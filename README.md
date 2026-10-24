@@ -2,65 +2,110 @@
 
 A native Mac creative environment for designing and making physical things.
 
-Form brings geometry, materials, artwork, construction, references, and production into one creative workspace. Start with the thing you want to make—a notebook, a package, a clock, a lamp—and develop it from an idea into an editable product and the assets needed to make it.
+One continuous Table for objects, artwork, materials, references, and the versions you want to compare. Start with the thing you want to make, then work directly with its dimensions, construction, and appearance.
 
-**Status:** Product definition. This repository currently contains the initial project documentation. Application implementation has not started.
+**Version 0.1 foundation:** A working native application with persistent projects, parametric objects, linked artwork, production exports, local Orca slicing, and a local MCP interface. **Codex handles the creative conversation; FORM makes no external AI model calls.**
 
-Read the [Project Brief — Version 0.1](docs/product-brief.md) for the full vision, requirements, architecture, and acceptance workflow.
+The next governing document is the [2D Design, Typography & Vector Editing specification](docs/2d-design-typography-vector-spec.md). Its professional editing requirements expand the [active implementation goal](docs/implementation-goal.md); the checklist distinguishes shipped foundations from remaining work.
 
-## The experience
+## Build and open
 
-- **The Table:** A navigable 3D studio surface where physical objects, artwork, references, material swatches, iterations, and variants sit together at real-world scale.
-- **Editable physical objects:** Products carry dimensions, components, materials, construction rules, constraints, and artwork. Native controls update those properties immediately.
-- **Connected 2D and 3D:** Edit a package's artwork and unfolded dieline while its assembled 3D representation updates live.
-- **A continuous AI collaborator:** Describe a product, establish its editable construction, explore new iterations, and preserve the project conversation, open questions, and design decisions.
-- **A path to fabrication:** Use studio materials and equipment profiles to prepare artwork, dielines, component summaries, and presentation renders.
+Requires macOS 14 or later and Xcode 16 or later with the Swift 6 toolchain. There are no third-party package dependencies or API keys.
 
-AI establishes useful, editable product definitions. Routine parameter, material, and artwork changes run directly in the application without another generation request.
+```sh
+bash scripts/build.sh release
+open build/FORM.app
+```
 
-## Version 0.1
+For a faster development build, use `bash scripts/build.sh`. The script creates an ad hoc signed app bundle and includes the MCP executable. You can also open `Package.swift` in Xcode. The app has not been notarized for public distribution.
 
-The first working application will demonstrate a complete **cyanotype kit** workflow: twenty 8-by-10-inch sheets of paper, an instruction booklet, and a printed folding sleeve.
+## In the studio
 
-The target workflow is to:
+- **Home:** Saved project previews, search, blank projects, and three editable starting studies: a cyanotype kit, table lamps, and material/form studies.
+- **The Table:** A continuous Metal-backed 3D workspace with physical scale, soft shadows, image references, material swatches, selection, movement, grouping, duplication, and persistent camera state.
+- **Contextual controls:** Floating native parameter and material inspectors. Focus or isolate a selection without leaving the canvas.
+- **Editable constructions:** Paper stacks, booklets, folding sleeves, lamps, hollow vessels, boxes, cylinders, extruded profiles, and independent artwork sheets. Custom agent-defined recipes get the same native controls.
+- **Linked artwork:** Text, shapes, lines, images, exact positioning, colors, layer order, bleed guides, and live 3D face updates. A folding sleeve exposes its unfolded cut/score dieline.
+- **Iterations and variants:** Independent design iterations or linked parameter/artwork variants with their own materials and placement.
+- **Studio Library:** Persistent materials and equipment profiles, separate from individual projects.
+- **Print preparation:** `⌘P` opens a dedicated physical print bed with object/component selection, orientation, scale, filament, layer height, walls, infill, supports, brim, and actual sliced layer previews.
+- **Filaments and local printers:** Studio settings preserve spool profiles, colors, temperatures, flow, density, cost, and remaining inventory. P1S connection settings use Keychain for the LAN code and a read-only TLS/MQTT status adapter. Sending or starting prints is disabled.
+- **Rendering and making:** Studio backgrounds, camera framing, 3000 × 2000 PNG, physically sized PDF artwork, millimeter SVG dielines, and component/material JSON.
+- **Project knowledge:** Editable design decisions and open questions, saved activity history, optional Codex conversation references, and undo/redo across native and MCP edits.
 
-1. Create a persistent project and describe the kit in natural language.
-2. Place its separate components on the Table and edit their dimensions, sheet counts, and materials through native controls.
-3. Edit the sleeve's artwork in 2D with live updates to its assembled 3D form.
-4. Create iterations and color or material variants, then compare them side by side.
-5. Produce a studio render, printable PDF artwork, an SVG dieline, and a basic component and material summary.
-6. Save, quit, reopen, and continue the original agent conversation.
+Projects autosave to `~/Library/Application Support/FORM` as modular `.form` packages. Imported assets travel with the project. Use **Save a Copy** to take a project elsewhere.
 
-The [full brief](docs/product-brief.md#12-version-01-the-first-working-application) defines the required capabilities and end-to-end acceptance test.
+## Create with Codex
 
-## Proposed architecture
+Keep FORM open and register its bundled MCP server:
 
-Form is macOS first and built around native technologies. The initial architecture is a proposal to guide implementation.
+```sh
+codex mcp add form -- "$PWD/build/FORM.app/Contents/MacOS/form-mcp"
+```
 
-| Area | Proposed foundation |
+Then describe an object in Codex:
+
+> Create an orange table lamp, about 350 mm tall, with editable shade diameter, shade height, stem diameter, and base width. Place a sage variant beside it.
+
+The server exposes 31 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
+
+See [Create with Codex](docs/mcp.md) for setup, schemas, a custom object example, and direct CLI invocation.
+
+## Optional OrcaSlicer engine
+
+The preparation UI is native SwiftUI/AppKit. Slicing runs the official OrcaSlicer app as a local subprocess. Install the verified engine separately:
+
+```sh
+bash scripts/install-orca.sh
+```
+
+This downloads official OrcaSlicer **2.4.2**, verifies its pinned SHA-256, and extracts it under `.local/engines`. Alternatively select an installed official `OrcaSlicer.app` under **Studio Library → Filaments & 3D printing → Slicing engine**. The binary is not committed or redistributed with FORM.
+
+See [Printing architecture, setup, and research](docs/printing.md) for profiles, license boundaries, P1S connection setup, and verified capabilities. Local slicing produces STL, G-code, and sliced 3MF files; no printer is contacted by slicing.
+
+## Navigation
+
+| Action | Control |
 | --- | --- |
-| Application interface | SwiftUI and AppKit |
-| Interactive 3D workspace | RealityKit initially, with Metal underneath |
-| Future custom rendering | Metal and MetalKit |
-| 2D graphics and typography | Core Graphics, Core Text, and AppKit |
-| Geometry | Native procedural geometry and construction recipes; Open CASCADE as a candidate for advanced solid operations |
-| Image processing | Core Image and Metal |
-| Persistence | Modular `.form` document packages, JSON, and SQLite where useful |
-| Agent integration | Model APIs with persistent conversations and structured tool calls |
-| External automation | An MCP interface over the same application operations |
+| Select / extend selection | Click / Shift-click |
+| Move an object or group | Drag the selection; Shift snaps to 10 mm |
+| Orbit | Drag empty Table space or right-drag |
+| Pan | Space-drag or Option-drag |
+| Zoom | Scroll or pinch |
+| Focus / isolate | `F` / `I`, or floating inspector buttons |
+| Perspective / overhead / front | `1` / `2` / `3` |
+| Fit all | `⌘0` |
+| Duplicate iteration / linked variant | `⌘D` / `⇧⌘D` |
+| Group | `⌘G` |
+| Undo / redo | `⌘Z` / `⇧⌘Z` |
+| Save / save a copy | `⌘S` / `⇧⌘S` |
+| Print preparation | `⌘P` |
+| Return to Home | `⇧⌘H` |
 
-The product model owns geometry, components, construction, parameters, constraints, materials, and artwork. Workspace placement and rendering remain separate, so the renderer can evolve independently and individual objects can load or regenerate without rebuilding the whole project.
+## Develop and validate
 
-## Development milestones
+```sh
+bash scripts/test.sh
+python3 scripts/smoke_mcp.py  # Requires the running app; creates a validation project
+python3 scripts/smoke_print.py # Optional engine; local cube and hollow-shade slices
+```
 
-1. **The spatial document:** Native Mac shell, Table, camera navigation, object selection and transforms, asset loading, basic materials, and project persistence.
-2. **Intelligent physical objects:** Parametric definitions, dependency updates, geometry recipes, generated native controls, and material assignments.
-3. **Linked 2D/3D editing:** Editable artwork surfaces, live texture updates, and a folding construction with an unfolded dieline.
-4. **Agent collaboration:** Structured object creation and editing, iterations, project questions, and persistent conversations.
-5. **The creative studio:** Material library, variants, rendering presets, production exports, and initial equipment profiles.
+Use an isolated library while testing:
 
-The first implementation milestone is the spatial document. Build and test instructions will be added with the application code.
+```sh
+FORM_LIBRARY_PATH="$PWD/.local/Library" build/FORM.app/Contents/MacOS/FORM
+```
+
+`FORM_SOCKET_PATH` can isolate multiple development instances. The native view redraws on demand, geometry updates are scoped to changed objects, and geometry/texture caches are bounded.
+
+This foundation has a focused artwork editor and procedural construction system. Professional typography/vector editing, general CAD booleans/import, collaboration, embedded agent UI, and photorealistic path tracing are unfinished. The expanded goal tracks the requested 2D capabilities through their demonstration and acceptance criteria. Live P1S status still requires verification with the physical printer's connection details.
 
 ## Documentation
 
-- [Project Brief — Version 0.1](docs/product-brief.md): The initial product document, including the vision, interaction model, proposed architecture, scope, milestones, and future directions.
+- [Initial product brief · Version 0.1](docs/product-brief.md)
+- [2D Design, Typography & Vector Editing · guiding specification](docs/2d-design-typography-vector-spec.md)
+- [Expanded implementation goal and completion checklist](docs/implementation-goal.md)
+- [Implementation architecture and boundaries](docs/architecture.md)
+- [MCP setup and custom object recipes](docs/mcp.md)
+- [Orca slicing, filament library, and local P1S setup](docs/printing.md)
+- [Validation notes](docs/validation.md)

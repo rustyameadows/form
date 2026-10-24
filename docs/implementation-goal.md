@@ -1,0 +1,76 @@
+# FORM implementation goal
+
+Status: **Active**. Expanded October 24, 2026 to include the complete [2D Design, Typography & Vector Editing specification](2d-design-typography-vector-spec.md), alongside the [original product brief](product-brief.md), the supplied interface sketches, and local 3D-print preparation.
+
+## Objective
+
+Deliver a capable, polished native Mac creative environment for both 3D physical design and professional 2D graphic composition. A continuous Table, editable parametric objects, independent and linked artwork, typography, vector geometry, persistent projects, production exports, Studio materials/filaments, and an Orca-powered print workspace must work together. Codex operates the same deterministic editing commands through local MCP; FORM does not call external AI models. Printer setup and status are permitted; sending or starting prints remains disabled under the user's explicit instruction.
+
+The new specification is a governing product document, not a claim that its features already exist. Its complete requirements remain in scope. Its explicit later-stage capabilities retain their staged sequence. Completion requires working native interactions and demonstrated output, rather than controls that only expose stored values.
+
+The goal service currently permits status changes but cannot rewrite the text of an active objective. This file records the expanded objective and completion requirements while that goal stays active.
+
+## Delivery checkpoints
+
+### A. Native 3D studio and fabrication foundation
+
+- [x] Continuous Metal-backed Table; native title bar; contextual inspectors; camera, focus, isolation, selection, movement, grouping, variants, and iterations.
+- [x] Home previews of saved scenes; modular packages; autosave; undo/redo; imported assets; Studio materials and equipment.
+- [x] Parametric constructions and custom recipes; linked artwork; PDF/SVG/PNG/component exports; local MCP registration and shared command engine.
+- [x] Dedicated Print workspace with physical P1S bed, component selection, orientation, scale, filament choice, slicing options, layer preview, and local outputs.
+- [x] Persistent Studio filament library; local printer profiles; Keychain credential storage; read-only TLS/MQTT status adapter.
+- [x] Real official OrcaSlicer 2.4.2 slice yielding STL, G-code, sliced 3MF, layer preview, and estimates; no printer commands sent.
+- [ ] Verify the physical P1S status connection when its IP, serial, and locally entered access code are available.
+- [ ] Complete the remaining original-brief physical design workflows; evaluate the 3D environment with the new linked artwork demonstrations.
+
+### B. Credible professional 2D canvas — specification Phase 1
+
+- [ ] Independent artwork documents and multiple physical artboards/pages; unit conversion for mm, cm, inches, and points; presets and exact custom dimensions.
+- [ ] Smooth pan, pinch/keyboard zoom, sharp rendering, rulers, numeric/draggable guides, grid, smart snapping, and configurable nudges.
+- [ ] Selection, multiple selection, resize, rotate, flip, aspect locking, transform origin, alignment, distribution, matching size, and exact transforms.
+- [ ] Layer naming, visibility, locking, ordering, nested grouping, group transforms, and editing within a group.
+- [ ] Select/direct-select, text, shapes, pen/Bézier, line/polygon/star, image placement, pan/zoom, eyedropper, and frame tools with conventional shortcuts.
+- [ ] Solid fill, stroke controls, basic path editing, native installed font discovery, point and area text, font/style/size/leading/tracking/alignment, and live surface updates.
+- [ ] Undo/redo, autosave/reopen, native text input, accessible controls, SVG/PDF/PNG output, and a typography-heavy label or dial completed directly in FORM.
+
+### C. Deep typography — specification Phase 2
+
+- [ ] Searchable previewing font browser with families/faces, favorites, recents, explicit missing-font handling, and preserved assignments.
+- [ ] Core Text shaping; all section 4.2 text/paragraph properties; mixed rich text and selected-character editing; point/area text reflow and overflow indicators.
+- [ ] Supported OpenType feature discovery, ligatures/alternates/sets, numeral treatments, fractions, caps, contextual/localized forms, and alternate glyph selection.
+- [ ] Real variable-font axes/ranges and optical sizing; per-pair kerning, baseline shifts, tracking, superscript/subscript, and character-level features.
+- [ ] Reusable paragraph/text styles; tabs, lists, direction, hyphenation, and advanced text frames.
+- [ ] Convert shaped text to ordinary editable outlines while preserving glyph positioning, variations, ligatures, and a recoverable editable source.
+- [ ] Demonstrate a refined wordmark and typographic clock dial with editable converted glyphs.
+
+### D. Mature vector editing — specification Phase 3
+
+- [ ] Complete Bézier node/handle operations, including corner/smooth, add/delete, join/split, close/open, reverse, numeric and multi-node transforms.
+- [ ] Union/subtract/intersect/exclude/divide where supported; non-destructive boolean groups and flattening; compound paths with holes.
+- [ ] Linear/radial gradients and editable stops/positions; full stroke styles and expansion; editable nested clipping masks.
+- [ ] Linked reusable components with overrides and detachment; shared swatches; non-destructive opacity/effects/blending.
+- [ ] Image crop/replace/mask/adjustments and effective DPI; original asset preservation; drag/drop and supported macOS formats.
+- [ ] Editable SVG import/export with transforms, hierarchy, geometry, text, and explicit unsupported-feature reporting; SVG/PDF/PNG/JPEG selection/frame/document export options.
+- [ ] Demonstrate an original illustration/logo and production-ready vector outputs.
+
+### E. Print and publication — specification Phase 4
+
+- [ ] Linked text frames, sequential multi-page documents, baseline grids, reusable document styles, and an instruction booklet with multi-page PDF output.
+- [ ] Bleed/trim/safe areas, output profiles and color-space metadata, ColorSync conversions, CMYK/spot-color workflows, and production preflight.
+- [ ] Font embedding where supported/permitted and explicit outline export; selectable raster size/resolution; physically accurate outputs.
+- [ ] Separate printable artwork from cut/score/stitch/engrave/guide roles in the model and exports; configurable production overlays and packaging/textile constraints.
+
+### F. Advanced physical integration — specification Phase 5
+
+- [ ] Independent artwork assets referenced by 3D product surfaces with selective resource invalidation and persistent links.
+- [ ] Pattern-aware placement, complex dielines, panel continuity, surface projections, and geometry-change review warnings.
+- [ ] Dedicated embroidery artwork and cutting/engraving preparation, shared collection assets, material-aware previews, and production packets.
+- [ ] Complete all four demonstration projects: clock dial, folding package, apparel graphic/patch, and instruction booklet.
+
+## Acceptance and evidence
+
+The 15-step workflow in specification section 19 is mandatory: exact 8 × 10 inch frame; installed typeface; detailed typography and supported font features; pair spacing; editable vector nodes; precise layout; nested groups; appearance and masks; variants; editable outlines; linked physical surface; live 3D updates; accurate exports; and intact save/close/reopen relationships.
+
+Every checkpoint also requires deterministic MCP access to the same native operations, meaningful undo behavior, round-trip persistence, and appropriate validation. Measure ordinary operations on hundreds of elements, keep idle rendering demand-driven, and test demonstrations through the native UI. Do not label the expanded goal complete while these acceptance requirements remain unfinished.
+
+See [validation notes](validation.md) for measured results and current limitations. Speculative and unavailable hardware checks must remain clearly identified.
