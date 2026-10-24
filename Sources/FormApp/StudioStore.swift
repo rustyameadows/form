@@ -309,6 +309,16 @@ enum WorkspaceMode: String, CaseIterable {
         let parents = Set(artworkSession.elements.map(\.parentID))
         artworkSession.scopeID = parents.count == 1 ? parents.first! : nil
       }
+      if let raw = args["node_ids"] as? [String] {
+        let ids = Set(raw.compactMap(UUID.init(uuidString:)))
+        let available = Set(
+          artworkSession.elements.flatMap { $0.path?.contours.flatMap(\.nodes).map(\.id) ?? [] })
+        guard ids.count == raw.count, ids.isSubset(of: available) else {
+          throw FormError.invalid("Unknown path node selection.")
+        }
+        artworkSession.nodes = ids
+        if !ids.isEmpty { artworkSession.tool = .direct }
+      }
     case "studio":
       showingHome = false
       mode = .studio

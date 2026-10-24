@@ -67,6 +67,57 @@ enum ArtworkTool: String, CaseIterable {
   var elements: [ArtworkElement] { art.elements.filter { selection.contains($0.id) } }
   var primary: ArtworkElement? { elements.first }
   var unit: PhysicalUnit { art.unit ?? .mm }
+  var nodeBounds: Rect2? {
+    guard let e = primary, let path = e.path else { return nil }
+    let t = art.worldTransform(e).followed(by: .scale(e.width / path.width, e.height / path.height))
+    let points = path.contours.flatMap(\.nodes).filter { nodes.contains($0.id) }.map {
+      t.apply($0.anchor)
+    }
+    guard let first = points.first else { return nil }
+    return points.dropFirst().reduce(.init(first.x, first.y, 0, 0)) {
+      $0.union(.init($1.x, $1.y, 0, 0))
+    }
+  }
+  func editPath(_ operation: String, _ arguments: [String: Any] = [:]) {
+    canvas?.finishText()
+    guard let store, let object, let e = primary, selection.count == 1 else { return }
+    var args = arguments
+    args["object_id"] = object.id.uuidString
+    args["element_id"] = e.id.uuidString
+    args["node_ids"] = nodes.map(\.uuidString)
+    args["operation"] = operation
+    do {
+      let result =
+        try store.engine.call("form_edit_path", arguments: args, source: "Studio") as? [String: Any]
+      nodes = Set((result?["selected_nodes"] as? [String] ?? []).compactMap(UUID.init(uuidString:)))
+      selection = Set(
+        (result?["selected_elements"] as? [String] ?? []).compactMap(UUID.init(uuidString:)))
+      store.changed()
+    } catch { store.error = error.localizedDescription }
+  }
+  func transformNodes(_ transform: Affine2) {
+    editPath(
+      "transform",
+      [
+        "matrix": [
+          "a": transform.a, "b": transform.b, "c": transform.c, "d": transform.d,
+          "tx": transform.tx, "ty": transform.ty,
+        ]
+      ])
+  }
+  func sizeNodes(width: Double? = nil, height: Double? = nil) {
+    guard let b = nodeBounds else { return }
+    guard width == nil || (width! >= 0 && b.width > 1e-9),
+      height == nil || (height! >= 0 && b.height > 1e-9)
+    else {
+      store?.error = "Choose nodes spanning a nonzero distance in this direction."
+      return
+    }
+    transformNodes(
+      .translation(b.x, b.y).followed(
+        by: .scale(width.map { $0 / b.width } ?? 1, height.map { $0 / b.height } ?? 1)
+      ).followed(by: .translation(-b.x, -b.y)))
+  }
   var inspectedTypography: Typography {
     canvas?.textInspection()?.typography ?? primary?.typography ?? .init()
   }

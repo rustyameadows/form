@@ -88,12 +88,19 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
         path.contours.reduce(0, { $0 + $1.nodes.count }) <= 100000
       else { throw FormError.invalid("Invalid path dimensions or node count.") }
       for node in path.contours.flatMap(\.nodes) {
+        guard node.mode == nil || ["corner", "smooth", "symmetric"].contains(node.mode!) else {
+          throw FormError.invalid("Unknown Bézier node mode.")
+        }
         guard
           finite([
             node.anchor.x, node.anchor.y, node.incoming?.x ?? 0, node.incoming?.y ?? 0,
             node.outgoing?.x ?? 0, node.outgoing?.y ?? 0,
           ])
         else { throw FormError.invalid("Path nodes must have finite physical coordinates.") }
+      }
+      let nodes = path.contours.flatMap(\.nodes)
+      guard Set(nodes.map(\.id)).count == nodes.count else {
+        throw FormError.invalid("Node IDs must be unique within a path.")
       }
     } else if e.kind == "path" {
       throw FormError.invalid("A path element needs editable path data.")

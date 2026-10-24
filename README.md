@@ -50,7 +50,7 @@ Then describe an object in Codex:
 
 > Create an orange table lamp, about 350 mm tall, with editable shade diameter, shade height, stem diameter, and base width. Place a sage variant beside it.
 
-The server exposes 38 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, fonts, vector operations, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
+The server exposes 39 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, fonts, vector operations, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
 
 See [Create with Codex](docs/mcp.md) for setup, schemas, a custom object example, and direct CLI invocation.
 
@@ -91,6 +91,7 @@ See [Printing architecture, setup, and research](docs/printing.md) for profiles,
 bash scripts/test.sh
 python3 scripts/smoke_mcp.py  # Requires the running app; creates a validation project
 python3 scripts/smoke_artwork.py # Typography/vector composition and physical exports
+python3 scripts/smoke_paths.py # Curve editing, transformed type, and linked variants
 python3 scripts/benchmark_artwork.py # 600-element native canvas performance
 python3 scripts/smoke_print.py # Optional engine; local cube and hollow-shade slices
 ```
@@ -110,6 +111,7 @@ This build has a native typography/vector editor and procedural construction sys
 - [Initial product brief · Version 0.1](docs/product-brief.md)
 - [2D Design, Typography & Vector Editing · guiding specification](docs/2d-design-typography-vector-spec.md)
 - [Native artwork editor · controls, MCP, and remaining work](docs/2d-editor.md)
+- [Precise paths and transformed native text](docs/path-editing.md)
 - [Textiles, Apparel & Merchandise · next feature specification](docs/textiles-apparel-merchandise-spec.md)
 - [Queued feature push · NASA bomber jacket demonstration](docs/next-feature-push.md)
 - [Expanded implementation goal and completion checklist](docs/implementation-goal.md)

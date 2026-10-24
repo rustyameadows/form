@@ -47,6 +47,8 @@ Current progress: the native canvas, physical frames, typography, vector operati
 
 ### D. Mature vector editing — specification Phase 3
 
+Current progress: [precise compound-path operations and transformed native text](path-editing.md) are implemented and validated. Joining separate path elements and the remaining vector-system requirements still need completion.
+
 - [ ] Complete Bézier node/handle operations, including corner/smooth, add/delete, join/split, close/open, reverse, numeric and multi-node transforms.
 - [ ] Union/subtract/intersect/exclude/divide where supported; non-destructive boolean groups and flattening; compound paths with holes.
 - [ ] Linear/radial gradients and editable stops/positions; full stroke styles and expansion; editable nested clipping masks.

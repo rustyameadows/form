@@ -156,10 +156,13 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var fitted = false
   private var down = CGPoint.zero, windowDown = CGPoint.zero, panOrigin = CGPoint.zero
   private var snapshot = Artwork(), startSelection = Set<UUID>(), dragMode = "", handle = 0
+  private var startNodes = Set<UUID>()
   private var downBounds = Rect2(0, 0, 1, 1), marquee: CGRect?
   private var snapLines: [(String, Double)] = []
   private var space = false
   private var textView: NSTextView?
+  private var textHost: NativeAffineView?
+  private var textClip: NativeAffineView?
   private var publishedInput: NSAttributedString?
   private var editingID: UUID?
   private var publishedText: ArtworkElement?
@@ -211,6 +214,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       publishedInput = NSAttributedString(attributedString: tv.attributedString())
       tv.setSelectedRange(NSRange(location: min(range.location, tv.string.utf16.count), length: 0))
       publishedText = e
+    }
+    if let id = editingID, let element = session.art.elements.first(where: { $0.id == id }) {
+      positionTextHost(element)
     }
     needsDisplay = true
     updateAccessibilityItems()
@@ -523,6 +529,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     down = p
     snapshot = s.art
     startSelection = s.selection
+    startNodes = s.nodes
     dragMode = ""
     snapLines = []
     s.beginGesture()
@@ -538,10 +545,29 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     if [.select, .direct].contains(s.tool) {
       if s.tool == .direct, nodeHit(p, event: event) {
+        if event.clickCount == 2 {
+          s.editPath(
+            s.primary?.path?.contours.flatMap(\.nodes).first(where: { s.nodes.contains($0.id) })?
+              .effectiveMode == "corner" ? "smooth" : "corner")
+          snapshot = s.art
+        }
         needsDisplay = true
         return
       }
-      if let e = s.primary, let g = e.gradient {
+      if s.tool == .direct, event.clickCount == 2, let e = s.primary, let path = e.path,
+        !s.art.isLocked(e),
+        let segment = PathCommands.nearestSegment(
+          path, to: .init(p),
+          map: s.art.worldTransform(e).followed(
+            by: .scale(e.width / path.width, e.height / path.height))),
+        segment.distance < 7 / (ppm * zoom), segment.t > 0.001, segment.t < 0.999
+      {
+        s.nodes = [segment.nodeID]
+        s.editPath("insert", ["t": segment.t])
+        dragMode = ""
+        return
+      }
+      if let e = s.primary, let g = e.gradient, !s.art.isLocked(e) {
         let t = s.art.worldTransform(e)
         for (i, q) in [g.start, g.end].enumerated() {
           let h = CGPoint(t.apply(.init(q.x * e.width, q.y * e.height)))
@@ -567,6 +593,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         }
       }
       if let e = hit(p, art: s.art, scope: s.scopeID) {
+        if s.tool == .direct, e.id == s.primary?.id, e.path != nil {
+          if !event.modifierFlags.contains(.shift) { s.nodes = [] }
+          dragMode = "node_marquee"
+          marquee = CGRect(origin: p, size: .zero)
+          return
+        }
         if event.clickCount == 2, e.kind == "text" {
           s.choose([e.id])
           beginText(e)
@@ -592,6 +624,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         downBounds = s.selectionBounds ?? .init(0, 0, 1, 1)
         dragMode = "move"
       } else {
+        if s.tool == .direct, s.primary?.path != nil {
+          if !event.modifierFlags.contains(.shift) { s.nodes = [] }
+          dragMode = "node_marquee"
+          marquee = CGRect(origin: p, size: .zero)
+          return
+        }
         if !event.modifierFlags.contains(.shift) { s.choose([]) }
         for g in s.art.showGuides == false ? [] : s.art.guides ?? [] where g.locked != true {
           if abs((g.axis == "x" ? p.x : p.y) - g.position) < 5 / (ppm * zoom) {
@@ -657,6 +695,20 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if !event.modifierFlags.contains(.option) {
         pen[pen.count - 1].incoming = .init(2 * anchor.x - p.x, 2 * anchor.y - p.y)
       }
+      needsDisplay = true
+      return
+    }
+    if dragMode == "node_marquee", let e = s.primary, let path = e.path {
+      let rect = CGRect(
+        x: min(down.x, p.x), y: min(down.y, p.y), width: abs(p.x - down.x),
+        height: abs(p.y - down.y))
+      marquee = rect
+      let t = snapshot.worldTransform(e).followed(
+        by: .scale(e.width / path.width, e.height / path.height))
+      let ids = Set(
+        path.contours.flatMap(\.nodes).filter { rect.contains(CGPoint(t.apply($0.anchor))) }.map(
+          \.id))
+      s.nodes = event.modifierFlags.contains(.shift) ? startNodes.union(ids) : ids
       needsDisplay = true
       return
     }
@@ -779,6 +831,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     s.save(value)
   }
   override func mouseUp(with event: NSEvent) {
+    if ["node", "incoming", "outgoing"].contains(dragMode), let s = session, let id = s.primary?.id
+    {
+      s.mutate { art in
+        if let i = art.elements.firstIndex(where: { $0.id == id }) {
+          PathCommands.normalize(&art.elements[i])
+        }
+      }
+    }
     if dragMode == "pan" { NSCursor.pop() }
     if dragMode == "pen" { commitPen(closed: false) }
     if dragMode == "create", let s = session, let e = s.primary {
@@ -857,7 +917,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return .init(x: newX, y: newY)
   }
   private func nodeHit(_ p: CGPoint, event: NSEvent) -> Bool {
-    guard let s = session, let e = s.primary, let path = e.path else { return false }
+    guard let s = session, let e = s.primary, let path = e.path, !s.art.isLocked(e) else {
+      return false
+    }
     let t = s.art.worldTransform(e).followed(
       by: .scale(e.width / path.width, e.height / path.height))
     let threshold = 7 / (ppm * zoom)
@@ -876,7 +938,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let q = t.apply(node.anchor)
       if hypot(p.x - q.x, p.y - q.y) < threshold {
         if event.modifierFlags.contains(.shift) {
-          s.nodes.insert(node.id)
+          if s.nodes.contains(node.id) { s.nodes.remove(node.id) } else { s.nodes.insert(node.id) }
         } else if !s.nodes.contains(node.id) {
           s.nodes = [node.id]
         }
@@ -918,47 +980,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         } else {
           let q = dragMode == "incoming" ? node.incoming : node.outgoing
           let next = Point2((q?.x ?? node.anchor.x) + dx, (q?.y ?? node.anchor.y) + dy)
-          if dragMode == "incoming" {
-            node.incoming = next
-            if !event.modifierFlags.contains(.option) {
-              node.outgoing = .init(2 * node.anchor.x - next.x, 2 * node.anchor.y - next.y)
-            }
-          } else {
-            node.outgoing = next
-            if !event.modifierFlags.contains(.option) {
-              node.incoming = .init(2 * node.anchor.x - next.x, 2 * node.anchor.y - next.y)
-            }
-          }
+          node = PathCommands.movingHandle(
+            node, incoming: dragMode == "incoming", to: next,
+            independent: event.modifierFlags.contains(.option))
         }
         value.elements[i].path?.contours[c].nodes[n] = node
       }
     }
     s.save(value)
-  }
-  func smoothNodes(_ smooth: Bool) {
-    guard let s = session else { return }
-    s.update { e in
-      guard var path = e.path else { return }
-      for c in path.contours.indices {
-        let nodes = path.contours[c].nodes
-        for i in nodes.indices where s.nodes.contains(nodes[i].id) {
-          if smooth && nodes.count > 1 {
-            let before = nodes[(i + nodes.count - 1) % nodes.count].anchor
-            let after = nodes[(i + 1) % nodes.count].anchor
-            let dx = (after.x - before.x) / 6
-            let dy = (after.y - before.y) / 6
-            path.contours[c].nodes[i].incoming = .init(
-              nodes[i].anchor.x - dx, nodes[i].anchor.y - dy)
-            path.contours[c].nodes[i].outgoing = .init(
-              nodes[i].anchor.x + dx, nodes[i].anchor.y + dy)
-          } else {
-            path.contours[c].nodes[i].incoming = nil
-            path.contours[c].nodes[i].outgoing = nil
-          }
-        }
-      }
-      e.path = path
-    }
   }
   private func penDown(_ p: CGPoint, event: NSEvent) {
     if pen.count >= 3, let first = pen.first,
@@ -1031,13 +1060,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     needsDisplay = true
   }
   func beginText(_ e: ArtworkElement) {
-    guard let s = session, let f = activeFrame else { return }
+    guard let s = session, activeFrame != nil else { return }
+    s.dieline = false
     s.beginGesture()
-    let b = s.art.bounds(of: e)
     let tv = NSTextView(
       frame: .init(
-        x: (f.rect.minX + b.x) * ppm, y: (f.rect.minY + b.y) * ppm, width: max(40, b.width * ppm),
-        height: max(24, b.height * ppm)))
+        x: 0, y: 0, width: e.width * ppm, height: e.height * ppm))
     tv.isRichText = true
     tv.usesRuler = false
     tv.usesInspectorBar = false
@@ -1060,7 +1088,16 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     publishedText = e
     s.editingText = true
     s.characterRange = .init(location: 0, length: tv.string.utf16.count)
-    addSubview(tv)
+    let clip = NativeAffineView(frame: bounds)
+    clip.clipsToBounds = true
+    let host = NativeAffineView(frame: bounds)
+    host.clipsToBounds = false
+    textClip = clip
+    textHost = host
+    addSubview(clip)
+    clip.addSubview(host)
+    host.addSubview(tv)
+    positionTextHost(e)
     window?.makeFirstResponder(tv)
     tv.setSelectedRange(s.characterRange)
     needsDisplay = true
@@ -1069,6 +1106,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let tv = textView else { return }
     textDidChange(Notification(name: NSText.didChangeNotification, object: tv))
     tv.removeFromSuperview()
+    textHost?.removeFromSuperview()
+    textHost = nil
+    textClip?.removeFromSuperview()
+    textClip = nil
     tv.delegate = nil
     textView = nil
     editingID = nil
@@ -1077,6 +1118,22 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     session?.editingText = false
     session?.endGesture()
     needsDisplay = true
+  }
+  private func positionTextHost(_ element: ArtworkElement) {
+    guard let s = session, let f = activeFrame, let host = textHost, let clip = textClip else {
+      return
+    }
+    let world = s.art.worldTransform(element)
+    clip.configure(
+      frame: CGRect(
+        x: f.rect.minX * ppm, y: f.rect.minY * ppm, width: f.rect.width * ppm,
+        height: f.rect.height * ppm),
+      transform: .init())
+    host.configure(
+      frame: clip.bounds,
+      transform: .init(
+        a: world.a, b: world.b, c: world.c, d: world.d,
+        tx: world.tx * ppm, ty: world.ty * ppm))
   }
   func textDidChange(_ notification: Notification) {
     guard let s = session, let id = editingID, let tv = textView,
@@ -1105,6 +1162,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     value.elements[i] = e
     publishedText = e
     s.save(value)
+    positionTextHost(e)
   }
   func textViewDidChangeSelection(_ notification: Notification) {
     guard let tv = textView else { return }
@@ -1234,22 +1292,20 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       return
     }
     if [123, 124, 125, 126].contains(event.keyCode) {
+      s.beginGesture()
       let step = (s.art.nudge ?? 0.1) * (event.modifierFlags.contains(.shift) ? 10 : 1)
-      s.translate(
-        dx: event.keyCode == 123 ? -step : event.keyCode == 124 ? step : 0,
-        dy: event.keyCode == 126 ? -step : event.keyCode == 125 ? step : 0)
+      let dx = event.keyCode == 123 ? -step : event.keyCode == 124 ? step : 0
+      let dy = event.keyCode == 126 ? -step : event.keyCode == 125 ? step : 0
+      if s.tool == .direct, !s.nodes.isEmpty {
+        s.transformNodes(.translation(dx, dy))
+      } else {
+        s.translate(dx: dx, dy: dy)
+      }
       return
     }
     if event.keyCode == 51 || event.keyCode == 117 {
       if s.tool == .direct, !s.nodes.isEmpty {
-        s.update { e in
-          guard var path = e.path else { return }
-          for c in path.contours.indices {
-            path.contours[c].nodes.removeAll { s.nodes.contains($0.id) }
-          }
-          e.path = path
-        }
-        s.nodes = []
+        s.editPath("delete")
       } else {
         s.execute("delete")
       }
@@ -1291,6 +1347,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     super.keyDown(with: event)
   }
   override func keyUp(with event: NSEvent) {
+    if [123, 124, 125, 126].contains(event.keyCode) { session?.endGesture() }
     if event.keyCode == 49, space {
       space = false
       NSCursor.pop()
@@ -1299,6 +1356,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
   }
   override func resignFirstResponder() -> Bool {
+    if session?.editingText != true { session?.endGesture() }
     if space {
       space = false
       NSCursor.pop()

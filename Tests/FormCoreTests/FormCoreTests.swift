@@ -199,7 +199,7 @@ final class FormCoreTests: XCTestCase {
       (initialize["result"] as? [String: Any])?["protocolVersion"] as? String, "2025-11-25")
     XCTAssertNil(response("{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}"))
     let listing = response("{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}")!
-    XCTAssertEqual(((listing["result"] as? [String: Any])?["tools"] as? [[String: Any]])?.count, 38)
+    XCTAssertEqual(((listing["result"] as? [String: Any])?["tools"] as? [[String: Any]])?.count, 39)
     XCTAssertEqual((response("{")?["error"] as? [String: Any])?["code"] as? Int, -32700)
     XCTAssertEqual(
       (response("{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"unknown\"}")?["error"] as? [String: Any])?[

@@ -186,6 +186,54 @@ public final class OperationEngine {
         }
       }
       return ["selected_elements": selected.map(\.uuidString)]
+    case "form_edit_path":
+      let id = try objectID()
+      guard let elementID = UUID(uuidString: try string("element_id")) else {
+        throw FormError.invalid("Invalid path element ID.")
+      }
+      let operation = try string("operation")
+      var nodes = Set<UUID>()
+      if let raw = a["node_ids"] {
+        guard let values = raw as? [String] else {
+          throw FormError.invalid("node_ids must be an array of UUIDs.")
+        }
+        if !values.isEmpty { nodes = try idsArgument(values) }
+      }
+      if a["matrix"] != nil { _ = try numericParameters(a["matrix"]) }
+      var selectedNodes = Set<UUID>()
+      var selectedElements = Set<UUID>()
+      try edit(
+        "Path: \(operation)", source: source,
+        coalescing: source == "Studio" && interaction == "artwork-\(id)" ? "artwork-\(id)" : nil
+      ) { p in
+        guard let object = p.objects.first(where: { $0.id == id }), var art = object.artwork,
+          let index = art.elements.firstIndex(where: { $0.id == elementID })
+        else {
+          throw FormError.missing("Path element not found.")
+        }
+        guard !art.isLocked(art.elements[index]) else {
+          throw FormError.invalid("Unlock this path first.")
+        }
+        let world = art.worldTransform(art.elements[index])
+        selectedNodes = try PathCommands.apply(
+          operation, to: &art.elements[index], nodes: nodes, arguments: a, world: world)
+        if art.elements[index].path?.contours.isEmpty == true {
+          art.elements.remove(at: index)
+          for i in art.elements.indices where art.elements[i].clipID == elementID {
+            art.elements[i].clipID = nil
+          }
+        } else {
+          selectedElements = [elementID]
+        }
+        try validateArtwork(art)
+        for i in p.objects.indices where p.objects[i].designID == object.designID {
+          p.objects[i].artwork = art
+        }
+      }
+      return [
+        "selected_nodes": selectedNodes.map(\.uuidString),
+        "selected_elements": selectedElements.map(\.uuidString),
+      ]
     case "form_list_recipes": return try jsonObject(Recipe.builtins + (project?.recipes ?? []))
     case "form_list_materials":
       return try jsonObject(
@@ -385,6 +433,7 @@ public final class OperationEngine {
         "form_add_object", "form_update_object", "form_duplicate_object", "form_group_objects",
         "form_set_artwork", "form_add_note", "form_create_recipe", "form_delete_objects",
         "form_edit_artwork",
+        "form_edit_path",
       ])
       guard operations.allSatisfy({ allowed.contains($0["name"] as? String ?? "") }) else {
         throw FormError.invalid(

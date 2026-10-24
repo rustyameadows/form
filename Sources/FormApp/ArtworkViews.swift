@@ -21,6 +21,7 @@ struct ArtworkStudio: View {
           Button {
             session.canvas?.finishText()
             session.tool = tool
+            session.canvas?.window?.makeFirstResponder(session.canvas)
           } label: {
             Image(systemName: tool.symbol).font(.system(size: 13)).frame(width: 30, height: 32)
               .background(
@@ -140,11 +141,16 @@ struct ArtworkStudio: View {
         Picker(
           "Units",
           selection: Binding(
-            get: { session.unit }, set: { unit in session.mutate { $0.unit = unit } })
+            get: { session.unit },
+            set: { unit in
+              NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
+              session.mutate { $0.unit = unit }
+            })
         ) { ForEach(PhysicalUnit.allCases, id: \.self) { Text($0.rawValue.uppercased()).tag($0) } }
         .labelsHidden().frame(width: 64)
       }.font(.system(size: 9)).padding(.horizontal, 16).frame(height: 37).background(Palette.paper)
     }.onAppear { session.reconcile() }.onChange(of: store.revision) { _, _ in session.reconcile() }
+      .onChange(of: session.dieline) { _, dieline in if dieline { session.canvas?.finishText() } }
       .onChange(of: store.mode) { _, mode in if mode != .artwork { session.canvas?.finishText() } }
   }
 }

@@ -107,6 +107,7 @@ public struct BezierNode: Codable, Equatable, Identifiable, Sendable {
   public var anchor: Point2
   public var incoming: Point2?
   public var outgoing: Point2?
+  public var mode: String?
   public init(_ anchor: Point2, incoming: Point2? = nil, outgoing: Point2? = nil) {
     self.anchor = anchor
     self.incoming = incoming

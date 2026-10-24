@@ -7,12 +7,12 @@ This is a tested foundation, **not completion of the expanded professional 2D sp
 ## Build and domain tests
 
 - Debug and optimized app builds succeeded; the app bundle contains the native executable, custom icon, Info.plist, and stdio MCP executable and is ad hoc signed.
-- `bash scripts/test.sh`: **42 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, atomic batch rollback, undo/redo, modular package round trips, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, and absence of hardware command tools.
+- `bash scripts/test.sh`: **54 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, atomic batch rollback, undo/redo, modular package round trips, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, and absence of hardware command tools.
 - No model/API credentials or third-party Swift packages are required.
 
 ## Real MCP and persistence
 
-`python3 scripts/smoke_mcp.py` passed against the running optimized app over its actual stdio MCP executable and local Unix socket. It verified protocol initialization, discovery of 38 unique tools, project creation, invalid input, linked variants, independent iterations, editable artwork, a custom recipe with native parameters, atomic batch rollback, every current export format, and saved-project reopen.
+`python3 scripts/smoke_mcp.py` passed against the running optimized app over its actual stdio MCP executable and local Unix socket. It verified protocol initialization, discovery of 39 unique tools, project creation, invalid input, linked variants, independent iterations, editable artwork, a custom recipe with native parameters, atomic batch rollback, every current export format, and saved-project reopen.
 
 The Mac app was also saved, quit, and reopened. Native text edits, the agent-defined lamp recipe, artwork, project identity, and edited dimensions survived. Codex's host configuration was registered with the built `form-mcp` executable and inspected successfully. This chat's tool catalog need not refresh immediately; a new Codex chat can load the registered server.
 
@@ -43,7 +43,19 @@ Native UI checks verified automatic fit at usable scale, two adjacent artwork fr
 
 Unsubmitted native frame-name and `9 in` numeric drafts both survived creating another project and reopening the original through MCP. These checks exercise the actual native field boundary, in addition to the domain-level callback test. Entering and leaving uppercase-displayed text without editing also preserved its original mixed-case source and artwork exactly.
 
-The [editor guide](2d-editor.md) records limitations. Rotated/sheared/reflected inline text input, complete node operations, SVG import, advanced typography, publication, color-managed production, and the full required demonstration suite remain unfinished.
+The [editor guide](2d-editor.md) records limitations. Separate-path combination, SVG import, advanced typography, publication, color-managed production, and the full required demonstration suite remain unfinished.
+
+## Precise paths and transformed native text
+
+`python3 scripts/smoke_paths.py` passed against the real packaged app with 39 tools. It created the linked **Curve atelier** study, inserted/split/joined/reversed a cubic path, rejected invalid edits without mutation, checked undo/redo and linked variant equality, generated physical SVG/PDF/PNG outputs, and reopened the saved artwork intact.
+
+Native testing edited text in a group with rotation and shear, including clicking a visible word to select its correct characters. Replacement and undo restored the exact stored artwork. A reflected parent group was tested the same way; screenshots confirmed the native selection, text, and static artwork stayed aligned. Automated coordinate checks exercise 48 successive affine maps with changing frame origins/sizes and forward/inverse conversions.
+
+Native path controls inserted a midpoint, split and rejoined endpoints, moved a selected node to **74.5657 mm**, double-clicked a visible curve to insert another node, nudged it **0.1 mm**, and undid/redid that nudge independently. A marquee selected all six nodes; numeric span editing resized them to **150 mm**. MCP inspection confirmed the physical coordinate and exact linked-variant artwork equality. Actual SVG/PDF/PNG outputs from these native edits were generated; Poppler rendered the PDF and its page was visually reviewed.
+
+Further native checks confirmed focused numeric fields update after undo and a pending 25 mm coordinate converts to 0.9843 inches when units change. Transformed text and selection were visually checked at the physical frame boundary; an untransformed clipping container prevents overflow. On a folding sleeve, entering dieline view ended inline text editing and choosing Edit text returned to the artwork surface.
+
+Curve tests sample shape-preserving operations under nested affine transforms, confirm exact cubic extrema and unselected-node stability, verify smooth/symmetric/independent handles, check endpoint orientation, release masks on final-path deletion, and roll back failed path batches. These checks extend the existing acceptance evidence; they do not complete publication, interchange, production color handling, or all physical design demonstrations.
 
 ## Real official Orca slicing
 
@@ -104,6 +116,7 @@ In another terminal:
 ```sh
 python3 scripts/smoke_mcp.py
 python3 scripts/smoke_artwork.py
+python3 scripts/smoke_paths.py
 python3 scripts/benchmark_artwork.py
 python3 scripts/smoke_print.py
 python3 scripts/benchmark.py

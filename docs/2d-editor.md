@@ -6,7 +6,7 @@ The editor is a working part of the expanded [2D specification](2d-design-typogr
 
 - Multiple physically sized sheets on one canvas: presets/custom dimensions, editable names and dimensions, independent placement, mm/cm/in/pt, pan, pinch zoom, fit, rulers, grid, numeric and ruler-dragged guides, guide locks, snapping, and nudges.
 - Selection/marquee, exact transforms, resize/rotation handles, flips, alignment/distribution, matching size, nested groups/scoped editing, layer naming/order/visibility/locks, duplication, and clipboard operations.
-- Rounded rectangles, ellipses, lines, polygons, stars, pen-created Bézier paths, direct anchor/handle editing, corner/smooth conversion, open/closed contours, and node deletion. Union/subtraction/intersection/exclusion produce editable paths and retain hidden source shapes.
+- Rounded rectangles, ellipses, lines, polygons, stars, pen-created Bézier paths, direct anchor/handle editing, corner/smooth/symmetric modes, shape-preserving subdivision/split/join, reversal, node marquee selection, exact multi-node transforms, open/closed contours, and deletion. Union/subtraction/intersection/exclusion produce editable paths and retain hidden source shapes.
 - Solid fills, linear/radial gradients, stroke widths/caps/joins/dashes, opacity, vector clipping masks, images with original assets preserved, replacement, and effective-DPI inspection.
 - Installed-font search and previews, families/styles, favorites/recents, explicit missing-font assignments, actual Core Text feature and variable-axis discovery, native rich text, and selected-character formatting with UTF-16 ranges.
 - Core Text shaping and editable glyph outlines, including fallback fonts, ligatures, variable settings, underline, and strikethrough. Outlining retains hidden editable text. Canvas, 3D textures, PDF, and raster outputs share a renderer.
@@ -44,7 +44,7 @@ While editing text, select characters and change typography controls to format t
 
 ## MCP
 
-There are 38 tools. Seven additions are `form_get_artwork`, `form_edit_artwork`, `form_list_fonts`, `form_font_features`, `form_convert_to_paths`, `form_boolean_artwork`, and `form_export_artwork`. They use the native model/editing functions. Tool discovery provides exact schemas and ranges.
+There are 39 tools. Artwork tools include `form_get_artwork`, `form_edit_artwork`, `form_list_fonts`, `form_font_features`, `form_convert_to_paths`, `form_boolean_artwork`, `form_export_artwork`, and `form_edit_path`. They use the native model/editing functions. Tool discovery provides exact schemas and ranges.
 
 ```json
 {"name":"form_list_fonts","arguments":{"query":"Georgia"}}
@@ -56,10 +56,11 @@ There are 38 tools. Seven additions are `form_get_artwork`, `form_edit_artwork`,
 
 `form_set_artwork` replaces a validated definition. `form_edit_artwork` supports add, replace, delete, duplicate, group, ungroup, align, distribute, reorder, and flip. `form_set_view` can select element IDs. Paths store ordinary contours/nodes; typography stores face names, features, axes, and optional rich text spans. Read-only calls preserve native editing focus; mutations commit active text and numeric drafts first.
 
+See [precise paths and transformed native text](path-editing.md) for direct selection, native text coordinates, and MCP node editing.
+
 ## Remaining work
 
-- Inline editing of rotated, reflected, or sheared text currently uses an axis-aligned native text view. Static canvas/export transforms are preserved; faithful transformed text input still needs implementation and validation.
-- Add/join/split/reverse and multi-node transforms; non-destructive boolean groups/division; transform origins; reusable vector components/overrides; swatches; effects/blending; full gradient-stop workflows; image crop/adjustments and drag/drop.
+- Joining separate path elements into a compound; non-destructive boolean groups/division; transform origins; reusable vector components/overrides; swatches; effects/blending; full gradient-stop workflows; image crop/adjustments and drag/drop.
 - Editable SVG import/interchange and explicit unsupported-feature reporting. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
 - Alternate-glyph selection, multiple non-exclusive feature settings, complete case treatment within mixed-character editing, reusable text styles, tabs/lists, linked text frames, sequential multi-page documents, and publication layout.
 - Color-managed production output, CMYK/spot separations, full preflight, role-specific production exports, advanced surface placement, and the complete demonstration/acceptance suite.

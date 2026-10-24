@@ -43,6 +43,7 @@ build/FORM.app/Contents/MacOS/form-mcp --call form_add_object '{"recipe_id":"lam
 | `form_duplicate_object`, `form_group_objects` | Iterations, linked variants, and group relationships |
 | `form_set_artwork`, `form_import_reference` | Editable surface graphics and persistent local references |
 | `form_get_artwork`, `form_edit_artwork` | Inspect and edit artwork elements, layers, groups, and transforms |
+| `form_edit_path` | Precise Bézier insertion/deletion, split/join, reverse, node modes, and physical node transforms |
 | `form_list_fonts`, `form_font_features` | Installed faces, supported font features, and variable axes |
 | `form_convert_to_paths`, `form_boolean_artwork` | Editable shaped glyph/stroke outlines and vector booleans |
 | `form_export_artwork` | Actual-size SVG/PDF and DPI-controlled PNG/JPEG frame or selection exports |
@@ -57,7 +58,7 @@ build/FORM.app/Contents/MacOS/form-mcp --call form_add_object '{"recipe_id":"lam
 
 Read-only project and recipe resources are also exposed as `form://project` and `form://recipes`. The `design_object` prompt supplies a starting workflow.
 
-There are 38 tools. Print options use the native configuration keys: `component`, `printerID`, `filamentID`, `layerHeight`, `infillPercent`, `wallLoops`, `supports`, `brimWidth`, `scalePercent`, and `rotation` (degree-valued `x`, `y`, `z` in printer coordinates). `form_slice` starts asynchronously; poll status until `busy` is false and inspect `validation_error` before consuming outputs. `form_set_view` accepts `print_bed` / `print_object`. See [printing setup](printing.md) for examples and the explicit no-print boundary.
+There are 39 tools. Print options use the native configuration keys: `component`, `printerID`, `filamentID`, `layerHeight`, `infillPercent`, `wallLoops`, `supports`, `brimWidth`, `scalePercent`, and `rotation` (degree-valued `x`, `y`, `z` in printer coordinates). `form_slice` starts asynchronously; poll status until `busy` is false and inspect `validation_error` before consuming outputs. `form_set_view` accepts `print_bed` / `print_object`. See [printing setup](printing.md) for examples and the explicit no-print boundary.
 
 ## Custom objects
 

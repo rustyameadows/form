@@ -145,6 +145,20 @@ public enum MCP {
           "axis": string,
         ], required: ["object_id", "command"]),
       tool(
+        "form_edit_path",
+        "Edit Bézier nodes using the native direct-selection operations: insert (subdivide after one node at t), delete, split, join two open endpoints within a compound path, reverse, open, close, corner, smooth, symmetric, or transform. Transform matrix uses physical artwork coordinates, including parent transforms. Node IDs come from form_get_artwork. Returns selected node IDs; all changes are atomic and undoable.",
+        [
+          "object_id": objectID, "element_id": string,
+          "operation": ["type": "string", "enum": PathCommands.names],
+          "node_ids": ["type": "array", "items": string], "t": number,
+          "matrix": [
+            "type": "object",
+            "properties": [
+              "a": number, "b": number, "c": number, "d": number, "tx": number, "ty": number,
+            ], "additionalProperties": false,
+          ],
+        ], required: ["object_id", "element_id", "operation"]),
+      tool(
         "form_list_fonts",
         "Search installed Mac font families and their actual faces. No font upload is required.",
         ["query": string], readOnly: true),
@@ -185,7 +199,7 @@ public enum MCP {
         required: ["text"]),
       tool(
         "form_set_view",
-        "Set a camera preset or focus/isolate an object. Views: perspective, overhead, front, fit, focus, isolate, show_all, home, table, artwork, studio, print_bed, print_object. Optional object_id selects the target.",
+        "Set a camera preset or focus/isolate an object. Views: perspective, overhead, front, fit, focus, isolate, show_all, home, table, artwork, studio, print_bed, print_object. Optional object_id selects the target. In artwork, element_ids selects layers and optional node_ids activates direct selection on a path.",
         [
           "view": [
             "type": "string",
@@ -194,6 +208,7 @@ public enum MCP {
               "table", "artwork", "studio", "print_bed", "print_object",
             ],
           ], "object_id": objectID, "element_ids": ["type": "array", "items": string],
+          "node_ids": ["type": "array", "items": string],
         ], required: ["view"]),
       tool(
         "form_export",

@@ -6,6 +6,60 @@ import XCTest
 @testable import FormGraphics
 
 final class ArtworkTests: XCTestCase {
+  func testAffineTextContainerClipsPointerHitTestingToPhysicalFrame() async throws {
+    await MainActor.run {
+      let canvas = NativeAffineView(frame: .init(x: 0, y: 0, width: 1000, height: 1000))
+      let clip = NativeAffineView(frame: canvas.bounds)
+      clip.configure(frame: .init(x: 100, y: 100, width: 200, height: 200), transform: .init())
+      clip.clipsToBounds = true
+      canvas.addSubview(clip)
+      let host = NativeAffineView(frame: clip.bounds)
+      host.configure(
+        frame: clip.bounds, transform: .translation(-50, 30).followed(by: .rotation(15)))
+      clip.addSubview(host)
+      let text = NSView(frame: .init(x: 0, y: 0, width: 300, height: 100))
+      host.addSubview(text)
+      XCTAssertNil(clip.hitTest(.init(x: 80, y: 150)))
+      let inside = host.convert(CGPoint(x: 100, y: 30), to: canvas)
+      XCTAssertTrue(clip.hitTest(inside) === text)
+    }
+  }
+  func testNativeAffineCoordinatesMatchArtworkIncludingReflectionAndShear() async throws {
+    await MainActor.run {
+      let parent = NativeAffineView(frame: .init(x: 0, y: 0, width: 1000, height: 1000))
+      let child = NativeAffineView(frame: parent.bounds)
+      parent.addSubview(child)
+      var transforms: [Affine2] = [
+        .init(), .rotation(31), .scale(-1, 1), .scale(1, -1), .scale(-2, -0.6),
+        .init(a: 1.3, b: 0.2, c: 0.8, d: 0.7, tx: 300, ty: 250),
+        .translation(300, 200).followed(by: .rotation(-60)).followed(by: .scale(2, -0.3)),
+        .init(),
+      ]
+      for i in 0..<40 {
+        transforms.append(
+          .translation(Double(i) * 3, Double(i) * 2).followed(by: .rotation(Double(i) * 17))
+            .followed(by: .scale(0.6 + Double(i % 5) * 0.17, i % 2 == 0 ? 0.8 : -1.3))
+            .followed(by: .rotation(Double(i) * 7)))
+      }
+      for (i, transform) in transforms.enumerated() {
+        let frame = CGRect(
+          x: Double(i % 3) * 12, y: Double(i % 4) * 9, width: 1000 - Double(i),
+          height: 1000 - Double(i))
+        child.configure(frame: frame, transform: transform)
+        for point in [Point2(), .init(12, 8), .init(-7, 20)] {
+          var expected = transform.apply(point)
+          expected.x += frame.origin.x
+          expected.y += frame.origin.y
+          let actual = child.convert(CGPoint(x: point.x, y: point.y), to: parent)
+          XCTAssertEqual(actual.x, expected.x, accuracy: 1e-8)
+          XCTAssertEqual(actual.y, expected.y, accuracy: 1e-8)
+          let inverse = child.convert(actual, from: parent)
+          XCTAssertEqual(inverse.x, point.x, accuracy: 1e-8)
+          XCTAssertEqual(inverse.y, point.y, accuracy: 1e-8)
+        }
+      }
+    }
+  }
   func testInteractionCoalescesTextAndPreservesCancelledRedo() throws {
     let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     defer { try? FileManager.default.removeItem(at: root) }

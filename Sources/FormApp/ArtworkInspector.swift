@@ -79,7 +79,7 @@ private struct ArtworkInput: View {
         draft = formatted()
         lastCommitted = draft
       }.onChange(of: value) { _, _ in
-        if !focused {
+        if !focused || draft == lastCommitted {
           draft = formatted()
           lastCommitted = draft
           error = false
@@ -139,6 +139,16 @@ struct ArtworkInspector: View {
             transformControls
             Divider()
             if e.kind == "text" || session.elements.allSatisfy({ $0.kind == "text" }) {
+              if session.elements.count == 1 {
+                Button(session.editingText ? "Finish text editing" : "Edit text on canvas") {
+                  if session.editingText {
+                    session.canvas?.finishText()
+                    session.canvas?.window?.makeFirstResponder(session.canvas)
+                  } else {
+                    session.canvas?.beginText(e)
+                  }
+                }.font(.system(size: 10))
+              }
               typographyControls
               Divider()
             }
@@ -160,7 +170,7 @@ struct ArtworkInspector: View {
                 }
               }
             }
-            if e.kind == "path" { pathControls }
+            if e.kind == "path" { pathControls.disabled(session.selection.count != 1) }
             if e.kind == "image" { imageControls(e) }
             Divider()
             HStack {
@@ -544,25 +554,66 @@ struct ArtworkInspector: View {
       Divider()
       SectionLabel("PATH NODES")
       HStack {
-        Button("Direct select") { session.tool = .direct }
-        Button("Corner") { session.canvas?.smoothNodes(false) }
-        Button("Smooth") { session.canvas?.smoothNodes(true) }
+        Button("Direct select") {
+          session.tool = .direct
+          session.canvas?.window?.makeFirstResponder(session.canvas)
+        }
+        Button("Corner") { session.editPath("corner") }.disabled(session.nodes.isEmpty)
+        Button("Smooth") { session.editPath("smooth") }.disabled(session.nodes.isEmpty)
       }.font(.system(size: 9))
       if let e, let path = e.path {
         Text(
           "\(path.contours.reduce(0){$0+$1.nodes.count}) nodes · \(session.nodes.count) selected"
         ).font(.system(size: 9)).foregroundStyle(Palette.secondary)
+        if let bounds = session.nodeBounds {
+          HStack(spacing: 10) {
+            ArtworkUnitField("Node X", value: bounds.x, unit: session.unit) { x in
+              session.transformNodes(.translation(x - bounds.x, 0))
+            }
+            ArtworkUnitField("Node Y", value: bounds.y, unit: session.unit) { y in
+              session.transformNodes(.translation(0, y - bounds.y))
+            }
+          }
+          if session.nodes.count > 1 {
+            HStack(spacing: 10) {
+              ArtworkUnitField("Span W", value: bounds.width, unit: session.unit) {
+                session.sizeNodes(width: $0)
+              }
+              ArtworkUnitField("Span H", value: bounds.height, unit: session.unit) {
+                session.sizeNodes(height: $0)
+              }
+            }
+            ScalarArtworkField("Rotate nodes by", value: 0, unit: "°") { angle in
+              session.transformNodes(
+                .translation(bounds.center.x, bounds.center.y).followed(by: .rotation(angle))
+                  .followed(by: .translation(-bounds.center.x, -bounds.center.y)))
+            }
+          }
+          HStack {
+            Button("Insert midpoint") { session.editPath("insert") }.disabled(
+              session.nodes.count != 1)
+            Button("Split") { session.editPath("split") }.disabled(session.nodes.count != 1)
+            Button("Join") { session.editPath("join") }.disabled(session.nodes.count != 2)
+          }.font(.system(size: 9))
+          HStack {
+            Button("Symmetric") { session.editPath("symmetric") }
+            Button("Delete nodes") { session.editPath("delete") }
+          }.font(.system(size: 9))
+        }
+        HStack {
+          Button("Reverse direction") { session.editPath("reverse") }
+          Button("Select all nodes") {
+            session.tool = .direct
+            session.nodes = Set(path.contours.flatMap(\.nodes).map(\.id))
+            session.canvas?.window?.makeFirstResponder(session.canvas)
+          }
+        }.font(.system(size: 9))
         Toggle(
           "Closed contours",
           isOn: Binding(
             get: { path.contours.allSatisfy(\.closed) },
             set: { value in
-              session.update { e in
-                if var p = e.path {
-                  for i in p.contours.indices { p.contours[i].closed = value }
-                  e.path = p
-                }
-              }
+              session.editPath(value ? "close" : "open")
             })
         ).font(.system(size: 10)).toggleStyle(.checkbox)
       }
@@ -695,7 +746,7 @@ private struct ArtworkFrameName: View {
         lastCommitted = value
       }
       .onChange(of: value) { _, name in
-        if !focused {
+        if !focused || draft == lastCommitted {
           draft = name
           lastCommitted = name
         }
