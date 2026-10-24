@@ -32,6 +32,7 @@ enum WorkspaceMode: String, CaseIterable {
   @Published var library: StudioLibrary
   var scene: TableSceneController?
   lazy var printing = PrintCoordinator(store: self)
+  lazy var artworkSession = ArtworkSession(store: self)
   private var saveWork: DispatchWorkItem?
   private var previewWork: DispatchWorkItem?
   private var noticeWork: DispatchWorkItem?
@@ -65,6 +66,17 @@ enum WorkspaceMode: String, CaseIterable {
       guard let self else { throw FormError.missing("FORM is closing.") }
       return try self.printing.call(name, args)
     }
+    engine.onGraphics = { [weak self] name, args in
+      guard let self else { throw FormError.missing("FORM is closing.") }
+      return try self.graphicsCall(name, args)
+    }
+    engine.onProjectWillChange = { [weak self] in self?.finishArtworkEditing() }
+  }
+  func finishArtworkEditing() {
+    NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
+    artworkSession.canvas?.finishText()
+    artworkSession.canvas?.finishPath()
+    NSApp.keyWindow?.makeFirstResponder(nil)
   }
   func startBridge() {
     do {
@@ -75,16 +87,20 @@ enum WorkspaceMode: String, CaseIterable {
             return
           }
           do {
+            let readOnly = [
+              "form_status", "form_list_projects", "form_get_project", "form_list_recipes",
+              "form_list_materials", "form_get_print_setup", "form_get_slice_status",
+              "form_list_filaments", "form_list_printers", "form_get_artwork",
+              "form_list_fonts", "form_font_features",
+            ].contains(name)
+            if !readOnly { self.finishArtworkEditing() }
             var result = try self.engine.call(name, arguments: args)
             if name == "form_status", var status = result as? [String: Any] {
               status["renderer"] = self.scene?.diagnostics ?? [:]
+              status["artwork_renderer"] = self.artworkSession.canvas?.diagnostics ?? [:]
               result = status
             }
-            if ![
-              "form_status", "form_list_projects", "form_get_project", "form_list_recipes",
-              "form_list_materials", "form_get_print_setup", "form_get_slice_status",
-              "form_list_filaments", "form_list_printers",
-            ].contains(name) {
+            if !readOnly {
               if ["form_create_project", "form_open_project"].contains(name) {
                 self.isolated = []
                 self.mode = .table
@@ -159,6 +175,7 @@ enum WorkspaceMode: String, CaseIterable {
     } catch { self.error = error.localizedDescription }
   }
   func home() {
+    finishArtworkEditing()
     save()
     capturePreview()
     showingHome = true
@@ -212,26 +229,46 @@ enum WorkspaceMode: String, CaseIterable {
     perform("form_update_object", args)
   }
   func duplicate(_ mode: String) {
+    if self.mode == .artwork {
+      if !artworkSession.selection.isEmpty { artworkSession.execute("duplicate") }
+      return
+    }
     guard let object = primary else { return }
     perform("form_duplicate_object", ["object_id": object.id.uuidString, "mode": mode])
     synchronizeScene()
     scene?.fitAll()
   }
   func deleteSelection() {
+    if mode == .artwork {
+      artworkSession.execute("delete")
+      return
+    }
     guard !selected.isEmpty else { return }
     perform("form_delete_objects", ["object_ids": selected.map { $0.id.uuidString }])
   }
   func undo() {
+    if mode == .artwork, artworkSession.canvas?.undoText() == true {
+      objectWillChange.send()
+      return
+    }
     engine.undo()
     changed()
     toast("Undone")
   }
   func redo() {
+    if mode == .artwork, artworkSession.canvas?.redoText() == true {
+      objectWillChange.send()
+      return
+    }
     engine.redo()
     changed()
     toast("Redone")
   }
   func group() {
+    if mode == .artwork {
+      artworkSession.execute("group")
+      return
+    }
     guard selected.count > 1 else { return }
     perform("form_group_objects", ["object_ids": selected.map { $0.id.uuidString }])
   }
@@ -263,6 +300,15 @@ enum WorkspaceMode: String, CaseIterable {
     case "artwork":
       showingHome = false
       mode = .artwork
+      artworkSession.reconcile()
+      if let raw = args["element_ids"] as? [String] {
+        let ids = Set(raw.compactMap(UUID.init(uuidString:)))
+        guard ids.count == raw.count, ids.isSubset(of: Set(artworkSession.art.elements.map(\.id)))
+        else { throw FormError.invalid("Unknown artwork selection.") }
+        artworkSession.choose(ids)
+        let parents = Set(artworkSession.elements.map(\.parentID))
+        artworkSession.scopeID = parents.count == 1 ? parents.first! : nil
+      }
     case "studio":
       showingHome = false
       mode = .studio

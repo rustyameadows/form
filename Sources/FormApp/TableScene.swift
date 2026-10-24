@@ -24,6 +24,8 @@ private struct RenderSignature: Equatable {
   let color: String?
   let artwork: Artwork?
   let asset: String?
+  let fontRevision: Int
+  let textureLimit: Int
 }
 
 @MainActor final class TableSceneController {
@@ -132,7 +134,7 @@ private struct RenderSignature: Equatable {
   }
   func sync(
     _ project: Project, selection: Set<UUID>, isolated: Set<UUID>, showGrid: Bool, studio: Bool,
-    preset: String, assets: URL
+    preset: String, assets: URL, textureLimit: Int = 2048
   ) {
     let started = CFAbsoluteTimeGetCurrent()
     defer { lastSyncMilliseconds = (CFAbsoluteTimeGetCurrent() - started) * 1000 }
@@ -157,11 +159,14 @@ private struct RenderSignature: Equatable {
     for object in project.objects {
       let fingerprint = RenderSignature(
         recipe: project.recipe(object.recipeID), parameters: object.parameters,
-        material: project.material(object.materialID), color: object.color, artwork: object.artwork,
-        asset: object.asset)
+        material: project.material(object.materialID), color: object.color,
+        artwork: object.artwork?.renderDefinition,
+        asset: object.asset, fontRevision: object.artwork == nil ? 0 : GeometryFactory.fontRevision,
+        textureLimit: textureLimit)
       if nodes[object.id] == nil || fingerprints[object.id] != fingerprint {
         nodes[object.id]?.removeFromParentNode()
-        let node = GeometryFactory.object(object, project: project, assets: assets)
+        let node = GeometryFactory.object(
+          object, project: project, assets: assets, textureLimit: textureLimit)
         geometryBuilds += 1
         node.name = "object:\(object.id.uuidString)"
         nodes[object.id] = node
@@ -537,10 +542,15 @@ private struct RenderSignature: Equatable {
 }
 
 @MainActor enum GeometryFactory {
+  private(set) static var fontRevision = 0
+  static func invalidateFontResources() {
+    cache.removeAllObjects()
+    fontRevision += 1
+  }
   private static let cache: NSCache<NSString, SCNNode> = {
     let cache = NSCache<NSString, SCNNode>()
     cache.countLimit = 80
-    cache.totalCostLimit = 24_000_000
+    cache.totalCostLimit = 64_000_000
     return cache
   }()
   private static var surfaceImages: [String: NSImage] = [:]
@@ -606,7 +616,9 @@ private struct RenderSignature: Equatable {
         chamferRadius: mm(min(corner, width / 2, height / 2, depth / 2))), material,
       at: v(x / 100, y / 100, z / 100))
   }
-  static func object(_ object: ProductObject, project: Project, assets: URL) -> SCNNode {
+  static func object(
+    _ object: ProductObject, project: Project, assets: URL, textureLimit: Int = 2048
+  ) -> SCNNode {
     var canonical = object
     let neutral = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
     canonical.id = neutral
@@ -618,12 +630,14 @@ private struct RenderSignature: Equatable {
     canonical.rotation = 0
     canonical.relationship = ""
     canonical.locked = false
+    canonical.artwork = canonical.artwork?.renderDefinition
     var signature = (try? JSONEncoder.form.encode(canonical)) ?? Data()
     signature.append((try? JSONEncoder.form.encode(project.material(object.materialID))) ?? Data())
     if let recipe = project.recipe(object.recipeID) {
       signature.append((try? JSONEncoder.form.encode(recipe)) ?? Data())
     }
     signature.append(Data(assets.path.utf8))
+    signature.append(Data("texture-limit:\(textureLimit)".utf8))
     let cacheKey =
       SHA256.hash(data: signature).map { String(format: "%02x", $0) }.joined() as NSString
     if let cached = cache.object(forKey: cacheKey) { return cached.clone() }
@@ -686,7 +700,9 @@ private struct RenderSignature: Equatable {
       root.addChildNode(box(0.8, h, depth, mat, x: -width / 2 + 0.4, y: h / 2))
       if let artwork = object.artwork {
         root.addChildNode(
-          artworkPlane(artwork, width: width, depth: depth, y: h + 0.03, assets: assets))
+          artworkPlane(
+            artwork, width: width, depth: depth, y: h + 0.03, assets: assets,
+            textureLimit: textureLimit))
       }
     case "sleeve":
       let width = object["width"]
@@ -707,7 +723,7 @@ private struct RenderSignature: Equatable {
         if i == 1, let artwork = object.artwork {
           let art = artworkPlane(
             artwork, width: panelWidth, depth: depth, y: -stock / 2 - 0.04, assets: assets,
-            underside: true)
+            underside: true, textureLimit: textureLimit)
           art.position.x = CGFloat(panelWidth / 200)
           hinge.addChildNode(art)
         }
@@ -803,20 +819,38 @@ private struct RenderSignature: Equatable {
       let top = Double(root.boundingBox.max.y) * 100 + 0.04
       root.addChildNode(
         artworkPlane(
-          artwork, width: object["width"], depth: object["depth"], y: top, assets: assets))
+          artwork, width: object["width"], depth: object["depth"], y: top, assets: assets,
+          textureLimit: textureLimit))
     }
-    cache.setObject(
-      root.clone(), forKey: cacheKey, cost: object.artwork == nil ? 30_000 : 2_000_000)
+    var imageBytes = 0
+    var counted = Set<ObjectIdentifier>()
+    func countImages(_ node: SCNNode) {
+      for material in node.geometry?.materials ?? [] {
+        if let image = material.diffuse.contents as? NSImage,
+          counted.insert(ObjectIdentifier(image)).inserted
+        {
+          let pixels =
+            image.representations.map { $0.pixelsWide * $0.pixelsHigh }.max()
+            ?? Int(image.size.width * image.size.height)
+          // Account for the bitmap and a corresponding GPU texture.
+          imageBytes += pixels * 8
+        }
+      }
+    }
+    countImages(root)
+    root.enumerateChildNodes { node, _ in countImages(node) }
+    cache.setObject(root.clone(), forKey: cacheKey, cost: max(30_000, imageBytes))
     return root
   }
   static func artworkPlane(
     _ artwork: Artwork, width: Double, depth: Double, y: Double, assets: URL,
-    underside: Bool = false
+    underside: Bool = false, textureLimit: Int = 2048
   ) -> SCNNode {
     let material = SCNMaterial()
     material.lightingModel = .physicallyBased
     material.diffuse.contents = ArtworkDrawing.image(
-      artwork, width: width, height: depth, assets: assets)
+      artwork, width: width, height: depth, assets: assets,
+      pixelsPerMM: min(5, Double(textureLimit) / max(width, depth)))
     material.roughness.contents = 0.88
     material.isDoubleSided = true
     if underside {

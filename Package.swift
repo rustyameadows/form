@@ -8,12 +8,14 @@ let package = Package(
     .executable(name: "Form", targets: ["FormApp"]),
     .executable(name: "form-mcp", targets: ["FormMCP"]),
     .library(name: "FormCore", targets: ["FormCore"]),
+    .library(name: "FormGraphics", targets: ["FormGraphics"]),
   ],
   targets: [
     .target(name: "FormCore"),
-    .executableTarget(name: "FormApp", dependencies: ["FormCore"]),
+    .target(name: "FormGraphics", dependencies: ["FormCore"]),
+    .executableTarget(name: "FormApp", dependencies: ["FormCore", "FormGraphics"]),
     .executableTarget(name: "FormMCP", dependencies: ["FormCore"]),
-    .testTarget(name: "FormCoreTests", dependencies: ["FormCore"]),
+    .testTarget(name: "FormCoreTests", dependencies: ["FormCore", "FormGraphics"]),
   ],
   swiftLanguageModes: [.v5]
 )

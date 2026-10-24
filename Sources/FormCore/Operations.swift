@@ -11,11 +11,17 @@ public final class OperationEngine {
   public var onView: ((String, [String: Any]) throws -> Any)?
   public var onExport: ((String, [String: Any]) throws -> Any)?
   public var onPrint: ((String, [String: Any]) throws -> Any)?
+  public var onGraphics: ((String, [String: Any]) throws -> Any)?
+  public var onProjectWillChange: (() -> Void)?
+  private var interaction: String?
+  private var interactionSnapshot: (project: Project, undo: [Project], redo: [Project])?
   private var lastCoalesce: String?
   private var lastEdit = Date.distantPast
   public init(repository: ProjectRepository) { self.repository = repository }
 
   public func open(_ id: UUID) throws {
+    onProjectWillChange?()
+    endInteraction()
     try flush()
     project = try repository.load(id)
     selection = []
@@ -28,11 +34,14 @@ public final class OperationEngine {
     _ label: String, source: String = "Studio", coalescing: String? = nil,
     _ body: (inout Project) throws -> Void
   ) throws {
+    if let interaction, interaction != coalescing { endInteraction() }
     guard var value = project else { throw FormError.missing("Open or create a project first.") }
     let before = value
     try body(&value)
+    value.schemaVersion = value.minimumSchemaVersion
     guard before != value else { return }
-    if coalescing == nil || coalescing != lastCoalesce || Date().timeIntervalSince(lastEdit) > 0.65
+    if coalescing == nil || coalescing != lastCoalesce
+      || (interaction != coalescing && Date().timeIntervalSince(lastEdit) > 0.65)
     {
       undoStack.append(before)
       if undoStack.count > 80 { undoStack.removeFirst() }
@@ -46,13 +55,41 @@ public final class OperationEngine {
     project = value
   }
   public func undo() {
+    endInteraction()
     guard let previous = undoStack.popLast(), let current = project else { return }
     redoStack.append(current)
     project = previous
     selection = selection.intersection(Set(previous.objects.map(\.id)))
     lastCoalesce = nil
   }
+  public func beginInteraction(_ key: String) {
+    guard interaction != key else { return }
+    endInteraction()
+    interaction = key
+    if let project {
+      interactionSnapshot = (project, undoStack, redoStack)
+    }
+    lastCoalesce = nil
+  }
+  public func endInteraction() {
+    if let snapshot = interactionSnapshot, var value = project {
+      // Native text undo and cancelled drags can return to the exact starting design.
+      // Remove their transient history entry and preserve any pre-existing redo branch.
+      value.history = snapshot.project.history
+      value.updatedAt = snapshot.project.updatedAt
+      value.schemaVersion = snapshot.project.schemaVersion
+      if value == snapshot.project {
+        project = snapshot.project
+        undoStack = snapshot.undo
+        redoStack = snapshot.redo
+      }
+    }
+    interaction = nil
+    interactionSnapshot = nil
+    lastCoalesce = nil
+  }
   public func redo() {
+    endInteraction()
     guard let next = redoStack.popLast(), let current = project else { return }
     undoStack.append(current)
     project = next
@@ -98,11 +135,13 @@ public final class OperationEngine {
       ]
     case "form_list_projects": return try jsonObject(repository.list())
     case "form_create_project":
-      try flush()
       let title = try string("name")
       guard title.count <= 160 else {
         throw FormError.invalid("Project names must be 160 characters or fewer.")
       }
+      onProjectWillChange?()
+      endInteraction()
+      try flush()
       var new = a["template"] as? String == "cyanotype" ? Samples.cyanotype() : Project(name: title)
       new.name = title
       new.conversationReference = a["conversation_reference"] as? String
@@ -122,6 +161,31 @@ public final class OperationEngine {
       try open(id)
       return try jsonObject(requireProject())
     case "form_get_project": return try jsonObject(requireProject())
+    case "form_get_artwork":
+      let id = try objectID()
+      guard let object = project?.objects.first(where: { $0.id == id }) else {
+        throw FormError.missing("Object not found.")
+      }
+      return try jsonObject(object.artwork ?? Artwork(background: "#FFFFFF"))
+    case "form_edit_artwork":
+      let id = try objectID()
+      let command = try string("command")
+      let ids = a["element_ids"] == nil ? Set<UUID>() : try idsArgument(a["element_ids"])
+      var selected = Set<UUID>()
+      try edit(
+        "Artwork: \(command)", source: source,
+        coalescing: source == "Studio" && interaction == "artwork-\(id)" ? "artwork-\(id)" : nil
+      ) { p in
+        guard let object = p.objects.first(where: { $0.id == id }) else {
+          throw FormError.missing("Object not found.")
+        }
+        var art = object.artwork ?? Artwork(background: "#FFFFFF")
+        selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
+        for i in p.objects.indices where p.objects[i].designID == object.designID {
+          p.objects[i].artwork = art
+        }
+      }
+      return ["selected_elements": selected.map(\.uuidString)]
     case "form_list_recipes": return try jsonObject(Recipe.builtins + (project?.recipes ?? []))
     case "form_list_materials":
       return try jsonObject(
@@ -320,6 +384,7 @@ public final class OperationEngine {
       let allowed = Set([
         "form_add_object", "form_update_object", "form_duplicate_object", "form_group_objects",
         "form_set_artwork", "form_add_note", "form_create_recipe", "form_delete_objects",
+        "form_edit_artwork",
       ])
       guard operations.allSatisfy({ allowed.contains($0["name"] as? String ?? "") }) else {
         throw FormError.invalid(
@@ -350,6 +415,7 @@ public final class OperationEngine {
       }
     default:
       if MCP.printToolNames.contains(name), let onPrint { return try onPrint(name, a) }
+      if MCP.graphicsToolNames.contains(name), let onGraphics { return try onGraphics(name, a) }
       throw FormError.invalid("Unknown tool '\(name)'.")
     }
   }
@@ -384,11 +450,13 @@ public func validateColor(_ color: String) throws {
 }
 public func validateArtwork(_ artwork: Artwork) throws {
   try validateColor(artwork.background)
-  guard artwork.elements.count <= 500, artwork.bleed.isFinite, (0...25).contains(artwork.bleed)
-  else { throw FormError.invalid("Artwork supports up to 500 elements and 0–25 mm bleed.") }
+  guard artwork.elements.count <= 5000, artwork.bleed.isFinite, (0...25).contains(artwork.bleed)
+  else { throw FormError.invalid("Artwork supports up to 5000 elements and 0–25 mm bleed.") }
   for element in artwork.elements {
     try validateColor(element.color)
-    guard ["text", "rectangle", "ellipse", "image", "line"].contains(element.kind),
+    guard
+      ["text", "rectangle", "ellipse", "image", "line", "polygon", "star", "path", "group"]
+        .contains(element.kind),
       [element.x, element.y, element.width, element.height, element.fontSize].allSatisfy({
         $0.isFinite && abs($0) <= 10000
       }), element.width > 0, element.height > 0, element.fontSize > 0, element.text.count <= 10000
@@ -399,6 +467,7 @@ public func validateArtwork(_ artwork: Artwork) throws {
       }
     }
   }
+  try validateArtworkDetails(artwork)
 }
 public func decodeRecipe(_ value: [String: Any]) throws -> Recipe {
   guard let id = value["id"] as? String,

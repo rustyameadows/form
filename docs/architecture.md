@@ -9,6 +9,7 @@ The deliberate change to the original brief is agent delivery. **Codex is the cr
 | Module | Responsibility |
 | --- | --- |
 | `FormCore` | Codable product graph, dimensions, parameter schemas, materials, artwork, recipes, arithmetic expressions, persistence, undo/redo, atomic edits, MCP discovery and protocol, local transport |
+| `FormGraphics` | Core Text shaping/font discovery, Bézier geometry, shared native artwork drawing, shaped outlines, physical SVG output, bounded text/image caches |
 | `FormApp` | SwiftUI shell, AppKit pointer and artwork interaction, Metal-backed SceneKit renderer, contextual controls, previews, studio, native file panels, PDF/SVG/PNG exports |
 | `FormMCP` | MCP over stdio; forwards tool calls to the running app over a user-owned Unix socket |
 
@@ -45,15 +46,19 @@ By default, the library lives in `~/Library/Application Support/FORM`. Each proj
 
 Object revisions are immutable. Saving writes changed resources before atomically publishing the manifest. Unchanged objects are not rewritten. Older object revisions remain in the package; garbage collection and durable cross-session undo are future work. Imported references are copied into `Assets`, so reopening does not depend on the original Downloads file. The shared `Studio.json` stores materials, equipment, filament inventory, printer metadata, and an optional Orca path. Printer codes stay in Keychain. Custom material definitions are also carried in projects.
 
+Extended vector/typography artwork requires schema 2, recorded in the manifest and project. Schema-1 documents load with optional-field defaults; a schema-1-only reader rejects schema 2. Canvas settings, guide placement, names, locks, and hidden editable sources are excluded from physical artwork signatures, avoiding unnecessary 3D texture invalidation.
+
 `FORM_LIBRARY_PATH` selects a separate library for development or tests. `FORM_SOCKET_PATH` selects a separate local bridge. These settings require no change to a project document.
 
 ## Artwork and production
 
-Artwork is an ordered list of text, rectangle, ellipse, line, and imported image elements in millimeter coordinates. The native editor, 3D face textures, and PDF renderer consume that definition. It supports drawing, positioning, exact dimensions, text editing, layer order, colors, bleed guides, and imported imagery. Independent artwork sheets can sit on the Table.
+Artwork is a validated hierarchy of text, vector shapes/paths, groups, masks, and imported images in millimeter coordinates. Affine transforms preserve nested group geometry. The AppKit canvas uses a magnifying scroll view, physical rulers/guides, direct handles, and native rich text. Core Text shapes in typographic points; rendering and outlines convert at the millimeter boundary. Shared font-metric decoration paths keep underlines and strikethroughs consistent between text and outlines. Cached text layouts exclude placement from their keys; image and geometry caches account for actual bitmap dimensions.
+
+Native character undo remains granular while editing. The domain engine groups the complete editing session into one step and removes cancelled/no-op interactions while preserving a prior redo branch. Project switches commit active text and numeric/name drafts before saving the old project. Agent mutations use the same boundary; inspection calls preserve editing focus.
 
 The sleeve recipe derives its assembled geometry and unfolded cut/score layout from the same width, height, spine, stock, tab, and fold parameters. PDF exports preserve physical page dimensions and include bleed/crop marks. SVG dielines preserve millimeter units and distinguish cut lines from scores. PNG renders are 3000 × 2000. Component summaries are JSON.
 
-This is a working foundation with a focused artwork editor and construction recipes. The expanded [2D specification](2d-design-typography-vector-spec.md) is governing scope. Its typography, nodes, booleans, masks, publication, and physical-integration features remain tracked in the [active implementation goal](implementation-goal.md), rather than being claimed as complete. General solid booleans, arbitrary CAD import, advanced manufacturing tolerances, collaboration, and photorealistic path tracing are also unfinished.
+The expanded [2D specification](2d-design-typography-vector-spec.md) remains governing scope. The [editor guide](2d-editor.md) records working controls and material gaps, including transformed inline text input, complete node operations, advanced typography, editable SVG import, publication, color management, and physical integration. General solid booleans, arbitrary CAD import, advanced manufacturing tolerances, collaboration, and photorealistic path tracing are also unfinished.
 
 ## Local slicing and printer status
 

@@ -8,6 +8,10 @@ public enum MCP {
     "form_get_slice_status", "form_cancel_slice", "form_list_filaments", "form_save_filament",
     "form_list_printers", "form_connect_printer",
   ]
+  public static let graphicsToolNames: Set<String> = [
+    "form_list_fonts", "form_font_features", "form_convert_to_paths", "form_boolean_artwork",
+    "form_export_artwork",
+  ]
   public static var tools: [[String: Any]] {
     let string: [String: Any] = ["type": "string"]
     let number: [String: Any] = ["type": "number"]
@@ -116,7 +120,7 @@ public enum MCP {
         ], required: ["recipe"]),
       tool(
         "form_set_artwork",
-        "Replace linked surface artwork. Artwork: background (#RRGGBB), bleed (mm), elements. Each element needs id (UUID), kind (text/rectangle/ellipse/line/image), x,y,width,height in mm, text,color,fontSize (points), optional asset. Origin is the upper-left of the printable face. The 3D material updates immediately.",
+        "Replace linked surface artwork. Artwork: background, bleed (mm), elements, optional unit/guides/gridSpacing/snapEnabled. Elements: id,kind (text/rectangle/ellipse/line/image/polygon/star/path/group), x,y,width,height in mm, text,color,fontSize in pt. Optional name,rotation,opacity,hidden,locked,parentID,stroke,gradient,path,typography,textRuns,productionRole. Typography preserves installed fontName, tracking, leading, alignment, variable axes/features, paragraphs and UTF-16 rich text ranges. The native editor and 3D material use the same definition.",
         [
           "object_id": objectID,
           "artwork": [
@@ -127,6 +131,50 @@ public enum MCP {
             ], "required": ["background", "bleed", "elements"],
           ],
         ], required: ["object_id", "artwork"]),
+      tool(
+        "form_get_artwork",
+        "Read a product surface or standalone artboard's complete editable artwork, hierarchy, typography, paths, guides, and physical units.",
+        ["object_id": objectID], required: ["object_id"], readOnly: true),
+      tool(
+        "form_edit_artwork",
+        "Apply a native artwork command: add/replace elements, delete, duplicate, group, ungroup, align, distribute, reorder, flip. Use complete element values for add/replace. Alignment modes: left/right/top/bottom/center_x/center_y/width/height; distribution: horizontal/vertical; order: front/back/forward/backward. Returns selected element IDs. All changes share native undo.",
+        [
+          "object_id": objectID, "command": ["type": "string", "enum": ArtworkCommands.names],
+          "element_ids": ["type": "array", "items": string],
+          "elements": ["type": "array", "items": ["type": "object"]], "mode": string,
+          "axis": string,
+        ], required: ["object_id", "command"]),
+      tool(
+        "form_list_fonts",
+        "Search installed Mac font families and their actual faces. No font upload is required.",
+        ["query": string], readOnly: true),
+      tool(
+        "form_font_features",
+        "Inspect the selected installed face's actual OpenType feature selectors and variable-font axes/ranges. Missing fonts are reported explicitly.",
+        ["font_name": string], required: ["font_name"], readOnly: true),
+      tool(
+        "form_convert_to_paths",
+        "Convert selected shaped text or strokes to editable Bézier paths. Text uses Core Text glyph runs, ligatures, kerning, and variations. Original source elements are retained hidden for recovery.",
+        [
+          "object_id": objectID, "element_ids": ["type": "array", "items": string],
+          "mode": ["type": "string", "enum": ["text", "stroke"]],
+        ], required: ["object_id", "element_ids"]),
+      tool(
+        "form_boolean_artwork",
+        "Combine compatible vector shapes into ordinary editable paths using union, subtract, intersect, or exclude. Source shapes are preserved hidden.",
+        [
+          "object_id": objectID, "element_ids": ["type": "array", "items": string],
+          "operation": ["type": "string", "enum": ["union", "subtract", "intersect", "exclude"]],
+        ], required: ["object_id", "element_ids", "operation"]),
+      tool(
+        "form_export_artwork",
+        "Export the selected artboard/product face as actual-size SVG/PDF or PNG/JPEG at a chosen DPI. Optional element_ids exports a selection. SVG text can be converted to portable outlines.",
+        [
+          "object_id": objectID,
+          "format": ["type": "string", "enum": ["svg", "pdf", "png", "jpeg"]], "path": string,
+          "dpi": number, "outline_text": ["type": "boolean"],
+          "element_ids": ["type": "array", "items": string],
+        ], required: ["object_id", "format"]),
       tool(
         "form_import_reference",
         "Import a local image into the project package and place it on the Table. Assets remain available after reopening.",
@@ -145,7 +193,7 @@ public enum MCP {
               "perspective", "overhead", "front", "fit", "focus", "isolate", "show_all", "home",
               "table", "artwork", "studio", "print_bed", "print_object",
             ],
-          ], "object_id": objectID,
+          ], "object_id": objectID, "element_ids": ["type": "array", "items": string],
         ], required: ["view"]),
       tool(
         "form_export",

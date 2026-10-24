@@ -45,7 +45,7 @@ public final class ProjectRepository {
   public func load(url: URL) throws -> Project {
     let manifest = try JSONDecoder.form.decode(
       Manifest.self, from: Data(contentsOf: url.appendingPathComponent("Manifest.json")))
-    guard manifest.project.schemaVersion == 1 else {
+    guard (1...2).contains(manifest.project.schemaVersion) else {
       throw FormError.invalid("This project uses a newer file format. Update FORM to open it.")
     }
     var project = manifest.project
@@ -82,6 +82,7 @@ public final class ProjectRepository {
       references.append(.init(id: object.id, file: filename))
     }
     var metadata = project
+    metadata.schemaVersion = project.minimumSchemaVersion
     metadata.objects = []
     // Immutable object revisions are written first; publishing the manifest is one atomic operation.
     try JSONEncoder.form.encode(Manifest(project: metadata, objects: references)).write(

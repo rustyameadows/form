@@ -25,6 +25,8 @@ The goal service currently permits status changes but cannot rewrite the text of
 
 ### B. Credible professional 2D canvas — specification Phase 1
 
+Current progress: the native canvas, physical frames, typography, vector operations, and shared renderer are implemented. [Editor capabilities and gaps](2d-editor.md) and [validation evidence](validation.md) distinguish working features from unfinished acceptance requirements; these broad checkpoint items remain open until their complete scope is demonstrated.
+
 - [ ] Independent artwork documents and multiple physical artboards/pages; unit conversion for mm, cm, inches, and points; presets and exact custom dimensions.
 - [ ] Smooth pan, pinch/keyboard zoom, sharp rendering, rulers, numeric/draggable guides, grid, smart snapping, and configurable nudges.
 - [ ] Selection, multiple selection, resize, rotate, flip, aspect locking, transform origin, alignment, distribution, matching size, and exact transforms.

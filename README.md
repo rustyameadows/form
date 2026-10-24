@@ -27,7 +27,8 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **The Table:** A continuous Metal-backed 3D workspace with physical scale, soft shadows, image references, material swatches, selection, movement, grouping, duplication, and persistent camera state.
 - **Contextual controls:** Floating native parameter and material inspectors. Focus or isolate a selection without leaving the canvas.
 - **Editable constructions:** Paper stacks, booklets, folding sleeves, lamps, hollow vessels, boxes, cylinders, extruded profiles, and independent artwork sheets. Custom agent-defined recipes get the same native controls.
-- **Linked artwork:** Text, shapes, lines, images, exact positioning, colors, layer order, bleed guides, and live 3D face updates. A folding sleeve exposes its unfolded cut/score dieline.
+- **Native artwork canvas:** Multiple physical frames, rulers/guides/grid/snapping, nested layers, exact transforms, Bézier paths, vector booleans, gradients, strokes, masks, and live 3D face updates. A folding sleeve exposes its unfolded cut/score dieline.
+- **Typography:** Installed-font browser, native selected-character editing, real OpenType features and variable axes, Core Text shaping, and editable glyph outlines with retained source text. See the [editor guide and remaining scope](docs/2d-editor.md).
 - **Iterations and variants:** Independent design iterations or linked parameter/artwork variants with their own materials and placement.
 - **Studio Library:** Persistent materials and equipment profiles, separate from individual projects.
 - **Print preparation:** `⌘P` opens a dedicated physical print bed with object/component selection, orientation, scale, filament, layer height, walls, infill, supports, brim, and actual sliced layer previews.
@@ -49,7 +50,7 @@ Then describe an object in Codex:
 
 > Create an orange table lamp, about 350 mm tall, with editable shade diameter, shade height, stem diameter, and base width. Place a sage variant beside it.
 
-The server exposes 31 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
+The server exposes 38 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, fonts, vector operations, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
 
 See [Create with Codex](docs/mcp.md) for setup, schemas, a custom object example, and direct CLI invocation.
 
@@ -89,6 +90,8 @@ See [Printing architecture, setup, and research](docs/printing.md) for profiles,
 ```sh
 bash scripts/test.sh
 python3 scripts/smoke_mcp.py  # Requires the running app; creates a validation project
+python3 scripts/smoke_artwork.py # Typography/vector composition and physical exports
+python3 scripts/benchmark_artwork.py # 600-element native canvas performance
 python3 scripts/smoke_print.py # Optional engine; local cube and hollow-shade slices
 ```
 
@@ -100,12 +103,13 @@ FORM_LIBRARY_PATH="$PWD/.local/Library" build/FORM.app/Contents/MacOS/FORM
 
 `FORM_SOCKET_PATH` can isolate multiple development instances. The native view redraws on demand, geometry updates are scoped to changed objects, and geometry/texture caches are bounded.
 
-This foundation has a focused artwork editor and procedural construction system. Professional typography/vector editing, general CAD booleans/import, collaboration, embedded agent UI, and photorealistic path tracing are unfinished. The expanded goal tracks the requested 2D capabilities through their demonstration and acceptance criteria. Live P1S status still requires verification with the physical printer's connection details.
+This build has a native typography/vector editor and procedural construction system. The full professional 2D specification, general CAD booleans/import, collaboration, embedded agent UI, and photorealistic path tracing remain unfinished. The expanded goal tracks the requested 2D capabilities through their demonstration and acceptance criteria. Live P1S status still requires verification with the physical printer's connection details.
 
 ## Documentation
 
 - [Initial product brief · Version 0.1](docs/product-brief.md)
 - [2D Design, Typography & Vector Editing · guiding specification](docs/2d-design-typography-vector-spec.md)
+- [Native artwork editor · controls, MCP, and remaining work](docs/2d-editor.md)
 - [Textiles, Apparel & Merchandise · next feature specification](docs/textiles-apparel-merchandise-spec.md)
 - [Queued feature push · NASA bomber jacket demonstration](docs/next-feature-push.md)
 - [Expanded implementation goal and completion checklist](docs/implementation-goal.md)

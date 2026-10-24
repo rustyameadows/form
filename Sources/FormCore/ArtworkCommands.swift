@@ -1,0 +1,198 @@
+import Foundation
+
+/// The native editor and MCP use these same deterministic document commands.
+public enum ArtworkCommands {
+  public static let names = [
+    "add", "replace", "delete", "duplicate", "group", "ungroup", "align", "distribute", "reorder",
+    "flip",
+  ]
+  @discardableResult public static func apply(
+    _ command: String, to art: inout Artwork, ids: Set<UUID> = [], arguments: [String: Any] = [:]
+  ) throws -> Set<UUID> {
+    var result = art
+    var selection = ids
+    let roots = art.selectionRoots(ids)
+    guard ids.isSubset(of: Set(art.elements.map(\.id))) else {
+      throw FormError.invalid("Unknown artwork selection.")
+    }
+    if !["add", "replace"].contains(command), roots.contains(where: { art.isLocked($0) }) {
+      throw FormError.invalid("Unlock the selected layers before editing them.")
+    }
+    switch command {
+    case "add", "replace":
+      guard let raw = arguments["elements"] as? [[String: Any]], !raw.isEmpty else {
+        throw FormError.invalid("Provide an elements array.")
+      }
+      let values = try JSONDecoder().decode(
+        [ArtworkElement].self, from: JSONSerialization.data(withJSONObject: raw))
+      if command == "replace" {
+        for e in values {
+          guard let i = result.elements.firstIndex(where: { $0.id == e.id }) else {
+            throw FormError.missing("Artwork element not found.")
+          }
+          result.elements[i] = e
+        }
+      } else {
+        result.elements += values
+      }
+      selection = Set(values.map(\.id))
+    case "delete":
+      let all = art.descendants(of: ids)
+      result.elements.removeAll { all.contains($0.id) }
+      selection = []
+      for i in result.elements.indices where result.elements[i].clipID.map(all.contains) == true {
+        result.elements[i].clipID = nil
+      }
+    case "duplicate":
+      let all = art.descendants(of: ids)
+      let mapping = Dictionary(uniqueKeysWithValues: all.map { ($0, UUID()) })
+      for var element in art.elements where all.contains(element.id) {
+        let original = element.id
+        element.id = mapping[original]!
+        if let parent = element.parentID, let id = mapping[parent] { element.parentID = id }
+        if let clip = element.clipID, let id = mapping[clip] { element.clipID = id }
+        if roots.contains(where: { $0.id == original }) {
+          element.x += 10
+          element.y += 10
+        }
+        result.elements.append(element)
+      }
+      selection = Set(roots.compactMap { mapping[$0.id] })
+    case "group":
+      guard roots.count >= 2, Set(roots.map(\.parentID)).count == 1 else {
+        throw FormError.invalid("Select at least two objects in the same group.")
+      }
+      let bounds = roots.map { localBounds($0) }.dropFirst().reduce(localBounds(roots[0])) {
+        $0.union($1)
+      }
+      var group = ArtworkElement(
+        kind: "group", x: bounds.x, y: bounds.y, width: max(bounds.width, 0.01),
+        height: max(bounds.height, 0.01))
+      group.name = "Group"
+      group.parentID = roots[0].parentID
+      group.contentSize = .init(group.width, group.height)
+      for i in result.elements.indices
+      where roots.contains(where: { $0.id == result.elements[i].id }) {
+        result.elements[i].affine = Affine2.translation(-bounds.x, -bounds.y).followed(
+          by: result.elements[i].affine ?? .init())
+        result.elements[i].parentID = group.id
+      }
+      result.elements.append(group)
+      selection = [group.id]
+    case "ungroup":
+      var ungrouped = Set<UUID>()
+      for group in roots where group.kind == "group" {
+        for i in result.elements.indices where result.elements[i].parentID == group.id {
+          result.elements[i].affine = group.localTransform.followed(
+            by: result.elements[i].affine ?? .init())
+          result.elements[i].parentID = group.parentID
+          ungrouped.insert(result.elements[i].id)
+        }
+        result.elements.removeAll { $0.id == group.id }
+      }
+      selection = ungrouped
+    case "align", "distribute":
+      guard roots.count >= 2, Set(roots.map(\.parentID)).count == 1 else {
+        throw FormError.invalid("Select two or more objects in the same group.")
+      }
+      let mode = arguments["mode"] as? String ?? "left"
+      let bounds = roots.map(localBounds).dropFirst().reduce(localBounds(roots[0])) { $0.union($1) }
+      if command == "align" {
+        guard
+          ["left", "right", "top", "bottom", "center_x", "center_y", "width", "height"].contains(
+            mode)
+        else { throw FormError.invalid("Unknown alignment mode.") }
+        for root in roots {
+          let b = localBounds(root)
+          let i = result.elements.firstIndex { $0.id == root.id }!
+          var dx = 0.0
+          var dy = 0.0
+          switch mode {
+          case "left": dx = bounds.x - b.x
+          case "right": dx = bounds.maxX - b.maxX
+          case "top": dy = bounds.y - b.y
+          case "bottom": dy = bounds.maxY - b.maxY
+          case "center_x": dx = bounds.center.x - b.center.x
+          case "center_y": dy = bounds.center.y - b.center.y
+          case "width": result.elements[i].width = roots[0].width
+          case "height": result.elements[i].height = roots[0].height
+          default: break
+          }
+          translate(&result.elements[i], dx: dx, dy: dy)
+        }
+      } else {
+        guard roots.count >= 3, ["horizontal", "vertical"].contains(mode) else {
+          throw FormError.invalid("Distribute three or more objects horizontally or vertically.")
+        }
+        let horizontal = mode == "horizontal"
+        let sorted = roots.sorted {
+          horizontal ? localBounds($0).x < localBounds($1).x : localBounds($0).y < localBounds($1).y
+        }
+        let total = sorted.reduce(0.0) {
+          $0 + (horizontal ? localBounds($1).width : localBounds($1).height)
+        }
+        let gap = ((horizontal ? bounds.width : bounds.height) - total) / Double(sorted.count - 1)
+        var next = horizontal ? bounds.x : bounds.y
+        for root in sorted {
+          let b = localBounds(root)
+          let i = result.elements.firstIndex { $0.id == root.id }!
+          translate(
+            &result.elements[i], dx: horizontal ? next - b.x : 0, dy: horizontal ? 0 : next - b.y)
+          next += (horizontal ? b.width : b.height) + gap
+        }
+      }
+    case "reorder":
+      let mode = arguments["mode"] as? String ?? "front"
+      guard ["front", "back", "forward", "backward"].contains(mode) else {
+        throw FormError.invalid("Unknown layer order.")
+      }
+      if mode == "front" || mode == "back" {
+        let selected = result.elements.filter { ids.contains($0.id) }
+        result.elements.removeAll { ids.contains($0.id) }
+        if mode == "front" {
+          result.elements += selected
+        } else {
+          result.elements.insert(contentsOf: selected, at: 0)
+        }
+      } else {
+        let forward = mode == "forward"
+        let indices =
+          forward ? Array(result.elements.indices.reversed()) : Array(result.elements.indices)
+        for i in indices where ids.contains(result.elements[i].id) {
+          let j = i + (forward ? 1 : -1)
+          if result.elements.indices.contains(j), !ids.contains(result.elements[j].id),
+            result.elements[i].parentID == result.elements[j].parentID
+          {
+            result.elements.swapAt(i, j)
+          }
+        }
+      }
+    case "flip":
+      for i in result.elements.indices where ids.contains(result.elements[i].id) {
+        if arguments["axis"] as? String == "y" {
+          result.elements[i].flipY = !(result.elements[i].flipY ?? false)
+        } else {
+          result.elements[i].flipX = !(result.elements[i].flipX ?? false)
+        }
+      }
+    default: throw FormError.invalid("Unknown artwork command.")
+    }
+    try validateArtwork(result)
+    art = result
+    return selection
+  }
+  public static func localBounds(_ e: ArtworkElement) -> Rect2 {
+    e.localTransform.bounds(
+      .init(
+        0, 0, e.kind == "group" ? e.contentSize?.x ?? e.width : e.width,
+        e.kind == "group" ? e.contentSize?.y ?? e.height : e.height))
+  }
+  public static func translate(_ e: inout ArtworkElement, dx: Double, dy: Double) {
+    if let affine = e.affine {
+      e.affine = Affine2.translation(dx, dy).followed(by: affine)
+    } else {
+      e.x += dx
+      e.y += dy
+    }
+  }
+}

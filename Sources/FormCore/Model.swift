@@ -80,6 +80,27 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var color: String
   public var fontSize: Double
   public var asset: String?
+  public var name: String?
+  public var rotation: Double?
+  public var opacity: Double?
+  public var hidden: Bool?
+  public var locked: Bool?
+  public var parentID: UUID?
+  public var contentSize: Point2?
+  public var affine: Affine2?
+  public var flipX: Bool?
+  public var flipY: Bool?
+  public var fillEnabled: Bool?
+  public var stroke: ArtworkStroke?
+  public var gradient: ArtworkGradient?
+  public var cornerRadius: Double?
+  public var sides: Int?
+  public var starInset: Double?
+  public var path: VectorPath?
+  public var typography: Typography?
+  public var textRuns: [TextSpan]?
+  public var productionRole: String?
+  public var clipID: UUID?
   public init(
     kind: String, x: Double, y: Double, width: Double = 60, height: Double = 30, text: String = "",
     color: String = "#FFFFFF", fontSize: Double = 14, asset: String? = nil
@@ -100,6 +121,14 @@ public struct Artwork: Codable, Equatable, Sendable {
   public var background: String
   public var elements: [ArtworkElement]
   public var bleed: Double
+  public var unit: PhysicalUnit?
+  public var guides: [ArtworkGuide]?
+  public var gridSpacing: Double?
+  public var showGrid: Bool?
+  public var snapEnabled: Bool?
+  public var nudge: Double?
+  public var showGuides: Bool?
+  public var canvasPosition: Point2?
   public init(background: String = "#224B9B", elements: [ArtworkElement] = [], bleed: Double = 3) {
     self.background = background
     self.elements = elements
@@ -311,6 +340,9 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var unit: String = "mm"
   public var conversationReference: String?
   public var printSetups: [String: PrintConfiguration]?
+  public var minimumSchemaVersion: Int {
+    max(schemaVersion, objects.contains { $0.artwork?.usesExtendedFormat == true } ? 2 : 1)
+  }
   public init(name: String, subtitle: String = "A new place to make things.") {
     self.name = name
     self.subtitle = subtitle

@@ -1,5 +1,6 @@
 import AppKit
 import FormCore
+import FormGraphics
 import SwiftUI
 
 @main struct FormApplication: App {
@@ -33,9 +34,12 @@ import SwiftUI
       }
       CommandGroup(replacing: .undoRedo) {
         Button("Undo") { store.undo() }.keyboardShortcut("z").disabled(
-          store.engine.undoStack.isEmpty)
+          store.artworkSession.editingText
+            ? store.artworkSession.canvas?.canUndoText != true : store.engine.undoStack.isEmpty)
         Button("Redo") { store.redo() }.keyboardShortcut("z", modifiers: [.command, .shift])
-          .disabled(store.engine.redoStack.isEmpty)
+          .disabled(
+            store.artworkSession.editingText
+              ? store.artworkSession.canvas?.canRedoText != true : store.engine.redoStack.isEmpty)
       }
       CommandGroup(replacing: .printItem) {
         Button("Print…") { store.printing.open() }.keyboardShortcut("p").disabled(
@@ -50,17 +54,22 @@ import SwiftUI
         }
         Divider()
         Button("Duplicate as Iteration") { store.duplicate("iteration") }.keyboardShortcut("d")
-          .disabled(store.primary == nil)
+          .disabled(
+            store.mode == .artwork ? store.artworkSession.selection.isEmpty : store.primary == nil)
         Button("Create Linked Variant") { store.duplicate("variant") }.keyboardShortcut(
           "d", modifiers: [.command, .shift]
-        ).disabled(store.primary == nil)
+        ).disabled(
+          store.mode == .artwork ? store.artworkSession.selection.isEmpty : store.primary == nil)
         Button("Group Selection") { store.group() }.keyboardShortcut("g").disabled(
-          store.selected.count < 2)
+          store.mode == .artwork
+            ? store.artworkSession.selection.count < 2 : store.selected.count < 2)
         Button("Delete") { store.deleteSelection() }
           .disabled(store.selected.isEmpty)
       }
       CommandGroup(after: .toolbar) {
-        Button("Fit All Objects") { store.scene?.fitAll() }.keyboardShortcut("0")
+        Button("Fit All Objects") {
+          if store.mode == .artwork { store.artworkSession.fit() } else { store.scene?.fitAll() }
+        }.keyboardShortcut("0")
         Button("Focus Selection") { store.scene?.focusSelection() }
         Button(store.isolated.isEmpty ? "Isolate Selection" : "Show All Objects") {
           store.isolate()
@@ -70,6 +79,29 @@ import SwiftUI
         Button("Overhead") { store.scene?.preset("overhead") }
         Button("Front") { store.scene?.preset("front") }
         Toggle("Show Grid", isOn: $store.showGrid)
+      }
+      CommandMenu("Artwork") {
+        Button("New Artwork Frame") {
+          if store.project == nil { store.createProject() }
+          store.artworkSession.createFrame(width: 203.2, height: 254, name: "Untitled artwork")
+        }.keyboardShortcut("n", modifiers: [.command, .option])
+        Divider()
+        Button("Ungroup") { store.artworkSession.execute("ungroup") }.keyboardShortcut(
+          "g", modifiers: [.command, .shift]
+        ).disabled(store.mode != .artwork)
+        Button("Convert Text to Outlines") {
+          store.artworkSession.canvas?.finishText()
+          store.artworkSession.convert()
+        }.keyboardShortcut("o", modifiers: [.command, .shift]).disabled(store.mode != .artwork)
+        Button("Outline Stroke") { store.artworkSession.convert("stroke") }.disabled(
+          store.mode != .artwork)
+        Divider()
+        Button("Show / Hide Guides") {
+          store.artworkSession.mutate { $0.showGuides = !($0.showGuides ?? true) }
+        }.keyboardShortcut(";").disabled(store.mode != .artwork)
+        Button("Show / Hide Artwork Grid") {
+          store.artworkSession.mutate { $0.showGrid = !($0.showGrid ?? false) }
+        }.keyboardShortcut("'").disabled(store.mode != .artwork)
       }
       CommandMenu("Studio") {
         Button("Materials & Equipment") { store.showingLibrary = true }
@@ -89,6 +121,15 @@ import SwiftUI
 final class FormAppDelegate: NSObject, NSApplicationDelegate {
   weak var store: StudioStore?
   func applicationDidFinishLaunching(_ notification: Notification) {
+    NotificationCenter.default.addObserver(
+      forName: NSFont.fontSetChangedNotification, object: nil, queue: .main
+    ) { [weak self] _ in
+      Task { @MainActor in
+        TypographyEngine.invalidateFonts()
+        GeometryFactory.invalidateFontResources()
+        self?.store?.changed(save: false)
+      }
+    }
     NSApp.setActivationPolicy(.regular)
     NSApp.activate(ignoringOtherApps: true)
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in

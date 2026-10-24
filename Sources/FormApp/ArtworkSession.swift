@@ -1,0 +1,398 @@
+import AppKit
+import FormCore
+import FormGraphics
+import SwiftUI
+
+struct CanvasFrame: Identifiable {
+  var object: ProductObject
+  var rect: CGRect
+  var id: UUID { object.id }
+  var artwork: Artwork { object.artwork ?? .init(background: "#FFFFFF") }
+}
+
+enum ArtworkTool: String, CaseIterable {
+  case select, direct, text, rectangle, ellipse, line, polygon, star, pen, hand, eyedropper
+  var symbol: String {
+    switch self {
+    case .select: return "cursorarrow"
+    case .direct: return "cursorarrow.and.square.on.square.dashed"
+    case .text: return "textformat"
+    case .rectangle: return "square"
+    case .ellipse: return "circle"
+    case .line: return "line.diagonal"
+    case .polygon: return "pentagon"
+    case .star: return "star"
+    case .pen: return "point.topleft.down.to.point.bottomright.curvepath"
+    case .hand: return "hand.draw"
+    case .eyedropper: return "eyedropper"
+    }
+  }
+  var shortcut: String {
+    switch self {
+    case .select: return "V"
+    case .direct: return "A"
+    case .text: return "T"
+    case .rectangle: return "R"
+    case .ellipse: return "O"
+    case .line: return "L"
+    case .polygon: return "P"
+    case .star: return "S"
+    case .pen: return "B"
+    case .hand: return "H"
+    case .eyedropper: return "I"
+    }
+  }
+}
+
+@MainActor final class ArtworkSession: ObservableObject {
+  weak var store: StudioStore?
+  weak var canvas: VectorCanvasView?
+  @Published var objectID: UUID?
+  @Published var selection = Set<UUID>() { didSet { store?.objectWillChange.send() } }
+  @Published var nodes = Set<UUID>()
+  @Published var scopeID: UUID?
+  @Published var tool: ArtworkTool = .select {
+    didSet { if tool != oldValue { canvas?.finishPath() } }
+  }
+  @Published var zoom = 1.0
+  @Published var dieline = false
+  @Published var preview = true
+  @Published var editingText = false { didSet { store?.objectWillChange.send() } }
+  @Published var characterRange = NSRange(location: 0, length: 0)
+  @Published var exportDPI = 300.0
+  @Published var exportOutline = true
+  init(store: StudioStore) { self.store = store }
+  var object: ProductObject? { store?.project?.objects.first { $0.id == objectID } }
+  var art: Artwork { object?.artwork ?? .init(background: "#FFFFFF") }
+  var elements: [ArtworkElement] { art.elements.filter { selection.contains($0.id) } }
+  var primary: ArtworkElement? { elements.first }
+  var unit: PhysicalUnit { art.unit ?? .mm }
+  var inspectedTypography: Typography {
+    canvas?.textInspection()?.typography ?? primary?.typography ?? .init()
+  }
+  var inspectedSize: Double { canvas?.textInspection()?.fontSize ?? primary?.fontSize ?? 14 }
+  var inspectedColor: String { canvas?.textInspection()?.color ?? primary?.color ?? "#292D2C" }
+  var assets: URL {
+    guard let store, let project = store.project else { return URL(fileURLWithPath: "/") }
+    return store.repository.url(for: project.id).appendingPathComponent("Assets")
+  }
+  var selectionBounds: Rect2? {
+    let values = art.selectionRoots(selection).map { art.bounds(of: $0) }
+    guard let first = values.first else { return nil }
+    return values.dropFirst().reduce(first) { $0.union($1) }
+  }
+  var frames: [CanvasFrame] {
+    guard let objects = store?.project?.objects else { return [] }
+    let related = objects.filter { $0.recipeID == "artboard" || $0.id == objectID }
+    var x = 36.0
+    var y = 40.0
+    var rowHeight = 0.0
+    var result: [CanvasFrame] = []
+    for (i, object) in related.enumerated() {
+      let size =
+        dieline && object.id == objectID && object.recipeID == "sleeve"
+        ? Dieline.dimensions(object) : ArtworkDrawing.dimensions(object)
+      if i > 0 && i % 3 == 0 {
+        x = 36
+        y += rowHeight + 44
+        rowHeight = 0
+      }
+      result.append(
+        .init(
+          object: object,
+          rect: .init(
+            x: object.artwork?.canvasPosition?.x ?? x, y: object.artwork?.canvasPosition?.y ?? y,
+            width: size.0, height: size.1)))
+      x += size.0 + 36
+      rowHeight = max(rowHeight, size.1)
+    }
+    return result
+  }
+  func reconcile() {
+    if let primary = store?.primary, ArtworkDrawing.dimensions(primary).width > 10,
+      primary["width"] > 0 || primary.recipeID == "clock"
+    {
+      if objectID != primary.id {
+        objectID = primary.id
+        selection = []
+        scopeID = nil
+      }
+    }
+    if object == nil {
+      objectID =
+        store?.project?.objects.first {
+          $0.artwork != nil && ($0["width"] > 0 || $0.recipeID == "clock")
+        }?.id
+    }
+    selection.formIntersection(Set(art.elements.map(\.id)))
+    if scopeID != nil && !art.elements.contains(where: { $0.id == scopeID }) { scopeID = nil }
+  }
+  func activate(_ id: UUID) {
+    guard id != objectID else { return }
+    canvas?.finishText()
+    objectID = id
+    selection = []
+    scopeID = nil
+    store?.select(id)
+  }
+  func choose(_ ids: Set<UUID>) {
+    selection = ids
+    nodes = []
+  }
+  func save(_ artwork: Artwork) {
+    guard let object else { return }
+    store?.saveArtwork(artwork, for: object)
+  }
+  func mutate(_ body: (inout Artwork) -> Void) {
+    var value = art
+    body(&value)
+    save(value)
+  }
+  func update(_ body: (inout ArtworkElement) -> Void) {
+    canvas?.finishText()
+    mutate { art in
+      for i in art.elements.indices where selection.contains(art.elements[i].id) {
+        body(&art.elements[i])
+      }
+    }
+  }
+  func execute(_ command: String, _ args: [String: Any] = [:]) {
+    canvas?.finishText()
+    guard let store, let object else { return }
+    var input = args
+    input["object_id"] = object.id.uuidString
+    input["command"] = command
+    if !selection.isEmpty { input["element_ids"] = selection.map(\.uuidString) }
+    do {
+      let result =
+        try store.engine.call("form_edit_artwork", arguments: input, source: "Studio")
+        as? [String: Any]
+      if let ids = result?["selected_elements"] as? [String] {
+        selection = Set(ids.compactMap(UUID.init(uuidString:)))
+      }
+      store.changed()
+    } catch { store.error = error.localizedDescription }
+  }
+  func add(_ elements: [ArtworkElement]) {
+    do { execute("add", ["elements": try elements.map { try jsonObject($0) }]) } catch {
+      store?.error = error.localizedDescription
+    }
+  }
+  func beginGesture() {
+    guard let id = objectID else { return }
+    store?.engine.beginInteraction("artwork-\(id)")
+  }
+  func endGesture() { store?.engine.endInteraction() }
+  func translate(dx: Double, dy: Double) {
+    canvas?.finishText()
+    guard !elements.contains(where: { art.isLocked($0) }) else { return }
+    var value = art
+    for root in art.selectionRoots(selection) {
+      if let i = value.elements.firstIndex(where: { $0.id == root.id }) {
+        value.elements[i] = transformed(root, delta: .translation(dx, dy), in: art)
+      }
+    }
+    save(value)
+  }
+  func transformed(_ element: ArtworkElement, delta: Affine2, in artwork: Artwork) -> ArtworkElement
+  {
+    var e = element
+    let parent =
+      artwork.elements.first { $0.id == e.parentID }.map { artwork.worldTransform($0) } ?? .init()
+    e.affine = (parent.inverse ?? .init()).followed(by: delta).followed(by: parent).followed(
+      by: e.affine ?? .init())
+    return e
+  }
+  func transformBounds(
+    x: Double? = nil, y: Double? = nil, width: Double? = nil, height: Double? = nil
+  ) {
+    canvas?.finishText()
+    guard let b = selectionBounds, !elements.contains(where: { art.isLocked($0) }) else { return }
+    if width != nil || height != nil, let e = primary, elements.count == 1, e.kind == "text",
+      e.typography?.frameMode != "point"
+    {
+      var changed = e
+      changed.width = max(0.1, e.width * (width ?? b.width) / max(0.001, b.width))
+      changed.height = max(0.1, e.height * (height ?? b.height) / max(0.001, b.height))
+      var value = art
+      let index = value.elements.firstIndex { $0.id == e.id }!
+      value.elements[index] = changed
+      let next = value.bounds(of: changed)
+      value.elements[index] = transformed(
+        changed, delta: .translation(b.x - next.x, b.y - next.y), in: value)
+      save(value)
+      return
+    }
+    let delta = Affine2.translation(x ?? b.x, y ?? b.y).followed(
+      by: .scale(
+        (width ?? b.width) / max(b.width, 0.001), (height ?? b.height) / max(b.height, 0.001))
+    ).followed(by: .translation(-b.x, -b.y))
+    var value = art
+    for e in art.selectionRoots(selection) {
+      let i = value.elements.firstIndex { $0.id == e.id }!
+      value.elements[i] = transformed(e, delta: delta, in: art)
+    }
+    save(value)
+  }
+  func rotate(_ degrees: Double) {
+    canvas?.finishText()
+    guard let b = selectionBounds, !elements.contains(where: { art.isLocked($0) }) else { return }
+    let delta = Affine2.translation(b.center.x, b.center.y).followed(by: .rotation(degrees))
+      .followed(by: .translation(-b.center.x, -b.center.y))
+    var value = art
+    for e in art.selectionRoots(selection) {
+      let i = value.elements.firstIndex { $0.id == e.id }!
+      value.elements[i] = transformed(e, delta: delta, in: art)
+    }
+    save(value)
+  }
+  func typography(_ body: (inout Typography) -> Void) {
+    if canvas?.applyTextStyle(body) == true { return }
+    update { e in
+      if e.kind == "text" {
+        var style = e.typography ?? .init()
+        body(&style)
+        e.typography = style
+        e.textRuns = nil
+      }
+    }
+  }
+  func typeSize(_ size: Double) {
+    if canvas?.applyTextSize(size) == true { return }
+    update {
+      if $0.kind == "text" {
+        $0.fontSize = max(0.1, size)
+        $0.textRuns = nil
+      }
+    }
+  }
+  func textColor(_ color: String) {
+    if canvas?.applyTextColor(color) == true { return }
+    update {
+      $0.color = color
+      if $0.kind == "text" { $0.textRuns = nil }
+    }
+  }
+  func manualKerning(_ value: Double) {
+    if canvas?.applyManualKerning(value) == true { return }
+    typography { $0.pairKerning[max(0, characterRange.location - 1)] = value }
+  }
+  func convert(_ mode: String = "text") {
+    canvas?.finishText()
+    guard let store, let object else { return }
+    do {
+      let result =
+        try store.graphicsCall(
+          "form_convert_to_paths",
+          [
+            "object_id": object.id.uuidString, "element_ids": selection.map(\.uuidString),
+            "mode": mode,
+          ]) as? [String: Any]
+      selection = Set(
+        (result?["selected_elements"] as? [String] ?? []).compactMap(UUID.init(uuidString:)))
+      store.changed()
+    } catch { store.error = error.localizedDescription }
+  }
+  func boolean(_ operation: String) {
+    canvas?.finishText()
+    guard let store, let object else { return }
+    do {
+      let result =
+        try store.graphicsCall(
+          "form_boolean_artwork",
+          [
+            "object_id": object.id.uuidString, "element_ids": selection.map(\.uuidString),
+            "operation": operation,
+          ]) as? [String: Any]
+      selection = Set(
+        (result?["selected_elements"] as? [String] ?? []).compactMap(UUID.init(uuidString:)))
+      store.changed()
+    } catch { store.error = error.localizedDescription }
+  }
+  func makeMask() {
+    canvas?.finishText()
+    let shapes = elements.filter { !["text", "image", "group"].contains($0.kind) }
+    guard elements.count >= 2, let mask = shapes.first else { return }
+    mutate { a in
+      for i in a.elements.indices
+      where selection.contains(a.elements[i].id) && a.elements[i].id != mask.id {
+        a.elements[i].clipID = mask.id
+      }
+    }
+  }
+  func addGuide(axis: String, position: Double) {
+    mutate { a in
+      if a.guides == nil { a.guides = [] }
+      a.guides?.append(.init(axis: axis, position: position))
+    }
+  }
+  func fit() { canvas?.fit(all: true) }
+  func setZoom(_ value: Double) { canvas?.setZoom(value) }
+  func createFrame(width: Double, height: Double, name: String) {
+    canvas?.finishText()
+    guard let store else { return }
+    if store.project == nil { store.createProject() }
+    store.perform(
+      "form_add_object",
+      [
+        "recipe_id": "artboard", "name": name, "parameters": ["width": width, "depth": height],
+        "material_id": "chalk",
+      ])
+    if let object = store.primary {
+      store.saveArtwork(.init(background: "#FFFFFF"), for: object)
+      objectID = object.id
+      selection = []
+      scopeID = nil
+    }
+    store.mode = .artwork
+    DispatchQueue.main.async { self.fit() }
+  }
+  func importImage(replacing: Bool = false) {
+    guard let store, let project = store.project else { return }
+    let panel = NSOpenPanel()
+    panel.allowedContentTypes = [.image, .pdf]
+    guard panel.runModal() == .OK, let url = panel.url else { return }
+    do {
+      let asset = try store.repository.importAsset(url, into: project.id)
+      if replacing {
+        update { $0.asset = asset }
+      } else {
+        var element = ArtworkElement(
+          kind: "image", x: 15, y: 15, width: 80, height: 60, asset: asset)
+        element.parentID = scopeID
+        add([element])
+      }
+    } catch { store.error = error.localizedDescription }
+  }
+  func copy() {
+    let ids = art.descendants(of: selection)
+    guard !ids.isEmpty else { return }
+    do {
+      let data = try JSONEncoder.form.encode(art.elements.filter { ids.contains($0.id) })
+      NSPasteboard.general.clearContents()
+      NSPasteboard.general.setData(data, forType: .init("studio.form.artwork"))
+    } catch { store?.error = error.localizedDescription }
+  }
+  func paste() {
+    guard let data = NSPasteboard.general.data(forType: .init("studio.form.artwork")),
+      let source = try? JSONDecoder.form.decode([ArtworkElement].self, from: data)
+    else { return }
+    let mapping = Dictionary(uniqueKeysWithValues: source.map { ($0.id, UUID()) })
+    let pasted = source.map { e -> ArtworkElement in
+      var value = e
+      value.id = mapping[e.id]!
+      value.parentID = e.parentID.flatMap { mapping[$0] } ?? scopeID
+      value.clipID = e.clipID.flatMap { mapping[$0] }
+      if e.parentID == nil {
+        value.x += 10
+        value.y += 10
+      }
+      return value
+    }
+    add(pasted)
+  }
+  func export(_ format: String) {
+    guard let store, let object else { return }
+    store.exportArtworkDialog(format, object: object, dpi: exportDPI, outlineText: exportOutline)
+  }
+}

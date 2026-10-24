@@ -42,6 +42,10 @@ build/FORM.app/Contents/MacOS/form-mcp --call form_add_object '{"recipe_id":"lam
 | `form_create_recipe` | Define a new object category and its native inspector |
 | `form_duplicate_object`, `form_group_objects` | Iterations, linked variants, and group relationships |
 | `form_set_artwork`, `form_import_reference` | Editable surface graphics and persistent local references |
+| `form_get_artwork`, `form_edit_artwork` | Inspect and edit artwork elements, layers, groups, and transforms |
+| `form_list_fonts`, `form_font_features` | Installed faces, supported font features, and variable axes |
+| `form_convert_to_paths`, `form_boolean_artwork` | Editable shaped glyph/stroke outlines and vector booleans |
+| `form_export_artwork` | Actual-size SVG/PDF and DPI-controlled PNG/JPEG frame or selection exports |
 | `form_add_note` | Design decisions and open questions |
 | `form_set_view` | Camera presets, focus, isolation, and workspace modes |
 | `form_export` | PNG, PDF, SVG, and component/material JSON |
@@ -53,7 +57,7 @@ build/FORM.app/Contents/MacOS/form-mcp --call form_add_object '{"recipe_id":"lam
 
 Read-only project and recipe resources are also exposed as `form://project` and `form://recipes`. The `design_object` prompt supplies a starting workflow.
 
-There are 31 tools. Print options use the native configuration keys: `component`, `printerID`, `filamentID`, `layerHeight`, `infillPercent`, `wallLoops`, `supports`, `brimWidth`, `scalePercent`, and `rotation` (degree-valued `x`, `y`, `z` in printer coordinates). `form_slice` starts asynchronously; poll status until `busy` is false and inspect `validation_error` before consuming outputs. `form_set_view` accepts `print_bed` / `print_object`. See [printing setup](printing.md) for examples and the explicit no-print boundary.
+There are 38 tools. Print options use the native configuration keys: `component`, `printerID`, `filamentID`, `layerHeight`, `infillPercent`, `wallLoops`, `supports`, `brimWidth`, `scalePercent`, and `rotation` (degree-valued `x`, `y`, `z` in printer coordinates). `form_slice` starts asynchronously; poll status until `busy` is false and inspect `validation_error` before consuming outputs. `form_set_view` accepts `print_bed` / `print_object`. See [printing setup](printing.md) for examples and the explicit no-print boundary.
 
 ## Custom objects
 
@@ -90,3 +94,5 @@ python3 scripts/smoke_mcp.py
 ```
 
 The smoke test uses the real stdio transport, creates a validation project in the running app's library, checks custom recipes and linked edits, and exports to `.local/validation`. For isolated development, launch the app executable with `FORM_LIBRARY_PATH="$PWD/.local/Library"` before running it. The server itself discovers the running app through its local socket; it does not read or mutate the package files behind the app.
+
+See the [native artwork editor guide](2d-editor.md) for artwork commands, file format, and current limitations.
