@@ -23,10 +23,11 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 
 ## In the studio
 
-- **Home:** Saved project previews, search, blank projects, and three editable starting studies: a cyanotype kit, table lamps, and material/form studies.
+- **Home:** Saved project previews, search, blank projects, and editable starting studies. Home cards start a clock dial, cyanotype kit, or lamp study; File → New from Study also offers material/form studies.
 - **The Table:** A continuous Metal-backed 3D workspace with physical scale, soft shadows, image references, material swatches, selection, movement, grouping, duplication, and persistent camera state.
 - **Contextual controls:** Floating native parameter and material inspectors. Focus or isolate a selection without leaving the canvas.
-- **Editable constructions:** Paper stacks, booklets, folding sleeves, lamps, hollow vessels, boxes, cylinders, extruded profiles, and independent artwork sheets. Custom agent-defined recipes get the same native controls.
+- **Editable constructions:** Clocks, paper stacks, booklets, folding sleeves, lamps, hollow vessels, boxes, cylinders, extruded profiles, and independent artwork sheets. Custom agent-defined recipes get the same native controls.
+- **Shared artwork:** Independent sheets can drive multiple physical faces. Actual-size or proportional fitting preserves the source; native source editing, detachment, iterations, and deletion have shared undo. Try the [linked clock demonstration](docs/linked-artwork.md).
 - **Native artwork canvas:** Multiple physical frames, rulers/guides/grid/snapping, nested layers, exact transforms, Bézier paths, vector booleans, gradients, strokes, masks, and live 3D face updates. A folding sleeve exposes its unfolded cut/score dieline.
 - **Typography:** Installed-font browser, native selected-character editing, real OpenType features and variable axes, Core Text shaping, and editable glyph outlines with retained source text. See the [editor guide and remaining scope](docs/2d-editor.md).
 - **Iterations and variants:** Independent design iterations or linked parameter/artwork variants with their own materials and placement.
@@ -50,7 +51,7 @@ Then describe an object in Codex:
 
 > Create an orange table lamp, about 350 mm tall, with editable shade diameter, shade height, stem diameter, and base width. Place a sage variant beside it.
 
-The server exposes 39 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, fonts, vector operations, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
+The server exposes 41 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, fonts, vector operations, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
 
 See [Create with Codex](docs/mcp.md) for setup, schemas, a custom object example, and direct CLI invocation.
 
@@ -92,6 +93,7 @@ bash scripts/test.sh
 python3 scripts/smoke_mcp.py  # Requires the running app; creates a validation project
 python3 scripts/smoke_artwork.py # Typography/vector composition and physical exports
 python3 scripts/smoke_paths.py # Curve editing, transformed type, and linked variants
+python3 scripts/smoke_clock.py --slice # Shared dial, immutable source links, physical exports, local Orca
 python3 scripts/benchmark_artwork.py # 600-element native canvas performance
 python3 scripts/smoke_print.py # Optional engine; local cube and hollow-shade slices
 ```
@@ -112,6 +114,7 @@ This build has a native typography/vector editor and procedural construction sys
 - [2D Design, Typography & Vector Editing · guiding specification](docs/2d-design-typography-vector-spec.md)
 - [Native artwork editor · controls, MCP, and remaining work](docs/2d-editor.md)
 - [Precise paths and transformed native text](docs/path-editing.md)
+- [Shared artwork and the clock study](docs/linked-artwork.md)
 - [Textiles, Apparel & Merchandise · next feature specification](docs/textiles-apparel-merchandise-spec.md)
 - [Queued feature push · NASA bomber jacket demonstration](docs/next-feature-push.md)
 - [Expanded implementation goal and completion checklist](docs/implementation-goal.md)

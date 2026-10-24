@@ -153,7 +153,7 @@ enum WorkspaceMode: String, CaseIterable {
     } catch { self.error = error.localizedDescription }
   }
   func createProject(template: String = "blank") {
-    let base = template == "blank" ? "Untitled study" : "Cyanotype study"
+    let base = Samples.templates.first { $0.id == template }?.name ?? "Untitled study"
     let count = projects.filter { $0.name.hasPrefix(base) }.count
     perform(
       "form_create_project",
@@ -438,9 +438,7 @@ enum WorkspaceMode: String, CaseIterable {
     do {
       try validateArtwork(artwork)
       edit("Edited artwork", coalescing: "artwork-\(object.id)") { p in
-        for i in p.objects.indices where p.objects[i].designID == object.designID {
-          p.objects[i].artwork = artwork
-        }
+        try p.setArtwork(artwork, for: object.id)
       }
     } catch { self.error = error.localizedDescription }
   }

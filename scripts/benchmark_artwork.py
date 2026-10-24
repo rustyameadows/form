@@ -39,6 +39,8 @@ def main():
         time.sleep(0.5)
         after = client.call("form_status")["artwork_renderer"]
         assert after["layout_builds"] == before["layout_builds"], "Placement must reuse existing text layouts"
+        accessibility_updates = after["accessibility_updates"] - before["accessibility_updates"]
+        assert accessibility_updates <= 60, "Moving one element must not rewrite every accessible canvas item"
         assert after["renders_continuously"] is False
         pid = subprocess.check_output(["pgrep", "-x", "FORM"], text=True).strip().splitlines()[0]
 
@@ -60,6 +62,7 @@ def main():
                   "saved_edit_median_ms": round(statistics.median(elapsed), 2),
                   "saved_edit_p95_ms": round(sorted(elapsed)[18], 2),
                   "text_layouts_rebuilt_for_placement": after["layout_builds"] - before["layout_builds"],
+                  "accessibility_items_updated_for_20_edits": accessibility_updates,
                   "idle_cpu_percent_over_3s": round(idle, 2), "idle_redraws": 0,
                   "resident_memory_mb": round(int(subprocess.check_output(["ps", "-p", pid, "-o", "rss="], text=True).strip()) / 1024, 1),
                   "renderer": final}

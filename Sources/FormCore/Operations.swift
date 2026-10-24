@@ -38,6 +38,7 @@ public final class OperationEngine {
     guard var value = project else { throw FormError.missing("Open or create a project first.") }
     let before = value
     try body(&value)
+    try value.validateArtworkLinks()
     value.schemaVersion = value.minimumSchemaVersion
     guard before != value else { return }
     if coalescing == nil || coalescing != lastCoalesce
@@ -142,7 +143,7 @@ public final class OperationEngine {
       onProjectWillChange?()
       endInteraction()
       try flush()
-      var new = a["template"] as? String == "cyanotype" ? Samples.cyanotype() : Project(name: title)
+      var new = try Samples.make(a["template"] as? String ?? "blank")
       new.name = title
       new.conversationReference = a["conversation_reference"] as? String
       new.materials = StudioLibrary.load(from: repository.root).materials.filter { item in
@@ -166,7 +167,7 @@ public final class OperationEngine {
       guard let object = project?.objects.first(where: { $0.id == id }) else {
         throw FormError.missing("Object not found.")
       }
-      return try jsonObject(object.artwork ?? Artwork(background: "#FFFFFF"))
+      return try jsonObject(project!.editableArtwork(object) ?? Artwork(background: "#FFFFFF"))
     case "form_edit_artwork":
       let id = try objectID()
       let command = try string("command")
@@ -179,11 +180,9 @@ public final class OperationEngine {
         guard let object = p.objects.first(where: { $0.id == id }) else {
           throw FormError.missing("Object not found.")
         }
-        var art = object.artwork ?? Artwork(background: "#FFFFFF")
+        var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
-        for i in p.objects.indices where p.objects[i].designID == object.designID {
-          p.objects[i].artwork = art
-        }
+        try p.setArtwork(art, for: id)
       }
       return ["selected_elements": selected.map(\.uuidString)]
     case "form_edit_path":
@@ -206,7 +205,8 @@ public final class OperationEngine {
         "Path: \(operation)", source: source,
         coalescing: source == "Studio" && interaction == "artwork-\(id)" ? "artwork-\(id)" : nil
       ) { p in
-        guard let object = p.objects.first(where: { $0.id == id }), var art = object.artwork,
+        guard let object = p.objects.first(where: { $0.id == id }),
+          var art = p.editableArtwork(object),
           let index = art.elements.firstIndex(where: { $0.id == elementID })
         else {
           throw FormError.missing("Path element not found.")
@@ -226,15 +226,51 @@ public final class OperationEngine {
           selectedElements = [elementID]
         }
         try validateArtwork(art)
-        for i in p.objects.indices where p.objects[i].designID == object.designID {
-          p.objects[i].artwork = art
-        }
+        try p.setArtwork(art, for: id)
       }
       return [
         "selected_nodes": selectedNodes.map(\.uuidString),
         "selected_elements": selectedElements.map(\.uuidString),
       ]
     case "form_list_recipes": return try jsonObject(Recipe.builtins + (project?.recipes ?? []))
+    case "form_link_artwork":
+      let id = try objectID()
+      var sourceID: UUID?
+      if let raw = a["source_object_id"], !(raw is NSNull) {
+        guard let value = raw as? String, let parsed = UUID(uuidString: value) else {
+          throw FormError.invalid("Invalid artwork source ID.")
+        }
+        sourceID = parsed
+      }
+      try edit(sourceID == nil ? "Detached artwork" : "Linked artwork", source: source) {
+        try $0.linkArtwork(id, sourceID: sourceID, fit: a["fit"] as? String ?? "actual")
+      }
+      return try jsonObject(requireProject().objects.first { $0.id == id }!)
+    case "form_extract_artwork":
+      let id = try objectID()
+      var created: ProductObject?
+      try edit("Created independent artwork document", source: source) { p in
+        guard let object = p.objects.first(where: { $0.id == id }), object.supportsArtworkFace,
+          var art = p.surfaceArtwork(object)
+        else { throw FormError.invalid("Choose an object with editable surface artwork.") }
+        guard object.artworkSourceID == nil else {
+          throw FormError.invalid("This object already links to an artwork document.")
+        }
+        let size = object.artworkSize
+        guard (20...1000).contains(size.x), (20...1000).contains(size.y) else {
+          throw FormError.invalid("Artwork documents support 20–1000 mm edges.")
+        }
+        var sheet = try p.makeObject(
+          recipeID: "artboard", name: object.name + " · Artwork",
+          parameters: ["width": size.x, "depth": size.y],
+          position: .init(object.position.x + object.footprintWidth + 65, 0, object.position.z))
+        art.boundary = nil
+        sheet.artwork = art
+        p.objects.append(sheet)
+        try p.linkArtwork(id, sourceID: sheet.id)
+        created = sheet
+      }
+      return try jsonObject(created!)
     case "form_list_materials":
       return try jsonObject(
         StudioLibrary.load(from: repository.root).materials + (project?.materials ?? []))
@@ -250,7 +286,16 @@ public final class OperationEngine {
         object.color = color
       }
       if recipe == "sleeve" { object.artwork = .cyanotype }
-      try edit("Added \(object.name)", source: source) { $0.objects.append(object) }
+      var clockSource: ProductObject?
+      if recipe == "clock" {
+        clockSource = try ClockDesign.source(for: object, in: p)
+        object.artworkSourceID = clockSource!.id
+        object.artworkFit = "actual"
+      }
+      try edit("Added \(object.name)", source: source) {
+        $0.objects.append(object)
+        if let clockSource { $0.objects.append(clockSource) }
+      }
       selection = [object.id]
       return try jsonObject(object)
     case "form_update_object":
@@ -302,6 +347,7 @@ public final class OperationEngine {
         guard ids.allSatisfy({ id in p.objects.contains { $0.id == id } }) else {
           throw FormError.missing("One or more objects were not found.")
         }
+        p.detachArtworkConsumers(of: ids)
         p.objects.removeAll { ids.contains($0.id) }
       }
       selection.subtract(ids)
@@ -331,6 +377,12 @@ public final class OperationEngine {
         a["name"] as? String ?? object.name + (mode == "variant" ? " · variant" : " · iteration")
       object.relationship = mode
       if mode != "variant" {
+        if object.artworkSourceID != nil {
+          object.artwork = p.surfaceArtwork(object)
+          object.artworkSourceID = nil
+          object.artworkFit = nil
+          if object.recipeID == "clock" { object.artwork?.boundary = nil }
+        }
         object.designID = UUID()
         object.parentIterationID = id
       }
@@ -368,13 +420,7 @@ public final class OperationEngine {
       try edit(
         "Edited artwork", source: source, coalescing: source == "Studio" ? "artwork-\(id)" : nil
       ) { p in
-        guard let index = p.objects.firstIndex(where: { $0.id == id }) else {
-          throw FormError.missing("Object not found.")
-        }
-        let design = p.objects[index].designID
-        for i in p.objects.indices where p.objects[i].designID == design {
-          p.objects[i].artwork = artwork
-        }
+        try p.setArtwork(artwork, for: id)
       }
       return ["updated": id.uuidString]
     case "form_add_note":
@@ -434,6 +480,7 @@ public final class OperationEngine {
         "form_set_artwork", "form_add_note", "form_create_recipe", "form_delete_objects",
         "form_edit_artwork",
         "form_edit_path",
+        "form_link_artwork", "form_extract_artwork",
       ])
       guard operations.allSatisfy({ allowed.contains($0["name"] as? String ?? "") }) else {
         throw FormError.invalid(

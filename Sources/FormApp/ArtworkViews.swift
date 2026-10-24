@@ -38,7 +38,7 @@ struct ArtworkStudio: View {
           NewArtworkFrame(session: session)
         }
         Spacer(minLength: 10)
-        if session.object?.recipeID == "sleeve" {
+        if session.previewObject?.recipeID == "sleeve" {
           Picker("View", selection: $session.dieline) {
             Text("Artwork").tag(false)
             Text("Dieline").tag(true)
@@ -150,7 +150,10 @@ struct ArtworkStudio: View {
         .labelsHidden().frame(width: 64)
       }.font(.system(size: 9)).padding(.horizontal, 16).frame(height: 37).background(Palette.paper)
     }.onAppear { session.reconcile() }.onChange(of: store.revision) { _, _ in session.reconcile() }
-      .onChange(of: session.dieline) { _, dieline in if dieline { session.canvas?.finishText() } }
+      .onChange(of: session.dieline) { _, dieline in
+        if dieline { session.canvas?.finishText() }
+        DispatchQueue.main.async { session.fit() }
+      }
       .onChange(of: store.mode) { _, mode in if mode != .artwork { session.canvas?.finishText() } }
   }
 }
@@ -382,7 +385,11 @@ struct ObjectPreview: NSViewRepresentable {
   }
   func updateNSView(_ view: TableSCNView, context: Context) {
     var preview = project
-    preview.objects = [object]
+    var surface = object
+    surface.artwork = project.surfaceArtwork(object)
+    surface.artworkSourceID = nil
+    surface.artworkFit = nil
+    preview.objects = [surface]
     preview.objects[0].position = .init()
     preview.objects[0].rotation = 0
     context.coordinator.sync(

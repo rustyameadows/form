@@ -51,7 +51,8 @@ public enum MCP {
         "form_create_project",
         "Create and open a persistent .form project. Default is a blank Table. No external AI calls are made.",
         [
-          "name": string, "template": ["type": "string", "enum": ["blank", "cyanotype"]],
+          "name": string,
+          "template": ["type": "string", "enum": ["blank"] + Samples.templates.map(\.id)],
           "conversation_reference": [
             "type": "string",
             "description":
@@ -131,6 +132,17 @@ public enum MCP {
             ], "required": ["background", "bleed", "elements"],
           ],
         ], required: ["object_id", "artwork"]),
+      tool(
+        "form_link_artwork",
+        "Link a physical flat surface to an independent artwork sheet. Editing either source or surface updates every consumer. Actual preserves physical typography and centers it; fit scales proportionally to the surface. Omit source_object_id to detach while preserving the rendered artwork. Linked product variants share the link.",
+        [
+          "object_id": objectID, "source_object_id": string,
+          "fit": ["type": "string", "enum": ["actual", "fit"]],
+        ], required: ["object_id"]),
+      tool(
+        "form_extract_artwork",
+        "Turn an object's inline surface artwork into an independent editable sheet and link the object and its variants to that document. Returns the new sheet; the physical appearance is preserved.",
+        ["object_id": objectID], required: ["object_id"]),
       tool(
         "form_get_artwork",
         "Read a product surface or standalone artboard's complete editable artwork, hierarchy, typography, paths, guides, and physical units.",

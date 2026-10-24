@@ -25,7 +25,7 @@ The renderer updates an object only when its geometry, material, or artwork fing
 
 ## Parametric objects
 
-Built-in constructions include paper stacks, booklets, scored folding sleeves, lamps, hollow revolved vessels, boxes, cylinders, extruded polygon profiles, material swatches, artwork sheets, and image references.
+Built-in constructions include clocks, paper stacks, booklets, scored folding sleeves, lamps, hollow revolved vessels, boxes, cylinders, extruded polygon profiles, material swatches, artwork sheets, and image references.
 
 Custom project recipes consist of parameter schemas and primitive parts. Part dimensions, placement, and rotation use a bounded arithmetic grammar with parameter variables, parentheses, and `+ - * /`. No expression executes Swift, JavaScript, shell commands, or Foundation predicate code. The same schema generates the native inspector and validates MCP edits.
 
@@ -48,6 +48,8 @@ Object revisions are immutable. Saving writes changed resources before atomicall
 
 Extended vector/typography artwork requires schema 2, recorded in the manifest and project. Schema-1 documents load with optional-field defaults; a schema-1-only reader rejects schema 2. Canvas settings, guide placement, names, locks, and hidden editable sources are excluded from physical artwork signatures, avoiding unnecessary 3D texture invalidation.
 
+Independent source links and physical artwork boundaries require schema 3; schema 1 and 2 still load. A product face references a same-project artwork sheet and a physical fitting mode. Source edits update its immutable object resource while consumers retain their existing object files. The graph validates references and rejects cycles/dangling links. Detachment, independent iterations, and source deletion bake the current resolved appearance. See [shared artwork](linked-artwork.md).
+
 `FORM_LIBRARY_PATH` selects a separate library for development or tests. `FORM_SOCKET_PATH` selects a separate local bridge. These settings require no change to a project document.
 
 ## Artwork and production
@@ -61,6 +63,8 @@ The sleeve recipe derives its assembled geometry and unfolded cut/score layout f
 The expanded [2D specification](2d-design-typography-vector-spec.md) remains governing scope. The [editor guide](2d-editor.md) records working controls and material gaps, including separate-path combination, advanced typography, editable SVG import, publication, color management, and physical integration. General solid booleans, arbitrary CAD import, advanced manufacturing tolerances, collaboration, and photorealistic path tracing are also unfinished.
 
 Native inline text uses the complete artwork affine map through AppKit coordinate transforms, including rotation, scale, shear, and reflection. A signed SVD and explicit reversal of prior coordinate operations keep native input and pointer geometry aligned during updates. Exact Bézier subdivision, contour split/join/reversal, node modes, and physical node transforms live in `FormCore.PathCommands`; the native direct-selection UI and `form_edit_path` call the same implementation. See [path editing](path-editing.md).
+
+Clock numerals and indices are ordinary editable artwork. A physical circular boundary clips the source on the dial and in production artwork exports. Render signatures omit hand-time/visibility parameters; existing pivots update independently. The beveled dial and bore use a bounded radial mesh, and lathed surfaces carry texture coordinates for material rendering.
 
 ## Local slicing and printer status
 

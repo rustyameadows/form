@@ -20,7 +20,7 @@ Joining endpoints is currently scoped to contours within one compound path. Comb
 
 ## MCP
 
-There are 39 tools. Inspect node UUIDs with `form_get_artwork`, then call:
+There are 41 tools. Inspect node UUIDs with `form_get_artwork`, then call:
 
 ```json
 {"name":"form_edit_path","arguments":{"object_id":"<frame UUID>","element_id":"<path UUID>","operation":"insert","node_ids":["<preceding anchor UUID>"],"t":0.37}}

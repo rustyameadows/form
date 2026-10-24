@@ -57,10 +57,12 @@ private struct RenderSignature: Equatable {
 
   init(store: StudioStore? = nil) {
     self.store = store
+    if let saved = store?.project?.camera { camera = saved }
     scene.background.contents = NSColor(hex: "#EEEDE8")
     scene.rootNode.addChildNode(objectRoot)
     cameraNode.camera = SCNCamera()
     cameraNode.camera?.fieldOfView = 39
+    cameraNode.camera?.projectionDirection = .vertical
     cameraNode.camera?.zNear = 0.01
     cameraNode.camera?.zFar = 1500
     cameraNode.camera?.wantsHDR = true
@@ -158,10 +160,12 @@ private struct RenderSignature: Equatable {
     var geometryChanged = false
     for object in project.objects {
       let fingerprint = RenderSignature(
-        recipe: project.recipe(object.recipeID), parameters: object.parameters,
+        recipe: project.recipe(object.recipeID),
+        parameters: GeometryFactory.geometryParameters(object),
         material: project.material(object.materialID), color: object.color,
-        artwork: object.artwork?.renderDefinition,
-        asset: object.asset, fontRevision: object.artwork == nil ? 0 : GeometryFactory.fontRevision,
+        artwork: project.surfaceArtwork(object)?.renderDefinition,
+        asset: object.asset,
+        fontRevision: project.editableArtwork(object) == nil ? 0 : GeometryFactory.fontRevision,
         textureLimit: textureLimit)
       if nodes[object.id] == nil || fingerprints[object.id] != fingerprint {
         nodes[object.id]?.removeFromParentNode()
@@ -175,6 +179,7 @@ private struct RenderSignature: Equatable {
         geometryChanged = true
       }
       let node = nodes[object.id]!
+      if object.recipeID == "clock" { GeometryFactory.updateClockHands(node, object: object) }
       node.position = v(object.position.x / 100, object.position.y / 100, object.position.z / 100)
       node.eulerAngles.y = CGFloat(object.rotation * .pi / 180)
       node.isHidden = !isolated.isEmpty && !isolated.contains(object.id)
@@ -242,11 +247,14 @@ private struct RenderSignature: Equatable {
     }
   }
   func updateCamera(animated: Bool = false) {
+    if let size = view?.bounds.size, size.width > 0, size.height > 0 {
+      camera.viewportAspect = size.width / size.height
+    }
     SCNTransaction.begin()
     SCNTransaction.animationDuration = animated ? 0.28 : 0
     SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
     cameraNode.camera?.usesOrthographicProjection = camera.projection == "orthographic"
-    cameraNode.camera?.orthographicScale = camera.distance * 0.36
+    cameraNode.camera?.orthographicScale = camera.distance * CameraFraming.orthographicFactor
     let target = v(camera.target.x, camera.target.y, camera.target.z)
     let elevation = min(max(camera.elevation, 0.04), .pi / 2 - 0.001)
     cameraNode.position = v(
@@ -256,7 +264,9 @@ private struct RenderSignature: Equatable {
     cameraNode.look(at: target)
     SCNTransaction.commit()
     view?.needsDisplay = true
-    if store?.engine.project != nil { store?.engine.project?.camera = camera }
+    if let projectID, store?.engine.project?.id == projectID {
+      store?.engine.project?.camera = camera
+    }
   }
   func resetCamera() {
     if let p = store?.project {
@@ -307,9 +317,8 @@ private struct RenderSignature: Equatable {
   func focusSelection() {
     if let selection = store?.engine.selection, !selection.isEmpty { frame(ids: selection) }
   }
-  private func frame(ids: Set<UUID>) {
-    var low = v(Double.infinity, Double.infinity, Double.infinity)
-    var high = v(-Double.infinity, -Double.infinity, -Double.infinity)
+  private func frame(ids: Set<UUID>, aspect: Double? = nil, animated: Bool = true) {
+    var points: [Vector3] = []
     for id in ids {
       guard let node = nodes[id] else { continue }
       let b = node.boundingBox
@@ -317,26 +326,24 @@ private struct RenderSignature: Equatable {
         for y in [b.min.y, b.max.y] {
           for z in [b.min.z, b.max.z] {
             let p = node.convertPosition(.init(x, y, z), to: nil)
-            low.x = min(low.x, p.x)
-            low.y = min(low.y, p.y)
-            low.z = min(low.z, p.z)
-            high.x = max(high.x, p.x)
-            high.y = max(high.y, p.y)
-            high.z = max(high.z, p.z)
+            points.append(.init(Double(p.x), Double(p.y), Double(p.z)))
           }
         }
       }
     }
-    guard low.x.isFinite else {
+    guard !points.isEmpty else {
       camera = .init()
       updateCamera(animated: true)
       return
     }
-    camera.target = .init(
-      Double((low.x + high.x) / 2), Double((low.y + high.y) / 2), Double((low.z + high.z) / 2))
-    let extent = Double(max(high.x - low.x, high.y - low.y, high.z - low.z))
-    camera.distance = max(extent * 2.55, 3.6)
-    updateCamera(animated: true)
+    let viewport = view?.bounds.size ?? CGSize(width: 600, height: 400)
+    let fitted = CameraFraming.fitted(
+      camera, points: points,
+      aspect: aspect ?? Double(viewport.width / max(1, viewport.height)),
+      fieldOfView: Double(cameraNode.camera?.fieldOfView ?? 39))
+    guard fitted != camera else { return }
+    camera = fitted
+    updateCamera(animated: animated)
   }
   func objectID(at point: NSPoint) -> UUID? {
     guard let view else { return nil }
@@ -365,24 +372,50 @@ private struct RenderSignature: Equatable {
       (Double(near.z) + Double(far.z - near.z) * t) * 100)
   }
   static func preview(
-    project: Project, size: CGSize, assets: URL, studio: Bool = false, preset: String = "Daylight"
+    project: Project, size: CGSize, assets: URL, studio: Bool = false, preset: String = "Daylight",
+    fitContents: Bool = false
   ) -> NSImage {
     let controller = TableSceneController()
     controller.sync(
       project, selection: [], isolated: [], showGrid: false, studio: studio, preset: preset,
       assets: assets)
+    if fitContents {
+      controller.frame(
+        ids: Set(controller.nodes.keys), aspect: size.width / max(1, size.height), animated: false)
+    }
     let renderer = SCNRenderer(device: MTLCreateSystemDefaultDevice(), options: nil)
     renderer.scene = controller.scene
-    renderer.pointOfView = controller.cameraNode
+    let outputCamera = controller.outputCamera(size: size)
+    controller.scene.rootNode.addChildNode(outputCamera)
+    defer { outputCamera.removeFromParentNode() }
+    renderer.pointOfView = outputCamera
     return renderer.snapshot(atTime: 0, with: size, antialiasingMode: .multisampling4X)
   }
   func snapshot(size: CGSize) -> NSImage {
     let renderer = SCNRenderer(device: MTLCreateSystemDefaultDevice(), options: nil)
     renderer.scene = scene
-    renderer.pointOfView = cameraNode
+    let outputCamera = outputCamera(size: size)
+    scene.rootNode.addChildNode(outputCamera)
+    defer { outputCamera.removeFromParentNode() }
+    renderer.pointOfView = outputCamera
     selectionNodes.forEach { $0.isHidden = true }
     defer { selectionNodes.forEach { $0.isHidden = false } }
     return renderer.snapshot(atTime: 0, with: size, antialiasingMode: .multisampling4X)
+  }
+  private func outputCamera(size: CGSize) -> SCNNode {
+    let node = cameraNode.clone()
+    node.camera = cameraNode.camera?.copy() as? SCNCamera
+    let factor = CameraFraming.viewportExpansion(
+      from: camera.viewportAspect,
+      to: size.width / max(1, size.height))
+    if let lens = node.camera {
+      if lens.usesOrthographicProjection {
+        lens.orthographicScale *= factor
+      } else {
+        lens.fieldOfView = atan(tan(lens.fieldOfView * .pi / 360) * factor) * 360 / .pi
+      }
+    }
+    return node
   }
 }
 
@@ -542,9 +575,15 @@ private struct RenderSignature: Equatable {
 }
 
 @MainActor enum GeometryFactory {
+  static func geometryParameters(_ object: ProductObject) -> [String: Double] {
+    object.recipeID == "clock"
+      ? object.parameters.filter { !["hour", "minute", "hands"].contains($0.key) }
+      : object.parameters
+  }
   private(set) static var fontRevision = 0
   static func invalidateFontResources() {
     cache.removeAllObjects()
+    artworkImages.removeAllObjects()
     fontRevision += 1
   }
   private static let cache: NSCache<NSString, SCNNode> = {
@@ -617,8 +656,12 @@ private struct RenderSignature: Equatable {
       at: v(x / 100, y / 100, z / 100))
   }
   static func object(
-    _ object: ProductObject, project: Project, assets: URL, textureLimit: Int = 2048
+    _ sourceObject: ProductObject, project: Project, assets: URL, textureLimit: Int = 2048
   ) -> SCNNode {
+    var object = sourceObject
+    object.artwork = project.surfaceArtwork(sourceObject)
+    object.artworkSourceID = nil
+    object.artworkFit = nil
     var canonical = object
     let neutral = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
     canonical.id = neutral
@@ -631,7 +674,11 @@ private struct RenderSignature: Equatable {
     canonical.relationship = ""
     canonical.locked = false
     canonical.artwork = canonical.artwork?.renderDefinition
+    let artworkData = canonical.artwork.flatMap { try? JSONEncoder.form.encode($0) }
+    canonical.artwork = nil
+    canonical.parameters = geometryParameters(object)
     var signature = (try? JSONEncoder.form.encode(canonical)) ?? Data()
+    if let artworkData { signature.append(artworkData) }
     signature.append((try? JSONEncoder.form.encode(project.material(object.materialID))) ?? Data())
     if let recipe = project.recipe(object.recipeID) {
       signature.append((try? JSONEncoder.form.encode(recipe)) ?? Data())
@@ -640,10 +687,79 @@ private struct RenderSignature: Equatable {
     signature.append(Data("texture-limit:\(textureLimit)".utf8))
     let cacheKey =
       SHA256.hash(data: signature).map { String(format: "%02x", $0) }.joined() as NSString
-    if let cached = cache.object(forKey: cacheKey) { return cached.clone() }
+    if let cached = cache.object(forKey: cacheKey) {
+      let node = cached.clone()
+      if object.recipeID == "clock" { updateClockHands(node, object: object) }
+      return node
+    }
     let root = SCNNode()
     let mat = material(object, project: project)
     switch object.recipeID {
+    case "clock":
+      let d = object["diameter"]
+      let r = d / 2
+      let t = object["thickness"]
+      let b = object["bore"] / 2
+      let profile = NSBezierPath(ovalIn: .init(x: mm(-r), y: mm(-r), width: mm(d), height: mm(d)))
+      // Scene units are 100 mm. AppKit's default flatness would reduce a dial to a few edges.
+      profile.flatness = mm(0.02)
+      profile.windingRule = .evenOdd
+      profile.appendOval(in: .init(x: mm(-b), y: mm(-b), width: mm(2 * b), height: mm(2 * b)))
+      // A bounded radial mesh keeps the bore and bevels accurate without the
+      // excessive cap/chamfer tessellation of an extruded Bezier shape.
+      let bevel = min(0.2, t / 4)
+      let body = lathe(
+        profile: [
+          (b + bevel, 0), (r - bevel, 0), (r, bevel), (r, t - bevel),
+          (r - bevel, t), (b + bevel, t), (b, t - bevel), (b, bevel),
+        ], segments: 256)
+      let dial = solid(body, mat)
+      dial.name = "clock.dial"
+      root.addChildNode(dial)
+      if let art = object.artwork {
+        let face = SCNShape(path: profile, extrusionDepth: 0.0002)
+        let ink = SCNMaterial()
+        ink.lightingModel = .physicallyBased
+        ink.diffuse.contents = artworkImage(
+          art, width: d, depth: d, assets: assets, textureLimit: textureLimit,
+          definition: artworkData)
+        ink.roughness.contents = 0.9
+        let node = solid(face, ink, at: v(0, (t + 0.03) / 100, 0))
+        node.eulerAngles.x = -.pi / 2
+        node.name = "clock.face"
+        root.addChildNode(node)
+      }
+      func hand(name: String, length: Double, width: Double, y: Double, color: String) {
+        let path = NSBezierPath(
+          roundedRect: .init(
+            x: mm(-width / 2), y: mm(-d * 0.045), width: mm(width), height: mm(length + d * 0.045)),
+          xRadius: mm(width / 2), yRadius: mm(width / 2))
+        path.flatness = mm(0.02)
+        let mesh = SCNShape(path: path, extrusionDepth: mm(0.8))
+        let material = SCNMaterial()
+        material.lightingModel = .physicallyBased
+        material.diffuse.contents = NSColor(hex: color)
+        material.roughness.contents = 0.6
+        let shape = solid(mesh, material)
+        shape.eulerAngles.x = -.pi / 2
+        let pivot = SCNNode()
+        pivot.name = name
+        pivot.position = v(0, y / 100, 0)
+        pivot.addChildNode(shape)
+        root.addChildNode(pivot)
+      }
+      hand(name: "clock.hour", length: d * 0.235, width: d * 0.022, y: t + 1.2, color: "#28312D")
+      hand(name: "clock.minute", length: d * 0.335, width: d * 0.013, y: t + 2.4, color: "#C96543")
+      let brass = SCNMaterial()
+      brass.lightingModel = .physicallyBased
+      brass.diffuse.contents = NSColor(hex: "#B99363")
+      brass.metalness.contents = 0.65
+      brass.roughness.contents = 0.4
+      let pin = solid(
+        SCNCylinder(radius: mm(d * 0.018), height: mm(1.6)), brass, at: v(0, (t + 4) / 100, 0))
+      pin.name = "clock.pin"
+      root.addChildNode(pin)
+      updateClockHands(root, object: object)
     case "lamp":
       let h = object["height"]
       let shadeH = min(object["shadeHeight"], h - 35)
@@ -702,7 +818,7 @@ private struct RenderSignature: Equatable {
         root.addChildNode(
           artworkPlane(
             artwork, width: width, depth: depth, y: h + 0.03, assets: assets,
-            textureLimit: textureLimit))
+            textureLimit: textureLimit, definition: artworkData))
       }
     case "sleeve":
       let width = object["width"]
@@ -723,7 +839,7 @@ private struct RenderSignature: Equatable {
         if i == 1, let artwork = object.artwork {
           let art = artworkPlane(
             artwork, width: panelWidth, depth: depth, y: -stock / 2 - 0.04, assets: assets,
-            underside: true, textureLimit: textureLimit)
+            underside: true, textureLimit: textureLimit, definition: artworkData)
           art.position.x = CGFloat(panelWidth / 200)
           hinge.addChildNode(art)
         }
@@ -813,14 +929,14 @@ private struct RenderSignature: Equatable {
         }
       }
     }
-    if let artwork = object.artwork, !["sleeve", "booklet"].contains(object.recipeID),
+    if let artwork = object.artwork, !["sleeve", "booklet", "clock"].contains(object.recipeID),
       object["width"] > 0, object["depth"] > 0
     {
       let top = Double(root.boundingBox.max.y) * 100 + 0.04
       root.addChildNode(
         artworkPlane(
           artwork, width: object["width"], depth: object["depth"], y: top, assets: assets,
-          textureLimit: textureLimit))
+          textureLimit: textureLimit, definition: artworkData))
     }
     var imageBytes = 0
     var counted = Set<ObjectIdentifier>()
@@ -844,13 +960,13 @@ private struct RenderSignature: Equatable {
   }
   static func artworkPlane(
     _ artwork: Artwork, width: Double, depth: Double, y: Double, assets: URL,
-    underside: Bool = false, textureLimit: Int = 2048
+    underside: Bool = false, textureLimit: Int = 2048, definition: Data? = nil
   ) -> SCNNode {
     let material = SCNMaterial()
     material.lightingModel = .physicallyBased
-    material.diffuse.contents = ArtworkDrawing.image(
-      artwork, width: width, height: depth, assets: assets,
-      pixelsPerMM: min(5, Double(textureLimit) / max(width, depth)))
+    material.diffuse.contents = artworkImage(
+      artwork, width: width, depth: depth, assets: assets, textureLimit: textureLimit,
+      definition: definition)
     material.roughness.contents = 0.88
     material.isDoubleSided = true
     if underside {
@@ -866,6 +982,36 @@ private struct RenderSignature: Equatable {
     node.eulerAngles.x = underside ? .pi / 2 : -.pi / 2
     return node
   }
+  static func updateClockHands(_ root: SCNNode, object: ProductObject) {
+    root.childNode(withName: "clock.hour", recursively: true)?.eulerAngles.y = CGFloat(
+      -(object["hour"] + object["minute"] / 60) * .pi / 6)
+    root.childNode(withName: "clock.minute", recursively: true)?.eulerAngles.y = CGFloat(
+      -object["minute"] * .pi / 30)
+    for name in ["clock.hour", "clock.minute", "clock.pin"] {
+      root.childNode(withName: name, recursively: true)?.isHidden = object["hands"] < 0.5
+    }
+  }
+  private static let artworkImages: NSCache<NSString, NSImage> = {
+    let cache = NSCache<NSString, NSImage>()
+    cache.totalCostLimit = 16_000_000
+    cache.countLimit = 24
+    return cache
+  }()
+  private static func artworkImage(
+    _ art: Artwork, width: Double, depth: Double, assets: URL, textureLimit: Int,
+    definition: Data? = nil
+  ) -> NSImage {
+    var signature = definition ?? (try? JSONEncoder.form.encode(art.renderDefinition)) ?? Data()
+    signature.append(Data("\(width),\(depth),\(textureLimit),\(fontRevision),\(assets.path)".utf8))
+    let key = SHA256.hash(data: signature).map { String(format: "%02x", $0) }.joined() as NSString
+    if let image = artworkImages.object(forKey: key) { return image }
+    let image = ArtworkDrawing.image(
+      art, width: width, height: depth, assets: assets,
+      pixelsPerMM: min(5, Double(textureLimit) / max(width, depth)))
+    let pixels = image.representations.map { $0.pixelsWide * $0.pixelsHigh }.max() ?? 1
+    artworkImages.setObject(image, forKey: key, cost: pixels * 8)
+    return image
+  }
   static func lathe(profile: [(Double, Double)], segments: Int) -> SCNGeometry {
     var profile = profile
     if let first = profile.first, let last = profile.last, first.0 != last.0 || first.1 != last.1 {
@@ -873,10 +1019,16 @@ private struct RenderSignature: Equatable {
     }
     var positions: [SCNVector3] = []
     var normals: [SCNVector3] = []
+    var coordinates: [CGPoint] = []
     var indices: [Int32] = []
+    let perimeter = zip(profile, profile.dropFirst()).reduce(0.0) {
+      $0 + hypot($1.1.0 - $1.0.0, $1.1.1 - $1.0.1)
+    }
+    var travel = 0.0
     for (j, point) in profile.enumerated() {
       let before = profile[max(0, j - 1)]
       let after = profile[min(profile.count - 1, j + 1)]
+      if j > 0 { travel += hypot(point.0 - before.0, point.1 - before.1) }
       let dr = after.0 - before.0
       let dy = after.1 - before.1
       let length = max(hypot(dr, dy), 0.0001)
@@ -884,6 +1036,8 @@ private struct RenderSignature: Equatable {
         let angle = Double(i) / Double(segments) * 2 * .pi
         positions.append(v(point.0 * cos(angle) / 100, point.1 / 100, point.0 * sin(angle) / 100))
         normals.append(v(dy / length * cos(angle), -dr / length, dy / length * sin(angle)))
+        coordinates.append(
+          .init(x: Double(i) / Double(segments), y: travel / max(perimeter, 0.001)))
         if j < profile.count - 1 && i < segments {
           let a = Int32(j * (segments + 1) + i)
           let b = a + Int32(segments + 1)
@@ -892,7 +1046,10 @@ private struct RenderSignature: Equatable {
       }
     }
     return SCNGeometry(
-      sources: [SCNGeometrySource(vertices: positions), SCNGeometrySource(normals: normals)],
+      sources: [
+        SCNGeometrySource(vertices: positions), SCNGeometrySource(normals: normals),
+        SCNGeometrySource(textureCoordinates: coordinates),
+      ],
       elements: [SCNGeometryElement(indices: indices, primitiveType: .triangles)])
   }
 }

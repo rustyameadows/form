@@ -1,6 +1,12 @@
 import Foundation
 
 public func validateArtworkDetails(_ artwork: Artwork) throws {
+  if let boundary = artwork.boundary {
+    var shape = ArtworkElement(
+      kind: "path", x: 0, y: 0, width: boundary.width, height: boundary.height)
+    shape.path = boundary
+    try validateArtworkDetails(Artwork(elements: [shape]))
+  }
   if let position = artwork.canvasPosition {
     guard [position.x, position.y].allSatisfy({ $0.isFinite && abs($0) <= 100000 }) else {
       throw FormError.invalid("Invalid artwork canvas position.")

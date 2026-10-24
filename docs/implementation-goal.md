@@ -66,6 +66,8 @@ Current progress: [precise compound-path operations and transformed native text]
 
 ### F. Advanced physical integration — specification Phase 5
 
+Current progress: [independent shared artwork and the clock study](linked-artwork.md) now support same-project source sheets, flat physical faces, actual-size/proportional fitting, immutable source-only persistence, scoped rendering, native source editing, and physically clipped exports. Clock and linked-sleeve workflows are validated; the complete integration and demonstration requirements below remain open.
+
 - [ ] Independent artwork assets referenced by 3D product surfaces with selective resource invalidation and persistent links.
 - [ ] Pattern-aware placement, complex dielines, panel continuity, surface projections, and geometry-change review warnings.
 - [ ] Dedicated embroidery artwork and cutting/engraving preparation, shared collection assets, material-aware previews, and production packets.

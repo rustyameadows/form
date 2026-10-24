@@ -15,6 +15,13 @@ import FormCore
     guard let context = NSGraphicsContext.current?.cgContext else { return }
     context.saveGState()
     context.clip(to: CGRect(x: 0, y: 0, width: width, height: height))
+    if let boundary = art.boundary {
+      var mask = ArtworkElement(
+        kind: "path", x: 0, y: 0, width: boundary.width, height: boundary.height)
+      mask.path = boundary
+      context.addPath(VectorGeometry.path(mask))
+      context.clip(using: boundary.evenOdd ? .evenOdd : .winding)
+    }
     context.setFillColor(FormColor.color(art.background).cgColor)
     context.fill(CGRect(x: 0, y: 0, width: width, height: height))
     let masks = Set(art.elements.compactMap(\.clipID))
@@ -121,7 +128,8 @@ import FormCore
       locations: locations)
   }
   public static func image(
-    _ art: Artwork, width: Double, height: Double, assets: URL, pixelsPerMM: Double? = nil
+    _ art: Artwork, width: Double, height: Double, assets: URL, pixelsPerMM: Double? = nil,
+    opaqueBackground: Bool = false
   ) -> NSImage {
     let scale = pixelsPerMM ?? min(5, 2048 / max(width, height))
     let w = max(1, Int((width * scale).rounded()))
@@ -130,6 +138,10 @@ import FormCore
       data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: 0,
       space: CGColorSpace(name: CGColorSpace.sRGB)!,
       bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+    if opaqueBackground {
+      graphics.setFillColor(NSColor.white.cgColor)
+      graphics.fill(CGRect(x: 0, y: 0, width: Double(w), height: Double(h)))
+    }
     NSGraphicsContext.saveGraphicsState()
     NSGraphicsContext.current = NSGraphicsContext(cgContext: graphics, flipped: true)
     graphics.translateBy(x: 0, y: Double(h))

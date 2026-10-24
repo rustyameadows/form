@@ -45,7 +45,7 @@ public final class ProjectRepository {
   public func load(url: URL) throws -> Project {
     let manifest = try JSONDecoder.form.decode(
       Manifest.self, from: Data(contentsOf: url.appendingPathComponent("Manifest.json")))
-    guard (1...2).contains(manifest.project.schemaVersion) else {
+    guard (1...3).contains(manifest.project.schemaVersion) else {
       throw FormError.invalid("This project uses a newer file format. Update FORM to open it.")
     }
     var project = manifest.project
@@ -62,9 +62,11 @@ public final class ProjectRepository {
       }
       return object
     }
+    try project.validateArtworkLinks()
     return project
   }
   public func save(_ project: Project) throws {
+    try project.validateArtworkLinks()
     let package = url(for: project.id)
     let objectFolder = package.appendingPathComponent("Objects", isDirectory: true)
     try FileManager.default.createDirectory(at: objectFolder, withIntermediateDirectories: true)

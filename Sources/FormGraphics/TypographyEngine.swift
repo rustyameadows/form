@@ -170,7 +170,7 @@ public enum FormColor {
     let font = raw as! CTFont
     var position = CGPoint.zero
     CTRunGetPositions(run, CFRange(location: 0, length: 1), &position)
-    let baseline = height - offset - origin.y - position.y
+    let baseline = height + offset - origin.y - position.y
     let thickness = max(0.05, CTFontGetUnderlineThickness(font))
     let width = CTRunGetTypographicBounds(run, CFRange(), nil, nil, nil)
     if ((attrs[NSAttributedString.Key.underlineStyle] as? NSNumber)?.intValue ?? 0) > 0 {
@@ -247,13 +247,16 @@ public enum FormColor {
     let range = CTFrameGetVisibleStringRange(frame)
     return range.location + range.length < cachedLayout(element).text.length
   }
+  public static func verticalOffset(_ element: ArtworkElement, points: Bool = false) -> Double {
+    cachedLayout(element).offset / (points ? 1 : pointsPerMM)
+  }
   public static func draw(_ element: ArtworkElement, in context: CGContext) {
     let entry = cachedLayout(element)
     context.saveGState()
     context.clip(to: .init(x: 0, y: 0, width: element.width, height: element.height))
     context.saveGState()
     context.scaleBy(x: 1 / pointsPerMM, y: 1 / pointsPerMM)
-    context.translateBy(x: 0, y: element.height * pointsPerMM - entry.offset)
+    context.translateBy(x: 0, y: element.height * pointsPerMM + entry.offset)
     context.scaleBy(x: 1, y: -1)
     context.textMatrix = .identity
     context.setAllowsFontSubpixelPositioning(true)
@@ -302,7 +305,7 @@ public enum FormColor {
             let origin = origins[i]
             var transform = CGAffineTransform(
               a: 1, b: 0, c: 0, d: -1, tx: origin.x + p.x,
-              ty: element.height * pointsPerMM - offset - origin.y - p.y)
+              ty: element.height * pointsPerMM + offset - origin.y - p.y)
             transform = CTRunGetTextMatrix(run).concatenating(transform)
             path.addPath(glyph, transform: transform)
           } else if indices[j] < text.length,

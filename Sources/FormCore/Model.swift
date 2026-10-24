@@ -129,6 +129,7 @@ public struct Artwork: Codable, Equatable, Sendable {
   public var nudge: Double?
   public var showGuides: Bool?
   public var canvasPosition: Point2?
+  public var boundary: VectorPath?
   public init(background: String = "#224B9B", elements: [ArtworkElement] = [], bleed: Double = 3) {
     self.background = background
     self.elements = elements
@@ -166,6 +167,8 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var parentIterationID: UUID?
   public var relationship: String
   public var artwork: Artwork?
+  public var artworkSourceID: UUID?
+  public var artworkFit: String?
   public var asset: String?
   public var locked: Bool
   public init(
@@ -260,6 +263,13 @@ public struct Recipe: Codable, Equatable, Identifiable, Sendable {
         throw FormError.invalid("Vessel walls must leave an open neck.")
       }
     }
+    if id == "clock" {
+      for key in ["hour", "minute", "hands"] {
+        guard let value = all[key], value.isFinite, value.rounded() == value else {
+          throw FormError.invalid("Clock time and hand visibility require whole values.")
+        }
+      }
+    }
     for part in parts {
       let evaluated = try part.evaluate(all)
       for (key, value) in evaluated {
@@ -307,6 +317,7 @@ public struct CameraState: Codable, Equatable, Sendable {
   public var distance: Double = 12
   public var target: Vector3 = .init(0, 0.6, 0)
   public var projection: String = "perspective"
+  public var viewportAspect: Double?
   public init() {}
 }
 
@@ -341,7 +352,11 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var conversationReference: String?
   public var printSetups: [String: PrintConfiguration]?
   public var minimumSchemaVersion: Int {
-    max(schemaVersion, objects.contains { $0.artwork?.usesExtendedFormat == true } ? 2 : 1)
+    max(
+      schemaVersion,
+      objects.contains {
+        $0.artworkSourceID != nil || $0.recipeID == "clock" || $0.artwork?.boundary != nil
+      } ? 3 : objects.contains { $0.artwork?.usesExtendedFormat == true } ? 2 : 1)
   }
   public init(name: String, subtitle: String = "A new place to make things.") {
     self.name = name

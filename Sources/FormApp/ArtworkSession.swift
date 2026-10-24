@@ -5,9 +5,10 @@ import SwiftUI
 
 struct CanvasFrame: Identifiable {
   var object: ProductObject
+  var surfaceObject: ProductObject
   var rect: CGRect
+  var artwork: Artwork
   var id: UUID { object.id }
-  var artwork: Artwork { object.artwork ?? .init(background: "#FFFFFF") }
 }
 
 enum ArtworkTool: String, CaseIterable {
@@ -48,6 +49,7 @@ enum ArtworkTool: String, CaseIterable {
   weak var store: StudioStore?
   weak var canvas: VectorCanvasView?
   @Published var objectID: UUID?
+  @Published var linkedTargetID: UUID?
   @Published var selection = Set<UUID>() { didSet { store?.objectWillChange.send() } }
   @Published var nodes = Set<UUID>()
   @Published var scopeID: UUID?
@@ -63,7 +65,12 @@ enum ArtworkTool: String, CaseIterable {
   @Published var exportOutline = true
   init(store: StudioStore) { self.store = store }
   var object: ProductObject? { store?.project?.objects.first { $0.id == objectID } }
-  var art: Artwork { object?.artwork ?? .init(background: "#FFFFFF") }
+  var art: Artwork {
+    object.flatMap { store?.project?.editableArtwork($0) } ?? .init(background: "#FFFFFF")
+  }
+  var previewObject: ProductObject? {
+    store?.project?.objects.first { $0.id == linkedTargetID } ?? object
+  }
   var elements: [ArtworkElement] { art.elements.filter { selection.contains($0.id) } }
   var primary: ArtworkElement? { elements.first }
   var unit: PhysicalUnit { art.unit ?? .mm }
@@ -140,9 +147,10 @@ enum ArtworkTool: String, CaseIterable {
     var rowHeight = 0.0
     var result: [CanvasFrame] = []
     for (i, object) in related.enumerated() {
+      let surface = object.id == objectID ? previewObject ?? object : object
+      let unfolding = dieline && object.id == objectID && surface.recipeID == "sleeve"
       let size =
-        dieline && object.id == objectID && object.recipeID == "sleeve"
-        ? Dieline.dimensions(object) : ArtworkDrawing.dimensions(object)
+        unfolding ? Dieline.dimensions(surface) : ArtworkDrawing.dimensions(object)
       if i > 0 && i % 3 == 0 {
         x = 36
         y += rowHeight + 44
@@ -151,9 +159,13 @@ enum ArtworkTool: String, CaseIterable {
       result.append(
         .init(
           object: object,
+          surfaceObject: surface,
           rect: .init(
             x: object.artwork?.canvasPosition?.x ?? x, y: object.artwork?.canvasPosition?.y ?? y,
-            width: size.0, height: size.1)))
+            width: size.0, height: size.1),
+          artwork: (unfolding
+            ? store?.project?.surfaceArtwork(surface) : store?.project?.editableArtwork(object))
+            ?? .init(background: "#FFFFFF")))
       x += size.0 + 36
       rowHeight = max(rowHeight, size.1)
     }
@@ -163,8 +175,10 @@ enum ArtworkTool: String, CaseIterable {
     if let primary = store?.primary, ArtworkDrawing.dimensions(primary).width > 10,
       primary["width"] > 0 || primary.recipeID == "clock"
     {
-      if objectID != primary.id {
-        objectID = primary.id
+      let owner = store?.project?.artworkOwner(primary) ?? primary
+      linkedTargetID = owner.id == primary.id ? nil : primary.id
+      if objectID != owner.id {
+        objectID = owner.id
         selection = []
         scopeID = nil
       }
@@ -172,9 +186,10 @@ enum ArtworkTool: String, CaseIterable {
     if object == nil {
       objectID =
         store?.project?.objects.first {
-          $0.artwork != nil && ($0["width"] > 0 || $0.recipeID == "clock")
+          store?.project?.editableArtwork($0) != nil && ($0["width"] > 0 || $0.recipeID == "clock")
         }?.id
     }
+    if previewObject?.recipeID != "sleeve" { dieline = false }
     selection.formIntersection(Set(art.elements.map(\.id)))
     if scopeID != nil && !art.elements.contains(where: { $0.id == scopeID }) { scopeID = nil }
   }
@@ -182,6 +197,8 @@ enum ArtworkTool: String, CaseIterable {
     guard id != objectID else { return }
     canvas?.finishText()
     objectID = id
+    linkedTargetID = nil
+    dieline = false
     selection = []
     scopeID = nil
     store?.select(id)

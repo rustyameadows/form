@@ -7,12 +7,12 @@ This is a tested foundation, **not completion of the expanded professional 2D sp
 ## Build and domain tests
 
 - Debug and optimized app builds succeeded; the app bundle contains the native executable, custom icon, Info.plist, and stdio MCP executable and is ad hoc signed.
-- `bash scripts/test.sh`: **54 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, atomic batch rollback, undo/redo, modular package round trips, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, and absence of hardware command tools.
+- `bash scripts/test.sh`: **69 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, shared artwork source graphs, atomic batch rollback, undo/redo, immutable package round trips, typography/outline alignment, actual SceneKit camera projections, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, and absence of hardware command tools.
 - No model/API credentials or third-party Swift packages are required.
 
 ## Real MCP and persistence
 
-`python3 scripts/smoke_mcp.py` passed against the running optimized app over its actual stdio MCP executable and local Unix socket. It verified protocol initialization, discovery of 39 unique tools, project creation, invalid input, linked variants, independent iterations, editable artwork, a custom recipe with native parameters, atomic batch rollback, every current export format, and saved-project reopen.
+`python3 scripts/smoke_mcp.py` passed against the running optimized app over its actual stdio MCP executable and local Unix socket. It verified protocol initialization, discovery of 41 unique tools, project creation, invalid input, linked variants, independent iterations, editable artwork, a custom recipe with native parameters, atomic batch rollback, every current export format, and saved-project reopen.
 
 The Mac app was also saved, quit, and reopened. Native text edits, the agent-defined lamp recipe, artwork, project identity, and edited dimensions survived. Codex's host configuration was registered with the built `form-mcp` executable and inspected successfully. This chat's tool catalog need not refresh immediately; a new Codex chat can load the registered server.
 
@@ -47,7 +47,7 @@ The [editor guide](2d-editor.md) records limitations. Separate-path combination,
 
 ## Precise paths and transformed native text
 
-`python3 scripts/smoke_paths.py` passed against the real packaged app with 39 tools. It created the linked **Curve atelier** study, inserted/split/joined/reversed a cubic path, rejected invalid edits without mutation, checked undo/redo and linked variant equality, generated physical SVG/PDF/PNG outputs, and reopened the saved artwork intact.
+`python3 scripts/smoke_paths.py` passed against the real packaged app with 41 tools. It created the linked **Curve atelier** study, inserted/split/joined/reversed a cubic path, rejected invalid edits without mutation, checked undo/redo and linked variant equality, generated physical SVG/PDF/PNG outputs, and reopened the saved artwork intact.
 
 Native testing edited text in a group with rotation and shear, including clicking a visible word to select its correct characters. Replacement and undo restored the exact stored artwork. A reflected parent group was tested the same way; screenshots confirmed the native selection, text, and static artwork stayed aligned. Automated coordinate checks exercise 48 successive affine maps with changing frame origins/sizes and forward/inverse conversions.
 
@@ -59,16 +59,33 @@ Curve tests sample shape-preserving operations under nested affine transforms, c
 
 ## Real official Orca slicing
 
+The [shared-artwork clock study](linked-artwork.md) adds a third real local slicing case, detailed below.
+
 Official OrcaSlicer **2.4.2** was downloaded from its GitHub release, SHA-256 verified, extracted unmodified, and run locally. `python3 scripts/smoke_print.py` passed through FORM's real MCP workflow:
 
 | Object | Mesh size | Layers | Orca estimate | Filament estimate |
 | --- | --- | --- | --- | --- |
 | Test cube | 20 × 20 × 20 mm | 100 | 21m 17s | 3.64 g |
 | Hollow lamp shade | 100 × 100 × 60 mm | 300 | 50m 44s | 29.20 g |
+| Clock dial with 8 mm bore | 240 × 240 × 6 mm | 30 | 2h 57m 4s | 130.11 g |
 
 Both jobs produced valid binary STL records, actual G-code, a sliced 3MF ZIP containing G-code, parsed extrusion-layer previews, configuration snapshots, and logs. Invalid layer settings were rejected without changing the existing setup. A new filament was saved and rediscovered. Per-object component settings persisted. The helper's idempotent checksum-verification path also passed.
 
 **Printer connections attempted: 0. Print jobs sent: 0.** Estimates are slicer predictions, not observed physical print results. Only the 0.4 mm P1S profile has been exercised end to end. A live P1S test awaits its local IP/serial and code entered directly in FORM. TLS certificate behavior, firmware-specific telemetry, and real network recovery remain unverified on that printer.
+
+## Independent artwork and the clock study
+
+`python3 scripts/smoke_clock.py --slice` passed through the real packaged MCP server in an isolated library. Two physical clock variants reference one independent source. An edit made through a consumer updates the source and both physical faces; only the source object file changes in the manifest. The script checks rollback, detachment on independent iteration, source-context glyph outlining and node edits, shared undo, schema-3 save/reopen, and all artwork export formats. Unit tests additionally check appearance-preserving source deletion/detachment, proportional versus actual-size placement, and immutable consumer revisions.
+
+Native Home **Start Clock dial study** created the complete project. **Edit source** opened the independent sheet while keeping the physical clock in the live preview. Native centered numeral input changed **12 → XII** on both consumers, and Undo restored the original. The native outline shortcut converted 12 into an ordinary editable path with 55 nodes, retained its hidden text source, and native Undo restored the text. Changing the physical dial to 280 mm preserved the 240 mm source; the native Fit control showed **116.7%**. Detach changed both physical variants to owned artwork and native Undo restored their links. A sleeve's inline artwork was extracted to a source sheet; native artwork/dieline views and the live physical preview retained the source.
+
+The clock artwork PNG is **1417 × 1417 pixels at 150 DPI**. Its PDF is **680.315 × 680.315 points**, confirmed with Poppler and visually reviewed. The circular boundary and shaft opening agree across PDF, PNG, and outlined SVG. The separate cut SVG has exactly two circles with radii 120 and 4 mm. JPEG has a white matte. The clock mesh measures 240.00001 × 240.00001 × 6.00000 mm. Its **4,096 triangles** have two incident triangles per welded edge, and its signed volume is approximately **271,074 mm³**, within 1% of the analytic annulus. The sliced files retain the opening and exclude artwork rendering geometry.
+
+Twenty saved hand-position edits measured approximately **12 ms median**, with **zero dial geometry rebuilds**. Source layouts remain editable and do not change when time changes. A bounded radial mesh replaced unnecessary shape/chamfer tessellation, and the face-image cache reuses serialized artwork definitions rather than encoding them twice.
+
+Camera framing tests project actual SceneKit camera matrices across portrait/wide viewports, near-horizontal/near-overhead views, and different azimuths, proving bounds stay within the intended margin in both perspective and orthographic projection. Stored viewport aspect lets scene output preserve the complete source view at a different output ratio. Native inset and study framing use the same fitting rules. Scene initialization and project switching preserve saved camera angles; a scene writes camera state only to its matching project.
+
+This is a prototype clock dial with illustrative hand blanks, not a completed working mechanism or a verified mounting/shaft system. Curved surface mapping, cross-project assets, panel continuity, the remaining demonstrations, and the full professional 2D requirements remain open.
 
 ## Performance sample
 
@@ -76,13 +93,13 @@ Both jobs produced valid binary STL records, actual G-code, a sliced 3MF ZIP con
 
 | Metric | Observed |
 | --- | --- |
-| Saved parameter edit latency, median | 15.27 ms |
-| Saved parameter edit latency, p95 | 17.33 ms |
-| Renderer synchronization after edits | 0.433 ms |
+| Saved parameter edit latency, median | 33.31 ms |
+| Saved parameter edit latency, p95 | 33.94 ms |
+| Renderer synchronization after edits | 3.455 ms |
 | Geometry rebuilds for 30 parameter edits | 30; unaffected objects reused |
 | Geometry rebuilt for a transform-only edit | None |
 | Idle CPU over a 3-second sample | 0.0% |
-| Resident memory | Approximately 304 MB |
+| Resident memory | Approximately 348 MB |
 
 The view is demand-driven with a 60 Hz interaction target. Actual sustained frame rate was not instrumented, and these measurements are one local sample rather than a cross-device guarantee. The separate 600-element text/vector sample follows. Documents beyond that size and very large toolpaths need additional measurements.
 
@@ -92,15 +109,17 @@ The view is demand-driven with a 60 Hz interaction target. Actual sustained fram
 
 | Metric | Observed |
 | --- | --- |
-| Saved MCP edit latency, median | 39.19 ms |
-| Saved MCP edit latency, p95 | 39.95 ms |
+| Saved MCP edit latency, median | 31.22 ms |
+| Saved MCP edit latency, p95 | 34.21 ms |
 | Last measured native canvas draw | 0.918 ms |
 | Text layouts rebuilt for 20 placement edits | 0 |
+| Accessibility items updated for 20 placement edits | 19 |
+| Saved edit latency after native accessibility inspection, median / p95 | 53.23 / 66.77 ms |
 | Settled canvas redraws over 3 seconds | 0 |
-| Idle CPU over 3 seconds | 0.0% |
-| Resident memory | Approximately 356 MB |
+| Idle CPU over 3 seconds | 0.33% |
+| Resident memory | Approximately 361 MB |
 
-An earlier run used roughly 760 MB and 101 ms median saved edits. Correct bitmap/GPU cache accounting and using a 1024-edge texture for the small 3D inset reduced that cost; Table textures retain their existing 2048-edge limit and physical exports retain their requested resolution. Renderer child lookup and imported-image reuse are bounded, and the text cache is limited to 800 layouts. These are local samples, not sustained gesture-FPS measurements or a cross-device guarantee.
+Table textures retain their 2048-edge limit, the small 3D inset uses a 1024-edge texture, and physical exports retain their requested resolution. Bitmap/GPU cache accounting is bounded; a face reuses its serialized definition rather than encoding it again. The canvas reuses accessible items and only writes changed attributes. Forty warm edits after native accessibility inspection updated 39 items and rebuilt no text layouts. Repeated inset fitting skips identical camera states. The text cache is limited to 800 layouts. These are local samples, not sustained gesture-FPS measurements or a cross-device guarantee.
 
 ## Reproduce
 
@@ -117,6 +136,7 @@ In another terminal:
 python3 scripts/smoke_mcp.py
 python3 scripts/smoke_artwork.py
 python3 scripts/smoke_paths.py
+python3 scripts/smoke_clock.py --slice
 python3 scripts/benchmark_artwork.py
 python3 scripts/smoke_print.py
 python3 scripts/benchmark.py

@@ -148,6 +148,15 @@ final class ArtworkRuler: NSRulerView {
   }
 }
 
+private final class CanvasTextView: NSTextView {
+  var verticalOffset = 0.0
+  override var textContainerOrigin: NSPoint {
+    var origin = super.textContainerOrigin
+    origin.y += verticalOffset
+    return origin
+  }
+}
+
 final class VectorCanvasView: NSView, NSTextViewDelegate {
   weak var session: ArtworkSession?
   private let ppm = TypographyEngine.pointsPerMM
@@ -171,6 +180,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var guideID: UUID?
   private var hover = CGPoint.zero
   private var accessibilityItems: [ArtworkAccessibilityElement] = []
+  private var accessibilityUpdates = 0
   private var frameDragOrigin = CGPoint.zero
   private var drawCount = 0, lastDrawMS = 0.0
   var diagnostics: [String: Any] {
@@ -178,6 +188,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     result["draw_count"] = drawCount
     result["last_draw_ms"] = lastDrawMS
     result["frames"] = frames.count
+    result["accessibility_updates"] = accessibilityUpdates
     result["live_preview"] = session?.preview ?? false
     result["renders_continuously"] = false
     return result
@@ -297,20 +308,20 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         at: .init(x: f.rect.minX, y: f.rect.minY - 15 / scale), withAttributes: attributes)
       context.saveGState()
       context.translateBy(x: f.rect.minX, y: f.rect.minY)
-      if session.dieline, f.object.recipeID == "sleeve", f.id == session.objectID {
+      if session.dieline, f.surfaceObject.recipeID == "sleeve", f.id == session.objectID {
         context.setFillColor(NSColor.white.cgColor)
         context.fill(.init(origin: .zero, size: f.rect.size))
         context.saveGState()
-        context.translateBy(x: f.object["width"] + f.object["height"], y: 0)
+        context.translateBy(x: f.surfaceObject["width"] + f.surfaceObject["height"], y: 0)
         ArtworkRenderer.draw(
-          f.artwork, width: f.object["width"], height: f.rect.height, assets: session.assets)
+          f.artwork, width: f.surfaceObject["width"], height: f.rect.height, assets: session.assets)
         context.restoreGState()
         context.setStrokeColor(NSColor(hex: "#D45A37").cgColor)
         context.setLineWidth(1 / scale)
         context.stroke(.init(origin: .zero, size: f.rect.size))
         context.setStrokeColor(NSColor(hex: "#4589B0").cgColor)
         context.setLineDash(phase: 0, lengths: [4 / scale, 3 / scale])
-        for x in Dieline.scores(f.object) {
+        for x in Dieline.scores(f.surfaceObject) {
           context.move(to: .init(x: x, y: 0))
           context.addLine(to: .init(x: x, y: f.rect.height))
           context.strokePath()
@@ -1063,7 +1074,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let s = session, activeFrame != nil else { return }
     s.dieline = false
     s.beginGesture()
-    let tv = NSTextView(
+    let tv = CanvasTextView(
       frame: .init(
         x: 0, y: 0, width: e.width * ppm, height: e.height * ppm))
     tv.isRichText = true
@@ -1072,6 +1083,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     tv.importsGraphics = false
     tv.allowsUndo = true
     tv.drawsBackground = false
+    tv.clipsToBounds = true
     tv.textContainerInset = .zero
     tv.textContainer?.lineFragmentPadding = 0
     tv.isVerticallyResizable = e.typography?.frameMode == "point"
@@ -1124,6 +1136,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       return
     }
     let world = s.art.worldTransform(element)
+    if let tv = textView as? CanvasTextView {
+      tv.verticalOffset = TypographyEngine.verticalOffset(element, points: true)
+      tv.needsDisplay = true
+    }
     clip.configure(
       frame: CGRect(
         x: f.rect.minX * ppm, y: f.rect.minY * ppm, width: f.rect.width * ppm,
@@ -1383,24 +1399,48 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   @objc private func deleteAction() { session?.execute("delete") }
   private func updateAccessibilityItems() {
     guard let s = session, let frame = activeFrame, let window else { return }
+    let artwork = s.art
+    let selection = s.selection
+    let existing = Dictionary(
+      uniqueKeysWithValues: accessibilityItems.compactMap { item in
+        item.elementID.map { ($0, item) }
+      })
     var next: [ArtworkAccessibilityElement] = []
-    for element in s.art.elements where element.hidden != true {
-      let bounds = s.art.bounds(of: element)
+    for element in artwork.elements where element.hidden != true {
+      let bounds = artwork.bounds(of: element)
       let rect = CGRect(
         x: (frame.rect.minX + bounds.x) * ppm, y: (frame.rect.minY + bounds.y) * ppm,
         width: bounds.width * ppm, height: bounds.height * ppm)
-      let child =
-        accessibilityItems.first { $0.elementID == element.id } ?? ArtworkAccessibilityElement()
-      child.setAccessibilityElement(true)
-      child.setAccessibilityEnabled(true)
-      child.canvas = self
-      child.elementID = element.id
-      child.setAccessibilityRole(.button)
-      child.setAccessibilityLabel("\(element.title), \(element.kind)")
-      child.setAccessibilityParent(self)
-      child.setAccessibilityFrame(window.convertToScreen(convert(rect, to: nil)))
-      child.setAccessibilityValue(s.selection.contains(element.id) ? "Selected" : "")
-      child.setAccessibilityIdentifier(element.id.uuidString)
+      let child = existing[element.id] ?? ArtworkAccessibilityElement()
+      if child.elementID == nil {
+        child.setAccessibilityElement(true)
+        child.setAccessibilityEnabled(true)
+        child.canvas = self
+        child.elementID = element.id
+        child.setAccessibilityRole(.button)
+        child.setAccessibilityParent(self)
+        child.setAccessibilityIdentifier(element.id.uuidString)
+      }
+      let label = "\(element.title), \(element.kind)"
+      let screen = window.convertToScreen(convert(rect, to: nil))
+      let value = selection.contains(element.id) ? "Selected" : ""
+      var changed = false
+      if child.cachedLabel != label {
+        child.setAccessibilityLabel(label)
+        child.cachedLabel = label
+        changed = true
+      }
+      if child.cachedFrame != screen {
+        child.setAccessibilityFrame(screen)
+        child.cachedFrame = screen
+        changed = true
+      }
+      if child.cachedValue != value {
+        child.setAccessibilityValue(value)
+        child.cachedValue = value
+        changed = true
+      }
+      if changed { accessibilityUpdates += 1 }
       next.append(child)
     }
     accessibilityItems = next
@@ -1415,6 +1455,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
 private final class ArtworkAccessibilityElement: NSAccessibilityElement {
   weak var canvas: VectorCanvasView?
   var elementID: UUID?
+  var cachedLabel: String?
+  var cachedFrame: CGRect?
+  var cachedValue: String?
   override func accessibilityPerformPress() -> Bool {
     guard let id = elementID else { return false }
     Task { @MainActor [weak self] in

@@ -51,7 +51,11 @@ import SwiftUI
     return OrcaEngine.appURL(configured: store.library.orcaAppPath, library: store.repository.root)
   }
   var components: [String] {
-    object?.recipeID == "lamp" ? ["Shade", "Stem", "Base", "Complete object"] : ["Complete object"]
+    if object?.recipeID == "clock" {
+      return ["Dial", "Hour hand", "Minute hand", "Complete object"]
+    }
+    return object?.recipeID == "lamp"
+      ? ["Shade", "Stem", "Base", "Complete object"] : ["Complete object"]
   }
   func open(objectID: UUID? = nil) {
     if busy {
@@ -72,6 +76,9 @@ import SwiftUI
     }
     if object?.recipeID == "lamp", configuration.component == "Complete object" {
       configuration.component = "Shade"
+    }
+    if object?.recipeID == "clock", configuration.component == "Complete object" {
+      configuration.component = "Dial"
     }
     prepare()
     store?.showingPrint = true
@@ -119,6 +126,7 @@ import SwiftUI
     configuration.printerID = printer.id
     configuration.filamentID = filament.id
     if object?.recipeID == "lamp" { configuration.component = "Shade" }
+    if object?.recipeID == "clock" { configuration.component = "Dial" }
     prepare()
   }
   func slice() throws {

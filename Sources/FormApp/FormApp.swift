@@ -18,6 +18,11 @@ import SwiftUI
     .commands {
       CommandGroup(replacing: .newItem) {
         Button("New Project") { store.createProject() }.keyboardShortcut("n")
+        Menu("New from Study") {
+          ForEach(Samples.templates) { template in
+            Button(template.title) { store.createProject(template: template.id) }
+          }
+        }
         Button("Open Project…") { store.openPackage() }.keyboardShortcut("o")
         Divider()
         Button("Show Home") { store.home() }.keyboardShortcut("h", modifiers: [.command, .shift])
@@ -109,8 +114,8 @@ import SwiftUI
         Divider()
         Button("Export Studio Image…") { store.exportDialog("png") }.disabled(store.project == nil)
         Button("Export Artwork PDF…") { store.exportDialog("pdf") }.disabled(store.primary == nil)
-        Button("Export Dieline SVG…") { store.exportDialog("svg") }.disabled(
-          store.primary?.recipeID != "sleeve")
+        Button("Export Cut Profile SVG…") { store.exportDialog("svg") }.disabled(
+          !["sleeve", "clock"].contains(store.primary?.recipeID ?? ""))
         Button("Export Component Summary…") { store.exportDialog("json") }.disabled(
           store.project == nil)
       }

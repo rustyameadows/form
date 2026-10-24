@@ -280,6 +280,7 @@ extension ArtworkElement {
 }
 extension Artwork {
   public var usesExtendedFormat: Bool {
+    if boundary != nil { return true }
     if unit != nil || guides != nil || gridSpacing != nil || showGrid != nil || showGuides != nil
       || snapEnabled != nil || nudge != nil || canvasPosition != nil
     {
@@ -313,6 +314,14 @@ extension Artwork {
     }
     var result = self
     result.elements = elements.filter { required.contains($0.id) }
+    if var boundary = result.boundary {
+      for c in boundary.contours.indices {
+        boundary.contours[c].nodes = boundary.contours[c].nodes.map {
+          PathCommands.transformed($0, by: .translation(-bounds.x, -bounds.y))
+        }
+      }
+      result.boundary = boundary
+    }
     for i in result.elements.indices where result.elements[i].parentID == nil {
       ArtworkCommands.translate(&result.elements[i], dx: -bounds.x, dy: -bounds.y)
     }

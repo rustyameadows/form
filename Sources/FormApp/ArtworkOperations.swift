@@ -31,7 +31,7 @@ extension StudioStore {
       throw FormError.invalid("Select artwork element IDs.")
     }
     let ids = Set(rawIDs.compactMap(UUID.init(uuidString:)))
-    let art = object.artwork ?? .init(background: "#FFFFFF")
+    let art = project.editableArtwork(object) ?? .init(background: "#FFFFFF")
     guard ids.count == rawIDs.count, ids.isSubset(of: Set(art.elements.map(\.id))) else {
       throw FormError.invalid("Unknown artwork element ID.")
     }
@@ -105,9 +105,7 @@ extension StudioStore {
       "Artwork: \(name == "form_convert_to_paths" ? "convert to outlines":"combine paths")",
       source: "Graphics"
     ) { p in
-      for i in p.objects.indices where p.objects[i].designID == object.designID {
-        p.objects[i].artwork = next
-      }
+      try p.setArtwork(next, for: object.id)
     }
     return [
       "selected_elements": created.map { $0.id.uuidString },
@@ -135,7 +133,7 @@ extension StudioStore {
     let format = arguments["format"] as? String ?? "svg"
     let dimensions = ArtworkDrawing.dimensions(object)
     let assets = repository.url(for: project.id).appendingPathComponent("Assets")
-    var art = object.artwork ?? .init(background: "#FFFFFF")
+    var art = project.surfaceArtwork(object) ?? .init(background: "#FFFFFF")
     var width = dimensions.width
     var height = dimensions.height
     if let raw = arguments["element_ids"] as? [String], !raw.isEmpty {
@@ -192,7 +190,8 @@ extension StudioStore {
           "Choose 36–1200 DPI with no more than 100 megapixels or 16000 pixels per edge.")
       }
       let image = ArtworkRenderer.image(
-        art, width: width, height: height, assets: assets, pixelsPerMM: dpi / 25.4)
+        art, width: width, height: height, assets: assets, pixelsPerMM: dpi / 25.4,
+        opaqueBackground: format == "jpeg")
       guard let bitmap = image.representations.first as? NSBitmapImageRep else {
         throw FormError.invalid("Raster export failed.")
       }

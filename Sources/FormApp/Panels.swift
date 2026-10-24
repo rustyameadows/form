@@ -145,13 +145,14 @@ struct ObjectInspector: View {
               ).font(.system(size: 10)).foregroundStyle(Palette.secondary).fixedSize(
                 horizontal: false, vertical: true)
             }
+            if object.supportsArtworkFace { ArtworkSourcePanel(object: object, project: project) }
           }.padding(18)
         }.scrollIndicators(.hidden)
         Divider()
         HStack {
-          if ["sleeve", "booklet", "paperStack", "box", "artboard"].contains(object.recipeID) {
+          if object.supportsArtworkFace {
             Button {
-              if object.artwork == nil {
+              if project.editableArtwork(object) == nil {
                 store.saveArtwork(
                   .init(background: project.material(object.materialID).color), for: object)
               }

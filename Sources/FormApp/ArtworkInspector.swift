@@ -115,9 +115,15 @@ struct ArtworkInspector: View {
               Spacer()
               Image(systemName: "link").foregroundStyle(Palette.accent)
             }
-            ObjectPreview(object: object, project: project, assets: session.assets).frame(
+            ObjectPreview(
+              object: session.previewObject ?? object, project: project, assets: session.assets
+            ).frame(
               height: 155
             ).clipped()
+            if let target = session.previewObject, session.linkedTargetID != nil {
+              Text("Editing \(object.name) · linked to \(target.name)")
+                .font(.system(size: 9)).foregroundStyle(Palette.secondary)
+            }
           }
           if let e {
             HStack {
@@ -382,8 +388,11 @@ struct ArtworkInspector: View {
           Picker(
             "Vertical",
             selection: Binding(
-              get: { type.verticalAlignment },
-              set: { v in session.typography { $0.verticalAlignment = v } })
+              get: { session.primary?.typography?.verticalAlignment ?? "top" },
+              set: { v in
+                session.canvas?.finishText()
+                session.typography { $0.verticalAlignment = v }
+              })
           ) {
             Text("Top").tag("top")
             Text("Middle").tag("middle")

@@ -40,7 +40,7 @@ import FormCore
         let id = e.id.uuidString
         if let clip = e.clipID, let mask = art.elements.first(where: { $0.id == clip }) {
           definitions +=
-            "<clipPath id=\"clip-\(id)\"><path d=\"\(data(VectorGeometry.path(mask)))\" transform=\"\(transform(mask.localTransform))\" fill-rule=\"\(mask.path?.evenOdd == true ? "evenodd":"nonzero")\"/></clipPath>"
+            "<clipPath id=\"clip-\(id)\"><path d=\"\(data(VectorGeometry.path(mask)))\" transform=\"\(transform(mask.localTransform))\" clip-rule=\"\(mask.path?.evenOdd == true ? "evenodd":"nonzero")\"/></clipPath>"
           output += "<g clip-path=\"url(#clip-\(id))\">"
         }
         output +=
@@ -105,6 +105,14 @@ import FormCore
       return output
     }
     body += try children(nil)
+    if let boundary = art.boundary {
+      var shape = ArtworkElement(
+        kind: "path", x: 0, y: 0, width: boundary.width, height: boundary.height)
+      shape.path = boundary
+      definitions +=
+        "<clipPath id=\"surface-boundary\"><path d=\"\(data(VectorGeometry.path(shape)))\" clip-rule=\"\(boundary.evenOdd ? "evenodd":"nonzero")\"/></clipPath>"
+      body = "<g clip-path=\"url(#surface-boundary)\">" + body + "</g>"
+    }
     return "<defs>\(definitions)</defs>" + body
   }
   public static func document(

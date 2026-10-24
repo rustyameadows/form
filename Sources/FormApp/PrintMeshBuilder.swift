@@ -7,6 +7,17 @@ import SceneKit
     object: ProductObject, project: Project, assets: URL, configuration: PrintConfiguration
   ) throws -> PrintMesh {
     let root = GeometryFactory.object(object, project: project, assets: assets)
+    if object.recipeID == "clock" {
+      let selected = [
+        "Dial": "clock.dial", "Hour hand": "clock.hour", "Minute hand": "clock.minute",
+      ][configuration.component]
+      for node in root.childNodes
+      where node.name == "clock.face" || selected != nil && node.name != selected
+        || selected == nil && node.isHidden
+      {
+        node.removeFromParentNode()
+      }
+    }
     if object.recipeID == "lamp" {
       let index = ["Base": 0, "Stem": 1, "Shade": 2][configuration.component]
       for (i, node) in root.childNodes.enumerated() where index != nil ? i != index : i == 3 {

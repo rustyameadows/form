@@ -85,8 +85,8 @@ struct StudioTopBar: View {
           Button("Studio image · PNG") { store.exportDialog("png") }
           Button("Printable artwork · PDF") { store.exportDialog("pdf") }.disabled(
             store.primary == nil)
-          Button("Folding dieline · SVG") { store.exportDialog("svg") }.disabled(
-            store.primary?.recipeID != "sleeve")
+          Button("Cut profile · SVG") { store.exportDialog("svg") }.disabled(
+            !["sleeve", "clock"].contains(store.primary?.recipeID ?? ""))
           Button("Component summary · JSON") { store.exportDialog("json") }
           Divider()
           Button("Save project copy…") { store.saveCopy() }
@@ -224,7 +224,15 @@ struct HomeView: View {
           alignment: .leading, spacing: 30
         ) {
           ForEach(filtered) { project in ProjectCard(project: project) }
-          NewProjectCard()
+          if store.projects.isEmpty { NewProjectCard() }
+        }
+        if search.isEmpty {
+          VStack(alignment: .leading, spacing: 14) {
+            SectionLabel("START WITH A STUDY")
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 270), spacing: 22)], spacing: 22) {
+              ForEach(Samples.templates.prefix(3)) { StudyCard(template: $0) }
+            }
+          }
         }
         HStack(spacing: 10) {
           Image(systemName: "point.3.connected.trianglepath.dotted").font(.system(size: 17))

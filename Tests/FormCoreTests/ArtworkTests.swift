@@ -6,6 +6,46 @@ import XCTest
 @testable import FormGraphics
 
 final class ArtworkTests: XCTestCase {
+  func testVerticalAlignmentMovesVisibleTextDownAndPreservesOutlineInk() async throws {
+    try await MainActor.run {
+      var element = ArtworkElement(
+        kind: "text", x: 0, y: 0, width: 50, height: 40,
+        text: "12", color: "#111111", fontSize: 36)
+      var style = Typography()
+      style.fontName = "Georgia"
+      style.alignment = "center"
+      style.underline = true
+      element.typography = style
+      let top = try TypographyEngine.outlines(element).boundingBoxOfPath
+      for alignment in ["middle", "bottom"] {
+        element.typography?.verticalAlignment = alignment
+        let outline = try TypographyEngine.outlines(element)
+        let box = outline.boundingBoxOfPath
+        let offset = TypographyEngine.verticalOffset(element)
+        XCTAssertGreaterThan(offset, 10)
+        XCTAssertEqual(box.minY, top.minY + offset, accuracy: 1e-6)
+        XCTAssertEqual(box.height, top.height, accuracy: 1e-6)
+        XCTAssertLessThanOrEqual(box.maxY, element.height)
+        let vector = try VectorGeometry.element(from: outline, color: element.color)
+        let original = ArtworkRenderer.image(
+          .init(background: "#FFFFFF", elements: [element]), width: 50, height: 40,
+          assets: URL(fileURLWithPath: "/tmp"), pixelsPerMM: 4)
+        let converted = ArtworkRenderer.image(
+          .init(background: "#FFFFFF", elements: [vector]), width: 50, height: 40,
+          assets: URL(fileURLWithPath: "/tmp"), pixelsPerMM: 4)
+        let a = original.representations[0] as! NSBitmapImageRep
+        let b = converted.representations[0] as! NSBitmapImageRep
+        let count = a.bytesPerRow * a.pixelsHigh
+        let error =
+          zip(
+            UnsafeBufferPointer(start: a.bitmapData!, count: count),
+            UnsafeBufferPointer(start: b.bitmapData!, count: count)
+          )
+          .reduce(0.0) { $0 + Double(abs(Int($1.0) - Int($1.1))) } / Double(count * 255)
+        XCTAssertLessThan(error, 0.008)
+      }
+    }
+  }
   func testAffineTextContainerClipsPointerHitTestingToPhysicalFrame() async throws {
     await MainActor.run {
       let canvas = NativeAffineView(frame: .init(x: 0, y: 0, width: 1000, height: 1000))

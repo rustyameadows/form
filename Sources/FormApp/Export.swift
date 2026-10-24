@@ -62,15 +62,23 @@ extension StudioStore {
       guard let data = image.pngData() else { throw FormError.invalid("Image rendering failed.") }
       try data.write(to: output, options: .atomic)
     case "svg":
-      guard let object, object.recipeID == "sleeve" else {
-        throw FormError.invalid("Select a folding sleeve to export its dieline.")
+      if let object, object.recipeID == "clock" {
+        try ClockDesign.profileSVG(object).write(to: output, atomically: true, encoding: .utf8)
+        break
       }
+      guard let object, object.recipeID == "sleeve" else {
+        throw FormError.invalid("Select a folding sleeve or clock to export its cut profile.")
+      }
+      var surface = object
+      surface.artwork = project.surfaceArtwork(object)
       try Dieline.svg(
-        object, assets: repository.url(for: project.id).appendingPathComponent("Assets")
+        surface, assets: repository.url(for: project.id).appendingPathComponent("Assets")
       ).write(to: output, atomically: true, encoding: .utf8)
     case "pdf":
       guard let object else { throw FormError.invalid("Select a printable object first.") }
-      let art = object.artwork ?? Artwork(background: project.material(object.materialID).color)
+      let art =
+        project.surfaceArtwork(object)
+        ?? Artwork(background: project.material(object.materialID).color)
       let size = ArtworkDrawing.dimensions(object)
       guard size.width > 10, size.height > 10 else {
         throw FormError.invalid("This object has no printable face.")

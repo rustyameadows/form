@@ -3,6 +3,17 @@ import Foundation
 extension Recipe {
   public static let builtins: [Recipe] = [
     .init(
+      "clock", "Clock", "clock",
+      "A physical dial with shaft opening, linked typography, and adjustable hand positions.",
+      [
+        .init("diameter", "Dial diameter", 240, 80...500),
+        .init("thickness", "Dial thickness", 6, 2...30, step: 0.5),
+        .init("bore", "Shaft opening", 8, 2...18, step: 0.5),
+        .init("hour", "Hour", 10, 1...12, unit: "h", step: 1),
+        .init("minute", "Minute", 8, 0...59, unit: "min", step: 1),
+        .init("hands", "Show hands", 1, 0...1, unit: "", step: 1),
+      ]),
+    .init(
       "artboard", "Artwork sheet", "square.and.pencil",
       "An independent vector artwork sheet on the Table.",
       [
