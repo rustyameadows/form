@@ -8,6 +8,8 @@ One continuous Table for objects, artwork, materials, references, and the versio
 
 The next governing document is the [2D Design, Typography & Vector Editing specification](docs/2d-design-typography-vector-spec.md). Its professional editing requirements expand the [active implementation goal](docs/implementation-goal.md); the checklist distinguishes shipped foundations from remaining work.
 
+**Queued next feature push:** [Textiles, Apparel & Merchandise](docs/textiles-apparel-merchandise-spec.md), led by a NASA-themed bomber jacket with custom patches, sewn-in tags, and embroidery. The [demo brief and sequence](docs/next-feature-push.md) are recorded; textile implementation has not started.
+
 ## Build and open
 
 Requires macOS 14 or later and Xcode 16 or later with the Swift 6 toolchain. There are no third-party package dependencies or API keys.
@@ -104,6 +106,8 @@ This foundation has a focused artwork editor and procedural construction system.
 
 - [Initial product brief · Version 0.1](docs/product-brief.md)
 - [2D Design, Typography & Vector Editing · guiding specification](docs/2d-design-typography-vector-spec.md)
+- [Textiles, Apparel & Merchandise · next feature specification](docs/textiles-apparel-merchandise-spec.md)
+- [Queued feature push · NASA bomber jacket demonstration](docs/next-feature-push.md)
 - [Expanded implementation goal and completion checklist](docs/implementation-goal.md)
 - [Implementation architecture and boundaries](docs/architecture.md)
 - [MCP setup and custom object recipes](docs/mcp.md)

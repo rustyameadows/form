@@ -74,3 +74,9 @@ The 15-step workflow in specification section 19 is mandatory: exact 8 × 10 inc
 Every checkpoint also requires deterministic MCP access to the same native operations, meaningful undo behavior, round-trip persistence, and appropriate validation. Measure ordinary operations on hundreds of elements, keep idle rendering demand-driven, and test demonstrations through the native UI. Do not label the expanded goal complete while these acceptance requirements remain unfinished.
 
 See [validation notes](validation.md) for measured results and current limitations. Speculative and unavailable hardware checks must remain clearly identified.
+
+## Queued next feature push
+
+The [Textiles, Apparel & Merchandise brief](textiles-apparel-merchandise-spec.md) is recorded as the next feature push. Its lead demo is a **NASA-themed bomber jacket with custom patches, sewn-in tags, embroidery, and related garment details**, as directed by the user. See the [queued demo and development sequence](next-feature-push.md).
+
+This new textile push has not started. The user requested recording it for later; it does not replace the active 2D/3D implementation work or expand the current completion checklist into the entire textile roadmap.

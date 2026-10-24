@@ -1140,21 +1140,21 @@ This tests the text system’s ability to handle both expressive display typogra
 
 The 2D editor should be considered successful when the following workflow is reliable:
 
-## 1. Create a new artwork frame measuring exactly 8 by 10 inches.
-## 2. Add text using any compatible installed Mac font.
-## 3. Adjust font size, weight, leading, tracking, and alignment.
-## 4. Apply supported ligatures, stylistic alternates, and variable font settings.
-## 5. Manually adjust spacing between individual glyphs.
-## 6. Add vector shapes and edit their nodes.
-## 7. Align several objects using snapping, guides, and exact numerical properties.
-## 8. Group objects, transform the group, and edit objects inside it.
-## 9. Apply colors, strokes, gradients, and clipping masks.
-## 10. Create a second variant of the composition.
-## 11. Convert a copy of the typography to editable outlines.
-## 12. Link the artwork to a physical object’s surface.
-## 13. Edit the artwork while observing the corresponding 3D representation update.
-## 14. Export dimensionally accurate vector and print files.
-## 15. Save, close, and reopen the project with all supported typography, artwork, and editing relationships intact.
+1. Create a new artwork frame measuring exactly 8 by 10 inches.
+2. Add text using any compatible installed Mac font.
+3. Adjust font size, weight, leading, tracking, and alignment.
+4. Apply supported ligatures, stylistic alternates, and variable font settings.
+5. Manually adjust spacing between individual glyphs.
+6. Add vector shapes and edit their nodes.
+7. Align several objects using snapping, guides, and exact numerical properties.
+8. Group objects, transform the group, and edit objects inside it.
+9. Apply colors, strokes, gradients, and clipping masks.
+10. Create a second variant of the composition.
+11. Convert a copy of the typography to editable outlines.
+12. Link the artwork to a physical object’s surface.
+13. Edit the artwork while observing the corresponding 3D representation update.
+14. Export dimensionally accurate vector and print files.
+15. Save, close, and reopen the project with all supported typography, artwork, and editing relationships intact.
 
 The output should be visually faithful, technically precise, and remain editable.
 
