@@ -4,7 +4,7 @@ This is FORM’s fixed 3D navigation contract. It replaces the earlier direction
 
 | Input | Result |
 | --- | --- |
-| Left drag in Orbit mode | Turn the scene with the pointer: right follows right; down follows down. |
+| Left drag in Orbit mode | Turn the scene with the pointer; horizontal movement changes yaw, vertical movement changes pitch. |
 | Shift + left drag in Orbit mode | Pan the entire view in screen space, without rotating. |
 | Scroll / pinch | Zoom while retaining the current orientation and orbit pivot. |
 | Click / Shift-click | Select / extend the selection. |
@@ -21,9 +21,13 @@ There is one pan gesture. Space, Option, middle-drag, and right-drag do not prov
 
 ## Orbit and recovery
 
-The camera rotates about its local axes with a persistent normalized quaternion. Both directions can continue through any number of complete rotations. There is no vertical-angle stop, pole snap, or world-up flip. Dragging back along the same path reverses the rotation, including diagonals. Passing over a pole carries the orientation continuously through the inverted view; a named view restores a canonical upright orientation.
+The default is a constrained, world-up turntable. Horizontal drags rotate indefinitely around the fixed vertical axis and cannot change pitch or bank the view. Vertical drags change pitch only. Diagonal drags combine those independent changes; small pointer noise is not suppressed by an invented axis lock or deadband, and it cannot accumulate roll.
 
-Pan uses the same actual camera right/up basis as rendering and framing, so the scene follows the pointer even after a complete orbit. Focus and Fit preserve orientation. Named views always discard the old pan target and distance and frame all project objects, regardless of selection. Framing reserves room for floating controls without moving the subject-centered pivot. Camera changes are immediate, so a new drag cannot jump ahead of an unfinished framing animation.
+Pitch ends at exact Top and Bottom (±90°). These are FORM’s explicit upright-view endpoints, rather than a claim about Fusion’s exact numeric limits. Reversing the mouse responds immediately. This replaces the earlier free-orbit behavior: unlimited vertical somersaults were allowing the tilted local axes that made ordinary scene exploration difficult. Horizontal orbit remains unlimited.
+
+Earlier saved free-orbit quaternions retain their look direction, pivot, and zoom while rendering with a level world-up frame. No manual leveling step is needed. Named views continue to recover canonical directions and frame the whole project.
+
+Pan uses the same level camera right/up basis as rendering and framing, so the scene follows the pointer without rotating. Focus and Fit preserve orientation. Named views always discard the old pan target and distance and frame all project objects, regardless of selection. Framing reserves room for floating controls without moving the subject-centered pivot. Camera changes are immediate, so a new drag cannot jump ahead of an unfinished framing animation.
 
 A drag needs a fresh mouse-down and is cancelled when its view resizes, loses the responder, changes windows, or receives a framing command. Late mouse events cannot reuse a previous gesture’s anchor. Clicking a newly active scene accepts the first gesture. Navigation never moves object definitions or rebuilds geometry. Rendering remains demand-driven.
 
@@ -33,6 +37,6 @@ Existing yaw/elevation-only project cameras retain their saved composition. The 
 
 ## Validation
 
-Core tests project actual SceneKit cameras through full rotations and inverted views, compare pointer directions, reverse motions, verify screen-space pan and physically framed bounds, and round-trip the saved orientation. Direct AppKit event tests cover mouse-down/drag/up, Shift transitions, late events, view changes, named views, Focus, and Fit. Actual computer-use input validates the packaged app. Results and limits are recorded in [validation notes](validation.md).
+Core tests project actual SceneKit cameras through unlimited horizontal rotations and Top/Bottom endpoints, verify independent yaw/pitch and a level projected horizon across 2,000 noisy drags, compare pointer directions, reverse motions, verify screen-space pan/framing, and reopen earlier banked orientations. Direct AppKit event tests cover mouse-down/drag/up, Shift transitions, late events, view changes, named views, Focus, and Fit. Actual computer-use input validates the packaged app. Results and limits are recorded in [validation notes](validation.md).
 
 The orbit / Shift-pan / wheel-zoom organization follows the [Blender navigation model](https://docs.blender.org/manual/en/5.0/editors/3dview/navigate/navigation.html), with left-drag as FORM’s primary navigation input.

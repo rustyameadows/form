@@ -1,10 +1,14 @@
 # FORM implementation goal
 
-Status: **Active**. Expanded October 24, 2026 to include the complete [2D Design, Typography & Vector Editing specification](2d-design-typography-vector-spec.md), alongside the [original product brief](product-brief.md), the supplied interface sketches, and local 3D-print preparation.
+Status: **Active**. Expanded October 25, 2026 to include the freeform Canvas/Table relationship, the complete Textiles, Apparel & Merchandise brief, and the complete [2D Design, Typography & Vector Editing specification](2d-design-typography-vector-spec.md), alongside the [original product brief](product-brief.md), the supplied interface sketches, and local 3D-print preparation.
 
 ## Objective
 
-Deliver a capable, polished native Mac creative environment for both 3D physical design and professional 2D graphic composition. A continuous Table, editable parametric objects, independent and linked artwork, typography, vector geometry, persistent projects, production exports, Studio materials/filaments, and an Orca-powered print workspace must work together. Codex operates the same deterministic editing commands through local MCP; FORM does not call external AI models. Printer setup and status are permitted; sending or starting prints remains disabled under the user's explicit instruction.
+Deliver a capable, polished native Mac creative environment for 3D physical design, professional 2D graphic composition, and textiles/apparel/soft goods. A continuous Table, editable parametric objects, independent and linked artwork, typography, vector geometry, persistent projects, production exports, Studio materials/filaments, and an Orca-powered print workspace must work together. Codex operates the same deterministic editing commands through local MCP; FORM does not call external AI models. Printer setup and status are permitted; sending or starting prints remains disabled under the user's explicit instruction.
+
+Canvas and Table are connected peer design surfaces. The freeform 2D Canvas holds loose typography, notes, references, images, and sketches without first requiring a physical artboard. Finite artboards and object-face regions live within that canvas and map to 3D products; moving/editing artwork in those regions updates the corresponding physical surfaces. Canvas-only, Table-only, split, and separate-window arrangements share one project and Undo history. See [design surfaces](design-surfaces.md).
+
+The [Textiles, Apparel & Merchandise brief](textiles-apparel-merchandise-spec.md) is now active implementation scope, not a queued record. The first showcase is the NASA-themed bomber with custom patches, sewn-in tags, embroidery, editable fabric/placement/colorways, and production information. All staged brief requirements remain in the completion scope; unsupported cloth physics or machine stitch output must not be presented as implemented.
 
 The new specification is a governing product document, not a claim that its features already exist. Its complete requirements remain in scope. Its explicit later-stage capabilities retain their staged sequence. Completion requires working native interactions and demonstrated output, rather than controls that only expose stored values.
 
@@ -15,7 +19,7 @@ The goal service currently permits status changes but cannot rewrite the text of
 ### A. Native 3D studio and fabrication foundation
 
 - [x] Continuous Metal-backed Table; native title bar; contextual inspectors; camera, focus, isolation, selection, movement, grouping, variants, and iterations.
-- [x] Fixed camera contract: scene-following drag orbit, continuous rotation through both poles, Shift-drag pan, whole-project Perspective/Top/Front buttons, selection-independent framing, stable Focus/Fit, and native mouse/event validation. See [camera controls](camera-navigation.md).
+- [ ] Validate researched constrained, world-up orbit: horizontal drags change yaw only, vertical drags change pitch only, no accumulated roll, immediate leveling of earlier banked views, fixed Shift-pan/zoom bindings, and reliable whole-project named views. The previous free-orbit milestone did not satisfy the user’s level-navigation requirement.
 - [x] Home previews of saved scenes; modular packages; autosave; undo/redo; imported assets; Studio materials and equipment.
 - [x] Parametric constructions and custom recipes; linked artwork; PDF/SVG/PNG/component exports; local MCP registration and shared command engine.
 - [x] Dedicated Print workspace with physical P1S bed, component selection, orientation, scale, filament choice, slicing options, layer preview, and local outputs.
@@ -96,8 +100,26 @@ Every checkpoint also requires deterministic MCP access to the same native opera
 
 See [validation notes](validation.md) for measured results and current limitations. Speculative and unavailable hardware checks must remain clearly identified.
 
-## Queued next feature push
+### G. Freeform Canvas and Table relationship
 
-The [Textiles, Apparel & Merchandise brief](textiles-apparel-merchandise-spec.md) is recorded as the next feature push. Its lead demo is a **NASA-themed bomber jacket with custom patches, sewn-in tags, embroidery, and related garment details**, as directed by the user. See the [queued demo and development sequence](next-feature-push.md).
+- [ ] Loose 2D typography, notes, references, images, and vectors on an expanding canvas without a required physical frame.
+- [ ] Movable finite artboards and mapped object-face regions; drag artwork into/out of a region with correct coordinates, live 3D updates, and one Undo.
+- [ ] Canvas-only, Table-only, resizable split, and a separate canvas window sharing project state, selections, focus-aware commands, and camera/editor ownership.
+- [ ] Preserve source links, styles/assets, project switches, save/reopen, physical exports, and large-canvas performance; validate through native UI and MCP.
 
-This new textile push has not started. The user requested recording it for later; it does not replace the active 2D/3D implementation work or expand the current completion checklist into the entire textile roadmap.
+### H. Textiles, apparel, fabric, and merchandise — active
+
+- [ ] Decorated garment blanks, real-scale regions, persistent fabric specifications, native material controls, linked artwork and garment-relative placement, variants, and collection editing.
+- [ ] NASA bomber demonstration: convincing garment construction and fabric, custom independent patches, sewn-in labels, direct embroidery regions, shared editable source art, two colorways, and polished hero/detail views.
+- [ ] Decoration production: real stitch model/editor/digitizing and supported embroidery exports, hoop/process constraints, patch/label construction, DTG/DTF/HTV and separations, manufacturing specs and revision-linked packets.
+- [ ] Fabric design: repeat patterns, engineered prints, colorways, pattern-piece-aware mapping, and output at physical dimensions.
+- [ ] Soft goods: parametric pattern pieces, seam relationships/allowances, cutting/nesting/consumption, assembled previews, instructions, and reusable constructions.
+- [ ] Garment development: blocks, body measurements, sizing/grading, pattern editing, fitting and cloth behavior with clearly stated simulation limits.
+- [ ] Integrated production: equipment profiles/compatibility, materials and thread inventory, costing, supplier references, job/sample/quality history, and supported integrations. Hardware operation remains prohibited.
+- [ ] Complete every applicable feature and acceptance requirement in the governing textile brief, not only this condensed checklist; demonstrate roundtrip, native/MCP edits, meaningful Undo, production outputs, and performance.
+
+## Active textile feature push
+
+The [Textiles, Apparel & Merchandise brief](textiles-apparel-merchandise-spec.md) is in active development. Its lead demo is a **NASA-themed bomber jacket with custom patches, sewn-in tags, embroidery, and related garment details**, as directed by the user. See the [demo and development sequence](next-feature-push.md).
+
+The user activated this work on October 25, 2026. It proceeds in parallel with camera fixes and the remaining 2D/3D work. An unavailable P1S status connection does not block unrelated software delivery.

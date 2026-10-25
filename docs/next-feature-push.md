@@ -1,6 +1,6 @@
 # Next feature push: Textiles, Apparel & Merchandise
 
-**Status: Queued — implementation not started.** Recorded October 24, 2026 at the user's request. This follows the current native 2D/3D studio work; recording the brief does not start textile development.
+**Status: Active implementation.** Recorded October 24 and activated October 25, 2026 by the user. This proceeds alongside the remaining 2D/3D work and camera fixes. The complete brief is part of the active completion scope.
 
 The complete [Textiles, Apparel & Merchandise product brief](textiles-apparel-merchandise-spec.md) governs this feature push. It extends the [original product brief](product-brief.md) and depends on the [professional 2D design specification](2d-design-typography-vector-spec.md).
 

@@ -8,7 +8,7 @@ One continuous Table for objects, artwork, materials, references, and the versio
 
 The next governing document is the [2D Design, Typography & Vector Editing specification](docs/2d-design-typography-vector-spec.md). Its professional editing requirements expand the [active implementation goal](docs/implementation-goal.md); the checklist distinguishes shipped foundations from remaining work.
 
-**Queued next feature push:** [Textiles, Apparel & Merchandise](docs/textiles-apparel-merchandise-spec.md), led by a NASA-themed bomber jacket with custom patches, sewn-in tags, and embroidery. The [demo brief and sequence](docs/next-feature-push.md) are recorded; textile implementation has not started.
+**Active textile feature push:** [Textiles, Apparel & Merchandise](docs/textiles-apparel-merchandise-spec.md), led by a NASA-themed bomber jacket with custom patches, sewn-in tags, and embroidery. The [demo brief and sequence](docs/next-feature-push.md) are guiding active implementation alongside the remaining 2D/3D work.
 
 ## Build and open
 
@@ -92,7 +92,7 @@ See [Printing architecture, setup, and research](docs/printing.md) for profiles,
 | Print preparation | `⌘P` |
 | Return to Home | `⇧⌘H` |
 
-The Table starts in Orbit mode. Rotation is continuous through complete turns in both axes, including the top and bottom poles. Shift-drag pans in screen space. Perspective, Top, and Front reset orientation and frame the **whole project** every time, including when an object was selected or isolated. Focus frames the selection. There are no alternate Space/Option pan bindings or navigation-direction settings. The Table, Studio, live object inset, and print preview share this behavior. See the [camera control contract and validation](docs/camera-navigation.md).
+The Table starts in Orbit mode. Horizontal rotation is unlimited around a fixed vertical axis; vertical movement tilts between Top and Bottom without banking or flipping. Shift-drag pans in screen space. Perspective, Top, and Front reset orientation and frame the **whole project** every time, including when an object was selected or isolated. Focus frames the selection. There are no alternate Space/Option pan bindings or navigation-direction settings. The Table, Studio, live object inset, and print preview share this behavior. See the [camera control contract and validation](docs/camera-navigation.md).
 
 ## Develop and validate
 
@@ -147,7 +147,7 @@ This build has a native typography/vector editor and procedural construction sys
 - [Vector paint and the PRISM collection](docs/paint-gradients-masks.md)
 - [Image editing and the LUMEN collection](docs/image-editing.md)
 - [Textiles, Apparel & Merchandise · next feature specification](docs/textiles-apparel-merchandise-spec.md)
-- [Queued feature push · NASA bomber jacket demonstration](docs/next-feature-push.md)
+- [Active feature push · NASA bomber jacket demonstration](docs/next-feature-push.md)
 - [Expanded implementation goal and completion checklist](docs/implementation-goal.md)
 - [Implementation architecture and boundaries](docs/architecture.md)
 - [MCP setup and custom object recipes](docs/mcp.md)

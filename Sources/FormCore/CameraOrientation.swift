@@ -1,7 +1,8 @@
 import Foundation
 import simd
 
-/// Persistent local-camera rotation. Unlike bounded yaw/pitch, it can cross either pole.
+/// Persistent camera rotation. Readers retain older free-orbit values; navigation
+/// resolves their look direction to a level, constrained turntable frame.
 public struct CameraOrientation: Codable, Equatable, Sendable {
   public var x: Double
   public var y: Double

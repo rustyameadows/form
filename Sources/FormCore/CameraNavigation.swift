@@ -2,23 +2,44 @@ import Foundation
 import simd
 
 /// Drag deltas use AppKit's view coordinates: right and up are positive.
-/// Orbit is about the camera's local axes, so dragging stays direct through either pole.
+/// Constrained turntable: world-up yaw, screen-right pitch, and no camera roll.
 public enum CameraNavigation {
   public static let minimumDistance = 0.05
   public static let maximumDistance = 300.0
+  public static let minimumElevation = -Double.pi / 2
+  public static let maximumElevation = Double.pi / 2
   public static func elevation(_ value: Double) -> Double {
-    value.isFinite ? value.remainder(dividingBy: 2 * .pi) : 0
+    value.isFinite ? min(maximumElevation, max(minimumElevation, value)) : 0
   }
 
-  private static func rotation(_ camera: CameraState) -> simd_quatd {
+  private static func savedRotation(_ camera: CameraState) -> simd_quatd {
     if let rotation = camera.orientation?.quaternion { return rotation }
     let azimuth = camera.azimuth.isFinite ? camera.azimuth.remainder(dividingBy: 2 * .pi) : 0
+    let pitch = camera.elevation.isFinite ? camera.elevation.remainder(dividingBy: 2 * .pi) : 0
     return simd_quatd(angle: azimuth, axis: SIMD3(0, 1, 0))
-      * simd_quatd(angle: -elevation(camera.elevation), axis: SIMD3(1, 0, 0))
+      * simd_quatd(angle: -pitch, axis: SIMD3(1, 0, 0))
+  }
+
+  private static func angles(_ camera: CameraState) -> (azimuth: Double, elevation: Double) {
+    let outward = savedRotation(camera).act(SIMD3<Double>(0, 0, 1))
+    let horizontal = hypot(outward.x, outward.z)
+    // At an exact top/bottom view the look direction cannot define yaw. Retain
+    // its saved yaw so a tiny drag does not choose an arbitrary new heading.
+    let fallback = camera.azimuth.isFinite ? camera.azimuth.remainder(dividingBy: 2 * .pi) : 0
+    return (horizontal > 1e-10 ? atan2(outward.x, outward.z) : fallback,
+      atan2(outward.y, horizontal))
+  }
+
+  private static func rotation(azimuth: Double, elevation: Double) -> simd_quatd {
+    simd_quatd(angle: azimuth, axis: SIMD3(0, 1, 0))
+      * simd_quatd(angle: -elevation, axis: SIMD3(1, 0, 0))
   }
 
   public static func basis(_ camera: CameraState) -> CameraBasis {
-    let rotation = rotation(camera)
+    let view = angles(camera)
+    // Read older free-orbit quaternions by preserving their look direction and
+    // removing only roll. Rendering and framing therefore agree immediately.
+    let rotation = rotation(azimuth: view.azimuth, elevation: view.elevation)
     func vector(_ value: SIMD3<Double>) -> Vector3 {
       let result = rotation.act(value)
       return .init(result.x, result.y, result.z)
@@ -36,18 +57,12 @@ public enum CameraNavigation {
     var result = camera
     let speed = Double.pi / max(240, viewportHeight)
       * preferences.effectiveOrbitSpeed * preferences.orbitSign
-    // One rotation vector makes opposite diagonal drags exact inverses too.
-    // Reduce the angle before quaternion construction to retain precision on large input.
-    let magnitude = hypot(dx, dy)
-    guard magnitude.isFinite else { return camera }
-    let delta = simd_quatd(angle: (magnitude * speed).remainder(dividingBy: 2 * .pi),
-      axis: SIMD3(-dy / magnitude, dx / magnitude, 0))
-    let next = (rotation(camera) * delta).normalized
-    result.orientation = CameraOrientation(next)
-    // Retain direction metadata for older diagnostics; the quaternion owns orientation.
-    let outward = next.act(SIMD3<Double>(0, 0, 1))
-    result.azimuth = atan2(outward.x, outward.z)
-    result.elevation = asin(min(1, max(-1, outward.y)))
+    let current = angles(camera)
+    result.azimuth = (current.azimuth + dx * speed).remainder(dividingBy: 2 * .pi)
+    // Top and bottom are actual endpoints. Horizontal rotation remains unlimited
+    // there; reversing a vertical drag responds immediately without a dead zone.
+    result.elevation = elevation(current.elevation + dy * speed)
+    result.orientation = CameraOrientation(rotation(azimuth: result.azimuth, elevation: result.elevation))
     return result
   }
 

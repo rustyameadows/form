@@ -1,5 +1,6 @@
 import AppKit
 import SceneKit
+import simd
 import XCTest
 @testable import FormApp
 @testable import FormCore
@@ -115,20 +116,60 @@ import XCTest
       assertAxesEqual(f.controller.camera,before)
     }
   }
-  func testNativeVerticalDragsCrossBothPolesAndReverseWithoutAStop() {
+  func testNativeHorizontalDragsKeepPitchAndHorizonLevelAcrossRepeatedFullTurns() {
+    let f = ViewFixture(); defer { f.close() }
+    for pitch in [-1.2, 0.0, 0.7, 1.2] {
+      f.controller.camera = CameraState(); f.controller.camera.elevation = pitch
+      f.controller.updateCamera()
+      let start = f.controller.camera
+      for dx in [53.333333333333336, -53.333333333333336] {
+        for _ in 0..<120 {
+          let before = f.controller.camera
+          f.drag(dx, 0)
+          XCTAssertEqual(f.controller.camera.elevation, pitch, accuracy: 1e-10)
+          XCTAssertNotEqual(CameraNavigation.basis(f.controller.camera).right,
+            CameraNavigation.basis(before).right)
+          XCTAssertEqual(Double(f.controller.cameraNode.simdWorldRight.y), 0, accuracy: 1e-7)
+          XCTAssertGreaterThan(Double(f.controller.cameraNode.simdWorldUp.y), 0)
+        }
+      }
+      assertAxesEqual(f.controller.camera, start, accuracy: 1e-8)
+      XCTAssertEqual(f.controller.camera.target, start.target)
+      XCTAssertEqual(f.controller.camera.distance, start.distance)
+    }
+  }
+  func testNativeVerticalEndpointsStayUprightAndReverseOnTheFirstMovement() {
+    let f = ViewFixture(); defer { f.close() }
+    for dy in [80.0, -80.0] {
+      f.controller.camera = CameraState(); f.controller.updateCamera()
+      let start = f.controller.camera
+      for _ in 0..<40 { f.drag(0, dy) }
+      let endpoint = f.controller.camera
+      XCTAssertEqual(endpoint.elevation, dy > 0 ? -.pi / 2 : .pi / 2, accuracy: 1e-12)
+      XCTAssertEqual(Double(f.controller.cameraNode.simdWorldRight.y), 0, accuracy: 1e-7)
+      f.drag(0, dy)
+      assertAxesEqual(f.controller.camera, endpoint)
+      f.drag(80, 0)
+      XCTAssertNotEqual(CameraNavigation.basis(f.controller.camera).right,
+        CameraNavigation.basis(endpoint).right)
+      f.drag(0, dy > 0 ? -4 : 4)
+      XCTAssertLessThan(abs(f.controller.camera.elevation), abs(endpoint.elevation))
+      XCTAssertGreaterThan(Double(f.controller.cameraNode.simdWorldUp.y), 0)
+      XCTAssertEqual(f.controller.camera.target, start.target)
+      XCTAssertEqual(f.controller.camera.distance, start.distance)
+    }
+  }
+  func testMostlyHorizontalNativeInputWithSmallVerticalNoiseNeverBanksTheCamera() {
     let f = ViewFixture(); defer { f.close() }
     let start = f.controller.camera
-    for dy in [80.0,-80.0] {
-      for _ in 0..<40 {
-        let previous = CameraNavigation.basis(f.controller.camera).outward
-        f.drag(0,dy)
-        let next = CameraNavigation.basis(f.controller.camera).outward
-        XCTAssertGreaterThan(abs(next.x-previous.x)+abs(next.y-previous.y)+abs(next.z-previous.z),0.01)
-      }
+    for step in 0..<160 {
+      f.drag(50, step % 2 == 0 ? 0.25 : -0.25)
+      XCTAssertEqual(Double(f.controller.cameraNode.simdWorldRight.y), 0, accuracy: 1e-7)
+      XCTAssertGreaterThan(Double(f.controller.cameraNode.simdWorldUp.y), 0)
     }
-    assertAxesEqual(f.controller.camera,start,accuracy:1e-8)
-    XCTAssertEqual(f.controller.camera.target,start.target)
-    XCTAssertEqual(f.controller.camera.distance,start.distance)
+    XCTAssertEqual(f.controller.camera.elevation, start.elevation, accuracy: 1e-10)
+    XCTAssertEqual(f.controller.camera.target, start.target)
+    XCTAssertEqual(f.controller.camera.distance, start.distance)
   }
   func testShiftDragsPanExactlyInEveryScreenDirectionWithoutRotating() {
     let f = ViewFixture(); defer { f.close() }
@@ -366,6 +407,49 @@ import XCTest
       XCTAssertEqual(f.controller.camera,recovered)
     }
   }
+  func testReopeningASavedBankedViewLevelsItsHorizonWithoutMovingItsComposition() throws {
+    _ = NSApplication.shared
+    let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    let repository = try ProjectRepository(root: root)
+    var saved = Project(name: "Saved banked view")
+    saved.objects = [try saved.makeObject(recipeID: "box")]
+    saved.camera.viewportAspect = 1.5
+    saved.camera.target = .init(4.5, 2, -7)
+    saved.camera.distance = 8.5
+    let raw = simd_quatd(angle: 0.8, axis: SIMD3(0, 1, 0))
+      * simd_quatd(angle: -0.45, axis: SIMD3(1, 0, 0))
+      * simd_quatd(angle: 1.1, axis: SIMD3(0, 0, 1))
+    let q = raw.vector
+    saved.camera.orientation = CameraOrientation(x: q.x, y: q.y, z: q.z, w: q.w)
+    saved.camera.azimuth = 0.8; saved.camera.elevation = 0.45
+    saved.schemaVersion = saved.minimumSchemaVersion
+    try repository.save(saved)
+    let before = try repository.load(saved.id)
+    // Recreate the store/controller from disk. Reopening a live store here would
+    // correctly flush its old in-memory project over the externally saved fixture.
+    let store = StudioStore(repository: repository, seedLibrary: false)
+    store.openProject(saved.id)
+    let f = ViewFixture(store: store)
+    defer { f.close(); try? FileManager.default.removeItem(at: root) }
+    XCTAssertEqual(store.project, before)
+    XCTAssertEqual(f.controller.camera.target, before.camera.target)
+    XCTAssertEqual(f.controller.camera.distance, before.camera.distance)
+    let expected = raw.act(SIMD3<Double>(0, 0, 1))
+    let axes = CameraNavigation.basis(f.controller.camera)
+    XCTAssertEqual(axes.outward.x, expected.x, accuracy: 1e-12)
+    XCTAssertEqual(axes.outward.y, expected.y, accuracy: 1e-12)
+    XCTAssertEqual(axes.outward.z, expected.z, accuracy: 1e-12)
+    XCTAssertEqual(Double(f.controller.cameraNode.simdWorldRight.y), 0, accuracy: 1e-7)
+    XCTAssertGreaterThan(Double(f.controller.cameraNode.simdWorldUp.y), 0)
+    f.drag(60, 0)
+    XCTAssertEqual(f.controller.camera.elevation, before.camera.elevation, accuracy: 1e-10)
+    XCTAssertEqual(Double(f.controller.cameraNode.simdWorldRight.y), 0, accuracy: 1e-7)
+    XCTAssertEqual(f.controller.camera.target, before.camera.target)
+    XCTAssertEqual(f.controller.camera.distance, before.camera.distance)
+    XCTAssertEqual(store.project!.objects, before.objects)
+    XCTAssertEqual(store.project!.history, before.history)
+  }
+
   func testOpeningAnotherProjectDuringADragRejectsLateEventsAndPreservesItsCamera() throws {
     let (f,store,root) = try scene(); defer { f.close(); try? FileManager.default.removeItem(at:root) }
     let firstID = store.project!.id
@@ -373,7 +457,7 @@ import XCTest
     var object = try next.makeObject(recipeID:"cylinder")
     object.position = .init(450,25,-700)
     next.objects = [object]
-    next.camera = CameraNavigation.orbited(next.camera,dx:350,dy:900,viewportHeight:800)
+    next.camera = CameraNavigation.orbited(next.camera,dx:350,dy:90,viewportHeight:800)
     next.camera.target = .init(4.5,2,-7)
     next.camera.distance = 8.5
     next.camera.projection = "orthographic"

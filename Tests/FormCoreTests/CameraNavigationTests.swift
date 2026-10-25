@@ -1,4 +1,5 @@
 import SceneKit
+import simd
 import XCTest
 
 @testable import FormCore
@@ -68,6 +69,8 @@ final class CameraNavigationTests: XCTestCase {
       let axes = CameraNavigation.basis(state)
       XCTAssertEqual(Double(node.simdWorldRight.x), axes.right.x, accuracy: 0.0002)
       XCTAssertEqual(Double(node.simdWorldRight.y), axes.right.y, accuracy: 0.0002)
+      XCTAssertEqual(axes.right.y, 0, accuracy: 1e-12)
+      XCTAssertGreaterThanOrEqual(axes.up.y, -1e-12)
       XCTAssertEqual(Double(node.simdWorldRight.z), axes.right.z, accuracy: 0.0002)
       XCTAssertEqual(Double(node.simdWorldUp.x), axes.up.x, accuracy: 0.0002)
       XCTAssertEqual(Double(node.simdWorldUp.y), axes.up.y, accuracy: 0.0002)
@@ -132,10 +135,10 @@ final class CameraNavigationTests: XCTestCase {
     }
   }
 
-  func testDefaultOrbitFollowsEveryDragDirectionAtUprightInvertedAndPoleOrientations() {
+  func testDefaultOrbitFollowsEveryDragDirectionAwayFromVerticalEndpoints() {
     XCTAssertEqual(CameraPreferences().orbitDirection, .turnObject)
     for projection in ["perspective", "orthographic"] {
-      for elevation in [-Double.pi, -.pi / 2, -0.7, 0.0, 0.7, .pi / 2, .pi] {
+      for elevation in [-1.2, -0.7, 0.0, 0.7, 1.2] {
         var start = CameraState()
         start.projection = projection; start.elevation = elevation
         let axes = CameraNavigation.basis(start)
@@ -148,61 +151,113 @@ final class CameraNavigationTests: XCTestCase {
           if dx != 0 { XCTAssertGreaterThan((position.x - initial.x) * dx, 0) }
           else { XCTAssertEqual(position.x, initial.x, accuracy: 0.001) }
           if dy != 0 { XCTAssertGreaterThan((position.y - initial.y) * dy, 0) }
-          else { XCTAssertEqual(position.y, initial.y, accuracy: 0.001) }
+          // Yaw follows a latitude around world-up; at nonzero pitch its finite
+          // perspective motion need not lie on an exact image-space horizontal.
           let reversed = CameraNavigation.orbited(moved, dx: -dx, dy: -dy, viewportHeight: 800)
           assertSameBasis(start, reversed)
           XCTAssertEqual(moved.target, start.target)
           XCTAssertEqual(moved.distance, start.distance)
+          XCTAssertEqual(CameraNavigation.basis(moved).right.y, 0, accuracy: 1e-12)
         }
       }
     }
   }
 
-  func testFullHorizontalAndVerticalRotationsHaveNoStopsOrPoleFlips() {
-    for (dx, dy) in [(1.0, 0.0), (0.0, 1.0), (0.0, -1.0), (-1.0, 0.0)] {
-      let start = CameraState()
-      var state = start
-      // Four full revolutions, crossing each pole eight times for vertical drags.
-      let step = 800.0 * 8 / (0.75 * 1440)
-      var previous = CameraNavigation.basis(start)
-      let node = SCNNode()
-      for _ in 0..<1440 {
-        state = CameraNavigation.orbited(state, dx: dx * step, dy: dy * step, viewportHeight: 800)
-        let axes = CameraNavigation.basis(state)
-        func dot(_ a: Vector3, _ b: Vector3) -> Double { a.x * b.x + a.y * b.y + a.z * b.z }
-        XCTAssertGreaterThan(dot(previous.right, axes.right), 0.999)
-        XCTAssertGreaterThan(dot(previous.up, axes.up), 0.999)
-        XCTAssertGreaterThan(dot(previous.outward, axes.outward), 0.999)
-        SceneCamera.position(node, using: state)
-        let target = node.convertPosition(.init(state.target.x, state.target.y, state.target.z), from: nil)
-        XCTAssertEqual(target.x, 0, accuracy: 0.0002)
-        XCTAssertEqual(target.y, 0, accuracy: 0.0002)
-        XCTAssertEqual(-Double(target.z), state.distance, accuracy: 0.0002)
-        previous = axes
+  func testHorizontalOrbitCompletesRepeatedTurnsWithoutRollOrStops() {
+    for dx in [-1.0, 1.0] {
+      for initialPitch in [-Double.pi / 2, -0.7, 0.7, Double.pi / 2] {
+        var start = CameraState(); start.elevation = initialPitch
+        var state = start
+        let step = 800.0 * 8 / (0.75 * 1440)
+        for _ in 0..<1440 {
+          let previous = CameraNavigation.basis(state)
+          state = CameraNavigation.orbited(state, dx: dx * step, dy: 0, viewportHeight: 800)
+          let axes = CameraNavigation.basis(state)
+          XCTAssertEqual(axes.right.y, 0, accuracy: 1e-12)
+          XCTAssertGreaterThanOrEqual(axes.up.y, -1e-12)
+          XCTAssertEqual(state.elevation, initialPitch, accuracy: 1e-10)
+          XCTAssertGreaterThan(previous.right.x * axes.right.x + previous.right.z * axes.right.z, 0.999)
+        }
+        assertSameBasis(start, state)
+        XCTAssertEqual(state.target, start.target)
+        XCTAssertEqual(state.distance, start.distance)
       }
-      assertSameBasis(start, state)
-      XCTAssertEqual(state.target, start.target)
-      XCTAssertEqual(state.distance, start.distance)
     }
   }
 
-  func testRolledCameraOrbitAndPanStillFollowTheActualScreenAxes() {
-    var start = CameraNavigation.orbited(CameraState(), dx: 300, dy: -450, viewportHeight: 800)
-    start = CameraNavigation.orbited(start, dx: -610, dy: -230, viewportHeight: 800)
-    let axes = CameraNavigation.basis(start)
-    let near = Vector3(start.target.x + axes.outward.x * 0.3,
-      start.target.y + axes.outward.y * 0.3, start.target.z + axes.outward.z * 0.3)
+  func testVerticalEndpointsPreventInversionAndReverseImmediatelyWhileYawStaysAvailable() {
+    for dy in [-1.0, 1.0] {
+      let initial = CameraState()
+      let endpoint = CameraNavigation.orbited(initial, dx: 0, dy: dy * 10000, viewportHeight: 800)
+      let expected = dy > 0 ? CameraNavigation.minimumElevation : CameraNavigation.maximumElevation
+      XCTAssertEqual(endpoint.elevation, expected, accuracy: 1e-12)
+      let held = CameraNavigation.orbited(endpoint, dx: 0, dy: dy * 10000, viewportHeight: 800)
+      assertSameBasis(endpoint, held)
+      let yawed = CameraNavigation.orbited(endpoint, dx: 80, dy: 0, viewportHeight: 800)
+      XCTAssertNotEqual(CameraNavigation.basis(yawed).right, CameraNavigation.basis(endpoint).right)
+      XCTAssertEqual(yawed.elevation, expected, accuracy: 1e-12)
+      let reversed = CameraNavigation.orbited(endpoint, dx: 0, dy: -dy, viewportHeight: 800)
+      XCTAssertLessThan(abs(reversed.elevation), abs(endpoint.elevation))
+      XCTAssertEqual(CameraNavigation.basis(reversed).right.y, 0, accuracy: 1e-12)
+      XCTAssertGreaterThan(CameraNavigation.basis(reversed).up.y, 0)
+      XCTAssertEqual(reversed.target, initial.target)
+      XCTAssertEqual(reversed.distance, initial.distance)
+    }
+  }
+
+  func testMostlyHorizontalMouseNoiseAndDiagonalPathsNeverAccumulateBank() {
+    var state = CameraState()
+    let start = state
+    for step in 0..<2000 {
+      state = CameraNavigation.orbited(state, dx: 6, dy: step % 2 == 0 ? 0.25 : -0.25, viewportHeight: 800)
+      let axes = CameraNavigation.basis(state)
+      XCTAssertEqual(axes.right.y, 0, accuracy: 1e-12)
+      XCTAssertGreaterThan(axes.up.y, 0)
+      // Project a pair of distant points on the ground-plane horizon using the
+      // actual SceneKit camera matrix. Bank would give them different screen Y.
+      let a = Vector3(state.target.x - axes.outward.x * 100 - axes.right.x * 10, 0,
+        state.target.z - axes.outward.z * 100 - axes.right.z * 10)
+      let b = Vector3(state.target.x - axes.outward.x * 100 + axes.right.x * 10, 0,
+        state.target.z - axes.outward.z * 100 + axes.right.z * 10)
+      XCTAssertEqual(project(a, state, width: 1200, height: 800).y,
+        project(b, state, width: 1200, height: 800).y, accuracy: 0.005) // SceneKit float projection, in screen pixels.
+    }
+    XCTAssertEqual(state.elevation, start.elevation, accuracy: 1e-10)
+    let actualVertical = CameraNavigation.orbited(start, dx: 0, dy: 0.25, viewportHeight: 800)
+    XCTAssertLessThan(actualVertical.elevation, start.elevation) // No invented deadband.
+    var diagonal = start
+    for (dx, dy) in [(80.0, 30.0), (-40.0, 20.0), (-80.0, -30.0), (40.0, -20.0)] {
+      diagonal = CameraNavigation.orbited(diagonal, dx: dx, dy: dy, viewportHeight: 800)
+      XCTAssertEqual(CameraNavigation.basis(diagonal).right.y, 0, accuracy: 1e-12)
+    }
+    assertSameBasis(start, diagonal)
+  }
+
+  func testSavedFreeOrbitRollIsRemovedWithoutChangingLookDirectionPivotOrZoom() {
+    var saved = CameraState()
+    let rotation = simd_quatd(angle: saved.azimuth, axis: SIMD3(0, 1, 0))
+      * simd_quatd(angle: -saved.elevation, axis: SIMD3(1, 0, 0))
+      * simd_quatd(angle: 1.1, axis: SIMD3(0, 0, 1))
+    saved.orientation = CameraOrientation(rotation)
+    let before = saved
+    let axes = CameraNavigation.basis(saved)
+    let outward = rotation.act(SIMD3<Double>(0, 0, 1))
+    XCTAssertEqual(axes.outward.x, outward.x, accuracy: 1e-12)
+    XCTAssertEqual(axes.outward.y, outward.y, accuracy: 1e-12)
+    XCTAssertEqual(axes.outward.z, outward.z, accuracy: 1e-12)
+    XCTAssertEqual(axes.right.y, 0, accuracy: 1e-12)
+    XCTAssertGreaterThan(axes.up.y, 0)
+    XCTAssertEqual(saved, before) // Rendering old files does not rewrite them.
     for (dx, dy) in [(40.0, 0.0), (-40.0, 0.0), (0.0, 40.0), (0.0, -40.0)] {
-      let before = project(near, start, width: 1200, height: 800)
-      let orbit = CameraNavigation.orbited(start, dx: dx, dy: dy, viewportHeight: 800)
-      let after = project(near, orbit, width: 1200, height: 800)
-      if dx != 0 { XCTAssertGreaterThan((after.x - before.x) * dx, 0) }
-      if dy != 0 { XCTAssertGreaterThan((after.y - before.y) * dy, 0) }
-      let pan = CameraNavigation.panned(start, dx: dx, dy: dy, viewportHeight: 800)
-      let originalTarget = project(start.target, start, width: 1200, height: 800)
-      let movedTarget = project(start.target, pan, width: 1200, height: 800)
-      XCTAssertEqual(movedTarget.x - originalTarget.x, dx, accuracy: 0.001)
-      XCTAssertEqual(movedTarget.y - originalTarget.y, dy, accuracy: 0.001)
+      let moved = CameraNavigation.orbited(saved, dx: dx, dy: dy, viewportHeight: 800)
+      XCTAssertEqual(moved.target, saved.target)
+      XCTAssertEqual(moved.distance, saved.distance)
+      XCTAssertEqual(CameraNavigation.basis(moved).right.y, 0, accuracy: 1e-12)
+      let pan = CameraNavigation.panned(saved, dx: dx, dy: dy, viewportHeight: 800)
+      let oldTarget = project(saved.target, saved, width: 1200, height: 800)
+      let newTarget = project(saved.target, pan, width: 1200, height: 800)
+      XCTAssertEqual(newTarget.x - oldTarget.x, dx, accuracy: 0.001)
+      XCTAssertEqual(newTarget.y - oldTarget.y, dy, accuracy: 0.001)
     }
   }
 
