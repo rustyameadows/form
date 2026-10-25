@@ -238,7 +238,7 @@ public enum MCP {
         ["query": string], readOnly: true),
       tool(
         "form_font_features",
-        "Inspect the selected installed face's actual OpenType feature selectors and variable-font axes/ranges. Missing fonts are reported explicitly.",
+        "Inspect an installed face's actual OpenType selectors, exclusivity, defaults and variable axes/ranges. Typography.features maps a mutually exclusive type to one selector; featureSelections maps an independent type to multiple selectors (even on, next odd off). Font defaults are retained by omitting the pair. These fields work on whole text and UTF-16 textRuns through form_edit_artwork replace. Missing fonts are explicit.",
         ["font_name": string], required: ["font_name"], readOnly: true),
       tool(
         "form_convert_to_paths",

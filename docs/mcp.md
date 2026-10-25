@@ -77,6 +77,8 @@ There are 49 tools. Print status includes `project_id`, `prepared_project_id`, a
 
 `form_edit_paint` patches vector strokes and gradients, retaining stable stop UUIDs as they reorder. `form_edit_artwork` includes `clip` and `release_clip`; mask geometry remains editable. See [PRISM, gradients, strokes, and masks](paint-gradients-masks.md) for native gestures, command examples, schema-10 persistence, and bounded stroke expansion.
 
+`form_font_features` reports actual per-face selector exclusivity and defaults. `Typography.featureSelections` supports several independent selectors per type on a whole text element or each UTF-16 `textRuns` span; `features` retains single/exclusive settings. Use `form_edit_artwork` with `command: "replace"` and the complete updated element, including both fields. Native controls use the same selection rules, validation, Undo, and schema-11 model. See [FOUNDRY and the selector format](font-features.md).
+
 `form_import_image` places or replaces a local file while retaining its original bytes. `form_edit_image` patches normalized crop bounds and image adjustments, with atomic batches and Undo. `form_image_info` inspects oriented pixel metadata and effective DPI at the resolved physical output size without disturbing native focus. See [image editing and LUMEN](image-editing.md) for schemas, examples, format support, and output limits.
 
 ## Custom objects

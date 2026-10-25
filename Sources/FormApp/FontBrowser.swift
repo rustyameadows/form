@@ -63,6 +63,7 @@ struct FontBrowser: View {
                 session.typography {
                   $0.fontName = face
                   $0.features = [:]
+                  $0.featureSelections = nil
                   $0.variations = [:]
                 }
                 recent.removeAll { $0 == family }
@@ -116,11 +117,12 @@ private struct FontAxis: Identifiable {
 }
 private struct FontFeature: Identifiable {
   struct Choice: Identifiable { var id: Int, name: String }
-  var id: Int, name: String, choices: [Choice]
+  var id: Int, name: String, choices: [Choice], exclusive: Bool
   init?(_ raw: [String: Any]) {
     guard let id = raw["id"] as? Int, let name = raw["name"] as? String else { return nil }
     self.id = id
     self.name = name
+    exclusive = raw["exclusive"] as? Bool ?? true
     choices = (raw["selectors"] as? [[String: Any]] ?? []).compactMap { v in
       guard let id = v["id"] as? Int, let name = v["name"] as? String else { return nil }
       return .init(id: id, name: name)
@@ -177,15 +179,19 @@ struct FontFeaturesInspector: View {
       if !features.isEmpty {
         DisclosureGroup("OpenType features") {
           VStack(alignment: .leading, spacing: 9) {
+            Button("Reset font features") {
+              session.typography { $0.features = [:]; $0.featureSelections = nil }
+            }.buttonStyle(.plain).font(.system(size: 9)).foregroundStyle(Palette.accent)
             ForEach(features) { feature in
               VStack(alignment: .leading, spacing: 3) {
                 Text(feature.name).font(.system(size: 9)).foregroundStyle(Palette.secondary)
-                Picker(
+                if feature.exclusive { Picker(
                   feature.name,
                   selection: Binding(
                     get: { session.inspectedTypography.features[feature.id] ?? -1 },
                     set: { value in
                       session.typography {
+                        $0.resetFeature(feature.id)
                         if value == -1 {
                           $0.features.removeValue(forKey: feature.id)
                         } else {
@@ -197,6 +203,28 @@ struct FontFeaturesInspector: View {
                   Text("Font default").tag(-1)
                   ForEach(feature.choices) { Text($0.name).tag($0.id) }
                 }.labelsHidden().font(.system(size: 10))
+                } else {
+                  ForEach(feature.choices.filter { $0.id % 2 == 0 }) { choice in
+                    VStack(alignment: .leading, spacing: 3) {
+                      Text(choice.name).font(.system(size: 10))
+                      Picker(choice.name, selection: Binding(
+                        get: {
+                          session.inspectedTypography.independentFeature(feature.id, selector: choice.id)
+                            .map { $0 ? 1 : 0 } ?? -1
+                        },
+                        set: { value in
+                          session.typography {
+                            $0.setIndependentFeature(feature.id, selector: choice.id,
+                              value: value == -1 ? nil : value == 1)
+                          }
+                        })) {
+                          Text("Default").tag(-1)
+                          Text("On").tag(1)
+                          Text("Off").tag(0)
+                        }.labelsHidden().pickerStyle(.segmented).controlSize(.mini)
+                    }.padding(.vertical, 3)
+                  }
+                }
               }
             }
           }.padding(.top, 8)

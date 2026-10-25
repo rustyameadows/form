@@ -212,6 +212,9 @@ public struct Typography: Codable, Equatable, Sendable {
   public var caseTreatment: String = "original"
   public var hyphenation: Double = 0
   public var features: [Int: Int] = [:]
+  /// Multiple independent selectors within a feature type. Values replace the
+  /// legacy single selector for that type; even/odd on/off pairs are exclusive.
+  public var featureSelections: [Int: [Int]]?
   public var variations: [Int: Double] = [:]
   public var pairKerning: [Int: Double] = [:]
   public init() {}
@@ -219,7 +222,7 @@ public struct Typography: Codable, Equatable, Sendable {
     case fontName, tracking, leading, baseline, wordSpacing, horizontalScale, alignment,
       verticalAlignment, paragraphBefore, paragraphAfter, leftIndent, rightIndent, firstLineIndent,
       underline, strikethrough, ligatures, direction, frameMode, caseTreatment, hyphenation,
-      features, variations, pairKerning
+      features, featureSelections, variations, pairKerning
   }
   public init(from decoder: Decoder) throws {
     self.init()
@@ -249,6 +252,7 @@ public struct Typography: Codable, Equatable, Sendable {
     caseTreatment = try c.decodeIfPresent(String.self, forKey: .caseTreatment) ?? caseTreatment
     hyphenation = try c.decodeIfPresent(Double.self, forKey: .hyphenation) ?? hyphenation
     features = try c.decodeIfPresent([Int: Int].self, forKey: .features) ?? features
+    featureSelections = try c.decodeIfPresent([Int: [Int]].self, forKey: .featureSelections)
     variations = try c.decodeIfPresent([Int: Double].self, forKey: .variations) ?? variations
     pairKerning = try c.decodeIfPresent([Int: Double].self, forKey: .pairKerning) ?? pairKerning
   }
@@ -290,6 +294,12 @@ extension ArtworkElement {
   }
 }
 extension Artwork {
+  public var requiresSchemaEleven: Bool {
+    elements.contains { e in
+      e.typography?.featureSelections?.isEmpty == false
+        || e.textRuns?.contains { $0.typography.featureSelections?.isEmpty == false } == true
+    }
+  }
   public var requiresSchemaFive: Bool { elements.contains { $0.booleanOperation != nil } }
   public var requiresSchemaFour: Bool {
     backgroundOpacity != nil || imports != nil
@@ -299,7 +309,7 @@ extension Artwork {
       }
   }
   public var usesExtendedFormat: Bool {
-    if requiresSchemaFour || requiresSchemaFive || requiresSchemaEight || requiresSchemaNine || requiresSchemaTen || !referencedSwatches.isEmpty || elements.contains(where: { $0.component != nil }) { return true }
+    if requiresSchemaFour || requiresSchemaFive || requiresSchemaEight || requiresSchemaNine || requiresSchemaTen || requiresSchemaEleven || !referencedSwatches.isEmpty || elements.contains(where: { $0.component != nil }) { return true }
     if boundary != nil { return true }
     if unit != nil || guides != nil || gridSpacing != nil || showGrid != nil || showGuides != nil
       || snapEnabled != nil || nudge != nil || canvasPosition != nil

@@ -226,6 +226,18 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
   }
 }
 public func validateTypography(_ t: Typography) throws {
+  let selections = t.featureSelections ?? [:]
+  let selectionCount = t.features.keys.filter { selections[$0] == nil }.count
+    + selections.values.reduce(0) { $0 + $1.count }
+  guard t.features.count <= 256, selections.count <= 256,
+    selectionCount <= 256,
+    t.features.allSatisfy({ (0...65535).contains($0.key) && (0...65535).contains($0.value) }),
+    selections.allSatisfy({ type, values in
+      (0...65535).contains(type) && !values.isEmpty && values.count <= 256
+        && values.allSatisfy { (0...65535).contains($0) }
+        && Set(values.map { $0 / 2 }).count == values.count
+    })
+  else { throw FormError.invalid("Use at most 256 valid font settings and one selector per on/off pair.") }
   let numbers = [
     t.tracking, t.leading, t.baseline, t.wordSpacing, t.horizontalScale, t.paragraphBefore,
     t.paragraphAfter, t.leftIndent, t.rightIndent, t.firstLineIndent,

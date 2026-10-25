@@ -369,7 +369,9 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var minimumSchemaVersion: Int {
     max(
       schemaVersion,
-      objects.contains { $0.artwork?.requiresSchemaTen == true }
+      objects.contains { $0.artwork?.requiresSchemaEleven == true }
+        ? 11
+        : objects.contains { $0.artwork?.requiresSchemaTen == true }
         ? 10
         : objects.contains { $0.artwork?.requiresSchemaNine == true }
         ? 9

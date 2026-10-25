@@ -60,7 +60,11 @@ public enum FormColor {
     return c
   }()
   private static var builds = 0, hits = 0
-  public static func invalidateFonts() { cache.removeAllObjects(); AppearanceRenderer.invalidateFonts() }
+  public static func invalidateFonts() {
+    cache.removeAllObjects()
+    FontCatalog.invalidate()
+    AppearanceRenderer.invalidateFonts()
+  }
   public static var diagnostics: [String: Any] {
     ["layout_builds": builds, "layout_cache_hits": hits, "layout_cache_limit": 800]
   }
@@ -68,11 +72,11 @@ public enum FormColor {
     let base =
       NSFont(name: style.fontName, size: size) ?? NSFont.systemFont(ofSize: size, weight: .medium)
     var attrs: [NSFontDescriptor.AttributeName: Any] = [:]
-    if !style.features.isEmpty {
-      attrs[.featureSettings] = style.features.map {
+    if !style.resolvedFeatureSelections.isEmpty {
+      attrs[.featureSettings] = style.resolvedFeatureSelections.map {
         [
-          NSFontDescriptor.FeatureKey.typeIdentifier: $0.key,
-          NSFontDescriptor.FeatureKey.selectorIdentifier: $0.value,
+          NSFontDescriptor.FeatureKey.typeIdentifier: $0.type,
+          NSFontDescriptor.FeatureKey.selectorIdentifier: $0.selector,
         ]
       }
     }
@@ -371,6 +375,14 @@ public enum FormColor {
           try? JSONDecoder.form.decode(Typography.self, from: $0)
         } ?? fallback
       let font = attrs[.font] as? NSFont ?? self.font(fallback, size: 14)
+      let assignedFont = self.font(style, size: font.pointSize)
+      // AppKit can omit explicit selectors that currently equal a face's
+      // defaults. Retain our assignment when the native font is unchanged;
+      // otherwise a later font/default change would silently lose that intent.
+      let assignedFeatures = assignedFont.fontDescriptor.object(forKey: .featureSettings) as? NSArray ?? []
+      let actualFeatures = font.fontDescriptor.object(forKey: .featureSettings) as? NSArray ?? []
+      let preserveFeatures = attrs[styleKey] != nil && assignedFont.fontName == font.fontName
+        && assignedFeatures.isEqual(actualFeatures)
       let preserveMissing =
         NSFont(name: style.fontName, size: font.pointSize) == nil
         && self.font(style, size: font.pointSize).fontName == font.fontName
@@ -379,7 +391,7 @@ public enum FormColor {
         style.variations = Dictionary(
           uniqueKeysWithValues: values.map { ($0.key.intValue, $0.value.doubleValue) })
       }
-      if let values = font.fontDescriptor.object(forKey: .featureSettings)
+      if !preserveFeatures, let values = font.fontDescriptor.object(forKey: .featureSettings)
         as? [[NSFontDescriptor.FeatureKey: Any]]
       {
         let selections: [(Int, Int)] = values.compactMap { v in
@@ -388,7 +400,21 @@ public enum FormColor {
           else { return nil }
           return (type, selector)
         }
-        style.features = selections.reduce(into: [:]) { $0[$1.0] = $1.1 }
+        let independent = FontCatalog.independentFeatureTypes(font.fontName)
+        let grouped = Dictionary(grouping: selections, by: { $0.0 })
+        let previous = style.featureSelections
+        style.features = [:]
+        style.featureSelections = nil
+        for (type, values) in grouped {
+          let selectors = Array(Set(values.map { $0.1 })).sorted()
+          if independent.contains(type) || selectors.count > 1 || previous?[type] != nil {
+            if style.featureSelections == nil { style.featureSelections = [:] }
+            style.featureSelections?[type] = selectors
+          } else { style.features[type] = selectors.first }
+        }
+      } else if !preserveFeatures {
+        style.features = [:]
+        style.featureSelections = nil
       }
       style.tracking = (attrs[.kern] as? NSNumber)?.doubleValue ?? 0
       style.baseline = (attrs[.baselineOffset] as? NSNumber)?.doubleValue ?? 0
@@ -418,6 +444,17 @@ public enum FormColor {
 }
 
 @MainActor public enum FontCatalog {
+  private static let detailCache: NSCache<NSString, NSDictionary> = {
+    let value = NSCache<NSString, NSDictionary>()
+    value.countLimit = 256
+    return value
+  }()
+  public static func invalidate() { detailCache.removeAllObjects() }
+  public static func independentFeatureTypes(_ name: String) -> Set<Int> {
+    Set((details(name)["features"] as? [[String: Any]] ?? []).compactMap {
+      ($0["exclusive"] as? Bool) == false ? $0["id"] as? Int : nil
+    })
+  }
   public static var families: [String] { NSFontManager.shared.availableFontFamilies.sorted() }
   public static func faces(_ family: String) -> [(name: String, style: String)] {
     (NSFontManager.shared.availableMembers(ofFontFamily: family) ?? []).compactMap { v in
@@ -428,6 +465,7 @@ public enum FormColor {
     }
   }
   public static func details(_ name: String) -> [String: Any] {
+    if let value = detailCache.object(forKey: name as NSString) { return value as! [String: Any] }
     guard let font = NSFont(name: name, size: 16) else {
       return ["font_name": name, "missing": true]
     }
@@ -456,11 +494,13 @@ public enum FormColor {
           },
       ]
     }
-    return [
+    let result: [String: Any] = [
       "font_name": font.fontName, "family": font.familyName ?? "",
       "display_name": font.displayName ?? name, "missing": false, "axes": axes,
       "features": features,
     ]
+    detailCache.setObject(result as NSDictionary, forKey: name as NSString)
+    return result
   }
   public static func missing(in art: Artwork) -> [String] {
     Set(
