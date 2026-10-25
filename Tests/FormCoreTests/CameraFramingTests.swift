@@ -21,6 +21,46 @@ final class CameraFramingTests: XCTestCase {
       CameraFraming.fitted(camera, points: [.init(.infinity, 0, 0)], aspect: 1), camera)
     XCTAssertTrue(CameraFraming.fitted(camera, points: corners, aspect: .nan).distance.isFinite)
   }
+  func testFramingDiscardsPreviousPanAndZoomWithoutChangingOrientation() {
+    for projection in ["perspective", "orthographic"] {
+      var original = CameraState()
+      original.projection = projection
+      // An orbit through the top creates the same orientation representation
+      // used by mouse navigation, including an inverted camera.
+      original = CameraNavigation.orbited(original, dx: 213, dy: 900, viewportHeight: 800)
+      let expected = CameraFraming.fitted(original, points: corners, aspect: 1.7)
+      for offset in [-1000.0, 0, 1000] {
+        for distance in [0.05, 12.0, 300] {
+          var moved = original
+          moved.target = .init(offset, offset * 3, -offset * 2)
+          moved.distance = distance
+          let fitted = CameraFraming.fitted(moved, points: corners, aspect: 1.7)
+          XCTAssertEqual(fitted, expected)
+          let basis = CameraNavigation.basis(fitted)
+          let before = CameraNavigation.basis(original)
+          XCTAssertEqual(basis.right, before.right)
+          XCTAssertEqual(basis.up, before.up)
+          XCTAssertEqual(basis.outward, before.outward)
+        }
+      }
+    }
+  }
+  func testFramingProjectsEveryCornerInsideTheViewThroughFullOrbitLoops() {
+    for projection in ["perspective", "orthographic"] {
+      var input = CameraState()
+      input.projection = projection
+      for step in 0..<64 {
+        // Pitch crosses both poles repeatedly; occasional yaw also exercises
+        // orientations with roll that azimuth/elevation alone cannot represent.
+        input = CameraNavigation.orbited(input, dx: step % 4 == 0 ? 71 : 0,
+          dy: 120, viewportHeight: 800)
+        for aspect in [0.55, 1.7, 3.0] {
+          let fitted = CameraFraming.fitted(input, points: corners, aspect: aspect)
+          assertProjectedCornersInside(fitted, aspect: aspect)
+        }
+      }
+    }
+  }
   func testFocusKeepsBoundsClearOfFloatingControlsWithoutMovingTheOrbitPivot() {
     let insets = CameraFraming.Insets(top: 0.12, right: 0.29, bottom: 0.15, left: 0.03)
     for projection in ["perspective", "orthographic"] {
@@ -109,11 +149,7 @@ final class CameraFramingTests: XCTestCase {
           camera.usesOrthographicProjection = projection == "orthographic"
           camera.orthographicScale = fitted.distance * CameraFraming.orthographicFactor
           node.camera = camera
-          node.position = .init(
-            fitted.target.x + fitted.distance * cos(elevation) * sin(azimuth),
-            fitted.target.y + fitted.distance * sin(elevation),
-            fitted.target.z + fitted.distance * cos(elevation) * cos(azimuth))
-          node.look(at: .init(fitted.target.x, fitted.target.y, fitted.target.z))
+          SceneCamera.position(node, using: fitted)
           let matrix = camera.projectionTransform
           for point in corners {
             let p = node.convertPosition(.init(point.x, point.y, point.z), from: nil)
@@ -128,6 +164,27 @@ final class CameraFramingTests: XCTestCase {
           }
         }
       }
+    }
+  }
+  private func assertProjectedCornersInside(_ fitted: CameraState, aspect: Double,
+    file: StaticString = #filePath, line: UInt = #line) {
+    let node = SCNNode()
+    let lens = SCNCamera()
+    lens.fieldOfView = 39
+    lens.projectionDirection = .vertical
+    lens.usesOrthographicProjection = fitted.projection == "orthographic"
+    lens.orthographicScale = fitted.distance * CameraFraming.orthographicFactor
+    node.camera = lens
+    SceneCamera.position(node, using: fitted)
+    let matrix = lens.projectionTransform
+    for point in corners {
+      let p = node.convertPosition(.init(point.x, point.y, point.z), from: nil)
+      let w = matrix.m14 * p.x + matrix.m24 * p.y + matrix.m34 * p.z + matrix.m44
+      let x = (matrix.m11 * p.x + matrix.m21 * p.y + matrix.m31 * p.z + matrix.m41) / w / aspect
+      let y = (matrix.m12 * p.x + matrix.m22 * p.y + matrix.m32 * p.z + matrix.m42) / w
+      XCTAssertLessThanOrEqual(abs(x), 1 / 1.2 + 0.00001, file: file, line: line)
+      XCTAssertLessThanOrEqual(abs(y), 1 / 1.2 + 0.00001, file: file, line: line)
+      XCTAssertGreaterThan(-p.z, 0.01, file: file, line: line)
     }
   }
 }

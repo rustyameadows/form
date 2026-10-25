@@ -15,7 +15,7 @@ The goal service currently permits status changes but cannot rewrite the text of
 ### A. Native 3D studio and fabrication foundation
 
 - [x] Continuous Metal-backed Table; native title bar; contextual inspectors; camera, focus, isolation, selection, movement, grouping, variants, and iterations.
-- [x] Address reversed-feeling camera navigation with saved Move camera / Turn object conventions, adjustable orbit speed, wheel reversal, shared preview behavior, and actual computer-use mouse validation.
+- [x] Fixed camera contract: scene-following drag orbit, continuous rotation through both poles, Shift-drag pan, whole-project Perspective/Top/Front buttons, selection-independent framing, stable Focus/Fit, and native mouse/event validation. See [camera controls](camera-navigation.md).
 - [x] Home previews of saved scenes; modular packages; autosave; undo/redo; imported assets; Studio materials and equipment.
 - [x] Parametric constructions and custom recipes; linked artwork; PDF/SVG/PNG/component exports; local MCP registration and shared command engine.
 - [x] Dedicated Print workspace with physical P1S bed, component selection, orientation, scale, filament choice, slicing options, layer preview, and local outputs.
@@ -39,7 +39,7 @@ Current progress: the native canvas, physical frames, typography, vector operati
 
 ### C. Deep typography — specification Phase 2
 
-Current progress: [FOUNDRY and independent font features](font-features.md) now validate simultaneous Common/Additional/Historical ligatures, explicit on/off/default states, exclusive numeral choices, selected-character feature edits, variable-axis coexistence, native assignment preservation, editable outlines, and schema-11 persistence. [FOLIO and reusable text styles](reusable-text-styles.md) add shared typography, independent paragraph inheritance, explicit local overrides, and native/MCP creation, redefinition, reset, detachment, and schema-12 persistence. [AVENUE and independent spacing](kerning.md) add real font metrics, disabled kerning, independent tracking/manual pairs, native character controls, and schema-13 persistence. [LEDGER and paragraph composition](paragraph-composition.md) add saved tab stops, repeating intervals, actual TextKit hyphenation, selected-paragraph commands, and schema-14 persistence. Advanced composition, alternate-glyph selection, and the remaining typography acceptance requirements below stay in scope.
+Current progress: [FOUNDRY and independent font features](font-features.md) now validate simultaneous Common/Additional/Historical ligatures, explicit on/off/default states, exclusive numeral choices, selected-character feature edits, variable-axis coexistence, native assignment preservation, editable outlines, and schema-11 persistence. [FOLIO and reusable text styles](reusable-text-styles.md) add shared typography, independent paragraph inheritance, explicit local overrides, and native/MCP creation, redefinition, reset, detachment, and schema-12 persistence. [AVENUE and independent spacing](kerning.md) add real font metrics, disabled kerning, independent tracking/manual pairs, native character controls, and schema-13 persistence. [LEDGER and paragraph composition](paragraph-composition.md) add saved tab stops, repeating intervals, actual TextKit hyphenation, selected-paragraph commands, and schema-14 persistence. [QUILL and alternate glyphs](glyphs.md) add a real font repertoire/palette, source-preserving choices, variable-face identity, schema-15 persistence, editable converted nodes, and a wordmark/100 mm dial demonstration. Advanced composition and the remaining typography acceptance requirements below stay in scope.
 
 - [ ] Searchable previewing font browser with families/faces, favorites, recents, explicit missing-font handling, and preserved assignments.
 - [ ] Core Text shaping; all section 4.2 text/paragraph properties; mixed rich text and selected-character editing; point/area text reflow and overflow indicators.
@@ -50,8 +50,9 @@ Current progress: [FOUNDRY and independent font features](font-features.md) now 
 - [x] Saved left/center/right/decimal tab stops and repeating intervals; native selected-paragraph controls/MCP patches; real hyphenated native/physical/export composition, recoverable source, style inheritance, and exact Undo. See [LEDGER](paragraph-composition.md).
 - [ ] Lists, complete direction/document-language/hyphenation limits, and advanced text frames.
 - [x] Non-destructive mixed-character Original/Uppercase/Lowercase treatment, source/display UTF-16 mapping through expansions, native controls and input/Undo, rich fonts/colors/styles, and matching physical exports. See [VERSO](text-case.md).
+- [x] Native alternate-glyph palette and searchable real font repertoire; source/rich-style preservation, variable-face identity, shared native/MCP edits and Undo, schema-15 persistence, and validated physical outputs. See [QUILL](glyphs.md).
 - [ ] Convert shaped text to ordinary editable outlines while preserving glyph positioning, variations, ligatures, and a recoverable editable source.
-- [ ] Demonstrate a refined wordmark and typographic clock dial with editable converted glyphs.
+- [x] Demonstrate a refined wordmark and typographic clock dial with editable converted glyphs: QUILL combines original/alternate/engraved Q forms, editable source text, ordinary converted Bézier nodes, linked oak products, and a physically sized 100 mm dial. See [the workflow](glyphs.md) and [validation](validation.md).
 
 ### D. Mature vector editing — specification Phase 3
 

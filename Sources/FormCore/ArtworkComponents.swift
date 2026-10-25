@@ -286,6 +286,7 @@ extension Project {
             if let text = change.text, sourceArt.elements[i].kind == "text" {
               sourceArt.elements[i].text = text
               sourceArt.elements[i].textRuns = nil
+              sourceArt.elements[i].glyphOverrides = nil
             }
             if let opacity = change.opacity { sourceArt.elements[i].opacity = opacity }
           }

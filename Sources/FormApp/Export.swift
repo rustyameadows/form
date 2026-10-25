@@ -1,5 +1,6 @@
 import AppKit
 import FormCore
+import FormGraphics
 import UniformTypeIdentifiers
 
 extension StudioStore {
@@ -49,6 +50,10 @@ extension StudioStore {
     }
     switch format {
     case "png":
+      let assets=repository.url(for:project.id).appendingPathComponent("Assets")
+      for o in project.objects where isolated.isEmpty || isolated.contains(o.id) {
+        if let art=project.surfaceArtwork(o) { try ArtworkRenderer.validateGlyphOutput(art,assets:assets) }
+      }
       synchronizeScene()
       let image: NSImage
       if let scene {
@@ -114,6 +119,7 @@ extension StudioStore {
   private func exportPDF(_ art: Artwork, width: Double, height: Double, assets: URL, to url: URL)
     throws
   {
+    try ArtworkRenderer.validateAppearanceOutput(art,assets:assets,pixelsPerMM:300/25.4)
     let pointsPerMM = 72.0 / 25.4
     let bleed = art.bleed
     var mediaBox = CGRect(

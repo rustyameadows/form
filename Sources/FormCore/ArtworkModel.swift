@@ -312,6 +312,7 @@ extension ArtworkElement {
   }
 }
 extension Artwork {
+  public var requiresSchemaFifteen: Bool {elements.contains{$0.glyphOverrides?.isEmpty == false}}
   public var requiresSchemaFourteen: Bool {
     elements.contains { $0.typography?.usesCustomTabs == true || ($0.typography?.hyphenation ?? 0) > 0
       || $0.textRuns?.contains { $0.typography.usesCustomTabs || $0.typography.hyphenation > 0 } == true }

@@ -29,6 +29,7 @@ public enum FormColor {
     var text: String, size: Double, color: String, width: Double, height: Double,
       style: Typography?, runs: [TextSpan]?
     var fillSwatchID: UUID?
+    var glyphs: [GlyphOverride]?
     init(_ e: ArtworkElement) {
       text = e.text
       size = e.fontSize
@@ -38,15 +39,18 @@ public enum FormColor {
       style = e.typography
       runs = e.textRuns
       fillSwatchID = e.fillSwatchID
+      glyphs = e.glyphOverrides
     }
   }
   private final class LayoutEntry {
     let signature: Signature, frame: CTFrame, drawingFrame: CTFrame, offset: Double, size: CGSize,
       text: NSAttributedString
     let decorations: [(CGPath, String)]
+    let horizontalOffset: Double, pointContainerWidth: Double?
     init(
       _ signature: Signature, frame: CTFrame, drawingFrame: CTFrame, offset: Double, size: CGSize,
-      text: NSAttributedString, decorations: [(CGPath, String)]
+      text: NSAttributedString, decorations: [(CGPath, String)], horizontalOffset: Double = 0,
+      pointContainerWidth: Double? = nil
     ) {
       self.signature = signature
       self.frame = frame
@@ -55,6 +59,8 @@ public enum FormColor {
       self.offset = offset
       self.size = size
       self.text = text
+      self.horizontalOffset = horizontalOffset
+      self.pointContainerWidth = pointContainerWidth
     }
   }
   private static let cache: NSCache<NSUUID, LayoutEntry> = {
@@ -73,12 +79,14 @@ public enum FormColor {
   public static var diagnostics: [String: Any] {
     ["layout_builds": builds, "layout_cache_hits": hits, "layout_cache_limit": 800]
       .merging(ParagraphLayout.diagnostics) { _, new in new }
+      .merging(GlyphCatalog.diagnostics) { _, new in new }
   }
   public static func usesParagraphLayout(_ element: ArtworkElement) -> Bool {
-    (element.typography?.hyphenation ?? 0) > 0 || element.textRuns?.contains { $0.typography.hyphenation > 0 } == true
+    if element.typography?.frameMode=="point",!(element.glyphOverrides ?? []).isEmpty {return false}
+    return (element.typography?.hyphenation ?? 0) > 0 || element.textRuns?.contains { $0.typography.hyphenation > 0 } == true
   }
   public static func requiresComposedOutlines(_ element: ArtworkElement) -> Bool {
-    usesParagraphLayout(element) || element.text.contains("\t")
+    usesParagraphLayout(element) || element.text.contains("\t") || !(element.glyphOverrides ?? []).isEmpty
   }
   private static func nativeTabs(_ style: Typography, factor: Double = 1) -> [NSTextTab] {
     guard let stops = style.tabStops else { return NSParagraphStyle.default.tabStops }
@@ -148,8 +156,8 @@ public enum FormColor {
     if let paragraphStyle { result[paragraphStyleKey] = try? JSONEncoder.form.encode(paragraphStyle) }
     return result
   }
-  public static func attributed(_ element: ArtworkElement, millimeters: Bool = false, preservingSource: Bool = false)
-    -> NSAttributedString
+  public static func sourceAttributed(_ element: ArtworkElement, millimeters: Bool = false)
+    -> NSMutableAttributedString
   {
     let base = element.typography ?? .init()
     let result = NSMutableAttributedString(
@@ -166,7 +174,11 @@ public enum FormColor {
         range: .init(location: run.location, length: run.length))
     }
     updateSpacing(result, millimeters: millimeters, fallbackPairs: base.pairKerning)
-    return displayingCase(result,preservingSource:preservingSource)
+    return result
+  }
+  public static func attributed(_ element: ArtworkElement, millimeters: Bool = false, preservingSource: Bool = false) -> NSAttributedString {
+    GlyphEngine.composed(sourceAttributed(element, millimeters: millimeters),
+      choices: element.glyphOverrides ?? [], preservingSource: preservingSource)
   }
   public static func displayingCase(_ source: NSAttributedString,preservingSource:Bool=true) -> NSAttributedString {
     var treatments:[(NSRange,String)]=[]
@@ -301,14 +313,38 @@ public enum FormColor {
     let setter = CTFramesetterCreateWithAttributedString(text)
     let width = element.width * pointsPerMM
     let height = element.height * pointsPerMM
-    let size = CTFramesetterSuggestFrameSizeWithConstraints(
+    var size = CTFramesetterSuggestFrameSizeWithConstraints(
       setter, CFRange(), nil,
       .init(width: element.typography?.frameMode == "point" ? 100000 : width, height: 100000), nil)
+    let pointGlyph=element.typography?.frameMode=="point" && !(element.glyphOverrides ?? []).isEmpty
+    let containerWidth=pointGlyph ? max(1,size.width+0.01) : width
+    var shiftX=0.0,shiftY=0.0
+    if pointGlyph {
+      // A swash may extend beyond its advance. Keep the full ink inside the auto-sized frame.
+      let probeHeight=100000.0
+      let probe=CTFramesetterCreateFrame(setter,CFRange(),CGPath(rect:.init(x:0,y:0,width:containerWidth,height:probeHeight),transform:nil),nil)
+      let probeLines=CTFrameGetLines(probe) as! [CTLine]
+      var positions=[CGPoint](repeating:.zero,count:probeLines.count)
+      CTFrameGetLineOrigins(probe,CFRange(),&positions)
+      var ink=CGRect.null
+      for (i,line) in probeLines.enumerated() {
+        let bounds=CTLineGetImageBounds(line,nil)
+        if !bounds.isNull,!bounds.isEmpty {
+          ink=ink.union(CGRect(x:positions[i].x+bounds.minX,y:probeHeight-positions[i].y-bounds.maxY,width:bounds.width,height:bounds.height))
+        }
+      }
+      if !ink.isNull {
+        shiftX=max(0,-ink.minX);shiftY=max(0,-ink.minY)
+        size.width=max(size.width,ink.maxX)+shiftX
+        size.height=max(size.height,ink.maxY)+shiftY
+      }
+    }
     let offset =
       element.typography?.verticalAlignment == "middle"
       ? max(0, (height - size.height) / 2)
       : element.typography?.verticalAlignment == "bottom" ? max(0, height - size.height) : 0
-    let box = CGPath(rect: .init(x: 0, y: 0, width: width, height: height), transform: nil)
+    let totalOffset=offset+shiftY
+    let box = CGPath(rect: .init(x: 0, y: 0, width: containerWidth, height: height), transform: nil)
     let frame = CTFramesetterCreateFrame(setter, CFRange(), box, nil)
     let lines = CTFrameGetLines(frame) as! [CTLine]
     var origins = [CGPoint](repeating: .zero, count: lines.count)
@@ -317,7 +353,7 @@ public enum FormColor {
     var mm = CGAffineTransform(scaleX: 1 / pointsPerMM, y: 1 / pointsPerMM)
     for (i, line) in lines.enumerated() {
       for run in CTLineGetGlyphRuns(line) as! [CTRun] {
-        let path = decoration(run, origin: origins[i], height: height, offset: offset)
+        let path = decoration(run, origin:CGPoint(x:origins[i].x+shiftX,y:origins[i].y), height: height, offset: totalOffset)
         if !path.isEmpty {
           let attrs = CTRunGetAttributes(run) as NSDictionary
           decorations.append(
@@ -339,9 +375,9 @@ public enum FormColor {
         CTFramesetterCreateWithAttributedString(plain), CFRange(), box, nil)
     }
     let entry = LayoutEntry(
-      signature, frame: frame, drawingFrame: drawingFrame, offset: offset,
+      signature, frame: frame, drawingFrame: drawingFrame, offset: totalOffset,
       size: .init(width: size.width / pointsPerMM, height: size.height / pointsPerMM), text: text,
-      decorations: decorations)
+      decorations: decorations,horizontalOffset:shiftX,pointContainerWidth:pointGlyph ? containerWidth:nil)
     cache.setObject(entry, forKey: element.id as NSUUID, cost: max(300, text.length * 100))
     builds += 1
     return entry
@@ -364,6 +400,13 @@ public enum FormColor {
     if usesParagraphLayout(element) { return ParagraphLayout.verticalOffset(element, points: points) }
     return cachedLayout(element).offset / (points ? 1 : pointsPerMM)
   }
+  public static func horizontalOffset(_ element:ArtworkElement,points:Bool=false)->Double {
+    usesParagraphLayout(element) ? 0 : cachedLayout(element).horizontalOffset/(points ? 1:pointsPerMM)
+  }
+  public static func pointGlyphContainerWidth(_ element:ArtworkElement)->Double? {
+    guard !usesParagraphLayout(element) else {return nil}
+    return cachedLayout(element).pointContainerWidth
+  }
   public static func draw(_ element: ArtworkElement, in context: CGContext) {
     if usesParagraphLayout(element) {
       context.saveGState()
@@ -376,7 +419,7 @@ public enum FormColor {
     context.clip(to: .init(x: 0, y: 0, width: element.width, height: element.height))
     context.saveGState()
     context.scaleBy(x: 1 / pointsPerMM, y: 1 / pointsPerMM)
-    context.translateBy(x: 0, y: element.height * pointsPerMM + entry.offset)
+    context.translateBy(x: entry.horizontalOffset, y: element.height * pointsPerMM + entry.offset)
     context.scaleBy(x: 1, y: -1)
     context.textMatrix = .identity
     context.setAllowsFontSubpixelPositioning(true)
@@ -404,13 +447,15 @@ public enum FormColor {
   }
   public static func outlinePaintRuns(_ element: ArtworkElement) throws
     -> [(path: CGPath, color: String, swatchID: UUID?)] {
+    try GlyphEngine.validateOutput(element, outlines: true)
     if usesParagraphLayout(element) { return try ParagraphLayout.outlines(element) }
     let (frame, offset) = layout(element)
     let lines = CTFrameGetLines(frame) as! [CTLine]
     var origins = [CGPoint](repeating: .zero, count: lines.count)
     CTFrameGetLineOrigins(frame, CFRange(), &origins)
     var result: [(path: CGPath, color: String, swatchID: UUID?)] = []
-    let text = cachedLayout(element).text.string as NSString
+    let entry = cachedLayout(element)
+    let text = entry.text.string as NSString
     for (i, line) in lines.enumerated() {
       for run in CTLineGetGlyphRuns(line) as! [CTRun] {
         let path = CGMutablePath()
@@ -429,7 +474,7 @@ public enum FormColor {
             let p = positions[j]
             let origin = origins[i]
             var transform = CGAffineTransform(
-              a: 1, b: 0, c: 0, d: -1, tx: origin.x + p.x,
+              a: 1, b: 0, c: 0, d: -1, tx: origin.x + p.x + entry.horizontalOffset,
               ty: element.height * pointsPerMM + offset - origin.y - p.y)
             transform = CTRunGetTextMatrix(run).concatenating(transform)
             path.addPath(glyph, transform: transform)
@@ -444,7 +489,7 @@ public enum FormColor {
         }
         var ink: CGPath = path
         let decoration = decoration(
-          run, origin: origins[i], height: element.height * pointsPerMM, offset: offset)
+          run, origin:CGPoint(x:origins[i].x+entry.horizontalOffset,y:origins[i].y), height: element.height * pointsPerMM, offset: offset)
         if !decoration.isEmpty { ink = ink.union(decoration) }
         let frameRect = CGRect(
           x: 0, y: 0, width: element.width * pointsPerMM, height: element.height * pointsPerMM)
@@ -575,7 +620,7 @@ public enum FormColor {
     value.countLimit = 256
     return value
   }()
-  public static func invalidate() { detailCache.removeAllObjects() }
+  public static func invalidate() { detailCache.removeAllObjects(); GlyphCatalog.invalidate() }
   public static func independentFeatureTypes(_ name: String) -> Set<Int> {
     Set((details(name)["features"] as? [[String: Any]] ?? []).compactMap {
       ($0["exclusive"] as? Bool) == false ? $0["id"] as? Int : nil

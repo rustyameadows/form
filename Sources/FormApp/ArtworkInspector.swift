@@ -478,6 +478,19 @@ struct ArtworkInspector: View {
           }
         }
       }.font(.system(size: 10))
+      HStack {
+        Button("Glyphs…") {session.showingGlyphs=true}
+          .popover(isPresented:$session.showingGlyphs,arrowEdge:.leading) {
+            GlyphPalette(session:session).onExitCommand {session.showingGlyphs=false}
+          }
+        Spacer()
+        if let e=session.primary,!(e.glyphOverrides ?? []).isEmpty {
+          Text("\(e.glyphOverrides!.count) glyph \(e.glyphOverrides!.count == 1 ? "choice":"choices")").foregroundStyle(Palette.secondary)
+        }
+      }.font(.system(size:10))
+      if let e=session.primary,let issue=GlyphEngine.issues(session.colored(e)).first {
+        Text(issue).font(.system(size:10)).foregroundStyle(Palette.accent)
+      }
       FontFeaturesInspector(session: session)
       Button("Convert to editable outlines") {
         session.canvas?.finishText()

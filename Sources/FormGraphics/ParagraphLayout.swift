@@ -7,9 +7,10 @@ import FormCore
   private struct Signature: Equatable {
     var text: String, width: Double, height: Double, size: Double, color: String
     var type: Typography?, runs: [TextSpan]?
+    var glyphs: [GlyphOverride]?
     init(_ e: ArtworkElement) {
       text=e.text; width=e.width; height=e.height; size=e.fontSize; color=e.color
-      type=e.typography; runs=e.textRuns
+      type=e.typography; runs=e.textRuns; glyphs=e.glyphOverrides
     }
   }
   @MainActor private final class Entry {

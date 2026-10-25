@@ -151,11 +151,13 @@ final class ArtworkRuler: NSRulerView {
 
 final class CanvasTextView: NSTextView, NSTextStorageDelegate {
   var verticalOffset = 0.0
+  var horizontalOffset = 0.0
   private var normalizingCase=false
   private var caseReference:NSAttributedString?
   private var storageSnapshot=NSAttributedString(string:"")
   private var sourceEdit:(NSAttributedString,NSRange)?
   private var composition:(NSAttributedString,NSRange)?
+  private var glyphInsertion:(NSRange,NSAttributedString)?
   private var ownedStorage:NSTextStorage?
   override init(frame frameRect:NSRect,textContainer:NSTextContainer?=nil) {
     let container:NSTextContainer
@@ -183,16 +185,24 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
     if let value=string as? NSAttributedString {marked=NSMutableAttributedString(attributedString:value)}
     else {marked=NSMutableAttributedString(string:string as? String ?? "",attributes:typingAttributes)}
     marked.removeAttribute(TextCase.sourceKey,range:NSRange(location:0,length:marked.length))
+    for key in [GlyphEngine.overrideKey, .glyphInfo, GlyphEngine.renderKey] { marked.removeAttribute(key, range: NSRange(location:0,length:marked.length)) }
     super.setMarkedText(marked,selectedRange:selectedRange,replacementRange:replacementRange)
+    let range=markedRange()
+    if range.location != NSNotFound,NSMaxRange(range)<=(textStorage?.length ?? 0) {
+      for key in [GlyphEngine.overrideKey,.glyphInfo,GlyphEngine.renderKey] { textStorage?.removeAttribute(key,range:range) }
+    }
   }
   override func insertText(_ insertString: Any, replacementRange: NSRange) {
     caseReference=NSAttributedString(attributedString:attributedString())
     undoManager?.beginUndoGrouping()
-    defer {undoManager?.endUndoGrouping()}
+    defer {glyphInsertion=nil;undoManager?.endUndoGrouping()}
     var input=insertString
     if let string=insertString as? String {
       var attrs=typingAttributes
       attrs.removeValue(forKey:TextCase.sourceKey)
+      attrs.removeValue(forKey:GlyphEngine.overrideKey)
+      attrs.removeValue(forKey:GlyphEngine.renderKey)
+      attrs.removeValue(forKey:.glyphInfo)
       attrs.removeValue(forKey:TypographyEngine.pairKey)
       let key:NSAttributedString.Key=attrs[.tracking] != nil ? .tracking : .kern
       let adjustment=(attrs[TypographyEngine.spacingKey] as? NSNumber)?.doubleValue ?? 0
@@ -200,14 +210,27 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
       attrs[TypographyEngine.spacingKey]=0.0
       input=TypographyEngine.displayingCase(NSAttributedString(string:string,attributes:attrs))
     }
+    if let inserted=input as? NSAttributedString {
+      let replaced=replacementRange.location==NSNotFound ? (hasMarkedText() ? markedRange():selectedRange()):replacementRange
+      glyphInsertion=(NSRange(location:replaced.location,length:inserted.length),inserted)
+    }
     super.insertText(input,replacementRange:replacementRange)
   }
   override func didChangeText() {
     if hasMarkedText() {super.didChangeText();return}
+    if let (range,inserted)=glyphInsertion,range.location != NSNotFound,
+      let storage=textStorage,NSMaxRange(range)<=storage.length {
+      glyphInsertion=nil
+      // AppKit can inherit custom attributes even from an attributed insertion that omits them.
+      for key in [GlyphEngine.overrideKey,.glyphInfo,GlyphEngine.renderKey] { storage.removeAttribute(key,range:range) }
+      inserted.enumerateAttribute(GlyphEngine.overrideKey,in:NSRange(location:0,length:inserted.length)) { raw,part,_ in
+        if let raw { storage.addAttribute(GlyphEngine.overrideKey,value:raw,range:NSRange(location:range.location+part.location,length:part.length)) }
+      }
+    }
     if !normalizingCase {
       let before=attributedString(),source=TextCase.source(before,reference:composition?.0 ?? sourceEdit?.0 ?? caseReference,editedRange:composition?.1 ?? sourceEdit?.1)
-      let normalized=TypographyEngine.displayingCase(source.text)
-      if !normalized.isEqual(to:before) {
+      let normalized=GlyphEngine.normalizedNative(source.text)
+      if !GlyphEngine.nativeEqual(normalized,before) {
         normalizingCase=true
         let range=source.sourceRange(selectedRange())
         let metadataOnly=normalized.string==before.string
@@ -227,7 +250,21 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
   override var textContainerOrigin: NSPoint {
     var origin = super.textContainerOrigin
     origin.y += verticalOffset
+    origin.x += horizontalOffset
     return origin
+  }
+  func applyGlyph(_ glyph: FontGlyph?, sourceRange: NSRange) throws {
+    guard !hasMarkedText() else { throw FormError.invalid("Finish the current text input before choosing a glyph.") }
+    let before = attributedString(), source = TextCase.source(before).text
+    let changed = try GlyphEngine.applying(glyph, range: sourceRange, to: source)
+    guard !GlyphEngine.nativeEqual(before,changed) else { return }
+    breakUndoCoalescing()
+    undoManager?.beginUndoGrouping()
+    defer { undoManager?.endUndoGrouping();breakUndoCoalescing() }
+    guard shouldChangeText(in: NSRange(location:0,length:before.length), replacementString:nil) else { return }
+    textStorage?.setAttributedString(changed)
+    setSelectedRange(TextCase.source(changed).displayRange(sourceRange))
+    didChangeText()
   }
 }
 
@@ -1436,6 +1473,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let world = s.art.worldTransform(element)
     if let tv = textView as? CanvasTextView {
       tv.verticalOffset = TypographyEngine.verticalOffset(element, points: true)
+      tv.horizontalOffset = TypographyEngine.horizontalOffset(element, points: true)
+      if element.typography?.frameMode=="point" {
+        tv.setFrameSize(.init(width:max(40,element.width*ppm),height:max(24,element.height*ppm)))
+      }
+      if let width=TypographyEngine.pointGlyphContainerWidth(element) {
+        tv.textContainer?.widthTracksTextView=false
+        tv.textContainer?.containerSize.width=width
+      } else {tv.textContainer?.widthTracksTextView=true}
       tv.needsDisplay = true
     }
     clip.configure(
@@ -1454,11 +1499,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let i = s.art.elements.firstIndex(where: { $0.id == id })
     else { return }
     if tv.hasMarkedText() {return}
-    if let publishedInput, tv.attributedString().isEqual(to: publishedInput) { return }
+    if let publishedInput, GlyphEngine.nativeEqual(tv.attributedString(),publishedInput) { return }
     publishedInput = NSAttributedString(attributedString: tv.attributedString())
     var value = s.art
     if let originalTextInput, let originalTextElement,
-      tv.attributedString().isEqual(to: originalTextInput) {
+      GlyphEngine.nativeEqual(tv.attributedString(),originalTextInput) {
       value.elements[i] = originalTextElement
       publishedText = s.colored(originalTextElement)
       s.save(value)
@@ -1468,6 +1513,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     var e = value.elements[i]
     let source=TextCase.source(tv.attributedString()).text
     e.text = source.string
+    let choices = GlyphEngine.overrides(from: source)
+    e.glyphOverrides = choices.isEmpty ? nil : choices
     let runs = TypographyEngine.spans(
       from: source, fallback: e.typography ?? .init())
     if runs.count == 1, let run = runs.first, run.fontSize == e.fontSize, run.color == e.color,
@@ -1510,7 +1557,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   private func changeText(_ attributes: [NSAttributedString.Key: Any], removing: [NSAttributedString.Key] = []) -> Bool {
     guard let tv = textView else { return false }
-    let range = TextCase.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString())
+    let range = GlyphEngine.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString())
     tv.undoManager?.beginUndoGrouping()
     defer {tv.undoManager?.endUndoGrouping()}
     if range.length == 0 {
@@ -1524,6 +1571,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       tv.textStorage?.endEditing()
       tv.didChangeText()
     }
+    return true
+  }
+  func applyGlyph(_ glyph: FontGlyph?, sourceRange: NSRange) throws -> Bool {
+    guard let tv = textView as? CanvasTextView else { return false }
+    try tv.applyGlyph(glyph, sourceRange: sourceRange)
+    tv.window?.makeFirstResponder(tv)
     return true
   }
   func textInspection() -> TextSpan? {
@@ -1589,9 +1642,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       var result=TypographyEngine.attributes(changed.typography, size: changed.fontSize, color: changed.color,
         millimeters: false, swatchID: changed.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
       result[TextCase.sourceKey]=raw[TextCase.sourceKey]
+      result[GlyphEngine.overrideKey]=raw[GlyphEngine.overrideKey]
       return result
     }
-    let range = TextCase.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString())
+    let range = GlyphEngine.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString())
     if range.length == 0 {
       tv.typingAttributes = attributes(tv.typingAttributes, at: range.location)
       session?.objectWillChange.send()
@@ -1622,7 +1676,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let tv = textView else { return false }
     tv.undoManager?.beginUndoGrouping()
     defer {tv.undoManager?.endUndoGrouping()}
-    var range = TextCase.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString())
+    var range = GlyphEngine.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString())
     let fallback = session?.primary?.typography ?? .init()
     let mapping=TextCase.source(tv.attributedString())
     if let old = textInspection()?.typography {
@@ -1653,6 +1707,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         var attrs=TypographyEngine.attributes(t, size: run.fontSize, color: run.color, millimeters: false,
           swatchID: run.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
         attrs[TextCase.sourceKey]=attributes[TextCase.sourceKey]
+        attrs[GlyphEngine.overrideKey]=attributes[GlyphEngine.overrideKey]
         replacements.append((part,attrs))
       }
     }

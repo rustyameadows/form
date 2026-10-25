@@ -5,7 +5,7 @@ public struct CameraPreferences: Codable, Equatable, Sendable {
   public enum OrbitDirection: String, Codable, CaseIterable, Sendable {
     case moveCamera, turnObject
   }
-  public var orbitDirection: OrbitDirection = .moveCamera
+  public var orbitDirection: OrbitDirection = .turnObject
   public var orbitSpeed = 0.75
   public var reverseScrollZoom = false
 

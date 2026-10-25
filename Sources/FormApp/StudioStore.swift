@@ -12,27 +12,23 @@ enum WorkspaceMode: String, CaseIterable {
 
 enum TableTool: String, CaseIterable {
   case orbit = "Orbit"
-  case pan = "Pan"
   case move = "Move"
   var symbol: String {
     switch self {
     case .orbit: return "rotate.3d"
-    case .pan: return "hand.draw"
     case .move: return "cursorarrow"
     }
   }
   var shortcut: String {
     switch self {
     case .orbit: return "O"
-    case .pan: return "H"
     case .move: return "V"
     }
   }
   var hint: String {
     switch self {
-    case .orbit: return "Drag to orbit · Click to select · Space-drag to pan"
-    case .pan: return "Drag to pan · O to orbit · Scroll to zoom"
-    case .move: return "Drag objects to move · Drag empty space to orbit · Space-drag to pan"
+    case .orbit: return "Drag to orbit · Shift-drag to pan · Scroll to zoom"
+    case .move: return "Drag objects to move · Shift snaps placement · O returns to navigation"
     }
   }
 }
@@ -55,14 +51,6 @@ enum TableTool: String, CaseIterable {
   @Published var svgImport: SVGImportReview?
   @Published var showGrid = false
   @Published var tableTool: TableTool = .orbit
-  @Published var cameraPreferences: CameraPreferences {
-    didSet {
-      if let data = try? JSONEncoder().encode(cameraPreferences) {
-        cameraDefaults.set(data, forKey: "FORM.cameraNavigation")
-      }
-    }
-  }
-  private let cameraDefaults: UserDefaults
   @Published var isolated: Set<UUID> = []
   @Published var studioPreset = "Daylight"
   @Published var previewVersion = 0
@@ -83,11 +71,7 @@ enum TableTool: String, CaseIterable {
   var primary: ProductObject? { selected.first }
   var materials: [FormCore.Material] { library.materials + (project?.materials ?? []) }
 
-  init(repository suppliedRepository: ProjectRepository? = nil, seedLibrary: Bool = true,
-    cameraDefaults: UserDefaults = .standard) {
-    self.cameraDefaults = cameraDefaults
-    cameraPreferences = cameraDefaults.data(forKey: "FORM.cameraNavigation")
-      .flatMap { try? JSONDecoder().decode(CameraPreferences.self, from: $0) } ?? CameraPreferences()
+  init(repository suppliedRepository: ProjectRepository? = nil, seedLibrary: Bool = true) {
     do {
       repository = try suppliedRepository ?? ProjectRepository()
       engine = OperationEngine(repository: repository)
@@ -118,6 +102,14 @@ enum TableTool: String, CaseIterable {
       let art = try BooleanGeometry.materialized(p.resolvingComponents(in:raw))
       for e in art.elements where ids.contains(e.id) && e.visibleStroke != nil { _ = try VectorGeometry.expandedStroke(e) }
     }
+    engine.onPrepareGlyph = { element, choice in
+      if let choice {try GlyphEngine.validateSelection(element, choice: choice)}
+      if element.typography?.frameMode=="point" {
+        let size=TypographyEngine.measured(element)
+        element.width=max(1,size.width+0.5)
+        element.height=max(element.fontSize/TypographyEngine.pointsPerMM*1.4,size.height+0.5)
+      }
+    }
     engine.onProjectWillChange = { [weak self] in self?.finishArtworkEditing() }
     engine.onProjectDidChange = { [weak self] in
       self?.printing.resetForProjectChange()
@@ -125,6 +117,7 @@ enum TableTool: String, CaseIterable {
       self?.artworkSession.showingTextStyles = false
       self?.artworkSession.showingPalette = false
       self?.artworkSession.showingTabs = false
+      self?.artworkSession.showingGlyphs = false
     }
   }
   func finishArtworkEditing() {
@@ -155,7 +148,7 @@ enum TableTool: String, CaseIterable {
                 || (name == "form_text_style" && args["command"] as? String == "list")
             if !readOnly { self.finishArtworkEditing() }
             var result = try self.engine.call(name, arguments: args)
-            if !readOnly { self.artworkSession.showingTabs = false }
+            if !readOnly { self.artworkSession.showingTabs = false;self.artworkSession.showingGlyphs=false }
             if name == "form_status", var status = result as? [String: Any] {
               status["renderer"] = self.scene?.diagnostics ?? [:]
               status["artwork_renderer"] = self.artworkSession.canvas?.diagnostics ?? [:]

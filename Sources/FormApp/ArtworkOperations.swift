@@ -24,7 +24,27 @@ extension StudioStore {
       guard let font = args["font_name"] as? String else {
         throw FormError.invalid("font_name is required.")
       }
-      return FontCatalog.details(font)
+      func integer(_ key: String, default fallback: Int) throws -> Int {
+        guard let value = args[key] else { return fallback }
+        guard let n = value as? NSNumber, CFGetTypeID(n) != CFBooleanGetTypeID(),
+          n.doubleValue.isFinite, n.doubleValue == n.doubleValue.rounded(),
+          n.doubleValue >= 0, n.doubleValue <= 65536 else { throw FormError.invalid("Use a nonnegative integer for \(key).") }
+        return n.intValue
+      }
+      switch args["command"] as? String ?? "features" {
+      case "features": return FontCatalog.details(font)
+      case "glyphs":
+        return try GlyphCatalog.repertoire(fontName: font, query: args["query"] as? String ?? "",
+          offset: integer("offset", default: 0), limit: integer("limit", default: 64))
+      case "alternates":
+        guard let text = args["text"] as? String else { throw FormError.invalid("Provide source text for alternate discovery.") }
+        let style = try args["typography"].map { try JSONDecoder.form.decode(Typography.self,
+          from: JSONSerialization.data(withJSONObject: $0)) } ?? Typography()
+        let range = try NSRange(location: integer("location", default: 0), length: integer("length", default: text.utf16.count))
+        let options = try GlyphCatalog.alternates(fontName: font, text: text, range: range, typography: style)
+        return ["font_name": font, "location": range.location, "length": range.length, "glyphs": options.map(\.json)]
+      default: throw FormError.invalid("Font discovery command must be features, glyphs, or alternates.")
+      }
     }
     guard let raw = args["object_id"] as? String, let id = UUID(uuidString: raw), let project,
       let object = project.objects.first(where: { $0.id == id })

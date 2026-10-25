@@ -206,6 +206,10 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
       throw FormError.invalid("A path element needs editable path data.")
     }
     if let style = e.typography { try validateTypography(style) }
+    if let glyphs=e.glyphOverrides {
+      guard e.kind=="text" || glyphs.isEmpty else {throw FormError.invalid("Glyph choices belong to text elements.")}
+      try GlyphCommands.validate(glyphs,text:e.text)
+    }
     var end = 0
     for run in (e.textRuns ?? []).sorted(by: { $0.location < $1.location }) {
       guard run.location >= end, run.length > 0, run.location <= e.text.utf16.count,

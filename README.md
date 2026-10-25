@@ -35,7 +35,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Vector paint:** Direct gradient-stop and axis editing, full stroke controls with inside/outside alignment, fill-preserving stroke outlines, and explicit nested-mask editing. See the [PRISM workflow](docs/paint-gradients-masks.md).
 - **Image editing:** Original files, aspect-aware placement, crop panning/zoom, numeric crop bounds, brightness/contrast/saturation, replacement that retains layout, drag/drop, and effective physical DPI. See the [LUMEN collection](docs/image-editing.md).
 - **Editable SVG import:** File → Import SVG Artwork (`⇧⌘I`) reviews native paths, groups, text, gradients, clips, and embedded images before creating a physical frame or adding to an existing surface. Originals stay in the project; unsupported features require explicit review. See the [SVG import guide](docs/svg-import.md).
-- **Typography:** Reusable text styles with local overrides, independent character/paragraph links, installed fonts, native selected-character editing, reversible Unicode case, paragraph tabs/hyphenation, font kerning, OpenType features, variable axes, Core Text shaping, and editable glyph outlines. See [FOLIO and text styles](docs/reusable-text-styles.md), [FOUNDRY and font features](docs/font-features.md), [AVENUE and kerning](docs/kerning.md), [LEDGER and paragraph composition](docs/paragraph-composition.md), [VERSO and text case](docs/text-case.md), and the [editor guide](docs/2d-editor.md).
+- **Typography:** Reusable text styles with local overrides, independent character/paragraph links, installed fonts, native selected-character editing, reversible Unicode case, paragraph tabs/hyphenation, font kerning, OpenType features, variable axes, real alternate-glyph selection, Core Text shaping, and editable glyph outlines. See [FOLIO and text styles](docs/reusable-text-styles.md), [FOUNDRY and font features](docs/font-features.md), [AVENUE and kerning](docs/kerning.md), [LEDGER and paragraph composition](docs/paragraph-composition.md), [VERSO and text case](docs/text-case.md), [QUILL and alternate glyphs](docs/glyphs.md), and the [editor guide](docs/2d-editor.md).
 - **Iterations and variants:** Independent design iterations or linked parameter/artwork variants with their own materials and placement.
 - **Studio Library:** Persistent materials and equipment profiles, separate from individual projects.
 - **Print preparation:** `⌘P` opens a dedicated physical print bed with object/component selection, orientation, scale, filament, layer height, walls, infill, supports, brim, and actual sliced layer previews. Project switches cancel local work and clear stale previews; settings and mesh share Undo/Redo.
@@ -78,13 +78,12 @@ See [Printing architecture, setup, and research](docs/printing.md) for profiles,
 | Action | Control |
 | --- | --- |
 | Select / extend selection | Click / Shift-click |
-| Orbit | **Orbit** tool (`O`), then drag anywhere; right-drag also orbits |
-| Pan | **Pan** tool (`H`); Space-drag, Option-drag, or middle-drag |
-| Move an object or group | **Move** tool (`V`), then drag the selection; Shift snaps to 10 mm |
+| Orbit | Drag in **Orbit** mode (`O`); the scene follows the pointer |
+| Pan the view | **Shift + drag** in Orbit mode |
+| Move an object or group | **Move** mode (`V`), then drag the selection; Shift snaps to 10 mm |
 | Zoom | Scroll up to zoom in, down to zoom out; pinch also works |
-| Fine camera adjustment | Hold Shift while orbiting or panning |
 | Focus / isolate | `F` / `I`, or floating inspector buttons |
-| Perspective / overhead / front | `1` / `2` / `3` |
+| Perspective / top / front | `1` / `2` / `3` |
 | Fit all | `⌘0` |
 | Duplicate iteration / linked variant | `⌘D` / `⇧⌘D` |
 | Group | `⌘G` |
@@ -93,7 +92,7 @@ See [Printing architecture, setup, and research](docs/printing.md) for profiles,
 | Print preparation | `⌘P` |
 | Return to Home | `⇧⌘H` |
 
-The Table starts in Orbit mode so navigation cannot accidentally move objects. The camera follows the drag by default; the sliders button in the camera bar offers **Move camera / Turn object**, orbit speed, and reverse scroll zoom. Preferences persist across launches and apply to the Table, Studio, object inset, and print preview. Pan follows the pointer in screen space, the horizon stays upright, and orbit preserves the current perspective or orthographic projection. See [camera controls and validation](docs/camera-navigation.md).
+The Table starts in Orbit mode. Rotation is continuous through complete turns in both axes, including the top and bottom poles. Shift-drag pans in screen space. Perspective, Top, and Front reset orientation and frame the **whole project** every time, including when an object was selected or isolated. Focus frames the selection. There are no alternate Space/Option pan bindings or navigation-direction settings. The Table, Studio, live object inset, and print preview share this behavior. See the [camera control contract and validation](docs/camera-navigation.md).
 
 ## Develop and validate
 
@@ -110,6 +109,7 @@ python3 scripts/smoke_appearance.py # Blur, shadows, blending, linked outputs, 1
 python3 scripts/smoke_paint.py # Gradients, strokes, nested masks, physical outputs, 200-element saved edits
 python3 scripts/smoke_font_features.py # Independent selectors, rich typography, linked faces, schema 11, 200-text saved edits
 python3 scripts/smoke_case.py # Reversible Unicode case, source preservation, native shaping, linked faces
+python3 scripts/smoke_glyphs.py # Actual font glyphs, editable QUILL wordmark/dial, recoverable paths, schema 15
 python3 scripts/smoke_paragraphs.py # Saved tabs, real hyphenation, paragraph patches, schema 14, linked faces
 python3 scripts/smoke_kerning.py # Font metrics, independent spacing, legacy preservation, schema 13, linked faces
 python3 scripts/smoke_text_styles.py # Reusable styles, local overrides, character/paragraph links, schema 12, linked faces
@@ -138,6 +138,7 @@ This build has a native typography/vector editor and procedural construction sys
 - [Native artwork editor · controls, MCP, and remaining work](docs/2d-editor.md)
 - [Paragraph tabs, hyphenation, and LEDGER](docs/paragraph-composition.md)
 - [Non-destructive text case and VERSO](docs/text-case.md)
+- [Alternate glyphs, the QUILL wordmark, and a 100 mm dial](docs/glyphs.md)
 - [Editable SVG import and ORBIT illustration](docs/svg-import.md)
 - [Precise paths and transformed native text](docs/path-editing.md)
 - [Shared artwork and the clock study](docs/linked-artwork.md)

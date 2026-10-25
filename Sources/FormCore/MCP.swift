@@ -217,7 +217,7 @@ public enum MCP {
         ], required: ["command"]),
       tool(
         "form_edit_artwork",
-        "Apply a native artwork command: add/replace elements, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip. Use complete element values for add/replace. clip uses mask_id or the bottom selected area shape; targets and mask must be siblings. Geometry stays editable; use nested clipped groups for nested masks. release_clip preserves the mask shape. Alignment modes: left/right/top/bottom/center_x/center_y/width/height; distribution: horizontal/vertical; order: front/back/forward/backward. paragraph patches paragraph typography on selected text; optional UTF-16 location/length expands to full paragraphs while retaining rich characters. Returns selected element IDs. All changes share native undo.",
+        "Apply a native artwork command: add/replace elements, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip. Use complete element values for add/replace. clip uses mask_id or the bottom selected area shape; targets and mask must be siblings. Geometry stays editable; use nested clipped groups for nested masks. release_clip preserves the mask shape. Alignment modes: left/right/top/bottom/center_x/center_y/width/height; distribution: horizontal/vertical; order: front/back/forward/backward. glyph assigns fontName/glyphID/glyphName/fontSignature discovered by form_font_features to one source UTF-16 location/length while retaining editable text; glyph:null clears the range or all selected text choices. paragraph patches paragraph typography on selected text; optional UTF-16 location/length expands to full paragraphs while retaining rich characters. Returns selected element IDs. All changes share native undo.",
         [
           "object_id": objectID, "mask_id": string, "command": ["type": "string", "enum": ArtworkCommands.names],
           "element_ids": ["type": "array", "items": string],
@@ -225,6 +225,7 @@ public enum MCP {
           "axis": string,
           "typography": ["type": "object", "description": "With paragraph, patch paragraph properties only: tabStops [{location in pt, alignment left/center/right/decimal, optional decimalSeparator period/comma}], defaultTabInterval in pt, leading, spacing/indents, alignment, direction, hyphenation 0–1. null resets optional tab settings. A UTF-16 location/length expands to containing paragraphs, preserving character formatting."],
           "location": ["type": "integer"], "length": ["type": "integer"],
+          "glyph": ["type": ["object","null"], "description": "With command glyph, provide fontName, glyphID, optional glyphName and fontSignature from font glyph discovery. location/length selects source UTF-16 characters. null clears choices in that range, or all selected text when the range is omitted."],
         ], required: ["object_id", "command"]),
       tool(
         "form_edit_path",
@@ -247,8 +248,13 @@ public enum MCP {
         ["query": string], readOnly: true),
       tool(
         "form_font_features",
-        "Inspect an installed face's actual OpenType selectors, exclusivity, defaults and variable axes/ranges. Typography.features maps a mutually exclusive type to one selector; featureSelections maps an independent type to multiple selectors (even on, next odd off). Font defaults are retained by omitting the pair. These fields work on whole text and UTF-16 textRuns through form_edit_artwork replace. Typography.kerningMode accepts metrics (font pair spacing plus independent tracking/manual deltas) or none; omission preserves original document spacing. Explicit kerning modes require schema 13 and are inherited by text styles. Missing fonts are explicit.",
-        ["font_name": string], required: ["font_name"], readOnly: true),
+        "Read-only font discovery. command features (default) inspects an installed face's actual OpenType selectors, exclusivity, defaults and variable axes/ranges. Typography.features maps a mutually exclusive type to one selector; featureSelections maps an independent type to multiple selectors (even on, next odd off). Font defaults are retained by omitting the pair. These fields work on whole text and UTF-16 textRuns through form_edit_artwork replace. Typography.kerningMode accepts metrics (font pair spacing plus independent tracking/manual deltas) or none; omission preserves original document spacing. Explicit kerning modes require schema 13 and are inherited by text styles. Missing fonts are explicit. command glyphs pages the actual font repertoire with query (name substring, numeric/gid: ID, or U+hex), offset, and limit 1–128. command alternates shapes source text and its UTF-16 location/length (1–64 units) with optional typography and returns actual one-glyph alternatives supported by the face, with fontName/glyphID/glyphName/fontSignature metadata for form_edit_artwork command glyph. Glyph choices retain original editable text and require schema 15.",
+        ["font_name": string,
+         "command": ["type":"string","enum":["features","glyphs","alternates"]],
+         "query": string,"offset":["type":"integer"],"limit":["type":"integer"],
+         "text":string,"location":["type":"integer"],"length":["type":"integer"],
+         "typography":["type":"object","description":"Optional current typography for alternate shaping, including features, variable axes and case treatment."]],
+         required: ["font_name"], readOnly: true),
       tool(
         "form_convert_to_paths",
         "Convert selected shaped text, geometric shapes, or strokes to editable Bézier paths. Text uses Core Text glyph runs, ligatures, kerning, and variations. Shape conversion preserves geometry, transforms, and appearance. Original source elements are retained hidden for recovery.",

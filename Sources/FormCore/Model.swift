@@ -111,6 +111,7 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var textStyle: TextStyleReference?
   public var paragraphStyle: TextStyleReference?
   public var textRuns: [TextSpan]?
+  public var glyphOverrides: [GlyphOverride]?
   public var productionRole: String?
   public var clipID: UUID?
   public init(
@@ -330,6 +331,7 @@ public struct ProjectEvent: Codable, Equatable, Identifiable, Sendable {
 public struct CameraState: Codable, Equatable, Sendable {
   public var azimuth: Double = 0.55
   public var elevation: Double = 0.70
+  public var orientation: CameraOrientation?
   public var distance: Double = 12
   public var target: Vector3 = .init(0, 0.6, 0)
   public var projection: String = "perspective"
@@ -372,7 +374,11 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var minimumSchemaVersion: Int {
     max(
       schemaVersion,
-      textStyles?.contains { $0.typography.usesCustomTabs || $0.typography.hyphenation > 0 } == true
+      camera.orientation != nil
+        ? 16
+        : objects.contains { $0.artwork?.requiresSchemaFifteen == true }
+        ? 15
+        : textStyles?.contains { $0.typography.usesCustomTabs || $0.typography.hyphenation > 0 } == true
         || objects.contains { $0.artwork?.requiresSchemaFourteen == true }
         ? 14
         : textStyles?.contains { $0.typography.kerningMode != nil } == true

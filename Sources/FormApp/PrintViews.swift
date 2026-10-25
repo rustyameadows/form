@@ -70,7 +70,7 @@ struct PrintWorkspace: View {
                   }
                 } else {
                   Label(
-                    "Drag to orbit · Space-drag to pan · Scroll to zoom",
+                    "Drag to orbit · Shift-drag to pan · Scroll to zoom",
                     systemImage: "cube.transparent"
                   ).font(
                     .system(size: 10)
@@ -265,11 +265,7 @@ struct PrintNumber: View {
 struct PrintBedCanvas: NSViewRepresentable {
   @ObservedObject var printing: PrintCoordinator
   func makeCoordinator() -> BedRenderer {
-    let renderer = BedRenderer()
-    renderer.controller.navigationPreferences = { [weak printing] in
-      printing?.store?.cameraPreferences ?? CameraPreferences()
-    }
-    return renderer
+    BedRenderer()
   }
   func makeNSView(context: Context) -> TableSCNView {
     let view = TableSCNView(frame: .zero)

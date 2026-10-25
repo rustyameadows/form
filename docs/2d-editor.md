@@ -28,6 +28,8 @@ The editor is a working part of the expanded [2D specification](2d-design-typogr
 
 [Non-destructive Unicode case and VERSO](text-case.md) add native Original/Uppercase/Lowercase/Mixed controls, source-aware selected-character formatting, exact UTF-16 mapping through expansions, contextual casing, and native input/Undo preservation. Case changes retain source words across physical rendering and exports.
 
+[Alternate glyphs and QUILL](glyphs.md) add a native character-selection palette, real supported alternates, searchable/paged font repertoires, original-source preservation, variable-face identity, and shared native/MCP Undo. Choices use schema 15; schemas 1–14 remain readable. Point text includes swash overhangs in its automatic bounds. Area text retains its explicit frame. Custom glyphs share native, physical, PDF/raster, and editable-outline rendering; SVG outlines them for portability.
+
 Text properties include point/area mode, font/style/size, leading, tracking, pair kerning, baseline, word spacing, alignment, paragraph spacing/indents, case, ligatures, direction, hyphenation, and vertical alignment. Shaping uses typographic points internally and millimeters at the artwork boundary. Font controls expose capabilities reported by the installed face.
 
 ## Controls
@@ -71,7 +73,7 @@ There are 50 tools. Artwork tools include `form_get_artwork`, `form_edit_artwork
 {"name":"form_export_artwork","arguments":{"object_id":"<frame UUID>","format":"pdf","path":"/absolute/path/artwork.pdf"}}
 ```
 
-`form_set_artwork` replaces a validated definition. `form_edit_artwork` supports add, replace, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip, and paragraph. `form_set_view` can select element IDs. Paths store ordinary contours/nodes; typography stores face names, features, axes, and optional rich text spans. Read-only calls preserve native editing focus; mutations commit active text and numeric drafts first.
+`form_set_artwork` replaces a validated definition. `form_edit_artwork` supports add, replace, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip, paragraph, and glyph. `form_font_features` also discovers actual glyph repertoires and alternates. `form_set_view` can select element IDs. Paths store ordinary contours/nodes; typography stores face names, features, axes, and optional rich text spans. Glyph choices retain source positions independently. Read-only calls preserve native editing focus; mutations commit active text and numeric drafts first.
 
 See [precise paths and transformed native text](path-editing.md) for direct selection, native text coordinates, and MCP node editing. [Live booleans](live-booleans.md) documents the `form_boolean_artwork` modes and Divide. These graphics edits and shape/text/stroke conversion also work in atomic batches.
 
@@ -79,13 +81,15 @@ See [precise paths and transformed native text](path-editing.md) for direct sele
 
 - Configurable transform origins and the specification’s later variable-width stroke workflows.
 - Full SVG interchange fidelity beyond the [supported import subset](svg-import.md), including filters, patterns, gradient strokes, advanced SVG text, and external resources. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
-- Alternate-glyph selection, small caps and explicit document-locale casing, lists, document-language/hyphenation limits, linked text frames, sequential multi-page documents, and publication layout.
+- Small caps and explicit document-locale casing, lists, document-language/hyphenation limits, linked text frames, sequential multi-page documents, and publication layout.
 - Cross-project clipboard transfer for linked named resources and local assets.
 - Color-managed production output, CMYK/spot separations, full preflight, role-specific production exports, advanced surface placement, and the complete demonstration/acceptance suite.
 
 The current **Soft geometry** demonstration is an 8 × 10 inch composition with installed type, gradients, an editable compound shape, a matching outlined version, and physical SVG/PDF/raster exports. It does not replace the required clock dial, folding package, apparel/patch graphic, and instruction booklet demonstrations.
 
 The [Clock dial study](linked-artwork.md) is now available directly from Home. Two clocks reference an independent typography document, with editable numerals/outlines, physical face clipping, actual-size/proportional fitting, and local dial fabrication preparation. The full demonstration suite and advanced physical integrations remain incomplete.
+
+The [QUILL wordmark and 100 mm dial](glyphs.md) demonstrate actual alternate-glyph selection, original editable words, character colors/manual spacing, recoverable conversion, editable converted nodes, and shared physical products. The scripted study exports SVG/PDF/PNG/JPEG at exact physical dimensions.
 
 ## Validation
 

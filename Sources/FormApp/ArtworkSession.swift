@@ -81,6 +81,7 @@ enum ArtworkTool: String, CaseIterable {
   @Published var showingPalette = false
   @Published var showingTextStyles = false
   @Published var showingTabs = false
+  @Published var showingGlyphs = false
   init(store: StudioStore) { self.store = store }
   var object: ProductObject? { store?.project?.objects.first { $0.id == objectID } }
   var art: Artwork {

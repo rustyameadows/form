@@ -37,15 +37,11 @@ private struct RenderSignature: Equatable {
   let keyLight = SCNNode()
   let floorNode = SCNNode()
   weak var store: StudioStore?
-  // Preview cameras share navigation preferences without owning the document camera.
-  var navigationPreferences: (() -> CameraPreferences)?
-  var currentNavigationPreferences: CameraPreferences {
-    navigationPreferences?() ?? store?.cameraPreferences ?? CameraPreferences()
-  }
   weak var view: TableSCNView?
   private var projectID: UUID?
   private var nodes: [UUID: SCNNode] = [:]
   private var fingerprints: [UUID: RenderSignature] = [:]
+  private var geometryBounds: [UUID: (min: SCNVector3, max: SCNVector3)] = [:]
   private var selectionNodes: [SCNNode] = []
   private var lastSelection = Set<UUID>()
   private var lastStudio = false
@@ -57,9 +53,9 @@ private struct RenderSignature: Equatable {
       "object_nodes": nodes.count, "geometry_builds": geometryBuilds,
       "last_sync_ms": lastSyncMilliseconds,
       "renders_continuously": view?.rendersContinuously ?? false, "preferred_fps": 60,
-      "orbit_direction": currentNavigationPreferences.orbitDirection.rawValue,
-      "orbit_speed": currentNavigationPreferences.effectiveOrbitSpeed,
-      "reverse_scroll_zoom": currentNavigationPreferences.reverseScrollZoom,
+      "orbit_direction": "followPointer",
+      "orbit_speed": CameraPreferences().effectiveOrbitSpeed,
+      "mouse": view?.inputDiagnostics ?? [:],
     ]
   }
   var camera = CameraState()
@@ -152,9 +148,11 @@ private struct RenderSignature: Equatable {
     SCNTransaction.begin()
     SCNTransaction.disableActions = true
     if projectID != project.id {
+      view?.cancelPointerInteraction()
       objectRoot.childNodes.forEach { $0.removeFromParentNode() }
       nodes = [:]
       fingerprints = [:]
+      geometryBounds = [:]
       selectionNodes = []
       lastSelection = []
       projectID = project.id
@@ -165,6 +163,7 @@ private struct RenderSignature: Equatable {
     for id in Array(nodes.keys) where !live.contains(id) {
       nodes.removeValue(forKey: id)?.removeFromParentNode()
       fingerprints.removeValue(forKey: id)
+      geometryBounds.removeValue(forKey: id)
     }
     var geometryChanged = false
     for object in project.objects {
@@ -183,6 +182,7 @@ private struct RenderSignature: Equatable {
         geometryBuilds += 1
         node.name = "object:\(object.id.uuidString)"
         nodes[object.id] = node
+        geometryBounds[object.id] = node.boundingBox
         objectRoot.addChildNode(node)
         fingerprints[object.id] = fingerprint
         geometryChanged = true
@@ -260,8 +260,11 @@ private struct RenderSignature: Equatable {
       camera.viewportAspect = size.width / size.height
     }
     SCNTransaction.begin()
-    SCNTransaction.animationDuration = animated ? 0.28 : 0
-    SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+    // Navigation is immediate: a drag must start from the view the user sees.
+    SCNTransaction.disableActions = true
+    SCNTransaction.animationDuration = 0
+    cameraNode.removeAllAnimations()
+    cameraNode.camera?.removeAllAnimations()
     cameraNode.camera?.usesOrthographicProjection = camera.projection == "orthographic"
     cameraNode.camera?.orthographicScale = camera.distance * CameraFraming.orthographicFactor
     SceneCamera.position(cameraNode, using: camera)
@@ -273,6 +276,7 @@ private struct RenderSignature: Equatable {
     }
   }
   func resetCamera() {
+    view?.cancelPointerInteraction()
     if let p = store?.project {
       camera = p.camera
       updateCamera()
@@ -280,8 +284,7 @@ private struct RenderSignature: Equatable {
   }
   func orbit(dx: CGFloat, dy: CGFloat) {
     camera = CameraNavigation.orbited(
-      camera, dx: Double(dx), dy: Double(dy), viewportHeight: Double(view?.bounds.height ?? 700),
-      preferences: currentNavigationPreferences)
+      camera, dx: Double(dx), dy: Double(dy), viewportHeight: Double(view?.bounds.height ?? 700))
     updateCamera()
   }
   func zoom(_ delta: Double) {
@@ -296,13 +299,16 @@ private struct RenderSignature: Equatable {
     updateCamera()
   }
   func preset(_ name: String) {
+    if store != nil { view?.window?.makeFirstResponder(view) }
+    view?.cancelPointerInteraction()
+    camera.orientation = nil
     switch name {
     case "overhead":
-      camera.elevation = 1.569
+      camera.elevation = .pi / 2
       camera.azimuth = 0
       camera.projection = "orthographic"
     case "front":
-      camera.elevation = 0.04
+      camera.elevation = 0
       camera.azimuth = 0
       camera.projection = "orthographic"
     default:
@@ -310,15 +316,22 @@ private struct RenderSignature: Equatable {
       camera.azimuth = 0.55
       camera.projection = "perspective"
     }
-    updateCamera(animated: true)
+    // Named views always recover the entire project, never a stale pan target.
+    store?.isolated = []
+    for node in nodes.values { node.isHidden = false }
+    frame(ids: Set(nodes.keys), animated: false)
     store?.cameraChanged()
   }
   func fitAll() {
+    if store != nil { view?.window?.makeFirstResponder(view) }
+    view?.cancelPointerInteraction()
     let isolated = store?.isolated ?? []
     frame(ids: Set(nodes.keys.filter { isolated.isEmpty || isolated.contains($0) }))
     store?.cameraChanged()
   }
   func focusSelection() {
+    if store != nil { view?.window?.makeFirstResponder(view) }
+    view?.cancelPointerInteraction()
     if let selection = store?.engine.selection, !selection.isEmpty {
       frame(ids: selection)
       store?.cameraChanged()
@@ -328,7 +341,7 @@ private struct RenderSignature: Equatable {
     var points: [Vector3] = []
     for id in ids {
       guard let node = nodes[id] else { continue }
-      let b = node.boundingBox
+      let b = geometryBounds[id] ?? node.boundingBox
       for x in [b.min.x, b.max.x] {
         for y in [b.min.y, b.max.y] {
           for z in [b.min.z, b.max.z] {
@@ -345,19 +358,20 @@ private struct RenderSignature: Equatable {
     }
     let viewport = view?.bounds.size ?? CGSize(width: 600, height: 400)
     var insets = CameraFraming.Insets()
-    if aspect == nil, view != nil, store?.mode == .table {
+    if aspect == nil, view != nil, let store {
       // Reserve the floating inspector and camera bar without changing the
       // subject-centered orbit pivot or the camera's actual viewport aspect.
       insets = .init(
         top: 80 / max(1, viewport.height),
-        right: store?.primary == nil ? 0 : (ObjectInspector.width + 48) / max(1, viewport.width),
+        right: (store.mode == .studio ? 264 + 48 : store.primary == nil ? 0 : ObjectInspector.width + 48) / max(1, viewport.width),
         bottom: 80 / max(1, viewport.height))
     }
     let fitted = CameraFraming.fitted(
       camera, points: points,
       aspect: aspect ?? Double(viewport.width / max(1, viewport.height)),
       fieldOfView: Double(cameraNode.camera?.fieldOfView ?? 39), insets: insets)
-    guard fitted != camera else { return }
+    // A preset may have changed orientation before fitting. Even when bounds
+    // need the same distance/target, apply that orientation to the renderer/store.
     camera = fitted
     updateCamera(animated: animated)
   }
@@ -383,6 +397,7 @@ private struct RenderSignature: Equatable {
     let dy = Double(far.y - near.y)
     guard abs(dy) > 0.000001 else { return nil }
     let t = (height / 100 - Double(near.y)) / dy
+    guard t.isFinite, t >= 0, t <= 1 else { return nil }
     return .init(
       (Double(near.x) + Double(far.x - near.x) * t) * 100, height,
       (Double(near.z) + Double(far.z - near.z) * t) * 100)
@@ -469,34 +484,61 @@ private struct RenderSignature: Equatable {
 @MainActor final class TableSCNView: SCNView {
   weak var controller: TableSceneController?
   var onEscape: (() -> Void)?
-  private enum DragAction { case orbit, pan, move }
+  private enum DragAction { case orbit, move }
   private var action: DragAction = .orbit
   private var previous = NSPoint.zero
   private var down = NSPoint.zero
   private var dragOrigin: Vector3?
   private var objectPositions: [UUID: Vector3] = [:]
   private var dragged = false
-  private var spaceHeld = false
+  private var pointerActive = false
+  private var gestureCount = 0
+  private var eventCount = 0
+  private var totalDelta = NSPoint.zero
+  private var lastAction = "none"
+  private var phase = "idle"
+  var inputDiagnostics: [String: Any] {
+    ["gesture_count": gestureCount, "event_count": eventCount,
+     "dx": totalDelta.x, "dy": totalDelta.y, "action": lastAction, "phase": phase]
+  }
   override var acceptsFirstResponder: Bool { true }
+  override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
   override func resetCursorRects() {
     addCursorRect(bounds, cursor: controller?.store?.tableTool == .move ? .arrow : .openHand)
   }
-
-  override func mouseDown(with event: NSEvent) {
-    window?.makeFirstResponder(self)
-    previous = convert(event.locationInWindow, from: nil)
-    down = previous
+  func cancelPointerInteraction() {
+    if pointerActive { phase = "cancelled" }
+    pointerActive = false
     dragged = false
     dragOrigin = nil
     objectPositions = [:]
-    guard let controller else { return }
-    let tool = controller.store?.tableTool ?? .orbit
-    if spaceHeld || event.modifierFlags.contains(.option) || tool == .pan {
-      action = .pan
-      return
+  }
+  override func viewWillMove(toWindow newWindow: NSWindow?) {
+    cancelPointerInteraction()
+    super.viewWillMove(toWindow: newWindow)
+  }
+  override func setFrameSize(_ newSize: NSSize) {
+    let changed = frame.size != newSize
+    super.setFrameSize(newSize)
+    if changed {
+      cancelPointerInteraction()
+      controller?.updateCamera()
     }
+  }
+  override func mouseDown(with event: NSEvent) {
+    window?.makeFirstResponder(self)
+    cancelPointerInteraction()
+    previous = convert(event.locationInWindow, from: nil)
+    down = previous
+    pointerActive = true
+    gestureCount += 1
+    eventCount = 0
+    totalDelta = .zero
+    phase = "began"
+    lastAction = "none"
     action = .orbit
-    if tool == .move, let store = controller.store,
+    guard let controller else { return }
+    if controller.store?.tableTool == .move, let store = controller.store,
       let id = controller.objectID(at: previous)
     {
       if !store.engine.selection.contains(id) || event.modifierFlags.contains(.shift) {
@@ -509,18 +551,32 @@ private struct RenderSignature: Equatable {
     }
   }
   override func mouseDragged(with event: NSEvent) {
+    // A late drag after a missed/cancelled mouse-down must never reuse an old anchor.
+    guard pointerActive, let controller else { return }
     let point = convert(event.locationInWindow, from: nil)
-    let dx = point.x - previous.x
-    let dy = point.y - previous.y
-    defer { previous = point }
-    guard let controller else { return }
+    guard point.x.isFinite, point.y.isFinite else { return }
+    let wasDragged = dragged
     dragged = dragged || hypot(point.x - down.x, point.y - down.y) > 3
+    defer { previous = point }
     guard dragged else { return }
-    let precision: CGFloat = event.modifierFlags.contains(.shift) ? 0.25 : 1
+    let anchor = wasDragged ? previous : down
+    let dx = point.x - anchor.x
+    let dy = point.y - anchor.y
+    eventCount += 1
+    totalDelta.x += dx
+    totalDelta.y += dy
+    phase = "dragging"
     switch action {
-    case .pan: controller.pan(dx: dx * precision, dy: dy * precision)
-    case .orbit: controller.orbit(dx: dx * precision, dy: dy * precision)
+    case .orbit:
+      if event.modifierFlags.contains(.shift) {
+        lastAction = "pan"
+        controller.pan(dx: dx, dy: dy)
+      } else {
+        lastAction = "orbit"
+        controller.orbit(dx: dx, dy: dy)
+      }
     case .move:
+      lastAction = "move"
       guard let origin = dragOrigin,
         let now = controller.pointOnTable(point, height: origin.y), let store = controller.store,
         !objectPositions.isEmpty
@@ -537,82 +593,33 @@ private struct RenderSignature: Equatable {
     }
   }
   override func mouseUp(with event: NSEvent) {
-    if !dragged, action != .pan, let controller, let store = controller.store {
+    guard pointerActive else { return }
+    if !dragged, let controller, let store = controller.store {
       let point = convert(event.locationInWindow, from: nil)
       if action != .move {
-        store.select(
-          controller.objectID(at: point), extending: event.modifierFlags.contains(.shift))
+        store.select(controller.objectID(at: point), extending: event.modifierFlags.contains(.shift))
       }
       if event.clickCount == 2 { controller.focusSelection() }
     }
+    pointerActive = false
+    phase = "ended"
     dragOrigin = nil
     objectPositions = [:]
-    controller?.store?.changed()
-  }
-  override func rightMouseDown(with event: NSEvent) {
-    window?.makeFirstResponder(self)
-    previous = convert(event.locationInWindow, from: nil)
-  }
-  override func rightMouseDragged(with event: NSEvent) {
-    let point = convert(event.locationInWindow, from: nil)
-    let precision: CGFloat = event.modifierFlags.contains(.shift) ? 0.25 : 1
-    controller?.orbit(
-      dx: (point.x - previous.x) * precision, dy: (point.y - previous.y) * precision)
-    previous = point
-  }
-  override func rightMouseUp(with event: NSEvent) { controller?.store?.cameraChanged() }
-  override func otherMouseDown(with event: NSEvent) {
-    if event.buttonNumber == 2 {
-      window?.makeFirstResponder(self)
-      previous = convert(event.locationInWindow, from: nil)
-    } else {
-      super.otherMouseDown(with: event)
-    }
-  }
-  override func otherMouseDragged(with event: NSEvent) {
-    guard event.buttonNumber == 2 else {
-      super.otherMouseDragged(with: event)
-      return
-    }
-    let point = convert(event.locationInWindow, from: nil)
-    let precision: CGFloat = event.modifierFlags.contains(.shift) ? 0.25 : 1
-    controller?.pan(dx: (point.x - previous.x) * precision, dy: (point.y - previous.y) * precision)
-    previous = point
-  }
-  override func otherMouseUp(with event: NSEvent) {
-    if event.buttonNumber == 2 {
-      controller?.store?.cameraChanged()
-    } else {
-      super.otherMouseUp(with: event)
-    }
+    controller?.store?.cameraChanged()
   }
   override func scrollWheel(with event: NSEvent) {
-    if event.modifierFlags.contains(.option) {
-      controller?.pan(dx: event.scrollingDeltaX, dy: event.scrollingDeltaY)
-      controller?.store?.cameraChanged()
-    } else {
-      let preferences = controller?.currentNavigationPreferences ?? CameraPreferences()
-      controller?.zoom(preferences.scrollZoomDelta(
-        Double(event.scrollingDeltaY), precise: event.hasPreciseScrollingDeltas))
-    }
+    let delta = -Double(event.scrollingDeltaY) * (event.hasPreciseScrollingDeltas ? 0.35 : 1)
+    controller?.zoom(delta)
   }
   override func magnify(with event: NSEvent) {
     controller?.zoom(-Double(event.magnification) * 100)
   }
-  override func rotate(with event: NSEvent) {
-    controller?.orbit(dx: CGFloat(event.rotation) * 2, dy: 0)
-    controller?.store?.cameraChanged()
-  }
   override func keyDown(with event: NSEvent) {
     if event.keyCode == 53, let onEscape { onEscape(); return }
-    if event.keyCode == 49 {
-      if !spaceHeld {
-        spaceHeld = true
-        NSCursor.openHand.push()
-      }
-    } else if event.keyCode == 51 || event.keyCode == 117 {
+    if event.keyCode == 51 || event.keyCode == 117 {
       controller?.store?.deleteSelection()
     } else if event.keyCode == 53 {
+      cancelPointerInteraction()
       if let store = controller?.store, !store.isolated.isEmpty {
         store.isolated = []
         controller?.fitAll()
@@ -622,7 +629,6 @@ private struct RenderSignature: Equatable {
     } else if !event.modifierFlags.contains(.command), !event.modifierFlags.contains(.control) {
       switch event.charactersIgnoringModifiers?.lowercased() {
       case "o": controller?.store?.setTableTool(.orbit)
-      case "h": controller?.store?.setTableTool(.pan)
       case "v": controller?.store?.setTableTool(.move)
       case "f": controller?.focusSelection()
       case "i": controller?.store?.isolate()
@@ -636,18 +642,9 @@ private struct RenderSignature: Equatable {
       super.keyDown(with: event)
     }
   }
-  private func releaseSpace() {
-    if spaceHeld {
-      spaceHeld = false
-      NSCursor.pop()
-    }
-  }
   override func resignFirstResponder() -> Bool {
-    releaseSpace()
+    cancelPointerInteraction()
     return super.resignFirstResponder()
-  }
-  override func keyUp(with event: NSEvent) {
-    if event.keyCode == 49 { releaseSpace() } else { super.keyUp(with: event) }
   }
 }
 

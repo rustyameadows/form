@@ -2,11 +2,19 @@ import AppKit
 import FormCore
 
 @MainActor public enum ArtworkRenderer {
+  public static func validateGlyphOutput(_ source: Artwork, assets: URL) throws {
+    let art=try BooleanGeometry.materialized(source)
+    let tree=ArtworkRenderTree(art,assets:assets,production:true,excluding:[])
+    for e in art.elements where e.kind=="text" && tree.displayed(e) { try GlyphEngine.validateOutput(e) }
+  }
   public static func validateAppearanceOutput(_ source: Artwork, assets: URL, pixelsPerMM: Double) throws {
     let art = try BooleanGeometry.materialized(source)
     let tree = ArtworkRenderTree(art, assets: assets, production: true, excluding: [])
     for e in art.elements where e.visibleStroke != nil && tree.displayed(e) {
       _ = try VectorGeometry.expandedStroke(e)
+    }
+    for e in art.elements where e.kind == "text" && tree.displayed(e) {
+      try GlyphEngine.validateOutput(e)
     }
     for e in art.elements where e.kind == "image" && tree.displayed(e) {
       try ImageRenderer.validateOutput(e, assets: assets, pixelsPerMM: pixelsPerMM, transform: art.worldTransform(e))

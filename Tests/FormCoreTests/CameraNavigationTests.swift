@@ -9,6 +9,7 @@ final class CameraNavigationTests: XCTestCase {
     var start = CameraState()
     start.azimuth = 0; start.elevation = 0.4
     var preferences = CameraPreferences()
+    preferences.orbitDirection = .moveCamera
     let camera = CameraNavigation.orbited(start, dx: 90, dy: 60, viewportHeight: 800,
       preferences: preferences)
     XCTAssertGreaterThan(camera.azimuth, start.azimuth)
@@ -20,8 +21,10 @@ final class CameraNavigationTests: XCTestCase {
     preferences.orbitDirection = .turnObject
     let object = CameraNavigation.orbited(start, dx: 90, dy: 60, viewportHeight: 800,
       preferences: preferences)
-    XCTAssertEqual(camera.azimuth - start.azimuth, start.azimuth - object.azimuth, accuracy: 1e-12)
-    XCTAssertEqual(camera.elevation - start.elevation, start.elevation - object.elevation, accuracy: 1e-12)
+    let restored = CameraNavigation.orbited(camera, dx: 90, dy: 60, viewportHeight: 800, preferences: preferences)
+    assertSameBasis(start, restored)
+    XCTAssertLessThan(object.azimuth, start.azimuth)
+    XCTAssertLessThan(object.elevation, start.elevation)
     XCTAssertEqual(camera.target, start.target)
     XCTAssertEqual(camera.distance, start.distance)
   }
@@ -35,7 +38,10 @@ final class CameraNavigationTests: XCTestCase {
     preferences.orbitSpeed = 1
     let fast = CameraNavigation.orbited(camera, dx: 120, dy: 0, viewportHeight: 800,
       preferences: preferences)
-    XCTAssertEqual(fast.azimuth - camera.azimuth, 2 * (slow.azimuth - camera.azimuth), accuracy: 1e-12)
+    preferences.orbitSpeed = 0.5
+    let secondSlow = CameraNavigation.orbited(slow, dx: 120, dy: 0, viewportHeight: 800, preferences: preferences)
+    assertSameBasis(fast, secondSlow)
+    XCTAssertNotEqual(fast.orientation, slow.orientation)
     preferences.orbitSpeed = .nan; XCTAssertEqual(preferences.effectiveOrbitSpeed, 0.75)
     preferences.orbitSpeed = -10; XCTAssertEqual(preferences.effectiveOrbitSpeed, 0.25)
     preferences.orbitSpeed = 1e9; XCTAssertEqual(preferences.effectiveOrbitSpeed, 2)
@@ -48,7 +54,7 @@ final class CameraNavigationTests: XCTestCase {
       from: JSONEncoder().encode(preferences)), preferences)
   }
 
-  func testRepeatedOrbitAndPanKeepTheActualCameraHorizonUpright() {
+  func testRepeatedOrbitAndPanKeepTheActualCameraOrthonormalAndPivotCentered() {
     let node = SCNNode()
     var state = CameraState()
     for step in 0..<1200 {
@@ -59,8 +65,13 @@ final class CameraNavigationTests: XCTestCase {
         state = CameraNavigation.panned(state, dx: -3, dy: 2, viewportHeight: 800)
       }
       SceneCamera.position(node, using: state)
-      XCTAssertEqual(node.simdWorldRight.y, 0, accuracy: 0.0002)
-      XCTAssertGreaterThan(node.simdWorldUp.y, 0)
+      let axes = CameraNavigation.basis(state)
+      XCTAssertEqual(Double(node.simdWorldRight.x), axes.right.x, accuracy: 0.0002)
+      XCTAssertEqual(Double(node.simdWorldRight.y), axes.right.y, accuracy: 0.0002)
+      XCTAssertEqual(Double(node.simdWorldRight.z), axes.right.z, accuracy: 0.0002)
+      XCTAssertEqual(Double(node.simdWorldUp.x), axes.up.x, accuracy: 0.0002)
+      XCTAssertEqual(Double(node.simdWorldUp.y), axes.up.y, accuracy: 0.0002)
+      XCTAssertEqual(Double(node.simdWorldUp.z), axes.up.z, accuracy: 0.0002)
       let target = node.convertPosition(
         .init(state.target.x, state.target.y, state.target.z),
         from: nil)
@@ -96,7 +107,7 @@ final class CameraNavigationTests: XCTestCase {
   func testPanTracksMousePointsAtEveryViewAngleAndProjection() {
     for projection in ["perspective", "orthographic"] {
       for azimuth in [0.0, 0.55, 2.5] {
-        for elevation in [-1.569, -0.7, 0, 0.7, 1.569] {
+        for elevation in [-Double.pi, -Double.pi / 2, -1.569, -0.7, 0, 0.7, 1.569, Double.pi / 2, Double.pi] {
           for height in [400.0, 900] {
             var camera = CameraState()
             camera.projection = projection
@@ -121,15 +132,108 @@ final class CameraNavigationTests: XCTestCase {
     }
   }
 
-  func testOrbitCanInspectBelowTheTableWithoutFlippingTheHorizon() {
-    let camera = CameraState()
-    let below = CameraNavigation.orbited(camera, dx: 0, dy: -300, viewportHeight: 700)
-    XCTAssertLessThan(below.elevation, 0)
-    let pole = CameraNavigation.orbited(camera, dx: 1e9, dy: 1e9, viewportHeight: 700)
-    XCTAssertLessThan(pole.elevation, .pi / 2)
-    XCTAssertLessThanOrEqual(abs(pole.azimuth), .pi)
-    let bottom = CameraNavigation.orbited(camera, dx: 0, dy: -1e9, viewportHeight: 700)
-    XCTAssertGreaterThan(bottom.elevation, -.pi / 2)
+  func testDefaultOrbitFollowsEveryDragDirectionAtUprightInvertedAndPoleOrientations() {
+    XCTAssertEqual(CameraPreferences().orbitDirection, .turnObject)
+    for projection in ["perspective", "orthographic"] {
+      for elevation in [-Double.pi, -.pi / 2, -0.7, 0.0, 0.7, .pi / 2, .pi] {
+        var start = CameraState()
+        start.projection = projection; start.elevation = elevation
+        let axes = CameraNavigation.basis(start)
+        let point = Vector3(start.target.x + axes.outward.x * 0.3,
+          start.target.y + axes.outward.y * 0.3, start.target.z + axes.outward.z * 0.3)
+        let initial = project(point, start, width: 1200, height: 800)
+        for (dx, dy) in [(40.0, 0.0), (-40.0, 0.0), (0.0, 40.0), (0.0, -40.0), (40.0, -40.0)] {
+          let moved = CameraNavigation.orbited(start, dx: dx, dy: dy, viewportHeight: 800)
+          let position = project(point, moved, width: 1200, height: 800)
+          if dx != 0 { XCTAssertGreaterThan((position.x - initial.x) * dx, 0) }
+          else { XCTAssertEqual(position.x, initial.x, accuracy: 0.001) }
+          if dy != 0 { XCTAssertGreaterThan((position.y - initial.y) * dy, 0) }
+          else { XCTAssertEqual(position.y, initial.y, accuracy: 0.001) }
+          let reversed = CameraNavigation.orbited(moved, dx: -dx, dy: -dy, viewportHeight: 800)
+          assertSameBasis(start, reversed)
+          XCTAssertEqual(moved.target, start.target)
+          XCTAssertEqual(moved.distance, start.distance)
+        }
+      }
+    }
+  }
+
+  func testFullHorizontalAndVerticalRotationsHaveNoStopsOrPoleFlips() {
+    for (dx, dy) in [(1.0, 0.0), (0.0, 1.0), (0.0, -1.0), (-1.0, 0.0)] {
+      let start = CameraState()
+      var state = start
+      // Four full revolutions, crossing each pole eight times for vertical drags.
+      let step = 800.0 * 8 / (0.75 * 1440)
+      var previous = CameraNavigation.basis(start)
+      let node = SCNNode()
+      for _ in 0..<1440 {
+        state = CameraNavigation.orbited(state, dx: dx * step, dy: dy * step, viewportHeight: 800)
+        let axes = CameraNavigation.basis(state)
+        func dot(_ a: Vector3, _ b: Vector3) -> Double { a.x * b.x + a.y * b.y + a.z * b.z }
+        XCTAssertGreaterThan(dot(previous.right, axes.right), 0.999)
+        XCTAssertGreaterThan(dot(previous.up, axes.up), 0.999)
+        XCTAssertGreaterThan(dot(previous.outward, axes.outward), 0.999)
+        SceneCamera.position(node, using: state)
+        let target = node.convertPosition(.init(state.target.x, state.target.y, state.target.z), from: nil)
+        XCTAssertEqual(target.x, 0, accuracy: 0.0002)
+        XCTAssertEqual(target.y, 0, accuracy: 0.0002)
+        XCTAssertEqual(-Double(target.z), state.distance, accuracy: 0.0002)
+        previous = axes
+      }
+      assertSameBasis(start, state)
+      XCTAssertEqual(state.target, start.target)
+      XCTAssertEqual(state.distance, start.distance)
+    }
+  }
+
+  func testRolledCameraOrbitAndPanStillFollowTheActualScreenAxes() {
+    var start = CameraNavigation.orbited(CameraState(), dx: 300, dy: -450, viewportHeight: 800)
+    start = CameraNavigation.orbited(start, dx: -610, dy: -230, viewportHeight: 800)
+    let axes = CameraNavigation.basis(start)
+    let near = Vector3(start.target.x + axes.outward.x * 0.3,
+      start.target.y + axes.outward.y * 0.3, start.target.z + axes.outward.z * 0.3)
+    for (dx, dy) in [(40.0, 0.0), (-40.0, 0.0), (0.0, 40.0), (0.0, -40.0)] {
+      let before = project(near, start, width: 1200, height: 800)
+      let orbit = CameraNavigation.orbited(start, dx: dx, dy: dy, viewportHeight: 800)
+      let after = project(near, orbit, width: 1200, height: 800)
+      if dx != 0 { XCTAssertGreaterThan((after.x - before.x) * dx, 0) }
+      if dy != 0 { XCTAssertGreaterThan((after.y - before.y) * dy, 0) }
+      let pan = CameraNavigation.panned(start, dx: dx, dy: dy, viewportHeight: 800)
+      let originalTarget = project(start.target, start, width: 1200, height: 800)
+      let movedTarget = project(start.target, pan, width: 1200, height: 800)
+      XCTAssertEqual(movedTarget.x - originalTarget.x, dx, accuracy: 0.001)
+      XCTAssertEqual(movedTarget.y - originalTarget.y, dy, accuracy: 0.001)
+    }
+  }
+
+  func testQuaternionPersistenceAndInvalidRotationFallbackPreserveLegacyCameras() throws {
+    let legacy = CameraState()
+    let encodedLegacy = try JSONEncoder.form.encode(legacy)
+    XCTAssertFalse(String(decoding: encodedLegacy, as: UTF8.self).contains("orientation"))
+    XCTAssertNil(try JSONDecoder.form.decode(CameraState.self, from: encodedLegacy).orientation)
+    let rotated = CameraNavigation.orbited(legacy, dx: 530, dy: -840, viewportHeight: 800)
+    let decoded = try JSONDecoder.form.decode(CameraState.self, from: JSONEncoder.form.encode(rotated))
+    XCTAssertEqual(decoded, rotated); assertSameBasis(decoded, rotated)
+    for bad in [CameraOrientation(x: 0, y: 0, z: 0, w: 0),
+      CameraOrientation(x: .nan, y: 0, z: 0, w: 1), CameraOrientation(x: 0, y: .infinity, z: 0, w: 1)] {
+      var invalid = legacy; invalid.orientation = bad
+      assertSameBasis(invalid, legacy)
+    }
+    var enormous = legacy
+    enormous.orientation = CameraOrientation(x: 0, y: 0, z: 0, w: Double.greatestFiniteMagnitude)
+    var identity = legacy; identity.azimuth = 0; identity.elevation = 0
+    assertSameBasis(enormous, identity)
+    var project = Project(name: "Free camera")
+    XCTAssertEqual(project.minimumSchemaVersion, 1)
+    project.camera = rotated
+    XCTAssertEqual(project.minimumSchemaVersion, 16)
+    let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    defer { try? FileManager.default.removeItem(at: root) }
+    let repository = try ProjectRepository(root: root)
+    try repository.save(project)
+    let reopened = try repository.load(project.id)
+    XCTAssertEqual(reopened.schemaVersion, 16)
+    assertSameBasis(reopened.camera, rotated)
   }
 
   func testZoomIsReversibleBoundedAndSupportsSmallObjects() {
@@ -154,6 +258,15 @@ final class CameraNavigationTests: XCTestCase {
       CameraNavigation.panned(
         camera, dx: 0, dy: .nan,
         viewportHeight: 700), camera)
+  }
+
+  private func assertSameBasis(_ a: CameraState, _ b: CameraState, file: StaticString = #filePath, line: UInt = #line) {
+    let first = CameraNavigation.basis(a), second = CameraNavigation.basis(b)
+    for (x, y) in [(first.right, second.right), (first.up, second.up), (first.outward, second.outward)] {
+      XCTAssertEqual(x.x, y.x, accuracy: 1e-10, file: file, line: line)
+      XCTAssertEqual(x.y, y.y, accuracy: 1e-10, file: file, line: line)
+      XCTAssertEqual(x.z, y.z, accuracy: 1e-10, file: file, line: line)
+    }
   }
 
   private func project(_ point: Vector3, _ state: CameraState, width: Double, height: Double)

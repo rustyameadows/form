@@ -42,7 +42,7 @@ public enum CameraFraming {
     result.target = .init((low.x + high.x) / 2, (low.y + high.y) / 2, (low.z + high.z) / 2)
     let aspect = aspect.isFinite && aspect > 0 ? aspect : 1
     result.viewportAspect = aspect
-    // Near-pole SceneKit look-at rotations lose a little precision in their float matrices.
+    // Keep a small numerical allowance for SceneKit's float projection matrices.
     let padding = (margin.isFinite ? max(1, margin) : 1.2) * 1.002
     func clearance(_ first: Double, _ second: Double) -> Double {
       func safe(_ value: Double) -> Double { value.isFinite ? min(0.49, max(0, value)) : 0 }
@@ -50,11 +50,10 @@ public enum CameraFraming {
     }
     let horizontal = clearance(insets.left, insets.right)
     let vertical = clearance(insets.top, insets.bottom)
-    let elevation = CameraNavigation.elevation(camera.elevation)
-    let a = camera.azimuth
-    let n = Vector3(cos(elevation) * sin(a), sin(elevation), cos(elevation) * cos(a))
-    let right = Vector3(cos(a), 0, -sin(a))
-    let up = Vector3(-sin(elevation) * sin(a), cos(elevation), -sin(elevation) * cos(a))
+    let basis = CameraNavigation.basis(camera)
+    let n = basis.outward
+    let right = basis.right
+    let up = basis.up
     let angle = fieldOfView.isFinite ? min(150, max(5, fieldOfView)) : 39
     let tangent = tan(angle * .pi / 360)
     var distance = CameraNavigation.minimumDistance

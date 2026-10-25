@@ -83,7 +83,7 @@ import SwiftUI
         }
         Divider()
         Button("Perspective") { store.scene?.preset("perspective") }
-        Button("Overhead") { store.scene?.preset("overhead") }
+        Button("Top") { store.scene?.preset("overhead") }
         Button("Front") { store.scene?.preset("front") }
         Toggle("Show Grid", isOn: $store.showGrid)
       }

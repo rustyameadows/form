@@ -86,7 +86,7 @@ struct ArtworkStudio: View {
             if format == "svg" {
               Toggle("Convert text to portable outlines", isOn: $session.exportOutline)
               if session.art.elements.contains(where: { TypographyEngine.requiresComposedOutlines($0) }) {
-                Text("Tab-aligned and hyphenated text keep their exact composition as outlines.").font(.system(size:10)).foregroundStyle(Palette.secondary)
+                Text("Tab-aligned, hyphenated, and custom-glyph text keep their exact composition as outlines.").font(.system(size:10)).foregroundStyle(Palette.secondary)
               }
             }
             Button("Export…") {
@@ -406,9 +406,7 @@ struct ObjectPreview: NSViewRepresentable {
   let project: Project
   let assets: URL
   func makeCoordinator() -> TableSceneController {
-    let controller = TableSceneController()
-    controller.navigationPreferences = { [weak store] in store?.cameraPreferences ?? CameraPreferences() }
-    return controller
+    TableSceneController()
   }
   func makeNSView(context: Context) -> TableSCNView {
     let view = TableSCNView(frame: .zero)
@@ -429,9 +427,11 @@ struct ObjectPreview: NSViewRepresentable {
     preview.objects = [surface]
     preview.objects[0].position = .init()
     preview.objects[0].rotation = 0
+    let builds = context.coordinator.geometryBuilds
+    let initial = context.coordinator.objectRoot.childNodes.isEmpty
     context.coordinator.sync(
       preview, selection: [], isolated: [], showGrid: false, studio: false, preset: "Daylight",
       assets: assets, textureLimit: 1024)
-    context.coordinator.fitAll()
+    if initial || builds != context.coordinator.geometryBuilds { context.coordinator.fitAll() }
   }
 }

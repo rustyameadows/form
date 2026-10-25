@@ -13,6 +13,7 @@ public final class OperationEngine {
   public var onPrint: ((String, [String: Any]) throws -> Any)?
   public var onGraphics: ((String, [String: Any]) throws -> Any)?
   public var onValidatePaint: ((Project, UUID, Set<UUID>) throws -> Void)?
+  public var onPrepareGlyph: ((inout ArtworkElement, GlyphOverride?) throws -> Void)?
   public var onProjectWillChange: (() -> Void)?
   public var onProjectDidChange: (() -> Void)?
   private var interaction: String?
@@ -311,9 +312,17 @@ public final class OperationEngine {
         guard let object = p.objects.first(where: { $0.id == id }) else {
           throw FormError.missing("Object not found.")
         }
-        if command == "paragraph", p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing paragraphs.") }
+        if ["paragraph","glyph"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing its text.") }
         var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
+        if command=="glyph" {
+          let targets=art.swatchPaintTargets(for:ids)
+          let location=(a["location"] as? NSNumber)?.intValue
+          for i in art.elements.indices where targets.contains(art.elements[i].id) && art.elements[i].kind=="text" {
+            let choice=a["glyph"] is [String:Any] ? art.elements[i].glyphOverrides?.first(where:{$0.location==location}) : nil
+            try onPrepareGlyph?(&art.elements[i],choice)
+          }
+        }
         try p.setArtwork(art, for: id)
       }
       return ["selected_elements": selected.map(\.uuidString)]
