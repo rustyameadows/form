@@ -5,7 +5,7 @@ import UniformTypeIdentifiers
 
 extension StudioStore {
   func exportSewingPattern(object: ProductObject, arguments: [String: Any]) throws -> Any {
-    guard arguments["roles"] == nil, arguments["fabric_pattern_material"] == nil, arguments["embroidery_format"] == nil else {
+    guard arguments["roles"] == nil, arguments["fabric_pattern_material"] == nil, arguments["embroidery_format"] == nil, arguments["cut_layout"] as? Bool != true else {
       throw FormError.invalid("Export sewing pattern pieces separately from fabric yardage, generic role layers, or embroidery programs.")
     }
     guard let project, let artwork = project.editableArtwork(object) else { throw FormError.missing("Choose a Canvas document containing sewing pattern pieces.") }
@@ -57,8 +57,12 @@ extension StudioStore {
           parameters: ["width": template.frameSize.x, "depth": template.frameSize.y])
         frame.artwork = template.artwork; project.objects.append(frame); created = frame.id
       }
-      revision += 1; showSurface(.artwork)
+      changed(); showSurface(.artwork)
       if let created { artworkSession.activate(created); DispatchQueue.main.async { self.artworkSession.canvas?.fit(all: false) } }
     } catch { self.error = error.localizedDescription }
+  }
+  func saveSewingSeam(_ seam: SewingSeam, objectID: UUID) throws {
+    _ = try engine.call("form_edit_artwork", arguments: ["object_id": objectID.uuidString, "command": "seam_pair", "seam": try jsonObject(seam)])
+    changed()
   }
 }

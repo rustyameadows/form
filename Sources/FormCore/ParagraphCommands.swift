@@ -5,7 +5,7 @@ extension Typography {
 }
 
 public enum ParagraphCommands {
-  public static func edit(_ art: inout Artwork, ids: Set<UUID>, arguments: [String: Any]) throws {
+  public static func edit(_ art: inout Artwork, ids: Set<UUID>, arguments: [String: Any],maxTextCharacters:Int=10000) throws {
     guard !ids.isEmpty, let patch = arguments["typography"] as? [String: Any], !patch.isEmpty,
       Set(patch.keys).isSubset(of: TextStyleCommands.paragraphProperties.union(["language"])) else {
       throw FormError.invalid("Choose text and provide supported paragraph typography properties.")
@@ -62,7 +62,7 @@ public enum ParagraphCommands {
       }
       candidate.elements[i] = e
     }
-    try validateArtwork(candidate)
+    try validateArtwork(candidate,maxTextCharacters:maxTextCharacters)
     art = candidate
   }
 }

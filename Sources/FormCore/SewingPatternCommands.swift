@@ -13,6 +13,7 @@ public enum SewingPatternCommands {
         guard let index = next.elements.firstIndex(where: { $0.id == root.id }), !artwork.isLocked(root) else { throw FormError.invalid("Unlock the pattern piece first.") }
         if raw is NSNull {
           next.elements[index].sewingPiece = nil
+          next.removeSewingLayoutReferences(to: [root.id])
           next.sewingSeams?.removeAll { $0.first.elementID == root.id || $0.second.elementID == root.id }
         } else {
           guard var value = raw as? [String: Any] else { throw FormError.invalid("piece must be an object or null.") }

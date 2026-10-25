@@ -100,7 +100,8 @@ extension StudioStore {
     let data:Data
     switch format {
     case "svg": data = Data(try output.svg(assets:assets,outlineText:arguments["outline_text"] as? Bool ?? true).utf8)
-    case "pdf": data = try output.pdf(assets:assets,dpi:arguments["dpi"] as? Double ?? 300,title:object.name)
+    case "pdf": data = try profiledArtworkPDF(output.pdf(assets:assets,dpi:arguments["dpi"] as? Double ?? 300,title:object.name),
+      artwork: source, assets: assets, title: object.name)
     case "png","jpeg":
       guard output.pages.count == 1 else {throw FormError.invalid("Choose one role for raster export; SVG/PDF preserve separate roles.")}
       let dpi = arguments["dpi"] as? Double ?? 300
@@ -130,6 +131,8 @@ extension StudioStore {
     try data.write(to:url,options:.atomic)
     var result = output.metadata
     result["path"] = url.path; result["format"] = format; result["bytes"] = data.count
+    result["color_space"] = format == "pdf" ? source.outputColorProfile?.model ?? "sRGB" : "sRGB"
+    if format == "pdf", let profile = source.outputColorProfile { result["pdf_output_profile"] = try jsonObject(profile) }
     result["composed_text_outlined"] = format == "svg" && arguments["outline_text"] as? Bool == false
       ? output.pages.filter {$0.role == .print}.reduce(0) {$0+$1.artwork.elements.filter {$0.kind == "text" && TypographyEngine.requiresComposedOutlines($0)}.count}:0
     return result

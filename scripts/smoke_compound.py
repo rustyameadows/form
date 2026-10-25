@@ -26,8 +26,7 @@ def curve(x, y, name):
 def main():
     c = Client()
     try:
-        tools = c.rpc('tools/list')['tools']
-        assert len(tools) == 50
+        tools=c.discover(['form_edit_path', 'form_export_artwork'])
         schema = next(t for t in tools if t['name'] == 'form_edit_path')['inputSchema']
         assert 'combine' in schema['properties']['operation']['enum']
         p = c.call('form_create_project', {'name': 'Contour atelier'})

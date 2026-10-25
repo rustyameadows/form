@@ -23,7 +23,7 @@ def main():
     c = Client()
     try:
         status = c.call('form_status'); assert '/.local/' in status['library_path']
-        assert len(c.rpc('tools/list')['tools']) == 50
+        c.discover(['form_font_features'])
         details = c.call('form_font_features', {'font_name': 'Baskerville'})
         ligatures = next(f for f in details['features'] if f['id'] == 1)
         assert not ligatures['exclusive']

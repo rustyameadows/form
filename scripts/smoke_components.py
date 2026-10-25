@@ -27,7 +27,7 @@ def text(x, y, w, h, value, size=12, name=None):
 def main():
     c = Client()
     try:
-        assert len(c.rpc('tools/list')['tools']) == 50
+        c.discover(['form_component', 'form_get_artwork'])
         status = c.call('form_status')
         assert '/.local/' in status['library_path'], 'Use an isolated validation library.'
         p = c.call('form_create_project', {'name': 'STRATA · Shared identity system'})
@@ -143,7 +143,7 @@ def main():
             box_ids=[b['id'] for b in boxes], benchmark_instances=200,
             saved_source_edit_median_ms=round(statistics.median(times), 2),
             saved_source_edit_p95_ms=round(sorted(times)[18], 2),
-            checks='50 tools; shared sources; size/color/text overrides; source-only resources; actual physical exports; detach equality and independence; atomic cycle/batch rejection; schema-6 reopen; 200-instance saved source edits',
+            checks='tool discovery; shared sources; size/color/text overrides; source-only resources; actual physical exports; detach equality and independence; atomic cycle/batch rejection; schema-6 reopen; 200-instance saved source edits',
             performance_status=performance_status, status=c.call('form_status'))
         (OUTPUT / 'components-baseline.json').write_text(json.dumps(c.call('form_get_project'), indent=2))
         (OUTPUT / 'components-report.json').write_text(json.dumps(report, indent=2))

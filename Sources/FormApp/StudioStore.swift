@@ -157,12 +157,16 @@ enum TableTool: String, CaseIterable {
                 "form_status", "form_list_projects", "form_get_project", "form_list_recipes",
                 "form_list_materials", "form_get_print_setup", "form_get_slice_status",
                 "form_list_filaments", "form_list_printers", "form_get_artwork",
-                "form_list_fonts", "form_font_features", "form_image_info",
+                "form_list_fonts", "form_font_features", "form_image_info", "form_export_publication",
               ].contains(name) || (name == "form_import_svg" && args["dry_run"] as? Bool == true)
                 || (name == "form_component" && args["command"] as? String == "list")
                 || (name == "form_swatch" && args["command"] as? String == "list")
                 || (name == "form_text_style" && args["command"] as? String == "list")
-            if !readOnly { self.finishArtworkEditing() }
+                || (name == "form_color_profile" && ["list", "get"].contains(args["command"] as? String ?? "list"))
+                || (["form_textile_stock","form_production_job"].contains(name) && ["list","get"].contains(args["command"] as? String ?? "list"))
+                || (name == "form_story" && ["list","get","layout"].contains(args["command"] as? String ?? "list"))
+                || (name == "form_publication" && ["list","get","preflight"].contains(args["command"] as? String ?? "list"))
+            if !readOnly {try self.preflightPublicationHandoff(name,args);self.finishArtworkEditing()}
             var result = try self.engine.call(name, arguments: args)
             if !readOnly { self.artworkSession.showingTabs = false;self.artworkSession.showingGlyphs=false }
             if name == "form_status", var status = result as? [String: Any] {
@@ -269,7 +273,10 @@ enum TableTool: String, CaseIterable {
   private func restoreProjectWorkspace() {
     isolated = []
     mode = .table
-    if let project,project.physicalObjectCount == 0,let workspace = project.canvasWorkspace {
+    if let first=project?.publications?.first?.pages.first,project?.objects.contains(where:{$0.id==first.objectID})==true {
+      mode = .artwork
+      artworkSession.activate(first.objectID)
+    } else if let project,project.physicalObjectCount == 0,let workspace = project.canvasWorkspace {
       mode = .artwork
       artworkSession.activate(workspace.id)
     }

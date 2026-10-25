@@ -28,6 +28,27 @@ import XCTest
     store.engine.undo(); XCTAssertEqual(store.project, before)
     store.engine.redo(); XCTAssertNotNil(try self.frame(store).artwork?.elements.first?.sewingPiece)
   }
+  func testNativeToteAndSeamChangesAutosaveWithoutFlushOrMCP() async throws {
+    let store = try store(); defer { store.engine.project = nil; cleanup(store) }
+    store.createTotePattern()
+    XCTAssertTrue(store.saving, "Native creation must enter the normal autosave pipeline.")
+    let object = try frame(store), projectID = store.project!.id
+    let deadline = Date().addingTimeInterval(4)
+    while store.saving && Date() < deadline { try await Task.sleep(for: .milliseconds(20)) }
+    XCTAssertFalse(store.saving)
+    let saved = try store.repository.load(projectID)
+    XCTAssertEqual(saved.objects.first { $0.id == object.id }?.artwork, object.artwork)
+    let body = object.artwork!.elements[0]
+    let seam = SewingSeam(name: "Native saved join", first: .init(elementID: body.id, edge: 0, copy: 1), second: .init(elementID: body.id, edge: 0, copy: 2))
+    try store.saveSewingSeam(seam, objectID: object.id)
+    XCTAssertTrue(store.saving, "Native seam edits must schedule a save.")
+    let secondDeadline = Date().addingTimeInterval(4)
+    while store.saving && Date() < secondDeadline { try await Task.sleep(for: .milliseconds(20)) }
+    XCTAssertFalse(store.saving)
+    let reopened = try store.repository.load(projectID)
+    XCTAssertTrue(reopened.objects.first { $0.id == object.id }!.artwork!.sewingSeams!.contains { $0.id == seam.id })
+    XCTAssertEqual(reopened.objects.first { $0.id == object.id }?.artwork?.elements, object.artwork?.elements)
+  }
   func testNativeMouseMovePreservesPhysicalAllowancesAndPairingWithUndo() throws {
     let store = try store(); defer { cleanup(store) }; store.createTotePattern()
     let session = store.artworkSession, frame = try frame(store)

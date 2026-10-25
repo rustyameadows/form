@@ -5,7 +5,7 @@ import FormGraphics
 extension StudioStore {
   /// Always regenerates from the current saved artwork. Preview caches are never production inputs.
   func exportEmbroidery(object:ProductObject,arguments:[String:Any])throws -> Any {
-    guard arguments["roles"]==nil,arguments["fabric_pattern_material"]==nil,arguments["pattern_pieces"]==nil,
+    guard arguments["roles"]==nil,arguments["fabric_pattern_material"]==nil,arguments["pattern_pieces"]==nil,arguments["cut_layout"]==nil,
       arguments["element_ids"]==nil else {throw FormError.invalid("Export embroidery, role layers, pattern pieces, and fabric yardage separately. Embroidery regions define their source selection.")}
     guard let project else {throw FormError.missing("Open a project first.")}
     let format=arguments["embroidery_format"] as? String ?? arguments["format"] as? String ?? "preflight"
@@ -25,7 +25,11 @@ extension StudioStore {
       "hoop_height_mm":program.design.hoopHeight,"margin_mm":program.design.margin,
       "bounds_mm":["x":bounds.x,"y":bounds.y,"width":bounds.width,"height":bounds.height],
       "coordinate_unit_mm":0.1,"verified_sew_out":false,
-      "limitations":["No fabric compensation, underlay, or automatic tie-in/tie-off is applied; sample sew-out and production digitizer review are required.","DST trim uses a three-jump convention; device recognition varies. DST does not embed RGB colors; use the ordered thread sidecar."]]
+      "limitations":["Underlay and backtracking ties are applied only when explicitly configured. No fabric compensation or machine-specific tuning is inferred; sample sew-out and production digitizer review are required.","DST trim uses a three-jump convention; device recognition varies. DST does not embed RGB colors; use the ordered thread sidecar."]]
+    result["underlay_stitches"]=program.commands.filter {$0.action == .stitch && $0.purpose == .underlay}.count
+    result["tie_in_stitches"]=program.commands.filter {$0.action == .stitch && $0.purpose == .tieIn}.count
+    result["tie_off_stitches"]=program.commands.filter {$0.action == .stitch && $0.purpose == .tieOff}.count
+    result["thread_diameter_mm"]=program.design.process?.threadDiameter ?? 0.22
     if format == "preflight" {return result}
     let data:Data
     switch format {

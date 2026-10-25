@@ -119,7 +119,7 @@ import FormCore
     let art=try BooleanGeometry.materialized(raw).withInheritedLanguage.resolvingLists
     let byID=Dictionary(uniqueKeysWithValues:art.elements.map {($0.id,$0)}),masks=Set(art.elements.compactMap(\.clipID))
     var geometryBudget=maximumGeometryPoints,workBudget=2_000_000,shapeCache:[UUID:Shape]=[:]
-    var signature=try JSONEncoder.form.encode(art);signature.append(try JSONEncoder.form.encode(design))
+    var signature=try JSONEncoder.form.encode(art.embroideryRenderDefinition);signature.append(try JSONEncoder.form.encode(design))
     let size=object.artworkSize
     let center=CGAffineTransform(translationX:-size.x/2,y:-size.y/2)
     let rect=CGRect(x:-size.x/2,y:-size.y/2,width:size.x,height:size.y)
@@ -155,12 +155,12 @@ import FormCore
       let result=Shape(path:path,rule:element.path?.evenOdd == true ? .evenOdd:.winding,contours:contours,clips:clips,clipContours:clipContours)
       shapeCache[element.id]=result;return result
     }
-    var commands:[EmbroideryCommand]=[],position=Point2(),currentThread:Int?,stitches=0,currentRegion:UUID?
+    var commands:[EmbroideryCommand]=[],position=Point2(),currentThread:Int?,stitches=0,currentRegion:UUID?,currentPurpose:EmbroideryCommand.Purpose?
     func append(_ action:EmbroideryCommand.Action,_ point:CGPoint,thread:Int)throws {
       let x=Int((point.x*10).rounded(.toNearestOrEven)),y=Int((point.y*10).rounded(.toNearestOrEven))
       guard commands.count<200000 else {throw FormError.invalid("Embroidery command count exceeds 200000. Simplify or split the design.")}
       if action == .stitch {stitches+=1;guard stitches<=design.maximumStitches else {throw FormError.invalid("Generated stitches exceed the configured limit. Increase spacing or split the design.")}}
-      commands.append(.init(action,x:x,y:y,threadIndex:thread,regionID:currentRegion));position = .init(Double(x)/10,Double(y)/10)
+      commands.append(.init(action,x:x,y:y,threadIndex:thread,regionID:currentRegion,purpose:currentPurpose));position = .init(Double(x)/10,Double(y)/10)
     }
     func travel(_ point:CGPoint,thread:Int)throws {
       if let currentThread,currentThread != thread {try append(.trim,CGPoint(x:position.x,y:position.y),thread:currentThread);try append(.colorChange,CGPoint(x:position.x,y:position.y),thread:thread)}
@@ -176,6 +176,69 @@ import FormCore
         if first || Int((next.x*10).rounded(.toNearestOrEven)) != Int((position.x*10).rounded(.toNearestOrEven)) || Int((next.y*10).rounded(.toNearestOrEven)) != Int((position.y*10).rounded(.toNearestOrEven)) {
           try append(.stitch,next,thread:thread)
         }
+      }
+    }
+    func fill(_ source:Shape,region:EmbroideryRegion,underlay:EmbroideryUnderlay?)throws {
+          let angle=(region.angle+(underlay == nil ? 0:90)) * .pi/180,c=cos(angle),s=sin(angle)
+          func rotated(_ p:CGPoint)->CGPoint {.init(x:p.x*c+p.y*s,y:-p.x*s+p.y*c)}
+          func original(_ p:CGPoint)->CGPoint {.init(x:p.x*c-p.y*s,y:p.x*s+p.y*c)}
+          var exclusions:[CGPath]=[],exclusionContours:[Contour]=[]
+          if let underlay {
+            for path in [source.path]+source.clips.map({$0.0}) {
+              let edge=path.copy(strokingWithWidth:underlay.inset*2,lineCap:.round,lineJoin:.round,miterLimit:2)
+              exclusions.append(edge);exclusionContours += try flatten(edge,budget:&geometryBudget)
+            }
+          }
+          let contours=(source.contours+source.clipContours+exclusionContours).filter(\.closed).map {$0.points.map(rotated)}
+          let points=source.contours.flatMap(\.points).map(rotated)
+          guard let low=points.map(\.y).min(),let high=points.map(\.y).max() else {return}
+          let spacing=underlay?.spacing ?? region.spacing
+          let rows=max(1,Int(ceil((high-low)/spacing)))
+          guard rows<=10000 else {throw FormError.invalid("Fill exceeds 10000 rows. Increase row spacing.")}
+          for row in 0..<rows {
+            let y=low+(Double(row)+0.5)*(high-low)/Double(rows)
+            var crossings:[Double]=[]
+            for contour in contours where contour.count>=3 {
+              workBudget-=contour.count
+              guard workBudget>=0 else {throw FormError.invalid("Digitizing exceeds its geometry-work budget. Simplify curves, split regions, or increase row spacing.")}
+              for index in contour.indices {
+                let a=contour[index],b=contour[(index+1)%contour.count]
+                if (a.y<=y && b.y>y) || (b.y<=y && a.y>y) {crossings.append(a.x+(y-a.y)*(b.x-a.x)/(b.y-a.y))}
+              }
+            }
+            crossings.sort()
+            var intervals:[(Double,Double)]=[]
+            for index in 1..<max(1,crossings.count) {
+              let a=crossings[index-1],b=crossings[index]
+              // Keep the quantized needle inside both the flattened curve's
+              // 0.05 mm error and the 0.1 mm coordinate grid's half-step.
+              let midpoint=original(.init(x:(a+b)/2,y:y))
+              let clearance=design.process.map {max(0.11,$0.threadDiameter/2+0.05)} ?? 0.11
+              if b-a>max(0.24,clearance*2+0.02),source.contains(midpoint),!exclusions.contains(where:{$0.contains(midpoint)}) {intervals.append((a+clearance,b-clearance))}
+            }
+            if row%2 != 0 {intervals.reverse()}
+            for interval in intervals {
+              let a=original(.init(x:row%2 == 0 ? interval.0:interval.1,y:y)),b=original(.init(x:row%2 == 0 ? interval.1:interval.0,y:y))
+              try travel(a,thread:region.threadIndex);try sew(a,thread:region.threadIndex,length:underlay?.stitchLength ?? region.stitchLength,first:true)
+              try sew(b,thread:region.threadIndex,length:underlay?.stitchLength ?? region.stitchLength)
+            }
+          }
+    }
+    func contained(_ points:[CGPoint],in source:Shape)throws {
+      let edgeClearance=design.process.map {$0.threadDiameter/2+0.05} ?? 0
+      let edges=edgeClearance>0 ? source.clips.map {$0.0.copy(strokingWithWidth:edgeClearance*2,lineCap:.round,lineJoin:.round,miterLimit:2)}:[]
+      func inside(_ point:CGPoint)->Bool {source.clips.allSatisfy {$0.0.contains(point,using:$0.1)} && !edges.contains(where:{$0.contains(point)})}
+      var last:CGPoint?
+      for point in points {
+        let needle=CGPoint(x:(point.x*10).rounded(.toNearestOrEven)/10,y:(point.y*10).rounded(.toNearestOrEven)/10)
+        if let last {
+          let steps=max(1,Int(ceil(distance(last,needle)/flatteningTolerance)));workBudget-=steps
+          guard workBudget>=0 else {throw FormError.invalid("Running/satin containment exceeds its bounded geometry-work budget.")}
+          guard (0...steps).allSatisfy({inside(interpolate(last,needle,Double($0)/Double(steps)))}) else {
+            throw FormError.invalid("A running/satin path leaves its face or clipping boundary. Inset the source, reduce satin width, or convert the clipped result to explicit paths.")
+          }
+        } else if !inside(needle) {throw FormError.invalid("A running/satin needle point leaves its face or clipping boundary. Inset the source or reduce satin width.")}
+        last=needle
       }
     }
     for region in design.regions {
@@ -204,66 +267,30 @@ import FormCore
               }
             }
             guard let first=points.first else {continue}
-            func contained(_ point:CGPoint)->Bool {
-              source.clips.allSatisfy {$0.0.contains(point,using:$0.1)}
-            }
-            // Running/satin does not silently intersect or reroute a clipped
-            // path. Accept already-contained geometry, checking travel along
-            // each sewn segment at the same 0.05 mm physical tolerance.
-            var last:CGPoint?
-            for point in points {
-              let needle=CGPoint(x:(point.x*10).rounded(.toNearestOrEven)/10,y:(point.y*10).rounded(.toNearestOrEven)/10)
-              if let last {
-                let steps=max(1,Int(ceil(distance(last,needle)/flatteningTolerance)))
-                workBudget-=steps
-                guard workBudget>=0 else {throw FormError.invalid("Running/satin containment exceeds its bounded geometry-work budget.")}
-                guard (0...steps).allSatisfy({contained(interpolate(last,needle,Double($0)/Double(steps)))}) else {
-                  throw FormError.invalid("A running/satin path leaves its face or clipping boundary. Inset the source, reduce satin width, or convert the clipped result to explicit paths.")
-                }
-              } else if !contained(needle) {
-                throw FormError.invalid("A running/satin needle point leaves its face or clipping boundary. Inset the source or reduce satin width.")
+            try contained(points,in:source)
+            if let underlay=region.underlay {
+              let center=try resample(contour.points,closed:contour.closed,spacing:underlay.stitchLength)
+              try contained(center,in:source)
+              if let start=center.first {
+                currentPurpose = .underlay
+                try travel(start,thread:region.threadIndex);try sew(start,thread:region.threadIndex,length:underlay.stitchLength,first:true)
+                for point in center.dropFirst() {try sew(point,thread:region.threadIndex,length:underlay.stitchLength)}
+                for point in center.dropLast().reversed() {try sew(point,thread:region.threadIndex,length:underlay.stitchLength)}
               }
-              last=needle
             }
+            currentPurpose=nil
             try travel(first,thread:region.threadIndex);try sew(first,thread:region.threadIndex,length:region.stitchLength,first:true)
             for point in points.dropFirst() {try sew(point,thread:region.threadIndex,length:region.stitchLength)}
           }
         case .fill:
           guard source.contours.allSatisfy(\.closed) else {throw FormError.invalid("Fill needs closed contours. Use running or satin for an open path.")}
-          let angle=region.angle * .pi/180,c=cos(angle),s=sin(angle)
-          func rotated(_ p:CGPoint)->CGPoint {.init(x:p.x*c+p.y*s,y:-p.x*s+p.y*c)}
-          func original(_ p:CGPoint)->CGPoint {.init(x:p.x*c-p.y*s,y:p.x*s+p.y*c)}
-          let contours=(source.contours+source.clipContours).filter(\.closed).map {$0.points.map(rotated)}
-          let points=source.contours.flatMap(\.points).map(rotated)
-          guard let low=points.map(\.y).min(),let high=points.map(\.y).max() else {continue}
-          let rows=max(1,Int(ceil((high-low)/region.spacing)))
-          guard rows<=10000 else {throw FormError.invalid("Fill exceeds 10000 rows. Increase row spacing.")}
-          for row in 0..<rows {
-            let y=low+(Double(row)+0.5)*(high-low)/Double(rows)
-            var crossings:[Double]=[]
-            for contour in contours where contour.count>=3 {
-              workBudget-=contour.count
-              guard workBudget>=0 else {throw FormError.invalid("Digitizing exceeds its geometry-work budget. Simplify curves, split regions, or increase row spacing.")}
-              for index in contour.indices {
-                let a=contour[index],b=contour[(index+1)%contour.count]
-                if (a.y<=y && b.y>y) || (b.y<=y && a.y>y) {crossings.append(a.x+(y-a.y)*(b.x-a.x)/(b.y-a.y))}
-              }
-            }
-            crossings.sort()
-            var intervals:[(Double,Double)]=[]
-            for index in 1..<max(1,crossings.count) {
-              let a=crossings[index-1],b=crossings[index]
-              // Keep the quantized needle inside both the flattened curve's
-              // 0.05 mm error and the 0.1 mm coordinate grid's half-step.
-              if b-a>0.24,source.contains(original(.init(x:(a+b)/2,y:y))) {intervals.append((a+0.11,b-0.11))}
-            }
-            if row%2 != 0 {intervals.reverse()}
-            for interval in intervals {
-              let a=original(.init(x:row%2 == 0 ? interval.0:interval.1,y:y)),b=original(.init(x:row%2 == 0 ? interval.1:interval.0,y:y))
-              try travel(a,thread:region.threadIndex);try sew(a,thread:region.threadIndex,length:region.stitchLength,first:true)
-              try sew(b,thread:region.threadIndex,length:region.stitchLength)
-            }
+          if let underlay=region.underlay {
+            let count=stitches;currentPurpose = .underlay
+            try fill(source,region:region,underlay:underlay)
+            guard stitches>count else {throw FormError.invalid("Sparse underlay produced no stitches. Reduce its inset/spacing or enlarge the region.")}
           }
+          currentPurpose=nil
+          try fill(source,region:region,underlay:nil)
         }
       }
       guard stitches>regionStart else {throw FormError.invalid("A digitizing region produced no stitches. Enlarge its geometry, reduce spacing, or choose a path method.")}
@@ -272,6 +299,6 @@ import FormCore
     try append(.trim,CGPoint(x:position.x,y:position.y),thread:thread);try append(.end,CGPoint(x:position.x,y:position.y),thread:thread)
     let digest=SHA256.hash(data:signature).map {String(format:"%02x",$0)}.joined()
     let result=EmbroideryProgram(name:object.name,sourceDigest:digest,design:design,commands:commands)
-    try result.validate();return result
+    try result.validate();return try EmbroideryTies.applying(to:result)
   }
 }

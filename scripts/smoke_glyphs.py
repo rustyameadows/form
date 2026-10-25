@@ -27,7 +27,7 @@ def main():
     try:
         status=c.call('form_status');library=pathlib.Path(status['library_path'])
         assert library.resolve().is_relative_to((ROOT/'.local').resolve()), 'Use a disposable validation library.'
-        assert len(c.rpc('tools/list')['tools'])==50
+        c.discover(['form_font_features', 'form_edit_artwork'])
         options=c.call('form_font_features',{'font_name':'HoeflerText-Regular','command':'alternates','text':'Quill','location':0,'length':1,'typography':{'fontName':'HoeflerText-Regular','caseTreatment':'uppercase'}})['glyphs']
         alternate=next(o['glyph'] for o in options if o['glyph'].get('glyphName')=='Q.alt')
         repertoire=c.call('form_font_features',{'font_name':'HoeflerText-Regular','command':'glyphs','query':'Q.engraved','limit':8})

@@ -13,7 +13,7 @@ import FormCore
         if command.action == .stitch || showJumps {
           let color=FormColor.color(program.design.threads[command.threadIndex].color)
           context.setStrokeColor((command.action == .jump ? NSColor.secondaryLabelColor.withAlphaComponent(0.55):color).cgColor)
-          context.setLineWidth(command.action == .jump ? 0.12:0.22)
+          context.setLineWidth(command.action == .jump ? 0.12:(program.design.process?.threadDiameter ?? 0.22))
           if command.action == .jump {context.setLineDash(phase:0,lengths:[0.7,0.5])}
           context.move(to:.init(x:previous.x,y:previous.y));context.addLine(to:.init(x:point.x,y:point.y));context.strokePath()
         }
@@ -40,7 +40,9 @@ import FormCore
       let point=command.point
       if command.action == .stitch || command.action == .jump && showJumps {
         let jump=command.action == .jump,color=jump ? "#888888":program.design.threads[command.threadIndex].color
-        result += "<path data-command=\"\(command.action.rawValue)\" data-index=\"\(index)\" data-thread=\"\(command.threadIndex)\" d=\"M\(number(previous.x)) \(number(previous.y))L\(number(point.x)) \(number(point.y))\" fill=\"none\" stroke=\"\(escape(color))\" stroke-width=\"\(jump ? "0.12":"0.22")\"\(jump ? " stroke-dasharray=\"0.7 0.5\"":"")/>"
+        let width=jump ? "0.12":number(program.design.process?.threadDiameter ?? 0.22)
+        let purpose=command.purpose.map {" data-purpose=\""+$0.rawValue+"\""} ?? ""
+        result += "<path data-command=\"\(command.action.rawValue)\" data-index=\"\(index)\" data-thread=\"\(command.threadIndex)\" d=\"M\(number(previous.x)) \(number(previous.y))L\(number(point.x)) \(number(point.y))\" fill=\"none\" stroke=\"\(escape(color))\" stroke-width=\"\(width)\"\(purpose)\(jump ? " stroke-dasharray=\"0.7 0.5\"":"")/>"
       } else if [.trim,.colorChange,.end].contains(command.action) {
         result += "<g data-command=\"\(command.action.rawValue)\" data-index=\"\(index)\" data-thread=\"\(command.threadIndex)\" data-x=\"\(command.x)\" data-y=\"\(command.y)\"/>"
       }

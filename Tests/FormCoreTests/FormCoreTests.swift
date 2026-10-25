@@ -199,7 +199,10 @@ final class FormCoreTests: XCTestCase {
       (initialize["result"] as? [String: Any])?["protocolVersion"] as? String, "2025-11-25")
     XCTAssertNil(response("{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}"))
     let listing = response("{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}")!
-    XCTAssertEqual(((listing["result"] as? [String: Any])?["tools"] as? [[String: Any]])?.count, 50)
+    let tools=try XCTUnwrap((listing["result"] as? [String:Any])?["tools"] as? [[String:Any]])
+    let names=Set(tools.compactMap{$0["name"] as? String})
+    XCTAssertGreaterThanOrEqual(tools.count,50);XCTAssertEqual(names.count,tools.count)
+    XCTAssertTrue(Set(["form_create_project","form_edit_artwork","form_batch","form_export"]).isSubset(of:names))
     XCTAssertEqual((response("{")?["error"] as? [String: Any])?["code"] as? Int, -32700)
     XCTAssertEqual(
       (response("{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"unknown\"}")?["error"] as? [String: Any])?[

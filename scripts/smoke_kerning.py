@@ -21,7 +21,7 @@ def main():
     c=Client()
     try:
         status=c.call('form_status');assert pathlib.Path(status['library_path']).resolve().is_relative_to(pathlib.Path('.local').resolve())
-        assert len(c.rpc('tools/list')['tools'])==50
+        c.discover(['form_font_features', 'form_text_style'])
         p=c.call('form_create_project',{'name':'AVENUE · The space between'})
         sheet=c.call('form_add_object',{'recipe_id':'artboard','name':'AVENUE / Type & space','parameters':{'width':200,'depth':160}})
         word=text(14,34,172,48,'AVENUE',112,name='AVENUE wordmark')

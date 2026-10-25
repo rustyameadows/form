@@ -12,6 +12,7 @@ public enum MCP {
     "form_import_image", "form_image_info",
     "form_list_fonts", "form_font_features", "form_convert_to_paths", "form_boolean_artwork",
     "form_export_artwork", "form_import_svg",
+    "form_export_publication", "form_textile_stock", "form_production_job", "form_color_profile",
   ]
   public static var tools: [[String: Any]] {
     let string: [String: Any] = ["type": "string"]
@@ -66,6 +67,21 @@ public enum MCP {
         "form_status", "Read FORM's current project, selection, version, and library location.",
         readOnly: true),
       tool("form_list_projects", "List saved projects and their project IDs.", readOnly: true),
+      tool("form_textile_stock", "Studio thread inventory and embroidery equipment declarations. Stock edits never rewrite assigned project snapshots or deduct inventory. assign_thread copies a complete portable stock record into one configured, unlocked decoration thread, as one undoable edit. Profiles check declared hoop/format only and never connect to machines.", [
+        "command":["type":"string","enum":["list","save_thread","remove_thread","save_equipment","remove_equipment","assign_thread"]],
+        "thread":["type":"object","description":"id optional UUID; required name/color; optional brand,sku,supplier,fiber,location,availableMeters,spoolMeters,spoolPrice,currency,notes. Unknown numeric values may be omitted. Known prices need a three-letter currency; spool length is required to derive cost per meter."],
+        "equipment":["type":"object","description":"id optional UUID; required name; optional manufacturer/model, hoops:[{name,width,height}] mm, formats:[lowercase extension], needleCount, declarationsVerified, notes. Empty hoops/formats mean unknown; no network credentials exist."],
+        "stock_id":objectID,"equipment_id":objectID,"object_id":objectID,"thread_index":["type":"integer","minimum":0,"maximum":31]
+      ],required:["command"]),
+      tool("form_production_job", "Capture and review immutable local embroidery production revisions, explicit BOM/consumption/cost assumptions, and user-recorded sample/quality/status notes. Source/stock/equipment snapshots and actual needle programs are SHA-addressed inside the project. Unknowns stay unknown; stock is never reserved/deducted and no machine is contacted. Export uses archived commands, even after source changes or deletion, and produces a review PDF with actual-size hoop page, chosen physical outputs, JSON specs and file digests in a local ZIP/folder.", [
+        "command":["type":"string","enum":["list","create","get","event","export"]],
+        "object_id":objectID,"job_id":objectID,"equipment_id":objectID,"supersedes_job_id":objectID,"name":string,
+        "quantity":["type":"integer","minimum":1,"maximum":100000],
+        "outputs":["type":"array","items":["type":"string","enum":["dst","svg","json"]],"minItems":1,"maxItems":3,"uniqueItems":true],
+        "assumptions":["type":"object","description":"Optional upperThreadFactor,allowanceMetersPerThreadPerItem (both required for consumption estimate), baseUnitCost/baseCurrency, laborMinutesPerItem/hourlyLaborRate/laborCurrency, notes, extraBOM:[{id?,name,quantityPerItem,unit,unitCost?,currency?,supplier?,sku?}]. Needle length is measured; usage/cost remain explicit estimates. No FX conversion or automatic zero prices."],
+        "record":["type":"object","description":"User record: kind note/sample/quality/status, notes, optional recordedBy/outcome(pass/needsChanges/fail)/reportedMeters/sourceDigest. Status records require status planned/sampling/approved/held/completed. IDs/date default locally. Approval/completion is user-reported and does not automatically verify a sew-out."],
+        "format":["type":"string","enum":["zip","folder"]],"path":string
+      ],required:["command"]),
       tool(
         "form_create_project",
         "Create and open a persistent .form project. Default is a blank Table. No external AI calls are made.",
@@ -108,7 +124,7 @@ public enum MCP {
           "object_id": objectID, "parameters": parameters, "material_id": string, "color": string,
           "position": position, "rotation": number, "name": string, "locked": ["type": "boolean"],
           "textile": textile,
-          "embroidery": ["type":["object","null"], "description":"Regenerable embroidery design: hoopWidth/hoopHeight mm (20–500), margin mm, trimJumpThreshold mm, maximumStitches <=100000, threads [{name,color,brand?,catalog?}], regions [{id?,elementIDs:[UUID],method:running|satin|fill,threadIndex,stitchLength mm,spacing mm,satinWidth mm,angle degrees}]. Export/preflight regenerates actual needle commands from editable source. No machine is contacted."],
+          "embroidery": ["type":["object","null"], "description":"Regenerable embroidery design: hoopWidth/hoopHeight mm (20–500), margin mm, trimJumpThreshold mm, maximumStitches <=100000, threads [{name,color,brand?,catalog?}], regions [{id?,elementIDs:[UUID],method:running|satin|fill,threadIndex,stitchLength mm,spacing mm,satinWidth mm,angle degrees,underlay?:{method:centerWalk|sparseFill,stitchLength,spacing,inset}}], optional process:{threadDiameter,tieIn,tieOff,tieLength,tieRepeats}. Center-walk requires satin; sparse fill requires fill and spacing >=1.5x top spacing. These opt-in process fields use schema28. Export/preflight regenerates actual needle commands from editable source. No machine is contacted."],
           "fabric_pattern": ["type":["object","null"], "description":"Project-scoped fabric repeat: sourceObjectID (frame UUID), repeatMode (straight/halfDrop/brick/mirror), scale, spacing {x,y} mm, offset {x,y} mm, rotation degrees, outputWidth/outputLength mm, includeTileBackground, colorways [{id,name,baseColor,replacements:{sourceHex:targetHex}}], activeColorwayID. Omitted values use physical defaults."],
         ], required: ["object_id"]),
       tool(
@@ -221,6 +237,21 @@ public enum MCP {
             "shadow": ["type": ["object", "null"], "properties": ["enabled": ["type": "boolean"], "x": number, "y": number, "blur": number, "color": string, "opacity": number], "additionalProperties": false],
           ], "additionalProperties": false],
         ], required: ["object_id", "element_ids"]),
+      tool("form_story",
+        "Manage one global rich text story flowing through ordered physical text frames. list/get/layout are read-only. create merges source words and formatting from the listed independent text frames; empty frames add capacity. append adds capacity and explicitly appends any target words. edit accepts a complete source ArtworkElement returned by get (kind text), keeping all rich UTF-16 spans, glyph choices, list identities and style links; raw text-only edits must supply compatible existing formatting. Source locations are global across all frames. reorder changes capacity order; unlink removes capacity while retaining recoverable global source. publication assigns a page document or null; delete removes the story with native Undo. layout returns actual source/display ranges and overset from the native compositor.",
+        ["command":["type":"string","enum":["list","get","create","append","reorder","unlink","edit","publication","delete","layout"]],
+         "story_id":string,"publication_id":["type":["string","null"]],"name":string,"text":string,"source":["type":"object"],"language":["type":["string","null"]],
+         "frames":["type":"array","minItems":1,"maxItems":400,"items":["type":"object","properties":["object_id":string,"element_id":string],"required":["object_id","element_id"],"additionalProperties":false]]],required:["command"]),
+      tool("form_publication",
+        "Manage an explicit ordered physical page document. list/get/preflight are read-only. create adopts independent artwork sheets in page_ids order; settings changes name, language, millimeter margins and optional baseline_grid in points. reorder includes all current page IDs exactly once. add_page creates a physical sheet with one to four body columns, optionally appended to story_id; no displayed text fragments are duplicated. Grid alignment is an opt-in paragraph Typography.alignToBaselineGrid property. preflight reports actual story overset, frame/font issues, physical page sizes and output-profile conflicts before export. delete removes document membership while retaining pages/stories. All mutations share native Undo and atomic batches.",
+        ["command":["type":"string","enum":["list","get","create","settings","reorder","add_page","delete","preflight"]],
+         "publication_id":string,"name":string,"page_ids":["type":"array","items":string,"maxItems":200],"language":["type":["string","null"]],
+         "margins":["type":"object","properties":["top":number,"right":number,"bottom":number,"left":number],"required":["top","right","bottom","left"]],
+         "baseline_grid":["type":["object","null"],"properties":["spacing":number,"origin":number],"required":["spacing","origin"]],
+         "story_id":string,"width":number,"height":number,"columns":["type":"integer","minimum":1,"maximum":4],"gutter":number],required:["command"]),
+      tool("form_export_publication",
+        "Export a real ordered multipage physical PDF from a publication. Pages retain individual MediaBox/TrimBox/BleedBox dimensions, shared story composition, rich text, generated lists and vector artwork. Default export refuses overset source; inspect form_publication preflight and add capacity first, or explicitly set allow_overset for a reviewed partial output. outline_text creates vector glyph paths. Optional per-page ICC profiles must have the same SHA on every page; conversion is applied to actual PDF content while editable source stays sRGB. Does not print or contact any device.",
+        ["publication_id":string,"path":["type":"string","description":"Absolute local PDF path; omitted writes the project's Exports folder."],"dpi":number,"outline_text":["type":"boolean"],"allow_overset":["type":"boolean"]],required:["publication_id"]),
       tool("form_text_style",
         "Manage reusable project typography styles. list is read-only. create/update accepts name, font_size in points, and a partial Typography object (fontName, kerningMode, tracking, leading, paragraph spacing/indents/alignment, features, independent featureSelections, variations, etc.). Styles preserve colors/palette links, frame behavior, and manual pair positions. update changes inherited properties across all users while retaining explicit local overrides. assign/reset/detach target text layers or text within selected groups; an optional UTF-16 location/length targets one text object's characters. Partial ranges keep a separate live paragraph-style link; whole-text assignment includes paragraph formatting. reset removes local overrides; detach/delete preserve appearance. create optionally applies to object_id/element_ids in the same undo step. Generic artwork edits record local property overrides. Shared native Undo and atomic batches.",
         ["command":["type":"string","enum":["list","create","update","assign","reset","detach","delete"]],
@@ -250,6 +281,8 @@ public enum MCP {
           "seam_id": string,
           "template": ["type":"string","enum":["tote"],"description":"With pattern_template append an editable unlined flat tote cutting study to the current Canvas/frame."],
           "pattern_parameters": ["type":"object","description":"Tote pattern physical parameters: width,height,handle_length,handle_width,seam_allowance,top_hem (mm),material_id. Native creation automatically sizes a new frame; MCP can create an800×750mm frame first or use unbounded Canvas."],
+          "layout_action": ["type":"string","enum":["save","plan"],"description":"With command cut_layout, save complete cutting_layout metadata/manual poses or explicitly run the bounded planner. Saving never rearranges pieces."],
+          "cutting_layout": ["type":["object","null"],"description":"With cut_layout: {id,name,materialID,stockWidth mm,surface roll/sheet,sheetLength mm,stock singleLayer/foldedPair,grain directional/bidirectional/unrestricted,margin mm,spacing mm,maximumLength mm,costPerSquareMeter,costCurrency,fabricOrigin:{x,y}mm,elementIDs,placements:[{elementID,copies:[1] or[1,2],x,y,rotation}]}. Width remains unknown until declared. Maximum200 placements/5m length; stock/fold constraints and exact outline clearance are preflighted. Null removes layout."],
           "list_action":["type":"string","enum":["set","remove","indent","outdent","restart","continue"]],
           "marker":["type":"string","enum":["bullet","decimal"]],
           "list_id":["type":"string","description":"With command list, shared list UUID for continuation across text objects in artwork layer order; raw source contains no generated marker characters."],
@@ -328,6 +361,9 @@ public enum MCP {
           "element_ids": ["type": "array", "items": string],
           "fabric_pattern_material": ["type":"string", "description":"Export this project's fabric material pattern as physical yardage instead of the object face. Uses its saved outputWidth/outputLength; object_id still identifies the project context."],
           "pattern_pieces": ["type":"boolean", "description":"True generates physical cutting templates from annotated sewing pieces. Includes per-edge seam allowances, real notches, omitted cut-on-fold edges, grainlines, cut quantities, dimensions, construction notes, seam mismatch diagnostics and a50mm calibration square. SVG retains named cut/stitch/guide layers; PDF combines them on one actual-size sheet. Optional element_ids selects pieces. Cannot combine with other output selectors."],
+          "cut_layout": ["type":"boolean","description":"Export the source document's saved material cutting layout at actual working-stock width/length. Exact source contours, copy/ply counts, grain/fold/spacing preflight and declared material consumption are retained. Cannot combine with other output selectors."],
+          "layout_preflight": ["type":"boolean","description":"With cut_layout true, return exact issues, copy poses and consumption/cost assumptions without writing a file."],
+          "include_fabric_preview": ["type":"boolean","description":"With cut_layout true, optionally add a roll-anchored fabric reference layer clipped to cut pieces. The upper/right ply is shown for folded stock. Motif phase is physical; seam continuity and machine postprocessing are not verified."],
         ], required: ["object_id", "format"]),
       tool(
         "form_import_svg",
@@ -422,6 +458,11 @@ public enum MCP {
         "form_connect_printer",
         "Connect the selected configured printer for TLS MQTT status monitoring only. IP, serial and access code must first be saved in native Studio settings. No file transfer, motion, heating, calibration, or print-start commands exist."
       ),
+      tool("form_color_profile",
+        "List installed local RGB/CMYK ICC profiles, get an artwork source's PDF output profile, or set/clear its portable profile with shared Undo. Editing colors and previews remain sRGB. PDF colors actually convert through ColorSync while preserving vector paths, supported embedded fonts, gradients and images. Assigning a profile never reinterprets source HEX colors. SVG/PNG/JPEG remain sRGB. Generic CMYK is a conversion study, not a printer-specific production condition. No device connection or printing occurs.",
+        ["command": ["type": "string", "enum": ["list", "get", "set", "clear"]],
+         "object_id": objectID,
+         "profile_path": ["type": "string", "description": "For set: absolute path to a local RGB/CMYK ICC file under 16 MB; bytes are copied into the project Assets with a SHA-256 identity."]]),
       tool("form_undo", "Undo the last native or MCP edit."),
       tool("form_redo", "Redo an undone edit."),
     ]

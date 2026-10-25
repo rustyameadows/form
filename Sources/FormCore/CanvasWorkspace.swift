@@ -127,6 +127,7 @@ extension Project {
       moved.append(result)
     }
     var remaining = sourceArtwork
+    try remaining.transferSewingLayout(to: &destination, moved: all, mapping: mapping)
     remaining.elements.removeAll { all.contains($0.id) }
     let retainedMaskIDs = Set(remaining.elements.compactMap(\.clipID)).intersection(all)
     for id in retainedMaskIDs.sorted(by: { $0.uuidString < $1.uuidString }) {
@@ -150,6 +151,7 @@ extension Project {
     if remaining.sewingSeams?.isEmpty == true { remaining.sewingSeams = nil }
     try validateArtwork(remaining); try validateArtwork(destination)
     var candidate = self
+    try PublicationCommands.transferFrames(in:&candidate,from:sourceOwner.id,to:targetOwner.id,mapping:mapping)
     try candidate.setArtwork(remaining,for:sourceOwner.id,recordingStyleOverrides:false)
     try candidate.setArtwork(destination,for:targetOwner.id,recordingStyleOverrides:false)
     try candidate.validateArtworkLinks()

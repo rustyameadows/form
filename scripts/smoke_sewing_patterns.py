@@ -22,7 +22,7 @@ def main():
         status = c.call('form_status')
         library = pathlib.Path(status['library_path']).resolve()
         assert library.is_relative_to((ROOT / '.local').resolve()), 'Use a disposable FORM_LIBRARY_PATH below .local.'
-        assert len(c.rpc('tools/list')['tools']) == 50
+        c.discover(['form_edit_artwork', 'form_export_artwork'])
         folder = OUTPUT / 'sewing-pattern-smoke'; folder.mkdir(parents=True, exist_ok=True)
         project = c.call('form_create_project', {'name': 'FIELD / Everyday tote cutting study'})
         workspace = c.call('form_add_object', {'recipe_id': 'artboard', 'canvas_workspace': True})

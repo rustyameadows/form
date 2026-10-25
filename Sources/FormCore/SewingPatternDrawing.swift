@@ -11,6 +11,21 @@ public struct SewingPatternPlan: Sendable {
 /// Derived technical geometry is rebuilt from the current editable contours; never persist it over
 /// the source. Cut contours include real V notches, and a cut-on-fold edge is omitted from cutting.
 public enum SewingPatternDrawing {
+  /// The complete physical material footprint. A fold boundary is included here for area and
+  /// collision checks even though that boundary is omitted from the actual cutting pass.
+  public static func cutContour(_ geometry: SewingPieceGeometry) -> [Point2] {
+    geometry.cut.indices.flatMap { Array(cutEdge(geometry, $0).dropLast()) }
+  }
+  public static func cutEdgePoints(_ geometry: SewingPieceGeometry, edge: Int) -> [Point2] { cutEdge(geometry, edge) }
+  public static func grainline(_ geometry: SewingPieceGeometry) -> [Point2] { grain(geometry) }
+  public static func technicalPath(_ points: [Point2], closed: Bool, source: UUID, name: String, role: String,
+    color: String, dash: [Double]? = nil) -> ArtworkElement {
+    line(points, closed: closed, source: source, tag: name, role: role, color: color, dash: dash)
+  }
+  public static func annotation(_ value: String, x: Double, y: Double, width: Double, height: Double,
+    source: UUID, name: String, color: String = "#344D5D") -> ArtworkElement {
+    text(value, x: x, y: y, width: width, height: height, source: source, tag: name, color: color)
+  }
   private static func id(_ source: UUID, _ tag: String) -> UUID {
     var bytes = Array(SHA256.hash(data: Data((source.uuidString + tag).utf8)).prefix(16))
     bytes[6] = (bytes[6] & 0x0f) | 0x50; bytes[8] = (bytes[8] & 0x3f) | 0x80
@@ -88,7 +103,7 @@ public enum SewingPatternDrawing {
         elements.append(line([g.stitch[fold], g.stitch[(fold + 1) % g.stitch.count]], closed: false,
           source: g.elementID, tag: "Place on fold", role: "guide", color: "#A67B41", dash: [6, 2]))
       } else {
-        let outline = g.cut.indices.flatMap { Array(cutEdge(g, $0).dropLast()) }
+        let outline = cutContour(g)
         elements.append(line(outline, closed: true, source: g.elementID, tag: "Cut contour", role: "cut", color: "#292D2C"))
       }
       elements.append(line(g.stitch, closed: true, source: g.elementID, tag: "Stitch outline", role: "stitch", color: "#43718A", dash: [3, 2]))

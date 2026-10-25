@@ -69,6 +69,9 @@ extension Project {
         throw FormError.invalid("Artwork references a missing project swatch.")
       }
     }
+    for story in textStories ?? [] {
+      guard Artwork(elements:[story.sourceElement]).referencedSwatches.isSubset(of:ids) else{throw FormError.invalid("A text story refers to a missing project swatch.")}
+    }
   }
 
   public func resolvingSwatches(in artwork: Artwork, keepingReferences: Bool = false,
@@ -154,6 +157,10 @@ public enum SwatchCommands {
       }
     }
     candidate.swatches?.removeAll { $0.id == id }
+    for i in candidate.textStories?.indices ?? 0..<0 {
+      let artwork=Artwork(elements:[candidate.textStories![i].sourceElement])
+      candidate.textStories![i].setSource(project.resolvingSwatches(in:artwork,only:[id]).elements[0])
+    }
     try candidate.validateArtworkLinks()
     project = candidate
   }
@@ -213,6 +220,30 @@ public enum SwatchCommands {
       guard let swatch = project.swatches?.first(where: { $0.id == swatchID }) else { throw FormError.missing("Swatch not found.") }
       color = swatch.color
     } else { color = nil }
+    if ["fill","text_range"].contains(target) {
+      let targets=art.swatchPaintTargets(for:ids)
+      let linked=art.elements.filter{targets.contains($0.id) && $0.storyFrame != nil}
+      if !linked.isEmpty {
+        var candidate=project,seen=Set<UUID>()
+        for element in linked {
+          let id=element.storyFrame!.storyID
+          guard seen.insert(id).inserted,let story=project.textStories?.first(where:{$0.id==id}) else{continue}
+          var source=story.sourceElement
+          let current=project.resolvingSwatches(in:Artwork(elements:[source]),keepingReferences:true).elements[0]
+          if target=="text_range" {
+            guard let location,let length else{throw FormError.invalid("Provide a global story UTF-16 range.")}
+            source=current;try textRange(&source,location:location,length:length,color:color,swatchID:swatchID)
+          } else {
+            source.color=color ?? current.color;source.fillSwatchID=swatchID
+            for i in source.textRuns?.indices ?? 0..<0 {source.textRuns![i].color=color ?? current.textRuns?[i].color ?? current.color;source.textRuns![i].swatchID=swatchID}
+          }
+          try PublicationCommands.setSource(in:&candidate,storyID:id,source:source)
+        }
+        let ordinary=targets.subtracting(Set(linked.map(\.id)))
+        if !ordinary.isEmpty {try assign(in:&candidate,objectID:objectID,ids:ordinary,target:target,swatchID:swatchID,stopID:stopID,partID:partID,location:location,length:length)}
+        try candidate.validateArtworkLinks();project=candidate;return
+      }
+    }
     let resolved = project.resolvingSwatches(in: art, keepingReferences: true)
     if target == "background" {
       art.background = color ?? resolved.background

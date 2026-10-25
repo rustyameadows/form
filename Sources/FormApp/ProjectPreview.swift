@@ -4,6 +4,15 @@ import FormGraphics
 
 @MainActor enum ProjectPreview {
   static func image(project:Project,size:CGSize,assets:URL) -> NSImage {
+    let pageIDs = Set((project.publications ?? []).flatMap { $0.pages.map(\.objectID) })
+    let physicalIDs = Set(project.objects.filter { !$0.isCanvasWorkspace }.map(\.id))
+    if !physicalIDs.isEmpty, physicalIDs.isSubset(of: pageIDs),
+      let page = project.publications?.first(where: { !$0.pages.isEmpty })?.pages.first,
+      let object = project.objects.first(where: { $0.id == page.objectID }),
+      let artwork = project.surfaceArtwork(object),
+      let preview = publicationPage(artwork, physicalSize: object.artworkSize, size: size, assets: assets) {
+      return preview
+    }
     guard project.physicalObjectCount == 0,let workspace = project.canvasWorkspace else {
       return TableSceneController.preview(project:project,size:size,assets:assets)
     }
@@ -28,5 +37,28 @@ import FormGraphics
     art.background = "#E7E7E1"; art.backgroundOpacity = 1; art.boundary = nil
     return ArtworkRenderer.image(art,width:width,height:height,assets:assets,
       pixelsPerMM:Double(max(1,size.width))/width,opaqueBackground:true)
+  }
+  private static func publicationPage(_ artwork: Artwork, physicalSize: Point2, size: CGSize, assets: URL) -> NSImage? {
+    guard size.width.isFinite, size.height.isFinite, physicalSize.x.isFinite, physicalSize.y.isFinite,
+      physicalSize.x > 0, physicalSize.y > 0 else { return nil }
+    let width = Int(max(1, min(4096, size.width))), height = Int(max(1, min(4096, size.height)))
+    guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+      space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return nil }
+    let w = Double(width), h = Double(height), gutter = min(w, h) * 0.065
+    let scale = min((w - 2 * gutter) / physicalSize.x, (h - 2 * gutter) / physicalSize.y)
+    let page = CGRect(x: (w - physicalSize.x * scale) / 2, y: (h - physicalSize.y * scale) / 2,
+      width: physicalSize.x * scale, height: physicalSize.y * scale)
+    context.setFillColor(FormColor.color("#E7E7E1").cgColor); context.fill(CGRect(x: 0, y: 0, width: w, height: h))
+    context.saveGState()
+    context.setShadow(offset: CGSize(width: 0, height: -3), blur: 12, color: NSColor.black.withAlphaComponent(0.13).cgColor)
+    context.setFillColor(NSColor.white.cgColor); context.fill(page)
+    context.restoreGState()
+    NSGraphicsContext.saveGraphicsState()
+    NSGraphicsContext.current = NSGraphicsContext(cgContext: context, flipped: true)
+    context.translateBy(x: page.minX, y: page.maxY); context.scaleBy(x: scale, y: -scale)
+    ArtworkRenderer.draw(artwork, width: physicalSize.x, height: physicalSize.y, assets: assets)
+    NSGraphicsContext.restoreGraphicsState()
+    guard let image = context.makeImage() else { return nil }
+    return NSImage(cgImage: image, size: CGSize(width: width, height: height))
   }
 }

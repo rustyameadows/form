@@ -73,6 +73,9 @@ public enum ComponentCommands {
       roots.allSatisfy({ !art.isLocked($0) })
     else { throw FormError.invalid("Choose unlocked artwork in one group and clipping mask.") }
     let rootIDs = Set(roots.map(\.id))
+    guard !art.elements.contains(where:{art.descendants(of:ids).contains($0.id) && $0.storyFrame != nil}) else{
+      throw FormError.invalid("Unlink text-story frames before making them into a reusable component.")
+    }
     guard !art.elements.contains(where: { $0.clipID.map(rootIDs.contains) == true }) else {
       throw FormError.invalid("Release the selected objects' use as clipping masks first.")
     }

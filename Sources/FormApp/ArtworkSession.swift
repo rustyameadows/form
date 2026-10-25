@@ -153,22 +153,23 @@ enum ArtworkTool: String, CaseIterable {
       ).followed(by: .translation(-b.x, -b.y)))
   }
   var inspectedTypography: Typography {
-    canvas?.textInspection()?.typography ?? primary?.typography ?? .init()
+    canvas?.textInspection()?.typography ?? sourceTextElement?.typography ?? .init()
   }
-  var inspectedSize: Double { canvas?.textInspection()?.fontSize ?? primary?.fontSize ?? 14 }
+  var inspectedSize: Double { canvas?.textInspection()?.fontSize ?? sourceTextElement?.fontSize ?? 14 }
   var caseTreatments:Set<String> {
     if let values=canvas?.textCaseTreatments() {return values}
-    return elements.filter{$0.kind=="text"}.reduce(into:Set<String>()) {values,e in
+    return sourceTextElements.filter{$0.kind=="text"}.reduce(into:Set<String>()) {values,e in
       let runs=e.textRuns ?? []
       if e.text.isEmpty || runs.reduce(0,{$0+$1.length})<e.text.utf16.count {values.insert(e.typography?.caseTreatment ?? "original")}
       for run in runs {values.insert(run.typography.caseTreatment)}
     }
   }
   func colored(_ element: ArtworkElement) -> ArtworkElement {
-    let resolved=art.resolvingLists.elements.first(where:{$0.id==element.id}) ?? element
+    let contextual=objectID.flatMap{id in store?.project?.resolvingTextStories(in:art,objectID:id)} ?? art
+    let resolved=contextual.resolvingLists.elements.first(where:{$0.id==element.id}) ?? element
     return (store?.project?.resolvingSwatches(in: .init(elements: [resolved]), keepingReferences: true).elements.first ?? resolved).inheritingLanguage(art.language)
   }
-  var inspectedColor: String { canvas?.textInspection()?.color ?? primary.map(colored)?.color ?? "#292D2C" }
+  var inspectedColor: String { canvas?.textInspection()?.color ?? sourceTextElement.map(colored)?.color ?? "#292D2C" }
   var assets: URL {
     guard let store, let project = store.project else { return URL(fileURLWithPath: "/") }
     return store.repository.url(for: project.id).appendingPathComponent("Assets")
@@ -212,7 +213,10 @@ enum ArtworkTool: String, CaseIterable {
             width: size.0, height: size.1),
           artwork: (unfolding
             ? store?.project?.surfaceArtwork(surface) : store?.project?.editableArtwork(object))
-            .map { (try? store?.project?.resolvingComponents(in: $0)) ?? $0 }
+            .map { artwork in
+              let resolved=store?.project?.resolvingTextStories(in:artwork,objectID:store?.project?.artworkOwner(object).id ?? object.id) ?? artwork
+              return (try? store?.project?.resolvingComponents(in:resolved)) ?? resolved
+            }
             ?? .init(background: "#FFFFFF")))
       if !object.isCanvasWorkspace {
         x += size.0 + 36
@@ -389,7 +393,11 @@ enum ArtworkTool: String, CaseIterable {
   }
   func typography(_ body: (inout Typography) -> Void) {
     if canvas?.applyTextStyle(body) == true { return }
-    let language = art.language
+    let language = selectedTextStory?.language ?? currentPublication?.language ?? art.language
+    if editLinkedTextSources({ e in
+      var style=e.typography ?? .init();body(&style);e.typography=style
+      for i in e.textRuns?.indices ?? 0..<0 {body(&e.textRuns![i].typography)}
+    }) {return}
     update { e in
       if e.kind == "text" {
         var style = e.typography ?? .init()
@@ -410,6 +418,7 @@ enum ArtworkTool: String, CaseIterable {
   }
   func typeSize(_ size: Double) {
     if canvas?.applyTextSize(size) == true { return }
+    if editLinkedTextSources({e in e.fontSize=max(0.1,size);for i in e.textRuns?.indices ?? 0..<0 {e.textRuns?[i].fontSize=max(0.1,size)}}) {return}
     update {
       if $0.kind == "text" {
         $0.fontSize = max(0.1, size)
@@ -419,6 +428,10 @@ enum ArtworkTool: String, CaseIterable {
   }
   func textColor(_ color: String) {
     if canvas?.applyTextColor(color) == true { return }
+    if editLinkedTextSources({e in
+      e.color=color;e.fillSwatchID=nil
+      for i in e.textRuns?.indices ?? 0..<0 {e.textRuns?[i].color=color;e.textRuns?[i].swatchID=nil}
+    }) {return}
     update {
       $0.color = color
       $0.fillSwatchID = nil

@@ -172,7 +172,8 @@ final class CanvasWorkspaceTests: XCTestCase {
     XCTAssertThrowsError(try engine.call("form_batch",arguments:["operations":[
       ["name":"form_edit_artwork","arguments":back],["name":"form_edit_artwork","arguments":bad]]]))
     XCTAssertEqual(engine.project,transferred)
-    XCTAssertEqual(MCP.tools.count,50)
+    XCTAssertGreaterThanOrEqual(MCP.tools.count,50)
+    XCTAssertTrue(Set(["form_add_object","form_edit_artwork","form_set_view"]).isSubset(of:MCP.toolNames))
   }
   func testMCPCreatingTheInternalWorkspacePreservesThePhysicalSelectionAndUndo() throws {
     let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)

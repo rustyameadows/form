@@ -535,6 +535,7 @@ struct LibraryView: View {
       } label: {
         Label("Fabrics & textile materials", systemImage: "tshirt").font(.system(size:12,weight:.medium))
       }.buttonStyle(.borderless)
+      TextileProductionLibraryButton()
       SectionLabel("MATERIALS")
       LazyVGrid(columns: [GridItem(.adaptive(minimum: 140))], spacing: 17) {
         ForEach(store.library.materials) { material in

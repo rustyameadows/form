@@ -63,7 +63,7 @@ public final class ProjectRepository {
   public func load(url: URL) throws -> Project {
     let manifest = try JSONDecoder.form.decode(
       Manifest.self, from: Data(contentsOf: url.appendingPathComponent("Manifest.json")))
-    guard (1...25).contains(manifest.project.schemaVersion) else {
+    guard (1...30).contains(manifest.project.schemaVersion) else {
       throw FormError.invalid("This project uses a newer file format. Update FORM to open it.")
     }
     var project = manifest.project
@@ -142,13 +142,14 @@ public struct StudioLibrary: Codable, Equatable {
   public var filaments: [FilamentProfile] = FilamentProfile.presets
   public var printers: [PrinterProfile] = [.init()]
   public var orcaAppPath: String?
+  public var textileProduction:TextileProductionLibrary?
   public var equipment: [Equipment] = [
     .init("Studio printer · A3", width: 297, height: 420, format: "PDF"),
     .init("Desktop cutter", width: 305, height: 610, format: "SVG"),
   ]
   public init() {}
   private enum CodingKeys: String, CodingKey {
-    case materials, equipment, filaments, printers, orcaAppPath
+    case materials, equipment, filaments, printers, orcaAppPath, textileProduction
   }
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -163,12 +164,14 @@ public struct StudioLibrary: Codable, Equatable {
       ?? FilamentProfile.presets
     printers = try values.decodeIfPresent([PrinterProfile].self, forKey: .printers) ?? [.init()]
     orcaAppPath = try values.decodeIfPresent(String.self, forKey: .orcaAppPath)
+    textileProduction=try values.decodeIfPresent(TextileProductionLibrary.self,forKey:.textileProduction)
   }
   public static func load(from root: URL) -> StudioLibrary {
     (try? JSONDecoder.form.decode(
       Self.self, from: Data(contentsOf: root.appendingPathComponent("Studio.json")))) ?? .init()
   }
   public func save(to root: URL) throws {
+    try textileProduction?.validate()
     guard materials.allSatisfy({ $0.fabric?.pattern == nil }) else {
       throw FormError.invalid("Fabric patterns reference project artwork. Save repeat designs in the project rather than the shared Studio Library.")
     }

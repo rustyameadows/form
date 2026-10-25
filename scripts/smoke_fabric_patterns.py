@@ -23,7 +23,7 @@ def main():
         status = c.call('form_status')
         library = pathlib.Path(status['library_path']).resolve()
         assert library.is_relative_to((ROOT / '.local').resolve()), 'Use an isolated FORM_LIBRARY_PATH below .local.'
-        assert len(c.rpc('tools/list')['tools']) == 50
+        c.discover(['form_update_object', 'form_export_artwork'])
         folder = OUTPUT / 'fabric-pattern-smoke'
         folder.mkdir(parents=True, exist_ok=True)
         project = c.call('form_create_project', {'name': 'ORBITAL / Printed flight fabric', 'template': 'flightJacket'})

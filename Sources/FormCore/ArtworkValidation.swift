@@ -1,6 +1,8 @@
 import Foundation
 
 public func validateArtworkDetails(_ artwork: Artwork) throws {
+  try artwork.outputColorProfile?.validate()
+  try artwork.sewingLayout?.validateMetadata()
   try SewingPatterns.validate(artwork)
   guard (0...1).contains(artwork.backgroundOpacity ?? 1), (artwork.imports?.count ?? 0) <= 200
   else {

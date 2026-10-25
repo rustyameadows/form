@@ -9,6 +9,11 @@ extension ArtworkSession {
   }
   var fillSwatchReferences: Set<UUID?> {
     if let native = canvas?.textSwatchReferences() { return native }
+    if elements.contains(where:{$0.storyFrame != nil}) {
+      var seen=Set<UUID>()
+      let sources=sourceTextElements.filter{seen.insert($0.id).inserted}
+      return Artwork(elements:sources).fillSwatchReferences(for:Set(sources.map(\.id)))
+    }
     return art.fillSwatchReferences(for: selection)
   }
   var inspectedFillSwatchID: UUID? {

@@ -265,6 +265,7 @@ public final class OperationEngine {
       }
       return ["selected_elements": ids.map(\.uuidString)]
     case "form_text_style": return try textStyleCall(a, source: source)
+    case "form_story","form_publication":return try publicationCall(name,a,source:source)
     case "form_swatch":
       let command = try string("command")
       if command == "list" { return ["swatches": try jsonObject(requireProject().swatches ?? [])] }
@@ -334,8 +335,9 @@ public final class OperationEngine {
         guard let object = p.objects.first(where: { $0.id == id }) else {
           throw FormError.missing("Object not found.")
         }
-        if ["paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
+        if ["paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template","cut_layout"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
         var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
+        if try PublicationCommands.editText(in:&p,objectID:id,ids:ids,command:command,arguments:a,prepareGlyph:onPrepareGlyph,prepareParagraphs:onPrepareParagraphs) {selected=ids;return}
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
         if command=="glyph" {
           let targets=art.swatchPaintTargets(for:ids)
@@ -561,6 +563,7 @@ public final class OperationEngine {
         p.detachArtworkConsumers(of: ids)
         p.detachTextileConsumers(of: ids)
         p.objects.removeAll { ids.contains($0.id) }
+        PublicationCommands.retainAvailableFrames(in:&p)
       }
       selection.subtract(ids)
       return ["removed": ids.count]
@@ -573,6 +576,9 @@ public final class OperationEngine {
       let mode = a["mode"] as? String ?? "iteration"
       guard ["iteration", "variant", "duplicate"].contains(mode) else {
         throw FormError.invalid("Mode must be iteration, variant, or duplicate.")
+      }
+      if mode=="variant",p.publications?.contains(where:{$0.pages.contains(where:{$0.objectID==id})})==true || object.artwork?.elements.contains(where:{$0.storyFrame != nil})==true {
+        throw FormError.invalid("A publication page needs independent frame capacity. Duplicate it as an iteration instead of a linked variant.")
       }
       object.id = UUID()
       object.groupID = nil
@@ -606,7 +612,11 @@ public final class OperationEngine {
         object.parentIterationID = id
       }
       if let material = a["material_id"] as? String { object.materialID = material }
-      try edit("Created \(mode)", source: source) { $0.objects.append(object) }
+      if let position=object.artwork?.canvasPosition {let width=object.artworkSize.x;object.artwork?.canvasPosition = .init(position.x+width+24,position.y)}
+      try edit("Created \(mode)", source: source) { candidate in
+        candidate.objects.append(object)
+        try PublicationCommands.duplicatePage(in:&candidate,from:id,to:object.id)
+      }
       selection = [object.id]
       return try jsonObject(object)
     case "form_group_objects":
@@ -701,11 +711,16 @@ public final class OperationEngine {
         "form_edit_path",
         "form_boolean_artwork", "form_convert_to_paths", "form_component", "form_swatch", "form_text_style", "form_appearance", "form_edit_image", "form_edit_paint",
         "form_link_artwork", "form_extract_artwork",
+        "form_story","form_publication","form_color_profile",
       ])
       guard operations.allSatisfy({ allowed.contains($0["name"] as? String ?? "") }) else {
         throw FormError.invalid(
           "Batch accepts only object, artwork, recipe, group, and note edits.")
       }
+      guard operations.allSatisfy({ operation in
+        operation["name"] as? String != "form_color_profile"
+          || ["set", "clear"].contains((operation["arguments"] as? [String: Any])?["command"] as? String ?? "list")
+      }) else { throw FormError.invalid("Color-profile batches accept set or clear commands only.") }
       let original = project
       let oldUndo = undoStack
       let oldRedo = redoStack
@@ -764,7 +779,7 @@ public func validateColor(_ color: String) throws {
     throw FormError.invalid("Colors must be six-digit hex values, such as #D45A37.")
   }
 }
-public func validateArtwork(_ artwork: Artwork) throws {
+public func validateArtwork(_ artwork: Artwork,maxTextCharacters:Int=10000) throws {
   try ParagraphLanguage.validate(artwork.language)
   try validateColor(artwork.background)
   guard artwork.elements.count <= 5000, artwork.bleed.isFinite, (0...25).contains(artwork.bleed)
@@ -776,7 +791,7 @@ public func validateArtwork(_ artwork: Artwork) throws {
         .contains(element.kind),
       [element.x, element.y, element.width, element.height, element.fontSize].allSatisfy({
         $0.isFinite && abs($0) <= 10000
-      }), element.width > 0, element.height > 0, element.fontSize > 0, element.text.count <= 10000
+      }), element.width > 0, element.height > 0, element.fontSize > 0, element.text.count <= maxTextCharacters
     else { throw FormError.invalid("Invalid artwork element dimensions, type, or text.") }
     if element.kind == "image" {
       guard let asset = element.asset, !asset.contains("/"), !asset.contains("..") else {

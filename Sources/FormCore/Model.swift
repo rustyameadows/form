@@ -115,6 +115,7 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var textRuns: [TextSpan]?
   public var glyphOverrides: [GlyphOverride]?
   public var listItems: [ParagraphListItem]?
+  public var storyFrame: StoryFrameReference?
   public var productionRole: String?
   public var sewingPiece: SewingPatternPiece?
   public var clipID: UUID?
@@ -136,7 +137,9 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
 
 public struct Artwork: Codable, Equatable, Sendable {
   public var background: String
+  public var outputColorProfile: ArtworkOutputProfile?
   public var sewingSeams: [SewingSeam]?
+  public var sewingLayout: SewingCutLayout?
   public var language: String?
   public var elements: [ArtworkElement]
   public var bleed: Double
@@ -379,7 +382,15 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var printSetups: [String: PrintConfiguration]?
   public var swatches: [ArtworkSwatch]?
   public var textStyles: [ArtworkTextStyle]?
+  public var textStories:[TextStory]?
+  public var publications:[PublicationDocument]?
+  public var productionJobs:[ProductionJob]?
   public var minimumSchemaVersion: Int {
+    if objects.contains(where: { $0.artwork?.outputColorProfile != nil }) { return max(schemaVersion, 30) }
+    if productionJobs?.isEmpty==false || objects.contains(where:{$0.textile?.embroidery?.threads.contains(where:{$0.stock != nil})==true}) {return max(schemaVersion,29)}
+    if objects.contains(where:{$0.textile?.embroidery?.requiresSchemaTwentyEight == true}) {return max(schemaVersion,28)}
+    if objects.contains(where: { $0.artwork?.sewingLayout != nil }) { return max(schemaVersion, 27) }
+    if textStories?.isEmpty==false || publications?.isEmpty==false || objects.contains(where:{$0.artwork?.requiresSchemaTwentySix==true}) || textStyles?.contains(where:{$0.typography.alignToBaselineGrid != nil})==true {return max(schemaVersion,26)}
     if objects.contains(where:{$0.textile?.embroidery != nil}) {return max(schemaVersion,25)}
     if objects.contains(where: { $0.artwork?.elements.contains { $0.sewingPiece != nil } == true || $0.artwork?.sewingSeams?.isEmpty == false }) { return max(schemaVersion, 24) }
     if objects.contains(where:{$0.artwork?.elements.contains{$0.listItems?.isEmpty == false} == true}) {return max(schemaVersion,23)}

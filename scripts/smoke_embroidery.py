@@ -25,8 +25,7 @@ def main():
     try:
         library = pathlib.Path(c.call("form_status")["library_path"])
         assert library.resolve().is_relative_to((ROOT / ".local").resolve()), "Use an isolated .local validation library."
-        tools = c.rpc("tools/list")["tools"]
-        assert len(tools) == 50
+        tools=c.discover(['form_export_artwork', 'form_update_object'])
         update = next(t for t in tools if t["name"] == "form_update_object")
         assert "embroidery" in update["inputSchema"]["properties"]
         project = c.call("form_create_project", {"name": "ORBIT / Needle program"})

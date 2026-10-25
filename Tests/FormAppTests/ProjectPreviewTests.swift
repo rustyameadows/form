@@ -4,6 +4,29 @@ import XCTest
 @testable import FormApp
 
 @MainActor final class ProjectPreviewTests:XCTestCase {
+  func testPublicationThumbnailUsesOrderedCoverRatherThanPhysicalObjectOrder() throws {
+    var project = Project(name: "Ordered booklet")
+    var blue = try project.makeObject(recipeID: "artboard"), red = try project.makeObject(recipeID: "artboard")
+    blue.artwork = Artwork(background: "#2266CC"); red.artwork = Artwork(background: "#D4492E")
+    project.objects = [blue, red]
+    project.publications = [.init(name: "Booklet", pages: [.init(objectID: red.id), .init(objectID: blue.id)])]
+    let before = project
+    func center(_ project: Project) throws -> NSColor {
+      let image = ProjectPreview.image(project: project, size: .init(width: 1000, height: 650), assets: FileManager.default.temporaryDirectory)
+      let cg = try XCTUnwrap(image.cgImage(forProposedRect: nil, context: nil, hints: nil))
+      XCTAssertEqual(cg.width, 1000); XCTAssertEqual(cg.height, 650)
+      let bitmap = NSBitmapImageRep(cgImage: cg)
+      let edge = try XCTUnwrap(bitmap.colorAt(x: 5, y: 5)?.usingColorSpace(.sRGB))
+      XCTAssertGreaterThan(edge.greenComponent, 0.8)
+      return try XCTUnwrap(bitmap.colorAt(x: 500, y: 325)?.usingColorSpace(.sRGB))
+    }
+    let redCover = try center(project)
+    XCTAssertGreaterThan(redCover.redComponent, redCover.blueComponent * 2)
+    XCTAssertEqual(project, before)
+    project.publications![0].pages.reverse()
+    let blueCover = try center(project)
+    XCTAssertGreaterThan(blueCover.blueComponent, blueCover.redComponent * 2)
+  }
   func testNegativeCoordinateCanvasThumbnailContainsArtworkAndPreservesTheProject() throws {
     var project = Project(name:"Loose artwork")
     _ = try project.ensureCanvasWorkspace()

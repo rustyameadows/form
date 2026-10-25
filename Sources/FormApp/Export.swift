@@ -157,6 +157,7 @@ extension StudioStore {
     NSGraphicsContext.restoreGraphicsState()
     context.endPDFPage()
     context.closePDF()
-    try (data as Data).write(to: url, options: .atomic)
+    try profiledArtworkPDF(data as Data, artwork: art, assets: assets, title: "FORM artwork")
+      .write(to: url, options: .atomic)
   }
 }

@@ -74,6 +74,7 @@ public enum FormColor {
     cache.removeAllObjects()
     ParagraphLayout.invalidate()
     PublicationLists.invalidateFonts()
+    PublicationStoryLayout.invalidate()
     FontCatalog.invalidate()
     AppearanceRenderer.invalidateFonts()
   }
@@ -81,8 +82,10 @@ public enum FormColor {
     ["layout_builds": builds, "layout_cache_hits": hits, "layout_cache_limit": 800]
       .merging(ParagraphLayout.diagnostics) { _, new in new }
       .merging(GlyphCatalog.diagnostics) { _, new in new }
+      .merging(PublicationStoryLayout.diagnostics) { _, new in new }
   }
   public static func usesParagraphLayout(_ element: ArtworkElement) -> Bool {
+    if element.storyFrame != nil {return true}
     if element.listItems?.isEmpty == false {return true}
     if element.typography?.frameMode=="point",!(element.glyphOverrides ?? []).isEmpty {return false}
     return (element.typography?.hyphenation ?? 0) > 0 || element.textRuns?.contains { $0.typography.hyphenation > 0 } == true
@@ -278,6 +281,7 @@ public enum FormColor {
     text.endEditing()
   }
   public static func measured(_ element: ArtworkElement, points: Bool = false) -> CGSize {
+    if element.storyFrame != nil {return PublicationStoryLayout.measured(element,points:points)}
     if usesParagraphLayout(element) { return ParagraphLayout.measured(element, points: points) }
     let size = cachedLayout(element).size
     let factor = points ? pointsPerMM : 1
@@ -393,12 +397,14 @@ public enum FormColor {
     return entry
   }
   public static func overflows(_ element: ArtworkElement) -> Bool {
+    if element.storyFrame != nil {return PublicationStoryLayout.overflows(element)}
     if usesParagraphLayout(element) { return ParagraphLayout.overflows(element) }
     let frame = layout(element).0
     let range = CTFrameGetVisibleStringRange(frame)
     return range.location + range.length < cachedLayout(element).text.length
   }
   public static func firstBaseline(_ element: ArtworkElement) -> Double {
+    if element.storyFrame != nil {return PublicationStoryLayout.firstBaseline(element)}
     if usesParagraphLayout(element) { return ParagraphLayout.firstBaseline(element) }
     let entry = cachedLayout(element)
     guard CFArrayGetCount(CTFrameGetLines(entry.frame)) > 0 else { return 0 }
@@ -407,6 +413,7 @@ public enum FormColor {
     return element.height + entry.offset / pointsPerMM - origin.y / pointsPerMM
   }
   public static func verticalOffset(_ element: ArtworkElement, points: Bool = false) -> Double {
+    if element.storyFrame != nil {return PublicationStoryLayout.verticalOffset(element,points:points)}
     if usesParagraphLayout(element) { return ParagraphLayout.verticalOffset(element, points: points) }
     return cachedLayout(element).offset / (points ? 1 : pointsPerMM)
   }
@@ -418,6 +425,10 @@ public enum FormColor {
     return cachedLayout(element).pointContainerWidth
   }
   public static func draw(_ element: ArtworkElement, in context: CGContext) {
+    if element.storyFrame != nil {
+      context.saveGState();context.clip(to:.init(x:0,y:0,width:element.width,height:element.height))
+      PublicationStoryLayout.draw(element,in:context);context.restoreGState();return
+    }
     if usesParagraphLayout(element) {
       context.saveGState()
       context.clip(to: .init(x:0,y:0,width:element.width,height:element.height))
@@ -457,6 +468,7 @@ public enum FormColor {
   }
   public static func outlinePaintRuns(_ element: ArtworkElement) throws
     -> [(path: CGPath, color: String, swatchID: UUID?)] {
+    if element.storyFrame != nil {return try PublicationStoryLayout.outlines(element)}
     try GlyphEngine.validateOutput(element, outlines: true)
     if usesParagraphLayout(element) { return try ParagraphLayout.outlines(element) }
     let (frame, offset) = layout(element)
@@ -596,7 +608,7 @@ public enum FormColor {
         if attrs[PublicationLists.key]==nil {
           style.alignment = [NSTextAlignment.center:"center",.right:"right",.justified:"justified"][p.alignment] ?? "left"
         }
-        style.leading = p.maximumLineHeight
+        if attrs[StoryComposition.gridKey]==nil {style.leading = p.maximumLineHeight}
         style.paragraphBefore = p.paragraphSpacingBefore
         style.paragraphAfter = p.paragraphSpacing
         if attrs[PublicationLists.key]==nil {style.leftIndent = p.headIndent;style.firstLineIndent = p.firstLineHeadIndent;style.rightIndent = -p.tailIndent}

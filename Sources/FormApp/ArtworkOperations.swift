@@ -5,6 +5,9 @@ import UniformTypeIdentifiers
 
 extension StudioStore {
   func graphicsCall(_ name: String, _ args: [String: Any]) throws -> Any {
+    if ["form_textile_stock","form_production_job"].contains(name) {return try productionCall(name,arguments:args)}
+    if ["form_story","form_publication","form_export_publication"].contains(name) {return try publicationGraphicsCall(name,args)}
+    if name == "form_color_profile" { return try colorProfileCall(args) }
     if name == "form_import_image" { return try importImage(args) }
     if name == "form_image_info" { return try imageInfo(args) }
     if name == "form_import_svg" { return try importSVG(arguments: args) }
@@ -59,7 +62,7 @@ extension StudioStore {
       throw FormError.invalid("Unknown artwork element ID.")
     }
     var next = art
-    let colored = project.resolvingSwatches(in: art, keepingReferences: true)
+    let colored = project.resolvingSwatches(in:project.resolvingTextStories(in:art,objectID:project.artworkOwner(object).id), keepingReferences: true)
     var created: [ArtworkElement] = []
     if name == "form_convert_to_paths" {
       guard !project.artworkOwner(object).locked else { throw FormError.invalid("Unlock this artwork object first.") }
@@ -102,6 +105,7 @@ extension StudioStore {
     } catch { self.error = error.localizedDescription }
   }
   func exportArtwork(object: ProductObject, arguments: [String: Any]) throws -> Any {
+    if arguments["cut_layout"] as? Bool == true { return try exportSewingLayout(object: object, arguments: arguments) }
     if arguments["pattern_pieces"] as? Bool == true { return try exportSewingPattern(object: object, arguments: arguments) }
     if arguments["embroidery_format"] != nil || ["dst","json","preflight"].contains(arguments["format"] as? String ?? "") {
       return try exportEmbroidery(object:object,arguments:arguments)
@@ -169,7 +173,8 @@ extension StudioStore {
       NSGraphicsContext.restoreGraphicsState()
       context.endPDFPage()
       context.closePDF()
-      try (data as Data).write(to: url, options: .atomic)
+      try profiledArtworkPDF(data as Data, artwork: art, assets: assets, title: object.name)
+        .write(to: url, options: .atomic)
     case "png", "jpeg":
       let dpi = arguments["dpi"] as? Double ?? 300
       guard dpi.isFinite, (36...1200).contains(dpi), width * dpi / 25.4 <= 16000,
@@ -194,11 +199,16 @@ extension StudioStore {
       try data.write(to: url, options: .atomic)
     default: throw FormError.invalid("Artwork format must be svg, pdf, png, or jpeg.")
     }
-    return [
+    var result: [String: Any] = [
       "path": url.path, "format": format, "width_mm": width, "height_mm": height,
       "bytes": (try FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int) ?? 0,
       "composed_text_outlined": format == "svg" && arguments["outline_text"] as? Bool == false
         ? art.elements.filter { $0.kind == "text" && $0.hidden != true && TypographyEngine.requiresComposedOutlines($0) }.count : 0,
     ]
+    result["color_space"] = format == "pdf" ? art.outputColorProfile?.model ?? "sRGB" : "sRGB"
+    if format == "pdf", let profile = art.outputColorProfile {
+      result["pdf_output_profile"] = try jsonObject(profile)
+    }
+    return result
   }
 }

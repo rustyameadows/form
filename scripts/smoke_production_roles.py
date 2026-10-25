@@ -28,8 +28,7 @@ def main():
     try:
         library = pathlib.Path(c.call("form_status")["library_path"])
         assert library.resolve().is_relative_to((ROOT / ".local").resolve()), "Use an isolated .local validation library."
-        tools = c.rpc("tools/list")["tools"]
-        assert len(tools) == 50
+        tools=c.discover(['form_edit_artwork', 'form_export_artwork'])
         assert "roles" in next(t for t in tools if t["name"] == "form_export_artwork")["inputSchema"]["properties"]
         project = c.call("form_create_project", {"name": "PRESS / Separate by intent"})
         sheet = c.call("form_add_object", {"recipe_id": "artboard", "name": "PRESS / Production master",

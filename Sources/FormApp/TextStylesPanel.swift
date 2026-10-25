@@ -5,12 +5,12 @@ import SwiftUI
 
 extension ArtworkSession {
   var inspectedTextStyle: TextStyleReference? {
-    canvas?.textInspection()?.textStyle ?? primary?.textStyle
+    canvas?.textInspection()?.textStyle ?? sourceTextElement?.textStyle
   }
   var textStyleReferences: Set<TextStyleReference?> {
     if let native = canvas?.textStyleReferences() { return native }
     var result = Set<TextStyleReference?>()
-    for e in elements where e.kind == "text" {
+    for e in sourceTextElements where e.kind == "text" {
       result.formUnion((e.textRuns ?? []).map(\.textStyle))
       if (e.textRuns ?? []).reduce(0, { $0 + $1.length }) < e.text.utf16.count || e.text.isEmpty {
         result.insert(e.textStyle)
@@ -86,7 +86,7 @@ struct TextStylePicker: View {
       Button("Manage text styles…") { session.showingTextStyles = true }
     } label: { Label(label, systemImage: "textformat.size").font(.system(size: 10)) }
       .menuStyle(.borderlessButton)
-    if let ref = session.canvas?.textInspection()?.paragraphStyle ?? session.primary?.paragraphStyle,
+    if let ref = session.canvas?.textInspection()?.paragraphStyle ?? session.sourceTextElement?.paragraphStyle,
       let style = store.project?.textStyles?.first(where: { $0.id == ref.styleID }) {
       Text("Paragraph · \(style.name)").font(.system(size: 9)).foregroundStyle(Palette.secondary)
     }

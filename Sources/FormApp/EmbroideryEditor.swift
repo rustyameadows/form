@@ -48,7 +48,7 @@ struct EmbroideryEditor:View {
           }.font(.system(size:11))
           Text(dirty ? "Settings changed. Rebuild to inspect the new needle program.":"Solid lines are stitches. Dashed lines are non-needle travel; orange marks indicate trim requests.")
             .font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
-          Text("Source artwork stays editable. This bounded running/constant-width satin/scanline-fill digitizer applies no underlay, fabric compensation, or automatic tie-in/off. Review a sample sew-out before production.")
+          Text("Source artwork stays editable. Opt-in underlay and backtracking locks are real stitches. No fabric compensation or machine-specific settings are inferred. Review a sample sew-out before production.")
             .font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
         }
         ScrollView {
@@ -59,6 +59,8 @@ struct EmbroideryEditor:View {
             HStack {Text("Stitch limit");Spacer();TextField("Stitch limit",value:$draft.maximumStitches,format:.number)
               .textFieldStyle(.roundedBorder).multilineTextAlignment(.trailing).frame(width:110)}.font(.system(size:11))
             Divider()
+            processControls
+            Divider()
             HStack {Text("THREAD ORDER").font(.system(size:9,weight:.semibold)).tracking(1);Spacer();Button {draft.threads.append(.init(name:"Thread \(draft.threads.count+1)",color:"#D98045"))} label:{Image(systemName:"plus")}.disabled(draft.threads.count>=32)}
             ForEach(draft.threads.indices,id:\.self) {index in
               VStack(alignment:.leading,spacing:5) {
@@ -67,7 +69,11 @@ struct EmbroideryEditor:View {
                   TextField("Thread name",text:$draft.threads[index].name).textFieldStyle(.roundedBorder)
                   Button {removeThread(index)} label:{Image(systemName:"minus.circle")}.disabled(draft.threads.count<=1)
                 }
-                ColorPicker("Color",selection:Binding(get:{Color(nsColor:NSColor(hex:draft.threads[index].color))},set:{draft.threads[index].color=NSColor($0).hexString}),supportsOpacity:false)
+                Menu(draft.threads[index].stock.map {"Stock snapshot · "+$0.name} ?? "Assign Studio thread…") {
+                  ForEach(store.library.textileProduction?.threads ?? []) {stock in Button(stock.name+" / "+(stock.sku ?? stock.color)) {draft.threads[index] = .init(stock:stock)}}
+                  if draft.threads[index].stock != nil {Divider();Button("Unlink stock snapshot") {draft.threads[index].stock=nil}}
+                }
+                ColorPicker("Color",selection:Binding(get:{Color(nsColor:NSColor(hex:draft.threads[index].color))},set:{draft.threads[index].color=NSColor($0).hexString}),supportsOpacity:false).disabled(draft.threads[index].stock != nil)
                 HStack {
                   TextField("Brand",text:Binding(get:{draft.threads[index].brand ?? ""},set:{draft.threads[index].brand=$0.isEmpty ? nil:$0}))
                   TextField("Catalog",text:Binding(get:{draft.threads[index].catalog ?? ""},set:{draft.threads[index].catalog=$0.isEmpty ? nil:$0}))
@@ -115,7 +121,7 @@ struct EmbroideryEditor:View {
           }))
         }
       }
-      Picker("Method",selection:$draft.regions[index].method) {ForEach(EmbroideryRegion.Method.allCases,id:\.self) {Text($0.rawValue.capitalized).tag($0)}}
+      Picker("Method",selection:Binding(get:{draft.regions[index].method},set:{draft.regions[index].method=$0;draft.regions[index].underlay=nil})) {ForEach(EmbroideryRegion.Method.allCases,id:\.self) {Text($0.rawValue.capitalized).tag($0)}}
       Picker("Thread",selection:$draft.regions[index].threadIndex) {ForEach(draft.threads.indices,id:\.self) {Text("\($0+1) · \(draft.threads[$0].name)").tag($0)}}
       number("Max stitch",$draft.regions[index].stitchLength)
       if current.method != .running {number(current.method == .fill ? "Row spacing":"Step along rail",$draft.regions[index].spacing)}
@@ -123,7 +129,40 @@ struct EmbroideryEditor:View {
       if current.method == .fill {
         HStack {Text("Fill angle");Spacer();TextField("Angle",value:$draft.regions[index].angle,format:.number).textFieldStyle(.roundedBorder).frame(width:82);Text("°")}
       }
+      if current.method != .running {
+        Toggle(current.method == .satin ? "Center-walk underlay":"Sparse cross-fill underlay",isOn:Binding(get:{draft.regions[index].underlay != nil},set:{on in
+          if on {var value=EmbroideryUnderlay(method:current.method == .satin ? .centerWalk:.sparseFill);value.spacing=max(2,current.spacing*2);draft.regions[index].underlay=value}
+          else {draft.regions[index].underlay=nil}
+        }))
+        if current.underlay != nil {
+          number("Underlay stitch",underlayValue(index,\.stitchLength))
+          if current.method == .fill {number("Underlay spacing",underlayValue(index,\.spacing));number("Underlay inset",underlayValue(index,\.inset))}
+        }
+      }
     }.font(.system(size:10))
+  }
+  private func underlayValue(_ index:Int,_ key:WritableKeyPath<EmbroideryUnderlay,Double>)->Binding<Double> {
+    Binding(get:{draft.regions[index].underlay?[keyPath:key] ?? 0},set:{draft.regions[index].underlay?[keyPath:key]=$0})
+  }
+  private func processValue(_ key:WritableKeyPath<EmbroideryProcess,Double>)->Binding<Double> {
+    Binding(get:{draft.process?[keyPath:key] ?? EmbroideryProcess()[keyPath:key]},set:{draft.process?[keyPath:key]=$0})
+  }
+  private var processControls:some View {
+    VStack(alignment:.leading,spacing:8) {
+      Text("PROCESS · EXPLICIT SETTINGS").font(.system(size:9,weight:.semibold)).tracking(1)
+      Toggle("Configure thread and locks",isOn:Binding(get:{draft.process != nil},set:{draft.process=$0 ? EmbroideryProcess():nil}))
+      if draft.process != nil {
+        number("Thread diameter",processValue(\.threadDiameter))
+        Toggle("Tie in after thread start",isOn:Binding(get:{draft.process?.tieIn ?? false},set:{draft.process?.tieIn=$0}))
+        Toggle("Tie off before trim/end",isOn:Binding(get:{draft.process?.tieOff ?? false},set:{draft.process?.tieOff=$0}))
+        if draft.process?.tieIn == true || draft.process?.tieOff == true {
+          number("Backtrack length",processValue(\.tieLength))
+          Stepper("Repeats · \(draft.process?.tieRepeats ?? 2)",value:Binding(get:{draft.process?.tieRepeats ?? 2},set:{draft.process?.tieRepeats=$0}),in:1...3)
+        }
+      }
+      Text("Locks follow an existing stitch segment. Center-walk satin and inset sparse-fill underlay are configured per region below.")
+        .font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
+    }.font(.system(size:11))
   }
   private func addRegion() {if let source=sources.first {draft.regions.append(.init(elementIDs:[source.id],method:.running))}}
   private func removeThread(_ index:Int) {
@@ -144,11 +183,11 @@ struct EmbroideryEditor:View {
   }
   @discardableResult private func apply()->Bool {
     guard rebuild() else {return false}
-    do {_ = try store.engine.call("form_update_object",arguments:["object_id":objectID.uuidString,"embroidery":try jsonObject(draft)],source:"Studio");store.revision+=1;store.toast("Embroidery source saved");return true}
+    do {_ = try store.engine.call("form_update_object",arguments:["object_id":objectID.uuidString,"embroidery":try jsonObject(draft)],source:"Studio");store.changed();store.toast("Embroidery source saved");return true}
     catch {self.error=error.localizedDescription;return false}
   }
   private func remove() {
-    do {_ = try store.engine.call("form_update_object",arguments:["object_id":objectID.uuidString,"embroidery":NSNull()],source:"Studio");store.revision+=1;dismiss()}
+    do {_ = try store.engine.call("form_update_object",arguments:["object_id":objectID.uuidString,"embroidery":NSNull()],source:"Studio");store.changed();dismiss()}
     catch {self.error=error.localizedDescription}
   }
   private func export(_ format:String) {

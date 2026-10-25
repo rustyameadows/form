@@ -5,7 +5,53 @@ public struct EmbroideryThread:Codable,Equatable,Sendable {
   public var color:String
   public var brand:String?
   public var catalog:String?
+  public var stock:StudioThread?
   public init(name:String,color:String) {self.name=name;self.color=color}
+}
+
+/// Explicit opt-in process intent, without inferred fabric compensation.
+public struct EmbroideryProcess:Codable,Equatable,Sendable {
+  public var threadDiameter=0.22
+  public var tieIn=false
+  public var tieOff=false
+  public var tieLength=0.8
+  public var tieRepeats=2
+  public init() {}
+  private enum CodingKeys:String,CodingKey {case threadDiameter,tieIn,tieOff,tieLength,tieRepeats}
+  public init(from decoder:Decoder)throws {
+    let c=try decoder.container(keyedBy:CodingKeys.self)
+    threadDiameter=try c.decodeIfPresent(Double.self,forKey:.threadDiameter) ?? 0.22
+    tieIn=try c.decodeIfPresent(Bool.self,forKey:.tieIn) ?? false
+    tieOff=try c.decodeIfPresent(Bool.self,forKey:.tieOff) ?? false
+    tieLength=try c.decodeIfPresent(Double.self,forKey:.tieLength) ?? 0.8
+    tieRepeats=try c.decodeIfPresent(Int.self,forKey:.tieRepeats) ?? 2
+  }
+  public func validate()throws {
+    guard threadDiameter.isFinite,(0.1...0.8).contains(threadDiameter),tieLength.isFinite,
+      (0.2...1.5).contains(tieLength),(1...3).contains(tieRepeats) else {throw FormError.invalid("Use 0.1–0.8 mm thread diameter, 0.2–1.5 mm tie length, and 1–3 backtracking repeats.")}
+  }
+}
+public struct EmbroideryUnderlay:Codable,Equatable,Sendable {
+  public enum Method:String,Codable,CaseIterable,Sendable {case centerWalk,sparseFill}
+  public var method:Method
+  public var stitchLength=2.5
+  public var spacing=2.0
+  public var inset=0.4
+  public init(method:Method) {self.method=method}
+  private enum CodingKeys:String,CodingKey {case method,stitchLength,spacing,inset}
+  public init(from decoder:Decoder)throws {
+    let c=try decoder.container(keyedBy:CodingKeys.self)
+    method=try c.decode(Method.self,forKey:.method)
+    stitchLength=try c.decodeIfPresent(Double.self,forKey:.stitchLength) ?? 2.5
+    spacing=try c.decodeIfPresent(Double.self,forKey:.spacing) ?? 2
+    inset=try c.decodeIfPresent(Double.self,forKey:.inset) ?? 0.4
+  }
+  public func validate(for region:EmbroideryRegion)throws {
+    guard [stitchLength,spacing,inset].allSatisfy(\.isFinite),(0.4...10).contains(stitchLength),
+      (0.8...8).contains(spacing),(0.2...3).contains(inset),
+      method == .centerWalk && region.method == .satin || method == .sparseFill && region.method == .fill else {throw FormError.invalid("Center-walk underlay needs satin; sparse-fill underlay needs fill. Use finite 0.4–10 mm stitches, 0.8–8 mm spacing, and 0.2–3 mm inset.")}
+    if method == .sparseFill,spacing<region.spacing*1.5 {throw FormError.invalid("Sparse underlay spacing must be at least 1.5 times the top-fill spacing.")}
+  }
 }
 
 public struct EmbroideryRegion:Codable,Equatable,Identifiable,Sendable {
@@ -18,11 +64,12 @@ public struct EmbroideryRegion:Codable,Equatable,Identifiable,Sendable {
   public var spacing:Double
   public var satinWidth:Double
   public var angle:Double
+  public var underlay:EmbroideryUnderlay?
   public init(elementIDs:[UUID],method:Method,threadIndex:Int = 0) {
     id=UUID();self.elementIDs=elementIDs;self.method=method;self.threadIndex=threadIndex
     stitchLength=2.5;spacing=0.4;satinWidth=2.8;angle=0
   }
-  private enum CodingKeys:String,CodingKey {case id,elementIDs,method,threadIndex,stitchLength,spacing,satinWidth,angle}
+  private enum CodingKeys:String,CodingKey {case id,elementIDs,method,threadIndex,stitchLength,spacing,satinWidth,angle,underlay}
   public init(from decoder:Decoder)throws {
     let c=try decoder.container(keyedBy:CodingKeys.self)
     id=try c.decodeIfPresent(UUID.self,forKey:.id) ?? UUID()
@@ -33,6 +80,7 @@ public struct EmbroideryRegion:Codable,Equatable,Identifiable,Sendable {
     spacing=try c.decodeIfPresent(Double.self,forKey:.spacing) ?? 0.4
     satinWidth=try c.decodeIfPresent(Double.self,forKey:.satinWidth) ?? 2.8
     angle=try c.decodeIfPresent(Double.self,forKey:.angle) ?? 0
+    underlay=try c.decodeIfPresent(EmbroideryUnderlay.self,forKey:.underlay)
   }
 }
 
@@ -46,11 +94,12 @@ public struct EmbroideryDesign:Codable,Equatable,Sendable {
   public var maximumStitches:Int
   public var threads:[EmbroideryThread]
   public var regions:[EmbroideryRegion]
+  public var process:EmbroideryProcess?
   public init(threads:[EmbroideryThread],regions:[EmbroideryRegion]) {
     hoopWidth=100;hoopHeight=100;margin=5;trimJumpThreshold=4;maximumStitches=100000
     self.threads=threads;self.regions=regions
   }
-  private enum CodingKeys:String,CodingKey {case hoopWidth,hoopHeight,margin,trimJumpThreshold,maximumStitches,threads,regions}
+  private enum CodingKeys:String,CodingKey {case hoopWidth,hoopHeight,margin,trimJumpThreshold,maximumStitches,threads,regions,process}
   public init(from decoder:Decoder)throws {
     let c=try decoder.container(keyedBy:CodingKeys.self)
     hoopWidth=try c.decodeIfPresent(Double.self,forKey:.hoopWidth) ?? 100
@@ -60,8 +109,11 @@ public struct EmbroideryDesign:Codable,Equatable,Sendable {
     maximumStitches=try c.decodeIfPresent(Int.self,forKey:.maximumStitches) ?? 100000
     threads=try c.decode([EmbroideryThread].self,forKey:.threads)
     regions=try c.decode([EmbroideryRegion].self,forKey:.regions)
+    process=try c.decodeIfPresent(EmbroideryProcess.self,forKey:.process)
   }
+  public var requiresSchemaTwentyEight:Bool {process != nil || regions.contains {$0.underlay != nil}}
   public func validate()throws {
+    try process?.validate()
     guard [hoopWidth,hoopHeight,margin,trimJumpThreshold].allSatisfy(\.isFinite),
       (20...500).contains(hoopWidth),(20...500).contains(hoopHeight),(0.5...50).contains(margin),
       margin*2 < min(hoopWidth,hoopHeight),(0.5...100).contains(trimJumpThreshold),
@@ -69,9 +121,11 @@ public struct EmbroideryDesign:Codable,Equatable,Sendable {
       Set(regions.map(\.id)).count==regions.count else {throw FormError.invalid("Embroidery needs a 20–500 mm hoop, at least 0.5 mm clearance, 1–32 threads, 1–128 regions, and at most 100000 stitches.")}
     for thread in threads {
       try validateColor(thread.color)
+      if let stock=thread.stock {try stock.validate();guard stock.color.uppercased()==thread.color.uppercased() else {throw FormError.invalid("Assigned stock color differs from the thread. Reassign or unlink its portable stock snapshot before recoloring.")}}
       guard !thread.name.isEmpty,thread.name.count<=160,(thread.brand?.count ?? 0)<=160,(thread.catalog?.count ?? 0)<=160 else {throw FormError.invalid("Use bounded thread names and catalog references.")}
     }
     for region in regions {
+      try region.underlay?.validate(for:region)
       guard !region.elementIDs.isEmpty,region.elementIDs.count<=256,Set(region.elementIDs).count==region.elementIDs.count,
         threads.indices.contains(region.threadIndex),[region.stitchLength,region.spacing,region.satinWidth,region.angle].allSatisfy(\.isFinite),
         (0.4...10).contains(region.stitchLength),(0.15...5).contains(region.spacing),
@@ -88,8 +142,10 @@ public struct EmbroideryCommand:Codable,Equatable,Sendable {
   public var y:Int
   public var threadIndex:Int
   public var regionID:UUID?
-  public init(_ action:Action,x:Int,y:Int,threadIndex:Int,regionID:UUID? = nil) {
-    self.action=action;self.x=x;self.y=y;self.threadIndex=threadIndex;self.regionID=regionID
+  public enum Purpose:String,Codable,Sendable {case underlay,tieIn,tieOff}
+  public var purpose:Purpose?
+  public init(_ action:Action,x:Int,y:Int,threadIndex:Int,regionID:UUID? = nil,purpose:Purpose? = nil) {
+    self.action=action;self.x=x;self.y=y;self.threadIndex=threadIndex;self.regionID=regionID;self.purpose=purpose
   }
   public var point:Point2 {.init(Double(x)/10,Double(y)/10)}
 }
@@ -134,5 +190,16 @@ public struct EmbroideryProgram:Codable,Equatable,Sendable {
       }
       last = .init(Double(command.x),Double(command.y));ended=command.action == .end
     }
+  }
+}
+
+extension Artwork {
+  /// Needle geometry has explicit region selection. Print-role exclusion would
+  /// incorrectly remove stitch-role source paths from its appearance signature.
+  public var embroideryRenderDefinition:Artwork {
+    var value=self
+    for index in value.elements.indices {value.elements[index].productionRole=nil}
+    value=value.renderDefinition;value.background="#000000";value.backgroundOpacity=0
+    return value
   }
 }

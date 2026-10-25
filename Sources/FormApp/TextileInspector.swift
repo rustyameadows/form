@@ -6,6 +6,7 @@ struct TextileInspector: View {
   let object:ProductObject
   let project:Project
   @State private var showingEmbroidery=false
+  @State private var showingProduction=false
   private var spec:TextileProduct {object.textile ?? TextileProduct.defaults(for:object.recipeID)!}
   private func update(_ change:(inout TextileProduct)->Void) {
     var value=spec;change(&value)
@@ -58,7 +59,11 @@ struct TextileInspector: View {
         if [.embroideredPatch,.directEmbroidery].contains(spec.process) || spec.embroidery != nil {
           Button(spec.embroidery == nil ? "Digitize embroidery…":"Edit stitch program…") {showingEmbroidery=true}
             .buttonStyle(.bordered).disabled(object.locked)
-          Text(spec.embroidery == nil ? "Artwork appearance study. Configure digitizing to generate actual stitches.":"Regenerable stitch source configured. Open Embroidery for actual needle paths, hoop checks, and DST output.")
+          if spec.embroidery != nil {Button("Production jobs & packet…") {showingProduction=true}.buttonStyle(.borderless)}
+          if let issue=store.scene?.embroideryIssue(for:object.id) {
+            Text("Embroidery needs attention: "+issue).font(.system(size:10)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)
+          }
+          Text(spec.embroidery == nil ? "Artwork appearance study. Configure digitizing to generate actual stitches.":"Actual stitches drive the physical face. Open Embroidery for needle paths, process settings, hoop checks, and DST output.")
             .font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
         }
       }
@@ -73,5 +78,6 @@ struct TextileInspector: View {
         .lineLimit(2...5).textFieldStyle(.roundedBorder)
     }.font(.system(size:11))
       .sheet(isPresented:$showingEmbroidery) {EmbroideryEditor(object:object,project:project).environmentObject(store)}
+      .sheet(isPresented:$showingProduction) {ProductionJobsView(objectID:object.id).environmentObject(store)}
   }
 }

@@ -210,7 +210,7 @@ import FormCore
     source[0].rotation = nil; source[0].flipX = nil; source[0].flipY = nil
     source[0].parentID = nil; source[0].clipID = nil
     source[0].opacity = nil; source[0].blendMode = nil
-    var data = (try? JSONEncoder.form.encode(source)) ?? Data()
+    var data = (try? Artwork(elements:source).renderCacheData()) ?? Data()
     data.append(Data("|\(assets.path)|\(production)|\(excluding.sorted { $0.uuidString < $1.uuidString })".utf8))
     return data
   }

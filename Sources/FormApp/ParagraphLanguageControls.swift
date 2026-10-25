@@ -7,7 +7,18 @@ struct ParagraphLanguageControls:View {
   let type:Typography
   @State private var customLanguage=""
   private let languages=[("en","English"),("en-US","English (US)"),("de","German"),("fr","French"),("es","Spanish"),("tr","Turkish"),("az","Azeri"),("lt","Lithuanian"),("el","Greek"),("ar","Arabic"),("he","Hebrew"),("ja","Japanese")]
-  private var effective:String? {type.language ?? session.primary?.typography?.language ?? session.art.language}
+  private var effective:String? {type.language ?? session.sourceTextElement?.typography?.language ?? documentLanguage}
+  private var documentLanguage:String? {session.selectedTextStory.map{$0.language ?? session.currentPublication?.language} ?? session.art.language}
+  private func setDocumentLanguage(_ value:String) {
+    if let story=session.selectedTextStory {
+      _ = session.publicationEdit("Updated story language") {project in
+        guard let i=project.textStories?.firstIndex(where:{$0.id==story.id}) else{return}
+        try PublicationCommands.ensureEditable(project.textStories![i],in:project)
+        project.textStories![i].language=try value.isEmpty ? nil:ParagraphLanguage.canonical(value)
+        try project.validatePublications()
+      }
+    } else {session.execute("language",["language":value.isEmpty ? NSNull():value as Any])}
+  }
   private func override(_ value:String?) {
     do {let canonical=try value.map{try ParagraphLanguage.canonical($0)};session.typography{$0.language=canonical}}
     catch {session.store?.error=error.localizedDescription}
@@ -24,12 +35,10 @@ struct ParagraphLanguageControls:View {
           .onSubmit {override(customLanguage.isEmpty ? nil:customLanguage)}
         Button("Set") {override(customLanguage.isEmpty ? nil:customLanguage)}.buttonStyle(.borderless)
       }
-      Picker("Document language",selection:Binding(get:{session.art.language ?? ""},set:{value in
-        session.execute("language",["language":value.isEmpty ? NSNull():value as Any])
-      })) {
+      Picker(session.selectedTextStory == nil ? "Document language":"Story language",selection:Binding(get:{documentLanguage ?? ""},set:setDocumentLanguage)) {
         Text("Automatic / system").tag("")
         ForEach(languages,id:\.0) {Text($0.1).tag($0.0)}
-        if let current=session.art.language,!languages.contains(where:{$0.0==current}) {Text(current).tag(current)}
+        if let current=documentLanguage,!languages.contains(where:{$0.0==current}) {Text(current).tag(current)}
       }.help("Default for this artwork document. Explicit character languages retain their overrides.")
       if let effective,!LanguageHyphenation.dictionaryAvailable(effective) {
         Text("No installed hyphenation dictionary for \(effective). Localized shaping/case still applies; automatic word hyphenation is disabled.")

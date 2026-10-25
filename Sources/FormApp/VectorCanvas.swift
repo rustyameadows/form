@@ -147,6 +147,11 @@ final class ArtworkRuler: NSRulerView {
 }
 
 final class CanvasTextView: NSTextView, NSTextStorageDelegate {
+  var sharedUndoManager:UndoManager?
+  weak var sharedSourceDelegate:NSTextStorageDelegate?
+  var prepareSource:((NSAttributedString)->NSAttributedString)?
+  var onBecomeActive:(()->Void)?
+  override var undoManager:UndoManager? {sharedUndoManager ?? super.undoManager}
   var verticalOffset = 0.0
   var horizontalOffset = 0.0
   private var normalizingCase=false
@@ -168,6 +173,18 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
     textStorage?.delegate=self
   }
   required init?(coder:NSCoder) {fatalError("init(coder:) has not been implemented")}
+  func resetSourceTracking() {
+    storageSnapshot=NSAttributedString(attributedString:attributedString());caseReference=storageSnapshot
+    if !hasMarkedText() {sourceEdit=nil;composition=nil}
+  }
+  func captureSharedSourceEdit(_ previous:NSAttributedString,range:NSRange) {
+    sourceEdit=(previous,range);storageSnapshot=NSAttributedString(attributedString:attributedString())
+  }
+  override func becomeFirstResponder()->Bool {
+    let result=super.becomeFirstResponder()
+    if result {textStorage?.delegate=sharedSourceDelegate ?? self;resetSourceTracking();onBecomeActive?()}
+    return result
+  }
   override func insertNewline(_ sender:Any?) {
     if handleListReturn() {return};super.insertNewline(sender)
   }
@@ -235,7 +252,8 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
     }
     if !normalizingCase {
       let before=attributedString(),source=TextCase.source(before,reference:composition?.0 ?? sourceEdit?.0 ?? caseReference,editedRange:composition?.1 ?? sourceEdit?.1)
-      let normalized=GlyphEngine.normalizedNative(normalizeListTyping(source.text))
+      let raw=normalizeListTyping(source.text)
+      let normalized=GlyphEngine.normalizedNative(prepareSource?(raw) ?? raw)
       if !GlyphEngine.nativeEqual(normalized,before) {
         normalizingCase=true
         let range=source.sourceRange(selectedRange())
@@ -289,6 +307,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var snapLines: [(String, Double)] = []
   private var space = false
   private var textView: NSTextView?
+  private var publicationEditor:PublicationEditingController?
+  var activeStoryView:CanvasTextView? {publicationEditor == nil ? nil:textView as? CanvasTextView}
+  var storyEditor:PublicationEditingController? {publicationEditor}
   private var textHost: NativeAffineView?
   private var textClip: NativeAffineView?
   private var publishedInput: NSAttributedString?
@@ -384,6 +405,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     if !fitted, !frames.isEmpty {
       DispatchQueue.main.async { [weak self] in self?.fitWhenReady() }
     }
+    if publicationEditor==nil {
     if let id = editingID, let tv = textView,
       let e = session.art.elements.first(where: { $0.id == id }).map(session.colored), e != publishedText,
       !tv.hasMarkedText()
@@ -397,6 +419,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     if let id = editingID, let element = session.art.elements.first(where: { $0.id == id }) {
       positionTextHost(element)
     }
+    } else {publicationEditor?.reposition()}
     needsDisplay = true
     updateAccessibilityItems()
   }
@@ -499,7 +522,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           production: false,
           excluding: (f.id == session.objectID ? Set([editingID].compactMap { $0 }).union(
             dragMode == "move" && moveDropFrameID != nil ? session.art.descendants(of:startSelection) : []) : [])
-            .union(ArtworkProduction.hiddenIDs(in:f.artwork,roles:session.hiddenProductionRoles)),
+            .union(ArtworkProduction.hiddenIDs(in:f.artwork,roles:session.hiddenProductionRoles))
+            .union(publicationEditor?.excluded(in:f.id) ?? []),
           unbounded:f.isWorkspace)
         if f.id == session.objectID {
           drawOverlays(f, context: context, scale: scale)
@@ -1490,8 +1514,50 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     penID = nil
     needsDisplay = true
   }
+  func attachStoryText(_ text:CanvasTextView,frame:CanvasFrame,element:ArtworkElement)->NSView {
+    let clip=NativeAffineView(frame:bounds),host=NativeAffineView(frame:bounds)
+    clip.clipsToBounds=true;host.clipsToBounds=false;addSubview(clip);clip.addSubview(host);host.addSubview(text)
+    positionStoryText(text,host:clip,frame:frame,element:element);return clip
+  }
+  func positionStoryText(_ text:CanvasTextView,host clip:NSView,frame:CanvasFrame,element:ArtworkElement) {
+    guard let clip=clip as? NativeAffineView,let host=clip.subviews.first as? NativeAffineView else{return}
+    let transform=frame.artwork.worldTransform(element)
+    clip.configure(frame:documentRect(frame.rect),transform:.init())
+    host.configure(frame:clip.bounds,transform:.init(a:transform.a,b:transform.b,c:transform.c,d:transform.d,tx:transform.tx*ppm,ty:transform.ty*ppm))
+    text.setFrameSize(.init(width:element.width*ppm,height:element.height*ppm))
+    var hidden=element.hidden==true,parent=element.parentID,visited=Set<UUID>()
+    while let id=parent,visited.insert(id).inserted,let ancestor=frame.artwork.elements.first(where:{$0.id==id}) {hidden = hidden || ancestor.hidden==true;parent=ancestor.parentID}
+    hidden = hidden || ArtworkProduction.hiddenIDs(in:frame.artwork,roles:session?.hiddenProductionRoles ?? []).contains(element.id)
+    clip.isHidden=hidden
+  }
+  func activateStoryText(_ text:CanvasTextView,frame:StoryFrameID?) {
+    textView=text;editingID=frame?.elementID
+    if let frame {session?.objectID=frame.objectID;session?.selection=[frame.elementID]}
+    session?.editingText=true;session?.characterRange=TextCase.source(text.attributedString()).sourceRange(text.selectedRange())
+    needsDisplay=true
+  }
+  func beginStoryText(_ element:ArtworkElement) {
+    guard let session,let project=session.store?.project,let id=element.storyFrame?.storyID,let context=project.resolvedTextStory(id),let owner=session.objectID else{return}
+    let frame=element.storyFrame?.frame ?? StoryFrameID(objectID:owner,elementID:element.id)
+    if let publicationEditor,publicationEditor.storyID==id {publicationEditor.focus(frame);return}
+    finishText();session.store?.activateDesignSurface(.artwork);session.dieline=false
+    let editor=PublicationEditingController(canvas:self,session:session,context:context)
+    publicationEditor=editor;session.editingText=true;editor.focus(frame);needsDisplay=true
+  }
+  func showStorySource() {publicationEditor?.showOverflow()}
+  func openStorySource(_ id:UUID) {
+    if let publicationEditor,publicationEditor.storyID==id {publicationEditor.showOverflow();return}
+    guard let session,let context=session.store?.project?.resolvedTextStory(id) else{return}
+    finishText();let editor=PublicationEditingController(canvas:self,session:session,context:context)
+    publicationEditor=editor;session.editingText=true;editor.showOverflow()
+  }
+  func revealStoryPage(_ id:UUID) {
+    synchronize()
+    if let frame=frames.first(where:{$0.id==id}) {_ = scrollToVisible(documentRect(frame.rect).insetBy(dx:-18,dy:-18))}
+  }
   func beginText(_ e: ArtworkElement) {
     guard let s = session, activeFrame != nil else { return }
+    if e.storyFrame != nil {beginStoryText(e);return}
     s.store?.activateDesignSurface(.artwork)
     originalTextElement = e
     let e = s.colored(e)
@@ -1545,6 +1611,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     needsDisplay = true
   }
   func finishText() {
+    if let editor=publicationEditor {
+      editor.finish();publicationEditor=nil;textView=nil;editingID=nil;publishedText=nil;publishedInput=nil
+      originalTextInput=nil;originalTextElement=nil;session?.editingText=false;needsDisplay=true;return
+    }
     guard let tv = textView else { return }
     if tv.hasMarkedText() {tv.unmarkText();tv.didChangeText()}
     textDidChange(Notification(name: NSText.didChangeNotification, object: tv))
@@ -1591,6 +1661,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         tx:world.tx*ppm+workspaceOffset.x,ty:world.ty*ppm+workspaceOffset.y))
   }
   func textDidChange(_ notification: Notification) {
+    if let publicationEditor {publicationEditor.textDidChange(notification);return}
     guard let s = session, let id = editingID, let tv = textView,
       let i = s.art.elements.firstIndex(where: { $0.id == id })
     else { return }

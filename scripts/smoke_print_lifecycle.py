@@ -28,7 +28,7 @@ def main():
     report = {}
     try:
         status = c.call('form_status'); assert '/.local/' in status['library_path']
-        assert len(c.rpc('tools/list')['tools']) == 50
+        c.discover(['form_slice', 'form_cancel_slice'])
         assert c.call('form_get_print_setup')['printer_status']['connected'] is False
         a = c.call('form_create_project', {'name': 'Print lifecycle / First project'})
         cube = c.call('form_add_object', {'recipe_id': 'box', 'name': 'First / 20 × 30 × 25 mm',

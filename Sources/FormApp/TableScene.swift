@@ -42,6 +42,14 @@ private struct RenderSignature: Equatable {
   weak var view: TableSCNView?
   private var projectID: UUID?
   private var nodes: [UUID: SCNNode] = [:]
+  private var embroideryIssues:[UUID:String]=[:]
+  private var embroideryDigests:[UUID:String]=[:]
+  func embroideryIssue(for id:UUID)->String? {embroideryIssues[id]}
+  func embroiderySourceDigest(for id:UUID)->String? {embroideryDigests[id]}
+  private func updateEmbroideryStatus(_ object:ProductObject,project:Project,textureLimit:Int) {
+    let status=EmbroiderySceneSurface.status(object:object,project:project,textureLimit:textureLimit)
+    embroideryIssues[object.id]=status.issue;embroideryDigests[object.id]=status.digest
+  }
   private var fingerprints: [UUID: RenderSignature] = [:]
   private var geometryBounds: [UUID: (min: SCNVector3, max: SCNVector3)] = [:]
   private var selectionNodes: [SCNNode] = []
@@ -53,6 +61,10 @@ private struct RenderSignature: Equatable {
   var diagnostics: [String: Any] {
     [
       "object_nodes": nodes.count, "geometry_builds": geometryBuilds,
+      "embroidery_program_builds":EmbroiderySurface.programBuilds,"embroidery_texture_builds":EmbroiderySurface.textureBuilds,
+      "embroidery_texture_max_edge":EmbroiderySurface.maximumTextureEdge,
+      "embroidery_issues":Dictionary(uniqueKeysWithValues:embroideryIssues.map {($0.key.uuidString,$0.value)}),
+      "embroidery_sources":Dictionary(uniqueKeysWithValues:embroideryDigests.map {($0.key.uuidString,$0.value)}),
       "last_sync_ms": lastSyncMilliseconds,
       "renders_continuously": view?.rendersContinuously ?? false, "preferred_fps": 60,
       "orbit_direction": "followPointer",
@@ -141,6 +153,11 @@ private struct RenderSignature: Equatable {
     material.writesToDepthBuffer = false
     grid.geometry?.materials = [material]
   }
+  private func canUpdateEmbroiderySurface(_ old:RenderSignature,_ new:RenderSignature,object:ProductObject)->Bool {
+    guard ["textilePatch","textileLabel"].contains(object.recipeID),old.textile?.embroidery != nil || new.textile?.embroidery != nil else {return false}
+    var a=old.textile,b=new.textile;a?.embroidery=nil;b?.embroidery=nil
+    return old.recipe==new.recipe && old.parameters==new.parameters && old.material==new.material && old.color==new.color && old.asset==new.asset && a==b && old.fabricPattern==new.fabricPattern
+  }
   func sync(
     _ project: Project, selection: Set<UUID>, isolated: Set<UUID>, showGrid: Bool, studio: Bool,
     preset: String, assets: URL, textureLimit: Int = 2048
@@ -153,6 +170,7 @@ private struct RenderSignature: Equatable {
       view?.cancelPointerInteraction()
       objectRoot.childNodes.forEach { $0.removeFromParentNode() }
       nodes = [:]
+      embroideryIssues=[:];embroideryDigests=[:]
       fingerprints = [:]
       geometryBounds = [:]
       selectionNodes = []
@@ -166,6 +184,7 @@ private struct RenderSignature: Equatable {
     for id in Array(nodes.keys) where !live.contains(id) {
       nodes.removeValue(forKey: id)?.removeFromParentNode()
       fingerprints.removeValue(forKey: id)
+      embroideryIssues.removeValue(forKey:id);embroideryDigests.removeValue(forKey:id)
       geometryBounds.removeValue(forKey: id)
     }
     var geometryChanged = false
@@ -174,12 +193,17 @@ private struct RenderSignature: Equatable {
         recipe: project.recipe(object.recipeID),
         parameters: GeometryFactory.geometryParameters(object),
         material: project.material(object.materialID).withoutFabricPattern, color: object.color,
-        artwork: project.surfaceArtwork(object)?.renderDefinition,
+        artwork: project.surfaceArtwork(object).map {GeometryFactory.artworkDefinition($0,object:object)},
         asset: object.asset,
         fontRevision: project.editableArtwork(object) == nil && project.material(object.materialID).fabric?.pattern == nil ? 0 : GeometryFactory.fontRevision,
         textureLimit: textureLimit, textile: object.textile?.renderDefinition,
         fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition)
-      if nodes[object.id] == nil || fingerprints[object.id] != fingerprint {
+      if let node=nodes[object.id],let prior=fingerprints[object.id],prior != fingerprint,
+        canUpdateEmbroiderySurface(prior,fingerprint,object:object) {
+        EmbroiderySceneSurface.update(node,object:object,project:project,assets:assets,textureLimit:textureLimit)
+        fingerprints[object.id]=fingerprint;geometryBounds[object.id]=node.boundingBox;geometryChanged=true
+        updateEmbroideryStatus(object,project:project,textureLimit:textureLimit)
+      } else if nodes[object.id] == nil || fingerprints[object.id] != fingerprint {
         nodes[object.id]?.removeFromParentNode()
         let node = GeometryFactory.object(
           object, project: project, assets: assets, textureLimit: textureLimit)
@@ -189,6 +213,7 @@ private struct RenderSignature: Equatable {
         geometryBounds[object.id] = node.boundingBox
         objectRoot.addChildNode(node)
         fingerprints[object.id] = fingerprint
+        updateEmbroideryStatus(object,project:project,textureLimit:textureLimit)
         geometryChanged = true
       }
       let node = nodes[object.id]!
@@ -668,6 +693,9 @@ private struct RenderSignature: Equatable {
 }
 
 @MainActor enum GeometryFactory {
+  static func artworkDefinition(_ artwork:Artwork,object:ProductObject)->Artwork {
+    object.textile?.embroidery != nil ? artwork.embroideryRenderDefinition:artwork.renderDefinition
+  }
   static func geometryParameters(_ object: ProductObject) -> [String: Double] {
     object.recipeID == "clock"
       ? object.parameters.filter { !["hour", "minute", "hands"].contains($0.key) }
@@ -677,6 +705,7 @@ private struct RenderSignature: Equatable {
   static func invalidateFontResources() {
     cache.removeAllObjects()
     artworkImages.removeAllObjects()
+    EmbroiderySurface.invalidate()
     fontRevision += 1
   }
   private static let cache: NSCache<NSString, SCNNode> = {
@@ -767,8 +796,8 @@ private struct RenderSignature: Equatable {
     canonical.relationship = ""
     canonical.locked = false
     canonical.textile = canonical.textile?.renderDefinition
-    canonical.artwork = canonical.artwork?.renderDefinition
-    let artworkData = canonical.artwork.flatMap { try? JSONEncoder.form.encode($0) }
+    canonical.artwork = canonical.artwork.map {artworkDefinition($0,object:object)}
+    let artworkData = canonical.artwork.flatMap { try? $0.renderCacheData() }
     canonical.artwork = nil
     canonical.parameters = geometryParameters(object)
     var signature = (try? JSONEncoder.form.encode(canonical)) ?? Data()
@@ -1044,7 +1073,8 @@ private struct RenderSignature: Equatable {
     var counted = Set<ObjectIdentifier>()
     func countImages(_ node: SCNNode) {
       for material in node.geometry?.materials ?? [] {
-        if let image = material.diffuse.contents as? NSImage,
+        for property in [material.diffuse,material.normal] {
+        if let image = property.contents as? NSImage,
           counted.insert(ObjectIdentifier(image)).inserted
         {
           let pixels =
@@ -1052,6 +1082,7 @@ private struct RenderSignature: Equatable {
             ?? Int(image.size.width * image.size.height)
           // Account for the bitmap and a corresponding GPU texture.
           imageBytes += pixels * 8
+        }
         }
       }
     }
@@ -1103,7 +1134,7 @@ private struct RenderSignature: Equatable {
     _ art: Artwork, width: Double, depth: Double, assets: URL, textureLimit: Int,
     definition: Data? = nil
   ) -> NSImage {
-    var signature = definition ?? (try? JSONEncoder.form.encode(art.renderDefinition)) ?? Data()
+    var signature = definition ?? (try? art.renderCacheData()) ?? Data()
     signature.append(Data("\(width),\(depth),\(textureLimit),\(fontRevision),\(assets.path)".utf8))
     let key = SHA256.hash(data: signature).map { String(format: "%02x", $0) }.joined() as NSString
     if let image = artworkImages.object(forKey: key) { return image }

@@ -205,6 +205,7 @@ struct ArtworkInspector: View {
             frameControls(object)
           }
           SewingPatternActions(session: session)
+          PublicationControls(session: session)
         } else {
           Text("Create an artwork frame to begin.").font(.system(size: 12)).foregroundStyle(
             Palette.secondary)
@@ -395,7 +396,7 @@ struct ArtworkInspector: View {
       ) {
         Text("Area text · wraps").tag("area")
         Text("Point text · grows").tag("point")
-      }.font(.system(size: 10))
+      }.font(.system(size: 10)).disabled(session.selectedTextStory != nil)
       if session.editingText {
         Text("Selected characters keep their own fonts, sizes, colors, and spacing.").font(
           .system(size: 9)
@@ -453,13 +454,15 @@ struct ArtworkInspector: View {
               get: { session.primary?.typography?.verticalAlignment ?? "top" },
               set: { v in
                 session.canvas?.finishText()
-                session.typography { $0.verticalAlignment = v }
+                if session.selectedTextStory != nil {
+                  session.update {if $0.kind=="text" {var t=$0.typography ?? .init();t.verticalAlignment=v;$0.typography=t}}
+                } else {session.typography { $0.verticalAlignment = v }}
               })
           ) {
             Text("Top").tag("top")
             Text("Middle").tag("middle")
             Text("Bottom").tag("bottom")
-          }
+          }.disabled(session.selectedTextStory.map { source in source.publicationID != nil && (source.typography?.alignToBaselineGrid==true || source.textRuns?.contains(where:{$0.typography.alignToBaselineGrid==true})==true) } ?? false)
           Picker(
             "Direction",
             selection: Binding(
@@ -619,6 +622,7 @@ struct ArtworkInspector: View {
     VStack(alignment: .leading, spacing: 15) {
       SectionLabel(object.isCanvasWorkspace ? "FREEFORM CANVAS" : "ARTWORK FRAME")
       ProductionOverlayControls(session:session)
+      ColorProfileControls(session: session)
       if object.isCanvasWorkspace {
         Text("Draw, type, or place images anywhere. Add a physical frame when you need one, then drag artwork onto it.")
           .font(.system(size:11)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)

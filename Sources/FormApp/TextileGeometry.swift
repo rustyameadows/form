@@ -150,10 +150,8 @@ import simd
     let shape=SCNShape(path:path,extrusionDepth:thickness/100);shape.chamferRadius=min(0.4,thickness/3)/100
     let cloth=GeometryFactory.material(o,project:project),base=GeometryFactory.solid(shape,cloth)
     base.eulerAngles.x = -.pi/2;base.name="Independent textile base";root.addChildNode(base)
-    if let artwork=project.surfaceArtwork(o) {
-      let art=GeometryFactory.artworkPlane(artwork,width:w,depth:h,y:thickness+0.15,assets:assets,textureLimit:textureLimit)
-      art.name="Linked editable decoration artwork";root.addChildNode(art)
-    }
+    root.name=EmbroiderySceneSurface.containerName
+    EmbroiderySceneSurface.update(root,object:o,project:project,assets:assets,textureLimit:textureLimit)
     let border=o["borderWidth"]
     if border>0 {
       let inset=max(border/2,0.5),x=w/2-inset,z=h/2-inset,corner=max(0,r-inset)

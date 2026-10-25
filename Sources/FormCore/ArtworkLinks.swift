@@ -28,7 +28,8 @@ extension Project {
     guard !object.isCanvasWorkspace else { return nil }
     let owner = artworkOwner(object)
     guard let stored = owner.artwork else { return nil }
-    var art = (try? resolvingComponents(in: stored, keepingSwatchReferences: keepingSwatchReferences)) ?? stored
+    let source=resolvingTextStories(in:stored,objectID:owner.id)
+    var art = (try? resolvingComponents(in: source, keepingSwatchReferences: keepingSwatchReferences)) ?? source
     if owner.id != object.id {
       let source = owner.artworkSize
       let target = object.artworkSize
@@ -63,6 +64,7 @@ extension Project {
     let owner = artworkOwner(object)
     let artwork = recordingStyleOverrides
       ? artwork.recordingTextStyleOverrides(from: owner.artwork) : artwork
+    try PublicationCommands.reconcileFrames(in:&self,objectID:owner.id,artwork:artwork)
     for i in objects.indices where objects[i].designID == owner.designID {
       objects[i].artwork = artwork
     }
@@ -99,6 +101,7 @@ extension Project {
     self = candidate
   }
   public func validateArtworkLinks() throws {
+    try validatePublications()
     try validateCanvasWorkspace()
     try validateTextiles()
     try validateTextStyles()

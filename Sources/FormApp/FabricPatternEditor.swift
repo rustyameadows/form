@@ -166,11 +166,11 @@ struct FabricPatternEditor: View {
       guard let sourceID else { throw FormError.invalid("Choose a source artwork frame first.") }
       var next = draft; next.sourceObjectID = sourceID
       try store.engine.edit("Edited fabric repeat", source: "Studio") { try $0.setFabricPattern(next, materialID: material.id) }
-      store.revision += 1; error = ""; store.toast("Fabric design applied"); return true
+      store.changed(); error = ""; store.toast("Fabric design applied"); return true
     } catch { self.error = error.localizedDescription; return false }
   }
   private func remove() {
-    do { try store.engine.edit("Removed fabric repeat", source: "Studio") { try $0.setFabricPattern(nil, materialID: material.id) }; store.revision += 1; dismiss() }
+    do { try store.engine.edit("Removed fabric repeat", source: "Studio") { try $0.setFabricPattern(nil, materialID: material.id) }; store.changed(); dismiss() }
     catch { self.error = error.localizedDescription }
   }
   private func createTile() {
@@ -185,7 +185,7 @@ struct FabricPatternEditor: View {
           ArtworkElement(kind: "ellipse", x: 30, y: 4, width: 3, height: 3, color: "#E6D6B4")]
         frame.artwork = art; created = frame.id; project.objects.append(frame)
       }
-      sourceID = created; store.revision += 1; error = ""
+      sourceID = created; store.changed(); error = ""
     } catch { self.error = error.localizedDescription }
   }
   private func editSource() {
@@ -238,7 +238,7 @@ private final class FabricPreviewNSView: NSView {
 
 extension StudioStore {
   func exportFabricPattern(materialID: String, arguments: [String: Any]) throws -> Any {
-    guard arguments["roles"] == nil, arguments["pattern_pieces"] as? Bool != true, arguments["embroidery_format"] == nil else {
+    guard arguments["roles"] == nil, arguments["pattern_pieces"] as? Bool != true, arguments["embroidery_format"] == nil, arguments["cut_layout"] as? Bool != true else {
       throw FormError.invalid("Export fabric yardage and manufacturing role layers separately.")
     }
     guard let project, let design = try project.resolvedFabricPattern(materialID: materialID) else { throw FormError.missing("Choose a fabric with a repeat pattern in this project.") }

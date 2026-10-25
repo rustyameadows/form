@@ -104,7 +104,7 @@ public struct TextileProduct: Codable, Equatable, Sendable {
   }
   public var renderDefinition: Self {
     var result=Self(kind:kind,process:process)
-    result.liningMaterialID=liningMaterialID;result.trimMaterialID=trimMaterialID;result.threadColors=threadColors
+    result.liningMaterialID=liningMaterialID;result.trimMaterialID=trimMaterialID;result.threadColors=threadColors;result.embroidery=embroidery
     return result
   }
   public static func defaults(for recipe:String)->Self? {
@@ -180,8 +180,10 @@ public enum TextileDesign {
 
 extension Project {
   public func validateTextiles() throws {
+    try validateProductionJobs()
     for material in materials {try material.fabric?.validate()}
     try validateFabricPatterns()
+    try validateSewingLayoutMaterials()
     for object in objects {
       guard let spec=object.textile else {continue}
       if let embroidery=spec.embroidery {

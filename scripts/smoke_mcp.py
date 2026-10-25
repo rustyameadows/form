@@ -50,6 +50,13 @@ class Client:
         self.process.stdin.close()
         self.process.wait(timeout=5)
 
+    def discover(self, required=()):
+        tools = self.rpc("tools/list")["tools"]
+        names = {tool["name"] for tool in tools}
+        assert len(tools) >= 50 and len(names) == len(tools), "Unique native tool discovery is required."
+        assert set(required).issubset(names), f"Missing required tools: {set(required) - names}"
+        return tools
+
 
 def main():
     client = Client()
@@ -58,8 +65,7 @@ def main():
         assert initialize["protocolVersion"] == "2025-11-25"
         client.process.stdin.write('{"jsonrpc":"2.0","method":"notifications/initialized"}\n')
         client.process.stdin.flush()
-        tools = client.rpc("tools/list")["tools"]
-        assert len(tools) == 50
+        tools = client.discover(["form_create_project", "form_get_project", "form_batch", "form_export"])
         assert len({tool["name"] for tool in tools}) == len(tools)
         project = client.call("form_create_project", {"name": "MCP validation", "template": "cyanotype", "conversation_reference": "FORM local integration test"})
         sleeve = next(obj for obj in project["objects"] if obj["recipeID"] == "sleeve")

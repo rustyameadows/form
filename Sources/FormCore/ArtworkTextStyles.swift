@@ -51,6 +51,7 @@ public enum TextStyleCommands {
     .init("kerningMode", \.kerningMode),
     .init("tabStops", \.tabStops), .init("defaultTabInterval", \.defaultTabInterval),
     .init("language", \.language), .init("hyphenationLimits", \.hyphenationLimits),
+    .init("alignToBaselineGrid", \.alignToBaselineGrid),
   ]
   public static let propertyNames = Set(properties.map(\.name) + ["fontSize"])
 
@@ -92,7 +93,7 @@ public enum TextStyleCommands {
     return value
   }
   public static let paragraphProperties: Set<String> = ["leading", "alignment", "paragraphBefore", "paragraphAfter",
-    "leftIndent", "rightIndent", "firstLineIndent", "direction", "hyphenation", "tabStops", "defaultTabInterval", "hyphenationLimits"]
+    "leftIndent", "rightIndent", "firstLineIndent", "direction", "hyphenation", "tabStops", "defaultTabInterval", "hyphenationLimits", "alignToBaselineGrid"]
   private static func paragraphReference(_ value: TextSpan) -> TextStyleReference? {
     if let ref = value.paragraphStyle { return ref }
     guard var ref = value.textStyle, ref.characterOnly != true else { return nil }
@@ -159,6 +160,24 @@ public enum TextStyleCommands {
     element.textStyle = value.textStyle
     element.paragraphStyle = value.paragraphStyle
   }
+  private static func refreshed(_ source:ArtworkElement,style:ArtworkTextStyle)->ArtworkElement {
+    var e=source
+    if e.textStyle?.styleID==style.id {set(formatted(span(e),style:style),on:&e)}
+    if e.paragraphStyle?.styleID==style.id {
+      var type=e.typography ?? .init()
+      for p in properties where paragraphProperties.contains(p.name) && !e.paragraphStyle!.overrides.contains(p.name) {p.copy(&type,style.typography)}
+      e.typography=type
+    }
+    for r in e.textRuns?.indices ?? 0..<0 where e.textRuns?[r].textStyle?.styleID==style.id {
+      e.textRuns![r]=formatted(e.textRuns![r],style:style)
+    }
+    for r in e.textRuns?.indices ?? 0..<0 where e.textRuns?[r].paragraphStyle?.styleID==style.id {
+      var run=e.textRuns![r]
+      for p in properties where paragraphProperties.contains(p.name) && !run.paragraphStyle!.overrides.contains(p.name) {p.copy(&run.typography,style.typography)}
+      e.textRuns![r]=run
+    }
+    return e
+  }
   @discardableResult public static func save(in project: inout Project, id: UUID? = nil,
     name: String, typography: Typography, fontSize: Double) throws -> UUID {
     var candidate = project
@@ -181,25 +200,13 @@ public enum TextStyleCommands {
     for i in candidate.objects.indices {
       guard var art = candidate.objects[i].artwork else { continue }
       for j in art.elements.indices {
-        var e = art.elements[j]
-        if e.textStyle?.styleID == style.id { set(formatted(span(e), style: style), on: &e) }
-        if e.paragraphStyle?.styleID == style.id {
-          var type = e.typography ?? .init()
-          for p in properties where paragraphProperties.contains(p.name) && !e.paragraphStyle!.overrides.contains(p.name) { p.copy(&type, style.typography) }
-          e.typography = type
-        }
-        for r in e.textRuns?.indices ?? 0..<0 where e.textRuns?[r].textStyle?.styleID == style.id {
-          let run = e.textRuns![r]
-          e.textRuns?[r] = formatted(run, style: style)
-        }
-        for r in e.textRuns?.indices ?? 0..<0 where e.textRuns?[r].paragraphStyle?.styleID == style.id {
-          var run = e.textRuns![r]
-          for p in properties where paragraphProperties.contains(p.name) && !run.paragraphStyle!.overrides.contains(p.name) { p.copy(&run.typography, style.typography) }
-          e.textRuns?[r] = run
-        }
-        art.elements[j] = e
+        art.elements[j]=refreshed(art.elements[j],style:style)
       }
       candidate.objects[i].artwork = art
+    }
+    for i in candidate.textStories?.indices ?? 0..<0 {
+      let changed=refreshed(candidate.textStories![i].sourceElement,style:style)
+      candidate.textStories![i].setSource(changed)
     }
     try candidate.validateArtworkLinks()
     project = candidate
@@ -224,6 +231,16 @@ public enum TextStyleCommands {
       candidate.objects[i].artwork = art
     }
     candidate.textStyles?.removeAll { $0.id == id }
+    for i in candidate.textStories?.indices ?? 0..<0 {
+      var e=candidate.textStories![i].sourceElement
+      if e.textStyle?.styleID==id {e.textStyle=nil}
+      if e.paragraphStyle?.styleID==id {e.paragraphStyle=nil}
+      for j in e.textRuns?.indices ?? 0..<0 {
+        if e.textRuns![j].textStyle?.styleID==id {e.textRuns![j].textStyle=nil}
+        if e.textRuns![j].paragraphStyle?.styleID==id {e.textRuns![j].paragraphStyle=nil}
+      }
+      candidate.textStories![i].setSource(e)
+    }
     try candidate.validateArtworkLinks()
     project = candidate
   }
@@ -249,8 +266,13 @@ public enum TextStyleCommands {
       guard let id, let style = styles[id] else { return span }
       return applying(span, style: style, preservingParagraphs: preservingParagraphs || (mode == "reset" && span.textStyle?.characterOnly == true))
     }
+    var candidate=project,changedStories=Set<UUID>()
     for i in art.elements.indices where textIDs.contains(art.elements[i].id) {
-      var e = art.elements[i]
+      let story=art.elements[i].storyFrame?.storyID
+      if let story,!changedStories.insert(story).inserted {continue}
+      let storyIndex=story.flatMap{id in candidate.textStories?.firstIndex{$0.id==id}}
+      if let storyIndex {try PublicationCommands.ensureEditable(candidate.textStories![storyIndex],in:candidate)}
+      var e=storyIndex.map{candidate.textStories![$0].sourceElement} ?? art.elements[i]
       if let location, let length {
         let partial = location != 0 || length != e.text.utf16.count
         try editRange(&e, location: location, length: length) { try edit($0, preservingParagraphs: partial) }
@@ -261,9 +283,8 @@ public enum TextStyleCommands {
           e.textRuns?[r] = try edit(run)
         }
       }
-      art.elements[i] = e
+      if let storyIndex {candidate.textStories![storyIndex].setSource(e)}else{art.elements[i]=e}
     }
-    var candidate = project
     try candidate.setArtwork(art, for: objectID, recordingStyleOverrides: false)
     try candidate.validateArtworkLinks()
     project = candidate
@@ -336,8 +357,8 @@ extension Project {
       }
       try validateTypography(style.typography)
     }
-    for object in objects {
-      guard let art = object.artwork else { continue }
+    let artworks=objects.compactMap(\.artwork)+(textStories ?? []).map{Artwork(elements:[$0.sourceElement])}
+    for art in artworks {
       guard art.referencedTextStyles.isSubset(of: ids) else { throw FormError.invalid("Artwork references a missing text style.") }
       let byID = Dictionary(uniqueKeysWithValues: styles.map { ($0.id, $0) })
       for e in art.elements {

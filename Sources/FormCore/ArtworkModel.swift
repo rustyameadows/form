@@ -234,13 +234,14 @@ public struct Typography: Codable, Equatable, Sendable {
   public var kerningMode: String?
   public var tabStops: [TextTabStop]?
   public var defaultTabInterval: Double?
+  public var alignToBaselineGrid:Bool?
   public init() {}
   enum CodingKeys: String, CodingKey {
     case fontName, tracking, leading, baseline, wordSpacing, horizontalScale, alignment,
       verticalAlignment, paragraphBefore, paragraphAfter, leftIndent, rightIndent, firstLineIndent,
       underline, strikethrough, ligatures, direction, frameMode, caseTreatment, hyphenation,
       features, featureSelections, variations, pairKerning, kerningMode, tabStops, defaultTabInterval,
-      language, hyphenationLimits
+      language, hyphenationLimits, alignToBaselineGrid
   }
   public init(from decoder: Decoder) throws {
     self.init()
@@ -271,6 +272,7 @@ public struct Typography: Codable, Equatable, Sendable {
     hyphenation = try c.decodeIfPresent(Double.self, forKey: .hyphenation) ?? hyphenation
     if let value=try c.decodeIfPresent(String.self,forKey:.language) {language=try ParagraphLanguage.canonical(value)}
     hyphenationLimits=try c.decodeIfPresent(HyphenationLimits.self,forKey:.hyphenationLimits)
+    alignToBaselineGrid=try c.decodeIfPresent(Bool.self,forKey:.alignToBaselineGrid)
     features = try c.decodeIfPresent([Int: Int].self, forKey: .features) ?? features
     featureSelections = try c.decodeIfPresent([Int: [Int]].self, forKey: .featureSelections)
     variations = try c.decodeIfPresent([Int: Double].self, forKey: .variations) ?? variations
@@ -393,6 +395,7 @@ extension Artwork {
     }
     var result = resolvingLists
     result.elements = result.elements.filter { required.contains($0.id) }.map(\.withBakedListNumbers)
+    result.sewingLayout = nil
     result.retainRepresentedSewingSeams()
     if result.elements.contains(where: { $0.hasVisualOverflow }) {
       let masks = Set(result.elements.compactMap(\.clipID))
@@ -416,7 +419,9 @@ extension Artwork {
   }
   public var renderDefinition: Artwork {
     var result = resolvingLists
+    result.outputColorProfile = nil
     result.sewingSeams = nil
+    result.sewingLayout = nil
     result.imports = nil
     result.unit = nil
     result.guides = nil

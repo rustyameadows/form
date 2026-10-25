@@ -17,7 +17,7 @@ def main():
         status=c.call('form_status');library=pathlib.Path(status['library_path'])
         assert library.resolve().is_relative_to((ROOT/'.local').resolve()),'Use an isolated validation library.'
         p=c.call('form_create_project',{'name':'ORBITAL / Textile foundation','template':'flightJacket'})
-        assert len(c.rpc('tools/list')['tools'])==50
+        c.discover(['form_add_object', 'form_update_object'])
         jackets=[o for o in p['objects'] if o['recipeID']=='bomberJacket'];assert len(jackets)==2
         attached=[o for o in p['objects'] if o.get('textile',{}).get('attachment')];assert len(attached)==8
         sheets=[o for o in p['objects'] if o['recipeID']=='artboard'];assert len(sheets)==3

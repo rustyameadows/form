@@ -66,7 +66,7 @@ While editing text, select characters and change typography controls to format t
 
 ## MCP
 
-There are 50 tools. Artwork tools include `form_get_artwork`, `form_edit_artwork`, `form_component`, `form_swatch`, `form_text_style`, `form_appearance`, `form_edit_paint`, `form_import_image`, `form_edit_image`, `form_image_info`, `form_link_artwork`, `form_extract_artwork`, `form_list_fonts`, `form_font_features`, `form_convert_to_paths`, `form_boolean_artwork`, `form_export_artwork`, `form_import_svg`, and `form_edit_path`. They use the native model/editing functions. Tool discovery provides exact schemas and ranges.
+Tool discovery lists the current native schemas. Artwork tools include `form_get_artwork`, `form_edit_artwork`, `form_component`, `form_swatch`, `form_text_style`, `form_appearance`, `form_edit_paint`, `form_import_image`, `form_edit_image`, `form_image_info`, `form_link_artwork`, `form_extract_artwork`, `form_list_fonts`, `form_font_features`, `form_convert_to_paths`, `form_boolean_artwork`, `form_export_artwork`, `form_import_svg`, and `form_edit_path`. They use the native model/editing functions. Tool discovery provides exact schemas and ranges.
 
 ```json
 {"name":"form_list_fonts","arguments":{"query":"Georgia"}}
@@ -84,7 +84,7 @@ See [precise paths and transformed native text](path-editing.md) for direct sele
 
 - The specification’s later variable-width stroke workflows.
 - Full SVG interchange fidelity beyond the [supported import subset](svg-import.md), including filters, patterns, gradient strokes, advanced SVG text, and external resources. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
-- Small caps, structured lists, linked text frames, sequential multi-page documents, and publication layout. Document/character language, locale casing and dictionary hyphenation limits are implemented in [paragraph language](paragraph-language.md).
+- Small caps, master pages, widow/orphan controls, spreads/imposition and deeper publication layout. [Structured lists](paragraph-lists.md), [linked stories, ordered physical pages, baseline grids and multipage PDF](publications.md), and [paragraph language](paragraph-language.md) now have working native implementations.
 - Cross-project clipboard transfer for linked named resources and local assets.
 - Color-managed production output, CMYK/spot separations, full preflight, advanced surface placement, and the complete demonstration/acceptance suite.
 

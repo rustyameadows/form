@@ -88,12 +88,14 @@ struct SewingPatternActions: View {
   @ObservedObject var session: ArtworkSession
   @State private var preview = false
   @State private var pairing = false
+  @State private var cuttingLayout = false
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
       if session.art.elements.contains(where: { $0.sewingPiece != nil }) {
         Divider(); SectionLabel("SEWING PATTERN")
-        Button("Preview cutting pattern") { preview = true }
-        Button("Pair seam edges") { pairing = true }
+        Button("Preview cutting pattern") { preview = true }.accessibilityLabel("Preview cutting pattern")
+        Button("Pair seam edges") { pairing = true }.accessibilityLabel("Pair seam edges")
+        Button("Material cutting layout") { session.canvas?.finishText(); cuttingLayout = true }.accessibilityLabel("Material cutting layout")
         if let checks = try? SewingPatterns.diagnostics(session.art) {
           ForEach(checks, id: \.seam.id) { check in
             HStack(alignment: .top) {
@@ -104,9 +106,10 @@ struct SewingPatternActions: View {
           }
         }
       }
-      Button("Add tote cutting study") { store.createTotePattern() }.font(.system(size: 10))
+      Button("Add tote cutting study") { store.createTotePattern() }.font(.system(size: 10)).accessibilityLabel("Add tote cutting study")
     }.font(.system(size: 10)).sheet(isPresented: $preview) { SewingPatternPreview(session: session).environmentObject(store) }
       .sheet(isPresented: $pairing) { SewingSeamEditor(session: session).environmentObject(store) }
+      .sheet(isPresented: $cuttingLayout) { SewingLayoutEditor(session: session).environmentObject(store) }
   }
 }
 
@@ -163,8 +166,8 @@ private struct SewingSeamEditor: View {
       guard let first, let second, let object = session.object else { throw FormError.invalid("Choose two pattern edges.") }
       var seam = SewingSeam(name: name, first: .init(elementID: first, edge: firstEdge, copy: firstCopy), second: .init(elementID: second, edge: secondEdge, copy: secondCopy))
       seam.tolerance = tolerance; seam.reversed = reversed
-      _ = try store.engine.call("form_edit_artwork", arguments: ["object_id": object.id.uuidString, "command": "seam_pair", "seam": try jsonObject(seam)])
-      store.revision += 1; dismiss()
+      try store.saveSewingSeam(seam, objectID: object.id)
+      dismiss()
     } catch { self.error = error.localizedDescription }
   }
 }

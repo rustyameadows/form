@@ -64,7 +64,7 @@ public enum GlyphCommands {
       end=choice.location+choice.length
     }
   }
-  public static func edit(_ art:inout Artwork,ids:Set<UUID>,arguments:[String:Any]) throws {
+  public static func edit(_ art:inout Artwork,ids:Set<UUID>,arguments:[String:Any],maxTextCharacters:Int=10000) throws {
     guard !ids.isEmpty,arguments.keys.contains("glyph") else {throw FormError.invalid("Select text and provide a glyph or null to clear its choices.")}
     let targets=art.swatchPaintTargets(for:ids)
     let textIDs=Set(art.elements.filter{targets.contains($0.id) && $0.kind=="text"}.map(\.id))
@@ -109,6 +109,6 @@ public enum GlyphCommands {
       } else {e.glyphOverrides=nil}
       candidate.elements[i]=e
     }
-    try validateArtwork(candidate);art=candidate
+    try validateArtwork(candidate,maxTextCharacters:maxTextCharacters);art=candidate
   }
 }
