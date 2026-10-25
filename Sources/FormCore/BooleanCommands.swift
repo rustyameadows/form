@@ -73,6 +73,9 @@ public enum BooleanCommands {
     group.fillEnabled = paint.fillEnabled
     group.fillSwatchID = paint.fillSwatchID
     group.fillOpacity = paint.fillOpacity
+    group.blendMode = paint.blendMode
+    group.blur = paint.blur
+    group.shadow = paint.shadow
     group.opacity = opacity == 1 ? nil : opacity
     group.gradient = paint.gradient
     group.stroke = paint.stroke

@@ -297,7 +297,7 @@ extension Artwork {
       }
   }
   public var usesExtendedFormat: Bool {
-    if requiresSchemaFour || requiresSchemaFive || !referencedSwatches.isEmpty || elements.contains(where: { $0.component != nil }) { return true }
+    if requiresSchemaFour || requiresSchemaFive || requiresSchemaEight || !referencedSwatches.isEmpty || elements.contains(where: { $0.component != nil }) { return true }
     if boundary != nil { return true }
     if unit != nil || guides != nil || gridSpacing != nil || showGrid != nil || showGuides != nil
       || snapEnabled != nil || nudge != nil || canvasPosition != nil
@@ -332,7 +332,7 @@ extension Artwork {
       }
     }
     let roots = selectionRoots(effective)
-    let bounds = roots.dropFirst().reduce(self.bounds(of: roots[0])) {
+    var bounds = roots.dropFirst().reduce(self.bounds(of: roots[0])) {
       $0.union(self.bounds(of: $1))
     }
     var required = descendants(of: effective)
@@ -346,6 +346,13 @@ extension Artwork {
     }
     var result = self
     result.elements = elements.filter { required.contains($0.id) }
+    if result.elements.contains(where: { $0.hasActiveEffects }) {
+      let masks = Set(result.elements.compactMap(\.clipID))
+      let visibleRoots = result.elements.filter { $0.parentID == nil && !masks.contains($0.id) && $0.hidden != true }
+      if let first = visibleRoots.first {
+        bounds = visibleRoots.dropFirst().reduce(result.visualBounds(of: first)) { $0.union(result.visualBounds(of: $1)) }
+      }
+    }
     if var boundary = result.boundary {
       for c in boundary.contours.indices {
         boundary.contours[c].nodes = boundary.contours[c].nodes.map {
@@ -389,6 +396,10 @@ extension Artwork {
     for i in result.elements.indices {
       result.elements[i].name = nil
       result.elements[i].locked = nil
+      if result.elements[i].blendMode == "normal" { result.elements[i].blendMode = nil }
+      if result.elements[i].isolatedBlending == false { result.elements[i].isolatedBlending = nil }
+      if result.elements[i].blur?.enabled != true || result.elements[i].blur?.radius == 0 { result.elements[i].blur = nil }
+      if result.elements[i].shadow?.enabled != true || result.elements[i].shadow?.opacity == 0 { result.elements[i].shadow = nil }
     }
     return result
   }

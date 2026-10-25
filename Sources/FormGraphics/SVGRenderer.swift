@@ -28,6 +28,7 @@ import FormCore
     _ source: Artwork, width: Double, height: Double, assets: URL, outlineText: Bool = true
   ) throws -> String {
     let art = try BooleanGeometry.materialized(source)
+    let tree = ArtworkRenderTree(art, assets: assets, production: true, excluding: [])
     var definitions = ""
     var body =
       "<rect width=\"\(width)\" height=\"\(height)\" fill=\"\(art.background)\" fill-opacity=\"\(art.backgroundOpacity ?? 1)\"/>"
@@ -40,24 +41,45 @@ import FormCore
         && (e.productionRole == nil || e.productionRole == "artwork")
       {
         let id = e.id.uuidString
+        var effect = ""
+        if e.hasActiveEffects {
+          let bounds = tree.localBounds(e)
+          var primitives = ""
+          var input = "SourceGraphic"
+          if let blur = e.blur, blur.enabled, blur.radius > 0 {
+            primitives += "<feGaussianBlur in=\"SourceGraphic\" stdDeviation=\"\(blur.radius)\" result=\"blurred\"/>"
+            input = "blurred"
+          }
+          if let shadow = e.shadow, shadow.enabled, shadow.opacity > 0 {
+            primitives += "<feDropShadow in=\"\(input)\" dx=\"\(shadow.offset.x)\" dy=\"\(shadow.offset.y)\" stdDeviation=\"\(shadow.blur)\" flood-color=\"\(shadow.color)\" flood-opacity=\"\(shadow.opacity)\"/>"
+          }
+          definitions += "<filter id=\"effect-\(id)\" filterUnits=\"userSpaceOnUse\" primitiveUnits=\"userSpaceOnUse\" color-interpolation-filters=\"sRGB\" x=\"\(bounds.minX)\" y=\"\(bounds.minY)\" width=\"\(bounds.width)\" height=\"\(bounds.height)\">\(primitives)</filter>"
+          effect = " filter=\"url(#effect-\(id))\""
+        }
         if let clip = e.clipID, let mask = art.elements.first(where: { $0.id == clip }) {
           definitions +=
             "<clipPath id=\"clip-\(id)\"><path d=\"\(data(VectorGeometry.path(mask)))\" transform=\"\(transform(mask.localTransform))\" clip-rule=\"\(mask.path?.evenOdd == true ? "evenodd":"nonzero")\"/></clipPath>"
           output += "<g clip-path=\"url(#clip-\(id))\">"
         }
+        let isolated = e.isolatedBlending == true || e.hasActiveEffects || (e.opacity ?? 1) < 1
+          || (e.blendMode ?? "normal") != "normal"
         output +=
-          "<g id=\"layer-\(id)\" transform=\"\(transform(e.localTransform))\" opacity=\"\(e.opacity ?? 1)\"><title>\(xml(e.title))</title>"
+          "<g id=\"layer-\(id)\" transform=\"\(transform(e.localTransform))\" opacity=\"\(e.opacity ?? 1)\" style=\"isolation:\(isolated ? "isolate" : "auto");mix-blend-mode:\(e.blendMode ?? "normal")\"\(effect)><title>\(xml(e.title))</title>"
         if e.kind == "group" {
           output += try children(e.id)
         } else if e.kind == "text" {
           if e.fillEnabled == false { /* invisible text retains its editable source */
           } else if outlineText {
+            output += "<g opacity=\"\(e.fillOpacity ?? 1)\">"
             for (path, color) in try TypographyEngine.outlineRuns(e) {
               output +=
-                "<path d=\"\(data(path))\" fill=\"\(color)\" fill-opacity=\"\(e.fillOpacity ?? 1)\"/>"
+                "<path d=\"\(data(path))\" fill=\"\(color)\"/>"
             }
+            output += "</g>"
           } else {
-            output += liveText(e)
+            var text = e
+            text.fillOpacity = nil
+            output += "<g opacity=\"\(e.fillOpacity ?? 1)\">" + liveText(text) + "</g>"
           }
         } else if e.kind == "image" {
           if let asset = e.asset, !asset.contains("/"),
@@ -122,7 +144,9 @@ import FormCore
         "<clipPath id=\"surface-boundary\"><path d=\"\(data(VectorGeometry.path(shape)))\" clip-rule=\"\(boundary.evenOdd ? "evenodd":"nonzero")\"/></clipPath>"
       body = "<g clip-path=\"url(#surface-boundary)\">" + body + "</g>"
     }
-    return "<defs>\(definitions)</defs>" + body
+    let frameID = "frame-\(art.elements.first?.id.uuidString ?? "empty")-\(Int(width * 1000))-\(Int(height * 1000))"
+    definitions += "<clipPath id=\"\(frameID)\"><rect width=\"\(width)\" height=\"\(height)\"/></clipPath>"
+    return "<defs>\(definitions)</defs><g style=\"isolation:isolate\" clip-path=\"url(#\(frameID))\">" + body + "</g>"
   }
   public static func document(
     _ art: Artwork, width: Double, height: Double, assets: URL, outlineText: Bool = true

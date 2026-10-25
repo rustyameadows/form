@@ -26,7 +26,7 @@ Paths being combined must share a parent and clipping mask. Release any use of t
 
 ## MCP
 
-There are 44 tools. Inspect node UUIDs with `form_get_artwork`, then call:
+There are 45 tools. Inspect node UUIDs with `form_get_artwork`, then call:
 
 ```json
 {"name":"form_edit_path","arguments":{"object_id":"<frame UUID>","element_id":"<path UUID>","operation":"insert","node_ids":["<preceding anchor UUID>"],"t":0.37}}

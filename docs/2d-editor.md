@@ -17,6 +17,7 @@ The editor is a working part of the expanded [2D specification](2d-design-typogr
 - Live boolean operations and their original operand hierarchy use schema 5. Schemas 1–4 still load; evaluated geometry stays ephemeral.
 - Reusable vector sources across artwork frames and physical products, independent instance sizing/transforms, fill/text/opacity overrides, reset, native source editing/return, nested sources, and appearance-preserving detachment. Components use schema 6; schemas 1–5 still load. See [components and the STRATA demonstration](reusable-components.md).
 - Named project sRGB palettes shared by vector fills, strokes, gradient stops, selected text characters, backgrounds, and component overrides. Native typography and glyph conversion retain links; detachment and swatch deletion preserve current colors. Palette data uses schema 7; schemas 1–6 still load. See [shared swatches and CHROMA](shared-swatches.md).
+- Non-destructive layer/group opacity, sixteen blend modes, Gaussian blur, drop shadows, shared shadow colors, and explicit group isolation. Native controls, linked physical surfaces, text outlines, and physical exports preserve the combined appearance. These fields use schema 8; schemas 1–7 still load. See [appearance and UMBRA](artwork-appearance.md).
 - Actual-size SVG/PDF and DPI-controlled PNG/JPEG frame/selection exports. SVG outlines text by default. Selection export preserves required group transforms, opacity, and masks. Printable artwork is distinct from cut/score/stitch/engrave/guide roles.
 
 Text properties include point/area mode, font/style/size, leading, tracking, pair kerning, baseline, word spacing, alignment, paragraph spacing/indents, case, ligatures, direction, hyphenation, and vertical alignment. Shaping uses typographic points internally and millimeters at the artwork boundary. Font controls expose capabilities reported by the installed face.
@@ -52,7 +53,7 @@ While editing text, select characters and change typography controls to format t
 
 ## MCP
 
-There are 44 tools. Artwork tools include `form_get_artwork`, `form_edit_artwork`, `form_component`, `form_swatch`, `form_link_artwork`, `form_extract_artwork`, `form_list_fonts`, `form_font_features`, `form_convert_to_paths`, `form_boolean_artwork`, `form_export_artwork`, `form_import_svg`, and `form_edit_path`. They use the native model/editing functions. Tool discovery provides exact schemas and ranges.
+There are 45 tools. Artwork tools include `form_get_artwork`, `form_edit_artwork`, `form_component`, `form_swatch`, `form_appearance`, `form_link_artwork`, `form_extract_artwork`, `form_list_fonts`, `form_font_features`, `form_convert_to_paths`, `form_boolean_artwork`, `form_export_artwork`, `form_import_svg`, and `form_edit_path`. They use the native model/editing functions. Tool discovery provides exact schemas and ranges.
 
 ```json
 {"name":"form_list_fonts","arguments":{"query":"Georgia"}}
@@ -68,7 +69,7 @@ See [precise paths and transformed native text](path-editing.md) for direct sele
 
 ## Remaining work
 
-- Transform origins; effects/blending; full gradient-stop workflows; image crop/adjustments and drag/drop.
+- Transform origins; full gradient-stop workflows; image crop/adjustments and drag/drop.
 - Full SVG interchange fidelity beyond the [supported import subset](svg-import.md), including filters, patterns, gradient strokes, advanced SVG text, and external resources. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
 - Alternate-glyph selection, multiple non-exclusive feature settings, complete case treatment within mixed-character editing, reusable text styles, tabs/lists, linked text frames, sequential multi-page documents, and publication layout.
 - Color-managed production output, CMYK/spot separations, full preflight, role-specific production exports, advanced surface placement, and the complete demonstration/acceptance suite.

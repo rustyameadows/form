@@ -17,7 +17,7 @@ def node(x, y, **handles):
 def main():
     client = Client()
     try:
-        assert len(client.rpc("tools/list")["tools"]) == 44
+        assert len(client.rpc("tools/list")["tools"]) == 45
         project = client.call("form_create_project", {"name": "Curve atelier"})
         frame = client.call("form_add_object", {"recipe_id": "artboard", "name": "Lines with intent / 8 × 10", "parameters": {"width": 203.2, "depth": 254}})
         group = element("group", 18, 40, 165, 60, name="Transformed typography", contentSize={"x": 165, "y": 60}, rotation=-9,

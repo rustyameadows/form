@@ -54,9 +54,10 @@ private struct ArtworkInput: View {
   func commit() {
     guard draft != lastCommitted else { return }
     do {
-      onCommit(try parser(draft))
+      let value = try parser(draft)
       error = false
       lastCommitted = draft
+      onCommit(value)
     } catch { self.error = true }
   }
   var body: some View {
@@ -163,6 +164,7 @@ struct ArtworkInspector: View {
               Divider()
             }
             appearanceControls
+            AppearanceInspector(session: session, element: e)
             if e.kind == "rectangle" {
               ArtworkUnitField("Corner radius", value: e.cornerRadius ?? 0, unit: session.unit) {
                 v in session.update { $0.cornerRadius = max(0, v) }

@@ -79,6 +79,21 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
     return (1, e.path?.contours.reduce(0) { $0 + $1.nodes.count } ?? 0)
   }
   for e in artwork.elements {
+    guard AppearanceCommands.blendModes.contains(e.blendMode ?? "normal") else {
+      throw FormError.invalid("Unsupported artwork blend mode.")
+    }
+    if let blur = e.blur {
+      guard blur.radius.isFinite, (0...50).contains(blur.radius) else {
+        throw FormError.invalid("Blur radius must be 0–50 mm.")
+      }
+    }
+    if let shadow = e.shadow {
+      try validateColor(shadow.color)
+      guard finite([shadow.offset.x, shadow.offset.y], 100), shadow.blur.isFinite,
+        (0...50).contains(shadow.blur), (0...1).contains(shadow.opacity) else {
+        throw FormError.invalid("Check shadow offsets (±100 mm), blur (0–50 mm), and opacity (0–1).")
+      }
+    }
     if let ref = e.component {
       guard e.kind == "group", e.booleanOperation == nil, e.contentSize != nil,
         (children[e.id] ?? []).isEmpty, (ref.overrides?.count ?? 0) <= 500,

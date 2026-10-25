@@ -84,6 +84,10 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var name: String?
   public var rotation: Double?
   public var opacity: Double?
+  public var blendMode: String?
+  public var isolatedBlending: Bool?
+  public var blur: ArtworkBlur?
+  public var shadow: ArtworkShadow?
   public var hidden: Bool?
   public var locked: Bool?
   public var parentID: UUID?
@@ -363,7 +367,9 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var minimumSchemaVersion: Int {
     max(
       schemaVersion,
-      swatches?.isEmpty == false || objects.contains { $0.artwork?.referencedSwatches.isEmpty == false }
+      objects.contains { $0.artwork?.requiresSchemaEight == true }
+        ? 8
+        : swatches?.isEmpty == false || objects.contains { $0.artwork?.referencedSwatches.isEmpty == false }
         ? 7
         : objects.contains { $0.componentDefinition == true || $0.artwork?.elements.contains { $0.component != nil } == true }
         ? 6

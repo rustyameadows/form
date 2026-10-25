@@ -84,6 +84,13 @@ public enum ArtworkCommands {
       var ungrouped = Set<UUID>()
       for group in roots where group.kind == "group" {
         guard group.component == nil else { throw FormError.invalid("Detach the component before ungrouping its artwork.") }
+        if group.booleanOperation == nil {
+          guard !group.hasActiveEffects, group.isolatedBlending != true,
+            group.blendMode == nil || group.blendMode == "normal",
+            (group.opacity ?? 1) == 1 else {
+            throw FormError.invalid("Keep this group to preserve its combined appearance, or reset its opacity, blending, and effects before ungrouping.")
+          }
+        }
         if group.booleanOperation != nil, group.clipID != nil,
           result.elements.contains(where: { $0.parentID == group.id && $0.clipID != nil })
         {

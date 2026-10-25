@@ -71,15 +71,45 @@ extension StudioStore {
             )
           ]
           : try TypographyEngine.outlinePaintRuns(e)
+        let wrap = paths.count > 1 && (e.hasActiveEffects || (e.blendMode ?? "normal") != "normal"
+          || (e.opacity ?? 1) < 1 || (e.fillOpacity ?? 1) < 1)
+        var container: ArtworkElement?
+        if wrap {
+          var group = ArtworkElement(kind: "group", x: 0, y: 0, width: e.width, height: e.height, color: e.color)
+          group.name = e.title + " · outlines"
+          group.parentID = e.parentID
+          group.contentSize = .init(e.width, e.height)
+          group.affine = e.localTransform
+          group.opacity = e.opacity
+          group.blendMode = e.blendMode
+          group.blur = e.blur
+          group.shadow = e.shadow
+          group.clipID = e.clipID
+          group.productionRole = e.productionRole
+          container = group
+          created.append(group)
+          if (e.fillOpacity ?? 1) < 1 {
+            var fills = ArtworkElement(kind: "group", x: 0, y: 0, width: e.width, height: e.height)
+            fills.name = "Glyph fills"
+            fills.contentSize = .init(e.width, e.height)
+            fills.parentID = group.id
+            fills.opacity = e.fillOpacity
+            container = fills
+            created.append(fills)
+          }
+        }
         for (path, color, swatchID) in paths {
           var vector = try VectorGeometry.element(
-            from: path, color: color, name: e.title + " · outlines", parentID: e.parentID)
-          vector.affine = e.localTransform
-          vector.opacity = e.opacity
-          vector.fillOpacity = stroke ? e.stroke?.opacity : e.fillOpacity
+            from: path, color: color, name: e.title + " · outlines", parentID: container?.id ?? e.parentID)
+          vector.affine = wrap ? .init() : e.localTransform
+          vector.opacity = wrap ? nil : e.opacity
+          vector.fillOpacity = wrap ? nil : stroke ? e.stroke?.opacity : e.fillOpacity
           vector.fillSwatchID = swatchID
+          vector.blendMode = wrap ? nil : e.blendMode
+          vector.blur = wrap ? nil : e.blur
+          vector.shadow = wrap ? nil : e.shadow
           vector.productionRole = e.productionRole
-          vector.clipID = e.clipID
+          vector.clipID = wrap ? nil : e.clipID
           created.append(vector)
         }
         let index = next.elements.firstIndex { $0.id == e.id }!
@@ -108,7 +138,7 @@ extension StudioStore {
       try p.setArtwork(next, for: object.id)
     }
     return [
-      "selected_elements": created.map { $0.id.uuidString },
+      "selected_elements": next.selectionRoots(Set(created.map(\.id))).map { $0.id.uuidString },
       "elements": try created.map { try jsonObject($0) },
     ]
   }
@@ -165,6 +195,9 @@ extension StudioStore {
         outlineText: arguments["outline_text"] as? Bool ?? true
       ).write(to: url, atomically: true, encoding: .utf8)
     case "pdf":
+      let dpi = arguments["dpi"] as? Double ?? 300
+      guard dpi.isFinite, (36...1200).contains(dpi) else { throw FormError.invalid("Choose 36–1200 DPI for PDF effects.") }
+      try ArtworkRenderer.validateAppearanceOutput(art, assets: assets, pixelsPerMM: dpi / 25.4)
       var box = CGRect(
         x: 0, y: 0, width: width * TypographyEngine.pointsPerMM,
         height: height * TypographyEngine.pointsPerMM)
@@ -178,7 +211,7 @@ extension StudioStore {
       context.scaleBy(x: TypographyEngine.pointsPerMM, y: -TypographyEngine.pointsPerMM)
       NSGraphicsContext.saveGraphicsState()
       NSGraphicsContext.current = NSGraphicsContext(cgContext: context, flipped: true)
-      ArtworkRenderer.draw(art, width: width, height: height, assets: assets)
+      ArtworkRenderer.draw(art, width: width, height: height, assets: assets, effectScale: dpi / 25.4)
       NSGraphicsContext.restoreGraphicsState()
       context.endPDFPage()
       context.closePDF()
@@ -191,6 +224,7 @@ extension StudioStore {
         throw FormError.invalid(
           "Choose 36–1200 DPI with no more than 100 megapixels or 16000 pixels per edge.")
       }
+      try ArtworkRenderer.validateAppearanceOutput(art, assets: assets, pixelsPerMM: dpi / 25.4)
       let image = ArtworkRenderer.image(
         art, width: width, height: height, assets: assets, pixelsPerMM: dpi / 25.4,
         opaqueBackground: format == "jpeg")

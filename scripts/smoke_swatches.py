@@ -27,7 +27,7 @@ def text(x, y, w, h, value, size=12, name=None):
 def main():
     c = Client()
     try:
-        assert len(c.rpc('tools/list')['tools']) == 44
+        assert len(c.rpc('tools/list')['tools']) == 45
         status = c.call('form_status'); assert '/.local/' in status['library_path']
         project = c.call('form_create_project', {'name': 'CHROMA · A shared palette'})
         colors = {}
@@ -149,7 +149,7 @@ def main():
             outlined_ids=[e['id'] for e in outlined['elements']], box_ids=[o['id'] for o in boxes],
             benchmark_elements=600, palette_update_median_ms=round(statistics.median(times),2),
             palette_update_p95_ms=round(sorted(times)[18],2), performance_status=perf_status,
-            checks='44 tools; six sRGB swatches; fills/strokes/gradient stops/background/text spans; linked component overrides; linked glyph outlines; metadata-only updates; pixel-identical delete/undo; batch rollback; physical exports; schema-7 reopen; 600-element palette edits',
+            checks='45 tools; six sRGB swatches; fills/strokes/gradient stops/background/text spans; linked component overrides; linked glyph outlines; metadata-only updates; pixel-identical delete/undo; batch rollback; physical exports; schema-7 reopen; 600-element palette edits',
             status=c.call('form_status'))
         (OUTPUT / 'swatches-baseline.json').write_text(json.dumps(c.call('form_get_project'), indent=2))
         (OUTPUT / 'swatches-report.json').write_text(json.dumps(report, indent=2))

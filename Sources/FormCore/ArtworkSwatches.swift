@@ -42,7 +42,7 @@ extension Artwork {
   public var referencedSwatches: Set<UUID> {
     var ids = Set([backgroundSwatchID].compactMap { $0 })
     for e in elements {
-      ids.formUnion([e.fillSwatchID, e.stroke?.swatchID, e.component?.colorSwatchID].compactMap { $0 })
+      ids.formUnion([e.fillSwatchID, e.stroke?.swatchID, e.component?.colorSwatchID, e.shadow?.swatchID].compactMap { $0 })
       ids.formUnion(e.gradient?.stops.compactMap(\.swatchID) ?? [])
       ids.formUnion(e.textRuns?.compactMap(\.swatchID) ?? [])
       ids.formUnion(e.component?.overrides?.compactMap(\.colorSwatchID) ?? [])
@@ -90,6 +90,7 @@ extension Project {
       var e = result.elements[i]
       resolve(&e.fillSwatchID, &e.color)
       if var stroke = e.stroke { resolve(&stroke.swatchID, &stroke.color); e.stroke = stroke }
+      if var shadow = e.shadow { resolve(&shadow.swatchID, &shadow.color); e.shadow = shadow }
       if var gradient = e.gradient {
         for index in gradient.stops.indices {
           var stop = gradient.stops[index]
@@ -199,7 +200,7 @@ public enum SwatchCommands {
     target: String = "fill", swatchID: UUID?, stopID: UUID? = nil, partID: UUID? = nil,
     location: Int? = nil, length: Int? = nil) throws {
     guard let object = project.objects.first(where: { $0.id == objectID }),
-      ["fill", "stroke", "gradient_stop", "background", "component_part", "text_range"].contains(target)
+      ["fill", "stroke", "shadow", "gradient_stop", "background", "component_part", "text_range"].contains(target)
     else { throw FormError.invalid("Choose artwork and a supported swatch target.") }
     guard target != "background" || object.supportsArtworkFace else {
       throw FormError.invalid("This object has no supported artwork background.")
@@ -253,10 +254,17 @@ public enum SwatchCommands {
           guard !["text", "image"].contains(e.kind), e.component == nil else {
             throw FormError.invalid("Choose vector strokes; edit a component's source for its stroke.")
           }
+          if swatchID == nil && e.stroke == nil { continue }
           var stroke = e.stroke ?? .init(color: e.color)
           stroke.color = color ?? current.stroke?.color ?? current.color
           stroke.swatchID = swatchID
           e.stroke = stroke
+        case "shadow":
+          if swatchID == nil && e.shadow == nil { continue }
+          var shadow = e.shadow ?? .init()
+          shadow.color = color ?? current.shadow?.color ?? shadow.color
+          shadow.swatchID = swatchID
+          e.shadow = shadow
         case "gradient_stop":
           guard let stopID, let index = e.gradient?.stops.firstIndex(where: { $0.id == stopID }) else {
             throw FormError.invalid("Choose an existing gradient stop.")

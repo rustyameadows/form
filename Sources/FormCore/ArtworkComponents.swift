@@ -84,8 +84,10 @@ public enum ComponentCommands {
       sourceArt.elements[i].clipID = nil
     }
     let copiedRoots = sourceArt.selectionRoots(rootIDs)
-    let bounds = copiedRoots.dropFirst().reduce(sourceArt.bounds(of: copiedRoots[0])) {
-      $0.union(sourceArt.bounds(of: $1))
+    let visual = sourceArt.elements.contains { $0.hasActiveEffects }
+    func box(_ e: ArtworkElement) -> Rect2 { visual ? sourceArt.visualBounds(of: e) : sourceArt.bounds(of: e) }
+    let bounds = copiedRoots.dropFirst().reduce(box(copiedRoots[0])) {
+      $0.union(box($1))
     }
     for i in sourceArt.elements.indices where rootIDs.contains(sourceArt.elements[i].id) {
       ArtworkCommands.translate(&sourceArt.elements[i], dx: -bounds.x, dy: -bounds.y)

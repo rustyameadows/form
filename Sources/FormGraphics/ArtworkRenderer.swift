@@ -2,6 +2,18 @@ import AppKit
 import FormCore
 
 @MainActor public enum ArtworkRenderer {
+  public static func validateAppearanceOutput(_ source: Artwork, assets: URL, pixelsPerMM: Double) throws {
+    let art = try BooleanGeometry.materialized(source)
+    let tree = ArtworkRenderTree(art, assets: assets, production: true, excluding: [])
+    for e in art.elements where e.hasActiveEffects && tree.displayed(e) {
+      let box = tree.localBounds(e)
+      let density = pixelsPerMM * AppearanceRenderer.scale(art.worldTransform(e).cg)
+      let width = ceil(box.width * density), height = ceil(box.height * density)
+      guard width.isFinite, height.isFinite, width <= Double(AppearanceRenderer.maximumEdge),
+        height <= Double(AppearanceRenderer.maximumEdge), width * height <= Double(AppearanceRenderer.maximumPixels)
+      else { throw FormError.invalid("An effect is too large at this resolution. Lower the export DPI, reduce the layer size, or export SVG to retain vector effects.") }
+    }
+  }
   private static let images: NSCache<NSString, NSImage> = {
     let cache = NSCache<NSString, NSImage>()
     cache.countLimit = 100
@@ -10,7 +22,7 @@ import FormCore
   }()
   public static func draw(
     _ source: Artwork, width: Double, height: Double, assets: URL, production: Bool = true,
-    excluding: Set<UUID> = []
+    excluding: Set<UUID> = [], effectScale: Double? = nil
   ) {
     guard let context = NSGraphicsContext.current?.cgContext else { return }
     let art: Artwork
@@ -33,34 +45,9 @@ import FormCore
     context.setFillColor(
       FormColor.color(art.background).withAlphaComponent(art.backgroundOpacity ?? 1).cgColor)
     context.fill(CGRect(x: 0, y: 0, width: width, height: height))
-    let masks = Set(art.elements.compactMap(\.clipID))
-    let byID = Dictionary(uniqueKeysWithValues: art.elements.map { ($0.id, $0) })
-    let children = Dictionary(grouping: art.elements, by: \.parentID)
-    func drawChildren(_ parent: UUID?) {
-      for e in children[parent] ?? []
-      where e.hidden != true && !excluding.contains(e.id)
-        && !masks.contains(e.id)
-      {
-        if production, let role = e.productionRole, role != "artwork" { continue }
-        context.saveGState()
-        if let clipID = e.clipID, let mask = byID[clipID] {
-          var t = mask.localTransform.cg
-          context.addPath(VectorGeometry.path(mask).copy(using: &t) ?? VectorGeometry.path(mask))
-          context.clip(using: mask.path?.evenOdd == true ? .evenOdd : .winding)
-        }
-        context.concatenate(e.localTransform.cg)
-        context.setAlpha(e.opacity ?? 1)
-        if e.kind == "group" {
-          context.beginTransparencyLayer(auxiliaryInfo: nil)
-          drawChildren(e.id)
-          context.endTransparencyLayer()
-        } else {
-          drawElement(e, assets: assets, context: context)
-        }
-        context.restoreGState()
-      }
-    }
-    drawChildren(nil)
+    ArtworkRenderTree(art, assets: assets, production: production, excluding: excluding)
+      .drawChildren(nil, context: context,
+        effectScale: effectScale.map { $0 / max(0.001, AppearanceRenderer.scale(context)) })
     context.restoreGState()
   }
   public static func drawElement(_ e: ArtworkElement, assets: URL, context: CGContext) {
@@ -68,12 +55,12 @@ import FormCore
     if e.kind == "text" {
       guard e.fillEnabled != false else { return }
       if let opacity = e.fillOpacity, opacity < 1 {
-        context.beginTransparencyLayer(auxiliaryInfo: nil)
         context.saveGState()
         context.setAlpha(opacity)
+        context.beginTransparencyLayer(auxiliaryInfo: nil)
         TypographyEngine.draw(e, in: context)
-        context.restoreGState()
         context.endTransparencyLayer()
+        context.restoreGState()
       } else {
         TypographyEngine.draw(e, in: context)
       }

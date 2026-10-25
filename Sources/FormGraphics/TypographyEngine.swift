@@ -60,7 +60,7 @@ public enum FormColor {
     return c
   }()
   private static var builds = 0, hits = 0
-  public static func invalidateFonts() { cache.removeAllObjects() }
+  public static func invalidateFonts() { cache.removeAllObjects(); AppearanceRenderer.invalidateFonts() }
   public static var diagnostics: [String: Any] {
     ["layout_builds": builds, "layout_cache_hits": hits, "layout_cache_limit": 800]
   }

@@ -226,6 +226,18 @@ public final class OperationEngine {
         }
       }
       return result
+    case "form_appearance":
+      let id = try objectID()
+      let ids = try idsArgument(a["element_ids"])
+      let command = a["command"] as? String ?? "update"
+      guard ["update", "reset"].contains(command) else { throw FormError.invalid("Unknown appearance command.") }
+      guard a["values"] == nil || a["values"] is [String: Any] else { throw FormError.invalid("Provide appearance values as an object.") }
+      try edit("Artwork appearance", source: source,
+        coalescing: source == "Studio" ? "appearance-\(id)-\(ids.map(\.uuidString).sorted().joined())" : nil) { p in
+        try AppearanceCommands.apply(in: &p, objectID: id, ids: ids,
+          values: a["values"] as? [String: Any] ?? [:], reset: command == "reset")
+      }
+      return ["selected_elements": ids.map(\.uuidString)]
     case "form_swatch":
       let command = try string("command")
       if command == "list" { return ["swatches": try jsonObject(requireProject().swatches ?? [])] }
@@ -571,7 +583,7 @@ public final class OperationEngine {
         "form_set_artwork", "form_add_note", "form_create_recipe", "form_delete_objects",
         "form_edit_artwork",
         "form_edit_path",
-        "form_boolean_artwork", "form_convert_to_paths", "form_component", "form_swatch",
+        "form_boolean_artwork", "form_convert_to_paths", "form_component", "form_swatch", "form_appearance",
         "form_link_artwork", "form_extract_artwork",
       ])
       guard operations.allSatisfy({ allowed.contains($0["name"] as? String ?? "") }) else {

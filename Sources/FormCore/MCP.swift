@@ -161,13 +161,25 @@ public enum MCP {
           ], "required": ["elementID"], "additionalProperties": false]],
         ], required: ["command"]),
       tool(
+        "form_appearance",
+        "Edit non-destructive layer appearance on selected roots, including groups and linked components. update patches opacity (0–1), blend_mode, group isolate, blur (enabled/radius in mm), and shadow (enabled, x/y offset in mm, blur in mm, color, opacity). null removes blur or shadow. reset restores normal blending, full opacity, and no effects. Disabled effects retain settings. Clipping is applied after effects. Native and MCP edits share undo, validation, and atomic batches.",
+        [
+          "command": ["type": "string", "enum": ["update", "reset"]],
+          "object_id": objectID, "element_ids": ["type": "array", "items": string],
+          "values": ["type": "object", "properties": [
+            "opacity": number, "blend_mode": ["type": "string", "enum": AppearanceCommands.blendModes], "isolate": ["type": "boolean"],
+            "blur": ["type": ["object", "null"], "properties": ["enabled": ["type": "boolean"], "radius": number], "additionalProperties": false],
+            "shadow": ["type": ["object", "null"], "properties": ["enabled": ["type": "boolean"], "x": number, "y": number, "blur": number, "color": string, "opacity": number], "additionalProperties": false],
+          ], "additionalProperties": false],
+        ], required: ["object_id", "element_ids"]),
+      tool(
         "form_swatch",
-        "Manage the project's named sRGB palette. list reads swatches; create/update changes a named color. assign binds artwork fill, stroke, gradient_stop, background, component_part, or a UTF-16 text_range. Changes update every reference across source documents and physical faces. detach freezes that reference's current appearance; delete freezes all references before removing the color. Instance fill binding is a component override. All mutations share native undo and atomic batches; stored consumer resources are unchanged by palette color updates.",
+        "Manage the project's named sRGB palette. list reads swatches; create/update changes a named color. assign binds artwork fill, stroke, shadow, gradient_stop, background, component_part, or a UTF-16 text_range. Changes update every reference across source documents and physical faces. detach freezes that reference's current appearance; delete freezes all references before removing the color. Instance fill binding is a component override. All mutations share native undo and atomic batches; stored consumer resources are unchanged by palette color updates.",
         [
           "command": ["type": "string", "enum": ["list", "create", "update", "assign", "detach", "delete"]],
           "swatch_id": string, "name": string, "color": string, "object_id": objectID,
           "element_ids": ["type": "array", "items": string],
-          "target": ["type": "string", "enum": ["fill", "stroke", "gradient_stop", "background", "component_part", "text_range"]],
+          "target": ["type": "string", "enum": ["fill", "stroke", "shadow", "gradient_stop", "background", "component_part", "text_range"]],
           "stop_id": string, "part_id": string, "location": ["type": "integer"], "length": ["type": "integer"],
         ], required: ["command"]),
       tool(

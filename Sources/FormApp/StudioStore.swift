@@ -134,6 +134,7 @@ enum TableTool: String, CaseIterable {
               status["artwork_renderer"] = self.artworkSession.canvas?.diagnostics ?? [:]
               status["boolean_geometry"] = BooleanGeometry.diagnostics
               status["component_resolution"] = ComponentCommands.resolutionDiagnostics
+              status["appearance_renderer"] = AppearanceRenderer.diagnostics
               result = status
             }
             if !readOnly {
