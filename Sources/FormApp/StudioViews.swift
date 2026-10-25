@@ -245,7 +245,13 @@ struct HomeView: View {
         }
         if search.isEmpty {
           VStack(alignment: .leading, spacing: 14) {
-            SectionLabel("START WITH A STUDY")
+            HStack {
+              SectionLabel("START WITH A STUDY")
+              Spacer()
+              Menu("All studies") {
+                ForEach(Samples.templates) { template in Button(template.title) { store.createProject(template: template.id) } }
+              }.font(.system(size: 11)).fixedSize(horizontal: true, vertical: false).accessibilityLabel("Browse all studies")
+            }
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 270), spacing: 22)], spacing: 22) {
               ForEach(Samples.templates.prefix(3)) { StudyCard(template: $0) }
             }

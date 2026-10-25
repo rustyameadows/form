@@ -31,15 +31,15 @@ The goal service currently permits status changes but cannot rewrite the text of
 
 ### B. Credible professional 2D canvas — specification Phase 1
 
-Current progress: the native canvas, physical frames, typography, vector operations, and shared renderer are implemented. [Editor capabilities and gaps](2d-editor.md) and [validation evidence](validation.md) distinguish working features from unfinished acceptance requirements; these broad checkpoint items remain open until their complete scope is demonstrated.
+**Credible-canvas checkpoint complete.** The seven foundation items below are demonstrated by the existing focused native/MCP workflows and the complete [AFFINITIES 15-step design workflow](design-acceptance.md), with [recorded evidence](evidence/design-acceptance.json), exact native Undo and actual app-relaunch/reopen. The 680-test integration passes. [Editor capabilities and gaps](2d-editor.md) and [validation evidence](validation.md) retain the limits; the complete typography, vector, publication and physical-integration requirements in later phases remain active.
 
-- [ ] Independent artwork documents and multiple physical artboards/pages; unit conversion for mm, cm, inches, and points; presets and exact custom dimensions.
-- [ ] Smooth pan, pinch/keyboard zoom, sharp rendering, rulers, numeric/draggable guides, grid, smart snapping, and configurable nudges.
-- [ ] Selection, multiple selection, resize, rotate, flip, aspect locking, transform origin, alignment, distribution, matching size, and exact transforms.
-- [ ] Layer naming, visibility, locking, ordering, nested grouping, group transforms, and editing within a group.
-- [ ] Select/direct-select, text, shapes, pen/Bézier, line/polygon/star, image placement, pan/zoom, eyedropper, and frame tools with conventional shortcuts.
-- [ ] Solid fill, stroke controls, basic path editing, native installed font discovery, point and area text, font/style/size/leading/tracking/alignment, and live surface updates.
-- [ ] Undo/redo, autosave/reopen, native text input, accessible controls, SVG/PDF/PNG output, and a typography-heavy label or dial completed directly in FORM.
+- [x] Independent artwork documents and multiple physical artboards/pages; unit conversion for mm, cm, inches, and points; presets and exact custom dimensions.
+- [x] Smooth pan, pinch/keyboard zoom, sharp rendering, rulers, numeric/draggable guides, grid, smart snapping, and configurable nudges.
+- [x] Selection, multiple selection, resize, rotate, flip, aspect locking, transform origin, alignment, distribution, matching size, and exact transforms.
+- [x] Layer naming, visibility, locking, ordering, nested grouping, group transforms, and editing within a group.
+- [x] Select/direct-select, text, shapes, pen/Bézier, line/polygon/star, image placement, pan/zoom, eyedropper, and frame tools with conventional shortcuts.
+- [x] Solid fill, stroke controls, basic path editing, native installed font discovery, point and area text, font/style/size/leading/tracking/alignment, and live surface updates.
+- [x] Undo/redo, autosave/reopen, native text input, accessible controls, SVG/PDF/PNG output, and a typography-heavy label or dial completed directly in FORM.
 
 ### C. Deep typography — specification Phase 2
 

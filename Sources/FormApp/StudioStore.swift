@@ -279,6 +279,7 @@ enum TableTool: String, CaseIterable {
     isolated = []
     scene?.resetCamera()
     if template == "blank" { showSurface(.artwork) }
+    if template == "affinities" { presentAffinitiesStudy() }
   }
   func openProject(_ id: UUID) {
     do {
