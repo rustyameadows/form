@@ -37,6 +37,11 @@ private struct RenderSignature: Equatable {
   let keyLight = SCNNode()
   let floorNode = SCNNode()
   weak var store: StudioStore?
+  // Preview cameras share navigation preferences without owning the document camera.
+  var navigationPreferences: (() -> CameraPreferences)?
+  var currentNavigationPreferences: CameraPreferences {
+    navigationPreferences?() ?? store?.cameraPreferences ?? CameraPreferences()
+  }
   weak var view: TableSCNView?
   private var projectID: UUID?
   private var nodes: [UUID: SCNNode] = [:]
@@ -52,6 +57,9 @@ private struct RenderSignature: Equatable {
       "object_nodes": nodes.count, "geometry_builds": geometryBuilds,
       "last_sync_ms": lastSyncMilliseconds,
       "renders_continuously": view?.rendersContinuously ?? false, "preferred_fps": 60,
+      "orbit_direction": currentNavigationPreferences.orbitDirection.rawValue,
+      "orbit_speed": currentNavigationPreferences.effectiveOrbitSpeed,
+      "reverse_scroll_zoom": currentNavigationPreferences.reverseScrollZoom,
     ]
   }
   var camera = CameraState()
@@ -272,7 +280,8 @@ private struct RenderSignature: Equatable {
   }
   func orbit(dx: CGFloat, dy: CGFloat) {
     camera = CameraNavigation.orbited(
-      camera, dx: Double(dx), dy: Double(dy), viewportHeight: Double(view?.bounds.height ?? 700))
+      camera, dx: Double(dx), dy: Double(dy), viewportHeight: Double(view?.bounds.height ?? 700),
+      preferences: currentNavigationPreferences)
     updateCamera()
   }
   func zoom(_ delta: Double) {
@@ -582,8 +591,9 @@ private struct RenderSignature: Equatable {
       controller?.pan(dx: event.scrollingDeltaX, dy: event.scrollingDeltaY)
       controller?.store?.cameraChanged()
     } else {
-      let precision = event.hasPreciseScrollingDeltas ? 0.35 : 1.0
-      controller?.zoom(-Double(event.scrollingDeltaY) * precision)
+      let preferences = controller?.currentNavigationPreferences ?? CameraPreferences()
+      controller?.zoom(preferences.scrollZoomDelta(
+        Double(event.scrollingDeltaY), precise: event.hasPreciseScrollingDeltas))
     }
   }
   override func magnify(with event: NSEvent) {

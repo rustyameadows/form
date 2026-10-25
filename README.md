@@ -93,7 +93,7 @@ See [Printing architecture, setup, and research](docs/printing.md) for profiles,
 | Print preparation | `⌘P` |
 | Return to Home | `⇧⌘H` |
 
-The Table starts in Orbit mode so navigation cannot accidentally move objects. Pan follows the pointer in screen space, the horizon stays upright, and orbit preserves the current perspective or orthographic projection. See [camera controls and validation](docs/camera-navigation.md).
+The Table starts in Orbit mode so navigation cannot accidentally move objects. The camera follows the drag by default; the sliders button in the camera bar offers **Move camera / Turn object**, orbit speed, and reverse scroll zoom. Preferences persist across launches and apply to the Table, Studio, object inset, and print preview. Pan follows the pointer in screen space, the horizon stays upright, and orbit preserves the current perspective or orthographic projection. See [camera controls and validation](docs/camera-navigation.md).
 
 ## Develop and validate
 

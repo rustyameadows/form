@@ -1,7 +1,7 @@
 import Foundation
 
 /// Drag deltas use AppKit's view coordinates: right and up are positive.
-/// The scene follows the pointer, while the camera keeps a stable, upright horizon.
+/// Direction is explicit; the camera always keeps a stable, upright horizon.
 public enum CameraNavigation {
   public static let minimumDistance = 0.05
   public static let maximumDistance = 300.0
@@ -12,13 +12,15 @@ public enum CameraNavigation {
   }
 
   public static func orbited(
-    _ camera: CameraState, dx: Double, dy: Double, viewportHeight: Double
+    _ camera: CameraState, dx: Double, dy: Double, viewportHeight: Double,
+    preferences: CameraPreferences = CameraPreferences()
   ) -> CameraState {
     guard dx.isFinite, dy.isFinite, viewportHeight.isFinite else { return camera }
     var result = camera
     let speed = Double.pi / max(240, viewportHeight)
-    result.azimuth = (camera.azimuth - dx * speed).remainder(dividingBy: 2 * .pi)
-    result.elevation = elevation(camera.elevation - dy * speed)
+      * preferences.effectiveOrbitSpeed * preferences.orbitSign
+    result.azimuth = (camera.azimuth + dx * speed).remainder(dividingBy: 2 * .pi)
+    result.elevation = elevation(camera.elevation + dy * speed)
     return result
   }
 

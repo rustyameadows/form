@@ -21,6 +21,8 @@ The initial renderer uses **SceneKit backed by Metal**, rather than the brief's 
 
 Physical dimensions and placement are stored in millimeters. Rendering converts 100 mm to one scene unit. Camera state, workspace placement, recipe parameters, and artwork are separate values.
 
+Local camera navigation preferences live in UserDefaults, outside the project and its undo history. `CameraPreferences` defines orbit direction, bounded speed, and wheel reversal. Table and Studio controllers read the store directly; artwork and print preview cameras read the same live preferences through a closure without owning or changing the document camera. Mouse navigation updates camera transforms without rebuilding object geometry.
+
 The renderer updates an object only when its geometry, material, or artwork fingerprint changes. Moving an object updates its transform. Shared node templates reuse immutable geometry and texture data; caches have bounded costs. The view targets 60 Hz while interacting and does not render continuously while idle. Paper stacks cap the number of represented sheet edges independently of the real sheet count.
 
 ## Parametric objects

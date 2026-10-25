@@ -401,10 +401,15 @@ struct ArtworkLayers: View {
 }
 
 struct ObjectPreview: NSViewRepresentable {
+  @EnvironmentObject var store: StudioStore
   let object: ProductObject
   let project: Project
   let assets: URL
-  func makeCoordinator() -> TableSceneController { TableSceneController() }
+  func makeCoordinator() -> TableSceneController {
+    let controller = TableSceneController()
+    controller.navigationPreferences = { [weak store] in store?.cameraPreferences ?? CameraPreferences() }
+    return controller
+  }
   func makeNSView(context: Context) -> TableSCNView {
     let view = TableSCNView(frame: .zero)
     view.controller = context.coordinator

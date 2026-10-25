@@ -433,6 +433,7 @@ struct EmptyTableView: View {
 
 struct CameraControls: View {
   @EnvironmentObject var store: StudioStore
+  @State private var showingNavigation = false
   var body: some View {
     HStack(spacing: 3) {
       ForEach(TableTool.allCases, id: \.self) { tool in
@@ -467,9 +468,64 @@ struct CameraControls: View {
         store.scene?.focusSelection()
       }.disabled(store.selected.isEmpty)
       IconButton("Toggle 100 mm grid", symbol: "grid") { store.showGrid.toggle() }
+      Rectangle().fill(Palette.line).frame(width: 1, height: 20).padding(.horizontal, 5)
+      IconButton("Camera navigation settings", symbol: "slider.horizontal.3") {
+        showingNavigation.toggle()
+      }.popover(isPresented: $showingNavigation, arrowEdge: .top) {
+        CameraNavigationPanel { showingNavigation = false }.environmentObject(store)
+          .onExitCommand { showingNavigation = false }
+      }
     }.padding(6).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 13)).overlay(
       RoundedRectangle(cornerRadius: 13).strokeBorder(.white.opacity(0.75))
     ).shadow(color: .black.opacity(0.06), radius: 14, y: 5)
+  }
+}
+
+private struct CameraNavigationPanel: View {
+  @EnvironmentObject var store: StudioStore
+  let close: () -> Void
+  var body: some View {
+    VStack(alignment: .leading, spacing: 18) {
+      HStack {
+        Text("Camera navigation").font(.system(size: 16, weight: .semibold))
+        Spacer()
+        Button("Done", action: close).keyboardShortcut(.cancelAction)
+          .font(.system(size: 11)).buttonStyle(.borderless)
+      }
+      VStack(alignment: .leading, spacing: 8) {
+        Text("Orbit direction").font(.system(size: 12, weight: .medium))
+        Picker("Orbit direction", selection: $store.cameraPreferences.orbitDirection) {
+          Text("Move camera").tag(CameraPreferences.OrbitDirection.moveCamera)
+          Text("Turn object").tag(CameraPreferences.OrbitDirection.turnObject)
+        }.pickerStyle(.segmented).labelsHidden()
+        Text(store.cameraPreferences.orbitDirection == .moveCamera
+          ? "Drag right to move the camera right. Drag up to look from above."
+          : "Drag as if turning the object with your hand. The near surface follows the pointer.")
+          .font(.system(size: 11)).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+      }
+      VStack(alignment: .leading, spacing: 8) {
+        HStack {
+          Text("Orbit speed").font(.system(size: 12, weight: .medium))
+          Spacer()
+          Text("\(Int(store.cameraPreferences.effectiveOrbitSpeed * 100))%")
+            .font(.system(size: 11, design: .monospaced)).foregroundStyle(.secondary)
+        }
+        Slider(value: $store.cameraPreferences.orbitSpeed, in: 0.25...2, step: 0.05)
+          .accessibilityLabel("Orbit speed")
+        Text("Hold Shift while dragging for finer control.")
+          .font(.system(size: 11)).foregroundStyle(.secondary)
+      }
+      Toggle("Reverse scroll zoom", isOn: $store.cameraPreferences.reverseScrollZoom)
+        .font(.system(size: 12))
+      Divider()
+      VStack(alignment: .leading, spacing: 7) {
+        Label("Pan: H or Space-drag", systemImage: "hand.draw")
+        Label("Focus object: select, then F", systemImage: "viewfinder")
+        Label("Fit everything: ⌘0", systemImage: "arrow.up.left.and.arrow.down.right")
+      }.font(.system(size: 11)).foregroundStyle(.secondary)
+      Button("Reset navigation settings") { store.cameraPreferences = CameraPreferences() }
+        .font(.system(size: 11)).buttonStyle(.link)
+    }.padding(22).frame(width: 310)
   }
 }
 

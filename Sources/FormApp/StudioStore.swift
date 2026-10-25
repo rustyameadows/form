@@ -31,7 +31,7 @@ enum TableTool: String, CaseIterable {
   var hint: String {
     switch self {
     case .orbit: return "Drag to orbit · Click to select · Space-drag to pan"
-    case .pan: return "Drag to pan · O to orbit · Scroll up to zoom in"
+    case .pan: return "Drag to pan · O to orbit · Scroll to zoom"
     case .move: return "Drag objects to move · Drag empty space to orbit · Space-drag to pan"
     }
   }
@@ -55,6 +55,14 @@ enum TableTool: String, CaseIterable {
   @Published var svgImport: SVGImportReview?
   @Published var showGrid = false
   @Published var tableTool: TableTool = .orbit
+  @Published var cameraPreferences: CameraPreferences {
+    didSet {
+      if let data = try? JSONEncoder().encode(cameraPreferences) {
+        cameraDefaults.set(data, forKey: "FORM.cameraNavigation")
+      }
+    }
+  }
+  private let cameraDefaults: UserDefaults
   @Published var isolated: Set<UUID> = []
   @Published var studioPreset = "Daylight"
   @Published var previewVersion = 0
@@ -75,7 +83,11 @@ enum TableTool: String, CaseIterable {
   var primary: ProductObject? { selected.first }
   var materials: [FormCore.Material] { library.materials + (project?.materials ?? []) }
 
-  init(repository suppliedRepository: ProjectRepository? = nil, seedLibrary: Bool = true) {
+  init(repository suppliedRepository: ProjectRepository? = nil, seedLibrary: Bool = true,
+    cameraDefaults: UserDefaults = .standard) {
+    self.cameraDefaults = cameraDefaults
+    cameraPreferences = cameraDefaults.data(forKey: "FORM.cameraNavigation")
+      .flatMap { try? JSONDecoder().decode(CameraPreferences.self, from: $0) } ?? CameraPreferences()
     do {
       repository = try suppliedRepository ?? ProjectRepository()
       engine = OperationEngine(repository: repository)

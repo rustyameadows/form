@@ -5,6 +5,49 @@ import XCTest
 @testable import FormGraphics
 
 final class CameraNavigationTests: XCTestCase {
+  func testCameraDirectionMovesTheCameraWithTheDragAndObjectDirectionReversesBothAxes() {
+    var start = CameraState()
+    start.azimuth = 0; start.elevation = 0.4
+    var preferences = CameraPreferences()
+    let camera = CameraNavigation.orbited(start, dx: 90, dy: 60, viewportHeight: 800,
+      preferences: preferences)
+    XCTAssertGreaterThan(camera.azimuth, start.azimuth)
+    XCTAssertGreaterThan(camera.elevation, start.elevation)
+    let node = SCNNode()
+    SceneCamera.position(node, using: camera)
+    XCTAssertGreaterThan(Double(node.position.x), start.target.x)
+    XCTAssertGreaterThan(Double(node.position.y), start.target.y + start.distance * sin(start.elevation))
+    preferences.orbitDirection = .turnObject
+    let object = CameraNavigation.orbited(start, dx: 90, dy: 60, viewportHeight: 800,
+      preferences: preferences)
+    XCTAssertEqual(camera.azimuth - start.azimuth, start.azimuth - object.azimuth, accuracy: 1e-12)
+    XCTAssertEqual(camera.elevation - start.elevation, start.elevation - object.elevation, accuracy: 1e-12)
+    XCTAssertEqual(camera.target, start.target)
+    XCTAssertEqual(camera.distance, start.distance)
+  }
+
+  func testOrbitSpeedIsBoundedAndDoesNotChangePanOrZoom() throws {
+    let camera = CameraState()
+    var preferences = CameraPreferences()
+    preferences.orbitSpeed = 0.5
+    let slow = CameraNavigation.orbited(camera, dx: 120, dy: 0, viewportHeight: 800,
+      preferences: preferences)
+    preferences.orbitSpeed = 1
+    let fast = CameraNavigation.orbited(camera, dx: 120, dy: 0, viewportHeight: 800,
+      preferences: preferences)
+    XCTAssertEqual(fast.azimuth - camera.azimuth, 2 * (slow.azimuth - camera.azimuth), accuracy: 1e-12)
+    preferences.orbitSpeed = .nan; XCTAssertEqual(preferences.effectiveOrbitSpeed, 0.75)
+    preferences.orbitSpeed = -10; XCTAssertEqual(preferences.effectiveOrbitSpeed, 0.25)
+    preferences.orbitSpeed = 1e9; XCTAssertEqual(preferences.effectiveOrbitSpeed, 2)
+    XCTAssertEqual(preferences.scrollZoomDelta(10, precise: false), -10)
+    XCTAssertEqual(preferences.scrollZoomDelta(10, precise: true), -3.5)
+    preferences.reverseScrollZoom = true
+    XCTAssertEqual(preferences.scrollZoomDelta(10, precise: false), 10)
+    XCTAssertEqual(preferences.scrollZoomDelta(10, precise: true), 3.5)
+    XCTAssertEqual(try JSONDecoder().decode(CameraPreferences.self,
+      from: JSONEncoder().encode(preferences)), preferences)
+  }
+
   func testRepeatedOrbitAndPanKeepTheActualCameraHorizonUpright() {
     let node = SCNNode()
     var state = CameraState()
@@ -31,8 +74,10 @@ final class CameraNavigationTests: XCTestCase {
     camera.azimuth = 0
     camera.elevation = 0.7
     camera.projection = "orthographic"
-    let right = CameraNavigation.orbited(camera, dx: 80, dy: 0, viewportHeight: 800)
-    let up = CameraNavigation.orbited(camera, dx: 0, dy: 80, viewportHeight: 800)
+    var preferences = CameraPreferences()
+    preferences.orbitDirection = .turnObject; preferences.orbitSpeed = 1
+    let right = CameraNavigation.orbited(camera, dx: 80, dy: 0, viewportHeight: 800, preferences: preferences)
+    let up = CameraNavigation.orbited(camera, dx: 0, dy: 80, viewportHeight: 800, preferences: preferences)
     // A point on the near face of the subject follows the pointer in both axes.
     let point = Vector3(camera.target.x, camera.target.y, camera.target.z + 0.3)
     let start = project(point, camera, width: 1200, height: 800)
@@ -41,10 +86,10 @@ final class CameraNavigationTests: XCTestCase {
     XCTAssertEqual(right.projection, "orthographic")
     XCTAssertEqual(right.target, camera.target)
     XCTAssertEqual(right.distance, camera.distance)
-    let undo = CameraNavigation.orbited(right, dx: -80, dy: 0, viewportHeight: 800)
+    let undo = CameraNavigation.orbited(right, dx: -80, dy: 0, viewportHeight: 800, preferences: preferences)
     XCTAssertEqual(undo.azimuth, camera.azimuth, accuracy: 1e-12)
     XCTAssertEqual(undo.elevation, camera.elevation, accuracy: 1e-12)
-    let resized = CameraNavigation.orbited(camera, dx: 160, dy: 0, viewportHeight: 1600)
+    let resized = CameraNavigation.orbited(camera, dx: 160, dy: 0, viewportHeight: 1600, preferences: preferences)
     XCTAssertEqual(right.azimuth, resized.azimuth, accuracy: 1e-12)
   }
 
@@ -78,12 +123,12 @@ final class CameraNavigationTests: XCTestCase {
 
   func testOrbitCanInspectBelowTheTableWithoutFlippingTheHorizon() {
     let camera = CameraState()
-    let below = CameraNavigation.orbited(camera, dx: 0, dy: 300, viewportHeight: 700)
+    let below = CameraNavigation.orbited(camera, dx: 0, dy: -300, viewportHeight: 700)
     XCTAssertLessThan(below.elevation, 0)
-    let pole = CameraNavigation.orbited(camera, dx: 1e9, dy: -1e9, viewportHeight: 700)
+    let pole = CameraNavigation.orbited(camera, dx: 1e9, dy: 1e9, viewportHeight: 700)
     XCTAssertLessThan(pole.elevation, .pi / 2)
     XCTAssertLessThanOrEqual(abs(pole.azimuth), .pi)
-    let bottom = CameraNavigation.orbited(camera, dx: 0, dy: 1e9, viewportHeight: 700)
+    let bottom = CameraNavigation.orbited(camera, dx: 0, dy: -1e9, viewportHeight: 700)
     XCTAssertGreaterThan(bottom.elevation, -.pi / 2)
   }
 

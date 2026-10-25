@@ -15,6 +15,7 @@ The goal service currently permits status changes but cannot rewrite the text of
 ### A. Native 3D studio and fabrication foundation
 
 - [x] Continuous Metal-backed Table; native title bar; contextual inspectors; camera, focus, isolation, selection, movement, grouping, variants, and iterations.
+- [x] Address reversed-feeling camera navigation with saved Move camera / Turn object conventions, adjustable orbit speed, wheel reversal, shared preview behavior, and actual computer-use mouse validation.
 - [x] Home previews of saved scenes; modular packages; autosave; undo/redo; imported assets; Studio materials and equipment.
 - [x] Parametric constructions and custom recipes; linked artwork; PDF/SVG/PNG/component exports; local MCP registration and shared command engine.
 - [x] Dedicated Print workspace with physical P1S bed, component selection, orientation, scale, filament choice, slicing options, layer preview, and local outputs.
