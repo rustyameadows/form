@@ -176,7 +176,7 @@ struct ArtworkInspector: View {
                 }
               }
             }
-            if e.kind == "path" { pathControls.disabled(session.selection.count != 1) }
+            if session.elements.allSatisfy({ $0.kind == "path" }) { pathControls }
             if e.kind == "image" { imageControls(e) }
             Divider()
             HStack {
@@ -268,6 +268,10 @@ struct ArtworkInspector: View {
           Button("Group") { session.execute("group") }
         }.font(.system(size: 9))
         Menu("Combine paths") {
+          Button("Make compound path") { session.editPath("combine") }
+            .disabled(!session.elements.allSatisfy { $0.kind == "path" })
+          Button("Convert shapes to paths") { session.convert("shape") }
+          Divider()
           Button("Union") { session.boolean("union") }
           Button("Subtract") { session.boolean("subtract") }
           Button("Intersect") { session.boolean("intersect") }
@@ -586,7 +590,7 @@ struct ArtworkInspector: View {
       }.font(.system(size: 9))
       if let e, let path = e.path {
         Text(
-          "\(path.contours.reduce(0){$0+$1.nodes.count}) nodes · \(session.nodes.count) selected"
+          "\(session.elements.reduce(0) { $0 + ($1.path?.contours.flatMap(\.nodes).count ?? 0) }) nodes · \(session.nodes.count) selected"
         ).font(.system(size: 9)).foregroundStyle(Palette.secondary)
         if let bounds = session.nodeBounds {
           HStack(spacing: 10) {
@@ -627,18 +631,28 @@ struct ArtworkInspector: View {
           Button("Reverse direction") { session.editPath("reverse") }
           Button("Select all nodes") {
             session.tool = .direct
-            session.nodes = Set(path.contours.flatMap(\.nodes).map(\.id))
+            session.nodes = Set(
+              session.elements.flatMap { $0.path?.contours.flatMap(\.nodes).map(\.id) ?? [] })
             session.canvas?.window?.makeFirstResponder(session.canvas)
           }
         }.font(.system(size: 9))
         Toggle(
           "Closed contours",
           isOn: Binding(
-            get: { path.contours.allSatisfy(\.closed) },
+            get: { session.elements.allSatisfy { $0.path?.contours.allSatisfy(\.closed) == true } },
             set: { value in
               session.editPath(value ? "close" : "open")
             })
         ).font(.system(size: 10)).toggleStyle(.checkbox)
+        if session.elements.count == 1, path.contours.count > 1 {
+          Button("Release compound path") { session.editPath("release") }.font(.system(size: 10))
+        }
+        if session.elements.count > 1 {
+          Text(
+            "Shift-click endpoints across paths, then Join. The frontmost path supplies the appearance."
+          )
+          .font(.system(size: 9)).foregroundStyle(Palette.secondary)
+        }
       }
     }
   }

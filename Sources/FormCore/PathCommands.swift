@@ -3,9 +3,16 @@ import Foundation
 /// Deterministic Bézier editing in path coordinates. Numeric transforms are in
 /// physical artwork coordinates, including every ancestor transform.
 public enum PathCommands {
+  public static func refreshNodeIDs(in element: inout ArtworkElement) {
+    guard var path = element.path else { return }
+    for c in path.contours.indices {
+      for n in path.contours[c].nodes.indices { path.contours[c].nodes[n].id = UUID() }
+    }
+    element.path = path
+  }
   public static let names = [
     "insert", "delete", "split", "join", "reverse", "open", "close", "corner", "smooth",
-    "symmetric", "transform",
+    "symmetric", "transform", "combine", "release",
   ]
   @discardableResult public static func apply(
     _ command: String, to element: inout ArtworkElement, nodes ids: Set<UUID>,
@@ -272,7 +279,7 @@ public enum PathCommands {
 
   /// Refit the editable viewport to exact cubic extrema while retaining the same
   /// parent-space geometry. This keeps object handles correct after node edits.
-  public static func normalize(_ element: inout ArtworkElement) {
+  public static func normalize(_ element: inout ArtworkElement, preservingPaint: Bool = false) {
     guard var path = element.path, !path.contours.isEmpty else { return }
     let oldTransform = element.localTransform
     let scale = Affine2.scale(element.width / path.width, element.height / path.height)
@@ -290,6 +297,16 @@ public enum PathCommands {
     }
     path.width = max(0.001, box.width)
     path.height = max(0.001, box.height)
+    if preservingPaint, var gradient = element.gradient {
+      gradient.start = .init(
+        gradient.start.x * element.width / path.width,
+        gradient.start.y * element.height / path.height)
+      gradient.end = .init(
+        gradient.end.x * element.width / path.width,
+        gradient.end.y * element.height / path.height)
+      gradient.transform = shift.followed(by: gradient.transform ?? .init())
+      element.gradient = gradient
+    }
     element.width = path.width
     element.height = path.height
     element.path = path

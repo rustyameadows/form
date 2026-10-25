@@ -158,9 +158,10 @@ public enum MCP {
         ], required: ["object_id", "command"]),
       tool(
         "form_edit_path",
-        "Edit Bézier nodes using the native direct-selection operations: insert (subdivide after one node at t), delete, split, join two open endpoints within a compound path, reverse, open, close, corner, smooth, symmetric, or transform. Transform matrix uses physical artwork coordinates, including parent transforms. Node IDs come from form_get_artwork. Returns selected node IDs; all changes are atomic and undoable.",
+        "Edit one path with element_id, or multiple paths with element_ids. Operations: insert, delete, split, join two open endpoints (including separate sibling paths), reverse, open, close, corner, smooth, symmetric, transform, combine into an even-odd compound, or release compound contours. Combine/join uses the frontmost path's appearance and retains its ID; combine requires a shared parent and clipping mask. Transform matrices use physical artwork coordinates, including parent transforms. Node IDs come from form_get_artwork. Returns selected element/node IDs; all changes are atomic and undoable.",
         [
           "object_id": objectID, "element_id": string,
+          "element_ids": ["type": "array", "items": string],
           "operation": ["type": "string", "enum": PathCommands.names],
           "node_ids": ["type": "array", "items": string], "t": number,
           "matrix": [
@@ -169,7 +170,7 @@ public enum MCP {
               "a": number, "b": number, "c": number, "d": number, "tx": number, "ty": number,
             ], "additionalProperties": false,
           ],
-        ], required: ["object_id", "element_id", "operation"]),
+        ], required: ["object_id", "operation"]),
       tool(
         "form_list_fonts",
         "Search installed Mac font families and their actual faces. No font upload is required.",
@@ -180,10 +181,10 @@ public enum MCP {
         ["font_name": string], required: ["font_name"], readOnly: true),
       tool(
         "form_convert_to_paths",
-        "Convert selected shaped text or strokes to editable Bézier paths. Text uses Core Text glyph runs, ligatures, kerning, and variations. Original source elements are retained hidden for recovery.",
+        "Convert selected shaped text, geometric shapes, or strokes to editable Bézier paths. Text uses Core Text glyph runs, ligatures, kerning, and variations. Shape conversion preserves geometry, transforms, and appearance. Original source elements are retained hidden for recovery.",
         [
           "object_id": objectID, "element_ids": ["type": "array", "items": string],
-          "mode": ["type": "string", "enum": ["text", "stroke"]],
+          "mode": ["type": "string", "enum": ["text", "stroke", "shape"]],
         ], required: ["object_id", "element_ids"]),
       tool(
         "form_boolean_artwork",

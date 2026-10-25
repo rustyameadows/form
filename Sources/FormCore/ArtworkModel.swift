@@ -377,7 +377,7 @@ extension Artwork {
     while let e = current, !visited.contains(e.id) {
       visited.insert(e.id)
       if e.locked == true { return true }
-      current = elements.first { $0.id == e.parentID }
+      current = e.parentID.flatMap { id in elements.first { $0.id == id } }
     }
     return false
   }
@@ -414,7 +414,7 @@ extension Artwork {
     while let item = parent, !visited.contains(item.id) {
       visited.insert(item.id)
       if item.hidden == true || item.locked == true { return false }
-      parent = elements.first { $0.id == item.parentID }
+      parent = item.parentID.flatMap { id in elements.first { $0.id == id } }
     }
     return true
   }

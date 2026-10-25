@@ -187,8 +187,17 @@ public final class OperationEngine {
       return ["selected_elements": selected.map(\.uuidString)]
     case "form_edit_path":
       let id = try objectID()
-      guard let elementID = UUID(uuidString: try string("element_id")) else {
-        throw FormError.invalid("Invalid path element ID.")
+      let elementIDs: Set<UUID>
+      if let raw = a["element_ids"] {
+        guard a["element_id"] == nil, let values = raw as? [String], !values.isEmpty else {
+          throw FormError.invalid("Provide either element_id or a nonempty element_ids array.")
+        }
+        elementIDs = try idsArgument(raw)
+      } else {
+        guard let elementID = UUID(uuidString: try string("element_id")) else {
+          throw FormError.invalid("Invalid path element ID.")
+        }
+        elementIDs = [elementID]
       }
       let operation = try string("operation")
       var nodes = Set<UUID>()
@@ -206,26 +215,14 @@ public final class OperationEngine {
         coalescing: source == "Studio" && interaction == "artwork-\(id)" ? "artwork-\(id)" : nil
       ) { p in
         guard let object = p.objects.first(where: { $0.id == id }),
-          var art = p.editableArtwork(object),
-          let index = art.elements.firstIndex(where: { $0.id == elementID })
+          var art = p.editableArtwork(object)
         else {
           throw FormError.missing("Path element not found.")
         }
-        guard !art.isLocked(art.elements[index]) else {
-          throw FormError.invalid("Unlock this path first.")
-        }
-        let world = art.worldTransform(art.elements[index])
-        selectedNodes = try PathCommands.apply(
-          operation, to: &art.elements[index], nodes: nodes, arguments: a, world: world)
-        if art.elements[index].path?.contours.isEmpty == true {
-          art.elements.remove(at: index)
-          for i in art.elements.indices where art.elements[i].clipID == elementID {
-            art.elements[i].clipID = nil
-          }
-        } else {
-          selectedElements = [elementID]
-        }
-        try validateArtwork(art)
+        let result = try PathCommands.edit(
+          operation, artwork: &art, elements: elementIDs, nodes: nodes, arguments: a)
+        selectedNodes = result.nodes
+        selectedElements = result.elements
         try p.setArtwork(art, for: id)
       }
       return [

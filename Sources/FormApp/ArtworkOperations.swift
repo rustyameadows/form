@@ -40,10 +40,22 @@ extension StudioStore {
     var created: [ArtworkElement] = []
     if name == "form_convert_to_paths" {
       let stroke = args["mode"] as? String == "stroke"
+      let shape = args["mode"] as? String == "shape"
       let all = art.descendants(of: ids)
       for e in art.elements
-      where all.contains(e.id) && (stroke ? e.stroke != nil : e.kind == "text") && e.hidden != true
+      where all.contains(e.id) && e.hidden != true
+        && (shape
+          ? ["rectangle", "ellipse", "line", "polygon", "star"].contains(e.kind)
+          : stroke ? e.stroke != nil : e.kind == "text")
       {
+        guard !art.isLocked(e) else { throw FormError.invalid("Unlock the selected layers first.") }
+        if shape {
+          created.append(try VectorGeometry.convertedShape(e))
+          let index = next.elements.firstIndex { $0.id == e.id }!
+          next.elements[index].hidden = true
+          next.elements[index].name = "\(e.title.prefix(470)) · editable source"
+          continue
+        }
         let paths: [(CGPath, String)] =
           stroke
           ? [(try VectorGeometry.expandedStroke(e), e.stroke!.color)]
@@ -64,8 +76,11 @@ extension StudioStore {
       }
       guard !created.isEmpty else {
         throw FormError.invalid(
-          stroke
-            ? "Select a vector object with a stroke." : "Select text with visible outline glyphs.")
+          shape
+            ? "Select geometric shapes to convert to editable paths."
+            : stroke
+              ? "Select a vector object with a stroke." : "Select text with visible outline glyphs."
+        )
       }
     } else if name == "form_boolean_artwork" {
       let selected = art.selectionRoots(ids)

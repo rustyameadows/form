@@ -47,7 +47,7 @@ Current progress: the native canvas, physical frames, typography, vector operati
 
 ### D. Mature vector editing — specification Phase 3
 
-Current progress: [precise compound-path operations and transformed native text](path-editing.md) are implemented and validated. The [editable SVG importer and original ORBIT illustration](svg-import.md) now demonstrate native paths/text/groups, affine gradients, clipping, physical units, original assets, explicit fidelity review, and linked product faces. Joining separate path elements, broader SVG fidelity, and the remaining vector-system requirements still need completion.
+Current progress: [precise compound-path operations and transformed native text](path-editing.md) are implemented and validated. The [editable SVG importer and original ORBIT illustration](svg-import.md) now demonstrate native paths/text/groups, affine gradients, clipping, physical units, original assets, explicit fidelity review, and linked product faces. Compound creation/release, geometric shape conversion, multi-path node transforms, and endpoint joining across separate objects are now implemented and validated through the [Contour atelier workflow](path-editing.md). Broader SVG fidelity and the remaining vector-system requirements still need completion.
 
 - [ ] Complete Bézier node/handle operations, including corner/smooth, add/delete, join/split, close/open, reverse, numeric and multi-node transforms.
 - [ ] Union/subtract/intersect/exclude/divide where supported; non-destructive boolean groups and flattening; compound paths with holes.

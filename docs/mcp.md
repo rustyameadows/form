@@ -45,9 +45,9 @@ build/FORM.app/Contents/MacOS/form-mcp --call form_add_object '{"recipe_id":"lam
 | `form_link_artwork`, `form_extract_artwork` | Independent source documents, physical fitting, and appearance-preserving detachment |
 | `form_get_artwork`, `form_edit_artwork` | Inspect and edit artwork elements, layers, groups, and transforms |
 | `form_import_svg` | Review and import local SVG into native editable artwork, retaining originals and reporting fidelity differences |
-| `form_edit_path` | Precise Bézier insertion/deletion, split/join, reverse, node modes, and physical node transforms |
+| `form_edit_path` | Precise Bézier edits, cross-object endpoint joining, compound creation/release, and multi-path physical node transforms |
 | `form_list_fonts`, `form_font_features` | Installed faces, supported font features, and variable axes |
-| `form_convert_to_paths`, `form_boolean_artwork` | Editable shaped glyph/stroke outlines and vector booleans |
+| `form_convert_to_paths`, `form_boolean_artwork` | Editable shaped glyph/stroke/shape outlines and vector booleans |
 | `form_export_artwork` | Actual-size SVG/PDF and DPI-controlled PNG/JPEG frame or selection exports |
 | `form_add_note` | Design decisions and open questions |
 | `form_set_view` | Camera presets, focus, isolation, and workspace modes |

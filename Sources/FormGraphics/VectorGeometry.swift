@@ -148,4 +148,28 @@ public enum VectorGeometry {
       strokingWithWidth: stroke.width, lineCap: cap(stroke.cap), lineJoin: join(stroke.join),
       miterLimit: stroke.miter ?? 10)
   }
+  public static func convertedShape(_ source: ArtworkElement) throws -> ArtworkElement {
+    guard ["rectangle", "ellipse", "line", "polygon", "star"].contains(source.kind) else {
+      throw FormError.invalid("Select a geometric shape to convert to a path.")
+    }
+    let geometry = try element(from: path(source), color: source.color)
+    var path = geometry.path!
+    for c in path.contours.indices {
+      path.contours[c].nodes = path.contours[c].nodes.map {
+        PathCommands.transformed($0, by: .translation(geometry.x, geometry.y))
+      }
+    }
+    path.width = source.width
+    path.height = source.height
+    var result = source
+    result.id = UUID()
+    result.kind = "path"
+    result.name = "\(source.title.prefix(470)) · path"
+    result.path = path
+    if source.kind == "line" {
+      result.fillEnabled = false
+      result.stroke = source.stroke ?? .init(color: source.color)
+    }
+    return result
+  }
 }

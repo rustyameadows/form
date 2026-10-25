@@ -102,6 +102,17 @@ import SwiftUI
         }.keyboardShortcut("o", modifiers: [.command, .shift]).disabled(store.mode != .artwork)
         Button("Outline Stroke") { store.artworkSession.convert("stroke") }.disabled(
           store.mode != .artwork)
+        Button("Convert Shapes to Paths") { store.artworkSession.convert("shape") }.disabled(
+          store.mode != .artwork)
+        Divider()
+        Button("Make Compound Path") { store.artworkSession.editPath("combine") }
+          .keyboardShortcut("8").disabled(
+            store.mode != .artwork || store.artworkSession.selection.count < 2)
+        Button("Release Compound Path") { store.artworkSession.editPath("release") }
+          .keyboardShortcut("8", modifiers: [.command, .option]).disabled(store.mode != .artwork)
+        Button("Join Selected Endpoints") { store.artworkSession.editPath("join") }
+          .keyboardShortcut("j").disabled(
+            store.mode != .artwork || store.artworkSession.nodes.count != 2)
         Divider()
         Button("Show / Hide Guides") {
           store.artworkSession.mutate { $0.showGuides = !($0.showGuides ?? true) }

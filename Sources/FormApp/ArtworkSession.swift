@@ -50,8 +50,13 @@ enum ArtworkTool: String, CaseIterable {
   weak var canvas: VectorCanvasView?
   @Published var objectID: UUID?
   @Published var linkedTargetID: UUID?
-  @Published var selection = Set<UUID>() { didSet { store?.objectWillChange.send() } }
-  @Published var nodes = Set<UUID>()
+  @Published var selection = Set<UUID>() {
+    didSet {
+      pruneNodeSelection()
+      store?.objectWillChange.send()
+    }
+  }
+  @Published var nodes = Set<UUID>() { didSet { store?.objectWillChange.send() } }
   @Published var scopeID: UUID?
   @Published var tool: ArtworkTool = .select {
     didSet { if tool != oldValue { canvas?.finishPath() } }
@@ -75,10 +80,14 @@ enum ArtworkTool: String, CaseIterable {
   var primary: ArtworkElement? { elements.first }
   var unit: PhysicalUnit { art.unit ?? .mm }
   var nodeBounds: Rect2? {
-    guard let e = primary, let path = e.path else { return nil }
-    let t = art.worldTransform(e).followed(by: .scale(e.width / path.width, e.height / path.height))
-    let points = path.contours.flatMap(\.nodes).filter { nodes.contains($0.id) }.map {
-      t.apply($0.anchor)
+    let artwork = art
+    let points = elements.flatMap { e -> [Point2] in
+      guard let path = e.path else { return [] }
+      let t = artwork.worldTransform(e).followed(
+        by: .scale(e.width / path.width, e.height / path.height))
+      return path.contours.flatMap(\.nodes).filter { nodes.contains($0.id) }.map {
+        t.apply($0.anchor)
+      }
     }
     guard let first = points.first else { return nil }
     return points.dropFirst().reduce(.init(first.x, first.y, 0, 0)) {
@@ -87,10 +96,10 @@ enum ArtworkTool: String, CaseIterable {
   }
   func editPath(_ operation: String, _ arguments: [String: Any] = [:]) {
     canvas?.finishText()
-    guard let store, let object, let e = primary, selection.count == 1 else { return }
+    guard let store, let object, !selection.isEmpty else { return }
     var args = arguments
     args["object_id"] = object.id.uuidString
-    args["element_id"] = e.id.uuidString
+    args["element_ids"] = selection.map(\.uuidString)
     args["node_ids"] = nodes.map(\.uuidString)
     args["operation"] = operation
     do {
@@ -100,6 +109,7 @@ enum ArtworkTool: String, CaseIterable {
       selection = Set(
         (result?["selected_elements"] as? [String] ?? []).compactMap(UUID.init(uuidString:)))
       store.changed()
+      canvas?.window?.makeFirstResponder(canvas)
     } catch { store.error = error.localizedDescription }
   }
   func transformNodes(_ transform: Affine2) {
@@ -172,8 +182,7 @@ enum ArtworkTool: String, CaseIterable {
     return result
   }
   func reconcile() {
-    if let primary = store?.primary, primary.supportsArtworkFace
-    {
+    if let primary = store?.primary, primary.supportsArtworkFace {
       let owner = store?.project?.artworkOwner(primary) ?? primary
       linkedTargetID = owner.id == primary.id ? nil : primary.id
       if objectID != owner.id {
@@ -190,6 +199,7 @@ enum ArtworkTool: String, CaseIterable {
     }
     if previewObject?.recipeID != "sleeve" { dieline = false }
     selection.formIntersection(Set(art.elements.map(\.id)))
+    pruneNodeSelection()
     if scopeID != nil && !art.elements.contains(where: { $0.id == scopeID }) { scopeID = nil }
   }
   func activate(_ id: UUID) {
@@ -201,6 +211,12 @@ enum ArtworkTool: String, CaseIterable {
     selection = []
     scopeID = nil
     store?.select(id)
+  }
+  private func pruneNodeSelection() {
+    guard !nodes.isEmpty else { return }
+    let available = Set(elements.flatMap { $0.path?.contours.flatMap(\.nodes).map(\.id) ?? [] })
+    let remaining = nodes.intersection(available)
+    if nodes != remaining { nodes = remaining }
   }
   func choose(_ ids: Set<UUID>) {
     selection = ids
@@ -448,6 +464,7 @@ enum ArtworkTool: String, CaseIterable {
     let pasted = source.map { e -> ArtworkElement in
       var value = e
       value.id = mapping[e.id]!
+      PathCommands.refreshNodeIDs(in: &value)
       value.parentID = e.parentID.flatMap { mapping[$0] } ?? scopeID
       value.clipID = e.clipID.flatMap { mapping[$0] }
       if e.parentID == nil {

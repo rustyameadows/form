@@ -49,6 +49,7 @@ public enum ArtworkCommands {
       for var element in art.elements where all.contains(element.id) {
         let original = element.id
         element.id = mapping[original]!
+        PathCommands.refreshNodeIDs(in: &element)
         if let parent = element.parentID, let id = mapping[parent] { element.parentID = id }
         if let clip = element.clipID, let id = mapping[clip] { element.clipID = id }
         if roots.contains(where: { $0.id == original }) {

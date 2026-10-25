@@ -7,7 +7,7 @@ This is a tested foundation, **not completion of the expanded professional 2D sp
 ## Build and domain tests
 
 - Debug and optimized app builds succeeded; the app bundle contains the native executable, custom icon, Info.plist, and stdio MCP executable and is ad hoc signed.
-- `bash scripts/test.sh`: **90 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, shared artwork source graphs, atomic batch rollback, undo/redo, immutable package round trips, typography/outline alignment, actual SceneKit camera projections, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, and absence of hardware command tools.
+- `bash scripts/test.sh`: **100 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, shared artwork source graphs, atomic batch rollback, undo/redo, immutable package round trips, typography/outline alignment, actual SceneKit camera projections, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, and absence of hardware command tools.
 - No model/API credentials or third-party Swift packages are required.
 
 ## Real MCP and persistence
@@ -183,3 +183,23 @@ Native text entry edited the imported wordmark while a read-only MCP preflight r
 The ordinary library was restored to Home with **Soft light** active. Its entire saved project, including all objects, artwork, camera, materials, notes, and history, matched the pre-validation snapshot exactly. The final build also passed the existing `smoke_mcp.py`, `smoke_artwork.py`, and `smoke_paths.py` flows. No printer connection or print command was attempted.
 
 Reports are retained under `.local/validation`, including `svg-import-report.json`, `svg-native-node-observation.json`, and `user-project-restored-svg.json`. The [SVG guide](svg-import.md) records the supported subset and remaining fidelity limits. Full publication, color-managed production, advanced vector features, physical integrations, and the full demonstration suite remain active requirements.
+
+## Compound paths and cross-object node editing — October 24, 2026
+
+The suite now passes **100 tests**, including ten compound-path tests. Geometry checks retain anchors and cubic handles under nested rotation, shear, scale, and reflection. They exercise all four cross-path endpoint orientations, coincident endpoint merging, distinct endpoint joining, multi-path physical transforms/deletion, fresh duplicate node IDs, locked/masked/invalid atomic rejection, linked-source undo/reopen, and affine gradient-field preservation through combine/release. Native pixel comparisons verify compound holes and shape-to-path appearance, including implicit line strokes.
+
+`python3 scripts/smoke_compound.py` passed through the packaged app's real MCP server in an isolated `CompoundLibrary`. **Contour atelier** converts two parametric ellipses to paths, combines a gradient ring with a true hole, releases/undoes its contours, and joins two separate cubic paths through a physical consumer. Clay and chalk product editions share the same source; only the source's object resource changes. Rejected edits leave the project unchanged, and saved-project reopen retains the exact artwork and relationships. The existing single-path and SVG smoke flows also pass.
+
+The actual exported PDF measures **566.929 × 396.850 points**, matching its **200 × 140 mm** document. PNG is **1181 × 827 pixels at 150 DPI**. SVG contains ordinary editable paths. Poppler rendered the PDF, and its text, gradient, compound opening, joined curves, and physical composition were visually reviewed.
+
+Twenty saved MCP transforms across **300 paths / 600 selected nodes** measured **29.01 ms median / 29.50 ms p95** locally. This includes the actual transport and document save; it is not a sustained native gesture frame-rate measurement or a guarantee at the model limits.
+
+Native computer-use checks covered:
+
+- Direct selection and Shift-click of endpoints on different paths; selection alone preserved the exact artwork.
+- A real mouse drag moved both selected anchors and their handles by approximately **4.839 × 2.419 mm**. Unselected anchors stayed fixed and both physical consumers resolved the updated source.
+- **Join**, `⌘J`, `⌥⌘8` release, and `⌘8` compound creation worked. Releasing filled the former hole; recombining restored it. A stale shortcut-enablement issue was corrected, and Undo now removes node selections that no longer belong to the selected path.
+- A real affine-gradient start-handle drag moved it approximately **4.779 × 2.369 mm**, preserving path geometry, stops, transform, and the opposite handle.
+- Native Undo restored the exact source definition after all these edits. The live 3D preview updated during the operations.
+
+Detailed observations are in `.local/validation/compound-native-observations.json` and `compound-report.json`. The ordinary library is restored and checked against `user-project-before-compound.json`. No printer connection or print command is part of this workflow. See [path editing](path-editing.md) for commands, frontmost-appearance behavior, clipping constraints, and remaining vector work.

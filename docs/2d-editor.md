@@ -6,7 +6,7 @@ The editor is a working part of the expanded [2D specification](2d-design-typogr
 
 - Multiple physically sized sheets on one canvas: presets/custom dimensions, editable names and dimensions, independent placement, mm/cm/in/pt, pan, pinch zoom, fit, rulers, grid, numeric and ruler-dragged guides, guide locks, snapping, and nudges.
 - Selection/marquee, exact transforms, resize/rotation handles, flips, alignment/distribution, matching size, nested groups/scoped editing, layer naming/order/visibility/locks, duplication, and clipboard operations.
-- Rounded rectangles, ellipses, lines, polygons, stars, pen-created Bézier paths, direct anchor/handle editing, corner/smooth/symmetric modes, shape-preserving subdivision/split/join, reversal, node marquee selection, exact multi-node transforms, open/closed contours, and deletion. Union/subtraction/intersection/exclusion produce editable paths and retain hidden source shapes.
+- Rounded rectangles, ellipses, lines, polygons, stars, pen-created Bézier paths, direct anchor/handle editing, corner/smooth/symmetric modes, shape-preserving subdivision/split/join across separate paths, compound creation/release, reversal, node marquee selection, exact multi-node transforms, open/closed contours, and deletion. Union/subtraction/intersection/exclusion produce editable paths and retain hidden source shapes.
 - Solid fills, linear/radial gradients, stroke widths/caps/joins/dashes, opacity, vector clipping masks, images with original assets preserved, replacement, and effective-DPI inspection.
 - Installed-font search and previews, families/styles, favorites/recents, explicit missing-font assignments, actual Core Text feature and variable-axis discovery, native rich text, and selected-character formatting with UTF-16 ranges.
 - Core Text shaping and editable glyph outlines, including fallback fonts, ligatures, variable settings, underline, and strikethrough. Outlining retains hidden editable text. Canvas, 3D textures, PDF, and raster outputs share a renderer.
@@ -38,6 +38,7 @@ Create an artwork sheet from **Object**, or use **Artwork → New Artwork Frame*
 | Zoom | Pinch, zoom menu, `⌘+` / `⌘−` |
 | Group / ungroup | `⌘G` / `⇧⌘G` |
 | Import SVG artwork | `⇧⌘I` |
+| Join endpoints / make compound / release compound | `⌘J` / `⌘8` / `⌥⌘8` |
 | Convert text to outlines | `⇧⌘O` |
 | Toggle guides / grid | `⌘;` / `⌘'` |
 
@@ -63,7 +64,7 @@ See [precise paths and transformed native text](path-editing.md) for direct sele
 
 ## Remaining work
 
-- Joining separate path elements into a compound; non-destructive boolean groups/division; transform origins; reusable vector components/overrides; swatches; effects/blending; full gradient-stop workflows; image crop/adjustments and drag/drop.
+- Non-destructive boolean groups/division; transform origins; reusable vector components/overrides; swatches; effects/blending; full gradient-stop workflows; image crop/adjustments and drag/drop.
 - Full SVG interchange fidelity beyond the [supported import subset](svg-import.md), including filters, patterns, gradient strokes, advanced SVG text, and external resources. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
 - Alternate-glyph selection, multiple non-exclusive feature settings, complete case treatment within mixed-character editing, reusable text styles, tabs/lists, linked text frames, sequential multi-page documents, and publication layout.
 - Color-managed production output, CMYK/spot separations, full preflight, role-specific production exports, advanced surface placement, and the complete demonstration/acceptance suite.

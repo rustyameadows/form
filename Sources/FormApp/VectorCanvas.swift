@@ -435,25 +435,28 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     context.addLine(to: rotate)
     context.strokePath()
     dot(rotate, context: context, scale: scale, circle: true)
-    if s.tool == .direct, let e = s.primary, let path = e.path {
-      let t = art.worldTransform(e).followed(
-        by: .scale(e.width / path.width, e.height / path.height))
-      for node in path.contours.flatMap(\.nodes) {
-        let p = CGPoint(t.apply(node.anchor))
-        if s.nodes.contains(node.id) {
-          for h in [node.incoming, node.outgoing].compactMap({ $0 }) {
-            let q = CGPoint(t.apply(h))
-            context.move(to: p)
-            context.addLine(to: q)
-            context.strokePath()
-            dot(q, context: context, scale: scale, circle: true)
+    if s.tool == .direct {
+      for e in s.elements {
+        guard let path = e.path else { continue }
+        let t = art.worldTransform(e).followed(
+          by: .scale(e.width / path.width, e.height / path.height))
+        for node in path.contours.flatMap(\.nodes) {
+          let p = CGPoint(t.apply(node.anchor))
+          if s.nodes.contains(node.id) {
+            for h in [node.incoming, node.outgoing].compactMap({ $0 }) {
+              let q = CGPoint(t.apply(h))
+              context.move(to: p)
+              context.addLine(to: q)
+              context.strokePath()
+              dot(q, context: context, scale: scale, circle: true)
+            }
           }
+          dot(p, context: context, scale: scale, filled: s.nodes.contains(node.id))
         }
-        dot(p, context: context, scale: scale, filled: s.nodes.contains(node.id))
       }
     }
     if let e = s.primary, let g = e.gradient {
-      let t = art.worldTransform(e)
+      let t = art.worldTransform(e).followed(by: g.transform ?? .init())
       let a = CGPoint(t.apply(.init(g.start.x * e.width, g.start.y * e.height)))
       let b = CGPoint(t.apply(.init(g.end.x * e.width, g.end.y * e.height)))
       context.move(to: a)
@@ -560,8 +563,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if s.tool == .direct, nodeHit(p, event: event) {
         if event.clickCount == 2 {
           s.editPath(
-            s.primary?.path?.contours.flatMap(\.nodes).first(where: { s.nodes.contains($0.id) })?
-              .effectiveMode == "corner" ? "smooth" : "corner")
+            s.elements.flatMap { $0.path?.contours.flatMap(\.nodes) ?? [] }.first(where: {
+              s.nodes.contains($0.id)
+            })?
+            .effectiveMode == "corner" ? "smooth" : "corner")
           snapshot = s.art
         }
         needsDisplay = true
@@ -581,7 +586,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         return
       }
       if let e = s.primary, let g = e.gradient, !s.art.isLocked(e) {
-        let t = s.art.worldTransform(e)
+        let t = s.art.worldTransform(e).followed(by: g.transform ?? .init())
         for (i, q) in [g.start, g.end].enumerated() {
           let h = CGPoint(t.apply(.init(q.x * e.width, q.y * e.height)))
           if hypot(h.x - p.x, h.y - p.y) < 7 / (ppm * zoom) {
@@ -606,7 +611,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         }
       }
       if let e = hit(p, art: s.art, scope: s.scopeID) {
-        if s.tool == .direct, e.id == s.primary?.id, e.path != nil {
+        if s.tool == .direct, s.selection.contains(e.id), e.path != nil {
           if !event.modifierFlags.contains(.shift) { s.nodes = [] }
           dragMode = "node_marquee"
           marquee = CGRect(origin: p, size: .zero)
@@ -711,16 +716,20 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       needsDisplay = true
       return
     }
-    if dragMode == "node_marquee", let e = s.primary, let path = e.path {
+    if dragMode == "node_marquee" {
       let rect = CGRect(
         x: min(down.x, p.x), y: min(down.y, p.y), width: abs(p.x - down.x),
         height: abs(p.y - down.y))
       marquee = rect
-      let t = snapshot.worldTransform(e).followed(
-        by: .scale(e.width / path.width, e.height / path.height))
       let ids = Set(
-        path.contours.flatMap(\.nodes).filter { rect.contains(CGPoint(t.apply($0.anchor))) }.map(
-          \.id))
+        snapshot.elements.filter { s.selection.contains($0.id) }.flatMap { e -> [UUID] in
+          guard let path = e.path, !snapshot.isLocked(e) else { return [] }
+          let t = snapshot.worldTransform(e).followed(
+            by: .scale(e.width / path.width, e.height / path.height))
+          return path.contours.flatMap(\.nodes).filter {
+            rect.contains(CGPoint(t.apply($0.anchor)))
+          }.map(\.id)
+        })
       s.nodes = event.modifierFlags.contains(.shift) ? startNodes.union(ids) : ids
       needsDisplay = true
       return
@@ -753,7 +762,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     if dragMode == "gradient", let e = s.primary,
       let i = value.elements.firstIndex(where: { $0.id == e.id }),
-      let inv = value.worldTransform(e).inverse
+      let inv = value.worldTransform(e).followed(by: e.gradient?.transform ?? .init()).inverse
     {
       let q = inv.apply(.init(p))
       if handle == 0 {
@@ -844,11 +853,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     s.save(value)
   }
   override func mouseUp(with event: NSEvent) {
-    if ["node", "incoming", "outgoing"].contains(dragMode), let s = session, let id = s.primary?.id
-    {
+    if ["node", "incoming", "outgoing"].contains(dragMode), point(event) != down, let s = session {
       s.mutate { art in
-        if let i = art.elements.firstIndex(where: { $0.id == id }) {
-          PathCommands.normalize(&art.elements[i])
+        for i in art.elements.indices where s.selection.contains(art.elements[i].id) {
+          if art.elements[i].path?.contours.flatMap(\.nodes).contains(where: {
+            s.nodes.contains($0.id)
+          }) == true {
+            PathCommands.normalize(&art.elements[i])
+          }
         }
       }
     }
@@ -930,74 +942,88 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return .init(x: newX, y: newY)
   }
   private func nodeHit(_ p: CGPoint, event: NSEvent) -> Bool {
-    guard let s = session, let e = s.primary, let path = e.path, !s.art.isLocked(e) else {
-      return false
-    }
-    let t = s.art.worldTransform(e).followed(
-      by: .scale(e.width / path.width, e.height / path.height))
+    guard let s = session else { return false }
+    let art = s.art
     let threshold = 7 / (ppm * zoom)
-    for node in path.contours.flatMap(\.nodes).reversed() {
-      for (mode, q) in [("incoming", node.incoming), ("outgoing", node.outgoing)]
-      where s.nodes.contains(node.id) {
-        if let q {
-          let v = t.apply(q)
-          if hypot(p.x - v.x, p.y - v.y) < threshold {
-            dragMode = mode
-            s.nodes = [node.id]
-            return true
+    let paths = art.elements.filter {
+      $0.path != nil && art.editable($0)
+        && (s.selection.contains($0.id) || $0.parentID == s.scopeID)
+    }
+    for e in paths.reversed() {
+      let path = e.path!
+      let t = art.worldTransform(e).followed(
+        by: .scale(e.width / path.width, e.height / path.height))
+      for node in path.contours.flatMap(\.nodes).reversed() {
+        for (mode, q) in [("incoming", node.incoming), ("outgoing", node.outgoing)]
+        where s.selection.contains(e.id) && s.nodes.contains(node.id) {
+          if let q {
+            let v = t.apply(q)
+            if hypot(p.x - v.x, p.y - v.y) < threshold {
+              dragMode = mode
+              s.nodes = [node.id]
+              return true
+            }
           }
         }
-      }
-      let q = t.apply(node.anchor)
-      if hypot(p.x - q.x, p.y - q.y) < threshold {
-        if event.modifierFlags.contains(.shift) {
-          if s.nodes.contains(node.id) { s.nodes.remove(node.id) } else { s.nodes.insert(node.id) }
-        } else if !s.nodes.contains(node.id) {
-          s.nodes = [node.id]
+        let q = t.apply(node.anchor)
+        if hypot(p.x - q.x, p.y - q.y) < threshold {
+          if !s.selection.contains(e.id) {
+            if event.modifierFlags.contains(.shift) {
+              s.selection.insert(e.id)
+            } else {
+              s.choose([e.id])
+            }
+          }
+          if event.modifierFlags.contains(.shift) {
+            if s.nodes.contains(node.id) {
+              s.nodes.remove(node.id)
+            } else {
+              s.nodes.insert(node.id)
+            }
+          } else if !s.nodes.contains(node.id) {
+            s.nodes = [node.id]
+          }
+          dragMode = "node"
+          return true
         }
-        dragMode = "node"
-        return true
       }
     }
     return false
   }
   private func dragNodes(_ p: CGPoint, event: NSEvent) {
-    guard let s = session, let e = s.primary,
-      let i = snapshot.elements.firstIndex(where: { $0.id == e.id }),
-      let path = snapshot.elements[i].path,
-      let inv = snapshot.worldTransform(e).followed(
-        by: .scale(e.width / path.width, e.height / path.height)
-      ).inverse
-    else { return }
+    guard let s = session else { return }
     var value = snapshot
-    let a = inv.apply(.init(down))
-    let b = inv.apply(.init(p))
-    let dx = b.x - a.x
-    let dy = b.y - a.y
-    for c in path.contours.indices {
-      for n in path.contours[c].nodes.indices where s.nodes.contains(path.contours[c].nodes[n].id) {
-        var node = path.contours[c].nodes[n]
-        if dragMode == "node" {
-          node.anchor.x += dx
-          node.anchor.y += dy
-          if var q = node.incoming {
-            q.x += dx
-            q.y += dy
-            node.incoming = q
+    let paths = snapshot.elements.filter { s.selection.contains($0.id) && $0.path != nil }
+    let counts = paths.flatMap { $0.path!.contours.flatMap(\.nodes).map(\.id) }
+      .reduce(into: [UUID: Int]()) { $0[$1, default: 0] += 1 }
+    guard s.nodes.allSatisfy({ counts[$0] == 1 }) else {
+      s.store?.error =
+        "These paths contain repeated node IDs. Combine them before selecting nodes together."
+      dragMode = ""
+      return
+    }
+    for e in paths where !snapshot.isLocked(e) {
+      guard let i = value.elements.firstIndex(where: { $0.id == e.id }), let path = e.path,
+        let inv = snapshot.worldTransform(e).followed(
+          by: .scale(e.width / path.width, e.height / path.height)
+        ).inverse
+      else { continue }
+      let a = inv.apply(.init(down))
+      let b = inv.apply(.init(p))
+      let delta = Affine2.translation(b.x - a.x, b.y - a.y)
+      for c in path.contours.indices {
+        for n in path.contours[c].nodes.indices where s.nodes.contains(path.contours[c].nodes[n].id)
+        {
+          let node = path.contours[c].nodes[n]
+          if dragMode == "node" {
+            value.elements[i].path?.contours[c].nodes[n] = PathCommands.transformed(node, by: delta)
+          } else {
+            let q = dragMode == "incoming" ? node.incoming : node.outgoing
+            value.elements[i].path?.contours[c].nodes[n] = PathCommands.movingHandle(
+              node, incoming: dragMode == "incoming", to: delta.apply(q ?? node.anchor),
+              independent: event.modifierFlags.contains(.option))
           }
-          if var q = node.outgoing {
-            q.x += dx
-            q.y += dy
-            node.outgoing = q
-          }
-        } else {
-          let q = dragMode == "incoming" ? node.incoming : node.outgoing
-          let next = Point2((q?.x ?? node.anchor.x) + dx, (q?.y ?? node.anchor.y) + dy)
-          node = PathCommands.movingHandle(
-            node, incoming: dragMode == "incoming", to: next,
-            independent: event.modifierFlags.contains(.option))
         }
-        value.elements[i].path?.contours[c].nodes[n] = node
       }
     }
     s.save(value)
