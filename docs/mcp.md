@@ -55,6 +55,7 @@ build/FORM.app/Contents/MacOS/form-mcp --call form_add_object '{"recipe_id":"lam
 | `form_text_style` | Reusable typography, character/paragraph inheritance, persistent local overrides, reset, redefine, and detachment |
 | `form_convert_to_paths`, `form_boolean_artwork` | Editable glyph/stroke/shape outlines; live vector booleans, update/release/flatten, and divided regions |
 | `form_export_artwork` | Actual-size SVG/PDF and DPI-controlled PNG/JPEG frame or selection exports |
+| `form_cloth` | Configure real cloth, bounded runtime controls, actual mesh snapshots and material-point attachments; open surfaces are rejected for slicing |
 | `form_add_note` | Design decisions and open questions |
 | `form_set_view` | Camera presets, focus, isolation, and workspace modes |
 | `form_export` | PNG, PDF, SVG, and component/material JSON |
@@ -147,3 +148,7 @@ Schema-28 digitizing adds optional `process:{threadDiameter,tieIn,tieOff,tieLeng
 ### Text stories and publications
 
 `form_story`, `form_publication`, and `form_export_publication` expose the shared rich source, physical page order, frame capacity, grid composition, preflight, and actual multipage PDF. Paragraph/list/glyph commands on linked frames use global UTF-16 source ranges. See [publications](publications.md) for schemas, safe native handoff behavior and output limits.
+
+### Font library and replacement
+
+`form_list_fonts` supports paged family/face search and complete read-only document `usage`. `form_edit_artwork` command `font` edits only font_name on selected text, optionally within one source UTF-16 range. `form_replace_font` provides an explicit exact-face replacement/dry-run with one document Undo; words, axes, features, rich ranges and exact glyph metadata remain stored. Exact glyph mismatches stay explicit. See [font library](font-library.md).

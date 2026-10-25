@@ -335,10 +335,11 @@ public final class OperationEngine {
         guard let object = p.objects.first(where: { $0.id == id }) else {
           throw FormError.missing("Object not found.")
         }
-        if ["paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template","cut_layout"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
+        if ["font","paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template","cut_layout"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
         var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
         if try PublicationCommands.editText(in:&p,objectID:id,ids:ids,command:command,arguments:a,prepareGlyph:onPrepareGlyph,prepareParagraphs:onPrepareParagraphs) {selected=ids;return}
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
+        if command=="font" {try onPrepareParagraphs?(&art,art.swatchPaintTargets(for:ids))}
         if command=="glyph" {
           let targets=art.swatchPaintTargets(for:ids)
           let location=(a["location"] as? NSNumber)?.intValue
@@ -492,7 +493,13 @@ public final class OperationEngine {
         else { throw FormError.missing("Object not found.") }
         let merged = p.objects[index].parameters.merging(params) { _, new in new }
         try recipe.validate(merged)
+        let oldCloth=p.objects[index].cloth
+        if oldCloth != nil,!params.isEmpty,p.objects[index].locked {throw FormError.invalid("Unlock the cloth source before rebuilding its mesh.")}
         p.objects[index].parameters = merged
+        if !params.isEmpty,ClothDesign.recipeIDs.contains(p.objects[index].recipeID) {
+          let rebuilt=try ClothDesign.definition(for:p.objects[index],settings:oldCloth?.settings)
+          try p.setCloth(rebuilt,for:id)
+        }
         if let name = a["name"] as? String {
           guard !name.isEmpty, name.count <= 160 else {
             throw FormError.invalid("Object name must contain 1–160 characters.")
@@ -512,7 +519,10 @@ public final class OperationEngine {
           try validateColor(color)
           p.objects[index].color = color
         }
-        if a["position"] != nil { p.objects[index].position = try vector(a["position"]) }
+        if a["position"] != nil {
+          guard p.objects[index].clothAttachment==nil else {throw FormError.invalid("Use form_cloth attach material coordinates to move this decoration on its surface, or detach it first.")}
+          p.objects[index].position = try vector(a["position"])
+        }
         if let rotation = a["rotation"] as? Double {
           guard rotation.isFinite else { throw FormError.invalid("Rotation must be finite.") }
           p.objects[index].rotation = rotation
@@ -550,6 +560,10 @@ public final class OperationEngine {
           let design = p.objects[index].designID
           for i in p.objects.indices where p.objects[i].designID == design {
             p.objects[i].parameters = merged
+            if i != index,!params.isEmpty,ClothDesign.recipeIDs.contains(p.objects[i].recipeID) {
+              let linkedID=p.objects[i].id,definition=try ClothDesign.definition(for:p.objects[i],settings:p.objects[i].cloth?.settings)
+              try p.setCloth(definition,for:linkedID)
+            }
           }
         }
       }

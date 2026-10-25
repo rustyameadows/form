@@ -60,7 +60,8 @@ public enum SewingLayouts {
       issues.append(.init(.grain, "\(p.geometry.piece.name) does not follow the chosen material grain rule (1° tolerance).", placements: id))
     }
     if let fold = p.geometry.piece.onFoldEdge {
-      let a = p.transform.apply(p.geometry.stitch[fold]), b = p.transform.apply(p.geometry.stitch[(fold + 1) % p.geometry.stitch.count])
+      let sourceEdge=p.geometry.usesGeneralGeometry ? p.geometry.sourceEdges[fold].points : [p.geometry.stitch[fold],p.geometry.stitch[(fold+1)%p.geometry.stitch.count]]
+      let a=p.transform.apply(sourceEdge[0]),b=p.transform.apply(sourceEdge.last!)
       if layout.stock != .foldedPair || abs(a.x) > 0.001 || abs(b.x) > 0.001 {
         issues.append(.init(.fold, "\(p.geometry.piece.name)'s fold edge must lie along the left stock fold.", placements: id))
       }
@@ -111,7 +112,7 @@ public enum SewingLayouts {
     let requiredLength = resolved.isEmpty ? 0 : (resolved.map { $0.bounds.maxY }.max()! + layout.margin)
     let consumedLength = layout.surface == .sheet ? layout.sheetLength ?? 0 : requiredLength
     let allocated = (layout.stockWidth ?? 0) * consumedLength
-    let used = resolved.reduce(0.0) { $0 + SewingLayoutGeometry.area($1.contour) * (layout.stock == .foldedPair ? 2 : 1) }
+    let used = resolved.reduce(0.0) { $0 + SewingLayoutGeometry.materialArea($1.materialContours) * (layout.stock == .foldedPair ? 2 : 1) }
     return .init(issues: issues, placements: resolved, workingWidth: width, requiredLength: requiredLength,
       consumedLength: consumedLength, allocatedAreaMM2: allocated, cutAreaMM2: used,
       estimatedCost: issues.isEmpty ? layout.costPerSquareMeter.map { $0 * allocated / 1_000_000 } : nil,

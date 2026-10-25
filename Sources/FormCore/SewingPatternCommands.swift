@@ -18,7 +18,12 @@ public enum SewingPatternCommands {
         } else {
           guard var value = raw as? [String: Any] else { throw FormError.invalid("piece must be an object or null.") }
           if value["name"] == nil { value["name"] = root.name ?? "Pattern piece" }
-          next.elements[index].sewingPiece = try JSONDecoder.form.decode(SewingPatternPiece.self, from: JSONSerialization.data(withJSONObject: value))
+          if SewingPatterns.needsGeneralGeometry(next.elements[index]), var path=next.elements[index].path {
+            for i in path.contours.indices where path.contours[i].id==nil {path.contours[i].id=UUID()}
+            next.elements[index].path=path
+          }
+          let piece = try JSONDecoder.form.decode(SewingPatternPiece.self, from: JSONSerialization.data(withJSONObject: value))
+          next.elements[index].sewingPiece = try SewingPatterns.bindingStableEdges(piece,to:next.elements[index])
           next.elements[index].fillEnabled = false
           next.elements[index].stroke = .init(color: "#43718A", width: 0.3)
           next.elements[index].productionRole = "stitch"
@@ -32,17 +37,31 @@ public enum SewingPatternCommands {
         next.sewingSeams?.removeAll { $0.id == id }
       } else {
         guard let value = raw as? [String: Any] else { throw FormError.invalid("seam must be an object or null.") }
-        let seam = try JSONDecoder.form.decode(SewingSeam.self, from: JSONSerialization.data(withJSONObject: value))
+        var seam = try JSONDecoder.form.decode(SewingSeam.self, from: JSONSerialization.data(withJSONObject: value))
         for end in [seam.first, seam.second] {
           guard let e = artwork.elements.first(where: { $0.id == end.elementID }), !artwork.isLocked(e) else { throw FormError.invalid("Choose unlocked pattern pieces for this seam.") }
         }
+        func bind(_ end:SewingSeamEnd)throws->SewingSeamEnd {
+          var value=end
+          if let e=next.elements.first(where:{$0.id==end.elementID}),SewingPatterns.needsGeneralGeometry(e),value.endID==nil {
+            let g=try SewingPatterns.geometry(e,in:next)
+            let index=try g.edgeIndex(value.edge,id:value.edgeID)
+            value.edgeID=g.sourceEdges[index].id;value.endID=g.sourceEdges[index].endID
+          };return value
+        }
+        seam.first=try bind(seam.first);seam.second=try bind(seam.second)
         var seams = next.sewingSeams ?? []
         if let index = seams.firstIndex(where: { $0.id == seam.id }) { seams[index] = seam } else { seams.append(seam) }
         next.sewingSeams = seams
       }
     case "pattern_template":
-      guard arguments["template"] as? String == "tote" else { throw FormError.invalid("The available pattern template is tote.") }
-      let template = try SewingPatternTemplates.tote(arguments["pattern_parameters"] as? [String: Any] ?? [:])
+      let parameters=arguments["pattern_parameters"] as? [String:Any] ?? [:]
+      let template:SewingPatternTemplate
+      switch arguments["template"] as? String {
+      case "tote":template=try SewingPatternTemplates.tote(parameters)
+      case "roundedPouch":template=try SewingPatternTemplates.roundedPouch(parameters)
+      default:throw FormError.invalid("Choose the tote or roundedPouch editable pattern template.")
+      }
       next.elements += template.artwork.elements
       next.sewingSeams = (next.sewingSeams ?? []) + (template.artwork.sewingSeams ?? [])
       try validateArtwork(next); artwork = next; return Set(template.artwork.elements.map(\.id))
@@ -102,9 +121,19 @@ extension Artwork {
   public mutating func duplicateSewingSeams(from original: Artwork, mapping: [UUID: UUID]) {
     for var seam in original.sewingSeams ?? [] {
       guard let first = mapping[seam.first.elementID], let second = mapping[seam.second.elementID] else { continue }
-      seam.id = UUID(); seam.first.elementID = first; seam.second.elementID = second
+      seam.id = UUID()
+      seam.first=remappingSewingEnd(seam.first,to:first,from:original)
+      seam.second=remappingSewingEnd(seam.second,to:second,from:original)
       sewingSeams = (sewingSeams ?? []) + [seam]
     }
+  }
+  public func remappingSewingEnd(_ original:SewingSeamEnd,to target:UUID,from source:Artwork)->SewingSeamEnd {
+    var result=original;result.elementID=target
+    let old=source.elements.first{$0.id==original.elementID}?.path?.contours.flatMap(\.nodes) ?? []
+    let new=elements.first{$0.id==target}?.path?.contours.flatMap(\.nodes) ?? []
+    let mapping=Dictionary(uniqueKeysWithValues:zip(old,new).map{($0.id,$1.id)})
+    result.edgeID=original.edgeID.flatMap{mapping[$0] ?? $0};result.endID=original.endID.flatMap{mapping[$0] ?? $0}
+    return result
   }
   public mutating func retainRepresentedSewingSeams() {
     let pieces = Set(elements.filter { $0.sewingPiece != nil }.map(\.id))

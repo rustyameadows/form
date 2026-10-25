@@ -99,8 +99,8 @@ struct SewingLayoutCanvas: NSViewRepresentable {
       for y in stride(from: max(0, floor(visibleA.y / step) * step), through: min(height, visibleB.y), by: step) { context.move(to: .init(x: 0, y: y)); context.addLine(to: .init(x: width, y: y)) }
       context.strokePath()
       if c.showFabric, !poses.isEmpty {
-        let clip = CGMutablePath(); for pose in poses { clip.addPath(path(pose.contour, closed: true)) }
-        context.saveGState(); context.addPath(clip); context.clip()
+        let clip = CGMutablePath(); for pose in poses { for contour in pose.materialContours { clip.addPath(path(contour,closed:true)) } }
+        context.saveGState(); context.addPath(clip); context.clip(using:.evenOdd)
         let fabric = c.fabricReference()
         if let design = fabric.design { FabricPatternRenderer.drawPreview(design, assets: c.assets, width: width, height: height, fontRevision: GeometryFactory.fontRevision) }
         else { context.setFillColor(NSColor(hex: fabric.color).cgColor); context.fill(stock) }
@@ -119,13 +119,14 @@ struct SewingLayoutCanvas: NSViewRepresentable {
     let invalid = Set(c.report?.issues.flatMap(\.placements) ?? [])
     for pose in poses {
       let selected = pose.placement.id == c.selectedID, bad = invalid.contains(pose.placement.id)
-      let cut = SewingLayoutGeometry.cuttingPath(pose)
+      let cuts = SewingLayoutGeometry.cuttingPaths(pose)
+      let region=CGMutablePath();for contour in pose.materialContours {region.addPath(path(contour,closed:true))}
       if !c.showFabric || width <= 0 {
-        context.setFillColor(NSColor(hex: "#EFEBDD").cgColor); context.addPath(path(pose.contour, closed: true)); context.fillPath()
+        context.setFillColor(NSColor(hex: "#EFEBDD").cgColor); context.addPath(region); context.drawPath(using:.eoFill)
       }
-      if bad { context.setFillColor(NSColor.systemRed.withAlphaComponent(0.12).cgColor); context.addPath(path(pose.contour,closed:true)); context.fillPath() }
+      if bad { context.setFillColor(NSColor.systemRed.withAlphaComponent(0.12).cgColor); context.addPath(region); context.drawPath(using:.eoFill) }
       context.setStrokeColor((selected ? NSColor(hex: "#3E7269") : bad ? NSColor.systemRed : NSColor(hex: "#454E47")).cgColor)
-      context.setLineWidth((selected ? 2 : 1) * unit); context.addPath(path(cut.points,closed:cut.closed)); context.strokePath()
+      context.setLineWidth((selected ? 2 : 1) * unit); for cut in cuts {context.addPath(path(cut.points,closed:cut.closed))}; context.strokePath()
       context.setStrokeColor(NSColor(hex: "#A67B41").cgColor); context.setLineWidth(0.8 * unit)
       let grain = SewingPatternDrawing.grainline(pose.geometry).map(pose.transform.apply)
       context.addPath(path(grain,closed:false)); context.strokePath()
@@ -153,7 +154,7 @@ struct SewingLayoutCanvas: NSViewRepresentable {
     guard let c = controller, c.refreshContext() else { return }
     window?.makeFirstResponder(self)
     let p = physicalPoint(convert(event.locationInWindow,from:nil))
-    guard let hit = c.previewPlacements.reversed().first(where: { path($0.contour,closed:true).contains(.init(x:p.x,y:p.y)) }) else { c.selectedID = nil; needsDisplay = true; return }
+    guard let hit = c.previewPlacements.reversed().first(where: { SewingLayoutGeometry.containsMaterial(p,contours:$0.materialContours) }) else { c.selectedID = nil; needsDisplay = true; return }
     c.selectedID = hit.placement.id
     guard let epoch = c.beginDrag() else { return }
     drag = (hit.placement.id,p,hit.placement,epoch); needsDisplay = true

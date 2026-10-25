@@ -143,8 +143,8 @@ extension Project {
       if first {
         remaining.sewingSeams?.removeAll { $0.id == seam.id }
         if destination.sewingSeams?.contains(where: { $0.id == seam.id }) == true { seam.id = UUID() }
-        seam.first.elementID = mapping[seam.first.elementID]!
-        seam.second.elementID = mapping[seam.second.elementID]!
+        seam.first=destination.remappingSewingEnd(seam.first,to:mapping[seam.first.elementID]!,from:sourceArtwork)
+        seam.second=destination.remappingSewingEnd(seam.second,to:mapping[seam.second.elementID]!,from:sourceArtwork)
         destination.sewingSeams = (destination.sewingSeams ?? []) + [seam]
       }
     }

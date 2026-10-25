@@ -14,7 +14,8 @@ public enum SewingPatternDrawing {
   /// The complete physical material footprint. A fold boundary is included here for area and
   /// collision checks even though that boundary is omitted from the actual cutting pass.
   public static func cutContour(_ geometry: SewingPieceGeometry) -> [Point2] {
-    geometry.cut.indices.flatMap { Array(cutEdge(geometry, $0).dropLast()) }
+    if geometry.usesGeneralGeometry { return geometry.cut }
+    return geometry.cut.indices.flatMap { Array(cutEdge(geometry, $0).dropLast()) }
   }
   public static func cutEdgePoints(_ geometry: SewingPieceGeometry, edge: Int) -> [Point2] { cutEdge(geometry, edge) }
   public static func grainline(_ geometry: SewingPieceGeometry) -> [Point2] { grain(geometry) }
@@ -71,31 +72,31 @@ public enum SewingPatternDrawing {
     }
     return result + [end]
   }
-  private static func grain(_ g: SewingPieceGeometry) -> [Point2] {
-    let center = Point2(g.stitch.map(\.x).reduce(0,+) / Double(g.stitch.count), g.stitch.map(\.y).reduce(0,+) / Double(g.stitch.count))
-    let d = g.grainDirection
-    var intersections: [Double] = []
-    for i in g.stitch.indices {
-      let a = g.stitch[i], b = g.stitch[(i + 1) % g.stitch.count]
-      let edge = Point2(b.x - a.x, b.y - a.y), q = Point2(a.x - center.x, a.y - center.y)
-      let det = d.x * edge.y - d.y * edge.x
-      if abs(det) < 1e-10 { continue }
-      let t = (q.x * edge.y - q.y * edge.x) / det
-      let u = (q.x * d.y - q.y * d.x) / det
-      if (-1e-8...1.00000001).contains(u) { intersections.append(t) }
-    }
-    let first = (intersections.min() ?? -10) * 0.7, last = (intersections.max() ?? 10) * 0.7
-    return [.init(center.x + first * d.x, center.y + first * d.y), .init(center.x + last * d.x, center.y + last * d.y)]
-  }
+  private static func grain(_ g: SewingPieceGeometry) -> [Point2] { generalGrain(g) }
   public static func plan(_ source: Artwork, selection: Set<UUID> = []) throws -> SewingPatternPlan {
     try validateArtwork(source)
     let chosen = selection.isEmpty ? Set(source.elements.map(\.id)) : source.descendants(of: Set(source.selectionRoots(selection).map(\.id)))
     let pieces = try source.elements.filter { $0.sewingPiece != nil && chosen.contains($0.id) && visible($0, in: source) }.map { try SewingPatterns.geometry($0, in: source) }
-    guard !pieces.isEmpty else { throw FormError.invalid("Select sewing pattern pieces, or annotate a sharp rectangle or convex straight contour first.") }
+    guard !pieces.isEmpty else { throw FormError.invalid("Select annotated sewing pattern pieces, or annotate a supported closed contour first.") }
     let diagnostics = try SewingPatterns.diagnostics(source), pieceIDs = Set(pieces.map(\.elementID))
     let seams = diagnostics.filter { pieceIDs.contains($0.seam.first.elementID) || pieceIDs.contains($0.seam.second.elementID) }
     var elements: [ArtworkElement] = []
     for g in pieces {
+      if g.usesGeneralGeometry {
+        for (i,path) in cuttingContours(g).enumerated() {
+          elements.append(line(path.points,closed:path.closed,source:g.elementID,tag:"Cut contour \(i+1)",role:"cut",color:"#292D2C"))
+        }
+        for (i,contour) in g.allStitchContours.enumerated() {
+          elements.append(line(contour,closed:true,source:g.elementID,tag:"Stitch contour \(i+1)",role:"stitch",color:"#43718A",dash:[3,2]))
+        }
+        if let fold=g.piece.onFoldEdge,let edge=g.sourceEdges.first(where:{$0.index==fold}) {
+          elements.append(line(edge.points,closed:false,source:g.elementID,tag:"Place on fold",role:"guide",color:"#A67B41",dash:[6,2]))
+        }
+        for edge in g.sourceEdges {
+          let sample=edge.sample(fraction:0.5),n=g.normals[edge.index]
+          elements.append(text("E\(edge.index+1)",x:sample.point.x-n.x*7-4,y:sample.point.y-n.y*7-2,width:9,height:5,source:g.elementID,tag:"Source edge label \(edge.index+1)"))
+        }
+      } else {
       if let fold = g.piece.onFoldEdge {
         for edge in g.cut.indices where edge != fold {
           elements.append(line(cutEdge(g, edge), closed: false, source: g.elementID, tag: "Cut edge \(edge + 1)", role: "cut", color: "#292D2C"))
@@ -111,6 +112,7 @@ public enum SewingPatternDrawing {
         let a = g.stitch[edge], b = g.stitch[(edge + 1) % g.stitch.count], n = g.normals[edge]
         elements.append(text("E\(edge + 1)", x: (a.x + b.x) / 2 - n.x * 7 - 4, y: (a.y + b.y) / 2 - n.y * 7 - 2,
           width: 9, height: 5, source: g.elementID, tag: "Edge label \(edge + 1)"))
+      }
       }
       let grain = grain(g), d = g.grainDirection, n = Point2(-d.y, d.x)
       elements.append(line(grain, closed: false, source: g.elementID, tag: "Grainline", role: "guide", color: "#A67B41"))
@@ -137,7 +139,7 @@ public enum SewingPatternDrawing {
     art.elements.append(text("50 × 50 mm\nPrint at 100% / actual size", x: x + 60, y: y + 12, width: 130, height: 18, source: calibrationID, tag: "Print calibration instructions"))
     let mismatches = seams.filter { !$0.matches }
     if !mismatches.isEmpty {
-      let message = mismatches.map { String(format: "%@: %.1f mm mismatch", $0.seam.name, $0.difference) }.joined(separator: " · ")
+      let message = mismatches.map { !$0.isConclusive ? String(format:"%@: measurement uncertain ±%.4f mm",$0.seam.name,$0.measurementError) : String(format: "%@: %.1f mm mismatch", $0.seam.name, $0.difference) }.joined(separator: " · ")
       art.elements.append(text("SEAM CHECK: " + message, x: x, y: y + 58, width: max(250, bounds.width), height: 20,
         source: calibrationID, tag: "Seam mismatch diagnostics", color: "#B64B32"))
     }
@@ -149,7 +151,7 @@ public enum SewingPatternDrawing {
       }
       let pair = "\(check.seam.name): \(endpoint(check.seam.first)) ↔ \(endpoint(check.seam.second))"
       let measurements = String(format: "%.1f / %.1f mm · %@ · %@", check.firstLength, check.secondLength,
-        check.matches ? "match" : "MISMATCH", check.seam.reversed ? "reverse edge direction" : "same edge direction")
+        !check.isConclusive ? "MEASUREMENT UNCERTAIN" : check.matches ? "match" : "MISMATCH", check.seam.reversed ? "reverse edge direction" : "same edge direction")
       art.elements.append(text(pair + "\n" + measurements, x: x, y: scheduleY, width: max(250, bounds.width), height: 10,
         source: check.seam.id, tag: "Seam schedule", color: check.matches ? "#344D5D" : "#B64B32"))
       scheduleY += 13

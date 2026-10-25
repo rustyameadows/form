@@ -14,14 +14,19 @@ import FormCore
       "pieces": plan.pieces.map { g in
         ["element_id": g.elementID.uuidString, "name": g.piece.name, "cut_quantity": g.piece.cutQuantity,
           "material_id": g.piece.materialID.map { $0 as Any } ?? NSNull(), "cut_width_mm": g.bounds.width, "cut_height_mm": g.bounds.height,
-          "edge_lengths_mm": g.edgeLengths, "seam_allowances_mm": g.stitch.indices.map { g.piece.allowance(for: $0) },
-          "notches": g.piece.notches.count, "grain_direction": [g.grainDirection.x, g.grainDirection.y],
+          "edge_lengths_mm": g.edgeLengths, "seam_allowances_mm": g.edgeLengths.indices.map { g.piece.allowance(for: $0) },
+          "notches": g.piece.notches.count,
+          "resolved_notches":g.cutNotches.map{["id":$0.id.uuidString,"edge_id":$0.edgeID?.uuidString ?? "","source_distance_mm":$0.sourceDistanceMM,"cut_opening_length_mm":$0.openingLengthMM,"mouth_a_mm":[$0.firstMouth.x,$0.firstMouth.y],"mouth_b_mm":[$0.secondMouth.x,$0.secondMouth.y],"tip_mm":[$0.tip.x,$0.tip.y]] as [String:Any]}, "hole_count": g.allStitchContours.count-1,
+          "contour_tolerance_mm": g.usesGeneralGeometry ? SewingCurveLimits.contourToleranceMM : 0,
+          "edge_length_errors_mm": g.edgeLengthErrors,
+          "source_edges": g.sourceEdges.map { ["id": $0.id?.uuidString ?? "", "end_id":$0.endID?.uuidString ?? "", "contour_id":g.boundaries[$0.contour].id?.uuidString ?? "", "is_hole":g.boundaries[$0.contour].isHole, "index": $0.index, "contour": $0.contour, "length_mm": $0.length, "length_error_mm": $0.lengthError] as [String:Any] }, "grain_direction": [g.grainDirection.x, g.grainDirection.y],
           "on_fold_edge": g.piece.onFoldEdge.map { $0 as Any } ?? NSNull()] as [String: Any]
       },
       "seams": plan.seams.map { d in ["id": d.seam.id.uuidString, "name": d.seam.name,
         "first_length_mm": d.firstLength, "second_length_mm": d.secondLength, "difference_mm": d.difference,
-        "tolerance_mm": d.seam.tolerance, "matches": d.matches] as [String: Any] },
-      "mismatched_seams": plan.seams.filter { !$0.matches }.count,
+        "tolerance_mm": d.seam.tolerance, "matches": d.matches, "measurement_error_mm": d.measurementError, "conclusive": d.isConclusive] as [String: Any] },
+      "mismatched_seams": plan.seams.filter { $0.isConclusive && !$0.matches }.count,
+      "uncertain_seams": plan.seams.filter { !$0.isConclusive }.count,
       "cutting_template": true, "cloth_simulation": false, "calibration_square_mm": 50]
   }
   public func svg(assets: URL) throws -> String {

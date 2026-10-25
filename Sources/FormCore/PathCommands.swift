@@ -3,12 +3,25 @@ import Foundation
 /// Deterministic Bézier editing in path coordinates. Numeric transforms are in
 /// physical artwork coordinates, including every ancestor transform.
 public enum PathCommands {
-  public static func refreshNodeIDs(in element: inout ArtworkElement) {
-    guard var path = element.path else { return }
+  @discardableResult public static func refreshNodeIDs(in element: inout ArtworkElement)->[UUID:UUID] {
+    guard var path=element.path else{return [:]}
+    var mapping:[UUID:UUID]=[:]
     for c in path.contours.indices {
-      for n in path.contours[c].nodes.indices { path.contours[c].nodes[n].id = UUID() }
+      if path.contours[c].id != nil {path.contours[c].id=UUID()}
+      for n in path.contours[c].nodes.indices {
+        let old=path.contours[c].nodes[n].id,new=UUID();mapping[old]=new;path.contours[c].nodes[n].id=new
+      }
     }
-    element.path = path
+    element.path=path
+    if var piece=element.sewingPiece {
+      piece.onFoldEdgeID=piece.onFoldEdgeID.flatMap{mapping[$0] ?? $0}
+      piece.onFoldEndID=piece.onFoldEndID.flatMap{mapping[$0] ?? $0}
+      for i in piece.notches.indices {
+        piece.notches[i].edgeID=piece.notches[i].edgeID.flatMap{mapping[$0] ?? $0}
+        piece.notches[i].endID=piece.notches[i].endID.flatMap{mapping[$0] ?? $0}
+      };element.sewingPiece=piece
+    }
+    return mapping
   }
   public static let names = [
     "insert", "delete", "split", "join", "reverse", "open", "close", "corner", "smooth",
@@ -264,13 +277,10 @@ public enum PathCommands {
     return result
   }
   private static func reversed(_ contour: VectorContour) -> VectorContour {
-    .init(
-      contour.nodes.reversed().map { node in
-        var n = node
-        n.incoming = node.outgoing
-        n.outgoing = node.incoming
-        return n
-      }, closed: contour.closed)
+    var result=VectorContour(contour.nodes.reversed().map { node in
+      var n=node;n.incoming=node.outgoing;n.outgoing=node.incoming;return n
+    },closed:contour.closed)
+    result.id=contour.id;return result
   }
   private static func lerp(_ a: Point2, _ b: Point2, _ t: Double) -> Point2 {
     .init(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t)

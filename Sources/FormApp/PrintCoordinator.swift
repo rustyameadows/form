@@ -187,6 +187,7 @@ import SwiftUI
     lastStoredConfiguration = project.printSetups?[object.id.uuidString]
     preparedInput = currentInput
     do {
+      guard object.cloth == nil else {throw FormError.invalid(ClothStudy.unsupportedPrintReason)}
       try configuration.validate(nozzle: printer.nozzleDiameter)
       try filament.validate(for: printer)
       try printer.validate()

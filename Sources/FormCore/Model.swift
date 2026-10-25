@@ -199,6 +199,8 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var asset: String?
   public var locked: Bool
   public var textile: TextileProduct?
+  public var cloth: ClothStudy?
+  public var clothAttachment: ClothAttachment?
   public init(
     name: String, recipeID: String, parameters: [String: Double], materialID: String = "chalk",
     position: Vector3 = .init(), rotation: Double = 0, artwork: Artwork? = nil
@@ -386,6 +388,12 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var publications:[PublicationDocument]?
   public var productionJobs:[ProductionJob]?
   public var minimumSchemaVersion: Int {
+    if objects.contains(where:{object in (object.artwork?.elements ?? []).contains(where:{e in
+      guard let piece=e.sewingPiece else{return false}
+      return SewingPatterns.needsGeneralGeometry(e) || piece.onFoldEdgeID != nil || piece.notches.contains(where:{$0.edgeID != nil})
+    }) || object.artwork?.sewingSeams?.contains(where:{$0.first.edgeID != nil || $0.second.edgeID != nil}) == true }) {return max(schemaVersion,32)}
+
+    if objects.contains(where:{$0.cloth != nil || $0.clothAttachment != nil}) {return max(schemaVersion,31)}
     if objects.contains(where: { $0.artwork?.outputColorProfile != nil }) { return max(schemaVersion, 30) }
     if productionJobs?.isEmpty==false || objects.contains(where:{$0.textile?.embroidery?.threads.contains(where:{$0.stock != nil})==true}) {return max(schemaVersion,29)}
     if objects.contains(where:{$0.textile?.embroidery?.requiresSchemaTwentyEight == true}) {return max(schemaVersion,28)}
@@ -465,6 +473,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
       parameters: recipe.defaults.merging(parameters) { _, new in new }, materialID: materialID,
       position: position)
     object.textile = TextileProduct.defaults(for: recipeID)
+    if ClothDesign.recipeIDs.contains(recipeID) {object.cloth = try ClothDesign.definition(for:object)}
     return object
   }
 }

@@ -60,6 +60,9 @@ enum TableTool: String, CaseIterable {
   @Published var library: StudioLibrary
   var scene: TableSceneController?
   lazy var printing = PrintCoordinator(store: self)
+  @Published var showingDocumentFonts=false
+  var fontLibraryPreferences=FontLibraryPreferences.environment()
+  lazy var cloth = ClothCoordinator(store:self)
   lazy var artworkSession = ArtworkSession(store: self)
   private var saveWork: DispatchWorkItem?
   private var previewWork: DispatchWorkItem?
@@ -129,11 +132,13 @@ enum TableTool: String, CaseIterable {
     engine.onProjectDidChange = { [weak self] in
       self?.closeDetachedCanvas()
       self?.printing.resetForProjectChange()
+      self?.cloth.clear()
       self?.showingPrint = false
       self?.artworkSession.showingTextStyles = false
       self?.artworkSession.showingPalette = false
       self?.artworkSession.showingTabs = false
       self?.artworkSession.showingGlyphs = false
+      self?.showingDocumentFonts=false
     }
   }
   func finishArtworkEditing() {
@@ -152,6 +157,7 @@ enum TableTool: String, CaseIterable {
             return
           }
           do {
+            if name == "form_cloth" {completion(.success(try self.bridgeClothCall(args)));return}
             let readOnly =
               [
                 "form_status", "form_list_projects", "form_get_project", "form_list_recipes",
@@ -159,6 +165,7 @@ enum TableTool: String, CaseIterable {
                 "form_list_filaments", "form_list_printers", "form_get_artwork",
                 "form_list_fonts", "form_font_features", "form_image_info", "form_export_publication",
               ].contains(name) || (name == "form_import_svg" && args["dry_run"] as? Bool == true)
+                || (name == "form_replace_font" && args["dry_run"] as? Bool==true)
                 || (name == "form_component" && args["command"] as? String == "list")
                 || (name == "form_swatch" && args["command"] as? String == "list")
                 || (name == "form_text_style" && args["command"] as? String == "list")
@@ -166,8 +173,12 @@ enum TableTool: String, CaseIterable {
                 || (["form_textile_stock","form_production_job"].contains(name) && ["list","get"].contains(args["command"] as? String ?? "list"))
                 || (name == "form_story" && ["list","get","layout"].contains(args["command"] as? String ?? "list"))
                 || (name == "form_publication" && ["list","get","preflight"].contains(args["command"] as? String ?? "list"))
-            if !readOnly {try self.preflightPublicationHandoff(name,args);self.finishArtworkEditing()}
+            if !readOnly {
+              try self.preflightFontHandoff(name,args)
+              try self.preflightPublicationHandoff(name,args);self.finishArtworkEditing()
+            }
             var result = try self.engine.call(name, arguments: args)
+            if ["form_undo","form_redo"].contains(name) {self.cloth.historyChanged()}
             if !readOnly { self.artworkSession.showingTabs = false;self.artworkSession.showingGlyphs=false }
             if name == "form_status", var status = result as? [String: Any] {
               status["renderer"] = self.scene?.diagnostics ?? [:]
@@ -179,6 +190,7 @@ enum TableTool: String, CaseIterable {
                 "canvas_workspace_id": self.project?.canvasWorkspace.map { $0.id.uuidString as Any } ?? NSNull(),
                 "artwork_object_id": self.artworkSession.objectID.map { $0.uuidString as Any } ?? NSNull(),
               ]
+              status["cloth_preview"] = ["object_id":self.cloth.preview.source?.objectID.uuidString as Any? ?? NSNull(),"diagnostics":self.cloth.preview.diagnostics.flatMap {try? jsonObject($0)} ?? NSNull(),"runtime_persisted":false]
               status["boolean_geometry"] = BooleanGeometry.diagnostics
               status["component_resolution"] = ComponentCommands.resolutionDiagnostics
               status["appearance_renderer"] = AppearanceRenderer.diagnostics
@@ -215,6 +227,7 @@ enum TableTool: String, CaseIterable {
     let visible = isolated.intersection(ids)
     if visible != isolated { isolated = visible }
     printing.reconcile()
+    cloth.reconcile()
     revision &+= 1
     if save { scheduleSave() }
   }
@@ -283,6 +296,7 @@ enum TableTool: String, CaseIterable {
     scene?.resetCamera()
   }
   func home() {
+    cloth.clear()
     closeDetachedCanvas()
     surfaceLayout = .single
     finishArtworkEditing()
@@ -324,7 +338,7 @@ enum TableTool: String, CaseIterable {
       "form_add_object",
       [
         "recipe_id": recipe.id, "position": [x, 0, 0],
-        "material_id": recipe.id == "bomberJacket" ? "flight-nylon" : recipe.id == "textilePatch" ? "patch-twill" : recipe.id == "textileLabel" ? "label-ecru" : recipe.id == "lamp" ? "vermillion" : recipe.id == "vase" ? "clay" : "chalk",
+        "material_id": ClothDesign.recipeIDs.contains(recipe.id) ? "linen" : recipe.id == "bomberJacket" ? "flight-nylon" : recipe.id == "textilePatch" ? "patch-twill" : recipe.id == "textileLabel" ? "label-ecru" : recipe.id == "lamp" ? "vermillion" : recipe.id == "vase" ? "clay" : "chalk",
       ])
     if recipe.id == "artboard", let object = primary {
       saveArtwork(.init(background: "#F2EDE1"), for: object)
@@ -363,6 +377,7 @@ enum TableTool: String, CaseIterable {
       return
     }
     engine.undo()
+    cloth.historyChanged()
     changed()
     toast("Undone")
   }
@@ -372,6 +387,7 @@ enum TableTool: String, CaseIterable {
       return
     }
     engine.redo()
+    cloth.historyChanged()
     changed()
     toast("Redone")
   }

@@ -3,14 +3,18 @@ import Foundation
 public struct SewingNotch: Codable, Equatable, Identifiable, Sendable {
   public var id = UUID()
   public var edge: Int
+  public var edgeID: UUID?
+  public var endID: UUID?
   public var position: Double
   public var width = 3.0
   public var depth = 3.0
   public init(edge: Int, position: Double) { self.edge = edge; self.position = position }
-  private enum CodingKeys: String, CodingKey { case id, edge, position, width, depth }
+  private enum CodingKeys: String, CodingKey { case id, edge, edgeID, endID, position, width, depth }
   public init(from decoder: Decoder) throws {
     let c = try decoder.container(keyedBy: CodingKeys.self)
     id = try c.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
+    edgeID = try c.decodeIfPresent(UUID.self, forKey: .edgeID)
+    endID = try c.decodeIfPresent(UUID.self, forKey: .endID)
     edge = try c.decode(Int.self, forKey: .edge); position = try c.decode(Double.self, forKey: .position)
     width = try c.decodeIfPresent(Double.self, forKey: .width) ?? 3; depth = try c.decodeIfPresent(Double.self, forKey: .depth) ?? 3
   }
@@ -25,10 +29,12 @@ public struct SewingPatternPiece: Codable, Equatable, Sendable {
   public var cutQuantity = 1
   public var grainAngle = 90.0
   public var onFoldEdge: Int?
+  public var onFoldEdgeID: UUID?
+  public var onFoldEndID: UUID?
   public var notches: [SewingNotch] = []
   public var notes: String?
   public init(name: String) { self.name = name }
-  private enum CodingKeys: String, CodingKey { case name, seamAllowance, edgeAllowances, materialID, cutQuantity, grainAngle, onFoldEdge, notches, notes }
+  private enum CodingKeys: String, CodingKey { case name, seamAllowance, edgeAllowances, materialID, cutQuantity, grainAngle, onFoldEdge, onFoldEdgeID, onFoldEndID, notches, notes }
   public init(from decoder: Decoder) throws {
     let c = try decoder.container(keyedBy: CodingKeys.self)
     name = try c.decode(String.self, forKey: .name)
@@ -38,6 +44,8 @@ public struct SewingPatternPiece: Codable, Equatable, Sendable {
     cutQuantity = try c.decodeIfPresent(Int.self, forKey: .cutQuantity) ?? 1
     grainAngle = try c.decodeIfPresent(Double.self, forKey: .grainAngle) ?? 90
     onFoldEdge = try c.decodeIfPresent(Int.self, forKey: .onFoldEdge)
+    onFoldEdgeID = try c.decodeIfPresent(UUID.self, forKey: .onFoldEdgeID)
+    onFoldEndID = try c.decodeIfPresent(UUID.self, forKey: .onFoldEndID)
     notches = try c.decodeIfPresent([SewingNotch].self, forKey: .notches) ?? []
     notes = try c.decodeIfPresent(String.self, forKey: .notes)
   }
@@ -47,12 +55,16 @@ public struct SewingPatternPiece: Codable, Equatable, Sendable {
 public struct SewingSeamEnd: Codable, Equatable, Sendable {
   public var elementID: UUID
   public var edge: Int
+  public var edgeID: UUID?
+  public var endID: UUID?
   public var copy: Int = 1
   public init(elementID: UUID, edge: Int, copy: Int = 1) { self.elementID = elementID; self.edge = edge; self.copy = copy }
-  private enum CodingKeys: String, CodingKey { case elementID, edge, copy }
+  private enum CodingKeys: String, CodingKey { case elementID, edge, edgeID, endID, copy }
   public init(from decoder: Decoder) throws {
     let c = try decoder.container(keyedBy: CodingKeys.self)
     elementID = try c.decode(UUID.self, forKey: .elementID); edge = try c.decode(Int.self, forKey: .edge)
+    edgeID = try c.decodeIfPresent(UUID.self, forKey: .edgeID)
+    endID = try c.decodeIfPresent(UUID.self, forKey: .endID)
     copy = try c.decodeIfPresent(Int.self, forKey: .copy) ?? 1
   }
 }
@@ -77,8 +89,10 @@ public struct SewingSeamDiagnostic: Equatable, Sendable {
   public var seam: SewingSeam
   public var firstLength: Double
   public var secondLength: Double
+  public var measurementError = 0.0
+  public var isConclusive: Bool { difference + measurementError <= seam.tolerance || difference - measurementError > seam.tolerance }
   public var difference: Double { abs(firstLength - secondLength) }
-  public var matches: Bool { difference <= seam.tolerance + 1e-8 }
+  public var matches: Bool { difference + measurementError <= seam.tolerance + 1e-8 }
 }
 public struct SewingPieceGeometry: Equatable, Sendable {
   public var elementID: UUID
@@ -88,14 +102,27 @@ public struct SewingPieceGeometry: Equatable, Sendable {
   public var normals: [Point2]
   public var edgeLengths: [Double]
   public var grainDirection: Point2
+  public var boundaries: [SewingBoundary] = []
+  public var cutContours: [[Point2]] = []
+  public var usesGeneralGeometry: Bool = false
+  public var edgeLengthErrors: [Double] = []
+  public var cutNotches: [SewingCutNotch] = []
+  public var allCutContours: [[Point2]] { cutContours.isEmpty ? [SewingPatternDrawing.cutContour(self)] : cutContours }
+  public var allStitchContours: [[Point2]] { boundaries.isEmpty ? [stitch] : boundaries.map(\.points) }
+  public var sourceEdges: [SewingBoundaryEdge] { boundaries.flatMap(\.edges) }
+  public func edgeIndex(_ legacy: Int, id: UUID?, endID: UUID? = nil) throws -> Int {
+    if let id { guard let edge = sourceEdges.first(where: { $0.id == id && (endID == nil || $0.endID == endID) }) else { throw FormError.invalid("A referenced source Bezier edge was removed or split/reversed. Reassign its seam, notch, or fold explicitly.") }; return edge.index }
+    guard endID == nil else { throw FormError.invalid("An endpoint guard needs its original source edge UUID.") }
+    guard edgeLengths.indices.contains(legacy) else { throw FormError.invalid("A referenced sewing edge no longer exists.") }; return legacy
+  }
   public var bounds: Rect2 {
-    let points = stitch + cut, x = points.map(\.x).min()!, y = points.map(\.y).min()!
+    let points = allStitchContours.flatMap { $0 } + (cutContours.isEmpty ? cut : cutContours.flatMap { $0 }), x = points.map(\.x).min()!, y = points.map(\.y).min()!
     return .init(x, y, points.map(\.x).max()! - x, points.map(\.y).max()! - y)
   }
 }
 
 public enum SewingPatterns {
-  public static let supportedShapes = "Sharp rectangles, regular polygons, and single closed convex paths made of straight edges. Curves, concave pieces, holes, masks, live components, and appearance effects are not supported in this first pattern editor."
+  public static let supportedShapes = "Closed editable Bezier paths with one simple outer contour and up to16 disjoint holes support uniform physical allowances. Existing sharp convex pieces retain per-edge allowances. Curved/concave per-edge overrides, curved folds, masks, live components, and appearance effects require an explicit simpler source."
   private static func cross(_ a: Point2, _ b: Point2) -> Double { a.x * b.y - a.y * b.x }
   private static func subtract(_ a: Point2, _ b: Point2) -> Point2 { .init(a.x - b.x, a.y - b.y) }
   private static func dot(_ a: Point2, _ b: Point2) -> Double { a.x * b.x + a.y * b.y }
@@ -128,6 +155,7 @@ public enum SewingPatterns {
         item.blendMode == nil || item.blendMode == "normal" else { throw FormError.invalid(supportedShapes) }
       ancestor = item.parentID.flatMap { id in art.elements.first { $0.id == id } }
     }
+    if needsGeneralGeometry(e) || piece.onFoldEdgeID != nil || piece.notches.contains(where: { $0.edgeID != nil }) { return try cachedGeneralGeometry(e, in: art) }
     let transform = art.worldTransform(e), points = try vertices(e).map(transform.apply), count = points.count
     let edges = points.indices.map { subtract(points[($0 + 1) % count], points[$0]) }
     let lengths = edges.map { hypot($0.x, $0.y) }, area = points.indices.reduce(0.0) { $0 + cross(points[$1], points[($1 + 1) % count]) } / 2
@@ -191,8 +219,8 @@ public enum SewingPatterns {
       guard !seam.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, seam.name.count <= 160,
         seam.first != seam.second, seam.tolerance.isFinite, (0...25).contains(seam.tolerance) else { throw FormError.invalid("Name each seam, choose two different piece copies/edges, and use a 0–25 mm tolerance.") }
       for end in [seam.first, seam.second] {
-        guard let piece = geometry[end.elementID], (0..<piece.edgeLengths.count).contains(end.edge),
-          (1...piece.piece.cutQuantity).contains(end.copy), end.edge != piece.piece.onFoldEdge else {
+        guard let piece = geometry[end.elementID], let edge = try? piece.edgeIndex(end.edge, id: end.edgeID, endID: end.endID),
+          (1...piece.piece.cutQuantity).contains(end.copy), edge != piece.piece.onFoldEdge else {
           throw FormError.invalid("A seam refers to a missing piece, edge, or cut copy. Remove or update that seam first.")
         }
       }
@@ -201,6 +229,11 @@ public enum SewingPatterns {
   public static func diagnostics(_ art: Artwork) throws -> [SewingSeamDiagnostic] {
     try validate(art)
     let geometries = try Dictionary(uniqueKeysWithValues: art.elements.filter { $0.sewingPiece != nil }.map { ($0.id, try geometry($0, in: art)) })
-    return (art.sewingSeams ?? []).map { .init(seam: $0, firstLength: geometries[$0.first.elementID]!.edgeLengths[$0.first.edge], secondLength: geometries[$0.second.elementID]!.edgeLengths[$0.second.edge]) }
+    return try (art.sewingSeams ?? []).map { seam in
+      let a=geometries[seam.first.elementID]!,b=geometries[seam.second.elementID]!
+      let ai=try a.edgeIndex(seam.first.edge,id:seam.first.edgeID,endID:seam.first.endID),bi=try b.edgeIndex(seam.second.edge,id:seam.second.edgeID,endID:seam.second.endID)
+      let error=(a.edgeLengthErrors.isEmpty ? 0:a.edgeLengthErrors[ai])+(b.edgeLengthErrors.isEmpty ? 0:b.edgeLengthErrors[bi])
+      return .init(seam:seam,firstLength:a.edgeLengths[ai],secondLength:b.edgeLengths[bi],measurementError:error)
+    }
   }
 }

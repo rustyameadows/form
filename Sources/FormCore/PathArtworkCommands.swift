@@ -19,6 +19,9 @@ extension PathCommands {
     guard paths.allSatisfy({ !artwork.isLocked($0) }) else {
       throw FormError.invalid("Unlock the selected paths before editing them.")
     }
+    if ["combine","release","join"].contains(operation),paths.contains(where:{$0.sewingPiece != nil}) {
+      throw FormError.invalid("Remove manufacturing annotations and seam pairs before combining, separating, or joining sewing source topology. Compose holes before annotating the piece.")
+    }
     let nodeIDs = paths.flatMap { $0.path!.contours.flatMap(\.nodes).map(\.id) }
     let counts = nodeIDs.reduce(into: [UUID: Int]()) { $0[$1, default: 0] += 1 }
     guard nodes.isSubset(of: Set(nodeIDs)) else { throw FormError.invalid("Unknown path node ID.") }

@@ -129,6 +129,8 @@ public struct SewingLayoutResolvedPlacement: Equatable, Sendable {
   public var contour: [Point2]
   public var bounds: Rect2
   public var grainDirection: Point2
+  public var contours: [[Point2]] = []
+  public var materialContours: [[Point2]] { contours.isEmpty ? [contour] : contours }
 }
 public struct SewingLayoutPreflight: Sendable {
   public var issues: [SewingLayoutIssue]

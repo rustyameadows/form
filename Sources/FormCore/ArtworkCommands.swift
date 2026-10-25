@@ -3,7 +3,7 @@ import Foundation
 /// The native editor and MCP use these same deterministic document commands.
 public enum ArtworkCommands {
   public static let names = [
-    "production",
+    "production", "font",
     "add", "replace", "delete", "duplicate", "group", "ungroup", "align", "distribute", "reorder",
     "flip", "clip", "release_clip", "paragraph", "glyph", "origin", "transform", "language", "list",
     "pattern_piece", "seam_pair", "pattern_template", "cut_layout",
@@ -21,6 +21,7 @@ public enum ArtworkCommands {
       throw FormError.invalid("Unlock the selected layers before editing them.")
     }
     switch command {
+    case "font":try FontCommands.assign(&result,ids:ids,arguments:arguments,maxTextCharacters:maxTextCharacters)
     case "cut_layout": try SewingLayoutCommands.edit(&result, arguments: arguments)
     case "pattern_piece", "seam_pair", "pattern_template":
       selection = try SewingPatternCommands.edit(command, artwork: &result, ids: ids, arguments: arguments)

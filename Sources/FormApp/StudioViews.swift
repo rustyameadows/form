@@ -36,6 +36,7 @@ struct RootView: View {
     .onChange(of:focusedDesignSurface) { _,surface in
       if let surface { store.activateDesignSurface(surface) }
     }
+    .sheet(isPresented:$store.showingDocumentFonts) {DocumentFontsPanel(session:store.artworkSession)}
     .sheet(isPresented: $store.showingLibrary) { LibraryView().environmentObject(store) }
     .sheet(isPresented: $store.showingBridge) { BridgeView().environmentObject(store) }
     .sheet(isPresented: $store.showingProjectInfo) { ProjectInfoView().environmentObject(store) }

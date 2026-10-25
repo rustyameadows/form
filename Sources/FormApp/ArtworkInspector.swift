@@ -334,7 +334,7 @@ struct ArtworkInspector: View {
         Picker(
           "Style",
           selection: Binding(
-            get: { type.fontName }, set: { name in session.typography { $0.fontName = name } })
+            get: { type.fontName }, set: { name in session.chooseFont(name) })
         ) {
           ForEach(FontCatalog.faces(family), id: \.name) { face in Text(face.style).tag(face.name) }
         }.labelsHidden().font(.system(size: 11))

@@ -1,0 +1,21 @@
+{
+  "repository": "https://github.com/AngusJohnson/Clipper2",
+  "tag": "Clipper2_2.0.1",
+  "archive_url": "https://codeload.github.com/AngusJohnson/Clipper2/tar.gz/refs/tags/Clipper2_2.0.1",
+  "archive_sha256": "2a3693aceab4aed3e39b743e038d87701acc53cf05ed7b2013aab3e0aec5287e",
+  "license": "BSL-1.0",
+  "files": [
+    "include/clipper2/clipper.core.h",
+    "include/clipper2/clipper.engine.h",
+    "include/clipper2/clipper.export.h",
+    "include/clipper2/clipper.h",
+    "include/clipper2/clipper.minkowski.h",
+    "include/clipper2/clipper.offset.h",
+    "include/clipper2/clipper.rectclip.h",
+    "include/clipper2/clipper.triangulation.h",
+    "include/clipper2/clipper.version.h",
+    "src/clipper.engine.cpp",
+    "src/clipper.offset.cpp",
+    "src/clipper.rectclip.cpp"
+  ]
+}

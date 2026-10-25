@@ -11,12 +11,14 @@ let package = Package(
     .library(name: "FormGraphics", targets: ["FormGraphics"]),
   ],
   targets: [
-    .target(name: "FormCore"),
+    .target(name: "CFormClipper", exclude: ["LICENSE", "UPSTREAM.json"], publicHeadersPath: "include", cxxSettings: [.headerSearchPath("vendor")]),
+    .target(name: "FormCore", dependencies: ["CFormClipper"]),
     .target(name: "FormGraphics", dependencies: ["FormCore"]),
     .executableTarget(name: "FormApp", dependencies: ["FormCore", "FormGraphics"]),
     .executableTarget(name: "FormMCP", dependencies: ["FormCore"]),
     .testTarget(name: "FormCoreTests", dependencies: ["FormCore", "FormGraphics"]),
     .testTarget(name: "FormAppTests", dependencies: ["FormApp", "FormCore"]),
   ],
-  swiftLanguageModes: [.v5]
+  swiftLanguageModes: [.v5],
+  cxxLanguageStandard: .cxx17
 )

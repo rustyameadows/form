@@ -149,6 +149,7 @@ import SwiftUI
         }.keyboardShortcut("'").disabled(store.mode != .artwork)
       }
       CommandMenu("Studio") {
+        Button("Document Fonts…") {store.showingDocumentFonts=true}.disabled(store.project==nil)
         Button("Materials & Equipment") { store.showingLibrary = true }
         Button("Codex Connection") { store.showingBridge = true }
         Divider()

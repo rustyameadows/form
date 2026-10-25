@@ -17,8 +17,8 @@ extension SewingLayouts {
     let work = try workItems(original, source: source)
     if let issue = work.issues.first { throw FormError.invalid(issue.message) }
     let sorted = work.items.sorted { a, b in
-      let areaA = SewingLayoutGeometry.area(SewingPatternDrawing.cutContour(a.geometry))
-      let areaB = SewingLayoutGeometry.area(SewingPatternDrawing.cutContour(b.geometry))
+      let areaA = SewingLayoutGeometry.materialArea(a.geometry.allCutContours)
+      let areaB = SewingLayoutGeometry.materialArea(b.geometry.allCutContours)
       if abs(areaA - areaB) > 1e-8 { return areaA > areaB }
       let edgeA = max(a.geometry.bounds.width, a.geometry.bounds.height), edgeB = max(b.geometry.bounds.width, b.geometry.bounds.height)
       if abs(edgeA - edgeB) > 1e-8 { return edgeA > edgeB }

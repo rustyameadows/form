@@ -24,11 +24,11 @@ struct SewingPatternControls: View {
               Text("Unspecified").tag("")
               ForEach(store.materials.filter { $0.fabric != nil }) { Text($0.name).tag($0.id) }
             }.font(.system(size: 10))
-            Picker("Cut on fold", selection: Binding(get: { piece.onFoldEdge ?? -1 }, set: { value in session.update { $0.sewingPiece?.onFoldEdge = value < 0 ? nil : value } })) {
+            Picker("Cut on fold", selection: Binding(get: { geometry.piece.onFoldEdge ?? -1 }, set: { value in session.update { e in e.sewingPiece?.onFoldEdge = value < 0 ? nil : value; e.sewingPiece?.onFoldEdgeID = value < 0 ? nil : geometry.sourceEdges.first(where: { $0.index == value })?.id; e.sewingPiece?.onFoldEndID = value < 0 ? nil : geometry.sourceEdges.first(where: { $0.index == value })?.endID } })) {
               Text("None").tag(-1)
-              ForEach(geometry.stitch.indices, id: \.self) { Text("Edge \($0 + 1)").tag($0) }
+              ForEach(geometry.edgeLengths.indices.filter { !geometry.usesGeneralGeometry || geometry.boundaries.count == 1 && geometry.sourceEdges[$0].isStraight }, id: \.self) { Text("Edge \($0 + 1)").tag($0) }
             }.font(.system(size: 10))
-            ForEach(geometry.stitch.indices, id: \.self) { index in edge(index, geometry: geometry) }
+            ForEach(geometry.edgeLengths.indices, id: \.self) { index in edge(index, geometry: geometry) }
             TextField("Construction notes", text: Binding(get: { piece.notes ?? "" }, set: { value in session.update { $0.sewingPiece?.notes = value } }), axis: .vertical)
               .font(.system(size: 10)).textFieldStyle(.roundedBorder).lineLimit(2...5)
             Button("Remove piece annotation") { session.execute("pattern_piece", ["piece": NSNull()]) }.font(.system(size: 10))
@@ -52,13 +52,15 @@ struct SewingPatternControls: View {
       if piece.onFoldEdge == index {
         Text("Place this edge on the fabric fold; no cut pass.").font(.system(size: 9)).foregroundStyle(Palette.secondary)
       } else {
-        ArtworkUnitField("Allowance", value: piece.allowance(for: index), unit: session.unit) { value in session.update { $0.sewingPiece?.edgeAllowances[index] = value } }
+        if !geometry.usesGeneralGeometry {
+          ArtworkUnitField("Allowance", value: piece.allowance(for:index),unit:session.unit) { value in session.update{$0.sewingPiece?.edgeAllowances[index]=value} }
+        } else {Text("Uniform physical allowance · original source edge").font(.system(size:9)).foregroundStyle(Palette.secondary)}
         if piece.edgeAllowances[index] != nil {
           Button("Use default allowance") { session.update { $0.sewingPiece?.edgeAllowances.removeValue(forKey: index) } }.font(.system(size: 9))
         }
         if !piece.notches.contains(where: { $0.edge == index }) {
           Button("Add midpoint notch") {
-            var notch = SewingNotch(edge: index, position: 0.5); notch.depth = min(3, piece.allowance(for: index) / 2)
+            var notch = SewingNotch(edge: index, position: 0.5); notch.edgeID = geometry.sourceEdges.first(where:{$0.index==index})?.id; notch.endID=geometry.sourceEdges.first(where:{$0.index==index})?.endID; notch.depth = min(3, piece.allowance(for: index) / 2)
             session.update { $0.sewingPiece?.notches.append(notch) }
           }.font(.system(size: 9)).disabled(length < 8 || piece.allowance(for: index) < 1.1)
         }
@@ -69,7 +71,7 @@ struct SewingPatternControls: View {
             ScalarArtworkField("Notch position", value: notch.position * 100, unit: "%") { value in editNotch(notch.id) { $0.position = value / 100 } }
             Button { session.update { $0.sewingPiece?.notches.removeAll { $0.id == notch.id } } } label: { Image(systemName: "minus.circle") }.buttonStyle(.borderless)
           }
-          ArtworkUnitField("Notch width", value: notch.width, unit: session.unit) { value in editNotch(notch.id) { $0.width = value } }
+          ArtworkUnitField(geometry.usesGeneralGeometry ? "Cut opening arc width" : "Notch width", value: notch.width, unit: session.unit) { value in editNotch(notch.id) { $0.width = value } }
           ArtworkUnitField("Notch depth", value: notch.depth, unit: session.unit) { value in editNotch(notch.id) { $0.depth = value } }
         }
       }
@@ -89,6 +91,7 @@ struct SewingPatternActions: View {
   @State private var preview = false
   @State private var pairing = false
   @State private var cuttingLayout = false
+  @State private var roundedPouch = false
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
       if session.art.elements.contains(where: { $0.sewingPiece != nil }) {
@@ -100,16 +103,18 @@ struct SewingPatternActions: View {
           ForEach(checks, id: \.seam.id) { check in
             HStack(alignment: .top) {
               Image(systemName: check.matches ? "checkmark.circle" : "exclamationmark.circle")
-              Text(check.seam.name + (check.matches ? " · matched" : String(format: " · %.1f mm mismatch", check.difference)))
+              Text(check.seam.name + (!check.isConclusive ? " · measurement uncertainty exceeds requested tolerance" : check.matches ? " · matched" : String(format: " · %.1f mm mismatch", check.difference)))
               Spacer(); Button { session.execute("seam_pair", ["seam": NSNull(), "seam_id": check.seam.id.uuidString]) } label: { Image(systemName: "minus.circle") }.buttonStyle(.borderless)
             }.font(.system(size: 9)).foregroundStyle(check.matches ? Palette.secondary : Palette.accent)
           }
         }
       }
       Button("Add tote cutting study") { store.createTotePattern() }.font(.system(size: 10)).accessibilityLabel("Add tote cutting study")
+      Button("Add measured rounded pouch…") { session.canvas?.finishText(); roundedPouch=true }.font(.system(size:10)).accessibilityLabel("Add measured rounded pouch")
     }.font(.system(size: 10)).sheet(isPresented: $preview) { SewingPatternPreview(session: session).environmentObject(store) }
       .sheet(isPresented: $pairing) { SewingSeamEditor(session: session).environmentObject(store) }
       .sheet(isPresented: $cuttingLayout) { SewingLayoutEditor(session: session).environmentObject(store) }
+      .sheet(isPresented:$roundedPouch){RoundedPouchControls().environmentObject(store)}
   }
 }
 

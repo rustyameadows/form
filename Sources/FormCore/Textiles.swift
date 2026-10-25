@@ -180,6 +180,7 @@ public enum TextileDesign {
 
 extension Project {
   public func validateTextiles() throws {
+    try validateCloth()
     try validateProductionJobs()
     for material in materials {try material.fabric?.validate()}
     try validateFabricPatterns()

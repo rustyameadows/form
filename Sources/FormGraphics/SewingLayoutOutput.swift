@@ -42,17 +42,17 @@ import FormCore
   }
   private var clipPath: CGPath {
     let path = CGMutablePath()
-    for p in report.placements {
-      guard let first = p.contour.first else { continue }
+    for p in report.placements { for contour in p.materialContours {
+      guard let first = contour.first else { continue }
       path.move(to: .init(x: first.x, y: first.y))
-      for point in p.contour.dropFirst() { path.addLine(to: .init(x: point.x, y: point.y)) }
+      for point in contour.dropFirst() { path.addLine(to: .init(x: point.x, y: point.y)) }
       path.closeSubpath()
-    }
+    } }
     return path
   }
   public func drawFabric(assets: URL, vector: Bool, density: Double = 1, fontRevision: Int = 0) throws {
     guard includeFabricPreview, let context = NSGraphicsContext.current?.cgContext else { return }
-    context.saveGState(); context.addPath(clipPath); context.clip()
+    context.saveGState(); context.addPath(clipPath); context.clip(using: .evenOdd)
     defer { context.restoreGState() }
     if let design = adjustedFabric {
       if vector {
@@ -91,7 +91,7 @@ import FormCore
         guard let start = full.range(of: "<defs>"), let end = full.range(of: "</svg>", options: .backwards) else { throw FormError.invalid("Could not compose the fabric reference layer.") }
         fill = String(full[start.lowerBound..<end.lowerBound])
       } else { fill = "<rect width=\"\(width)\" height=\"\(height)\" fill=\"\(fabricColor)\"/>" }
-      reference += "<defs><clipPath id=\"cutting-layout-pieces\"><path d=\"\(path)\"/></clipPath></defs><g id=\"form-role-fabric-reference\" inkscape:groupmode=\"layer\" inkscape:label=\"Fabric reference\" data-form-role=\"fabric-reference\"><title>Roll-anchored fabric reference; visible upper ply when folded</title><g clip-path=\"url(#cutting-layout-pieces)\">\(fill)</g></g>"
+      reference += "<defs><clipPath id=\"cutting-layout-pieces\"><path d=\"\(path)\" clip-rule=\"evenodd\"/></clipPath></defs><g id=\"form-role-fabric-reference\" inkscape:groupmode=\"layer\" inkscape:label=\"Fabric reference\" data-form-role=\"fabric-reference\"><title>Roll-anchored fabric reference; visible upper ply when folded</title><g clip-path=\"url(#cutting-layout-pieces)\">\(fill)</g></g>"
     }
     if let end = svg.range(of: "</desc>")?.upperBound { svg = String(svg[..<end]) + reference + String(svg[end...]) }
     return svg

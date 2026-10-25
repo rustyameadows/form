@@ -47,7 +47,7 @@ final class SewingPatternTests: XCTestCase {
     XCTAssertThrowsError(try SewingPatterns.geometry(e, in: Artwork(elements: [e])))
     e.cornerRadius = nil; e.kind = "path"
     e.path = .init(width: 100, height: 80, contours: [.init([.init(.init(0, 0)), .init(.init(100, 0)), .init(.init(50, 20)), .init(.init(100, 80)), .init(.init(0, 80))])])
-    XCTAssertThrowsError(try SewingPatterns.geometry(e, in: Artwork(elements: [e])))
+    XCTAssertNoThrow(try SewingPatterns.geometry(e, in: Artwork(elements: [e])))
     e = piece(); e.sewingPiece!.notches = [.init(edge: 0, position: 0.01)]
     XCTAssertThrowsError(try SewingPatterns.geometry(e, in: Artwork(elements: [e])))
     e.sewingPiece!.notches[0].position = 0.5

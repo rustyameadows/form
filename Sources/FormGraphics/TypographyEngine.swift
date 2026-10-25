@@ -559,7 +559,9 @@ public enum FormColor {
         && assignedFeatures.isEqual(actualFeatures)
       let preserveAssignedName = attrs[styleKey] != nil && assignedFont.fontName == font.fontName
       if !preserveAssignedName { style.fontName = font.fontName }
-      if let values = font.fontDescriptor.object(forKey: .variation) as? [NSNumber: NSNumber] {
+      let assignedVariations=assignedFont.fontDescriptor.object(forKey:.variation) as? NSDictionary ?? [:]
+      let actualVariations=font.fontDescriptor.object(forKey:.variation) as? NSDictionary ?? [:]
+      if !(preserveAssignedName && assignedVariations.isEqual(actualVariations)),let values = font.fontDescriptor.object(forKey: .variation) as? [NSNumber: NSNumber] {
         style.variations = Dictionary(
           uniqueKeysWithValues: values.map { ($0.key.intValue, $0.value.doubleValue) })
       }
@@ -644,7 +646,7 @@ public enum FormColor {
     value.countLimit = 256
     return value
   }()
-  public static func invalidate() { detailCache.removeAllObjects(); GlyphCatalog.invalidate() }
+  public static func invalidate() { detailCache.removeAllObjects(); FontLibraryCatalog.invalidate(); GlyphCatalog.invalidate() }
   public static func independentFeatureTypes(_ name: String) -> Set<Int> {
     Set((details(name)["features"] as? [[String: Any]] ?? []).compactMap {
       ($0["exclusive"] as? Bool) == false ? $0["id"] as? Int : nil
@@ -698,11 +700,8 @@ public enum FormColor {
     return result
   }
   public static func missing(in art: Artwork) -> [String] {
-    Set(
-      art.elements.filter { $0.kind == "text" }.flatMap { e in
-        [e.typography?.fontName ?? Typography().fontName]
-          + (e.textRuns ?? []).map { $0.typography.fontName }
-      }
-    ).filter { NSFont(name: $0, size: 12) == nil }.sorted()
+    var names=Set(art.elements.flatMap{FontUsage.uses(in:$0).map(\.fontName)})
+    for story in art.elements.compactMap({$0.storyFrame?.resolved?.story}) {names.formUnion(FontUsage.uses(in:story.sourceElement).map(\.fontName))}
+    return names.filter{!FontLibraryCatalog.installed($0)}.sorted()
   }
 }

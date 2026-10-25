@@ -22,82 +22,79 @@ struct FontBrowserButton: View {
   }
 }
 struct FontBrowser: View {
-  @ObservedObject var session: ArtworkSession
-  @Environment(\.dismiss) var dismiss
-  @State private var query = ""
-  @State private var favorites =
-    UserDefaults.standard.stringArray(forKey: "FORM.favoriteFontFamilies") ?? []
-  @State private var recent =
-    UserDefaults.standard.stringArray(forKey: "FORM.recentFontFamilies") ?? []
-  @State private var favoriteOnly = false
-  var families: [String] {
-    let all = FontCatalog.families.filter {
-      query.isEmpty || $0.localizedCaseInsensitiveContains(query)
-    }.filter { !favoriteOnly || favorites.contains($0) }
-    if query.isEmpty && !favoriteOnly {
-      return recent.filter { all.contains($0) } + all.filter { !recent.contains($0) }
-    }
-    return all
+  @ObservedObject var session:ArtworkSession
+  var onChoose:((String)->Void)?
+  @Environment(\.dismiss) private var dismiss
+  @StateObject private var preferences:FontLibraryPreferences
+  init(session:ArtworkSession,onChoose:((String)->Void)?=nil) {
+    self.session=session;self.onChoose=onChoose
+    _preferences=StateObject(wrappedValue:session.store?.fontLibraryPreferences ?? .environment())
   }
-  var body: some View {
-    VStack(spacing: 13) {
+  @State private var query=""
+  @State private var sample=FontLibraryCatalog.defaultPreview
+  @State private var favoriteOnly=false
+  @State private var showingUsage=false
+  @State private var fontRevision=0
+  private var faces:[InstalledFontFace] {
+    _ = fontRevision
+    let all=FontLibraryCatalog.search(query).filter{!favoriteOnly || preferences.favorite($0)}
+    guard query.isEmpty,!favoriteOnly else{return all}
+    let ranks=Dictionary(uniqueKeysWithValues:preferences.recent.enumerated().map{($0.element,$0.offset)})
+    return all.enumerated().sorted {a,b in
+      let left=ranks[a.element.name] ?? Int.max,right=ranks[b.element.name] ?? Int.max
+      return left==right ? a.offset<b.offset:left<right
+    }.map(\.element)
+  }
+  var body:some View {
+    VStack(spacing:12) {
       HStack {
-        TextField("Search installed fonts", text: $query).textFieldStyle(.roundedBorder)
-        Button {
-          favoriteOnly.toggle()
-        } label: {
-          Image(systemName: favoriteOnly ? "star.fill" : "star")
-        }.buttonStyle(.plain).help("Show favorite typefaces")
+        TextField("Search family, style or face",text:$query).textFieldStyle(.roundedBorder)
+        Button {favoriteOnly.toggle()} label:{Image(systemName:favoriteOnly ? "star.fill":"star")}
+          .buttonStyle(.plain).help("Show favorite font faces")
       }
-      HStack {
-        SectionLabel("FONTS ON THIS MAC")
-        Spacer()
-        Text("\(families.count) families").font(.system(size: 9)).foregroundStyle(Palette.secondary)
-      }
+      TextField("Preview text",text:$sample).textFieldStyle(.roundedBorder)
+        .onChange(of:sample) {_,value in if value.count>128 {sample=String(value.prefix(128))}}
+      HStack {SectionLabel("FONT FACES ON THIS MAC");Spacer();Text(faces.count == 1 ? "1 face":"\(faces.count) faces").font(.system(size:9)).foregroundStyle(Palette.secondary)}
       ScrollView {
-        LazyVStack(spacing: 2) {
-          ForEach(families, id: \.self) { family in
-            HStack {
+        LazyVStack(spacing:3) {
+          ForEach(faces) {face in
+            HStack(spacing:5) {
               Button {
-                let face = FontCatalog.faces(family).first?.name ?? family
-                session.typography {
-                  $0.fontName = face
-                  $0.features = [:]
-                  $0.featureSelections = nil
-                  $0.variations = [:]
-                }
-                recent.removeAll { $0 == family }
-                recent.insert(family, at: 0)
-                recent = Array(recent.prefix(12))
-                UserDefaults.standard.set(recent, forKey: "FORM.recentFontFamilies")
+                if let onChoose {onChoose(face.name)} else{session.chooseFont(face.name)}
                 dismiss()
-              } label: {
-                VStack(alignment: .leading, spacing: 5) {
-                  Text(family).font(.system(size: 9)).foregroundStyle(Palette.secondary)
-                  Text("Aa  Form  0123456789").font(
-                    Font(
-                      NSFont(name: FontCatalog.faces(family).first?.name ?? family, size: 18)
-                        ?? .systemFont(ofSize: 18))
-                  ).foregroundStyle(Palette.ink).lineLimit(1)
-                }.frame(maxWidth: .infinity, alignment: .leading).padding(10)
+              } label:{
+                VStack(alignment:.leading,spacing:4) {
+                  HStack {
+                    Text(face.family+" · "+face.style).font(.system(size:10)).foregroundStyle(Palette.secondary)
+                    if preferences.recent.contains(face.name) {Image(systemName:"clock").font(.system(size:8)).foregroundStyle(Palette.secondary)}
+                    Spacer()
+                    if session.inspectedTypography.fontName==face.name {Image(systemName:"checkmark").font(.system(size:9)).foregroundStyle(Palette.accent)}
+                  }
+                  if let font=FontLibraryCatalog.preview(face.name) {
+                    let preview=FontLibraryCatalog.previewText(sample,font:font)
+                    Text(preview.text).font(Font(font)).lineLimit(1).foregroundStyle(Palette.ink)
+                    if preview.usesFallback {Text("Some preview characters use system fallback").font(.system(size:8)).foregroundStyle(Palette.secondary)}
+                  }
+                  else {Text("Unavailable").font(.system(size:11)).foregroundStyle(Palette.secondary)}
+                  Text(face.name).font(.system(size:8,design:.monospaced)).foregroundStyle(Palette.secondary).lineLimit(1)
+                }.padding(10).frame(maxWidth:.infinity,alignment:.leading).contentShape(Rectangle())
               }.buttonStyle(.plain)
-              Button {
-                if favorites.contains(family) {
-                  favorites.removeAll { $0 == family }
-                } else {
-                  favorites.append(family)
-                }
-                UserDefaults.standard.set(favorites, forKey: "FORM.favoriteFontFamilies")
-              } label: {
-                Image(systemName: favorites.contains(family) ? "star.fill" : "star").font(
-                  .system(size: 11)
-                ).foregroundStyle(favorites.contains(family) ? Palette.accent : Palette.secondary)
-              }.buttonStyle(.plain).padding(.trailing, 12)
-            }.background(.white.opacity(0.6), in: RoundedRectangle(cornerRadius: 6))
+              Button {preferences.toggle(face)} label:{Image(systemName:preferences.favorite(face) ? "star.fill":"star").font(.system(size:11))}
+                .buttonStyle(.plain).foregroundStyle(preferences.favorite(face) ? Palette.accent:Palette.secondary)
+                .help("Favorite \(face.name)").padding(.trailing,12)
+            }.background(.white.opacity(0.6),in:RoundedRectangle(cornerRadius:6))
           }
+          if faces.isEmpty {Text("No matching installed faces.").font(.system(size:12)).foregroundStyle(Palette.secondary).padding(20)}
         }
       }
-    }.padding(18).frame(width: 380, height: 460).background(Palette.paper)
+      if let error=preferences.error {Text(error).font(.system(size:10)).foregroundStyle(Palette.accent)}
+      if onChoose==nil {
+        Button("Document font usage & replacements…",systemImage:"doc.text.magnifyingglass") {showingUsage=true}
+          .buttonStyle(.borderless).font(.system(size:11)).frame(maxWidth:.infinity,alignment:.leading)
+      }
+    }.padding(18).frame(width:400,height:530).background(Palette.paper)
+      .onReceive(NotificationCenter.default.publisher(for:NSFont.fontSetChangedNotification)) {_ in FontLibraryCatalog.invalidate();fontRevision+=1}
+      .sheet(isPresented:$showingUsage) {DocumentFontsPanel(session:session)}
   }
 }
 

@@ -5,24 +5,15 @@ import UniformTypeIdentifiers
 
 extension StudioStore {
   func graphicsCall(_ name: String, _ args: [String: Any]) throws -> Any {
+    if name == "form_cloth" {return try clothCall(args)}
     if ["form_textile_stock","form_production_job"].contains(name) {return try productionCall(name,arguments:args)}
     if ["form_story","form_publication","form_export_publication"].contains(name) {return try publicationGraphicsCall(name,args)}
     if name == "form_color_profile" { return try colorProfileCall(args) }
     if name == "form_import_image" { return try importImage(args) }
     if name == "form_image_info" { return try imageInfo(args) }
     if name == "form_import_svg" { return try importSVG(arguments: args) }
-    if name == "form_list_fonts" {
-      let query = (args["query"] as? String ?? "").lowercased()
-      return [
-        "families": FontCatalog.families.filter { query.isEmpty || $0.lowercased().contains(query) }
-          .prefix(100).map {
-            [
-              "family": $0,
-              "faces": FontCatalog.faces($0).map { ["name": $0.name, "style": $0.style] },
-            ]
-          }
-      ]
-    }
+    if name == "form_list_fonts" {return try fontLibraryCall(args)}
+    if name == "form_replace_font" {return try replaceFontCall(args)}
     if name == "form_font_features" {
       guard let font = args["font_name"] as? String else {
         throw FormError.invalid("font_name is required.")

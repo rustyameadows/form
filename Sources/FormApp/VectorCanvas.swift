@@ -308,6 +308,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var space = false
   private var textView: NSTextView?
   private var publicationEditor:PublicationEditingController?
+  var hasMarkedTextInput:Bool {textView?.hasMarkedText() ?? false}
   var activeStoryView:CanvasTextView? {publicationEditor == nil ? nil:textView as? CanvasTextView}
   var storyEditor:PublicationEditingController? {publicationEditor}
   private var textHost: NativeAffineView?

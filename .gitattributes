@@ -1,0 +1,3 @@
+# Keep pinned upstream Clipper2 bytes intact; FORM bridge/source files keep normal whitespace checks.
+Sources/CFormClipper/src/clipper.*.cpp -whitespace
+Sources/CFormClipper/vendor/clipper2/*.h -whitespace

@@ -29,6 +29,7 @@ private struct RenderSignature: Equatable {
   let textureLimit: Int
   let textile: TextileProduct?
   let fabricPattern: ResolvedFabricPattern?
+  let cloth:ClothStudy?
 }
 
 @MainActor final class TableSceneController {
@@ -42,6 +43,8 @@ private struct RenderSignature: Equatable {
   weak var view: TableSCNView?
   private var projectID: UUID?
   private var nodes: [UUID: SCNNode] = [:]
+  private var clothSurfaces:[UUID:ClothSceneSurface]=[:]
+  private var clothIssues:[UUID:String]=[:]
   private var embroideryIssues:[UUID:String]=[:]
   private var embroideryDigests:[UUID:String]=[:]
   func embroideryIssue(for id:UUID)->String? {embroideryIssues[id]}
@@ -61,6 +64,7 @@ private struct RenderSignature: Equatable {
   var diagnostics: [String: Any] {
     [
       "object_nodes": nodes.count, "geometry_builds": geometryBuilds,
+      "cloth_surfaces":clothSurfaces.count,"cloth_issues":Dictionary(uniqueKeysWithValues:clothIssues.map {($0.key.uuidString,$0.value)}),
       "embroidery_program_builds":EmbroiderySurface.programBuilds,"embroidery_texture_builds":EmbroiderySurface.textureBuilds,
       "embroidery_texture_max_edge":EmbroiderySurface.maximumTextureEdge,
       "embroidery_issues":Dictionary(uniqueKeysWithValues:embroideryIssues.map {($0.key.uuidString,$0.value)}),
@@ -170,6 +174,7 @@ private struct RenderSignature: Equatable {
       view?.cancelPointerInteraction()
       objectRoot.childNodes.forEach { $0.removeFromParentNode() }
       nodes = [:]
+      clothSurfaces=[:];clothIssues=[:]
       embroideryIssues=[:];embroideryDigests=[:]
       fingerprints = [:]
       geometryBounds = [:]
@@ -183,6 +188,7 @@ private struct RenderSignature: Equatable {
     let live = Set(physicalObjects.map(\.id))
     for id in Array(nodes.keys) where !live.contains(id) {
       nodes.removeValue(forKey: id)?.removeFromParentNode()
+      clothSurfaces.removeValue(forKey:id);clothIssues.removeValue(forKey:id)
       fingerprints.removeValue(forKey: id)
       embroideryIssues.removeValue(forKey:id);embroideryDigests.removeValue(forKey:id)
       geometryBounds.removeValue(forKey: id)
@@ -197,7 +203,7 @@ private struct RenderSignature: Equatable {
         asset: object.asset,
         fontRevision: project.editableArtwork(object) == nil && project.material(object.materialID).fabric?.pattern == nil ? 0 : GeometryFactory.fontRevision,
         textureLimit: textureLimit, textile: object.textile?.renderDefinition,
-        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition)
+        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth)
       if let node=nodes[object.id],let prior=fingerprints[object.id],prior != fingerprint,
         canUpdateEmbroiderySurface(prior,fingerprint,object:object) {
         EmbroiderySceneSurface.update(node,object:object,project:project,assets:assets,textureLimit:textureLimit)
@@ -205,12 +211,20 @@ private struct RenderSignature: Equatable {
         updateEmbroideryStatus(object,project:project,textureLimit:textureLimit)
       } else if nodes[object.id] == nil || fingerprints[object.id] != fingerprint {
         nodes[object.id]?.removeFromParentNode()
-        let node = GeometryFactory.object(
-          object, project: project, assets: assets, textureLimit: textureLimit)
+        let node:SCNNode
+        if object.cloth != nil {
+          do {
+            let surface=try ClothSceneSurface(object:object,project:project,frame:store?.cloth.frame(for:object,in:project),assets:assets,textureLimit:textureLimit)
+            clothSurfaces[object.id]=surface;clothIssues[object.id]=nil;node=surface.root
+          } catch {clothIssues[object.id]=error.localizedDescription;clothSurfaces[object.id]=nil;node=SCNNode()}
+        } else {
+          clothSurfaces[object.id]=nil;clothIssues[object.id]=nil
+          node=GeometryFactory.object(object,project:project,assets:assets,textureLimit:textureLimit)
+        }
         geometryBuilds += 1
         node.name = "object:\(object.id.uuidString)"
         nodes[object.id] = node
-        geometryBounds[object.id] = node.boundingBox
+        geometryBounds[object.id] = clothSurfaces[object.id]?.geometricBounds ?? node.boundingBox
         objectRoot.addChildNode(node)
         fingerprints[object.id] = fingerprint
         updateEmbroideryStatus(object,project:project,textureLimit:textureLimit)
@@ -220,7 +234,9 @@ private struct RenderSignature: Equatable {
       if object.recipeID == "clock" { GeometryFactory.updateClockHands(node, object: object) }
       let placement = project.textilePlacement(object)
       node.position = v(placement.position.x / 100, placement.position.y / 100, placement.position.z / 100)
-      if object.textile?.attachment != nil {
+      if let cloth=try? (store != nil ? store!.cloth.placement(of:object,in:project):project.clothPlacement(object)) {
+        applyClothPlacement(cloth,to:node)
+      } else if object.textile?.attachment != nil {
         let normal = SIMD3<Float>(Float(placement.normal.x), Float(placement.normal.y), Float(placement.normal.z))
         node.simdOrientation = simd_quatf(from: SIMD3<Float>(0,1,0), to: normal)
           * simd_quatf(angle: Float(placement.rotation * .pi / 180), axis: SIMD3<Float>(0,1,0))
@@ -251,13 +267,38 @@ private struct RenderSignature: Equatable {
     SCNTransaction.commit()
     view?.needsDisplay = true
   }
+  private func applyClothPlacement(_ placement:ClothSurfacePlacement,to node:SCNNode) {
+    let p=placement.positionMm,n=placement.normal,t=placement.materialTangent
+    let x=SIMD3<Float>(Float(t.x),Float(t.y),Float(t.z)),y=SIMD3<Float>(Float(n.x),Float(n.y),Float(n.z)),z=simd_cross(x,y)
+    node.position=SCNVector3(p.x/100,p.y/100,p.z/100);node.simdOrientation=simd_quatf(simd_float3x3(columns:(x,y,z)))
+  }
+  func updateClothFrame(_ frame:ClothFrame,objectID:UUID) {
+    guard let project=store?.project,project.id==projectID,let object=project.objects.first(where:{$0.id==objectID}),let surface=clothSurfaces[objectID],object.cloth?.mesh==surface.surface.mesh else {return}
+    do {
+      try surface.update(frame);geometryBounds[objectID]=surface.geometricBounds
+      for object in project.objects where object.clothAttachment?.surfaceObjectID==objectID {
+        if let node=nodes[object.id],let placement=try store?.cloth.placement(of:object,in:project) {applyClothPlacement(placement,to:node)}
+      }
+      rebuildSelection(lastSelection,studio:lastStudio);view?.needsDisplay=true
+    } catch {clothIssues[objectID]=error.localizedDescription}
+  }
+  func resetClothFrame(objectID:UUID) {
+    guard let object=store?.project?.objects.first(where:{$0.id==objectID}),let study=object.cloth,let frame=try? ClothSolver(mesh:study.mesh,settings:study.settings,colliders:study.colliders).frame else {return}
+    updateClothFrame(frame,objectID:objectID)
+  }
+  func worldPosition(_ object:ProductObject)->Vector3 {
+    guard let project=store?.project else {return object.position}
+    if let placement=try? store?.cloth.placement(of:object,in:project) {return placement.positionMm}
+    return project.textilePlacement(object).position
+  }
+  func clothBounds(for id:UUID)->(min:SCNVector3,max:SCNVector3)? {clothSurfaces[id]?.geometricBounds}
   private func rebuildSelection(_ selection: Set<UUID>, studio: Bool) {
     selectionNodes.forEach { $0.removeFromParentNode() }
     selectionNodes = []
     guard !studio else { return }
     for id in selection {
       guard let node = nodes[id] else { continue }
-      let bounds = node.boundingBox
+      let bounds = geometryBounds[id] ?? node.boundingBox
       let min = bounds.min
       let max = bounds.max
       let p: CGFloat = 0.035
@@ -584,8 +625,8 @@ private struct RenderSignature: Equatable {
       }
       action = .move
       objectPositions = Dictionary(
-        uniqueKeysWithValues: store.selected.filter { !$0.locked }.map { ($0.id, store.project?.textilePlacement($0).position ?? $0.position) })
-      dragOrigin = controller.pointOnTable(previous, height: store.primary.map { store.project?.textilePlacement($0).position.y ?? $0.position.y } ?? 0)
+        uniqueKeysWithValues: store.selected.filter { !$0.locked }.map { ($0.id, controller.worldPosition($0)) })
+      dragOrigin = controller.pointOnTable(previous, height: store.primary.map {controller.worldPosition($0).y} ?? 0)
     }
   }
   override func mouseDragged(with event: NSEvent) {
@@ -626,11 +667,12 @@ private struct RenderSignature: Equatable {
             // A selected decoration follows its moving garment. Moving both
             // independently would apply the same translation twice and make
             // the result depend on their saved object order.
-            if let parent = p.objects[i].textile?.attachment?.garmentID,
+            if let parent = p.objects[i].textile?.attachment?.garmentID ?? p.objects[i].clothAttachment?.surfaceObjectID,
               self.objectPositions[parent] != nil { continue }
             let target = Vector3(((start.x + now.x - origin.x) / snap).rounded() * snap,
               start.y, ((start.z + now.z - origin.z) / snap).rounded() * snap)
-            p.setTextileWorldPosition(p.objects[i].id,to:target)
+            if p.objects[i].clothAttachment != nil {try store.cloth.reposition(p.objects[i].id,to:target,in:&p)}
+            else {p.setTextileWorldPosition(p.objects[i].id,to:target)}
           }
         }
       }
@@ -780,6 +822,7 @@ private struct RenderSignature: Equatable {
   static func object(
     _ sourceObject: ProductObject, project: Project, assets: URL, textureLimit: Int = 2048
   ) -> SCNNode {
+    if sourceObject.cloth != nil,let cloth=try? ClothSceneSurface(object:sourceObject,project:project,assets:assets,textureLimit:textureLimit) {return cloth.root}
     var object = sourceObject
     object.artwork = project.surfaceArtwork(sourceObject)
     object.artworkSourceID = nil

@@ -9,6 +9,7 @@ public struct StudyTemplate: Identifiable, Sendable {
 }
 extension Samples {
   public static let templates: [StudyTemplate] = [
+    .init(id:"clothLab",name:"NASA / Flexible materials",title:"Cloth studies",summary:"Real drape, static contacts, paired seams and material-point labels.",symbol:"square.3.layers.3d"),
     .init(id:"fieldGuide",name:"ORBITAL / Field notes",title:"Instruction booklet",summary:"Illustrated pages and one flowing text story.",symbol:"book.closed"),
     .init(id: "flightJacket", name: "ORBITAL / Flight systems", title: "Flight bomber",
       summary: "A shaped blank, mission patches, and sewn labels.", symbol: "jacket"),
@@ -31,6 +32,7 @@ extension Samples {
     case "clock": return clock()
     case "flightJacket": return flightJacket()
     case "fieldGuide":return try fieldGuide()
+    case "clothLab":return try clothLab()
     case "cyanotype": return cyanotype()
     case "lamps": return lamps()
     case "forms": return studies()

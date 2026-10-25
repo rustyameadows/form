@@ -12,7 +12,7 @@ The next governing document is the [2D Design, Typography & Vector Editing speci
 
 ## Build and open
 
-Requires macOS 14 or later and Xcode 16 or later with the Swift 6 toolchain. There are no third-party package dependencies or API keys.
+Requires macOS 14 or later and Xcode 16 or later with the Swift 6 toolchain. No external Swift packages or API keys are required. The app includes pinned Clipper2 geometry source under the Boost Software License 1.0; see [third-party geometry](docs/third-party-geometry.md).
 
 ```sh
 bash scripts/build.sh release
@@ -30,11 +30,13 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Fabric repeats:** Editable artwork tiles, straight/half-drop/brick/mirror repeats, physical scale and spacing, independent colorways, native yardage preview, bomber fabric mapping, and actual-size SVG/PDF/PNG output. See [physical fabric designs](docs/fabric-patterns.md).
 - **Language-aware typography:** Document and character languages, localized case treatment, actual installed hyphenation dictionaries, and minimum word/prefix/suffix limits. Native editing and production output preserve the source words. See [paragraph language](docs/paragraph-language.md).
 - **Structured lists:** Source-preserving bullets and decimal lists, stable items, nesting, continuation/restart, native Return/Tab editing, and matching physical output. See [paragraph lists](docs/paragraph-lists.md).
-- **Sewing patterns:** Editable convex straight-sided pieces, physical per-edge allowances, cut quantities, grain/fold guides, V-notches, paired seams, a tote study, and dedicated actual-size cutting preview/export. See [sewing patterns](docs/sewing-patterns.md).
+- **Sewing patterns:** Editable straight, supported curved/concave and holed pieces; physical allowances, cut quantities, grain/fold guides, V-notches and guarded seam identities. Tote and rounded-pouch studies include actual-size preview/export. See [sewing patterns](docs/sewing-patterns.md) and [curved geometry](docs/curved-sewing-patterns.md).
 - **Publications:** Linked rich-text stories, ordered physical pages, baseline grids, overflow/preflight, and native or outlined multipage PDF. The ORBITAL field-guide study is editable across four columns. See [publications](docs/publications.md).
 - **Material cutting layouts:** Explicit stock width, grain/fold rules, cut copies, deterministic nesting, manual placement, physical fabric phase, consumption and declared-rate estimates, and actual-size output. See [cutting layouts](docs/cutting-layouts.md).
 - **Embroidery and production:** Regenerable running/satin/fill commands, real underlay/ties, physical 3D stitch surfaces, Studio thread stock, declared equipment checks, immutable revision-linked jobs and review packets. See [embroidery process](docs/embroidery-process.md) and [production jobs](docs/textile-production-jobs.md).
 - **Color-managed PDF:** Portable ICC assignments and actual ColorSync output conversion preserve physical page boxes. CMYK source editing and named spot separations remain ongoing work. See [color management](docs/color-management.md).
+- **Cloth studies:** Physical draping and seamed-panel previews with pins, contacts, fixed artwork coordinates and attached labels. Run/Stop/Step/Reset is transient; source settings share Undo. These bounded studies do not establish calibrated garment fit. See [cloth simulation](docs/cloth-simulation-foundation.md).
+- **Font library:** Search and preview actual installed faces, save face favorites/recents, inspect missing assignments and intentionally replace a face throughout a document with one Undo. Original words, features, axes and exact glyph choices remain recorded. See [document fonts](docs/font-library.md).
 - **Contextual controls:** Floating native parameter and material inspectors. Focus or isolate a selection without leaving the canvas.
 - **Editable constructions:** Clocks, paper stacks, booklets, folding sleeves, lamps, hollow vessels, boxes, cylinders, extruded profiles, and independent artwork sheets. Custom agent-defined recipes get the same native controls.
 - **Shared artwork:** Independent sheets can drive multiple physical faces. Actual-size or proportional fitting preserves the source; native source editing, detachment, iterations, and deletion have shared undo. Try the [linked clock demonstration](docs/linked-artwork.md).
@@ -179,3 +181,7 @@ This build has a native typography/vector editor and procedural construction sys
 - [Validation notes](docs/validation.md)
 
 The [publication workflow](docs/publications.md) adds one editable rich story across linked text frames, ordered physical pages, opt-in baseline grids, and a three-page ORBITAL instruction-booklet study with native and outlined multipage PDF. The broader publication specification remains active.
+
+The [font library](docs/font-library.md) provides explicit installed-face previews/search, persistent favorites/recents, complete document font usage, and reviewed replacement that preserves original words, features, variable axes, rich ranges and exact glyph metadata.
+
+[Cloth studies](docs/cloth-simulation-foundation.md) add real bounded drape and paired seam previews, physical material coordinates, native/MCP runtime controls and saved initial settings. The NASA materials-lab template demonstrates the foundation; calibrated fit, self-collision and full garment assembly remain future work. Open cloth is explicitly rejected for slicing.

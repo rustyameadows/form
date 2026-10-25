@@ -115,6 +115,8 @@ public struct BezierNode: Codable, Equatable, Identifiable, Sendable {
   }
 }
 public struct VectorContour: Codable, Equatable, Sendable {
+  /// Stable manufacturing-boundary identity, assigned when a general sewing piece is annotated.
+  public var id: UUID?
   public var nodes: [BezierNode]
   public var closed: Bool
   public init(_ nodes: [BezierNode], closed: Bool = true) {

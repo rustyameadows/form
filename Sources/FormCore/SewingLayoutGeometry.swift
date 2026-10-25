@@ -25,9 +25,22 @@ public enum SewingLayoutGeometry {
     let transformed = contour.map(transform.apply)
     let d = geometry.grainDirection
     return .init(placement: placement, geometry: geometry, transform: transform, contour: transformed,
-      bounds: bounds(transformed), grainDirection: .init(rotation.a * d.x + rotation.c * d.y, rotation.b * d.x + rotation.d * d.y))
+      bounds: bounds(transformed), grainDirection: .init(rotation.a * d.x + rotation.c * d.y, rotation.b * d.x + rotation.d * d.y),
+      contours: geometry.allCutContours.map { $0.map(transform.apply) })
+  }
+  public static func materialArea(_ contours:[[Point2]])->Double {
+    guard let outer=contours.first else{return 0};return max(0,area(outer)-contours.dropFirst().reduce(0){$0+area($1)})
+  }
+  public static func containsMaterial(_ point:Point2,contours:[[Point2]])->Bool {
+    guard let outer=contours.first,SewingCurves.contains(point,ring:outer) else{return false}
+    return !contours.dropFirst().contains{SewingCurves.contains(point,ring:$0)}
+  }
+  public static func cuttingPaths(_ p:SewingLayoutResolvedPlacement)->[(points:[Point2],closed:Bool)] {
+    if p.geometry.usesGeneralGeometry {return SewingPatternDrawing.cuttingContours(p.geometry).map{($0.points.map(p.transform.apply),$0.closed)}}
+    return [cuttingPath(p)]
   }
   public static func cuttingPath(_ placement: SewingLayoutResolvedPlacement) -> (points: [Point2], closed: Bool) {
+    if placement.geometry.usesGeneralGeometry { return cuttingPaths(placement)[0] }
     guard let fold = placement.geometry.piece.onFoldEdge else { return (placement.contour, true) }
     let g = placement.geometry
     var points: [Point2] = []
@@ -92,15 +105,16 @@ public enum SewingLayoutGeometry {
     let broad = aabbDistance(a.bounds, b.bounds)
     if broad + epsilon >= required { return (false, broad) }
     var distance = Double.infinity
-    for i in a.contour.indices { for j in b.contour.indices {
-      comparisons += 1
-      guard comparisons <= SewingLayoutLimits.maximumSegmentComparisons else { throw FormError.invalid("Cutting layout exceeded its exact collision-check budget. Reduce the piece count or simplify the contours.") }
-      let p = a.contour[i], q = a.contour[(i + 1) % a.contour.count]
-      let r = b.contour[j], s = b.contour[(j + 1) % b.contour.count]
-      if intersects(p, q, r, s) { return (true, 0) }
-      distance = min(distance, pointSegmentDistance(p, r, s), pointSegmentDistance(q, r, s), pointSegmentDistance(r, p, q), pointSegmentDistance(s, p, q))
-    } }
-    if contains(a.contour[0], polygon: b.contour) || contains(b.contour[0], polygon: a.contour) { return (true, 0) }
+    for ap in a.materialContours {for bp in b.materialContours {
+      for i in ap.indices { for j in bp.indices {
+        comparisons += 1
+        guard comparisons <= SewingLayoutLimits.maximumSegmentComparisons else { throw FormError.invalid("Cutting layout exceeded its exact collision-check budget. Reduce the piece count or simplify the contours.") }
+        let p=ap[i],q=ap[(i+1)%ap.count],r=bp[j],s=bp[(j+1)%bp.count]
+        if intersects(p,q,r,s){return (true,0)}
+        distance=min(distance,pointSegmentDistance(p,r,s),pointSegmentDistance(q,r,s),pointSegmentDistance(r,p,q),pointSegmentDistance(s,p,q))
+      }}
+    }}
+    if containsMaterial(a.contour[0],contours:b.materialContours) || containsMaterial(b.contour[0],contours:a.materialContours) {return (true,0)}
     return (false, distance)
   }
 }

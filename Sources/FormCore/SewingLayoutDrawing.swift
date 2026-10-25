@@ -15,10 +15,12 @@ public enum SewingLayoutDrawing {
     }
     for p in report.placements {
       let id = p.placement.id, g = p.geometry
-      let cut = SewingLayoutGeometry.cuttingPath(p)
-      elements.append(SewingPatternDrawing.technicalPath(cut.points, closed: cut.closed, source: id, name: "Cut contour", role: "cut", color: "#292D2C"))
-      elements.append(SewingPatternDrawing.technicalPath(g.stitch.map(p.transform.apply), closed: true,
-        source: id, name: "Stitch outline", role: "stitch", color: "#43718A", dash: [3,2]))
+      for (index,cut) in SewingLayoutGeometry.cuttingPaths(p).enumerated() {
+        elements.append(SewingPatternDrawing.technicalPath(cut.points,closed:cut.closed,source:id,name:index==0 ? "Cut contour":"Cut hole \(index)",role:"cut",color:"#292D2C"))
+      }
+      for (index,stitch) in g.allStitchContours.enumerated() {
+        elements.append(SewingPatternDrawing.technicalPath(stitch.map(p.transform.apply),closed:true,source:id,name:index==0 ? "Stitch outline":"Stitch hole \(index)",role:"stitch",color:"#43718A",dash:[3,2]))
+      }
       let grain = SewingPatternDrawing.grainline(g).map(p.transform.apply)
       elements.append(SewingPatternDrawing.technicalPath(grain, closed: false, source: id, name: "Grainline", role: "guide", color: "#A67B41"))
       let d = p.grainDirection, n = Point2(-d.y,d.x)
@@ -34,7 +36,7 @@ public enum SewingLayoutDrawing {
         let text = "\(g.piece.name)\nCopy \(copies)\(g.piece.onFoldEdge == nil ? "" : " · ON FOLD")"
         var label = SewingPatternDrawing.annotation(text,x:p.bounds.x+2,y:p.bounds.y+2,width:max(1,min(120,p.bounds.width-4)),height:min(12,p.bounds.height-4),source:id,name:"Cut copy label")
         if labelBackplates {
-          let mask = SewingPatternDrawing.technicalPath(p.contour,closed:true,source:id,name:"Copy label clip",role:"guide",color:"#FFFFFF")
+          let mask = SewingPatternDrawing.technicalCompoundPath(p.materialContours,source:id,name:"Copy label clip",role:"guide",color:"#FFFFFF")
           elements.append(mask)
           var backplate = ArtworkElement(kind:"rectangle",x:label.x,y:label.y,width:label.width,height:label.height,color:"#FFFFFF")
           backplate.id = ComponentCommands.derivedID(label.id,UUID(uuidString:"D83F46BF-D355-47B0-9E73-095F42E4A661")!)
