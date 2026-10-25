@@ -7,12 +7,12 @@ This is a tested foundation, **not completion of the expanded professional 2D sp
 ## Build and domain tests
 
 - Debug and optimized app builds succeeded; the app bundle contains the native executable, custom icon, Info.plist, and stdio MCP executable and is ad hoc signed.
-- `bash scripts/test.sh`: **74 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, shared artwork source graphs, atomic batch rollback, undo/redo, immutable package round trips, typography/outline alignment, actual SceneKit camera projections, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, and absence of hardware command tools.
+- `bash scripts/test.sh`: **90 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, shared artwork source graphs, atomic batch rollback, undo/redo, immutable package round trips, typography/outline alignment, actual SceneKit camera projections, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, and absence of hardware command tools.
 - No model/API credentials or third-party Swift packages are required.
 
 ## Real MCP and persistence
 
-`python3 scripts/smoke_mcp.py` passed against the running optimized app over its actual stdio MCP executable and local Unix socket. It verified protocol initialization, discovery of 41 unique tools, project creation, invalid input, linked variants, independent iterations, editable artwork, a custom recipe with native parameters, atomic batch rollback, every current export format, and saved-project reopen.
+`python3 scripts/smoke_mcp.py` passed against the running optimized app over its actual stdio MCP executable and local Unix socket. It verified protocol initialization, discovery of 42 unique tools, project creation, invalid input, linked variants, independent iterations, editable artwork, a custom recipe with native parameters, atomic batch rollback, every current export format, and saved-project reopen.
 
 The Mac app was also saved, quit, and reopened. Native text edits, the agent-defined lamp recipe, artwork, project identity, and edited dimensions survived. Codex's host configuration was registered with the built `form-mcp` executable and inspected successfully. This chat's tool catalog need not refresh immediately; a new Codex chat can load the registered server.
 
@@ -29,7 +29,7 @@ The Print sheet was inspected with a real sliced lamp shade. Bed and object came
 - Sleeve SVG: millimeter dimensions verified, with **one cut boundary and four distinct score lines**. No duplicated fabrication passes.
 - Component JSON: valid structured output with millimeter units and materials.
 
-The new artwork checks below extend these export guarantees. The complete professional typography specification, editable SVG interchange, color-managed production PDF, and advanced vector fidelity still require implementation and their own demonstrations.
+The new artwork checks below extend these export guarantees. The complete professional typography specification, full SVG interchange fidelity, color-managed production PDF, and advanced vector fidelity still require implementation and their own demonstrations. Editable SVG import is validated in its dedicated record below.
 
 ## Native typography and vector milestone
 
@@ -43,7 +43,7 @@ Native UI checks verified automatic fit at usable scale, two adjacent artwork fr
 
 Unsubmitted native frame-name and `9 in` numeric drafts both survived creating another project and reopening the original through MCP. These checks exercise the actual native field boundary, in addition to the domain-level callback test. Entering and leaving uppercase-displayed text without editing also preserved its original mixed-case source and artwork exactly.
 
-The [editor guide](2d-editor.md) records limitations. Separate-path combination, SVG import, advanced typography, publication, color-managed production, and the full required demonstration suite remain unfinished.
+The [editor guide](2d-editor.md) records limitations. Separate-path combination, full SVG fidelity, advanced typography, publication, color-managed production, and the full required demonstration suite remain unfinished. The later SVG import milestone extends this record.
 
 ## Precise paths and transformed native text
 
@@ -136,6 +136,7 @@ In another terminal:
 python3 scripts/smoke_mcp.py
 python3 scripts/smoke_artwork.py
 python3 scripts/smoke_paths.py
+python3 scripts/smoke_svg.py
 python3 scripts/smoke_clock.py --slice
 python3 scripts/benchmark_artwork.py
 python3 scripts/smoke_print.py
@@ -162,3 +163,23 @@ Native checks covered:
 - Save, quit, relaunch, and reopen preserved the camera state exactly. The default tool returned to Orbit.
 
 Geometry build count remained three throughout the lamp navigation and placement checks, and `renders_continuously` stayed false. This verifies that camera movement does not regenerate meshes; it is not a sustained gesture frame-rate measurement. Local observations are retained in `.local/validation/camera-mouse-observations.json`, with the normal-library preservation check in `user-project-restored-camera.json`. The full suite passes **74 tests** and the optimized native app builds successfully. See [camera navigation](camera-navigation.md) for the updated controls.
+
+## Editable SVG import — October 24, 2026
+
+The suite now passes **90 tests**, including 16 SVG tests. Coverage exercises physical units and viewport mapping, complete path command families, reflected controls and elliptical arcs, nested transforms, CSS inheritance, rich/positioned text, reference expansion and cycles, gradient alpha/transforms, clipping holes, unsupported-feature reporting, XML/entity/depth limits, embedded image bytes/crops/type validation, boundary dimensions, and one-edit import/undo/persistence. Direct import onto a bare oak face retains its material and transparent artwork background. A trusted fixture rendered through macOS's SVG implementation stays within 3.5% mean RGB error of the native conversion.
+
+`python3 scripts/smoke_svg.py` passed against the optimized app's actual stdio MCP server with **42 tools**, using an isolated `SVGLibrary`. It verified:
+
+- Read-only preflight changes neither the project nor its assets. A warning-bearing import requires explicit acceptance; rejected imports preserve both.
+- The original ORBIT SVG is retained byte for byte, alongside its embedded PNG. The 120 × 80 mm source contains 34 native elements, including 15 paths, four text objects, and one image.
+- Oak and graphite product editions reference one source. Editing a source node leaves the consumer object files unchanged. Importing through a linked consumer adds to its canonical source; Undo restores the exact prior artwork.
+- Actual SVG, optional live-text SVG, PDF, PNG, and JPEG files are produced. The PDF is **340.158 × 226.772 points**, matching 120 × 80 mm; PNG is **709 × 472 pixels at 150 DPI**. Poppler rendered the final PDF and the result was visually reviewed. Schema-4 save/reopen retains artwork, original provenance, and consumer links.
+- Six read-only preflights of 600 paths plus 100 text objects measured **14.74 ms median / 16.21 ms maximum** locally. The first ORBIT preflight in that run took 4.42 ms. These are local conversion/transport samples, not sustained native gesture FPS or responsiveness at input limits.
+
+The native file chooser, Go to Folder, review preview, and Import button were exercised through computer use. The chooser now uses an asynchronous Mac sheet. A filter-bearing SVG showed its explicit warning and disabled Import until the acceptance checkbox was selected. Cancel preserved the exact project. A supported ORBIT import created a second artwork frame; native Undo and Redo removed and restored it.
+
+Native text entry edited the imported wordmark while a read-only MCP preflight ran; the text editor retained focus. In the final build, direct selection and a real mouse drag moved one imported planet node and both handles by approximately **2.996 × 2.244 mm**. Both product editions resolved the changed source, and native Undo restored the exact original artwork. The live 3D preview was visually inspected. A further Table mouse pass checked selection, Focus, orbit directly over the oak product, pointer-following pan, wheel zoom, and Fit.
+
+The ordinary library was restored to Home with **Soft light** active. Its entire saved project, including all objects, artwork, camera, materials, notes, and history, matched the pre-validation snapshot exactly. The final build also passed the existing `smoke_mcp.py`, `smoke_artwork.py`, and `smoke_paths.py` flows. No printer connection or print command was attempted.
+
+Reports are retained under `.local/validation`, including `svg-import-report.json`, `svg-native-node-observation.json`, and `user-project-restored-svg.json`. The [SVG guide](svg-import.md) records the supported subset and remaining fidelity limits. Full publication, color-managed production, advanced vector features, physical integrations, and the full demonstration suite remain active requirements.

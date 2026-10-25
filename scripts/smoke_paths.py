@@ -17,7 +17,7 @@ def node(x, y, **handles):
 def main():
     client = Client()
     try:
-        assert len(client.rpc("tools/list")["tools"]) == 41
+        assert len(client.rpc("tools/list")["tools"]) == 42
         project = client.call("form_create_project", {"name": "Curve atelier"})
         frame = client.call("form_add_object", {"recipe_id": "artboard", "name": "Lines with intent / 8 × 10", "parameters": {"width": 203.2, "depth": 254}})
         group = element("group", 18, 40, 165, 60, name="Transformed typography", contentSize={"x": 165, "y": 60}, rotation=-9,
@@ -69,7 +69,7 @@ def main():
         report = {"project_id": project["id"], "frame_id": frame["id"], "variant_id": variant["id"],
                   "title_id": title["id"], "group_id": group["id"], "path_id": curve["id"], "inserted_node_id": inserted[0],
                   "original_nodes": [n["id"] for n in anchors], "exports": outputs,
-                  "checks": "41 MCP tools, cubic insertion/split/join/reversal, invalid-edit rollback, linked artwork variants, undo/redo, physical exports, save/reopen, transformed native text setup"}
+                  "checks": "42 MCP tools, cubic insertion/split/join/reversal, invalid-edit rollback, linked artwork variants, undo/redo, physical exports, save/reopen, transformed native text setup"}
         (OUTPUT / "paths.json").write_text(json.dumps(report, indent=2) + "\n")
         print(json.dumps(report, indent=2))
     finally:

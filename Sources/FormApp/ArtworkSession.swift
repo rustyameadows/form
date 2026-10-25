@@ -172,8 +172,7 @@ enum ArtworkTool: String, CaseIterable {
     return result
   }
   func reconcile() {
-    if let primary = store?.primary, ArtworkDrawing.dimensions(primary).width > 10,
-      primary["width"] > 0 || primary.recipeID == "clock"
+    if let primary = store?.primary, primary.supportsArtworkFace
     {
       let owner = store?.project?.artworkOwner(primary) ?? primary
       linkedTargetID = owner.id == primary.id ? nil : primary.id

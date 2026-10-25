@@ -10,7 +10,7 @@ public enum MCP {
   ]
   public static let graphicsToolNames: Set<String> = [
     "form_list_fonts", "form_font_features", "form_convert_to_paths", "form_boolean_artwork",
-    "form_export_artwork",
+    "form_export_artwork", "form_import_svg",
   ]
   public static var tools: [[String: Any]] {
     let string: [String: Any] = ["type": "string"]
@@ -201,6 +201,13 @@ public enum MCP {
           "dpi": number, "outline_text": ["type": "boolean"],
           "element_ids": ["type": "array", "items": string],
         ], required: ["object_id", "format"]),
+      tool(
+        "form_import_svg",
+        "Import a local SVG as editable native artwork, preserving physical dimensions, groups, text, paths, and the original SVG asset. Omit object_id to create a new frame, or provide a target to add at original size, centered in its canonical artwork source. dry_run returns dimensions and fidelity issues without changing the project or writing assets. Warnings require allow_unsupported=true after inspection. External resources and scripts are never loaded.",
+        [
+          "path": string, "object_id": objectID, "name": string, "dry_run": ["type": "boolean"],
+          "allow_unsupported": ["type": "boolean"],
+        ], required: ["path"]),
       tool(
         "form_import_reference",
         "Import a local image into the project package and place it on the Table. Assets remain available after reopening.",

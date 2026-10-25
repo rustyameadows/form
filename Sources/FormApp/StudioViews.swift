@@ -35,6 +35,9 @@ struct RootView: View {
     .sheet(isPresented: $store.showingLibrary) { LibraryView().environmentObject(store) }
     .sheet(isPresented: $store.showingBridge) { BridgeView().environmentObject(store) }
     .sheet(isPresented: $store.showingProjectInfo) { ProjectInfoView().environmentObject(store) }
+    .sheet(item: $store.svgImport) { review in
+      SVGImportSheet(review: review).environmentObject(store)
+    }
     .sheet(isPresented: $store.showingPrint) {
       PrintWorkspace(printing: store.printing).environmentObject(store)
     }

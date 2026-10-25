@@ -247,6 +247,13 @@ public enum FormColor {
     let range = CTFrameGetVisibleStringRange(frame)
     return range.location + range.length < cachedLayout(element).text.length
   }
+  public static func firstBaseline(_ element: ArtworkElement) -> Double {
+    let entry = cachedLayout(element)
+    guard CFArrayGetCount(CTFrameGetLines(entry.frame)) > 0 else { return 0 }
+    var origin = CGPoint.zero
+    CTFrameGetLineOrigins(entry.frame, CFRange(location: 0, length: 1), &origin)
+    return element.height + entry.offset / pointsPerMM - origin.y / pointsPerMM
+  }
   public static func verticalOffset(_ element: ArtworkElement, points: Bool = false) -> Double {
     cachedLayout(element).offset / (points ? 1 : pointsPerMM)
   }

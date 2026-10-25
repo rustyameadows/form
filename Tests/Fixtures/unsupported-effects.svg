@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30mm" height="30mm" viewBox="0 0 30 30"><defs><filter id="soft"><feGaussianBlur stdDeviation="2"/></filter></defs><circle id="soft-disc" cx="15" cy="15" r="10" fill="#C76748" filter="url(#soft)"/></svg>

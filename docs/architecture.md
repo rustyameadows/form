@@ -9,7 +9,7 @@ The deliberate change to the original brief is agent delivery. **Codex is the cr
 | Module | Responsibility |
 | --- | --- |
 | `FormCore` | Codable product graph, dimensions, parameter schemas, materials, artwork, recipes, arithmetic expressions, persistence, undo/redo, atomic edits, MCP discovery and protocol, local transport |
-| `FormGraphics` | Core Text shaping/font discovery, Bézier geometry, shared native artwork drawing, shaped outlines, physical SVG output, bounded text/image caches |
+| `FormGraphics` | Core Text shaping/font discovery, Bézier geometry, shared native artwork drawing, shaped outlines, editable SVG parsing/import, physical SVG output, bounded text/image caches |
 | `FormApp` | SwiftUI shell, AppKit pointer and artwork interaction, Metal-backed SceneKit renderer, contextual controls, previews, studio, native file panels, PDF/SVG/PNG exports |
 | `FormMCP` | MCP over stdio; forwards tool calls to the running app over a user-owned Unix socket |
 
@@ -50,6 +50,8 @@ Extended vector/typography artwork requires schema 2, recorded in the manifest a
 
 Independent source links and physical artwork boundaries require schema 3; schema 1 and 2 still load. A product face references a same-project artwork sheet and a physical fitting mode. Source edits update its immutable object resource while consumers retain their existing object files. The graph validates references and rejects cycles/dangling links. Detachment, independent iterations, and source deletion bake the current resolved appearance. See [shared artwork](linked-artwork.md).
 
+Import provenance, transparent frame/fill/gradient-stop appearance, gradient affine maps, and dash phase require schema 4. Readers retain schemas 1–3. SVG conversion produces ordinary native artwork; original source bytes and embedded images are copied to the package. Provenance is excluded from render signatures. See [SVG import](svg-import.md) for supported features and limits.
+
 `FORM_LIBRARY_PATH` selects a separate library for development or tests. `FORM_SOCKET_PATH` selects a separate local bridge. These settings require no change to a project document.
 
 ## Artwork and production
@@ -60,7 +62,7 @@ Native character undo remains granular while editing. The domain engine groups t
 
 The sleeve recipe derives its assembled geometry and unfolded cut/score layout from the same width, height, spine, stock, tab, and fold parameters. PDF exports preserve physical page dimensions and include bleed/crop marks. SVG dielines preserve millimeter units and distinguish cut lines from scores. PNG renders are 3000 × 2000. Component summaries are JSON.
 
-The expanded [2D specification](2d-design-typography-vector-spec.md) remains governing scope. The [editor guide](2d-editor.md) records working controls and material gaps, including separate-path combination, advanced typography, editable SVG import, publication, color management, and physical integration. General solid booleans, arbitrary CAD import, advanced manufacturing tolerances, collaboration, and photorealistic path tracing are also unfinished.
+The expanded [2D specification](2d-design-typography-vector-spec.md) remains governing scope. The [editor guide](2d-editor.md) records working controls and material gaps, including separate-path combination, advanced typography, full SVG fidelity, publication, color management, and physical integration. General solid booleans, arbitrary CAD import, advanced manufacturing tolerances, collaboration, and photorealistic path tracing are also unfinished.
 
 Native inline text uses the complete artwork affine map through AppKit coordinate transforms, including rotation, scale, shear, and reflection. A signed SVD and explicit reversal of prior coordinate operations keep native input and pointer geometry aligned during updates. Exact Bézier subdivision, contour split/join/reversal, node modes, and physical node transforms live in `FormCore.PathCommands`; the native direct-selection UI and `form_edit_path` call the same implementation. See [path editing](path-editing.md).
 

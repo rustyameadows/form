@@ -253,10 +253,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let rect =
       all ? frames.map(\.rect).reduce(CGRect.null) { $0.union($1) } : activeFrame?.rect ?? .zero
     guard !rect.isNull, rect.width > 0 else { return }
+    let horizontal = min(14, rect.width * 0.08 + 1)
+    let vertical = min(18, rect.height * 0.08 + 1)
     scroll.magnify(
       toFit: NSRect(
-        x: (rect.minX - 14) * ppm, y: (rect.minY - 18) * ppm, width: (rect.width + 28) * ppm,
-        height: (rect.height + 36) * ppm))
+        x: (rect.minX - horizontal) * ppm, y: (rect.minY - vertical) * ppm,
+        width: (rect.width + 2 * horizontal) * ppm, height: (rect.height + 2 * vertical) * ppm))
     session?.zoom = Double(scroll.magnification)
     needsDisplay = true
   }

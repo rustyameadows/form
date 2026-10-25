@@ -28,7 +28,8 @@ import FormCore
     _ art: Artwork, width: Double, height: Double, assets: URL, outlineText: Bool = true
   ) throws -> String {
     var definitions = ""
-    var body = "<rect width=\"\(width)\" height=\"\(height)\" fill=\"\(art.background)\"/>"
+    var body =
+      "<rect width=\"\(width)\" height=\"\(height)\" fill=\"\(art.background)\" fill-opacity=\"\(art.backgroundOpacity ?? 1)\"/>"
     let masks = Set(art.elements.compactMap(\.clipID))
     func transform(_ t: Affine2) -> String { "matrix(\(t.a) \(t.b) \(t.c) \(t.d) \(t.tx) \(t.ty))" }
     func children(_ parent: UUID?) throws -> String {
@@ -48,9 +49,11 @@ import FormCore
         if e.kind == "group" {
           output += try children(e.id)
         } else if e.kind == "text" {
-          if outlineText {
+          if e.fillEnabled == false { /* invisible text retains its editable source */
+          } else if outlineText {
             for (path, color) in try TypographyEngine.outlineRuns(e) {
-              output += "<path d=\"\(data(path))\" fill=\"\(color)\"/>"
+              output +=
+                "<path d=\"\(data(path))\" fill=\"\(color)\" fill-opacity=\"\(e.fillOpacity ?? 1)\"/>"
             }
           } else {
             output += liveText(e)
@@ -77,14 +80,18 @@ import FormCore
         } else {
           var fill = e.fillEnabled == false || e.kind == "line" ? "none" : e.color
           if let g = e.gradient, e.fillEnabled != false {
-            let stops = g.stops.map { "<stop offset=\"\($0.offset)\" stop-color=\"\($0.color)\"/>" }
-              .joined()
+            let stops = g.stops.map {
+              "<stop offset=\"\($0.offset)\" stop-color=\"\($0.color)\" stop-opacity=\"\($0.opacity ?? 1)\"/>"
+            }
+            .joined()
+            let gradientTransform =
+              g.transform.map { " gradientTransform=\"\(transform($0))\"" } ?? ""
             if g.kind == "radial" {
               definitions +=
-                "<radialGradient id=\"gradient-\(id)\" gradientUnits=\"userSpaceOnUse\" cx=\"\(g.start.x*e.width)\" cy=\"\(g.start.y*e.height)\" r=\"\(hypot((g.end.x-g.start.x)*e.width,(g.end.y-g.start.y)*e.height))\">\(stops)</radialGradient>"
+                "<radialGradient id=\"gradient-\(id)\" gradientUnits=\"userSpaceOnUse\"\(gradientTransform) cx=\"\(g.start.x*e.width)\" cy=\"\(g.start.y*e.height)\" r=\"\(hypot((g.end.x-g.start.x)*e.width,(g.end.y-g.start.y)*e.height))\">\(stops)</radialGradient>"
             } else {
               definitions +=
-                "<linearGradient id=\"gradient-\(id)\" gradientUnits=\"userSpaceOnUse\" x1=\"\(g.start.x*e.width)\" y1=\"\(g.start.y*e.height)\" x2=\"\(g.end.x*e.width)\" y2=\"\(g.end.y*e.height)\">\(stops)</linearGradient>"
+                "<linearGradient id=\"gradient-\(id)\" gradientUnits=\"userSpaceOnUse\"\(gradientTransform) x1=\"\(g.start.x*e.width)\" y1=\"\(g.start.y*e.height)\" x2=\"\(g.end.x*e.width)\" y2=\"\(g.end.y*e.height)\">\(stops)</linearGradient>"
             }
             fill = "url(#gradient-\(id))"
           }
@@ -93,11 +100,12 @@ import FormCore
             stroke =
               " stroke=\"\(s.color)\" stroke-width=\"\(s.width)\" stroke-opacity=\"\(s.opacity ?? 1)\" stroke-linecap=\"\(s.cap ?? "butt")\" stroke-linejoin=\"\(s.join ?? "miter")\" stroke-miterlimit=\"\(s.miter ?? 10)\""
             if let dash = s.dash, !dash.isEmpty {
-              stroke += " stroke-dasharray=\"\(dash.map{String($0)}.joined(separator:" "))\""
+              stroke +=
+                " stroke-dasharray=\"\(dash.map{String($0)}.joined(separator:" "))\" stroke-dashoffset=\"\(s.dashOffset ?? 0)\""
             }
           }
           output +=
-            "<path d=\"\(data(VectorGeometry.path(e)))\" fill=\"\(fill)\" fill-rule=\"\(e.path?.evenOdd == true ? "evenodd":"nonzero")\"\(stroke)/>"
+            "<path d=\"\(data(VectorGeometry.path(e)))\" fill=\"\(fill)\" fill-opacity=\"\(e.fillOpacity ?? 1)\" fill-rule=\"\(e.path?.evenOdd == true ? "evenodd":"nonzero")\"\(stroke)/>"
         }
         output += "</g>"
         if e.clipID != nil { output += "</g>" }
@@ -150,7 +158,7 @@ import FormCore
         var p = CGPoint.zero
         CTRunGetPositions(run, CFRange(location: 0, length: 1), &p)
         result +=
-          "<text xml:space=\"preserve\" x=\"\((origins[i].x+p.x)/TypographyEngine.pointsPerMM)\" y=\"\(element.height-offset-(origins[i].y+p.y)/TypographyEngine.pointsPerMM)\" font-family=\"\(xml(font.fontName))\" font-size=\"\(font.pointSize/TypographyEngine.pointsPerMM)\" letter-spacing=\"\(((attrs[NSAttributedString.Key.kern] as? NSNumber)?.doubleValue ?? 0)/TypographyEngine.pointsPerMM)\" fill=\"\(FormColor.hex(attrs[NSAttributedString.Key.foregroundColor] as? NSColor ?? .black))\">\(xml(text))</text>"
+          "<text xml:space=\"preserve\" x=\"\((origins[i].x+p.x)/TypographyEngine.pointsPerMM)\" y=\"\(element.height+offset-(origins[i].y+p.y)/TypographyEngine.pointsPerMM)\" font-family=\"\(xml(font.fontName))\" font-size=\"\(font.pointSize/TypographyEngine.pointsPerMM)\" letter-spacing=\"\(((attrs[NSAttributedString.Key.kern] as? NSNumber)?.doubleValue ?? 0)/TypographyEngine.pointsPerMM)\" fill=\"\(FormColor.hex(attrs[NSAttributedString.Key.foregroundColor] as? NSColor ?? .black))\" fill-opacity=\"\(element.fillOpacity ?? 1)\">\(xml(text))</text>"
       }
     }
     return result

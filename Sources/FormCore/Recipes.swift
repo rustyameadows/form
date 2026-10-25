@@ -17,7 +17,7 @@ extension Recipe {
       "artboard", "Artwork sheet", "square.and.pencil",
       "An independent vector artwork sheet on the Table.",
       [
-        .init("width", "Width", 210, 20...1000), .init("depth", "Height", 297, 20...1000),
+        .init("width", "Width", 210, 1...1000, step: 0.1), .init("depth", "Height", 297, 1...1000, step: 0.1),
       ]),
     .init(
       "lamp", "Table lamp", "lamp.desk", "A shade, stem, and weighted base.",

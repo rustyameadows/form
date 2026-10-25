@@ -24,6 +24,8 @@ import SwiftUI
           }
         }
         Button("Open Project…") { store.openPackage() }.keyboardShortcut("o")
+        Button("Import SVG Artwork…") { store.importSVGDialog() }.keyboardShortcut(
+          "i", modifiers: [.command, .shift])
         Divider()
         Button("Show Home") { store.home() }.keyboardShortcut("h", modifiers: [.command, .shift])
       }

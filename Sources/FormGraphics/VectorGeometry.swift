@@ -142,7 +142,7 @@ public enum VectorGeometry {
     }
     var p = path(e)
     if let dash = stroke.dash, !dash.isEmpty {
-      p = p.copy(dashingWithPhase: 0, lengths: dash.map { CGFloat($0) })
+      p = p.copy(dashingWithPhase: stroke.dashOffset ?? 0, lengths: dash.map { CGFloat($0) })
     }
     return p.copy(
       strokingWithWidth: stroke.width, lineCap: cap(stroke.cap), lineJoin: join(stroke.join),

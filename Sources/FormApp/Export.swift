@@ -80,7 +80,7 @@ extension StudioStore {
         project.surfaceArtwork(object)
         ?? Artwork(background: project.material(object.materialID).color)
       let size = ArtworkDrawing.dimensions(object)
-      guard size.width > 10, size.height > 10 else {
+      guard object.supportsArtworkFace else {
         throw FormError.invalid("This object has no printable face.")
       }
       try exportPDF(

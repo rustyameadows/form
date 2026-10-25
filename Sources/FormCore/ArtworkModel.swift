@@ -142,6 +142,7 @@ public struct ArtworkStroke: Codable, Equatable, Sendable {
   public var join: String?
   public var miter: Double?
   public var dash: [Double]?
+  public var dashOffset: Double?
   public init(color: String = "#292D2C", width: Double = 0.5) {
     self.color = color
     self.width = width
@@ -151,6 +152,7 @@ public struct GradientStop: Codable, Equatable, Identifiable, Sendable {
   public var id = UUID()
   public var offset: Double
   public var color: String
+  public var opacity: Double?
   public init(_ offset: Double, _ color: String) {
     self.offset = offset
     self.color = color
@@ -161,6 +163,7 @@ public struct ArtworkGradient: Codable, Equatable, Sendable {
   public var start: Point2
   public var end: Point2
   public var stops: [GradientStop]
+  public var transform: Affine2?
   public init(
     kind: String = "linear", start: Point2 = .init(0, 0), end: Point2 = .init(1, 1),
     stops: [GradientStop] = [.init(0, "#D45A37"), .init(1, "#E4D8A9")]
@@ -279,7 +282,15 @@ extension ArtworkElement {
   }
 }
 extension Artwork {
+  public var requiresSchemaFour: Bool {
+    backgroundOpacity != nil || imports != nil
+      || elements.contains {
+        $0.fillOpacity != nil || $0.stroke?.dashOffset != nil || $0.gradient?.transform != nil
+          || $0.gradient?.stops.contains { $0.opacity != nil } == true
+      }
+  }
   public var usesExtendedFormat: Bool {
+    if requiresSchemaFour { return true }
     if boundary != nil { return true }
     if unit != nil || guides != nil || gridSpacing != nil || showGrid != nil || showGuides != nil
       || snapEnabled != nil || nudge != nil || canvasPosition != nil
@@ -329,6 +340,7 @@ extension Artwork {
   }
   public var renderDefinition: Artwork {
     var result = self
+    result.imports = nil
     result.unit = nil
     result.guides = nil
     result.gridSpacing = nil

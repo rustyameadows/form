@@ -91,6 +91,7 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var flipX: Bool?
   public var flipY: Bool?
   public var fillEnabled: Bool?
+  public var fillOpacity: Double?
   public var stroke: ArtworkStroke?
   public var gradient: ArtworkGradient?
   public var cornerRadius: Double?
@@ -130,6 +131,8 @@ public struct Artwork: Codable, Equatable, Sendable {
   public var showGuides: Bool?
   public var canvasPosition: Point2?
   public var boundary: VectorPath?
+  public var backgroundOpacity: Double?
+  public var imports: [ArtworkImport]?
   public init(background: String = "#224B9B", elements: [ArtworkElement] = [], bleed: Double = 3) {
     self.background = background
     self.elements = elements
@@ -354,7 +357,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var minimumSchemaVersion: Int {
     max(
       schemaVersion,
-      objects.contains {
+      objects.contains { $0.artwork?.requiresSchemaFour == true } ? 4 : objects.contains {
         $0.artworkSourceID != nil || $0.recipeID == "clock" || $0.artwork?.boundary != nil
       } ? 3 : objects.contains { $0.artwork?.usesExtendedFormat == true } ? 2 : 1)
   }

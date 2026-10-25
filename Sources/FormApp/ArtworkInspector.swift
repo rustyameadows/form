@@ -440,6 +440,12 @@ struct ArtworkInspector: View {
         ScalarArtworkField("Opacity", value: (e.opacity ?? 1) * 100, unit: "%") { v in
           session.update { $0.opacity = min(1, max(0, v / 100)) }
         }
+        if !["image", "group"].contains(e.kind) {
+          ScalarArtworkField("Fill opacity", value: (e.fillOpacity ?? 1) * 100, unit: "%") {
+            value in
+            session.update { $0.fillOpacity = min(1, max(0, value / 100)) }
+          }
+        }
         if !["text", "image", "group"].contains(e.kind) {
           Toggle(
             "Stroke",
@@ -500,6 +506,10 @@ struct ArtworkInspector: View {
                   "Gap", value: dash.count > 1 ? dash[1] : dash[0], unit: session.unit
                 ) { v in session.update { $0.stroke?.dash = [dash[0], max(0.01, v)] } }
               }
+              ArtworkUnitField("Dash phase", value: stroke.dashOffset ?? 0, unit: session.unit) {
+                value in
+                session.update { $0.stroke?.dashOffset = value }
+              }
             }
             Button("Outline stroke") { session.convert("stroke") }.font(.system(size: 10))
           }
@@ -537,6 +547,10 @@ struct ArtworkInspector: View {
                       e.gradient?.stops.sort { $0.offset < $1.offset }
                     }
                   }
+                }
+                ScalarArtworkField("Stop opacity", value: (stop.opacity ?? 1) * 100, unit: "%") {
+                  value in
+                  session.update { $0.gradient?.stops[index].opacity = min(1, max(0, value / 100)) }
                 }
               }
               Button("Add color stop") {
@@ -665,6 +679,11 @@ struct ArtworkInspector: View {
           set: { color in session.mutate { $0.background = FormColor.hex(NSColor(color)) } }),
         supportsOpacity: false
       ).font(.system(size: 10))
+      ScalarArtworkField(
+        "Background opacity", value: (session.art.backgroundOpacity ?? 1) * 100, unit: "%"
+      ) { value in
+        session.mutate { $0.backgroundOpacity = min(1, max(0, value / 100)) }
+      }
       Divider()
       SectionLabel("PRECISION")
       Toggle(

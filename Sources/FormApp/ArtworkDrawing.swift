@@ -20,14 +20,7 @@ import FormGraphics
     context.restoreGState()
   }
   static func dimensions(_ object: ProductObject) -> (width: Double, height: Double) {
-    (
-      max(
-        object["diameter"] > 0 && object.recipeID == "clock" ? object["diameter"] : object["width"],
-        10),
-      max(
-        object["diameter"] > 0 && object.recipeID == "clock" ? object["diameter"] : object["depth"],
-        10)
-    )
+    (object.artworkSize.x, object.artworkSize.y)
   }
 }
 
@@ -47,7 +40,7 @@ import FormGraphics
     var body = ""
     if let artwork = object.artwork {
       body +=
-        "<defs><clipPath id=\"face\"><rect width=\"\(w)\" height=\"\(height)\"/></clipPath></defs><g transform=\"translate(\(w+spine),0)\" clip-path=\"url(#face)\"><rect width=\"\(w)\" height=\"\(height)\" fill=\"\(artwork.background)\"/>\n"
+        "<defs><clipPath id=\"face\"><rect width=\"\(w)\" height=\"\(height)\"/></clipPath></defs><g transform=\"translate(\(w+spine),0)\" clip-path=\"url(#face)\">\n"
       body += try SVGRenderer.fragment(
         artwork, width: w, height: height, assets: assets ?? URL(fileURLWithPath: "/"))
       body += "</g>\n"

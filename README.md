@@ -29,6 +29,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Editable constructions:** Clocks, paper stacks, booklets, folding sleeves, lamps, hollow vessels, boxes, cylinders, extruded profiles, and independent artwork sheets. Custom agent-defined recipes get the same native controls.
 - **Shared artwork:** Independent sheets can drive multiple physical faces. Actual-size or proportional fitting preserves the source; native source editing, detachment, iterations, and deletion have shared undo. Try the [linked clock demonstration](docs/linked-artwork.md).
 - **Native artwork canvas:** Multiple physical frames, rulers/guides/grid/snapping, nested layers, exact transforms, Bézier paths, vector booleans, gradients, strokes, masks, and live 3D face updates. A folding sleeve exposes its unfolded cut/score dieline.
+- **Editable SVG import:** File → Import SVG Artwork (`⇧⌘I`) reviews native paths, groups, text, gradients, clips, and embedded images before creating a physical frame or adding to an existing surface. Originals stay in the project; unsupported features require explicit review. See the [SVG import guide](docs/svg-import.md).
 - **Typography:** Installed-font browser, native selected-character editing, real OpenType features and variable axes, Core Text shaping, and editable glyph outlines with retained source text. See the [editor guide and remaining scope](docs/2d-editor.md).
 - **Iterations and variants:** Independent design iterations or linked parameter/artwork variants with their own materials and placement.
 - **Studio Library:** Persistent materials and equipment profiles, separate from individual projects.
@@ -51,7 +52,7 @@ Then describe an object in Codex:
 
 > Create an orange table lamp, about 350 mm tall, with editable shade diameter, shade height, stem diameter, and base width. Place a sage variant beside it.
 
-The server exposes 41 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, fonts, vector operations, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
+The server exposes 42 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, fonts, vector operations, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
 
 See [Create with Codex](docs/mcp.md) for setup, schemas, a custom object example, and direct CLI invocation.
 
@@ -95,6 +96,7 @@ The Table starts in Orbit mode so navigation cannot accidentally move objects. P
 bash scripts/test.sh
 python3 scripts/smoke_mcp.py  # Requires the running app; creates a validation project
 python3 scripts/smoke_artwork.py # Typography/vector composition and physical exports
+python3 scripts/smoke_svg.py # Editable import, source preservation, fidelity review, physical exports
 python3 scripts/smoke_paths.py # Curve editing, transformed type, and linked variants
 python3 scripts/smoke_clock.py --slice # Shared dial, immutable source links, physical exports, local Orca
 python3 scripts/benchmark_artwork.py # 600-element native canvas performance
@@ -116,6 +118,7 @@ This build has a native typography/vector editor and procedural construction sys
 - [Initial product brief · Version 0.1](docs/product-brief.md)
 - [2D Design, Typography & Vector Editing · guiding specification](docs/2d-design-typography-vector-spec.md)
 - [Native artwork editor · controls, MCP, and remaining work](docs/2d-editor.md)
+- [Editable SVG import and ORBIT illustration](docs/svg-import.md)
 - [Precise paths and transformed native text](docs/path-editing.md)
 - [Shared artwork and the clock study](docs/linked-artwork.md)
 - [Textiles, Apparel & Merchandise · next feature specification](docs/textiles-apparel-merchandise-spec.md)

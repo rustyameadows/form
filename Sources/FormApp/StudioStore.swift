@@ -51,6 +51,7 @@ enum TableTool: String, CaseIterable {
   @Published var showingProjectInfo = false
   @Published var showingBridge = false
   @Published var showingPrint = false
+  @Published var svgImport: SVGImportReview?
   @Published var showGrid = false
   @Published var tableTool: TableTool = .orbit
   @Published var isolated: Set<UUID> = []
@@ -65,6 +66,7 @@ enum TableTool: String, CaseIterable {
   private var previewWork: DispatchWorkItem?
   private var noticeWork: DispatchWorkItem?
   var bridgeReady = false
+  var choosingSVG = false
   var project: Project? { engine.project }
   var selected: [ProductObject] {
     project?.objects.filter { engine.selection.contains($0.id) } ?? []
@@ -115,12 +117,13 @@ enum TableTool: String, CaseIterable {
             return
           }
           do {
-            let readOnly = [
-              "form_status", "form_list_projects", "form_get_project", "form_list_recipes",
-              "form_list_materials", "form_get_print_setup", "form_get_slice_status",
-              "form_list_filaments", "form_list_printers", "form_get_artwork",
-              "form_list_fonts", "form_font_features",
-            ].contains(name)
+            let readOnly =
+              [
+                "form_status", "form_list_projects", "form_get_project", "form_list_recipes",
+                "form_list_materials", "form_get_print_setup", "form_get_slice_status",
+                "form_list_filaments", "form_list_printers", "form_get_artwork",
+                "form_list_fonts", "form_font_features",
+              ].contains(name) || (name == "form_import_svg" && args["dry_run"] as? Bool == true)
             if !readOnly { self.finishArtworkEditing() }
             var result = try self.engine.call(name, arguments: args)
             if name == "form_status", var status = result as? [String: Any] {

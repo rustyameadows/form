@@ -257,8 +257,8 @@ public final class OperationEngine {
           throw FormError.invalid("This object already links to an artwork document.")
         }
         let size = object.artworkSize
-        guard (20...1000).contains(size.x), (20...1000).contains(size.y) else {
-          throw FormError.invalid("Artwork documents support 20–1000 mm edges.")
+        guard (1...1000).contains(size.x), (1...1000).contains(size.y) else {
+          throw FormError.invalid("Artwork documents support 1–1000 mm edges.")
         }
         var sheet = try p.makeObject(
           recipeID: "artboard", name: object.name + " · Artwork",

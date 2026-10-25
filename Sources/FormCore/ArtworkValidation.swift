@@ -1,6 +1,19 @@
 import Foundation
 
 public func validateArtworkDetails(_ artwork: Artwork) throws {
+  guard (0...1).contains(artwork.backgroundOpacity ?? 1), (artwork.imports?.count ?? 0) <= 200
+  else {
+    throw FormError.invalid("Invalid artwork background opacity or import history.")
+  }
+  for source in artwork.imports ?? [] {
+    guard !source.asset.contains("/"), !source.asset.contains(".."), !source.asset.isEmpty,
+      source.name.count <= 500, source.width.isFinite, source.height.isFinite,
+      source.width > 0, source.height > 0, source.issues.count <= 500,
+      source.issues.allSatisfy({ $0.count <= 2000 })
+    else {
+      throw FormError.invalid("Invalid imported artwork provenance.")
+    }
+  }
   if let boundary = artwork.boundary {
     var shape = ArtworkElement(
       kind: "path", x: 0, y: 0, width: boundary.width, height: boundary.height)
@@ -38,7 +51,8 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
   }
   let byID = Dictionary(uniqueKeysWithValues: artwork.elements.map { ($0.id, $0) })
   for e in artwork.elements {
-    guard finite([e.rotation ?? 0]), (0...1).contains(e.opacity ?? 1), (e.name?.count ?? 0) <= 500
+    guard finite([e.rotation ?? 0]), (0...1).contains(e.opacity ?? 1),
+      (0...1).contains(e.fillOpacity ?? 1), (e.name?.count ?? 0) <= 500
     else { throw FormError.invalid("Invalid rotation, opacity, or layer name.") }
     if let a = e.affine {
       guard finite([a.a, a.b, a.c, a.d, a.tx, a.ty]), a.inverse != nil else {
@@ -66,12 +80,14 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
     }
     if let stroke = e.stroke {
       try validateColor(stroke.color)
-      guard finite([stroke.width, stroke.miter ?? 10]), (0...100).contains(stroke.width),
+      guard finite([stroke.width, stroke.miter ?? 10, stroke.dashOffset ?? 0]),
+        (0...100).contains(stroke.width),
         (0...1).contains(stroke.opacity ?? 1),
         ["butt", "round", "square"].contains(stroke.cap ?? "butt"),
         ["miter", "round", "bevel"].contains(stroke.join ?? "miter"), (stroke.miter ?? 10) > 0,
         (stroke.dash?.count ?? 0) <= 16,
-        (stroke.dash ?? []).allSatisfy({ $0.isFinite && $0 > 0 && $0 <= 1000 })
+        (stroke.dash ?? []).allSatisfy({ $0.isFinite && $0 >= 0 && $0 <= 1000 }),
+        stroke.dash == nil || stroke.dash!.isEmpty || stroke.dash!.reduce(0, +) > 0
       else {
         throw FormError.invalid("Check stroke width, opacity, caps, joins, and dash lengths.")
       }
@@ -85,6 +101,14 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
         throw FormError.invalid("A gradient needs two or more ordered stops and finite positions.")
       }
       for stop in g.stops { try validateColor(stop.color) }
+      guard g.stops.allSatisfy({ (0...1).contains($0.opacity ?? 1) }) else {
+        throw FormError.invalid("Invalid gradient stop opacity.")
+      }
+      if let t = g.transform {
+        guard finite([t.a, t.b, t.c, t.d, t.tx, t.ty]), t.inverse != nil else {
+          throw FormError.invalid("Invalid gradient transform.")
+        }
+      }
     }
     guard (e.sides ?? 5) >= 3, (e.sides ?? 5) <= 100, (0.01...1).contains(e.starInset ?? 0.45),
       (e.cornerRadius ?? 0).isFinite, (e.cornerRadius ?? 0) >= 0

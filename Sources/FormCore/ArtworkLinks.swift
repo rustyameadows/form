@@ -7,7 +7,7 @@ extension ProductObject {
   public var artworkSize: Point2 {
     recipeID == "clock"
       ? .init(self["diameter"], self["diameter"])
-      : .init(max(10, self["width"]), max(10, self["depth"]))
+      : .init(self["width"] > 0 ? self["width"] : 10, self["depth"] > 0 ? self["depth"] : 10)
   }
 }
 

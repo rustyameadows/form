@@ -30,6 +30,9 @@ struct ArtworkStudio: View {
         }
         Divider().frame(height: 19).padding(.horizontal, 5)
         IconButton("Place image", symbol: "photo.badge.plus") { session.importImage() }
+        IconButton("Import editable SVG · ⇧⌘I", symbol: "square.and.arrow.down") {
+          store.importSVGDialog()
+        }
         Button {
           newFrame = true
         } label: {
@@ -207,7 +210,7 @@ struct NewArtworkFrame: View {
         session.mutate { $0.unit = unit }
         dismiss()
       }.buttonStyle(.borderedProminent).tint(Palette.ink).disabled(
-        width < 20 || width > 1000 || height < 20 || height > 1000)
+        width < 1 || width > 1000 || height < 1 || height > 1000)
     }.padding(23).frame(width: 290)
   }
 }

@@ -5,6 +5,7 @@ import UniformTypeIdentifiers
 
 extension StudioStore {
   func graphicsCall(_ name: String, _ args: [String: Any]) throws -> Any {
+    if name == "form_import_svg" { return try importSVG(arguments: args) }
     if name == "form_list_fonts" {
       let query = (args["query"] as? String ?? "").lowercased()
       return [
@@ -52,6 +53,7 @@ extension StudioStore {
             from: path, color: color, name: e.title + " · outlines", parentID: e.parentID)
           vector.affine = e.localTransform
           vector.opacity = e.opacity
+          vector.fillOpacity = stroke ? e.stroke?.opacity : e.fillOpacity
           vector.productionRole = e.productionRole
           vector.clipID = e.clipID
           created.append(vector)

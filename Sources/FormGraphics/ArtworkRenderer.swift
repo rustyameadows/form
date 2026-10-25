@@ -22,7 +22,8 @@ import FormCore
       context.addPath(VectorGeometry.path(mask))
       context.clip(using: boundary.evenOdd ? .evenOdd : .winding)
     }
-    context.setFillColor(FormColor.color(art.background).cgColor)
+    context.setFillColor(
+      FormColor.color(art.background).withAlphaComponent(art.backgroundOpacity ?? 1).cgColor)
     context.fill(CGRect(x: 0, y: 0, width: width, height: height))
     let masks = Set(art.elements.compactMap(\.clipID))
     let byID = Dictionary(uniqueKeysWithValues: art.elements.map { ($0.id, $0) })
@@ -57,7 +58,17 @@ import FormCore
   public static func drawElement(_ e: ArtworkElement, assets: URL, context: CGContext) {
     let rect = CGRect(x: 0, y: 0, width: e.width, height: e.height)
     if e.kind == "text" {
-      TypographyEngine.draw(e, in: context)
+      guard e.fillEnabled != false else { return }
+      if let opacity = e.fillOpacity, opacity < 1 {
+        context.beginTransparencyLayer(auxiliaryInfo: nil)
+        context.saveGState()
+        context.setAlpha(opacity)
+        TypographyEngine.draw(e, in: context)
+        context.restoreGState()
+        context.endTransparencyLayer()
+      } else {
+        TypographyEngine.draw(e, in: context)
+      }
       return
     }
     if e.kind == "image" {
@@ -83,10 +94,12 @@ import FormCore
     let path = VectorGeometry.path(e)
     let rule: CGPathFillRule = e.path?.evenOdd == true ? .evenOdd : .winding
     if e.fillEnabled != false && e.kind != "line" {
-      if let gradient = e.gradient, let colors = makeGradient(gradient) {
+      if let gradient = e.gradient, let colors = makeGradient(gradient, opacity: e.fillOpacity ?? 1)
+      {
         context.saveGState()
         context.addPath(path)
         context.clip(using: rule)
+        if let transform = gradient.transform { context.concatenate(transform.cg) }
         let start = CGPoint(x: gradient.start.x * e.width, y: gradient.start.y * e.height)
         let end = CGPoint(x: gradient.end.x * e.width, y: gradient.end.y * e.height)
         if gradient.kind == "radial" {
@@ -101,7 +114,8 @@ import FormCore
         }
         context.restoreGState()
       } else {
-        context.setFillColor(FormColor.color(e.color).cgColor)
+        context.setFillColor(
+          FormColor.color(e.color).withAlphaComponent(e.fillOpacity ?? 1).cgColor)
         context.addPath(path)
         context.fillPath(using: rule)
       }
@@ -115,13 +129,16 @@ import FormCore
       context.setLineCap(VectorGeometry.cap(stroke.cap))
       context.setLineJoin(VectorGeometry.join(stroke.join))
       context.setMiterLimit(stroke.miter ?? 10)
-      context.setLineDash(phase: 0, lengths: (stroke.dash ?? []).map { CGFloat($0) })
+      context.setLineDash(
+        phase: stroke.dashOffset ?? 0, lengths: (stroke.dash ?? []).map { CGFloat($0) })
       context.addPath(path)
       context.strokePath()
     }
   }
-  private static func makeGradient(_ gradient: ArtworkGradient) -> CGGradient? {
-    let colors: [CGColor] = gradient.stops.map { FormColor.color($0.color).cgColor }
+  private static func makeGradient(_ gradient: ArtworkGradient, opacity: Double) -> CGGradient? {
+    let colors: [CGColor] = gradient.stops.map {
+      FormColor.color($0.color).withAlphaComponent(($0.opacity ?? 1) * opacity).cgColor
+    }
     let locations: [CGFloat] = gradient.stops.map { CGFloat($0.offset) }
     return CGGradient(
       colorsSpace: CGColorSpace(name: CGColorSpace.sRGB), colors: colors as CFArray,

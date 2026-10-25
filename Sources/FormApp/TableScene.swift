@@ -1063,7 +1063,7 @@ private struct RenderSignature: Equatable {
     if let image = artworkImages.object(forKey: key) { return image }
     let image = ArtworkDrawing.image(
       art, width: width, height: depth, assets: assets,
-      pixelsPerMM: min(5, Double(textureLimit) / max(width, depth)))
+      pixelsPerMM: min(max(5, 1024 / max(width, depth)), Double(textureLimit) / max(width, depth)))
     let pixels = image.representations.map { $0.pixelsWide * $0.pixelsHigh }.max() ?? 1
     artworkImages.setObject(image, forKey: key, cost: pixels * 8)
     return image
