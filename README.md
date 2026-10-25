@@ -45,6 +45,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Editable appearance:** Layer/group opacity, sixteen blend modes, Gaussian blur, drop shadows, explicit group isolation, and shared shadow colors. The canvas, linked products, and physical exports preserve their appearance. See the [UMBRA study](docs/artwork-appearance.md).
 - **Native artwork canvas:** Multiple physical frames, rulers/guides/grid/snapping, nested layers, exact transforms, Bézier paths, compound holes, cross-object endpoint joining, gradients, strokes, masks, and live 3D face updates. [Live boolean groups and Divide](docs/live-booleans.md) retain editable operands, support operation changes/release/flatten, and update linked product faces. A folding sleeve exposes its unfolded cut/score dieline.
 - **Vector paint:** Direct gradient-stop and axis editing, full stroke controls with inside/outside alignment, fill-preserving stroke outlines, and explicit nested-mask editing. See the [PRISM workflow](docs/paint-gradients-masks.md).
+- **Production inks:** Profile-pinned CMYK and named-spot palette declarations, explicit RGB previews, genuine ICCBased/Separation composite PDF and normal-knockout digital ink maps for an opaque vector subset. Integrated acceptance remains pending; see [production inks](docs/production-inks.md).
 - **Production roles:** Explicit print, cut, score, stitch, engrave, and guide intent; inherited manufacturing groups; local overlay visibility; separate SVG role layers and actual-size PDF pages from the same source. See [production roles](docs/production-roles.md).
 - **Regenerable embroidery:** Actual running, constant-width satin, and clipped compound-fill needle commands from editable artwork; dedicated native stitch/travel preview and playback, actual command-derived 3D thread surfaces, opt-in underlay/backtracking locks, thread/region controls, hoop preflight, physical SVG/JSON and DST with ordered thread sidecars. Independently decoded with Pyembroidery; no hardware calls or verified sew-out claim. See [embroidery](docs/embroidery.md).
 - **Textile production records:** Studio thread inventory and declared embroidery equipment, portable thread assignment, immutable revision-linked jobs, measured needle paths versus explicit cost/usage assumptions, user sample/quality history, and local PDF/JSON/DST/SVG review packets. No stock deduction or machine operations. See [production jobs](docs/textile-production-jobs.md).
@@ -140,6 +141,7 @@ python3 scripts/smoke_images.py # Original images, crop/adjustments, physical DP
 python3 scripts/smoke_paths.py # Curve editing, transformed type, and linked variants
 python3 scripts/smoke_clock.py --slice # Shared dial, immutable source links, physical exports, local Orca
 python3 scripts/benchmark_artwork.py # 600-element native canvas performance
+python3 scripts/smoke_production_inks.py # Declared CMYK/spot intents, knockout maps, guarded physical PDF, schema35
 python3 scripts/smoke_print_lifecycle.py # Project scope, local-worker cancellation, unseen mesh dimensions, Undo/Redo
 python3 scripts/smoke_print.py # Optional engine; local cube and hollow-shade slices
 ```
@@ -159,6 +161,7 @@ This build has a native typography/vector editor and procedural construction sys
 - [Initial product brief · Version 0.1](docs/product-brief.md)
 - [2D Design, Typography & Vector Editing · guiding specification](docs/2d-design-typography-vector-spec.md)
 - [Native artwork editor · controls, MCP, and remaining work](docs/2d-editor.md)
+- [Production inks · CMYK, named spots and physical ink maps](docs/production-inks.md)
 - [Production roles · separate print and manufacturing geometry](docs/production-roles.md)
 - [Physical fabric repeat designs](docs/fabric-patterns.md)
 - [Paragraph language and hyphenation](docs/paragraph-language.md)

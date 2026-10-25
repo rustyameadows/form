@@ -38,3 +38,8 @@ Five focused core/graphics tests and four native domain tests pass. They check p
 `scripts/smoke_color_profiles.py` passes against the packaged app in a disposable library. It refuses to mutate the ordinary library and verifies real tool discovery, linked-source assignment, source-only package writes, zero geometry rebuilds, unchanged screen pixels, Undo/Redo, actual CMYK vector paint, physical exports, and schema-30 reopen.
 
 Native computer use assigns and clears Generic CMYK, verifies both changes directly in the saved object files before any MCP readback, and restores exact artwork/history with two document Undo actions. The linked-screen PNG remains byte-identical and geometry builds stay at4 through profile assignment; actual PDF vector paint and embedded image samples are CMYK. Native source composition and all color values remain sRGB.
+
+
+## Declared CMYK and named spot inks — milestone 35
+
+The [production-ink workflow](production-inks.md) now separates raw, profile-pinned process/spot declarations from their ColorSync-derived sRGB preview. Explicit composite PDF writes ICCBased process colors and genuine Separation resources; positive digital maps preserve opaque normal knockout and physical page boxes. Existing RGB conversion remains available. Declared ink is never silently passed through the ordinary RGB-to-profile conversion route. The initial production subset rejects images, gradients, transparency/effects and non-normal blends; overprint, trapping, screening, physical ink equivalence and PDF/X remain open. See the linked guide for schema35, exact native/MCP behavior, limits, physical proofs and pending packaged acceptance.

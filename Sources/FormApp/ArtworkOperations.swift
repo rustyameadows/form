@@ -95,7 +95,14 @@ extension StudioStore {
       toast("Artwork \(format.uppercased()) exported")
     } catch { self.error = error.localizedDescription }
   }
-  func exportArtwork(object: ProductObject, arguments: [String: Any]) throws -> Any {
+  func exportArtwork(object suppliedObject: ProductObject, arguments: [String: Any]) throws -> Any {
+    guard let object=self.project?.objects.first(where:{$0.id==suppliedObject.id}) else{throw FormError.missing("Choose an existing artwork object.")}
+    if let value=arguments["ink_output"] {
+      guard let mode=value as? String else{throw FormError.invalid("ink_output must be preview, composite, plates, or preflight.")}
+      let conflict=arguments["embroidery_format"] != nil || arguments["fabric_pattern_material"] != nil || arguments["cut_layout"] as? Bool==true || arguments["pattern_pieces"] as? Bool==true
+      guard !conflict,["pdf","svg","png","jpeg"].contains(arguments["format"] as? String ?? "") else{throw FormError.invalid("Choose production ink output separately from embroidery, pattern pieces and cutting layouts.")}
+      if mode != "preview" {return try exportProductionInks(object,arguments:arguments)}
+    }
     if arguments["cut_layout"] as? Bool == true { return try exportSewingLayout(object: object, arguments: arguments) }
     if arguments["pattern_pieces"] as? Bool == true { return try exportSewingPattern(object: object, arguments: arguments) }
     if arguments["embroidery_format"] != nil || ["dst","json","preflight"].contains(arguments["format"] as? String ?? "") {
@@ -113,7 +120,8 @@ extension StudioStore {
     if object.isCanvasWorkspace,(arguments["element_ids"] as? [String])?.isEmpty != false {
       throw FormError.invalid("Select Canvas artwork to export, or place it on a physical frame.")
     }
-    var art = (object.isCanvasWorkspace ? project.editableArtwork(object) : project.surfaceArtwork(object)) ?? .init(background:"#FFFFFF")
+    var art = (object.isCanvasWorkspace ? project.editableArtwork(object) : project.surfaceArtwork(object,keepingSwatchReferences:format=="pdf")) ?? .init(background:"#FFFFFF")
+    if object.isCanvasWorkspace {art=try project.resolvingComponents(in:art,keepingSwatchReferences:true)}
     var width = dimensions.width
     var height = dimensions.height
     if let raw = arguments["element_ids"] as? [String], !raw.isEmpty {
@@ -126,6 +134,11 @@ extension StudioStore {
       width = max(0.1, exported.bounds.width)
       height = max(0.1, exported.bounds.height)
     }
+    let declaredInks=project.hasUsedProductionInks(in:art) || (format != "pdf" && art.requiresInkOutput)
+    if format=="pdf" {art.requiresInkOutput=declaredInks}
+    art=project.resolvingSwatches(in:art,keepingReferences:format=="pdf")
+    if format=="pdf",declaredInks,arguments["ink_output"] as? String != "preview" {throw FormError.invalid("This artwork declares production inks. Choose ink_output preview, composite, plates, or preflight explicitly.")}
+    if arguments["ink_output"] as? String=="preview" {art.outputColorProfile=nil;art.requiresInkOutput=false}
     // Resolve live geometry before opening/writing a production output.
     art = try BooleanGeometry.materialized(art)
     let url: URL
@@ -197,6 +210,7 @@ extension StudioStore {
       "composed_text_outlined": format == "svg" && arguments["outline_text"] as? Bool == false
         ? art.elements.filter { $0.kind == "text" && $0.hidden != true && TypographyEngine.requiresComposedOutlines($0) }.count : 0,
     ]
+    if declaredInks {result["ink_output"]="preview";result["ink_declarations_encoded"]=false;result["ink_notice"]="sRGB appearance preview; named/process ink declarations are not encoded in this output."}
     result["color_space"] = format == "pdf" ? art.outputColorProfile?.model ?? "sRGB" : "sRGB"
     if format == "pdf", let profile = art.outputColorProfile {
       result["pdf_output_profile"] = try jsonObject(profile)

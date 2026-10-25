@@ -273,8 +273,10 @@ extension StudioStore {
     default: throw FormError.invalid("Fabric output format must be svg, pdf, png, or jpeg.")
     }
     try data.write(to: url, options: .atomic)
-    return ["path": url.path, "format": format, "width_mm": width, "height_mm": height, "dpi": dpi, "bytes": data.count,
+    var result:[String:Any]=["path": url.path, "format": format, "width_mm": width, "height_mm": height, "dpi": dpi, "bytes": data.count,
       "fabric_pattern_material": materialID, "source_object_id": design.pattern.sourceObjectID.uuidString,
-      "repeat_width_mm": design.supertileSize.x, "repeat_height_mm": design.supertileSize.y] as [String: Any]
+      "repeat_width_mm": design.supertileSize.x, "repeat_height_mm": design.supertileSize.y]
+    if design.artwork.requiresInkOutput {result["ink_output"]="preview";result["ink_declarations_encoded"]=false;result["ink_notice"]="sRGB appearance preview; production ink declarations and colorway equivalence are not encoded."}
+    return result
   }
 }

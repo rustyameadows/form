@@ -24,6 +24,9 @@ extension ArtworkSession {
     guard let store else { return false }
     let target = arguments["target"] as? String ?? "fill"
     if ["assign", "detach"].contains(command), target == "fill", editingText {
+      if command=="detach",fillSwatchReferences.contains(where:{store.project?.productionInk($0) != nil}) {
+        store.error="Convert this production ink to RGB preview before detaching its paint link.";return false
+      }
       let id = (arguments["swatch_id"] as? String).flatMap(UUID.init(uuidString:))
       let color = store.project?.swatches?.first { $0.id == id }?.color
       if canvas?.applyTextSwatch(command == "assign" ? id : nil, color: color) == true { return true }
@@ -98,7 +101,7 @@ struct SwatchPalette: View {
       HStack {
         SectionLabel("PROJECT PALETTE")
         Spacer()
-        Text("sRGB").font(.system(size: 9, design: .monospaced)).foregroundStyle(Palette.secondary)
+        Text("sRGB preview / print inks").font(.system(size: 9, design: .monospaced)).foregroundStyle(Palette.secondary)
       }
       if store.project?.swatches?.isEmpty != false {
         Text("Keep a collection's colors linked across artwork and products.")
@@ -113,14 +116,15 @@ struct SwatchPalette: View {
                 ColorPicker("Swatch color", selection: Binding(
                   get: { Color(nsColor: FormColor.color(value.color)) },
                   set: { session.swatch("update", ["swatch_id": value.id.uuidString,
-                    "color": FormColor.hex(NSColor($0))]) }), supportsOpacity: false).labelsHidden()
+                    "color": FormColor.hex(NSColor($0))]) }), supportsOpacity: false).labelsHidden().disabled(value.printInk != nil)
                 SwatchTextField(title: "Swatch name", value: value.name) {
                   session.swatch("update", ["swatch_id": value.id.uuidString, "name": $0])
                 }
                 SwatchTextField(title: "HEX", value: value.color) {
                   session.swatch("update", ["swatch_id": value.id.uuidString, "color": $0])
-                }.frame(width: 85)
+                }.frame(width: 85).disabled(value.printInk != nil)
               }
+              ProductionInkSwatchControls(session:session,swatch:value)
               HStack(spacing: 12) {
                 Button("Apply fill") { session.swatch("assign", ["swatch_id": value.id.uuidString]) }
                   .disabled(session.selection.isEmpty)
@@ -142,7 +146,7 @@ struct SwatchPalette: View {
           if session.swatch("create", ["name": name, "color": color]) { name = "" }
         }.disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
       }
-      Text("Shared colors remain linked until detached. Delete preserves their current appearance; Undo restores the links.")
+      Text("RGB swatches preserve appearance when deleted. Used production inks require explicit conversion to RGB preview before detaching or deleting; Undo restores their intent.")
         .font(.system(size: 9)).foregroundStyle(Palette.secondary)
     }.padding(20).frame(width: 410).background(Palette.paper)
   }

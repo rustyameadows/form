@@ -114,6 +114,7 @@ import FormCore
     """
   }
   public static func pdf(_ design: ResolvedFabricPattern, assets: URL, width: Double, height: Double, dpi: Double) throws -> Data {
+    guard !design.artwork.requiresInkOutput else{throw FormError.invalid("This fabric tile declares production inks. Yardage PDF does not yet preserve those colorants. Export the source tile with an explicit production ink mode; SVG/raster yardage are RGB appearance previews.")}
     let origins = try design.pattern.tileOrigins(sourceSize: design.sourceSize, width: width, height: height)
     let cost = origins.count * design.pattern.motifTransforms(sourceSize: design.sourceSize).count * max(1, design.artwork.elements.count)
     guard cost <= 250000 else { throw FormError.invalid("This PDF needs too much repeated artwork. Reduce the output area or export SVG.") }

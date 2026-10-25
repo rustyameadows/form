@@ -167,7 +167,9 @@ extension Project {
     guard [cell.x, cell.y].allSatisfy({ $0.isFinite && (0.1...20000).contains($0) }) else {
       throw FormError.invalid("Fabric repeat cells must be at least 0.1 mm and at most 20000 mm.")
     }
-    var artwork = try resolvingComponents(in: stored)
+    var artwork = try resolvingComponents(in: resolvingTextStories(in:stored,objectID:source.id),keepingSwatchReferences:true)
+    if !pattern.includeTileBackground {artwork.backgroundOpacity=0}
+    artwork.requiresInkOutput=hasUsedProductionInks(in:artwork)
     artwork = resolvingSwatches(in: artwork)
     let colorway = pattern.colorways.first { $0.id == pattern.activeColorwayID }
     let colors = Dictionary(uniqueKeysWithValues: (colorway?.replacements ?? [:]).map { ($0.key.uppercased(), $0.value) })

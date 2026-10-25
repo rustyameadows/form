@@ -29,7 +29,9 @@ extension Project {
     let owner = artworkOwner(object)
     guard let stored = owner.artwork else { return nil }
     let source=resolvingTextStories(in:stored,objectID:owner.id)
-    var art = (try? resolvingComponents(in: source, keepingSwatchReferences: keepingSwatchReferences)) ?? source
+    var art = (try? resolvingComponents(in: source, keepingSwatchReferences: true)) ?? source
+    art.requiresInkOutput=hasUsedProductionInks(in:art)
+    if !keepingSwatchReferences {art=resolvingSwatches(in:art)}
     if owner.id != object.id {
       let source = owner.artworkSize
       let target = object.artworkSize
@@ -62,8 +64,9 @@ extension Project {
       throw FormError.missing("Object not found.")
     }
     let owner = artworkOwner(object)
-    let artwork = recordingStyleOverrides
+    var artwork = recordingStyleOverrides
       ? artwork.recordingTextStyleOverrides(from: owner.artwork) : artwork
+    artwork.requiresInkOutput=false
     try PublicationCommands.reconcileFrames(in:&self,objectID:owner.id,artwork:artwork)
     for i in objects.indices where objects[i].designID == owner.designID {
       objects[i].artwork = artwork
@@ -90,6 +93,7 @@ extension Project {
     let design = objects[i].designID
     // Detachment bakes the current placement so the physical result is preserved.
     var detached = sourceID == nil ? surfaceArtwork(objects[i], keepingSwatchReferences: true) : nil
+    detached?.requiresInkOutput=false
     if objects[i].recipeID == "clock" { detached?.boundary = nil }
     var candidate = self
     for n in candidate.objects.indices where candidate.objects[n].designID == design {
@@ -149,6 +153,7 @@ extension Project {
     let snapshots = objects.filter { !ids.contains($0.id) && ids.contains(artworkOwner($0).id) }
       .map { object -> (UUID, Artwork?) in
         var art = surfaceArtwork(object, keepingSwatchReferences: true)
+        art?.requiresInkOutput=false
         if object.recipeID == "clock" { art?.boundary = nil }
         return (object.id, art)
       }

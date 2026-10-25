@@ -26,7 +26,7 @@ import FormCore
       "frames":frames,"overset_location":value.oversetRange.location,"overset_length":value.oversetRange.length,
       "renderer":PublicationStoryLayout.diagnostics]
   }
-  public static func preflight(_ project:Project,documentID:UUID,assets:URL?=nil)->[String:Any] {
+  public static func preflight(_ project:Project,documentID:UUID,assets:URL?=nil,previewOnly:Bool=false)->[String:Any] {
     var issues:[[String:Any]]=[]
     func issue(_ severity:String,_ message:String,page:UUID?=nil,element:UUID?=nil,story:UUID?=nil,code:String?=nil) {
       var value:[String:Any]=["severity":severity,"message":message]
@@ -37,7 +37,7 @@ import FormCore
     guard let document=project.publications?.first(where:{$0.id==documentID}) else{return ["publication_id":documentID.uuidString,"can_export":false,"issues":[["severity":"error","message":"Publication not found."]]]}
     do {try project.validatePublications()}catch{issue("error",error.localizedDescription)}
     do {
-      if let profile=try outputProfile(project,document:document),let assets {_ = try ICCOutputProfile(reference:profile,assets:assets)}
+      if !previewOnly,let profile=try outputProfile(project,document:document),let assets {_ = try ICCOutputProfile(reference:profile,assets:assets)}
     }catch{issue("error",error.localizedDescription)}
     if document.pages.isEmpty {issue("error","Add at least one physical page before exporting.")}
     var stories:[[String:Any]]=[]
@@ -76,13 +76,21 @@ import FormCore
     }
     return ["publication_id":document.id.uuidString,"name":document.name,"can_export":!issues.contains{$0["severity"] as? String=="error"},"issues":issues,"pages":pages,"stories":stories]
   }
-  public static func pdf(_ project:Project,documentID:UUID,assets:URL,dpi:Double=300,outlineText:Bool=false,allowOverset:Bool=false) throws -> Data {
+  public static func pdf(_ project:Project,documentID:UUID,assets:URL,dpi:Double=300,outlineText:Bool=false,allowOverset:Bool=false,inkOutput:InkOutputMode?=nil) throws -> Data {
     try project.validatePublications()
     guard let document=project.publications?.first(where:{$0.id==documentID}),!document.pages.isEmpty,dpi.isFinite,(36...1200).contains(dpi) else{
       throw FormError.invalid("Choose a publication with physical pages and 36–1200DPI effects resolution.")
     }
-    let profile=try outputProfile(project,document:document)
-    let report=preflight(project,documentID:documentID,assets:assets)
+    let physicalPages=try document.pages.map {page->InkPrintPage in
+      guard let object=project.objects.first(where:{$0.id==page.objectID}),let art=project.surfaceArtwork(object,keepingSwatchReferences:true) else{throw FormError.missing("A physical publication page is missing.")}
+      return .init(id:object.id,name:object.name,artwork:art,width:object.artworkSize.x,height:object.artworkSize.y)
+    }
+    if inkOutput == .composite || inkOutput == .plates {
+      return try ProductionInkPDF.export(project:project,pages:physicalPages,assets:assets,mode:inkOutput!,title:document.name).data
+    }
+    if physicalPages.contains(where:{$0.artwork.requiresInkOutput}),inkOutput != .preview {throw FormError.invalid("This publication declares production inks. Choose an explicit preview, composite or plates output.")}
+    let profile=inkOutput == .preview ? nil:try outputProfile(project,document:document)
+    let report=preflight(project,documentID:documentID,assets:assets,previewOnly:inkOutput == .preview)
     let errors=(report["issues"] as? [[String:Any]] ?? []).filter{$0["severity"] as? String=="error" && !(allowOverset && $0["code"] as? String=="overset")}.compactMap{$0["message"] as? String}
     if !errors.isEmpty {throw FormError.invalid(errors.joined(separator:"\n"))}
     let data=NSMutableData();var first=CGRect(x:0,y:0,width:100,height:100)

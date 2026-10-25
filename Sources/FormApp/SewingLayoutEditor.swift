@@ -10,6 +10,7 @@ struct SewingLayoutEditor: View {
   @State private var dpi = 150.0
   @State private var includeFabricExport = false
   @State private var exportError = ""
+  @State private var reviewingPDF = false
   init(session: ArtworkSession) { _model = StateObject(wrappedValue: SewingLayoutController(session: session)) }
   var body: some View {
     VStack(alignment: .leading, spacing: 14) {
@@ -28,6 +29,7 @@ struct SewingLayoutEditor: View {
           HStack {
             Button("Auto layout") { model.plan() }.disabled(!model.canPlan)
             Button("Fit stock") { model.fitRequest += 1 }
+            Button("Review PDF…") { if model.commitFields() { reviewingPDF = true } }.disabled(!model.canExport).accessibilityLabel("Review cutting layout PDF")
             Toggle("Fabric reference", isOn: $model.showFabric).toggleStyle(.checkbox).font(.system(size: 10))
             Spacer()
             if model.planning || model.checking { ProgressView().controlSize(.small); Text(model.planning ? "Planning…" : "Checking…").font(.system(size: 10)).foregroundStyle(Palette.secondary) }
@@ -53,6 +55,7 @@ struct SewingLayoutEditor: View {
       .onChange(of: store.revision) { _, _ in _ = model.refreshContext() }
       .onChange(of: store.project?.id) { _, id in if id != model.projectID { model.finish(); dismiss() } }
       .onDisappear { model.finish() }
+      .sheet(isPresented: $reviewingPDF) { SewingLayoutPDFReview(model: model).environmentObject(store) }
   }
   @ViewBuilder private var stockControls: some View {
     SectionLabel("MATERIAL & STOCK")

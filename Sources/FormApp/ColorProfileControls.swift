@@ -26,12 +26,13 @@ struct ColorProfileControls: View {
       } label: {
         Text(session.art.outputColorProfile.map { "PDF · \($0.name) (\($0.model))" } ?? "PDF · Preserve source sRGB")
       }.accessibilityLabel("PDF output profile")
-      Text("PDF colors convert through the selected ICC profile. Editable colors, Table previews, SVG, PNG and JPEG remain sRGB.")
+      Text("RGB PDF content converts through this profile. Declared CMYK/spot inks use explicit matching ink output; screen, SVG and raster remain appearance previews.")
         .font(.system(size: 9)).foregroundStyle(Palette.secondary).fixedSize(horizontal: false, vertical: true)
       if session.art.outputColorProfile?.name.localizedCaseInsensitiveContains("generic") == true {
         Text("A generic profile is a conversion study. Choose your print provider's profile for a specific production condition.")
           .font(.system(size: 9)).foregroundStyle(Palette.secondary).fixedSize(horizontal: false, vertical: true)
       }
+      ProductionInkExportControls(session:session)
     }.font(.system(size: 10)).onAppear { profiles = ICCOutputProfile.installed() }
   }
 }

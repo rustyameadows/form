@@ -5,7 +5,8 @@ public struct ArtworkSwatch: Codable, Equatable, Identifiable, Sendable {
   public var name: String
   public var color: String
   public var colorSpace: String? = "sRGB"
-  public init(name: String, color: String) { self.name = name; self.color = color }
+  public var printInk:ProductionInk?
+  public init(name: String, color: String,printInk:ProductionInk?=nil) { self.name = name; self.color = color;self.printInk=printInk }
 }
 
 extension Artwork {
@@ -53,6 +54,7 @@ extension Artwork {
 
 extension Project {
   public func validateSwatches() throws {
+    try validateProductionInks()
     let values = swatches ?? []
     let ids = Set(values.map(\.id))
     guard values.count <= 256, ids.count == values.count,
@@ -130,17 +132,19 @@ extension Project {
 
 public enum SwatchCommands {
   @discardableResult public static func save(in project: inout Project, id: UUID? = nil,
-    name: String, color: String) throws -> UUID {
+    name: String, color: String,printInk:ProductionInk?=nil,replacingInk:Bool=false) throws -> UUID {
     var candidate = project
     var values = candidate.swatches ?? []
     if let id {
       guard let index = values.firstIndex(where: { $0.id == id }) else {
         throw FormError.missing("Swatch not found.")
       }
+      if values[index].printInk != nil,!replacingInk,values[index].color.uppercased() != color.uppercased() {throw FormError.invalid("Edit the production ink components, or choose Convert to RGB preview before changing this swatch's HEX appearance.")}
+      if replacingInk {values[index].printInk=printInk}
       values[index].name = name.trimmingCharacters(in: .whitespacesAndNewlines)
       values[index].color = color.uppercased()
     } else {
-      values.append(.init(name: name.trimmingCharacters(in: .whitespacesAndNewlines), color: color.uppercased()))
+      values.append(.init(name: name.trimmingCharacters(in: .whitespacesAndNewlines), color: color.uppercased(),printInk:printInk))
     }
     candidate.swatches = values
     try candidate.validateSwatches()
@@ -150,6 +154,7 @@ public enum SwatchCommands {
 
   public static func delete(in project: inout Project, id: UUID) throws {
     guard project.swatches?.contains(where: { $0.id == id }) == true else { throw FormError.missing("Swatch not found.") }
+    if project.productionInk(id) != nil,project.productionInkIsReferenced(id) {throw FormError.invalid("Convert this used production ink to RGB preview before deleting it.")}
     var candidate = project
     for i in candidate.objects.indices {
       if let art = candidate.objects[i].artwork, art.referencedSwatches.contains(id) {
@@ -215,6 +220,7 @@ public enum SwatchCommands {
       throw FormError.invalid("This object has no supported artwork background.")
     }
     var art = project.editableArtwork(object) ?? .init(background: "#FFFFFF", bleed: 0)
+    if swatchID==nil {try ProductionInkCommands.validateDetach(project,artwork:art,ids:ids,target:target,stopID:stopID,partID:partID,location:location,length:length)}
     let color: String?
     if let swatchID {
       guard let swatch = project.swatches?.first(where: { $0.id == swatchID }) else { throw FormError.missing("Swatch not found.") }

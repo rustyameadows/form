@@ -8,7 +8,7 @@ extension StudioStore {
     let command = args["command"] as? String ?? "list"
     if command == "list" {
       return ["editing_color_space": "sRGB", "profiles": ICCOutputProfile.installed().map(\.json),
-        "scope": "Actual ICC conversion for artwork and publication PDF. Screen, SVG, PNG and JPEG remain sRGB."]
+        "scope": "Actual ICC conversion for RGB artwork/publication PDF; declared production inks use explicit matching-profile composite/maps. Screen, SVG, PNG and JPEG remain sRGB appearance previews.","production_ink_output_modes":["preview","composite","plates","preflight"]]
     }
     guard ["get", "set", "clear"].contains(command),
       let raw = args["object_id"] as? String, let id = UUID(uuidString: raw), let project,
@@ -54,6 +54,7 @@ extension StudioStore {
     setOutputColorProfile(url.path, objectID: objectID)
   }
   func profiledArtworkPDF(_ data: Data, artwork: Artwork, assets: URL, title: String) throws -> Data {
+    guard !artwork.requiresInkOutput else{throw FormError.invalid("This physical artwork carries production ink declarations. Use the explicit production ink PDF export, or choose an RGB preview export; this route does not flatten named inks.")}
     guard let reference = artwork.outputColorProfile else { return data }
     return try ProfiledPDF.convert(data, profile: ICCOutputProfile(reference: reference, assets: assets), title: title)
   }

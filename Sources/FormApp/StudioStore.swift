@@ -111,6 +111,10 @@ enum TableTool: String, CaseIterable {
       let art = try BooleanGeometry.materialized(p.resolvingComponents(in:raw))
       for e in art.elements where ids.contains(e.id) && e.visibleStroke != nil { _ = try VectorGeometry.expandedStroke(e) }
     }
+    engine.onPrepareSwatch = { [weak self] project,swatch in
+      guard let self else{throw FormError.missing("FORM is closing.")}
+      try self.prepareProductionSwatch(project,&swatch)
+    }
     engine.onPrepareGlyph = { element, choice in
       if let choice {try GlyphEngine.validateSelection(element, choice: choice)}
       if element.typography?.frameMode=="point" {
@@ -165,6 +169,7 @@ enum TableTool: String, CaseIterable {
                 "form_list_filaments", "form_list_printers", "form_get_artwork",
                 "form_list_fonts", "form_font_features", "form_image_info", "form_export_publication",
               ].contains(name) || (name == "form_import_svg" && args["dry_run"] as? Bool == true)
+                || (name=="form_export_artwork" && args["ink_output"] as? String=="preflight")
                 || (name == "form_replace_font" && args["dry_run"] as? Bool==true)
                 || (name == "form_component" && args["command"] as? String == "list")
                 || (name == "form_swatch" && args["command"] as? String == "list")
@@ -174,6 +179,7 @@ enum TableTool: String, CaseIterable {
                 || (name == "form_story" && ["list","get","layout"].contains(args["command"] as? String ?? "list"))
                 || (name == "form_publication" && ["list","get","preflight"].contains(args["command"] as? String ?? "list"))
             if !readOnly {
+              try self.preflightInkHandoff(name,args)
               try self.preflightFontHandoff(name,args)
               try self.preflightPublicationHandoff(name,args);self.finishArtworkEditing()
             }

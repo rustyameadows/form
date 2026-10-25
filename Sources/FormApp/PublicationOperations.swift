@@ -30,6 +30,14 @@ extension StudioStore {
     let id=try uuid("publication_id")
     if name=="form_publication" {return PublicationOutput.preflight(project,documentID:id,assets:assets)}
     guard let document=project.publications?.first(where:{$0.id==id}) else{throw FormError.missing("Publication not found.")}
+    if let value=arguments["ink_output"] {
+      guard let text=value as? String,let mode=InkOutputMode(rawValue:text) else{throw FormError.invalid("Choose a valid ink_output mode.")}
+      if mode == .preflight {return ProductionInkPDF.preflight(project:project,pages:try inkPublicationPages(id),assets:assets)}
+      if mode == .composite || mode == .plates {
+        let output=try ProductionInkPDF.export(project:project,pages:inkPublicationPages(id),assets:assets,mode:mode,title:document.name)
+        return try writeProductionInkPDF(output.data,report:output.report,name:document.name,mode:mode,arguments:arguments)
+      }
+    }
     let url:URL
     if let path=arguments["path"] as? String {
       guard path.hasPrefix("/"),URL(fileURLWithPath:path).pathExtension.lowercased()=="pdf" else{throw FormError.invalid("Use an absolute local path ending in .pdf.")}
@@ -40,10 +48,13 @@ extension StudioStore {
       url=folder.appendingPathComponent(document.name.replacingOccurrences(of:"/",with:"-")+".pdf")
     }
     let data=try PublicationOutput.pdf(project,documentID:id,assets:assets,dpi:arguments["dpi"] as? Double ?? 300,
-      outlineText:arguments["outline_text"] as? Bool ?? false,allowOverset:arguments["allow_overset"] as? Bool ?? false)
+      outlineText:arguments["outline_text"] as? Bool ?? false,allowOverset:arguments["allow_overset"] as? Bool ?? false,inkOutput:(arguments["ink_output"] as? String).flatMap(InkOutputMode.init(rawValue:)))
     try data.write(to:url,options:.atomic)
-    return ["path":url.path,"format":"pdf","publication_id":id.uuidString,"page_count":document.pages.count,"bytes":data.count,
-      "source_color_space":"sRGB","output_profile":try PublicationOutput.outputProfile(project,document:document).map{try jsonObject($0)} ?? NSNull(),
-      "preflight":PublicationOutput.preflight(project,documentID:id,assets:assets)] as [String:Any]
+    let preview=arguments["ink_output"] as? String=="preview"
+    var result:[String:Any]=["path":url.path,"format":"pdf","publication_id":id.uuidString,"page_count":document.pages.count,"bytes":data.count,
+      "source_color_space":"sRGB","output_profile":preview ? NSNull():try PublicationOutput.outputProfile(project,document:document).map{try jsonObject($0)} ?? NSNull(),
+      "preflight":PublicationOutput.preflight(project,documentID:id,assets:assets,previewOnly:preview)]
+    if preview {result["ink_output"]="preview";result["ink_declarations_encoded"]=false;result["ink_notice"]="sRGB appearance preview; named/process ink declarations are not encoded in this output."}
+    return result
   }
 }

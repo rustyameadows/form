@@ -13,6 +13,7 @@ public final class OperationEngine {
   public var onPrint: ((String, [String: Any]) throws -> Any)?
   public var onGraphics: ((String, [String: Any]) throws -> Any)?
   public var onValidatePaint: ((Project, UUID, Set<UUID>) throws -> Void)?
+  public var onPrepareSwatch:((Project,inout ArtworkSwatch)throws->Void)?
   public var onPrepareGlyph: ((inout ArtworkElement, GlyphOverride?) throws -> Void)?
   public var onPrepareParagraphs: ((inout Artwork, Set<UUID>) throws -> Void)?
   public var onProjectWillChange: (() -> Void)?
@@ -283,9 +284,16 @@ public final class OperationEngine {
         case "create", "update":
           let id: UUID? = command == "update" ? try uuid("swatch_id") : nil
           let old = p.swatches?.first { $0.id == id }
+          let ink=try a["print_ink"].flatMap {raw->ProductionInk? in
+            if raw is NSNull {return nil}
+            return try JSONDecoder.form.decode(ProductionInk.self,from:JSONSerialization.data(withJSONObject:raw))
+          }
           let saved = try SwatchCommands.save(in: &p, id: id,
             name: a["name"] as? String ?? old?.name ?? "Untitled color",
-            color: a["color"] as? String ?? old?.color ?? "#D45A37")
+            color: a["color"] as? String ?? old?.color ?? "#D45A37",printInk:ink,replacingInk:a["print_ink"] != nil)
+          if let index=p.swatches?.firstIndex(where:{$0.id==saved}) {
+            var value=p.swatches![index];try onPrepareSwatch?(p,&value);p.swatches![index]=value
+          }
           result = ["swatch": try jsonObject(p.swatches!.first { $0.id == saved }!)]
         case "delete":
           try SwatchCommands.delete(in: &p, id: uuid("swatch_id"))
@@ -618,7 +626,8 @@ public final class OperationEngine {
       object.relationship = mode
       if mode != "variant" {
         if object.artworkSourceID != nil {
-          object.artwork = p.surfaceArtwork(object)
+          object.artwork = p.surfaceArtwork(object,keepingSwatchReferences:true)
+          object.artwork?.requiresInkOutput=false
           object.artworkSourceID = nil
           object.artworkFit = nil
           if object.recipeID == "clock" { object.artwork?.boundary = nil }

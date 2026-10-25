@@ -176,38 +176,3 @@ private struct SewingSeamEditor: View {
     } catch { self.error = error.localizedDescription }
   }
 }
-
-private struct SewingPatternPreview: View {
-  @EnvironmentObject var store: StudioStore
-  @Environment(\.dismiss) var dismiss
-  @ObservedObject var session: ArtworkSession
-  @State private var dpi = 150.0
-  @State private var error = ""
-  private var output: SewingPatternOutput? { try? SewingPatternOutput(source: session.art) }
-  var body: some View {
-    VStack(alignment: .leading, spacing: 15) {
-      HStack { Text("Cutting pattern").font(.system(size: 25, design: .serif)); Spacer(); Button("Done") { dismiss() }.keyboardShortcut(.cancelAction) }
-      if let output {
-        let size = output.plan.frameSize
-        let image = ArtworkRenderer.image(output.combinedArtwork, width: size.x, height: size.y, assets: session.assets, pixelsPerMM: min(2, 1400 / max(size.x, size.y)))
-        Image(nsImage: image).resizable().interpolation(.high).scaledToFit().frame(maxWidth: .infinity, maxHeight: .infinity).background(.white)
-        HStack {
-          Text(String(format: "%.1f × %.1f mm · %d piece templates · print at 100%%", size.x, size.y, output.plan.pieces.count)).font(.system(size: 10, design: .monospaced))
-          Spacer(); TextField("DPI", value: $dpi, format: .number).textFieldStyle(.roundedBorder).frame(width: 70); Text("DPI").font(.system(size: 10))
-        }
-        Text("Black: cut contour and notches. Blue: stitch outline. Gold: grain and fold guides. Check the 50 mm square before cutting fabric.").font(.system(size: 10)).foregroundStyle(Palette.secondary)
-        HStack { ForEach(["pdf", "svg", "png"], id: \.self) { format in Button("Export " + format.uppercased()) { export(format) } }; Spacer() }
-      } else { ContentUnavailableView("No sewing pieces", systemImage: "scissors", description: Text("Annotate supported closed shapes in Canvas first.")) }
-      if !error.isEmpty { Text(error).foregroundStyle(.red).font(.system(size: 11)) }
-    }.padding(26).frame(width: 900, height: 790).background(Palette.paper)
-  }
-  private func export(_ format: String) {
-    NSApp.keyWindow?.makeFirstResponder(nil)
-    guard let object = session.object else { return }
-    let panel = NSSavePanel(); panel.nameFieldStringValue = object.name + "-sewing-pattern." + format
-    panel.allowedContentTypes = [format == "pdf" ? .pdf : format == "svg" ? .svg : .png]
-    guard panel.runModal() == .OK, let url = panel.url else { return }
-    do { _ = try store.exportSewingPattern(object: object, arguments: ["format": format, "path": url.path, "dpi": dpi]); error = ""; store.toast("Sewing pattern exported") }
-    catch { self.error = error.localizedDescription }
-  }
-}

@@ -422,6 +422,7 @@ extension Artwork {
   public var renderDefinition: Artwork {
     var result = resolvingLists
     result.outputColorProfile = nil
+    result.requiresInkOutput=false
     result.sewingSeams = nil
     result.sewingLayout = nil
     result.imports = nil

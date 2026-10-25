@@ -87,7 +87,7 @@ extension StudioStore {
     let roles = try ArtworkProduction.parseRoles(arguments["roles"])
     let format = arguments["format"] as? String ?? "svg"
     let dimensions = ArtworkDrawing.dimensions(object)
-    let source = (object.isCanvasWorkspace ? project.editableArtwork(object):project.surfaceArtwork(object)) ?? Artwork(background:"#FFFFFF")
+    var source = (object.isCanvasWorkspace ? project.editableArtwork(object):project.surfaceArtwork(object,keepingSwatchReferences:format=="pdf")) ?? Artwork(background:"#FFFFFF")
     var selection:Set<UUID> = []
     if let value = arguments["element_ids"] {
       guard let raw = value as? [String] else {throw FormError.invalid("element_ids must be an array of artwork UUIDs.")}
@@ -96,6 +96,10 @@ extension StudioStore {
     }
     if object.isCanvasWorkspace,selection.isEmpty {throw FormError.invalid("Select Canvas artwork to export, or place it on a physical frame.")}
     let output = try ArtworkProductionOutput(source:source,width:dimensions.width,height:dimensions.height,roles:roles,selection:selection)
+    let declaredInks=output.pages.contains{$0.role == .print && (project.hasUsedProductionInks(in:$0.artwork) || $0.artwork.requiresInkOutput)}
+    if format=="pdf",declaredInks,arguments["ink_output"] as? String != "preview" {throw FormError.invalid("Print roles contain production inks. Choose explicit preview, composite or plates output.")}
+    source.requiresInkOutput=false
+    if arguments["ink_output"] as? String=="preview" {source.outputColorProfile=nil}
     let assets = repository.url(for:project.id).appendingPathComponent("Assets")
     let data:Data
     switch format {
@@ -131,6 +135,7 @@ extension StudioStore {
     try data.write(to:url,options:.atomic)
     var result = output.metadata
     result["path"] = url.path; result["format"] = format; result["bytes"] = data.count
+    if declaredInks {result["ink_output"]="preview";result["ink_declarations_encoded"]=false}
     result["color_space"] = format == "pdf" ? source.outputColorProfile?.model ?? "sRGB" : "sRGB"
     if format == "pdf", let profile = source.outputColorProfile { result["pdf_output_profile"] = try jsonObject(profile) }
     result["composed_text_outlined"] = format == "svg" && arguments["outline_text"] as? Bool == false

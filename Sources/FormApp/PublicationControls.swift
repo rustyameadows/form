@@ -189,12 +189,16 @@ struct PublicationControls:View {
                   .help("Applies to selected paragraphs while editing, or the selected story otherwise.")
               }
             }
+            if let project=session.store?.project,document.pages.contains(where:{page in project.objects.first(where:{$0.id==page.objectID}).flatMap{project.surfaceArtwork($0)}?.requiresInkOutput==true}) {
+              ProductionInkExportControls(session:session,publicationID:document.id)
+            } else {
             HStack {
               Button("Preflight") {
                 if let project=session.store?.project {report=PublicationOutput.preflight(project,documentID:document.id,assets:session.assets);preflightOpen=true}
               }.accessibilityLabel("Publication preflight")
               Spacer()
               Button("Export booklet PDF…") {session.exportPublication(document)}.accessibilityLabel("Export booklet PDF")
+            }
             }
           } else {Button("Create publication",systemImage:"book.closed") {createDocument()}}
         }.buttonStyle(.borderless).font(.system(size:10)).padding(.top,8)

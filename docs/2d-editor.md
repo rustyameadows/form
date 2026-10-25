@@ -97,3 +97,7 @@ The [QUILL wordmark and 100 mm dial](glyphs.md) demonstrate actual alternate-gly
 ## Validation
 
 Use `bash scripts/test.sh`, `python3 scripts/smoke_artwork.py`, and `python3 scripts/benchmark_artwork.py` against an isolated running library. The smoke script verifies installed fonts/features, editable geometry/outlines, invalid-edit rollback, physical output dimensions, and save/reopen through real stdio MCP. The benchmark measures 600 elements and 300 shaped text layouts. See [validation notes](validation.md) for measurements and native UI evidence.
+
+## Declared production colors
+
+Choose the intended CMYK profile in the frame's Color output section, then use Set production ink… in the existing shared palette. Process components and named-spot alternate/tint remain separate from the approximate RGB chip. Save commits the focused numeric field, and Convert to RGB preview is explicit and undoable. Frame/publication export offers RGB appearance, genuine CMYK/spot composite and positive digital ink maps, with element-specific preflight. The current opaque-vector subset rejects unsupported paints instead of flattening spots. See [production inks](production-inks.md) for masks/text, knockout, physical boxes and remaining print limitations.
