@@ -81,16 +81,13 @@ final class ArtworkRuler: NSRulerView {
     let desired = 50 / max(factor, 0.001)
     let power = pow(10, floor(log10(desired)))
     let step = [1.0, 2.0, 5.0, 10.0].map { $0 * power }.first { $0 >= desired } ?? power * 10
-    let extent =
-      (horizontal ? canvas.frame.width : canvas.frame.height) / TypographyEngine.pointsPerMM
-      / unit.millimeters
-    let start = -max(frame.rect.origin.x, frame.rect.origin.y) / unit.millimeters
-    for value in stride(from: floor(start / step) * step, through: extent, by: step / 5) {
-      let world = CGPoint(
-        x: (frame.rect.minX + (horizontal ? value * unit.millimeters : 0))
-          * TypographyEngine.pointsPerMM,
-        y: (frame.rect.minY + (horizontal ? 0 : value * unit.millimeters))
-          * TypographyEngine.pointsPerMM)
+    let visible = canvas.visibleCanvasRect
+    let start = (horizontal ? visible.minX-frame.rect.minX : visible.minY-frame.rect.minY)/unit.millimeters
+    let end = (horizontal ? visible.maxX-frame.rect.minX : visible.maxY-frame.rect.minY)/unit.millimeters
+    for value in stride(from: floor(start / step) * step, through:end+step, by: step / 5) {
+      let world = canvas.documentPoint(CGPoint(
+        x: frame.rect.minX + (horizontal ? value * unit.millimeters : 0),
+        y: frame.rect.minY + (horizontal ? 0 : value * unit.millimeters)))
       let p = convert(world, from: canvas)
       let position = horizontal ? p.x : p.y
       guard position >= 0, position <= (horizontal ? bounds.width : bounds.height) else { continue }
@@ -120,12 +117,12 @@ final class ArtworkRuler: NSRulerView {
     guard let canvas = scrollView?.documentView as? VectorCanvasView, let s = canvas.session,
       let frame = s.frames.first(where: { $0.id == s.objectID })
     else { return }
-    let point = canvas.convert(event.locationInWindow, from: nil)
+    let point = canvas.canvasPoint(canvas.convert(event.locationInWindow, from: nil))
     let horizontal = orientation == .horizontalRuler
     s.beginGesture()
     s.addGuide(
       axis: horizontal ? "y" : "x",
-      position: (horizontal ? point.y : point.x) / TypographyEngine.pointsPerMM
+      position: (horizontal ? point.y : point.x)
         - (horizontal ? frame.rect.minY : frame.rect.minX))
     guideID = s.art.guides?.last?.id
   }
@@ -133,13 +130,13 @@ final class ArtworkRuler: NSRulerView {
     guard let canvas = scrollView?.documentView as? VectorCanvasView, let s = canvas.session,
       let frame = s.frames.first(where: { $0.id == s.objectID }), let id = guideID
     else { return }
-    let p = canvas.convert(event.locationInWindow, from: nil)
+    let p = canvas.canvasPoint(canvas.convert(event.locationInWindow, from: nil))
     s.mutate { art in
       if let i = art.guides?.firstIndex(where: { $0.id == id }) {
         art.guides?[i].position =
           self.orientation == .horizontalRuler
-          ? p.y / TypographyEngine.pointsPerMM - frame.rect.minY
-          : p.x / TypographyEngine.pointsPerMM - frame.rect.minX
+          ? p.y - frame.rect.minY
+          : p.x - frame.rect.minX
       }
     }
   }
@@ -274,6 +271,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var frames: [CanvasFrame] = []
   private var projectID: UUID?
   private var fitted = false
+  private(set) var canvasOrigin = CGPoint.zero
+  private var canvasExtent = CGRect.null
   private var down = CGPoint.zero, windowDown = CGPoint.zero, panOrigin = CGPoint.zero
   private var snapshot = Artwork(), startSelection = Set<UUID>(), dragMode = "", handle = 0
   private var startNodes = Set<UUID>()
@@ -293,6 +292,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var guideID: UUID?
   private var imageDropUpdates = 0, imageDropAttempts = 0
   private var dropFrameID: UUID?
+  private var moveDropFrameID: UUID?
+  private var moveDropPoint = CGPoint.zero
   private var hover = CGPoint.zero
   private var accessibilityItems: [ArtworkAccessibilityElement] = []
   private var accessibilityUpdates = 0
@@ -316,14 +317,54 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   override var isOpaque: Bool { true }
   var zoom: Double { Double(enclosingScrollView?.magnification ?? 1) }
   var activeFrame: CanvasFrame? { frames.first { $0.id == session?.objectID } }
+  func canvasPoint(_ point:CGPoint) -> CGPoint {
+    .init(x:point.x/ppm+canvasOrigin.x,y:point.y/ppm+canvasOrigin.y)
+  }
+  func documentPoint(_ point:CGPoint) -> CGPoint {
+    .init(x:(point.x-canvasOrigin.x)*ppm,y:(point.y-canvasOrigin.y)*ppm)
+  }
+  private func documentRect(_ rect:CGRect) -> CGRect {
+    .init(origin:documentPoint(rect.origin),size:.init(width:rect.width*ppm,height:rect.height*ppm))
+  }
+  var visibleCanvasRect:CGRect {
+    .init(origin:canvasPoint(visibleRect.origin),size:.init(width:visibleRect.width/ppm,height:visibleRect.height/ppm))
+  }
+  func frame(atCanvasPoint point:CGPoint) -> CanvasFrame? {
+    frames.last { !$0.isWorkspace && $0.rect.contains(point) } ?? frames.first { $0.isWorkspace }
+  }
+  func contentBounds(all:Bool) -> CGRect {
+    let chosen = all ? frames : activeFrame.map { [$0] } ?? []
+    var result = CGRect.null
+    for frame in chosen {
+      if !frame.isWorkspace { result = result.union(frame.rect); continue }
+      let masks = Set(frame.artwork.elements.compactMap(\.clipID))
+      for element in frame.artwork.elements where element.parentID == nil && element.hidden != true && !masks.contains(element.id) {
+        result = result.union(CGRect(frame.artwork.bounds(of:element)).offsetBy(dx:frame.rect.minX,dy:frame.rect.minY))
+      }
+    }
+    return result.isNull ? CGRect(x:0,y:0,width:400,height:260) : result
+  }
+  private func expandCanvas(toInclude rect:CGRect) {
+    let before = visibleCanvasRect.origin
+    let requested = CGRect(x:floor(rect.minX/160)*160,y:floor(rect.minY/160)*160,
+      width:(ceil(rect.maxX/160)-floor(rect.minX/160))*160,
+      height:(ceil(rect.maxY/160)-floor(rect.minY/160))*160)
+    let next = canvasExtent.isNull ? requested : canvasExtent.union(requested)
+    guard next != canvasExtent else { return }
+    canvasExtent = next
+    canvasOrigin = next.origin
+    setFrameSize(.init(width:max(600,next.width*ppm),height:max(500,next.height*ppm)))
+    if let scroll = enclosingScrollView {
+      scroll.tile()
+      scroll.contentView.scroll(to:documentPoint(before))
+      scroll.reflectScrolledClipView(scroll.contentView)
+    }
+  }
   func synchronize() {
     guard let session else { return }
+    if projectID != session.store?.project?.id { canvasExtent = .null; canvasOrigin = .zero }
     frames = session.frames
-    let old = frame.size
-    let bounds = frames.map(\.rect).reduce(CGRect.zero) { $0.union($1) }
-    setFrameSize(
-      .init(width: max(600, (bounds.maxX + 36) * ppm), height: max(500, (bounds.maxY + 36) * ppm)))
-    if old != frame.size { enclosingScrollView?.tile() }
+    expandCanvas(toInclude:contentBounds(all:true).union(CGRect(x:0,y:0,width:400,height:260)).insetBy(dx:-180,dy:-180))
     if projectID != session.store?.project?.id {
       projectID = session.store?.project?.id
       fitted = false
@@ -368,15 +409,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let scroll = enclosingScrollView else { return }
     guard scroll.contentSize.width > 100, scroll.contentSize.height > 100 else { return }
     fitted = true
-    let rect =
-      all ? frames.map(\.rect).reduce(CGRect.null) { $0.union($1) } : activeFrame?.rect ?? .zero
+    let rect = contentBounds(all:all)
     guard !rect.isNull, rect.width > 0 else { return }
     let horizontal = min(14, rect.width * 0.08 + 1)
     let vertical = min(18, rect.height * 0.08 + 1)
     scroll.magnify(
-      toFit: NSRect(
-        x: (rect.minX - horizontal) * ppm, y: (rect.minY - vertical) * ppm,
-        width: (rect.width + 2 * horizontal) * ppm, height: (rect.height + 2 * vertical) * ppm))
+      toFit: documentRect(rect.insetBy(dx:-horizontal,dy:-vertical)))
     session?.zoom = Double(scroll.magnification)
     needsDisplay = true
   }
@@ -405,13 +443,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let context = NSGraphicsContext.current?.cgContext, let session else { return }
     context.saveGState()
     context.scaleBy(x: ppm, y: ppm)
+    context.translateBy(x:-canvasOrigin.x,y:-canvasOrigin.y)
     let scale = ppm * zoom
     for f in frames
-    where dirtyRect.intersects(
-      NSRect(
-        x: (f.rect.minX - 10) * ppm, y: (f.rect.minY - 12) * ppm, width: (f.rect.width + 20) * ppm,
-        height: (f.rect.height + 24) * ppm))
+    where f.isWorkspace || dirtyRect.intersects(documentRect(f.rect.insetBy(dx:-12,dy:-12)))
     {
+      if !f.isWorkspace {
       context.saveGState()
       context.setShadow(
         offset: .init(width: 0, height: 2 / scale), blur: 9 / scale,
@@ -426,6 +463,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       ]
       (title as NSString).draw(
         at: .init(x: f.rect.minX, y: f.rect.minY - 15 / scale), withAttributes: attributes)
+      }
       context.saveGState()
       context.translateBy(x: f.rect.minX, y: f.rect.minY)
       if session.dieline, f.surfaceObject.recipeID == "sleeve", f.id == session.objectID {
@@ -450,17 +488,39 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         ArtworkRenderer.draw(
           f.artwork, width: f.rect.width, height: f.rect.height, assets: session.assets,
           production: false,
-          excluding: f.id == session.objectID ? Set([editingID].compactMap { $0 }) : [])
+          excluding: f.id == session.objectID ? Set([editingID].compactMap { $0 }).union(
+            dragMode == "move" && moveDropFrameID != nil ? session.art.descendants(of:startSelection) : []) : [],
+          unbounded:f.isWorkspace)
         if f.id == session.objectID {
           drawOverlays(f, context: context, scale: scale)
-          if editingID == nil { drawSelection(context: context, scale: scale) }
+          if editingID == nil && !(dragMode == "move" && moveDropFrameID != nil) { drawSelection(context: context, scale: scale) }
         }
       }
       context.restoreGState()
-      if dropFrameID == f.id {
+      if (dropFrameID == f.id || moveDropFrameID == f.id) && !f.isWorkspace {
         context.setStrokeColor(NSColor.systemBlue.cgColor)
         context.setLineWidth(3/scale)
         context.stroke(f.rect.insetBy(dx:-2/scale,dy:-2/scale))
+      }
+    }
+    if dragMode == "move",moveDropFrameID != nil,let active = activeFrame,
+      let exported = try? session.art.exporting(startSelection) {
+      context.saveGState()
+      context.translateBy(x:active.rect.minX+exported.bounds.x,y:active.rect.minY+exported.bounds.y)
+      ArtworkRenderer.draw(exported.artwork,width:exported.bounds.width,height:exported.bounds.height,
+        assets:session.assets,production:false,unbounded:true)
+      context.restoreGState()
+      context.saveGState(); context.translateBy(x:active.rect.minX,y:active.rect.minY)
+      drawSelection(context:context,scale:scale); context.restoreGState()
+      if let destination = frames.first(where: { $0.id == moveDropFrameID }) {
+        let label = "Move to \(destination.isWorkspace ? "Canvas" : destination.object.name)"
+        let attributes:[NSAttributedString.Key:Any] = [.font:NSFont.systemFont(ofSize:10/scale,weight:.medium),
+          .foregroundColor:NSColor.systemBlue]
+        let size = (label as NSString).size(withAttributes:attributes)
+        let origin = CGPoint(x:moveDropPoint.x+12/scale,y:moveDropPoint.y+12/scale)
+        context.setFillColor(NSColor.white.withAlphaComponent(0.95).cgColor)
+        context.fill(CGRect(x:origin.x-4/scale,y:origin.y-3/scale,width:size.width+8/scale,height:size.height+6/scale))
+        (label as NSString).draw(at:origin,withAttributes:attributes)
       }
     }
     context.restoreGState()
@@ -469,41 +529,42 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let session else { return }
     let art = f.artwork
     context.saveGState()
-    context.clip(to: .init(origin: .zero, size: f.rect.size))
+    let region = f.isWorkspace ? visibleCanvasRect.offsetBy(dx:-f.rect.minX,dy:-f.rect.minY) : CGRect(origin:.zero,size:f.rect.size)
+    context.clip(to:region)
     context.setLineWidth(0.5 / scale)
     if art.showGrid == true {
       let spacing = max(art.gridSpacing ?? 10, 5 / scale)
       context.setStrokeColor(NSColor(hex: "#A6ACA6").withAlphaComponent(0.3).cgColor)
-      for x in stride(from: 0.0, through: f.rect.width, by: spacing) {
-        context.move(to: .init(x: x, y: 0))
-        context.addLine(to: .init(x: x, y: f.rect.height))
+      for x in stride(from: floor(region.minX/spacing)*spacing, through:region.maxX, by: spacing) {
+        context.move(to: .init(x: x, y:region.minY))
+        context.addLine(to: .init(x: x, y:region.maxY))
       }
-      for y in stride(from: 0.0, through: f.rect.height, by: spacing) {
-        context.move(to: .init(x: 0, y: y))
-        context.addLine(to: .init(x: f.rect.width, y: y))
+      for y in stride(from: floor(region.minY/spacing)*spacing, through:region.maxY, by: spacing) {
+        context.move(to: .init(x:region.minX, y:y))
+        context.addLine(to: .init(x:region.maxX, y:y))
       }
       context.strokePath()
     }
     context.setStrokeColor(NSColor(hex: "#5B8DA9").withAlphaComponent(0.7).cgColor)
     context.setLineDash(phase: 0, lengths: [4 / scale, 3 / scale])
     for g in art.showGuides == false ? [] : art.guides ?? [] {
-      context.move(to: g.axis == "x" ? .init(x: g.position, y: 0) : .init(x: 0, y: g.position))
+      context.move(to: g.axis == "x" ? .init(x:g.position,y:region.minY) : .init(x:region.minX,y:g.position))
       context.addLine(
         to: g.axis == "x"
-          ? .init(x: g.position, y: f.rect.height) : .init(x: f.rect.width, y: g.position))
+          ? .init(x:g.position,y:region.maxY) : .init(x:region.maxX,y:g.position))
       context.strokePath()
     }
     context.setStrokeColor(NSColor(hex: "#B78D68").withAlphaComponent(0.5).cgColor)
-    if art.bleed > 0 {
+    if art.bleed > 0 && !f.isWorkspace {
       context.stroke(CGRect(origin: .zero, size: f.rect.size).insetBy(dx: art.bleed, dy: art.bleed))
     }
     context.setLineDash(phase: 0, lengths: [])
     context.setStrokeColor(NSColor(hex: "#D45A37").cgColor)
     context.setLineWidth(1 / scale)
     for (axis, p) in snapLines {
-      context.move(to: axis == "x" ? .init(x: p, y: 0) : .init(x: 0, y: p))
+      context.move(to: axis == "x" ? .init(x:p,y:region.minY) : .init(x:region.minX,y:p))
       context.addLine(
-        to: axis == "x" ? .init(x: p, y: f.rect.height) : .init(x: f.rect.width, y: p))
+        to: axis == "x" ? .init(x:p,y:region.maxY) : .init(x:region.maxX,y:p))
       context.strokePath()
     }
     if let marquee {
@@ -591,6 +652,13 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     context.addLine(to: rotate)
     context.strokePath()
     dot(rotate, context: context, scale: scale, circle: true)
+    if s.selection.count == 1, let pivot = s.transformOrigin {
+      let p = CGPoint(pivot),r = 4.5/scale
+      context.strokeEllipse(in:CGRect(x:p.x-r,y:p.y-r,width:r*2,height:r*2))
+      context.move(to:.init(x:p.x-r*1.6,y:p.y)); context.addLine(to:.init(x:p.x+r*1.6,y:p.y))
+      context.move(to:.init(x:p.x,y:p.y-r*1.6)); context.addLine(to:.init(x:p.x,y:p.y+r*1.6))
+      context.strokePath()
+    }
     if let e = s.primary, s.maskEditing?.maskID == e.id {
       context.addPath(VectorGeometry.worldPath(e,in:art))
       context.strokePath()
@@ -638,9 +706,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
   }
   private func point(_ event: NSEvent) -> CGPoint {
-    let p = convert(event.locationInWindow, from: nil)
+    let p = canvasPoint(convert(event.locationInWindow, from: nil))
     return .init(
-      x: p.x / ppm - (activeFrame?.rect.minX ?? 0), y: p.y / ppm - (activeFrame?.rect.minY ?? 0))
+      x:p.x-(activeFrame?.rect.minX ?? 0),y:p.y-(activeFrame?.rect.minY ?? 0))
   }
   private func gradientHandles(_ element: ArtworkElement, in art: Artwork)
     -> (a: CGPoint, b: CGPoint, stops: [(stop: GradientStop, point: CGPoint)])? {
@@ -698,21 +766,23 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   override func mouseDown(with event: NSEvent) {
     guard let s = session else { return }
+    s.store?.activateDesignSurface(.artwork)
     let absolute = convert(event.locationInWindow, from: nil)
-    let physical = CGPoint(x: absolute.x / ppm, y: absolute.y / ppm)
+    let physical = canvasPoint(absolute)
+    moveDropFrameID = nil
     if space || s.tool == .hand {
       dragMode = "pan"
       windowDown = event.locationInWindow
-      panOrigin = visibleRect.origin
+      panOrigin = visibleCanvasRect.origin
       NSCursor.closedHand.push()
       return
     }
-    if let frame = frames.last(where: { $0.rect.contains(physical) }), frame.id != s.objectID {
+    if let frame = frame(atCanvasPoint:physical), frame.id != s.objectID {
       finishText()
       s.activate(frame.id)
       frames = s.frames
     }
-    if let f = frames.last(where: {
+    if let f = frames.last(where: { !$0.isWorkspace &&
       CGRect(
         x: $0.rect.minX, y: $0.rect.minY - 16 / (ppm * zoom), width: $0.rect.width,
         height: 16 / (ppm * zoom)
@@ -875,7 +945,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         dragMode = "marquee"
         marquee = CGRect(origin: p, size: .zero)
       }
-    } else if CGRect(origin: .zero, size: f.rect.size).contains(p) {
+    } else if f.isWorkspace || CGRect(origin: .zero, size: f.rect.size).contains(p) {
       var e = ArtworkElement(
         kind: s.tool.rawValue, x: p.x, y: p.y, width: s.tool == .text ? 90 : 1,
         height: s.tool == .text ? 18 : 1, text: s.tool == .text ? "Text" : "", color: "#292D2C",
@@ -905,10 +975,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let s = session else { return }
     if dragMode == "pan" {
       let p = event.locationInWindow
+      let proposed = CGPoint(x:panOrigin.x-(p.x-windowDown.x)/(zoom*ppm),y:panOrigin.y+(p.y-windowDown.y)/(zoom*ppm))
+      let region = CGRect(origin:proposed,size:visibleCanvasRect.size)
+      expandCanvas(toInclude:region.insetBy(dx:-80,dy:-80))
       enclosingScrollView?.contentView.scroll(
-        to: .init(
-          x: panOrigin.x - (p.x - windowDown.x) / zoom, y: panOrigin.y + (p.y - windowDown.y) / zoom
-        ))
+        to:documentPoint(region.origin))
       enclosingScrollView?.reflectScrolledClipView(enclosingScrollView!.contentView)
       return
     }
@@ -925,11 +996,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       return
     }
     if dragMode == "frame" {
-      let p = convert(event.locationInWindow, from: nil)
+      let p = canvasPoint(convert(event.locationInWindow, from: nil))
       var art = snapshot
       art.canvasPosition = .init(
-        max(4, frameDragOrigin.x + p.x / ppm - down.x),
-        max(10, frameDragOrigin.y + p.y / ppm - down.y))
+        frameDragOrigin.x+p.x-down.x,frameDragOrigin.y+p.y-down.y)
       s.save(art)
       return
     }
@@ -1047,13 +1117,16 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     var delta = Affine2()
     if dragMode == "move" {
+      moveDropPoint = canvasPoint(convert(event.locationInWindow,from:nil))
+      let destination = frame(atCanvasPoint:moveDropPoint)
+      moveDropFrameID = destination?.id == s.objectID ? nil : destination?.id
       var dx = p.x - down.x
       var dy = p.y - down.y
       if event.modifierFlags.contains(.shift) { if abs(dx) > abs(dy) { dy = 0 } else { dx = 0 } }
       let snapped = snap(dx: dx, dy: dy, event: event)
       delta = .translation(snapped.x, snapped.y)
     } else if dragMode == "rotate" {
-      let c = downBounds.center
+      let c = ArtworkTransforms.selectionOrigin(in:snapshot,ids:startSelection) ?? downBounds.center
       var degrees = (atan2(p.y - c.y, p.x - c.x) - atan2(down.y - c.y, down.x - c.x)) * 180 / .pi
       if event.modifierFlags.contains(.shift) { degrees = (degrees / 15).rounded() * 15 }
       delta = .translation(c.x, c.y).followed(by: .rotation(degrees)).followed(
@@ -1099,6 +1172,13 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     s.save(value)
   }
   override func mouseUp(with event: NSEvent) {
+    if dragMode == "move",let s = session,let source = activeFrame,
+      let destination = frame(atCanvasPoint:canvasPoint(convert(event.locationInWindow,from:nil))),
+      destination.id != source.id,point(event) != down {
+      let offset = Point2(source.rect.minX-destination.rect.minX,source.rect.minY-destination.rect.minY)
+      if !s.transferSelection(to:destination.id,offset:offset) { s.save(snapshot) }
+      synchronize()
+    }
     if ["node", "incoming", "outgoing"].contains(dragMode), point(event) != down, let s = session {
       s.mutate { art in
         for i in art.elements.indices where s.selection.contains(art.elements[i].id) {
@@ -1124,6 +1204,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       s.tool = .select
     }
     dragMode = ""
+    moveDropFrameID = nil
     marquee = nil
     snapLines = []
     guideID = nil
@@ -1142,6 +1223,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if event.phase == .ended { s.endGesture() }
       return
     }
+    expandCanvas(toInclude:visibleCanvasRect.insetBy(dx:-180,dy:-180))
     super.scrollWheel(with:event)
   }
   private func droppedURLs(_ sender: NSDraggingInfo) -> [URL] {
@@ -1151,9 +1233,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
     imageDropUpdates += 1
     let p = convert(sender.draggingLocation,from:nil)
-    let physical = CGPoint(x:p.x/ppm,y:p.y/ppm)
+    let physical = canvasPoint(p)
     let old = dropFrameID
-    dropFrameID = frames.last(where:{$0.rect.contains(physical)})?.id
+    dropFrameID = frame(atCanvasPoint:physical)?.id
     if old != dropFrameID { needsDisplay = true }
     let extensions = Set(["png","jpg","jpeg","tif","tiff","heic","heif","gif","bmp","webp","pdf","svg"])
     let supported = droppedURLs(sender).contains { extensions.contains($0.pathExtension.lowercased()) }
@@ -1164,9 +1246,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
     imageDropAttempts += 1
     guard let s = session, let id = dropFrameID, let frame = frames.first(where:{$0.id == id}) else { return false }
+    s.store?.activateDesignSurface(.artwork)
     finishText(); s.activate(id)
-    let p = convert(sender.draggingLocation,from:nil)
-    var point = Point2(p.x/ppm-frame.rect.minX,p.y/ppm-frame.rect.minY)
+    let p = canvasPoint(convert(sender.draggingLocation,from:nil))
+    var point = Point2(p.x-frame.rect.minX,p.y-frame.rect.minY)
     if let scope = s.scopeID, let group = s.art.elements.first(where:{$0.id == scope}),
       let inverse = s.art.worldTransform(group).inverse { point = inverse.apply(point) }
     var urls = droppedURLs(sender)
@@ -1192,8 +1275,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     else { return .init(x: dx, y: dy) }
     let b = downBounds
     let tolerance = 5 / (ppm * zoom)
-    var xs = [0.0, f.rect.width / 2, f.rect.width]
-    var ys = [0.0, f.rect.height / 2, f.rect.height]
+    var xs = f.isWorkspace ? [] : [0.0, f.rect.width / 2, f.rect.width]
+    var ys = f.isWorkspace ? [] : [0.0, f.rect.height / 2, f.rect.height]
     for g in snapshot.guides ?? [] {
       if g.axis == "x" { xs.append(g.position) } else { ys.append(g.position) }
     }
@@ -1398,6 +1481,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func beginText(_ e: ArtworkElement) {
     guard let s = session, activeFrame != nil else { return }
+    s.store?.activateDesignSurface(.artwork)
     originalTextElement = e
     let e = s.colored(e)
     s.dieline = false
@@ -1483,16 +1567,13 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       } else {tv.textContainer?.widthTracksTextView=true}
       tv.needsDisplay = true
     }
-    clip.configure(
-      frame: CGRect(
-        x: f.rect.minX * ppm, y: f.rect.minY * ppm, width: f.rect.width * ppm,
-        height: f.rect.height * ppm),
-      transform: .init())
+    clip.configure(frame:f.isWorkspace ? bounds : documentRect(f.rect),transform:.init())
+    let workspaceOffset = f.isWorkspace ? documentPoint(f.rect.origin) : .zero
     host.configure(
       frame: clip.bounds,
       transform: .init(
         a: world.a, b: world.b, c: world.c, d: world.d,
-        tx: world.tx * ppm, ty: world.ty * ppm))
+        tx:world.tx*ppm+workspaceOffset.x,ty:world.ty*ppm+workspaceOffset.y))
   }
   func textDidChange(_ notification: Notification) {
     guard let s = session, let id = editingID, let tv = textView,
@@ -1899,9 +1980,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     var next: [ArtworkAccessibilityElement] = []
     for element in artwork.elements where element.hidden != true {
       let bounds = artwork.bounds(of: element)
-      let rect = CGRect(
-        x: (frame.rect.minX + bounds.x) * ppm, y: (frame.rect.minY + bounds.y) * ppm,
-        width: bounds.width * ppm, height: bounds.height * ppm)
+      let rect = documentRect(CGRect(x:frame.rect.minX+bounds.x,y:frame.rect.minY+bounds.y,
+        width:bounds.width,height:bounds.height))
       let child = existing[element.id] ?? ArtworkAccessibilityElement()
       if child.elementID == nil {
         child.setAccessibilityElement(true)

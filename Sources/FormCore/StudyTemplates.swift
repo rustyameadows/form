@@ -9,6 +9,8 @@ public struct StudyTemplate: Identifiable, Sendable {
 }
 extension Samples {
   public static let templates: [StudyTemplate] = [
+    .init(id: "flightJacket", name: "ORBITAL / Flight systems", title: "Flight bomber",
+      summary: "A shaped blank, mission patches, and sewn labels.", symbol: "jacket"),
     .init(
       id: "clock", name: "Time, well spent", title: "Clock dial",
       summary: "One editable dial. Two physical clocks.", symbol: "clock"),
@@ -26,6 +28,7 @@ extension Samples {
     switch template {
     case "blank": return Project(name: "Untitled study")
     case "clock": return clock()
+    case "flightJacket": return flightJacket()
     case "cyanotype": return cyanotype()
     case "lamps": return lamps()
     case "forms": return studies()

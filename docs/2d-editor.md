@@ -32,6 +32,8 @@ The editor is a working part of the expanded [2D specification](2d-design-typogr
 
 Text properties include point/area mode, font/style/size, leading, tracking, pair kerning, baseline, word spacing, alignment, paragraph spacing/indents, case, ligatures, direction, hyphenation, and vertical alignment. Shaping uses typographic points internally and millimeters at the artwork boundary. Font controls expose capabilities reported by the installed face.
 
+**Transform origins:** Select one layer or group and choose its reference point in the inspector's 3 × 3 control, or enter Origin X/Y percentages. Center is the default; 0% is top/left and 100% is bottom/right. Custom values from −1000% to 1000% allow an external pivot. Choosing an origin leaves the artwork exactly where it is. Rotation and numeric sizing keep that point fixed, including through nested groups, flips, and affine transforms. X/Y position fields still refer to the artwork's axis-aligned bounds. Direct resize handles retain their opposite-handle anchor. Area text changes frame dimensions and reflows without scaling its font settings. A crosshair shows the origin on the canvas. Multiple selected roots rotate/scale around their combined center; group them to give the collection a persistent custom origin. Origins use schema 18 and are excluded from render signatures, so changing a reference point alone does not rebuild linked surface textures.
+
 ## Controls
 
 Create an artwork sheet from **Object**, or use **Artwork → New Artwork Frame**. **Frame** offers physical presets and custom sizes. Select an artwork-bearing physical object and choose **Artwork** to edit its surface with a live 3D preview.
@@ -73,13 +75,13 @@ There are 50 tools. Artwork tools include `form_get_artwork`, `form_edit_artwork
 {"name":"form_export_artwork","arguments":{"object_id":"<frame UUID>","format":"pdf","path":"/absolute/path/artwork.pdf"}}
 ```
 
-`form_set_artwork` replaces a validated definition. `form_edit_artwork` supports add, replace, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip, paragraph, and glyph. `form_font_features` also discovers actual glyph repertoires and alternates. `form_set_view` can select element IDs. Paths store ordinary contours/nodes; typography stores face names, features, axes, and optional rich text spans. Glyph choices retain source positions independently. Read-only calls preserve native editing focus; mutations commit active text and numeric drafts first.
+`form_set_artwork` replaces a validated definition. `form_edit_artwork` supports add, replace, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip, paragraph, glyph, origin, and transform. `origin` accepts one layer/group and normalized `origin:{x,y}`, or `null` to reset. `transform` accepts positive `scale_x`/`scale_y`, relative `rotation` degrees, and `translate_x`/`translate_y` millimeters; it scales, rotates around the origin, then translates. Multiple roots use their combined center. Native operations share source locking, validation, atomic batches, and Undo with these commands. `form_font_features` also discovers actual glyph repertoires and alternates. `form_set_view` can select element IDs. Paths store ordinary contours/nodes; typography stores face names, features, axes, and optional rich text spans. Glyph choices retain source positions independently. Read-only calls preserve native editing focus; mutations commit active text and numeric drafts first.
 
 See [precise paths and transformed native text](path-editing.md) for direct selection, native text coordinates, and MCP node editing. [Live booleans](live-booleans.md) documents the `form_boolean_artwork` modes and Divide. These graphics edits and shape/text/stroke conversion also work in atomic batches.
 
 ## Remaining work
 
-- Configurable transform origins and the specification’s later variable-width stroke workflows.
+- The specification’s later variable-width stroke workflows.
 - Full SVG interchange fidelity beyond the [supported import subset](svg-import.md), including filters, patterns, gradient strokes, advanced SVG text, and external resources. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
 - Small caps and explicit document-locale casing, lists, document-language/hyphenation limits, linked text frames, sequential multi-page documents, and publication layout.
 - Cross-project clipboard transfer for linked named resources and local assets.

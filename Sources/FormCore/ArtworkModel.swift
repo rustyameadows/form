@@ -312,6 +312,7 @@ extension ArtworkElement {
   }
 }
 extension Artwork {
+  public var requiresSchemaEighteen: Bool { elements.contains { $0.transformOrigin != nil } }
   public var requiresSchemaFifteen: Bool {elements.contains{$0.glyphOverrides?.isEmpty == false}}
   public var requiresSchemaFourteen: Bool {
     elements.contains { $0.typography?.usesCustomTabs == true || ($0.typography?.hyphenation ?? 0) > 0
@@ -345,7 +346,7 @@ extension Artwork {
     }
     return elements.contains { e in
       !["text", "rectangle", "ellipse", "image", "line"].contains(e.kind) || e.name != nil
-        || e.rotation != nil || e.opacity != nil || e.hidden != nil || e.locked != nil
+        || e.rotation != nil || e.transformOrigin != nil || e.opacity != nil || e.hidden != nil || e.locked != nil
         || e.parentID != nil || e.contentSize != nil || e.affine != nil || e.flipX != nil
         || e.flipY != nil || e.fillEnabled != nil || e.stroke != nil || e.gradient != nil
         || e.cornerRadius != nil || e.sides != nil || e.starInset != nil || e.path != nil
@@ -441,6 +442,7 @@ extension Artwork {
         result.elements[i].stroke = result.elements[i].kind == "line" ? ArtworkStroke(color:"#000000",width:0) : nil
       }
       result.elements[i].name = nil
+      result.elements[i].transformOrigin = nil
       result.elements[i].locked = nil
       if result.elements[i].blendMode == "normal" { result.elements[i].blendMode = nil }
       if result.elements[i].isolatedBlending == false { result.elements[i].isolatedBlending = nil }

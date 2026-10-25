@@ -79,6 +79,7 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
     return (1, e.path?.contours.reduce(0) { $0 + $1.nodes.count } ?? 0)
   }
   for e in artwork.elements {
+    if let origin = e.transformOrigin { try ArtworkTransforms.validateOrigin(origin) }
     try ImageCommands.validate(e)
     guard AppearanceCommands.blendModes.contains(e.blendMode ?? "normal") else {
       throw FormError.invalid("Unsupported artwork blend mode.")

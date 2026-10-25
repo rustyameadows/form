@@ -155,7 +155,7 @@ extension StudioStore {
           let result = try SVGImporter.read(data, name: name)
           let current = self.mode == .artwork ? self.artworkSession.object : self.primary
           let target = current.flatMap {
-            $0.supportsArtworkFace ? self.project?.artworkOwner($0) : nil
+            $0.supportsArtworkFace || $0.isCanvasWorkspace ? self.project?.artworkOwner($0) : nil
           }
           self.svgImport = try .init(
             data: data, name: name, result: result, projectID: self.project?.id, target: target)

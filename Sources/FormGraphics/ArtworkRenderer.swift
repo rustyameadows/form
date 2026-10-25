@@ -36,7 +36,7 @@ import FormCore
   }()
   public static func draw(
     _ source: Artwork, width: Double, height: Double, assets: URL, production: Bool = true,
-    excluding: Set<UUID> = [], effectScale: Double? = nil
+    excluding: Set<UUID> = [], effectScale: Double? = nil, unbounded: Bool = false
   ) {
     guard let context = NSGraphicsContext.current?.cgContext else { return }
     let art: Artwork
@@ -48,17 +48,19 @@ import FormCore
       return
     }
     context.saveGState()
-    context.clip(to: CGRect(x: 0, y: 0, width: width, height: height))
-    if let boundary = art.boundary {
+    if !unbounded { context.clip(to: CGRect(x: 0, y: 0, width: width, height: height)) }
+    if !unbounded, let boundary = art.boundary {
       var mask = ArtworkElement(
         kind: "path", x: 0, y: 0, width: boundary.width, height: boundary.height)
       mask.path = boundary
       context.addPath(VectorGeometry.path(mask))
       context.clip(using: boundary.evenOdd ? .evenOdd : .winding)
     }
-    context.setFillColor(
-      FormColor.color(art.background).withAlphaComponent(art.backgroundOpacity ?? 1).cgColor)
-    context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+    if !unbounded {
+      context.setFillColor(
+        FormColor.color(art.background).withAlphaComponent(art.backgroundOpacity ?? 1).cgColor)
+      context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+    }
     ArtworkRenderTree(art, assets: assets, production: production, excluding: excluding)
       .drawChildren(nil, context: context,
         effectScale: effectScale.map { $0 / max(0.001, AppearanceRenderer.scale(context)) })

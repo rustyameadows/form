@@ -110,14 +110,14 @@ struct ArtworkInspector: View {
     ScrollView {
       VStack(alignment: .leading, spacing: 17) {
         if let object = session.object {
-          if session.preview, let project = store.project {
+          if session.preview,store.surfaceLayout != .split,let preview = session.previewObject, let project = store.project {
             HStack {
               SectionLabel("LIVE OBJECT")
               Spacer()
               Image(systemName: "link").foregroundStyle(Palette.accent)
             }
             ObjectPreview(
-              object: session.previewObject ?? object, project: project, assets: session.assets
+              object:preview,project:project,assets:session.assets
             ).frame(
               height: 155
             ).clipped()
@@ -226,6 +226,9 @@ struct ArtworkInspector: View {
   }
   @ViewBuilder var transformControls: some View {
     if let b = session.selectionBounds {
+      if session.elements.count == 1, let e = session.primary {
+        ArtworkOriginPicker(session:session,element:e)
+      }
       HStack(spacing: 12) {
         ArtworkUnitField("X", value: b.x, unit: session.unit) { session.transformBounds(x: $0) }
         ArtworkUnitField("Y", value: b.y, unit: session.unit) { session.transformBounds(y: $0) }
@@ -624,7 +627,11 @@ struct ArtworkInspector: View {
   }
   func frameControls(_ object: ProductObject) -> some View {
     VStack(alignment: .leading, spacing: 15) {
-      SectionLabel("ARTWORK FRAME")
+      SectionLabel(object.isCanvasWorkspace ? "FREEFORM CANVAS" : "ARTWORK FRAME")
+      if object.isCanvasWorkspace {
+        Text("Draw, type, or place images anywhere. Add a physical frame when you need one, then drag artwork onto it.")
+          .font(.system(size:11)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
+      } else {
       ArtworkFrameName(value: object.name) { name in store.update(object, ["name": name]) }
       let dimensions = ArtworkDrawing.dimensions(object)
       if object.recipeID == "artboard" {
@@ -656,6 +663,7 @@ struct ArtworkInspector: View {
       ) { value in
         session.mutate { $0.backgroundOpacity = min(1, max(0, value / 100)) }
       }
+      }
       Divider()
       SectionLabel("PRECISION")
       Toggle(
@@ -675,12 +683,14 @@ struct ArtworkInspector: View {
       ArtworkUnitField("Nudge", value: session.art.nudge ?? 0.1, unit: session.unit) { v in
         session.mutate { $0.nudge = max(0.01, v) }
       }
+      if !object.isCanvasWorkspace {
       ArtworkUnitField("Bleed / safe guide", value: session.art.bleed, unit: session.unit) { v in
         session.mutate { $0.bleed = min(25, max(0, v)) }
       }
+      }
       HStack {
-        Button("Vertical guide") { session.addGuide(axis: "x", position: dimensions.width / 2) }
-        Button("Horizontal guide") { session.addGuide(axis: "y", position: dimensions.height / 2) }
+        Button("Vertical guide") { session.addGuide(axis:"x",position:object.isCanvasWorkspace ? session.canvas?.visibleCanvasRect.midX ?? 0 : ArtworkDrawing.dimensions(object).width/2) }
+        Button("Horizontal guide") { session.addGuide(axis:"y",position:object.isCanvasWorkspace ? session.canvas?.visibleCanvasRect.midY ?? 0 : ArtworkDrawing.dimensions(object).height/2) }
       }.font(.system(size: 9))
       ForEach(session.art.guides ?? []) { guide in
         HStack {
@@ -710,7 +720,7 @@ struct ArtworkInspector: View {
           }.buttonStyle(.plain)
         }
       }
-      if object.recipeID == "artboard" {
+      if object.recipeID == "artboard" && !object.isCanvasWorkspace {
         Button("Duplicate frame") {
           store.perform(
             "form_duplicate_object", ["object_id": object.id.uuidString, "mode": "iteration"])

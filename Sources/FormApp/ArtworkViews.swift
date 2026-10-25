@@ -14,9 +14,18 @@ struct ArtworkStudio: View {
   @State private var newFrame = false
   @State private var exportOptions = false
   @State private var format = "svg"
+  @State private var compactLayers = false
+  @State private var compactInspector = false
+  private var compact: Bool { store.surfaceLayout == .split }
   var body: some View {
     VStack(spacing: 0) {
+      ScrollView(.horizontal,showsIndicators:false) {
       HStack(spacing: 3) {
+        if compact {
+          IconButton("Show Canvas layers",symbol:"sidebar.left") { compactLayers.toggle() }
+          IconButton("Show Canvas inspector",symbol:"sidebar.right") { compactInspector.toggle() }
+          Divider().frame(height:19).padding(.horizontal,5)
+        }
         ForEach(ArtworkTool.allCases, id: \.self) { tool in
           Button {
             session.canvas?.finishText()
@@ -62,12 +71,12 @@ struct ArtworkStudio: View {
         } label: {
           Image(systemName: "cube.transparent").foregroundStyle(
             session.preview ? Palette.accent : Palette.secondary)
-        }.buttonStyle(.plain).help("Show live 3D preview")
+        }.buttonStyle(.plain).help("Show live 3D preview").disabled(session.previewObject == nil || compact)
         Button {
           exportOptions = true
         } label: {
           Label("Export", systemImage: "square.and.arrow.up").font(.system(size: 11))
-        }.buttonStyle(.plain).padding(.leading, 10).disabled(session.object == nil).popover(
+        }.buttonStyle(.plain).padding(.leading, 10).disabled(session.object == nil || session.object?.isCanvasWorkspace == true && session.selection.isEmpty).popover(
           isPresented: $exportOptions
         ) {
           VStack(alignment: .leading, spacing: 16) {
@@ -95,31 +104,33 @@ struct ArtworkStudio: View {
             }
           }.padding(22).frame(width: 300)
         }
-      }.padding(.horizontal, 16).frame(height: 50).background(Palette.paper)
+      }.padding(.horizontal, 16).frame(height: 50)
+      }.frame(height:50).background(Palette.paper)
       Divider()
       HStack(spacing: 0) {
-        ArtworkLayers(session: session).frame(width: 210)
-        Divider()
-        if session.object != nil {
+        if !compact || compactLayers {
+          ArtworkLayers(session: session).frame(width:compact ? 180 : 210)
+          Divider()
+        }
+        if store.project != nil {
           VectorCanvas(session: session, revision: store.revision)
         } else {
           VStack(spacing: 17) {
             Image(systemName: "rectangle.badge.plus").font(.system(size: 36, weight: .ultraLight))
-            Text("A blank page. A new direction.").font(.system(size: 24, design: .serif))
-            Text("Create an artwork frame in real dimensions.").font(.system(size: 12))
+            Text("A place to begin.").font(.system(size: 24, design: .serif))
+            Text("Draw freely, then add a frame when you need a physical size.").font(.system(size: 12))
               .foregroundStyle(Palette.secondary)
-            Button("Create an 8 × 10 inch frame") {
-              session.createFrame(width: 203.2, height: 254, name: "Untitled artwork")
-            }
           }.frame(maxWidth: .infinity, maxHeight: .infinity).background(
             Color(nsColor: NSColor(hex: "#E7E7E1")))
         }
-        Divider()
-        ArtworkInspector(session: session).frame(width: 286)
+        if !compact || compactInspector {
+          Divider()
+          ArtworkInspector(session: session).frame(width:286)
+        }
       }
       Divider()
       HStack(spacing: 14) {
-        Text(session.maskEditing != nil ? "EDITING MASK" : session.scopeID == nil ? "ARTWORK" : "EDITING GROUP").font(
+        Text(session.maskEditing != nil ? "EDITING MASK" : session.scopeID == nil ? "CANVAS" : "EDITING GROUP").font(
           .system(size: 8, weight: .medium, design: .monospaced)
         ).tracking(0.8)
         if session.maskEditing != nil {
@@ -151,14 +162,14 @@ struct ArtworkStudio: View {
             Button("\(Int(zoom*100))%") { session.setZoom(zoom) }
           }
           Divider()
-          Button("Fit all frames") { session.fit() }
+          Button("Fit Canvas contents") { session.fit() }
         }.menuStyle(.borderlessButton).frame(width: 65)
         Button {
           session.setZoom(session.zoom * 1.2)
         } label: {
           Image(systemName: "plus")
         }.buttonStyle(.plain)
-        IconButton("Fit all frames · ⌘0", symbol: "arrow.up.left.and.arrow.down.right") {
+        IconButton("Fit Canvas contents · ⌘0", symbol: "arrow.up.left.and.arrow.down.right") {
           session.fit()
         }
         Picker(
@@ -172,12 +183,15 @@ struct ArtworkStudio: View {
         ) { ForEach(PhysicalUnit.allCases, id: \.self) { Text($0.rawValue.uppercased()).tag($0) } }
         .labelsHidden().frame(width: 64)
       }.font(.system(size: 9)).padding(.horizontal, 16).frame(height: 37).background(Palette.paper)
-    }.onAppear { session.reconcile() }.onChange(of: store.revision) { _, _ in session.reconcile() }
+    }.onAppear {
+      if session.object == nil { store.ensureCanvas() }
+      session.reconcile()
+    }.onChange(of: store.revision) { _, _ in session.reconcile() }
       .onChange(of: session.dieline) { _, dieline in
         if dieline { session.canvas?.finishText() }
         DispatchQueue.main.async { session.fit() }
       }
-      .onChange(of: store.mode) { _, mode in if mode != .artwork { session.canvas?.finishText() } }
+      .onChange(of: store.mode) { _, mode in if mode != .artwork && store.surfaceLayout == .single { session.canvas?.finishText() } }
   }
 }
 
@@ -255,9 +269,9 @@ struct ArtworkLayers: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
       HStack {
-        SectionLabel("FRAMES")
+        SectionLabel("CANVAS & FRAMES")
         Spacer()
-        Text("\(session.frames.count)").foregroundStyle(Palette.secondary).font(.system(size: 9))
+        Text("\(session.frames.filter { !$0.isWorkspace }.count)").foregroundStyle(Palette.secondary).font(.system(size: 9))
       }.padding(16)
       ForEach(session.frames) { frame in
         Button {
@@ -265,8 +279,8 @@ struct ArtworkLayers: View {
           session.canvas?.fit(all: false)
         } label: {
           HStack(spacing: 8) {
-            Image(systemName: frame.object.componentDefinition == true ? "diamond.fill" : frame.object.recipeID == "artboard" ? "rectangle" : "link")
-            Text(frame.object.name).lineLimit(1)
+            Image(systemName: frame.isWorkspace ? "square.dashed" : frame.object.componentDefinition == true ? "diamond.fill" : frame.object.recipeID == "artboard" ? "rectangle" : "link")
+            Text(frame.isWorkspace ? "Canvas" : frame.object.name).lineLimit(1)
             Spacer()
           }.font(.system(size: 11)).padding(.horizontal, 14).padding(.vertical, 9).background(
             session.objectID == frame.id ? Color.white : .clear)

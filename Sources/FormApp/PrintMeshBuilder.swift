@@ -7,6 +7,9 @@ import SceneKit
   static func mesh(
     object: ProductObject, project: Project, assets: URL, configuration: PrintConfiguration
   ) throws -> PrintMesh {
+    guard !TextileDesign.recipeIDs.contains(object.recipeID) else {
+      throw FormError.invalid("This is a textile presentation product. Export its linked artwork; it is not an FDM-printable mesh.")
+    }
     let root = GeometryFactory.object(object, project: project, assets: assets)
     if object.recipeID == "clock" {
       let selected = [

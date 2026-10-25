@@ -18,4 +18,6 @@ Implementation acceptance:
 - Save/reopen and validate the same operations through deterministic MCP commands.
 - Keep frame/selection exports physically bounded and camera/viewport changes outside geometry rebuilds.
 
-This document records required behavior. Shipping evidence belongs in validation.md; unfinished requirements must remain visible in implementation-goal.md.
+The first implementation satisfies these Canvas/Table acceptance checks. A saved schema-19 workspace contains loose artwork without a physical face; existing finite documents stay compatible. `form_set_view` supports `canvas`, `split`, and `canvas_window`, alongside the finite `artwork` view. `form_edit_artwork` with `command: transfer` uses the same preserved hierarchy/coordinate operation as native mouse drops. Whole-workspace export requires a selection so it has an explicit physical extent.
+
+The packaged 501-element workflow and native text/drag/Undo/dock/split/origin checks are recorded in [validation notes](validation.md). The broader product requirements remain visible in [the implementation goal](implementation-goal.md).

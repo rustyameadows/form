@@ -106,7 +106,7 @@ struct StudioTopBar: View {
         HStack(spacing: 3) {
           ForEach(WorkspaceMode.allCases, id: \.self) { mode in
             Button {
-              store.mode = mode
+              store.showSurface(mode)
             } label: {
               Label(
                 mode.rawValue,
@@ -123,6 +123,15 @@ struct StudioTopBar: View {
             }.buttonStyle(.plain).foregroundStyle(
               store.mode == mode ? Palette.ink : Palette.secondary)
           }
+          Rectangle().fill(Palette.line).frame(width:1,height:19).padding(.horizontal,3)
+          Button { store.showSplit() } label: {
+            Image(systemName:"rectangle.split.2x1").frame(width:30,height:30)
+              .foregroundStyle(store.surfaceLayout == .split ? Palette.accent : Palette.secondary)
+          }.buttonStyle(.plain).help("Canvas and Table side by side").accessibilityLabel("Split Canvas and Table")
+          Button { store.detachCanvas() } label: {
+            Image(systemName:"arrow.up.forward.square").frame(width:30,height:30)
+          }.buttonStyle(.plain).help("Open Canvas in a separate window").accessibilityLabel("Open Canvas window")
+
         }.padding(4).background(.black.opacity(0.035), in: RoundedRectangle(cornerRadius: 11))
       }
     }
@@ -349,38 +358,57 @@ struct NewProjectCard: View {
 struct WorkspaceView: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
-    ZStack {
-      if store.mode == .artwork {
-        ArtworkWorkspace()
-      } else {
-        TableCanvas()
-        VStack {
-          HStack(alignment: .top) {
-            TableHeading()
-            Spacer()
-            if store.mode == .studio {
-              StudioPanel()
-            } else if store.primary != nil {
-              ObjectInspector().id(store.primary?.id)
-            }
-          }.padding(24)
-          Spacer(minLength: 0)
-          HStack(alignment: .bottom) {
-            CameraControls()
-            Spacer()
-            if store.project?.objects.isEmpty == false {
-              Text(
-                store.mode == .studio
-                  ? "A different light. The same objects."
-                  : store.tableTool.hint
-              ).font(.system(size: 10)).foregroundStyle(Palette.secondary).padding(.bottom, 14)
-            }
-          }.padding(.horizontal, 24).padding(.bottom, 18)
+    Group {
+      if store.surfaceLayout == .split {
+        HSplitView {
+          ArtworkWorkspace().frame(minWidth: 440)
+          TableWorkspace().frame(minWidth: 360)
         }
-        if store.project?.objects.isEmpty == true { EmptyTableView() }
+      } else if store.surfaceLayout == .detached || store.mode != .artwork {
+        TableWorkspace()
+      } else {
+        ArtworkWorkspace()
       }
+    }.safeAreaInset(edge: .bottom, spacing: 0) { WorkspaceStatus() }
+  }
+}
+
+struct TableWorkspace: View {
+  @EnvironmentObject var store: StudioStore
+  @State private var showingObjectControls = false
+  var body: some View {
+    ZStack {
+      TableCanvas()
+      VStack {
+        HStack(alignment: .top) {
+          TableHeading()
+          Spacer()
+          if store.mode == .studio {
+            StudioPanel()
+          } else if store.primary != nil {
+            if store.surfaceLayout == .split {
+              Button { showingObjectControls.toggle() } label: {
+                Label(store.primary?.name ?? "Object controls", systemImage: "slider.horizontal.3")
+                  .font(.system(size: 11,weight:.medium)).lineLimit(1)
+                  .padding(10).background(.regularMaterial,in:RoundedRectangle(cornerRadius:9))
+              }.buttonStyle(.plain).popover(isPresented:$showingObjectControls) {
+                ObjectInspector().frame(maxHeight:650).environmentObject(store)
+              }
+            } else { ObjectInspector().id(store.primary?.id) }
+          }
+        }.padding(24)
+        Spacer(minLength: 0)
+        HStack(alignment: .bottom) {
+          CameraControls()
+          Spacer()
+          if store.project?.objects.isEmpty == false && store.surfaceLayout != .split {
+            Text(store.mode == .studio ? "A different light. The same objects." : store.tableTool.hint)
+              .font(.system(size: 10)).foregroundStyle(Palette.secondary).padding(.bottom,14)
+          }
+        }.padding(.horizontal,24).padding(.bottom,18)
+      }
+      if store.project?.objects.filter({ !$0.isCanvasWorkspace }).isEmpty == true { EmptyTableView() }
     }
-    .safeAreaInset(edge: .bottom, spacing: 0) { WorkspaceStatus() }
   }
 }
 

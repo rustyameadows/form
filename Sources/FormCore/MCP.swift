@@ -28,6 +28,24 @@ public enum MCP {
       "description":
         "Recipe parameter IDs mapped to numeric values. Discover ranges with form_list_recipes. Dimensions are millimeters unless specified.",
     ]
+    let textile: [String: Any] = [
+      "type": ["object", "null"], "required": ["kind", "process"],
+      "properties": [
+        "kind": ["type": "string", "enum": TextileProduct.Kind.allCases.map(\.rawValue)],
+        "process": ["type": "string", "enum": TextileProduct.Process.allCases.map(\.rawValue)],
+        "blankName": string, "size": string, "manufacturer": string, "sku": string,
+        "measurementsVerified": ["type": "boolean"], "liningMaterialID": string, "trimMaterialID": string,
+        "border": string, "backing": string, "attachmentMethod": string, "notes": string,
+        "threadColors": ["type": "array", "items": string, "maxItems": 64],
+        "laidFaceDown": ["type": "boolean"],
+        "attachment": ["type": ["object", "null"], "required": ["garmentID", "zone"], "properties": [
+          "garmentID": objectID, "zone": ["type": "string", "enum": TextileAttachment.Zone.allCases.map(\.rawValue)],
+          "offset": ["type": "object", "properties": ["x": number, "y": number], "required": ["x", "y"]],
+          "rotation": number, "clearance": ["type": "number", "minimum": 0, "maximum": 50],
+        ]],
+      ],
+      "description": "Complete textile product specification or null to clear. Garments are generic presentation blanks; embroidery fields record intent, not a verified stitch program. Attachments reference a supported garment and physical region; offsets are millimeters.",
+    ]
     func tool(
       _ name: String, _ description: String, _ properties: [String: Any] = [:],
       required: [String] = [], readOnly: Bool = false, destructive: Bool = false
@@ -76,10 +94,12 @@ public enum MCP {
         readOnly: true),
       tool(
         "form_add_object",
-        "Create an editable object on the Table. Native inspector controls are generated from its recipe. All dimensions and positions use millimeters.",
+        "Create an editable object on the Table. Native inspector controls are generated from its recipe. All dimensions and positions use millimeters. With recipe_id artboard and canvas_workspace true, return or create the project's shared unframed Canvas workspace; physical object options do not apply to that container.",
         [
           "recipe_id": string, "name": string, "parameters": parameters, "material_id": string,
           "color": string, "position": position,
+          "canvas_workspace":["type":"boolean","description":"With recipe_id artboard, true returns/creates the single unframed editing workspace. It has no physical Table/print face and cannot directly drive a product surface."],
+          "textile": textile,
         ], required: ["recipe_id"]),
       tool(
         "form_update_object",
@@ -87,6 +107,7 @@ public enum MCP {
         [
           "object_id": objectID, "parameters": parameters, "material_id": string, "color": string,
           "position": position, "rotation": number, "name": string, "locked": ["type": "boolean"],
+          "textile": textile,
         ], required: ["object_id"]),
       tool(
         "form_delete_objects", "Remove objects from the current project. Undo is available.",
@@ -217,12 +238,17 @@ public enum MCP {
         ], required: ["command"]),
       tool(
         "form_edit_artwork",
-        "Apply a native artwork command: add/replace elements, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip. Use complete element values for add/replace. clip uses mask_id or the bottom selected area shape; targets and mask must be siblings. Geometry stays editable; use nested clipped groups for nested masks. release_clip preserves the mask shape. Alignment modes: left/right/top/bottom/center_x/center_y/width/height; distribution: horizontal/vertical; order: front/back/forward/backward. glyph assigns fontName/glyphID/glyphName/fontSignature discovered by form_font_features to one source UTF-16 location/length while retaining editable text; glyph:null clears the range or all selected text choices. paragraph patches paragraph typography on selected text; optional UTF-16 location/length expands to full paragraphs while retaining rich characters. Returns selected element IDs. All changes share native undo.",
+        "Apply a native artwork command: add/replace elements, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip. Use complete element values for add/replace. origin sets one layer/group's normalized local transform reference {x,y}, or null resets to center; changing origin never moves artwork. transform applies positive scale_x/scale_y, relative rotation degrees, and translate_x/translate_y millimeters in that order around the selected layer's origin; multiple roots use their combined center. clip uses mask_id or the bottom selected area shape; targets and mask must be siblings. Geometry stays editable; use nested clipped groups for nested masks. release_clip preserves the mask shape. Alignment modes: left/right/top/bottom/center_x/center_y/width/height; distribution: horizontal/vertical; order: front/back/forward/backward. glyph assigns fontName/glyphID/glyphName/fontSignature discovered by form_font_features to one source UTF-16 location/length while retaining editable text; glyph:null clears the range or all selected text choices. paragraph patches paragraph typography on selected text; optional UTF-16 location/length expands to full paragraphs while retaining rich characters. Returns selected element IDs. All changes share native undo.",
         [
-          "object_id": objectID, "mask_id": string, "command": ["type": "string", "enum": ArtworkCommands.names],
+          "object_id": objectID, "mask_id": string, "command": ["type": "string", "enum": ArtworkCommands.names+["transfer"]],
+          "target_object_id":["type":"string","description":"With command transfer, move selected roots/descendants to this artwork frame or Canvas workspace. Keeps hierarchy, styles, assets and masks. The default offset preserves physical Canvas placement using saved canvasPosition. Required external masks are copied; inherited clipped/effect groups must be selected as a whole. Returns destination owner ID and selected root IDs."],
+          "offset_x":["type":"number","description":"With transfer, optionally provide BOTH offset_x and offset_y in mm to override the source-local to destination-local translation."],"offset_y":number,
           "element_ids": ["type": "array", "items": string],
           "elements": ["type": "array", "items": ["type": "object"]], "mode": string,
           "axis": string,
+          "origin": ["type":["object","null"],"description":"With command origin, normalized local coordinates x/y (0 top/left, 0.5 center, 1 bottom/right; −10…10 for an external pivot), or null to reset. Does not move rendered geometry."],
+          "rotation": number,"scale_x":number,"scale_y":number,
+          "translate_x":number,"translate_y":number,
           "typography": ["type": "object", "description": "With paragraph, patch paragraph properties only: tabStops [{location in pt, alignment left/center/right/decimal, optional decimalSeparator period/comma}], defaultTabInterval in pt, leading, spacing/indents, alignment, direction, hyphenation 0–1. null resets optional tab settings. A UTF-16 location/length expands to containing paragraphs, preserving character formatting."],
           "location": ["type": "integer"], "length": ["type": "integer"],
           "glyph": ["type": ["object","null"], "description": "With command glyph, provide fontName, glyphID, optional glyphName and fontSignature from font glyph discovery. location/length selects source UTF-16 characters. null clears choices in that range, or all selected text when the range is omitted."],
@@ -300,13 +326,13 @@ public enum MCP {
         required: ["text"]),
       tool(
         "form_set_view",
-        "Set a camera preset or focus/isolate an object. Views: perspective, overhead, front, fit, focus, isolate, show_all, home, table, artwork, studio, print_bed, print_object. Optional object_id selects the target. In artwork, element_ids selects layers and optional node_ids activates direct selection on a path.",
+        "Set a camera preset or design surface. canvas opens the freeform 2D Canvas; split shows Canvas beside Table; canvas_window opens Canvas in a separate native window. These share one project and Undo history. artwork retains the finite-frame editor view. Optional object_id selects the target; element_ids and node_ids select artwork layers and path nodes. Named camera views always frame the whole physical project.",
         [
           "view": [
             "type": "string",
             "enum": [
               "perspective", "overhead", "front", "fit", "focus", "isolate", "show_all", "home",
-              "table", "artwork", "studio", "print_bed", "print_object",
+              "table", "canvas", "split", "canvas_window", "artwork", "studio", "print_bed", "print_object",
             ],
           ], "object_id": objectID, "element_ids": ["type": "array", "items": string],
           "node_ids": ["type": "array", "items": string],

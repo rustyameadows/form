@@ -6,7 +6,7 @@ import UniformTypeIdentifiers
 
 enum WorkspaceMode: String, CaseIterable {
   case table = "Table"
-  case artwork = "Artwork"
+  case artwork = "Canvas"
   case studio = "Studio"
 }
 
@@ -41,6 +41,8 @@ enum TableTool: String, CaseIterable {
   @Published var revision = 0
   @Published var showingHome = true
   @Published var mode: WorkspaceMode = .table
+  @Published var surfaceLayout: DesignSurfaceLayout = .single
+  var canvasWindowController: CanvasWindowController?
   @Published var projects: [ProjectSummary] = []
   @Published var notice: String?
   @Published var error: String?
@@ -66,10 +68,14 @@ enum TableTool: String, CaseIterable {
   var choosingSVG = false
   var project: Project? { engine.project }
   var selected: [ProductObject] {
-    project?.objects.filter { engine.selection.contains($0.id) } ?? []
+    project?.objects.filter { !$0.isCanvasWorkspace && engine.selection.contains($0.id) } ?? []
   }
   var primary: ProductObject? { selected.first }
-  var materials: [FormCore.Material] { library.materials + (project?.materials ?? []) }
+  var materials: [FormCore.Material] {
+    let overrides = project?.materials ?? []
+    let ids = Set(overrides.map(\.id))
+    return library.materials.filter { !ids.contains($0.id) } + overrides
+  }
 
   init(repository suppliedRepository: ProjectRepository? = nil, seedLibrary: Bool = true) {
     do {
@@ -112,6 +118,7 @@ enum TableTool: String, CaseIterable {
     }
     engine.onProjectWillChange = { [weak self] in self?.finishArtworkEditing() }
     engine.onProjectDidChange = { [weak self] in
+      self?.closeDetachedCanvas()
       self?.printing.resetForProjectChange()
       self?.showingPrint = false
       self?.artworkSession.showingTextStyles = false
@@ -152,6 +159,13 @@ enum TableTool: String, CaseIterable {
             if name == "form_status", var status = result as? [String: Any] {
               status["renderer"] = self.scene?.diagnostics ?? [:]
               status["artwork_renderer"] = self.artworkSession.canvas?.diagnostics ?? [:]
+              status["design_surfaces"] = [
+                "layout": self.surfaceLayout.rawValue,
+                "focused_surface": self.mode.rawValue.lowercased(),
+                "canvas_window_open": self.canvasWindowController?.window?.isVisible == true,
+                "canvas_workspace_id": self.project?.canvasWorkspace.map { $0.id.uuidString as Any } ?? NSNull(),
+                "artwork_object_id": self.artworkSession.objectID.map { $0.uuidString as Any } ?? NSNull(),
+              ]
               status["boolean_geometry"] = BooleanGeometry.diagnostics
               status["component_resolution"] = ComponentCommands.resolutionDiagnostics
               status["appearance_renderer"] = AppearanceRenderer.diagnostics
@@ -234,6 +248,7 @@ enum TableTool: String, CaseIterable {
     showingHome = false
     isolated = []
     scene?.resetCamera()
+    if template == "blank" { showSurface(.artwork) }
   }
   func openProject(_ id: UUID) {
     do {
@@ -247,6 +262,8 @@ enum TableTool: String, CaseIterable {
     } catch { self.error = error.localizedDescription }
   }
   func home() {
+    closeDetachedCanvas()
+    surfaceLayout = .single
     finishArtworkEditing()
     save()
     capturePreview()
@@ -279,13 +296,13 @@ enum TableTool: String, CaseIterable {
     let width = max(
       recipe.defaults["width"] ?? 0, recipe.defaults["shadeDiameter"] ?? 0,
       recipe.defaults["diameter"] ?? 0, 150)
-    let edge = project?.objects.map { $0.position.x + $0.footprintWidth / 2 }.max()
+    let edge = project?.objects.filter { !$0.isCanvasWorkspace }.map { $0.position.x + $0.footprintWidth / 2 }.max()
     let x = edge.map { $0 + width / 2 + 70 } ?? 0
     perform(
       "form_add_object",
       [
         "recipe_id": recipe.id, "position": [x, 0, 0],
-        "material_id": recipe.id == "lamp" ? "vermillion" : recipe.id == "vase" ? "clay" : "chalk",
+        "material_id": recipe.id == "bomberJacket" ? "flight-nylon" : recipe.id == "textilePatch" ? "patch-twill" : recipe.id == "textileLabel" ? "label-ecru" : recipe.id == "lamp" ? "vermillion" : recipe.id == "vase" ? "clay" : "chalk",
       ])
     if recipe.id == "artboard", let object = primary {
       saveArtwork(.init(background: "#F2EDE1"), for: object)
@@ -367,33 +384,21 @@ enum TableTool: String, CaseIterable {
     switch view {
     case "home": home()
     case "table":
-      showingHome = false
-      mode = .table
+      showSurface(.table)
+    case "canvas":
+      showSurface(.artwork)
+    case "split":
+      showSplit()
+    case "canvas_window":
+      detachCanvas()
     case "artwork":
+      closeDetachedCanvas()
+      surfaceLayout = .single
       showingHome = false
       mode = .artwork
       artworkSession.reconcile()
-      if let raw = args["element_ids"] as? [String] {
-        let ids = Set(raw.compactMap(UUID.init(uuidString:)))
-        guard ids.count == raw.count, ids.isSubset(of: Set(artworkSession.art.elements.map(\.id)))
-        else { throw FormError.invalid("Unknown artwork selection.") }
-        artworkSession.choose(ids)
-        let parents = Set(artworkSession.elements.map(\.parentID))
-        artworkSession.scopeID = parents.count == 1 ? parents.first! : nil
-      }
-      if let raw = args["node_ids"] as? [String] {
-        let ids = Set(raw.compactMap(UUID.init(uuidString:)))
-        let available = Set(
-          artworkSession.elements.flatMap { $0.path?.contours.flatMap(\.nodes).map(\.id) ?? [] })
-        guard ids.count == raw.count, ids.isSubset(of: available) else {
-          throw FormError.invalid("Unknown path node selection.")
-        }
-        artworkSession.nodes = ids
-        if !ids.isEmpty { artworkSession.tool = .direct }
-      }
     case "studio":
-      showingHome = false
-      mode = .studio
+      showSurface(.studio)
     case "focus": scene?.focusSelection()
     case "isolate":
       guard !engine.selection.isEmpty else {
@@ -415,6 +420,29 @@ enum TableTool: String, CaseIterable {
       showingPrint = true
       printing.frame("object")
     default: throw FormError.invalid("Unknown view.")
+    }
+    if ["artwork", "canvas", "split", "canvas_window"].contains(view) {
+      if let raw = args["object_id"] as? String, let id = UUID(uuidString:raw) {
+        guard let object = project?.objects.first(where:{$0.id == id}), project?.editableArtwork(object) != nil
+        else { throw FormError.invalid("The selected object has no editable artwork.") }
+        artworkSession.activate(id)
+      }
+      if let raw = args["element_ids"] as? [String] {
+        let ids = Set(raw.compactMap(UUID.init(uuidString:)))
+        guard ids.count == raw.count, ids.isSubset(of:Set(artworkSession.art.elements.map(\.id)))
+        else { throw FormError.invalid("Unknown artwork selection.") }
+        artworkSession.choose(ids)
+        let parents = Set(artworkSession.elements.map(\.parentID))
+        artworkSession.scopeID = parents.count == 1 ? parents.first! : nil
+      }
+      if let raw = args["node_ids"] as? [String] {
+        let ids = Set(raw.compactMap(UUID.init(uuidString:)))
+        let available = Set(artworkSession.elements.flatMap { $0.path?.contours.flatMap(\.nodes).map(\.id) ?? [] })
+        guard ids.count == raw.count, ids.isSubset(of:available)
+        else { throw FormError.invalid("Unknown path node selection.") }
+        artworkSession.nodes = ids
+        if !ids.isEmpty { artworkSession.tool = .direct }
+      }
     }
     changed(save: false)
   }
@@ -522,7 +550,7 @@ enum TableTool: String, CaseIterable {
       if project != nil {
         edit("Updated Studio Library") {
           $0.materials = library.materials.filter { item in
-            !FormCore.Material.presets.contains { $0.id == item.id }
+            !FormCore.Material.presets.contains(item)
           }
         }
       }

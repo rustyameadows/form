@@ -9,7 +9,7 @@ import SwiftUI
   var body: some Scene {
     WindowGroup("FORM", id: "studio") {
       RootView().environmentObject(store)
-        .frame(minWidth: 1020, minHeight: 700)
+        .frame(minWidth: store.surfaceLayout == .split ? 1280 : 1020, minHeight: 700)
         .preferredColorScheme(.light)
         .onAppear { delegate.store = store }
     }
@@ -71,7 +71,7 @@ import SwiftUI
           store.mode == .artwork
             ? store.artworkSession.selection.count < 2 : store.selected.count < 2)
         Button("Delete") { store.deleteSelection() }
-          .disabled(store.selected.isEmpty)
+          .disabled(store.mode == .artwork ? store.artworkSession.selection.isEmpty : store.selected.isEmpty)
       }
       CommandGroup(after: .toolbar) {
         Button("Fit All Objects") {

@@ -104,7 +104,7 @@ extension Recipe {
       [
         .init("width", "Width", 210, 20...1000), .init("depth", "Height", 148, 20...1000),
       ]),
-  ]
+  ] + TextileDesign.recipes
 }
 
 public enum Samples {

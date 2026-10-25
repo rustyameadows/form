@@ -2,7 +2,7 @@ import Foundation
 
 extension ProductObject {
   public var supportsArtworkFace: Bool {
-    recipeID == "clock" || self["width"] > 0 && self["depth"] > 0
+    !isCanvasWorkspace && recipeID != "bomberJacket" && (recipeID == "clock" || self["width"] > 0 && self["depth"] > 0)
   }
   public var artworkSize: Point2 {
     recipeID == "clock"
@@ -25,6 +25,7 @@ extension Project {
   /// Resolve the shared document at physical surface scale, keeping editor-only
   /// data out of render signatures. Source files and source typography stay intact.
   public func surfaceArtwork(_ object: ProductObject, keepingSwatchReferences: Bool = false) -> Artwork? {
+    guard !object.isCanvasWorkspace else { return nil }
     let owner = artworkOwner(object)
     guard let stored = owner.artwork else { return nil }
     var art = (try? resolvingComponents(in: stored, keepingSwatchReferences: keepingSwatchReferences)) ?? stored
@@ -79,7 +80,7 @@ extension Project {
     }
     if let sourceID {
       guard sourceID != objectID, let source = objects.first(where: { $0.id == sourceID }),
-        source.recipeID == "artboard", source.artworkSourceID == nil, source.artwork != nil
+        source.recipeID == "artboard", !source.isCanvasWorkspace, source.artworkSourceID == nil, source.artwork != nil
       else {
         throw FormError.invalid("Choose an artwork sheet in this project as the source.")
       }
@@ -98,6 +99,8 @@ extension Project {
     self = candidate
   }
   public func validateArtworkLinks() throws {
+    try validateCanvasWorkspace()
+    try validateTextiles()
     try validateTextStyles()
     try validateSwatches()
     try validateComponentLinks()

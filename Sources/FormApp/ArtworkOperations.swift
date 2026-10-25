@@ -84,7 +84,8 @@ extension StudioStore {
     ]
   }
   func exportArtworkDialog(
-    _ format: String, object: ProductObject, dpi: Double = 300, outlineText: Bool = true
+    _ format: String, object: ProductObject, dpi: Double = 300, outlineText: Bool = true,
+    elementIDs:Set<UUID> = []
   ) {
     let panel = NSSavePanel()
     panel.nameFieldStringValue = object.name + "." + format
@@ -93,9 +94,9 @@ extension StudioStore {
     ]
     guard panel.runModal() == .OK, let url = panel.url else { return }
     do {
-      _ = try exportArtwork(
-        object: object,
-        arguments: ["format": format, "path": url.path, "dpi": dpi, "outline_text": outlineText])
+      var arguments:[String:Any] = ["format":format,"path":url.path,"dpi":dpi,"outline_text":outlineText]
+      if !elementIDs.isEmpty { arguments["element_ids"] = elementIDs.map(\.uuidString) }
+      _ = try exportArtwork(object:object,arguments:arguments)
       toast("Artwork \(format.uppercased()) exported")
     } catch { self.error = error.localizedDescription }
   }
@@ -104,7 +105,10 @@ extension StudioStore {
     let format = arguments["format"] as? String ?? "svg"
     let dimensions = ArtworkDrawing.dimensions(object)
     let assets = repository.url(for: project.id).appendingPathComponent("Assets")
-    var art = project.surfaceArtwork(object) ?? .init(background: "#FFFFFF")
+    if object.isCanvasWorkspace,(arguments["element_ids"] as? [String])?.isEmpty != false {
+      throw FormError.invalid("Select Canvas artwork to export, or place it on a physical frame.")
+    }
+    var art = (object.isCanvasWorkspace ? project.editableArtwork(object) : project.surfaceArtwork(object)) ?? .init(background:"#FFFFFF")
     var width = dimensions.width
     var height = dimensions.height
     if let raw = arguments["element_ids"] as? [String], !raw.isEmpty {

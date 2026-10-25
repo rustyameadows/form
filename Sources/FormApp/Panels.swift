@@ -110,6 +110,11 @@ struct ObjectInspector: View {
               ).font(.system(size: 11)).foregroundStyle(Palette.secondary)
             }
             Divider()
+            if object.textile != nil || TextileDesign.recipeIDs.contains(object.recipeID) {
+              TextileInspector(object: object, project: project)
+              Divider()
+            }
+            if object.textile?.attachment == nil {
             DisclosureGroup(isExpanded: $showPlacement) {
               VStack(spacing: 10) {
                 HStack(spacing: 8) {
@@ -139,6 +144,7 @@ struct ObjectInspector: View {
             } label: {
               SectionLabel("PLACEMENT")
             }.tint(Palette.secondary)
+            }
             if object.relationship == "variant" {
               Label(
                 "Geometry and artwork stay linked.\nMaterials and placement are your own.",
@@ -495,6 +501,7 @@ struct LibraryView: View {
   @Environment(\.dismiss) var dismiss
   @State private var newName = ""
   @State private var printingSettings = false
+  @State private var fabricSettings = false
   @State private var newColor = Color(nsColor: NSColor(hex: "#B7B6A1"))
   var body: some View {
     VStack(alignment: .leading, spacing: 22) {
@@ -523,6 +530,11 @@ struct LibraryView: View {
           Image(systemName: "arrow.up.right").font(.system(size: 11))
         }.padding(14).background(.white, in: RoundedRectangle(cornerRadius: 9))
       }.buttonStyle(.plain)
+      Button {
+        fabricSettings = true
+      } label: {
+        Label("Fabrics & textile materials", systemImage: "tshirt").font(.system(size:12,weight:.medium))
+      }.buttonStyle(.borderless)
       SectionLabel("MATERIALS")
       LazyVGrid(columns: [GridItem(.adaptive(minimum: 140))], spacing: 17) {
         ForEach(store.library.materials) { material in
@@ -577,6 +589,7 @@ struct LibraryView: View {
       ).foregroundStyle(Palette.secondary)
     }.padding(30).frame(width: 680).background(Palette.paper).sheet(isPresented: $printingSettings)
     { PrintingSettingsView(printing: store.printing).environmentObject(store) }
+    .sheet(isPresented: $fabricSettings) { TextileFabricLibrary().environmentObject(store) }
   }
 }
 

@@ -41,6 +41,7 @@ public struct Material: Codable, Equatable, Identifiable, Sendable {
   public var roughness: Double
   public var metallic: Double
   public var thickness: Double
+  public var fabric: FabricProfile?
   public init(
     _ id: String, _ name: String, _ category: String, _ color: String, roughness: Double = 0.65,
     metallic: Double = 0, thickness: Double = 0.3
@@ -66,7 +67,7 @@ public struct Material: Codable, Equatable, Identifiable, Sendable {
     .init("clay", "Unglazed clay", "Ceramic", "#B57860", roughness: 0.92, thickness: 4),
     .init("linen", "Natural linen", "Fabric", "#D4CDBB", roughness: 1, thickness: 0.8),
     .init("petg", "Frosted PETG", "Plastic", "#C4D6D3", roughness: 0.48, thickness: 1.2),
-  ]
+  ] + TextileDesign.materials
 }
 
 public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
@@ -85,6 +86,7 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var imageAdjustments: ImageAdjustments?
   public var name: String?
   public var rotation: Double?
+  public var transformOrigin: Point2?
   public var opacity: Double?
   public var blendMode: String?
   public var isolatedBlending: Bool?
@@ -186,8 +188,10 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var artworkSourceID: UUID?
   public var artworkFit: String?
   public var componentDefinition: Bool?
+  public var canvasWorkspace: Bool?
   public var asset: String?
   public var locked: Bool
+  public var textile: TextileProduct?
   public init(
     name: String, recipeID: String, parameters: [String: Double], materialID: String = "chalk",
     position: Vector3 = .init(), rotation: Double = 0, artwork: Artwork? = nil
@@ -374,7 +378,13 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var minimumSchemaVersion: Int {
     max(
       schemaVersion,
-      camera.orientation != nil
+      objects.contains { $0.isCanvasWorkspace }
+        ? 19
+        : objects.contains { $0.artwork?.requiresSchemaEighteen == true }
+        ? 18
+        : objects.contains { $0.textile != nil || TextileDesign.recipeIDs.contains($0.recipeID) } || materials.contains { $0.fabric != nil }
+        ? 17
+        : camera.orientation != nil
         ? 16
         : objects.contains { $0.artwork?.requiresSchemaFifteen == true }
         ? 15
@@ -425,10 +435,12 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
         "Unknown recipe '\(recipeID)'. Use form_list_recipes to discover available recipes.")
     }
     try recipe.validate(parameters)
-    return ProductObject(
+    var object = ProductObject(
       name: name ?? recipe.name, recipeID: recipeID,
       parameters: recipe.defaults.merging(parameters) { _, new in new }, materialID: materialID,
       position: position)
+    object.textile = TextileProduct.defaults(for: recipeID)
+    return object
   }
 }
 

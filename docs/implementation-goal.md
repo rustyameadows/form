@@ -19,7 +19,7 @@ The goal service currently permits status changes but cannot rewrite the text of
 ### A. Native 3D studio and fabrication foundation
 
 - [x] Continuous Metal-backed Table; native title bar; contextual inspectors; camera, focus, isolation, selection, movement, grouping, variants, and iterations.
-- [ ] Validate researched constrained, world-up orbit: horizontal drags change yaw only, vertical drags change pitch only, no accumulated roll, immediate leveling of earlier banked views, fixed Shift-pan/zoom bindings, and reliable whole-project named views. The previous free-orbit milestone did not satisfy the user’s level-navigation requirement.
+- [x] Validate researched constrained, world-up orbit: horizontal drags change yaw only, vertical drags change pitch only, no accumulated roll, immediate leveling of earlier banked views, fixed Shift-pan/zoom bindings, and reliable whole-project named views. Native mouse runs and core/AppKit tests are recorded in validation notes; CUA cannot hold Shift through its drag API, so Shift-pan uses direct AppKit event evidence.
 - [x] Home previews of saved scenes; modular packages; autosave; undo/redo; imported assets; Studio materials and equipment.
 - [x] Parametric constructions and custom recipes; linked artwork; PDF/SVG/PNG/component exports; local MCP registration and shared command engine.
 - [x] Dedicated Print workspace with physical P1S bed, component selection, orientation, scale, filament choice, slicing options, layer preview, and local outputs.
@@ -102,12 +102,14 @@ See [validation notes](validation.md) for measured results and current limitatio
 
 ### G. Freeform Canvas and Table relationship
 
-- [ ] Loose 2D typography, notes, references, images, and vectors on an expanding canvas without a required physical frame.
-- [ ] Movable finite artboards and mapped object-face regions; drag artwork into/out of a region with correct coordinates, live 3D updates, and one Undo.
-- [ ] Canvas-only, Table-only, resizable split, and a separate canvas window sharing project state, selections, focus-aware commands, and camera/editor ownership.
-- [ ] Preserve source links, styles/assets, project switches, save/reopen, physical exports, and large-canvas performance; validate through native UI and MCP.
+- [x] Loose 2D typography, notes, references, images, and vectors on an expanding canvas without a required physical frame.
+- [x] Movable finite artboards and mapped object-face regions; drag artwork into/out of a region with correct coordinates, live 3D updates, and one Undo.
+- [x] Canvas-only, Table-only, resizable split, and a separate canvas window sharing project state, selections, focus-aware commands, and camera/editor ownership.
+- [x] Preserve source links, styles/assets, project switches, save/reopen, physical exports, and large-canvas performance; validate through native UI and MCP. The 501-element packaged workflow measured 48 ms median edits; native drag, text, split, window, and origin checks are recorded in validation notes.
 
 ### H. Textiles, apparel, fabric, and merchandise — active
+
+The [ORBITAL textile foundation](textile-foundation.md) now implements shaped parametric bomber blanks, attached decorations, shared artwork, two colorways, editable fabric specifications/inventory, and physical patch/label exports. Packaged MCP and native checks pass. The complete requirements below remain open; this foundation is not a finished clothing system.
 
 - [ ] Decorated garment blanks, real-scale regions, persistent fabric specifications, native material controls, linked artwork and garment-relative placement, variants, and collection editing.
 - [ ] NASA bomber demonstration: convincing garment construction and fabric, custom independent patches, sewn-in labels, direct embroidery regions, shared editable source art, two colorways, and polished hero/detail views.

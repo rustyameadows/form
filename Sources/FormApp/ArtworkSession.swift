@@ -9,6 +9,7 @@ struct CanvasFrame: Identifiable {
   var rect: CGRect
   var artwork: Artwork
   var id: UUID { object.id }
+  var isWorkspace: Bool { object.isCanvasWorkspace }
 }
 
 enum ArtworkTool: String, CaseIterable {
@@ -88,7 +89,8 @@ enum ArtworkTool: String, CaseIterable {
     object.flatMap { store?.project?.editableArtwork($0) } ?? .init(background: "#FFFFFF")
   }
   var previewObject: ProductObject? {
-    store?.project?.objects.first { $0.id == linkedTargetID } ?? object
+    guard object?.isCanvasWorkspace != true else { return nil }
+    return store?.project?.objects.first { $0.id == linkedTargetID } ?? object
   }
   var elements: [ArtworkElement] { art.elements.filter { selection.contains($0.id) } }
   var primary: ArtworkElement? { elements.first }
@@ -174,19 +176,26 @@ enum ArtworkTool: String, CaseIterable {
     guard let first = values.first else { return nil }
     return values.dropFirst().reduce(first) { $0.union($1) }
   }
+  var transformOrigin: Point2? { ArtworkTransforms.selectionOrigin(in:art,ids:selection) }
+  func setTransformOrigin(_ point:Point2?) {
+    var arguments:[String:Any] = ["origin":NSNull()]
+    if let point { arguments["origin"] = ["x":point.x,"y":point.y] }
+    execute("origin",arguments)
+  }
   var frames: [CanvasFrame] {
     guard let objects = store?.project?.objects else { return [] }
-    let related = objects.filter { $0.recipeID == "artboard" || $0.id == objectID }
+    let related = objects.filter { $0.isCanvasWorkspace } + objects.filter { !$0.isCanvasWorkspace && ($0.recipeID == "artboard" || $0.id == objectID) }
     var x = 36.0
     var y = 40.0
     var rowHeight = 0.0
     var result: [CanvasFrame] = []
-    for (i, object) in related.enumerated() {
+    var finiteIndex = 0
+    for object in related {
       let surface = object.id == objectID ? previewObject ?? object : object
       let unfolding = dieline && object.id == objectID && surface.recipeID == "sleeve"
       let size =
         unfolding ? Dieline.dimensions(surface) : ArtworkDrawing.dimensions(object)
-      if i > 0 && i % 3 == 0 {
+      if !object.isCanvasWorkspace, finiteIndex > 0 && finiteIndex % 3 == 0 {
         x = 36
         y += rowHeight + 44
         rowHeight = 0
@@ -196,21 +205,25 @@ enum ArtworkTool: String, CaseIterable {
           object: object,
           surfaceObject: surface,
           rect: .init(
-            x: object.artwork?.canvasPosition?.x ?? x, y: object.artwork?.canvasPosition?.y ?? y,
+            x: object.isCanvasWorkspace ? 0 : object.artwork?.canvasPosition?.x ?? x,
+            y: object.isCanvasWorkspace ? 0 : object.artwork?.canvasPosition?.y ?? y,
             width: size.0, height: size.1),
           artwork: (unfolding
             ? store?.project?.surfaceArtwork(surface) : store?.project?.editableArtwork(object))
             .map { (try? store?.project?.resolvingComponents(in: $0)) ?? $0 }
             ?? .init(background: "#FFFFFF")))
-      x += size.0 + 36
-      rowHeight = max(rowHeight, size.1)
+      if !object.isCanvasWorkspace {
+        x += size.0 + 36
+        rowHeight = max(rowHeight, size.1)
+        finiteIndex += 1
+      }
     }
     return result
   }
   func reconcile() {
     if let maskEditing, !art.elements.contains(where: { $0.id == maskEditing.maskID }) { self.maskEditing = nil }
     if componentReturn != nil && object?.componentDefinition != true { componentReturn = nil }
-    if componentReturn == nil, let primary = store?.primary, primary.supportsArtworkFace {
+    if componentReturn == nil, object?.isCanvasWorkspace != true, let primary = store?.primary, primary.supportsArtworkFace {
       let owner = store?.project?.artworkOwner(primary) ?? primary
       linkedTargetID = owner.id == primary.id ? nil : primary.id
       if objectID != owner.id {
@@ -221,8 +234,7 @@ enum ArtworkTool: String, CaseIterable {
     }
     if object == nil {
       componentReturn = nil
-      objectID =
-        store?.project?.objects.first {
+      objectID = store?.project?.canvasWorkspace?.id ?? store?.project?.objects.first {
           store?.project?.editableArtwork($0) != nil && ($0["width"] > 0 || $0.recipeID == "clock")
         }?.id
     }
@@ -242,7 +254,19 @@ enum ArtworkTool: String, CaseIterable {
     dieline = false
     selection = []
     scopeID = nil
-    store?.select(id)
+    if object?.isCanvasWorkspace != true { store?.select(id) }
+  }
+  @discardableResult func transferSelection(to target:UUID,offset:Point2) -> Bool {
+    guard let store,let source = objectID,!selection.isEmpty else { return false }
+    do {
+      var moved = Set<UUID>()
+      try store.engine.edit("Moved artwork between frames",source:"Studio",coalescing:"artwork-\(source)") {
+        moved = try $0.transferArtwork(from:source,to:target,ids:self.selection,offset:offset)
+      }
+      objectID = target; linkedTargetID = nil; scopeID = nil; nodes = []; croppingImageID = nil
+      choose(moved); store.changed()
+      return true
+    } catch { store.error = error.localizedDescription; return false }
   }
   private func pruneNodeSelection() {
     guard !nodes.isEmpty else { return }
@@ -326,22 +350,31 @@ enum ArtworkTool: String, CaseIterable {
     if width != nil || height != nil, let e = primary, elements.count == 1, e.kind == "text",
       e.typography?.frameMode != "point"
     {
+      let anchor = ArtworkTransforms.worldOrigin(e,in:art)
       var changed = e
       changed.width = max(0.1, e.width * (width ?? b.width) / max(0.001, b.width))
       changed.height = max(0.1, e.height * (height ?? b.height) / max(0.001, b.height))
       var value = art
       let index = value.elements.firstIndex { $0.id == e.id }!
       value.elements[index] = changed
-      let next = value.bounds(of: changed)
+      let next = ArtworkTransforms.worldOrigin(changed,in:value)
       value.elements[index] = transformed(
-        changed, delta: .translation(b.x - next.x, b.y - next.y), in: value)
+        changed, delta: .translation(anchor.x-next.x,anchor.y-next.y), in: value)
+      if x != nil || y != nil {
+        let bounds = value.bounds(of:value.elements[index])
+        value.elements[index] = transformed(value.elements[index],
+          delta:.translation((x ?? bounds.x)-bounds.x,(y ?? bounds.y)-bounds.y),in:value)
+      }
       save(value)
       return
     }
-    let delta = Affine2.translation(x ?? b.x, y ?? b.y).followed(
+    let pivot = transformOrigin ?? b.center
+    var delta = Affine2.translation(pivot.x,pivot.y).followed(
       by: .scale(
         (width ?? b.width) / max(b.width, 0.001), (height ?? b.height) / max(b.height, 0.001))
-    ).followed(by: .translation(-b.x, -b.y))
+    ).followed(by: .translation(-pivot.x,-pivot.y))
+    let scaled = delta.bounds(b)
+    delta = Affine2.translation((x ?? scaled.x)-scaled.x,(y ?? scaled.y)-scaled.y).followed(by:delta)
     var value = art
     for e in art.selectionRoots(selection) {
       let i = value.elements.firstIndex { $0.id == e.id }!
@@ -350,16 +383,7 @@ enum ArtworkTool: String, CaseIterable {
     save(value)
   }
   func rotate(_ degrees: Double) {
-    canvas?.finishText()
-    guard let b = selectionBounds, !elements.contains(where: { art.isLocked($0) }) else { return }
-    let delta = Affine2.translation(b.center.x, b.center.y).followed(by: .rotation(degrees))
-      .followed(by: .translation(-b.center.x, -b.center.y))
-    var value = art
-    for e in art.selectionRoots(selection) {
-      let i = value.elements.firstIndex { $0.id == e.id }!
-      value.elements[i] = transformed(e, delta: delta, in: art)
-    }
-    save(value)
+    execute("transform",["rotation":degrees])
   }
   func typography(_ body: (inout Typography) -> Void) {
     if canvas?.applyTextStyle(body) == true { return }
@@ -469,7 +493,8 @@ enum ArtworkTool: String, CaseIterable {
     panel.allowedContentTypes = [.image, .pdf]
     panel.allowsMultipleSelection = !replacing
     guard panel.runModal() == .OK, !panel.urls.isEmpty else { return }
-    placeImages(panel.urls,replacing: replacing)
+    let point = object?.isCanvasWorkspace == true ? canvas.map { Point2($0.visibleCanvasRect.midX,$0.visibleCanvasRect.midY) } : nil
+    placeImages(panel.urls,point:point,replacing:replacing)
   }
 
   func copy() {
@@ -502,6 +527,7 @@ enum ArtworkTool: String, CaseIterable {
   }
   func export(_ format: String) {
     guard let store, let object else { return }
-    store.exportArtworkDialog(format, object: object, dpi: exportDPI, outlineText: exportOutline)
+    store.exportArtworkDialog(format,object:object,dpi:exportDPI,outlineText:exportOutline,
+      elementIDs:object.isCanvasWorkspace ? selection : [])
   }
 }

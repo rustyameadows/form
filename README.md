@@ -2,7 +2,7 @@
 
 A native Mac creative environment for designing and making physical things.
 
-One continuous Table for objects, artwork, materials, references, and the versions you want to compare. Start with the thing you want to make, then work directly with its dimensions, construction, and appearance.
+Explore typography, notes, references, and graphics on a freeform 2D Canvas, connected to a continuous 3D Table for physical objects and materials. Use either surface alone, side by side, or with Canvas in a separate window. Start with the thing you want to make, then work directly with its dimensions, construction, and appearance.
 
 **Version 0.1 foundation:** A working native application with persistent projects, parametric objects, linked artwork, production exports, local Orca slicing, and a local MCP interface. **Codex handles the creative conversation; FORM makes no external AI model calls.**
 
@@ -25,6 +25,8 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 
 - **Home:** Saved project previews, search, blank projects, and editable starting studies. Home cards start a clock dial, cyanotype kit, or lamp study; File → New from Study also offers material/form studies.
 - **The Table:** A continuous Metal-backed 3D workspace with physical scale, soft shadows, image references, material swatches, selection, movement, grouping, duplication, and persistent camera state.
+- **Connected Canvas:** Type, draw, or place images without an artboard, including negative coordinates. Drag artwork onto or off a physical region to update its 3D face with shared Undo. Resizable split and separate-window layouts keep one editor and shared project state. See [Canvas and Table](docs/design-surfaces.md).
+- **Textile foundation:** Dimensioned flight-bomber blanks, garment-relative patches and sewn labels, shared editable artwork, two NASA-themed colorways, and editable Studio fabric specifications/inventory. The [ORBITAL study](docs/textile-foundation.md) is a concept blank and decoration workflow; garment patterns, cloth simulation, and machine embroidery remain unfinished.
 - **Contextual controls:** Floating native parameter and material inspectors. Focus or isolate a selection without leaving the canvas.
 - **Editable constructions:** Clocks, paper stacks, booklets, folding sleeves, lamps, hollow vessels, boxes, cylinders, extruded profiles, and independent artwork sheets. Custom agent-defined recipes get the same native controls.
 - **Shared artwork:** Independent sheets can drive multiple physical faces. Actual-size or proportional fitting preserves the source; native source editing, detachment, iterations, and deletion have shared undo. Try the [linked clock demonstration](docs/linked-artwork.md).

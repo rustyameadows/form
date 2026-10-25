@@ -29,7 +29,7 @@ extension StudioStore {
 
   func importImage(_ args: [String: Any], source: String = "Codex") throws -> [String: Any] {
     guard let p = project, let raw = args["object_id"] as? String, let id = UUID(uuidString: raw),
-      let object = p.objects.first(where: { $0.id == id }), object.supportsArtworkFace,
+      let object = p.objects.first(where: { $0.id == id }), object.supportsArtworkFace || object.isCanvasWorkspace,
       let path = args["path"] as? String, path.hasPrefix("/") else {
       throw FormError.invalid("Choose an artwork target and an absolute local image path.")
     }
@@ -77,10 +77,11 @@ extension StudioStore {
       }
       elementID = replacement
     } else {
-      let defaultWidth = min(owner.artworkSize.x * 0.7, owner.artworkSize.y * 0.7 * aspect)
+      let defaultWidth = owner.isCanvasWorkspace ? min(120,120*aspect)
+        : min(owner.artworkSize.x*0.7,owner.artworkSize.y*0.7*aspect)
       let width = try number("width",defaultWidth), height = try number("height",width/aspect)
-      var e = ArtworkElement(kind: "image", x: try number("x",(owner.artworkSize.x-width)/2),
-        y: try number("y",(owner.artworkSize.y-height)/2),width: width,height: height,asset: placeholder)
+      var e = ArtworkElement(kind:"image",x:try number("x",owner.isCanvasWorkspace ? 0 : (owner.artworkSize.x-width)/2),
+        y:try number("y",owner.isCanvasWorkspace ? 0 : (owner.artworkSize.y-height)/2),width:width,height:height,asset:placeholder)
       let originalName = existingAsset ? p.objects.compactMap(\.artwork).flatMap(\.elements)
         .first(where:{$0.asset == url.lastPathComponent && $0.name != nil})?.name.map{$0 + " copy"} : nil
       e.name = String((args["name"] as? String ?? originalName ?? url.lastPathComponent).prefix(500))

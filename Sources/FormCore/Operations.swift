@@ -151,7 +151,7 @@ public final class OperationEngine {
       new.name = title
       new.conversationReference = a["conversation_reference"] as? String
       new.materials = StudioLibrary.load(from: repository.root).materials.filter { item in
-        !Material.presets.contains { $0.id == item.id }
+        !Material.presets.contains(item)
       }
       try repository.save(new)
       project = new
@@ -305,6 +305,27 @@ public final class OperationEngine {
       let command = try string("command")
       let ids = a["element_ids"] == nil ? Set<UUID>() : try idsArgument(a["element_ids"])
       var selected = Set<UUID>()
+      if command == "transfer" {
+        guard let target = UUID(uuidString:try string("target_object_id")) else {
+          throw FormError.invalid("Provide a destination target_object_id.")
+        }
+        let offset:Point2?
+        if a["offset_x"] != nil || a["offset_y"] != nil {
+          guard let x = a["offset_x"] as? NSNumber,let y = a["offset_y"] as? NSNumber,
+            CFGetTypeID(x) != CFBooleanGetTypeID(),CFGetTypeID(y) != CFBooleanGetTypeID() else {
+            throw FormError.invalid("Provide both offset_x and offset_y as physical millimeter numbers.")
+          }
+          offset = .init(x.doubleValue,y.doubleValue)
+        } else { offset = nil }
+        var ownerID = target
+        try edit("Transferred artwork",source:source,
+          coalescing:source == "Studio" && interaction == "artwork-\(id)" ? "artwork-\(id)" : nil) { p in
+          selected = try p.transferArtwork(from:id,to:target,ids:ids,offset:offset)
+          if let object = p.objects.first(where: { $0.id == target }) { ownerID = p.artworkOwner(object).id }
+        }
+        selection = [ownerID]
+        return ["selected_elements":selected.map(\.uuidString),"target_object_id":ownerID.uuidString]
+      }
       try edit(
         "Artwork: \(command)", source: source,
         coalescing: source == "Studio" && interaction == "artwork-\(id)" ? "artwork-\(id)" : nil
@@ -312,7 +333,7 @@ public final class OperationEngine {
         guard let object = p.objects.first(where: { $0.id == id }) else {
           throw FormError.missing("Object not found.")
         }
-        if ["paragraph","glyph"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing its text.") }
+        if ["paragraph","glyph","origin","transform"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
         var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
         if command=="glyph" {
@@ -410,11 +431,24 @@ public final class OperationEngine {
       }
       return try jsonObject(created!)
     case "form_list_materials":
-      return try jsonObject(
-        StudioLibrary.load(from: repository.root).materials + (project?.materials ?? []))
+      let local = project?.materials ?? []
+      return try jsonObject(StudioLibrary.load(from: repository.root).materials.filter { item in
+        !local.contains(where: { $0.id == item.id })
+      } + local)
     case "form_add_object":
       let p = try requireProject()
       let recipe = try string("recipe_id")
+      if let raw = a["canvas_workspace"] {
+        guard let flag = raw as? NSNumber,CFGetTypeID(flag) == CFBooleanGetTypeID() else {
+          throw FormError.invalid("canvas_workspace must be a boolean.")
+        }
+        if flag.boolValue {
+          guard recipe == "artboard" else { throw FormError.invalid("Use recipe_id artboard for the Canvas workspace.") }
+          var workspace:ProductObject?
+          try edit("Opened Canvas workspace",source:source) { workspace = try $0.ensureCanvasWorkspace() }
+          return try jsonObject(workspace!)
+        }
+      }
       let parameters = try numericParameters(a["parameters"])
       var object = try p.makeObject(
         recipeID: recipe, name: a["name"] as? String, parameters: parameters,
@@ -422,6 +456,9 @@ public final class OperationEngine {
       if let color = a["color"] as? String {
         try validateColor(color)
         object.color = color
+      }
+      if let raw = a["textile"] as? [String: Any] {
+        object.textile = try JSONDecoder.form.decode(TextileProduct.self, from: JSONSerialization.data(withJSONObject: raw))
       }
       if recipe == "sleeve" { object.artwork = .cyanotype }
       var clockSource: ProductObject?
@@ -466,6 +503,15 @@ public final class OperationEngine {
           p.objects[index].rotation = rotation
         }
         if let locked = a["locked"] as? Bool { p.objects[index].locked = locked }
+        if let raw = a["textile"] {
+          if raw is NSNull { p.objects[index].textile = nil }
+          else if let definition = raw as? [String: Any] {
+            p.objects[index].textile = try JSONDecoder.form.decode(TextileProduct.self, from: JSONSerialization.data(withJSONObject: definition))
+          } else { throw FormError.invalid("Provide a textile product definition or null.") }
+        }
+        if a["position"] != nil, p.objects[index].textile?.attachment != nil {
+          p.setTextileWorldPosition(id, to: try vector(a["position"]))
+        }
         // Variants share parameter and artwork definitions; material and placement remain local.
         if p.objects[index].relationship == "variant"
           || p.objects.contains(where: {
@@ -486,6 +532,7 @@ public final class OperationEngine {
           throw FormError.missing("One or more objects were not found.")
         }
         p.detachArtworkConsumers(of: ids)
+        p.detachTextileConsumers(of: ids)
         p.objects.removeAll { ids.contains($0.id) }
       }
       selection.subtract(ids)
@@ -502,6 +549,13 @@ public final class OperationEngine {
       }
       object.id = UUID()
       object.groupID = nil
+      if object.textile?.attachment != nil {
+        let placement = p.textilePlacement(object)
+        object.position = placement.position
+        object.rotation = placement.rotation
+        object.textile?.laidFaceDown = placement.underside
+        object.textile?.attachment = nil
+      }
       object.position.x += object.footprintWidth + 55
       while p.objects.contains(where: {
         abs($0.position.x - object.position.x) < ($0.footprintWidth + object.footprintWidth) / 2

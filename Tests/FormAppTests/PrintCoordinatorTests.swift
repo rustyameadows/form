@@ -120,7 +120,7 @@ import XCTest
     XCTAssertTrue(store.showingPrint)
     store.createProject()
     XCTAssertNotEqual(store.project!.id, next)
-    XCTAssertTrue(store.project!.objects.isEmpty)
+    XCTAssertTrue(store.project!.objects.allSatisfy(\.isCanvasWorkspace))
     XCTAssertFalse(store.showingPrint)
     XCTAssertNil(store.printing.objectID)
     XCTAssertNil(store.printing.mesh)

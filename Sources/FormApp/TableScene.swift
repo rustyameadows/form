@@ -27,6 +27,7 @@ private struct RenderSignature: Equatable {
   let asset: String?
   let fontRevision: Int
   let textureLimit: Int
+  let textile: TextileProduct?
 }
 
 @MainActor final class TableSceneController {
@@ -159,14 +160,15 @@ private struct RenderSignature: Equatable {
       camera = project.camera
       updateCamera()
     }
-    let live = Set(project.objects.map(\.id))
+    let physicalObjects = project.objects.filter { !$0.isCanvasWorkspace }
+    let live = Set(physicalObjects.map(\.id))
     for id in Array(nodes.keys) where !live.contains(id) {
       nodes.removeValue(forKey: id)?.removeFromParentNode()
       fingerprints.removeValue(forKey: id)
       geometryBounds.removeValue(forKey: id)
     }
     var geometryChanged = false
-    for object in project.objects {
+    for object in physicalObjects {
       let fingerprint = RenderSignature(
         recipe: project.recipe(object.recipeID),
         parameters: GeometryFactory.geometryParameters(object),
@@ -174,7 +176,7 @@ private struct RenderSignature: Equatable {
         artwork: project.surfaceArtwork(object)?.renderDefinition,
         asset: object.asset,
         fontRevision: project.editableArtwork(object) == nil ? 0 : GeometryFactory.fontRevision,
-        textureLimit: textureLimit)
+        textureLimit: textureLimit, textile: object.textile?.renderDefinition)
       if nodes[object.id] == nil || fingerprints[object.id] != fingerprint {
         nodes[object.id]?.removeFromParentNode()
         let node = GeometryFactory.object(
@@ -189,8 +191,16 @@ private struct RenderSignature: Equatable {
       }
       let node = nodes[object.id]!
       if object.recipeID == "clock" { GeometryFactory.updateClockHands(node, object: object) }
-      node.position = v(object.position.x / 100, object.position.y / 100, object.position.z / 100)
-      node.eulerAngles.y = CGFloat(object.rotation * .pi / 180)
+      let placement = project.textilePlacement(object)
+      node.position = v(placement.position.x / 100, placement.position.y / 100, placement.position.z / 100)
+      if object.textile?.attachment != nil {
+        let normal = SIMD3<Float>(Float(placement.normal.x), Float(placement.normal.y), Float(placement.normal.z))
+        node.simdOrientation = simd_quatf(from: SIMD3<Float>(0,1,0), to: normal)
+          * simd_quatf(angle: Float(placement.rotation * .pi / 180), axis: SIMD3<Float>(0,1,0))
+      } else {
+        node.eulerAngles = SCNVector3(placement.underside ? Float.pi : 0,
+          Float(placement.rotation * .pi / 180),0)
+      }
       node.isHidden = !isolated.isEmpty && !isolated.contains(object.id)
     }
     grid.isHidden = !showGrid || studio
@@ -363,7 +373,7 @@ private struct RenderSignature: Equatable {
       // subject-centered orbit pivot or the camera's actual viewport aspect.
       insets = .init(
         top: 80 / max(1, viewport.height),
-        right: (store.mode == .studio ? 264 + 48 : store.primary == nil ? 0 : ObjectInspector.width + 48) / max(1, viewport.width),
+        right: (store.mode == .studio ? 264 + 48 : store.surfaceLayout == .split || store.primary == nil ? 0 : ObjectInspector.width + 48) / max(1, viewport.width),
         bottom: 80 / max(1, viewport.height))
     }
     let fitted = CameraFraming.fitted(
@@ -527,6 +537,7 @@ private struct RenderSignature: Equatable {
   }
   override func mouseDown(with event: NSEvent) {
     window?.makeFirstResponder(self)
+    controller?.store?.activateDesignSurface(.table)
     cancelPointerInteraction()
     previous = convert(event.locationInWindow, from: nil)
     down = previous
@@ -546,8 +557,8 @@ private struct RenderSignature: Equatable {
       }
       action = .move
       objectPositions = Dictionary(
-        uniqueKeysWithValues: store.selected.filter { !$0.locked }.map { ($0.id, $0.position) })
-      dragOrigin = controller.pointOnTable(previous, height: store.primary?.position.y ?? 0)
+        uniqueKeysWithValues: store.selected.filter { !$0.locked }.map { ($0.id, store.project?.textilePlacement($0).position ?? $0.position) })
+      dragOrigin = controller.pointOnTable(previous, height: store.primary.map { store.project?.textilePlacement($0).position.y ?? $0.position.y } ?? 0)
     }
   }
   override func mouseDragged(with event: NSEvent) {
@@ -585,8 +596,14 @@ private struct RenderSignature: Equatable {
       store.edit("Moved objects", coalescing: "move-selection") { p in
         for i in p.objects.indices {
           if let start = self.objectPositions[p.objects[i].id] {
-            p.objects[i].position.x = ((start.x + now.x - origin.x) / snap).rounded() * snap
-            p.objects[i].position.z = ((start.z + now.z - origin.z) / snap).rounded() * snap
+            // A selected decoration follows its moving garment. Moving both
+            // independently would apply the same translation twice and make
+            // the result depend on their saved object order.
+            if let parent = p.objects[i].textile?.attachment?.garmentID,
+              self.objectPositions[parent] != nil { continue }
+            let target = Vector3(((start.x + now.x - origin.x) / snap).rounded() * snap,
+              start.y, ((start.z + now.z - origin.z) / snap).rounded() * snap)
+            p.setTextileWorldPosition(p.objects[i].id,to:target)
           }
         }
       }
@@ -747,6 +764,7 @@ private struct RenderSignature: Equatable {
     canonical.rotation = 0
     canonical.relationship = ""
     canonical.locked = false
+    canonical.textile = canonical.textile?.renderDefinition
     canonical.artwork = canonical.artwork?.renderDefinition
     let artworkData = canonical.artwork.flatMap { try? JSONEncoder.form.encode($0) }
     canonical.artwork = nil
@@ -769,6 +787,10 @@ private struct RenderSignature: Equatable {
     let root = SCNNode()
     let mat = material(object, project: project)
     switch object.recipeID {
+    case "bomberJacket":
+      root.addChildNode(TextileGeometry.bomber(object, project: project))
+    case "textilePatch", "textileLabel":
+      root.addChildNode(TextileGeometry.decoration(object, project: project, assets: assets, textureLimit: textureLimit))
     case "clock":
       let d = object["diameter"]
       let r = d / 2
@@ -1003,7 +1025,7 @@ private struct RenderSignature: Equatable {
         }
       }
     }
-    if let artwork = object.artwork, !["sleeve", "booklet", "clock"].contains(object.recipeID),
+    if let artwork = object.artwork, !["sleeve", "booklet", "clock", "bomberJacket", "textilePatch", "textileLabel"].contains(object.recipeID),
       object["width"] > 0, object["depth"] > 0
     {
       let top = Double(root.boundingBox.max.y) * 100 + 0.04
