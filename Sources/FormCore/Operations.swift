@@ -311,6 +311,7 @@ public final class OperationEngine {
         guard let object = p.objects.first(where: { $0.id == id }) else {
           throw FormError.missing("Object not found.")
         }
+        if command == "paragraph", p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing paragraphs.") }
         var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
         try p.setArtwork(art, for: id)

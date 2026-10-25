@@ -226,6 +226,15 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
   }
 }
 public func validateTypography(_ t: Typography) throws {
+  let tabs = t.tabStops ?? []
+  guard tabs.count <= 64, tabs.allSatisfy({
+    $0.location.isFinite && (0...10000).contains($0.location)
+      && ["left", "center", "right", "decimal"].contains($0.alignment)
+      && ($0.decimalSeparator == nil || ($0.alignment == "decimal" && [".", ","].contains($0.decimalSeparator!)))
+  }), zip(tabs, tabs.dropFirst()).allSatisfy({ pair in pair.0.location < pair.1.location }),
+    t.defaultTabInterval == nil || (t.defaultTabInterval!.isFinite && (0...10000).contains(t.defaultTabInterval!)) else {
+    throw FormError.invalid("Use up to 64 increasing tab positions in 0–10000 pt, valid alignment, and a period/comma decimal separator.")
+  }
   let selections = t.featureSelections ?? [:]
   let selectionCount = t.features.keys.filter { selections[$0] == nil }.count
     + selections.values.reduce(0) { $0 + $1.count }

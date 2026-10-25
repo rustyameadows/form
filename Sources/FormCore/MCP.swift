@@ -217,12 +217,14 @@ public enum MCP {
         ], required: ["command"]),
       tool(
         "form_edit_artwork",
-        "Apply a native artwork command: add/replace elements, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip. Use complete element values for add/replace. clip uses mask_id or the bottom selected area shape; targets and mask must be siblings. Geometry stays editable; use nested clipped groups for nested masks. release_clip preserves the mask shape. Alignment modes: left/right/top/bottom/center_x/center_y/width/height; distribution: horizontal/vertical; order: front/back/forward/backward. Returns selected element IDs. All changes share native undo.",
+        "Apply a native artwork command: add/replace elements, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip. Use complete element values for add/replace. clip uses mask_id or the bottom selected area shape; targets and mask must be siblings. Geometry stays editable; use nested clipped groups for nested masks. release_clip preserves the mask shape. Alignment modes: left/right/top/bottom/center_x/center_y/width/height; distribution: horizontal/vertical; order: front/back/forward/backward. paragraph patches paragraph typography on selected text; optional UTF-16 location/length expands to full paragraphs while retaining rich characters. Returns selected element IDs. All changes share native undo.",
         [
           "object_id": objectID, "mask_id": string, "command": ["type": "string", "enum": ArtworkCommands.names],
           "element_ids": ["type": "array", "items": string],
           "elements": ["type": "array", "items": ["type": "object"]], "mode": string,
           "axis": string,
+          "typography": ["type": "object", "description": "With paragraph, patch paragraph properties only: tabStops [{location in pt, alignment left/center/right/decimal, optional decimalSeparator period/comma}], defaultTabInterval in pt, leading, spacing/indents, alignment, direction, hyphenation 0–1. null resets optional tab settings. A UTF-16 location/length expands to containing paragraphs, preserving character formatting."],
+          "location": ["type": "integer"], "length": ["type": "integer"],
         ], required: ["object_id", "command"]),
       tool(
         "form_edit_path",
@@ -268,7 +270,7 @@ public enum MCP {
         ], required: ["object_id", "element_ids"]),
       tool(
         "form_export_artwork",
-        "Export the selected artboard/product face as actual-size SVG/PDF or PNG/JPEG at a chosen DPI. Optional element_ids exports a selection. SVG text can be converted to portable outlines.",
+        "Export the selected artboard/product face as actual-size SVG/PDF or PNG/JPEG at a chosen DPI. Optional element_ids exports a selection. SVG text can be converted to portable outlines. Tab-aligned and hyphenated text use outlines to preserve native composition even when outline_text is false; the result reports composed_text_outlined.",
         [
           "object_id": objectID,
           "format": ["type": "string", "enum": ["svg", "pdf", "png", "jpeg"]], "path": string,

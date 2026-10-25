@@ -190,6 +190,15 @@ public struct ArtworkGuide: Codable, Equatable, Identifiable, Sendable {
 }
 
 /// Sizes and spacing are typographic points. Positions in artwork stay millimeters.
+public struct TextTabStop: Codable, Equatable, Sendable {
+  public var location: Double
+  public var alignment: String
+  public var decimalSeparator: String?
+  public init(location: Double, alignment: String = "left", decimalSeparator: String? = nil) {
+    self.location = location; self.alignment = alignment; self.decimalSeparator = decimalSeparator
+  }
+}
+
 public struct Typography: Codable, Equatable, Sendable {
   public var fontName: String = "HelveticaNeue-Medium"
   public var tracking: Double = 0
@@ -219,12 +228,14 @@ public struct Typography: Codable, Equatable, Sendable {
   public var pairKerning: [Int: Double] = [:]
   /// nil retains the original spacing algorithm for existing documents.
   public var kerningMode: String?
+  public var tabStops: [TextTabStop]?
+  public var defaultTabInterval: Double?
   public init() {}
   enum CodingKeys: String, CodingKey {
     case fontName, tracking, leading, baseline, wordSpacing, horizontalScale, alignment,
       verticalAlignment, paragraphBefore, paragraphAfter, leftIndent, rightIndent, firstLineIndent,
       underline, strikethrough, ligatures, direction, frameMode, caseTreatment, hyphenation,
-      features, featureSelections, variations, pairKerning, kerningMode
+      features, featureSelections, variations, pairKerning, kerningMode, tabStops, defaultTabInterval
   }
   public init(from decoder: Decoder) throws {
     self.init()
@@ -258,6 +269,8 @@ public struct Typography: Codable, Equatable, Sendable {
     variations = try c.decodeIfPresent([Int: Double].self, forKey: .variations) ?? variations
     pairKerning = try c.decodeIfPresent([Int: Double].self, forKey: .pairKerning) ?? pairKerning
     kerningMode = try c.decodeIfPresent(String.self, forKey: .kerningMode)
+    tabStops = try c.decodeIfPresent([TextTabStop].self, forKey: .tabStops)
+    defaultTabInterval = try c.decodeIfPresent(Double.self, forKey: .defaultTabInterval)
   }
 }
 public struct TextSpan: Codable, Equatable, Sendable {
@@ -299,6 +312,10 @@ extension ArtworkElement {
   }
 }
 extension Artwork {
+  public var requiresSchemaFourteen: Bool {
+    elements.contains { $0.typography?.usesCustomTabs == true || ($0.typography?.hyphenation ?? 0) > 0
+      || $0.textRuns?.contains { $0.typography.usesCustomTabs || $0.typography.hyphenation > 0 } == true }
+  }
   public var requiresSchemaThirteen: Bool {
     elements.contains { $0.typography?.kerningMode != nil
       || $0.textRuns?.contains { $0.typography.kerningMode != nil } == true }

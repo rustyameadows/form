@@ -66,11 +66,28 @@ public enum FormColor {
   private static var builds = 0, hits = 0
   public static func invalidateFonts() {
     cache.removeAllObjects()
+    ParagraphLayout.invalidate()
     FontCatalog.invalidate()
     AppearanceRenderer.invalidateFonts()
   }
   public static var diagnostics: [String: Any] {
     ["layout_builds": builds, "layout_cache_hits": hits, "layout_cache_limit": 800]
+      .merging(ParagraphLayout.diagnostics) { _, new in new }
+  }
+  public static func usesParagraphLayout(_ element: ArtworkElement) -> Bool {
+    (element.typography?.hyphenation ?? 0) > 0 || element.textRuns?.contains { $0.typography.hyphenation > 0 } == true
+  }
+  public static func requiresComposedOutlines(_ element: ArtworkElement) -> Bool {
+    usesParagraphLayout(element) || element.text.contains("\t")
+  }
+  private static func nativeTabs(_ style: Typography, factor: Double = 1) -> [NSTextTab] {
+    guard let stops = style.tabStops else { return NSParagraphStyle.default.tabStops }
+    return stops.map { stop in
+      let alignment: NSTextAlignment = stop.alignment == "center" ? .center : stop.alignment == "left" ? .left : .right
+      let options: [NSTextTab.OptionKey: Any] = stop.alignment == "decimal"
+        ? [.columnTerminators: CharacterSet(charactersIn: stop.decimalSeparator ?? ".")] : [:]
+      return NSTextTab(textAlignment: alignment, location: stop.location * factor, options: options)
+    }
   }
   public static func font(_ style: Typography, size: Double) -> NSFont {
     let base =
@@ -113,6 +130,8 @@ public enum FormColor {
     p.hyphenationFactor = Float(style.hyphenation)
     p.baseWritingDirection =
       style.direction == "rtl" ? .rightToLeft : style.direction == "ltr" ? .leftToRight : .natural
+    if style.tabStops != nil { p.tabStops = nativeTabs(style, factor: f) }
+    if let interval = style.defaultTabInterval { p.defaultTabInterval = interval * f }
     p.lineBreakMode = .byWordWrapping
     var result: [NSAttributedString.Key: Any] = [
       styleKey: (try? JSONEncoder.form.encode(style)) ?? Data(),
@@ -219,6 +238,7 @@ public enum FormColor {
     text.endEditing()
   }
   public static func measured(_ element: ArtworkElement, points: Bool = false) -> CGSize {
+    if usesParagraphLayout(element) { return ParagraphLayout.measured(element, points: points) }
     let size = cachedLayout(element).size
     let factor = points ? pointsPerMM : 1
     return .init(width: size.width * factor, height: size.height * factor)
@@ -309,11 +329,13 @@ public enum FormColor {
     return entry
   }
   public static func overflows(_ element: ArtworkElement) -> Bool {
+    if usesParagraphLayout(element) { return ParagraphLayout.overflows(element) }
     let frame = layout(element).0
     let range = CTFrameGetVisibleStringRange(frame)
     return range.location + range.length < cachedLayout(element).text.length
   }
   public static func firstBaseline(_ element: ArtworkElement) -> Double {
+    if usesParagraphLayout(element) { return ParagraphLayout.firstBaseline(element) }
     let entry = cachedLayout(element)
     guard CFArrayGetCount(CTFrameGetLines(entry.frame)) > 0 else { return 0 }
     var origin = CGPoint.zero
@@ -321,9 +343,16 @@ public enum FormColor {
     return element.height + entry.offset / pointsPerMM - origin.y / pointsPerMM
   }
   public static func verticalOffset(_ element: ArtworkElement, points: Bool = false) -> Double {
-    cachedLayout(element).offset / (points ? 1 : pointsPerMM)
+    if usesParagraphLayout(element) { return ParagraphLayout.verticalOffset(element, points: points) }
+    return cachedLayout(element).offset / (points ? 1 : pointsPerMM)
   }
   public static func draw(_ element: ArtworkElement, in context: CGContext) {
+    if usesParagraphLayout(element) {
+      context.saveGState()
+      context.clip(to: .init(x:0,y:0,width:element.width,height:element.height))
+      ParagraphLayout.draw(element, in: context)
+      context.restoreGState(); return
+    }
     let entry = cachedLayout(element)
     context.saveGState()
     context.clip(to: .init(x: 0, y: 0, width: element.width, height: element.height))
@@ -357,6 +386,7 @@ public enum FormColor {
   }
   public static func outlinePaintRuns(_ element: ArtworkElement) throws
     -> [(path: CGPath, color: String, swatchID: UUID?)] {
+    if usesParagraphLayout(element) { return try ParagraphLayout.outlines(element) }
     let (frame, offset) = layout(element)
     let lines = CTFrameGetLines(frame) as! [CTLine]
     var origins = [CGPoint](repeating: .zero, count: lines.count)
@@ -495,6 +525,18 @@ public enum FormColor {
         style.leftIndent = p.headIndent
         style.rightIndent = -p.tailIndent
         style.firstLineIndent = p.firstLineHeadIndent
+        style.direction = p.baseWritingDirection == .rightToLeft ? "rtl" : p.baseWritingDirection == .leftToRight ? "ltr" : "natural"
+        if abs(Double(p.hyphenationFactor)-style.hyphenation) > 1e-6 { style.hyphenation = Double(p.hyphenationFactor) }
+        if p.tabStops != nativeTabs(style) {
+          style.tabStops = p.tabStops.map { tab in
+            let terminators = tab.options[.columnTerminators] as? CharacterSet
+            let decimal = tab.alignment == .right && terminators != nil
+            return TextTabStop(location: tab.location,
+              alignment: decimal ? "decimal" : tab.alignment == .center ? "center" : tab.alignment == .right ? "right" : "left",
+              decimalSeparator: decimal ? (terminators!.contains(",") ? "," : ".") : nil)
+          }
+        }
+        if p.defaultTabInterval != (style.defaultTabInterval ?? 0) { style.defaultTabInterval = p.defaultTabInterval }
       }
       var span = TextSpan(
           location: range.location + utf16Offset, length: range.length, typography: style,

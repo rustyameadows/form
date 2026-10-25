@@ -440,6 +440,11 @@ struct ArtworkInspector: View {
           ScalarArtworkField("First line", value: type.firstLineIndent, unit: "pt") { v in
             session.typography { $0.firstLineIndent = v }
           }
+          ScalarArtworkField("Hyphenation", value: type.hyphenation*100, unit: "%") { v in
+            session.typography { $0.hyphenation = min(1,max(0,v/100)) }
+          }
+          Button("Tab stops…") { session.showingTabs = true }
+            .sheet(isPresented: $session.showingTabs) { ParagraphTabsPanel(session: session) }
           Picker(
             "Vertical",
             selection: Binding(

@@ -164,6 +164,8 @@ extension StudioStore {
     return [
       "path": url.path, "format": format, "width_mm": width, "height_mm": height,
       "bytes": (try FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int) ?? 0,
+      "composed_text_outlined": format == "svg" && arguments["outline_text"] as? Bool == false
+        ? art.elements.filter { $0.kind == "text" && $0.hidden != true && TypographyEngine.requiresComposedOutlines($0) }.count : 0,
     ]
   }
 }

@@ -72,7 +72,7 @@ import FormCore
           output += try children(e.id)
         } else if e.kind == "text" {
           if e.fillEnabled == false { /* invisible text retains its editable source */
-          } else if outlineText {
+          } else if outlineText || TypographyEngine.requiresComposedOutlines(e) {
             output += "<g opacity=\"\(e.fillOpacity ?? 1)\">"
             for (path, color) in try TypographyEngine.outlineRuns(e) {
               output +=

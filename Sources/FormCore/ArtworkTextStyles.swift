@@ -49,6 +49,7 @@ public enum TextStyleCommands {
     .init("hyphenation", \.hyphenation), .init("features", \.features),
     .init("featureSelections", \.featureSelections), .init("variations", \.variations),
     .init("kerningMode", \.kerningMode),
+    .init("tabStops", \.tabStops), .init("defaultTabInterval", \.defaultTabInterval),
   ]
   public static let propertyNames = Set(properties.map(\.name) + ["fontSize"])
 
@@ -90,7 +91,7 @@ public enum TextStyleCommands {
     return value
   }
   public static let paragraphProperties: Set<String> = ["leading", "alignment", "paragraphBefore", "paragraphAfter",
-    "leftIndent", "rightIndent", "firstLineIndent", "direction", "hyphenation"]
+    "leftIndent", "rightIndent", "firstLineIndent", "direction", "hyphenation", "tabStops", "defaultTabInterval"]
   private static func paragraphReference(_ value: TextSpan) -> TextStyleReference? {
     if let ref = value.paragraphStyle { return ref }
     guard var ref = value.textStyle, ref.characterOnly != true else { return nil }

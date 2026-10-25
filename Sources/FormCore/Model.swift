@@ -372,7 +372,10 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var minimumSchemaVersion: Int {
     max(
       schemaVersion,
-      textStyles?.contains { $0.typography.kerningMode != nil } == true
+      textStyles?.contains { $0.typography.usesCustomTabs || $0.typography.hyphenation > 0 } == true
+        || objects.contains { $0.artwork?.requiresSchemaFourteen == true }
+        ? 14
+        : textStyles?.contains { $0.typography.kerningMode != nil } == true
         || objects.contains { $0.artwork?.requiresSchemaThirteen == true }
         ? 13
         : textStyles?.isEmpty == false || objects.contains { $0.artwork?.referencedTextStyles.isEmpty == false }

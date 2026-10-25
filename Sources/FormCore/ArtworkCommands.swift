@@ -4,7 +4,7 @@ import Foundation
 public enum ArtworkCommands {
   public static let names = [
     "add", "replace", "delete", "duplicate", "group", "ungroup", "align", "distribute", "reorder",
-    "flip", "clip", "release_clip",
+    "flip", "clip", "release_clip", "paragraph",
   ]
   @discardableResult public static func apply(
     _ command: String, to art: inout Artwork, ids: Set<UUID> = [], arguments: [String: Any] = [:]
@@ -19,6 +19,7 @@ public enum ArtworkCommands {
       throw FormError.invalid("Unlock the selected layers before editing them.")
     }
     switch command {
+    case "paragraph": try ParagraphCommands.edit(&result, ids: ids, arguments: arguments)
     case "clip":
       let candidates = roots.filter { ["rectangle","ellipse","polygon","star","path"].contains($0.kind) }
       let mask: ArtworkElement

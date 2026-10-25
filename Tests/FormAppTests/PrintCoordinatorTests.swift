@@ -49,12 +49,14 @@ import XCTest
     printing.frame("object")
     store.artworkSession.showingTextStyles = true
     store.artworkSession.showingPalette = true
+    store.artworkSession.showingTabs = true
     let meshVersion = printing.meshVersion
     let pathVersion = printing.toolpathVersion
     try store.engine.open(next)
     XCTAssertFalse(store.showingPrint)
     XCTAssertFalse(store.artworkSession.showingTextStyles)
     XCTAssertFalse(store.artworkSession.showingPalette)
+    XCTAssertFalse(store.artworkSession.showingTabs)
     XCTAssertNil(printing.objectID)
     XCTAssertNil(printing.preparedProjectID)
     XCTAssertNil(printing.mesh)
@@ -87,6 +89,7 @@ import XCTest
     let request = try stage(printing, root: root)
     store.artworkSession.showingTextStyles = true
     store.artworkSession.showingPalette = true
+    store.artworkSession.showingTabs = true
     XCTAssertThrowsError(try store.engine.open(UUID()))
     XCTAssertThrowsError(
       try store.engine.call(
@@ -94,6 +97,7 @@ import XCTest
     XCTAssertTrue(store.showingPrint)
     XCTAssertTrue(store.artworkSession.showingTextStyles)
     XCTAssertTrue(store.artworkSession.showingPalette)
+    XCTAssertTrue(store.artworkSession.showingTabs)
     XCTAssertTrue(printing.busy)
     XCTAssertEqual(printing.preparedProjectID, oldProject)
     XCTAssertEqual(printing.objectID, a.id)

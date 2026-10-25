@@ -112,6 +112,7 @@ enum TableTool: String, CaseIterable {
       self?.showingPrint = false
       self?.artworkSession.showingTextStyles = false
       self?.artworkSession.showingPalette = false
+      self?.artworkSession.showingTabs = false
     }
   }
   func finishArtworkEditing() {
@@ -142,6 +143,7 @@ enum TableTool: String, CaseIterable {
                 || (name == "form_text_style" && args["command"] as? String == "list")
             if !readOnly { self.finishArtworkEditing() }
             var result = try self.engine.call(name, arguments: args)
+            if !readOnly { self.artworkSession.showingTabs = false }
             if name == "form_status", var status = result as? [String: Any] {
               status["renderer"] = self.scene?.diagnostics ?? [:]
               status["artwork_renderer"] = self.artworkSession.canvas?.diagnostics ?? [:]

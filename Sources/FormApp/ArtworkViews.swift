@@ -85,6 +85,9 @@ struct ArtworkStudio: View {
             }
             if format == "svg" {
               Toggle("Convert text to portable outlines", isOn: $session.exportOutline)
+              if session.art.elements.contains(where: { TypographyEngine.requiresComposedOutlines($0) }) {
+                Text("Tab-aligned and hyphenated text keep their exact composition as outlines.").font(.system(size:10)).foregroundStyle(Palette.secondary)
+              }
             }
             Button("Export…") {
               exportOptions = false

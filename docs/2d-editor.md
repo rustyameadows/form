@@ -24,6 +24,8 @@ The editor is a working part of the expanded [2D specification](2d-design-typogr
 
 [Font kerning and AVENUE](kerning.md) add explicit Font metrics/None modes with independent tracking, word spacing, and manual pairs. Native character edits, shared styles, SVG text, physical faces, and outlines use the same schema-13 setting. Existing artwork retains its original spacing.
 
+[Paragraph composition and LEDGER](paragraph-composition.md) add saved left/center/right/decimal tab stops, repeating intervals, real native hyphenation, and selected-paragraph MCP patches. These settings use schema 14; schemas 1–13 remain readable. Hyphenated composition shares actual TextKit glyphs across native drawing, physical faces, and exports. Tabbed/hyphenated SVG text uses explicit outline fallback even when other text remains live.
+
 Text properties include point/area mode, font/style/size, leading, tracking, pair kerning, baseline, word spacing, alignment, paragraph spacing/indents, case, ligatures, direction, hyphenation, and vertical alignment. Shaping uses typographic points internally and millimeters at the artwork boundary. Font controls expose capabilities reported by the installed face.
 
 ## Controls
@@ -67,7 +69,7 @@ There are 50 tools. Artwork tools include `form_get_artwork`, `form_edit_artwork
 {"name":"form_export_artwork","arguments":{"object_id":"<frame UUID>","format":"pdf","path":"/absolute/path/artwork.pdf"}}
 ```
 
-`form_set_artwork` replaces a validated definition. `form_edit_artwork` supports add, replace, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, and release_clip. `form_set_view` can select element IDs. Paths store ordinary contours/nodes; typography stores face names, features, axes, and optional rich text spans. Read-only calls preserve native editing focus; mutations commit active text and numeric drafts first.
+`form_set_artwork` replaces a validated definition. `form_edit_artwork` supports add, replace, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip, and paragraph. `form_set_view` can select element IDs. Paths store ordinary contours/nodes; typography stores face names, features, axes, and optional rich text spans. Read-only calls preserve native editing focus; mutations commit active text and numeric drafts first.
 
 See [precise paths and transformed native text](path-editing.md) for direct selection, native text coordinates, and MCP node editing. [Live booleans](live-booleans.md) documents the `form_boolean_artwork` modes and Divide. These graphics edits and shape/text/stroke conversion also work in atomic batches.
 
@@ -75,7 +77,7 @@ See [precise paths and transformed native text](path-editing.md) for direct sele
 
 - Configurable transform origins and the specification’s later variable-width stroke workflows.
 - Full SVG interchange fidelity beyond the [supported import subset](svg-import.md), including filters, patterns, gradient strokes, advanced SVG text, and external resources. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
-- Alternate-glyph selection, complete case treatment within mixed-character editing, tabs/lists, linked text frames, sequential multi-page documents, and publication layout.
+- Alternate-glyph selection, complete case treatment within mixed-character editing, lists, document-language/hyphenation limits, linked text frames, sequential multi-page documents, and publication layout.
 - Cross-project clipboard transfer for linked named resources and local assets.
 - Color-managed production output, CMYK/spot separations, full preflight, role-specific production exports, advanced surface placement, and the complete demonstration/acceptance suite.
 
