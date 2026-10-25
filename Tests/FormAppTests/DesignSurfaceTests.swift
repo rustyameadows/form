@@ -194,6 +194,23 @@ import XCTest
     store.engine.undo(); XCTAssertEqual(store.project,expected)
   }
 
+  func testCanvasOnlyProjectReopensOnCanvasWithoutCreatingASecondWorkspaceOrEdit() throws {
+    let (store,root) = try fixture(); defer {clean(store,root)}
+    var canvas = Project(name:"Only loose artwork")
+    let workspace = try canvas.ensureCanvasWorkspace()
+    canvas.objects[0].artwork!.elements = [ArtworkElement(kind:"text",x:-40,y:-30,
+      width:80,height:20,text:"A loose idea")]
+    try store.repository.save(canvas)
+    let expected = try store.repository.load(canvas.id)
+    store.openProject(canvas.id)
+    XCTAssertEqual(store.mode,.artwork)
+    XCTAssertEqual(store.surfaceLayout,.single)
+    XCTAssertEqual(store.artworkSession.objectID,workspace.id)
+    XCTAssertEqual(store.project,expected)
+    XCTAssertTrue(store.engine.selection.isEmpty)
+    XCTAssertTrue(store.engine.undoStack.isEmpty)
+  }
+
   func testTableNeverBuildsOrFramesTheUnframedCanvasAndIgnoresItsArtworkChanges() throws {
     let (store,root) = try fixture(); defer {clean(store,root)}
     let controller = TableSceneController(store:store)

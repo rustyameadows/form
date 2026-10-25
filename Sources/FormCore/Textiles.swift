@@ -61,7 +61,7 @@ public struct TextileAttachment: Codable, Equatable, Sendable {
   }
 }
 
-/// Independent manufactured decoration intent; an actual stitch program is a separate future resource.
+/// Manufactured decoration intent with optional regenerable embroidery source.
 public struct TextileProduct: Codable, Equatable, Sendable {
   public enum Kind: String, Codable, CaseIterable, Sendable {case garment, patch, label, embroidery}
   public enum Process: String, Codable, CaseIterable, Sendable {
@@ -83,11 +83,12 @@ public struct TextileProduct: Codable, Equatable, Sendable {
   public var backing: String?
   public var attachmentMethod: String?
   public var threadColors: [String]?
+  public var embroidery: EmbroideryDesign?
   public var notes: String?
   public var attachment: TextileAttachment?
   public var laidFaceDown: Bool?
   public init(kind:Kind,process:Process) {self.kind=kind;self.process=process}
-  private enum CodingKeys:String,CodingKey {case kind,process,blankName,size,manufacturer,sku,measurementsVerified,liningMaterialID,trimMaterialID,border,backing,attachmentMethod,threadColors,notes,attachment,laidFaceDown}
+  private enum CodingKeys:String,CodingKey {case kind,process,blankName,size,manufacturer,sku,measurementsVerified,liningMaterialID,trimMaterialID,border,backing,attachmentMethod,threadColors,embroidery,notes,attachment,laidFaceDown}
   public init(from decoder:Decoder)throws {
     let c=try decoder.container(keyedBy:CodingKeys.self)
     kind=try c.decode(Kind.self,forKey:.kind);process=try c.decode(Process.self,forKey:.process)
@@ -98,6 +99,7 @@ public struct TextileProduct: Codable, Equatable, Sendable {
     border=try c.decodeIfPresent(String.self,forKey:.border);backing=try c.decodeIfPresent(String.self,forKey:.backing)
     attachmentMethod=try c.decodeIfPresent(String.self,forKey:.attachmentMethod);threadColors=try c.decodeIfPresent([String].self,forKey:.threadColors)
     notes=try c.decodeIfPresent(String.self,forKey:.notes);attachment=try c.decodeIfPresent(TextileAttachment.self,forKey:.attachment)
+    embroidery=try c.decodeIfPresent(EmbroideryDesign.self,forKey:.embroidery)
     laidFaceDown=try c.decodeIfPresent(Bool.self,forKey:.laidFaceDown)
   }
   public var renderDefinition: Self {
@@ -182,6 +184,10 @@ extension Project {
     try validateFabricPatterns()
     for object in objects {
       guard let spec=object.textile else {continue}
+      if let embroidery=spec.embroidery {
+        guard spec.kind != .garment else {throw FormError.invalid("Digitize an independent patch/decoration region before attaching it to a garment.")}
+        try embroidery.validate()
+      }
       guard TextileDesign.recipeIDs.contains(object.recipeID),
         (object.recipeID=="bomberJacket") == (spec.kind == .garment),
         (spec.kind == .garment) == (spec.process == .decoratedBlank),

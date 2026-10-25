@@ -20,7 +20,7 @@ public enum FormColor {
 @MainActor public enum TypographyEngine {
   public static let pointsPerMM = 72.0 / 25.4
   private static let styleKey = NSAttributedString.Key("studio.form.typography")
-  public static let swatchKey = NSAttributedString.Key("studio.form.swatch")
+  public nonisolated static let swatchKey = NSAttributedString.Key("studio.form.swatch")
   public static let textStyleKey = NSAttributedString.Key("studio.form.textStyle")
   public static let paragraphStyleKey = NSAttributedString.Key("studio.form.paragraphTextStyle")
   public static let spacingKey = NSAttributedString.Key("studio.form.spacingAdjustment")
@@ -73,6 +73,7 @@ public enum FormColor {
   public static func invalidateFonts() {
     cache.removeAllObjects()
     ParagraphLayout.invalidate()
+    PublicationLists.invalidateFonts()
     FontCatalog.invalidate()
     AppearanceRenderer.invalidateFonts()
   }
@@ -82,6 +83,7 @@ public enum FormColor {
       .merging(GlyphCatalog.diagnostics) { _, new in new }
   }
   public static func usesParagraphLayout(_ element: ArtworkElement) -> Bool {
+    if element.listItems?.isEmpty == false {return true}
     if element.typography?.frameMode=="point",!(element.glyphOverrides ?? []).isEmpty {return false}
     return (element.typography?.hyphenation ?? 0) > 0 || element.textRuns?.contains { $0.typography.hyphenation > 0 } == true
   }
@@ -177,6 +179,7 @@ public enum FormColor {
           swatchID: run.swatchID, textStyle: run.textStyle, paragraphStyle: run.paragraphStyle),
         range: .init(location: run.location, length: run.length))
     }
+    PublicationLists.apply(element.listItems ?? [],to:result)
     updateSpacing(result, millimeters: millimeters, fallbackPairs: base.pairKerning)
     return result
   }
@@ -590,15 +593,13 @@ public enum FormColor {
       style.underline = ((attrs[.underlineStyle] as? NSNumber)?.intValue ?? 0) > 0
       style.strikethrough = ((attrs[.strikethroughStyle] as? NSNumber)?.intValue ?? 0) > 0
       if let p = attrs[.paragraphStyle] as? NSParagraphStyle {
-        style.alignment =
-          [NSTextAlignment.center: "center", .right: "right", .justified: "justified"][p.alignment]
-          ?? "left"
+        if attrs[PublicationLists.key]==nil {
+          style.alignment = [NSTextAlignment.center:"center",.right:"right",.justified:"justified"][p.alignment] ?? "left"
+        }
         style.leading = p.maximumLineHeight
         style.paragraphBefore = p.paragraphSpacingBefore
         style.paragraphAfter = p.paragraphSpacing
-        style.leftIndent = p.headIndent
-        style.rightIndent = -p.tailIndent
-        style.firstLineIndent = p.firstLineHeadIndent
+        if attrs[PublicationLists.key]==nil {style.leftIndent = p.headIndent;style.firstLineIndent = p.firstLineHeadIndent;style.rightIndent = -p.tailIndent}
         style.direction = p.baseWritingDirection == .rightToLeft ? "rtl" : p.baseWritingDirection == .leftToRight ? "ltr" : "natural"
         if abs(Double(p.hyphenationFactor)-style.hyphenation) > 1e-6 { style.hyphenation = Double(p.hyphenationFactor) }
         if p.tabStops != nativeTabs(style) {

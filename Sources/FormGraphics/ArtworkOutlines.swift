@@ -26,7 +26,7 @@ import Foundation
       $0.formUnion(artwork.descendants(of: [$1.id]).subtracting([$1.id]))
     }
     let paintByID = Dictionary(
-      uniqueKeysWithValues: (resolvedPaint ?? artwork).elements.map { ($0.id, $0) })
+      uniqueKeysWithValues: (resolvedPaint ?? artwork).resolvingLists.elements.map { ($0.id, $0) })
     for record in artwork.elements
     where all.contains(record.id) && !booleanChildren.contains(record.id)
       && (record.hidden != true || masks.contains(record.id))

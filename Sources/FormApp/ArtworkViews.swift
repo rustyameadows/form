@@ -5,7 +5,10 @@ import SwiftUI
 
 struct ArtworkWorkspace: View {
   @EnvironmentObject var store: StudioStore
-  var body: some View { ArtworkStudio(session: store.artworkSession).environmentObject(store) }
+  var body: some View {
+    ArtworkStudio(session:store.artworkSession).environmentObject(store)
+      .focusedValue(\.designSurface,.artwork)
+  }
 }
 
 struct ArtworkStudio: View {

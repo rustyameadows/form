@@ -5,6 +5,7 @@ struct TextileInspector: View {
   @EnvironmentObject var store:StudioStore
   let object:ProductObject
   let project:Project
+  @State private var showingEmbroidery=false
   private var spec:TextileProduct {object.textile ?? TextileProduct.defaults(for:object.recipeID)!}
   private func update(_ change:(inout TextileProduct)->Void) {
     var value=spec;change(&value)
@@ -54,8 +55,10 @@ struct TextileInspector: View {
             store.select(attachment.garmentID);store.scene?.focusSelection()
           }.buttonStyle(.borderless)
         }
-        if [.embroideredPatch,.directEmbroidery].contains(spec.process) {
-          Text("Embroidery appearance study. No digitized stitch program or machine file has been generated.")
+        if [.embroideredPatch,.directEmbroidery].contains(spec.process) || spec.embroidery != nil {
+          Button(spec.embroidery == nil ? "Digitize embroidery…":"Edit stitch program…") {showingEmbroidery=true}
+            .buttonStyle(.bordered).disabled(object.locked)
+          Text(spec.embroidery == nil ? "Artwork appearance study. Configure digitizing to generate actual stitches.":"Regenerable stitch source configured. Open Embroidery for actual needle paths, hoop checks, and DST output.")
             .font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
         }
       }
@@ -69,5 +72,6 @@ struct TextileInspector: View {
       TextField("Product / process notes",text:Binding(get:{spec.notes ?? ""},set:{v in update{$0.notes=v}}),axis:.vertical)
         .lineLimit(2...5).textFieldStyle(.roundedBorder)
     }.font(.system(size:11))
+      .sheet(isPresented:$showingEmbroidery) {EmbroideryEditor(object:object,project:project).environmentObject(store)}
   }
 }

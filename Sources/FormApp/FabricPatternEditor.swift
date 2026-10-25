@@ -238,7 +238,7 @@ private final class FabricPreviewNSView: NSView {
 
 extension StudioStore {
   func exportFabricPattern(materialID: String, arguments: [String: Any]) throws -> Any {
-    guard arguments["roles"] == nil else {
+    guard arguments["roles"] == nil, arguments["pattern_pieces"] as? Bool != true, arguments["embroidery_format"] == nil else {
       throw FormError.invalid("Export fabric yardage and manufacturing role layers separately.")
     }
     guard let project, let design = try project.resolvedFabricPattern(materialID: materialID) else { throw FormError.missing("Choose a fabric with a repeat pattern in this project.") }

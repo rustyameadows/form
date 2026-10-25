@@ -12,6 +12,7 @@ enum Palette {
 
 struct RootView: View {
   @EnvironmentObject var store: StudioStore
+  @FocusedValue(\.designSurface) private var focusedDesignSurface: WorkspaceMode?
   var body: some View {
     VStack(spacing: 0) {
       StudioTopBar()
@@ -32,6 +33,9 @@ struct RootView: View {
       }
     }
     .animation(.easeOut(duration: 0.18), value: store.notice)
+    .onChange(of:focusedDesignSurface) { _,surface in
+      if let surface { store.activateDesignSurface(surface) }
+    }
     .sheet(isPresented: $store.showingLibrary) { LibraryView().environmentObject(store) }
     .sheet(isPresented: $store.showingBridge) { BridgeView().environmentObject(store) }
     .sheet(isPresented: $store.showingProjectInfo) { ProjectInfoView().environmentObject(store) }
@@ -408,7 +412,7 @@ struct TableWorkspace: View {
         }.padding(.horizontal,24).padding(.bottom,18)
       }
       if store.project?.objects.filter({ !$0.isCanvasWorkspace }).isEmpty == true { EmptyTableView() }
-    }
+    }.focusedValue(\.designSurface,store.mode == .studio ? .studio : .table)
   }
 }
 

@@ -165,7 +165,8 @@ enum ArtworkTool: String, CaseIterable {
     }
   }
   func colored(_ element: ArtworkElement) -> ArtworkElement {
-    (store?.project?.resolvingSwatches(in: .init(elements: [element]), keepingReferences: true).elements.first ?? element).inheritingLanguage(art.language)
+    let resolved=art.resolvingLists.elements.first(where:{$0.id==element.id}) ?? element
+    return (store?.project?.resolvingSwatches(in: .init(elements: [resolved]), keepingReferences: true).elements.first ?? resolved).inheritingLanguage(art.language)
   }
   var inspectedColor: String { canvas?.textInspection()?.color ?? primary.map(colored)?.color ?? "#292D2C" }
   var assets: URL {
@@ -402,6 +403,10 @@ enum ArtworkTool: String, CaseIterable {
         }
       }
     }
+  }
+  func paragraphList(_ arguments:[String:Any]) {
+    if canvas?.applyList(arguments)==true {return}
+    execute("list",arguments)
   }
   func typeSize(_ size: Double) {
     if canvas?.applyTextSize(size) == true { return }

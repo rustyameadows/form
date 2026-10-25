@@ -334,7 +334,7 @@ public final class OperationEngine {
         guard let object = p.objects.first(where: { $0.id == id }) else {
           throw FormError.missing("Object not found.")
         }
-        if ["paragraph","glyph","origin","transform","language","production"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
+        if ["paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
         var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
         if command=="glyph" {
@@ -345,7 +345,7 @@ public final class OperationEngine {
             try onPrepareGlyph?(&art.elements[i],choice)
           }
         }
-        if ["language","paragraph","glyph"].contains(command) {
+        if ["language","paragraph","glyph","list"].contains(command) {
           let targets=command=="language" ? Set(art.elements.map(\.id)):art.swatchPaintTargets(for:ids)
           try onPrepareParagraphs?(&art,targets)
         }
@@ -517,10 +517,24 @@ public final class OperationEngine {
         }
         if let locked = a["locked"] as? Bool { p.objects[index].locked = locked }
         if let raw = a["textile"] {
-          if raw is NSNull { p.objects[index].textile = nil }
+          if raw is NSNull {
+            guard !p.objects[index].locked || p.objects[index].textile?.embroidery==nil else {throw FormError.invalid("Unlock this decoration before removing its embroidery program.")}
+            p.objects[index].textile = nil
+          }
           else if let definition = raw as? [String: Any] {
-            p.objects[index].textile = try JSONDecoder.form.decode(TextileProduct.self, from: JSONSerialization.data(withJSONObject: definition))
+            let next=try JSONDecoder.form.decode(TextileProduct.self, from: JSONSerialization.data(withJSONObject: definition))
+            guard !p.objects[index].locked || next.embroidery==p.objects[index].textile?.embroidery else {throw FormError.invalid("Unlock this decoration before editing its embroidery program.")}
+            p.objects[index].textile = next
           } else { throw FormError.invalid("Provide a textile product definition or null.") }
+        }
+        if let raw=a["embroidery"] {
+          guard !p.objects[index].locked else {throw FormError.invalid("Unlock this decoration before editing its embroidery program.")}
+          guard p.objects[index].textile?.kind != .garment,p.objects[index].textile != nil else {throw FormError.invalid("Choose a textile patch or independent decoration for digitizing.")}
+          if raw is NSNull {p.objects[index].textile?.embroidery=nil}
+          else if let definition=raw as? [String:Any] {
+            let design=try JSONDecoder.form.decode(EmbroideryDesign.self,from:JSONSerialization.data(withJSONObject:definition))
+            try design.validate();p.objects[index].textile?.embroidery=design
+          } else {throw FormError.invalid("Provide an embroidery design definition or null.")}
         }
         if a["position"] != nil, p.objects[index].textile?.attachment != nil {
           p.setTextileWorldPosition(id, to: try vector(a["position"]))

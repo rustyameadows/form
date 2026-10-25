@@ -114,7 +114,9 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var paragraphStyle: TextStyleReference?
   public var textRuns: [TextSpan]?
   public var glyphOverrides: [GlyphOverride]?
+  public var listItems: [ParagraphListItem]?
   public var productionRole: String?
+  public var sewingPiece: SewingPatternPiece?
   public var clipID: UUID?
   public init(
     kind: String, x: Double, y: Double, width: Double = 60, height: Double = 30, text: String = "",
@@ -134,6 +136,7 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
 
 public struct Artwork: Codable, Equatable, Sendable {
   public var background: String
+  public var sewingSeams: [SewingSeam]?
   public var language: String?
   public var elements: [ArtworkElement]
   public var bleed: Double
@@ -377,7 +380,10 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var swatches: [ArtworkSwatch]?
   public var textStyles: [ArtworkTextStyle]?
   public var minimumSchemaVersion: Int {
-    max(
+    if objects.contains(where:{$0.textile?.embroidery != nil}) {return max(schemaVersion,25)}
+    if objects.contains(where: { $0.artwork?.elements.contains { $0.sewingPiece != nil } == true || $0.artwork?.sewingSeams?.isEmpty == false }) { return max(schemaVersion, 24) }
+    if objects.contains(where:{$0.artwork?.elements.contains{$0.listItems?.isEmpty == false} == true}) {return max(schemaVersion,23)}
+    return max(
       schemaVersion,
       objects.contains { $0.artwork?.requiresSchemaTwentyTwo == true }
         ? 22

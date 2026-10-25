@@ -391,8 +391,9 @@ extension Artwork {
       }
       if before == required { break }
     }
-    var result = self
-    result.elements = elements.filter { required.contains($0.id) }
+    var result = resolvingLists
+    result.elements = result.elements.filter { required.contains($0.id) }.map(\.withBakedListNumbers)
+    result.retainRepresentedSewingSeams()
     if result.elements.contains(where: { $0.hasVisualOverflow }) {
       let masks = Set(result.elements.compactMap(\.clipID))
       let visibleRoots = result.elements.filter { $0.parentID == nil && !masks.contains($0.id) && $0.hidden != true }
@@ -414,7 +415,8 @@ extension Artwork {
     return (result, bounds)
   }
   public var renderDefinition: Artwork {
-    var result = self
+    var result = resolvingLists
+    result.sewingSeams = nil
     result.imports = nil
     result.unit = nil
     result.guides = nil
@@ -426,7 +428,7 @@ extension Artwork {
     result.canvasPosition = nil
     result.bleed = 0
     let masks = Set(elements.compactMap(\.clipID))
-    result.elements = elements.filter { e in
+    result.elements = result.elements.filter { e in
       if e.hidden == true && !masks.contains(e.id) { return false }
       if let role = e.productionRole, ArtworkProductionRole.resolve(role) != .print, !masks.contains(e.id) { return false }
       var parent = e.parentID
@@ -441,6 +443,8 @@ extension Artwork {
       return true
     }
     for i in result.elements.indices {
+      result.elements[i].sewingPiece = nil
+      result.elements[i]=result.elements[i].withBakedListNumbers
       if result.elements[i].imageCrop == .full { result.elements[i].imageCrop = nil }
       if result.elements[i].imageAdjustments?.isIdentity == true { result.elements[i].imageAdjustments = nil }
       if result.elements[i].stroke?.alignment == "center" { result.elements[i].stroke?.alignment = nil }

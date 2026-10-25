@@ -56,7 +56,8 @@ extension Artwork {
     language != nil || elements.contains{$0.typography?.usesPublicationLanguage == true || $0.textRuns?.contains{$0.typography.usesPublicationLanguage} == true}
   }
   public var withInheritedLanguage:Self {
-    guard language != nil else {return self}
-    var result=self;result.elements=elements.map{$0.inheritingLanguage(language)};return result
+    var result=resolvingLists
+    if let language {result.elements=result.elements.map{$0.inheritingLanguage(language)}}
+    return result
   }
 }

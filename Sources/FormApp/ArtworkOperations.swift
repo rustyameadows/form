@@ -102,6 +102,10 @@ extension StudioStore {
     } catch { self.error = error.localizedDescription }
   }
   func exportArtwork(object: ProductObject, arguments: [String: Any]) throws -> Any {
+    if arguments["pattern_pieces"] as? Bool == true { return try exportSewingPattern(object: object, arguments: arguments) }
+    if arguments["embroidery_format"] != nil || ["dst","json","preflight"].contains(arguments["format"] as? String ?? "") {
+      return try exportEmbroidery(object:object,arguments:arguments)
+    }
     if let materialID = arguments["fabric_pattern_material"] as? String {
       return try exportFabricPattern(materialID: materialID, arguments: arguments)
     }

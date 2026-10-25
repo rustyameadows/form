@@ -53,7 +53,8 @@ Current progress: [FOUNDRY and independent font features](font-features.md) now 
 - [x] Reusable paragraph/text styles with persistent local overrides, independent character/paragraph relationships, creation/redefinition/reset/detachment/deletion, and shared native/MCP Undo. See [FOLIO and text styles](reusable-text-styles.md).
 - [x] Saved left/center/right/decimal tab stops and repeating intervals; native selected-paragraph controls/MCP patches; real hyphenated native/physical/export composition, recoverable source, style inheritance, and exact Undo. See [LEDGER](paragraph-composition.md).
 - [x] Document and character language, inherited defaults, Natural/LTR/RTL direction, actual installed language dictionaries, and minimum word/prefix/suffix hyphenation limits; locale-aware case/source preservation and matching physical outputs. See [paragraph language](paragraph-language.md).
-- [ ] Structured lists and advanced text frames, including linked stories and publication layouts.
+- [x] Source-preserving structured bullets/decimal lists, stable item identities, nesting, continuation/restart, native Return/Tab and Undo, and matching physical outputs. See [paragraph lists](paragraph-lists.md).
+- [ ] Advanced text frames, including linked stories and publication layouts.
 - [x] Non-destructive mixed-character Original/Uppercase/Lowercase treatment, source/display UTF-16 mapping through expansions, native controls and input/Undo, rich fonts/colors/styles, and matching physical exports. See [VERSO](text-case.md).
 - [x] Native alternate-glyph palette and searchable real font repertoire; source/rich-style preservation, variable-face identity, shared native/MCP edits and Undo, schema-15 persistence, and validated physical outputs. See [QUILL](glyphs.md).
 - [ ] Convert shaped text to ordinary editable outlines while preserving glyph positioning, variations, ligatures, and a recoverable editable source.
@@ -117,8 +118,10 @@ The [ORBITAL textile foundation](textile-foundation.md) now implements shaped pa
 
 - [ ] Decorated garment blanks, real-scale regions, persistent fabric specifications, native material controls, linked artwork and garment-relative placement, variants, and collection editing.
 - [ ] NASA bomber demonstration: convincing garment construction and fabric, custom independent patches, sewn-in labels, direct embroidery regions, shared editable source art, two colorways, and polished hero/detail views.
-- [ ] Decoration production: real stitch model/editor/digitizing and supported embroidery exports, hoop/process constraints, patch/label construction, DTG/DTF/HTV and separations, manufacturing specs and revision-linked packets.
+- [x] Bounded regenerable running/constant-width satin/scanline-fill stitch programs, editable native regions/threads, actual-command preview/playback, hoop preflight, physical SVG/JSON/DST, ordered thread sidecars, independent DST-reader verification, and shared MCP/Undo/persistence. See [embroidery](embroidery.md); this does not establish verified physical sew-out quality.
+- [ ] Complete decoration production: production digitizing/compensation and machine-specific constraints, patch/label construction, DTG/DTF/HTV and separations, manufacturing specs and revision-linked packets.
 - [ ] Fabric design: repeat patterns, engineered prints, colorways, pattern-piece-aware mapping, and output at physical dimensions.
+- [x] Editable convex straight-sided sewing pieces, real-scale default/per-edge allowances, grain/fold guides, V-notches, cut-copy seam relationships, tote study, native preview, physical exports, shared Undo and schema-24 reopen. See [sewing patterns](sewing-patterns.md); general curved garment construction remains unfinished.
 - [ ] Soft goods: parametric pattern pieces, seam relationships/allowances, cutting/nesting/consumption, assembled previews, instructions, and reusable constructions.
 - [ ] Garment development: blocks, body measurements, sizing/grading, pattern editing, fitting and cloth behavior with clearly stated simulation limits.
 - [ ] Integrated production: equipment profiles/compatibility, materials and thread inventory, costing, supplier references, job/sample/quality history, and supported integrations. Hardware operation remains prohibited.

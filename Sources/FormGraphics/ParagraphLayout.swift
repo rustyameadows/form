@@ -8,9 +8,10 @@ import FormCore
     var text: String, width: Double, height: Double, size: Double, color: String
     var type: Typography?, runs: [TextSpan]?
     var glyphs: [GlyphOverride]?
+    var lists:[ParagraphListItem]?
     init(_ e: ArtworkElement) {
       text=e.text; width=e.width; height=e.height; size=e.fontSize; color=e.color
-      type=e.typography; runs=e.textRuns; glyphs=e.glyphOverrides
+      type=e.typography; runs=e.textRuns; glyphs=e.glyphOverrides;lists=e.listItems
     }
   }
   @MainActor private final class Entry {
@@ -20,7 +21,7 @@ import FormCore
     init(_ e: ArtworkElement) {
       signature=Signature(e)
       storage=PublicationTextStorage();storage.setAttributedString(TypographyEngine.attributed(e))
-      layout=NSLayoutManager()
+      layout=PublicationLayoutManager()
       container=NSTextContainer(size:.init(width:e.typography?.frameMode == "point" ? 100000 : e.width*TypographyEngine.pointsPerMM,height:100000))
       container.lineFragmentPadding=0
       layout.addTextContainer(container);storage.addLayoutManager(layout)
@@ -86,7 +87,7 @@ import FormCore
       let character=value.layout.characterIndexForGlyph(at:index)
       guard character<value.storage.length else { continue }
       let attrs=value.storage.attributes(at:character,effectiveRange:nil)
-      let font=attrs[.font] as? NSFont ?? .systemFont(ofSize:e.fontSize)
+      let font=(value.layout as? PublicationLayoutManager)?.fontForGeneratedGlyph(index) ?? attrs[.font] as? NSFont ?? .systemFont(ofSize:e.fontSize)
       let glyph=value.layout.glyph(at:index)
       let path=CGMutablePath()
       let line=value.layout.lineFragmentRect(forGlyphAt:index,effectiveRange:nil)
@@ -119,6 +120,10 @@ import FormCore
           result[result.count-1]=(combined,color,swatch)
         } else { result.append((path,color,swatch)) }
       }
+    }
+    for ink in PublicationLists.ink(layout:value.layout,glyphRange:value.visible) {
+      let path=CGMutablePath();path.addPath(ink.path,transform:CGAffineTransform(a:factor,b:0,c:0,d:factor,tx:0,ty:value.offset*factor))
+      result.append((path,ink.color,ink.swatchID))
     }
     value.ink=result;return result
   }

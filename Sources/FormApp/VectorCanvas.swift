@@ -160,7 +160,7 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
     let container:NSTextContainer
     if let textContainer {container=textContainer}
     else {
-      let storage=PublicationTextStorage(),layout=NSLayoutManager()
+      let storage=PublicationTextStorage(),layout=PublicationLayoutManager()
       container=NSTextContainer(size:NSSize(width:frameRect.width,height:100000))
       storage.addLayoutManager(layout);layout.addTextContainer(container);ownedStorage=storage
     }
@@ -168,6 +168,15 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
     textStorage?.delegate=self
   }
   required init?(coder:NSCoder) {fatalError("init(coder:) has not been implemented")}
+  override func insertNewline(_ sender:Any?) {
+    if handleListReturn() {return};super.insertNewline(sender)
+  }
+  override func insertTab(_ sender:Any?) {
+    if handleListIndent(outdent:false) {return};super.insertTab(sender)
+  }
+  override func insertBacktab(_ sender:Any?) {
+    if handleListIndent(outdent:true) {return};super.insertBacktab(sender)
+  }
   func textStorage(_ storage:NSTextStorage,didProcessEditing mask:NSTextStorageEditActions,range:NSRange,changeInLength delta:Int) {
     if mask.contains(.editedCharacters),storage.string != storageSnapshot.string {
       sourceEdit=(storageSnapshot,NSRange(location:range.location,length:max(0,range.length-delta)))
@@ -226,7 +235,7 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
     }
     if !normalizingCase {
       let before=attributedString(),source=TextCase.source(before,reference:composition?.0 ?? sourceEdit?.0 ?? caseReference,editedRange:composition?.1 ?? sourceEdit?.1)
-      let normalized=GlyphEngine.normalizedNative(source.text)
+      let normalized=GlyphEngine.normalizedNative(normalizeListTyping(source.text))
       if !GlyphEngine.nativeEqual(normalized,before) {
         normalizingCase=true
         let range=source.sourceRange(selectedRange())
@@ -1506,6 +1515,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     tv.autoresizingMask = []
     tv.insertionPointColor = NSColor(hex: e.color)
     tv.textStorage?.setAttributedString(TypographyEngine.attributed(e, millimeters: false, preservingSource: true))
+    if let item=e.listItems?.first(where:{$0.location==e.text.utf16.count}),e.text.isEmpty || e.text.last?.isNewline == true {
+      tv.restoreListTyping(item,base:TypographyEngine.attributes(e.typography ?? .init(),size:e.fontSize,color:e.color,millimeters:false))
+    }
     if let storage = tv.textStorage {
       TypographyEngine.refreshNativeMetadata(TypographyEngine.spans(from: TextCase.source(storage).text, fallback: e.typography ?? .init()), in: storage)
     }
@@ -1583,11 +1595,13 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let i = s.art.elements.firstIndex(where: { $0.id == id })
     else { return }
     if tv.hasMarkedText() {return}
-    if let publishedInput, GlyphEngine.nativeEqual(tv.attributedString(),publishedInput) { return }
+    let source=TextCase.source(tv.attributedString()).text
+    let listItems=PublicationLists.items(from:source,trailingAttributes:tv.typingAttributes)
+    if let publishedInput, GlyphEngine.nativeEqual(tv.attributedString(),publishedInput),listItems==s.art.elements[i].listItems { return }
     publishedInput = NSAttributedString(attributedString: tv.attributedString())
     var value = s.art
     if let originalTextInput, let originalTextElement,
-      GlyphEngine.nativeEqual(tv.attributedString(),originalTextInput) {
+      GlyphEngine.nativeEqual(tv.attributedString(),originalTextInput),listItems==originalTextElement.listItems {
       value.elements[i] = originalTextElement
       publishedText = s.colored(originalTextElement)
       s.save(value)
@@ -1595,8 +1609,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       return
     }
     var e = value.elements[i]
-    let source=TextCase.source(tv.attributedString()).text
     e.text = source.string
+    e.listItems=listItems
     let choices = GlyphEngine.overrides(from: source)
     e.glyphOverrides = choices.isEmpty ? nil : choices
     let runs = TypographyEngine.spans(
@@ -1624,6 +1638,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     publishedText = s.colored(e)
     s.save(value)
+    let resolved=s.colored(e)
+    if let storage=tv.textStorage,resolved.listItems?.isEmpty == false {
+      PublicationLists.apply(resolved.listItems!,to:storage)
+      if let item=resolved.listItems?.first(where:{$0.location==e.text.utf16.count}),e.text.isEmpty || e.text.last?.isNewline == true {
+        (tv as? CanvasTextView)?.restoreListTyping(item)
+      }
+      publishedInput=NSAttributedString(attributedString:tv.attributedString())
+    }
     positionTextHost(e)
   }
   func textViewDidChangeSelection(_ notification: Notification) {
@@ -1661,6 +1683,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let tv = textView as? CanvasTextView else { return false }
     try tv.applyGlyph(glyph, sourceRange: sourceRange)
     tv.window?.makeFirstResponder(tv)
+    return true
+  }
+  func applyList(_ arguments:[String:Any])->Bool {
+    guard let text=textView as? CanvasTextView else{return false}
+    do {try text.applyParagraphList(arguments)}catch{session?.store?.error=error.localizedDescription}
     return true
   }
   func textInspection() -> TextSpan? {
@@ -1728,6 +1755,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         millimeters: false, swatchID: changed.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
       result[TextCase.sourceKey]=raw[TextCase.sourceKey]
       result[GlyphEngine.overrideKey]=raw[GlyphEngine.overrideKey]
+      result[PublicationLists.key]=raw[PublicationLists.key]
       return result
     }
     let range = GlyphEngine.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString())
@@ -1795,6 +1823,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           swatchID: run.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
         attrs[TextCase.sourceKey]=attributes[TextCase.sourceKey]
         attrs[GlyphEngine.overrideKey]=attributes[GlyphEngine.overrideKey]
+        attrs[PublicationLists.key]=attributes[PublicationLists.key]
         replacements.append((part,attrs))
       }
     }

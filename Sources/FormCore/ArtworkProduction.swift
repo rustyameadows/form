@@ -109,8 +109,9 @@ public enum ArtworkProduction {
         if required.insert(dependency).inserted {pending.append(dependency)}
       }
     }
-    var art = source
-    art.elements = source.elements.filter {required.contains($0.id)}
+    var art = source.resolvingLists
+    art.elements = art.elements.filter {required.contains($0.id)}.map(\.withBakedListNumbers)
+    art.retainRepresentedSewingSeams()
     for index in art.elements.indices {art.elements[index].productionRole = nil}
     if !roles.contains(.print) {art.backgroundOpacity = 0; art.boundary = nil}
     return .init(artwork:art,contentIDs:content,roles:effective.filter {required.contains($0.key)})

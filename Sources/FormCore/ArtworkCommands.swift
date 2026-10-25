@@ -5,7 +5,8 @@ public enum ArtworkCommands {
   public static let names = [
     "production",
     "add", "replace", "delete", "duplicate", "group", "ungroup", "align", "distribute", "reorder",
-    "flip", "clip", "release_clip", "paragraph", "glyph", "origin", "transform", "language",
+    "flip", "clip", "release_clip", "paragraph", "glyph", "origin", "transform", "language", "list",
+    "pattern_piece", "seam_pair", "pattern_template",
   ]
   @discardableResult public static func apply(
     _ command: String, to art: inout Artwork, ids: Set<UUID> = [], arguments: [String: Any] = [:]
@@ -20,8 +21,11 @@ public enum ArtworkCommands {
       throw FormError.invalid("Unlock the selected layers before editing them.")
     }
     switch command {
+    case "pattern_piece", "seam_pair", "pattern_template":
+      selection = try SewingPatternCommands.edit(command, artwork: &result, ids: ids, arguments: arguments)
     case "production": try ArtworkProduction.assign(&result,ids:ids,arguments:arguments)
     case "language": try ParagraphLanguage.setDefault(&result,arguments:arguments)
+    case "list": try ListCommands.edit(&result,ids:ids,arguments:arguments)
     case "origin": try ArtworkTransforms.editOrigin(&result,ids:ids,arguments:arguments)
     case "transform": try ArtworkTransforms.transform(&result,ids:ids,arguments:arguments)
     case "glyph": try GlyphCommands.edit(&result,ids:ids,arguments:arguments)
@@ -71,6 +75,7 @@ public enum ArtworkCommands {
       selection = Set(values.map(\.id))
     case "delete":
       let all = art.descendants(of: ids)
+      result.removeSewingSeams(involving: all)
       result.elements.removeAll { all.contains($0.id) }
       selection = []
       for i in result.elements.indices where result.elements[i].clipID.map(all.contains) == true {
@@ -79,10 +84,16 @@ public enum ArtworkCommands {
     case "duplicate":
       let all = art.descendants(of: ids)
       let mapping = Dictionary(uniqueKeysWithValues: all.map { ($0, UUID()) })
+      let listIDs=Set(art.elements.filter{all.contains($0.id)}.flatMap{($0.listItems ?? []).map(\.listID)})
+      let listMapping=Dictionary(uniqueKeysWithValues:listIDs.map{($0,UUID())})
       for var element in art.elements where all.contains(element.id) {
         let original = element.id
         element.id = mapping[original]!
         PathCommands.refreshNodeIDs(in: &element)
+        for i in element.listItems?.indices ?? 0..<0 {
+          element.listItems![i].id=UUID();element.listItems![i].listID=listMapping[element.listItems![i].listID]!
+          element.listItems![i].resolvedNumber=nil
+        }
         if let parent = element.parentID, let id = mapping[parent] { element.parentID = id }
         if let clip = element.clipID, let id = mapping[clip] { element.clipID = id }
         if roots.contains(where: { $0.id == original }) {
@@ -91,6 +102,7 @@ public enum ArtworkCommands {
         }
         result.elements.append(element)
       }
+      result.duplicateSewingSeams(from: art, mapping: mapping)
       selection = Set(roots.compactMap { mapping[$0.id] })
     case "group":
       guard roots.count >= 2, Set(roots.map(\.parentID)).count == 1 else {

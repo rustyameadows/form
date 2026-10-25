@@ -288,11 +288,12 @@ extension Project {
               sourceArt.elements[i].text = text
               sourceArt.elements[i].textRuns = nil
               sourceArt.elements[i].glyphOverrides = nil
+              sourceArt.elements[i].listItems = nil
             }
             if let opacity = change.opacity { sourceArt.elements[i].opacity = opacity }
           }
         }
-        sourceArt = try expand(sourceArt, stack: stack.union([ref.sourceObjectID]), depth: depth + 1)
+        sourceArt = try expand(sourceArt, stack: stack.union([ref.sourceObjectID]), depth: depth + 1).resolvingLists
         let contentID = ComponentCommands.derivedID(element.id, source.id)
         let maskID = ComponentCommands.derivedID(contentID, source.id)
         var root = element
@@ -334,6 +335,12 @@ extension Project {
             paint(color, swatchID: change.colorSwatchID, on: &child)
           }
           child.id = ComponentCommands.derivedID(element.id, child.id)
+          for i in child.listItems?.indices ?? 0..<0 {
+            let old=child.listItems![i]
+            child.listItems![i].id=ComponentCommands.derivedID(element.id,old.id)
+            child.listItems![i].listID=ComponentCommands.derivedID(element.id,old.listID)
+            if let number=old.resolvedNumber {child.listItems![i].restart=number}
+          }
           child.parentID = child.parentID.map { ComponentCommands.derivedID(element.id, $0) } ?? contentID
           child.clipID = child.clipID.map { ComponentCommands.derivedID(element.id, $0) }
           if var path = child.path {

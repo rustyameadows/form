@@ -184,9 +184,7 @@ enum TableTool: String, CaseIterable {
             }
             if !readOnly {
               if ["form_create_project", "form_open_project"].contains(name) {
-                self.isolated = []
-                self.mode = .table
-                self.scene?.resetCamera()
+                self.restoreProjectWorkspace()
               }
               if self.project != nil && name != "form_set_view" { self.showingHome = false }
               self.changed()
@@ -263,12 +261,19 @@ enum TableTool: String, CaseIterable {
     do {
       capturePreview()
       try engine.open(id)
-      isolated = []
-      mode = .table
+      restoreProjectWorkspace()
       showingHome = false
       changed(save: false)
-      scene?.resetCamera()
     } catch { self.error = error.localizedDescription }
+  }
+  private func restoreProjectWorkspace() {
+    isolated = []
+    mode = .table
+    if let project,project.physicalObjectCount == 0,let workspace = project.canvasWorkspace {
+      mode = .artwork
+      artworkSession.activate(workspace.id)
+    }
+    scene?.resetCamera()
   }
   func home() {
     closeDetachedCanvas()

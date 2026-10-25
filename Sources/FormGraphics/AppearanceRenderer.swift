@@ -202,6 +202,7 @@ import FormCore
       source[i].parentID = source[i].parentID.flatMap { ids[$0] }
       source[i].clipID = source[i].clipID.flatMap { ids[$0] }
       source[i].name = nil; source[i].locked = nil
+      source[i]=source[i].withBakedListNumbers
       if source[i].blur?.enabled != true { source[i].blur = nil }
       if source[i].shadow?.enabled != true { source[i].shadow = nil }
     }

@@ -4,6 +4,14 @@ import SwiftUI
 
 enum DesignSurfaceLayout: String { case single, split, detached }
 
+private struct DesignSurfaceFocusKey: FocusedValueKey { typealias Value = WorkspaceMode }
+extension FocusedValues {
+  var designSurface: WorkspaceMode? {
+    get { self[DesignSurfaceFocusKey.self] }
+    set { self[DesignSurfaceFocusKey.self] = newValue }
+  }
+}
+
 extension StudioStore {
   @discardableResult func ensureCanvas() -> UUID? {
     guard project != nil else { return nil }

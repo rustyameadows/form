@@ -1,6 +1,7 @@
 import Foundation
 
 public func validateArtworkDetails(_ artwork: Artwork) throws {
+  try SewingPatterns.validate(artwork)
   guard (0...1).contains(artwork.backgroundOpacity ?? 1), (artwork.imports?.count ?? 0) <= 200
   else {
     throw FormError.invalid("Invalid artwork background opacity or import history.")
@@ -79,6 +80,10 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
     return (1, e.path?.contours.reduce(0) { $0 + $1.nodes.count } ?? 0)
   }
   for e in artwork.elements {
+    if e.listItems != nil {
+      guard e.kind=="text" else {throw FormError.invalid("Paragraph lists belong to editable text objects.")}
+      try ParagraphLists.validate(e.listItems,text:e.text)
+    }
     if let origin = e.transformOrigin { try ArtworkTransforms.validateOrigin(origin) }
     try ImageCommands.validate(e)
     guard AppearanceCommands.blendModes.contains(e.blendMode ?? "normal") else {

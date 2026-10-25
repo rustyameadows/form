@@ -144,6 +144,7 @@ struct ArtworkInspector: View {
               ).font(.system(size: 15, design: .serif)).textFieldStyle(.plain)
             }
             transformControls
+            SewingPatternControls(session: session, element: e)
             if session.elements.count == 1, e.booleanOperation != nil { booleanControls(e) }
             if session.elements.count == 1, e.component != nil {
               ComponentInspector(session: session, element: e)
@@ -203,6 +204,7 @@ struct ArtworkInspector: View {
           } else {
             frameControls(object)
           }
+          SewingPatternActions(session: session)
         } else {
           Text("Create an artwork frame to begin.").font(.system(size: 12)).foregroundStyle(
             Palette.secondary)
@@ -443,6 +445,7 @@ struct ArtworkInspector: View {
           }
           Button("Tab stops…") { session.showingTabs = true }
             .sheet(isPresented: $session.showingTabs) { ParagraphTabsPanel(session: session) }
+          ParagraphListControls(session:session)
           ParagraphLanguageControls(session:session,type:type)
           Picker(
             "Vertical",

@@ -136,6 +136,18 @@ extension Project {
       remaining.elements.append(copy)
     }
     destination.elements.append(contentsOf:maskCopies+moved)
+    for var seam in sourceArtwork.sewingSeams ?? [] {
+      let first = all.contains(seam.first.elementID), second = all.contains(seam.second.elementID)
+      guard first == second else { throw FormError.invalid("Transfer both joined sewing pieces together, or remove their seam pairing first.") }
+      if first {
+        remaining.sewingSeams?.removeAll { $0.id == seam.id }
+        if destination.sewingSeams?.contains(where: { $0.id == seam.id }) == true { seam.id = UUID() }
+        seam.first.elementID = mapping[seam.first.elementID]!
+        seam.second.elementID = mapping[seam.second.elementID]!
+        destination.sewingSeams = (destination.sewingSeams ?? []) + [seam]
+      }
+    }
+    if remaining.sewingSeams?.isEmpty == true { remaining.sewingSeams = nil }
     try validateArtwork(remaining); try validateArtwork(destination)
     var candidate = self
     try candidate.setArtwork(remaining,for:sourceOwner.id,recordingStyleOverrides:false)
