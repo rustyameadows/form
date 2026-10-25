@@ -22,11 +22,11 @@ Use **Artwork → Convert Shapes to Paths** to turn rectangles, ellipses, lines,
 
 Paths being combined must share a parent and clipping mask. Release any use of the selected paths as clipping masks first. Joining requires two open endpoints; interior or closed nodes reject the complete operation. Different colors, strokes, opacity, and production roles become the frontmost path's values. Document Undo restores the original separate objects and their complete appearance; hidden parametric source shapes also remain recoverable. Combining older duplicated paths refreshes any colliding node IDs; new duplicates and pasted paths receive independent IDs from the start.
 
-[Live boolean groups and Divide](live-booleans.md) now extend these path workflows with editable operands, operation changes, release, and flattening. The complete [vector specification](2d-design-typography-vector-spec.md) still retains reusable components, full SVG fidelity, and further advanced editing work.
+[Live boolean groups and Divide](live-booleans.md) extend these path workflows with editable operands, operation changes, release, and flattening. [Reusable components](reusable-components.md) share editable marks across layouts and physical products. The complete [vector specification](2d-design-typography-vector-spec.md) still retains full SVG fidelity and further advanced editing work.
 
 ## MCP
 
-There are 42 tools. Inspect node UUIDs with `form_get_artwork`, then call:
+There are 43 tools. Inspect node UUIDs with `form_get_artwork`, then call:
 
 ```json
 {"name":"form_edit_path","arguments":{"object_id":"<frame UUID>","element_id":"<path UUID>","operation":"insert","node_ids":["<preceding anchor UUID>"],"t":0.37}}

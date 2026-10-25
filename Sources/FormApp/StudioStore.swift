@@ -125,12 +125,14 @@ enum TableTool: String, CaseIterable {
                 "form_list_filaments", "form_list_printers", "form_get_artwork",
                 "form_list_fonts", "form_font_features",
               ].contains(name) || (name == "form_import_svg" && args["dry_run"] as? Bool == true)
+                || (name == "form_component" && args["command"] as? String == "list")
             if !readOnly { self.finishArtworkEditing() }
             var result = try self.engine.call(name, arguments: args)
             if name == "form_status", var status = result as? [String: Any] {
               status["renderer"] = self.scene?.diagnostics ?? [:]
               status["artwork_renderer"] = self.artworkSession.canvas?.diagnostics ?? [:]
               status["boolean_geometry"] = BooleanGeometry.diagnostics
+              status["component_resolution"] = ComponentCommands.resolutionDiagnostics
               result = status
             }
             if !readOnly {

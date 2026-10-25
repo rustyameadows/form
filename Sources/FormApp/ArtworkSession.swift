@@ -58,6 +58,7 @@ enum ArtworkTool: String, CaseIterable {
   }
   @Published var nodes = Set<UUID>() { didSet { store?.objectWillChange.send() } }
   @Published var scopeID: UUID?
+  @Published var componentReturn: ComponentEditingContext?
   @Published var tool: ArtworkTool = .select {
     didSet { if tool != oldValue { canvas?.finishPath() } }
   }
@@ -175,6 +176,7 @@ enum ArtworkTool: String, CaseIterable {
             width: size.0, height: size.1),
           artwork: (unfolding
             ? store?.project?.surfaceArtwork(surface) : store?.project?.editableArtwork(object))
+            .map { (try? store?.project?.resolvingComponents(in: $0)) ?? $0 }
             ?? .init(background: "#FFFFFF")))
       x += size.0 + 36
       rowHeight = max(rowHeight, size.1)
@@ -182,7 +184,8 @@ enum ArtworkTool: String, CaseIterable {
     return result
   }
   func reconcile() {
-    if let primary = store?.primary, primary.supportsArtworkFace {
+    if componentReturn != nil && object?.componentDefinition != true { componentReturn = nil }
+    if componentReturn == nil, let primary = store?.primary, primary.supportsArtworkFace {
       let owner = store?.project?.artworkOwner(primary) ?? primary
       linkedTargetID = owner.id == primary.id ? nil : primary.id
       if objectID != owner.id {
@@ -192,6 +195,7 @@ enum ArtworkTool: String, CaseIterable {
       }
     }
     if object == nil {
+      componentReturn = nil
       objectID =
         store?.project?.objects.first {
           store?.project?.editableArtwork($0) != nil && ($0["width"] > 0 || $0.recipeID == "clock")
@@ -205,6 +209,7 @@ enum ArtworkTool: String, CaseIterable {
   func activate(_ id: UUID) {
     guard id != objectID else { return }
     canvas?.finishText()
+    componentReturn = nil
     objectID = id
     linkedTargetID = nil
     dieline = false

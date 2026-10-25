@@ -93,6 +93,7 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var fillEnabled: Bool?
   public var fillOpacity: Double?
   public var booleanOperation: String?
+  public var component: ArtworkComponentReference?
   public var stroke: ArtworkStroke?
   public var gradient: ArtworkGradient?
   public var cornerRadius: Double?
@@ -173,6 +174,7 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var artwork: Artwork?
   public var artworkSourceID: UUID?
   public var artworkFit: String?
+  public var componentDefinition: Bool?
   public var asset: String?
   public var locked: Bool
   public init(
@@ -358,7 +360,9 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var minimumSchemaVersion: Int {
     max(
       schemaVersion,
-      objects.contains { $0.artwork?.requiresSchemaFive == true }
+      objects.contains { $0.componentDefinition == true || $0.artwork?.elements.contains { $0.component != nil } == true }
+        ? 6
+        : objects.contains { $0.artwork?.requiresSchemaFive == true }
         ? 5
         : objects.contains { $0.artwork?.requiresSchemaFour == true }
           ? 4

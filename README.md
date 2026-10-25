@@ -28,6 +28,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Contextual controls:** Floating native parameter and material inspectors. Focus or isolate a selection without leaving the canvas.
 - **Editable constructions:** Clocks, paper stacks, booklets, folding sleeves, lamps, hollow vessels, boxes, cylinders, extruded profiles, and independent artwork sheets. Custom agent-defined recipes get the same native controls.
 - **Shared artwork:** Independent sheets can drive multiple physical faces. Actual-size or proportional fitting preserves the source; native source editing, detachment, iterations, and deletion have shared undo. Try the [linked clock demonstration](docs/linked-artwork.md).
+- **Reusable components:** One editable emblem can drive multiple layouts and physical products. Instances retain their own size, color/text overrides, and transforms; detachment preserves ordinary editable artwork. See the [STRATA identity workflow](docs/reusable-components.md).
 - **Native artwork canvas:** Multiple physical frames, rulers/guides/grid/snapping, nested layers, exact transforms, Bézier paths, compound holes, cross-object endpoint joining, gradients, strokes, masks, and live 3D face updates. [Live boolean groups and Divide](docs/live-booleans.md) retain editable operands, support operation changes/release/flatten, and update linked product faces. A folding sleeve exposes its unfolded cut/score dieline.
 - **Editable SVG import:** File → Import SVG Artwork (`⇧⌘I`) reviews native paths, groups, text, gradients, clips, and embedded images before creating a physical frame or adding to an existing surface. Originals stay in the project; unsupported features require explicit review. See the [SVG import guide](docs/svg-import.md).
 - **Typography:** Installed-font browser, native selected-character editing, real OpenType features and variable axes, Core Text shaping, and editable glyph outlines with retained source text. See the [editor guide and remaining scope](docs/2d-editor.md).
@@ -52,7 +53,7 @@ Then describe an object in Codex:
 
 > Create an orange table lamp, about 350 mm tall, with editable shade diameter, shade height, stem diameter, and base width. Place a sage variant beside it.
 
-The server exposes 42 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, fonts, vector operations, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
+The server exposes 43 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, fonts, vector operations, reusable components, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
 
 See [Create with Codex](docs/mcp.md) for setup, schemas, a custom object example, and direct CLI invocation.
 
@@ -99,6 +100,7 @@ python3 scripts/smoke_artwork.py # Typography/vector composition and physical ex
 python3 scripts/smoke_svg.py # Editable import, source preservation, fidelity review, physical exports
 python3 scripts/smoke_compound.py # Compound paths, cross-object joins, 600-node saved edits
 python3 scripts/smoke_boolean.py # Live operands, Divide, linked faces, atomic batches, saved edits
+python3 scripts/smoke_components.py # Shared marks, overrides, detach, 200 linked placements
 python3 scripts/smoke_paths.py # Curve editing, transformed type, and linked variants
 python3 scripts/smoke_clock.py --slice # Shared dial, immutable source links, physical exports, local Orca
 python3 scripts/benchmark_artwork.py # 600-element native canvas performance

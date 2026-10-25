@@ -128,6 +128,19 @@ import SwiftUI
             store.mode != .artwork || store.artworkSession.elements.count != 1
               || store.artworkSession.primary?.booleanOperation == nil)
         Divider()
+        Button("Create Component from Selection") { store.artworkSession.component("create") }
+          .keyboardShortcut("k", modifiers: [.command, .option])
+          .disabled(store.mode != .artwork || store.artworkSession.selection.isEmpty)
+        Menu("Insert Component") {
+          ForEach(store.project?.artworkComponents ?? []) { source in
+            Button(source.name) {
+              store.artworkSession.component("insert", ["source_object_id": source.id.uuidString])
+            }.disabled(source.id == store.artworkSession.objectID)
+          }
+        }.disabled(store.mode != .artwork || store.project?.artworkComponents.isEmpty != false)
+        Button("Detach Component Instance") { store.artworkSession.component("detach") }
+          .disabled(store.mode != .artwork || store.artworkSession.primary?.component == nil)
+        Divider()
         Button("Show / Hide Guides") {
           store.artworkSession.mutate { $0.showGuides = !($0.showGuides ?? true) }
         }.keyboardShortcut(";").disabled(store.mode != .artwork)

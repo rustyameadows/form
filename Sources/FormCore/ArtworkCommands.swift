@@ -83,6 +83,7 @@ public enum ArtworkCommands {
     case "ungroup":
       var ungrouped = Set<UUID>()
       for group in roots where group.kind == "group" {
+        guard group.component == nil else { throw FormError.invalid("Detach the component before ungrouping its artwork.") }
         if group.booleanOperation != nil, group.clipID != nil,
           result.elements.contains(where: { $0.parentID == group.id && $0.clipID != nil })
         {

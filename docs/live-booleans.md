@@ -40,6 +40,8 @@ Live groups use schema 5; schemas 1–4 still load. A project stores the operati
 
 Current limits are 64 direct operands, 256 visible vector shapes, 20,000 path nodes, and 16 nested group levels per live group. Divide accepts 2–16 operands and at most 512 regions. Selected operands must share a parent and common clipping mask; release their use as another object's clipping mask before combining them. These are vector operations; solid CAD booleans remain separate work.
 
+Live booleans inside a [reusable component](reusable-components.md) remain editable in its source. Detach a component instance before using its geometry as a boolean operand.
+
 ## Demonstration and validation
 
 `python3 scripts/smoke_boolean.py` creates **Aperture · Live boolean study** in an isolated running library. Its crescent and trefoil remain live, its divided regions are separate editable paths, and two physical product editions reference the independent 200 × 140 mm artwork. The script checks atomic batches, source-only persistence, operand edits, cache invalidation, flatten/release/undo, actual exports, reopen, and a 100-group edit sample.

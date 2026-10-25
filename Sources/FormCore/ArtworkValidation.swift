@@ -52,6 +52,7 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
   let byID = Dictionary(uniqueKeysWithValues: artwork.elements.map { ($0.id, $0) })
   let children = Dictionary(grouping: artwork.elements, by: \.parentID)
   func operandSize(_ e: ArtworkElement, depth: Int) throws -> (Int, Int) {
+    guard e.component == nil else { throw FormError.invalid("Detach component instances before using them as boolean operands.") }
     guard depth <= 16 else {
       throw FormError.invalid("Boolean operands support at most 16 nested group levels.")
     }
@@ -78,6 +79,19 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
     return (1, e.path?.contours.reduce(0) { $0 + $1.nodes.count } ?? 0)
   }
   for e in artwork.elements {
+    if let ref = e.component {
+      guard e.kind == "group", e.booleanOperation == nil, e.contentSize != nil,
+        (children[e.id] ?? []).isEmpty, (ref.overrides?.count ?? 0) <= 500,
+        Set((ref.overrides ?? []).map(\.elementID)).count == (ref.overrides?.count ?? 0)
+      else { throw FormError.invalid("A component instance needs an empty group and unique overrides.") }
+      if let color = ref.color { try validateColor(color) }
+      for change in ref.overrides ?? [] {
+        if let color = change.color { try validateColor(color) }
+        guard (change.text?.count ?? 0) <= 10000, (0...1).contains(change.opacity ?? 1) else {
+          throw FormError.invalid("Invalid component text or opacity override.")
+        }
+      }
+    }
     if let operation = e.booleanOperation {
       guard e.kind == "group", e.contentSize != nil, BooleanCommands.operations.contains(operation)
       else {

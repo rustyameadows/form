@@ -145,8 +145,21 @@ public enum MCP {
         ["object_id": objectID], required: ["object_id"]),
       tool(
         "form_get_artwork",
-        "Read a product surface or standalone artboard's complete editable artwork, hierarchy, typography, paths, guides, and physical units.",
-        ["object_id": objectID], required: ["object_id"], readOnly: true),
+        "Read editable artwork, hierarchy, typography, paths, guides, and physical units. resolved:true returns a derived ordinary hierarchy with component instances expanded; edit the raw source or instance reference instead of persisting resolved copies.",
+        ["object_id": objectID, "resolved": ["type": "boolean"]], required: ["object_id"], readOnly: true),
+      tool(
+        "form_component",
+        "Reusable artwork across project frames and physical faces. list reads source frames/parts. create moves selected sibling artwork into a new editable source frame and places a linked instance. insert places a source in another frame. override sets a global fill color (null clears it) and/or replaces per-part overrides; reset clears overrides; detach bakes ordinary editable artwork. Instances retain independent transforms and sizes. Source edits update linked placements. All mutations are undoable and support atomic batches.",
+        [
+          "command": ["type": "string", "enum": ["list", "create", "insert", "override", "reset", "detach"]],
+          "object_id": objectID, "source_object_id": objectID, "name": string,
+          "element_ids": ["type": "array", "items": string],
+          "x": number, "y": number, "width": number, "height": number,
+          "color": ["type": ["string", "null"]],
+          "overrides": ["type": "array", "items": ["type": "object", "properties": [
+            "elementID": string, "color": string, "text": string, "opacity": number,
+          ], "required": ["elementID"], "additionalProperties": false]],
+        ], required: ["command"]),
       tool(
         "form_edit_artwork",
         "Apply a native artwork command: add/replace elements, delete, duplicate, group, ungroup, align, distribute, reorder, flip. Use complete element values for add/replace. Alignment modes: left/right/top/bottom/center_x/center_y/width/height; distribution: horizontal/vertical; order: front/back/forward/backward. Returns selected element IDs. All changes share native undo.",

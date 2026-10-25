@@ -57,6 +57,8 @@ Current progress: [precise compound-path operations and transformed native text]
 - [ ] Editable SVG import/export with transforms, hierarchy, geometry, text, and explicit unsupported-feature reporting; SVG/PDF/PNG/JPEG selection/frame/document export options.
 - [ ] Demonstrate an original illustration/logo and production-ready vector outputs.
 
+[Reusable vector components](reusable-components.md) now share source artwork across frames and physical products, with independent placement/size, fill/text/opacity overrides, nested references, reset, and detachment. The STRATA workflow validates these features through native and MCP interactions. The broader component/swatch/effects checkpoint remains open because shared swatches and effects/blending still need implementation.
+
 ### E. Print and publication — specification Phase 4
 
 - [ ] Linked text frames, sequential multi-page documents, baseline grids, reusable document styles, and an instruction booklet with multi-page PDF output.

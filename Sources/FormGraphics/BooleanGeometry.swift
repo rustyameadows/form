@@ -35,11 +35,13 @@ import Foundation
   }()
   private static var builds = 0
   private static var hits = 0
+  private static var hierarchyIndexes = 0
   private static var lastMilliseconds = 0.0
   private static var lastError: String?
   public static var diagnostics: [String: Any] {
     var result: [String: Any] = [
-      "geometry_builds": builds, "cache_hits": hits, "last_build_ms": lastMilliseconds,
+      "geometry_builds": builds, "cache_hits": hits, "hierarchy_indexes": hierarchyIndexes,
+      "last_build_ms": lastMilliseconds,
       "cache_limit_bytes": 64_000_000,
     ]
     if let lastError { result["error"] = lastError }
@@ -48,17 +50,26 @@ import Foundation
   public static func resetDiagnostics() {
     builds = 0
     hits = 0
+    hierarchyIndexes = 0
     lastMilliseconds = 0
     lastError = nil
     cache.removeAllObjects()
   }
 
-  private static func snapshot(_ element: ArtworkElement, in art: Artwork, root: Bool = false)
+  private struct Index {
+    let children: [UUID?: [ArtworkElement]]
+    let byID: [UUID: ArtworkElement]
+    let masks: Set<UUID>
+  }
+  private static func index(_ art: Artwork) -> Index {
+    hierarchyIndexes += 1
+    return .init(children: Dictionary(grouping: art.elements, by: \.parentID),
+      byID: Dictionary(uniqueKeysWithValues: art.elements.map { ($0.id, $0) }),
+      masks: Set(art.elements.compactMap(\.clipID)))
+  }
+  private static func snapshot(_ element: ArtworkElement, index: Index, root: Bool = false)
     throws -> Node
   {
-    let children = Dictionary(grouping: art.elements, by: \.parentID)
-    let byID = Dictionary(uniqueKeysWithValues: art.elements.map { ($0.id, $0) })
-    let masks = Set(art.elements.compactMap(\.clipID))
     func build(_ e: ArtworkElement, depth: Int, root: Bool) throws -> Node {
       guard depth <= 16, e.kind == "group" || BooleanCommands.shapeKinds.contains(e.kind) else {
         throw FormError.invalid("Boolean operands need compatible vectors within 16 group levels.")
@@ -70,11 +81,11 @@ import Foundation
         corner: e.cornerRadius, sides: e.sides, inset: e.starInset, operation: e.booleanOperation,
         children: [], mask: [])
       if group {
-        node.children = try (children[e.id] ?? []).filter {
-          $0.hidden != true && !masks.contains($0.id)
+        node.children = try (index.children[e.id] ?? []).filter {
+          $0.hidden != true && !index.masks.contains($0.id)
         }.map { try build($0, depth: depth + 1, root: false) }
       }
-      if !root, let id = e.clipID, let mask = byID[id] {
+      if !root, let id = e.clipID, let mask = index.byID[id] {
         node.mask = [try build(mask, depth: depth + 1, root: false)]
       }
       return node
@@ -125,8 +136,8 @@ import Foundation
     result.evenOdd = false
     return result
   }
-  private static func resolved(_ group: ArtworkElement, in art: Artwork) throws -> Cached {
-    let node = try snapshot(group, in: art, root: true)
+  private static func resolved(_ group: ArtworkElement, index: Index) throws -> Cached {
+    let node = try snapshot(group, index: index, root: true)
     let data = try JSONEncoder.form.encode(node)
     let key =
       (SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
@@ -147,13 +158,18 @@ import Foundation
     return value
   }
   public static func path(_ group: ArtworkElement, in art: Artwork) throws -> CGPath {
-    try resolved(group, in: art).path
+    try resolved(group, index: index(art)).path
   }
 
   public static func proxy(_ group: ArtworkElement, in art: Artwork, normalize: Bool = false) throws
     -> ArtworkElement
   {
-    let value = try resolved(group, in: art)
+    try proxy(group, index: index(art), normalize: normalize)
+  }
+  private static func proxy(_ group: ArtworkElement, index: Index, normalize: Bool = false) throws
+    -> ArtworkElement
+  {
+    let value = try resolved(group, index: index)
     var result = group
     let size = group.paintSize
     result.kind = "path"
@@ -174,14 +190,14 @@ import Foundation
   public static func materialized(_ art: Artwork) throws -> Artwork {
     let groups = art.elements.filter { $0.booleanOperation != nil }
     guard !groups.isEmpty else { return art }
-    let byID = Dictionary(uniqueKeysWithValues: art.elements.map { ($0.id, $0) })
+    let index = index(art)
     var removed = Set<UUID>()
     var replacements: [UUID: ArtworkElement] = [:]
     do {
       for group in groups where group.hidden != true {
         var parent = group.parentID
         var skip = false
-        while let id = parent, let ancestor = byID[id] {
+        while let id = parent, let ancestor = index.byID[id] {
           if ancestor.booleanOperation != nil || ancestor.hidden == true {
             skip = true
             break
@@ -189,8 +205,13 @@ import Foundation
           parent = ancestor.parentID
         }
         if skip { continue }
-        replacements[group.id] = try proxy(group, in: art)
-        removed.formUnion(art.descendants(of: [group.id]).subtracting([group.id]))
+        replacements[group.id] = try proxy(group, index: index)
+        var stack = [group.id]
+        while let id = stack.popLast() {
+          for child in index.children[id] ?? [] where removed.insert(child.id).inserted {
+            stack.append(child.id)
+          }
+        }
       }
     } catch {
       lastError = error.localizedDescription
@@ -212,9 +233,10 @@ import Foundation
       throw FormError.invalid("Divide supports 2–16 vector operands.")
     }
     var cells: [Region] = []
+    let index = index(art)
     var occupied: CGPath = CGMutablePath()
     for operand in operands {
-      let path = try evaluate(snapshot(operand, in: art))
+      let path = try evaluate(snapshot(operand, index: index))
       var next: [Region] = []
       func append(_ path: CGPath, owner: ArtworkElement) throws {
         for piece in path.componentsSeparated() where !piece.isEmpty {

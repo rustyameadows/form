@@ -26,7 +26,8 @@ extension Project {
   /// data out of render signatures. Source files and source typography stay intact.
   public func surfaceArtwork(_ object: ProductObject) -> Artwork? {
     let owner = artworkOwner(object)
-    guard var art = owner.artwork else { return nil }
+    guard let stored = owner.artwork else { return nil }
+    var art = (try? resolvingComponents(in: stored)) ?? stored
     if owner.id != object.id {
       let source = owner.artworkSize
       let target = object.artworkSize
@@ -94,6 +95,7 @@ extension Project {
     self = candidate
   }
   public func validateArtworkLinks() throws {
+    try validateComponentLinks()
     for object in objects {
       guard object.artworkFit == nil || ["actual", "fit"].contains(object.artworkFit!) else {
         throw FormError.invalid("Unknown artwork fitting mode.")
@@ -121,6 +123,18 @@ extension Project {
     }
   }
   public mutating func detachArtworkConsumers(of ids: Set<UUID>) {
+    // Resolve instances before removing a source frame, preserving each override.
+    let old = self
+    for i in objects.indices where !ids.contains(objects[i].id) {
+      guard let art = objects[i].artwork else { continue }
+      let instances = Set(art.elements.filter { $0.component.map { ids.contains($0.sourceObjectID) } == true }.map(\.id))
+      if !instances.isEmpty {
+        var candidate = old
+        if (try? ComponentCommands.detach(in: &candidate, objectID: objects[i].id, ids: instances, allowLocked: true)) != nil {
+          objects[i].artwork = candidate.objects.first { $0.id == objects[i].id }?.artwork
+        }
+      }
+    }
     let snapshots = objects.filter { !ids.contains($0.id) && ids.contains(artworkOwner($0).id) }
       .map { object -> (UUID, Artwork?) in
         var art = surfaceArtwork(object)

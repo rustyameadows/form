@@ -25,7 +25,7 @@ public enum BooleanCommands {
   public static func compatible(_ element: ArtworkElement, in art: Artwork) -> Bool {
     let children = Dictionary(grouping: art.elements, by: \.parentID)
     func check(_ e: ArtworkElement, depth: Int) -> Bool {
-      guard depth <= 16 else { return false }
+      guard depth <= 16, e.component == nil else { return false }
       if e.kind == "group" {
         return (children[e.id] ?? []).filter { $0.hidden != true }.allSatisfy {
           check($0, depth: depth + 1)

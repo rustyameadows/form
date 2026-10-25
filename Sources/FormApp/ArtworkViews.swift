@@ -109,6 +109,10 @@ struct ArtworkStudio: View {
         Text(session.scopeID == nil ? "ARTWORK" : "EDITING GROUP").font(
           .system(size: 8, weight: .medium, design: .monospaced)
         ).tracking(0.8)
+        if session.componentReturn != nil {
+          Button("Back to instance") { session.returnToComponent() }
+            .buttonStyle(.plain).foregroundStyle(Palette.accent)
+        }
         if session.scopeID != nil {
           Button("Leave group") {
             session.scopeID = nil
@@ -245,7 +249,7 @@ struct ArtworkLayers: View {
           session.canvas?.fit(all: false)
         } label: {
           HStack(spacing: 8) {
-            Image(systemName: frame.object.recipeID == "artboard" ? "rectangle" : "link")
+            Image(systemName: frame.object.componentDefinition == true ? "diamond.fill" : frame.object.recipeID == "artboard" ? "rectangle" : "link")
             Text(frame.object.name).lineLimit(1)
             Spacer()
           }.font(.system(size: 11)).padding(.horizontal, 14).padding(.vertical, 9).background(
@@ -273,7 +277,9 @@ struct ArtworkLayers: View {
         LazyVStack(spacing: 2) {
           ForEach(rows, id: \.element.id) { row in
             HStack(spacing: 6) {
-              if row.element.kind == "group" {
+              if row.element.component != nil {
+                Image(systemName: "diamond").font(.system(size: 10)).frame(width: 10)
+              } else if row.element.kind == "group" {
                 Button {
                   if collapsed.contains(row.element.id) {
                     collapsed.remove(row.element.id)
@@ -357,7 +363,14 @@ struct ArtworkLayers: View {
               Button("Edit inside group") {
                 session.scopeID = row.element.id
                 session.choose([])
-              }.disabled(row.element.kind != "group")
+              }.disabled(row.element.kind != "group" || row.element.component != nil)
+              if row.element.component != nil {
+                Button("Edit component source") { session.editComponentSource(row.element) }
+                Button("Detach instance") {
+                  session.choose([row.element.id])
+                  session.component("detach")
+                }
+              }
               Button("Delete") {
                 session.choose([row.element.id])
                 session.execute("delete")

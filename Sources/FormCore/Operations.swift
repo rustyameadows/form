@@ -167,7 +167,64 @@ public final class OperationEngine {
       guard let object = project?.objects.first(where: { $0.id == id }) else {
         throw FormError.missing("Object not found.")
       }
-      return try jsonObject(project!.editableArtwork(object) ?? Artwork(background: "#FFFFFF"))
+      let art = project!.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
+      return try jsonObject(a["resolved"] as? Bool == true ? project!.resolvingComponents(in: art) : art)
+    case "form_component":
+      let command = try string("command")
+      if command == "list" {
+        return ["components": try requireProject().artworkComponents.map { component -> [String: Any] in
+          ["id": component.id.uuidString, "name": component.name,
+           "width": component.artworkSize.x, "height": component.artworkSize.y,
+           "parts": try (component.artwork?.elements ?? []).map { try jsonObject($0) },
+           "override_parts": (component.artwork?.componentOverrideParts ?? []).map { $0.id.uuidString }]
+        }]
+      }
+      let target = try objectID()
+      var result: [String: Any] = [:]
+      try edit("Component: \(command)", source: source) { p in
+        switch command {
+        case "create":
+          let ids = try idsArgument(a["element_ids"])
+          let created = try ComponentCommands.create(in: &p, objectID: target, elements: ids,
+            name: a["name"] as? String ?? "Untitled component")
+          result = ["source_object_id": created.source.uuidString, "selected_elements": [created.instance.uuidString]]
+        case "insert":
+          guard let raw = a["source_object_id"] as? String, let sourceID = UUID(uuidString: raw) else {
+            throw FormError.invalid("Choose a component source_object_id.")
+          }
+          let id = try ComponentCommands.insert(in: &p, objectID: target, sourceID: sourceID,
+            x: a["x"] as? Double ?? 10, y: a["y"] as? Double ?? 10,
+            width: a["width"] as? Double, height: a["height"] as? Double)
+          result = ["source_object_id": sourceID.uuidString, "selected_elements": [id.uuidString]]
+        case "detach":
+          let ids = try idsArgument(a["element_ids"])
+          try ComponentCommands.detach(in: &p, objectID: target, ids: ids)
+          result = ["selected_elements": ids.map(\.uuidString)]
+        case "override", "reset":
+          let ids = try idsArgument(a["element_ids"])
+          guard let object = p.objects.first(where: { $0.id == target }), var art = p.editableArtwork(object),
+            ids.isSubset(of: Set(art.elements.filter { $0.component != nil && !art.isLocked($0) }.map(\.id)))
+          else { throw FormError.invalid("Select unlocked component instances.") }
+          for i in art.elements.indices where ids.contains(art.elements[i].id) {
+            if command == "reset" {
+              art.elements[i].component = .init(sourceObjectID: art.elements[i].component!.sourceObjectID)
+            } else {
+              if let color = a["color"] {
+                guard color is NSNull || color is String else { throw FormError.invalid("Color must be a hex string or null.") }
+                art.elements[i].component?.color = color as? String
+              }
+              if let overrides = a["overrides"] {
+                art.elements[i].component?.overrides = try JSONDecoder().decode([ArtworkComponentOverride].self,
+                  from: JSONSerialization.data(withJSONObject: overrides))
+              }
+            }
+          }
+          try p.setArtwork(art, for: target)
+          result = ["selected_elements": ids.map(\.uuidString)]
+        default: throw FormError.invalid("Unknown component command.")
+        }
+      }
+      return result
     case "form_edit_artwork":
       let id = try objectID()
       let command = try string("command")
@@ -477,7 +534,7 @@ public final class OperationEngine {
         "form_set_artwork", "form_add_note", "form_create_recipe", "form_delete_objects",
         "form_edit_artwork",
         "form_edit_path",
-        "form_boolean_artwork", "form_convert_to_paths",
+        "form_boolean_artwork", "form_convert_to_paths", "form_component",
         "form_link_artwork", "form_extract_artwork",
       ])
       guard operations.allSatisfy({ allowed.contains($0["name"] as? String ?? "") }) else {

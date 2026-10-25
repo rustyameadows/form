@@ -362,4 +362,18 @@ final class BooleanTests: XCTestCase {
     let owner = loaded.objects.first { $0.id == source.id }!
     XCTAssertTrue(try BooleanGeometry.materialized(owner.artwork!).elements[0].path != nil)
   }
+
+  @MainActor func testMaterializationIndexesTheHierarchyOnceForHundredsOfGroups() throws {
+    var art = Artwork(elements: [])
+    for _ in 0..<200 {
+      let (piece, _, _, _) = try pair("union")
+      art.elements += piece.elements
+    }
+    BooleanGeometry.resetDiagnostics()
+    let resolved = try BooleanGeometry.materialized(art)
+    XCTAssertEqual(resolved.elements.count, 200)
+    XCTAssertEqual(BooleanGeometry.diagnostics["hierarchy_indexes"] as? Int, 1)
+    XCTAssertEqual(BooleanGeometry.diagnostics["geometry_builds"] as? Int, 1)
+    XCTAssertTrue(resolved.elements.allSatisfy { $0.kind == "path" && $0.booleanOperation == nil })
+  }
 }

@@ -642,6 +642,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           return
         }
         if event.clickCount == 2, e.kind == "group" {
+          if e.component != nil {
+            s.editComponentSource(e)
+            return
+          }
           s.scopeID = e.id
           s.choose([])
           needsDisplay = true

@@ -54,6 +54,8 @@ Import provenance, transparent frame/fill/gradient-stop appearance, gradient aff
 
 Live boolean groups require schema 5; schemas 1–4 still load. The document stores operations and editable operands. `FormCore.BooleanCommands` creates and validates the hierarchy; `FormGraphics.BooleanGeometry` resolves paths for the native canvas, linked faces, and all exports. Its bounded 64 MB cache excludes paint, names, locks, and root placement while tracking operand geometry, order, visibility, hierarchy, transforms, and clips. Flattening retains a hidden live source; Divide emits individual regions. Creation, flattening, division, and release preserve the result's stack position relative to unrelated siblings. See [live booleans](live-booleans.md).
 
+Reusable vector components require schema 6; schemas 1–5 still load. Independent artwork frames hold editable source definitions; empty instance groups store a source reference, placement/size, and selected overrides. Resolution derives ordinary nested artwork with stable per-instance IDs before the canvas, surface signatures, and exports consume it. A bounded 64 MB cache keys each artwork and its reachable source graph, preserving source-only immutable resource updates. Validation rejects cycles and excessive expansion; source deletion bakes affected instances before removing the definition. Detachment retains ordinary editable text, geometry, masks, live booleans, and current overrides. See [components](reusable-components.md).
+
 `FORM_LIBRARY_PATH` selects a separate library for development or tests. `FORM_SOCKET_PATH` selects a separate local bridge. These settings require no change to a project document.
 
 ## Artwork and production

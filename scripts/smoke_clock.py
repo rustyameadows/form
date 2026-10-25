@@ -52,7 +52,7 @@ def main():
         status = client.call("form_status")
         library = pathlib.Path(status["library_path"])
         assert library.resolve().is_relative_to((ROOT / ".local").resolve()), "Use an isolated FORM_LIBRARY_PATH inside .local"
-        assert len(client.rpc("tools/list")["tools"]) == 42
+        assert len(client.rpc("tools/list")["tools"]) == 43
         project = client.call("form_create_project", {"name": "Time, well spent / validation", "template": "clock"})
         clocks = [o for o in project["objects"] if o["recipeID"] == "clock"]
         clock = clocks[0]
@@ -148,7 +148,7 @@ def main():
                   "exports": exports, "hand_edit_median_ms": statistics.median(durations), "hand_edit_p95_ms": sorted(durations)[18],
                   "hand_edit_geometry_rebuilds": 0, "mesh_size_mm": setup["mesh_size_mm"], "mesh": mesh, "slice": slice_result,
                   "print_jobs_sent": 0, "printer_connections_attempted": 0,
-                  "checks": "42 tools; shared source persistence; immutable consumer files; hand edits reuse meshes; rollback; independent iteration; editable numeral outlines/nodes; all physical exports; schema 3 reopen; P1S bed validation"}
+                  "checks": "43 tools; shared source persistence; immutable consumer files; hand edits reuse meshes; rollback; independent iteration; editable numeral outlines/nodes; all physical exports; schema 3 reopen; P1S bed validation"}
         (OUTPUT / "clock.json").write_text(json.dumps(report, indent=2) + "\n")
         print(json.dumps(report, indent=2))
     finally:

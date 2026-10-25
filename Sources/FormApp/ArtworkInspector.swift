@@ -144,6 +144,9 @@ struct ArtworkInspector: View {
             }
             transformControls
             if session.elements.count == 1, e.booleanOperation != nil { booleanControls(e) }
+            if session.elements.count == 1, e.component != nil {
+              ComponentInspector(session: session, element: e)
+            }
             Divider()
             if e.kind == "text" || session.elements.allSatisfy({ $0.kind == "text" }) {
               if session.elements.count == 1 {
@@ -284,7 +287,7 @@ struct ArtworkInspector: View {
           .system(size: 10)
         ).foregroundStyle(Palette.accent)
       }
-      if e?.kind == "group", e?.booleanOperation == nil {
+      if e?.kind == "group", e?.booleanOperation == nil, e?.component == nil {
         HStack {
           Button("Edit group") {
             session.scopeID = e?.id
