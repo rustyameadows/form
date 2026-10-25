@@ -167,9 +167,12 @@ extension Artwork {
             bounds = Affine2.scale(e.width / path.width, e.height / path.height).bounds(box)
           }
         }
-        if let stroke = e.stroke, stroke.width > 0 {
-          bounds = bounds.expanded(stroke.width / 2 * (stroke.join == "miter" || stroke.join == nil ? stroke.miter ?? 10 : 1))
-        } else if e.kind == "line" { bounds = bounds.expanded(0.2) }
+        if let stroke = e.visibleStroke {
+          let alignment = stroke.alignment == "inside" ? 0.0 : stroke.alignment == "outside" ? 1.0 : 0.5
+          let corner = ["rectangle","ellipse","line"].contains(e.kind) ? 1 : stroke.join == "miter" || stroke.join == nil ? stroke.miter ?? 10 : 1
+          let cap = e.kind == "line" && stroke.cap == "square" ? sqrt(2.0) : 1
+          bounds = bounds.expanded(stroke.width * alignment * max(corner,cap))
+        }
       }
       if let blur = e.blur, blur.enabled { bounds = bounds.expanded(blur.radius * 4) }
       if let shadow = e.shadow, shadow.enabled, shadow.opacity > 0 {
@@ -180,7 +183,15 @@ extension Artwork {
     func parent(_ e: ArtworkElement) -> Rect2 {
       let value = e.localTransform.bounds(local(e))
       guard let id = e.clipID, let mask = byID[id] else { return value }
-      return value.intersection(mask.localTransform.bounds(.init(0, 0, mask.width, mask.height)))
+      var box = Rect2(0,0,mask.width,mask.height)
+      if let path = mask.path {
+        let points = path.contours.flatMap(\.nodes).flatMap { [$0.anchor,$0.incoming ?? $0.anchor,$0.outgoing ?? $0.anchor] }
+        if let first = points.first {
+          box = points.dropFirst().reduce(Rect2(first.x,first.y,0,0)) { $0.union(.init($1.x,$1.y,0,0)) }
+          box = Affine2.scale(mask.width/path.width,mask.height/path.height).bounds(box)
+        }
+      }
+      return value.intersection(mask.localTransform.bounds(box))
     }
     return local(element)
   }

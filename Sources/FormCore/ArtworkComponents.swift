@@ -84,7 +84,7 @@ public enum ComponentCommands {
       sourceArt.elements[i].clipID = nil
     }
     let copiedRoots = sourceArt.selectionRoots(rootIDs)
-    let visual = sourceArt.elements.contains { $0.hasActiveEffects }
+    let visual = sourceArt.elements.contains { $0.hasVisualOverflow }
     func box(_ e: ArtworkElement) -> Rect2 { visual ? sourceArt.visualBounds(of: e) : sourceArt.bounds(of: e) }
     let bounds = copiedRoots.dropFirst().reduce(box(copiedRoots[0])) {
       $0.union(box($1))

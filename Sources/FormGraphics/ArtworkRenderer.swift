@@ -5,6 +5,9 @@ import FormCore
   public static func validateAppearanceOutput(_ source: Artwork, assets: URL, pixelsPerMM: Double) throws {
     let art = try BooleanGeometry.materialized(source)
     let tree = ArtworkRenderTree(art, assets: assets, production: true, excluding: [])
+    for e in art.elements where e.visibleStroke != nil && tree.displayed(e) {
+      _ = try VectorGeometry.expandedStroke(e)
+    }
     for e in art.elements where e.kind == "image" && tree.displayed(e) {
       try ImageRenderer.validateOutput(e, assets: assets, pixelsPerMM: pixelsPerMM, transform: art.worldTransform(e))
     }
@@ -107,7 +110,10 @@ import FormCore
         if let transform = gradient.transform { context.concatenate(transform.cg) }
         let start = CGPoint(x: gradient.start.x * e.width, y: gradient.start.y * e.height)
         let end = CGPoint(x: gradient.end.x * e.width, y: gradient.end.y * e.height)
-        if gradient.kind == "radial" {
+        if hypot(end.x-start.x,end.y-start.y) < 1e-9, let stop = gradient.stops.last {
+          context.setFillColor(FormColor.color(stop.color).withAlphaComponent((stop.opacity ?? 1)*(e.fillOpacity ?? 1)).cgColor)
+          context.fill(rect)
+        } else if gradient.kind == "radial" {
           context.drawRadialGradient(
             colors, startCenter: start, startRadius: 0, endCenter: start,
             endRadius: max(0.001, hypot(end.x - start.x, end.y - start.y)),
@@ -125,9 +131,15 @@ import FormCore
         context.fillPath(using: rule)
       }
     }
-    if let stroke = e.stroke ?? (e.kind == "line" ? ArtworkStroke(color: e.color) : nil),
-      stroke.width > 0
-    {
+    if let stroke = e.visibleStroke {
+      if (stroke.alignment ?? "center") != "center" {
+        if let outline = try? VectorGeometry.expandedStroke(e) {
+          context.setFillColor(FormColor.color(stroke.color).withAlphaComponent(stroke.opacity ?? 1).cgColor)
+          context.addPath(outline); context.fillPath()
+        }
+        return
+      }
+      if stroke.dash?.isEmpty == false, (try? StrokeGeometry.path(e)) == nil { return }
       context.setStrokeColor(
         FormColor.color(stroke.color).withAlphaComponent(stroke.opacity ?? 1).cgColor)
       context.setLineWidth(stroke.width)

@@ -479,6 +479,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     context.addLine(to: rotate)
     context.strokePath()
     dot(rotate, context: context, scale: scale, circle: true)
+    if let e = s.primary, s.maskEditing?.maskID == e.id {
+      context.addPath(VectorGeometry.worldPath(e,in:art))
+      context.strokePath()
+    }
     if s.tool == .direct {
       for e in s.elements {
         guard let path = e.path else { continue }
@@ -499,15 +503,20 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         }
       }
     }
-    if let e = s.primary, let g = e.gradient {
-      let t = art.worldTransform(e).followed(by: g.transform ?? .init())
-      let a = CGPoint(t.apply(.init(g.start.x * e.paintSize.x, g.start.y * e.paintSize.y)))
-      let b = CGPoint(t.apply(.init(g.end.x * e.paintSize.x, g.end.y * e.paintSize.y)))
-      context.move(to: a)
-      context.addLine(to: b)
-      context.strokePath()
-      dot(a, context: context, scale: scale, circle: true)
-      dot(b, context: context, scale: scale, circle: true)
+    if s.selection.count == 1, s.maskEditing == nil, let e = s.primary, let axis = gradientHandles(e, in: art) {
+      context.saveGState()
+      context.move(to: axis.a); context.addLine(to: axis.b); context.strokePath()
+      dot(axis.a, context: context, scale: scale, circle: true)
+      dot(axis.b, context: context, scale: scale, circle: true)
+      for item in axis.stops {
+        let r = CGRect(x:item.point.x-4.5/scale,y:item.point.y-4.5/scale,width:9/scale,height:9/scale)
+        context.setFillColor(NSColor(hex:item.stop.color).cgColor)
+        context.fillEllipse(in:r)
+        context.setStrokeColor((s.selectedGradientStopID == item.stop.id ? NSColor(hex:"#D45A37") : NSColor.white).cgColor)
+        context.setLineWidth((s.selectedGradientStopID == item.stop.id ? 2 : 1)/scale)
+        context.strokeEllipse(in:r)
+      }
+      context.restoreGState()
     }
     if let e = s.primary, e.kind == "text", TypographyEngine.overflows(e) {
       let r = CGRect(
@@ -521,8 +530,33 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return .init(
       x: p.x / ppm - (activeFrame?.rect.minX ?? 0), y: p.y / ppm - (activeFrame?.rect.minY ?? 0))
   }
+  private func gradientHandles(_ element: ArtworkElement, in art: Artwork)
+    -> (a: CGPoint, b: CGPoint, stops: [(stop: GradientStop, point: CGPoint)])? {
+    let e = session?.colored(element) ?? element
+    guard let g = e.gradient else { return nil }
+    let t = art.worldTransform(e).followed(by:g.transform ?? .init())
+    let a = CGPoint(t.apply(.init(g.start.x*e.paintSize.x,g.start.y*e.paintSize.y)))
+    let b = CGPoint(t.apply(.init(g.end.x*e.paintSize.x,g.end.y*e.paintSize.y)))
+    let length = hypot(b.x-a.x,b.y-a.y)
+    guard length > 1e-9 else { return (a,b,[]) }
+    var repeated: [Double:Int] = [:]
+    let stops = g.stops.map { stop -> (GradientStop,CGPoint) in
+      let row = repeated[stop.offset,default:0]; repeated[stop.offset] = row+1
+      let offset = Double(12+row*12)/(ppm*zoom)
+      return (stop,.init(x:a.x+(b.x-a.x)*stop.offset-(b.y-a.y)/length*offset,
+        y:a.y+(b.y-a.y)*stop.offset+(b.x-a.x)/length*offset))
+    }
+    return (a,b,stops)
+  }
+  private func gradientPosition(_ p: CGPoint, a: CGPoint, b: CGPoint) -> Double? {
+    let dx = b.x-a.x, dy = b.y-a.y, square = dx*dx+dy*dy
+    guard square > 1e-18 else { return nil }
+    return ((p.x-a.x)*dx+(p.y-a.y)*dy)/square
+  }
   private func hit(_ point: CGPoint, art: Artwork, scope: UUID?) -> ArtworkElement? {
-    for e in art.elements.reversed() where art.editable(e) && e.parentID == scope {
+    let masks = Set(art.elements.compactMap(\.clipID))
+    for e in art.elements.reversed() where e.parentID == scope &&
+      (session?.maskEditing.map { $0.maskID == e.id && !art.isLocked(e) } ?? (art.editable(e) && !masks.contains(e.id))) {
       let world = art.worldTransform(e)
       if e.kind == "group" {
         if CGRect(art.bounds(of: e)).contains(point) { return e }
@@ -536,7 +570,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       {
         return e
       }
-      if e.fillEnabled != false,
+      if e.fillEnabled != false || session?.maskEditing?.maskID == e.id,
         path.contains(p, using: e.path?.evenOdd == true ? .evenOdd : .winding)
       {
         return e
@@ -638,15 +672,23 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         dragMode = ""
         return
       }
-      if let e = s.primary, let g = e.gradient, !s.art.isLocked(e) {
-        let t = s.art.worldTransform(e).followed(by: g.transform ?? .init())
-        for (i, q) in [g.start, g.end].enumerated() {
-          let h = CGPoint(t.apply(.init(q.x * e.paintSize.x, q.y * e.paintSize.y)))
-          if hypot(h.x - p.x, h.y - p.y) < 7 / (ppm * zoom) {
-            dragMode = "gradient"
-            handle = i
-            return
-          }
+      if s.selection.count == 1, s.maskEditing == nil, let e = s.primary, !s.art.isLocked(e),
+        let axis = gradientHandles(e,in:s.art) {
+        if let item = axis.stops.last(where:{ hypot($0.point.x-p.x,$0.point.y-p.y) < 7/(ppm*zoom) }) {
+          s.selectedGradientStopID = item.stop.id
+          dragMode = "gradient_stop"
+          return
+        }
+        for (i,h) in [axis.a,axis.b].enumerated() where hypot(h.x-p.x,h.y-p.y) < 7/(ppm*zoom) {
+          dragMode = "gradient"; handle = i; return
+        }
+        if let offset = gradientPosition(p,a:axis.a,b:axis.b), (0...1).contains(offset),
+          hypot(p.x-(axis.a.x+(axis.b.x-axis.a.x)*offset),p.y-(axis.a.y+(axis.b.y-axis.a.y)*offset)) < 6/(ppm*zoom) {
+          if event.clickCount == 2 {
+            s.paint("add_stop",["offset":offset]); snapshot = s.art
+            dragMode = "gradient_stop"
+          } else { dragMode = "gradient_axis" }
+          return
         }
       }
       if let b = s.selectionBounds, !s.elements.contains(where: { s.art.isLocked($0) }) {
@@ -830,6 +872,25 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     if dragMode == "node" || dragMode == "incoming" || dragMode == "outgoing" {
       dragNodes(p, event: event)
+      return
+    }
+    if dragMode == "gradient_axis", let e = s.primary,
+      let i = value.elements.firstIndex(where:{$0.id == e.id}),
+      let inverse = snapshot.worldTransform(e).followed(by:e.gradient?.transform ?? .init()).inverse,
+      var gradient = value.elements[i].gradient {
+      let a = inverse.apply(.init(down)), b = inverse.apply(.init(p))
+      let dx = (b.x-a.x)/e.paintSize.x, dy = (b.y-a.y)/e.paintSize.y
+      gradient.start.x += dx; gradient.start.y += dy
+      gradient.end.x += dx; gradient.end.y += dy
+      value.elements[i].gradient = gradient; s.save(value); return
+    }
+    if dragMode == "gradient_stop", let e = s.primary, let id = s.selectedGradientStopID,
+      let axis = gradientHandles(e,in:snapshot), let offset = gradientPosition(p,a:axis.a,b:axis.b),
+      let i = value.elements.firstIndex(where:{$0.id == e.id}),
+      let stop = value.elements[i].gradient?.stops.firstIndex(where:{$0.id == id}) {
+      value.elements[i].gradient?.stops[stop].offset = min(1,max(0,offset))
+      value.elements[i].gradient?.sortStops()
+      s.save(value)
       return
     }
     if dragMode == "gradient", let e = s.primary,
@@ -1070,7 +1131,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let art = s.art
     let threshold = 7 / (ppm * zoom)
     let paths = art.elements.filter {
-      $0.path != nil && art.editable($0)
+      $0.path != nil && (s.maskEditing == nil ? art.editable($0) : $0.id == s.maskEditing?.maskID && !art.isLocked($0))
         && (s.selection.contains($0.id) || $0.parentID == s.scopeID)
     }
     for e in paths.reversed() {
@@ -1499,7 +1560,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       return
     }
     if event.keyCode == 51 || event.keyCode == 117 {
-      if s.tool == .direct, !s.nodes.isEmpty {
+      if let stop = s.selectedGradientStopID {
+        s.paint("delete_stop",["stop_id":stop.uuidString])
+      } else if s.tool == .direct, !s.nodes.isEmpty {
         s.editPath("delete")
       } else {
         s.execute("delete")
@@ -1510,6 +1573,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if !pen.isEmpty {
         pen = []
         penID = nil
+      } else if s.selectedGradientStopID != nil {
+        s.selectedGradientStopID = nil
+      } else if s.maskEditing != nil {
+        s.returnFromMask()
       } else if s.scopeID != nil {
         s.scopeID = s.art.elements.first { $0.id == s.scopeID }?.parentID
         s.choose([])

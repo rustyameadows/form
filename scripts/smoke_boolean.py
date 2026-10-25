@@ -33,7 +33,7 @@ def replace(c, id, element):
 def main():
     c = Client()
     try:
-        assert len(c.rpc('tools/list')['tools']) == 48
+        assert len(c.rpc('tools/list')['tools']) == 49
         project = c.call('form_create_project', {'name': 'Aperture · Live boolean study'})
         source = c.call('form_add_object', {'recipe_id': 'artboard', 'name': 'APERTURE / 002', 'parameters': {'width': 200, 'depth': 140}})
         a = shape('ellipse', 20, 34, 82, 82, '#D45A37', 'Aperture outer')

@@ -32,6 +32,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Shared colors:** Named sRGB palettes link fills, strokes, shadows, gradient stops, selected characters, frame backgrounds, and component overrides across layouts and physical products. Editing a swatch updates its uses; detachment or deletion preserves current colors. See the [CHROMA palette workflow](docs/shared-swatches.md).
 - **Editable appearance:** Layer/group opacity, sixteen blend modes, Gaussian blur, drop shadows, explicit group isolation, and shared shadow colors. The canvas, linked products, and physical exports preserve their appearance. See the [UMBRA study](docs/artwork-appearance.md).
 - **Native artwork canvas:** Multiple physical frames, rulers/guides/grid/snapping, nested layers, exact transforms, Bézier paths, compound holes, cross-object endpoint joining, gradients, strokes, masks, and live 3D face updates. [Live boolean groups and Divide](docs/live-booleans.md) retain editable operands, support operation changes/release/flatten, and update linked product faces. A folding sleeve exposes its unfolded cut/score dieline.
+- **Vector paint:** Direct gradient-stop and axis editing, full stroke controls with inside/outside alignment, fill-preserving stroke outlines, and explicit nested-mask editing. See the [PRISM workflow](docs/paint-gradients-masks.md).
 - **Image editing:** Original files, aspect-aware placement, crop panning/zoom, numeric crop bounds, brightness/contrast/saturation, replacement that retains layout, drag/drop, and effective physical DPI. See the [LUMEN collection](docs/image-editing.md).
 - **Editable SVG import:** File → Import SVG Artwork (`⇧⌘I`) reviews native paths, groups, text, gradients, clips, and embedded images before creating a physical frame or adding to an existing surface. Originals stay in the project; unsupported features require explicit review. See the [SVG import guide](docs/svg-import.md).
 - **Typography:** Installed-font browser, native selected-character editing, real OpenType features and variable axes, Core Text shaping, and editable glyph outlines with retained source text. See the [editor guide and remaining scope](docs/2d-editor.md).
@@ -56,7 +57,7 @@ Then describe an object in Codex:
 
 > Create an orange table lamp, about 350 mm tall, with editable shade diameter, shade height, stem diameter, and base width. Place a sage variant beside it.
 
-The server exposes 48 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, fonts, vector operations, reusable components, shared palettes, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
+The server exposes 49 tools for project creation, recipe discovery, custom parametric recipes, object edits, artwork, fonts, vector operations, reusable components, shared palettes, variants, grouping, camera control, project notes, exports, local slicing, filament profiles, printer status, atomic batches, and undo/redo. Changes appear in the native app and remain editable without another generation request.
 
 See [Create with Codex](docs/mcp.md) for setup, schemas, a custom object example, and direct CLI invocation.
 
@@ -106,6 +107,7 @@ python3 scripts/smoke_boolean.py # Live operands, Divide, linked faces, atomic b
 python3 scripts/smoke_components.py # Shared marks, overrides, detach, 200 linked placements
 python3 scripts/smoke_swatches.py # Shared colors, rich text, linked products, 600-element palette edits
 python3 scripts/smoke_appearance.py # Blur, shadows, blending, linked outputs, 100 effect placements
+python3 scripts/smoke_paint.py # Gradients, strokes, nested masks, physical outputs, 200-element saved edits
 python3 scripts/smoke_images.py # Original images, crop/adjustments, physical DPI, replacement, 100-image saved edits
 python3 scripts/smoke_paths.py # Curve editing, transformed type, and linked variants
 python3 scripts/smoke_clock.py --slice # Shared dial, immutable source links, physical exports, local Orca
@@ -133,6 +135,7 @@ This build has a native typography/vector editor and procedural construction sys
 - [Shared artwork and the clock study](docs/linked-artwork.md)
 - [Shared colors and the CHROMA collection](docs/shared-swatches.md)
 - [Editable appearance and the UMBRA study](docs/artwork-appearance.md)
+- [Vector paint and the PRISM collection](docs/paint-gradients-masks.md)
 - [Image editing and the LUMEN collection](docs/image-editing.md)
 - [Textiles, Apparel & Merchandise · next feature specification](docs/textiles-apparel-merchandise-spec.md)
 - [Queued feature push · NASA bomber jacket demonstration](docs/next-feature-push.md)

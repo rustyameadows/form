@@ -4,7 +4,7 @@ import Foundation
 public enum ArtworkCommands {
   public static let names = [
     "add", "replace", "delete", "duplicate", "group", "ungroup", "align", "distribute", "reorder",
-    "flip",
+    "flip", "clip", "release_clip",
   ]
   @discardableResult public static func apply(
     _ command: String, to art: inout Artwork, ids: Set<UUID> = [], arguments: [String: Any] = [:]
@@ -19,6 +19,32 @@ public enum ArtworkCommands {
       throw FormError.invalid("Unlock the selected layers before editing them.")
     }
     switch command {
+    case "clip":
+      let candidates = roots.filter { ["rectangle","ellipse","polygon","star","path"].contains($0.kind) }
+      let mask: ArtworkElement
+      if let raw = arguments["mask_id"] {
+        guard let raw = raw as? String, let id = UUID(uuidString:raw),
+          let value = art.elements.first(where:{$0.id == id}) else { throw FormError.invalid("Choose an existing mask_id.") }
+        mask = value
+      } else {
+        guard let value = candidates.first else { throw FormError.invalid("Choose an area shape for the clipping mask.") }
+        mask = value
+      }
+      let targets = roots.filter { $0.id != mask.id }
+      guard ["rectangle","ellipse","polygon","star","path"].contains(mask.kind), mask.clipID == nil,
+        !targets.isEmpty, targets.allSatisfy({$0.parentID == mask.parentID}),
+        Set(art.elements.compactMap(\.clipID)).isDisjoint(with: Set(targets.map(\.id))) else {
+        throw FormError.invalid("Choose sibling artwork and an unclipped area shape. Use nested groups for nested masks.")
+      }
+      let targetIDs = Set(targets.map(\.id))
+      guard !art.elements.contains(where:{targetIDs.contains($0.id) && art.isLocked($0)}) else { throw FormError.invalid("Unlock clipped artwork first.") }
+      for i in result.elements.indices where targetIDs.contains(result.elements[i].id) { result.elements[i].clipID = mask.id }
+      selection = targetIDs
+    case "release_clip":
+      let targetIDs = Set(roots.filter{$0.clipID != nil}.map(\.id))
+      guard !targetIDs.isEmpty else { throw FormError.invalid("Choose clipped artwork to release its mask.") }
+      for i in result.elements.indices where targetIDs.contains(result.elements[i].id) { result.elements[i].clipID = nil }
+      selection = targetIDs
     case "add", "replace":
       guard let raw = arguments["elements"] as? [[String: Any]], !raw.isEmpty else {
         throw FormError.invalid("Provide an elements array.")

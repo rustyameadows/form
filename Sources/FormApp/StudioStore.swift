@@ -101,6 +101,11 @@ enum TableTool: String, CaseIterable {
       guard let self else { throw FormError.missing("FORM is closing.") }
       return try self.graphicsCall(name, args)
     }
+    engine.onValidatePaint = { p,id,ids in
+      guard let object = p.objects.first(where:{$0.id == id}), let raw = p.editableArtwork(object) else { return }
+      let art = try BooleanGeometry.materialized(p.resolvingComponents(in:raw))
+      for e in art.elements where ids.contains(e.id) && e.visibleStroke != nil { _ = try VectorGeometry.expandedStroke(e) }
+    }
     engine.onProjectWillChange = { [weak self] in self?.finishArtworkEditing() }
   }
   func finishArtworkEditing() {
@@ -137,6 +142,7 @@ enum TableTool: String, CaseIterable {
               status["component_resolution"] = ComponentCommands.resolutionDiagnostics
               status["appearance_renderer"] = AppearanceRenderer.diagnostics
               status["image_renderer"] = ImageRenderer.diagnostics
+              status["stroke_geometry"] = StrokeGeometry.diagnostics
               result = status
             }
             if !readOnly {

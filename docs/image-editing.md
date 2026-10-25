@@ -26,7 +26,7 @@ Original bytes are copied into the `.form` package's `Assets` folder. Routine ed
 
 ## MCP
 
-There are **48 tools**. Image commands accept an artwork frame or a linked physical product:
+There are **49 tools**. Image commands accept an artwork frame or a linked physical product:
 
 ```json
 {"name":"form_import_image","arguments":{"object_id":"<frame UUID>","path":"/absolute/path/study.png","x":100,"y":80,"width":120,"anchor":"center"}}

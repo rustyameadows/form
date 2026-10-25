@@ -162,6 +162,14 @@ public enum MCP {
           ], "required": ["elementID"], "additionalProperties": false]],
         ], required: ["command"]),
       tool(
+        "form_edit_paint",
+        "Edit vector stroke and gradient paint without replacing geometry. command update patches stroke (enabled, width/color/opacity, cap/join/miter, dash lengths and dash_offset in mm, alignment center/inside/outside) and gradient (kind, normalized start/end, optional affine transform). null removes explicit stroke or gradient; lines retain their implicit stroke unless enabled:false. Inside/outside require closed geometry. Single-object add_stop/update_stop/delete_stop use stop_id, offset, color, opacity; add samples current shared colors when color is omitted and accepts an optional new UUID. reverse_stops reverses colors. Stops retain UUIDs across reordering; at least two remain. Native/MCP edits share undo and atomic batches.",
+        ["object_id":objectID,"element_ids":["type":"array","items":string],
+          "command":["type":"string","enum":PaintCommands.names],
+          "stroke":["type":["object","null"],"properties":["enabled":["type":"boolean"],"width":number,"color":string,"opacity":number,"cap":string,"join":string,"miter":number,"dash":["type":["array","null"],"items":number],"dash_offset":number,"alignment":["type":"string","enum":["center","inside","outside"]]],"additionalProperties":false],
+          "gradient":["type":["object","null"],"properties":["kind":["type":"string","enum":["linear","radial"]],"start":["type":"object"],"end":["type":"object"],"transform":["type":["object","null"]]],"additionalProperties":false],
+          "stop_id":string,"offset":number,"color":string,"opacity":number],required:["object_id","element_ids"]),
+      tool(
         "form_import_image",
         "Place a local image into editable artwork, or replace element_id while retaining its frame, transform, masks, opacity, and adjustments. Originals are copied into the project. Placement defaults to an aspect-preserving fit; explicit width/height crops to fill. Replacement refills the same frame around the previous crop center. x/y/width/height are physical mm; anchor defaults to top-left and also accepts center. PDF/SVG references retain vector appearance; raster formats support adjustments. File import is outside atomic batches.",
         ["object_id": objectID, "path": string, "element_id": string, "parent_id": string,
@@ -202,9 +210,9 @@ public enum MCP {
         ], required: ["command"]),
       tool(
         "form_edit_artwork",
-        "Apply a native artwork command: add/replace elements, delete, duplicate, group, ungroup, align, distribute, reorder, flip. Use complete element values for add/replace. Alignment modes: left/right/top/bottom/center_x/center_y/width/height; distribution: horizontal/vertical; order: front/back/forward/backward. Returns selected element IDs. All changes share native undo.",
+        "Apply a native artwork command: add/replace elements, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip. Use complete element values for add/replace. clip uses mask_id or the bottom selected area shape; targets and mask must be siblings. Geometry stays editable; use nested clipped groups for nested masks. release_clip preserves the mask shape. Alignment modes: left/right/top/bottom/center_x/center_y/width/height; distribution: horizontal/vertical; order: front/back/forward/backward. Returns selected element IDs. All changes share native undo.",
         [
-          "object_id": objectID, "command": ["type": "string", "enum": ArtworkCommands.names],
+          "object_id": objectID, "mask_id": string, "command": ["type": "string", "enum": ArtworkCommands.names],
           "element_ids": ["type": "array", "items": string],
           "elements": ["type": "array", "items": ["type": "object"]], "mode": string,
           "axis": string,

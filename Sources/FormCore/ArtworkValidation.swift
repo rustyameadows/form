@@ -145,6 +145,10 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
     }
     if let stroke = e.stroke {
       try validateColor(stroke.color)
+      guard ["center","inside","outside"].contains(stroke.alignment ?? "center"),
+        stroke.alignment == nil || stroke.alignment == "center" || e.supportsAlignedStroke else {
+        throw FormError.invalid("Inside/outside strokes require closed vector geometry. Choose a centered stroke for open paths.")
+      }
       guard finite([stroke.width, stroke.miter ?? 10, stroke.dashOffset ?? 0]),
         (0...100).contains(stroke.width),
         (0...1).contains(stroke.opacity ?? 1),
@@ -160,6 +164,7 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
     if let g = e.gradient {
       guard ["linear", "radial"].contains(g.kind),
         finite([g.start.x, g.start.y, g.end.x, g.end.y], 10), (2...32).contains(g.stops.count),
+        Set(g.stops.map(\.id)).count == g.stops.count,
         g.stops.allSatisfy({ $0.offset.isFinite && (0...1).contains($0.offset) }),
         g.stops.map(\.offset) == g.stops.map(\.offset).sorted()
       else {

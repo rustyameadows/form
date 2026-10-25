@@ -29,6 +29,9 @@ import FormCore
   ) throws -> String {
     let art = try BooleanGeometry.materialized(source)
     let tree = ArtworkRenderTree(art, assets: assets, production: true, excluding: [])
+    for e in art.elements where tree.displayed(e) && e.visibleStroke?.dash?.isEmpty == false {
+      _ = try StrokeGeometry.path(e)
+    }
     var definitions = ""
     var body =
       "<rect width=\"\(width)\" height=\"\(height)\" fill=\"\(art.background)\" fill-opacity=\"\(art.backgroundOpacity ?? 1)\"/>"
@@ -134,7 +137,7 @@ import FormCore
             fill = "url(#gradient-\(id))"
           }
           var stroke = ""
-          if let s = e.stroke ?? (e.kind == "line" ? .init(color: e.color) : nil) {
+          if let s = e.visibleStroke, (s.alignment ?? "center") == "center" {
             stroke =
               " stroke=\"\(s.color)\" stroke-width=\"\(s.width)\" stroke-opacity=\"\(s.opacity ?? 1)\" stroke-linecap=\"\(s.cap ?? "butt")\" stroke-linejoin=\"\(s.join ?? "miter")\" stroke-miterlimit=\"\(s.miter ?? 10)\""
             if let dash = s.dash, !dash.isEmpty {
@@ -144,6 +147,10 @@ import FormCore
           }
           output +=
             "<path d=\"\(data(VectorGeometry.path(e)))\" fill=\"\(fill)\" fill-opacity=\"\(e.fillOpacity ?? 1)\" fill-rule=\"\(e.path?.evenOdd == true ? "evenodd":"nonzero")\"\(stroke)/>"
+          if let stroke = e.visibleStroke, (stroke.alignment ?? "center") != "center" {
+            let outline = try VectorGeometry.expandedStroke(e)
+            output += "<path d=\"\(data(outline))\" fill=\"\(stroke.color)\" fill-opacity=\"\(stroke.opacity ?? 1)\"/>"
+          }
         }
         output += "</g>"
         if e.clipID != nil { output += "</g>" }

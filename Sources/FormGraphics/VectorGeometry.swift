@@ -136,17 +136,8 @@ public enum VectorGeometry {
   public static func join(_ value: String?) -> CGLineJoin {
     value == "round" ? .round : value == "bevel" ? .bevel : .miter
   }
-  public static func expandedStroke(_ e: ArtworkElement) throws -> CGPath {
-    guard let stroke = e.stroke, stroke.width > 0 else {
-      throw FormError.invalid("Add a stroke before converting it to outlines.")
-    }
-    var p = path(e)
-    if let dash = stroke.dash, !dash.isEmpty {
-      p = p.copy(dashingWithPhase: stroke.dashOffset ?? 0, lengths: dash.map { CGFloat($0) })
-    }
-    return p.copy(
-      strokingWithWidth: stroke.width, lineCap: cap(stroke.cap), lineJoin: join(stroke.join),
-      miterLimit: stroke.miter ?? 10)
+  @MainActor public static func expandedStroke(_ e: ArtworkElement) throws -> CGPath {
+    try StrokeGeometry.path(e)
   }
   public static func convertedShape(_ source: ArtworkElement) throws -> ArtworkElement {
     guard ["rectangle", "ellipse", "line", "polygon", "star"].contains(source.kind) else {

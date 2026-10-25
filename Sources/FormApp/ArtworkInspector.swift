@@ -163,8 +163,11 @@ struct ArtworkInspector: View {
               typographyControls
               Divider()
             }
-            appearanceControls
-            AppearanceInspector(session: session, element: e)
+            MaskInspector(session: session, element: e)
+            if !session.art.elements.contains(where: { $0.clipID == e.id }) {
+              appearanceControls
+              AppearanceInspector(session: session, element: e)
+            }
             if e.kind == "rectangle" {
               ArtworkUnitField("Corner radius", value: e.cornerRadius ?? 0, unit: session.unit) {
                 v in session.update { $0.cornerRadius = max(0, v) }
@@ -495,136 +498,10 @@ struct ArtworkInspector: View {
           }
         }
         if !["text", "image", "group"].contains(e.kind) || e.booleanOperation != nil {
-          Toggle(
-            "Stroke",
-            isOn: Binding(
-              get: { e.stroke != nil },
-              set: { v in session.update { $0.stroke = v ? .init() : nil } })
-          ).font(.system(size: 10)).toggleStyle(.checkbox)
-          if let stroke = e.stroke {
-            HStack {
-              ArtworkUnitField("Width", value: stroke.width, unit: session.unit) { v in
-                session.update { $0.stroke?.width = max(0, v) }
-              }
-              ColorPicker(
-                "Stroke color",
-                selection: Binding(
-                  get: { Color(nsColor: FormColor.color(stroke.color)) },
-                  set: { color in
-                    session.update {
-                      $0.stroke?.color = FormColor.hex(NSColor(color)); $0.stroke?.swatchID = nil
-                    }
-                  }), supportsOpacity: false
-              ).labelsHidden()
-            }
-            HStack {
-              Picker(
-                "Cap",
-                selection: Binding(
-                  get: { stroke.cap ?? "butt" }, set: { v in session.update { $0.stroke?.cap = v } }
-                )
-              ) {
-                Text("Butt").tag("butt")
-                Text("Round").tag("round")
-                Text("Square").tag("square")
-              }
-              Picker(
-                "Join",
-                selection: Binding(
-                  get: { stroke.join ?? "miter" },
-                  set: { v in session.update { $0.stroke?.join = v } })
-              ) {
-                Text("Miter").tag("miter")
-                Text("Round").tag("round")
-                Text("Bevel").tag("bevel")
-              }
-            }.labelsHidden().font(.system(size: 9))
-            SwatchPicker(session: session, target: "stroke", swatchID: stroke.swatchID)
-            Toggle(
-              "Dashed",
-              isOn: Binding(
-                get: { !(stroke.dash ?? []).isEmpty },
-                set: { v in session.update { $0.stroke?.dash = v ? [3, 2] : nil } })
-            ).font(.system(size: 10)).toggleStyle(.checkbox)
-            if let dash = stroke.dash, !dash.isEmpty {
-              HStack {
-                ArtworkUnitField("Dash", value: dash[0], unit: session.unit) { v in
-                  session.update {
-                    $0.stroke?.dash = [max(0.01, v), dash.count > 1 ? dash[1] : dash[0]]
-                  }
-                }
-                ArtworkUnitField(
-                  "Gap", value: dash.count > 1 ? dash[1] : dash[0], unit: session.unit
-                ) { v in session.update { $0.stroke?.dash = [dash[0], max(0.01, v)] } }
-              }
-              ArtworkUnitField("Dash phase", value: stroke.dashOffset ?? 0, unit: session.unit) {
-                value in
-                session.update { $0.stroke?.dashOffset = value }
-              }
-            }
-            Button("Outline stroke") { session.convert("stroke") }.font(.system(size: 10))
-          }
-          DisclosureGroup("Gradient") {
-            Toggle(
-              "Use gradient",
-              isOn: Binding(
-                get: { e.gradient != nil },
-                set: { v in session.update {
-                  $0.gradient = v ? .init() : nil
-                  if v { $0.fillSwatchID = nil }
-                } })
-            ).font(.system(size: 10)).toggleStyle(.checkbox)
-            if let g = e.gradient {
-              Picker(
-                "Type",
-                selection: Binding(
-                  get: { g.kind }, set: { v in session.update { $0.gradient?.kind = v } })
-              ) {
-                Text("Linear").tag("linear")
-                Text("Radial").tag("radial")
-              }.labelsHidden()
-              ForEach(Array(g.stops.enumerated()), id: \.element.id) { index, stop in
-                HStack {
-                  ColorPicker(
-                    "Stop",
-                    selection: Binding(
-                      get: { Color(nsColor: FormColor.color(stop.color)) },
-                      set: { color in
-                        session.update {
-                          $0.gradient?.stops[index].color = FormColor.hex(NSColor(color))
-                          $0.gradient?.stops[index].swatchID = nil
-                        }
-                      }), supportsOpacity: false
-                  ).labelsHidden()
-                  ScalarArtworkField("Position", value: stop.offset * 100, unit: "%") { v in
-                    session.update { e in
-                      e.gradient?.stops[index].offset = min(1, max(0, v / 100))
-                      e.gradient?.stops.sort { $0.offset < $1.offset }
-                    }
-                  }
-                }
-                SwatchPicker(session: session, target: "gradient_stop", swatchID: stop.swatchID, stopID: stop.id)
-                ScalarArtworkField("Stop opacity", value: (stop.opacity ?? 1) * 100, unit: "%") {
-                  value in
-                  session.update { $0.gradient?.stops[index].opacity = min(1, max(0, value / 100)) }
-                }
-              }
-              Button("Add color stop") {
-                session.update { e in
-                  e.gradient?.stops.append(.init(0.5, e.color))
-                  e.gradient?.stops.sort { $0.offset < $1.offset }
-                }
-              }.font(.system(size: 10))
-              Text("Drag the gradient's start and end handles on the canvas.").font(
-                .system(size: 9)
-              ).foregroundStyle(Palette.secondary)
-            }
-          }.font(.system(size: 10))
+          StrokeInspector(session: session, element: e)
+          if e.kind != "line" { GradientInspector(session: session, element: e) }
         }
-        if e.clipID != nil {
-          Button("Release clipping mask") { session.update { $0.clipID = nil } }.font(
-            .system(size: 10))
-        }
+
       }
     }
   }

@@ -21,6 +21,7 @@ The goal service currently permits status changes but cannot rewrite the text of
 - [x] Persistent Studio filament library; local printer profiles; Keychain credential storage; read-only TLS/MQTT status adapter.
 - [x] Real official OrcaSlicer 2.4.2 slice yielding STL, G-code, sliced 3MF, layer preview, and estimates; no printer commands sent.
 - [ ] Verify the physical P1S status connection when its IP, serial, and locally entered access code are available.
+- [ ] Clear or refresh an open Print preview when switching projects, including an in-progress local slice. Native regression review exposed stale mesh/object state after a project switch.
 - [ ] Complete the remaining original-brief physical design workflows; evaluate the 3D environment with the new linked artwork demonstrations.
 
 ### B. Credible professional 2D canvas — specification Phase 1
@@ -51,7 +52,7 @@ Current progress: [precise compound-path operations and transformed native text]
 
 - [x] Complete Bézier node/handle operations, including corner/smooth, add/delete, join/split, close/open, reverse, numeric and multi-node transforms.
 - [x] Union/subtract/intersect/exclude/divide where supported; non-destructive boolean groups and flattening; compound paths with holes.
-- [ ] Linear/radial gradients and editable stops/positions; full stroke styles and expansion; editable nested clipping masks.
+- [x] Linear/radial gradients and editable stops/positions; full stroke styles and expansion; editable nested clipping masks.
 - [x] Linked reusable components with overrides and detachment; shared swatches; non-destructive opacity/effects/blending.
 - [x] Image crop/replace/mask/adjustments and effective DPI; original asset preservation; drag/drop and supported macOS formats.
 - [ ] Editable SVG import/export with transforms, hierarchy, geometry, text, and explicit unsupported-feature reporting; SVG/PDF/PNG/JPEG selection/frame/document export options.
@@ -60,6 +61,8 @@ Current progress: [precise compound-path operations and transformed native text]
 [Reusable vector components](reusable-components.md) now share source artwork across frames and physical products, with independent placement/size, fill/text/opacity overrides, nested references, reset, and detachment. The STRATA workflow validates these features through native and MCP interactions. [Shared sRGB swatches](shared-swatches.md) now update fills, strokes, gradient stops, selected characters, backgrounds, and component overrides across the CHROMA collection, with appearance-preserving detachment/deletion and native/MCP undo. [Editable appearance and the UMBRA study](artwork-appearance.md) now validate sixteen blend modes, layer/group opacity, Gaussian blur, drop shadows, shared shadow colors, group isolation, preserved text outlines, and physical outputs. Native controls and real MCP workflows complete the component/swatch/basic-effects checkpoint; advanced effects can follow gradually as specified. Production color profiles and physical material/thread/ink mappings remain staged work.
 
 [Image editing and the LUMEN collection](image-editing.md) now complete the basic raster-image checkpoint: original bytes, oriented ImageIO decoding, crop gestures/numeric bounds, image adjustments, layout-preserving replacement, native file drops and asset reuse, clipping, and transform-aware physical DPI. Native and real MCP workflows validate the canvas, linked products, schema-9 persistence, and physical exports. The remaining publication/color and vector requirements above stay open.
+
+[Vector paint and PRISM](paint-gradients-masks.md) now validate on-canvas gradient stops/axes, complete stroke controls and inside/outside geometry, fill-preserving expansion, explicit nested-mask editing, stable references/Undo, schema-10 persistence, and physical outputs through native mouse and real MCP flows. The remaining SVG interchange and production demonstration requirements above stay open.
 
 ### E. Print and publication — specification Phase 4
 

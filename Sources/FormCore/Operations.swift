@@ -12,6 +12,7 @@ public final class OperationEngine {
   public var onExport: ((String, [String: Any]) throws -> Any)?
   public var onPrint: ((String, [String: Any]) throws -> Any)?
   public var onGraphics: ((String, [String: Any]) throws -> Any)?
+  public var onValidatePaint: ((Project, UUID, Set<UUID>) throws -> Void)?
   public var onProjectWillChange: (() -> Void)?
   private var interaction: String?
   private var interactionSnapshot: (project: Project, undo: [Project], redo: [Project])?
@@ -225,6 +226,17 @@ public final class OperationEngine {
         default: throw FormError.invalid("Unknown component command.")
         }
       }
+      return result
+    case "form_edit_paint":
+      let id = try objectID(), ids = try idsArgument(a["element_ids"])
+      let command = a["command"] as? String ?? "update"
+      var selectedStop: UUID?
+      try edit("Vector paint", source:source, coalescing:source == "Studio" ? "paint-\(id)-\(command)-\(a["stop_id"] as? String ?? "")" : nil) { p in
+        selectedStop = try PaintCommands.apply(in:&p,objectID:id,ids:ids,command:command,arguments:a)
+        try self.onValidatePaint?(p,id,ids)
+      }
+      var result: [String:Any] = ["selected_elements":ids.map(\.uuidString)]
+      if let selectedStop { result["selected_stop"] = selectedStop.uuidString }
       return result
     case "form_edit_image":
       let id = try objectID(), ids = try idsArgument(a["element_ids"])
@@ -592,7 +604,7 @@ public final class OperationEngine {
         "form_set_artwork", "form_add_note", "form_create_recipe", "form_delete_objects",
         "form_edit_artwork",
         "form_edit_path",
-        "form_boolean_artwork", "form_convert_to_paths", "form_component", "form_swatch", "form_appearance", "form_edit_image",
+        "form_boolean_artwork", "form_convert_to_paths", "form_component", "form_swatch", "form_appearance", "form_edit_image", "form_edit_paint",
         "form_link_artwork", "form_extract_artwork",
       ])
       guard operations.allSatisfy({ allowed.contains($0["name"] as? String ?? "") }) else {

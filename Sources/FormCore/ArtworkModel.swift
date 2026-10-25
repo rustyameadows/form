@@ -135,6 +135,8 @@ public struct VectorPath: Codable, Equatable, Sendable {
   }
 }
 public struct ArtworkStroke: Codable, Equatable, Sendable {
+  public var enabled: Bool?
+  public var alignment: String?
   public var color: String
   public var swatchID: UUID?
   public var width: Double
@@ -297,7 +299,7 @@ extension Artwork {
       }
   }
   public var usesExtendedFormat: Bool {
-    if requiresSchemaFour || requiresSchemaFive || requiresSchemaEight || requiresSchemaNine || !referencedSwatches.isEmpty || elements.contains(where: { $0.component != nil }) { return true }
+    if requiresSchemaFour || requiresSchemaFive || requiresSchemaEight || requiresSchemaNine || requiresSchemaTen || !referencedSwatches.isEmpty || elements.contains(where: { $0.component != nil }) { return true }
     if boundary != nil { return true }
     if unit != nil || guides != nil || gridSpacing != nil || showGrid != nil || showGuides != nil
       || snapEnabled != nil || nudge != nil || canvasPosition != nil
@@ -346,7 +348,7 @@ extension Artwork {
     }
     var result = self
     result.elements = elements.filter { required.contains($0.id) }
-    if result.elements.contains(where: { $0.hasActiveEffects }) {
+    if result.elements.contains(where: { $0.hasVisualOverflow }) {
       let masks = Set(result.elements.compactMap(\.clipID))
       let visibleRoots = result.elements.filter { $0.parentID == nil && !masks.contains($0.id) && $0.hidden != true }
       if let first = visibleRoots.first {
@@ -396,6 +398,11 @@ extension Artwork {
     for i in result.elements.indices {
       if result.elements[i].imageCrop == .full { result.elements[i].imageCrop = nil }
       if result.elements[i].imageAdjustments?.isIdentity == true { result.elements[i].imageAdjustments = nil }
+      if result.elements[i].stroke?.alignment == "center" { result.elements[i].stroke?.alignment = nil }
+      if result.elements[i].stroke?.enabled == true { result.elements[i].stroke?.enabled = nil }
+      if result.elements[i].stroke?.enabled == false {
+        result.elements[i].stroke = result.elements[i].kind == "line" ? ArtworkStroke(color:"#000000",width:0) : nil
+      }
       result.elements[i].name = nil
       result.elements[i].locked = nil
       if result.elements[i].blendMode == "normal" { result.elements[i].blendMode = nil }

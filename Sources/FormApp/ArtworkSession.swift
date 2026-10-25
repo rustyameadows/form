@@ -55,6 +55,10 @@ enum ArtworkTool: String, CaseIterable {
   @Published var selection = Set<UUID>() {
     didSet {
       if let croppingImageID, selection != [croppingImageID] { self.croppingImageID = nil }
+      if let selectedGradientStopID, primary?.gradient?.stops.contains(where: { $0.id == selectedGradientStopID }) != true {
+        self.selectedGradientStopID = nil
+      }
+      if let maskEditing, !selection.isEmpty && selection != [maskEditing.maskID] { self.maskEditing = nil }
       pruneNodeSelection()
       store?.objectWillChange.send()
     }
@@ -62,6 +66,8 @@ enum ArtworkTool: String, CaseIterable {
   @Published var nodes = Set<UUID>() { didSet { store?.objectWillChange.send() } }
   @Published var scopeID: UUID?
   @Published var componentReturn: ComponentEditingContext?
+  @Published var selectedGradientStopID: UUID?
+  @Published var maskEditing: MaskEditingContext?
   @Published var tool: ArtworkTool = .select {
     didSet { if tool != oldValue { croppingImageID = nil; canvas?.finishPath() } }
   }
@@ -191,6 +197,7 @@ enum ArtworkTool: String, CaseIterable {
     return result
   }
   func reconcile() {
+    if let maskEditing, !art.elements.contains(where: { $0.id == maskEditing.maskID }) { self.maskEditing = nil }
     if componentReturn != nil && object?.componentDefinition != true { componentReturn = nil }
     if componentReturn == nil, let primary = store?.primary, primary.supportsArtworkFace {
       let owner = store?.project?.artworkOwner(primary) ?? primary
@@ -217,6 +224,8 @@ enum ArtworkTool: String, CaseIterable {
     guard id != objectID else { return }
     canvas?.finishText()
     componentReturn = nil
+    maskEditing = nil
+    selectedGradientStopID = nil
     objectID = id
     linkedTargetID = nil
     dieline = false
@@ -414,15 +423,7 @@ enum ArtworkTool: String, CaseIterable {
     } catch { store.error = error.localizedDescription }
   }
   func makeMask() {
-    canvas?.finishText()
-    let shapes = elements.filter { !["text", "image", "group"].contains($0.kind) }
-    guard elements.count >= 2, let mask = shapes.first else { return }
-    mutate { a in
-      for i in a.elements.indices
-      where selection.contains(a.elements[i].id) && a.elements[i].id != mask.id {
-        a.elements[i].clipID = mask.id
-      }
-    }
+    execute("clip")
   }
   func addGuide(axis: String, position: Double) {
     mutate { a in

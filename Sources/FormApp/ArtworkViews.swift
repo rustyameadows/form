@@ -111,14 +111,17 @@ struct ArtworkStudio: View {
       }
       Divider()
       HStack(spacing: 14) {
-        Text(session.scopeID == nil ? "ARTWORK" : "EDITING GROUP").font(
+        Text(session.maskEditing != nil ? "EDITING MASK" : session.scopeID == nil ? "ARTWORK" : "EDITING GROUP").font(
           .system(size: 8, weight: .medium, design: .monospaced)
         ).tracking(0.8)
-        if session.componentReturn != nil {
+        if session.maskEditing != nil {
+          Button("Back to contents") { session.returnFromMask() }
+            .buttonStyle(.plain).foregroundStyle(Palette.accent)
+        } else if session.componentReturn != nil {
           Button("Back to instance") { session.returnToComponent() }
             .buttonStyle(.plain).foregroundStyle(Palette.accent)
         }
-        if session.scopeID != nil {
+        if session.scopeID != nil && session.maskEditing == nil {
           Button("Leave group") {
             session.scopeID = nil
             session.choose([])

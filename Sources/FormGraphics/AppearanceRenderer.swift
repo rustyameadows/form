@@ -174,7 +174,7 @@ import FormCore
     } else if e.kind == "image" { box = .init(x: 0, y: 0, width: e.width, height: e.height) }
     else {
       box = e.fillEnabled == false || e.kind == "line" ? .null : VectorGeometry.path(e).boundingBoxOfPath
-      if e.stroke != nil || e.kind == "line", let stroke = try? VectorGeometry.expandedStroke(e) {
+      if e.visibleStroke != nil, let stroke = try? VectorGeometry.expandedStroke(e) {
         box = box.union(stroke.boundingBoxOfPath)
       }
     }

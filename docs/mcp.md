@@ -47,6 +47,7 @@ build/FORM.app/Contents/MacOS/form-mcp --call form_add_object '{"recipe_id":"lam
 | `form_component` | List/create reusable sources, place linked instances, override/reset appearance and text, and detach |
 | `form_appearance` | Editable opacity, blend modes, group isolation, blur, and shared-color drop shadows |
 | `form_swatch` | List/create/update project colors, assign or detach paint links, and delete while preserving current appearance |
+| `form_edit_paint` | Gradient stops/axis, complete stroke styles, inside/outside alignment, and atomic paint patches |
 | `form_import_image`, `form_edit_image`, `form_image_info` | Original image placement/replacement, editable crop/adjustments, and resolved physical DPI |
 | `form_import_svg` | Review and import local SVG into native editable artwork, retaining originals and reporting fidelity differences |
 | `form_edit_path` | Precise Bézier edits, cross-object endpoint joining, compound creation/release, and multi-path physical node transforms |
@@ -66,13 +67,15 @@ Read-only project and recipe resources are also exposed as `form://project` and 
 
 `form_boolean_artwork` defaults to live Union/Subtract/Intersect/Exclude groups; `operation: divide` creates editable regions. `mode` also accepts `update`, `flatten`, `release`, and `path` for a direct flat result with hidden source operands. These edits and `form_convert_to_paths` participate in atomic `form_batch` operations. See the [live boolean guide](live-booleans.md) for examples, compatibility constraints, and schema-5 persistence.
 
-There are 48 tools. Print options use the native configuration keys: `component`, `printerID`, `filamentID`, `layerHeight`, `infillPercent`, `wallLoops`, `supports`, `brimWidth`, `scalePercent`, and `rotation` (degree-valued `x`, `y`, `z` in printer coordinates). `form_slice` starts asynchronously; poll status until `busy` is false and inspect `validation_error` before consuming outputs. `form_set_view` accepts `print_bed` / `print_object`. See [printing setup](printing.md) for examples and the explicit no-print boundary.
+There are 49 tools. Print options use the native configuration keys: `component`, `printerID`, `filamentID`, `layerHeight`, `infillPercent`, `wallLoops`, `supports`, `brimWidth`, `scalePercent`, and `rotation` (degree-valued `x`, `y`, `z` in printer coordinates). `form_slice` starts asynchronously; poll status until `busy` is false and inspect `validation_error` before consuming outputs. `form_set_view` accepts `print_bed` / `print_object`. See [printing setup](printing.md) for examples and the explicit no-print boundary.
 
 `form_component` edits reusable vector sources and instances across project artwork frames and linked physical products. Source edits retain consumer object resources; instances support independent size, global/per-part fill, text, opacity, reset, and detach. `form_get_artwork` accepts `resolved: true` to inspect the expanded hierarchy. See [components and STRATA](reusable-components.md) for schemas, examples, and limits.
 
 `form_swatch` shares named sRGB colors across project artwork and linked physical faces. It supports fills, strokes, shadows, gradient stops, backgrounds, component parts, and UTF-16 text ranges. Read-only `command: list` preserves native drafts; all mutations participate in atomic batches and Undo. `form_get_artwork` with `resolved: true` also bakes current palette values into the derived output. See [shared swatches and CHROMA](shared-swatches.md) for exact arguments and persistence.
 
 `form_appearance` patches selected root layers with `opacity`, `blend_mode`, group `isolate`, `blur`, and `shadow` values; `command: reset` clears their appearance. Disabled effects retain their settings, and clipping follows effects. `form_swatch target: shadow` binds or detaches a shared shadow color. Both commands support atomic batches and Undo. See [editable appearance and UMBRA](artwork-appearance.md) for exact examples, schema-8 persistence, group semantics, and export limits.
+
+`form_edit_paint` patches vector strokes and gradients, retaining stable stop UUIDs as they reorder. `form_edit_artwork` includes `clip` and `release_clip`; mask geometry remains editable. See [PRISM, gradients, strokes, and masks](paint-gradients-masks.md) for native gestures, command examples, schema-10 persistence, and bounded stroke expansion.
 
 `form_import_image` places or replaces a local file while retaining its original bytes. `form_edit_image` patches normalized crop bounds and image adjustments, with atomic batches and Undo. `form_image_info` inspects oriented pixel metadata and effective DPI at the resolved physical output size without disturbing native focus. See [image editing and LUMEN](image-editing.md) for schemas, examples, format support, and output limits.
 

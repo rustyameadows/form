@@ -42,96 +42,15 @@ extension StudioStore {
     let colored = project.resolvingSwatches(in: art, keepingReferences: true)
     var created: [ArtworkElement] = []
     if name == "form_convert_to_paths" {
-      let stroke = args["mode"] as? String == "stroke"
-      let shape = args["mode"] as? String == "shape"
-      let all = art.descendants(of: ids)
-      let booleanChildren = art.elements.filter {
-        all.contains($0.id) && $0.booleanOperation != nil
-      }
-      .reduce(into: Set<UUID>()) { $0.formUnion(art.descendants(of: [$1.id]).subtracting([$1.id])) }
-      for e in colored.elements
-      where all.contains(e.id) && !booleanChildren.contains(e.id) && e.hidden != true
-        && (shape
-          ? ["rectangle", "ellipse", "line", "polygon", "star"].contains(e.kind)
-          : stroke ? e.stroke != nil : e.kind == "text")
-      {
-        guard !art.isLocked(e) else { throw FormError.invalid("Unlock the selected layers first.") }
-        if shape {
-          created.append(try VectorGeometry.convertedShape(e))
-          let index = next.elements.firstIndex { $0.id == e.id }!
-          next.elements[index].hidden = true
-          next.elements[index].name = "\(e.title.prefix(470)) · editable source"
-          continue
-        }
-        let paths: [(path: CGPath, color: String, swatchID: UUID?)] =
-          stroke
-          ? [
-            (
-              try VectorGeometry.expandedStroke(
-                e.booleanOperation != nil ? BooleanGeometry.proxy(e, in: art) : e), e.stroke!.color,
-              e.stroke?.swatchID
-            )
-          ]
-          : try TypographyEngine.outlinePaintRuns(e)
-        let wrap = paths.count > 1 && (e.hasActiveEffects || (e.blendMode ?? "normal") != "normal"
-          || (e.opacity ?? 1) < 1 || (e.fillOpacity ?? 1) < 1)
-        var container: ArtworkElement?
-        if wrap {
-          var group = ArtworkElement(kind: "group", x: 0, y: 0, width: e.width, height: e.height, color: e.color)
-          group.name = e.title + " · outlines"
-          group.parentID = e.parentID
-          group.contentSize = .init(e.width, e.height)
-          group.affine = e.localTransform
-          group.opacity = e.opacity
-          group.blendMode = e.blendMode
-          group.blur = e.blur
-          group.shadow = e.shadow
-          group.clipID = e.clipID
-          group.productionRole = e.productionRole
-          container = group
-          created.append(group)
-          if (e.fillOpacity ?? 1) < 1 {
-            var fills = ArtworkElement(kind: "group", x: 0, y: 0, width: e.width, height: e.height)
-            fills.name = "Glyph fills"
-            fills.contentSize = .init(e.width, e.height)
-            fills.parentID = group.id
-            fills.opacity = e.fillOpacity
-            container = fills
-            created.append(fills)
-          }
-        }
-        for (path, color, swatchID) in paths {
-          var vector = try VectorGeometry.element(
-            from: path, color: color, name: e.title + " · outlines", parentID: container?.id ?? e.parentID)
-          vector.affine = wrap ? .init() : e.localTransform
-          vector.opacity = wrap ? nil : e.opacity
-          vector.fillOpacity = wrap ? nil : stroke ? e.stroke?.opacity : e.fillOpacity
-          vector.fillSwatchID = swatchID
-          vector.blendMode = wrap ? nil : e.blendMode
-          vector.blur = wrap ? nil : e.blur
-          vector.shadow = wrap ? nil : e.shadow
-          vector.productionRole = e.productionRole
-          vector.clipID = wrap ? nil : e.clipID
-          created.append(vector)
-        }
-        let index = next.elements.firstIndex { $0.id == e.id }!
-        next.elements[index].hidden = true
-        next.elements[index].name = e.title + " · editable source"
-      }
-      guard !created.isEmpty else {
-        throw FormError.invalid(
-          shape
-            ? "Select geometric shapes to convert to editable paths."
-            : stroke
-              ? "Select a vector object with a stroke." : "Select text with visible outline glyphs."
-        )
-      }
+      guard !project.artworkOwner(object).locked else { throw FormError.invalid("Unlock this artwork object first.") }
+      let conversion = try ArtworkOutlines.convert(art, ids: ids, mode: args["mode"] as? String ?? "text", resolvedPaint: colored)
+      next = conversion.artwork
+      created = conversion.created
     } else if name == "form_boolean_artwork" {
       return try editBoolean(object: object, artwork: art, ids: ids, arguments: args)
     } else {
       throw FormError.invalid("Unknown graphics operation.")
     }
-    next.elements += created
     try validateArtwork(next)
     try engine.edit(
       "Artwork: \(name == "form_convert_to_paths" ? "convert to outlines":"combine paths")",
