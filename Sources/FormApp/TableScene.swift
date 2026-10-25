@@ -30,6 +30,8 @@ private struct RenderSignature: Equatable {
   let textile: TextileProduct?
   let fabricPattern: ResolvedFabricPattern?
   let cloth:ClothStudy?
+  let merchandiseSurface:[String:Double]?
+  let merchandiseMaterials:[FormCore.Material]?
 }
 
 @MainActor final class TableSceneController {
@@ -203,7 +205,7 @@ private struct RenderSignature: Equatable {
         asset: object.asset,
         fontRevision: project.editableArtwork(object) == nil && project.material(object.materialID).fabric?.pattern == nil ? 0 : GeometryFactory.fontRevision,
         textureLimit: textureLimit, textile: object.textile?.renderDefinition,
-        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth)
+        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth, merchandiseSurface:project.conformedMerchandiseSignature(object),merchandiseMaterials:project.merchandiseMaterialDependencies(object))
       if let node=nodes[object.id],let prior=fingerprints[object.id],prior != fingerprint,
         canUpdateEmbroiderySurface(prior,fingerprint,object:object) {
         EmbroiderySceneSurface.update(node,object:object,project:project,assets:assets,textureLimit:textureLimit)
@@ -236,6 +238,9 @@ private struct RenderSignature: Equatable {
       node.position = v(placement.position.x / 100, placement.position.y / 100, placement.position.z / 100)
       if let cloth=try? (store != nil ? store!.cloth.placement(of:object,in:project):project.clothPlacement(object)) {
         applyClothPlacement(cloth,to:node)
+      } else if let right=placement.basisRight,let down=placement.basisDown {
+        let n=placement.normal
+        node.simdOrientation=simd_quatf(simd_float3x3(columns:(SIMD3(Float(right.x),Float(right.y),Float(right.z)),SIMD3(Float(n.x),Float(n.y),Float(n.z)),SIMD3(Float(down.x),Float(down.y),Float(down.z)))))
       } else if object.textile?.attachment != nil {
         let normal = SIMD3<Float>(Float(placement.normal.x), Float(placement.normal.y), Float(placement.normal.z))
         node.simdOrientation = simd_quatf(from: SIMD3<Float>(0,1,0), to: normal)
@@ -853,6 +858,8 @@ private struct RenderSignature: Equatable {
     if let recipe = project.recipe(object.recipeID) {
       signature.append((try? JSONEncoder.form.encode(recipe)) ?? Data())
     }
+    if let materials=project.merchandiseMaterialDependencies(object){signature.append((try? JSONEncoder.form.encode(materials)) ?? Data())}
+    if let surface=project.conformedMerchandiseSignature(object){signature.append((try? JSONEncoder.form.encode(surface)) ?? Data())}
     signature.append(Data(assets.path.utf8))
     signature.append(Data("texture-limit:\(textureLimit)".utf8))
     let cacheKey =
@@ -865,6 +872,10 @@ private struct RenderSignature: Equatable {
     let root = SCNNode()
     let mat = material(object, project: project)
     switch object.recipeID {
+    case "crewTee":root.addChildNode(MerchandiseGeometry.tee(object,project:project,assets:assets,limit:textureLimit))
+    case "curvedCap":root.addChildNode(MerchandiseGeometry.cap(object,project:project,assets:assets,limit:textureLimit))
+    case "canvasTote":root.addChildNode(MerchandiseGeometry.tote(object,project:project,assets:assets,limit:textureLimit))
+    case "textilePrint":root.addChildNode(MerchandiseGeometry.directArtwork(object,project:project,assets:assets,limit:textureLimit))
     case "bomberJacket":
       root.addChildNode(TextileGeometry.bomber(object, project: project, assets: assets, textureLimit: textureLimit))
     case "textilePatch", "textileLabel":
@@ -1103,7 +1114,7 @@ private struct RenderSignature: Equatable {
         }
       }
     }
-    if let artwork = object.artwork, !["sleeve", "booklet", "clock", "bomberJacket", "textilePatch", "textileLabel"].contains(object.recipeID),
+    if let artwork = object.artwork, !["sleeve", "booklet", "clock", "bomberJacket", "textilePatch", "textileLabel", "crewTee", "curvedCap", "canvasTote", "textilePrint"].contains(object.recipeID),
       object["width"] > 0, object["depth"] > 0
     {
       let top = Double(root.boundingBox.max.y) * 100 + 0.04

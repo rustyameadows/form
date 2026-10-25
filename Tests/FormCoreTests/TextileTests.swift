@@ -79,7 +79,9 @@ final class TextileTests:XCTestCase {
     try library.save(to:root);XCTAssertEqual(StudioLibrary.load(from:root),library)
     let old=Data("{\"materials\":[],\"equipment\":[]}".utf8)
     let upgraded=try JSONDecoder.form.decode(StudioLibrary.self,from:old)
-    XCTAssertEqual(upgraded.materials.filter{$0.fabric != nil}.count,6)
+    let fabricIDs=Set(upgraded.materials.filter{$0.fabric != nil}.map(\.id))
+    XCTAssertTrue(Set(["flight-nylon","flight-sage","flight-orange","flight-rib","patch-twill","label-ecru"]).isSubset(of:fabricIDs))
+    XCTAssertTrue(Set(["jersey-ecru","jersey-navy","merch-twill","merch-canvas","merch-webbing","merch-rib"]).isSubset(of:fabricIDs))
     XCTAssertThrowsError(try FabricProfile(composition:"Nylon",structure:.woven,weightGSM:Double.nan).validate())
   }
   func testArtworkEditsLeaveGarmentAndIndependentComponentResourcesUntouched() throws {

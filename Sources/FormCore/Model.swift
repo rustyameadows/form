@@ -218,10 +218,14 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   }
   public subscript(_ key: String) -> Double { parameters[key] ?? 0 }
   public var footprintWidth: Double {
-    max(self["width"], self["shadeDiameter"], self["baseDiameter"], self["diameter"], 100)
+    if recipeID=="crewTee" {return self["width"]+self["sleeveLength"]*2}
+    if recipeID=="curvedCap" {return max(self["width"],self["brimWidth"])}
+    return max(self["width"], self["shadeDiameter"], self["baseDiameter"], self["diameter"], 100)
   }
   public var footprintDepth: Double {
-    max(self["depth"], self["shadeDiameter"], self["baseDiameter"], self["diameter"], 100)
+    if recipeID=="curvedCap" {return self["width"]+self["depth"]}
+    if recipeID=="canvasTote" {return self["depth"]+self["handleDrop"]}
+    return max(self["depth"], self["shadeDiameter"], self["baseDiameter"], self["diameter"], 100)
   }
 }
 
@@ -388,6 +392,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var publications:[PublicationDocument]?
   public var productionJobs:[ProductionJob]?
   public var minimumSchemaVersion: Int {
+    if objects.contains(where:{MerchandiseBlanks.recipeIDs.contains($0.recipeID) || $0.textile?.process == .directPrint || $0.textile?.attachment.map{[TextileAttachment.Zone.front,.leftSide,.rightSide].contains($0.zone)} == true}) {return max(schemaVersion,34)}
     if objects.contains(where:{object in (object.artwork?.elements ?? []).contains(where:{e in
       guard let piece=e.sewingPiece else{return false}
       return SewingPatterns.needsGeneralGeometry(e) || piece.onFoldEdgeID != nil || piece.notches.contains(where:{$0.edgeID != nil})
@@ -461,7 +466,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   }
   public func makeObject(
     recipeID: String, name: String? = nil, parameters: [String: Double] = [:],
-    materialID: String = "chalk", position: Vector3 = .init()
+    materialID: String? = nil, position: Vector3 = .init()
   ) throws -> ProductObject {
     guard let recipe = recipe(recipeID) else {
       throw FormError.invalid(
@@ -470,10 +475,11 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
     try recipe.validate(parameters)
     var object = ProductObject(
       name: name ?? recipe.name, recipeID: recipeID,
-      parameters: recipe.defaults.merging(parameters) { _, new in new }, materialID: materialID,
+      parameters: recipe.defaults.merging(parameters) { _, new in new }, materialID: materialID ?? MerchandiseBlanks.defaultMaterial(recipeID) ?? "chalk",
       position: position)
     object.textile = TextileProduct.defaults(for: recipeID)
     if ClothDesign.recipeIDs.contains(recipeID) {object.cloth = try ClothDesign.definition(for:object)}
+    if recipeID=="textilePrint" {object.artwork=MerchandiseBlanks.blankArtwork(width:object["width"],height:object["depth"])}
     return object
   }
 }

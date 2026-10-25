@@ -2,7 +2,7 @@ import Foundation
 
 extension ProductObject {
   public var supportsArtworkFace: Bool {
-    !isCanvasWorkspace && recipeID != "bomberJacket" && (recipeID == "clock" || self["width"] > 0 && self["depth"] > 0)
+    !isCanvasWorkspace && recipeID != "bomberJacket" && !MerchandiseBlanks.garmentIDs.contains(recipeID) && (recipeID == "clock" || self["width"] > 0 && self["depth"] > 0)
   }
   public var artworkSize: Point2 {
     recipeID == "clock"

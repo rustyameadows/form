@@ -160,7 +160,7 @@ enum TableTool: String, CaseIterable {
             if name == "form_cloth" {completion(.success(try self.bridgeClothCall(args)));return}
             let readOnly =
               [
-                "form_status", "form_list_projects", "form_get_project", "form_list_recipes",
+                "form_status", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones",
                 "form_list_materials", "form_get_print_setup", "form_get_slice_status",
                 "form_list_filaments", "form_list_printers", "form_get_artwork",
                 "form_list_fonts", "form_font_features", "form_image_info", "form_export_publication",
@@ -338,7 +338,7 @@ enum TableTool: String, CaseIterable {
       "form_add_object",
       [
         "recipe_id": recipe.id, "position": [x, 0, 0],
-        "material_id": ClothDesign.recipeIDs.contains(recipe.id) ? "linen" : recipe.id == "bomberJacket" ? "flight-nylon" : recipe.id == "textilePatch" ? "patch-twill" : recipe.id == "textileLabel" ? "label-ecru" : recipe.id == "lamp" ? "vermillion" : recipe.id == "vase" ? "clay" : "chalk",
+        "material_id": MerchandiseBlanks.defaultMaterial(recipe.id) ?? (ClothDesign.recipeIDs.contains(recipe.id) ? "linen" : recipe.id == "bomberJacket" ? "flight-nylon" : recipe.id == "textilePatch" ? "patch-twill" : recipe.id == "textileLabel" ? "label-ecru" : recipe.id == "lamp" ? "vermillion" : recipe.id == "vase" ? "clay" : "chalk"),
       ])
     if recipe.id == "artboard", let object = primary {
       saveArtwork(.init(background: "#F2EDE1"), for: object)

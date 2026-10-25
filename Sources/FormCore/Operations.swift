@@ -168,6 +168,7 @@ public final class OperationEngine {
       try open(id)
       return try jsonObject(requireProject())
     case "form_get_project": return try jsonObject(requireProject())
+    case "form_textile_zones": return try requireProject().textileZoneReport(objectID:objectID())
     case "form_get_artwork":
       let id = try objectID()
       guard let object = project?.objects.first(where: { $0.id == id }) else {
@@ -460,7 +461,7 @@ public final class OperationEngine {
       let parameters = try numericParameters(a["parameters"])
       var object = try p.makeObject(
         recipeID: recipe, name: a["name"] as? String, parameters: parameters,
-        materialID: a["material_id"] as? String ?? "chalk", position: try vector(a["position"]))
+        materialID: a["material_id"] as? String ?? MerchandiseBlanks.defaultMaterial(recipe) ?? "chalk", position: try vector(a["position"]))
       if let color = a["color"] as? String {
         try validateColor(color)
         object.color = color
@@ -597,7 +598,7 @@ public final class OperationEngine {
       object.id = UUID()
       object.groupID = nil
       if object.textile?.attachment != nil {
-        let placement = p.textilePlacement(object)
+        let placement = p.detachedTextilePlacement(object)
         object.position = placement.position
         object.rotation = placement.rotation
         object.textile?.laidFaceDown = placement.underside

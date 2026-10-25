@@ -105,6 +105,7 @@ extension StudioStore {
       return try exportFabricPattern(materialID: materialID, arguments: arguments)
     }
     if arguments["roles"] != nil {return try exportProductionArtwork(object:object,arguments:arguments)}
+    guard !MerchandiseBlanks.garmentIDs.contains(object.recipeID) else {throw FormError.invalid("Choose an independent decoration region or its artwork source for physical artwork export. Use the scene export for a garment preview.")}
     guard let project else { throw FormError.missing("Open a project first.") }
     let format = arguments["format"] as? String ?? "svg"
     let dimensions = ArtworkDrawing.dimensions(object)

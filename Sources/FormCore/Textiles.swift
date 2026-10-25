@@ -40,9 +40,9 @@ public struct FabricProfile: Codable, Equatable, Sendable {
 
 public struct TextileAttachment: Codable, Equatable, Sendable {
   public enum Zone: String, Codable, CaseIterable, Sendable {
-    case leftChest, rightChest, leftSleeve, rightSleeve, collar, back
+    case leftChest, rightChest, leftSleeve, rightSleeve, collar, back, front, leftSide, rightSide
     public var name: String {
-      switch self {case .leftChest:return "Left chest";case .rightChest:return "Right chest";case .leftSleeve:return "Left sleeve";case .rightSleeve:return "Right sleeve";case .collar:return "Inside collar";case .back:return "Back"}
+      switch self {case .leftChest:return "Left chest";case .rightChest:return "Right chest";case .leftSleeve:return "Left sleeve";case .rightSleeve:return "Right sleeve";case .collar:return "Inside collar";case .back:return "Back";case .front:return "Front";case .leftSide:return "Left side";case .rightSide:return "Right side"}
     }
   }
   public var garmentID: UUID
@@ -65,9 +65,9 @@ public struct TextileAttachment: Codable, Equatable, Sendable {
 public struct TextileProduct: Codable, Equatable, Sendable {
   public enum Kind: String, Codable, CaseIterable, Sendable {case garment, patch, label, embroidery}
   public enum Process: String, Codable, CaseIterable, Sendable {
-    case decoratedBlank, embroideredPatch, wovenPatch, printedPatch, sewnLabel, directEmbroidery
+    case decoratedBlank, embroideredPatch, wovenPatch, printedPatch, sewnLabel, directEmbroidery, directPrint
     public var name: String {
-      switch self {case .decoratedBlank:return "Decorated blank";case .embroideredPatch:return "Embroidered patch study";case .wovenPatch:return "Woven patch";case .printedPatch:return "Printed patch";case .sewnLabel:return "Sewn label";case .directEmbroidery:return "Direct embroidery study"}
+      switch self {case .decoratedBlank:return "Decorated blank";case .embroideredPatch:return "Embroidered patch study";case .wovenPatch:return "Woven patch";case .printedPatch:return "Printed patch";case .sewnLabel:return "Sewn label";case .directEmbroidery:return "Direct embroidery study";case .directPrint:return "Direct surface artwork"}
     }
   }
   public var kind: Kind
@@ -108,6 +108,7 @@ public struct TextileProduct: Codable, Equatable, Sendable {
     return result
   }
   public static func defaults(for recipe:String)->Self? {
+    if let merch=MerchandiseBlanks.defaults(recipe){return merch}
     switch recipe {
     case "bomberJacket":
       var item=Self(kind:.garment,process:.decoratedBlank);item.blankName="Generic flight bomber";item.size="M · concept measurements";item.liningMaterialID="flight-orange";item.trimMaterialID="flight-rib";return item
@@ -125,10 +126,12 @@ public struct TextilePlacement: Equatable, Sendable {
   public var rotation:Double
   public var underside:Bool
   public var normal:Vector3 = .init(0,1,0)
+  public var basisRight:Vector3?
+  public var basisDown:Vector3?
 }
 
 public enum TextileDesign {
-  public static let recipeIDs:Set<String>=["bomberJacket","textilePatch","textileLabel"]
+  public static let recipeIDs:Set<String>=Set(["bomberJacket","textilePatch","textileLabel"]).union(MerchandiseBlanks.recipeIDs)
   public static let recipes:[Recipe]=[
     .init("bomberJacket","Flight bomber","jacket","A dimensioned generic bomber blank with shaped fabric panels, ribbing, zipper, pockets, and independent decorations. Concept geometry, not a cutting pattern.",[
       .init("width","Body width",620,400...900),.init("depth","Body length",660,420...1000),
@@ -140,7 +143,7 @@ public enum TextileDesign {
       .init("height","Thickness",2.4,0.3...12,step:0.1),.init("corner","Corner radius",45,0...200,step:0.5),.init("borderWidth","Border",3,0...12,step:0.5)]),
     .init("textileLabel","Sewn label","tag","A separate woven or printed label with editable artwork and placement.",[
       .init("width","Width",90,10...300,step:0.5),.init("depth","Height",32,8...160,step:0.5),
-      .init("height","Thickness",0.8,0.2...6,step:0.1),.init("corner","Corner radius",1,0...20,step:0.5),.init("borderWidth","Stitch inset",2,0...8,step:0.5)])]
+      .init("height","Thickness",0.8,0.2...6,step:0.1),.init("corner","Corner radius",1,0...20,step:0.5),.init("borderWidth","Stitch inset",2,0...8,step:0.5)])]+MerchandiseBlanks.recipes
 
   public static var materials:[Material] {
     func fabric(_ id:String,_ name:String,_ color:String,_ composition:String,_ structure:FabricProfile.Structure,_ gsm:Double,_ thickness:Double,_ roughness:Double)->Material {
@@ -152,7 +155,7 @@ public enum TextileDesign {
       fabric("flight-orange","Rescue orange lining","#CB5A2E","Polyester lining · generic",.woven,95,0.25,0.48),
       fabric("flight-rib","Midnight rib knit","#19252D","Cotton / elastane rib · generic",.knit,420,2.2,0.94),
       fabric("patch-twill","Patch twill · midnight","#172B42","Polyester twill · generic",.woven,240,0.7,0.88),
-      fabric("label-ecru","Woven label · ecru","#E5DEC8","Polyester label tape · generic",.woven,150,0.45,0.9)]
+      fabric("label-ecru","Woven label · ecru","#E5DEC8","Polyester label tape · generic",.woven,150,0.45,0.9)]+MerchandiseBlanks.materials
   }
   /// Shared visual surface used by jacket mesh and attachment landmarks, in millimeters.
   public static func bodyTop(_ object:ProductObject,x:Double,z:Double)->Double {
@@ -171,6 +174,7 @@ public enum TextileDesign {
     case .rightSleeve:return .init(-w*0.41-s*0.34*cos(a),sleeveTop(garment,t:0.34),-d*0.28+s*0.34*sin(a))
     case .collar:return .init(0,12,-d*0.43)
     case .back:return .init(0,1,d*0.02)
+    case .front,.leftSide,.rightSide:return .init()
     }
   }
   public static func sleeveTop(_ garment:ProductObject,t:Double)->Double {
@@ -186,31 +190,40 @@ extension Project {
     try validateFabricPatterns()
     try validateSewingLayoutMaterials()
     for object in objects {
+      try MerchandiseBlanks.validate(object,in:self)
+      if MerchandiseBlanks.recipeIDs.contains(object.recipeID),object.textile==nil {throw FormError.invalid("Merchandise blanks and direct artwork regions retain their textile specifications.")}
       guard let spec=object.textile else {continue}
+      if spec.process == .directPrint,object.recipeID != "textilePrint" {throw FormError.invalid("Choose a direct artwork region for directPrint; rigid patch/label recipes keep their declared physical process.")}
+      if object.recipeID=="textilePrint",spec.process != .directPrint || spec.kind != .patch || spec.embroidery != nil {throw FormError.invalid("A direct artwork region uses the directPrint process and editable artwork, not a rigid or stitched product.")}
+
       if let embroidery=spec.embroidery {
         guard spec.kind != .garment else {throw FormError.invalid("Digitize an independent patch/decoration region before attaching it to a garment.")}
         try embroidery.validate()
       }
       guard TextileDesign.recipeIDs.contains(object.recipeID),
-        (object.recipeID=="bomberJacket") == (spec.kind == .garment),
+        (object.recipeID=="bomberJacket" || MerchandiseBlanks.garmentIDs.contains(object.recipeID)) == (spec.kind == .garment),
         (spec.kind == .garment) == (spec.process == .decoratedBlank),
         [spec.blankName,spec.size,spec.manufacturer,spec.sku,spec.liningMaterialID,spec.trimMaterialID,spec.border,spec.backing,spec.attachmentMethod,spec.notes].allSatisfy({($0?.count ?? 0)<=2000}),
         (spec.threadColors?.count ?? 0)<=64 else {throw FormError.invalid("Invalid textile product or specification.")}
       for color in spec.threadColors ?? [] {try validateColor(color)}
       if let placement=spec.attachment {
         guard spec.kind != .garment,placement.garmentID != object.id,
-          let garment=objects.first(where:{$0.id==placement.garmentID}),garment.recipeID=="bomberJacket",garment.textile?.kind == .garment,
+          let garment=objects.first(where:{$0.id==placement.garmentID}),(garment.recipeID=="bomberJacket" || MerchandiseBlanks.garmentIDs.contains(garment.recipeID)),garment.textile?.kind == .garment,
           [placement.offset.x,placement.offset.y,placement.rotation,placement.clearance].allSatisfy(\.isFinite),
           abs(placement.offset.x)<=3000,abs(placement.offset.y)<=3000,abs(placement.rotation)<=36000,
-          (0...50).contains(placement.clearance) else {throw FormError.invalid("Attach decorations to a flight bomber with finite, dimensioned placement.")}
+          (0...50).contains(placement.clearance) else {throw FormError.invalid("Attach decorations to a known garment blank with finite, dimensioned placement.")}
+        if garment.recipeID=="bomberJacket",[TextileAttachment.Zone.front,.leftSide,.rightSide].contains(placement.zone) || garment.recipeID=="bomberJacket" && object.recipeID=="textilePrint" {throw FormError.invalid("Choose an existing bomber patch/label zone; conforming direct artwork is supported on the new merchandise blanks.")}
+
       }
     }
   }
   public func textilePlacement(_ object:ProductObject)->TextilePlacement {
+    if MerchandiseBlanks.garmentIDs.contains(object.recipeID){return merchandiseBlankPlacement(object)}
     guard let attachment=object.textile?.attachment,
       let garment=objects.first(where:{$0.id==attachment.garmentID}) else {
       return .init(position:object.position,rotation:object.rotation,underside:object.textile?.laidFaceDown == true)
     }
+    if MerchandiseBlanks.garmentIDs.contains(garment.recipeID){return merchandisePlacement(object,attachment:attachment,host:garment)}
     var local=TextileDesign.anchor(garment,zone:attachment.zone)
     var hx=0.0,hz=0.0
     local.x+=attachment.offset.x;local.z+=attachment.offset.y
@@ -233,14 +246,16 @@ extension Project {
     let old=self
     for i in objects.indices where !ids.contains(objects[i].id) {
       guard let attached=objects[i].textile?.attachment,ids.contains(attached.garmentID) else {continue}
-      let placement=old.textilePlacement(objects[i]);objects[i].position=placement.position;objects[i].rotation=placement.rotation
+      let placement=old.detachedTextilePlacement(objects[i]);objects[i].position=placement.position;objects[i].rotation=placement.rotation
       objects[i].textile?.laidFaceDown=placement.underside
       objects[i].textile?.attachment=nil
     }
   }
   public mutating func setTextileWorldPosition(_ id:UUID,to position:Vector3) {
     guard let i=objects.firstIndex(where:{$0.id==id}) else {return}
+    if MerchandiseBlanks.garmentIDs.contains(objects[i].recipeID),objects[i].textile?.laidFaceDown==true {objects[i].position = .init(position.x,position.y-MerchandiseBlanks.displayHeight(objects[i]),position.z);return}
     guard let attachment=objects[i].textile?.attachment,let garment=objects.first(where:{$0.id==attachment.garmentID}) else {objects[i].position=position;return}
+    if MerchandiseBlanks.garmentIDs.contains(garment.recipeID){moveMerchandiseAttachment(id,to:position,host:garment,attachment:attachment);return}
     let a=garment.rotation * .pi/180,dx=position.x-garment.position.x,dz=position.z-garment.position.z
     let anchor=TextileDesign.anchor(garment,zone:attachment.zone)
     objects[i].textile?.attachment?.offset = .init(dx*cos(a)-dz*sin(a)-anchor.x,dx*sin(a)+dz*cos(a)-anchor.z)

@@ -45,7 +45,7 @@ public enum MCP {
           "rotation": number, "clearance": ["type": "number", "minimum": 0, "maximum": 50],
         ]],
       ],
-      "description": "Complete textile product specification or null to clear. Garments are generic presentation blanks. Optional embroidery stores regenerable digitizing settings; machine programs export separately. Attachments reference a supported garment and physical region; offsets are millimeters.",
+      "description": "Complete textile product specification or null to clear. Garments are generic presentation blanks. Optional embroidery stores regenerable digitizing settings; machine programs export separately. Attachments reference a supported garment and physical region; offsets are centered region-local millimeters. Discover bounds with form_textile_zones for crewTee/curvedCap/canvasTote. Direct artwork uses textilePrint/directPrint and clearance 0–0.25 mm; cap rigid patch/label/embroidery placements reject. laidFaceDown explicitly turns over tee/tote with every attachment; caps remain upright.",
     ]
     func tool(
       _ name: String, _ description: String, _ properties: [String: Any] = [:],
@@ -109,6 +109,7 @@ public enum MCP {
         "form_get_project",
         "Read all objects, editable parameters, recipes, artwork, materials, decisions, and history for the current project.",
         readOnly: true),
+      tool("form_textile_zones","Read exact bounded decoration regions of a crewTee, curvedCap or canvasTote. Returns physical centered zone dimensions, surface mapping and allowed processes. Curved cap art uses arc-length millimeters below the dome and clear of the back opening; it rejects rigid patches/labels/embroidery. This does not fit or mutate decorations.",["object_id":objectID],required:["object_id"],readOnly:true),
       tool(
         "form_list_recipes",
         "Discover built-in and project-defined parametric recipes, including their native inspector schemas, ranges, and defaults.",
