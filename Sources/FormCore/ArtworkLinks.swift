@@ -24,10 +24,10 @@ extension Project {
   public func artworkSize(_ object: ProductObject) -> Point2 { artworkOwner(object).artworkSize }
   /// Resolve the shared document at physical surface scale, keeping editor-only
   /// data out of render signatures. Source files and source typography stay intact.
-  public func surfaceArtwork(_ object: ProductObject) -> Artwork? {
+  public func surfaceArtwork(_ object: ProductObject, keepingSwatchReferences: Bool = false) -> Artwork? {
     let owner = artworkOwner(object)
     guard let stored = owner.artwork else { return nil }
-    var art = (try? resolvingComponents(in: stored)) ?? stored
+    var art = (try? resolvingComponents(in: stored, keepingSwatchReferences: keepingSwatchReferences)) ?? stored
     if owner.id != object.id {
       let source = owner.artworkSize
       let target = object.artworkSize
@@ -83,7 +83,7 @@ extension Project {
     }
     let design = objects[i].designID
     // Detachment bakes the current placement so the physical result is preserved.
-    var detached = sourceID == nil ? surfaceArtwork(objects[i]) : nil
+    var detached = sourceID == nil ? surfaceArtwork(objects[i], keepingSwatchReferences: true) : nil
     if objects[i].recipeID == "clock" { detached?.boundary = nil }
     var candidate = self
     for n in candidate.objects.indices where candidate.objects[n].designID == design {
@@ -95,6 +95,7 @@ extension Project {
     self = candidate
   }
   public func validateArtworkLinks() throws {
+    try validateSwatches()
     try validateComponentLinks()
     for object in objects {
       guard object.artworkFit == nil || ["actual", "fit"].contains(object.artworkFit!) else {
@@ -137,7 +138,7 @@ extension Project {
     }
     let snapshots = objects.filter { !ids.contains($0.id) && ids.contains(artworkOwner($0).id) }
       .map { object -> (UUID, Artwork?) in
-        var art = surfaceArtwork(object)
+        var art = surfaceArtwork(object, keepingSwatchReferences: true)
         if object.recipeID == "clock" { art?.boundary = nil }
         return (object.id, art)
       }

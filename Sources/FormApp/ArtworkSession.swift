@@ -69,6 +69,7 @@ enum ArtworkTool: String, CaseIterable {
   @Published var characterRange = NSRange(location: 0, length: 0)
   @Published var exportDPI = 300.0
   @Published var exportOutline = true
+  @Published var showingPalette = false
   init(store: StudioStore) { self.store = store }
   var object: ProductObject? { store?.project?.objects.first { $0.id == objectID } }
   var art: Artwork {
@@ -140,7 +141,10 @@ enum ArtworkTool: String, CaseIterable {
     canvas?.textInspection()?.typography ?? primary?.typography ?? .init()
   }
   var inspectedSize: Double { canvas?.textInspection()?.fontSize ?? primary?.fontSize ?? 14 }
-  var inspectedColor: String { canvas?.textInspection()?.color ?? primary?.color ?? "#292D2C" }
+  func colored(_ element: ArtworkElement) -> ArtworkElement {
+    store?.project?.resolvingSwatches(in: .init(elements: [element]), keepingReferences: true).elements.first ?? element
+  }
+  var inspectedColor: String { canvas?.textInspection()?.color ?? primary.map(colored)?.color ?? "#292D2C" }
   var assets: URL {
     guard let store, let project = store.project else { return URL(fileURLWithPath: "/") }
     return store.repository.url(for: project.id).appendingPathComponent("Assets")
@@ -341,7 +345,7 @@ enum ArtworkTool: String, CaseIterable {
         var style = e.typography ?? .init()
         body(&style)
         e.typography = style
-        e.textRuns = nil
+        for i in e.textRuns?.indices ?? 0..<0 { body(&e.textRuns![i].typography) }
       }
     }
   }
@@ -350,7 +354,7 @@ enum ArtworkTool: String, CaseIterable {
     update {
       if $0.kind == "text" {
         $0.fontSize = max(0.1, size)
-        $0.textRuns = nil
+        for i in $0.textRuns?.indices ?? 0..<0 { $0.textRuns?[i].fontSize = max(0.1, size) }
       }
     }
   }
@@ -358,7 +362,12 @@ enum ArtworkTool: String, CaseIterable {
     if canvas?.applyTextColor(color) == true { return }
     update {
       $0.color = color
-      if $0.kind == "text" { $0.textRuns = nil }
+      $0.fillSwatchID = nil
+      if $0.kind != "text" { $0.gradient = nil; $0.fillEnabled = true }
+      for i in $0.textRuns?.indices ?? 0..<0 {
+        $0.textRuns?[i].color = color
+        $0.textRuns?[i].swatchID = nil
+      }
     }
   }
   func manualKerning(_ value: Double) {

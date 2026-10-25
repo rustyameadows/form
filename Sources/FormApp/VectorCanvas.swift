@@ -217,7 +217,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       DispatchQueue.main.async { [weak self] in self?.fitWhenReady() }
     }
     if let id = editingID, let tv = textView,
-      let e = session.art.elements.first(where: { $0.id == id }), e != publishedText,
+      let e = session.art.elements.first(where: { $0.id == id }).map(session.colored), e != publishedText,
       !tv.hasMarkedText()
     {
       let range = tv.selectedRange()
@@ -1123,6 +1123,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func beginText(_ e: ArtworkElement) {
     guard let s = session, activeFrame != nil else { return }
+    let e = s.colored(e)
     s.dieline = false
     s.beginGesture()
     let tv = CanvasTextView(
@@ -1214,7 +1215,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let runs = TypographyEngine.spans(
       from: tv.attributedString(), fallback: e.typography ?? .init())
     if runs.count == 1, let run = runs.first, run.fontSize == e.fontSize, run.color == e.color,
-      run.typography == (e.typography ?? .init())
+      run.typography == (e.typography ?? .init()), run.swatchID == e.fillSwatchID
     {
       e.textRuns = nil
     } else {
@@ -1227,7 +1228,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       tv.setFrameSize(.init(width: max(40, e.width * ppm), height: max(24, e.height * ppm)))
     }
     value.elements[i] = e
-    publishedText = e
+    publishedText = s.colored(e)
     s.save(value)
     positionTextHost(e)
   }
@@ -1244,14 +1245,18 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     return false
   }
-  private func changeText(_ attributes: [NSAttributedString.Key: Any]) -> Bool {
+  private func changeText(_ attributes: [NSAttributedString.Key: Any], removing: [NSAttributedString.Key] = []) -> Bool {
     guard let tv = textView else { return false }
     let range = tv.selectedRange()
     if range.length == 0 {
       tv.typingAttributes.merge(attributes) { _, new in new }
+      for key in removing { tv.typingAttributes.removeValue(forKey: key) }
       session?.objectWillChange.send()
     } else if tv.shouldChangeText(in: range, replacementString: nil) {
+      tv.textStorage?.beginEditing()
+      for key in removing { tv.textStorage?.removeAttribute(key, range: range) }
       tv.textStorage?.addAttributes(attributes, range: range)
+      tv.textStorage?.endEditing()
       tv.didChangeText()
     }
     return true
@@ -1268,6 +1273,18 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       fallback: session?.primary?.typography ?? .init()
     ).first
   }
+  func textSwatchReferences() -> Set<UUID?>? {
+    guard let tv = textView else { return nil }
+    let range = tv.selectedRange()
+    if range.length == 0 {
+      return [(tv.typingAttributes[TypographyEngine.swatchKey] as? String).flatMap(UUID.init(uuidString:))]
+    }
+    var result = Set<UUID?>()
+    tv.attributedString().enumerateAttribute(TypographyEngine.swatchKey, in: range) { value, _, _ in
+      result.insert((value as? String).flatMap(UUID.init(uuidString:)))
+    }
+    return result
+  }
   func applyTextStyle(_ body: (inout Typography) -> Void) -> Bool {
     guard let tv = textView else { return false }
     let range = tv.selectedRange()
@@ -1276,7 +1293,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       var t = run.typography
       body(&t)
       tv.typingAttributes = TypographyEngine.attributes(
-        t, size: run.fontSize, color: run.color, millimeters: false)
+        t, size: run.fontSize, color: run.color, millimeters: false, swatchID: run.swatchID)
       session?.objectWillChange.send()
       return true
     }
@@ -1291,7 +1308,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         replacements.append(
           (
             part,
-            TypographyEngine.attributes(t, size: run.fontSize, color: run.color, millimeters: false)
+            TypographyEngine.attributes(t, size: run.fontSize, color: run.color, millimeters: false,
+              swatchID: run.swatchID)
           ))
       }
     }
@@ -1323,7 +1341,13 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return changeText([.font: NSFont(descriptor: font.fontDescriptor, size: size) ?? font])
   }
   func applyTextColor(_ color: String) -> Bool {
-    changeText([.foregroundColor: FormColor.color(color)])
+    changeText([.foregroundColor: FormColor.color(color)], removing: [TypographyEngine.swatchKey])
+  }
+  func applyTextSwatch(_ id: UUID?, color: String?) -> Bool {
+    if let id, let color {
+      return changeText([.foregroundColor: FormColor.color(color), TypographyEngine.swatchKey: id.uuidString])
+    }
+    return changeText([:], removing: [TypographyEngine.swatchKey])
   }
   func undoText() -> Bool {
     guard let tv = textView else { return false }

@@ -212,6 +212,7 @@ public final class OperationEngine {
               if let color = a["color"] {
                 guard color is NSNull || color is String else { throw FormError.invalid("Color must be a hex string or null.") }
                 art.elements[i].component?.color = color as? String
+                art.elements[i].component?.colorSwatchID = nil
               }
               if let overrides = a["overrides"] {
                 art.elements[i].component?.overrides = try JSONDecoder().decode([ArtworkComponentOverride].self,
@@ -222,6 +223,42 @@ public final class OperationEngine {
           try p.setArtwork(art, for: target)
           result = ["selected_elements": ids.map(\.uuidString)]
         default: throw FormError.invalid("Unknown component command.")
+        }
+      }
+      return result
+    case "form_swatch":
+      let command = try string("command")
+      if command == "list" { return ["swatches": try jsonObject(requireProject().swatches ?? [])] }
+      func uuid(_ key: String) throws -> UUID {
+        guard let raw = a[key] as? String, let value = UUID(uuidString: raw) else {
+          throw FormError.invalid("Provide a valid \(key).")
+        }
+        return value
+      }
+      var result: [String: Any] = [:]
+      let coalescing = source == "Studio" && command == "update" ? "swatch-\(a["swatch_id"] ?? "")" : nil
+      try edit("Swatch: \(command)", source: source, coalescing: coalescing) { p in
+        switch command {
+        case "create", "update":
+          let id: UUID? = command == "update" ? try uuid("swatch_id") : nil
+          let old = p.swatches?.first { $0.id == id }
+          let saved = try SwatchCommands.save(in: &p, id: id,
+            name: a["name"] as? String ?? old?.name ?? "Untitled color",
+            color: a["color"] as? String ?? old?.color ?? "#D45A37")
+          result = ["swatch": try jsonObject(p.swatches!.first { $0.id == saved }!)]
+        case "delete":
+          try SwatchCommands.delete(in: &p, id: uuid("swatch_id"))
+          result = ["deleted": true]
+        case "assign", "detach":
+          let target = a["target"] as? String ?? "fill"
+          let ids = target == "background" ? Set<UUID>() : try idsArgument(a["element_ids"])
+          try SwatchCommands.assign(in: &p, objectID: objectID(), ids: ids, target: target,
+            swatchID: command == "assign" ? try uuid("swatch_id") : nil,
+            stopID: a["stop_id"] == nil ? nil : try uuid("stop_id"),
+            partID: a["part_id"] == nil ? nil : try uuid("part_id"),
+            location: a["location"] as? Int, length: a["length"] as? Int)
+          result = ["selected_elements": ids.map(\.uuidString)]
+        default: throw FormError.invalid("Unknown swatch command.")
         }
       }
       return result
@@ -534,7 +571,7 @@ public final class OperationEngine {
         "form_set_artwork", "form_add_note", "form_create_recipe", "form_delete_objects",
         "form_edit_artwork",
         "form_edit_path",
-        "form_boolean_artwork", "form_convert_to_paths", "form_component",
+        "form_boolean_artwork", "form_convert_to_paths", "form_component", "form_swatch",
         "form_link_artwork", "form_extract_artwork",
       ])
       guard operations.allSatisfy({ allowed.contains($0["name"] as? String ?? "") }) else {

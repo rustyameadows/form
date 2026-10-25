@@ -126,6 +126,7 @@ enum TableTool: String, CaseIterable {
                 "form_list_fonts", "form_font_features",
               ].contains(name) || (name == "form_import_svg" && args["dry_run"] as? Bool == true)
                 || (name == "form_component" && args["command"] as? String == "list")
+                || (name == "form_swatch" && args["command"] as? String == "list")
             if !readOnly { self.finishArtworkEditing() }
             var result = try self.engine.call(name, arguments: args)
             if name == "form_status", var status = result as? [String: Any] {

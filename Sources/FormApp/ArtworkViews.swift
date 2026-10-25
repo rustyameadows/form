@@ -40,6 +40,11 @@ struct ArtworkStudio: View {
         }.buttonStyle(.plain).padding(.leading, 8).popover(isPresented: $newFrame) {
           NewArtworkFrame(session: session)
         }
+        Button { session.showingPalette.toggle() } label: {
+          Label("Palette", systemImage: "swatchpalette").font(.system(size: 11))
+        }.buttonStyle(.plain).padding(.leading, 12).popover(isPresented: $session.showingPalette) {
+          SwatchPalette(session: session)
+        }
         Spacer(minLength: 10)
         if session.previewObject?.recipeID == "sleeve" {
           Picker("View", selection: $session.dieline) {

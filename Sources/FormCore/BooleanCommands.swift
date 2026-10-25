@@ -71,6 +71,7 @@ public enum BooleanCommands {
     group.contentSize = size
     group.booleanOperation = operation
     group.fillEnabled = paint.fillEnabled
+    group.fillSwatchID = paint.fillSwatchID
     group.fillOpacity = paint.fillOpacity
     group.opacity = opacity == 1 ? nil : opacity
     group.gradient = paint.gradient

@@ -20,9 +20,11 @@ public enum FormColor {
 @MainActor public enum TypographyEngine {
   public static let pointsPerMM = 72.0 / 25.4
   private static let styleKey = NSAttributedString.Key("studio.form.typography")
+  public static let swatchKey = NSAttributedString.Key("studio.form.swatch")
   private struct Signature: Equatable {
     var text: String, size: Double, color: String, width: Double, height: Double,
       style: Typography?, runs: [TextSpan]?
+    var fillSwatchID: UUID?
     init(_ e: ArtworkElement) {
       text = e.text
       size = e.fontSize
@@ -31,6 +33,7 @@ public enum FormColor {
       height = e.height
       style = e.typography
       runs = e.textRuns
+      fillSwatchID = e.fillSwatchID
     }
   }
   private final class LayoutEntry {
@@ -81,7 +84,8 @@ public enum FormColor {
     }
     return NSFont(descriptor: base.fontDescriptor.addingAttributes(attrs), size: size) ?? base
   }
-  public static func attributes(_ style: Typography, size: Double, color: String, millimeters: Bool)
+  public static func attributes(_ style: Typography, size: Double, color: String, millimeters: Bool,
+    swatchID: UUID? = nil)
     -> [NSAttributedString.Key: Any]
   {
     let f = millimeters ? 1 / pointsPerMM : 1
@@ -102,7 +106,7 @@ public enum FormColor {
     p.baseWritingDirection =
       style.direction == "rtl" ? .rightToLeft : style.direction == "ltr" ? .leftToRight : .natural
     p.lineBreakMode = .byWordWrapping
-    return [
+    var result: [NSAttributedString.Key: Any] = [
       styleKey: (try? JSONEncoder.form.encode(style)) ?? Data(),
       .font: font(style, size: size * f), .foregroundColor: FormColor.color(color),
       .paragraphStyle: p, .kern: style.tracking * f, .baselineOffset: style.baseline * f,
@@ -111,6 +115,8 @@ public enum FormColor {
       .strikethroughStyle: style.strikethrough ? NSUnderlineStyle.single.rawValue : 0,
       .expansion: log(style.horizontalScale / 100),
     ]
+    if let swatchID { result[swatchKey] = swatchID.uuidString }
+    return result
   }
   public static func attributed(_ element: ArtworkElement, millimeters: Bool = false)
     -> NSAttributedString
@@ -124,7 +130,8 @@ public enum FormColor {
     let result = NSMutableAttributedString(
       string: text,
       attributes: attributes(
-        base, size: element.fontSize, color: element.color, millimeters: millimeters))
+        base, size: element.fontSize, color: element.color, millimeters: millimeters,
+        swatchID: element.fillSwatchID))
     for run in element.textRuns ?? [] {
       let original = element.text as NSString
       guard run.location + run.length <= original.length else { continue }
@@ -134,7 +141,8 @@ public enum FormColor {
       ).utf16.count
       guard start + length <= result.length else { continue }
       result.setAttributes(
-        attributes(run.typography, size: run.fontSize, color: run.color, millimeters: millimeters),
+        attributes(run.typography, size: run.fontSize, color: run.color, millimeters: millimeters,
+          swatchID: run.swatchID),
         range: .init(location: start, length: length))
     }
     let factor = millimeters ? 1 / pointsPerMM : 1
@@ -287,11 +295,15 @@ public enum FormColor {
     return result
   }
   public static func outlineRuns(_ element: ArtworkElement) throws -> [(CGPath, String)] {
+    try outlinePaintRuns(element).map { ($0.path, $0.color) }
+  }
+  public static func outlinePaintRuns(_ element: ArtworkElement) throws
+    -> [(path: CGPath, color: String, swatchID: UUID?)] {
     let (frame, offset) = layout(element)
     let lines = CTFrameGetLines(frame) as! [CTLine]
     var origins = [CGPoint](repeating: .zero, count: lines.count)
     CTFrameGetLineOrigins(frame, CFRange(), &origins)
-    var result: [(CGPath, String)] = []
+    var result: [(path: CGPath, color: String, swatchID: UUID?)] = []
     let text = cachedLayout(element).text.string as NSString
     for (i, line) in lines.enumerated() {
       for run in CTLineGetGlyphRuns(line) as! [CTRun] {
@@ -341,7 +353,8 @@ public enum FormColor {
               ink,
               FormColor.hex(
                 attrs[NSAttributedString.Key.foregroundColor] as? NSColor
-                  ?? FormColor.color(element.color))
+                  ?? FormColor.color(element.color)),
+              (attrs[swatchKey] as? String).flatMap(UUID.init(uuidString:))
             ))
         }
       }
@@ -393,11 +406,12 @@ public enum FormColor {
         style.rightIndent = -p.tailIndent
         style.firstLineIndent = p.firstLineHeadIndent
       }
-      result.append(
-        .init(
+      var span = TextSpan(
           location: range.location, length: range.length, typography: style,
           fontSize: font.pointSize,
-          color: FormColor.hex(attrs[.foregroundColor] as? NSColor ?? .black)))
+          color: FormColor.hex(attrs[.foregroundColor] as? NSColor ?? .black))
+      span.swatchID = (attrs[swatchKey] as? String).flatMap(UUID.init(uuidString:))
+      result.append(span)
     }
     return result
   }

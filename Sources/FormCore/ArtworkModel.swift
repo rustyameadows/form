@@ -136,6 +136,7 @@ public struct VectorPath: Codable, Equatable, Sendable {
 }
 public struct ArtworkStroke: Codable, Equatable, Sendable {
   public var color: String
+  public var swatchID: UUID?
   public var width: Double
   public var opacity: Double?
   public var cap: String?
@@ -152,6 +153,7 @@ public struct GradientStop: Codable, Equatable, Identifiable, Sendable {
   public var id = UUID()
   public var offset: Double
   public var color: String
+  public var swatchID: UUID?
   public var opacity: Double?
   public init(_ offset: Double, _ color: String) {
     self.offset = offset
@@ -255,6 +257,7 @@ public struct TextSpan: Codable, Equatable, Sendable {
   public var typography: Typography
   public var fontSize: Double
   public var color: String
+  public var swatchID: UUID?
   public init(location: Int, length: Int, typography: Typography, fontSize: Double, color: String) {
     self.location = location
     self.length = length
@@ -294,7 +297,7 @@ extension Artwork {
       }
   }
   public var usesExtendedFormat: Bool {
-    if requiresSchemaFour || requiresSchemaFive || elements.contains(where: { $0.component != nil }) { return true }
+    if requiresSchemaFour || requiresSchemaFive || !referencedSwatches.isEmpty || elements.contains(where: { $0.component != nil }) { return true }
     if boundary != nil { return true }
     if unit != nil || guides != nil || gridSpacing != nil || showGrid != nil || showGuides != nil
       || snapEnabled != nil || nudge != nil || canvasPosition != nil

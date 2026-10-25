@@ -59,7 +59,7 @@ def main():
         client.process.stdin.write('{"jsonrpc":"2.0","method":"notifications/initialized"}\n')
         client.process.stdin.flush()
         tools = client.rpc("tools/list")["tools"]
-        assert len(tools) == 43
+        assert len(tools) == 44
         assert len({tool["name"] for tool in tools}) == len(tools)
         project = client.call("form_create_project", {"name": "MCP validation", "template": "cyanotype", "conversation_reference": "FORM local integration test"})
         sleeve = next(obj for obj in project["objects"] if obj["recipeID"] == "sleeve")

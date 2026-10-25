@@ -161,6 +161,16 @@ public enum MCP {
           ], "required": ["elementID"], "additionalProperties": false]],
         ], required: ["command"]),
       tool(
+        "form_swatch",
+        "Manage the project's named sRGB palette. list reads swatches; create/update changes a named color. assign binds artwork fill, stroke, gradient_stop, background, component_part, or a UTF-16 text_range. Changes update every reference across source documents and physical faces. detach freezes that reference's current appearance; delete freezes all references before removing the color. Instance fill binding is a component override. All mutations share native undo and atomic batches; stored consumer resources are unchanged by palette color updates.",
+        [
+          "command": ["type": "string", "enum": ["list", "create", "update", "assign", "detach", "delete"]],
+          "swatch_id": string, "name": string, "color": string, "object_id": objectID,
+          "element_ids": ["type": "array", "items": string],
+          "target": ["type": "string", "enum": ["fill", "stroke", "gradient_stop", "background", "component_part", "text_range"]],
+          "stop_id": string, "part_id": string, "location": ["type": "integer"], "length": ["type": "integer"],
+        ], required: ["command"]),
+      tool(
         "form_edit_artwork",
         "Apply a native artwork command: add/replace elements, delete, duplicate, group, ungroup, align, distribute, reorder, flip. Use complete element values for add/replace. Alignment modes: left/right/top/bottom/center_x/center_y/width/height; distribution: horizontal/vertical; order: front/back/forward/backward. Returns selected element IDs. All changes share native undo.",
         [

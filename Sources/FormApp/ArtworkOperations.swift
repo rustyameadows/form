@@ -37,6 +37,7 @@ extension StudioStore {
       throw FormError.invalid("Unknown artwork element ID.")
     }
     var next = art
+    let colored = project.resolvingSwatches(in: art, keepingReferences: true)
     var created: [ArtworkElement] = []
     if name == "form_convert_to_paths" {
       let stroke = args["mode"] as? String == "stroke"
@@ -46,7 +47,7 @@ extension StudioStore {
         all.contains($0.id) && $0.booleanOperation != nil
       }
       .reduce(into: Set<UUID>()) { $0.formUnion(art.descendants(of: [$1.id]).subtracting([$1.id])) }
-      for e in art.elements
+      for e in colored.elements
       where all.contains(e.id) && !booleanChildren.contains(e.id) && e.hidden != true
         && (shape
           ? ["rectangle", "ellipse", "line", "polygon", "star"].contains(e.kind)
@@ -60,21 +61,23 @@ extension StudioStore {
           next.elements[index].name = "\(e.title.prefix(470)) · editable source"
           continue
         }
-        let paths: [(CGPath, String)] =
+        let paths: [(path: CGPath, color: String, swatchID: UUID?)] =
           stroke
           ? [
             (
               try VectorGeometry.expandedStroke(
-                e.booleanOperation != nil ? BooleanGeometry.proxy(e, in: art) : e), e.stroke!.color
+                e.booleanOperation != nil ? BooleanGeometry.proxy(e, in: art) : e), e.stroke!.color,
+              e.stroke?.swatchID
             )
           ]
-          : try TypographyEngine.outlineRuns(e)
-        for (path, color) in paths {
+          : try TypographyEngine.outlinePaintRuns(e)
+        for (path, color, swatchID) in paths {
           var vector = try VectorGeometry.element(
             from: path, color: color, name: e.title + " · outlines", parentID: e.parentID)
           vector.affine = e.localTransform
           vector.opacity = e.opacity
           vector.fillOpacity = stroke ? e.stroke?.opacity : e.fillOpacity
+          vector.fillSwatchID = swatchID
           vector.productionRole = e.productionRole
           vector.clipID = e.clipID
           created.append(vector)

@@ -30,6 +30,7 @@ private enum ComponentResolutionCache {
 public struct ArtworkComponentOverride: Codable, Equatable, Sendable {
   public var elementID: UUID
   public var color: String?
+  public var colorSwatchID: UUID?
   public var text: String?
   public var opacity: Double?
   public init(elementID: UUID, color: String? = nil, text: String? = nil, opacity: Double? = nil) {
@@ -43,6 +44,7 @@ public struct ArtworkComponentOverride: Codable, Equatable, Sendable {
 public struct ArtworkComponentReference: Codable, Equatable, Sendable {
   public var sourceObjectID: UUID
   public var color: String?
+  public var colorSwatchID: UUID?
   public var overrides: [ArtworkComponentOverride]?
   public init(sourceObjectID: UUID) { self.sourceObjectID = sourceObjectID }
 }
@@ -139,7 +141,7 @@ public enum ComponentCommands {
       var art = project.editableArtwork(object), !ids.isEmpty,
       ids.isSubset(of: Set(art.elements.filter { $0.component != nil && (allowLocked || !art.isLocked($0)) }.map(\.id)))
     else { throw FormError.invalid("Select unlocked component instances to detach.") }
-    let resolved = try project.resolvingComponents(in: art)
+    let resolved = try project.resolvingComponents(in: art, keepingSwatchReferences: true)
     let groups = Dictionary(uniqueKeysWithValues: ids.map { id in
       let descendants = resolved.descendants(of: [id])
       return (id, resolved.elements.filter { descendants.contains($0.id) })
@@ -219,7 +221,8 @@ extension Project {
   }
 
   /// Derived ordinary groups, paths and text. Never persist this over a linked instance.
-  public func resolvingComponents(in art: Artwork) throws -> Artwork {
+  public func resolvingComponents(in stored: Artwork, keepingSwatchReferences: Bool = false) throws -> Artwork {
+    let art = resolvingSwatches(in: stored, keepingReferences: keepingSwatchReferences)
     guard art.elements.contains(where: { $0.component != nil }) else { return art }
     let byID = Dictionary(uniqueKeysWithValues: objects.map { ($0.id, $0) })
     struct SourceSnapshot: Codable {
@@ -238,7 +241,8 @@ extension Project {
         source.componentDefinition == true, source.artworkSourceID == nil, let artwork = source.artwork
       else { throw FormError.invalid("Missing, cyclic, or excessively nested component source.") }
       if sources[id] != nil { return }
-      sources[id] = .init(id: id, name: source.name, size: source.artworkSize, artwork: artwork)
+      sources[id] = .init(id: id, name: source.name, size: source.artworkSize,
+        artwork: resolvingSwatches(in: artwork, keepingReferences: keepingSwatchReferences))
       for reference in artwork.elements.compactMap(\.component) {
         try collect(reference.sourceObjectID, stack: stack.union([id]), depth: depth + 1)
       }
@@ -253,11 +257,15 @@ extension Project {
       return cached.artwork
     }
     let started = Date.timeIntervalSinceReferenceDate
-    func paint(_ color: String, on e: inout ArtworkElement) {
+    func paint(_ color: String, swatchID: UUID? = nil, on e: inout ArtworkElement) {
       guard e.kind != "group" || e.booleanOperation != nil, e.kind != "image" else { return }
       e.color = color
+      e.fillSwatchID = swatchID
       e.gradient = nil
-      for i in e.textRuns?.indices ?? 0..<0 { e.textRuns?[i].color = color }
+      for i in e.textRuns?.indices ?? 0..<0 {
+        e.textRuns?[i].color = color
+        e.textRuns?[i].swatchID = swatchID
+      }
     }
     func expand(_ input: Artwork, stack: Set<UUID>, depth: Int) throws -> Artwork {
       guard depth <= 8 else { throw FormError.invalid("Component nesting exceeds eight levels.") }
@@ -269,9 +277,10 @@ extension Project {
           source.componentDefinition == true, var sourceArt = source.artwork else {
           throw FormError.invalid("Missing or cyclic component source.")
         }
+        sourceArt = resolvingSwatches(in: sourceArt, keepingReferences: keepingSwatchReferences)
         for i in sourceArt.elements.indices {
           if let change = ref.overrides?.first(where: { $0.elementID == sourceArt.elements[i].id }) {
-            if let color = change.color { paint(color, on: &sourceArt.elements[i]) }
+            if let color = change.color { paint(color, swatchID: change.colorSwatchID, on: &sourceArt.elements[i]) }
             if let text = change.text, sourceArt.elements[i].kind == "text" {
               sourceArt.elements[i].text = text
               sourceArt.elements[i].textRuns = nil
@@ -304,9 +313,9 @@ extension Project {
         output.elements.append(content)
         for var child in sourceArt.elements {
           let sourceElementID = child.id
-          if let color = ref.color { paint(color, on: &child) }
-          if let color = ref.overrides?.first(where: { $0.elementID == sourceElementID })?.color {
-            paint(color, on: &child)
+          if let color = ref.color { paint(color, swatchID: ref.colorSwatchID, on: &child) }
+          if let change = ref.overrides?.first(where: { $0.elementID == sourceElementID }), let color = change.color {
+            paint(color, swatchID: change.colorSwatchID, on: &child)
           }
           child.id = ComponentCommands.derivedID(element.id, child.id)
           child.parentID = child.parentID.map { ComponentCommands.derivedID(element.id, $0) } ?? contentID

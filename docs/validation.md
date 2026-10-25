@@ -7,7 +7,7 @@ This is a tested foundation, **not completion of the expanded professional 2D sp
 ## Build and domain tests
 
 - Debug and optimized app builds succeeded; the app bundle contains the native executable, custom icon, Info.plist, and stdio MCP executable and is ad hoc signed.
-- `bash scripts/test.sh`: **131 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, shared artwork source graphs, atomic batch rollback, undo/redo, immutable package round trips, typography/outline alignment, actual SceneKit camera projections, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, live boolean geometry/persistence, and absence of hardware command tools.
+- `bash scripts/test.sh`: **145 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, shared artwork source graphs, atomic batch rollback, undo/redo, immutable package round trips, typography/outline alignment, actual SceneKit camera projections, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, live boolean geometry/persistence, shared palette resolution, and absence of hardware command tools.
 - No model/API credentials or third-party Swift packages are required.
 
 ## Real MCP and persistence
@@ -250,4 +250,27 @@ The final native canvas had **zero redraws and approximately 0% CPU over a three
 
 The ordinary library was restored to Home. The entire **Soft light** project, including its three objects, camera, artwork, materials, notes, and history, matches `user-project-before-components.json` exactly; the readback is retained in `user-project-restored-components.json`.
 
-Detailed reports are retained in `.local/validation/components-report.json`, `components-native-observations.json`, and corresponding logs. See [reusable components](reusable-components.md) for source-frame semantics, overrides, persistence, and limits. Shared swatches, effects/blending, advanced publication/color management, complete SVG fidelity, and further physical demonstrations remain active requirements. No printer connection or print command is part of this workflow.
+Detailed reports are retained in `.local/validation/components-report.json`, `components-native-observations.json`, and corresponding logs. See [reusable components](reusable-components.md) for source-frame semantics, overrides, persistence, and limits. Shared swatches are covered by the next milestone below. Effects/blending, advanced publication/color management, complete SVG fidelity, and further physical demonstrations remain active requirements. No printer connection or print command is part of this workflow.
+
+## Shared sRGB palettes and CHROMA — October 24, 2026
+
+The suite passes **145 tests**, including fourteen palette tests. Coverage includes unique names and invalid-edit immutability; all paint locations; UTF-16 range boundaries; mixed typography; native attributed-text identity and shaped glyph outlines; component and physical-artwork detachment; appearance-preserving deletion including locked layers; group masks/hidden leaves; source-only immutable persistence; schema-7 reopen; batch rollback; and cache invalidation limited to reachable colors.
+
+`python3 scripts/smoke_swatches.py` exercises **44 tools** through the packaged stdio server. **CHROMA · A shared palette** uses six named colors across a **200 × 140 mm** collection sheet, a **120 × 80 mm** edition card, a reusable seal, and clay/chalk physical products. Checks cover fills, strokes, gradient stops, text spans, backgrounds, component overrides, and outlined glyph paint. Changing Accent updates both layout exports while leaving every stored object and object-resource filename unchanged. Deleting Accent produces byte-identical PNGs for both layouts; Undo restores the links. Failed batches preserve the complete project, and reopening preserves schema 7 and all object definitions.
+
+Native computer-use checks cover:
+
+- Editing Accent HEX from `#D45A37` to `#849381`, with both layouts and the linked 3D inset visibly updating. No stored object definition changes, and native Undo restores the entire project exactly.
+- Deleting a used swatch with byte-identical exports, followed by native Undo restoring the palette and references.
+- Selecting only `003` in the title, applying Accent, and increasing those characters to **32 pt** while retaining the **2.5 pt** tracking and shared-color identity. Document Undo restores the entire native text session exactly.
+- Assigning named colors through the stroke and gradient-stop menus, adding a new Mineral swatch, applying a shared frame background, and linking a component part override to Sage. Native Undo restores each sequence exactly.
+- Leaving a palette-name draft focused during `form_get_project` and `form_swatch list`. An agent mutation then commits that draft before applying its own note; two native Undo steps restore the complete baseline.
+- Selecting a group containing Ink-linked text and a line. The Group fills menu reports Ink; native detachment removes both links with byte-identical PNG output. Two native Undo steps restore the exact pre-group project. Group inspection uses the same visible paint leaves as assignment and detachment.
+
+Twenty distinct palette edits in a **600-element document**—300 text elements and 300 ellipses, with 200 uses of Accent—measured **43.78 ms median / 46.75 ms p95** for saved MCP edits on this Mac. Object resources stayed unchanged throughout. The sampled canvas draw was **1.33 ms**. After native inspection, a settled three-second interval produced **zero canvas redraws**. These are local saved-edit/draw samples, not sustained gesture-FPS measurements.
+
+PDFs were rendered with Poppler and visually reviewed. Page sizes are **566.929 × 396.850 pt** and **340.158 × 226.772 pt**, corresponding to the two physical layouts; the collection PNG is **1181 × 827 px at 150 DPI**. SVG/PDF/PNG/JPEG output uses current resolved palette values. The existing component, live-boolean, SVG, artwork/typography, and general MCP smoke workflows pass with the updated discovery count.
+
+Reports and native observations are retained in `.local/validation/swatches-report.json`, `swatches-native-observations.json`, and the `swatches-*.log` files. See [shared swatches and CHROMA](shared-swatches.md) for controls, MCP arguments, persistence, and the explicit production-color boundary. ICC conversions, CMYK/spot separations, physical color catalogs, effects/blending, and the broader professional editing requirements remain open. No printer connection or command is part of this milestone.
+
+The regular library was restored to Home with **Soft light** active. Its complete saved project, including its three objects, artwork, camera, materials, notes, and history, exactly matches `user-project-before-swatches-native.json`; the readback is retained in `user-project-restored-swatches.json`. The final optimized native app builds successfully without warnings.

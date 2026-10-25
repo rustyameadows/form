@@ -79,6 +79,7 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var text: String
   public var color: String
   public var fontSize: Double
+  public var fillSwatchID: UUID?
   public var asset: String?
   public var name: String?
   public var rotation: Double?
@@ -134,6 +135,7 @@ public struct Artwork: Codable, Equatable, Sendable {
   public var canvasPosition: Point2?
   public var boundary: VectorPath?
   public var backgroundOpacity: Double?
+  public var backgroundSwatchID: UUID?
   public var imports: [ArtworkImport]?
   public init(background: String = "#224B9B", elements: [ArtworkElement] = [], bleed: Double = 3) {
     self.background = background
@@ -357,10 +359,13 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var unit: String = "mm"
   public var conversationReference: String?
   public var printSetups: [String: PrintConfiguration]?
+  public var swatches: [ArtworkSwatch]?
   public var minimumSchemaVersion: Int {
     max(
       schemaVersion,
-      objects.contains { $0.componentDefinition == true || $0.artwork?.elements.contains { $0.component != nil } == true }
+      swatches?.isEmpty == false || objects.contains { $0.artwork?.referencedSwatches.isEmpty == false }
+        ? 7
+        : objects.contains { $0.componentDefinition == true || $0.artwork?.elements.contains { $0.component != nil } == true }
         ? 6
         : objects.contains { $0.artwork?.requiresSchemaFive == true }
         ? 5

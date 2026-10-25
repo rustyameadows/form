@@ -103,7 +103,7 @@ private struct ArtworkInput: View {
 struct ArtworkInspector: View {
   @EnvironmentObject var store: StudioStore
   @ObservedObject var session: ArtworkSession
-  var e: ArtworkElement? { session.primary }
+  var e: ArtworkElement? { session.primary.map(session.colored) }
   var type: Typography { session.inspectedTypography }
   var body: some View {
     ScrollView {
@@ -476,6 +476,12 @@ struct ArtworkInspector: View {
                 set: { session.textColor(FormColor.hex(NSColor($0))) }), supportsOpacity: false
             ).labelsHidden()
           }.font(.system(size: 10))
+          SwatchPicker(session: session, target: "fill", swatchID: session.inspectedFillSwatchID,
+            mixed: session.fillSwatchReferences.count > 1)
+        } else if e.kind == "group", e.component == nil {
+          Text("Group fills").font(.system(size: 10))
+          SwatchPicker(session: session, target: "fill", swatchID: session.inspectedFillSwatchID,
+            mixed: session.fillSwatchReferences.count > 1)
         }
         ScalarArtworkField("Opacity", value: (e.opacity ?? 1) * 100, unit: "%") { v in
           session.update { $0.opacity = min(1, max(0, v / 100)) }
@@ -503,7 +509,9 @@ struct ArtworkInspector: View {
                 selection: Binding(
                   get: { Color(nsColor: FormColor.color(stroke.color)) },
                   set: { color in
-                    session.update { $0.stroke?.color = FormColor.hex(NSColor(color)) }
+                    session.update {
+                      $0.stroke?.color = FormColor.hex(NSColor(color)); $0.stroke?.swatchID = nil
+                    }
                   }), supportsOpacity: false
               ).labelsHidden()
             }
@@ -529,6 +537,7 @@ struct ArtworkInspector: View {
                 Text("Bevel").tag("bevel")
               }
             }.labelsHidden().font(.system(size: 9))
+            SwatchPicker(session: session, target: "stroke", swatchID: stroke.swatchID)
             Toggle(
               "Dashed",
               isOn: Binding(
@@ -558,7 +567,10 @@ struct ArtworkInspector: View {
               "Use gradient",
               isOn: Binding(
                 get: { e.gradient != nil },
-                set: { v in session.update { $0.gradient = v ? .init() : nil } })
+                set: { v in session.update {
+                  $0.gradient = v ? .init() : nil
+                  if v { $0.fillSwatchID = nil }
+                } })
             ).font(.system(size: 10)).toggleStyle(.checkbox)
             if let g = e.gradient {
               Picker(
@@ -578,6 +590,7 @@ struct ArtworkInspector: View {
                       set: { color in
                         session.update {
                           $0.gradient?.stops[index].color = FormColor.hex(NSColor(color))
+                          $0.gradient?.stops[index].swatchID = nil
                         }
                       }), supportsOpacity: false
                   ).labelsHidden()
@@ -588,6 +601,7 @@ struct ArtworkInspector: View {
                     }
                   }
                 }
+                SwatchPicker(session: session, target: "gradient_stop", swatchID: stop.swatchID, stopID: stop.id)
                 ScalarArtworkField("Stop opacity", value: (stop.opacity ?? 1) * 100, unit: "%") {
                   value in
                   session.update { $0.gradient?.stops[index].opacity = min(1, max(0, value / 100)) }
@@ -725,10 +739,13 @@ struct ArtworkInspector: View {
       ColorPicker(
         "Paper / background",
         selection: Binding(
-          get: { Color(nsColor: FormColor.color(session.art.background)) },
-          set: { color in session.mutate { $0.background = FormColor.hex(NSColor(color)) } }),
+          get: { Color(nsColor: FormColor.color(session.backgroundColor)) },
+          set: { color in session.mutate {
+            $0.background = FormColor.hex(NSColor(color)); $0.backgroundSwatchID = nil
+          } }),
         supportsOpacity: false
       ).font(.system(size: 10))
+      SwatchPicker(session: session, target: "background", swatchID: session.art.backgroundSwatchID)
       ScalarArtworkField(
         "Background opacity", value: (session.art.backgroundOpacity ?? 1) * 100, unit: "%"
       ) { value in

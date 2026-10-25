@@ -62,7 +62,8 @@ struct ComponentInspector: View {
   var reference: ArtworkComponentReference { element.component! }
   var source: ProductObject? { store.project?.objects.first { $0.id == reference.sourceObjectID } }
   var parts: [ArtworkElement] {
-    source?.artwork?.componentOverrideParts ?? []
+    guard let art = source?.artwork else { return [] }
+    return store.project?.resolvingSwatches(in: art, keepingReferences: true).componentOverrideParts ?? []
   }
   var part: ArtworkElement? { parts.first { $0.id == selectedPart } ?? parts.first }
   var body: some View {
@@ -82,6 +83,7 @@ struct ComponentInspector: View {
         ColorPicker("Instance fill", selection: Binding(
           get: { Color(nsColor: NSColor(hex: color)) },
           set: { session.component("override", ["color": NSColor($0).hexString]) }), supportsOpacity: false)
+        SwatchPicker(session: session, target: "fill", swatchID: reference.colorSwatchID)
       }
       if let part {
         Divider()
@@ -91,11 +93,16 @@ struct ComponentInspector: View {
         let change = reference.overrides?.first { $0.elementID == part.id }
         Toggle("Override part fill", isOn: Binding(
           get: { change?.color != nil },
-          set: { enabled in session.overridePart(part.id) { $0.color = enabled ? part.color : nil } }))
+          set: { enabled in session.overridePart(part.id) {
+            $0.color = enabled ? part.color : nil; $0.colorSwatchID = nil
+          } }))
         if let color = change?.color {
           ColorPicker("Part fill", selection: Binding(
             get: { Color(nsColor: NSColor(hex: color)) },
-            set: { value in session.overridePart(part.id) { $0.color = NSColor(value).hexString } }), supportsOpacity: false)
+            set: { value in session.overridePart(part.id) {
+              $0.color = NSColor(value).hexString; $0.colorSwatchID = nil
+            } }), supportsOpacity: false)
+          SwatchPicker(session: session, target: "component_part", swatchID: change?.colorSwatchID, partID: part.id)
         }
         if part.kind == "text" {
           Toggle("Override text", isOn: Binding(
