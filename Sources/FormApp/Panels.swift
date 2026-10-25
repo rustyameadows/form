@@ -3,6 +3,7 @@ import FormCore
 import SwiftUI
 
 struct ObjectInspector: View {
+  static let width: CGFloat = 286
   @EnvironmentObject var store: StudioStore
   @State private var showPlacement = false
   var body: some View {
@@ -168,7 +169,7 @@ struct ObjectInspector: View {
           Image(systemName: "arrow.up.right").font(.system(size: 10)).foregroundStyle(
             Palette.secondary)
         }.padding(.horizontal, 18).padding(.vertical, 14)
-      }.frame(width: 286).frame(maxHeight: 590)
+      }.frame(width: Self.width).frame(maxHeight: 590)
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16)).overlay(
           RoundedRectangle(cornerRadius: 16).strokeBorder(.white.opacity(0.9))
         )

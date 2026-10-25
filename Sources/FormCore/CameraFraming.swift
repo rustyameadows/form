@@ -1,6 +1,22 @@
 import Foundation
 
 public enum CameraFraming {
+  /// Fractions of the viewport occupied by floating controls. The orbit pivot
+  /// stays at the subject's center; fitting leaves room around that pivot.
+  public struct Insets {
+    public var top: Double
+    public var right: Double
+    public var bottom: Double
+    public var left: Double
+
+    public init(top: Double = 0, right: Double = 0, bottom: Double = 0, left: Double = 0) {
+      self.top = top
+      self.right = right
+      self.bottom = bottom
+      self.left = left
+    }
+  }
+
   /// SceneKit's orthographic scale is the visible half-height in scene units.
   public static let orthographicFactor = 0.36
   public static func viewportExpansion(from source: Double?, to output: Double) -> Double {
@@ -12,7 +28,7 @@ public enum CameraFraming {
   /// direction. Perspective depth is included so near corners cannot clip.
   public static func fitted(
     _ camera: CameraState, points: [Vector3], aspect: Double,
-    fieldOfView: Double = 39, margin: Double = 1.2
+    fieldOfView: Double = 39, margin: Double = 1.2, insets: Insets = .init()
   ) -> CameraState {
     let points = points.filter { $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }
     guard let first = points.first else { return camera }
@@ -28,6 +44,12 @@ public enum CameraFraming {
     result.viewportAspect = aspect
     // Near-pole SceneKit look-at rotations lose a little precision in their float matrices.
     let padding = (margin.isFinite ? max(1, margin) : 1.2) * 1.002
+    func clearance(_ first: Double, _ second: Double) -> Double {
+      func safe(_ value: Double) -> Double { value.isFinite ? min(0.49, max(0, value)) : 0 }
+      return 1 - 2 * max(safe(first), safe(second))
+    }
+    let horizontal = clearance(insets.left, insets.right)
+    let vertical = clearance(insets.top, insets.bottom)
     let elevation = CameraNavigation.elevation(camera.elevation)
     let a = camera.azimuth
     let n = Vector3(cos(elevation) * sin(a), sin(elevation), cos(elevation) * cos(a))
@@ -44,10 +66,11 @@ public enum CameraFraming {
       let y = abs(dot(up))
       let depth = dot(n)
       distance = max(distance, depth + 0.1)
+      let extent = max(y / vertical, x / (aspect * horizontal))
       if camera.projection == "orthographic" {
-        distance = max(distance, padding * max(y, x / aspect) / orthographicFactor)
+        distance = max(distance, padding * extent / orthographicFactor)
       } else {
-        distance = max(distance, depth + padding * max(y, x / aspect) / tangent)
+        distance = max(distance, depth + padding * extent / tangent)
       }
     }
     result.distance = distance

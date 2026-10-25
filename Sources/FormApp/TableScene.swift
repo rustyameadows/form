@@ -335,10 +335,19 @@ private struct RenderSignature: Equatable {
       return
     }
     let viewport = view?.bounds.size ?? CGSize(width: 600, height: 400)
+    var insets = CameraFraming.Insets()
+    if aspect == nil, view != nil, store?.mode == .table {
+      // Reserve the floating inspector and camera bar without changing the
+      // subject-centered orbit pivot or the camera's actual viewport aspect.
+      insets = .init(
+        top: 80 / max(1, viewport.height),
+        right: store?.primary == nil ? 0 : (ObjectInspector.width + 48) / max(1, viewport.width),
+        bottom: 80 / max(1, viewport.height))
+    }
     let fitted = CameraFraming.fitted(
       camera, points: points,
       aspect: aspect ?? Double(viewport.width / max(1, viewport.height)),
-      fieldOfView: Double(cameraNode.camera?.fieldOfView ?? 39))
+      fieldOfView: Double(cameraNode.camera?.fieldOfView ?? 39), insets: insets)
     guard fitted != camera else { return }
     camera = fitted
     updateCamera(animated: animated)

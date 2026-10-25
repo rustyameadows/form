@@ -7,7 +7,7 @@ This is a tested foundation, **not completion of the expanded professional 2D sp
 ## Build and domain tests
 
 - Debug and optimized app builds succeeded; the app bundle contains the native executable, custom icon, Info.plist, and stdio MCP executable and is ad hoc signed.
-- `bash scripts/test.sh`: **129 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, shared artwork source graphs, atomic batch rollback, undo/redo, immutable package round trips, typography/outline alignment, actual SceneKit camera projections, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, live boolean geometry/persistence, and absence of hardware command tools.
+- `bash scripts/test.sh`: **131 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, shared artwork source graphs, atomic batch rollback, undo/redo, immutable package round trips, typography/outline alignment, actual SceneKit camera projections, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, live boolean geometry/persistence, and absence of hardware command tools.
 - No model/API credentials or third-party Swift packages are required.
 
 ## Real MCP and persistence
@@ -163,6 +163,16 @@ Native checks covered:
 - Save, quit, relaunch, and reopen preserved the camera state exactly. The default tool returned to Orbit.
 
 Geometry build count remained three throughout the lamp navigation and placement checks, and `renders_continuously` stayed false. This verifies that camera movement does not regenerate meshes; it is not a sustained gesture frame-rate measurement. Local observations are retained in `.local/validation/camera-mouse-observations.json`, with the normal-library preservation check in `user-project-restored-camera.json`. The full suite passes **74 tests** and the optimized native app builds successfully. See [camera navigation](camera-navigation.md) for the updated controls.
+
+### Focus and floating controls follow-up
+
+A second native computer-use pass used actual drags over a linked-artwork box, mouse-wheel zoom, Pan, Focus, isolation, overhead view, and recovery to perspective with Fit. Orbit and pan followed the pointer, wheel-up moved closer, and every object definition stayed unchanged. The test exposed a framing problem: Focus could place the right edge of the object behind its floating inspector.
+
+Focus, isolation, and Fit now reserve the inspector width and space for the camera controls. The subject remains the orbit pivot; the actual viewport aspect remains unchanged. On the same box and angle, Focus distance changed from 3.12959 to 5.40347, making the complete object visible beside the inspector. Mouse orbit afterward retained the target and distance. Isolated overhead Focus and perspective Fit also kept their subjects clear of the controls. The renderer retained five geometry builds throughout these checks and remained on demand.
+
+All 11 camera tests pass. New SceneKit projection checks cover both projections, three viewport ratios, three azimuths, and five elevations, including views below the Table and near both poles. They verify every fitted corner stays outside the reserved control areas without shifting the orbit pivot. Invalid inset values remain bounded. The optimized native build completed successfully without warnings.
+
+Observations are retained in `.local/validation/camera-current-mouse-check.json`. Testing ran in a separate local library. The regular **Soft light** project was restored exactly, including camera, objects, artwork, notes, and history, and the app was left at Home; comparison is retained in `user-project-restored-camera-followup.json`. No printer action was invoked.
 
 ## Editable SVG import — October 24, 2026
 
