@@ -103,11 +103,12 @@ public enum MCP {
         ], required: ["recipe_id"]),
       tool(
         "form_update_object",
-        "Edit object parameters, material, color, placement, rotation (degrees), name, or locked state. Variant geometry remains linked; iterations are independent.",
+        "Edit object parameters, material, color, placement, rotation (degrees), name, or locked state. fabric_pattern updates this project's shared fabric material design using an editable independent artwork frame as source; null removes it. Variant geometry remains linked; iterations are independent.",
         [
           "object_id": objectID, "parameters": parameters, "material_id": string, "color": string,
           "position": position, "rotation": number, "name": string, "locked": ["type": "boolean"],
           "textile": textile,
+          "fabric_pattern": ["type":["object","null"], "description":"Project-scoped fabric repeat: sourceObjectID (frame UUID), repeatMode (straight/halfDrop/brick/mirror), scale, spacing {x,y} mm, offset {x,y} mm, rotation degrees, outputWidth/outputLength mm, includeTileBackground, colorways [{id,name,baseColor,replacements:{sourceHex:targetHex}}], activeColorwayID. Omitted values use physical defaults."],
         ], required: ["object_id"]),
       tool(
         "form_delete_objects", "Remove objects from the current project. Undo is available.",
@@ -240,7 +241,9 @@ public enum MCP {
         "form_edit_artwork",
         "Apply a native artwork command: add/replace elements, delete, duplicate, group, ungroup, align, distribute, reorder, flip, clip, release_clip. Use complete element values for add/replace. origin sets one layer/group's normalized local transform reference {x,y}, or null resets to center; changing origin never moves artwork. transform applies positive scale_x/scale_y, relative rotation degrees, and translate_x/translate_y millimeters in that order around the selected layer's origin; multiple roots use their combined center. clip uses mask_id or the bottom selected area shape; targets and mask must be siblings. Geometry stays editable; use nested clipped groups for nested masks. release_clip preserves the mask shape. Alignment modes: left/right/top/bottom/center_x/center_y/width/height; distribution: horizontal/vertical; order: front/back/forward/backward. glyph assigns fontName/glyphID/glyphName/fontSignature discovered by form_font_features to one source UTF-16 location/length while retaining editable text; glyph:null clears the range or all selected text choices. paragraph patches paragraph typography on selected text; optional UTF-16 location/length expands to full paragraphs while retaining rich characters. Returns selected element IDs. All changes share native undo.",
         [
+          "role": ["type":["string","null"],"enum":["print","cut","score","stitch","engrave","guide",NSNull()],"description":"With command production, assign a manufacturing role to selected roots and inherit it through descendants; null clears to inherited/default print. A non-print ancestor controls its whole subtree; edit that group first. Legacy artwork is accepted as print."],
           "object_id": objectID, "mask_id": string, "command": ["type": "string", "enum": ArtworkCommands.names+["transfer"]],
+          "language": ["type": ["string", "null"], "description": "For command language: BCP47 document default (for example en-US, de, tr), or null for automatic. Source words remain unchanged; text/rich-span Typography.language can override the document."],
           "target_object_id":["type":"string","description":"With command transfer, move selected roots/descendants to this artwork frame or Canvas workspace. Keeps hierarchy, styles, assets and masks. The default offset preserves physical Canvas placement using saved canvasPosition. Required external masks are copied; inherited clipped/effect groups must be selected as a whole. Returns destination owner ID and selected root IDs."],
           "offset_x":["type":"number","description":"With transfer, optionally provide BOTH offset_x and offset_y in mm to override the source-local to destination-local translation."],"offset_y":number,
           "element_ids": ["type": "array", "items": string],
@@ -249,7 +252,7 @@ public enum MCP {
           "origin": ["type":["object","null"],"description":"With command origin, normalized local coordinates x/y (0 top/left, 0.5 center, 1 bottom/right; −10…10 for an external pivot), or null to reset. Does not move rendered geometry."],
           "rotation": number,"scale_x":number,"scale_y":number,
           "translate_x":number,"translate_y":number,
-          "typography": ["type": "object", "description": "With paragraph, patch paragraph properties only: tabStops [{location in pt, alignment left/center/right/decimal, optional decimalSeparator period/comma}], defaultTabInterval in pt, leading, spacing/indents, alignment, direction, hyphenation 0–1. null resets optional tab settings. A UTF-16 location/length expands to containing paragraphs, preserving character formatting."],
+          "typography": ["type": "object", "description": "With paragraph, patch paragraph properties: tabStops [{location in pt, alignment left/center/right/decimal, optional decimalSeparator period/comma}], defaultTabInterval in pt, leading, spacing/indents, alignment, direction natural/ltr/rtl, hyphenation 0–1, language (BCP 47 or null to inherit), hyphenationLimits {minimumWordLength 2–100, minimumPrefix 1–30, minimumSuffix 1–30} or null. Explicit language drives the installed dictionary; an unavailable dictionary disables automatic word hyphenation. A UTF-16 location/length expands to containing paragraphs, preserving source words and character formatting."],
           "location": ["type": "integer"], "length": ["type": "integer"],
           "glyph": ["type": ["object","null"], "description": "With command glyph, provide fontName, glyphID, optional glyphName and fontSignature from font glyph discovery. location/length selects source UTF-16 characters. null clears choices in that range, or all selected text when the range is omitted."],
         ], required: ["object_id", "command"]),
@@ -306,8 +309,10 @@ public enum MCP {
         [
           "object_id": objectID,
           "format": ["type": "string", "enum": ["svg", "pdf", "png", "jpeg"]], "path": string,
+          "roles": ["type":"array","items":["type":"string","enum":["print","cut","score","stitch","engrave","guide"]],"description":"Optional explicit output roles. Default exports printable artwork only. SVG creates separate named layers; PDF creates one physically sized page per nonempty role. Guides require explicit opt-in. Cut/score/stitch need vector geometry without images/effects; stitch paths are not digitized machine programs."],
           "dpi": number, "outline_text": ["type": "boolean"],
           "element_ids": ["type": "array", "items": string],
+          "fabric_pattern_material": ["type":"string", "description":"Export this project's fabric material pattern as physical yardage instead of the object face. Uses its saved outputWidth/outputLength; object_id still identifies the project context."],
         ], required: ["object_id", "format"]),
       tool(
         "form_import_svg",

@@ -146,7 +146,7 @@ import FormCore
   }
   func visible(_ e: ArtworkElement) -> Bool {
     e.hidden != true && (e.opacity ?? 1) > 0 && !excluding.contains(e.id) && !masks.contains(e.id)
-      && (!production || e.productionRole == nil || e.productionRole == "artwork")
+      && (!production || e.productionRole == nil || ArtworkProductionRole.resolve(e.productionRole) == .print)
   }
   func displayed(_ e: ArtworkElement) -> Bool {
     guard visible(e) else { return false }

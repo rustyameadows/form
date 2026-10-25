@@ -85,7 +85,7 @@ extension StudioStore {
   }
   func exportArtworkDialog(
     _ format: String, object: ProductObject, dpi: Double = 300, outlineText: Bool = true,
-    elementIDs:Set<UUID> = []
+    elementIDs:Set<UUID> = [], roles:[String]? = nil
   ) {
     let panel = NSSavePanel()
     panel.nameFieldStringValue = object.name + "." + format
@@ -96,11 +96,16 @@ extension StudioStore {
     do {
       var arguments:[String:Any] = ["format":format,"path":url.path,"dpi":dpi,"outline_text":outlineText]
       if !elementIDs.isEmpty { arguments["element_ids"] = elementIDs.map(\.uuidString) }
+      if let roles {arguments["roles"] = roles}
       _ = try exportArtwork(object:object,arguments:arguments)
       toast("Artwork \(format.uppercased()) exported")
     } catch { self.error = error.localizedDescription }
   }
   func exportArtwork(object: ProductObject, arguments: [String: Any]) throws -> Any {
+    if let materialID = arguments["fabric_pattern_material"] as? String {
+      return try exportFabricPattern(materialID: materialID, arguments: arguments)
+    }
+    if arguments["roles"] != nil {return try exportProductionArtwork(object:object,arguments:arguments)}
     guard let project else { throw FormError.missing("Open a project first.") }
     let format = arguments["format"] as? String ?? "svg"
     let dimensions = ArtworkDrawing.dimensions(object)

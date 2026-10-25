@@ -14,6 +14,7 @@ struct ArtworkStudio: View {
   @State private var newFrame = false
   @State private var exportOptions = false
   @State private var format = "svg"
+  @State private var productionOutput = "print"
   @State private var compactLayers = false
   @State private var compactInspector = false
   private var compact: Bool { store.surfaceLayout == .split }
@@ -87,6 +88,7 @@ struct ArtworkStudio: View {
               Text("PNG").tag("png")
               Text("JPEG").tag("jpeg")
             }
+            ProductionExportPicker(output:$productionOutput,format:format)
             if ["png", "jpeg"].contains(format) {
               ScalarArtworkField("Resolution", value: session.exportDPI, unit: "DPI") {
                 session.exportDPI = $0
@@ -100,7 +102,7 @@ struct ArtworkStudio: View {
             }
             Button("Export…") {
               exportOptions = false
-              session.export(format)
+              session.exportProduction(format,output:productionOutput)
             }
           }.padding(22).frame(width: 300)
         }

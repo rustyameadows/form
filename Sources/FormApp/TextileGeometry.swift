@@ -1,5 +1,6 @@
 import AppKit
 import FormCore
+import FormGraphics
 import SceneKit
 import simd
 
@@ -51,8 +52,16 @@ import simd
     }
     return o["width"]*0.44
   }
-  static func bomber(_ o:ProductObject,project:Project)->SCNNode {
+  static func bomber(_ o:ProductObject,project:Project, assets:URL? = nil, textureLimit:Int = 2048)->SCNNode {
     let root=SCNNode(),cloth=GeometryFactory.material(o,project:project)
+    if let assets, let design = try? project.resolvedFabricPattern(materialID: o.materialID) {
+      cloth.diffuse.contents = FabricPatternRenderer.texture(design, assets: assets, limit: textureLimit, fontRevision: GeometryFactory.fontRevision)
+      let t = design.pattern.bomberTextureTransform(sourceSize: design.sourceSize)
+      var matrix = SCNMatrix4Identity
+      matrix.m11 = CGFloat(t.a); matrix.m12 = CGFloat(t.b); matrix.m21 = CGFloat(t.c); matrix.m22 = CGFloat(t.d)
+      matrix.m41 = CGFloat(t.tx); matrix.m42 = CGFloat(t.ty)
+      cloth.diffuse.contentsTransform = matrix
+    }
     cloth.isDoubleSided=true;cloth.diffuse.wrapS = .repeat;cloth.diffuse.wrapT = .repeat
     let trim=material(project.material(o.textile?.trimMaterialID ?? "flight-rib").color,0.97)
     let lining=material(project.material(o.textile?.liningMaterialID ?? "flight-orange").color,0.62)

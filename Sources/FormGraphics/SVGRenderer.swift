@@ -27,7 +27,7 @@ import FormCore
   public static func fragment(
     _ source: Artwork, width: Double, height: Double, assets: URL, outlineText: Bool = true
   ) throws -> String {
-    let art = try BooleanGeometry.materialized(source)
+    let art = try BooleanGeometry.materialized(source).withInheritedLanguage
     let tree = ArtworkRenderTree(art, assets: assets, production: true, excluding: [])
     for e in art.elements where tree.displayed(e) && e.visibleStroke?.dash?.isEmpty == false {
       _ = try StrokeGeometry.path(e)
@@ -41,7 +41,7 @@ import FormCore
       var output = ""
       for e in art.elements
       where e.parentID == parent && e.hidden != true && !masks.contains(e.id)
-        && (e.productionRole == nil || e.productionRole == "artwork")
+        && (e.productionRole == nil || ArtworkProductionRole.resolve(e.productionRole) == .print)
       {
         let id = e.id.uuidString
         var effect = ""
@@ -207,8 +207,9 @@ import FormCore
         let kern = attrs[NSAttributedString.Key.kern] as? NSNumber
         let spacing = (attrs[NSAttributedString.Key.tracking] as? NSNumber)?.doubleValue ?? kern?.doubleValue ?? 0
         let kerning = kern?.doubleValue == 0 ? "none" : "normal"
+        let language = (attrs[LanguageHyphenation.languageKey] as? String).map { " xml:lang=\"\(xml($0))\"" } ?? ""
         result +=
-          "<text xml:space=\"preserve\" x=\"\((origins[i].x+p.x)/TypographyEngine.pointsPerMM)\" y=\"\(element.height+offset-(origins[i].y+p.y)/TypographyEngine.pointsPerMM)\" font-family=\"\(xml(font.fontName))\" font-size=\"\(font.pointSize/TypographyEngine.pointsPerMM)\" font-kerning=\"\(kerning)\" letter-spacing=\"\(spacing/TypographyEngine.pointsPerMM)\" fill=\"\(FormColor.hex(attrs[NSAttributedString.Key.foregroundColor] as? NSColor ?? .black))\" fill-opacity=\"\(element.fillOpacity ?? 1)\">\(xml(text))</text>"
+          "<text xml:space=\"preserve\"\(language) x=\"\((origins[i].x+p.x)/TypographyEngine.pointsPerMM)\" y=\"\(element.height+offset-(origins[i].y+p.y)/TypographyEngine.pointsPerMM)\" font-family=\"\(xml(font.fontName))\" font-size=\"\(font.pointSize/TypographyEngine.pointsPerMM)\" font-kerning=\"\(kerning)\" letter-spacing=\"\(spacing/TypographyEngine.pointsPerMM)\" fill=\"\(FormColor.hex(attrs[NSAttributedString.Key.foregroundColor] as? NSColor ?? .black))\" fill-opacity=\"\(element.fillOpacity ?? 1)\">\(xml(text))</text>"
       }
     }
     return result

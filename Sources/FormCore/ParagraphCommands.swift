@@ -7,7 +7,7 @@ extension Typography {
 public enum ParagraphCommands {
   public static func edit(_ art: inout Artwork, ids: Set<UUID>, arguments: [String: Any]) throws {
     guard !ids.isEmpty, let patch = arguments["typography"] as? [String: Any], !patch.isEmpty,
-      Set(patch.keys).isSubset(of: TextStyleCommands.paragraphProperties) else {
+      Set(patch.keys).isSubset(of: TextStyleCommands.paragraphProperties.union(["language"])) else {
       throw FormError.invalid("Choose text and provide supported paragraph typography properties.")
     }
     let targets = art.swatchPaintTargets(for: ids)

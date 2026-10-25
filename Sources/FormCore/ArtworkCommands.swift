@@ -3,8 +3,9 @@ import Foundation
 /// The native editor and MCP use these same deterministic document commands.
 public enum ArtworkCommands {
   public static let names = [
+    "production",
     "add", "replace", "delete", "duplicate", "group", "ungroup", "align", "distribute", "reorder",
-    "flip", "clip", "release_clip", "paragraph", "glyph", "origin", "transform",
+    "flip", "clip", "release_clip", "paragraph", "glyph", "origin", "transform", "language",
   ]
   @discardableResult public static func apply(
     _ command: String, to art: inout Artwork, ids: Set<UUID> = [], arguments: [String: Any] = [:]
@@ -19,6 +20,8 @@ public enum ArtworkCommands {
       throw FormError.invalid("Unlock the selected layers before editing them.")
     }
     switch command {
+    case "production": try ArtworkProduction.assign(&result,ids:ids,arguments:arguments)
+    case "language": try ParagraphLanguage.setDefault(&result,arguments:arguments)
     case "origin": try ArtworkTransforms.editOrigin(&result,ids:ids,arguments:arguments)
     case "transform": try ArtworkTransforms.transform(&result,ids:ids,arguments:arguments)
     case "glyph": try GlyphCommands.edit(&result,ids:ids,arguments:arguments)

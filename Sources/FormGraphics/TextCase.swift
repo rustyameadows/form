@@ -5,11 +5,12 @@ import FormCore
 /// It exists only in native attributed text; documents persist source words.
 @MainActor public enum TextCase {
   public static let sourceKey=NSAttributedString.Key("studio.form.caseSource")
-  private static func converted(_ text:String,_ treatment:String)->String {
-    treatment=="uppercase" ? (text as NSString).uppercased : (text as NSString).lowercased
+  private static func converted(_ text:String,_ treatment:String,locale:Locale?=nil)->String {
+    if let locale {return treatment=="uppercase" ? text.uppercased(with:locale):text.lowercased(with:locale)}
+    return treatment=="uppercase" ? (text as NSString).uppercased : (text as NSString).lowercased
   }
   public struct Piece:Codable,Equatable {public var source:NSRange,display:NSRange}
-  private struct Record:Codable {var source:String,display:String,pieces:[Piece]}
+  private struct Record:Codable {var source:String,display:String,pieces:[Piece];var sourceArchive:Data?}
   public struct Source {
     public let text:NSAttributedString
     public let pieces:[Piece]
@@ -34,7 +35,8 @@ import FormCore
     }
   }
   private static func record(_ data:Any?)->Record? {
-    guard let data=data as? Data,let record=try? JSONDecoder().decode(Record.self,from:data) else{return nil}
+    guard let data=data as? Data,data.count<=4_000_000,let record=try? JSONDecoder().decode(Record.self,from:data),
+      (record.sourceArchive?.count ?? 0)<=2_000_000 else{return nil}
     let sourceLength=record.source.utf16.count,displayLength=record.display.utf16.count
     var source=0,display=0
     for piece in record.pieces {
@@ -67,6 +69,7 @@ import FormCore
     }
     guard let root else {raw(NSRange(location:0,length:input.length));return Source(text:result,pieces:pieces)}
     let original=root.source as NSString,old=root.display as NSString,current=input.string as NSString
+    let archived=root.sourceArchive.flatMap{try? NSKeyedUnarchiver.unarchivedObject(ofClass:NSAttributedString.self,from:$0)}
     @MainActor func characterAttributes(_ at:Int)->NSDictionary {
       var attrs=input.attributes(at:at,effectiveRange:nil)
       let spacing=(attrs[TypographyEngine.spacingKey] as? NSNumber)?.doubleValue ?? 0
@@ -96,7 +99,32 @@ import FormCore
             attrs[key]=input.attribute(key,at:NSMaxRange(displayed)-1,effectiveRange:nil)
           }
           let start=result.length
-          result.append(NSAttributedString(string:original.substring(with:piece.source),attributes:attrs))
+          if let archived,NSMaxRange(piece.source)<=archived.length {
+            let recovered=NSMutableAttributedString(attributedString:archived.attributedSubstring(from:piece.source))
+            let base=recovered.attributes(at:0,effectiveRange:nil)
+            for key in Set(base.keys).union(attrs.keys) where key != sourceKey {
+              let a=base[key] as? NSObject,b=attrs[key] as? NSObject
+              guard !(a==nil && b==nil),a?.isEqual(b) != true else {continue}
+              if key == NSAttributedString.Key("studio.form.typography"),let old=base[key] as? Data,let new=attrs[key] as? Data,
+                let oldJSON=try? JSONSerialization.jsonObject(with:old) as? [String:Any],let newJSON=try? JSONSerialization.jsonObject(with:new) as? [String:Any] {
+                let changed=Set(oldJSON.keys).union(newJSON.keys).filter {name in
+                  let x=oldJSON[name] as? NSObject,y=newJSON[name] as? NSObject
+                  return !(x==nil && y==nil) && x?.isEqual(y) != true
+                }
+                var updates:[(NSRange,Data)]=[]
+                recovered.enumerateAttribute(key,in:NSRange(location:0,length:recovered.length)) {raw,range,_ in
+                  guard let raw=raw as? Data,var values=try? JSONSerialization.jsonObject(with:raw) as? [String:Any] else{return}
+                  for name in changed {values[name]=newJSON[name]}
+                  if let json=try? JSONSerialization.data(withJSONObject:values),
+                    let style=try? JSONDecoder.form.decode(Typography.self,from:json),
+                    let data=try? JSONEncoder.form.encode(style) {updates.append((range,data))}
+                }
+                for (range,data) in updates {recovered.addAttribute(key,value:data,range:range)}
+              } else if let value=attrs[key] {recovered.addAttribute(key,value:value,range:NSRange(location:0,length:recovered.length))}
+              else {recovered.removeAttribute(key,range:NSRange(location:0,length:recovered.length))}
+            }
+            result.append(recovered)
+          } else {result.append(NSAttributedString(string:original.substring(with:piece.source),attributes:attrs))}
           pieces.append(.init(source:NSRange(location:start,length:piece.source.length),display:displayed))
         } else {raw(displayed)}
       }
@@ -135,19 +163,20 @@ import FormCore
   public static func expandedDisplayRange(_ range:NSRange,in text:NSAttributedString)->NSRange {
     let recovered=source(text);return recovered.displayRange(recovered.sourceRange(range))
   }
-  public static func displaying(_ source:NSAttributedString,preservingSource:Bool=true,caseAt:(Int)->String)->NSAttributedString {
+  public static func displaying(_ source:NSAttributedString,preservingSource:Bool=true,
+    localeAt:((Int)->Locale?)?=nil,caseAt:(Int)->String)->NSAttributedString {
     if !preservingSource,source.length>0 {
       var range=NSRange()
       var attrs=source.attributes(at:0,effectiveRange:&range)
       if range.length==source.length,attrs[TypographyEngine.pairKey]==nil {
         let treatment=caseAt(0)
         attrs.removeValue(forKey:sourceKey)
-        return NSAttributedString(string:treatment=="uppercase" || treatment=="lowercase" ? converted(source.string,treatment) : source.string,attributes:attrs)
+        return NSAttributedString(string:treatment=="uppercase" || treatment=="lowercase" ? converted(source.string,treatment,locale:localeAt?(0)) : source.string,attributes:attrs)
       }
     }
     let output=NSMutableAttributedString(string:"")
     let string=source.string as NSString
-    var pieces:[Piece]=[],start=0
+    var pieces:[Piece]=[],start=0,needsArchive=false
     @MainActor func append(_ text:NSAttributedString,_ range:NSRange) {
       let display=NSRange(location:output.length,length:text.length)
       output.append(text)
@@ -159,18 +188,24 @@ import FormCore
     }
     while start<source.length {
       let treatment=caseAt(start)
+      let locale=localeAt?(start)
       var end=start+1
-      while end<source.length && caseAt(end)==treatment {end+=1}
+      while end<source.length && caseAt(end)==treatment && localeAt?(end)==locale {end+=1}
       let range=NSRange(location:start,length:end-start)
       guard treatment=="uppercase" || treatment=="lowercase" else {append(source.attributedSubstring(from:range),range);start=end;continue}
       let original=string.substring(with:range)
-      let converted=converted(original,treatment)
-      let scalars=original.unicodeScalars.map(String.init)
-      let lengths=scalars.map{Self.converted($0,treatment).utf16.count}
+      let converted=converted(original,treatment,locale:locale)
+      var scalars=original.unicodeScalars.map(String.init)
+      var lengths=scalars.map{Self.converted($0,treatment,locale:locale).utf16.count}
+      if lengths.reduce(0,+) != converted.utf16.count {
+        needsArchive=true
+        scalars=original.map(String.init);lengths=scalars.map{Self.converted($0,treatment,locale:locale).utf16.count}
+        if lengths.reduce(0,+) != converted.utf16.count {scalars=[original];lengths=[converted.utf16.count]}
+      }
       let contextual=converted as NSString,useContext=lengths.reduce(0,+)==contextual.length
       var sourceIndex=start,displayIndex=0
       for (scalar,length) in zip(scalars,lengths) {
-        let rendered=useContext ? contextual.substring(with:NSRange(location:displayIndex,length:length)) : Self.converted(scalar,treatment)
+        let rendered=useContext ? contextual.substring(with:NSRange(location:displayIndex,length:length)) : Self.converted(scalar,treatment,locale:locale)
         let range=NSRange(location:sourceIndex,length:scalar.utf16.count)
         if scalar==rendered {append(source.attributedSubstring(from:range),range)}
         else {
@@ -194,7 +229,8 @@ import FormCore
     output.removeAttribute(sourceKey,range:NSRange(location:0,length:output.length))
     if preservingSource,source.string != output.string {
       let encoder=JSONEncoder();encoder.outputFormatting = .sortedKeys
-      if let data=try? encoder.encode(Record(source:source.string,display:output.string,pieces:pieces)) {
+      let archive=needsArchive ? try? NSKeyedArchiver.archivedData(withRootObject:source,requiringSecureCoding:true):nil
+      if let data=try? encoder.encode(Record(source:source.string,display:output.string,pieces:pieces,sourceArchive:archive)) {
         output.addAttribute(sourceKey,value:data,range:NSRange(location:0,length:output.length))
       }
     }

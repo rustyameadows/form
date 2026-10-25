@@ -16,6 +16,8 @@ Select a patch or label independently on the Table. Its textile inspector expose
 
 ## Fabric library
 
+Project-scoped [fabric repeat designs](fabric-patterns.md) now extend the stock library with editable linked motif tiles, four repeat modes, physical scale, independent colorways, a yardage preview, actual-size outputs, and bomber cloth mapping. Stock specifications stay reusable across projects; the artwork links stay with their project.
+
 Open **Studio Library → Fabrics & textile materials**. Six initial generic nylon, lining, rib-knit, patch-twill, and label materials provide editable composition, woven/knit/nonwoven/thread structure, GSM, usable width, studio inventory in meters, supplier, SKU, care notes, color, and verification state. Unknown measurements remain empty. Save validates finite physical ranges and persists the library separately from projects. Modified specifications are captured in a project's material definitions.
 
 The generic presets are assumptions. Setting the verification flag records a user's declaration; FORM does not independently test a fabric or simulate its physical behavior.

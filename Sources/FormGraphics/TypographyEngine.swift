@@ -151,6 +151,8 @@ public enum FormColor {
       .expansion: log(style.horizontalScale / 100),
     ]
     result.merge(spacingAttributes(style, adjustment: 0, factor: f)) { _, new in new }
+    if let language=style.language ?? style.inheritedLanguage {result[LanguageHyphenation.languageKey]=language}
+    if let language=style.inheritedLanguage {result[LanguageHyphenation.inheritedLanguageKey]=language}
     if let swatchID { result[swatchKey] = swatchID.uuidString }
     if let textStyle { result[textStyleKey] = try? JSONEncoder.form.encode(textStyle) }
     if let paragraphStyle { result[paragraphStyleKey] = try? JSONEncoder.form.encode(paragraphStyle) }
@@ -168,8 +170,10 @@ public enum FormColor {
     for run in element.textRuns ?? [] {
       let original = element.text as NSString
       guard run.location + run.length <= original.length else { continue }
+      var type=run.typography
+      type.inheritedLanguage=type.inheritedLanguage ?? base.language ?? base.inheritedLanguage
       result.setAttributes(
-        attributes(run.typography, size: run.fontSize, color: run.color, millimeters: millimeters,
+        attributes(type, size: run.fontSize, color: run.color, millimeters: millimeters,
           swatchID: run.swatchID, textStyle: run.textStyle, paragraphStyle: run.paragraphStyle),
         range: .init(location: run.location, length: run.length))
     }
@@ -181,14 +185,17 @@ public enum FormColor {
       choices: element.glyphOverrides ?? [], preservingSource: preservingSource)
   }
   public static func displayingCase(_ source: NSAttributedString,preservingSource:Bool=true) -> NSAttributedString {
-    var treatments:[(NSRange,String)]=[]
+    var treatments:[(NSRange,String,String?)]=[]
     source.enumerateAttribute(styleKey,in:NSRange(location:0,length:source.length)) { raw,range,_ in
       let type=(raw as? Data).flatMap{try? JSONDecoder.form.decode(Typography.self,from:$0)}
-      treatments.append((range,type?.caseTreatment ?? "original"))
+      let language=type?.language ?? source.attribute(LanguageHyphenation.languageKey,at:range.location,effectiveRange:nil) as? String
+      treatments.append((range,type?.caseTreatment ?? "original",language))
     }
     guard treatments.contains(where:{$0.1 == "uppercase" || $0.1 == "lowercase"}) else {return source}
     var index=0
-    return TextCase.displaying(source,preservingSource:preservingSource) { offset in
+    return TextCase.displaying(source,preservingSource:preservingSource,localeAt:{offset in
+      treatments.first(where:{NSLocationInRange(offset,$0.0)})?.2.map{Locale(identifier:$0)}
+    }) { offset in
       while index+1<treatments.count && offset>=NSMaxRange(treatments[index].0) {index+=1}
       return treatments[index].1
     }
@@ -522,6 +529,10 @@ public enum FormColor {
         (attrs[styleKey] as? Data).flatMap {
           try? JSONDecoder.form.decode(Typography.self, from: $0)
         } ?? fallback
+      style.inheritedLanguage=nil
+      if attrs[styleKey]==nil,let language=attrs[LanguageHyphenation.languageKey] as? String {
+        style.language=try? ParagraphLanguage.canonical(language)
+      }
       let font = attrs[.font] as? NSFont ?? self.font(fallback, size: 14)
       let assignedFont = self.font(style, size: font.pointSize)
       // AppKit can omit explicit selectors that currently equal a face's

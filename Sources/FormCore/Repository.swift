@@ -8,11 +8,14 @@ public struct ProjectSummary: Codable, Identifiable, Sendable {
   public var updatedAt: Date
   public var objectCount: Int
   public var url: URL
+  public var canvasItemCount: Int?
 }
 
 private struct ObjectReference: Codable {
   var id: UUID
   var file: String
+  var canvasWorkspace: Bool?
+  var canvasItemCount: Int?
 }
 private struct Manifest: Codable {
   var project: Project
@@ -36,16 +39,31 @@ public final class ProjectRepository {
           let manifest = try? JSONDecoder.form.decode(
             Manifest.self, from: Data(contentsOf: url.appendingPathComponent("Manifest.json")))
         else { return nil }
+        var physicalCount = 0,canvasCount = 0
+        for ref in manifest.objects {
+          if let workspace = ref.canvasWorkspace {
+            if workspace { canvasCount += max(0,ref.canvasItemCount ?? 0) }
+            else { physicalCount += 1 }
+          } else if manifest.project.schemaVersion >= 19,
+            !ref.file.contains("/"),ref.file.hasSuffix(".json"),
+            let data = try? Data(contentsOf:url.appendingPathComponent("Objects").appendingPathComponent(ref.file)),
+            let object = try? JSONDecoder.form.decode(ProductObject.self,from:data),object.id == ref.id,
+            object.isCanvasWorkspace {
+            // Early schema-19 packages predate summary metadata. New saves keep
+            // these counts in the manifest, avoiding object reads on Home.
+            canvasCount += ProjectContent.looseItems(in:object.artwork)
+          } else { physicalCount += 1 }
+        }
         return ProjectSummary(
           id: manifest.project.id, name: manifest.project.name, subtitle: manifest.project.subtitle,
-          updatedAt: manifest.project.updatedAt, objectCount: manifest.objects.count, url: url)
+          updatedAt: manifest.project.updatedAt, objectCount:physicalCount, url:url,canvasItemCount:canvasCount)
       }.sorted { $0.updatedAt > $1.updatedAt }
   }
   public func load(_ id: UUID) throws -> Project { try load(url: url(for: id)) }
   public func load(url: URL) throws -> Project {
     let manifest = try JSONDecoder.form.decode(
       Manifest.self, from: Data(contentsOf: url.appendingPathComponent("Manifest.json")))
-    guard (1...19).contains(manifest.project.schemaVersion) else {
+    guard (1...22).contains(manifest.project.schemaVersion) else {
       throw FormError.invalid("This project uses a newer file format. Update FORM to open it.")
     }
     var project = manifest.project
@@ -81,7 +99,8 @@ public final class ProjectRepository {
       if !FileManager.default.fileExists(atPath: target.path) {
         try data.write(to: target, options: .atomic)
       }
-      references.append(.init(id: object.id, file: filename))
+      references.append(.init(id:object.id,file:filename,canvasWorkspace:object.isCanvasWorkspace,
+        canvasItemCount:object.isCanvasWorkspace ? ProjectContent.looseItems(in:object.artwork) : nil))
     }
     var metadata = project
     metadata.schemaVersion = project.minimumSchemaVersion
@@ -150,6 +169,9 @@ public struct StudioLibrary: Codable, Equatable {
       Self.self, from: Data(contentsOf: root.appendingPathComponent("Studio.json")))) ?? .init()
   }
   public func save(to root: URL) throws {
+    guard materials.allSatisfy({ $0.fabric?.pattern == nil }) else {
+      throw FormError.invalid("Fabric patterns reference project artwork. Save repeat designs in the project rather than the shared Studio Library.")
+    }
     try JSONEncoder.form.encode(self).write(
       to: root.appendingPathComponent("Studio.json"), options: .atomic)
   }

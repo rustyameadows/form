@@ -116,6 +116,15 @@ enum TableTool: String, CaseIterable {
         element.height=max(element.fontSize/TypographyEngine.pointsPerMM*1.4,size.height+0.5)
       }
     }
+    engine.onPrepareParagraphs = { artwork, ids in
+      for i in artwork.elements.indices where ids.contains(artwork.elements[i].id)
+        && artwork.elements[i].kind=="text" && artwork.elements[i].typography?.frameMode=="point" {
+        let element=artwork.elements[i].inheritingLanguage(artwork.language)
+        let size=TypographyEngine.measured(element)
+        artwork.elements[i].width=max(1,size.width+0.5)
+        artwork.elements[i].height=max(element.fontSize/TypographyEngine.pointsPerMM*1.4,size.height+0.5)
+      }
+    }
     engine.onProjectWillChange = { [weak self] in self?.finishArtworkEditing() }
     engine.onProjectDidChange = { [weak self] in
       self?.closeDetachedCanvas()
@@ -270,6 +279,7 @@ enum TableTool: String, CaseIterable {
     showingHome = true
     engine.selection = []
     isolated = []
+    generateMissingPreviews()
   }
   func select(_ id: UUID?, extending: Bool = false) {
     guard let id else {
@@ -467,7 +477,7 @@ enum TableTool: String, CaseIterable {
   func capturePreview() {
     guard let project else { return }
     do {
-      let image = TableSceneController.preview(
+      let image = ProjectPreview.image(
         project: project, size: CGSize(width: 1000, height: 650),
         assets: repository.url(for: project.id).appendingPathComponent("Assets"))
       try image.pngData()?.write(to: previewURL(project.id), options: .atomic)
@@ -479,7 +489,7 @@ enum TableTool: String, CaseIterable {
     where !FileManager.default.fileExists(atPath: previewURL(summary.id).path) {
       DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.3) { [weak self] in
         guard let self, let project = try? self.repository.load(summary.id) else { return }
-        let image = TableSceneController.preview(
+        let image = ProjectPreview.image(
           project: project, size: CGSize(width: 1000, height: 650),
           assets: self.repository.url(for: project.id).appendingPathComponent("Assets"))
         try? image.pngData()?.write(to: self.previewURL(project.id), options: .atomic)
@@ -549,9 +559,10 @@ enum TableTool: String, CaseIterable {
       try library.save(to: repository.root)
       if project != nil {
         edit("Updated Studio Library") {
-          $0.materials = library.materials.filter { item in
+          let physicalMaterials = library.materials.filter { item in
             !FormCore.Material.presets.contains(item)
           }
+          $0.materials = $0.mergingStudioMaterials(physicalMaterials)
         }
       }
       revision += 1

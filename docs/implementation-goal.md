@@ -52,7 +52,8 @@ Current progress: [FOUNDRY and independent font features](font-features.md) now 
 - [x] Explicit font-metrics/None kerning with independent tracking, word spacing, and manual pairs; character-level native/MCP editing, style inheritance, portable outlines, and legacy layout preservation. See [AVENUE and spacing](kerning.md).
 - [x] Reusable paragraph/text styles with persistent local overrides, independent character/paragraph relationships, creation/redefinition/reset/detachment/deletion, and shared native/MCP Undo. See [FOLIO and text styles](reusable-text-styles.md).
 - [x] Saved left/center/right/decimal tab stops and repeating intervals; native selected-paragraph controls/MCP patches; real hyphenated native/physical/export composition, recoverable source, style inheritance, and exact Undo. See [LEDGER](paragraph-composition.md).
-- [ ] Lists, complete direction/document-language/hyphenation limits, and advanced text frames.
+- [x] Document and character language, inherited defaults, Natural/LTR/RTL direction, actual installed language dictionaries, and minimum word/prefix/suffix hyphenation limits; locale-aware case/source preservation and matching physical outputs. See [paragraph language](paragraph-language.md).
+- [ ] Structured lists and advanced text frames, including linked stories and publication layouts.
 - [x] Non-destructive mixed-character Original/Uppercase/Lowercase treatment, source/display UTF-16 mapping through expansions, native controls and input/Undo, rich fonts/colors/styles, and matching physical exports. See [VERSO](text-case.md).
 - [x] Native alternate-glyph palette and searchable real font repertoire; source/rich-style preservation, variable-face identity, shared native/MCP edits and Undo, schema-15 persistence, and validated physical outputs. See [QUILL](glyphs.md).
 - [ ] Convert shaped text to ordinary editable outlines while preserving glyph positioning, variations, ligatures, and a recoverable editable source.
@@ -81,7 +82,8 @@ Current progress: [precise compound-path operations and transformed native text]
 - [ ] Linked text frames, sequential multi-page documents, baseline grids, reusable document styles, and an instruction booklet with multi-page PDF output.
 - [ ] Bleed/trim/safe areas, output profiles and color-space metadata, ColorSync conversions, CMYK/spot-color workflows, and production preflight.
 - [ ] Font embedding where supported/permitted and explicit outline export; selectable raster size/resolution; physically accurate outputs.
-- [ ] Separate printable artwork from cut/score/stitch/engrave/guide roles in the model and exports; configurable production overlays and packaging/textile constraints.
+- [x] Separate print/cut/score/stitch/engrave/guide intent, inherited manufacturing groups, native/MCP assignment and Undo, local role-overlay visibility, role-filtered SVG layers and physically sized PDF pages, and explicit guide-reference output. See [production roles](production-roles.md).
+- [ ] Complete the remaining bleed/trim/safe-area, registration/material/print-limit overlays, machine-specific production processing, and packaging/textile constraints.
 
 ### F. Advanced physical integration — specification Phase 5
 
@@ -110,6 +112,8 @@ See [validation notes](validation.md) for measured results and current limitatio
 ### H. Textiles, apparel, fabric, and merchandise — active
 
 The [ORBITAL textile foundation](textile-foundation.md) now implements shaped parametric bomber blanks, attached decorations, shared artwork, two colorways, editable fabric specifications/inventory, and physical patch/label exports. Packaged MCP and native checks pass. The complete requirements below remain open; this foundation is not a finished clothing system.
+
+[Physical fabric repeats](fabric-patterns.md) now add linked editable tiles, four repeat modes, millimeter scale/spacing/offset/rotation, independent colorways, native yardage controls, physical bomber mapping, and SVG/PDF/PNG/JPEG outputs. Native and packaged MCP checks pass, including source invalidation and zero geometry rebuilds for output-only changes. Engineered prints, cross-seam pattern-piece continuity, cutting, fit, and cloth behavior remain unfinished.
 
 - [ ] Decorated garment blanks, real-scale regions, persistent fabric specifications, native material controls, linked artwork and garment-relative placement, variants, and collection editing.
 - [ ] NASA bomber demonstration: convincing garment construction and fabric, custom independent patches, sewn-in labels, direct embroidery regions, shared editable source art, two colorways, and polished hero/detail views.

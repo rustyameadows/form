@@ -199,21 +199,7 @@ struct ArtworkInspector: View {
               Button("Duplicate") { session.execute("duplicate") }
               Button("Delete") { session.execute("delete") }
             }.font(.system(size: 9))
-            DisclosureGroup("Production role") {
-              Picker(
-                "Role",
-                selection: Binding(
-                  get: { e.productionRole ?? "artwork" },
-                  set: { role in session.update { $0.productionRole = role } })
-              ) {
-                ForEach(["artwork", "cut", "score", "stitch", "engrave", "guide"], id: \.self) {
-                  Text($0.capitalized).tag($0)
-                }
-              }.labelsHidden()
-              Text("Construction roles stay separate from printable artwork.").font(
-                .system(size: 9)
-              ).foregroundStyle(Palette.secondary)
-            }.font(.system(size: 10))
+            ProductionRoleControls(session:session)
           } else {
             frameControls(object)
           }
@@ -457,6 +443,7 @@ struct ArtworkInspector: View {
           }
           Button("Tab stops…") { session.showingTabs = true }
             .sheet(isPresented: $session.showingTabs) { ParagraphTabsPanel(session: session) }
+          ParagraphLanguageControls(session:session,type:type)
           Picker(
             "Vertical",
             selection: Binding(
@@ -628,6 +615,7 @@ struct ArtworkInspector: View {
   func frameControls(_ object: ProductObject) -> some View {
     VStack(alignment: .leading, spacing: 15) {
       SectionLabel(object.isCanvasWorkspace ? "FREEFORM CANVAS" : "ARTWORK FRAME")
+      ProductionOverlayControls(session:session)
       if object.isCanvasWorkspace {
         Text("Draw, type, or place images anywhere. Add a physical frame when you need one, then drag artwork onto it.")
           .font(.system(size:11)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)

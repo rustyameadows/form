@@ -160,7 +160,7 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
     let container:NSTextContainer
     if let textContainer {container=textContainer}
     else {
-      let storage=NSTextStorage(),layout=NSLayoutManager()
+      let storage=PublicationTextStorage(),layout=NSLayoutManager()
       container=NSTextContainer(size:NSSize(width:frameRect.width,height:100000))
       storage.addLayoutManager(layout);layout.addTextContainer(container);ownedStorage=storage
     }
@@ -488,8 +488,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         ArtworkRenderer.draw(
           f.artwork, width: f.rect.width, height: f.rect.height, assets: session.assets,
           production: false,
-          excluding: f.id == session.objectID ? Set([editingID].compactMap { $0 }).union(
-            dragMode == "move" && moveDropFrameID != nil ? session.art.descendants(of:startSelection) : []) : [],
+          excluding: (f.id == session.objectID ? Set([editingID].compactMap { $0 }).union(
+            dragMode == "move" && moveDropFrameID != nil ? session.art.descendants(of:startSelection) : []) : [])
+            .union(ArtworkProduction.hiddenIDs(in:f.artwork,roles:session.hiddenProductionRoles)),
           unbounded:f.isWorkspace)
         if f.id == session.objectID {
           drawOverlays(f, context: context, scale: scale)
@@ -735,7 +736,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   private func hit(_ point: CGPoint, art: Artwork, scope: UUID?) -> ArtworkElement? {
     let masks = Set(art.elements.compactMap(\.clipID))
-    for e in art.elements.reversed() where e.parentID == scope &&
+    let hiddenRoles = ArtworkProduction.hiddenIDs(in:art,roles:session?.hiddenProductionRoles ?? [])
+    for e in art.elements.reversed() where !hiddenRoles.contains(e.id) && e.parentID == scope &&
       (session?.maskEditing.map { $0.maskID == e.id && !art.isLocked(e) } ?? (art.editable(e) && !masks.contains(e.id))) {
       let world = art.worldTransform(e)
       if e.kind == "group" {
@@ -1554,6 +1556,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let s = session, let f = activeFrame, let host = textHost, let clip = textClip else {
       return
     }
+    let element=element.inheritingLanguage(s.art.language)
     let world = s.art.worldTransform(element)
     if let tv = textView as? CanvasTextView {
       tv.verticalOffset = TypographyEngine.verticalOffset(element, points: true)
@@ -1607,7 +1610,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       e.textRuns = runs
     }
     if e.typography?.frameMode == "point" {
-      let size = TypographyEngine.measured(e)
+      let size = TypographyEngine.measured(e.inheritingLanguage(s.art.language))
       e.width = max(1, size.width + 0.5)
       e.height = max(e.fontSize / ppm * 1.4, size.height + 0.5)
       tv.setFrameSize(.init(width: max(40, e.width * ppm), height: max(24, e.height * ppm)))
@@ -1720,7 +1723,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let changed = command == "reset"
         ? TextStyleCommands.resetting(old, styles: styles, preservingParagraphs: partial)
         : TextStyleCommands.applying(old, style: style, detach: command == "detach", preservingParagraphs: partial)
-      var result=TypographyEngine.attributes(changed.typography, size: changed.fontSize, color: changed.color,
+      var type=changed.typography;type.inheritedLanguage=raw[LanguageHyphenation.inheritedLanguageKey] as? String
+      var result=TypographyEngine.attributes(type, size: changed.fontSize, color: changed.color,
         millimeters: false, swatchID: changed.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
       result[TextCase.sourceKey]=raw[TextCase.sourceKey]
       result[GlyphEngine.overrideKey]=raw[GlyphEngine.overrideKey]
@@ -1767,6 +1771,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     if range.length == 0, let run = textInspection() {
       var t = run.typography
       body(&t)
+      t.inheritedLanguage=tv.typingAttributes[LanguageHyphenation.inheritedLanguageKey] as? String
       var changed = run; changed.typography = t
       changed = TextStyleCommands.recording(changed, from: run)
       tv.typingAttributes = TypographyEngine.attributes(
@@ -1783,6 +1788,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       ).first {
         var t = run.typography
         body(&t)
+        t.inheritedLanguage=attributes[LanguageHyphenation.inheritedLanguageKey] as? String
         var changed = run; changed.typography = t
         changed = TextStyleCommands.recording(changed, from: run)
         var attrs=TypographyEngine.attributes(t, size: run.fontSize, color: run.color, millimeters: false,

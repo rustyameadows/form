@@ -19,7 +19,7 @@ import FormCore
     var ink: [(path:CGPath,color:String,swatchID:UUID?)]?
     init(_ e: ArtworkElement) {
       signature=Signature(e)
-      storage=NSTextStorage(attributedString:TypographyEngine.attributed(e))
+      storage=PublicationTextStorage();storage.setAttributedString(TypographyEngine.attributed(e))
       layout=NSLayoutManager()
       container=NSTextContainer(size:.init(width:e.typography?.frameMode == "point" ? 100000 : e.width*TypographyEngine.pointsPerMM,height:100000))
       container.lineFragmentPadding=0

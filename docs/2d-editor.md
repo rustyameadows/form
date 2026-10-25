@@ -19,6 +19,7 @@ The editor is a working part of the expanded [2D specification](2d-design-typogr
 - Named project sRGB palettes shared by vector fills, strokes, gradient stops, selected text characters, backgrounds, and component overrides. Native typography and glyph conversion retain links; detachment and swatch deletion preserve current colors. Palette data uses schema 7; schemas 1–6 still load. See [shared swatches and CHROMA](shared-swatches.md).
 - Non-destructive layer/group opacity, sixteen blend modes, Gaussian blur, drop shadows, shared shadow colors, and explicit group isolation. Native controls, linked physical surfaces, text outlines, and physical exports preserve the combined appearance. These fields use schema 8; schemas 1–7 still load. See [appearance and UMBRA](artwork-appearance.md).
 - Actual-size SVG/PDF and DPI-controlled PNG/JPEG frame/selection exports. SVG outlines text by default. Selection export preserves required group transforms, opacity, and masks. Printable artwork is distinct from cut/score/stitch/engrave/guide roles.
+- Native production-role assignment and inherited manufacturing groups, independent technical-overlay visibility, explicit role-filtered exports, named SVG role layers, and one physically sized PDF page per output role. Shared masks and compound holes retain their geometry; guides require explicit reference export. See [production roles](production-roles.md).
 
 [Reusable project text styles](reusable-text-styles.md) now link headings, body copy, captions, character ranges, and their paragraph formatting across frames, components, and physical faces. Explicit local overrides survive later style changes. Native creation/redefinition, reset, detach/delete, and MCP commands share Undo and schema-12 persistence.
 
@@ -83,9 +84,9 @@ See [precise paths and transformed native text](path-editing.md) for direct sele
 
 - The specification’s later variable-width stroke workflows.
 - Full SVG interchange fidelity beyond the [supported import subset](svg-import.md), including filters, patterns, gradient strokes, advanced SVG text, and external resources. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
-- Small caps and explicit document-locale casing, lists, document-language/hyphenation limits, linked text frames, sequential multi-page documents, and publication layout.
+- Small caps, structured lists, linked text frames, sequential multi-page documents, and publication layout. Document/character language, locale casing and dictionary hyphenation limits are implemented in [paragraph language](paragraph-language.md).
 - Cross-project clipboard transfer for linked named resources and local assets.
-- Color-managed production output, CMYK/spot separations, full preflight, role-specific production exports, advanced surface placement, and the complete demonstration/acceptance suite.
+- Color-managed production output, CMYK/spot separations, full preflight, advanced surface placement, and the complete demonstration/acceptance suite.
 
 The current **Soft geometry** demonstration is an 8 × 10 inch composition with installed type, gradients, an editable compound shape, a matching outlined version, and physical SVG/PDF/raster exports. It does not replace the required clock dial, folding package, apparel/patch graphic, and instruction booklet demonstrations.
 

@@ -224,13 +224,15 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
       end = run.location + run.length
     }
     if let role = e.productionRole {
-      guard ["artwork", "cut", "score", "stitch", "engrave", "guide"].contains(role) else {
+      guard ArtworkProductionRole.resolve(role) != nil else {
         throw FormError.invalid("Unknown manufacturing role.")
       }
     }
   }
 }
 public func validateTypography(_ t: Typography) throws {
+  try ParagraphLanguage.validate(t.language)
+  try t.hyphenationLimits?.validate()
   let tabs = t.tabStops ?? []
   guard tabs.count <= 64, tabs.allSatisfy({
     $0.location.isFinite && (0...10000).contains($0.location)

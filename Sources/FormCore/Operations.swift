@@ -14,6 +14,7 @@ public final class OperationEngine {
   public var onGraphics: ((String, [String: Any]) throws -> Any)?
   public var onValidatePaint: ((Project, UUID, Set<UUID>) throws -> Void)?
   public var onPrepareGlyph: ((inout ArtworkElement, GlyphOverride?) throws -> Void)?
+  public var onPrepareParagraphs: ((inout Artwork, Set<UUID>) throws -> Void)?
   public var onProjectWillChange: (() -> Void)?
   public var onProjectDidChange: (() -> Void)?
   private var interaction: String?
@@ -333,7 +334,7 @@ public final class OperationEngine {
         guard let object = p.objects.first(where: { $0.id == id }) else {
           throw FormError.missing("Object not found.")
         }
-        if ["paragraph","glyph","origin","transform"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
+        if ["paragraph","glyph","origin","transform","language","production"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
         var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
         if command=="glyph" {
@@ -343,6 +344,10 @@ public final class OperationEngine {
             let choice=a["glyph"] is [String:Any] ? art.elements[i].glyphOverrides?.first(where:{$0.location==location}) : nil
             try onPrepareGlyph?(&art.elements[i],choice)
           }
+        }
+        if ["language","paragraph","glyph"].contains(command) {
+          let targets=command=="language" ? Set(art.elements.map(\.id)):art.swatchPaintTargets(for:ids)
+          try onPrepareParagraphs?(&art,targets)
         }
         try p.setArtwork(art, for: id)
       }
@@ -493,6 +498,14 @@ public final class OperationEngine {
           p.objects[index].name = name
         }
         if let material = a["material_id"] as? String { p.objects[index].materialID = material }
+        if let raw = a["fabric_pattern"] {
+          let pattern: FabricPattern?
+          if raw is NSNull { pattern = nil }
+          else if let value = raw as? [String: Any] {
+            pattern = try JSONDecoder.form.decode(FabricPattern.self, from: JSONSerialization.data(withJSONObject: value))
+          } else { throw FormError.invalid("Provide a fabric pattern definition or null.") }
+          try p.setFabricPattern(pattern, materialID: p.objects[index].materialID)
+        }
         if let color = a["color"] as? String {
           try validateColor(color)
           p.objects[index].color = color
@@ -738,6 +751,7 @@ public func validateColor(_ color: String) throws {
   }
 }
 public func validateArtwork(_ artwork: Artwork) throws {
+  try ParagraphLanguage.validate(artwork.language)
   try validateColor(artwork.background)
   guard artwork.elements.count <= 5000, artwork.bleed.isFinite, (0...25).contains(artwork.bleed)
   else { throw FormError.invalid("Artwork supports up to 5000 elements and 0–25 mm bleed.") }

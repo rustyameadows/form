@@ -292,7 +292,7 @@ struct ProjectCard: View {
             Image(systemName: "cube.transparent").font(.system(size: 35, weight: .ultraLight))
               .foregroundStyle(Palette.secondary).frame(maxWidth: .infinity, maxHeight: .infinity)
           }
-          Text("\(project.objectCount) OBJECTS").font(
+          Text(project.contentDescription.uppercased()).font(
             .system(size: 8, weight: .semibold, design: .monospaced)
           ).tracking(1).padding(.horizontal, 9).padding(.vertical, 6).background(
             .regularMaterial, in: Capsule()
@@ -322,7 +322,7 @@ struct ProjectCard: View {
       .task(id: store.previewVersion) {
         preview = NSImage(contentsOf: store.previewURL(project.id))
       }
-      .accessibilityLabel("Open \(project.name), \(project.objectCount) objects")
+      .accessibilityLabel("Open \(project.name), \(project.contentDescription)")
   }
 }
 
@@ -347,7 +347,7 @@ struct NewProjectCard: View {
             Palette.ink.opacity(0.16), style: StrokeStyle(lineWidth: 1, dash: [4, 5])))
         VStack(alignment: .leading, spacing: 5) {
           Text("Start a new project").font(.system(size: 15, weight: .semibold))
-          Text("A blank Table. All the possibilities.").font(.system(size: 12)).foregroundStyle(
+          Text("An open Canvas. All the possibilities.").font(.system(size: 12)).foregroundStyle(
             Palette.secondary)
         }
       }
@@ -509,7 +509,7 @@ struct WorkspaceStatus: View {
       Circle().fill(Color(nsColor: NSColor(hex: "#7C9278"))).frame(width: 5, height: 5)
       Text(store.saving ? "Saving…" : "Saved locally").font(.system(size: 10))
       Text("/").foregroundStyle(.black.opacity(0.15))
-      Text("\(store.project?.objects.count ?? 0) objects").font(.system(size: 10))
+      Text(store.project?.contentDescription ?? "0 objects").font(.system(size: 10))
       if !store.selected.isEmpty {
         Text("·  \(store.selected.count) selected").font(.system(size: 10))
       }

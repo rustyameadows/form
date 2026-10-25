@@ -14,10 +14,11 @@ public struct FabricProfile: Codable, Equatable, Sendable {
   public var care: String?
   public var inventoryMeters: Double?
   public var specificationsVerified = false
+  public var pattern: FabricPattern?
   public init(composition: String, structure: Structure, weightGSM: Double? = nil, usableWidth: Double? = nil) {
     self.composition=composition;self.structure=structure;self.weightGSM=weightGSM;self.usableWidth=usableWidth
   }
-  private enum CodingKeys:String,CodingKey {case composition,structure,weightGSM,usableWidth,stretchWarp,stretchWeft,supplier,sku,care,inventoryMeters,specificationsVerified}
+  private enum CodingKeys:String,CodingKey {case composition,structure,weightGSM,usableWidth,stretchWarp,stretchWeft,supplier,sku,care,inventoryMeters,specificationsVerified,pattern}
   public init(from decoder:Decoder)throws {
     let c=try decoder.container(keyedBy:CodingKeys.self)
     composition=try c.decode(String.self,forKey:.composition);structure=try c.decode(Structure.self,forKey:.structure)
@@ -25,6 +26,7 @@ public struct FabricProfile: Codable, Equatable, Sendable {
     stretchWarp=try c.decodeIfPresent(Double.self,forKey:.stretchWarp);stretchWeft=try c.decodeIfPresent(Double.self,forKey:.stretchWeft)
     supplier=try c.decodeIfPresent(String.self,forKey:.supplier);sku=try c.decodeIfPresent(String.self,forKey:.sku);care=try c.decodeIfPresent(String.self,forKey:.care)
     inventoryMeters=try c.decodeIfPresent(Double.self,forKey:.inventoryMeters);specificationsVerified=try c.decodeIfPresent(Bool.self,forKey:.specificationsVerified) ?? false
+    pattern=try c.decodeIfPresent(FabricPattern.self,forKey:.pattern)
   }
   public func validate() throws {
     guard !composition.isEmpty,composition.count<=500 else {throw FormError.invalid("Fabric composition needs 1–500 characters.")}
@@ -32,6 +34,7 @@ public struct FabricProfile: Codable, Equatable, Sendable {
       if let value, !value.isFinite || value<0 || value>maximum {throw FormError.invalid("Fabric measurements must be finite and within supported physical ranges.")}
     }
     guard [supplier,sku,care].allSatisfy({($0?.count ?? 0)<=2000}) else {throw FormError.invalid("Fabric notes are too long.")}
+    try pattern?.validate()
   }
 }
 
@@ -176,6 +179,7 @@ public enum TextileDesign {
 extension Project {
   public func validateTextiles() throws {
     for material in materials {try material.fabric?.validate()}
+    try validateFabricPatterns()
     for object in objects {
       guard let spec=object.textile else {continue}
       guard TextileDesign.recipeIDs.contains(object.recipeID),

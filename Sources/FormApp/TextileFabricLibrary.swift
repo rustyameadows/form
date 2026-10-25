@@ -6,6 +6,7 @@ struct TextileFabricLibrary: View {
   @EnvironmentObject var store:StudioStore
   @Environment(\.dismiss) var dismiss
   @State private var editing:FormCore.Material?
+  @State private var patternEditing:FormCore.Material?
   var body:some View {
     VStack(alignment:.leading,spacing:20) {
       HStack {
@@ -18,6 +19,7 @@ struct TextileFabricLibrary: View {
       ScrollView {
         LazyVStack(spacing:10) {
           ForEach(store.library.materials.filter{$0.fabric != nil}) {material in
+            HStack(spacing: 8) {
             Button {editing=material} label: {
               HStack(spacing:14) {
                 RoundedRectangle(cornerRadius:7).fill(Color(nsColor:NSColor(hex:material.color))).frame(width:48,height:55)
@@ -30,6 +32,15 @@ struct TextileFabricLibrary: View {
                 Spacer();Image(systemName:"slider.horizontal.3").foregroundStyle(Palette.secondary)
               }.padding(12).background(.white,in:RoundedRectangle(cornerRadius:10)).contentShape(Rectangle())
             }.buttonStyle(.plain)
+              Button {
+                patternEditing = store.project?.material(material.id) ?? material
+              } label: {
+                VStack(spacing: 5) {
+                  Image(systemName: "square.grid.3x3").font(.system(size: 16))
+                  Text(store.project?.material(material.id).fabric?.pattern == nil ? "Pattern" : "Edit pattern").font(.system(size: 9))
+                }.frame(width: 70, height: 74).background(.white, in: RoundedRectangle(cornerRadius: 10))
+              }.buttonStyle(.plain).disabled(store.project == nil).help("Edit this project's fabric repeat design")
+            }
           }
         }
       }
@@ -39,10 +50,21 @@ struct TextileFabricLibrary: View {
       }.buttonStyle(.borderless)
     }.padding(28).frame(width:700,height:610).background(Palette.paper)
       .sheet(item:$editing) {material in FabricMaterialEditor(material:material) {changed in
+        var changed = changed; changed.fabric?.pattern = nil
         if let i=store.library.materials.firstIndex(where:{$0.id==changed.id}) {store.library.materials[i]=changed}
         else {store.library.materials.append(changed)}
         store.saveLibrary();editing=nil
       }}
+      .sheet(item:$patternEditing) {material in
+        FabricPatternEditor(material: material, project: store.project) { sourceID in
+          patternEditing = nil; dismiss()
+          store.showingLibrary = false
+          DispatchQueue.main.async {
+            store.showSurface(.artwork); store.artworkSession.activate(sourceID)
+            DispatchQueue.main.async { store.artworkSession.canvas?.fit(all: false) }
+          }
+        }.environmentObject(store)
+      }
   }
 }
 

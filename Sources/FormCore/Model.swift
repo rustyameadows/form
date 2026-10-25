@@ -134,6 +134,7 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
 
 public struct Artwork: Codable, Equatable, Sendable {
   public var background: String
+  public var language: String?
   public var elements: [ArtworkElement]
   public var bleed: Double
   public var unit: PhysicalUnit?
@@ -378,7 +379,14 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var minimumSchemaVersion: Int {
     max(
       schemaVersion,
-      objects.contains { $0.isCanvasWorkspace }
+      objects.contains { $0.artwork?.requiresSchemaTwentyTwo == true }
+        ? 22
+        : materials.contains { $0.fabric?.pattern != nil }
+        ? 21
+        : objects.contains { $0.artwork?.requiresSchemaTwenty == true }
+        || textStyles?.contains { $0.typography.usesPublicationLanguage } == true
+        ? 20
+        : objects.contains { $0.isCanvasWorkspace }
         ? 19
         : objects.contains { $0.artwork?.requiresSchemaEighteen == true }
         ? 18

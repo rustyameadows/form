@@ -31,7 +31,7 @@ import Foundation
     where all.contains(record.id) && !booleanChildren.contains(record.id)
       && (record.hidden != true || masks.contains(record.id))
     {
-      let source = paintByID[record.id] ?? record
+      let source = (paintByID[record.id] ?? record).inheritingLanguage(artwork.language)
       let eligible =
         mode == "shape"
         ? ["rectangle", "ellipse", "line", "polygon", "star"].contains(source.kind)

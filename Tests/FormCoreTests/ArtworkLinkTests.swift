@@ -138,8 +138,8 @@ final class ArtworkLinkTests: XCTestCase {
         try JSONSerialization.jsonObject(
           with: Data(contentsOf: package.appendingPathComponent("Manifest.json"))) as! [String: Any]
       return Dictionary(
-        uniqueKeysWithValues: (manifest["objects"] as! [[String: String]]).map {
-          ($0["id"]!, $0["file"]!)
+        uniqueKeysWithValues: (manifest["objects"] as! [[String: Any]]).map {
+          ($0["id"] as! String, $0["file"] as! String)
         })
     }
     let before = try references()

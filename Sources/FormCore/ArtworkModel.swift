@@ -220,6 +220,10 @@ public struct Typography: Codable, Equatable, Sendable {
   public var frameMode: String = "area"
   public var caseTreatment: String = "original"
   public var hyphenation: Double = 0
+  public var language: String?
+  public var hyphenationLimits: HyphenationLimits?
+  /// Derived document default, omitted from persisted/native style metadata.
+  public var inheritedLanguage: String?
   public var features: [Int: Int] = [:]
   /// Multiple independent selectors within a feature type. Values replace the
   /// legacy single selector for that type; even/odd on/off pairs are exclusive.
@@ -235,7 +239,8 @@ public struct Typography: Codable, Equatable, Sendable {
     case fontName, tracking, leading, baseline, wordSpacing, horizontalScale, alignment,
       verticalAlignment, paragraphBefore, paragraphAfter, leftIndent, rightIndent, firstLineIndent,
       underline, strikethrough, ligatures, direction, frameMode, caseTreatment, hyphenation,
-      features, featureSelections, variations, pairKerning, kerningMode, tabStops, defaultTabInterval
+      features, featureSelections, variations, pairKerning, kerningMode, tabStops, defaultTabInterval,
+      language, hyphenationLimits
   }
   public init(from decoder: Decoder) throws {
     self.init()
@@ -264,6 +269,8 @@ public struct Typography: Codable, Equatable, Sendable {
     frameMode = try c.decodeIfPresent(String.self, forKey: .frameMode) ?? frameMode
     caseTreatment = try c.decodeIfPresent(String.self, forKey: .caseTreatment) ?? caseTreatment
     hyphenation = try c.decodeIfPresent(Double.self, forKey: .hyphenation) ?? hyphenation
+    if let value=try c.decodeIfPresent(String.self,forKey:.language) {language=try ParagraphLanguage.canonical(value)}
+    hyphenationLimits=try c.decodeIfPresent(HyphenationLimits.self,forKey:.hyphenationLimits)
     features = try c.decodeIfPresent([Int: Int].self, forKey: .features) ?? features
     featureSelections = try c.decodeIfPresent([Int: [Int]].self, forKey: .featureSelections)
     variations = try c.decodeIfPresent([Int: Double].self, forKey: .variations) ?? variations
@@ -421,12 +428,12 @@ extension Artwork {
     let masks = Set(elements.compactMap(\.clipID))
     result.elements = elements.filter { e in
       if e.hidden == true && !masks.contains(e.id) { return false }
-      if let role = e.productionRole, role != "artwork", !masks.contains(e.id) { return false }
+      if let role = e.productionRole, ArtworkProductionRole.resolve(role) != .print, !masks.contains(e.id) { return false }
       var parent = e.parentID
       var seen = Set<UUID>()
       while let id = parent, let item = elements.first(where: { $0.id == id }), !seen.contains(id) {
         seen.insert(id)
-        if item.hidden == true || (item.productionRole != nil && item.productionRole != "artwork") {
+        if item.hidden == true || (item.productionRole != nil && ArtworkProductionRole.resolve(item.productionRole) != .print) {
           return false
         }
         parent = item.parentID
@@ -442,6 +449,7 @@ extension Artwork {
         result.elements[i].stroke = result.elements[i].kind == "line" ? ArtworkStroke(color:"#000000",width:0) : nil
       }
       result.elements[i].name = nil
+      result.elements[i].productionRole = nil
       result.elements[i].transformOrigin = nil
       result.elements[i].locked = nil
       if result.elements[i].blendMode == "normal" { result.elements[i].blendMode = nil }

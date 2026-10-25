@@ -27,6 +27,8 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **The Table:** A continuous Metal-backed 3D workspace with physical scale, soft shadows, image references, material swatches, selection, movement, grouping, duplication, and persistent camera state.
 - **Connected Canvas:** Type, draw, or place images without an artboard, including negative coordinates. Drag artwork onto or off a physical region to update its 3D face with shared Undo. Resizable split and separate-window layouts keep one editor and shared project state. See [Canvas and Table](docs/design-surfaces.md).
 - **Textile foundation:** Dimensioned flight-bomber blanks, garment-relative patches and sewn labels, shared editable artwork, two NASA-themed colorways, and editable Studio fabric specifications/inventory. The [ORBITAL study](docs/textile-foundation.md) is a concept blank and decoration workflow; garment patterns, cloth simulation, and machine embroidery remain unfinished.
+- **Fabric repeats:** Editable artwork tiles, straight/half-drop/brick/mirror repeats, physical scale and spacing, independent colorways, native yardage preview, bomber fabric mapping, and actual-size SVG/PDF/PNG output. See [physical fabric designs](docs/fabric-patterns.md).
+- **Language-aware typography:** Document and character languages, localized case treatment, actual installed hyphenation dictionaries, and minimum word/prefix/suffix limits. Native editing and production output preserve the source words. See [paragraph language](docs/paragraph-language.md).
 - **Contextual controls:** Floating native parameter and material inspectors. Focus or isolate a selection without leaving the canvas.
 - **Editable constructions:** Clocks, paper stacks, booklets, folding sleeves, lamps, hollow vessels, boxes, cylinders, extruded profiles, and independent artwork sheets. Custom agent-defined recipes get the same native controls.
 - **Shared artwork:** Independent sheets can drive multiple physical faces. Actual-size or proportional fitting preserves the source; native source editing, detachment, iterations, and deletion have shared undo. Try the [linked clock demonstration](docs/linked-artwork.md).
@@ -35,6 +37,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Editable appearance:** Layer/group opacity, sixteen blend modes, Gaussian blur, drop shadows, explicit group isolation, and shared shadow colors. The canvas, linked products, and physical exports preserve their appearance. See the [UMBRA study](docs/artwork-appearance.md).
 - **Native artwork canvas:** Multiple physical frames, rulers/guides/grid/snapping, nested layers, exact transforms, Bézier paths, compound holes, cross-object endpoint joining, gradients, strokes, masks, and live 3D face updates. [Live boolean groups and Divide](docs/live-booleans.md) retain editable operands, support operation changes/release/flatten, and update linked product faces. A folding sleeve exposes its unfolded cut/score dieline.
 - **Vector paint:** Direct gradient-stop and axis editing, full stroke controls with inside/outside alignment, fill-preserving stroke outlines, and explicit nested-mask editing. See the [PRISM workflow](docs/paint-gradients-masks.md).
+- **Production roles:** Explicit print, cut, score, stitch, engrave, and guide intent; inherited manufacturing groups; local overlay visibility; separate SVG role layers and actual-size PDF pages from the same source. See [production roles](docs/production-roles.md).
 - **Image editing:** Original files, aspect-aware placement, crop panning/zoom, numeric crop bounds, brightness/contrast/saturation, replacement that retains layout, drag/drop, and effective physical DPI. See the [LUMEN collection](docs/image-editing.md).
 - **Editable SVG import:** File → Import SVG Artwork (`⇧⌘I`) reviews native paths, groups, text, gradients, clips, and embedded images before creating a physical frame or adding to an existing surface. Originals stay in the project; unsupported features require explicit review. See the [SVG import guide](docs/svg-import.md).
 - **Typography:** Reusable text styles with local overrides, independent character/paragraph links, installed fonts, native selected-character editing, reversible Unicode case, paragraph tabs/hyphenation, font kerning, OpenType features, variable axes, real alternate-glyph selection, Core Text shaping, and editable glyph outlines. See [FOLIO and text styles](docs/reusable-text-styles.md), [FOUNDRY and font features](docs/font-features.md), [AVENUE and kerning](docs/kerning.md), [LEDGER and paragraph composition](docs/paragraph-composition.md), [VERSO and text case](docs/text-case.md), [QUILL and alternate glyphs](docs/glyphs.md), and the [editor guide](docs/2d-editor.md).
@@ -112,6 +115,9 @@ python3 scripts/smoke_paint.py # Gradients, strokes, nested masks, physical outp
 python3 scripts/smoke_font_features.py # Independent selectors, rich typography, linked faces, schema 11, 200-text saved edits
 python3 scripts/smoke_case.py # Reversible Unicode case, source preservation, native shaping, linked faces
 python3 scripts/smoke_glyphs.py # Actual font glyphs, editable QUILL wordmark/dial, recoverable paths, schema 15
+python3 scripts/smoke_paragraph_language.py # Document/character languages, actual dictionaries, source preservation, schema 20
+python3 scripts/smoke_fabric_patterns.py # Physical fabric repeats, colorways, linked tiles and yardage exports, schema 21
+python3 scripts/smoke_production_roles.py # Separate print/cut/score/stitch/engrave outputs, shared masks, schema 22
 python3 scripts/smoke_paragraphs.py # Saved tabs, real hyphenation, paragraph patches, schema 14, linked faces
 python3 scripts/smoke_kerning.py # Font metrics, independent spacing, legacy preservation, schema 13, linked faces
 python3 scripts/smoke_text_styles.py # Reusable styles, local overrides, character/paragraph links, schema 12, linked faces
@@ -138,6 +144,9 @@ This build has a native typography/vector editor and procedural construction sys
 - [Initial product brief · Version 0.1](docs/product-brief.md)
 - [2D Design, Typography & Vector Editing · guiding specification](docs/2d-design-typography-vector-spec.md)
 - [Native artwork editor · controls, MCP, and remaining work](docs/2d-editor.md)
+- [Production roles · separate print and manufacturing geometry](docs/production-roles.md)
+- [Physical fabric repeat designs](docs/fabric-patterns.md)
+- [Paragraph language and hyphenation](docs/paragraph-language.md)
 - [Paragraph tabs, hyphenation, and LEDGER](docs/paragraph-composition.md)
 - [Non-destructive text case and VERSO](docs/text-case.md)
 - [Alternate glyphs, the QUILL wordmark, and a 100 mm dial](docs/glyphs.md)

@@ -40,7 +40,7 @@ import FormCore
   ) {
     guard let context = NSGraphicsContext.current?.cgContext else { return }
     let art: Artwork
-    do { art = try BooleanGeometry.materialized(source) } catch {
+    do { art = try BooleanGeometry.materialized(source).withInheritedLanguage } catch {
       context.saveGState()
       context.setStrokeColor(FormColor.color("#D45A37").cgColor)
       context.stroke(CGRect(x: 0, y: 0, width: width, height: height))

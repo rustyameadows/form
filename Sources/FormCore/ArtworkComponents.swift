@@ -78,6 +78,7 @@ public enum ComponentCommands {
     }
     let all = art.descendants(of: rootIDs)
     var sourceArt = Artwork(background: "#FFFFFF", elements: art.elements.filter { all.contains($0.id) }, bleed: 0)
+    sourceArt.language = art.language
     sourceArt.backgroundOpacity = 0
     for i in sourceArt.elements.indices where rootIDs.contains(sourceArt.elements[i].id) {
       sourceArt.elements[i].parentID = nil
@@ -315,6 +316,18 @@ extension Project {
         }
         output.elements.append(content)
         for var child in sourceArt.elements {
+          // A component carries its source document's language into the host.
+          // Resolve on this derived copy so host defaults cannot change its text.
+          if child.kind == "text", let language = sourceArt.language {
+            var type = child.typography ?? .init()
+            type.language = type.language ?? language
+            child.typography = type
+            for i in child.textRuns?.indices ?? 0..<0 {
+              var run = child.textRuns![i]
+              run.typography.language = run.typography.language ?? type.language
+              child.textRuns![i] = run
+            }
+          }
           let sourceElementID = child.id
           if let color = ref.color { paint(color, swatchID: ref.colorSwatchID, on: &child) }
           if let change = ref.overrides?.first(where: { $0.elementID == sourceElementID }), let color = change.color {

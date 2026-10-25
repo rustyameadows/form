@@ -28,6 +28,7 @@ private struct RenderSignature: Equatable {
   let fontRevision: Int
   let textureLimit: Int
   let textile: TextileProduct?
+  let fabricPattern: ResolvedFabricPattern?
 }
 
 @MainActor final class TableSceneController {
@@ -172,11 +173,12 @@ private struct RenderSignature: Equatable {
       let fingerprint = RenderSignature(
         recipe: project.recipe(object.recipeID),
         parameters: GeometryFactory.geometryParameters(object),
-        material: project.material(object.materialID), color: object.color,
+        material: project.material(object.materialID).withoutFabricPattern, color: object.color,
         artwork: project.surfaceArtwork(object)?.renderDefinition,
         asset: object.asset,
-        fontRevision: project.editableArtwork(object) == nil ? 0 : GeometryFactory.fontRevision,
-        textureLimit: textureLimit, textile: object.textile?.renderDefinition)
+        fontRevision: project.editableArtwork(object) == nil && project.material(object.materialID).fabric?.pattern == nil ? 0 : GeometryFactory.fontRevision,
+        textureLimit: textureLimit, textile: object.textile?.renderDefinition,
+        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition)
       if nodes[object.id] == nil || fingerprints[object.id] != fingerprint {
         nodes[object.id]?.removeFromParentNode()
         let node = GeometryFactory.object(
@@ -771,7 +773,11 @@ private struct RenderSignature: Equatable {
     canonical.parameters = geometryParameters(object)
     var signature = (try? JSONEncoder.form.encode(canonical)) ?? Data()
     if let artworkData { signature.append(artworkData) }
-    signature.append((try? JSONEncoder.form.encode(project.material(object.materialID))) ?? Data())
+    signature.append((try? JSONEncoder.form.encode(project.material(object.materialID).withoutFabricPattern)) ?? Data())
+    if let pattern = try? project.resolvedFabricPattern(materialID: object.materialID) {
+      signature.append((try? JSONEncoder.form.encode(pattern.renderDefinition)) ?? Data())
+      signature.append(Data("fabric-fonts:\(fontRevision)".utf8))
+    }
     if let recipe = project.recipe(object.recipeID) {
       signature.append((try? JSONEncoder.form.encode(recipe)) ?? Data())
     }
@@ -788,7 +794,7 @@ private struct RenderSignature: Equatable {
     let mat = material(object, project: project)
     switch object.recipeID {
     case "bomberJacket":
-      root.addChildNode(TextileGeometry.bomber(object, project: project))
+      root.addChildNode(TextileGeometry.bomber(object, project: project, assets: assets, textureLimit: textureLimit))
     case "textilePatch", "textileLabel":
       root.addChildNode(TextileGeometry.decoration(object, project: project, assets: assets, textureLimit: textureLimit))
     case "clock":

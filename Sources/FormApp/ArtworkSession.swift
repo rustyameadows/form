@@ -74,6 +74,7 @@ enum ArtworkTool: String, CaseIterable {
   }
   @Published var zoom = 1.0
   @Published var dieline = false
+  @Published var hiddenProductionRoles:Set<ArtworkProductionRole> = []
   @Published var preview = true
   @Published var editingText = false { didSet { store?.objectWillChange.send() } }
   @Published var characterRange = NSRange(location: 0, length: 0)
@@ -164,7 +165,7 @@ enum ArtworkTool: String, CaseIterable {
     }
   }
   func colored(_ element: ArtworkElement) -> ArtworkElement {
-    store?.project?.resolvingSwatches(in: .init(elements: [element]), keepingReferences: true).elements.first ?? element
+    (store?.project?.resolvingSwatches(in: .init(elements: [element]), keepingReferences: true).elements.first ?? element).inheritingLanguage(art.language)
   }
   var inspectedColor: String { canvas?.textInspection()?.color ?? primary.map(colored)?.color ?? "#292D2C" }
   var assets: URL {
@@ -387,12 +388,18 @@ enum ArtworkTool: String, CaseIterable {
   }
   func typography(_ body: (inout Typography) -> Void) {
     if canvas?.applyTextStyle(body) == true { return }
+    let language = art.language
     update { e in
       if e.kind == "text" {
         var style = e.typography ?? .init()
         body(&style)
         e.typography = style
         for i in e.textRuns?.indices ?? 0..<0 { body(&e.textRuns![i].typography) }
+        if style.frameMode == "point" {
+          let size = TypographyEngine.measured(e.inheritingLanguage(language))
+          e.width = max(1, size.width + 0.5)
+          e.height = max(e.fontSize / TypographyEngine.pointsPerMM * 1.4, size.height + 0.5)
+        }
       }
     }
   }
