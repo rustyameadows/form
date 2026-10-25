@@ -117,12 +117,13 @@ public enum FormColor {
     var result: [NSAttributedString.Key: Any] = [
       styleKey: (try? JSONEncoder.form.encode(style)) ?? Data(),
       .font: font(style, size: size * f), .foregroundColor: FormColor.color(color),
-      .paragraphStyle: p, .kern: style.tracking * f, .baselineOffset: style.baseline * f,
+      .paragraphStyle: p, .baselineOffset: style.baseline * f,
       .ligature: style.ligatures,
       .underlineStyle: style.underline ? NSUnderlineStyle.single.rawValue : 0,
       .strikethroughStyle: style.strikethrough ? NSUnderlineStyle.single.rawValue : 0,
       .expansion: log(style.horizontalScale / 100),
     ]
+    result.merge(spacingAttributes(style, adjustment: 0, factor: f)) { _, new in new }
     if let swatchID { result[swatchKey] = swatchID.uuidString }
     if let textStyle { result[textStyleKey] = try? JSONEncoder.form.encode(textStyle) }
     if let paragraphStyle { result[paragraphStyleKey] = try? JSONEncoder.form.encode(paragraphStyle) }
@@ -159,6 +160,30 @@ public enum FormColor {
     return result
   }
   /// Keep tracking separate from word/pair additions through native text edits.
+  private static func spacingAttributes(_ style: Typography, adjustment: Double,
+    factor: Double) -> [NSAttributedString.Key: Any] {
+    let amount = (style.tracking + adjustment) * factor
+    if style.kerningMode == "metrics" { return [.tracking: amount] }
+    if style.kerningMode == "none" { return [.kern: 0.0, .tracking: amount] }
+    return [.kern: amount]
+  }
+  private static func setSpacing(_ text: NSMutableAttributedString, range: NSRange,
+    style: Typography, adjustment: Double, pair: Double?, factor: Double = 1) {
+    text.removeAttribute(.kern, range: range)
+    text.removeAttribute(.tracking, range: range)
+    text.removeAttribute(pairKey, range: range)
+    text.addAttributes(spacingAttributes(style, adjustment: adjustment, factor: factor), range: range)
+    text.addAttribute(spacingKey, value: adjustment * factor, range: range)
+    if let pair { text.addAttribute(pairKey, value: pair * factor, range: range) }
+  }
+  public static func setManualPair(_ value: Double, at index: Int, in text: NSMutableAttributedString) {
+    guard index >= 0, index < text.length else { return }
+    let raw = text.attributes(at: index, effectiveRange: nil)
+    let style = spans(from: NSAttributedString(string: "A", attributes: raw),
+      fallback: .init(), utf16Offset: index)[0].typography
+    let word = style.kerningMode != nil && (text.string as NSString).character(at: index) == 32 ? style.wordSpacing : 0
+    setSpacing(text, range: NSRange(location: index, length: 1), style: style, adjustment: word + value, pair: value)
+  }
   public static func updateSpacing(_ text: NSMutableAttributedString, range: NSRange? = nil,
     millimeters: Bool = false, fallbackPairs: [Int: Double] = [:]) {
     let full = range ?? NSRange(location: 0, length: text.length)
@@ -170,14 +195,12 @@ public enum FormColor {
     let string = text.string as NSString
     text.beginEditing()
     for (part, type) in runs {
-      text.removeAttribute(pairKey, range: part)
       for i in part.location..<NSMaxRange(part) {
         let pair = type.pairKerning[i] ?? fallbackPairs[i]
-        let adjustment = pair ?? (string.character(at: i) == 32 ? type.wordSpacing : 0)
+        let word = string.character(at: i) == 32 ? type.wordSpacing : 0
+        let adjustment = type.kerningMode == nil ? (pair ?? word) : word + (pair ?? 0)
         let one = NSRange(location: i, length: 1)
-        text.addAttribute(.kern, value: (type.tracking + adjustment) * factor, range: one)
-        text.addAttribute(spacingKey, value: adjustment * factor, range: one)
-        if let pair { text.addAttribute(pairKey, value: pair * factor, range: one) }
+        setSpacing(text, range: one, style: type, adjustment: adjustment, pair: pair, factor: factor)
       }
     }
     text.endEditing()
@@ -447,7 +470,11 @@ public enum FormColor {
         style.featureSelections = nil
       }
       let adjustment = (attrs[spacingKey] as? NSNumber)?.doubleValue ?? 0
-      style.tracking = ((attrs[.kern] as? NSNumber)?.doubleValue ?? 0) - adjustment
+      if attrs[styleKey] == nil, attrs[.tracking] != nil {
+        style.kerningMode = (attrs[.kern] as? NSNumber)?.doubleValue == 0 ? "none" : "metrics"
+      }
+      let trackingKey: NSAttributedString.Key = style.kerningMode == nil ? .kern : .tracking
+      style.tracking = ((attrs[trackingKey] as? NSNumber)?.doubleValue ?? 0) - adjustment
       if attrs[spacingKey] != nil {
         style.pairKerning = [:]
         if let pair = (attrs[pairKey] as? NSNumber)?.doubleValue {

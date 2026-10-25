@@ -204,8 +204,11 @@ import FormCore
           ?? .systemFont(ofSize: element.fontSize)
         var p = CGPoint.zero
         CTRunGetPositions(run, CFRange(location: 0, length: 1), &p)
+        let kern = attrs[NSAttributedString.Key.kern] as? NSNumber
+        let spacing = (attrs[NSAttributedString.Key.tracking] as? NSNumber)?.doubleValue ?? kern?.doubleValue ?? 0
+        let kerning = kern?.doubleValue == 0 ? "none" : "normal"
         result +=
-          "<text xml:space=\"preserve\" x=\"\((origins[i].x+p.x)/TypographyEngine.pointsPerMM)\" y=\"\(element.height+offset-(origins[i].y+p.y)/TypographyEngine.pointsPerMM)\" font-family=\"\(xml(font.fontName))\" font-size=\"\(font.pointSize/TypographyEngine.pointsPerMM)\" letter-spacing=\"\(((attrs[NSAttributedString.Key.kern] as? NSNumber)?.doubleValue ?? 0)/TypographyEngine.pointsPerMM)\" fill=\"\(FormColor.hex(attrs[NSAttributedString.Key.foregroundColor] as? NSColor ?? .black))\" fill-opacity=\"\(element.fillOpacity ?? 1)\">\(xml(text))</text>"
+          "<text xml:space=\"preserve\" x=\"\((origins[i].x+p.x)/TypographyEngine.pointsPerMM)\" y=\"\(element.height+offset-(origins[i].y+p.y)/TypographyEngine.pointsPerMM)\" font-family=\"\(xml(font.fontName))\" font-size=\"\(font.pointSize/TypographyEngine.pointsPerMM)\" font-kerning=\"\(kerning)\" letter-spacing=\"\(spacing/TypographyEngine.pointsPerMM)\" fill=\"\(FormColor.hex(attrs[NSAttributedString.Key.foregroundColor] as? NSColor ?? .black))\" fill-opacity=\"\(element.fillOpacity ?? 1)\">\(xml(text))</text>"
       }
     }
     return result

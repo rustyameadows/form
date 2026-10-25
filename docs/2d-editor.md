@@ -22,6 +22,8 @@ The editor is a working part of the expanded [2D specification](2d-design-typogr
 
 [Reusable project text styles](reusable-text-styles.md) now link headings, body copy, captions, character ranges, and their paragraph formatting across frames, components, and physical faces. Explicit local overrides survive later style changes. Native creation/redefinition, reset, detach/delete, and MCP commands share Undo and schema-12 persistence.
 
+[Font kerning and AVENUE](kerning.md) add explicit Font metrics/None modes with independent tracking, word spacing, and manual pairs. Native character edits, shared styles, SVG text, physical faces, and outlines use the same schema-13 setting. Existing artwork retains its original spacing.
+
 Text properties include point/area mode, font/style/size, leading, tracking, pair kerning, baseline, word spacing, alignment, paragraph spacing/indents, case, ligatures, direction, hyphenation, and vertical alignment. Shaping uses typographic points internally and millimeters at the artwork boundary. Font controls expose capabilities reported by the installed face.
 
 ## Controls
@@ -74,7 +76,7 @@ See [precise paths and transformed native text](path-editing.md) for direct sele
 - Configurable transform origins and the specification’s later variable-width stroke workflows.
 - Full SVG interchange fidelity beyond the [supported import subset](svg-import.md), including filters, patterns, gradient strokes, advanced SVG text, and external resources. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
 - Alternate-glyph selection, complete case treatment within mixed-character editing, tabs/lists, linked text frames, sequential multi-page documents, and publication layout.
-- Cross-project clipboard transfer for linked named resources and local assets; explicit automatic font-pair kerning controls.
+- Cross-project clipboard transfer for linked named resources and local assets.
 - Color-managed production output, CMYK/spot separations, full preflight, role-specific production exports, advanced surface placement, and the complete demonstration/acceptance suite.
 
 The current **Soft geometry** demonstration is an 8 × 10 inch composition with installed type, gradients, an editable compound shape, a matching outlined version, and physical SVG/PDF/raster exports. It does not replace the required clock dial, folding package, apparel/patch graphic, and instruction booklet demonstrations.

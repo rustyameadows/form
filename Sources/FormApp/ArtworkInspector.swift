@@ -368,6 +368,15 @@ struct ArtworkInspector: View {
           session.typography { $0.baseline = v }
         }
       }
+      Picker("Kerning", selection: Binding(
+        get: { type.kerningMode ?? "legacy" },
+        set: { value in session.typography { $0.kerningMode = value == "legacy" ? nil : value } }
+      )) {
+        Text("Font metrics").tag("metrics")
+        Text("None").tag("none")
+        Text("Original spacing").tag("legacy")
+      }.font(.system(size: 10))
+        .help("Font metrics uses the face's built-in pair spacing. Tracking and manual pair adjustments remain independent. Original spacing preserves older artwork.")
       Picker(
         "Alignment",
         selection: Binding(

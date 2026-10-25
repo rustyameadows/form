@@ -129,7 +129,7 @@ struct SVGStyleSheet {
     "fill", "fill-opacity", "fill-rule", "stroke", "stroke-width", "stroke-opacity",
     "stroke-linecap", "stroke-linejoin", "stroke-miterlimit", "stroke-dasharray",
     "stroke-dashoffset", "color", "visibility", "font-family", "font-size", "font-weight",
-    "font-style", "font-stretch", "letter-spacing", "word-spacing", "text-anchor", "direction",
+    "font-style", "font-stretch", "font-kerning", "letter-spacing", "word-spacing", "text-anchor", "direction",
     "dominant-baseline", "text-decoration", "clip-rule", "white-space",
   ]
   static let supported = inherited.union([

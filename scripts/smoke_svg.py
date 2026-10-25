@@ -94,12 +94,12 @@ def main():
         assert client.call('form_get_project') == unchanged
         client.call('form_open_project', {'project_id': project['id']})
         reopened = client.call('form_get_project')
-        assert reopened['schemaVersion'] == 4
+        assert reopened['schemaVersion'] == 13
         assert next(o for o in reopened['objects'] if o['id'] == source_id)['artwork'] == art
         assert next(o for o in reopened['objects'] if o['id'] == box['id'])['artworkSourceID'] == source_id
         wordmark = next(e for e in art['elements'] if e.get('name') == 'wordmark')
         client.call('form_set_view', {'view': 'artwork', 'object_id': box['id'], 'element_ids': [wordmark['id']]})
-        report = {'project_id': project['id'], 'source_id': source_id, 'box_id': box['id'], 'variant_id': variant['id'], 'wordmark_id': wordmark['id'], 'tools': 44, 'original_sha256': hashlib.sha256(fixture.read_bytes()).hexdigest(), 'preflight': preview, 'cold_preflight_ms': round(cold_ms,2), 'benchmark_700_elements_median_ms': round(statistics.median(times),2), 'benchmark_700_elements_max_ms': round(max(times),2), 'exports': exports, 'checks': 'read-only preflight; explicit fidelity review; failure immutability; original/embedded assets; editable paths/text/groups/gradients/clips; linked physical sources; consumer immutable files; node edit/undo; actual-size exports; schema 4 reopen', 'status': client.call('form_status')}
+        report = {'project_id': project['id'], 'source_id': source_id, 'box_id': box['id'], 'variant_id': variant['id'], 'wordmark_id': wordmark['id'], 'tools': 50, 'original_sha256': hashlib.sha256(fixture.read_bytes()).hexdigest(), 'preflight': preview, 'cold_preflight_ms': round(cold_ms,2), 'benchmark_700_elements_median_ms': round(statistics.median(times),2), 'benchmark_700_elements_max_ms': round(max(times),2), 'exports': exports, 'checks': 'read-only preflight; explicit fidelity review; failure immutability; original/embedded assets; editable paths/text/groups/gradients/clips; linked physical sources; consumer immutable files; node edit/undo; actual-size exports; schema 13 reopen', 'status': client.call('form_status')}
         (OUTPUT / 'svg-import-report.json').write_text(json.dumps(report, indent=2)+'\n')
         print(json.dumps(report,indent=2))
     finally:

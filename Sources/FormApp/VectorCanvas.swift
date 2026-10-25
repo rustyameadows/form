@@ -777,6 +777,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if s.tool == .text {
         var t = Typography()
         t.frameMode = "point"
+        t.kerningMode = "metrics"
         e.typography = t
       }
       if s.tool == .line {
@@ -1579,10 +1580,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard index < (tv.textStorage?.length ?? 0) else { return true }
     let target = NSRange(location: index, length: 1)
     if tv.shouldChangeText(in: target, replacementString: nil) {
-      let attrs = tv.attributedString().attributes(at: index, effectiveRange: nil)
-      let style = TypographyEngine.spans(from: NSAttributedString(string: "A", attributes: attrs), fallback: .init(), utf16Offset: index)[0].typography
-      tv.textStorage?.addAttributes([.kern: style.tracking + value,
-        TypographyEngine.spacingKey: value, TypographyEngine.pairKey: value], range: target)
+      if let storage = tv.textStorage { TypographyEngine.setManualPair(value, at: index, in: storage) }
       tv.didChangeText()
     }
     return true

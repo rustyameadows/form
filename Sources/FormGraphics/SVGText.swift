@@ -174,6 +174,10 @@ extension SVGImportBuilder {
   {
     var t = Typography()
     t.frameMode = "point"
+    t.kerningMode = style["font-kerning"] == "none" ? "none" : "metrics"
+    if let value = style["font-kerning"], !["auto", "normal", "none"].contains(value) {
+      issue(node, "Unsupported font-kerning '\(value)'; font metrics are used.")
+    }
     t.fontName = "Times-Roman"
     t.direction = style["direction"] == "rtl" ? "rtl" : "ltr"
     let families = (style["font-family"] ?? "serif").split(separator: ",").map {

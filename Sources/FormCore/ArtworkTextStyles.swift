@@ -48,6 +48,7 @@ public enum TextStyleCommands {
     .init("direction", \.direction), .init("caseTreatment", \.caseTreatment),
     .init("hyphenation", \.hyphenation), .init("features", \.features),
     .init("featureSelections", \.featureSelections), .init("variations", \.variations),
+    .init("kerningMode", \.kerningMode),
   ]
   public static let propertyNames = Set(properties.map(\.name) + ["fontSize"])
 

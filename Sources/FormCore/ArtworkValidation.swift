@@ -249,6 +249,7 @@ public func validateTypography(_ t: Typography) throws {
     ["natural", "ltr", "rtl"].contains(t.direction), ["point", "area"].contains(t.frameMode),
     ["original", "uppercase", "lowercase"].contains(t.caseTreatment), (0...2).contains(t.ligatures),
     (0...1).contains(t.hyphenation),
+    t.kerningMode == nil || ["metrics", "none"].contains(t.kerningMode!),
     t.variations.values.allSatisfy({ $0.isFinite && abs($0) < 100000 }),
     t.pairKerning.allSatisfy({ $0.key >= 0 && $0.value.isFinite && abs($0.value) <= 10000 })
   else { throw FormError.invalid("Invalid font, text spacing, paragraph, or variation setting.") }

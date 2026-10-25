@@ -217,12 +217,14 @@ public struct Typography: Codable, Equatable, Sendable {
   public var featureSelections: [Int: [Int]]?
   public var variations: [Int: Double] = [:]
   public var pairKerning: [Int: Double] = [:]
+  /// nil retains the original spacing algorithm for existing documents.
+  public var kerningMode: String?
   public init() {}
   enum CodingKeys: String, CodingKey {
     case fontName, tracking, leading, baseline, wordSpacing, horizontalScale, alignment,
       verticalAlignment, paragraphBefore, paragraphAfter, leftIndent, rightIndent, firstLineIndent,
       underline, strikethrough, ligatures, direction, frameMode, caseTreatment, hyphenation,
-      features, featureSelections, variations, pairKerning
+      features, featureSelections, variations, pairKerning, kerningMode
   }
   public init(from decoder: Decoder) throws {
     self.init()
@@ -255,6 +257,7 @@ public struct Typography: Codable, Equatable, Sendable {
     featureSelections = try c.decodeIfPresent([Int: [Int]].self, forKey: .featureSelections)
     variations = try c.decodeIfPresent([Int: Double].self, forKey: .variations) ?? variations
     pairKerning = try c.decodeIfPresent([Int: Double].self, forKey: .pairKerning) ?? pairKerning
+    kerningMode = try c.decodeIfPresent(String.self, forKey: .kerningMode)
   }
 }
 public struct TextSpan: Codable, Equatable, Sendable {
@@ -296,6 +299,10 @@ extension ArtworkElement {
   }
 }
 extension Artwork {
+  public var requiresSchemaThirteen: Bool {
+    elements.contains { $0.typography?.kerningMode != nil
+      || $0.textRuns?.contains { $0.typography.kerningMode != nil } == true }
+  }
   public var requiresSchemaEleven: Bool {
     elements.contains { e in
       e.typography?.featureSelections?.isEmpty == false

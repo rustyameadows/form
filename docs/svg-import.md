@@ -17,7 +17,7 @@ Paths, groups, text, gradients, and embedded images become ordinary FORM artwork
 | Linear/radial gradients and local gradient inheritance | Editable stops, stop alpha, object/user-space coordinates, and affine gradient transforms |
 | Stroke width, caps, joins, miter, dashes, dash offset | Native stroke and editable phase |
 | Shape/group clipping, local references, object-bounding-box clips | Native editable vector masks, including compound holes |
-| Ordinary text and rich/positioned `tspan` content | Installed native fonts, UTF-16 rich spans, physical point sizes, anchors, baseline positioning, tracking, and decorations; positioned chunks become separate text objects |
+| Ordinary text and rich/positioned `tspan` content | Installed native fonts, UTF-16 rich spans, physical point sizes, anchors, baseline positioning, inherited font kerning, tracking, and decorations; positioned chunks become separate text objects |
 | Embedded PNG/JPEG data images | Original decoded image bytes, placement, crop, and editable masks |
 
 The [ORBIT fixture](../Tests/Fixtures/orbit-mark.svg) is an original 120 × 80 mm illustration with curved orbital paths, linear/radial gradients, dashed strokes, four text objects, reusable registration marks, and a clipped embedded material sample. `python3 scripts/smoke_svg.py` imports it and links the independent source to oak and graphite product editions. Its physical type sizes remain unchanged on the larger product faces.
@@ -46,7 +46,7 @@ Discover the exact schema through `tools/list`. Preflight needs no open project 
 
 Preflight returns `width_mm`, `height_mm`, `elements`, `paths`, `text_objects`, `embedded_images`, `requires_review`, and structured `issues`. Actual import also returns the canonical `object_id`, `original_asset`, and `selected_elements`. Set `allow_unsupported` only after reviewing the reported differences. A linked consumer ID imports into its source; it does not detach the consumer.
 
-Conversion and candidate-document validation happen before project asset writes. Originals are named by SHA-256 and retained byte for byte; embedded images receive independent asset names. Existing files are compared before reuse. Failed insertion cleans up newly written assets. Undo removes the inserted artwork while retained source assets remain available for Redo and recovery. Packages containing import provenance or extended opacity/gradient/dash appearance use schema 4; schemas 1–3 remain readable.
+Conversion and candidate-document validation happen before project asset writes. Originals are named by SHA-256 and retained byte for byte; embedded images receive independent asset names. Existing files are compared before reuse. Failed insertion cleans up newly written assets. Undo removes the inserted artwork while retained source assets remain available for Redo and recovery. Import provenance and extended opacity/gradient/dash appearance require schema 4. Newly imported text retains explicit font kerning and therefore requires schema 13. Existing schemas 1–12 remain readable.
 
 ## Validation and references
 
