@@ -97,6 +97,7 @@ extension StudioStore {
   }
   func exportArtwork(object suppliedObject: ProductObject, arguments: [String: Any]) throws -> Any {
     guard let object=self.project?.objects.first(where:{$0.id==suppliedObject.id}) else{throw FormError.missing("Choose an existing artwork object.")}
+    if arguments["pattern_tiles"] != nil, arguments["pattern_pieces"] as? Bool != true { throw FormError.invalid("Use pattern_tiles only with pattern_pieces:true for sewing template PDF output.") }
     if let value=arguments["ink_output"] {
       guard let mode=value as? String else{throw FormError.invalid("ink_output must be preview, composite, plates, or preflight.")}
       let conflict=arguments["embroidery_format"] != nil || arguments["fabric_pattern_material"] != nil || arguments["cut_layout"] as? Bool==true || arguments["pattern_pieces"] as? Bool==true

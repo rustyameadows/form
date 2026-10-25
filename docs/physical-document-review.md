@@ -22,6 +22,10 @@ The detail above is independently rendered from the PDF with Poppler; the contou
 
 ![Curved pouch technical proof](images/document-review/rounded-pouch-vector.png)
 
+## Tiled sewing pages
+
+The cutting-pattern review also offers [Tiled sheets](tiled-sewing-patterns.md): an actual-size A4, Letter or custom multipage PDF with calibration and assembly marks. Its paper settings are separate from source geometry and review navigation. The existing previous/next controls navigate the generated pages; large-format and tiled review keep separate session viewports.
+
 ## Cutting layouts
 
 **Review PDF…** appears beside **Fit stock** after a valid layout exists. Its fabric-reference toggle controls only the proof layer, preserving the same physical roll phase as the existing export. It never rearranges cut copies, changes source geometry or deducts fabric inventory. Close the review to return to the editable stock canvas. Invalid or missing sources produce an explicit error instead of retaining a stale proof.

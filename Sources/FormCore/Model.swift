@@ -141,9 +141,10 @@ public struct Artwork: Codable, Equatable, Sendable {
   /// Derived surface guard only; never encoded or used in visual signatures.
   public var requiresInkOutput=false
   private enum CodingKeys:String,CodingKey {
-    case background,outputColorProfile,sewingSeams,sewingLayout,language,elements,bleed,unit,guides,gridSpacing,showGrid,snapEnabled,nudge,showGuides,canvasPosition,boundary,backgroundOpacity,backgroundSwatchID,imports
+    case background,outputColorProfile,sewingSeams,sewingLayout,sewingTiles,language,elements,bleed,unit,guides,gridSpacing,showGrid,snapEnabled,nudge,showGuides,canvasPosition,boundary,backgroundOpacity,backgroundSwatchID,imports
   }
   public var sewingSeams: [SewingSeam]?
+  public var sewingTiles: SewingTileOptions?
   public var sewingLayout: SewingCutLayout?
   public var language: String?
   public var elements: [ArtworkElement]
@@ -397,6 +398,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var publications:[PublicationDocument]?
   public var productionJobs:[ProductionJob]?
   public var minimumSchemaVersion: Int {
+    if objects.contains(where: { $0.artwork?.sewingTiles != nil }) { return max(schemaVersion, 40) }
     if swatches?.contains(where:{$0.printInk != nil})==true {return max(schemaVersion,35)}
     if objects.contains(where:{MerchandiseBlanks.recipeIDs.contains($0.recipeID) || $0.textile?.process == .directPrint || $0.textile?.attachment.map{[TextileAttachment.Zone.front,.leftSide,.rightSide].contains($0.zone)} == true}) {return max(schemaVersion,34)}
     if objects.contains(where:{object in (object.artwork?.elements ?? []).contains(where:{e in

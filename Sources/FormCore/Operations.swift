@@ -344,7 +344,7 @@ public final class OperationEngine {
         guard let object = p.objects.first(where: { $0.id == id }) else {
           throw FormError.missing("Object not found.")
         }
-        if ["font","paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template","cut_layout"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
+        if ["font","paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template","cut_layout","pattern_tiles"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
         var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
         if try PublicationCommands.editText(in:&p,objectID:id,ids:ids,command:command,arguments:a,prepareGlyph:onPrepareGlyph,prepareParagraphs:onPrepareParagraphs) {selected=ids;return}
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)

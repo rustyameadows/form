@@ -1,0 +1,119 @@
+{
+  "date": "2026-10-25",
+  "release": "tiled-sewing-patterns",
+  "schema_reader": 40,
+  "tests": {
+    "total": 697,
+    "core_graphics_ipc": 485,
+    "native": 212,
+    "failures": 0,
+    "skips": 0
+  },
+  "packaged_tool_count": 59,
+  "project_id": "FD67711A-6CD5-4929-8055-65868ADF8740",
+  "source_id": "D800E95E-18F0-417F-BCF9-D74368461CD9",
+  "native": {
+    "actual_computer_use": true,
+    "focused_save": {
+      "field": "left margin mm",
+      "before": 13,
+      "after": 13.75,
+      "tab_or_return_before_save": false,
+      "disk_checked_before_bridge_read": true,
+      "only_expected_option_changed": true,
+      "history_increment": 1,
+      "source_and_camera_unchanged": true
+    },
+    "one_native_undo_entire_project_exact": true,
+    "proof_page": 4,
+    "zoom_percent": 400,
+    "pan_initial": [
+      0.5003088326127239,
+      0.5001755001755002
+    ],
+    "mouse_pan": [
+      {
+        "direction": "right",
+        "scroll": [
+          0.253242742433601,
+          0.5001755001755002
+        ]
+      },
+      {
+        "direction": "left",
+        "scroll": [
+          0.5003088326127239,
+          0.5001755001755002
+        ]
+      },
+      {
+        "direction": "down",
+        "scroll": [
+          0.5003088326127239,
+          0.3948753948753949
+        ]
+      },
+      {
+        "direction": "up",
+        "scroll": [
+          0.5003088326127239,
+          0.5001755001755002
+        ]
+      }
+    ],
+    "export_dpi": [
+      150,
+      600
+    ],
+    "dpi_preserves_page_scale_position": true,
+    "proof_reopen_preserves_viewport": true,
+    "native_save_dialog_export": true,
+    "actual_process_quit_relaunch_home_reopen_exact": true
+  },
+  "independent_native_pdf": {
+    "reader": "pypdf",
+    "renderer": "Poppler",
+    "pages": 7,
+    "tiles": 6,
+    "rows": 3,
+    "columns": 2,
+    "sheet_mm": [
+      210,
+      297
+    ],
+    "source_mm": [
+      320,
+      548
+    ],
+    "calibration_square_mm": 50,
+    "calibration_rule_mm": 100,
+    "scale": 1,
+    "coverage_and_trim_partition": "no gaps or duplication after trimming",
+    "ink_samples": 665,
+    "overlap_ink_samples": 56,
+    "raster_samples": 47310,
+    "mean_rgb_error": 1.3842780824018468e-05,
+    "source_pixels_checked": 3048360,
+    "all_source_pixels_mean_rgb_error": 0.0004911489104995661,
+    "gutter_mark_segments_checked": 104,
+    "footer_labels_checked": 6,
+    "all_marks_outside_source": true
+  },
+  "ordinary_library": {
+    "project_count": 5,
+    "all_projects_exact": true,
+    "studio_file_exact": true
+  },
+  "equipment_operations": 0,
+  "files": {
+    "native_pdf_sha256": "2619c8d59d8c3c52890222107d41ea2ede8a08f5de4151c196ff9485e8922bad",
+    "form_sha256": "c3abe9a6fdb900ecb3f9861e4abcb52243e01a7a705280226536eab943e76ddb",
+    "mcp_sha256": "4ee2b4394f829f7e5efe246abadcfa60c16ee7fe197d91c5cded051ce46e844e"
+  },
+  "limitations": [
+    "Sewing template PDFs only; stock-layout tiling is not implemented.",
+    "Margins are declared, not queried from a printer.",
+    "No physical printer calibration or garment-fit verification.",
+    "200-page, vector-work and file-size guards apply."
+  ]
+}

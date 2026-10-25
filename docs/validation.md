@@ -2,6 +2,12 @@
 
 Validated October 24–25, 2026 on the local Apple silicon Mac, macOS 26, Xcode 27 / Swift 6.4. The package deployment target is macOS 14; older supported OS versions have not been exercised on hardware. Build artifacts, downloaded engines, test libraries, exports, and detailed reports are kept under ignored `.local` / `build` directories.
 
+## Tiled sewing pattern release — October 25
+
+The integrated release passes **697 tests: 485 core/graphics/IPC and 212 native**, zero failures or skips. Its signed optimized app passes the real packaged `smoke_sewing_tiles.py` workflow: physical A4/Letter/custom files, saved and temporary options, exact Undo/Redo/clear/reopen, invalid request rollback, approved-file preservation and unchanged Studio data. `verify_sewing_tiles.py` independently reads the packaged and native-dialog PDFs with pypdf/Poppler; calibration, physical boxes, source coverage, overlap ownership and clean mark gutters pass.
+
+Actual native computer use changes the focused left margin **13→13.75 mm** and clicks Save without Tab/Return. Disk inspection before any MCP read confirms only that option changes, one history entry, and unchanged camera/source geometry. One native Undo restores the entire project exactly. Page 4 at 400% supports four-direction mouse panning with exact return, unchanged zoom/page/position through export DPI 150→600, and viewport retention after closing/reopening the proof. The native save-dialog export passes independent comparison of **3,048,360 source-region pixels**, mean RGB error **0.000491**, with all **104** gray assembly segments and **six** footer labels outside the drawing. Actual process quit/relaunch and native Home reopen preserve the entire project, including options/history/camera. The ordinary five-project library and Studio file remain exact. [Feature behavior and limits](tiled-sewing-patterns.md), [native evidence](evidence/sewing-tiles-native.json).
+
 ## Cloth studies, curved sewing geometry and document fonts — October 25
 
 The integrated schema-32 release passes **620 tests: 451 core/graphics and 169 native app tests**, with zero failures. The optimized signed application builds successfully. It adds saved cloth definitions/transient runtime (31), general supported sewing geometry (32), and the expanded font library (no new project schema). All 58 unique packaged MCP tools remain local. Merchandise, production ink and pattern-to-assembly work is excluded from this tested snapshot.

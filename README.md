@@ -191,3 +191,5 @@ The [publication workflow](docs/publications.md) adds one editable rich story ac
 The [font library](docs/font-library.md) provides explicit installed-face previews/search, persistent favorites/recents, complete document font usage, and reviewed replacement that preserves original words, features, variable axes, rich ranges and exact glyph metadata.
 
 [Cloth studies](docs/cloth-simulation-foundation.md) add real bounded drape and paired seam previews, physical material coordinates, native/MCP runtime controls and saved initial settings. The NASA materials-lab template demonstrates the foundation; calibrated fit, self-collision and full garment assembly remain future work. Open cloth is explicitly rejected for slicing.
+
+[Tiled sewing patterns](docs/tiled-sewing-patterns.md) export A4, Letter and custom PDF sheets at actual size, with calibration and assembly marks outside the drawing. Native saved sheet options, exact Undo, packaged physical exports and actual app reopen pass in the 697-test integration. No printer is contacted.

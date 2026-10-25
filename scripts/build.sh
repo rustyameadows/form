@@ -12,6 +12,8 @@ mkdir -p "$app_path/Contents/MacOS" "$app_path/Contents/Resources"
 cp "$binary_path/Form" "$app_path/Contents/MacOS/FORM"
 cp "$binary_path/form-mcp" "$app_path/Contents/MacOS/form-mcp"
 cp Resources/Info.plist "$app_path/Contents/Info.plist"
+mkdir -p "$app_path/Contents/Resources/ThirdPartyNotices"
+cp Sources/CFormClipper/LICENSE "$app_path/Contents/Resources/ThirdPartyNotices/Clipper2-Boost-1.0.txt"
 if [ ! -f "$app_path/Contents/Resources/FORM.icns" ] || [ Resources/Icon.swift -nt "$app_path/Contents/Resources/FORM.icns" ]; then
     swift Resources/Icon.swift "$PWD/build/FORM.iconset"
     iconutil -c icns "$PWD/build/FORM.iconset" -o "$app_path/Contents/Resources/FORM.icns"

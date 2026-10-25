@@ -1,6 +1,6 @@
 # Editable sewing pattern pieces
 
-Canvas shapes can be annotated as sewing pattern pieces. The editable shape is the finished stitch outline; FORM derives the outward cut contour from its current physical geometry. This milestone supports sharp rectangles, regular polygons, and single closed convex paths with straight edges. Curves, holes, concave corners, masks, effects, and live component instances need later offset and construction work.
+Canvas shapes can be annotated as sewing pattern pieces. The editable shape is the finished stitch outline; FORM derives the outward cut contour from its current physical geometry. Straight per-edge allowances support sharp rectangles, regular polygons, and closed convex paths with straight edges. The later [general sewing geometry](curved-sewing-patterns.md) adds bounded curved/concave contours and holes with explicit topology and allowance limits.
 
 ![Generated tote cutting pattern with notches, grainlines, edge labels, construction notes, calibration square, and seam schedule](images/sewing-patterns-proof.png)
 
@@ -24,7 +24,7 @@ The handle template is a 120 × 600 mm strip, folded to a 30 mm handle, with 20 
 
 The cutting preview exports **SVG**, **PDF**, and **PNG**; MCP also supports JPEG. SVG retains separate named cut, stitch, and guide layers and machine-readable piece/seam metadata. PDF combines the drawing and instructions on one actual-size sheet. Text is portable in SVG; PDF retains vector geometry and embedded typography. Raster output uses the chosen DPI with the existing 100 megapixel/16000 pixel limits. Print at actual size and verify the 50 mm calibration square. The app does not send these files to equipment.
 
-Cut quantity is an instruction for making that many physical copies. FORM draws one template per annotated source piece; it does not yet duplicate quantities into an optimized roll layout. Pattern nesting, tiled home-printer pages, curved allowances, darts/pleats, graded sizing, assembly graphs, and simulated drape remain later work under the [textile product specification](textiles-apparel-merchandise-spec.md).
+Cut quantity is an instruction for making that many physical copies. FORM draws one template per annotated source piece; it does not yet duplicate quantities into an optimized roll layout. The [material cutting layout](cutting-layouts.md) expands declared quantities into editable stock placements. [Tiled sewing PDFs](tiled-sewing-patterns.md) preserve this complete source page across A4, Letter or custom sheets at 100%. [General curved geometry](curved-sewing-patterns.md) and the bounded [cloth foundation](cloth-simulation-foundation.md) have separate contracts. Darts/pleats, graded sizing, and a fully connected garment-construction workflow remain open under the [textile product specification](textiles-apparel-merchandise-spec.md).
 
 ## MCP
 

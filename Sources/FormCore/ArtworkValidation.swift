@@ -1,6 +1,7 @@
 import Foundation
 
 public func validateArtworkDetails(_ artwork: Artwork) throws {
+  try artwork.sewingTiles?.validate()
   try artwork.outputColorProfile?.validate()
   try artwork.sewingLayout?.validateMetadata()
   try SewingPatterns.validate(artwork)

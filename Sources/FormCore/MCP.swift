@@ -29,6 +29,15 @@ public enum MCP {
       "description":
         "Recipe parameter IDs mapped to numeric values. Discover ranges with form_list_recipes. Dimensions are millimeters unless specified.",
     ]
+    let tileOptions: [String: Any] = [
+      "type":"object","additionalProperties":false,"required":["sheetSize","margins","overlap"],
+      "properties":[
+        "sheetSize":["type":"object","additionalProperties":false,"required":["x","y"],"properties":["x":["type":"number","minimum":100,"maximum":1000],"y":["type":"number","minimum":100,"maximum":1000]]],
+        "margins":["type":"object","additionalProperties":false,"required":["top","right","bottom","left"],"properties":Dictionary(uniqueKeysWithValues:["top","right","bottom","left"].map{($0,["type":"number","minimum":0,"maximum":50] as [String:Any])})],
+        "overlap":["type":"number","minimum":0,"maximum":40]
+      ],
+      "description":"Physical millimeters: sheetSize{x,y}, margins{top,right,bottom,left}, overlap. A4=210×297; Letter=215.9×279.4; swap dimensions for landscape. Defaults10mm margins/overlap;12mm reserved footer. At least100×140mm usable design area. No automatic printer-margin assumption or scaling."
+    ]
     let textile: [String: Any] = [
       "type": ["object", "null"], "required": ["kind", "process"],
       "properties": [
@@ -292,6 +301,7 @@ public enum MCP {
           "seam_id": string,
           "template": ["type":"string","enum":["tote","roundedPouch"],"description":"With pattern_template append editable original tote or roundedPouch source geometry to the current Canvas/frame. Curved pouch dimensions are measured stitch outlines, not calibrated fit."],
           "pattern_parameters": ["type":"object","description":"Pattern physical parameters: tote width,height,handle_length,handle_width,seam_allowance,top_hem; roundedPouch width,height,corner_radius,facing_height,seam_allowance (mm),material_id. Native creation automatically sizes a new frame; MCP can create an800×750mm frame first or use unbounded Canvas."],
+          "tile_options": tileOptions.merging(["type":["object","null"],"description":"With command pattern_tiles, save complete physical sheet options, or null to clear. One Undo/autosave; source geometry and linked 3D appearance are unchanged. Preview/export overrides do not save options."]){_,new in new},
           "layout_action": ["type":"string","enum":["save","plan"],"description":"With command cut_layout, save complete cutting_layout metadata/manual poses or explicitly run the bounded planner. Saving never rearranges pieces."],
           "cutting_layout": ["type":["object","null"],"description":"With cut_layout: {id,name,materialID,stockWidth mm,surface roll/sheet,sheetLength mm,stock singleLayer/foldedPair,grain directional/bidirectional/unrestricted,margin mm,spacing mm,maximumLength mm,costPerSquareMeter,costCurrency,fabricOrigin:{x,y}mm,elementIDs,placements:[{elementID,copies:[1] or[1,2],x,y,rotation}]}. Width remains unknown until declared. Maximum200 placements/5m length; stock/fold constraints and exact outline clearance are preflighted. Null removes layout."],
           "list_action":["type":"string","enum":["set","remove","indent","outdent","restart","continue"]],
@@ -374,6 +384,7 @@ public enum MCP {
           "dpi": number, "outline_text": ["type": "boolean"],
           "element_ids": ["type": "array", "items": string],
           "fabric_pattern_material": ["type":"string", "description":"Export this project's fabric material pattern as physical yardage instead of the object face. Uses its saved outputWidth/outputLength; object_id still identifies the project context."],
+          "pattern_tiles": ["anyOf":[["type":"boolean"],tileOptions],"description":"With pattern_pieces:true: true uses saved sheet options or A4 defaults; a complete object overrides only this export. PDF preserves the entire authoritative source at100%, with repeated overlap, paper-trim/registration marks, row/column labels and one calibration cover. Maximum200 total pages. format:preflight returns coverage/boxes without files. Absent/false keeps existing large-format output. No printer operation."],
           "pattern_pieces": ["type":"boolean", "description":"True generates physical cutting templates from annotated sewing pieces. Includes per-edge seam allowances, real notches, omitted cut-on-fold edges, grainlines, cut quantities, dimensions, construction notes, seam mismatch diagnostics and a50mm calibration square. SVG retains named cut/stitch/guide layers; PDF combines them on one actual-size sheet. Optional element_ids selects pieces. Cannot combine with other output selectors."],
           "cut_layout": ["type":"boolean","description":"Export the source document's saved material cutting layout at actual working-stock width/length. Exact source contours, copy/ply counts, grain/fold/spacing preflight and declared material consumption are retained. Cannot combine with other output selectors."],
           "layout_preflight": ["type":"boolean","description":"With cut_layout true, return exact issues, copy poses and consumption/cost assumptions without writing a file."],

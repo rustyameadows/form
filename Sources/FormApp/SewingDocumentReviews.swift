@@ -9,94 +9,77 @@ struct SewingPatternPreview: View {
   @Environment(\.dismiss) var dismiss
   @ObservedObject var session: ArtworkSession
   @StateObject private var review = PhysicalDocumentController()
-  @State private var dpi = 150.0
-  @State private var error = ""
-  @State private var proof: Data?
-  @State private var sourceKey: Data?
-  @State private var size = Point2()
-  @State private var pieceCount = 0
-  private var identity: String {
-    PhysicalDocumentController.key(
-      project: store.project?.id, object: session.object?.id, kind: "sewing-pattern")
+  @StateObject private var model: SewingPatternReviewModel
+  init(session: ArtworkSession, model: SewingPatternReviewModel? = nil) {
+    self.session = session
+    _model = StateObject(wrappedValue: model ?? SewingPatternReviewModel(session: session))
   }
   var body: some View {
-    VStack(alignment: .leading, spacing: 15) {
+    VStack(alignment: .leading, spacing: 14) {
       HStack {
         Text("Cutting pattern").font(.system(size: 25, design: .serif))
         Spacer()
+        Picker("Pattern output", selection: $model.tiled) {
+          Text("Large format").tag(false)
+          Text("Tiled sheets").tag(true)
+        }.pickerStyle(.segmented).labelsHidden().frame(width: 275).accessibilityLabel("Pattern output")
         Button("Done") { dismiss() }.keyboardShortcut(.cancelAction)
       }
-      if let proof {
-        PhysicalDocumentNavigation(controller: review)
-        PhysicalDocumentCanvas(controller: review, data: proof, identifier: identity)
-          .frame(maxWidth: .infinity, maxHeight: .infinity).clipShape(
-            RoundedRectangle(cornerRadius: 6))
-        HStack {
-          Text(
-            String(
-              format: "%.1f × %.1f mm · %d piece templates · print at 100%%", size.x, size.y,
-              pieceCount)
-          ).font(.system(size: 10, design: .monospaced))
-          Spacer()
-          TextField("Export DPI", value: $dpi, format: .number).textFieldStyle(.roundedBorder)
-            .frame(width: 70).accessibilityLabel("Pattern export DPI")
-          Text("Export DPI").font(.system(size: 10))
+      HStack(alignment: .top, spacing: 22) {
+        if model.tiled {
+          SewingTileSettings(draft: model.draft, saved: model.hasSavedOptions,
+            save: { model.saveOptions() }, clear: { model.saveOptions(clear: true) })
         }
-        Text(
-          "Black: cut contour and notches. Blue: stitch outline. Gold: grain and fold guides. Verify the 50 mm square before cutting. Preview zoom and export DPI are independent."
-        ).font(.system(size: 10)).foregroundStyle(Palette.secondary)
-        HStack {
-          ForEach(["pdf", "svg", "png"], id: \.self) { format in
-            Button("Export " + format.uppercased()) { export(format) }
+        VStack(alignment: .leading, spacing: 10) {
+          if let proof = model.proof {
+            PhysicalDocumentNavigation(controller: review)
+            PhysicalDocumentCanvas(controller: review, data: proof, identifier: model.identity)
+              .frame(maxWidth: .infinity, maxHeight: .infinity).clipShape(RoundedRectangle(cornerRadius: 6))
+          } else {
+            ContentUnavailableView("No cutting proof", systemImage: "scissors",
+              description: Text(model.error.isEmpty ? "Annotate supported closed shapes in Canvas first." : model.error))
+              .frame(maxWidth: .infinity, maxHeight: .infinity)
           }
-          Spacer()
+          Text(String(format: "%.1f × %.1f mm source · %d piece templates · %d PDF pages",
+            model.size.x, model.size.y, model.pieceCount, model.pageCount))
+            .font(.system(size: 10, design: .monospaced))
+          Text(model.gridDescription).font(.system(size: 10)).foregroundStyle(Palette.secondary)
         }
-      } else {
-        ContentUnavailableView(
-          "No cutting proof", systemImage: "scissors",
-          description: Text(
-            error.isEmpty ? "Annotate supported closed shapes in Canvas first." : error))
+      }.frame(maxHeight: .infinity)
+      Text(model.tiled
+        ? "Print at 100% / Actual size with no fit-to-page. Verify the calibration page first. Match labels, trim straight between paired gutter ticks, then butt matching edges; repeated overlap is trimmed away."
+        : "Black: cut contour and notches. Blue: stitch outline. Gold: grain and fold guides. Verify the 50 mm square before cutting.")
+        .font(.system(size: 10)).foregroundStyle(Palette.secondary)
+      HStack {
+        ForEach(model.tiled ? ["pdf"] : ["pdf", "svg", "png"], id: \.self) { format in
+          Button("Export " + (model.tiled ? "tiled PDF" : format.uppercased())) { export(format) }
+            .disabled(model.proof == nil)
+        }
+        Spacer()
+        Text("Export DPI").font(.system(size: 10))
+        TextField("Export DPI", text: $model.dpi).textFieldStyle(.roundedBorder).frame(width: 70)
+          .accessibilityLabel("Pattern export DPI")
+        Text("Vector geometry and preview zoom stay independent.").font(.system(size: 10)).foregroundStyle(Palette.secondary)
       }
-      if proof != nil, !error.isEmpty { Text(error).foregroundStyle(.red).font(.system(size: 11)) }
+      if model.proof != nil, !model.error.isEmpty { Text(model.error).foregroundStyle(.red).font(.system(size: 11)) }
       if !review.error.isEmpty { Text(review.error).foregroundStyle(.red).font(.system(size: 11)) }
-    }.padding(26).frame(width: 1000, height: 790).background(Palette.paper)
-      .onAppear { refresh() }
-      .onChange(of: session.art) { _, _ in refresh() }
-      .onChange(of: store.revision) { _, _ in refresh() }
-      .onChange(of: store.project?.id) { _, _ in refresh() }
-  }
-  private func refresh() {
-    do {
-      var key = try JSONEncoder.form.encode(session.art)
-      key.append(Data("\(identity)/\(session.assets.path)/\(GeometryFactory.fontRevision)".utf8))
-      guard key != sourceKey else { return }
-      let output = try SewingPatternOutput(source: session.art)
-      // Technical paths stay vector. This fixed density is only for supported effect layers.
-      let data = try output.pdf(assets: session.assets, dpi: 150)
-      size = output.plan.frameSize
-      pieceCount = output.plan.pieces.count
-      proof = data
-      sourceKey = key
-      error = ""
-    } catch {
-      proof = nil
-      sourceKey = nil
-      self.error = error.localizedDescription
-    }
+    }.padding(26).frame(width: 1120, height: 830).background(Palette.paper)
+      .onAppear { model.refresh() }
+      .onChange(of: session.art) { _, _ in model.refresh() }
+      .onChange(of: store.revision) { _, _ in model.refresh() }
+      .onChange(of: store.project?.id) { _, _ in model.refresh() }
+      .onChange(of: session.object?.id) { _, _ in model.refresh() }
+      .onChange(of: model.tiled) { _, _ in model.refresh() }
+      .onChange(of: model.draft.values) { _, _ in model.refresh() }
   }
   private func export(_ format: String) {
     NSApp.keyWindow?.makeFirstResponder(nil)
     guard let object = session.object else { return }
     let panel = NSSavePanel()
-    panel.nameFieldStringValue = object.name + "-sewing-pattern." + format
+    panel.nameFieldStringValue = object.name + (model.tiled ? "-sewing-pattern-tiled." : "-sewing-pattern.") + format
     panel.allowedContentTypes = [format == "pdf" ? .pdf : format == "svg" ? .svg : .png]
     guard panel.runModal() == .OK, let url = panel.url else { return }
-    do {
-      _ = try store.exportSewingPattern(
-        object: object, arguments: ["format": format, "path": url.path, "dpi": dpi])
-      error = ""
-      store.toast("Sewing pattern exported")
-    } catch { self.error = error.localizedDescription }
+    if model.export(format, path: url) { store.toast("Sewing pattern exported") }
   }
 }
 

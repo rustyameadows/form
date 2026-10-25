@@ -398,6 +398,7 @@ extension Artwork {
     var result = resolvingLists
     result.elements = result.elements.filter { required.contains($0.id) }.map(\.withBakedListNumbers)
     result.sewingLayout = nil
+    result.sewingTiles = nil
     result.retainRepresentedSewingSeams()
     if result.elements.contains(where: { $0.hasVisualOverflow }) {
       let masks = Set(result.elements.compactMap(\.clipID))
@@ -425,6 +426,7 @@ extension Artwork {
     result.requiresInkOutput=false
     result.sewingSeams = nil
     result.sewingLayout = nil
+    result.sewingTiles = nil
     result.imports = nil
     result.unit = nil
     result.guides = nil
