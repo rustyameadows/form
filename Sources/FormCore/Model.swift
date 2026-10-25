@@ -81,6 +81,8 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var fontSize: Double
   public var fillSwatchID: UUID?
   public var asset: String?
+  public var imageCrop: ImageCrop?
+  public var imageAdjustments: ImageAdjustments?
   public var name: String?
   public var rotation: Double?
   public var opacity: Double?
@@ -367,7 +369,9 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var minimumSchemaVersion: Int {
     max(
       schemaVersion,
-      objects.contains { $0.artwork?.requiresSchemaEight == true }
+      objects.contains { $0.artwork?.requiresSchemaNine == true }
+        ? 9
+        : objects.contains { $0.artwork?.requiresSchemaEight == true }
         ? 8
         : swatches?.isEmpty == false || objects.contains { $0.artwork?.referencedSwatches.isEmpty == false }
         ? 7

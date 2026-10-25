@@ -60,6 +60,8 @@ Named project palettes and paint references require schema 7; schemas 1–6 stil
 
 Editable opacity, blend/isolation settings, blur, and shadows require schema 8; schemas 1–7 still load. Shared shadow colors resolve with other palette references. The renderer applies complete-layer opacity once, passes ordinary group blending through, and isolates groups with effects/opacity or explicit isolation. A 64 MB Core Image cache reuses source pixels across placements; actual affine scale determines preview density, with per-layer allocation limits. SVG preserves live filters/compositing; PDF rasterizes only filtered layers at the requested DPI. Production raster/PDF output rejects effects exceeding those limits at the requested resolution. See [appearance](artwork-appearance.md).
 
+Image crop/adjustment fields require schema 9; schemas 1–8 still load. ImageIO provides oriented pixel metadata and bounded thumbnail decoding; a separate 64 MB cache reuses bitmap content across placements. Crop remains a normalized window into the original file. A shared saturation/contrast/brightness matrix drives Core Image and live SVG filters. Effective DPI uses the complete resolved physical transform, including shear and component/surface fitting. Native file drops, disk placement/replacement, original-asset reuse, and three MCP tools share the same import/edit boundary. Original bytes remain in the package; invalid imports validate before adding an asset. See [image editing](image-editing.md).
+
 `FORM_LIBRARY_PATH` selects a separate library for development or tests. `FORM_SOCKET_PATH` selects a separate local bridge. These settings require no change to a project document.
 
 ## Artwork and production

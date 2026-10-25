@@ -297,7 +297,7 @@ extension Artwork {
       }
   }
   public var usesExtendedFormat: Bool {
-    if requiresSchemaFour || requiresSchemaFive || requiresSchemaEight || !referencedSwatches.isEmpty || elements.contains(where: { $0.component != nil }) { return true }
+    if requiresSchemaFour || requiresSchemaFive || requiresSchemaEight || requiresSchemaNine || !referencedSwatches.isEmpty || elements.contains(where: { $0.component != nil }) { return true }
     if boundary != nil { return true }
     if unit != nil || guides != nil || gridSpacing != nil || showGrid != nil || showGuides != nil
       || snapEnabled != nil || nudge != nil || canvasPosition != nil
@@ -394,6 +394,8 @@ extension Artwork {
       return true
     }
     for i in result.elements.indices {
+      if result.elements[i].imageCrop == .full { result.elements[i].imageCrop = nil }
+      if result.elements[i].imageAdjustments?.isIdentity == true { result.elements[i].imageAdjustments = nil }
       result.elements[i].name = nil
       result.elements[i].locked = nil
       if result.elements[i].blendMode == "normal" { result.elements[i].blendMode = nil }

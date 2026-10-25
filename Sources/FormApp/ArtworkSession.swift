@@ -48,10 +48,13 @@ enum ArtworkTool: String, CaseIterable {
 @MainActor final class ArtworkSession: ObservableObject {
   weak var store: StudioStore?
   weak var canvas: VectorCanvasView?
+  var imageDragStarts = 0
+  @Published var croppingImageID: UUID?
   @Published var objectID: UUID?
   @Published var linkedTargetID: UUID?
   @Published var selection = Set<UUID>() {
     didSet {
+      if let croppingImageID, selection != [croppingImageID] { self.croppingImageID = nil }
       pruneNodeSelection()
       store?.objectWillChange.send()
     }
@@ -60,7 +63,7 @@ enum ArtworkTool: String, CaseIterable {
   @Published var scopeID: UUID?
   @Published var componentReturn: ComponentEditingContext?
   @Published var tool: ArtworkTool = .select {
-    didSet { if tool != oldValue { canvas?.finishPath() } }
+    didSet { if tool != oldValue { croppingImageID = nil; canvas?.finishPath() } }
   }
   @Published var zoom = 1.0
   @Published var dieline = false
@@ -449,22 +452,14 @@ enum ArtworkTool: String, CaseIterable {
     DispatchQueue.main.async { self.fit() }
   }
   func importImage(replacing: Bool = false) {
-    guard let store, let project = store.project else { return }
+    guard store?.project != nil else { return }
     let panel = NSOpenPanel()
     panel.allowedContentTypes = [.image, .pdf]
-    guard panel.runModal() == .OK, let url = panel.url else { return }
-    do {
-      let asset = try store.repository.importAsset(url, into: project.id)
-      if replacing {
-        update { $0.asset = asset }
-      } else {
-        var element = ArtworkElement(
-          kind: "image", x: 15, y: 15, width: 80, height: 60, asset: asset)
-        element.parentID = scopeID
-        add([element])
-      }
-    } catch { store.error = error.localizedDescription }
+    panel.allowsMultipleSelection = !replacing
+    guard panel.runModal() == .OK, !panel.urls.isEmpty else { return }
+    placeImages(panel.urls,replacing: replacing)
   }
+
   func copy() {
     let ids = art.descendants(of: selection)
     guard !ids.isEmpty else { return }

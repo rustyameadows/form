@@ -16,7 +16,7 @@ An effect-bearing group cannot be ungrouped while that would discard its combine
 
 ## MCP
 
-There are **45 tools**. `form_appearance` patches selected root layers on an artwork frame or linked physical product:
+There are **48 tools**. `form_appearance` patches selected root layers on an artwork frame or linked physical product:
 
 ```json
 {"name":"form_appearance","arguments":{"object_id":"<frame UUID>","element_ids":["<group UUID>"],"values":{"shadow":{"x":2,"y":3.5,"blur":1.2,"opacity":0.23,"color":"#263C64"}}}}

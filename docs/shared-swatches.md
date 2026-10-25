@@ -18,7 +18,7 @@ Read-only MCP inspection leaves active native drafts and focus intact. An agent 
 
 ## MCP
 
-There are 45 tools. `form_swatch` supports `list`, `create`, `update`, `assign`, `detach`, and `delete`. Create returns `{"swatch": {...}}`; list returns `{"swatches": [...]}`. Use the returned UUIDs in subsequent calls.
+There are 48 tools. `form_swatch` supports `list`, `create`, `update`, `assign`, `detach`, and `delete`. Create returns `{"swatch": {...}}`; list returns `{"swatches": [...]}`. Use the returned UUIDs in subsequent calls.
 
 ```json
 {"name":"form_swatch","arguments":{"command":"create","name":"Accent","color":"#D45A37"}}

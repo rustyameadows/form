@@ -5,6 +5,9 @@ import FormCore
   public static func validateAppearanceOutput(_ source: Artwork, assets: URL, pixelsPerMM: Double) throws {
     let art = try BooleanGeometry.materialized(source)
     let tree = ArtworkRenderTree(art, assets: assets, production: true, excluding: [])
+    for e in art.elements where e.kind == "image" && tree.displayed(e) {
+      try ImageRenderer.validateOutput(e, assets: assets, pixelsPerMM: pixelsPerMM, transform: art.worldTransform(e))
+    }
     for e in art.elements where e.hasActiveEffects && tree.displayed(e) {
       let box = tree.localBounds(e)
       let density = pixelsPerMM * AppearanceRenderer.scale(art.worldTransform(e).cg)
@@ -67,6 +70,7 @@ import FormCore
       return
     }
     if e.kind == "image" {
+      if ImageRenderer.draw(e, assets: assets, context: context) { return }
       guard let name = e.asset, !name.contains("/") else { return }
       let url = assets.appendingPathComponent(name)
       let key = url.path as NSString
@@ -81,9 +85,15 @@ import FormCore
           ?? Int(image.size.width * image.size.height)
         images.setObject(image, forKey: key, cost: max(1, pixels) * 8)
       }
+      let crop = e.imageCrop ?? .full
+      context.saveGState()
+      context.clip(to: rect)
+      context.scaleBy(x: e.width / crop.width, y: e.height / crop.height)
+      context.translateBy(x: -crop.x, y: -crop.y)
       image.draw(
-        in: rect, from: .zero, operation: .sourceOver, fraction: 1, respectFlipped: true,
+        in: CGRect(x: 0, y: 0, width: 1, height: 1), from: .zero, operation: .sourceOver, fraction: 1, respectFlipped: true,
         hints: [.interpolation: NSImageInterpolation.high])
+      context.restoreGState()
       return
     }
     let path = VectorGeometry.path(e)

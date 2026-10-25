@@ -183,7 +183,7 @@ struct ArtworkInspector: View {
               }
             }
             if session.elements.allSatisfy({ $0.kind == "path" }) { pathControls }
-            if e.kind == "image" { imageControls(e) }
+            if e.kind == "image" { ImageInspector(session: session,element: e) }
             Divider()
             HStack {
               IconButton("Bring forward", symbol: "square.3.layers.3d.top.filled") {
@@ -706,17 +706,6 @@ struct ArtworkInspector: View {
           .font(.system(size: 9)).foregroundStyle(Palette.secondary)
         }
       }
-    }
-  }
-  @ViewBuilder func imageControls(_ e: ArtworkElement) -> some View {
-    if let name = e.asset,
-      let image = NSImage(contentsOf: session.assets.appendingPathComponent(name)),
-      let rep = image.representations.first
-    {
-      Text(
-        "\(rep.pixelsWide) × \(rep.pixelsHigh) px · \(Int(Double(rep.pixelsWide)/(e.width/25.4))) effective DPI"
-      ).font(.system(size: 9)).foregroundStyle(Palette.secondary)
-      Button("Replace image…") { session.importImage(replacing: true) }.font(.system(size: 10))
     }
   }
   func frameControls(_ object: ProductObject) -> some View {

@@ -9,6 +9,7 @@ public enum MCP {
     "form_list_printers", "form_connect_printer",
   ]
   public static let graphicsToolNames: Set<String> = [
+    "form_import_image", "form_image_info",
     "form_list_fonts", "form_font_features", "form_convert_to_paths", "form_boolean_artwork",
     "form_export_artwork", "form_import_svg",
   ]
@@ -160,6 +161,23 @@ public enum MCP {
             "elementID": string, "color": string, "text": string, "opacity": number,
           ], "required": ["elementID"], "additionalProperties": false]],
         ], required: ["command"]),
+      tool(
+        "form_import_image",
+        "Place a local image into editable artwork, or replace element_id while retaining its frame, transform, masks, opacity, and adjustments. Originals are copied into the project. Placement defaults to an aspect-preserving fit; explicit width/height crops to fill. Replacement refills the same frame around the previous crop center. x/y/width/height are physical mm; anchor defaults to top-left and also accepts center. PDF/SVG references retain vector appearance; raster formats support adjustments. File import is outside atomic batches.",
+        ["object_id": objectID, "path": string, "element_id": string, "parent_id": string,
+          "x": number, "y": number, "width": number, "height": number, "name": string,
+          "anchor":["type":"string","enum":["top-left","center"]]], required: ["object_id", "path"]),
+      tool(
+        "form_edit_image",
+        "Patch non-destructive image crop and color adjustments on unlocked image layers. Crop x/y/width/height are normalized 0–1 top-left original-image coordinates, at least .01 wide/high. Adjustments: brightness −1–1, contrast 0–4, saturation 0–2. null clears a setting; command reset clears crop and adjustments. Originals, frame geometry, transforms and masks stay intact. Shared undo and atomic batches.",
+        ["object_id": objectID, "element_ids": ["type":"array","items":string],
+          "command": ["type":"string","enum":["update","reset"]],
+          "crop": ["type":["object","null"],"properties":["x":number,"y":number,"width":number,"height":number],"additionalProperties":false],
+          "adjustments": ["type":["object","null"],"properties":["brightness":number,"contrast":number,"saturation":number],"additionalProperties":false]], required:["object_id","element_ids"]),
+      tool(
+        "form_image_info",
+        "Inspect original oriented pixel dimensions, format/frame count, crop and conservative effective DPI at the resolved physical output size. DPI includes ancestors, shear, crop, component placement and surface fitting. Reports below-300/150-DPI flags. Vector PDF/SVG references have no fixed raster DPI. Does not change native editing focus.",
+        ["object_id":objectID,"element_ids":["type":"array","items":string]],required:["object_id"],readOnly:true),
       tool(
         "form_appearance",
         "Edit non-destructive layer appearance on selected roots, including groups and linked components. update patches opacity (0–1), blend_mode, group isolate, blur (enabled/radius in mm), and shadow (enabled, x/y offset in mm, blur in mm, color, opacity). null removes blur or shadow. reset restores normal blending, full opacity, and no effects. Disabled effects retain settings. Clipping is applied after effects. Native and MCP edits share undo, validation, and atomic batches.",

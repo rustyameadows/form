@@ -45,7 +45,7 @@ public final class ProjectRepository {
   public func load(url: URL) throws -> Project {
     let manifest = try JSONDecoder.form.decode(
       Manifest.self, from: Data(contentsOf: url.appendingPathComponent("Manifest.json")))
-    guard (1...8).contains(manifest.project.schemaVersion) else {
+    guard (1...9).contains(manifest.project.schemaVersion) else {
       throw FormError.invalid("This project uses a newer file format. Update FORM to open it.")
     }
     var project = manifest.project
@@ -92,9 +92,9 @@ public final class ProjectRepository {
   }
   public func importAsset(_ source: URL, into id: UUID) throws -> String {
     guard
-      ["png", "jpg", "jpeg", "tiff", "heic", "pdf", "svg"].contains(
+      ["png", "jpg", "jpeg", "tiff", "tif", "heic", "heif", "gif", "bmp", "webp", "pdf", "svg"].contains(
         source.pathExtension.lowercased())
-    else { throw FormError.invalid("Choose a PNG, JPEG, TIFF, HEIC, PDF, or SVG image.") }
+    else { throw FormError.invalid("Choose a PNG, JPEG, TIFF, HEIC, GIF, BMP, WebP, PDF, or SVG image.") }
     let attrs = try FileManager.default.attributesOfItem(atPath: source.path)
     guard (attrs[.size] as? Int ?? 0) <= 50_000_000 else {
       throw FormError.invalid("Reference images must be under 50 MB.")

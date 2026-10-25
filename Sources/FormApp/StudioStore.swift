@@ -104,6 +104,7 @@ enum TableTool: String, CaseIterable {
     engine.onProjectWillChange = { [weak self] in self?.finishArtworkEditing() }
   }
   func finishArtworkEditing() {
+    artworkSession.croppingImageID = nil
     NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
     artworkSession.canvas?.finishText()
     artworkSession.canvas?.finishPath()
@@ -123,7 +124,7 @@ enum TableTool: String, CaseIterable {
                 "form_status", "form_list_projects", "form_get_project", "form_list_recipes",
                 "form_list_materials", "form_get_print_setup", "form_get_slice_status",
                 "form_list_filaments", "form_list_printers", "form_get_artwork",
-                "form_list_fonts", "form_font_features",
+                "form_list_fonts", "form_font_features", "form_image_info",
               ].contains(name) || (name == "form_import_svg" && args["dry_run"] as? Bool == true)
                 || (name == "form_component" && args["command"] as? String == "list")
                 || (name == "form_swatch" && args["command"] as? String == "list")
@@ -135,6 +136,7 @@ enum TableTool: String, CaseIterable {
               status["boolean_geometry"] = BooleanGeometry.diagnostics
               status["component_resolution"] = ComponentCommands.resolutionDiagnostics
               status["appearance_renderer"] = AppearanceRenderer.diagnostics
+              status["image_renderer"] = ImageRenderer.diagnostics
               result = status
             }
             if !readOnly {

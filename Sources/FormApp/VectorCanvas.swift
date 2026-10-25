@@ -22,6 +22,7 @@ struct VectorCanvas: NSViewRepresentable {
     scroll.minMagnification = 0.08
     scroll.maxMagnification = 24
     scroll.documentView = view
+    view.registerForDraggedTypes([.fileURL, .png, .tiff])
     view.session = session
     session.canvas = view
     scroll.hasHorizontalRuler = true
@@ -178,6 +179,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var pen: [BezierNode] = []
   private var penID: UUID?
   private var guideID: UUID?
+  private var imageDropUpdates = 0, imageDropAttempts = 0
+  private var dropFrameID: UUID?
   private var hover = CGPoint.zero
   private var accessibilityItems: [ArtworkAccessibilityElement] = []
   private var accessibilityUpdates = 0
@@ -185,6 +188,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var drawCount = 0, lastDrawMS = 0.0
   var diagnostics: [String: Any] {
     var result = TypographyEngine.diagnostics
+    result["image_drag_starts"] = session?.imageDragStarts ?? 0
+    result["image_drop_updates"] = imageDropUpdates
+    result["image_drop_attempts"] = imageDropAttempts
     result["draw_count"] = drawCount
     result["last_draw_ms"] = lastDrawMS
     result["frames"] = frames.count
@@ -339,6 +345,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         }
       }
       context.restoreGState()
+      if dropFrameID == f.id {
+        context.setStrokeColor(NSColor.systemBlue.cgColor)
+        context.setLineWidth(3/scale)
+        context.stroke(f.rect.insetBy(dx:-2/scale,dy:-2/scale))
+      }
     }
     context.restoreGState()
   }
@@ -445,6 +456,20 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private func drawSelection(context: CGContext, scale: Double) {
     guard let s = session, let b = s.selectionBounds else { return }
     let art = s.art
+    if let id = s.croppingImageID, let e = art.elements.first(where: { $0.id == id }) {
+      context.saveGState()
+      context.concatenate(art.worldTransform(e).cg)
+      context.setStrokeColor(NSColor.systemBlue.cgColor)
+      context.setLineWidth(1.2 / scale)
+      context.stroke(CGRect(x:0,y:0,width:e.width,height:e.height))
+      context.setLineDash(phase:0,lengths:[3/scale,3/scale])
+      for value in [1.0/3,2.0/3] {
+        context.move(to:.init(x:e.width*value,y:0)); context.addLine(to:.init(x:e.width*value,y:e.height))
+        context.move(to:.init(x:0,y:e.height*value)); context.addLine(to:.init(x:e.width,y:e.height*value))
+      }
+      context.strokePath(); context.restoreGState()
+      return
+    }
     context.setStrokeColor(NSColor(hex: "#D45A37").cgColor)
     context.setLineWidth(1.2 / scale)
     context.stroke(CGRect(b))
@@ -568,6 +593,15 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     dragMode = ""
     snapLines = []
     s.beginGesture()
+    if let id = s.croppingImageID, let e = s.art.elements.first(where:{$0.id == id}),
+      let inverse = s.art.worldTransform(e).inverse {
+      let local = inverse.apply(.init(p))
+      if CGRect(x:0,y:0,width:e.width,height:e.height).contains(CGPoint(local)) {
+        dragMode = "image_crop"
+        return
+      }
+      s.croppingImageID = nil
+    }
     if s.tool == .pen {
       penDown(p, event: event)
       return
@@ -634,6 +668,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           if !event.modifierFlags.contains(.shift) { s.nodes = [] }
           dragMode = "node_marquee"
           marquee = CGRect(origin: p, size: .zero)
+          return
+        }
+        if event.clickCount == 2, e.kind == "image" {
+          s.choose([e.id]); s.croppingImageID = e.id
+          needsDisplay = true
           return
         }
         if event.clickCount == 2, e.kind == "text" {
@@ -720,6 +759,16 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     let p = point(event)
     var value = snapshot
+    if dragMode == "image_crop", let id = s.croppingImageID,
+      let i = value.elements.firstIndex(where:{$0.id == id}),
+      let inverse = snapshot.worldTransform(value.elements[i]).inverse {
+      let a = inverse.apply(.init(down)), b = inverse.apply(.init(p))
+      let crop = value.elements[i].imageCrop ?? .full
+      value.elements[i].imageCrop = crop.moved(dx:-(b.x-a.x)/value.elements[i].width*crop.width,
+        dy:-(b.y-a.y)/value.elements[i].height*crop.height)
+      s.save(value)
+      return
+    }
     if dragMode == "frame" {
       let p = convert(event.locationInWindow, from: nil)
       var art = snapshot
@@ -906,6 +955,58 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guideID = nil
     if editingID == nil { session?.endGesture() }
     needsDisplay = true
+  }
+  override func scrollWheel(with event: NSEvent) {
+    if let s = session, let id = s.croppingImageID,
+      let e = s.art.elements.first(where:{$0.id == id}), !s.art.isLocked(e),
+      let inverse = s.art.worldTransform(e).inverse {
+      let p = inverse.apply(.init(point(event)))
+      let anchor = Point2(max(0,min(1,p.x/e.width)),max(0,min(1,p.y/e.height)))
+      let precision = event.hasPreciseScrollingDeltas ? 0.35 : 1.0
+      let delta = max(-24,min(24,event.scrollingDeltaY*precision))
+      s.cropImage((e.imageCrop ?? .full).zoomed(exp(-delta*0.008),anchor:anchor))
+      if event.phase == .ended { s.endGesture() }
+      return
+    }
+    super.scrollWheel(with:event)
+  }
+  private func droppedURLs(_ sender: NSDraggingInfo) -> [URL] {
+    (sender.draggingPasteboard.readObjects(forClasses:[NSURL.self],options:[.urlReadingFileURLsOnly:true]) as? [URL]) ?? []
+  }
+  override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation { draggingUpdated(sender) }
+  override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
+    imageDropUpdates += 1
+    let p = convert(sender.draggingLocation,from:nil)
+    let physical = CGPoint(x:p.x/ppm,y:p.y/ppm)
+    let old = dropFrameID
+    dropFrameID = frames.last(where:{$0.rect.contains(physical)})?.id
+    if old != dropFrameID { needsDisplay = true }
+    let extensions = Set(["png","jpg","jpeg","tif","tiff","heic","heif","gif","bmp","webp","pdf","svg"])
+    let supported = droppedURLs(sender).contains { extensions.contains($0.pathExtension.lowercased()) }
+      || sender.draggingPasteboard.data(forType:.png) != nil || sender.draggingPasteboard.data(forType:.tiff) != nil
+    return dropFrameID != nil && supported ? .copy : []
+  }
+  override func draggingExited(_ sender: NSDraggingInfo?) { dropFrameID = nil; needsDisplay = true }
+  override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+    imageDropAttempts += 1
+    guard let s = session, let id = dropFrameID, let frame = frames.first(where:{$0.id == id}) else { return false }
+    finishText(); s.activate(id)
+    let p = convert(sender.draggingLocation,from:nil)
+    var point = Point2(p.x/ppm-frame.rect.minX,p.y/ppm-frame.rect.minY)
+    if let scope = s.scopeID, let group = s.art.elements.first(where:{$0.id == scope}),
+      let inverse = s.art.worldTransform(group).inverse { point = inverse.apply(point) }
+    var urls = droppedURLs(sender)
+    var temporary: URL?
+    if urls.isEmpty {
+      let board = sender.draggingPasteboard
+      if let bytes = board.data(forType:.png) ?? board.data(forType:.tiff) {
+        let file = FileManager.default.temporaryDirectory.appendingPathComponent("FORM-drop-\(UUID().uuidString).\(board.data(forType:.png) != nil ? "png" : "tiff")")
+        do { try bytes.write(to:file,options:.atomic); urls = [file]; temporary = file } catch { return false }
+      }
+    }
+    defer { if let temporary { try? FileManager.default.removeItem(at:temporary) }; dropFrameID = nil; needsDisplay = true }
+    guard !urls.isEmpty else { return false }
+    return s.placeImages(urls,point:point)
   }
   override func mouseMoved(with event: NSEvent) {
     hover = point(event)
@@ -1375,6 +1476,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   override func keyDown(with event: NSEvent) {
     guard let s = session else { return }
     let command = event.modifierFlags.contains(.command)
+    if s.croppingImageID != nil, [36,53].contains(event.keyCode) {
+      s.croppingImageID = nil; s.endGesture(); needsDisplay = true; return
+    }
     if event.keyCode == 49 {
       if !space {
         space = true

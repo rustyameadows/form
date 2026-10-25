@@ -53,11 +53,13 @@ Current progress: [precise compound-path operations and transformed native text]
 - [x] Union/subtract/intersect/exclude/divide where supported; non-destructive boolean groups and flattening; compound paths with holes.
 - [ ] Linear/radial gradients and editable stops/positions; full stroke styles and expansion; editable nested clipping masks.
 - [x] Linked reusable components with overrides and detachment; shared swatches; non-destructive opacity/effects/blending.
-- [ ] Image crop/replace/mask/adjustments and effective DPI; original asset preservation; drag/drop and supported macOS formats.
+- [x] Image crop/replace/mask/adjustments and effective DPI; original asset preservation; drag/drop and supported macOS formats.
 - [ ] Editable SVG import/export with transforms, hierarchy, geometry, text, and explicit unsupported-feature reporting; SVG/PDF/PNG/JPEG selection/frame/document export options.
 - [ ] Demonstrate an original illustration/logo and production-ready vector outputs.
 
 [Reusable vector components](reusable-components.md) now share source artwork across frames and physical products, with independent placement/size, fill/text/opacity overrides, nested references, reset, and detachment. The STRATA workflow validates these features through native and MCP interactions. [Shared sRGB swatches](shared-swatches.md) now update fills, strokes, gradient stops, selected characters, backgrounds, and component overrides across the CHROMA collection, with appearance-preserving detachment/deletion and native/MCP undo. [Editable appearance and the UMBRA study](artwork-appearance.md) now validate sixteen blend modes, layer/group opacity, Gaussian blur, drop shadows, shared shadow colors, group isolation, preserved text outlines, and physical outputs. Native controls and real MCP workflows complete the component/swatch/basic-effects checkpoint; advanced effects can follow gradually as specified. Production color profiles and physical material/thread/ink mappings remain staged work.
+
+[Image editing and the LUMEN collection](image-editing.md) now complete the basic raster-image checkpoint: original bytes, oriented ImageIO decoding, crop gestures/numeric bounds, image adjustments, layout-preserving replacement, native file drops and asset reuse, clipping, and transform-aware physical DPI. Native and real MCP workflows validate the canvas, linked products, schema-9 persistence, and physical exports. The remaining publication/color and vector requirements above stay open.
 
 ### E. Print and publication — specification Phase 4
 

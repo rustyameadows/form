@@ -226,6 +226,15 @@ public final class OperationEngine {
         }
       }
       return result
+    case "form_edit_image":
+      let id = try objectID(), ids = try idsArgument(a["element_ids"])
+      let command = a["command"] as? String ?? "update"
+      guard ["update", "reset"].contains(command) else { throw FormError.invalid("Unknown image command.") }
+      try edit("Image settings", source: source, coalescing: source == "Studio" ? "artwork-\(id)" : nil) { p in
+        try ImageCommands.apply(in: &p, objectID: id, ids: ids, crop: a["crop"],
+          adjustments: a["adjustments"], reset: command == "reset")
+      }
+      return ["selected_elements": ids.map(\.uuidString)]
     case "form_appearance":
       let id = try objectID()
       let ids = try idsArgument(a["element_ids"])
@@ -583,7 +592,7 @@ public final class OperationEngine {
         "form_set_artwork", "form_add_note", "form_create_recipe", "form_delete_objects",
         "form_edit_artwork",
         "form_edit_path",
-        "form_boolean_artwork", "form_convert_to_paths", "form_component", "form_swatch", "form_appearance",
+        "form_boolean_artwork", "form_convert_to_paths", "form_component", "form_swatch", "form_appearance", "form_edit_image",
         "form_link_artwork", "form_extract_artwork",
       ])
       guard operations.allSatisfy({ allowed.contains($0["name"] as? String ?? "") }) else {

@@ -90,15 +90,30 @@ import FormCore
             var mime =
               ext == "svg"
               ? "image/svg+xml" : ["jpg", "jpeg"].contains(ext) ? "image/jpeg" : "image/png"
-            if !["svg", "png", "jpg", "jpeg"].contains(ext), let image = NSImage(data: raw),
-              let tiff = image.tiffRepresentation, let rep = NSBitmapImageRep(data: tiff),
-              let png = rep.representation(using: .png, properties: [:])
-            {
-              bytes = png
+            if !["svg", "png", "jpg", "jpeg"].contains(ext) {
+              let url = assets.appendingPathComponent(asset)
+              if let info = try? ImageRenderer.info(url) {
+                guard max(info.width,info.height) <= ImageRenderer.maximumEdge,
+                  info.width * info.height <= ImageRenderer.maximumPixels else {
+                  throw FormError.invalid("This image is too large for lossless SVG conversion. Use a PNG/JPEG original or raster export at a chosen DPI.")
+                }
+                let bitmap = NSBitmapImageRep(cgImage: try ImageRenderer.bitmap(url, requestedEdge: Double(max(info.width,info.height))))
+                guard let png = bitmap.representation(using: .png, properties: [:]) else { throw FormError.invalid("Could not encode the SVG image.") }
+                bytes = png
+              } else if let image = NSImage(data: raw), let tiff = image.tiffRepresentation,
+                let rep = NSBitmapImageRep(data: tiff), let png = rep.representation(using: .png, properties: [:]) {
+                bytes = png
+              }
               mime = "image/png"
             }
-            output +=
-              "<image width=\"\(e.width)\" height=\"\(e.height)\" href=\"data:\(mime);base64,\(bytes.base64EncodedString())\" preserveAspectRatio=\"none\"/>"
+            let crop = e.imageCrop ?? .full
+            var adjustment = ""
+            if let a = e.imageAdjustments, !a.isIdentity {
+              let matrix = a.colorMatrix.flatMap{$0}.map{String($0)}.joined(separator:" ")
+              definitions += "<filter id=\"image-color-\(id)\" color-interpolation-filters=\"sRGB\" x=\"0\" y=\"0\" width=\"1\" height=\"1\"><feColorMatrix type=\"matrix\" values=\"\(matrix)\"/></filter>"
+              adjustment = " filter=\"url(#image-color-\(id))\""
+            }
+            output += "<svg width=\"\(e.width)\" height=\"\(e.height)\" viewBox=\"\(crop.x) \(crop.y) \(crop.width) \(crop.height)\" preserveAspectRatio=\"none\" overflow=\"hidden\"><image width=\"1\" height=\"1\" href=\"data:\(mime);base64,\(bytes.base64EncodedString())\" preserveAspectRatio=\"none\"\(adjustment)/></svg>"
           }
         } else {
           var fill = e.fillEnabled == false || e.kind == "line" ? "none" : e.color

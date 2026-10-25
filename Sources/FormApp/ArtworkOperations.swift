@@ -5,6 +5,8 @@ import UniformTypeIdentifiers
 
 extension StudioStore {
   func graphicsCall(_ name: String, _ args: [String: Any]) throws -> Any {
+    if name == "form_import_image" { return try importImage(args) }
+    if name == "form_image_info" { return try imageInfo(args) }
     if name == "form_import_svg" { return try importSVG(arguments: args) }
     if name == "form_list_fonts" {
       let query = (args["query"] as? String ?? "").lowercased()
