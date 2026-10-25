@@ -110,6 +110,8 @@ enum TableTool: String, CaseIterable {
     engine.onProjectDidChange = { [weak self] in
       self?.printing.resetForProjectChange()
       self?.showingPrint = false
+      self?.artworkSession.showingTextStyles = false
+      self?.artworkSession.showingPalette = false
     }
   }
   func finishArtworkEditing() {
@@ -137,6 +139,7 @@ enum TableTool: String, CaseIterable {
               ].contains(name) || (name == "form_import_svg" && args["dry_run"] as? Bool == true)
                 || (name == "form_component" && args["command"] as? String == "list")
                 || (name == "form_swatch" && args["command"] as? String == "list")
+                || (name == "form_text_style" && args["command"] as? String == "list")
             if !readOnly { self.finishArtworkEditing() }
             var result = try self.engine.call(name, arguments: args)
             if name == "form_status", var status = result as? [String: Any] {

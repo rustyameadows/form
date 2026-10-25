@@ -262,6 +262,7 @@ public final class OperationEngine {
           values: a["values"] as? [String: Any] ?? [:], reset: command == "reset")
       }
       return ["selected_elements": ids.map(\.uuidString)]
+    case "form_text_style": return try textStyleCall(a, source: source)
     case "form_swatch":
       let command = try string("command")
       if command == "list" { return ["swatches": try jsonObject(requireProject().swatches ?? [])] }
@@ -607,7 +608,7 @@ public final class OperationEngine {
         "form_set_artwork", "form_add_note", "form_create_recipe", "form_delete_objects",
         "form_edit_artwork",
         "form_edit_path",
-        "form_boolean_artwork", "form_convert_to_paths", "form_component", "form_swatch", "form_appearance", "form_edit_image", "form_edit_paint",
+        "form_boolean_artwork", "form_convert_to_paths", "form_component", "form_swatch", "form_text_style", "form_appearance", "form_edit_image", "form_edit_paint",
         "form_link_artwork", "form_extract_artwork",
       ])
       guard operations.allSatisfy({ allowed.contains($0["name"] as? String ?? "") }) else {

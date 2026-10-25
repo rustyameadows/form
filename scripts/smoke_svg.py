@@ -20,7 +20,7 @@ def main():
     fixture = ROOT / 'Tests/Fixtures/orbit-mark.svg'
     unsupported = ROOT / 'Tests/Fixtures/unsupported-effects.svg'
     try:
-        assert len(client.rpc('tools/list')['tools']) == 49
+        assert len(client.rpc('tools/list')['tools']) == 50
         project = client.call('form_create_project', {'name': 'ORBIT · SVG import study'})
         package = pathlib.Path(client.call('form_status')['library_path']) / (project['id'] + '.form')
         before = client.call('form_get_project')

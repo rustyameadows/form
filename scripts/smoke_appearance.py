@@ -26,7 +26,7 @@ def text(x, y, width, height, value, size, face='HelveticaNeue-Medium', name=Non
 def main():
     c = Client()
     try:
-        assert len(c.rpc('tools/list')['tools']) == 49
+        assert len(c.rpc('tools/list')['tools']) == 50
         status = c.call('form_status'); assert '/.local/' in status['library_path']
         project = c.call('form_create_project', {'name': 'UMBRA · Light & matter'})
         ink = c.call('form_swatch', {'command': 'create', 'name': 'Ink', 'color': '#263C64'})['swatch']['id']
@@ -148,7 +148,7 @@ def main():
             orange_id=orange['id'], glow_id=glow['id'], title_id=title['id'], box_ids=[o['id'] for o in boxes],
             ink_id=ink, saved_edit_median_ms=round(statistics.median(timings), 2),
             saved_edit_p95_ms=round(sorted(timings)[18], 2), performance_status=performance,
-            checks='49 tools; live blur/shadow/blending; shared shadow swatch; source-only revisions; linked physical outputs; typography outlines; rollback; physical SVG/PDF/PNG/JPEG; schema-8 reopen; 100 effect placements',
+            checks='50 tools; live blur/shadow/blending; shared shadow swatch; source-only revisions; linked physical outputs; typography outlines; rollback; physical SVG/PDF/PNG/JPEG; schema-8 reopen; 100 effect placements',
             status=c.call('form_status'))
         (OUTPUT / 'appearance-report.json').write_text(json.dumps(report, indent=2))
         (OUTPUT / 'appearance-baseline.json').write_text(json.dumps(c.call('form_get_project'), indent=2))

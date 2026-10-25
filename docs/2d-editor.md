@@ -20,6 +20,8 @@ The editor is a working part of the expanded [2D specification](2d-design-typogr
 - Non-destructive layer/group opacity, sixteen blend modes, Gaussian blur, drop shadows, shared shadow colors, and explicit group isolation. Native controls, linked physical surfaces, text outlines, and physical exports preserve the combined appearance. These fields use schema 8; schemas 1–7 still load. See [appearance and UMBRA](artwork-appearance.md).
 - Actual-size SVG/PDF and DPI-controlled PNG/JPEG frame/selection exports. SVG outlines text by default. Selection export preserves required group transforms, opacity, and masks. Printable artwork is distinct from cut/score/stitch/engrave/guide roles.
 
+[Reusable project text styles](reusable-text-styles.md) now link headings, body copy, captions, character ranges, and their paragraph formatting across frames, components, and physical faces. Explicit local overrides survive later style changes. Native creation/redefinition, reset, detach/delete, and MCP commands share Undo and schema-12 persistence.
+
 Text properties include point/area mode, font/style/size, leading, tracking, pair kerning, baseline, word spacing, alignment, paragraph spacing/indents, case, ligatures, direction, hyphenation, and vertical alignment. Shaping uses typographic points internally and millimeters at the artwork boundary. Font controls expose capabilities reported by the installed face.
 
 ## Controls
@@ -53,7 +55,7 @@ While editing text, select characters and change typography controls to format t
 
 ## MCP
 
-There are 49 tools. Artwork tools include `form_get_artwork`, `form_edit_artwork`, `form_component`, `form_swatch`, `form_appearance`, `form_edit_paint`, `form_import_image`, `form_edit_image`, `form_image_info`, `form_link_artwork`, `form_extract_artwork`, `form_list_fonts`, `form_font_features`, `form_convert_to_paths`, `form_boolean_artwork`, `form_export_artwork`, `form_import_svg`, and `form_edit_path`. They use the native model/editing functions. Tool discovery provides exact schemas and ranges.
+There are 50 tools. Artwork tools include `form_get_artwork`, `form_edit_artwork`, `form_component`, `form_swatch`, `form_text_style`, `form_appearance`, `form_edit_paint`, `form_import_image`, `form_edit_image`, `form_image_info`, `form_link_artwork`, `form_extract_artwork`, `form_list_fonts`, `form_font_features`, `form_convert_to_paths`, `form_boolean_artwork`, `form_export_artwork`, `form_import_svg`, and `form_edit_path`. They use the native model/editing functions. Tool discovery provides exact schemas and ranges.
 
 ```json
 {"name":"form_list_fonts","arguments":{"query":"Georgia"}}
@@ -71,7 +73,8 @@ See [precise paths and transformed native text](path-editing.md) for direct sele
 
 - Configurable transform origins and the specification’s later variable-width stroke workflows.
 - Full SVG interchange fidelity beyond the [supported import subset](svg-import.md), including filters, patterns, gradient strokes, advanced SVG text, and external resources. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
-- Alternate-glyph selection, complete case treatment within mixed-character editing, reusable text styles, tabs/lists, linked text frames, sequential multi-page documents, and publication layout.
+- Alternate-glyph selection, complete case treatment within mixed-character editing, tabs/lists, linked text frames, sequential multi-page documents, and publication layout.
+- Cross-project clipboard transfer for linked named resources and local assets; explicit automatic font-pair kerning controls.
 - Color-managed production output, CMYK/spot separations, full preflight, role-specific production exports, advanced surface placement, and the complete demonstration/acceptance suite.
 
 The current **Soft geometry** demonstration is an 8 × 10 inch composition with installed type, gradients, an editable compound shape, a matching outlined version, and physical SVG/PDF/raster exports. It does not replace the required clock dial, folding package, apparel/patch graphic, and instruction booklet demonstrations.

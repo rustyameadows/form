@@ -47,10 +47,14 @@ import XCTest
     XCTAssertNotNil(printing.outputDirectory)
     printing.layer = 1
     printing.frame("object")
+    store.artworkSession.showingTextStyles = true
+    store.artworkSession.showingPalette = true
     let meshVersion = printing.meshVersion
     let pathVersion = printing.toolpathVersion
     try store.engine.open(next)
     XCTAssertFalse(store.showingPrint)
+    XCTAssertFalse(store.artworkSession.showingTextStyles)
+    XCTAssertFalse(store.artworkSession.showingPalette)
     XCTAssertNil(printing.objectID)
     XCTAssertNil(printing.preparedProjectID)
     XCTAssertNil(printing.mesh)
@@ -81,11 +85,15 @@ import XCTest
     let printing = store.printing
     let oldProject = store.project!.id
     let request = try stage(printing, root: root)
+    store.artworkSession.showingTextStyles = true
+    store.artworkSession.showingPalette = true
     XCTAssertThrowsError(try store.engine.open(UUID()))
     XCTAssertThrowsError(
       try store.engine.call(
         "form_create_project", arguments: ["name": "Invalid", "template": "missing"]))
     XCTAssertTrue(store.showingPrint)
+    XCTAssertTrue(store.artworkSession.showingTextStyles)
+    XCTAssertTrue(store.artworkSession.showingPalette)
     XCTAssertTrue(printing.busy)
     XCTAssertEqual(printing.preparedProjectID, oldProject)
     XCTAssertEqual(printing.objectID, a.id)

@@ -29,7 +29,7 @@ def main():
     c = Client()
     try:
         status = c.call('form_status'); assert '/.local/' in status['library_path']
-        assert len(c.rpc('tools/list')['tools']) == 49
+        assert len(c.rpc('tools/list')['tools']) == 50
         source = OUTPUT / 'image-light-source.png'; replacement = OUTPUT / 'image-light-replacement.png'
         c.call('form_create_project', {'name': 'LUMEN / Raster sources', 'template': 'lamps'})
         c.call('form_set_view', {'view': 'studio'}); c.call('form_set_view', {'view': 'fit'})
@@ -155,7 +155,7 @@ def main():
             source_asset=old['asset'], source_path=str(source), replacement_path=str(replacement),
             raw_info=raw, physical_info=physical, saved_edit_median_ms=round(statistics.median(timings), 2),
             saved_edit_p95_ms=round(sorted(timings)[18], 2), performance_status=performance,
-            checks='49 tools; original asset bytes; live crop/adjustments; physical DPI; clipping; replacement preserves layout; source-only persistence; invalid import and batch rollback; physical exports; schema-9 reopen; 100 image saved edits')
+            checks='50 tools; original asset bytes; live crop/adjustments; physical DPI; clipping; replacement preserves layout; source-only persistence; invalid import and batch rollback; physical exports; schema-9 reopen; 100 image saved edits')
         (OUTPUT / 'images-report.json').write_text(json.dumps(report, indent=2))
         print(json.dumps(report, indent=2))
     finally:

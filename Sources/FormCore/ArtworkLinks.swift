@@ -53,12 +53,15 @@ extension Project {
     }
     return art
   }
-  public mutating func setArtwork(_ artwork: Artwork, for objectID: UUID) throws {
+  public mutating func setArtwork(_ artwork: Artwork, for objectID: UUID,
+    recordingStyleOverrides: Bool = true) throws {
     try validateArtwork(artwork)
     guard let object = objects.first(where: { $0.id == objectID }) else {
       throw FormError.missing("Object not found.")
     }
     let owner = artworkOwner(object)
+    let artwork = recordingStyleOverrides
+      ? artwork.recordingTextStyleOverrides(from: owner.artwork) : artwork
     for i in objects.indices where objects[i].designID == owner.designID {
       objects[i].artwork = artwork
     }
@@ -95,6 +98,7 @@ extension Project {
     self = candidate
   }
   public func validateArtworkLinks() throws {
+    try validateTextStyles()
     try validateSwatches()
     try validateComponentLinks()
     for object in objects {

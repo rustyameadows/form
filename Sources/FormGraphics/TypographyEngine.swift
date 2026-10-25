@@ -21,6 +21,10 @@ public enum FormColor {
   public static let pointsPerMM = 72.0 / 25.4
   private static let styleKey = NSAttributedString.Key("studio.form.typography")
   public static let swatchKey = NSAttributedString.Key("studio.form.swatch")
+  public static let textStyleKey = NSAttributedString.Key("studio.form.textStyle")
+  public static let paragraphStyleKey = NSAttributedString.Key("studio.form.paragraphTextStyle")
+  public static let spacingKey = NSAttributedString.Key("studio.form.spacingAdjustment")
+  public static let pairKey = NSAttributedString.Key("studio.form.pairAdjustment")
   private struct Signature: Equatable {
     var text: String, size: Double, color: String, width: Double, height: Double,
       style: Typography?, runs: [TextSpan]?
@@ -89,7 +93,7 @@ public enum FormColor {
     return NSFont(descriptor: base.fontDescriptor.addingAttributes(attrs), size: size) ?? base
   }
   public static func attributes(_ style: Typography, size: Double, color: String, millimeters: Bool,
-    swatchID: UUID? = nil)
+    swatchID: UUID? = nil, textStyle: TextStyleReference? = nil, paragraphStyle: TextStyleReference? = nil)
     -> [NSAttributedString.Key: Any]
   {
     let f = millimeters ? 1 / pointsPerMM : 1
@@ -120,6 +124,8 @@ public enum FormColor {
       .expansion: log(style.horizontalScale / 100),
     ]
     if let swatchID { result[swatchKey] = swatchID.uuidString }
+    if let textStyle { result[textStyleKey] = try? JSONEncoder.form.encode(textStyle) }
+    if let paragraphStyle { result[paragraphStyleKey] = try? JSONEncoder.form.encode(paragraphStyle) }
     return result
   }
   public static func attributed(_ element: ArtworkElement, millimeters: Bool = false)
@@ -135,7 +141,7 @@ public enum FormColor {
       string: text,
       attributes: attributes(
         base, size: element.fontSize, color: element.color, millimeters: millimeters,
-        swatchID: element.fillSwatchID))
+        swatchID: element.fillSwatchID, textStyle: element.textStyle, paragraphStyle: element.paragraphStyle))
     for run in element.textRuns ?? [] {
       let original = element.text as NSString
       guard run.location + run.length <= original.length else { continue }
@@ -146,23 +152,48 @@ public enum FormColor {
       guard start + length <= result.length else { continue }
       result.setAttributes(
         attributes(run.typography, size: run.fontSize, color: run.color, millimeters: millimeters,
-          swatchID: run.swatchID),
+          swatchID: run.swatchID, textStyle: run.textStyle, paragraphStyle: run.paragraphStyle),
         range: .init(location: start, length: length))
     }
+    updateSpacing(result, millimeters: millimeters, fallbackPairs: base.pairKerning)
+    return result
+  }
+  /// Keep tracking separate from word/pair additions through native text edits.
+  public static func updateSpacing(_ text: NSMutableAttributedString, range: NSRange? = nil,
+    millimeters: Bool = false, fallbackPairs: [Int: Double] = [:]) {
+    let full = range ?? NSRange(location: 0, length: text.length)
     let factor = millimeters ? 1 / pointsPerMM : 1
-    let nsText = result.string as NSString
-    if base.wordSpacing != 0 {
-      for i in 0..<nsText.length where nsText.character(at: i) == 32 {
-        result.addAttribute(
-          .kern, value: (base.tracking + base.wordSpacing) * factor,
-          range: .init(location: i, length: 1))
+    var runs: [(NSRange, Typography)] = []
+    text.enumerateAttribute(styleKey, in: full) { raw, part, _ in
+      if let data = raw as? Data, let type = try? JSONDecoder.form.decode(Typography.self, from: data) { runs.append((part, type)) }
+    }
+    let string = text.string as NSString
+    text.beginEditing()
+    for (part, type) in runs {
+      text.removeAttribute(pairKey, range: part)
+      for i in part.location..<NSMaxRange(part) {
+        let pair = type.pairKerning[i] ?? fallbackPairs[i]
+        let adjustment = pair ?? (string.character(at: i) == 32 ? type.wordSpacing : 0)
+        let one = NSRange(location: i, length: 1)
+        text.addAttribute(.kern, value: (type.tracking + adjustment) * factor, range: one)
+        text.addAttribute(spacingKey, value: adjustment * factor, range: one)
+        if let pair { text.addAttribute(pairKey, value: pair * factor, range: one) }
       }
     }
-    for (i, value) in base.pairKerning where i >= 0 && i < result.length {
-      result.addAttribute(
-        .kern, value: (base.tracking + value) * factor, range: .init(location: i, length: 1))
+    text.endEditing()
+  }
+  public static func refreshNativeMetadata(_ spans: [TextSpan], in text: NSMutableAttributedString) {
+    text.beginEditing()
+    for run in spans {
+      let range = NSRange(location: run.location, length: run.length)
+      if let data = try? JSONEncoder.form.encode(run.typography) { text.addAttribute(styleKey, value: data, range: range) }
+      text.removeAttribute(textStyleKey, range: range)
+      if let ref = run.textStyle, let data = try? JSONEncoder.form.encode(ref) { text.addAttribute(textStyleKey, value: data, range: range) }
+      text.removeAttribute(paragraphStyleKey, range: range)
+      if let ref = run.paragraphStyle, let data = try? JSONEncoder.form.encode(ref) { text.addAttribute(paragraphStyleKey, value: data, range: range) }
     }
-    return result
+    updateSpacing(text)
+    text.endEditing()
   }
   public static func measured(_ element: ArtworkElement, points: Bool = false) -> CGSize {
     let size = cachedLayout(element).size
@@ -365,7 +396,8 @@ public enum FormColor {
     }
     return result
   }
-  public static func spans(from attributed: NSAttributedString, fallback: Typography) -> [TextSpan]
+  public static func spans(from attributed: NSAttributedString, fallback: Typography,
+    utf16Offset: Int = 0) -> [TextSpan]
   {
     var result: [TextSpan] = []
     attributed.enumerateAttributes(in: NSRange(location: 0, length: attributed.length)) {
@@ -383,10 +415,8 @@ public enum FormColor {
       let actualFeatures = font.fontDescriptor.object(forKey: .featureSettings) as? NSArray ?? []
       let preserveFeatures = attrs[styleKey] != nil && assignedFont.fontName == font.fontName
         && assignedFeatures.isEqual(actualFeatures)
-      let preserveMissing =
-        NSFont(name: style.fontName, size: font.pointSize) == nil
-        && self.font(style, size: font.pointSize).fontName == font.fontName
-      if !preserveMissing { style.fontName = font.fontName }
+      let preserveAssignedName = attrs[styleKey] != nil && assignedFont.fontName == font.fontName
+      if !preserveAssignedName { style.fontName = font.fontName }
       if let values = font.fontDescriptor.object(forKey: .variation) as? [NSNumber: NSNumber] {
         style.variations = Dictionary(
           uniqueKeysWithValues: values.map { ($0.key.intValue, $0.value.doubleValue) })
@@ -416,7 +446,14 @@ public enum FormColor {
         style.features = [:]
         style.featureSelections = nil
       }
-      style.tracking = (attrs[.kern] as? NSNumber)?.doubleValue ?? 0
+      let adjustment = (attrs[spacingKey] as? NSNumber)?.doubleValue ?? 0
+      style.tracking = ((attrs[.kern] as? NSNumber)?.doubleValue ?? 0) - adjustment
+      if attrs[spacingKey] != nil {
+        style.pairKerning = [:]
+        if let pair = (attrs[pairKey] as? NSNumber)?.doubleValue {
+          for i in range.location..<NSMaxRange(range) { style.pairKerning[i + utf16Offset] = pair }
+        }
+      }
       style.baseline = (attrs[.baselineOffset] as? NSNumber)?.doubleValue ?? 0
       style.ligatures = (attrs[.ligature] as? NSNumber)?.intValue ?? 1
       style.underline = ((attrs[.underlineStyle] as? NSNumber)?.intValue ?? 0) > 0
@@ -433,10 +470,12 @@ public enum FormColor {
         style.firstLineIndent = p.firstLineHeadIndent
       }
       var span = TextSpan(
-          location: range.location, length: range.length, typography: style,
+          location: range.location + utf16Offset, length: range.length, typography: style,
           fontSize: font.pointSize,
           color: FormColor.hex(attrs[.foregroundColor] as? NSColor ?? .black))
       span.swatchID = (attrs[swatchKey] as? String).flatMap(UUID.init(uuidString:))
+      span.textStyle = (attrs[textStyleKey] as? Data).flatMap { try? JSONDecoder.form.decode(TextStyleReference.self, from: $0) }
+      span.paragraphStyle = (attrs[paragraphStyleKey] as? Data).flatMap { try? JSONDecoder.form.decode(TextStyleReference.self, from: $0) }
       result.append(span)
     }
     return result

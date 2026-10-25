@@ -38,13 +38,14 @@ Current progress: the native canvas, physical frames, typography, vector operati
 
 ### C. Deep typography — specification Phase 2
 
-Current progress: [FOUNDRY and independent font features](font-features.md) now validate simultaneous Common/Additional/Historical ligatures, explicit on/off/default states, exclusive numeral choices, selected-character feature edits, variable-axis coexistence, native assignment preservation, editable outlines, and schema-11 persistence. Reusable styles, advanced text composition, alternate-glyph selection, and the remaining typography acceptance requirements below stay in scope.
+Current progress: [FOUNDRY and independent font features](font-features.md) now validate simultaneous Common/Additional/Historical ligatures, explicit on/off/default states, exclusive numeral choices, selected-character feature edits, variable-axis coexistence, native assignment preservation, editable outlines, and schema-11 persistence. [FOLIO and reusable text styles](reusable-text-styles.md) add shared typography, independent paragraph inheritance, explicit local overrides, and native/MCP creation, redefinition, reset, detachment, and schema-12 persistence. Advanced composition, alternate-glyph selection, and the remaining typography acceptance requirements below stay in scope.
 
 - [ ] Searchable previewing font browser with families/faces, favorites, recents, explicit missing-font handling, and preserved assignments.
 - [ ] Core Text shaping; all section 4.2 text/paragraph properties; mixed rich text and selected-character editing; point/area text reflow and overflow indicators.
 - [ ] Supported OpenType feature discovery, ligatures/alternates/sets, numeral treatments, fractions, caps, contextual/localized forms, and alternate glyph selection.
 - [ ] Real variable-font axes/ranges and optical sizing; per-pair kerning, baseline shifts, tracking, superscript/subscript, and character-level features.
-- [ ] Reusable paragraph/text styles; tabs, lists, direction, hyphenation, and advanced text frames.
+- [x] Reusable paragraph/text styles with persistent local overrides, independent character/paragraph relationships, creation/redefinition/reset/detachment/deletion, and shared native/MCP Undo. See [FOLIO and text styles](reusable-text-styles.md).
+- [ ] Tabs, lists, complete direction/hyphenation controls, and advanced text frames.
 - [ ] Convert shaped text to ordinary editable outlines while preserving glyph positioning, variations, ligatures, and a recoverable editable source.
 - [ ] Demonstrate a refined wordmark and typographic clock dial with editable converted glyphs.
 

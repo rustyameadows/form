@@ -23,7 +23,7 @@ def main():
     c = Client()
     try:
         status = c.call('form_status'); assert '/.local/' in status['library_path']
-        assert len(c.rpc('tools/list')['tools']) == 49
+        assert len(c.rpc('tools/list')['tools']) == 50
         details = c.call('form_font_features', {'font_name': 'Baskerville'})
         ligatures = next(f for f in details['features'] if f['id'] == 1)
         assert not ligatures['exclusive']
@@ -112,7 +112,7 @@ def main():
         c.call('form_set_view', {'view': 'artwork', 'object_id': box['id'], 'element_ids': [combined['id']]})
         report = dict(project_id=project['id'], sheet_id=sheet['id'], box_id=box['id'], variant_id=variant['id'],
             title_id=title['id'], combined_id=combined['id'], separate_id=separate['id'], variable_id=variable['id'],
-            mixed_id=mixed['id'], tools=49, exports=exports,
+            mixed_id=mixed['id'], tools=50, exports=exports,
             benchmark_texts=200, saved_edit_median_ms=round(statistics.median(times),2),
             saved_edit_p95_ms=round(sorted(times)[18],2), performance_status=perf_status,
             checks='Real installed capabilities; simultaneous features; source-only immutable updates; linked faces; invalid-pair batch rollback; rich spans; variable axes; editable outlines/recovery; physical outputs; schema-11 reopen; 200-text edits',

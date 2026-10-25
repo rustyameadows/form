@@ -27,7 +27,7 @@ def main():
     c = Client()
     try:
         status = c.call('form_status'); assert '/.local/' in status['library_path']
-        assert len(c.rpc('tools/list')['tools']) == 49
+        assert len(c.rpc('tools/list')['tools']) == 50
         project = c.call('form_create_project', {'name': 'PRISM · Color in motion'})
         sheet = c.call('form_add_object', {'recipe_id': 'artboard', 'name': 'PRISM / Field notes',
             'parameters': {'width': 200, 'depth': 160}})
@@ -161,7 +161,7 @@ def main():
             product_ids=[o['id'] for o in boxes], gradient_stop_ids=added, outputs=outputs,
             warm_saved_edit_ms={'median': statistics.median(samples), 'max': max(samples)},
             status=measured,
-            checks='49 tools; stop UUID reorder and interpolation; source-only resource updates through a linked product; complete strokes; nested masks; mask conversion redirects; filled stroke expansion equality; native undo/redo boundary; atomic invalids; linked physical outputs; schema-10 reopen; 200-element saved paint edits')
+            checks='50 tools; stop UUID reorder and interpolation; source-only resource updates through a linked product; complete strokes; nested masks; mask conversion redirects; filled stroke expansion equality; native undo/redo boundary; atomic invalids; linked physical outputs; schema-10 reopen; 200-element saved paint edits')
         (OUTPUT/'paint-report.json').write_text(json.dumps(report, indent=2))
         print(json.dumps(report, indent=2))
     finally:

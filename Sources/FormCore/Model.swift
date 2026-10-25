@@ -108,6 +108,8 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var starInset: Double?
   public var path: VectorPath?
   public var typography: Typography?
+  public var textStyle: TextStyleReference?
+  public var paragraphStyle: TextStyleReference?
   public var textRuns: [TextSpan]?
   public var productionRole: String?
   public var clipID: UUID?
@@ -366,10 +368,13 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var conversationReference: String?
   public var printSetups: [String: PrintConfiguration]?
   public var swatches: [ArtworkSwatch]?
+  public var textStyles: [ArtworkTextStyle]?
   public var minimumSchemaVersion: Int {
     max(
       schemaVersion,
-      objects.contains { $0.artwork?.requiresSchemaEleven == true }
+      textStyles?.isEmpty == false || objects.contains { $0.artwork?.referencedTextStyles.isEmpty == false }
+        ? 12
+        : objects.contains { $0.artwork?.requiresSchemaEleven == true }
         ? 11
         : objects.contains { $0.artwork?.requiresSchemaTen == true }
         ? 10

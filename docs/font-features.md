@@ -40,4 +40,4 @@ Run `python3 scripts/smoke_font_features.py` against an isolated `FORM_LIBRARY_P
 
 Font discovery has a 256-face cache cleared on font changes. Layout uses the existing 800-entry cache: changed features rebuild text, placement reuses it. See [validation evidence](validation.md) for real native controls, mouse checks, and local timings.
 
-The full goal remains active. Alternate-glyph selection, reusable styles, complete mixed-case treatment, tabs/lists, linked frames, and sequential documents still require work.
+The full goal remains active. [Reusable text styles](reusable-text-styles.md) are now available. Alternate-glyph selection, complete mixed-case treatment, tabs/lists, linked frames, and sequential documents still require work.

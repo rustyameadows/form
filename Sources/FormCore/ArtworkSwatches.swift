@@ -184,6 +184,8 @@ public enum SwatchCommands {
           fontSize: element.fontSize, color: element.color)
       if !old.contains(where: { $0.location <= start && $0.location + $0.length >= end }) {
         run.swatchID = element.fillSwatchID
+        run.textStyle = element.textStyle
+        run.paragraphStyle = element.paragraphStyle
       }
       run.location = start
       run.length = end - start

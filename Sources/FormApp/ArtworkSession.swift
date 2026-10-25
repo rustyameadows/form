@@ -79,6 +79,7 @@ enum ArtworkTool: String, CaseIterable {
   @Published var exportDPI = 300.0
   @Published var exportOutline = true
   @Published var showingPalette = false
+  @Published var showingTextStyles = false
   init(store: StudioStore) { self.store = store }
   var object: ProductObject? { store?.project?.objects.first { $0.id == objectID } }
   var art: Artwork {

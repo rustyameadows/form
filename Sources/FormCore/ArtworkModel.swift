@@ -264,6 +264,8 @@ public struct TextSpan: Codable, Equatable, Sendable {
   public var fontSize: Double
   public var color: String
   public var swatchID: UUID?
+  public var textStyle: TextStyleReference?
+  public var paragraphStyle: TextStyleReference?
   public init(location: Int, length: Int, typography: Typography, fontSize: Double, color: String) {
     self.location = location
     self.length = length

@@ -174,6 +174,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var textHost: NativeAffineView?
   private var textClip: NativeAffineView?
   private var publishedInput: NSAttributedString?
+  private var originalTextInput: NSAttributedString?
+  private var originalTextElement: ArtworkElement?
   private var editingID: UUID?
   private var publishedText: ArtworkElement?
   private var pen: [BezierNode] = []
@@ -1285,6 +1287,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func beginText(_ e: ArtworkElement) {
     guard let s = session, activeFrame != nil else { return }
+    originalTextElement = e
     let e = s.colored(e)
     s.dieline = false
     s.beginGesture()
@@ -1306,7 +1309,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     tv.autoresizingMask = []
     tv.insertionPointColor = NSColor(hex: e.color)
     tv.textStorage?.setAttributedString(TypographyEngine.attributed(e, millimeters: false))
+    if let storage = tv.textStorage {
+      TypographyEngine.refreshNativeMetadata(TypographyEngine.spans(from: storage, fallback: e.typography ?? .init()), in: storage)
+    }
     publishedInput = NSAttributedString(attributedString: tv.attributedString())
+    originalTextInput = publishedInput
     tv.delegate = self
     tv.setAccessibilityLabel("Edit text on artwork canvas")
     textView = tv
@@ -1341,6 +1348,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     editingID = nil
     publishedText = nil
     publishedInput = nil
+    originalTextInput = nil
+    originalTextElement = nil
     session?.editingText = false
     session?.endGesture()
     needsDisplay = true
@@ -1372,12 +1381,21 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     if let publishedInput, tv.attributedString().isEqual(to: publishedInput) { return }
     publishedInput = NSAttributedString(attributedString: tv.attributedString())
     var value = s.art
+    if let originalTextInput, let originalTextElement,
+      tv.attributedString().isEqual(to: originalTextInput) {
+      value.elements[i] = originalTextElement
+      publishedText = s.colored(originalTextElement)
+      s.save(value)
+      positionTextHost(originalTextElement)
+      return
+    }
     var e = value.elements[i]
     e.text = tv.string
     let runs = TypographyEngine.spans(
       from: tv.attributedString(), fallback: e.typography ?? .init())
     if runs.count == 1, let run = runs.first, run.fontSize == e.fontSize, run.color == e.color,
-      run.typography == (e.typography ?? .init()), run.swatchID == e.fillSwatchID
+      run.typography == (e.typography ?? .init()), run.swatchID == e.fillSwatchID,
+      run.textStyle == e.textStyle, run.paragraphStyle == e.paragraphStyle
     {
       e.textRuns = nil
     } else {
@@ -1390,6 +1408,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       tv.setFrameSize(.init(width: max(40, e.width * ppm), height: max(24, e.height * ppm)))
     }
     value.elements[i] = e
+    value = value.recordingTextStyleOverrides(from: s.art)
+    e = value.elements[i]
+    if let storage = tv.textStorage {
+      TypographyEngine.refreshNativeMetadata(e.textRuns ?? [TextStyleCommands.span(e)], in: storage)
+      publishedInput = NSAttributedString(attributedString: tv.attributedString())
+    }
     publishedText = s.colored(e)
     s.save(value)
     positionTextHost(e)
@@ -1432,7 +1456,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       : tv.typingAttributes
     return TypographyEngine.spans(
       from: NSAttributedString(string: "A", attributes: attrs),
-      fallback: session?.primary?.typography ?? .init()
+      fallback: session?.primary?.typography ?? .init(), utf16Offset: range.location
     ).first
   }
   func textSwatchReferences() -> Set<UUID?>? {
@@ -1447,15 +1471,79 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     return result
   }
+  func textStyleReferences() -> Set<TextStyleReference?>? {
+    guard let tv = textView else { return nil }
+    func decode(_ raw: Any?) -> TextStyleReference? {
+      (raw as? Data).flatMap { try? JSONDecoder.form.decode(TextStyleReference.self, from: $0) }
+    }
+    let range = tv.selectedRange()
+    if range.length == 0 { return [decode(tv.typingAttributes[TypographyEngine.textStyleKey])] }
+    var result = Set<TextStyleReference?>()
+    tv.attributedString().enumerateAttribute(TypographyEngine.textStyleKey, in: range) { value, _, _ in result.insert(decode(value)) }
+    return result
+  }
+  func applyTextReference(_ command: String, styleID: UUID?) -> Bool {
+    guard let tv = textView, let project = session?.store?.project else { return false }
+    let styles = Dictionary(uniqueKeysWithValues: (project.textStyles ?? []).map { ($0.id, $0) })
+    if command == "assign", styleID.flatMap({ styles[$0] }) == nil {
+      session?.store?.error = "Text style not found."
+      return true
+    }
+    let fallback = session?.primary?.typography ?? .init()
+    let selected = tv.selectedRange()
+    let partial = selected.location != 0 || selected.length != tv.string.utf16.count
+    func attributes(_ raw: [NSAttributedString.Key: Any], at location: Int) -> [NSAttributedString.Key: Any] {
+      let old = TypographyEngine.spans(from: NSAttributedString(string: "A", attributes: raw), fallback: fallback, utf16Offset: location)[0]
+      let style = (command == "assign" ? styleID : old.textStyle?.styleID).flatMap { styles[$0] }
+      let changed = command == "reset"
+        ? TextStyleCommands.resetting(old, styles: styles, preservingParagraphs: partial)
+        : TextStyleCommands.applying(old, style: style, detach: command == "detach", preservingParagraphs: partial)
+      return TypographyEngine.attributes(changed.typography, size: changed.fontSize, color: changed.color,
+        millimeters: false, swatchID: changed.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
+    }
+    let range = tv.selectedRange()
+    if range.length == 0 {
+      tv.typingAttributes = attributes(tv.typingAttributes, at: range.location)
+      session?.objectWillChange.send()
+      return true
+    }
+    let undoRange = command == "reset" ? (tv.string as NSString).paragraphRange(for: range) : range
+    guard tv.shouldChangeText(in: undoRange, replacementString: nil) else { return true }
+    var replacements: [(NSRange, [NSAttributedString.Key: Any])] = []
+    tv.attributedString().enumerateAttributes(in: range) { raw, part, _ in replacements.append((part, attributes(raw, at: part.location))) }
+    tv.textStorage?.beginEditing()
+    for (part, raw) in replacements { tv.textStorage?.setAttributes(raw, range: part) }
+    if command == "reset" {
+      // AppKit normalizes paragraph attributes across the whole paragraph.
+      // Apply the reset there too, while retaining the character selection.
+      for (part, raw) in replacements {
+        if let paragraph = raw[.paragraphStyle] {
+          tv.textStorage?.addAttribute(.paragraphStyle, value: paragraph,
+            range: (tv.string as NSString).paragraphRange(for: part))
+        }
+      }
+    }
+    if let storage = tv.textStorage { TypographyEngine.updateSpacing(storage, range: range) }
+    tv.textStorage?.endEditing()
+    tv.didChangeText()
+    return true
+  }
   func applyTextStyle(_ body: (inout Typography) -> Void) -> Bool {
     guard let tv = textView else { return false }
-    let range = tv.selectedRange()
+    var range = tv.selectedRange()
     let fallback = session?.primary?.typography ?? .init()
+    if let old = textInspection()?.typography {
+      var changed = old; body(&changed)
+      if TextStyleCommands.changesParagraphs(old, changed) { range = (tv.string as NSString).paragraphRange(for: range) }
+    }
     if range.length == 0, let run = textInspection() {
       var t = run.typography
       body(&t)
+      var changed = run; changed.typography = t
+      changed = TextStyleCommands.recording(changed, from: run)
       tv.typingAttributes = TypographyEngine.attributes(
-        t, size: run.fontSize, color: run.color, millimeters: false, swatchID: run.swatchID)
+        t, size: run.fontSize, color: run.color, millimeters: false, swatchID: run.swatchID,
+        textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
       session?.objectWillChange.send()
       return true
     }
@@ -1463,20 +1551,23 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     var replacements: [(NSRange, [NSAttributedString.Key: Any])] = []
     tv.attributedString().enumerateAttributes(in: range) { attributes, part, _ in
       if let run = TypographyEngine.spans(
-        from: NSAttributedString(string: "A", attributes: attributes), fallback: fallback
+        from: NSAttributedString(string: "A", attributes: attributes), fallback: fallback, utf16Offset: part.location
       ).first {
         var t = run.typography
         body(&t)
+        var changed = run; changed.typography = t
+        changed = TextStyleCommands.recording(changed, from: run)
         replacements.append(
           (
             part,
             TypographyEngine.attributes(t, size: run.fontSize, color: run.color, millimeters: false,
-              swatchID: run.swatchID)
+              swatchID: run.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
           ))
       }
     }
     tv.textStorage?.beginEditing()
     for (range, attrs) in replacements { tv.textStorage?.setAttributes(attrs, range: range) }
+    if let storage = tv.textStorage { TypographyEngine.updateSpacing(storage, range: range) }
     tv.textStorage?.endEditing()
     tv.didChangeText()
     return true
@@ -1488,10 +1579,19 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard index < (tv.textStorage?.length ?? 0) else { return true }
     let target = NSRange(location: index, length: 1)
     if tv.shouldChangeText(in: target, replacementString: nil) {
-      tv.textStorage?.addAttribute(.kern, value: value, range: target)
+      let attrs = tv.attributedString().attributes(at: index, effectiveRange: nil)
+      let style = TypographyEngine.spans(from: NSAttributedString(string: "A", attributes: attrs), fallback: .init(), utf16Offset: index)[0].typography
+      tv.textStorage?.addAttributes([.kern: style.tracking + value,
+        TypographyEngine.spacingKey: value, TypographyEngine.pairKey: value], range: target)
       tv.didChangeText()
     }
     return true
+  }
+  func manualKerningInspection() -> Double? {
+    guard let tv = textView else { return nil }
+    let index = max(0, tv.selectedRange().location - 1)
+    guard index < (tv.textStorage?.length ?? 0) else { return 0 }
+    return (tv.textStorage?.attribute(TypographyEngine.pairKey, at: index, effectiveRange: nil) as? NSNumber)?.doubleValue ?? 0
   }
   func applyTextSize(_ size: Double) -> Bool {
     guard let tv = textView else { return false }

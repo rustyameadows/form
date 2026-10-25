@@ -45,6 +45,11 @@ struct ArtworkStudio: View {
         }.buttonStyle(.plain).padding(.leading, 12).popover(isPresented: $session.showingPalette) {
           SwatchPalette(session: session)
         }
+        Button { session.showingTextStyles.toggle() } label: {
+          Label("Text styles", systemImage: "textformat.size").font(.system(size: 11))
+        }.buttonStyle(.plain).padding(.leading, 12).sheet(isPresented: $session.showingTextStyles) {
+          TextStylesPanel(session: session)
+        }
         Spacer(minLength: 10)
         if session.previewObject?.recipeID == "sleeve" {
           Picker("View", selection: $session.dieline) {

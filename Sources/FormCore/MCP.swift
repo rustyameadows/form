@@ -198,6 +198,13 @@ public enum MCP {
             "shadow": ["type": ["object", "null"], "properties": ["enabled": ["type": "boolean"], "x": number, "y": number, "blur": number, "color": string, "opacity": number], "additionalProperties": false],
           ], "additionalProperties": false],
         ], required: ["object_id", "element_ids"]),
+      tool("form_text_style",
+        "Manage reusable project typography styles. list is read-only. create/update accepts name, font_size in points, and a partial Typography object (fontName, tracking, leading, paragraph spacing/indents/alignment, features, independent featureSelections, variations, etc.). Styles preserve colors/palette links, frame behavior, and manual pair positions. update changes inherited properties across all users while retaining explicit local overrides. assign/reset/detach target text layers or text within selected groups; an optional UTF-16 location/length targets one text object's characters. Partial ranges keep a separate live paragraph-style link; whole-text assignment includes paragraph formatting. reset removes local overrides; detach/delete preserve appearance. create optionally applies to object_id/element_ids in the same undo step. Generic artwork edits record local property overrides. Shared native Undo and atomic batches.",
+        ["command":["type":"string","enum":["list","create","update","assign","reset","detach","delete"]],
+          "style_id":string,"name":string,"font_size":number,"typography":["type":"object"],
+          "reset_selection":["type":"boolean","description":"With update, reset matching style overrides in object_id/element_ids in the same undo step (native Redefine)."],
+          "object_id":objectID,"element_ids":["type":"array","items":string],
+          "location":["type":"integer"],"length":["type":"integer"]],required:["command"]),
       tool(
         "form_swatch",
         "Manage the project's named sRGB palette. list reads swatches; create/update changes a named color. assign binds artwork fill, stroke, shadow, gradient_stop, background, component_part, or a UTF-16 text_range. Changes update every reference across source documents and physical faces. detach freezes that reference's current appearance; delete freezes all references before removing the color. Instance fill binding is a component override. All mutations share native undo and atomic batches; stored consumer resources are unchanged by palette color updates.",

@@ -336,6 +336,7 @@ struct ArtworkInspector: View {
   var typographyControls: some View {
     VStack(alignment: .leading, spacing: 12) {
       SectionLabel("TYPOGRAPHY")
+      TextStylePicker(session: session)
       FontBrowserButton(session: session)
       if let font = NSFont(name: type.fontName, size: 12), let family = font.familyName {
         Picker(
@@ -399,7 +400,7 @@ struct ArtworkInspector: View {
         Text("Selected characters keep their own fonts, sizes, colors, and spacing.").font(
           .system(size: 9)
         ).foregroundStyle(Palette.secondary)
-        ScalarArtworkField("Pair kerning", value: type.tracking, unit: "pt") {
+        ScalarArtworkField("Pair kerning", value: session.canvas?.manualKerningInspection() ?? 0, unit: "pt") {
           session.manualKerning($0)
         }
       }
