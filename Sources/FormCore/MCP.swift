@@ -317,15 +317,15 @@ public enum MCP {
         ], required: ["operations"]),
       tool(
         "form_open_print",
-        "Open the dedicated native print-preparation window for a selected object or component. Places the real millimeter mesh on the printer bed. Sending and starting prints are disabled.",
+        "Open native print preparation for the current project's selected object/component. Prepares its real millimeter mesh even if it has never been rendered. Project switches dismiss/reset this workspace and stop its active local slice. A different object cannot be selected during a live slice. Sending and starting prints are disabled.",
         ["object_id": objectID]),
       tool(
         "form_get_print_setup",
-        "Read the selected object/component, physical bed fit, printer, filament, slicing settings, engine availability, and live status. No credentials are returned.",
+        "Read current project_id, prepared_project_id, workspace_presented, object/component, physical mesh/bed fit, printer, filament, settings, engine availability, and status. Null preparation fields indicate no object is prepared. Read-only; no credentials are returned.",
         readOnly: true),
       tool(
         "form_set_print_options",
-        "Set native print options. Rotation is {x,y,z} in degrees in printer coordinates (Z up); scalePercent never changes original dimensions. Lamp components: Shade, Stem, Base, Complete object.",
+        "Set native print options with shared Undo/Redo; settings and preview remain synchronized. Rotation is {x,y,z} in printer degrees (Z up); scalePercent never changes original dimensions. Lamp components: Shade, Stem, Base, Complete object. Active slices reject setting edits.",
         [
           "layerHeight": number, "infillPercent": number, "wallLoops": ["type": "integer"],
           "supports": ["type": "boolean"], "brimWidth": number, "scalePercent": number,
@@ -340,7 +340,7 @@ public enum MCP {
       ),
       tool(
         "form_get_slice_status",
-        "Read local slicing progress, errors, output folder, layer count, material and time estimates. Does not contact a printer.",
+        "Read local slicing progress, project/preparation ownership, errors, output folder, layer count, material and time estimates. Late results from an invalidated project/object cannot replace the current preview. Does not contact a printer.",
         readOnly: true),
       tool(
         "form_cancel_slice",

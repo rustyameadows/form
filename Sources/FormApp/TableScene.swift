@@ -459,6 +459,7 @@ private struct RenderSignature: Equatable {
 
 @MainActor final class TableSCNView: SCNView {
   weak var controller: TableSceneController?
+  var onEscape: (() -> Void)?
   private enum DragAction { case orbit, pan, move }
   private var action: DragAction = .orbit
   private var previous = NSPoint.zero
@@ -593,6 +594,7 @@ private struct RenderSignature: Equatable {
     controller?.store?.cameraChanged()
   }
   override func keyDown(with event: NSEvent) {
+    if event.keyCode == 53, let onEscape { onEscape(); return }
     if event.keyCode == 49 {
       if !spaceHeld {
         spaceHeld = true

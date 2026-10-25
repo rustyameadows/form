@@ -8,6 +8,12 @@ struct PrintWorkspace: View {
   @Environment(\.dismiss) var dismiss
   @ObservedObject var printing: PrintCoordinator
   @State private var settings = false
+  private func setting<Value>(_ path: WritableKeyPath<PrintConfiguration, Value>) -> Binding<Value>
+  {
+    Binding(
+      get: { printing.configuration[keyPath: path] },
+      set: { value in printing.updateConfiguration { $0[keyPath: path] = value } })
+  }
   var body: some View {
     VStack(spacing: 0) {
       HStack(spacing: 14) {
@@ -27,7 +33,7 @@ struct PrintWorkspace: View {
         } label: {
           Image(systemName: "slider.horizontal.3")
         }.buttonStyle(.plain).help("Filaments, printers & slicing engine")
-        Button("Done") { dismiss() }.keyboardShortcut(.defaultAction)
+        Button("Done") { dismiss() }.keyboardShortcut(.cancelAction)
       }.padding(.horizontal, 25).frame(height: 76)
       Divider()
       HStack(spacing: 0) {
@@ -89,12 +95,13 @@ struct PrintWorkspace: View {
               selection: Binding(
                 get: { printing.objectID }, set: { if let id = $0 { printing.chooseObject(id) } })
             ) {
+              Text("Choose an object").tag(Optional<UUID>.none)
               ForEach(store.project?.objects ?? []) { object in
                 Text(object.name).tag(Optional(object.id))
               }
             }.labelsHidden().frame(maxWidth: .infinity)
             if printing.components.count > 1 {
-              Picker("Component", selection: $printing.configuration.component) {
+              Picker("Component", selection: setting(\.component)) {
                 ForEach(printing.components, id: \.self) { Text($0) }
               }.font(.system(size: 11))
             }
@@ -106,9 +113,7 @@ struct PrintWorkspace: View {
             SectionLabel("PRINTER & FILAMENT")
             Picker(
               "Printer",
-              selection: Binding(
-                get: { printing.configuration.printerID },
-                set: { printing.configuration.printerID = $0 })
+              selection: setting(\.printerID)
             ) { ForEach(store.library.printers) { Text($0.name).tag(Optional($0.id)) } }
             .labelsHidden()
             HStack {
@@ -116,9 +121,7 @@ struct PrintWorkspace: View {
                 width: 15, height: 15)
               Picker(
                 "Filament",
-                selection: Binding(
-                  get: { printing.configuration.filamentID },
-                  set: { printing.configuration.filamentID = $0 })
+                selection: setting(\.filamentID)
               ) { ForEach(store.library.filaments) { Text($0.name).tag(Optional($0.id)) } }
               .labelsHidden()
             }
@@ -131,35 +134,39 @@ struct PrintWorkspace: View {
             Divider()
             SectionLabel("SLICE SETTINGS")
             PrintNumber(
-              "Layer height", value: $printing.configuration.layerHeight, unit: "mm",
+              "Layer height", value: setting(\.layerHeight), unit: "mm",
               range: 0.04...(printing.printer.nozzleDiameter * 0.8))
             PrintNumber(
-              "Infill", value: $printing.configuration.infillPercent, unit: "%", range: 0...100)
+              "Infill", value: setting(\.infillPercent), unit: "%", range: 0...100)
             Stepper(
               "Walls: \(printing.configuration.wallLoops)",
-              value: $printing.configuration.wallLoops, in: 1...12
+              value: setting(\.wallLoops), in: 1...12
             ).font(.system(size: 11))
-            Toggle("Generate supports", isOn: $printing.configuration.supports).font(
+            Toggle("Generate supports", isOn: setting(\.supports)).font(
               .system(size: 11)
             ).toggleStyle(.switch).controlSize(.mini)
             PrintNumber(
-              "Brim width", value: $printing.configuration.brimWidth, unit: "mm", range: 0...30)
+              "Brim width", value: setting(\.brimWidth), unit: "mm", range: 0...30)
             Divider()
             SectionLabel("ORIENTATION & SCALE")
             PrintNumber(
-              "Scale", value: $printing.configuration.scalePercent, unit: "%", range: 1...1000)
+              "Scale", value: setting(\.scalePercent), unit: "%", range: 1...1000)
             HStack(spacing: 7) {
               ForEach(["X", "Y", "Z"], id: \.self) { axis in
                 Button("\(axis) +90°") {
-                  if axis == "X" { printing.configuration.rotation.x += 90 }
-                  if axis == "Y" { printing.configuration.rotation.y += 90 }
-                  if axis == "Z" { printing.configuration.rotation.z += 90 }
+                  printing.updateConfiguration {
+                    if axis == "X" { $0.rotation.x += 90 }
+                    if axis == "Y" { $0.rotation.y += 90 }
+                    if axis == "Z" { $0.rotation.z += 90 }
+                  }
                 }.font(.system(size: 10))
               }
             }
             Button("Reset orientation") {
-              printing.configuration.rotation = .init()
-              printing.configuration.scalePercent = 100
+              printing.updateConfiguration {
+                $0.rotation = .init()
+                $0.scalePercent = 100
+              }
             }.buttonStyle(.plain).font(.system(size: 10)).foregroundStyle(Palette.secondary)
             if let error = printing.validationError {
               Label(error, systemImage: "exclamationmark.circle").font(.system(size: 11))
@@ -223,10 +230,7 @@ struct PrintWorkspace: View {
       .sheet(isPresented: $settings) {
         PrintingSettingsView(printing: printing).environmentObject(store)
       }
-      .onChange(of: printing.configuration) { _, _ in
-        if !printing.busy { printing.prepare(persist: true) }
-      }
-      .onChange(of: store.library) { _, _ in if !printing.busy { printing.prepare() } }
+      .onChange(of: store.library) { _, _ in printing.reconcile() }
   }
 }
 
@@ -251,6 +255,7 @@ struct PrintNumber: View {
           get: { value }, set: { value = min(range.upperBound, max(range.lowerBound, $0)) }),
         format: .number.precision(.fractionLength(0...2))
       ).multilineTextAlignment(.trailing).frame(width: 65).textFieldStyle(.roundedBorder)
+        .onSubmit { NSApp.keyWindow?.makeFirstResponder(nil) }
       Text(unit).foregroundStyle(Palette.secondary).fixedSize().frame(
         minWidth: 21, alignment: .leading)
     }.font(.system(size: 11))
@@ -262,6 +267,7 @@ struct PrintBedCanvas: NSViewRepresentable {
   func makeCoordinator() -> BedRenderer { BedRenderer() }
   func makeNSView(context: Context) -> TableSCNView {
     let view = TableSCNView(frame: .zero)
+    view.onEscape = { [weak printing] in printing?.store?.showingPrint = false }
     view.controller = context.coordinator.controller
     context.coordinator.controller.view = view
     view.scene = context.coordinator.controller.scene

@@ -3,6 +3,7 @@ import FormCore
 import SceneKit
 
 @MainActor enum PrintMeshBuilder {
+  private static let preparationRenderer = SCNRenderer(device: nil, options: nil)
   static func mesh(
     object: ProductObject, project: Project, assets: URL, configuration: PrintConfiguration
   ) throws -> PrintMesh {
@@ -27,9 +28,19 @@ import SceneKit
     var triangles: [MeshTriangle] = []
     var failure: Error?
     root.enumerateChildNodes { node, stop in
-      guard let geometry = node.geometry, !(geometry is SCNPlane),
+      guard let original = node.geometry, !(original is SCNPlane) else { return }
+      // Parametric primitives can initially expose a unit placeholder mesh.
+      // Explicit preparation bakes their dimensions and chamfers even when the
+      // object has never appeared in a rendered view. STL needs no materials.
+      let geometry = original.copy() as! SCNGeometry
+      geometry.materials = []
+      guard preparationRenderer.prepare(geometry, shouldAbortBlock: nil),
         let source = geometry.sources(for: .vertex).first
-      else { return }
+      else {
+        failure = FormError.invalid("Could not prepare the object's mesh for export.")
+        stop.pointee = true
+        return
+      }
       guard source.usesFloatComponents, [4, 8].contains(source.bytesPerComponent),
         source.componentsPerVector >= 3
       else {

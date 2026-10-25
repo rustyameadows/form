@@ -75,13 +75,13 @@ enum TableTool: String, CaseIterable {
   var primary: ProductObject? { selected.first }
   var materials: [FormCore.Material] { library.materials + (project?.materials ?? []) }
 
-  private init() {
+  init(repository suppliedRepository: ProjectRepository? = nil, seedLibrary: Bool = true) {
     do {
-      repository = try ProjectRepository()
+      repository = try suppliedRepository ?? ProjectRepository()
       engine = OperationEngine(repository: repository)
       library = StudioLibrary.load(from: repository.root)
       try library.save(to: repository.root)
-      try repository.seedIfEmpty()
+      if seedLibrary { try repository.seedIfEmpty() }
       projects = try repository.list()
     } catch { fatalError("FORM could not open its project library: \(error.localizedDescription)") }
     engine.onView = { [weak self] view, args in
@@ -107,6 +107,10 @@ enum TableTool: String, CaseIterable {
       for e in art.elements where ids.contains(e.id) && e.visibleStroke != nil { _ = try VectorGeometry.expandedStroke(e) }
     }
     engine.onProjectWillChange = { [weak self] in self?.finishArtworkEditing() }
+    engine.onProjectDidChange = { [weak self] in
+      self?.printing.resetForProjectChange()
+      self?.showingPrint = false
+    }
   }
   func finishArtworkEditing() {
     artworkSession.croppingImageID = nil
@@ -175,6 +179,7 @@ enum TableTool: String, CaseIterable {
     engine.selection.formIntersection(ids)
     let visible = isolated.intersection(ids)
     if visible != isolated { isolated = visible }
+    printing.reconcile()
     revision &+= 1
     if save { scheduleSave() }
   }
@@ -392,9 +397,11 @@ enum TableTool: String, CaseIterable {
     case "fit": scene?.fitAll()
     case "perspective", "overhead", "front": scene?.preset(view)
     case "print_bed":
+      if printing.object == nil { printing.open() }
       showingPrint = true
       printing.frame("bed")
     case "print_object":
+      if printing.object == nil { printing.open() }
       showingPrint = true
       printing.frame("object")
     default: throw FormError.invalid("Unknown view.")

@@ -10,6 +10,12 @@ Choose a complete object or a lamp's separate shade, stem, or base. The print tr
 
 Choose a saved printer and filament, then set layer height, infill percentage, wall count, supports, and brim. **Slice & preview** runs Orca locally in the background. The resulting layer slider shows extrusion paths, including interpolated arc previews, with time and filament estimates. Preview detail is bounded to 200,000 segments; this limit does not modify the actual G-code. Jobs can be cancelled.
 
+Print preparation belongs to its project and object. A successful project switch closes the sheet, stops its active local slice, and clears the mesh, layers, estimates, files link, and camera request. Late results cannot replace the new workspace. Failed project opens preserve the active preparation. Completed and cancelled job files remain under their original project.
+
+Changes to printable geometry, recipes, or relevant print settings invalidate the previous slice and refresh the mesh. Object placement, names, and colors do not restart preparation. Removing the selected object clears its preview and exposes **Choose an object**. An empty project has no exportable mesh or stale results.
+
+Settings participate in document Undo/Redo; the controls, saved per-object configuration, and mesh stay synchronized. Saved component choices, including **Complete object**, survive reopening and object selection. Return commits numeric input without closing the sheet. Done or Escape closes it; **Cancel** stops active local slicing.
+
 Each preparation is saved inside the project:
 
 ```text
@@ -74,7 +80,18 @@ The native workflow is available through `form_open_print`, `form_get_print_setu
 {"name":"form_slice","arguments":{}}
 ```
 
-Poll `form_get_slice_status` until `busy` is false, then inspect `validation_error`, outputs, layers, and estimates. `form_set_view` accepts `print_bed` and `print_object` for camera framing.
+Poll `form_get_slice_status` until `busy` is false, then inspect `validation_error`, outputs, layers, and estimates. Status includes current `project_id`, `prepared_project_id`, and `workspace_presented`; null preparation fields mean no object is prepared. Switching projects invalidates the old job. Active slices reject requests to choose another object or edit their settings. `form_set_view` accepts `print_bed` and `print_object` for camera framing.
+
+## Mesh extraction and regression workflow
+
+STL extraction explicitly prepares SceneKit geometry before reading vertices. This bakes parametric dimensions and chamfers even for an object never displayed in a viewport. Materials are excluded from this preparation. Printer-axis rotation and scale then apply once to the resulting triangles. The implementation uses Apple's [geometry preparation API](https://developer.apple.com/documentation/scenekit/scnscenerenderer/prepare(_:shouldabortblock:)), which prepares vertex resources as well as materials.
+
+```sh
+FORM_LIBRARY_PATH="$PWD/.local/PrintLifecycleLibrary" build/FORM.app/Contents/MacOS/FORM
+python3 scripts/smoke_print_lifecycle.py
+```
+
+The workflow performs an actual local rounded-block slice, verifies binary STL dimensions, switches completed and running preparations across projects, confirms the owned Orca process exits, checks that late results cannot replace a fresh preview, verifies failed-open preservation and setting/geometry Undo, and checks project-scoped output directories. Native computer use additionally validates sheet dismissal/reopening, Return, Undo/Redo, Cancel, the empty state, and actual camera drags/scrolling. Direct app tests use temporary injected libraries and cover deterministic completion races without a printer. See [validation evidence](validation.md).
 
 ## Primary implementation references
 

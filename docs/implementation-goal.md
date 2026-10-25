@@ -21,7 +21,7 @@ The goal service currently permits status changes but cannot rewrite the text of
 - [x] Persistent Studio filament library; local printer profiles; Keychain credential storage; read-only TLS/MQTT status adapter.
 - [x] Real official OrcaSlicer 2.4.2 slice yielding STL, G-code, sliced 3MF, layer preview, and estimates; no printer commands sent.
 - [ ] Verify the physical P1S status connection when its IP, serial, and locally entered access code are available.
-- [ ] Clear or refresh an open Print preview when switching projects, including an in-progress local slice. Native regression review exposed stale mesh/object state after a project switch.
+- [x] Clear an open Print preview on successful project switches, cancel its active local slice, reject late results, and synchronize settings/mesh through Undo/Redo. Direct app tests, real Orca workflows, and native computer use verify the lifecycle.
 - [ ] Complete the remaining original-brief physical design workflows; evaluate the 3D environment with the new linked artwork demonstrations.
 
 ### B. Credible professional 2D canvas — specification Phase 1

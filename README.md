@@ -38,7 +38,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Typography:** Installed-font browser, native selected-character editing, real OpenType features and variable axes, Core Text shaping, and editable glyph outlines with retained source text. See the [editor guide and remaining scope](docs/2d-editor.md).
 - **Iterations and variants:** Independent design iterations or linked parameter/artwork variants with their own materials and placement.
 - **Studio Library:** Persistent materials and equipment profiles, separate from individual projects.
-- **Print preparation:** `⌘P` opens a dedicated physical print bed with object/component selection, orientation, scale, filament, layer height, walls, infill, supports, brim, and actual sliced layer previews.
+- **Print preparation:** `⌘P` opens a dedicated physical print bed with object/component selection, orientation, scale, filament, layer height, walls, infill, supports, brim, and actual sliced layer previews. Project switches cancel local work and clear stale previews; settings and mesh share Undo/Redo.
 - **Filaments and local printers:** Studio settings preserve spool profiles, colors, temperatures, flow, density, cost, and remaining inventory. P1S connection settings use Keychain for the LAN code and a read-only TLS/MQTT status adapter. Sending or starting prints is disabled.
 - **Rendering and making:** Studio backgrounds, camera framing, 3000 × 2000 PNG, physically sized PDF artwork, millimeter SVG dielines, and component/material JSON.
 - **Project knowledge:** Editable design decisions and open questions, saved activity history, optional Codex conversation references, and undo/redo across native and MCP edits.
@@ -112,6 +112,7 @@ python3 scripts/smoke_images.py # Original images, crop/adjustments, physical DP
 python3 scripts/smoke_paths.py # Curve editing, transformed type, and linked variants
 python3 scripts/smoke_clock.py --slice # Shared dial, immutable source links, physical exports, local Orca
 python3 scripts/benchmark_artwork.py # 600-element native canvas performance
+python3 scripts/smoke_print_lifecycle.py # Project scope, local-worker cancellation, unseen mesh dimensions, Undo/Redo
 python3 scripts/smoke_print.py # Optional engine; local cube and hollow-shade slices
 ```
 

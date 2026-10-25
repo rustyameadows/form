@@ -14,6 +14,7 @@ public final class OperationEngine {
   public var onGraphics: ((String, [String: Any]) throws -> Any)?
   public var onValidatePaint: ((Project, UUID, Set<UUID>) throws -> Void)?
   public var onProjectWillChange: (() -> Void)?
+  public var onProjectDidChange: (() -> Void)?
   private var interaction: String?
   private var interactionSnapshot: (project: Project, undo: [Project], redo: [Project])?
   private var lastCoalesce: String?
@@ -29,6 +30,7 @@ public final class OperationEngine {
     undoStack = []
     redoStack = []
     lastCoalesce = nil
+    onProjectDidChange?()
   }
   public func flush() throws { if let project { try repository.save(project) } }
   public func edit(
@@ -155,6 +157,7 @@ public final class OperationEngine {
       selection = []
       undoStack = []
       redoStack = []
+      onProjectDidChange?()
       return try jsonObject(new)
     case "form_open_project":
       guard let id = UUID(uuidString: try string("project_id")) else {

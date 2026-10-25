@@ -198,7 +198,7 @@ struct PrinterSettingsPanel: View {
         Button("Save printer") { save() }
         Button("Test local connection") {
           if save() {
-            printing.configuration.printerID = draft.id
+            printing.updateConfiguration { $0.printerID = draft.id }
             printing.connectPrinter()
           }
         }
@@ -229,7 +229,7 @@ struct PrinterSettingsPanel: View {
           Button("Trust this certificate & reconnect") {
             draft.trustedCertificateSHA256 = fingerprint
             if save() {
-              printing.configuration.printerID = draft.id
+              printing.updateConfiguration { $0.printerID = draft.id }
               printing.connectPrinter()
             }
           }.font(.system(size: 11))

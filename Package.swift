@@ -16,6 +16,7 @@ let package = Package(
     .executableTarget(name: "FormApp", dependencies: ["FormCore", "FormGraphics"]),
     .executableTarget(name: "FormMCP", dependencies: ["FormCore"]),
     .testTarget(name: "FormCoreTests", dependencies: ["FormCore", "FormGraphics"]),
+    .testTarget(name: "FormAppTests", dependencies: ["FormApp", "FormCore"]),
   ],
   swiftLanguageModes: [.v5]
 )
