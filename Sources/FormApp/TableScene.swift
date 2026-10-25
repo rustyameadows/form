@@ -1,6 +1,7 @@
 import AppKit
 import CryptoKit
 import FormCore
+import FormGraphics
 import Metal
 import SceneKit
 import SwiftUI
@@ -255,13 +256,8 @@ private struct RenderSignature: Equatable {
     SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
     cameraNode.camera?.usesOrthographicProjection = camera.projection == "orthographic"
     cameraNode.camera?.orthographicScale = camera.distance * CameraFraming.orthographicFactor
-    let target = v(camera.target.x, camera.target.y, camera.target.z)
-    let elevation = min(max(camera.elevation, 0.04), .pi / 2 - 0.001)
-    cameraNode.position = v(
-      camera.target.x + camera.distance * cos(elevation) * sin(camera.azimuth),
-      camera.target.y + camera.distance * sin(elevation),
-      camera.target.z + camera.distance * cos(elevation) * cos(camera.azimuth))
-    cameraNode.look(at: target)
+    SceneCamera.position(cameraNode, using: camera)
+    floorNode.isHidden = cameraNode.position.y < 0
     SCNTransaction.commit()
     view?.needsDisplay = true
     if let projectID, store?.engine.project?.id == projectID {
@@ -275,21 +271,19 @@ private struct RenderSignature: Equatable {
     }
   }
   func orbit(dx: CGFloat, dy: CGFloat) {
-    camera.projection = "perspective"
-    camera.azimuth -= Double(dx) * 0.007
-    camera.elevation = min(max(camera.elevation + Double(dy) * 0.006, 0.05), 1.55)
+    camera = CameraNavigation.orbited(
+      camera, dx: Double(dx), dy: Double(dy), viewportHeight: Double(view?.bounds.height ?? 700))
     updateCamera()
   }
   func zoom(_ delta: Double) {
-    camera.distance = min(max(camera.distance * exp(delta * 0.008), 1), 300)
+    camera = CameraNavigation.zoomed(camera, delta: delta)
     updateCamera()
+    store?.cameraChanged()
   }
   func pan(dx: CGFloat, dy: CGFloat) {
-    let scale = camera.distance * 0.0013
-    let x = Double(dx) * scale
-    let y = Double(dy) * scale
-    camera.target.x -= x * cos(camera.azimuth) + y * sin(camera.azimuth)
-    camera.target.z += x * sin(camera.azimuth) - y * cos(camera.azimuth)
+    camera = CameraNavigation.panned(
+      camera, dx: Double(dx), dy: Double(dy), viewportHeight: Double(view?.bounds.height ?? 700),
+      fieldOfView: Double(cameraNode.camera?.fieldOfView ?? 39))
     updateCamera()
   }
   func preset(_ name: String) {
@@ -308,14 +302,18 @@ private struct RenderSignature: Equatable {
       camera.projection = "perspective"
     }
     updateCamera(animated: true)
-    store?.changed(save: false)
+    store?.cameraChanged()
   }
   func fitAll() {
     let isolated = store?.isolated ?? []
     frame(ids: Set(nodes.keys.filter { isolated.isEmpty || isolated.contains($0) }))
+    store?.cameraChanged()
   }
   func focusSelection() {
-    if let selection = store?.engine.selection, !selection.isEmpty { frame(ids: selection) }
+    if let selection = store?.engine.selection, !selection.isEmpty {
+      frame(ids: selection)
+      store?.cameraChanged()
+    }
   }
   private func frame(ids: Set<UUID>, aspect: Double? = nil, animated: Bool = true) {
     var points: [Vector3] = []
@@ -452,34 +450,43 @@ private struct RenderSignature: Equatable {
 
 @MainActor final class TableSCNView: SCNView {
   weak var controller: TableSceneController?
+  private enum DragAction { case orbit, pan, move }
+  private var action: DragAction = .orbit
   private var previous = NSPoint.zero
   private var down = NSPoint.zero
   private var dragOrigin: Vector3?
   private var objectPositions: [UUID: Vector3] = [:]
-  private var moving = false
+  private var dragged = false
   private var spaceHeld = false
   override var acceptsFirstResponder: Bool { true }
+  override func resetCursorRects() {
+    addCursorRect(bounds, cursor: controller?.store?.tableTool == .move ? .arrow : .openHand)
+  }
+
   override func mouseDown(with event: NSEvent) {
     window?.makeFirstResponder(self)
     previous = convert(event.locationInWindow, from: nil)
     down = previous
-    guard let controller, let store = controller.store else { return }
-    if spaceHeld || event.modifierFlags.contains(.option) {
-      moving = false
+    dragged = false
+    dragOrigin = nil
+    objectPositions = [:]
+    guard let controller else { return }
+    let tool = controller.store?.tableTool ?? .orbit
+    if spaceHeld || event.modifierFlags.contains(.option) || tool == .pan {
+      action = .pan
       return
     }
-    if let id = controller.objectID(at: previous) {
+    action = .orbit
+    if tool == .move, let store = controller.store,
+      let id = controller.objectID(at: previous)
+    {
       if !store.engine.selection.contains(id) || event.modifierFlags.contains(.shift) {
         store.select(id, extending: event.modifierFlags.contains(.shift))
       }
-      if event.clickCount == 2 { controller.focusSelection() }
-      moving = true
+      action = .move
       objectPositions = Dictionary(
         uniqueKeysWithValues: store.selected.filter { !$0.locked }.map { ($0.id, $0.position) })
       dragOrigin = controller.pointOnTable(previous, height: store.primary?.position.y ?? 0)
-    } else {
-      store.select(nil, extending: event.modifierFlags.contains(.shift))
-      moving = false
     }
   }
   override func mouseDragged(with event: NSEvent) {
@@ -488,13 +495,17 @@ private struct RenderSignature: Equatable {
     let dy = point.y - previous.y
     defer { previous = point }
     guard let controller else { return }
-    if spaceHeld || event.modifierFlags.contains(.option) {
-      controller.pan(dx: dx, dy: dy)
-      return
-    }
-    if moving, hypot(point.x - down.x, point.y - down.y) > 3, let origin = dragOrigin,
-      let now = controller.pointOnTable(point, height: origin.y), let store = controller.store
-    {
+    dragged = dragged || hypot(point.x - down.x, point.y - down.y) > 3
+    guard dragged else { return }
+    let precision: CGFloat = event.modifierFlags.contains(.shift) ? 0.25 : 1
+    switch action {
+    case .pan: controller.pan(dx: dx * precision, dy: dy * precision)
+    case .orbit: controller.orbit(dx: dx * precision, dy: dy * precision)
+    case .move:
+      guard let origin = dragOrigin,
+        let now = controller.pointOnTable(point, height: origin.y), let store = controller.store,
+        !objectPositions.isEmpty
+      else { return }
       let snap = event.modifierFlags.contains(.shift) ? 10.0 : 1.0
       store.edit("Moved objects", coalescing: "move-selection") { p in
         for i in p.objects.indices {
@@ -504,36 +515,73 @@ private struct RenderSignature: Equatable {
           }
         }
       }
-    } else if !moving {
-      controller.orbit(dx: dx, dy: dy)
     }
   }
   override func mouseUp(with event: NSEvent) {
-    moving = false
+    if !dragged, action != .pan, let controller, let store = controller.store {
+      let point = convert(event.locationInWindow, from: nil)
+      if action != .move {
+        store.select(
+          controller.objectID(at: point), extending: event.modifierFlags.contains(.shift))
+      }
+      if event.clickCount == 2 { controller.focusSelection() }
+    }
     dragOrigin = nil
+    objectPositions = [:]
     controller?.store?.changed()
   }
   override func rightMouseDown(with event: NSEvent) {
+    window?.makeFirstResponder(self)
     previous = convert(event.locationInWindow, from: nil)
   }
   override func rightMouseDragged(with event: NSEvent) {
     let point = convert(event.locationInWindow, from: nil)
-    controller?.orbit(dx: point.x - previous.x, dy: point.y - previous.y)
+    let precision: CGFloat = event.modifierFlags.contains(.shift) ? 0.25 : 1
+    controller?.orbit(
+      dx: (point.x - previous.x) * precision, dy: (point.y - previous.y) * precision)
     previous = point
+  }
+  override func rightMouseUp(with event: NSEvent) { controller?.store?.cameraChanged() }
+  override func otherMouseDown(with event: NSEvent) {
+    if event.buttonNumber == 2 {
+      window?.makeFirstResponder(self)
+      previous = convert(event.locationInWindow, from: nil)
+    } else {
+      super.otherMouseDown(with: event)
+    }
+  }
+  override func otherMouseDragged(with event: NSEvent) {
+    guard event.buttonNumber == 2 else {
+      super.otherMouseDragged(with: event)
+      return
+    }
+    let point = convert(event.locationInWindow, from: nil)
+    let precision: CGFloat = event.modifierFlags.contains(.shift) ? 0.25 : 1
+    controller?.pan(dx: (point.x - previous.x) * precision, dy: (point.y - previous.y) * precision)
+    previous = point
+  }
+  override func otherMouseUp(with event: NSEvent) {
+    if event.buttonNumber == 2 {
+      controller?.store?.cameraChanged()
+    } else {
+      super.otherMouseUp(with: event)
+    }
   }
   override func scrollWheel(with event: NSEvent) {
     if event.modifierFlags.contains(.option) {
-      controller?.pan(dx: event.scrollingDeltaX, dy: -event.scrollingDeltaY)
+      controller?.pan(dx: event.scrollingDeltaX, dy: event.scrollingDeltaY)
+      controller?.store?.cameraChanged()
     } else {
-      controller?.zoom(Double(event.scrollingDeltaY))
+      let precision = event.hasPreciseScrollingDeltas ? 0.35 : 1.0
+      controller?.zoom(-Double(event.scrollingDeltaY) * precision)
     }
-    controller?.store?.changed(save: false)
   }
   override func magnify(with event: NSEvent) {
     controller?.zoom(-Double(event.magnification) * 100)
   }
   override func rotate(with event: NSEvent) {
     controller?.orbit(dx: CGFloat(event.rotation) * 2, dy: 0)
+    controller?.store?.cameraChanged()
   }
   override func keyDown(with event: NSEvent) {
     if event.keyCode == 49 {
@@ -552,6 +600,9 @@ private struct RenderSignature: Equatable {
       }
     } else if !event.modifierFlags.contains(.command), !event.modifierFlags.contains(.control) {
       switch event.charactersIgnoringModifiers?.lowercased() {
+      case "o": controller?.store?.setTableTool(.orbit)
+      case "h": controller?.store?.setTableTool(.pan)
+      case "v": controller?.store?.setTableTool(.move)
       case "f": controller?.focusSelection()
       case "i": controller?.store?.isolate()
       case "1": controller?.preset("perspective")
@@ -564,13 +615,18 @@ private struct RenderSignature: Equatable {
       super.keyDown(with: event)
     }
   }
-  override func keyUp(with event: NSEvent) {
-    if event.keyCode == 49 && spaceHeld {
+  private func releaseSpace() {
+    if spaceHeld {
       spaceHeld = false
       NSCursor.pop()
-    } else {
-      super.keyUp(with: event)
     }
+  }
+  override func resignFirstResponder() -> Bool {
+    releaseSpace()
+    return super.resignFirstResponder()
+  }
+  override func keyUp(with event: NSEvent) {
+    if event.keyCode == 49 { releaseSpace() } else { super.keyUp(with: event) }
   }
 }
 

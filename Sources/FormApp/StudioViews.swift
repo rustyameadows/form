@@ -369,7 +369,7 @@ struct WorkspaceView: View {
               Text(
                 store.mode == .studio
                   ? "A different light. The same objects."
-                  : "Drag to orbit  ·  Scroll to zoom  ·  Space + drag to pan"
+                  : store.tableTool.hint
               ).font(.system(size: 10)).foregroundStyle(Palette.secondary).padding(.bottom, 14)
             }
           }.padding(.horizontal, 24).padding(.bottom, 18)
@@ -432,6 +432,21 @@ struct CameraControls: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
     HStack(spacing: 3) {
+      ForEach(TableTool.allCases, id: \.self) { tool in
+        Button {
+          store.setTableTool(tool)
+        } label: {
+          Label(tool.rawValue, systemImage: tool.symbol)
+            .font(.system(size: 11, weight: .medium)).padding(.horizontal, 9).frame(height: 32)
+            .foregroundStyle(store.tableTool == tool ? Palette.ink : Palette.secondary)
+            .background(
+              store.tableTool == tool ? Color.white.opacity(0.9) : .clear,
+              in: RoundedRectangle(cornerRadius: 8))
+        }.buttonStyle(.plain).help("\(tool.rawValue) · \(tool.shortcut)")
+          .accessibilityLabel("\(tool.rawValue) tool · \(tool.shortcut)")
+          .accessibilityValue(store.tableTool == tool ? "Selected" : "")
+      }
+      Rectangle().fill(Palette.line).frame(width: 1, height: 20).padding(.horizontal, 5)
       Menu {
         Button("Perspective · 1") { store.scene?.preset("perspective") }
         Button("Overhead · 2") { store.scene?.preset("overhead") }
@@ -445,6 +460,9 @@ struct CameraControls: View {
       IconButton("Fit all · ⌘0", symbol: "arrow.up.left.and.arrow.down.right") {
         store.scene?.fitAll()
       }
+      IconButton("Focus selection · F", symbol: "viewfinder") {
+        store.scene?.focusSelection()
+      }.disabled(store.selected.isEmpty)
       IconButton("Toggle 100 mm grid", symbol: "grid") { store.showGrid.toggle() }
     }.padding(6).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 13)).overlay(
       RoundedRectangle(cornerRadius: 13).strokeBorder(.white.opacity(0.75))

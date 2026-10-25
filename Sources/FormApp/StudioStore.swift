@@ -9,6 +9,33 @@ enum WorkspaceMode: String, CaseIterable {
   case studio = "Studio"
 }
 
+enum TableTool: String, CaseIterable {
+  case orbit = "Orbit"
+  case pan = "Pan"
+  case move = "Move"
+  var symbol: String {
+    switch self {
+    case .orbit: return "rotate.3d"
+    case .pan: return "hand.draw"
+    case .move: return "cursorarrow"
+    }
+  }
+  var shortcut: String {
+    switch self {
+    case .orbit: return "O"
+    case .pan: return "H"
+    case .move: return "V"
+    }
+  }
+  var hint: String {
+    switch self {
+    case .orbit: return "Drag to orbit · Click to select · Space-drag to pan"
+    case .pan: return "Drag to pan · O to orbit · Scroll up to zoom in"
+    case .move: return "Drag objects to move · Drag empty space to orbit · Space-drag to pan"
+    }
+  }
+}
+
 @MainActor final class StudioStore: ObservableObject {
   static let shared = StudioStore()
   let repository: ProjectRepository
@@ -25,6 +52,7 @@ enum WorkspaceMode: String, CaseIterable {
   @Published var showingBridge = false
   @Published var showingPrint = false
   @Published var showGrid = false
+  @Published var tableTool: TableTool = .orbit
   @Published var isolated: Set<UUID> = []
   @Published var studioPreset = "Daylight"
   @Published var previewVersion = 0
@@ -131,12 +159,24 @@ enum WorkspaceMode: String, CaseIterable {
     let visible = isolated.intersection(ids)
     if visible != isolated { isolated = visible }
     revision &+= 1
-    if save {
-      saving = true
-      saveWork?.cancel()
-      let item = DispatchWorkItem { [weak self] in self?.save() }
-      saveWork = item
-      DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: item)
+    if save { scheduleSave() }
+  }
+  func cameraChanged() {
+    guard project != nil else { return }
+    scheduleSave()
+  }
+  private func scheduleSave() {
+    if !saving { saving = true }
+    saveWork?.cancel()
+    let item = DispatchWorkItem { [weak self] in self?.save() }
+    saveWork = item
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: item)
+  }
+  func setTableTool(_ tool: TableTool) {
+    tableTool = tool
+    if let view = scene?.view {
+      view.window?.makeFirstResponder(view)
+      view.window?.invalidateCursorRects(for: view)
     }
   }
   func save() {

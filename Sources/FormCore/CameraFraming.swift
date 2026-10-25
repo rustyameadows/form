@@ -28,14 +28,14 @@ public enum CameraFraming {
     result.viewportAspect = aspect
     // Near-pole SceneKit look-at rotations lose a little precision in their float matrices.
     let padding = (margin.isFinite ? max(1, margin) : 1.2) * 1.002
-    let elevation = min(max(camera.elevation, 0.04), .pi / 2 - 0.001)
+    let elevation = CameraNavigation.elevation(camera.elevation)
     let a = camera.azimuth
     let n = Vector3(cos(elevation) * sin(a), sin(elevation), cos(elevation) * cos(a))
     let right = Vector3(cos(a), 0, -sin(a))
     let up = Vector3(-sin(elevation) * sin(a), cos(elevation), -sin(elevation) * cos(a))
     let angle = fieldOfView.isFinite ? min(150, max(5, fieldOfView)) : 39
     let tangent = tan(angle * .pi / 360)
-    var distance = 1.0
+    var distance = CameraNavigation.minimumDistance
     for point in points {
       let d = Vector3(
         point.x - result.target.x, point.y - result.target.y, point.z - result.target.z)

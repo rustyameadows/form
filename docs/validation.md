@@ -7,7 +7,7 @@ This is a tested foundation, **not completion of the expanded professional 2D sp
 ## Build and domain tests
 
 - Debug and optimized app builds succeeded; the app bundle contains the native executable, custom icon, Info.plist, and stdio MCP executable and is ad hoc signed.
-- `bash scripts/test.sh`: **69 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, shared artwork source graphs, atomic batch rollback, undo/redo, immutable package round trips, typography/outline alignment, actual SceneKit camera projections, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, and absence of hardware command tools.
+- `bash scripts/test.sh`: **74 tests passed, zero failures**. Coverage includes arithmetic parsing, parameter constraints, invalid-edit immutability, linked variants versus independent iterations, shared artwork source graphs, atomic batch rollback, undo/redo, immutable package round trips, typography/outline alignment, actual SceneKit camera projections, recipe validation, imported assets, artwork validation, JSON-RPC behavior, Unix-socket transport, hundreds of objects, binary STL records, physical bed/exclusion checks, relative extrusion/layers/arcs, fragmented MQTT frames, library migration, filament limits, and absence of hardware command tools.
 - No model/API credentials or third-party Swift packages are required.
 
 ## Real MCP and persistence
@@ -143,3 +143,22 @@ python3 scripts/benchmark.py
 ```
 
 These scripts create named validation projects in the running app's library. Use the isolated development library to keep ordinary projects tidy. Reports and outputs are written to `.local/validation`.
+
+
+## Native camera control pass — October 24, 2026
+
+Camera navigation was tested through computer use with actual mouse drags and wheel input in the native app. Local MCP only observed state; it did not generate these camera movements. Testing used an isolated `CameraLibrary`, then restored the ordinary library and verified that Sun studies' six objects, artwork, recipes, materials, notes, and history were unchanged.
+
+The original wheel-up gesture zoomed out, vertical orbit and pan were inconsistent, and sequential look-at updates accumulated roll. A small SceneKit reproduction measured a camera right-vector Y component of 0.188 after two orbit changes; fixed world-up reduced it to 0.00000154. The new repeated-update test checks 1,200 orbit/pan updates without horizon drift.
+
+Native checks covered:
+
+- Dragging right and up directly across a lamp in Orbit mode changed azimuth from 0.55 to 0.17865 and elevation from 0.70 to 0.32865, preserving every object definition.
+- Selecting Pan and dragging diagonally moved the displayed scene right and up with the pointer. Projection tests independently verify exact screen-space displacement on the focus plane across angles and projections.
+- Wheel-up reduced distance from 12 to 10.78878; wheel-down recovered the wider view. Overhead orbit retained orthographic projection.
+- Click selection, keyboard Focus, isolation, recovery presets, Fit, and orbiting below the Table worked. The underside remained visible with an upright view.
+- Explicit Move changed only the selected lamp's placement; native Undo restored all original object definitions.
+- The Print sheet accepted mouse orbit and wheel zoom over a lamp shade, and Fit print bed recovered the bed framing. No slice or printer action was invoked during this pass.
+- Save, quit, relaunch, and reopen preserved the camera state exactly. The default tool returned to Orbit.
+
+Geometry build count remained three throughout the lamp navigation and placement checks, and `renders_continuously` stayed false. This verifies that camera movement does not regenerate meshes; it is not a sustained gesture frame-rate measurement. Local observations are retained in `.local/validation/camera-mouse-observations.json`, with the normal-library preservation check in `user-project-restored-camera.json`. The full suite passes **74 tests** and the optimized native app builds successfully. See [camera navigation](camera-navigation.md) for the updated controls.

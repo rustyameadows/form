@@ -72,10 +72,11 @@ See [Printing architecture, setup, and research](docs/printing.md) for profiles,
 | Action | Control |
 | --- | --- |
 | Select / extend selection | Click / Shift-click |
-| Move an object or group | Drag the selection; Shift snaps to 10 mm |
-| Orbit | Drag empty Table space or right-drag |
-| Pan | Space-drag or Option-drag |
-| Zoom | Scroll or pinch |
+| Orbit | **Orbit** tool (`O`), then drag anywhere; right-drag also orbits |
+| Pan | **Pan** tool (`H`); Space-drag, Option-drag, or middle-drag |
+| Move an object or group | **Move** tool (`V`), then drag the selection; Shift snaps to 10 mm |
+| Zoom | Scroll up to zoom in, down to zoom out; pinch also works |
+| Fine camera adjustment | Hold Shift while orbiting or panning |
 | Focus / isolate | `F` / `I`, or floating inspector buttons |
 | Perspective / overhead / front | `1` / `2` / `3` |
 | Fit all | `⌘0` |
@@ -85,6 +86,8 @@ See [Printing architecture, setup, and research](docs/printing.md) for profiles,
 | Save / save a copy | `⌘S` / `⇧⌘S` |
 | Print preparation | `⌘P` |
 | Return to Home | `⇧⌘H` |
+
+The Table starts in Orbit mode so navigation cannot accidentally move objects. Pan follows the pointer in screen space, the horizon stays upright, and orbit preserves the current perspective or orthographic projection. See [camera controls and validation](docs/camera-navigation.md).
 
 ## Develop and validate
 

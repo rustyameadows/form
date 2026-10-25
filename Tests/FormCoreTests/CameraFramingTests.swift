@@ -40,7 +40,7 @@ final class CameraFramingTests: XCTestCase {
   private func verify(projection: String) {
     for aspect in [0.55, 1, 1.5, 3] {
       for azimuth in [0.0, 0.55, 2.5] {
-        for elevation in [0.1, 0.7, 1.569] {
+        for elevation in [-1.569, -0.7, 0.1, 0.7, 1.569] {
           var input = CameraState()
           input.azimuth = azimuth
           input.elevation = elevation

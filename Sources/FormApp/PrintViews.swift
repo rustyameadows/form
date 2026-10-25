@@ -63,7 +63,10 @@ struct PrintWorkspace: View {
                     ).tint(Palette.accent)
                   }
                 } else {
-                  Label("Drag to orbit · Scroll to zoom", systemImage: "cube.transparent").font(
+                  Label(
+                    "Drag to orbit · Space-drag to pan · Scroll up to zoom in",
+                    systemImage: "cube.transparent"
+                  ).font(
                     .system(size: 10)
                   ).foregroundStyle(Palette.secondary)
                 }
