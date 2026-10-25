@@ -404,6 +404,25 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       context.setLineWidth(1 / scale)
       if let group = art.elements.first(where: { $0.id == session.scopeID }) {
         context.stroke(CGRect(art.bounds(of: group)))
+        if group.booleanOperation != nil {
+          context.saveGState()
+          context.setLineDash(phase: 0, lengths: [4 / scale, 3 / scale])
+          let masks = Set(art.elements.compactMap(\.clipID))
+          for operand in art.elements
+          where operand.parentID == group.id && operand.hidden != true
+            && !masks.contains(operand.id)
+          {
+            let path =
+              operand.kind == "group"
+              ? (try? BooleanGeometry.path(operand, in: art)) : VectorGeometry.path(operand)
+            if let path {
+              var transform = art.worldTransform(operand).cg
+              context.addPath(path.copy(using: &transform) ?? path)
+              context.strokePath()
+            }
+          }
+          context.restoreGState()
+        }
       }
     }
   }
@@ -457,8 +476,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     if let e = s.primary, let g = e.gradient {
       let t = art.worldTransform(e).followed(by: g.transform ?? .init())
-      let a = CGPoint(t.apply(.init(g.start.x * e.width, g.start.y * e.height)))
-      let b = CGPoint(t.apply(.init(g.end.x * e.width, g.end.y * e.height)))
+      let a = CGPoint(t.apply(.init(g.start.x * e.paintSize.x, g.start.y * e.paintSize.y)))
+      let b = CGPoint(t.apply(.init(g.end.x * e.paintSize.x, g.end.y * e.paintSize.y)))
       context.move(to: a)
       context.addLine(to: b)
       context.strokePath()
@@ -588,7 +607,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if let e = s.primary, let g = e.gradient, !s.art.isLocked(e) {
         let t = s.art.worldTransform(e).followed(by: g.transform ?? .init())
         for (i, q) in [g.start, g.end].enumerated() {
-          let h = CGPoint(t.apply(.init(q.x * e.width, q.y * e.height)))
+          let h = CGPoint(t.apply(.init(q.x * e.paintSize.x, q.y * e.paintSize.y)))
           if hypot(h.x - p.x, h.y - p.y) < 7 / (ppm * zoom) {
             dragMode = "gradient"
             handle = i
@@ -766,9 +785,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     {
       let q = inv.apply(.init(p))
       if handle == 0 {
-        value.elements[i].gradient?.start = .init(q.x / e.width, q.y / e.height)
+        value.elements[i].gradient?.start = .init(q.x / e.paintSize.x, q.y / e.paintSize.y)
       } else {
-        value.elements[i].gradient?.end = .init(q.x / e.width, q.y / e.height)
+        value.elements[i].gradient?.end = .init(q.x / e.paintSize.x, q.y / e.paintSize.y)
       }
       s.save(value)
       return

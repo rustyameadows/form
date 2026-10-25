@@ -9,10 +9,18 @@ import FormCore
     return cache
   }()
   public static func draw(
-    _ art: Artwork, width: Double, height: Double, assets: URL, production: Bool = true,
+    _ source: Artwork, width: Double, height: Double, assets: URL, production: Bool = true,
     excluding: Set<UUID> = []
   ) {
     guard let context = NSGraphicsContext.current?.cgContext else { return }
+    let art: Artwork
+    do { art = try BooleanGeometry.materialized(source) } catch {
+      context.saveGState()
+      context.setStrokeColor(FormColor.color("#D45A37").cgColor)
+      context.stroke(CGRect(x: 0, y: 0, width: width, height: height))
+      context.restoreGState()
+      return
+    }
     context.saveGState()
     context.clip(to: CGRect(x: 0, y: 0, width: width, height: height))
     if let boundary = art.boundary {

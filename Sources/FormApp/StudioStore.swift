@@ -1,5 +1,6 @@
 import AppKit
 import FormCore
+import FormGraphics
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -129,6 +130,7 @@ enum TableTool: String, CaseIterable {
             if name == "form_status", var status = result as? [String: Any] {
               status["renderer"] = self.scene?.diagnostics ?? [:]
               status["artwork_renderer"] = self.artworkSession.canvas?.diagnostics ?? [:]
+              status["boolean_geometry"] = BooleanGeometry.diagnostics
               result = status
             }
             if !readOnly {

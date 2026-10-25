@@ -143,6 +143,7 @@ struct ArtworkInspector: View {
               ).font(.system(size: 15, design: .serif)).textFieldStyle(.plain)
             }
             transformControls
+            if session.elements.count == 1, e.booleanOperation != nil { booleanControls(e) }
             Divider()
             if e.kind == "text" || session.elements.allSatisfy({ $0.kind == "text" }) {
               if session.elements.count == 1 {
@@ -276,12 +277,14 @@ struct ArtworkInspector: View {
           Button("Subtract") { session.boolean("subtract") }
           Button("Intersect") { session.boolean("intersect") }
           Button("Exclude") { session.boolean("exclude") }
+          Divider()
+          Button("Divide into editable regions") { session.boolean("union", mode: "divide") }
         }
         Button("Use bottom shape as clipping mask") { session.makeMask() }.buttonStyle(.plain).font(
           .system(size: 10)
         ).foregroundStyle(Palette.accent)
       }
-      if e?.kind == "group" {
+      if e?.kind == "group", e?.booleanOperation == nil {
         HStack {
           Button("Edit group") {
             session.scopeID = e?.id
@@ -290,6 +293,36 @@ struct ArtworkInspector: View {
           Button("Ungroup") { session.execute("ungroup") }
         }.font(.system(size: 10))
       }
+    }
+  }
+  func booleanControls(_ group: ArtworkElement) -> some View {
+    VStack(alignment: .leading, spacing: 10) {
+      SectionLabel("LIVE BOOLEAN")
+      Picker(
+        "Operation",
+        selection: Binding(
+          get: { group.booleanOperation ?? "union" },
+          set: { session.boolean($0, mode: "update") })
+      ) {
+        ForEach(BooleanCommands.operations, id: \.self) { Text($0.capitalized).tag($0) }
+      }.font(.system(size: 10))
+      HStack {
+        Button("Edit operands") {
+          session.scopeID = group.id
+          session.choose([])
+        }
+        Button("Release operands") { session.boolean("union", mode: "release") }
+      }.font(.system(size: 10))
+      Button("Flatten result to path") { session.boolean("union", mode: "flatten") }.font(
+        .system(size: 10))
+      if let path = try? BooleanGeometry.path(group, in: session.art), path.isEmpty {
+        Text("Empty result. Edit the operands or choose another operation.").font(.system(size: 10))
+          .foregroundStyle(Palette.accent)
+      }
+      Text(
+        "Shape boundaries drive the result. Original fills and strokes return when operands are released."
+      )
+      .font(.system(size: 9)).foregroundStyle(Palette.secondary)
     }
   }
   var typographyControls: some View {
@@ -424,7 +457,7 @@ struct ArtworkInspector: View {
     VStack(alignment: .leading, spacing: 12) {
       SectionLabel("APPEARANCE")
       if let e {
-        if e.kind != "image", e.kind != "group" {
+        if e.kind != "image", e.kind != "group" || e.booleanOperation != nil {
           HStack {
             Toggle(
               "Fill",
@@ -444,13 +477,13 @@ struct ArtworkInspector: View {
         ScalarArtworkField("Opacity", value: (e.opacity ?? 1) * 100, unit: "%") { v in
           session.update { $0.opacity = min(1, max(0, v / 100)) }
         }
-        if !["image", "group"].contains(e.kind) {
+        if !["image", "group"].contains(e.kind) || e.booleanOperation != nil {
           ScalarArtworkField("Fill opacity", value: (e.fillOpacity ?? 1) * 100, unit: "%") {
             value in
             session.update { $0.fillOpacity = min(1, max(0, value / 100)) }
           }
         }
-        if !["text", "image", "group"].contains(e.kind) {
+        if !["text", "image", "group"].contains(e.kind) || e.booleanOperation != nil {
           Toggle(
             "Stroke",
             isOn: Binding(

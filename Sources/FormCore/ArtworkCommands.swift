@@ -83,13 +83,41 @@ public enum ArtworkCommands {
     case "ungroup":
       var ungrouped = Set<UUID>()
       for group in roots where group.kind == "group" {
-        for i in result.elements.indices where result.elements[i].parentID == group.id {
+        if group.booleanOperation != nil, group.clipID != nil,
+          result.elements.contains(where: { $0.parentID == group.id && $0.clipID != nil })
+        {
+          let index = result.elements.firstIndex { $0.id == group.id }!
+          result.elements[index].booleanOperation = nil
+          result.elements[index].opacity = nil
+          result.elements[index].productionRole = nil
+          result.elements[index].name = "Operands · clipping group"
+          ungrouped.formUnion(
+            result.elements.filter { $0.parentID == group.id && $0.hidden != true }.map(\.id))
+          continue
+        }
+        let childIDs = Set(result.elements.filter { $0.parentID == group.id }.map(\.id))
+        for i in result.elements.indices where childIDs.contains(result.elements[i].id) {
           result.elements[i].affine = group.localTransform.followed(
             by: result.elements[i].affine ?? .init())
           result.elements[i].parentID = group.parentID
-          ungrouped.insert(result.elements[i].id)
+          if group.booleanOperation != nil, let clip = group.clipID {
+            result.elements[i].clipID = clip
+          }
+          if group.booleanOperation == nil || result.elements[i].hidden != true {
+            ungrouped.insert(result.elements[i].id)
+          }
         }
-        result.elements.removeAll { $0.id == group.id }
+        if group.booleanOperation != nil {
+          // Release at the group's current stack position, including after a
+          // layer reorder. The operand records can sit anywhere in the array.
+          let children = result.elements.filter { childIDs.contains($0.id) }
+          let groupIndex = result.elements.firstIndex { $0.id == group.id }!
+          let insertion = result.elements[..<groupIndex].filter { !childIDs.contains($0.id) }.count
+          result.elements.removeAll { $0.id == group.id || childIDs.contains($0.id) }
+          result.elements.insert(contentsOf: children, at: insertion)
+        } else {
+          result.elements.removeAll { $0.id == group.id }
+        }
       }
       selection = ungrouped
     case "align", "distribute":

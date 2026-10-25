@@ -47,10 +47,10 @@ Current progress: the native canvas, physical frames, typography, vector operati
 
 ### D. Mature vector editing — specification Phase 3
 
-Current progress: [precise compound-path operations and transformed native text](path-editing.md) are implemented and validated. The [editable SVG importer and original ORBIT illustration](svg-import.md) now demonstrate native paths/text/groups, affine gradients, clipping, physical units, original assets, explicit fidelity review, and linked product faces. Compound creation/release, geometric shape conversion, multi-path node transforms, and endpoint joining across separate objects are now implemented and validated through the [Contour atelier workflow](path-editing.md). Broader SVG fidelity and the remaining vector-system requirements still need completion.
+Current progress: [precise compound-path operations and transformed native text](path-editing.md) are implemented and validated. The [editable SVG importer and original ORBIT illustration](svg-import.md) demonstrate native paths/text/groups, affine gradients, clipping, physical units, original assets, explicit fidelity review, and linked product faces. The [Contour atelier workflow](path-editing.md) validates compound creation/release, shape conversion, multi-path node transforms, and cross-object endpoint joining. [Aperture](live-booleans.md) adds editable live boolean groups, operation switching, release/flatten, divided regions, and shared physical previews. Broader SVG fidelity and the remaining vector-system requirements still need completion.
 
-- [ ] Complete Bézier node/handle operations, including corner/smooth, add/delete, join/split, close/open, reverse, numeric and multi-node transforms.
-- [ ] Union/subtract/intersect/exclude/divide where supported; non-destructive boolean groups and flattening; compound paths with holes.
+- [x] Complete Bézier node/handle operations, including corner/smooth, add/delete, join/split, close/open, reverse, numeric and multi-node transforms.
+- [x] Union/subtract/intersect/exclude/divide where supported; non-destructive boolean groups and flattening; compound paths with holes.
 - [ ] Linear/radial gradients and editable stops/positions; full stroke styles and expansion; editable nested clipping masks.
 - [ ] Linked reusable components with overrides and detachment; shared swatches; non-destructive opacity/effects/blending.
 - [ ] Image crop/replace/mask/adjustments and effective DPI; original asset preservation; drag/drop and supported macOS formats.

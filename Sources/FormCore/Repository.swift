@@ -45,7 +45,7 @@ public final class ProjectRepository {
   public func load(url: URL) throws -> Project {
     let manifest = try JSONDecoder.form.decode(
       Manifest.self, from: Data(contentsOf: url.appendingPathComponent("Manifest.json")))
-    guard (1...4).contains(manifest.project.schemaVersion) else {
+    guard (1...5).contains(manifest.project.schemaVersion) else {
       throw FormError.invalid("This project uses a newer file format. Update FORM to open it.")
     }
     var project = manifest.project

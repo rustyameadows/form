@@ -9,7 +9,7 @@ The deliberate change to the original brief is agent delivery. **Codex is the cr
 | Module | Responsibility |
 | --- | --- |
 | `FormCore` | Codable product graph, dimensions, parameter schemas, materials, artwork, recipes, arithmetic expressions, persistence, undo/redo, atomic edits, MCP discovery and protocol, local transport |
-| `FormGraphics` | Core Text shaping/font discovery, Bézier geometry, shared native artwork drawing, shaped outlines, editable SVG parsing/import, physical SVG output, bounded text/image caches |
+| `FormGraphics` | Core Text shaping/font discovery, Bézier and cached live-boolean geometry, shared native artwork drawing, shaped outlines, editable SVG parsing/import, physical SVG output, bounded caches |
 | `FormApp` | SwiftUI shell, AppKit pointer and artwork interaction, Metal-backed SceneKit renderer, contextual controls, previews, studio, native file panels, PDF/SVG/PNG exports |
 | `FormMCP` | MCP over stdio; forwards tool calls to the running app over a user-owned Unix socket |
 
@@ -52,6 +52,8 @@ Independent source links and physical artwork boundaries require schema 3; schem
 
 Import provenance, transparent frame/fill/gradient-stop appearance, gradient affine maps, and dash phase require schema 4. Readers retain schemas 1–3. SVG conversion produces ordinary native artwork; original source bytes and embedded images are copied to the package. Provenance is excluded from render signatures. See [SVG import](svg-import.md) for supported features and limits.
 
+Live boolean groups require schema 5; schemas 1–4 still load. The document stores operations and editable operands. `FormCore.BooleanCommands` creates and validates the hierarchy; `FormGraphics.BooleanGeometry` resolves paths for the native canvas, linked faces, and all exports. Its bounded 64 MB cache excludes paint, names, locks, and root placement while tracking operand geometry, order, visibility, hierarchy, transforms, and clips. Flattening retains a hidden live source; Divide emits individual regions. Creation, flattening, division, and release preserve the result's stack position relative to unrelated siblings. See [live booleans](live-booleans.md).
+
 `FORM_LIBRARY_PATH` selects a separate library for development or tests. `FORM_SOCKET_PATH` selects a separate local bridge. These settings require no change to a project document.
 
 ## Artwork and production
@@ -62,7 +64,7 @@ Native character undo remains granular while editing. The domain engine groups t
 
 The sleeve recipe derives its assembled geometry and unfolded cut/score layout from the same width, height, spine, stock, tab, and fold parameters. PDF exports preserve physical page dimensions and include bleed/crop marks. SVG dielines preserve millimeter units and distinguish cut lines from scores. PNG renders are 3000 × 2000. Component summaries are JSON.
 
-The expanded [2D specification](2d-design-typography-vector-spec.md) remains governing scope. The [editor guide](2d-editor.md) records working controls and material gaps, including non-destructive boolean groups, advanced typography, full SVG fidelity, publication, color management, and physical integration. General solid booleans, arbitrary CAD import, advanced manufacturing tolerances, collaboration, and photorealistic path tracing are also unfinished.
+The expanded [2D specification](2d-design-typography-vector-spec.md) remains governing scope. The [editor guide](2d-editor.md) records working controls and material gaps, including advanced typography, full SVG fidelity, publication, color management, and physical integration. General solid booleans, arbitrary CAD import, advanced manufacturing tolerances, collaboration, and photorealistic path tracing are also unfinished.
 
 Native inline text uses the complete artwork affine map through AppKit coordinate transforms, including rotation, scale, shear, and reflection. A signed SVD and explicit reversal of prior coordinate operations keep native input and pointer geometry aligned during updates. Exact Bézier subdivision, contour split/join/reversal, node modes, and physical node transforms live in `FormCore.PathCommands`; the native direct-selection UI and `form_edit_path` call the same implementation. Document-level compound creation/release and multi-path endpoint/node edits use validated candidates and commit atomically. Shape-to-path conversion preserves native appearance and retains hidden parametric sources. See [path editing](path-editing.md).
 

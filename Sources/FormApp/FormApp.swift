@@ -114,6 +114,20 @@ import SwiftUI
           .keyboardShortcut("j").disabled(
             store.mode != .artwork || store.artworkSession.nodes.count != 2)
         Divider()
+        Menu("Live Boolean") {
+          ForEach(BooleanCommands.operations, id: \.self) { operation in
+            Button(operation.capitalized) { store.artworkSession.boolean(operation) }
+          }
+          Divider()
+          Button("Divide into Editable Regions") {
+            store.artworkSession.boolean("union", mode: "divide")
+          }
+        }.disabled(store.mode != .artwork || store.artworkSession.selection.count < 2)
+        Button("Flatten Boolean Result") { store.artworkSession.boolean("union", mode: "flatten") }
+          .disabled(
+            store.mode != .artwork || store.artworkSession.elements.count != 1
+              || store.artworkSession.primary?.booleanOperation == nil)
+        Divider()
         Button("Show / Hide Guides") {
           store.artworkSession.mutate { $0.showGuides = !($0.showGuides ?? true) }
         }.keyboardShortcut(";").disabled(store.mode != .artwork)

@@ -44,7 +44,7 @@ def main():
                    "snapEnabled": True, "guides": [{"id": str(uuid.uuid4()), "axis": "x", "position": 18}],
                    "elements": [label, title, square, hole, circle, footer]}
         client.call("form_set_artwork", {"object_id": frame["id"], "artwork": artwork})
-        result = client.call("form_boolean_artwork", {"object_id": frame["id"], "element_ids": [square["id"], hole["id"]], "operation": "subtract"})
+        result = client.call("form_boolean_artwork", {"object_id": frame["id"], "element_ids": [square["id"], hole["id"]], "operation": "subtract", "mode": "path"})
         assert result["elements"][0]["kind"] == "path"
         assert len(result["elements"][0]["path"]["contours"]) >= 2
         current = client.call("form_get_artwork", {"object_id": frame["id"]})

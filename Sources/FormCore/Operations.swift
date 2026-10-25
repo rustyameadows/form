@@ -477,6 +477,7 @@ public final class OperationEngine {
         "form_set_artwork", "form_add_note", "form_create_recipe", "form_delete_objects",
         "form_edit_artwork",
         "form_edit_path",
+        "form_boolean_artwork", "form_convert_to_paths",
         "form_link_artwork", "form_extract_artwork",
       ])
       guard operations.allSatisfy({ allowed.contains($0["name"] as? String ?? "") }) else {

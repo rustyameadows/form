@@ -376,7 +376,7 @@ enum ArtworkTool: String, CaseIterable {
       store.changed()
     } catch { store.error = error.localizedDescription }
   }
-  func boolean(_ operation: String) {
+  func boolean(_ operation: String, mode: String = "live") {
     canvas?.finishText()
     guard let store, let object else { return }
     do {
@@ -385,10 +385,14 @@ enum ArtworkTool: String, CaseIterable {
           "form_boolean_artwork",
           [
             "object_id": object.id.uuidString, "element_ids": selection.map(\.uuidString),
-            "operation": operation,
+            "operation": operation, "mode": mode,
           ]) as? [String: Any]
       selection = Set(
         (result?["selected_elements"] as? [String] ?? []).compactMap(UUID.init(uuidString:)))
+      if mode == "release" {
+        let parents = Set(elements.map(\.parentID))
+        scopeID = parents.count == 1 ? parents.first! : nil
+      }
       store.changed()
     } catch { store.error = error.localizedDescription }
   }

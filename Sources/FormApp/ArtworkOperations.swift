@@ -42,8 +42,12 @@ extension StudioStore {
       let stroke = args["mode"] as? String == "stroke"
       let shape = args["mode"] as? String == "shape"
       let all = art.descendants(of: ids)
+      let booleanChildren = art.elements.filter {
+        all.contains($0.id) && $0.booleanOperation != nil
+      }
+      .reduce(into: Set<UUID>()) { $0.formUnion(art.descendants(of: [$1.id]).subtracting([$1.id])) }
       for e in art.elements
-      where all.contains(e.id) && e.hidden != true
+      where all.contains(e.id) && !booleanChildren.contains(e.id) && e.hidden != true
         && (shape
           ? ["rectangle", "ellipse", "line", "polygon", "star"].contains(e.kind)
           : stroke ? e.stroke != nil : e.kind == "text")
@@ -58,7 +62,12 @@ extension StudioStore {
         }
         let paths: [(CGPath, String)] =
           stroke
-          ? [(try VectorGeometry.expandedStroke(e), e.stroke!.color)]
+          ? [
+            (
+              try VectorGeometry.expandedStroke(
+                e.booleanOperation != nil ? BooleanGeometry.proxy(e, in: art) : e), e.stroke!.color
+            )
+          ]
           : try TypographyEngine.outlineRuns(e)
         for (path, color) in paths {
           var vector = try VectorGeometry.element(
@@ -83,36 +92,7 @@ extension StudioStore {
         )
       }
     } else if name == "form_boolean_artwork" {
-      let selected = art.selectionRoots(ids)
-      guard selected.count >= 2, Set(selected.map(\.parentID)).count == 1,
-        selected.allSatisfy({
-          ["rectangle", "ellipse", "polygon", "star", "path"].contains($0.kind)
-        })
-      else { throw FormError.invalid("Select two or more vector shapes in the same group.") }
-      let operation = args["operation"] as? String ?? "union"
-      func path(_ e: ArtworkElement) -> CGPath {
-        var t = e.localTransform.cg
-        return VectorGeometry.path(e).copy(using: &t)!.normalized(
-          using: e.path?.evenOdd == true ? .evenOdd : .winding)
-      }
-      var result = path(selected[0])
-      for e in selected.dropFirst() {
-        switch operation {
-        case "union": result = result.union(path(e), using: .winding)
-        case "subtract": result = result.subtracting(path(e), using: .winding)
-        case "intersect": result = result.intersection(path(e), using: .winding)
-        case "exclude": result = result.symmetricDifference(path(e), using: .winding)
-        default: throw FormError.invalid("Unknown boolean operation.")
-        }
-      }
-      var vector = try VectorGeometry.element(
-        from: result, color: selected.last!.color, name: operation.capitalized,
-        parentID: selected[0].parentID)
-      vector.path?.evenOdd = false
-      created = [vector]
-      for i in next.elements.indices where ids.contains(next.elements[i].id) {
-        next.elements[i].hidden = true
-      }
+      return try editBoolean(object: object, artwork: art, ids: ids, arguments: args)
     } else {
       throw FormError.invalid("Unknown graphics operation.")
     }
@@ -163,6 +143,8 @@ extension StudioStore {
       width = max(0.1, exported.bounds.width)
       height = max(0.1, exported.bounds.height)
     }
+    // Resolve live geometry before opening/writing a production output.
+    art = try BooleanGeometry.materialized(art)
     let url: URL
     if let path = arguments["path"] as? String {
       guard path.hasPrefix("/") else { throw FormError.invalid("Export path must be absolute.") }

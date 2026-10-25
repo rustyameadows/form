@@ -47,7 +47,7 @@ build/FORM.app/Contents/MacOS/form-mcp --call form_add_object '{"recipe_id":"lam
 | `form_import_svg` | Review and import local SVG into native editable artwork, retaining originals and reporting fidelity differences |
 | `form_edit_path` | Precise Bézier edits, cross-object endpoint joining, compound creation/release, and multi-path physical node transforms |
 | `form_list_fonts`, `form_font_features` | Installed faces, supported font features, and variable axes |
-| `form_convert_to_paths`, `form_boolean_artwork` | Editable shaped glyph/stroke/shape outlines and vector booleans |
+| `form_convert_to_paths`, `form_boolean_artwork` | Editable glyph/stroke/shape outlines; live vector booleans, update/release/flatten, and divided regions |
 | `form_export_artwork` | Actual-size SVG/PDF and DPI-controlled PNG/JPEG frame or selection exports |
 | `form_add_note` | Design decisions and open questions |
 | `form_set_view` | Camera presets, focus, isolation, and workspace modes |
@@ -59,6 +59,8 @@ build/FORM.app/Contents/MacOS/form-mcp --call form_add_object '{"recipe_id":"lam
 | `form_list_printers`, `form_connect_printer` | Read metadata/status or connect using credentials already saved in Keychain |
 
 Read-only project and recipe resources are also exposed as `form://project` and `form://recipes`. The `design_object` prompt supplies a starting workflow.
+
+`form_boolean_artwork` defaults to live Union/Subtract/Intersect/Exclude groups; `operation: divide` creates editable regions. `mode` also accepts `update`, `flatten`, `release`, and `path` for a direct flat result with hidden source operands. These edits and `form_convert_to_paths` participate in atomic `form_batch` operations. See the [live boolean guide](live-booleans.md) for examples, compatibility constraints, and schema-5 persistence.
 
 There are 42 tools. Print options use the native configuration keys: `component`, `printerID`, `filamentID`, `layerHeight`, `infillPercent`, `wallLoops`, `supports`, `brimWidth`, `scalePercent`, and `rotation` (degree-valued `x`, `y`, `z` in printer coordinates). `form_slice` starts asynchronously; poll status until `busy` is false and inspect `validation_error` before consuming outputs. `form_set_view` accepts `print_bed` / `print_object`. See [printing setup](printing.md) for examples and the explicit no-print boundary.
 

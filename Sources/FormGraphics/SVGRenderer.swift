@@ -25,8 +25,9 @@ import FormCore
     return output
   }
   public static func fragment(
-    _ art: Artwork, width: Double, height: Double, assets: URL, outlineText: Bool = true
+    _ source: Artwork, width: Double, height: Double, assets: URL, outlineText: Bool = true
   ) throws -> String {
+    let art = try BooleanGeometry.materialized(source)
     var definitions = ""
     var body =
       "<rect width=\"\(width)\" height=\"\(height)\" fill=\"\(art.background)\" fill-opacity=\"\(art.backgroundOpacity ?? 1)\"/>"

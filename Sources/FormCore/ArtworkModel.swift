@@ -280,8 +280,12 @@ extension ArtworkElement {
     }
     return (affine ?? .init()).followed(by: t)
   }
+  public var paintSize: Point2 {
+    booleanOperation != nil ? contentSize ?? .init(width, height) : .init(width, height)
+  }
 }
 extension Artwork {
+  public var requiresSchemaFive: Bool { elements.contains { $0.booleanOperation != nil } }
   public var requiresSchemaFour: Bool {
     backgroundOpacity != nil || imports != nil
       || elements.contains {
@@ -290,7 +294,7 @@ extension Artwork {
       }
   }
   public var usesExtendedFormat: Bool {
-    if requiresSchemaFour { return true }
+    if requiresSchemaFour || requiresSchemaFive { return true }
     if boundary != nil { return true }
     if unit != nil || guides != nil || gridSpacing != nil || showGrid != nil || showGuides != nil
       || snapEnabled != nil || nudge != nil || canvasPosition != nil
@@ -310,11 +314,25 @@ extension Artwork {
     guard !ids.isEmpty, ids.isSubset(of: Set(elements.map(\.id))) else {
       throw FormError.invalid("Choose valid artwork elements to export.")
     }
-    let roots = selectionRoots(ids)
+    var effective = ids
+    for id in ids {
+      var current = elements.first { $0.id == id }
+      var owner: UUID?
+      var visited = Set<UUID>()
+      while let e = current, visited.insert(e.id).inserted {
+        if e.booleanOperation != nil { owner = e.id }
+        current = e.parentID.flatMap { parent in elements.first { $0.id == parent } }
+      }
+      if let owner {
+        effective.remove(id)
+        effective.insert(owner)
+      }
+    }
+    let roots = selectionRoots(effective)
     let bounds = roots.dropFirst().reduce(self.bounds(of: roots[0])) {
       $0.union(self.bounds(of: $1))
     }
-    var required = descendants(of: ids)
+    var required = descendants(of: effective)
     for _ in 0...elements.count {
       let before = required
       for e in elements where required.contains(e.id) {
@@ -394,7 +412,24 @@ extension Artwork {
     return result
   }
   public func bounds(of element: ArtworkElement) -> Rect2 {
-    worldTransform(element).bounds(
+    if element.booleanOperation != nil {
+      let masks = Set(elements.compactMap(\.clipID))
+      let children = Dictionary(grouping: elements, by: \.parentID)
+      func operandBounds(_ e: ArtworkElement) -> Rect2 {
+        if e.kind == "group" {
+          let values = (children[e.id] ?? []).filter { $0.hidden != true && !masks.contains($0.id) }
+          if let first = values.first {
+            return values.dropFirst().reduce(operandBounds(first)) { $0.union(operandBounds($1)) }
+          }
+        }
+        return worldTransform(e).bounds(
+          .init(
+            0, 0, e.kind == "group" ? e.contentSize?.x ?? e.width : e.width,
+            e.kind == "group" ? e.contentSize?.y ?? e.height : e.height))
+      }
+      return operandBounds(element)
+    }
+    return worldTransform(element).bounds(
       .init(
         0, 0, element.kind == "group" ? element.contentSize?.x ?? element.width : element.width,
         element.kind == "group" ? element.contentSize?.y ?? element.height : element.height))

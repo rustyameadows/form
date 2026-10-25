@@ -50,7 +50,42 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
     }
   }
   let byID = Dictionary(uniqueKeysWithValues: artwork.elements.map { ($0.id, $0) })
+  let children = Dictionary(grouping: artwork.elements, by: \.parentID)
+  func operandSize(_ e: ArtworkElement, depth: Int) throws -> (Int, Int) {
+    guard depth <= 16 else {
+      throw FormError.invalid("Boolean operands support at most 16 nested group levels.")
+    }
+    if e.kind == "group" {
+      let values = (children[e.id] ?? []).filter { $0.hidden != true }
+      guard values.count <= 64 else {
+        throw FormError.invalid("A boolean group supports at most 64 operands.")
+      }
+      return try values.reduce((0, 0)) { sum, value in
+        let size = try operandSize(value, depth: depth + 1)
+        let count = sum.0 + size.0
+        let nodes = sum.1 + size.1
+        guard count <= 256, nodes <= 20000 else {
+          throw FormError.invalid("Boolean operands exceed 256 vector shapes or 20,000 nodes.")
+        }
+        return (count, nodes)
+      }
+    }
+    guard BooleanCommands.shapeKinds.contains(e.kind) else {
+      throw FormError.invalid(
+        "Boolean operands must be vector shapes or paths. Convert text or strokes to outlines first."
+      )
+    }
+    return (1, e.path?.contours.reduce(0) { $0 + $1.nodes.count } ?? 0)
+  }
   for e in artwork.elements {
+    if let operation = e.booleanOperation {
+      guard e.kind == "group", e.contentSize != nil, BooleanCommands.operations.contains(operation)
+      else {
+        throw FormError.invalid(
+          "A live boolean needs a group, content dimensions, and a supported operation.")
+      }
+      _ = try operandSize(e, depth: 0)
+    }
     guard finite([e.rotation ?? 0]), (0...1).contains(e.opacity ?? 1),
       (0...1).contains(e.fillOpacity ?? 1), (e.name?.count ?? 0) <= 500
     else { throw FormError.invalid("Invalid rotation, opacity, or layer name.") }

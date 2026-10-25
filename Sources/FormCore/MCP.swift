@@ -188,11 +188,16 @@ public enum MCP {
         ], required: ["object_id", "element_ids"]),
       tool(
         "form_boolean_artwork",
-        "Combine compatible vector shapes into ordinary editable paths using union, subtract, intersect, or exclude. Source shapes are preserved hidden.",
+        "Combine compatible vectors with union/subtract/intersect/exclude. Default mode live retains editable operands in a live group; mode path produces a flat path with hidden sources. On a selected live group, update changes its operation, flatten produces ordinary paths and retains the group hidden, and release restores operands. Mode divide partitions 2–16 operands into separate editable regions using each region's frontmost paint. Subtract uses the bottom operand as its base. Locked or incompatible input rejects atomically.",
         [
           "object_id": objectID, "element_ids": ["type": "array", "items": string],
-          "operation": ["type": "string", "enum": ["union", "subtract", "intersect", "exclude"]],
-        ], required: ["object_id", "element_ids", "operation"]),
+          "operation": [
+            "type": "string", "enum": ["union", "subtract", "intersect", "exclude", "divide"],
+          ],
+          "mode": [
+            "type": "string", "enum": ["live", "path", "update", "flatten", "release", "divide"],
+          ],
+        ], required: ["object_id", "element_ids"]),
       tool(
         "form_export_artwork",
         "Export the selected artboard/product face as actual-size SVG/PDF or PNG/JPEG at a chosen DPI. Optional element_ids exports a selection. SVG text can be converted to portable outlines.",

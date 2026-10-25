@@ -92,6 +92,7 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var flipY: Bool?
   public var fillEnabled: Bool?
   public var fillOpacity: Double?
+  public var booleanOperation: String?
   public var stroke: ArtworkStroke?
   public var gradient: ArtworkGradient?
   public var cornerRadius: Double?
@@ -357,9 +358,13 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var minimumSchemaVersion: Int {
     max(
       schemaVersion,
-      objects.contains { $0.artwork?.requiresSchemaFour == true } ? 4 : objects.contains {
-        $0.artworkSourceID != nil || $0.recipeID == "clock" || $0.artwork?.boundary != nil
-      } ? 3 : objects.contains { $0.artwork?.usesExtendedFormat == true } ? 2 : 1)
+      objects.contains { $0.artwork?.requiresSchemaFive == true }
+        ? 5
+        : objects.contains { $0.artwork?.requiresSchemaFour == true }
+          ? 4
+          : objects.contains {
+            $0.artworkSourceID != nil || $0.recipeID == "clock" || $0.artwork?.boundary != nil
+          } ? 3 : objects.contains { $0.artwork?.usesExtendedFormat == true } ? 2 : 1)
   }
   public init(name: String, subtitle: String = "A new place to make things.") {
     self.name = name
