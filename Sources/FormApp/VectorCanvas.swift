@@ -149,8 +149,81 @@ final class ArtworkRuler: NSRulerView {
   }
 }
 
-private final class CanvasTextView: NSTextView {
+final class CanvasTextView: NSTextView, NSTextStorageDelegate {
   var verticalOffset = 0.0
+  private var normalizingCase=false
+  private var caseReference:NSAttributedString?
+  private var storageSnapshot=NSAttributedString(string:"")
+  private var sourceEdit:(NSAttributedString,NSRange)?
+  private var composition:(NSAttributedString,NSRange)?
+  private var ownedStorage:NSTextStorage?
+  override init(frame frameRect:NSRect,textContainer:NSTextContainer?=nil) {
+    let container:NSTextContainer
+    if let textContainer {container=textContainer}
+    else {
+      let storage=NSTextStorage(),layout=NSLayoutManager()
+      container=NSTextContainer(size:NSSize(width:frameRect.width,height:100000))
+      storage.addLayoutManager(layout);layout.addTextContainer(container);ownedStorage=storage
+    }
+    super.init(frame:frameRect,textContainer:container)
+    textStorage?.delegate=self
+  }
+  required init?(coder:NSCoder) {fatalError("init(coder:) has not been implemented")}
+  func textStorage(_ storage:NSTextStorage,didProcessEditing mask:NSTextStorageEditActions,range:NSRange,changeInLength delta:Int) {
+    if mask.contains(.editedCharacters),storage.string != storageSnapshot.string {
+      sourceEdit=(storageSnapshot,NSRange(location:range.location,length:max(0,range.length-delta)))
+    }
+    storageSnapshot=NSAttributedString(attributedString:storage)
+  }
+  override func setMarkedText(_ string:Any,selectedRange:NSRange,replacementRange:NSRange) {
+    if !hasMarkedText() {
+      composition=(NSAttributedString(attributedString:attributedString()),replacementRange.location==NSNotFound ? self.selectedRange() : replacementRange)
+    }
+    let marked:NSMutableAttributedString
+    if let value=string as? NSAttributedString {marked=NSMutableAttributedString(attributedString:value)}
+    else {marked=NSMutableAttributedString(string:string as? String ?? "",attributes:typingAttributes)}
+    marked.removeAttribute(TextCase.sourceKey,range:NSRange(location:0,length:marked.length))
+    super.setMarkedText(marked,selectedRange:selectedRange,replacementRange:replacementRange)
+  }
+  override func insertText(_ insertString: Any, replacementRange: NSRange) {
+    caseReference=NSAttributedString(attributedString:attributedString())
+    undoManager?.beginUndoGrouping()
+    defer {undoManager?.endUndoGrouping()}
+    var input=insertString
+    if let string=insertString as? String {
+      var attrs=typingAttributes
+      attrs.removeValue(forKey:TextCase.sourceKey)
+      attrs.removeValue(forKey:TypographyEngine.pairKey)
+      let key:NSAttributedString.Key=attrs[.tracking] != nil ? .tracking : .kern
+      let adjustment=(attrs[TypographyEngine.spacingKey] as? NSNumber)?.doubleValue ?? 0
+      attrs[key]=((attrs[key] as? NSNumber)?.doubleValue ?? 0)-adjustment
+      attrs[TypographyEngine.spacingKey]=0.0
+      input=TypographyEngine.displayingCase(NSAttributedString(string:string,attributes:attrs))
+    }
+    super.insertText(input,replacementRange:replacementRange)
+  }
+  override func didChangeText() {
+    if hasMarkedText() {super.didChangeText();return}
+    if !normalizingCase {
+      let before=attributedString(),source=TextCase.source(before,reference:composition?.0 ?? sourceEdit?.0 ?? caseReference,editedRange:composition?.1 ?? sourceEdit?.1)
+      let normalized=TypographyEngine.displayingCase(source.text)
+      if !normalized.isEqual(to:before) {
+        normalizingCase=true
+        let range=source.sourceRange(selectedRange())
+        let metadataOnly=normalized.string==before.string
+        if metadataOnly || (undoManager?.isUndoing != true && undoManager?.isRedoing != true
+          && shouldChangeText(in:NSRange(location:0,length:before.length),replacementString:normalized.string)) {
+          textStorage?.setAttributedString(normalized)
+          setSelectedRange(TextCase.source(normalized).displayRange(range))
+        }
+        normalizingCase=false
+      }
+    }
+    caseReference=NSAttributedString(attributedString:attributedString())
+    sourceEdit=nil
+    composition=nil
+    super.didChangeText()
+  }
   override var textContainerOrigin: NSPoint {
     var origin = super.textContainerOrigin
     origin.y += verticalOffset
@@ -228,10 +301,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let e = session.art.elements.first(where: { $0.id == id }).map(session.colored), e != publishedText,
       !tv.hasMarkedText()
     {
-      let range = tv.selectedRange()
-      tv.textStorage?.setAttributedString(TypographyEngine.attributed(e, millimeters: false))
+      let range = TextCase.source(tv.attributedString()).sourceRange(tv.selectedRange())
+      tv.textStorage?.setAttributedString(TypographyEngine.attributed(e, millimeters: false, preservingSource: true))
       publishedInput = NSAttributedString(attributedString: tv.attributedString())
-      tv.setSelectedRange(NSRange(location: min(range.location, tv.string.utf16.count), length: 0))
+      tv.setSelectedRange(TextCase.source(tv.attributedString()).displayRange(NSRange(location:min(range.location,e.text.utf16.count),length:0)))
       publishedText = e
     }
     if let id = editingID, let element = session.art.elements.first(where: { $0.id == id }) {
@@ -1309,9 +1382,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     tv.textContainer?.widthTracksTextView = true
     tv.autoresizingMask = []
     tv.insertionPointColor = NSColor(hex: e.color)
-    tv.textStorage?.setAttributedString(TypographyEngine.attributed(e, millimeters: false))
+    tv.textStorage?.setAttributedString(TypographyEngine.attributed(e, millimeters: false, preservingSource: true))
     if let storage = tv.textStorage {
-      TypographyEngine.refreshNativeMetadata(TypographyEngine.spans(from: storage, fallback: e.typography ?? .init()), in: storage)
+      TypographyEngine.refreshNativeMetadata(TypographyEngine.spans(from: TextCase.source(storage).text, fallback: e.typography ?? .init()), in: storage)
     }
     publishedInput = NSAttributedString(attributedString: tv.attributedString())
     originalTextInput = publishedInput
@@ -1321,7 +1394,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     editingID = e.id
     publishedText = e
     s.editingText = true
-    s.characterRange = .init(location: 0, length: tv.string.utf16.count)
+    s.characterRange = .init(location: 0, length: e.text.utf16.count)
     let clip = NativeAffineView(frame: bounds)
     clip.clipsToBounds = true
     let host = NativeAffineView(frame: bounds)
@@ -1333,11 +1406,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     host.addSubview(tv)
     positionTextHost(e)
     window?.makeFirstResponder(tv)
-    tv.setSelectedRange(s.characterRange)
+    tv.setSelectedRange(NSRange(location:0,length:tv.string.utf16.count))
     needsDisplay = true
   }
   func finishText() {
     guard let tv = textView else { return }
+    if tv.hasMarkedText() {tv.unmarkText();tv.didChangeText()}
     textDidChange(Notification(name: NSText.didChangeNotification, object: tv))
     tv.removeFromSuperview()
     textHost?.removeFromSuperview()
@@ -1379,6 +1453,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let s = session, let id = editingID, let tv = textView,
       let i = s.art.elements.firstIndex(where: { $0.id == id })
     else { return }
+    if tv.hasMarkedText() {return}
     if let publishedInput, tv.attributedString().isEqual(to: publishedInput) { return }
     publishedInput = NSAttributedString(attributedString: tv.attributedString())
     var value = s.art
@@ -1391,9 +1466,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       return
     }
     var e = value.elements[i]
-    e.text = tv.string
+    let source=TextCase.source(tv.attributedString()).text
+    e.text = source.string
     let runs = TypographyEngine.spans(
-      from: tv.attributedString(), fallback: e.typography ?? .init())
+      from: source, fallback: e.typography ?? .init())
     if runs.count == 1, let run = runs.first, run.fontSize == e.fontSize, run.color == e.color,
       run.typography == (e.typography ?? .init()), run.swatchID == e.fillSwatchID,
       run.textStyle == e.textStyle, run.paragraphStyle == e.paragraphStyle
@@ -1421,7 +1497,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func textViewDidChangeSelection(_ notification: Notification) {
     guard let tv = textView else { return }
-    session?.characterRange = tv.selectedRange()
+    session?.characterRange = TextCase.source(tv.attributedString()).sourceRange(tv.selectedRange())
     session?.objectWillChange.send()
   }
   func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
@@ -1434,7 +1510,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   private func changeText(_ attributes: [NSAttributedString.Key: Any], removing: [NSAttributedString.Key] = []) -> Bool {
     guard let tv = textView else { return false }
-    let range = tv.selectedRange()
+    let range = TextCase.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString())
+    tv.undoManager?.beginUndoGrouping()
+    defer {tv.undoManager?.endUndoGrouping()}
     if range.length == 0 {
       tv.typingAttributes.merge(attributes) { _, new in new }
       for key in removing { tv.typingAttributes.removeValue(forKey: key) }
@@ -1457,8 +1535,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       : tv.typingAttributes
     return TypographyEngine.spans(
       from: NSAttributedString(string: "A", attributes: attrs),
-      fallback: session?.primary?.typography ?? .init(), utf16Offset: range.location
+      fallback: session?.primary?.typography ?? .init(), utf16Offset: TextCase.source(tv.attributedString()).sourceRange(range).location
     ).first
+  }
+  func textCaseTreatments()->Set<String>? {
+    guard let tv=textView else{return nil}
+    let range=tv.selectedRange()
+    if range.length==0 {return [textInspection()?.typography.caseTreatment ?? "original"]}
+    return TypographyEngine.caseTreatments(in:tv.attributedString(),range:range)
   }
   func textSwatchReferences() -> Set<UUID?>? {
     guard let tv = textView else { return nil }
@@ -1485,24 +1569,29 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func applyTextReference(_ command: String, styleID: UUID?) -> Bool {
     guard let tv = textView, let project = session?.store?.project else { return false }
+    tv.undoManager?.beginUndoGrouping()
+    defer {tv.undoManager?.endUndoGrouping()}
     let styles = Dictionary(uniqueKeysWithValues: (project.textStyles ?? []).map { ($0.id, $0) })
     if command == "assign", styleID.flatMap({ styles[$0] }) == nil {
       session?.store?.error = "Text style not found."
       return true
     }
     let fallback = session?.primary?.typography ?? .init()
+    let mapping=TextCase.source(tv.attributedString())
     let selected = tv.selectedRange()
     let partial = selected.location != 0 || selected.length != tv.string.utf16.count
     func attributes(_ raw: [NSAttributedString.Key: Any], at location: Int) -> [NSAttributedString.Key: Any] {
-      let old = TypographyEngine.spans(from: NSAttributedString(string: "A", attributes: raw), fallback: fallback, utf16Offset: location)[0]
+      let old = TypographyEngine.spans(from: NSAttributedString(string: "A", attributes: raw), fallback: fallback, utf16Offset: mapping.sourceRange(NSRange(location:location,length:0)).location)[0]
       let style = (command == "assign" ? styleID : old.textStyle?.styleID).flatMap { styles[$0] }
       let changed = command == "reset"
         ? TextStyleCommands.resetting(old, styles: styles, preservingParagraphs: partial)
         : TextStyleCommands.applying(old, style: style, detach: command == "detach", preservingParagraphs: partial)
-      return TypographyEngine.attributes(changed.typography, size: changed.fontSize, color: changed.color,
+      var result=TypographyEngine.attributes(changed.typography, size: changed.fontSize, color: changed.color,
         millimeters: false, swatchID: changed.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
+      result[TextCase.sourceKey]=raw[TextCase.sourceKey]
+      return result
     }
-    let range = tv.selectedRange()
+    let range = TextCase.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString())
     if range.length == 0 {
       tv.typingAttributes = attributes(tv.typingAttributes, at: range.location)
       session?.objectWillChange.send()
@@ -1531,8 +1620,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func applyTextStyle(_ body: (inout Typography) -> Void) -> Bool {
     guard let tv = textView else { return false }
-    var range = tv.selectedRange()
+    tv.undoManager?.beginUndoGrouping()
+    defer {tv.undoManager?.endUndoGrouping()}
+    var range = TextCase.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString())
     let fallback = session?.primary?.typography ?? .init()
+    let mapping=TextCase.source(tv.attributedString())
     if let old = textInspection()?.typography {
       var changed = old; body(&changed)
       if TextStyleCommands.changesParagraphs(old, changed) { range = (tv.string as NSString).paragraphRange(for: range) }
@@ -1552,18 +1644,16 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     var replacements: [(NSRange, [NSAttributedString.Key: Any])] = []
     tv.attributedString().enumerateAttributes(in: range) { attributes, part, _ in
       if let run = TypographyEngine.spans(
-        from: NSAttributedString(string: "A", attributes: attributes), fallback: fallback, utf16Offset: part.location
+        from: NSAttributedString(string: "A", attributes: attributes), fallback: fallback, utf16Offset: mapping.sourceRange(NSRange(location:part.location,length:0)).location
       ).first {
         var t = run.typography
         body(&t)
         var changed = run; changed.typography = t
         changed = TextStyleCommands.recording(changed, from: run)
-        replacements.append(
-          (
-            part,
-            TypographyEngine.attributes(t, size: run.fontSize, color: run.color, millimeters: false,
-              swatchID: run.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
-          ))
+        var attrs=TypographyEngine.attributes(t, size: run.fontSize, color: run.color, millimeters: false,
+          swatchID: run.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
+        attrs[TextCase.sourceKey]=attributes[TextCase.sourceKey]
+        replacements.append((part,attrs))
       }
     }
     tv.textStorage?.beginEditing()
@@ -1576,7 +1666,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   func applyManualKerning(_ value: Double) -> Bool {
     guard let tv = textView else { return false }
     let range = tv.selectedRange()
-    let index = max(0, range.location - 1)
+    let initial=max(0,range.location-1)
+    let index=max(0,NSMaxRange(TextCase.expandedDisplayRange(NSRange(location:initial,length:range.location>0 ? 1:0),in:tv.attributedString()))-1)
     guard index < (tv.textStorage?.length ?? 0) else { return true }
     let target = NSRange(location: index, length: 1)
     if tv.shouldChangeText(in: target, replacementString: nil) {
@@ -1587,7 +1678,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func manualKerningInspection() -> Double? {
     guard let tv = textView else { return nil }
-    let index = max(0, tv.selectedRange().location - 1)
+    let location=tv.selectedRange().location
+    let index=max(0,NSMaxRange(TextCase.expandedDisplayRange(NSRange(location:max(0,location-1),length:location>0 ? 1:0),in:tv.attributedString()))-1)
     guard index < (tv.textStorage?.length ?? 0) else { return 0 }
     return (tv.textStorage?.attribute(TypographyEngine.pairKey, at: index, effectiveRange: nil) as? NSNumber)?.doubleValue ?? 0
   }
@@ -1707,7 +1799,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     super.keyDown(with: event)
   }
   override func keyUp(with event: NSEvent) {
-    if [123, 124, 125, 126].contains(event.keyCode) { session?.endGesture() }
+    if editingID == nil,[123, 124, 125, 126].contains(event.keyCode) { session?.endGesture() }
     if event.keyCode == 49, space {
       space = false
       NSCursor.pop()

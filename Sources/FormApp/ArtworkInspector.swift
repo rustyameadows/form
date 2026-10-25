@@ -419,6 +419,15 @@ struct ArtworkInspector: View {
       }
       DisclosureGroup("Paragraph & character settings") {
         VStack(spacing: 10) {
+          Picker("Case",selection:Binding(
+            get:{session.caseTreatments.count>1 ? "mixed" : session.caseTreatments.first ?? type.caseTreatment},
+            set:{value in if value != "mixed" {session.typography{$0.caseTreatment=value}}}
+          )) {
+            if session.caseTreatments.count>1 {Text("Mixed").tag("mixed").disabled(true)}
+            Text("Original").tag("original")
+            Text("Uppercase").tag("uppercase")
+            Text("Lowercase").tag("lowercase")
+          }.help("Changes displayed case and preserves the original words.")
           ScalarArtworkField("Word spacing", value: type.wordSpacing, unit: "pt") { v in
             session.typography { $0.wordSpacing = v }
           }

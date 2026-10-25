@@ -35,7 +35,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Vector paint:** Direct gradient-stop and axis editing, full stroke controls with inside/outside alignment, fill-preserving stroke outlines, and explicit nested-mask editing. See the [PRISM workflow](docs/paint-gradients-masks.md).
 - **Image editing:** Original files, aspect-aware placement, crop panning/zoom, numeric crop bounds, brightness/contrast/saturation, replacement that retains layout, drag/drop, and effective physical DPI. See the [LUMEN collection](docs/image-editing.md).
 - **Editable SVG import:** File → Import SVG Artwork (`⇧⌘I`) reviews native paths, groups, text, gradients, clips, and embedded images before creating a physical frame or adding to an existing surface. Originals stay in the project; unsupported features require explicit review. See the [SVG import guide](docs/svg-import.md).
-- **Typography:** Reusable text styles with local overrides, independent character/paragraph links, installed fonts, native selected-character editing, paragraph tabs/hyphenation, font kerning, OpenType features, variable axes, Core Text shaping, and editable glyph outlines. See [FOLIO and text styles](docs/reusable-text-styles.md), [FOUNDRY and font features](docs/font-features.md), [AVENUE and kerning](docs/kerning.md), [LEDGER and paragraph composition](docs/paragraph-composition.md), and the [editor guide](docs/2d-editor.md).
+- **Typography:** Reusable text styles with local overrides, independent character/paragraph links, installed fonts, native selected-character editing, reversible Unicode case, paragraph tabs/hyphenation, font kerning, OpenType features, variable axes, Core Text shaping, and editable glyph outlines. See [FOLIO and text styles](docs/reusable-text-styles.md), [FOUNDRY and font features](docs/font-features.md), [AVENUE and kerning](docs/kerning.md), [LEDGER and paragraph composition](docs/paragraph-composition.md), [VERSO and text case](docs/text-case.md), and the [editor guide](docs/2d-editor.md).
 - **Iterations and variants:** Independent design iterations or linked parameter/artwork variants with their own materials and placement.
 - **Studio Library:** Persistent materials and equipment profiles, separate from individual projects.
 - **Print preparation:** `⌘P` opens a dedicated physical print bed with object/component selection, orientation, scale, filament, layer height, walls, infill, supports, brim, and actual sliced layer previews. Project switches cancel local work and clear stale previews; settings and mesh share Undo/Redo.
@@ -109,6 +109,7 @@ python3 scripts/smoke_swatches.py # Shared colors, rich text, linked products, 6
 python3 scripts/smoke_appearance.py # Blur, shadows, blending, linked outputs, 100 effect placements
 python3 scripts/smoke_paint.py # Gradients, strokes, nested masks, physical outputs, 200-element saved edits
 python3 scripts/smoke_font_features.py # Independent selectors, rich typography, linked faces, schema 11, 200-text saved edits
+python3 scripts/smoke_case.py # Reversible Unicode case, source preservation, native shaping, linked faces
 python3 scripts/smoke_paragraphs.py # Saved tabs, real hyphenation, paragraph patches, schema 14, linked faces
 python3 scripts/smoke_kerning.py # Font metrics, independent spacing, legacy preservation, schema 13, linked faces
 python3 scripts/smoke_text_styles.py # Reusable styles, local overrides, character/paragraph links, schema 12, linked faces
@@ -136,6 +137,7 @@ This build has a native typography/vector editor and procedural construction sys
 - [2D Design, Typography & Vector Editing · guiding specification](docs/2d-design-typography-vector-spec.md)
 - [Native artwork editor · controls, MCP, and remaining work](docs/2d-editor.md)
 - [Paragraph tabs, hyphenation, and LEDGER](docs/paragraph-composition.md)
+- [Non-destructive text case and VERSO](docs/text-case.md)
 - [Editable SVG import and ORBIT illustration](docs/svg-import.md)
 - [Precise paths and transformed native text](docs/path-editing.md)
 - [Shared artwork and the clock study](docs/linked-artwork.md)

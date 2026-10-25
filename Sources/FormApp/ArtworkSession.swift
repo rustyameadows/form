@@ -152,6 +152,14 @@ enum ArtworkTool: String, CaseIterable {
     canvas?.textInspection()?.typography ?? primary?.typography ?? .init()
   }
   var inspectedSize: Double { canvas?.textInspection()?.fontSize ?? primary?.fontSize ?? 14 }
+  var caseTreatments:Set<String> {
+    if let values=canvas?.textCaseTreatments() {return values}
+    return elements.filter{$0.kind=="text"}.reduce(into:Set<String>()) {values,e in
+      let runs=e.textRuns ?? []
+      if e.text.isEmpty || runs.reduce(0,{$0+$1.length})<e.text.utf16.count {values.insert(e.typography?.caseTreatment ?? "original")}
+      for run in runs {values.insert(run.typography.caseTreatment)}
+    }
+  }
   func colored(_ element: ArtworkElement) -> ArtworkElement {
     store?.project?.resolvingSwatches(in: .init(elements: [element]), keepingReferences: true).elements.first ?? element
   }

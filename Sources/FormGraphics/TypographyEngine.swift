@@ -148,35 +148,46 @@ public enum FormColor {
     if let paragraphStyle { result[paragraphStyleKey] = try? JSONEncoder.form.encode(paragraphStyle) }
     return result
   }
-  public static func attributed(_ element: ArtworkElement, millimeters: Bool = false)
+  public static func attributed(_ element: ArtworkElement, millimeters: Bool = false, preservingSource: Bool = false)
     -> NSAttributedString
   {
     let base = element.typography ?? .init()
-    func caseText(_ s: String) -> String {
-      base.caseTreatment == "uppercase"
-        ? s.uppercased() : base.caseTreatment == "lowercase" ? s.lowercased() : s
-    }
-    let text = caseText(element.text)
     let result = NSMutableAttributedString(
-      string: text,
+      string: element.text,
       attributes: attributes(
         base, size: element.fontSize, color: element.color, millimeters: millimeters,
         swatchID: element.fillSwatchID, textStyle: element.textStyle, paragraphStyle: element.paragraphStyle))
     for run in element.textRuns ?? [] {
       let original = element.text as NSString
       guard run.location + run.length <= original.length else { continue }
-      let start = caseText(original.substring(to: run.location)).utf16.count
-      let length = caseText(
-        original.substring(with: NSRange(location: run.location, length: run.length))
-      ).utf16.count
-      guard start + length <= result.length else { continue }
       result.setAttributes(
         attributes(run.typography, size: run.fontSize, color: run.color, millimeters: millimeters,
           swatchID: run.swatchID, textStyle: run.textStyle, paragraphStyle: run.paragraphStyle),
-        range: .init(location: start, length: length))
+        range: .init(location: run.location, length: run.length))
     }
     updateSpacing(result, millimeters: millimeters, fallbackPairs: base.pairKerning)
-    return result
+    return displayingCase(result,preservingSource:preservingSource)
+  }
+  public static func displayingCase(_ source: NSAttributedString,preservingSource:Bool=true) -> NSAttributedString {
+    var treatments:[(NSRange,String)]=[]
+    source.enumerateAttribute(styleKey,in:NSRange(location:0,length:source.length)) { raw,range,_ in
+      let type=(raw as? Data).flatMap{try? JSONDecoder.form.decode(Typography.self,from:$0)}
+      treatments.append((range,type?.caseTreatment ?? "original"))
+    }
+    guard treatments.contains(where:{$0.1 == "uppercase" || $0.1 == "lowercase"}) else {return source}
+    var index=0
+    return TextCase.displaying(source,preservingSource:preservingSource) { offset in
+      while index+1<treatments.count && offset>=NSMaxRange(treatments[index].0) {index+=1}
+      return treatments[index].1
+    }
+  }
+  public static func caseTreatments(in text:NSAttributedString,range:NSRange?=nil)->Set<String> {
+    var values=Set<String>()
+    text.enumerateAttribute(styleKey,in:range ?? NSRange(location:0,length:text.length)) { raw,_,_ in
+      let type=(raw as? Data).flatMap{try? JSONDecoder.form.decode(Typography.self,from:$0)}
+      values.insert(type?.caseTreatment ?? "original")
+    }
+    return values
   }
   /// Keep tracking separate from word/pair additions through native text edits.
   private static func spacingAttributes(_ style: Typography, adjustment: Double,
@@ -212,10 +223,16 @@ public enum FormColor {
       if let data = raw as? Data, let type = try? JSONDecoder.form.decode(Typography.self, from: data) { runs.append((part, type)) }
     }
     let string = text.string as NSString
+    let mapping=TextCase.source(text)
+    var pieceIndex=0
     text.beginEditing()
     for (part, type) in runs {
       for i in part.location..<NSMaxRange(part) {
-        let pair = type.pairKerning[i] ?? fallbackPairs[i]
+        while pieceIndex+1<mapping.pieces.count && i>=NSMaxRange(mapping.pieces[pieceIndex].display) {pieceIndex+=1}
+        let piece=mapping.pieces[pieceIndex]
+        let same=piece.source.length==piece.display.length
+        let sourceIndex=same ? piece.source.location+i-piece.display.location : NSMaxRange(piece.source)-1
+        let pair = same || i==NSMaxRange(piece.display)-1 ? (type.pairKerning[sourceIndex] ?? fallbackPairs[sourceIndex]) : nil
         let word = string.character(at: i) == 32 ? type.wordSpacing : 0
         let adjustment = type.kerningMode == nil ? (pair ?? word) : word + (pair ?? 0)
         let one = NSRange(location: i, length: 1)
@@ -225,9 +242,10 @@ public enum FormColor {
     text.endEditing()
   }
   public static func refreshNativeMetadata(_ spans: [TextSpan], in text: NSMutableAttributedString) {
+    let mapping=TextCase.source(text)
     text.beginEditing()
     for run in spans {
-      let range = NSRange(location: run.location, length: run.length)
+      let range = mapping.displayRange(NSRange(location: run.location, length: run.length))
       if let data = try? JSONEncoder.form.encode(run.typography) { text.addAttribute(styleKey, value: data, range: range) }
       text.removeAttribute(textStyleKey, range: range)
       if let ref = run.textStyle, let data = try? JSONEncoder.form.encode(ref) { text.addAttribute(textStyleKey, value: data, range: range) }

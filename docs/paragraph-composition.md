@@ -62,4 +62,4 @@ Twenty saved paragraph edits across **200 text objects** measured **119.03 ms me
 
 Native computer use verifies unchanged Apply, invalid-input retention, exact one-step Undo, selected-paragraph changes, retained character formatting, agent draft handoff, actual hyphenation/overflow changes, and identical source after native editing. See [validation evidence](validation.md).
 
-Hyphenation decisions depend on the installed system dictionaries and language. Explicit document language, consecutive-hyphen limits, advanced composition, lists, linked text frames, baseline grids, and sequential publication remain unfinished. Complete mixed-character case handling and alternate glyph selection also remain in the expanded goal.
+Hyphenation decisions depend on the installed system dictionaries and language. Explicit document language, consecutive-hyphen limits, advanced composition, lists, linked text frames, baseline grids, and sequential publication remain unfinished. [Reversible mixed-character case](text-case.md) is now available; alternate glyph selection remains in the expanded goal.

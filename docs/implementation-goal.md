@@ -48,7 +48,7 @@ Current progress: [FOUNDRY and independent font features](font-features.md) now 
 - [x] Reusable paragraph/text styles with persistent local overrides, independent character/paragraph relationships, creation/redefinition/reset/detachment/deletion, and shared native/MCP Undo. See [FOLIO and text styles](reusable-text-styles.md).
 - [x] Saved left/center/right/decimal tab stops and repeating intervals; native selected-paragraph controls/MCP patches; real hyphenated native/physical/export composition, recoverable source, style inheritance, and exact Undo. See [LEDGER](paragraph-composition.md).
 - [ ] Lists, complete direction/document-language/hyphenation limits, and advanced text frames.
-- [ ] Complete mixed-character case treatment, including source-to-displayed UTF-16 mapping when case conversion changes length.
+- [x] Non-destructive mixed-character Original/Uppercase/Lowercase treatment, source/display UTF-16 mapping through expansions, native controls and input/Undo, rich fonts/colors/styles, and matching physical exports. See [VERSO](text-case.md).
 - [ ] Convert shaped text to ordinary editable outlines while preserving glyph positioning, variations, ligatures, and a recoverable editable source.
 - [ ] Demonstrate a refined wordmark and typographic clock dial with editable converted glyphs.
 

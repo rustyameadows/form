@@ -26,6 +26,8 @@ The editor is a working part of the expanded [2D specification](2d-design-typogr
 
 [Paragraph composition and LEDGER](paragraph-composition.md) add saved left/center/right/decimal tab stops, repeating intervals, real native hyphenation, and selected-paragraph MCP patches. These settings use schema 14; schemas 1–13 remain readable. Hyphenated composition shares actual TextKit glyphs across native drawing, physical faces, and exports. Tabbed/hyphenated SVG text uses explicit outline fallback even when other text remains live.
 
+[Non-destructive Unicode case and VERSO](text-case.md) add native Original/Uppercase/Lowercase/Mixed controls, source-aware selected-character formatting, exact UTF-16 mapping through expansions, contextual casing, and native input/Undo preservation. Case changes retain source words across physical rendering and exports.
+
 Text properties include point/area mode, font/style/size, leading, tracking, pair kerning, baseline, word spacing, alignment, paragraph spacing/indents, case, ligatures, direction, hyphenation, and vertical alignment. Shaping uses typographic points internally and millimeters at the artwork boundary. Font controls expose capabilities reported by the installed face.
 
 ## Controls
@@ -77,7 +79,7 @@ See [precise paths and transformed native text](path-editing.md) for direct sele
 
 - Configurable transform origins and the specification’s later variable-width stroke workflows.
 - Full SVG interchange fidelity beyond the [supported import subset](svg-import.md), including filters, patterns, gradient strokes, advanced SVG text, and external resources. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
-- Alternate-glyph selection, complete case treatment within mixed-character editing, lists, document-language/hyphenation limits, linked text frames, sequential multi-page documents, and publication layout.
+- Alternate-glyph selection, small caps and explicit document-locale casing, lists, document-language/hyphenation limits, linked text frames, sequential multi-page documents, and publication layout.
 - Cross-project clipboard transfer for linked named resources and local assets.
 - Color-managed production output, CMYK/spot separations, full preflight, role-specific production exports, advanced surface placement, and the complete demonstration/acceptance suite.
 

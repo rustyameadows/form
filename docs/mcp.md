@@ -84,6 +84,8 @@ There are 50 tools. Print status includes `project_id`, `prepared_project_id`, a
 
 `form_edit_artwork command: "paragraph"` patches selected paragraphs without replacing character formatting. Optional integer UTF-16 `location`/`length` expands to containing paragraphs and accepts a zero-length caret. Saved `tabStops` support left/center/right/decimal alignment; `defaultTabInterval` controls repeating tabs, and `hyphenation` changes actual composition. Values validate atomically and share Undo. SVG exports with `outline_text:false` still outline tabbed/hyphenated text and report `composed_text_outlined`. See [LEDGER and paragraph composition](paragraph-composition.md) for the exact patch format, native draft semantics, and schema 14.
 
+`Typography.caseTreatment` applies `original`, `uppercase`, or `lowercase` independently to text/rich spans and reusable styles. Stored words and MCP character ranges remain in source UTF-16 coordinates when displayed case expands a character. Native source/display records are ephemeral and excluded from projects and production shaping. See [VERSO and reversible case](text-case.md).
+
 `form_import_image` places or replaces a local file while retaining its original bytes. `form_edit_image` patches normalized crop bounds and image adjustments, with atomic batches and Undo. `form_image_info` inspects oriented pixel metadata and effective DPI at the resolved physical output size without disturbing native focus. See [image editing and LUMEN](image-editing.md) for schemas, examples, format support, and output limits.
 
 ## Custom objects
