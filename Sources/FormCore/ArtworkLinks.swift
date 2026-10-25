@@ -110,6 +110,7 @@ extension Project {
     try validateTextiles()
     try validateTextStyles()
     try validateSwatches()
+    try validateDecorationPreparations()
     try validateComponentLinks()
     for object in objects {
       guard object.artworkFit == nil || ["actual", "fit"].contains(object.artworkFit!) else {

@@ -16,6 +16,7 @@ private struct JobBOMDraft:Identifiable {
 struct ProductionJobsView:View {
   @EnvironmentObject var store:StudioStore
   @Environment(\.dismiss) var dismiss
+  @State private var decorationJobs=false
   @State private var objectID:UUID?
   @State private var selectedJobID:UUID?
   @State private var captured:ProductionJobRevision?
@@ -50,6 +51,8 @@ struct ProductionJobsView:View {
   var body:some View {
     VStack(alignment:.leading,spacing:16) {
       HStack {VStack(alignment:.leading,spacing:4) {Text("Production jobs").font(.system(size:25,design:.serif));Text(store.project?.name ?? "Open a project").font(.system(size:11)).foregroundStyle(Palette.secondary)};Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)}
+      Picker("Production kind",selection:$decorationJobs) {Text("Embroidery").tag(false);Text("HTV / DTF preparations").tag(true)}.pickerStyle(.segmented).frame(width:360)
+      if decorationJobs {DecorationArchiveBrowser(store:store)} else {
       HSplitView {
         VStack(alignment:.leading,spacing:8) {
           Text("CAPTURED JOBS").font(.system(size:9,weight:.semibold)).tracking(1)
@@ -64,6 +67,7 @@ struct ProductionJobsView:View {
       if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
       Text("No machine connection, stock reservation, or deduction. A user-reported approval or completion is recorded against its source digest; it does not automatically verify physical sewing.")
         .font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
+      }
     }.padding(26).frame(width:1080,height:770).background(Palette.paper)
       .onAppear {if objectID==nil {objectID=objects.first?.id}}
       .onChange(of:store.project?.id) {_,_ in dismiss()}

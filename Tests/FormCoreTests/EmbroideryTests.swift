@@ -139,6 +139,6 @@ import XCTest
     let program=try EmbroideryDigitizer.generate(object:patch,project:project,design:design)
     XCTAssertGreaterThan(program.stitchCount,1000)
     XCTAssertEqual(Set(program.commands.compactMap(\.regionID)),Set(design.regions.map(\.id)))
-    XCTAssertEqual(project.objects.first {$0.id==patch.id}?.textile?.embroidery,nil)
+    XCTAssertNotNil(project.objects.first {$0.id==patch.id}?.textile?.embroidery)
   }
 }

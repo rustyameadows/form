@@ -49,63 +49,19 @@ struct InkPlannedPage {var source:InkPrintPage,primitives:[InkPrimitive]}
     return .process(try profile.processComponents(color))
   }
   private func prepare(_ page:InkPrintPage) throws {
-    var art=try BooleanGeometry.materialized(page.artwork).withInheritedLanguage
-    art=try ArtworkProduction.filtered(art,roles:[.print]).artwork
-    let tree=ArtworkRenderTree(art,assets:assets,production:true,excluding:[])
+    let geometry=try PhysicalVectorPlan(artwork:page.artwork,width:page.width,height:page.height,assets:assets)
+    for value in geometry.issues {
+      var item:[String:Any]=["severity":"error","message":value.message,"page":page.name]
+      if let id=page.id {item["object_id"]=id.uuidString}
+      if let id=value.elementID {item["element_id"]=id.uuidString};if let title=value.title {item["element"]=title}
+      issues.append(item)
+    }
     var primitives:[InkPrimitive]=[]
-    func world(_ path:CGPath,_ transform:Affine2)->CGPath {var t=transform.cg;return path.copy(using:&t) ?? path}
-    var boundary:[InkClip]=[]
-    if let value=art.boundary {
-      var element=ArtworkElement(kind:"path",x:0,y:0,width:value.width,height:value.height);element.path=value
-      boundary=[.init(path:VectorGeometry.path(element),evenOdd:value.evenOdd)]
-    }
-    func append(_ path:CGPath,evenOdd:Bool=false,paint:InkPaint,clips:[InkClip]) throws {
-      guard !path.isEmpty else{return}
+    for value in geometry.paints {
       primitiveCount+=1;guard primitiveCount<=100000 else{throw FormError.invalid("Production ink output supports at most 100,000 vector paints per export.")}
-      primitives.append(.init(path:path,evenOdd:evenOdd,paint:paint,clips:clips))
+      primitives.append(.init(path:value.path,evenOdd:value.evenOdd,paint:try paint(value.color,swatchID:value.swatchID,page:page),clips:value.clips.map{.init(path:$0.path,evenOdd:$0.evenOdd)}))
     }
-    let background=art.backgroundOpacity ?? 1
-    if background>0 {
-      if background != 1 {issue("Partial background opacity is not supported in opaque production ink output.",page:page)}
-      else {try append(CGPath(rect:.init(x: -art.bleed,y: -art.bleed,width:page.width+art.bleed*2,height:page.height+art.bleed*2),transform:nil),paint:paint(art.background,swatchID:art.backgroundSwatchID,page:page),clips:boundary)}
-    }
-    for name in FontCatalog.missing(in:art) {issue("Install or intentionally replace missing font \(name) before outlining production ink text.",page:page)}
-    func visit(_ parent:UUID?,clips:[InkClip]) throws {
-      for e in tree.children[parent] ?? [] where tree.visible(e) {
-        if e.hasActiveEffects || (e.blendMode ?? "normal") != "normal" || (e.opacity ?? 1) != 1 {
-          issue("Production inks currently require opaque, normal-blend artwork without blur or shadow effects.",page:page,element:e);continue
-        }
-        var masks=clips
-        if let id=e.clipID,let mask=tree.byID[id] {
-          guard ["rectangle","ellipse","polygon","star","path"].contains(mask.kind) else{issue("Production inks support geometric vector masks; convert this mask to a path first.",page:page,element:mask);continue}
-          masks.append(.init(path:world(VectorGeometry.path(mask),art.worldTransform(mask)),evenOdd:mask.path?.evenOdd==true))
-        }
-        if e.kind=="group" {try visit(e.id,clips:masks);continue}
-        guard e.kind != "image" else{issue("Images require a broader production ink pipeline and are not silently flattened into spot output.",page:page,element:e);continue}
-        if e.gradient != nil,e.fillEnabled != false,(e.fillOpacity ?? 1)>0 {issue("Gradient paints are not supported in this flat production ink output.",page:page,element:e);continue}
-        let fill=e.fillOpacity ?? 1
-        if fill>0,fill != 1,e.fillEnabled != false {issue("Partial fill opacity is not an ink tint. Use an explicit named-ink tint swatch.",page:page,element:e);continue}
-        let transform=art.worldTransform(e)
-        if e.kind=="text" {
-          guard e.fillEnabled != false,fill>0 else{continue}
-          if TypographyEngine.overflows(e) {issue("Text is overset or wider than its frame. Add capacity before production ink export.",page:page,element:e);continue}
-          do {
-            if let context=e.storyFrame?.resolved {try GlyphEngine.validateOutput(context.story.sourceElement.inheritingLanguage(context.language),outlines:true)}
-            else {try GlyphEngine.validateOutput(e,outlines:true)}
-            for run in try TypographyEngine.outlinePaintRuns(e) {try append(world(run.path,transform),paint:paint(run.color,swatchID:run.swatchID,page:page),clips:masks)}
-          }catch{issue(error.localizedDescription,page:page,element:e)}
-          continue
-        }
-        guard ["rectangle","ellipse","line","polygon","star","path"].contains(e.kind) else{issue("Convert this artwork to supported vector paths before production ink output.",page:page,element:e);continue}
-        if e.fillEnabled != false,e.kind != "line",fill>0 {try append(world(VectorGeometry.path(e),transform),evenOdd:e.path?.evenOdd==true,paint:paint(e.color,swatchID:e.fillSwatchID,page:page),clips:masks)}
-        if let stroke=e.visibleStroke {
-          guard (stroke.opacity ?? 1)==1 else{issue("Partial stroke opacity is not supported; use an explicit ink tint.",page:page,element:e);continue}
-          do {try append(world(StrokeGeometry.path(e),transform),paint:paint(stroke.color,swatchID:stroke.swatchID,page:page),clips:masks)}
-          catch {issue(error.localizedDescription,page:page,element:e)}
-        }
-      }
-    }
-    try visit(nil,clips:boundary);pages.append(.init(source:page,primitives:primitives))
+    pages.append(.init(source:page,primitives:primitives))
   }
   var colorants:[String] {["Cyan","Magenta","Yellow","Black"]+spots.keys.sorted()}
   var canExport:Bool {!pages.isEmpty && !issues.contains{$0["severity"] as? String=="error"}}

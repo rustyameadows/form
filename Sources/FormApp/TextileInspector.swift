@@ -77,6 +77,7 @@ struct TextileInspector: View {
             store.select(attachment.garmentID);store.scene?.focusSelection()
           }.buttonStyle(.borderless)
         }
+        if object.supportsArtworkFace {DecorationPreparationAction(store:store,objectID:object.id).buttonStyle(.borderless)}
         if [.embroideredPatch,.directEmbroidery].contains(spec.process) || spec.embroidery != nil {
           Button(spec.embroidery == nil ? "Digitize embroidery…":"Edit stitch program…") {showingEmbroidery=true}
             .buttonStyle(.bordered).disabled(object.locked)

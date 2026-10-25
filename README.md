@@ -51,6 +51,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Production inks:** Profile-pinned CMYK and named-spot palette declarations, explicit RGB previews, genuine ICCBased/Separation composite PDF and normal-knockout digital ink maps for an opaque vector subset. Native/MCP and independent PDF checks pass; see [production inks](docs/production-inks.md).
 - **Production roles:** Explicit print, cut, score, stitch, engrave, and guide intent; inherited manufacturing groups; local overlay visibility; separate SVG role layers and actual-size PDF pages from the same source. See [production roles](docs/production-roles.md).
 - **Regenerable embroidery:** Actual running, constant-width satin, and clipped compound-fill needle commands from editable artwork; dedicated native stitch/travel preview and playback, actual command-derived 3D thread surfaces, opt-in underlay/backtracking locks, thread/region controls, hoop preflight, physical SVG/JSON and DST with ordered thread sidecars. Independently decoded with Pyembroidery; no hardware calls or verified sew-out claim. See [embroidery](docs/embroidery.md).
+- **HTV / DTF preparation:** Actual-size knockout cut SVGs or transparent RGBA/profiled process files, explicit mirror/white/material review, and immutable source-linked packets with native Undo. See [decoration preparation](docs/decoration-preparation.md).
 - **Textile production records:** Studio thread inventory and declared embroidery equipment, portable thread assignment, immutable revision-linked jobs, measured needle paths versus explicit cost/usage assumptions, user sample/quality history, and local PDF/JSON/DST/SVG review packets. No stock deduction or machine operations. See [production jobs](docs/textile-production-jobs.md).
 - **Image editing:** Original files, aspect-aware placement, crop panning/zoom, numeric crop bounds, brightness/contrast/saturation, replacement that retains layout, drag/drop, and effective physical DPI. See the [LUMEN collection](docs/image-editing.md).
 - **Editable SVG import:** File → Import SVG Artwork (`⇧⌘I`) reviews native paths, groups, text, gradients, clips, and embedded images before creating a physical frame or adding to an existing surface. Originals stay in the project; unsupported features require explicit review. See the [SVG import guide](docs/svg-import.md).
@@ -145,6 +146,7 @@ python3 scripts/smoke_paths.py # Curve editing, transformed type, and linked var
 python3 scripts/smoke_clock.py --slice # Shared dial, immutable source links, physical exports, local Orca
 python3 scripts/benchmark_artwork.py # 600-element native canvas performance
 python3 scripts/smoke_production_inks.py # Declared CMYK/spot intents, knockout maps, guarded physical PDF, schema35
+python3 scripts/smoke_decoration_preparation.py # Disposable library only; HTV/DTF physical files and immutable packets
 python3 scripts/smoke_print_lifecycle.py # Project scope, local-worker cancellation, unseen mesh dimensions, Undo/Redo
 python3 scripts/smoke_print.py # Optional engine; local cube and hollow-shade slices
 ```
@@ -165,6 +167,7 @@ This build has a native typography/vector editor and procedural construction sys
 - [2D Design, Typography & Vector Editing · guiding specification](docs/2d-design-typography-vector-spec.md)
 - [Native artwork editor · controls, MCP, and remaining work](docs/2d-editor.md)
 - [Production inks · CMYK, named spots and physical ink maps](docs/production-inks.md)
+- [HTV / DTF decoration preparation and immutable handoff packets](docs/decoration-preparation.md)
 - [Production roles · separate print and manufacturing geometry](docs/production-roles.md)
 - [Physical fabric repeat designs](docs/fabric-patterns.md)
 - [Paragraph language and hyphenation](docs/paragraph-language.md)
@@ -193,3 +196,5 @@ The [font library](docs/font-library.md) provides explicit installed-face previe
 [Cloth studies](docs/cloth-simulation-foundation.md) add real bounded drape and paired seam previews, physical material coordinates, native/MCP runtime controls and saved initial settings. The NASA materials-lab template demonstrates the foundation; calibrated fit, self-collision and full garment assembly remain future work. Open cloth is explicitly rejected for slicing.
 
 [Tiled sewing patterns](docs/tiled-sewing-patterns.md) export A4, Letter and custom PDF sheets at actual size, with calibration and assembly marks outside the drawing. Native saved sheet options, exact Undo, packaged physical exports and actual app reopen pass in the 697-test integration. No printer is contacted.
+
+[HTV/DTF preparation](docs/decoration-preparation.md) adds physical cut/transfer files and immutable source-linked handoff packets. The updated [Flight bomber study](docs/flight-bomber-showcase.md) starts with five real stitch definitions and underlay. Native capture/export/Undo/reopen and independent files pass in the 719-test integration. Studio retains its presentation mode and lighting while orbiting, panning and zooming; camera bindings are unchanged.

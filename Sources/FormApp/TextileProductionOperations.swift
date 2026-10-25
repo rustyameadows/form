@@ -29,6 +29,10 @@ import FormGraphics
 extension StudioStore {
   func productionCall(_ name:String,arguments:[String:Any],source:String = "Codex")throws -> Any {
     let command=arguments["command"] as? String ?? "list"
+    if name=="form_production_job",let raw=arguments["kind"] {
+      guard let kind=raw as? String,["embroidery","decoration"].contains(kind) else{throw FormError.invalid("Production job kind must be embroidery or decoration.")}
+      if kind=="decoration" {return try decorationCall(arguments,source:source)}
+    }
     func uuid(_ key:String)throws -> UUID {
       guard let string=arguments[key] as? String,let id=UUID(uuidString:string) else {throw FormError.invalid("Provide a valid \(key) UUID.")};return id
     }

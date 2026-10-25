@@ -397,8 +397,10 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var textStories:[TextStory]?
   public var publications:[PublicationDocument]?
   public var productionJobs:[ProductionJob]?
+  public var decorationPreparations:[DecorationPreparation]?
   public var minimumSchemaVersion: Int {
     if objects.contains(where: { $0.artwork?.sewingTiles != nil }) { return max(schemaVersion, 40) }
+    if decorationPreparations?.isEmpty==false {return max(schemaVersion,38)}
     if swatches?.contains(where:{$0.printInk != nil})==true {return max(schemaVersion,35)}
     if objects.contains(where:{MerchandiseBlanks.recipeIDs.contains($0.recipeID) || $0.textile?.process == .directPrint || $0.textile?.attachment.map{[TextileAttachment.Zone.front,.leftSide,.rightSide].contains($0.zone)} == true}) {return max(schemaVersion,34)}
     if objects.contains(where:{object in (object.artwork?.elements ?? []).contains(where:{e in

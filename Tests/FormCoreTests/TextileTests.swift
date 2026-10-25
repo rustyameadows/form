@@ -7,7 +7,7 @@ final class TextileTests:XCTestCase {
     XCTAssertEqual(p.objects.filter{$0.recipeID=="bomberJacket"}.count,2)
     XCTAssertEqual(p.objects.filter{$0.textile?.attachment != nil}.count,8)
     XCTAssertEqual(p.objects.filter{$0.recipeID=="artboard"}.count,3)
-    XCTAssertEqual(p.minimumSchemaVersion,17)
+    XCTAssertEqual(p.minimumSchemaVersion,28)
     XCTAssertNoThrow(try p.validateArtworkLinks())
     for object in p.objects where object.textile != nil {
       XCTAssertFalse(object.textile!.measurementsVerified)

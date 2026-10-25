@@ -1,11 +1,12 @@
 import Foundation
 
 extension Samples {
-  /// Authored artwork and concept dimensions; no supplier geometry or verified stitch file is implied.
+  /// Authored artwork, regenerable stitch intent and concept dimensions.
+  /// No supplier geometry, calibrated fit or physical sew-out is implied.
   public static func flightJacket()->Project {
     var p=Project(name:"ORBITAL / Flight systems",subtitle:"A NASA-inspired flight bomber, independent mission patches, and sewn labels.")
     var jacket=try! p.makeObject(recipeID:"bomberJacket",name:"01 / ORBITAL flight bomber",materialID:"flight-nylon",position:.init(-520,0,0))
-    jacket.textile?.notes="Generic M-size concept blank. Dimensions and fabric declarations are estimates; verify a physical blank before production. Patches are editable artwork studies, not digitized stitch programs."
+    jacket.textile?.notes="Generic M-size concept blank. Dimensions and fabric declarations are estimates; verify a physical blank before production. Mission patches contain editable digitizing intent and actual generated stitches; physical sew-out, compensation and fit are unverified."
     let badgeArt=missionBadge(),labelArt=flightLabel(),nameArt=nameTape()
     func source(_ name:String,_ width:Double,_ height:Double,_ art:Artwork,_ position:Vector3)->ProductObject {
       var o=try! p.makeObject(recipeID:"artboard",name:name,parameters:["width":width,"depth":height],position:position);o.artwork=art;return o
@@ -15,6 +16,8 @@ extension Samples {
     let tape=source("Artwork / NASA flight research",118,34,nameArt,.init(560,0,40))
     var patch=try! p.makeObject(recipeID:"textilePatch",name:"Mission patch / left chest",parameters:["width":90,"depth":90,"corner":45],materialID:"patch-twill")
     patch.artworkSourceID=badge.id;patch.artworkFit="actual";patch.textile?.threadColors=["#D7CAB0","#CD593D","#E9E2D2"]
+    patch.textile?.embroidery=missionEmbroidery(badgeArt)
+    patch.textile?.notes="Four declared thread colors; running rings, a constant-width satin signal and filled editable lettering/stars. The main wordmark has explicit sparse-fill underlay. Lock stitches are off in this sample; review small lettering before enabling them. Inspect the actual needle paths and test fabric, backing and tension before production. The outer merrow-style border remains a construction appearance study."
     patch.textile?.attachment = .init(garmentID:jacket.id,zone:.leftChest)
     var independent=patch;independent.id=UUID();independent.designID=UUID();independent.name="Mission patch / standalone";independent.position = .init(370,0,-250);independent.textile?.attachment=nil
     var tag=try! p.makeObject(recipeID:"textileLabel",name:"Sewn-in label / collar",materialID:"label-ecru")
@@ -32,12 +35,33 @@ extension Samples {
     }
     p.notes=[.init("NASA-inspired original artwork; no endorsement or flight-certified product is implied."),
       .init("The blank and fabric specifications are generic concept assumptions, not manufacturer measurements."),
-      .init("The jacket is a shaped presentation blank. Cutting patterns, physical fit/drape, stitch digitization, machine files, and hardware operation are not implemented in this milestone.",kind:"question"),
+      .init("The jacket is a shaped presentation blank. Its mission patches generate real stitch programs and supported local files from editable source artwork. Garment cutting patterns, calibrated fit/drape, physical sew-out, fabric compensation and hardware operation are not established by this study.",kind:"question"),
       .init("Edit the independent mission artwork or sewn label to update every linked physical placement.")]
     p.camera.distance=42;p.camera.elevation=1.0;p.camera.azimuth=0.12;p.camera.target = .init(3,0.2,1.4)
     p.history=[.init("Created the ORBITAL flight-bomber textile study.")]
-    p.schemaVersion=17
+    p.schemaVersion=28
     return p
+  }
+  private static func missionEmbroidery(_ art:Artwork)->EmbroideryDesign {
+    let colors=["#DACDB3","#E4DCC8","#CD593D","#E9E2D2"]
+    let names=["Mission gold","Orbital ivory","Signal vermilion","Lettering bone"]
+    let regions=art.elements.map { element in
+      let method:EmbroideryRegion.Method=element.kind == "line" ? .satin : element.fillEnabled == false ? .running : .fill
+      let color=method == .fill ? element.color : element.stroke?.color ?? element.color
+      var region=EmbroideryRegion(elementIDs:[element.id],method:method,threadIndex:colors.firstIndex(of:color) ?? 3)
+      region.stitchLength=2.5
+      region.spacing=0.4
+      if method == .satin {region.satinWidth=2.2}
+      if element.kind == "text",element.text == "NASA" {
+        var underlay=EmbroideryUnderlay(method:.sparseFill)
+        underlay.spacing=2;underlay.inset=0.4
+        region.underlay=underlay
+      }
+      return region
+    }
+    var design=EmbroideryDesign(threads:zip(names,colors).map {EmbroideryThread(name:$0.0,color:$0.1)},regions:regions)
+    design.process=EmbroideryProcess()
+    return design
   }
   private static func type(_ text:String,_ x:Double,_ y:Double,_ width:Double,_ height:Double,_ size:Double,_ color:String="#E9E2D2",alignment:String="center")->ArtworkElement {
     var e=ArtworkElement(kind:"text",x:x,y:y,width:width,height:height,text:text,color:color,fontSize:size)

@@ -78,6 +78,36 @@ import XCTest
     store.showingHome = false
     return (ViewFixture(store:store),store,root)
   }
+  func testStudioPointerOrbitPanAndZoomRetainPresentationUntilExplicitTableSwitch() throws {
+    let (f,store,root)=try scene()
+    defer {f.close();store.engine.project=nil;try? FileManager.default.removeItem(at:root)}
+    store.showSurface(.studio)
+    store.studioPreset="Graphite"
+    store.synchronizeScene()
+    let before=try XCTUnwrap(store.project)
+    let builds=f.controller.diagnostics["geometry_builds"] as? Int
+    func verifyStudio() {
+      XCTAssertEqual(store.mode,.studio)
+      XCTAssertEqual(store.studioPreset,"Graphite")
+      store.synchronizeScene()
+      XCTAssertEqual(f.controller.scene.background.contents as? NSColor,NSColor(hex:"#3E4345"))
+    }
+    f.drag(30,0)
+    verifyStudio()
+    f.drag(0,-20,flags:.shift)
+    verifyStudio()
+    let wheel=try XCTUnwrap(CGEvent(scrollWheelEvent2Source:nil,units:.line,wheelCount:1,wheel1:2,wheel2:0,wheel3:0))
+    f.view.scrollWheel(with:try XCTUnwrap(NSEvent(cgEvent:wheel)))
+    verifyStudio()
+    XCTAssertNotEqual(store.project?.camera,before.camera)
+    XCTAssertEqual(store.project?.objects,before.objects)
+    XCTAssertEqual(store.project?.history,before.history)
+    XCTAssertTrue(store.engine.undoStack.isEmpty)
+    XCTAssertEqual(f.controller.diagnostics["geometry_builds"] as? Int,builds)
+    store.showSurface(.table)
+    XCTAssertEqual(store.mode,.table)
+  }
+
   private func assertProjectVisible(_ f:ViewFixture,
     file:StaticString = #filePath,line:UInt = #line) {
     let width = f.view.bounds.width,height = f.view.bounds.height

@@ -71,7 +71,12 @@ final class FabricPatternTests: XCTestCase {
   }
   func testMCPPatternMutationIsAtomicUndoableAndPersistsSchemaTwentyOne() throws {
     let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString); defer { try? FileManager.default.removeItem(at: root) }
-    let engine = OperationEngine(repository: try ProjectRepository(root: root)), fixture = try fixture(); engine.project = fixture.0
+    let engine = OperationEngine(repository: try ProjectRepository(root: root)), fixture = try fixture()
+    // Keep the schema-21 regression on a pre-embroidery source even as the live study advances.
+    var legacy=fixture.0
+    legacy.schemaVersion=17
+    for index in legacy.objects.indices {legacy.objects[index].textile?.embroidery=nil}
+    engine.project=legacy
     let baseline = engine.project!, pattern = FabricPattern(sourceObjectID: fixture.1)
     _ = try engine.call("form_update_object", arguments: ["object_id": fixture.2.uuidString, "fabric_pattern": try jsonObject(pattern)])
     XCTAssertEqual(engine.project!.minimumSchemaVersion, 21)

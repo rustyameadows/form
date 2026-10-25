@@ -170,6 +170,7 @@ enum TableTool: String, CaseIterable {
                 "form_list_fonts", "form_font_features", "form_image_info", "form_export_publication",
               ].contains(name) || (name == "form_import_svg" && args["dry_run"] as? Bool == true)
                 || (name=="form_export_artwork" && args["ink_output"] as? String=="preflight")
+                || (name=="form_production_job" && args["kind"] as? String=="decoration" && ["preflight","export"].contains(args["command"] as? String ?? "list"))
                 || (name == "form_replace_font" && args["dry_run"] as? Bool==true)
                 || (name == "form_component" && args["command"] as? String == "list")
                 || (name == "form_swatch" && args["command"] as? String == "list")
@@ -179,6 +180,7 @@ enum TableTool: String, CaseIterable {
                 || (name == "form_story" && ["list","get","layout"].contains(args["command"] as? String ?? "list"))
                 || (name == "form_publication" && ["list","get","preflight"].contains(args["command"] as? String ?? "list"))
             if !readOnly {
+              try self.preflightDecorationHandoff(name,args)
               try self.preflightInkHandoff(name,args)
               try self.preflightFontHandoff(name,args)
               try self.preflightPublicationHandoff(name,args);self.finishArtworkEditing()

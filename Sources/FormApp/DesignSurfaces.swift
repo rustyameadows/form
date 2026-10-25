@@ -27,6 +27,8 @@ extension StudioStore {
   }
 
   func activateDesignSurface(_ surface: WorkspaceMode) {
+    // Studio uses the same 3D surface. Pointer focus must retain its presentation settings.
+    if surface == .table, mode == .studio { return }
     if mode != surface { mode = surface }
   }
 

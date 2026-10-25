@@ -101,3 +101,6 @@ Use `bash scripts/test.sh`, `python3 scripts/smoke_artwork.py`, and `python3 scr
 ## Declared production colors
 
 Choose the intended CMYK profile in the frame's Color output section, then use Set production ink… in the existing shared palette. Process components and named-spot alternate/tint remain separate from the approximate RGB chip. Save commits the focused numeric field, and Convert to RGB preview is explicit and undoable. Frame/publication export offers RGB appearance, genuine CMYK/spot composite and positive digital ink maps, with element-specific preflight. The current opaque-vector subset rejects unsupported paints instead of flattening spots. See [production inks](production-inks.md) for masks/text, knockout, physical boxes and remaining print limitations.
+
+
+Finite physical frames and attached decoration inspectors expose **Prepare HTV / DTF…**. Application/delivery review, explicit mirror/background/white choices, physical cut/transfer files and immutable capture use the current editable source without changing camera or 3D Print controls. Saved archives remain available in **Production jobs → HTV / DTF preparations**, including after source deletion. [Supported workflow and limits](decoration-preparation.md).

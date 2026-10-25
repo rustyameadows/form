@@ -623,6 +623,7 @@ struct ArtworkInspector: View {
       SectionLabel(object.isCanvasWorkspace ? "FREEFORM CANVAS" : "ARTWORK FRAME")
       ProductionOverlayControls(session:session)
       ColorProfileControls(session: session)
+      if object.recipeID=="artboard",!object.isCanvasWorkspace,let store=session.store {DecorationPreparationAction(store:store,objectID:object.id).buttonStyle(.borderless)}
       if object.isCanvasWorkspace {
         Text("Draw, type, or place images anywhere. Add a physical frame when you need one, then drag artwork onto it.")
           .font(.system(size:11)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
