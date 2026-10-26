@@ -40,7 +40,15 @@ enum TableTool: String, CaseIterable {
   let bridge = LocalBridgeServer()
   @Published var revision = 0
   @Published var showingHome = true
-  @Published var mode: WorkspaceMode = .table
+  @Published var environment: ProjectEnvironment = .form
+  @Published var mode: WorkspaceMode = .table {
+    didSet {
+      // Existing explicit artwork actions also leave the secondary Studio.
+      if mode != .studio && environment == .studio { environment = .form; studioReturnSurface = nil }
+    }
+  }
+  var studioReturnSurface: (mode: WorkspaceMode, layout: DesignSurfaceLayout)?
+  @Published var fabricationReview: FabricationReview?
   @Published var surfaceLayout: DesignSurfaceLayout = .single
   var canvasWindowController: CanvasWindowController?
   @Published var projects: [ProjectSummary] = []
@@ -146,6 +154,9 @@ enum TableTool: String, CaseIterable {
     }
     engine.onProjectDidChange = { [weak self] in
       self?.closeDetachedCanvas()
+      self?.environment = .form
+      self?.studioReturnSurface = nil
+      self?.fabricationReview = nil
       self?.printing.resetForProjectChange()
       self?.cloth.clear()
       self?.showingPrint = false
@@ -221,6 +232,9 @@ enum TableTool: String, CaseIterable {
             if name == "form_status", var status = result as? [String: Any] {
               status["renderer"] = self.scene?.diagnostics ?? [:]
               status["artwork_renderer"] = self.artworkSession.canvas?.diagnostics ?? [:]
+              status["environment"] = self.environment.rawValue
+              status["primary_environments"] = ProjectEnvironment.primary.map(\.rawValue)
+              status["studio_access"] = "secondary_icon_and_menu"
               status["design_surfaces"] = [
                 "layout": self.surfaceLayout.rawValue,
                 "focused_surface": self.mode.rawValue.lowercased(),
@@ -367,6 +381,10 @@ enum TableTool: String, CaseIterable {
     scene?.resetCamera()
   }
   func home() {
+    environment = .form
+    mode = .table
+    studioReturnSurface = nil
+    fabricationReview = nil
     invalidateArtworkTransferProject()
     studioShots.reset()
     cloth.clear()
@@ -501,6 +519,8 @@ enum TableTool: String, CaseIterable {
     }
     switch view {
     case "home": home()
+    case "form", "function", "fabricate":
+      showEnvironment(ProjectEnvironment(rawValue: view)!)
     case "table":
       showSurface(.table)
     case "canvas":

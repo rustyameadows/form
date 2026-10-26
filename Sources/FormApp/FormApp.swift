@@ -148,7 +148,19 @@ import SwiftUI
           store.artworkSession.mutate { $0.showGrid = !($0.showGrid ?? false) }
         }.keyboardShortcut("'").disabled(store.mode != .artwork)
       }
+      CommandMenu("Environment") {
+        ForEach(ProjectEnvironment.primary) { environment in
+          Button(environment.title) { store.showEnvironment(environment) }.disabled(store.project == nil)
+        }
+        Divider()
+        Button("Canvas") { store.showSurface(.artwork) }.disabled(store.project == nil)
+        Button("Table") { store.showSurface(.table) }.disabled(store.project == nil)
+        Button("Split Canvas and Table") { store.showSplit() }.disabled(store.project == nil)
+        Button("Open Canvas Window") { store.detachCanvas() }.disabled(store.project == nil)
+      }
       CommandMenu("Studio") {
+        Button("Show Studio") { store.showEnvironment(.studio) }.disabled(store.project == nil)
+        Divider()
         Button("Document Fonts…") {store.showingDocumentFonts=true}.disabled(store.project==nil)
         Button("Materials & Equipment") { store.showingLibrary = true }
         Button("Codex Connection") { store.showingBridge = true }

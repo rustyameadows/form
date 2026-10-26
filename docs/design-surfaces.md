@@ -1,12 +1,14 @@
 # Canvas and Table
 
-Canvas and Table are peer design surfaces in the same FORM project. This direction was requested October 25, 2026 and is part of the active implementation goal.
+Canvas and Table are peer design surfaces in the same LAB project. This direction was requested October 25, 2026 and is part of the active implementation goal.
 
 The freeform 2D Canvas holds loose typography, notes, references, images, and vector experiments without requiring an artboard. Finite physical artboards and object-face regions sit within it. They provide the physical boundaries used for manufacturing/export and the links to 3D product surfaces. The Table remains the continuous 3D environment for objects, construction, materials, and physical relationships.
 
 Moving artwork onto a mapped region makes it part of that physical source. Moving it back onto the loose canvas removes it from the product. Source text, styles, components, asset links, masks, physical coordinates, and meaningful Undo must survive those transfers. Existing shared artwork remains the source of truth; the two views must not maintain divergent copies.
 
 Both surfaces can be used alone, together in a resizable split, or with the Canvas in its own window. A single active canvas/editor and a single Table camera avoid competing gesture ownership. Project changes, Save, Undo, and native/MCP edits act on shared state. Command focus follows the surface being edited. Closing a detached surface restores a usable main-window arrangement.
+
+Form, Function and Fabricate are project environments; Canvas and Table are views of their shared source. Choose views from the secondary **Views** toolbar or **Environment** menu. Studio is a separate presentation environment reached through the aperture icon or **Studio → Show Studio**. Returning from Studio restores the previous design layout and finite artwork target without resetting the camera.
 
 Implementation acceptance:
 

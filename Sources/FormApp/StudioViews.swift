@@ -43,11 +43,14 @@ struct RootView: View {
     .sheet(item: $store.svgImport) { review in
       SVGImportSheet(review: review).environmentObject(store)
     }
+    .sheet(item: $store.fabricationReview) { review in
+      FabricationReviewView(review: review).environmentObject(store)
+    }
     .sheet(isPresented: $store.showingPrint) {
       PrintWorkspace(printing: store.printing).environmentObject(store)
     }
     .alert(
-      "FORM",
+      "LAB",
       isPresented: Binding(get: { store.error != nil }, set: { if !$0 { store.error = nil } })
     ) {
       Button("OK") { store.error = nil }
@@ -62,8 +65,8 @@ struct StudioTopBar: View {
   var body: some View {
     HStack(spacing: 14) {
       if store.showingHome {
-        Text("FORM").font(.system(size: 15, weight: .heavy, design: .rounded)).tracking(4)
-        Text("0.1").font(.system(size: 10, weight: .medium, design: .monospaced)).foregroundStyle(
+        Text("LAB").font(.system(size: 15, weight: .heavy, design: .rounded)).tracking(4)
+        Text("0.2").font(.system(size: 10, weight: .medium, design: .monospaced)).foregroundStyle(
           Palette.secondary
         ).padding(.horizontal, 7).padding(.vertical, 3).background(Palette.line, in: Capsule())
       } else {
@@ -72,7 +75,27 @@ struct StudioTopBar: View {
         Text(store.project?.name ?? "Untitled study").font(.system(size: 13, weight: .semibold))
           .lineLimit(1).frame(maxWidth: 210, alignment: .leading)
       }
-      Spacer()
+      Spacer(minLength: 10)
+      if !store.showingHome {
+        HStack(spacing: 3) {
+          ForEach(ProjectEnvironment.primary) { environment in
+            Button { store.showEnvironment(environment) } label: {
+              Text(environment.title)
+                .font(.system(size: 12, weight: store.environment == environment ? .semibold : .medium))
+                .padding(.horizontal, 15).padding(.vertical, 8)
+                .background(store.environment == environment ? Color.white : Color.clear, in: RoundedRectangle(cornerRadius: 7))
+            }.buttonStyle(.plain)
+              .foregroundStyle(store.environment == environment ? Palette.ink : Palette.secondary)
+              .accessibilityLabel(environment.title + " environment")
+          }
+        }.padding(4).background(.black.opacity(0.035), in: RoundedRectangle(cornerRadius: 11))
+        Button { store.showEnvironment(.studio) } label: {
+          Image(systemName: "camera.aperture").font(.system(size: 16)).frame(width: 34, height: 34)
+            .foregroundStyle(store.environment == .studio ? Palette.accent : Palette.secondary)
+            .background(store.environment == .studio ? Palette.accent.opacity(0.09) : .clear, in: RoundedRectangle(cornerRadius: 8))
+        }.buttonStyle(.plain).help("Studio · lighting, saved shots & presentation").accessibilityLabel("Studio environment")
+        Spacer(minLength: 10)
+      }
       if store.showingHome {
         Button {
           store.showingBridge = true
@@ -82,7 +105,7 @@ struct StudioTopBar: View {
           ).foregroundStyle(Palette.secondary)
         }.buttonStyle(.plain)
         Rectangle().fill(Palette.line).frame(width: 1, height: 20)
-        IconButton("Studio Library", symbol: "square.stack.3d.up") { store.showingLibrary = true }
+        IconButton("LAB Library", symbol: "square.stack.3d.up") { store.showingLibrary = true }
       } else {
         IconButton("Project notes", symbol: "text.alignleft") { store.showingProjectInfo = true }
         IconButton("Materials & equipment", symbol: "square.stack.3d.up") {
@@ -106,40 +129,6 @@ struct StudioTopBar: View {
       }
     }
     .padding(.leading, 92).padding(.trailing, 22).frame(height: 62)
-    .overlay {
-      if !store.showingHome {
-        HStack(spacing: 3) {
-          ForEach(WorkspaceMode.allCases, id: \.self) { mode in
-            Button {
-              store.showSurface(mode)
-            } label: {
-              Label(
-                mode.rawValue,
-                systemImage: mode == .table
-                  ? "cube.transparent" : mode == .artwork ? "square.and.pencil" : "camera.aperture"
-              )
-              .font(.system(size: 12, weight: store.mode == mode ? .semibold : .medium))
-              .padding(.horizontal, 13).padding(.vertical, 8)
-              .background(
-                store.mode == mode ? Color.white : Color.clear,
-                in: RoundedRectangle(cornerRadius: 7)
-              )
-              .shadow(color: .black.opacity(store.mode == mode ? 0.04 : 0), radius: 2, y: 1)
-            }.buttonStyle(.plain).foregroundStyle(
-              store.mode == mode ? Palette.ink : Palette.secondary)
-          }
-          Rectangle().fill(Palette.line).frame(width:1,height:19).padding(.horizontal,3)
-          Button { store.showSplit() } label: {
-            Image(systemName:"rectangle.split.2x1").frame(width:30,height:30)
-              .foregroundStyle(store.surfaceLayout == .split ? Palette.accent : Palette.secondary)
-          }.buttonStyle(.plain).help("Canvas and Table side by side").accessibilityLabel("Split Canvas and Table")
-          Button { store.detachCanvas() } label: {
-            Image(systemName:"arrow.up.forward.square").frame(width:30,height:30)
-          }.buttonStyle(.plain).help("Open Canvas in a separate window").accessibilityLabel("Open Canvas window")
-
-        }.padding(4).background(.black.opacity(0.035), in: RoundedRectangle(cornerRadius: 11))
-      }
-    }
     .background(Palette.paper)
   }
 }
@@ -208,7 +197,7 @@ struct HomeView: View {
           VStack(alignment: .leading, spacing: 11) {
             Text("A PLACE TO MAKE THINGS").font(.system(size: 10, weight: .semibold)).tracking(2.3)
               .foregroundStyle(Palette.secondary)
-            Text("Your studio.").font(.system(size: 43, weight: .regular, design: .serif)).tracking(
+            Text("Your lab.").font(.system(size: 43, weight: .regular, design: .serif)).tracking(
               -1.1)
             Text("Pick up where you left off, or put a new idea on the table.").font(
               .system(size: 14)
@@ -260,7 +249,7 @@ struct HomeView: View {
         HStack(spacing: 10) {
           Image(systemName: "point.3.connected.trianglepath.dotted").font(.system(size: 17))
           Text("A conversation here. An object there.").font(.system(size: 12, weight: .medium))
-          Text("Create with Codex, then make it your own in FORM.").font(.system(size: 12))
+          Text("Create with Codex, then make it your own in LAB.").font(.system(size: 12))
             .foregroundStyle(Palette.secondary)
           Spacer()
           Button("Connect Codex") { store.showingBridge = true }.buttonStyle(.plain).font(
@@ -273,7 +262,7 @@ struct HomeView: View {
             .system(size: 9, weight: .medium)
           ).tracking(1.6)
           Spacer()
-          Text("FORM  /  STUDIO 0.1").font(.system(size: 9, design: .monospaced))
+          Text("LAB  /  0.2").font(.system(size: 9, design: .monospaced))
         }.foregroundStyle(Palette.secondary.opacity(0.75)).padding(.top, 10).padding(.bottom, 24)
       }.padding(.horizontal, 52).frame(maxWidth: 1600)
         .frame(maxWidth: .infinity)
@@ -375,19 +364,50 @@ struct NewProjectCard: View {
   }
 }
 
+struct DesignSurfaceBar: View {
+  @EnvironmentObject var store: StudioStore
+  var body: some View {
+    HStack(spacing: 8) {
+      Text("VIEWS").font(.system(size: 9, weight: .semibold)).tracking(1).foregroundStyle(Palette.secondary)
+      ForEach([WorkspaceMode.artwork, .table], id: \.self) { surface in
+        Button { store.showSurface(surface) } label: {
+          Label(surface.rawValue, systemImage: surface == .artwork ? "square.and.pencil" : "cube.transparent")
+            .font(.system(size: 11, weight: .medium)).padding(.horizontal, 10).padding(.vertical, 5)
+            .background(store.surfaceLayout == .single && store.mode == surface ? Color.white : .clear, in: RoundedRectangle(cornerRadius: 5))
+        }.buttonStyle(.plain).accessibilityLabel(surface.rawValue + " view")
+      }
+      Button { store.showSplit() } label: {
+        Label("Split", systemImage: "rectangle.split.2x1").font(.system(size: 11)).padding(.horizontal, 10).padding(.vertical, 5)
+          .background(store.surfaceLayout == .split ? Color.white : .clear, in: RoundedRectangle(cornerRadius: 5))
+      }.buttonStyle(.plain).help("Canvas and Table side by side").accessibilityLabel("Split Canvas and Table")
+      Button { store.detachCanvas() } label: { Image(systemName: "arrow.up.forward.square").frame(width: 28, height: 28) }
+        .buttonStyle(.plain).help("Open Canvas in a separate window").accessibilityLabel("Open Canvas window")
+      Spacer()
+      Text("One project · connected surfaces").font(.system(size: 10)).foregroundStyle(Palette.secondary)
+    }.padding(.horizontal, 24).frame(height: 38).background(Palette.line.opacity(0.3))
+  }
+}
+
 struct WorkspaceView: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
-    Group {
-      if store.surfaceLayout == .split {
-        HSplitView {
-          ArtworkWorkspace().frame(minWidth: 440)
-          TableWorkspace().frame(minWidth: 360)
+    VStack(spacing: 0) {
+      if store.environment != .studio { DesignSurfaceBar() }
+      HStack(spacing: 0) {
+        Group {
+          if store.surfaceLayout == .split {
+            HSplitView {
+              ArtworkWorkspace().frame(minWidth: 440)
+              TableWorkspace().frame(minWidth: 360)
+            }
+          } else if store.surfaceLayout == .detached || store.mode != .artwork {
+            TableWorkspace()
+          } else { ArtworkWorkspace() }
+        }.frame(maxWidth: .infinity, maxHeight: .infinity)
+        if [.function, .fabricate].contains(store.environment) {
+          Rectangle().fill(Palette.line).frame(width: 1)
+          EnvironmentContextPanel()
         }
-      } else if store.surfaceLayout == .detached || store.mode != .artwork {
-        TableWorkspace()
-      } else {
-        ArtworkWorkspace()
       }
     }.safeAreaInset(edge: .bottom, spacing: 0) { WorkspaceStatus() }
   }
@@ -405,7 +425,7 @@ struct TableWorkspace: View {
           Spacer()
           if store.mode == .studio {
             StudioPanel()
-          } else if store.primary != nil {
+          } else if store.primary != nil && store.environment == .form {
             if store.surfaceLayout == .split {
               Button { showingObjectControls.toggle() } label: {
                 Label(store.primary?.name ?? "Object controls", systemImage: "slider.horizontal.3")
@@ -437,7 +457,7 @@ struct TableHeading: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
       HStack(spacing: 9) {
-        Text(store.mode == .studio ? "RENDERING STUDIO" : "THE TABLE").font(
+        Text(store.mode == .studio ? "STUDIO" : "THE TABLE").font(
           .system(size: 10, weight: .semibold)
         ).tracking(1.7)
         if !store.isolated.isEmpty {

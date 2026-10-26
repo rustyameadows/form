@@ -1,12 +1,12 @@
-# FORM implementation goal
+# LAB product roadmap
 
-Status: **Incomplete**. The October 26, 2026 audit found no active goal attached in the goal service; the product scope below remains unfinished. See [current project status](project-status.md) for shipped work, unshipped candidates and execution state.
+Status: **Broader product scope incomplete.** The October 26 audit found no active goal attached at that checkpoint. The user's subsequent LAB transition request has an active, bounded implementation goal, defined in the [transition contract](lab-transition.md). It reorganizes the application around Form, Function and Fabricate, with Studio retained as a secondary environment. Completing that structural transition does not complete or cancel the broader requirements below. See [current project status](project-status.md) for verified delivery and remaining product work.
 
 Expanded October 25, 2026 to include the freeform Canvas/Table relationship, the complete Textiles, Apparel & Merchandise brief, and the complete [2D Design, Typography & Vector Editing specification](2d-design-typography-vector-spec.md), alongside the [original product brief](product-brief.md), the supplied interface sketches, and local 3D-print preparation.
 
 ## Objective
 
-Deliver a capable, polished native Mac creative environment for 3D physical design, professional 2D graphic composition, and textiles/apparel/soft goods. A continuous Table, editable parametric objects, independent and linked artwork, typography, vector geometry, persistent projects, production exports, Studio materials/filaments, and an Orca-powered print workspace must work together. Codex operates the same deterministic editing commands through local MCP; FORM does not call external AI models. Printer setup and status are permitted; sending or starting prints remains disabled under the user's explicit instruction.
+Deliver a capable, polished native Mac creative environment for 3D physical design, professional 2D graphic composition, and textiles/apparel/soft goods. A continuous Table, editable parametric objects, independent and linked artwork, typography, vector geometry, persistent projects, production exports, Studio materials/filaments, and an Orca-powered print workspace must work together. Codex operates the same deterministic editing commands through local MCP; LAB does not call external AI models. Printer setup and status are permitted; sending or starting prints remains disabled under the user's explicit instruction.
 
 Canvas and Table are connected peer design surfaces. The freeform 2D Canvas holds loose typography, notes, references, images, and sketches without first requiring a physical artboard. Finite artboards and object-face regions live within that canvas and map to 3D products; moving/editing artwork in those regions updates the corresponding physical surfaces. Canvas-only, Table-only, split, and separate-window arrangements share one project and Undo history. See [design surfaces](design-surfaces.md).
 

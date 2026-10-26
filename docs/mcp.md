@@ -33,6 +33,10 @@ build/LAB.app/Contents/MacOS/lab-mcp --call form_create_project '{"name":"Evenin
 build/LAB.app/Contents/MacOS/lab-mcp --call form_add_object '{"recipe_id":"lamp","material_id":"vermillion","parameters":{"height":350}}'
 ```
 
+## Environments and views
+
+`form_set_view` accepts `form`, `function`, and `fabricate` for primary environments, and `studio` for the separate presentation environment. Switching these retains the same project, selection and camera. `form_status` reports `environment`, the three `primary_environments`, `studio_access`, and the existing `design_surfaces` state. `table`, `canvas`, `split`, `canvas_window`, and `artwork` remain surface commands; camera presets and saved Studio shot operations keep their existing behavior.
+
 ## Tools
 
 | Tools | Use |
@@ -127,7 +131,7 @@ bash scripts/test.sh
 python3 scripts/smoke_mcp.py
 ```
 
-The smoke test uses the real stdio transport, creates a validation project in the running app's library, checks custom recipes and linked edits, and exports to `.local/validation`. For isolated development, launch the app executable with `FORM_LIBRARY_PATH="$PWD/.local/Library"` before running it. The server itself discovers the running app through its local socket; it does not read or mutate the package files behind the app.
+The smoke test uses the real stdio transport, creates a validation project in the running app's library, checks custom recipes and linked edits, and exports to `.local/validation`. For isolated development, launch the app executable with `LAB_LIBRARY_PATH="$PWD/.local/Library"` before running it. The server itself discovers the running app through its local socket; it does not read or mutate the package files behind the app.
 
 See the [native artwork editor guide](2d-editor.md) for artwork commands, file format, and current limitations.
 

@@ -34,6 +34,8 @@ extension StudioStore {
 
   func showSurface(_ surface: WorkspaceMode) {
     guard project != nil else { return }
+    if surface == .studio { showEnvironment(.studio); return }
+    if environment == .studio { showEnvironment(.form) }
     if surfaceLayout == .detached, surface == .artwork {
       canvasWindowController?.showWindow(nil)
       canvasWindowController?.window?.makeKeyAndOrderFront(nil)
@@ -53,6 +55,7 @@ extension StudioStore {
 
   func showSplit() {
     guard project != nil else { return }
+    if environment == .studio { showEnvironment(.form) }
     finishArtworkEditing()
     closeDetachedCanvas()
     _ = ensureCanvas()
@@ -63,6 +66,7 @@ extension StudioStore {
 
   func detachCanvas() {
     guard project != nil else { return }
+    if environment == .studio { showEnvironment(.form) }
     if surfaceLayout == .detached, let controller = canvasWindowController {
       controller.window?.makeKeyAndOrderFront(nil)
       return

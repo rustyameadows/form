@@ -171,7 +171,7 @@ Use an isolated library while testing:
 LAB_LIBRARY_PATH="$PWD/.local/Library" build/LAB.app/Contents/MacOS/LAB
 ```
 
-`FORM_SOCKET_PATH` can isolate multiple development instances. The native view redraws on demand, geometry updates are scoped to changed objects, and geometry/texture caches are bounded.
+`LAB_SOCKET_PATH` (or legacy `FORM_SOCKET_PATH`) can isolate multiple development instances. The native view redraws on demand, geometry updates are scoped to changed objects, and geometry/texture caches are bounded.
 
 This build has a native typography/vector editor and procedural construction system. The full professional 2D specification, general CAD booleans/import, collaboration, embedded agent UI, and photorealistic path tracing remain unfinished. The expanded goal tracks the requested 2D capabilities through their demonstration and acceptance criteria. Live P1S status still requires verification with the physical printer's connection details.
 

@@ -425,13 +425,13 @@ public enum MCP {
         required: ["text"]),
       tool(
         "form_set_view",
-        "Set a camera preset or design surface. canvas opens the freeform 2D Canvas; split shows Canvas beside Table; canvas_window opens Canvas in a separate native window. These share one project and Undo history. artwork retains the finite-frame editor view. Optional object_id selects the target; element_ids and node_ids select artwork layers and path nodes. Named camera views always frame the whole physical project.",
+        "Set a project environment, camera preset or design surface. form, function and fabricate are the three primary environments; studio is the secondary presentation environment. Environment changes preserve source, selection and camera. canvas opens the freeform 2D Canvas; split shows Canvas beside Table; canvas_window opens Canvas in a separate native window. These share one project and Undo history. artwork retains the finite-frame editor view. Optional object_id selects the target; element_ids and node_ids select artwork layers and path nodes. Named camera views always frame the whole physical project.",
         [
           "view": [
             "type": "string",
             "enum": [
               "perspective", "overhead", "front", "fit", "focus", "isolate", "show_all", "home",
-              "table", "canvas", "split", "canvas_window", "artwork", "studio", "print_bed", "print_object",
+              "form", "function", "fabricate", "table", "canvas", "split", "canvas_window", "artwork", "studio", "print_bed", "print_object",
             ],
           ], "studio_command":["type":"string","enum":["list","get","capture","update","rename","delete","recall"]],"shot_id":objectID,"name":string,"reference_aspect":["type":"number"],"camera":["type":"object"],"lighting":["type":"string","enum":StudioShot.lightingIDs],"surface":["type":"string","enum":StudioShot.surfaces],"visibility":["type":"object","description":"mode:project or objects; objectIDs is an exact UUID list for objects. Missing subjects block rendering, never silently retarget."],"width":["type":"integer"],"height":["type":"integer"], "object_id": objectID, "element_ids": ["type": "array", "items": string],
           "node_ids": ["type": "array", "items": string],

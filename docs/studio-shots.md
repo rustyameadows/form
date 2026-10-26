@@ -6,6 +6,8 @@ The first presets are **Classic**, which preserves the existing Studio rig, **So
 
 ## Compose, capture and recall
 
+Use the aperture icon beside Form / Function / Fabricate, or **Studio → Show Studio**. Studio is a separate environment outside the three primary tabs. Returning to a primary environment restores the previous surface arrangement.
+
 Open Studio and use the existing camera controls. Choose Whole project or Selected objects; selected visibility means exactly those object IDs, so select applied details as well. Choose lighting, surface and Width × Height in pixels, then **Capture shot**. Capture creates one Undo step and selects the new definition, so an immediate Update edits that new shot. The original full-size Table/Studio viewport remains in use until you explicitly recall a saved shot.
 
 Recall from the Shots menu. Studio displays a labeled reference frame at the captured aspect, with neutral gutters outside it. Resizing a window scales this frame without refitting, recentering or changing the saved camera. Moving the camera produces a working draft. Capturing another definition preserves an independently active reference frame. **Update** saves the current view/options as one Undo. Rename and Delete are in More; New shot saves an independent shot from the recalled working view. Leaving the frame or using an existing named camera view leaves shot review; the existing Perspective, Top and Front behavior and mouse/keyboard controls are unchanged.
