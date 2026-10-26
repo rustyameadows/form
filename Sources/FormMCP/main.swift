@@ -16,7 +16,7 @@ if CommandLine.arguments.count >= 3 && CommandLine.arguments[1] == "--call" {
   }
 } else if CommandLine.arguments.contains("--help") {
   print(
-    "FORM MCP server 0.1\n\nRun without arguments for MCP over stdio. Open FORM first.\nDirect invocation: form-mcp --call form_status '{}'\nOptional environment: FORM_SOCKET_PATH\n"
+    "LAB MCP server 0.2\n\nRun without arguments for MCP over stdio. Open LAB first.\nDirect invocation: lab-mcp --call form_status '{}'\nOptional environment: LAB_SOCKET_PATH (FORM_SOCKET_PATH remains supported)\n"
   )
 } else {
   while let line = readLine() {

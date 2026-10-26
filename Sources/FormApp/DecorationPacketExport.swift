@@ -5,7 +5,7 @@ extension StudioStore {
   func decorationManifest(_ job:DecorationPreparation,revision:DecorationPreparationRevision,files:[String:Data])throws -> (data:Data,digest:String) {
     guard files.count<=132,files.values.allSatisfy({!$0.isEmpty && $0.count<=64_000_000}) else{throw FormError.invalid("The decoration packet exceeds its file count or per-file bound.")}
     let entries=files.mapValues{["sha256":DecorationPacketAssets.digest($0),"bytes":$0.count] as [String:Any]}
-    var value:[String:Any]=["application":"FORM","packet_version":1,"kind":"decoration","process":job.process.rawValue,"job_id":job.id.uuidString,
+    var value:[String:Any]=["application":"LAB","packet_version":1,"kind":"decoration","process":job.process.rawValue,"job_id":job.id.uuidString,
       "source_digest":job.sourceDigest,"revision_digest":job.revisionDigest,"quantity":job.quantity,"files":entries,
       "delivery_files":revision.files.filter{$0.role=="delivery"}.map(\.name),"reference_files":revision.files.filter{$0.role=="reference"}.map(\.name),
       "source_files":revision.files.filter{$0.role=="source" || $0.role=="profile"}.map(\.name),

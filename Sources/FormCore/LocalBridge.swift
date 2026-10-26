@@ -69,7 +69,7 @@ public enum LocalBridgeClient {
     setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, socklen_t(MemoryLayout<timeval>.size))
     var addr = try address(socketPath)
     guard withAddress(&addr, { Darwin.connect(fd, $0, $1) }) == 0 else {
-      throw FormError.missing("Open FORM first. The local bridge is not running at \(socketPath).")
+      throw FormError.missing("Open LAB first. The local bridge is not running at \(socketPath).")
     }
     let request: [String: Any] = ["name": name, "arguments": arguments]
     try writeMessage(JSONSerialization.data(withJSONObject: request), to: fd)
@@ -95,7 +95,7 @@ public final class LocalBridgeServer {
         throw FormError.invalid("Bridge path is occupied by another file.")
       }
       if (try? LocalBridgeClient.call("form_status", arguments: [:], socketPath: path)) != nil {
-        throw FormError.invalid("Another FORM window already owns the local bridge.")
+        throw FormError.invalid("Another LAB window already owns the local bridge.")
       }
       unlink(path)
     }

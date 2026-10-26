@@ -125,7 +125,7 @@ struct FilamentEditor: View {
               store.library.filaments[index] = draft
             }
             store.saveLibrary()
-            message = "Saved to Studio Library"
+            message = "Saved to LAB Library"
           } catch { message = error.localizedDescription }
         }.buttonStyle(.borderedProminent).tint(Palette.ink)
       }
@@ -237,7 +237,7 @@ struct PrinterSettingsPanel: View {
           Palette.accent.opacity(0.06), in: RoundedRectangle(cornerRadius: 8))
       }
       Text(
-        "Use the IP, serial, and LAN access code shown by your printer. Available LAN features depend on firmware and network mode. FORM receives status over TLS; it does not upload files, heat, move, calibrate, or start prints in this build."
+        "Use the IP, serial, and LAN access code shown by your printer. Available LAN features depend on firmware and network mode. LAB receives status over TLS; it does not upload files, heat, move, calibrate, or start prints in this build."
       ).font(.system(size: 11)).foregroundStyle(Palette.secondary).lineSpacing(3)
     }.onAppear {
       draft =
@@ -307,7 +307,7 @@ struct EngineSettingsPanel: View {
         VStack(alignment: .leading, spacing: 5) {
           Text("OrcaSlicer, inside your workflow.").font(
             .system(size: 22, weight: .regular, design: .serif))
-          Text("Native FORM controls. Real local Orca slicing.").font(.system(size: 12))
+          Text("Native LAB controls. Real local Orca slicing.").font(.system(size: 12))
             .foregroundStyle(Palette.secondary)
         }
       }
@@ -339,10 +339,10 @@ struct EngineSettingsPanel: View {
         }
       }
       Text(
-        "FORM resolves the engine's printer, process, and filament presets, then prepares your selected component and slices it on this Mac. The layer preview, estimates, STL, G-code, and 3MF remain local."
+        "LAB resolves the engine's printer, process, and filament presets, then prepares your selected component and slices it on this Mac. The layer preview, estimates, STL, G-code, and 3MF remain local."
       ).font(.system(size: 13)).foregroundStyle(Palette.secondary).lineSpacing(5)
       Text(
-        "OrcaSlicer is a separate AGPL-3.0 application. Its code and networking plugin are not linked into FORM. Local development uses the checksum-verified official 2.4.2 release; compatible installations can be selected here."
+        "OrcaSlicer is a separate AGPL-3.0 application. Its code and networking plugin are not linked into LAB. Local development uses the checksum-verified official 2.4.2 release; compatible installations can be selected here."
       ).font(.system(size: 11)).foregroundStyle(Palette.secondary).lineSpacing(3)
       Link(
         "Official OrcaSlicer releases",

@@ -521,14 +521,14 @@ public enum FormError: LocalizedError {
 
 public enum FormPaths {
   public static var library: URL {
-    if let path = ProcessInfo.processInfo.environment["FORM_LIBRARY_PATH"] {
+    if let path = LabIdentity.libraryOverride() {
       return URL(fileURLWithPath: path, isDirectory: true)
     }
     return FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-      .appendingPathComponent("FORM", isDirectory: true)
+      .appendingPathComponent(LabIdentity.libraryDirectory, isDirectory: true)
   }
   public static var socket: String {
-    ProcessInfo.processInfo.environment["FORM_SOCKET_PATH"] ?? "/tmp/form-\(getuid()).sock"
+    LabIdentity.socketOverride() ?? "/tmp/form-\(getuid()).sock"
   }
 }
 

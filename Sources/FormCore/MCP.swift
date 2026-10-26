@@ -73,7 +73,7 @@ public enum MCP {
     }
     return [
       tool(
-        "form_status", "Read FORM's current project, selection, version, and library location.",
+        "form_status", "Read LAB's current project, selection, version, and library location.",
         readOnly: true),
       tool("form_list_projects", "List saved projects and their project IDs.", readOnly: true),
       tool("form_cloth", "Configure and inspect real bounded cloth studies. Initial mesh, masses, material UVs, pins, seams, static colliders and solver settings are saved/undoable. Runtime Run/Stop/Step/Reset and snapshots share the native controller, never commit text drafts, append project history or persist motion. Contacts: static plane, swept vertex/sphere and discrete triangle/sphere; no self-collision/calibrated fit. Cloth remains an open surface and cannot be sliced as a solid. Add clothPanel or clothTote with form_add_object for prepared templates; pouchAssembly is an original curved-pattern project template. assemble creates source-linked sewn panels with explicit rigid poses, source-edge seam fractions and material-coordinate attachments. Pattern assemblies first perform bounded gravity-free preparation: physical seconds/frames stay 0 until every structural length is within 5% and P95 absolute error within 1%; source pose remains visible until ready. Step advances a preparation batch before physical frames; inspect diagnostics.preparation and reset after failure. Initial/worst joining strain and unready candidate positions remain separately inspectable. No generated mesh is an editable document source. Attach a separate object at physical material coordinates; detach before deleting its surface.", [
@@ -119,7 +119,7 @@ public enum MCP {
           ],
         ], required: ["name"]),
       tool(
-        "form_open_project", "Open a saved project in the running FORM window.",
+        "form_open_project", "Open a saved project in the running LAB window.",
         ["project_id": string], required: ["project_id"]),
       tool(
         "form_get_project",
@@ -536,10 +536,10 @@ public enum MCP {
         ["2024-11-05", "2025-03-26", "2025-06-18", protocolVersion].contains(requested)
         ? requested : protocolVersion
       result = [
-        "protocolVersion": version, "serverInfo": ["name": "form", "version": "0.1.0"],
+        "protocolVersion": version, "serverInfo": ["name": "lab", "version": LabIdentity.version],
         "capabilities": ["tools": [:], "resources": [:], "prompts": [:]],
         "instructions":
-          "FORM is a native physical design studio. Use form_list_recipes and form_get_project before editing. Create custom recipes for new object categories. All physical dimensions are millimeters. Use form_batch for coherent multi-part changes. Native edits and MCP edits share undo history. No external model calls occur in FORM.",
+          "LAB is a native creative environment for designing and making physical things. Use form_list_recipes and form_get_project before editing. Create custom recipes for new object categories. All physical dimensions are millimeters. Use form_batch for coherent multi-part changes. Native edits and MCP edits share undo history. No external model calls occur in LAB.",
       ]
     case "ping": result = [String: String]()
     case "tools/list": result = ["tools": tools]
@@ -616,7 +616,7 @@ public enum MCP {
             "content": [
               "type": "text",
               "text":
-                "In FORM, design \(description). Inspect available recipes and the current project. Create a project if needed. Reuse or define a parametric recipe with meaningful dimensions and controls. Create editable objects on the Table, choose materials, record assumptions as decisions or questions, and focus the result. Do not make external AI calls.",
+                "In LAB, design \(description). Inspect available recipes and the current project. Create a project if needed. Reuse or define a parametric recipe with meaningful dimensions and controls. Create editable objects on the Table, choose materials, record assumptions as decisions or questions, and focus the result. Do not make external AI calls.",
             ],
           ]
         ]

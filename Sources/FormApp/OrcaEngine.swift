@@ -4,7 +4,7 @@ import Foundation
 enum OrcaEngine {
   static func appURL(configured: String?, library: URL) -> URL? {
     let candidates: [String] = [
-      configured, ProcessInfo.processInfo.environment["FORM_ORCA_APP_PATH"],
+      configured, LabIdentity.environmentOverride("LAB_ORCA_APP_PATH",legacy:"FORM_ORCA_APP_PATH",environment:ProcessInfo.processInfo.environment),
       Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/OrcaSlicer.app").path,
       "/Applications/OrcaSlicer.app", library.appendingPathComponent("Engines/OrcaSlicer.app").path,
       Bundle.main.bundleURL.deletingLastPathComponent().deletingLastPathComponent()

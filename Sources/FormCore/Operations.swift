@@ -143,7 +143,7 @@ public final class OperationEngine {
     switch name {
     case "form_status":
       return [
-        "application": "FORM", "version": "0.1.0",
+        "application": LabIdentity.name, "version": LabIdentity.version,
         "project_id": project?.id.uuidString as Any? ?? NSNull(),
         "project_name": project?.name as Any? ?? NSNull(),
         "selected_objects": selection.map(\.uuidString), "external_model_calls": false,
@@ -322,7 +322,7 @@ public final class OperationEngine {
       return result
     case "form_edit_artwork":
       if ArtworkTransferCommands.recognizes(name,a) {
-        guard let onGraphics else{throw FormError.missing("Portable artwork transfer requires the running FORM app.")}
+        guard let onGraphics else{throw FormError.missing("Portable artwork transfer requires the running LAB app.")}
         var input=a;input["_source"]=source;return try onGraphics(name,input)
       }
       let id = try objectID()
@@ -746,11 +746,11 @@ public final class OperationEngine {
         return try result.map {try jsonObject($0)} ?? ["deleted":true]
       }
       guard let onView else {
-        throw FormError.missing("View controls require the running FORM app.")
+        throw FormError.missing("View controls require the running LAB app.")
       }
       return try onView(try string("view"), a)
     case "form_export":
-      guard let onExport else { throw FormError.missing("Export requires the running FORM app.") }
+      guard let onExport else { throw FormError.missing("Export requires the running LAB app.") }
       try flush()
       return try onExport(try string("format"), a)
     case "form_undo":

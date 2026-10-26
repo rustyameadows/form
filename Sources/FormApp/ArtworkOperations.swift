@@ -227,7 +227,7 @@ extension StudioStore {
     if positionFallback>0 || capsFallback>0 {result["character_forms_fallback"]="Character position and small caps use shared native outlines for faithful font forms and geometric fallback; source words stay editable."}
     result["optical_text_outlined"]=opticalFallback
     result["optical_sizing_warnings"]=OpticalTypography.warnings(art)
-    if opticalFallback>0 {result["optical_sizing_fallback"]="Optical-sizing text uses shared native outlines for precise SVG metrics; source text stays editable in FORM."}
+    if opticalFallback>0 {result["optical_sizing_fallback"]="Optical-sizing text uses shared native outlines for precise SVG metrics; source text stays editable in LAB."}
     if declaredInks {result["ink_output"]="preview";result["ink_declarations_encoded"]=false;result["ink_notice"]="sRGB appearance preview; named/process ink declarations are not encoded in this output."}
     result["color_space"] = format == "pdf" ? art.outputColorProfile?.model ?? "sRGB" : "sRGB"
     if format == "pdf", let profile = art.outputColorProfile {

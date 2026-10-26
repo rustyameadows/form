@@ -101,7 +101,7 @@ extension StudioStore {
     self.store = store
     let window = NSWindow(contentRect:.init(x:0,y:0,width:1160,height:820),
       styleMask:[.titled,.closable,.miniaturizable,.resizable],backing:.buffered,defer:false)
-    window.title = "\(store.project?.name ?? "FORM") · Canvas"
+    window.title = "\(store.project?.name ?? "LAB") · Canvas"
     window.minSize = .init(width:860,height:600)
     window.isReleasedWhenClosed = false
     window.contentView = NSHostingView(rootView:DetachedCanvasView().environmentObject(store))
@@ -139,7 +139,7 @@ private struct DetachedCanvasView: View {
       ArtworkWorkspace()
     }.preferredColorScheme(.light)
       .onChange(of:store.project?.id) { _,_ in
-        store.canvasWindowController?.window?.title = "\(store.project?.name ?? "FORM") · Canvas"
+        store.canvasWindowController?.window?.title = "\(store.project?.name ?? "LAB") · Canvas"
       }
   }
 }

@@ -92,7 +92,7 @@ enum TableTool: String, CaseIterable {
       try library.save(to: repository.root)
       if seedLibrary { try repository.seedIfEmpty() }
       projects = try repository.list()
-    } catch { fatalError("FORM could not open its project library: \(error.localizedDescription)") }
+    } catch { fatalError("LAB could not open its project library: \(error.localizedDescription)") }
     engine.onStudioShotValidate = { [weak self] shot in
       guard let self,let project=self.project else{return};try self.studioShots.runtimePreflight(project,shot)
     }
@@ -106,11 +106,11 @@ enum TableTool: String, CaseIterable {
       return try self.export(format: format, arguments: args)
     }
     engine.onPrint = { [weak self] name, args in
-      guard let self else { throw FormError.missing("FORM is closing.") }
+      guard let self else { throw FormError.missing("LAB is closing.") }
       return try self.printing.call(name, args)
     }
     engine.onGraphics = { [weak self] name, args in
-      guard let self else { throw FormError.missing("FORM is closing.") }
+      guard let self else { throw FormError.missing("LAB is closing.") }
       return try self.graphicsCall(name, args)
     }
     engine.onValidatePaint = { p,id,ids in
@@ -119,7 +119,7 @@ enum TableTool: String, CaseIterable {
       for e in art.elements where ids.contains(e.id) && e.visibleStroke != nil { _ = try VectorGeometry.expandedStroke(e) }
     }
     engine.onPrepareSwatch = { [weak self] project,swatch in
-      guard let self else{throw FormError.missing("FORM is closing.")}
+      guard let self else{throw FormError.missing("LAB is closing.")}
       try self.prepareProductionSwatch(project,&swatch)
     }
     engine.onPrepareGlyph = { element, choice in
@@ -168,14 +168,14 @@ enum TableTool: String, CaseIterable {
       try bridge.start { [weak self] name, args, completion in
         DispatchQueue.main.async {
           guard let self else {
-            completion(.failure(FormError.missing("FORM is closing.")))
+            completion(.failure(FormError.missing("LAB is closing.")))
             return
           }
           do {
             guard !ArtworkTransferCommands.rejectsBatch(name,args) else{throw FormError.invalid("Portable file transfers require individual calls; batch cannot roll back external files.")}
             if ArtworkTransferCommands.recognizes(name,args) {
               Task { @MainActor [weak self] in
-                guard let self else{completion(.failure(FormError.missing("FORM is closing.")));return}
+                guard let self else{completion(.failure(FormError.missing("LAB is closing.")));return}
                 do {
                   let result=try await self.artworkTransferCallAsync(args)
                   if args["command"] as? String==ArtworkTransferCommands.importName {self.changed();try self.engine.flush();self.saving=false;self.showingHome=false}
@@ -667,7 +667,7 @@ enum TableTool: String, CaseIterable {
     do {
       try library.save(to: repository.root)
       if project != nil {
-        edit("Updated Studio Library") {
+        edit("Updated LAB Library") {
           let physicalMaterials = library.materials.filter { item in
             !FormCore.Material.presets.contains(item)
           }

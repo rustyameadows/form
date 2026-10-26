@@ -68,7 +68,7 @@ struct ObjectInspector: View {
             if object.isFlexibleSurface {ClothInspector(controller:store.cloth.preview,object:object);Divider()}
             if object.patternAssembly==nil {
             VStack(alignment: .leading, spacing: 14) {
-              SectionLabel("FORM & DIMENSIONS")
+              SectionLabel("DIMENSIONS & PARAMETERS")
               ForEach(recipe.parameters) { parameter in
                 ParameterControl(parameter: parameter, object: object)
               }
@@ -350,9 +350,9 @@ struct BridgeView: View {
   @EnvironmentObject var store: StudioStore
   @Environment(\.dismiss) var dismiss
   var command: String {
-    Bundle.main.bundleURL.appendingPathComponent("Contents/MacOS/form-mcp").path
+    Bundle.main.bundleURL.appendingPathComponent("Contents/MacOS/lab-mcp").path
   }
-  var config: String { "[mcp_servers.form]\ncommand = \"\(command)\"" }
+  var config: String { "[mcp_servers.lab]\ncommand = \"\(command)\"" }
   var body: some View {
     VStack(alignment: .leading, spacing: 22) {
       HStack {
@@ -366,7 +366,7 @@ struct BridgeView: View {
         Text("A conversation here.\nAn object on the Table.").font(
           .system(size: 30, weight: .regular, design: .serif))
         Text(
-          "Describe what you want to make in Codex. FORM exposes the same editable objects and controls through a local MCP connection."
+          "Describe what you want to make in Codex. LAB exposes the same editable objects and controls through a local MCP connection."
         ).font(.system(size: 13)).foregroundStyle(Palette.secondary).lineSpacing(4)
       }
       HStack {
@@ -377,7 +377,7 @@ struct BridgeView: View {
         Text("No external model calls").font(.system(size: 10)).foregroundStyle(Palette.secondary)
       }
       VStack(alignment: .leading, spacing: 12) {
-        Text("Add FORM to your Codex MCP configuration:").font(.system(size: 12, weight: .medium))
+        Text("Add LAB to your Codex MCP configuration:").font(.system(size: 12, weight: .medium))
         Text(config).font(.system(size: 11, design: .monospaced)).textSelection(.enabled).padding(
           14
         ).frame(maxWidth: .infinity, alignment: .leading).background(
@@ -398,7 +398,7 @@ struct BridgeView: View {
         ).font(.system(size: 13, design: .serif)).lineSpacing(4).foregroundStyle(Palette.secondary)
       }
       Text(
-        "Keep FORM open while connected. Changes appear live, save locally, and can be undone in the app. Custom recipes become native parameter controls."
+        "Keep LAB open while connected. Changes appear live, save locally, and can be undone in the app. Custom recipes become native parameter controls."
       ).font(.system(size: 11)).foregroundStyle(Palette.secondary).lineSpacing(3)
     }.padding(32).frame(width: 510).background(Palette.paper)
   }
@@ -514,7 +514,7 @@ struct LibraryView: View {
     VStack(alignment: .leading, spacing: 22) {
       HStack {
         VStack(alignment: .leading, spacing: 5) {
-          Text("Studio Library").font(.system(size: 28, weight: .regular, design: .serif))
+          Text("LAB Library").font(.system(size: 28, weight: .regular, design: .serif))
           Text("Materials and tools that follow you from project to project.").font(
             .system(size: 12)
           ).foregroundStyle(Palette.secondary)

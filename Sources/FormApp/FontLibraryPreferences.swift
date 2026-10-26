@@ -1,4 +1,5 @@
 import AppKit
+import FormCore
 import FormGraphics
 import SwiftUI
 
@@ -26,7 +27,7 @@ import SwiftUI
     favorites=unique(favorites,limit:1024);recent=unique(recent,limit:12);legacyFamilies=unique(legacyFamilies,limit:256)
   }
   static func environment()->FontLibraryPreferences {
-    if let path=ProcessInfo.processInfo.environment["FORM_LIBRARY_PATH"],!path.isEmpty {
+    if let path=LabIdentity.libraryOverride() {
       return .init(file:URL(fileURLWithPath:path).appendingPathComponent("FontPreferences.json"))
     }
     return .init(defaults:.standard)

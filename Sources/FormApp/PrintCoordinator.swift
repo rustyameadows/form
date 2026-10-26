@@ -393,7 +393,7 @@ import SwiftUI
     ]
   }
   func call(_ name: String, _ a: [String: Any]) throws -> Any {
-    guard let store else { throw FormError.missing("FORM is closing.") }
+    guard let store else { throw FormError.missing("LAB is closing.") }
     switch name {
     case "form_open_print":
       let id: UUID?

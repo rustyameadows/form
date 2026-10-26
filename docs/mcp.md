@@ -1,23 +1,25 @@
 # Create with Codex
 
-FORM's app and MCP executable use the same editing engine. Keep the native app open, describe a product in Codex, and use the resulting native controls to explore it. There are no external model calls inside FORM.
+LAB's app and MCP executable use the same editing engine. Keep the native app open, describe a product in Codex, and use the resulting native controls to explore it. There are no external model calls inside LAB.
 
 ## Connect
 
 Build the app first, then register the bundled stdio server:
 
 ```sh
-codex mcp add form -- /absolute/path/to/form/build/FORM.app/Contents/MacOS/form-mcp
+codex mcp add lab -- /absolute/path/to/form/build/LAB.app/Contents/MacOS/lab-mcp
 ```
 
 Alternatively add this to the applicable Codex `config.toml`, replacing the path:
 
 ```toml
-[mcp_servers.form]
-command = "/absolute/path/to/form/build/FORM.app/Contents/MacOS/form-mcp"
+[mcp_servers.lab]
+command = "/absolute/path/to/form/build/LAB.app/Contents/MacOS/lab-mcp"
 ```
 
 The app's **Codex connection** panel copies the exact configuration for its current location. Codex supports local stdio servers in shared or trusted project configuration; see the [official MCP configuration documentation](https://developers.openai.com/codex/mcp/). Open a new Codex chat or reconnect the server if an existing chat has not loaded it.
+
+LAB advertises server name `lab`. Existing `form_*` tool identifiers, `form://` resources, the `form-mcp` helper, and the default local socket remain compatible. Existing clients do not need to rename their configured server. New environment variables `LAB_LIBRARY_PATH`, `LAB_SOCKET_PATH`, and `LAB_ORCA_APP_PATH` take precedence over their `FORM_` counterparts; the ordinary project library stays in `~/Library/Application Support/FORM`.
 
 ## A first conversation
 
@@ -26,9 +28,9 @@ The app's **Codex connection** panel copies the exact configuration for its curr
 An agent can discover `lamp` with `form_list_recipes`, create or open a project, add the lamp, duplicate a linked variant, and frame both. Native parameters update immediately. The same operations are available without MCP framing for development:
 
 ```sh
-build/FORM.app/Contents/MacOS/form-mcp --call form_status '{}'
-build/FORM.app/Contents/MacOS/form-mcp --call form_create_project '{"name":"Evening light"}'
-build/FORM.app/Contents/MacOS/form-mcp --call form_add_object '{"recipe_id":"lamp","material_id":"vermillion","parameters":{"height":350}}'
+build/LAB.app/Contents/MacOS/lab-mcp --call form_status '{}'
+build/LAB.app/Contents/MacOS/lab-mcp --call form_create_project '{"name":"Evening light"}'
+build/LAB.app/Contents/MacOS/lab-mcp --call form_add_object '{"recipe_id":"lamp","material_id":"vermillion","parameters":{"height":350}}'
 ```
 
 ## Tools

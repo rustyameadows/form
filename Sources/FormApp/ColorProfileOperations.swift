@@ -49,7 +49,7 @@ extension StudioStore {
   func importOutputColorProfile(objectID: UUID) {
     let panel = NSOpenPanel(); panel.allowedContentTypes = [UTType("com.apple.colorsync-profile") ?? .data]
     panel.allowsMultipleSelection = false; panel.canChooseDirectories = false
-    panel.message = "Choose the ICC output profile supplied for your print process. FORM stores a portable copy with this artwork."
+    panel.message = "Choose the ICC output profile supplied for your print process. LAB stores a portable copy with this artwork."
     guard panel.runModal() == .OK, let url = panel.url else { return }
     setOutputColorProfile(url.path, objectID: objectID)
   }

@@ -7,7 +7,7 @@ import SwiftUI
   @NSApplicationDelegateAdaptor(FormAppDelegate.self) var delegate
   @StateObject var store = StudioStore.shared
   var body: some Scene {
-    WindowGroup("FORM", id: "studio") {
+    WindowGroup("LAB", id: "studio") {
       RootView().environmentObject(store)
         .frame(minWidth: store.surfaceLayout == .split ? 1280 : 1020, minHeight: 700)
         .preferredColorScheme(.light)

@@ -30,7 +30,7 @@ extension OperationEngine {
       return try jsonObject(document)
     }
     if command=="layout" || command=="preflight" {
-      guard let onGraphics else{throw FormError.missing("Publication layout/preflight requires the running native FORM app.")}
+      guard let onGraphics else{throw FormError.missing("Publication layout/preflight requires the running native LAB app.")}
       return try onGraphics(name,arguments)
     }
     var result:[String:Any]=[:]

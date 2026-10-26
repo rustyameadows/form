@@ -1,5 +1,5 @@
 #!/bin/bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-if [ ! -x build/FORM.app/Contents/MacOS/FORM ]; then bash scripts/build.sh; fi
-open build/FORM.app
+if [ ! -x build/LAB.app/Contents/MacOS/LAB ]; then bash scripts/build.sh; fi
+open build/LAB.app

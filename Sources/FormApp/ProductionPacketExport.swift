@@ -29,7 +29,7 @@ extension StudioStore {
     }
     guard files.values.reduce(0,{$0+$1.count})<=128_000_000 else {throw FormError.invalid("This packet exceeds 128 MB. Select fewer reference outputs or split the source.")}
     let entries:[String:[String:Any]]=files.mapValues {["sha256":ProductionAssets.digest($0),"bytes":$0.count]}
-    var manifest:[String:Any]=["application":"FORM","packet_version":1,"job_id":job.id.uuidString,"source_digest":job.sourceDigest,"revision_digest":job.revisionDigest,
+    var manifest:[String:Any]=["application":"LAB","packet_version":1,"job_id":job.id.uuidString,"source_digest":job.sourceDigest,"revision_digest":job.revisionDigest,
       "program_digest":job.programDigest,"quantity":job.quantity,"user_record_count":job.records.count,"outputs":revision.outputs,"files":entries,
       "inventory_deducted":false,"machine_contacted":false,"automatically_verified_sew_out":false]
     let packetDigest=ProductionAssets.digest(try JSONSerialization.data(withJSONObject:manifest,options:.sortedKeys))

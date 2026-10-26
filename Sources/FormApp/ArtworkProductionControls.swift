@@ -143,7 +143,7 @@ extension StudioStore {
     let opticalFallback=format=="svg" && arguments["outline_text"] as? Bool==false ? output.pages.filter{$0.role == .print}.reduce(0){$0+$1.artwork.elements.filter{$0.kind=="text" && OpticalTypography.requiresOutlines($0)}.count}:0
     result["optical_text_outlined"]=opticalFallback
     result["optical_sizing_warnings"]=Array(Set(output.pages.flatMap{OpticalTypography.warnings($0.artwork)})).sorted()
-    if opticalFallback>0 {result["optical_sizing_fallback"]="Optical-sizing text uses shared native outlines for precise SVG metrics; source text stays editable in FORM."}
+    if opticalFallback>0 {result["optical_sizing_fallback"]="Optical-sizing text uses shared native outlines for precise SVG metrics; source text stays editable in LAB."}
     return result
   }
 }

@@ -16,4 +16,4 @@ if [ ! -x "$destination/OrcaSlicer.app/Contents/MacOS/OrcaSlicer" ]; then
   hdiutil attach -readonly -nobrowse -mountpoint "$mount_path" "$image_path"
   ditto "$mount_path/OrcaSlicer.app" "$destination/OrcaSlicer.app"
 fi
-printf '\nVerified official OrcaSlicer %s at %s\nSelect this app in FORM → Studio Library → Filaments & 3D printing → Slicing engine.\n' "$version" "$destination/OrcaSlicer.app"
+printf '\nVerified official OrcaSlicer %s at %s\nSelect this app in LAB → LAB Library → Filaments & 3D printing → Slicing engine.\n' "$version" "$destination/OrcaSlicer.app"

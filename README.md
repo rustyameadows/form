@@ -1,12 +1,14 @@
-# FORM
+# LAB
 
 A native Mac creative environment for designing and making physical things.
+
+**Form, Function, Fabricate** are the three primary environments for one project. **Studio** remains a separate environment, available through the aperture icon and Studio menu, for lighting, saved shots and presentation. Canvas, Table, split view and a separate Canvas window are views of that shared project. See the [LAB thesis](docs/lab-working-thesis-v2.md) and [transition contract](docs/lab-transition.md).
 
 **Project status:** [What works, what remains, and the current development state](docs/project-status.md) — updated October 26, 2026.
 
 Explore typography, notes, references, and graphics on a freeform 2D Canvas, connected to a continuous 3D Table for physical objects and materials. Use either surface alone, side by side, or with Canvas in a separate window. Start with the thing you want to make, then work directly with its dimensions, construction, and appearance.
 
-**Version 0.1 foundation:** A working native application with persistent projects, parametric objects, linked artwork, production exports, local Orca slicing, and a local MCP interface. **Codex handles the creative conversation; FORM makes no external AI model calls.**
+**Version 0.2 transition:** A working native application with persistent projects, parametric objects, linked artwork, production exports, local Orca slicing, and a local MCP interface. **Codex handles the creative conversation; LAB makes no external AI model calls.**
 
 The next governing document is the [2D Design, Typography & Vector Editing specification](docs/2d-design-typography-vector-spec.md). Its professional editing requirements expand the [implementation roadmap](docs/implementation-goal.md); the checklist distinguishes shipped foundations from remaining work.
 
@@ -18,7 +20,7 @@ Requires macOS 14 or later and Xcode 16 or later with the Swift 6 toolchain. No 
 
 ```sh
 bash scripts/build.sh release
-open build/FORM.app
+open build/LAB.app
 ```
 
 For a faster development build, use `bash scripts/build.sh`. The script creates an ad hoc signed app bundle and includes the MCP executable. You can also open `Package.swift` in Xcode. The app has not been notarized for public distribution.
@@ -64,21 +66,21 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Optical typography:** Explicit Automatic/Explicit/Off sizing in source points, source-preserving styles/glyphs, precise physical SVG fallback, and focused numeric Up/Down/Shift/Undo. See [optical sizing and precision](docs/optical-sizing.md).
 - **Typography:** Reusable text styles with local overrides, independent character/paragraph links, installed fonts, native selected-character editing, reversible Unicode case, paragraph tabs/hyphenation, font kerning, OpenType features, variable axes, real alternate-glyph selection, Core Text shaping, and editable glyph outlines. See [FOLIO and text styles](docs/reusable-text-styles.md), [FOUNDRY and font features](docs/font-features.md), [AVENUE and kerning](docs/kerning.md), [LEDGER and paragraph composition](docs/paragraph-composition.md), [VERSO and text case](docs/text-case.md), [QUILL and alternate glyphs](docs/glyphs.md), the [character position and small-cap guide](docs/character-forms.md), and the [editor guide](docs/2d-editor.md).
 - **Iterations and variants:** Independent design iterations or linked parameter/artwork variants with their own materials and placement.
-- **Studio Library:** Persistent materials and equipment profiles, separate from individual projects.
+- **LAB Library:** Persistent materials and equipment profiles, separate from individual projects.
 - **Print preparation:** `⌘P` opens a dedicated physical print bed with object/component selection, orientation, scale, filament, layer height, walls, infill, supports, brim, and actual sliced layer previews. Project switches cancel local work and clear stale previews; settings and mesh share Undo/Redo.
 - **Filaments and local printers:** Studio settings preserve spool profiles, colors, temperatures, flow, density, cost, and remaining inventory. P1S connection settings use Keychain for the LAN code and a read-only TLS/MQTT status adapter. Sending or starting prints is disabled.
 - **Saved Studio shots:** Named camera compositions with exact subjects, lighting/surfaces, output pixels, reference framing and PNG + render-record folders; capture/update share Undo. See [Studio shots](docs/studio-shots.md).
 - **Rendering and making:** Studio backgrounds, camera framing, 3000 × 2000 PNG, physically sized PDF artwork, millimeter SVG dielines, and component/material JSON.
 - **Project knowledge:** Editable design decisions and open questions, saved activity history, optional Codex conversation references, and undo/redo across native and MCP edits.
 
-Projects autosave to `~/Library/Application Support/FORM` as modular `.form` packages. Imported assets travel with the project. Use **Save a Copy** to take a project elsewhere.
+For compatibility, projects continue to autosave to `~/Library/Application Support/FORM` as modular `.form` packages. The existing bundle/document identifiers, local socket and `form_*` MCP tools remain compatible. `LAB_LIBRARY_PATH` / `LAB_SOCKET_PATH` / `LAB_ORCA_APP_PATH` take precedence over their legacy `FORM_` equivalents. Internal Swift module/product names remain stable; the packaged native application is LAB. `build/FORM.app` and its `form-mcp` helper remain compatibility launch paths. Imported assets travel with the project. Use **Save a Copy** to take a project elsewhere.
 
 ## Create with Codex
 
-Keep FORM open and register its bundled MCP server:
+Keep LAB open and register its bundled MCP server:
 
 ```sh
-codex mcp add form -- "$PWD/build/FORM.app/Contents/MacOS/form-mcp"
+codex mcp add lab -- "$PWD/build/LAB.app/Contents/MacOS/lab-mcp"
 ```
 
 Then describe an object in Codex:
@@ -97,7 +99,7 @@ The preparation UI is native SwiftUI/AppKit. Slicing runs the official OrcaSlice
 bash scripts/install-orca.sh
 ```
 
-This downloads official OrcaSlicer **2.4.2**, verifies its pinned SHA-256, and extracts it under `.local/engines`. Alternatively select an installed official `OrcaSlicer.app` under **Studio Library → Filaments & 3D printing → Slicing engine**. The binary is not committed or redistributed with FORM.
+This downloads official OrcaSlicer **2.4.2**, verifies its pinned SHA-256, and extracts it under `.local/engines`. Alternatively select an installed official `OrcaSlicer.app` under **LAB Library → Filaments & 3D printing → Slicing engine**. The binary is not committed or redistributed with LAB.
 
 See [Printing architecture, setup, and research](docs/printing.md) for profiles, license boundaries, P1S connection setup, and verified capabilities. Local slicing produces STL, G-code, and sliced 3MF files; no printer is contacted by slicing.
 
@@ -166,7 +168,7 @@ python3 scripts/smoke_print.py # Optional engine; local cube and hollow-shade sl
 Use an isolated library while testing:
 
 ```sh
-FORM_LIBRARY_PATH="$PWD/.local/Library" build/FORM.app/Contents/MacOS/FORM
+LAB_LIBRARY_PATH="$PWD/.local/Library" build/LAB.app/Contents/MacOS/LAB
 ```
 
 `FORM_SOCKET_PATH` can isolate multiple development instances. The native view redraws on demand, geometry updates are scoped to changed objects, and geometry/texture caches are bounded.

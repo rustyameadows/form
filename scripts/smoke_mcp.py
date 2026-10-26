@@ -5,6 +5,7 @@ Writes a new validation project and exports to .local/validation. Run against a
 disposable FORM_LIBRARY_PATH during development. Existing projects are untouched.
 """
 import json
+import os
 import pathlib
 import re
 import select
@@ -24,7 +25,7 @@ class Client:
     def __init__(self):
         self.sequence = 0
         self.process = subprocess.Popen(
-            [str(ROOT / "build/FORM.app/Contents/MacOS/form-mcp")],
+            [os.environ.get("LAB_MCP_PATH", str(ROOT / ("build/LAB.app/Contents/MacOS/lab-mcp" if (ROOT / "build/LAB.app").exists() else "build/FORM.app/Contents/MacOS/form-mcp")))],
             stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True,
         )
 
