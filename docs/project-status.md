@@ -1,24 +1,25 @@
-# FORM project status
+# LAB project status
 
 As of October 26, 2026.
 
-**FORM is a working native Mac alpha with substantial 2D, 3D and fabrication workflows. The complete product, typography and textile briefs are not finished.** The latest verified application integrates **portable artwork transfer (48) and physical page setup (49)**, and the reference-led **MERIDIAN desk-clock construction (50)**, with **989 optimized tests passing**: 643 core/graphics/IPC and 346 native tests, with no failures or skips. The installed signed application matches the tested source. See [transfer/page integration evidence](evidence/transfer-page-native.json) and [desk-clock evidence](evidence/desk-clock-native.json).
+**LAB is a working native Mac alpha with substantial 2D, 3D and fabrication workflows. The complete product, typography and textile briefs are not finished.** The LAB 0.2.0 structural transition establishes **Form, Function and Fabricate** as the three primary environments, with **Studio** retained through a secondary aperture icon and menu. Canvas/Table/split/separate-window views and existing source/Undo remain connected. The signed code at `fce57a0` passes **1,003 optimized tests**: 646 core/graphics/IPC and 357 native, with no failures or skips. Actual native/MCP navigation, typed parameter handoff/Undo, print preparation, split layout, legacy/new clients and quit/reopen are verified. See [LAB transition evidence](evidence/lab-transition-native.json) and the [environment guide](lab-environments.md).
+
+The earlier portable artwork transfer (48), physical page setup (49), and MERIDIAN desk-clock construction (50) remain in the app. Their earlier acceptance records remain [transfer/page evidence](evidence/transfer-page-native.json) and [desk-clock evidence](evidence/desk-clock-native.json).
 
 This report distinguishes features in that application from local candidates and research. Test totals are validation checkpoints, not a percentage of product completion.
 
 ## Current execution and GitHub state
 
-- The goal service currently returns **no active goal**. The earlier Active label in the roadmap was stale as an execution indicator. The remaining requirements have not been completed or cancelled.
-- The available record does not establish why the goal stopped being attached. There is no basis to report that it stopped because the app was finished.
+- The earlier audit found no attached goal; its absence did not mean the app was finished. The user subsequently requested a bounded LAB transition goal. Its delivered scope and acceptance are recorded in the [transition contract](lab-transition.md); completing it does not complete or cancel the broader roadmap.
 - The transfer/page candidates are integrated and accepted together. The subsequent desk-clock request adds a bounded sculpted-clock construction and a real reference-led project; it does not restart the full roadmap. Separate cloth and broader SVG research remain local.
 - The application code is pushed to **codex/form-v0.1** in [draft pull request 1](https://github.com/rustyameadows/form/pull/1). It has not been merged. **main still contains the initial product brief and README**, so viewing main does not show the implementation.
-- All five earlier projects and Studio settings remain exact. A sixth project, MERIDIAN, is open with its embedded reference, linked editable dial and clock in split view. Eight physical STL parts and dial SVG/PDF are exported; movement fit, mounts and lens remain follow-ups. No print was sent or started.
+- All five earlier projects and shared library settings remain exact. MERIDIAN source/assets, the original photo, user-edited “Test Clock” signature, masks/history/shots remain exact; only viewport aspect and its derived preview changed. The sixth project is open with its embedded reference, linked editable dial and clock in split view. Eight physical STL parts and dial SVG/PDF are exported; movement fit, mounts and lens remain follow-ups. No print was sent or started.
 
 ## What works in the verified application
 
 | Area | Implemented and verified | Important boundary |
 | --- | --- | --- |
-| Native project environment | Home previews, modular project packages, assets, autosave, Undo/Redo, iterations, linked variants and shared Studio records. | A complete release and clean-install acceptance pass remains ahead. |
+| Native project environment | LAB identity; Form/Function/Fabricate and secondary Studio; Home previews, modular project packages, assets, autosave, Undo/Redo, iterations, linked variants and shared Studio records. | A complete release and clean-install acceptance pass remains ahead. |
 | 3D Table and navigation | Continuous Table, parametric recipes and inspectors, selection/movement/groups, focus/isolation and stable named views. Four actual mouse directions preserve the expected axis and world-up frame; Perspective frames the whole project with or without selection. | Supported constructions remain recipe based. MERIDIAN adds a smooth hollow desk-clock case and separate printable components; movement mounts, lens and mechanical fit remain unfinished. This is not a general solid-modeling or arbitrary garment-construction system. |
 | Connected 2D and 3D surfaces | Freeform Canvas with notes, references, type and graphics; physical frames and linked object artwork; single, split and separate-window arrangements sharing state and Undo. | General curved-surface projection, engineered cross-panel continuity and broader dieline relationships remain incomplete. |
 | Typography | Native rich text, installed fonts and replacement, actual font features/axes/glyphs, kerning, optical sizing, source-preserving superscript/subscript and genuine small caps, styles, language, lists, tabs, hyphenation and editable outlines. | Broader font/script and complex-document compatibility still needs acceptance work. Font files are not made portable automatically. |
@@ -86,3 +87,7 @@ The unavailable P1S connection does not block the remaining software work. No co
 ## Governing scope
 
 The [original product brief](product-brief.md), [2D typography and vector specification](2d-design-typography-vector-spec.md), [textile brief](textiles-apparel-merchandise-spec.md), and the user's subsequent Canvas/Table, camera and print directions remain the scope. The [implementation roadmap](implementation-goal.md) retains detailed requirements; this status report is the current summary of delivery and execution state.
+
+## LAB transition follow-up
+
+The structural transition is delivered; future constraints, electronics, mechanisms and fabrication drivers remain future systems. Function currently exposes existing parametric/construction controls. Command-W dispatch for a custom detached Canvas window needs a separate fix; the native close control, Studio restoration and docking remain usable and verified. No broader feature candidate was integrated as part of this rename.

@@ -27,3 +27,15 @@ Navigation must preserve project source, selection, shared Undo, camera controls
 5. Run the full appropriate suite, sign/package the tested source, validate actual native navigation/MCP/restart on existing projects, and record evidence.
 
 Commit meaningful coherent stages and push accepted work. The goal is complete when the structural transition is delivered and verified, not when the entire product thesis is implemented.
+
+## Delivered acceptance — October 26, 2026
+
+The transition is implemented in the signed LAB 0.2.0 bundle at code commit `fce57a0`. [Native/MCP evidence](evidence/lab-transition-native.json) records **1,003 optimized passing tests** (646 core/graphics/IPC + 357 native), actual Studio icon/menu use, source/selection/camera preservation, shared Undo and print preparation. [Environment guide](lab-environments.md) describes the delivered controls.
+
+Actual keyboard testing found that object parameter fields submitted each digit and raised transient range alerts. They now retain local drafts and commit complete values on Submit or editing handoff. Native typing `1` leaves the source at 180 mm; completing `181` and changing environment commits once, and Command-Z restores 180 mm. Invalid values remain local. A final layout pass gives the split workspace its own footer row so Canvas and camera controls remain fully visible.
+
+The actual detached Canvas → Studio menu → Form sequence restores the same finite dial source and native window. Both the new and legacy helper paths reach LAB's ordinary library/default socket. A real horizontal mouse drag changes yaw with only 2.8e−17 radians of elevation difference and no object edits. An actual quit/relaunch and saved reopen preserve source and camera pose.
+
+All five earlier projects remain exact. MERIDIAN's objects, assets, source text/mask, history and saved shots remain exact; only its camera viewport aspect and derived preview changed. Shared library settings remain exact. No credentials were read and no print/equipment command or external model call occurred. Private source/photo screenshots stay in ignored local evidence.
+
+This completes the bounded rename/navigation transition. The broader product roadmap remains incomplete. During acceptance, Command-W did not close a custom detached Canvas window; its native close button and Studio close/restore lifecycle worked. That existing custom-window shortcut dispatch remains a separate UI follow-up.
