@@ -151,6 +151,7 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
   weak var sharedSourceDelegate:NSTextStorageDelegate?
   var prepareSource:((NSAttributedString)->NSAttributedString)?
   var onBecomeActive:(()->Void)?
+  var onCharacterPosition:((CharacterPosition)->Void)?
   override var undoManager:UndoManager? {sharedUndoManager ?? super.undoManager}
   var verticalOffset = 0.0
   var horizontalOffset = 0.0
@@ -185,6 +186,9 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
     if result {textStorage?.delegate=sharedSourceDelegate ?? self;resetSourceTracking();onBecomeActive?()}
     return result
   }
+  override func superscript(_ sender:Any?) {onCharacterPosition?(.superscript)}
+  override func `subscript`(_ sender:Any?) {onCharacterPosition?(.subscript)}
+  override func unscript(_ sender:Any?) {onCharacterPosition?(.normal)}
   override func insertNewline(_ sender:Any?) {
     if handleListReturn() {return};super.insertNewline(sender)
   }
@@ -413,10 +417,15 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let e = session.art.elements.first(where: { $0.id == id }).map(session.colored), e != publishedText,
       !tv.hasMarkedText()
     {
-      let range = TextCase.source(tv.attributedString()).sourceRange(tv.selectedRange())
+      let previous = TextCase.source(tv.attributedString())
+      let range = previous.sourceRange(tv.selectedRange())
       tv.textStorage?.setAttributedString(TypographyEngine.attributed(e, millimeters: false, preservingSource: true))
       publishedInput = NSAttributedString(attributedString: tv.attributedString())
-      tv.setSelectedRange(TextCase.source(tv.attributedString()).displayRange(NSRange(location:min(range.location,e.text.utf16.count),length:0)))
+      let location=min(range.location,e.text.utf16.count)
+      // A formatting/source-metadata refresh keeps the same words and must not
+      // collapse the user's selection or change the character inspector target.
+      let length=previous.text.string==e.text ? min(range.length,e.text.utf16.count-location):0
+      tv.setSelectedRange(TextCase.source(tv.attributedString()).displayRange(NSRange(location:location,length:length)))
       publishedText = e
     }
     if let id = editingID, let element = session.art.elements.first(where: { $0.id == id }) {
@@ -1535,6 +1544,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func activateStoryText(_ text:CanvasTextView,frame:StoryFrameID?) {
     textView=text;editingID=frame?.elementID
+    configureCharacterPositionAction(text)
     if let frame {session?.objectID=frame.objectID;session?.selection=[frame.elementID]}
     session?.editingText=true;session?.characterRange=TextCase.source(text.attributedString()).sourceRange(text.selectedRange())
     needsDisplay=true
@@ -1595,6 +1605,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     tv.delegate = self
     tv.setAccessibilityLabel("Edit text on artwork canvas")
     textView = tv
+    configureCharacterPositionAction(tv)
     editingID = e.id
     publishedText = e
     s.editingText = true
@@ -1872,6 +1883,32 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let manager=numericTextUndoManager;numericTextUndoManager=nil;numericTextUndoToken=nil
     if let manager,manager.groupingLevel>0 {manager.endUndoGrouping()}
   }
+  private func configureCharacterPositionAction(_ view:CanvasTextView) {
+    view.onCharacterPosition={ [weak self,weak view] value in
+      guard let self,let view,self.textView === view else{return}
+      do {_ = try self.applyCharacterPosition(value)}catch{self.session?.store?.error=error.localizedDescription}
+    }
+  }
+  func smallCapInspection()->[SmallCapsTypography.Report]? {
+    guard let tv=textView else{return nil}
+    let range=tv.selectedRange();return SmallCapsTypography.reports(in:tv.attributedString(),range:range.length>0 ? range:nil)
+  }
+  func characterPositionInspection()->[CharacterTypography.Resolution]? {
+    guard let tv=textView else{return nil}
+    let range=tv.selectedRange()
+    guard range.length>0 else {
+      if range.location<tv.attributedString().length,let record=CharacterTypography.resolution(tv.attributedString().attributes(at:range.location,effectiveRange:nil)){return[record]}
+      return []
+    }
+    return CharacterTypography.records(in:tv.attributedString()).filter{NSIntersectionRange($0.0,range).length>0}.map(\.1)
+  }
+  func applyCharacterPosition(_ value:CharacterPosition?)throws->Bool {
+    guard let tv=textView else{return false}
+    guard !hasMarkedTextInput else{throw FormError.invalid("Finish marked text input before changing character position.")}
+    let range=GlyphEngine.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString()),mapping=TextCase.source(tv.attributedString()),sourceRange=mapping.sourceRange(range)
+    guard CharacterPositionCommands.isCompleteRange(sourceRange,in:mapping.text.string,allowCaret:true) else{throw FormError.invalid("Character position needs complete graphemes; the selection was preserved.")}
+    return applyTextStyle{$0.characterPosition=value}
+  }
   func opticalSizingInspection()->[Typography]? {
     guard let tv=textView else{return nil}
     let range=tv.selectedRange(),fallback=session?.primary?.typography ?? .init()
@@ -1971,7 +2008,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func applyTextSize(_ size: Double) -> Bool {
     guard let tv = textView else { return false }
-    if opticalSizingInspection()?.contains(where:{$0.opticalSizing != nil})==true {return applyOpticalTextSize(size)}
+    if opticalSizingInspection()?.contains(where:{$0.opticalSizing != nil || $0.characterPosition != nil})==true {return applyOpticalTextSize(size)}
     let range = tv.selectedRange()
     let font =
       (range.location < (tv.textStorage?.length ?? 0)
@@ -1988,7 +2025,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       var changed=run;changed.fontSize=size;changed=TextStyleCommands.recording(changed,from:run)
       var type=changed.typography;type.inheritedLanguage=raw[LanguageHyphenation.inheritedLanguageKey] as? String
       var attrs=TypographyEngine.attributes(type,size:size,color:changed.color,millimeters:false,swatchID:changed.swatchID,textStyle:changed.textStyle,paragraphStyle:changed.paragraphStyle)
-      if type.opticalSizing==nil,let old=raw[.font] as? NSFont {attrs[.font]=NSFont(descriptor:old.fontDescriptor,size:size) ?? old}
+      if type.opticalSizing==nil,type.characterPosition==nil,let old=raw[.font] as? NSFont {attrs[.font]=NSFont(descriptor:old.fontDescriptor,size:size) ?? old}
       for key in [TextCase.sourceKey,GlyphEngine.overrideKey,PublicationLists.key] {attrs[key]=raw[key]}
       return attrs
     }

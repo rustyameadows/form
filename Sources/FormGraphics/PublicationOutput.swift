@@ -57,6 +57,8 @@ import FormCore
       let missing=FontCatalog.missing(in:Artwork(elements:[story.sourceElement]))
       for font in missing {issue("warning","\(story.name) uses missing font \(font); install it or select an available face.",story:story.id)}
       for message in GlyphEngine.issues(story.sourceElement.inheritingLanguage(story.language ?? document.language)) {issue("error",message,story:story.id)}
+      let sourceArt=Artwork(elements:[story.sourceElement.inheritingLanguage(story.language ?? document.language)])
+      for message in CharacterTypography.warnings(sourceArt)+SmallCapsTypography.warnings(sourceArt) {issue("warning",message,story:story.id,code:"character_forms")}
     }
     var pages:[[String:Any]]=[]
     for (index,page) in document.pages.enumerated() {
@@ -64,6 +66,8 @@ import FormCore
       pages.append(["index":index+1,"page_id":page.id.uuidString,"object_id":object.id.uuidString,"name":page.label ?? object.name,
         "width_mm":object.artworkSize.x,"height_mm":object.artworkSize.y,"bleed_mm":art.bleed])
       for font in FontCatalog.missing(in:art) {issue("warning","\(object.name) uses missing font \(font).",page:object.id)}
+      let independent=Artwork(elements:art.elements.filter{$0.storyFrame==nil})
+      for message in CharacterTypography.warnings(independent)+SmallCapsTypography.warnings(independent) {issue("warning",message,page:object.id,code:"character_forms")}
       for element in art.elements where element.kind != "group" && element.hidden != true {
         let bounds=art.bounds(of:element)
         if bounds.x < -art.bleed - 0.001 || bounds.y < -art.bleed - 0.001 || bounds.maxX > object.artworkSize.x+art.bleed+0.001 || bounds.maxY > object.artworkSize.y+art.bleed+0.001 {

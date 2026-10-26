@@ -40,6 +40,7 @@ extension OperationEngine {
           for (key, field) in changes { value[key] = field is NSNull ? nil : field }
           type = try JSONDecoder.form.decode(Typography.self, from: JSONSerialization.data(withJSONObject: value))
           if changes["opticalSizing"] is NSNull {type.setOpticalSizing(nil)}
+          if changes["characterPosition"]==nil,["features","featureSelections"].contains(where:{(changes[$0] as? [String:Any])?.keys.contains("10")==true}) {type.characterPosition=nil}
         }
         let saved = try TextStyleCommands.save(in: &p, id: id,
           name: a["name"] as? String ?? old?.name ?? "Untitled style", typography: type,

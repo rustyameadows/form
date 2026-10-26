@@ -5,7 +5,7 @@ extension PublicationCommands {
     prepareGlyph:((inout ArtworkElement,GlyphOverride?)throws->Void)?=nil,
     prepareParagraphs:((inout Artwork,Set<UUID>)throws->Void)?=nil,
     prepareOptical:((Artwork,Set<UUID>,[String:Any])throws->Void)?=nil) throws -> Bool {
-    guard ["paragraph","glyph","list","font","optical"].contains(command),let object=project.objects.first(where:{$0.id==objectID}),var artwork=project.editableArtwork(object) else{return false}
+    guard ["paragraph","glyph","list","font","optical","character_position"].contains(command),let object=project.objects.first(where:{$0.id==objectID}),var artwork=project.editableArtwork(object) else{return false}
     let targets=artwork.swatchPaintTargets(for:ids)
     let linked=artwork.elements.filter{targets.contains($0.id) && $0.storyFrame != nil}
     guard !linked.isEmpty else{return false}

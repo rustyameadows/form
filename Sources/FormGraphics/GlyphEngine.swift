@@ -57,10 +57,11 @@ import FormCore
       ((source.string as NSString).substring(with: choice.range) as NSString).isEqual(to:choice.sourceText) else {
       throw FormError.invalid("The source characters for this glyph changed. Select them again.")
     }
-    let first = source.attributes(at: choice.location, effectiveRange: nil)
+    let positioned=CharacterTypography.resolved(source,exactRanges:[choice.range])
+    let first = positioned.attributes(at: choice.location, effectiveRange: nil)
     guard let font = first[.font] as? NSFont else { throw FormError.invalid("Choose a font for the glyph.") }
     var uniform = true
-    source.enumerateAttributes(in: choice.range) { attrs, _, _ in
+    positioned.enumerateAttributes(in: choice.range) { attrs, _, _ in
       for key in uniformKeys {
         let a = first[key] as? NSObject, b = attrs[key] as? NSObject
         if a == nil ? b != nil : b == nil || !a!.isEqual(b!) { uniform = false }
@@ -70,7 +71,7 @@ import FormCore
       throw FormError.invalid("A single glyph needs matching font, size, color, and spacing across its source characters.")
     }
     let type=TypographyEngine.assignedTypography(in:first)
-    return (try GlyphCatalog.resolve(choice.glyph,font:font,sourceFace:type?.opticalSizing != nil ? type?.fontName:nil),font)
+    return (try GlyphCatalog.resolve(choice.glyph,font:font,sourceFace:(type?.opticalSizing != nil || type?.characterPosition != nil) ? type?.fontName:nil),font)
   }
   public static func issues(_ element: ArtworkElement) -> [String] {
     let source = TypographyEngine.sourceAttributed(element)
@@ -95,10 +96,15 @@ import FormCore
     }
   }
   public static func composed(_ source: NSAttributedString, choices: [GlyphOverride], preservingSource: Bool) -> NSAttributedString {
-    guard !choices.isEmpty else { return TypographyEngine.displayingCase(source, preservingSource: preservingSource) }
+    let source=CharacterTypography.authored(source)
+    guard !choices.isEmpty else {
+      let displayed=CharacterTypography.resolved(TypographyEngine.displayingCase(source,preservingSource:preservingSource))
+      return preservingSource ? displayed:CharacterTypography.withoutRuntime(displayed)
+    }
     // Production shaping needs the case map, but never serializes native source metadata.
-    let result = NSMutableAttributedString(attributedString: TypographyEngine.displayingCase(source))
-    let mapping = TextCase.source(result)
+    let display=TypographyEngine.displayingCase(source)
+    let mapping=TextCase.source(display)
+    let result=NSMutableAttributedString(attributedString:CharacterTypography.resolved(display,exactRanges:choices.map{mapping.displayRange($0.range)}))
     for choice in choices {
       guard choice.location >= 0,NSMaxRange(choice.range)<=source.length else {continue}
       let range = mapping.displayRange(choice.range)
@@ -120,7 +126,7 @@ import FormCore
       result.removeAttribute(TextCase.sourceKey, range: NSRange(location: 0, length: result.length))
       result.removeAttribute(overrideKey, range: NSRange(location: 0, length: result.length))
     }
-    return result
+    return preservingSource ? result:CharacterTypography.withoutRuntime(result)
   }
   public static func overrides(from source: NSAttributedString) -> [GlyphOverride] {
     var values: [GlyphOverride] = [], seen = Set<UUID>()

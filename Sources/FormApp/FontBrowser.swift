@@ -137,6 +137,7 @@ struct FontFeaturesInspector: View {
   }
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
+      CharacterPositionControls(session:session,fontVariants:features.first{$0.id==10}?.choices.map{CharacterFontVariant(id:$0.id,name:$0.name)} ?? [])
       if axes.contains(where:{$0.id==OpticalSizing.axisID}) || session.opticalInspectionTypes.contains(where:{$0.opticalSizing != nil || $0.variations[OpticalSizing.axisID] != nil}) {OpticalSizingControls(session:session)}
       if axes.contains(where:{$0.id != OpticalSizing.axisID}) {
         DisclosureGroup("Variable font axes") {
@@ -181,7 +182,7 @@ struct FontFeaturesInspector: View {
             Button("Reset font features") {
               session.typography { $0.features = [:]; $0.featureSelections = nil }
             }.buttonStyle(.plain).font(.system(size: 9)).foregroundStyle(Palette.accent)
-            ForEach(features) { feature in
+            ForEach(features.filter{$0.id != 10}) { feature in
               VStack(alignment: .leading, spacing: 3) {
                 Text(feature.name).font(.system(size: 9)).foregroundStyle(Palette.secondary)
                 if feature.exclusive { Picker(
@@ -229,6 +230,7 @@ struct FontFeaturesInspector: View {
           }.padding(.top, 8)
         }.font(.system(size: 10))
       }
+      ForEach(session.smallCapWarnings,id:\.self) {Text($0).font(.system(size:9)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)}
     }
   }
 }

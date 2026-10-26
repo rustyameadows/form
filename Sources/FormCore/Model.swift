@@ -404,6 +404,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if requiresCharacterPositionSchema {return max(schemaVersion,47)}
     if collectionProduction.map({!$0.plans.isEmpty || !$0.captures.isEmpty}) == true {return max(schemaVersion,45)}
     if studioPresentation?.shots.isEmpty == false {return max(schemaVersion,43)}
     if requiresOpticalSizingSchema {return max(schemaVersion,42)}

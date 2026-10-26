@@ -88,10 +88,11 @@ public enum FormColor {
     if element.storyFrame != nil {return true}
     if element.listItems?.isEmpty == false {return true}
     if element.typography?.frameMode=="point",!(element.glyphOverrides ?? []).isEmpty {return false}
+    if CharacterTypography.requiresOutlines(element) {return true}
     return (element.typography?.hyphenation ?? 0) > 0 || element.textRuns?.contains { $0.typography.hyphenation > 0 } == true
   }
   public static func requiresComposedOutlines(_ element: ArtworkElement) -> Bool {
-    usesParagraphLayout(element) || element.text.contains("\t") || !(element.glyphOverrides ?? []).isEmpty || element.typography?.opticalSizing != nil || element.textRuns?.contains{$0.typography.opticalSizing != nil}==true
+    SmallCapsTypography.requiresOutlines(element) || CharacterTypography.requiresOutlines(element) || usesParagraphLayout(element) || element.text.contains("\t") || !(element.glyphOverrides ?? []).isEmpty || element.typography?.opticalSizing != nil || element.textRuns?.contains{$0.typography.opticalSizing != nil}==true
   }
   private static func nativeTabs(_ style: Typography, factor: Double = 1) -> [NSTextTab] {
     guard let stops = style.tabStops else { return NSParagraphStyle.default.tabStops }
@@ -161,6 +162,7 @@ public enum FormColor {
     ]
     result.merge(spacingAttributes(style, adjustment: 0, factor: f)) { _, new in new }
     if style.opticalSizing != nil,let font=result[.font] as? NSFont {result[OpticalTypography.resolvedFaceKey]=font.fontName}
+    if style.characterPosition != nil {result[CharacterTypography.seedKey]=CharacterTypography.seed(size:size,factor:f)}
     if let language=style.language ?? style.inheritedLanguage {result[LanguageHyphenation.languageKey]=language}
     if let language=style.inheritedLanguage {result[LanguageHyphenation.inheritedLanguageKey]=language}
     if let swatchID { result[swatchKey] = swatchID.uuidString }
@@ -542,6 +544,7 @@ public enum FormColor {
   public static func spans(from attributed: NSAttributedString, fallback: Typography,
     utf16Offset: Int = 0) -> [TextSpan]
   {
+    let attributed=CharacterTypography.authored(attributed)
     var result: [TextSpan] = []
     attributed.enumerateAttributes(in: NSRange(location: 0, length: attributed.length)) {
       attrs, range, _ in
@@ -612,7 +615,7 @@ public enum FormColor {
           for i in range.location..<NSMaxRange(range) { style.pairKerning[i + utf16Offset] = pair }
         }
       }
-      style.baseline = (attrs[.baselineOffset] as? NSNumber)?.doubleValue ?? 0
+      style.baseline = CharacterTypography.sourceBaseline(in:attrs) ?? (attrs[.baselineOffset] as? NSNumber)?.doubleValue ?? 0
       style.ligatures = (attrs[.ligature] as? NSNumber)?.intValue ?? 1
       style.underline = ((attrs[.underlineStyle] as? NSNumber)?.intValue ?? 0) > 0
       style.strikethrough = ((attrs[.strikethroughStyle] as? NSNumber)?.intValue ?? 0) > 0
@@ -639,7 +642,7 @@ public enum FormColor {
       }
       var span = TextSpan(
           location: range.location + utf16Offset, length: range.length, typography: style,
-          fontSize: font.pointSize,
+          fontSize: CharacterTypography.sourcePointSize(in:attrs) ?? font.pointSize,
           color: FormColor.hex(attrs[.foregroundColor] as? NSColor ?? .black))
       span.swatchID = (attrs[swatchKey] as? String).flatMap(UUID.init(uuidString:))
       span.textStyle = (attrs[textStyleKey] as? Data).flatMap { try? JSONDecoder.form.decode(TextStyleReference.self, from: $0) }
@@ -656,7 +659,7 @@ public enum FormColor {
     value.countLimit = 256
     return value
   }()
-  public static func invalidate() { detailCache.removeAllObjects(); FontLibraryCatalog.invalidate(); GlyphCatalog.invalidate() }
+  public static func invalidate() { detailCache.removeAllObjects(); FontLibraryCatalog.invalidate(); GlyphCatalog.invalidate(); CharacterTypography.invalidate() }
   public static func independentFeatureTypes(_ name: String) -> Set<Int> {
     Set((details(name)["features"] as? [[String: Any]] ?? []).compactMap {
       ($0["exclusive"] as? Bool) == false ? $0["id"] as? Int : nil

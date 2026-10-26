@@ -190,9 +190,9 @@ public final class StoryTextContainer:NSTextContainer {
     guard let(value,index)=frame(element) else{throw FormError.invalid("Resolve the linked text story before converting its frame to paths.")}
     let range=value.glyphRange(index),factor=1/TypographyEngine.pointsPerMM,offset=value.offset(index,verticalAlignment:element.typography?.verticalAlignment ?? "top")
     var result:[(path:CGPath,color:String,swatchID:UUID?)]=[]
-    for glyph in range.location..<NSMaxRange(range) where !value.layout.propertyForGlyph(at:glyph).contains(.controlCharacter) {
+    for glyph in range.location..<NSMaxRange(range) where !value.layout.propertyForGlyph(at:glyph).contains(.controlCharacter) && !value.layout.notShownAttribute(forGlyphAt:glyph) {
       let character=value.layout.characterIndexForGlyph(at:glyph),attrs=value.storage.attributes(at:character,effectiveRange:nil)
-      let font=value.layout.fontForGeneratedGlyph(glyph) ?? attrs[.font] as? NSFont ?? .systemFont(ofSize:element.fontSize)
+      let font=try value.layout.outlineFont(forGlyphAt:glyph,authored:attrs[.font] as? NSFont)
       let path=CGMutablePath(),line=value.layout.lineFragmentRect(forGlyphAt:glyph,effectiveRange:nil),position=value.layout.location(forGlyphAt:glyph)
       let baseline=line.minY+position.y+offset
       let native=value.layout.glyph(at:glyph)

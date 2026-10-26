@@ -1,0 +1,350 @@
+{
+  "milestone": 47,
+  "tests": {
+    "optimized_total": 917,
+    "core_graphics_ipc": 604,
+    "native": 313,
+    "failures": 0,
+    "skipped": 0
+  },
+  "package": {
+    "tests": 917,
+    "code_files_verified": 415,
+    "binaries": {
+      "FORM": "0ebd10e3e0cca2afcaa0b821b03e851b8e725e04dfc3e82aeebee50e31982d54",
+      "form-mcp": "15304406e7f8766ae24fa5899f3109452da48ba2e2460337a85e0dd1ab043216"
+    }
+  },
+  "tools": 59,
+  "native": {
+    "single_position_control": true,
+    "complete_font_forms_and_labelled_whole_span_fallback": true,
+    "original_words_nominal_size_and_manual_baseline_preserved": true,
+    "focused_size_36_to_44_then_position_without_tab": true,
+    "position_undo_preserves_44pt_size": true,
+    "exact_glyph_id_and_dormant_axes_preserved": true,
+    "unsupported_georgia_small_caps_reported": true,
+    "real_selected_text": "ab",
+    "source_utf16_ranges": [
+      [
+        0,
+        2,
+        "superscript"
+      ],
+      [
+        2,
+        2,
+        "subscript"
+      ],
+      [
+        4,
+        1,
+        "superscript"
+      ]
+    ],
+    "selection_retained_after_position_and_native_undo_redo": true,
+    "live_inspector_tracks_selected_subscript": true,
+    "one_document_undo_redo_exact_entire_project": true,
+    "actual_process_restart_native_home_reopen_entire_project_exact": true
+  },
+  "physical_native_export": {
+    "page_mm": [
+      230,
+      210
+    ],
+    "png_pixels": [
+      1358,
+      1240
+    ],
+    "dpi": 150,
+    "pdf_sha256": "e49d98d512836d7b6991e5d5a4c06a04d5c26cd61d3914f8ccedbd111e9a06c8"
+  },
+  "independent_live_outline_proof": {
+    "pdf_sha256": "621b996ffd381772951337110ccd41b86bdee44f4cfb7d5739219926bdc15e16",
+    "pages": 2,
+    "page_points": [
+      1200,
+      780
+    ],
+    "dpi": 576,
+    "comparisons": [
+      {
+        "page": 1,
+        "name": "System / font forms / superscript",
+        "foreground_error": 0.03401829546677966,
+        "ink_bbox_delta_points": 0.0,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 1,
+        "name": "System / font forms / subscript",
+        "foreground_error": 0.034029431762376605,
+        "ink_bbox_delta_points": 0.125,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 1,
+        "name": "System / whole-span geometry",
+        "foreground_error": 0.04533019942083502,
+        "ink_bbox_delta_points": 0.0,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 1,
+        "name": "Georgia / geometry / subscript",
+        "foreground_error": 0.028516595324518435,
+        "ink_bbox_delta_points": 0.125,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 1,
+        "name": "Selected characters / original body",
+        "foreground_error": 0.04490596898808169,
+        "ink_bbox_delta_points": 0.125,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 1,
+        "name": "Automatic optical / rendered 23.4pt",
+        "foreground_error": 0.04533019942083502,
+        "ink_bbox_delta_points": 0.0,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 1,
+        "name": "Complex scripts / source retained",
+        "foreground_error": 0.034622693138504884,
+        "ink_bbox_delta_points": 0.125,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 1,
+        "name": "Exact ampersand glyph / source Q",
+        "foreground_error": 0.04821748760604743,
+        "ink_bbox_delta_points": 0.125,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 2,
+        "name": "System / genuine small caps",
+        "foreground_error": 0.027077843081956498,
+        "ink_bbox_delta_points": 0.0,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 2,
+        "name": "Baskerville / genuine small caps",
+        "foreground_error": 0.05382119540508726,
+        "ink_bbox_delta_points": 0.0,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 2,
+        "name": "Didot / genuine small caps",
+        "foreground_error": 0.04924021741707615,
+        "ink_bbox_delta_points": 0.0,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 2,
+        "name": "Georgia / no synthetic caps",
+        "foreground_error": 0.0348864388045166,
+        "ink_bbox_delta_points": 0.0,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 2,
+        "name": "Case expansion / original stra\u00dfe",
+        "foreground_error": 0.056712790312701135,
+        "ink_bbox_delta_points": 0.125,
+        "source_nominal_points": 36
+      },
+      {
+        "page": 2,
+        "name": "Generated list / nominal marker",
+        "foreground_error": 0.04868943327524302,
+        "ink_bbox_delta_points": 0.125,
+        "source_nominal_points": 36
+      }
+    ],
+    "maximum_foreground_error": 0.056712790312701135,
+    "maximum_ink_bbox_delta_points": 0.125,
+    "complete_ink_bounds_inside_pages": true,
+    "method": "Poppler independent rasterization; source-independent PIL crop/bounds/foreground comparison"
+  },
+  "camera": {
+    "actual_mouse_drag_pixels": 100,
+    "samples": {
+      "base": {
+        "camera": {
+          "azimuth": 0.55,
+          "distance": 50.24317893950082,
+          "elevation": 0.7,
+          "projection": "perspective",
+          "target": {
+            "x": 3.3999996185302734,
+            "y": 0.39144912362098694,
+            "z": 3.189589262008667
+          },
+          "viewportAspect": 1.8957871396895787
+        },
+        "selected_objects": [],
+        "geometry_builds": 42
+      },
+      "right": {
+        "camera": {
+          "azimuth": 0.4193905493241493,
+          "distance": 50.24317893950082,
+          "elevation": 0.7,
+          "orientation": {
+            "w": 0.9187951827417946,
+            "x": -0.3353864226136821,
+            "y": 0.19554157054886512,
+            "z": 0.0713782451742295
+          },
+          "projection": "perspective",
+          "target": {
+            "x": 3.3999996185302734,
+            "y": 0.39144912362098694,
+            "z": 3.189589262008667
+          },
+          "viewportAspect": 1.8957871396895787
+        },
+        "selected_objects": [],
+        "geometry_builds": 42
+      },
+      "left": {
+        "camera": {
+          "azimuth": 0.55,
+          "distance": 50.24317893950082,
+          "elevation": 0.6999999999999998,
+          "orientation": {
+            "w": 0.9040759688087128,
+            "x": -0.3300134901066022,
+            "y": 0.25508378283385996,
+            "z": 0.09311284930349475
+          },
+          "projection": "perspective",
+          "target": {
+            "x": 3.3999996185302734,
+            "y": 0.39144912362098694,
+            "z": 3.189589262008667
+          },
+          "viewportAspect": 1.8957871396895787
+        },
+        "selected_objects": [],
+        "geometry_builds": 42
+      },
+      "down": {
+        "camera": {
+          "azimuth": 0.5499999999999999,
+          "distance": 50.24317893950082,
+          "elevation": 0.8306094506758503,
+          "orientation": {
+            "w": 0.8806127190500889,
+            "x": -0.3883085114660278,
+            "y": 0.24846365940121085,
+            "z": 0.10956070886593512
+          },
+          "projection": "perspective",
+          "target": {
+            "x": 3.3999996185302734,
+            "y": 0.39144912362098694,
+            "z": 3.189589262008667
+          },
+          "viewportAspect": 1.8957871396895787
+        },
+        "selected_objects": [],
+        "geometry_builds": 42
+      },
+      "up": {
+        "camera": {
+          "azimuth": 0.5499999999999999,
+          "distance": 50.24317893950082,
+          "elevation": 0.6999999999999997,
+          "orientation": {
+            "w": 0.9040759688087128,
+            "x": -0.33001349010660214,
+            "y": 0.2550837828338599,
+            "z": 0.09311284930349473
+          },
+          "projection": "perspective",
+          "target": {
+            "x": 3.3999996185302734,
+            "y": 0.39144912362098694,
+            "z": 3.189589262008667
+          },
+          "viewportAspect": 1.8957871396895787
+        },
+        "selected_objects": [],
+        "geometry_builds": 42
+      },
+      "selected-perspective": {
+        "camera": {
+          "azimuth": 0.55,
+          "distance": 50.24317893950082,
+          "elevation": 0.7,
+          "projection": "perspective",
+          "target": {
+            "x": 3.3999996185302734,
+            "y": 0.39144912362098694,
+            "z": 3.189589262008667
+          },
+          "viewportAspect": 1.8957871396895787
+        },
+        "selected_objects": [
+          "23CD8D08-7884-4863-A575-2992EA6BB1DE"
+        ],
+        "geometry_builds": 42
+      },
+      "no-selection-perspective": {
+        "camera": {
+          "azimuth": 0.55,
+          "distance": 50.24317893950082,
+          "elevation": 0.7,
+          "projection": "perspective",
+          "target": {
+            "x": 3.3999996185302734,
+            "y": 0.39144912362098694,
+            "z": 3.189589262008667
+          },
+          "viewportAspect": 1.8957871396895787
+        },
+        "selected_objects": [],
+        "geometry_builds": 42
+      },
+      "reopened-collection": {
+        "camera": {
+          "azimuth": 0.55,
+          "distance": 50.24317893950082,
+          "elevation": 0.7,
+          "projection": "perspective",
+          "target": {
+            "x": 3.3999996185302734,
+            "y": 0.39144912362098694,
+            "z": 3.189589262008667
+          },
+          "viewportAspect": 1.8957871396895787
+        },
+        "selected_objects": [],
+        "geometry_builds": 16
+      }
+    },
+    "noncamera_source_history_metadata_exact": true,
+    "world_up_quaternion_max_error": 2.220446049250313e-16,
+    "whole_project_perspective_selected_vs_unselected_exact": true,
+    "bindings_unchanged": true,
+    "shift_pan_verification": "Existing actual AppKit event tests; CUA cannot hold a modifier during drag."
+  },
+  "preservation": {
+    "ordinary_projects_exact": 5,
+    "ordinary_studio_json_exact": true,
+    "ordinary_font_preferences_file_absent": true,
+    "copied_collection_studio_source_archive_files_exact": 26,
+    "copied_preview_regenerated": true,
+    "ordinary_home_restored": true
+  },
+  "hardware_contacted": false,
+  "external_model_calls": false,
+  "goal_complete": false
+}

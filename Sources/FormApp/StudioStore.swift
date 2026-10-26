@@ -187,6 +187,7 @@ enum TableTool: String, CaseIterable {
                 || (name == "form_story" && ["list","get","layout"].contains(args["command"] as? String ?? "list"))
                 || (name == "form_publication" && ["list","get","preflight"].contains(args["command"] as? String ?? "list"))
             if !readOnly {
+              try self.preflightCharacterPositionHandoff(name,args)
               try self.preflightOpticalHandoff(name,args)
 
               try self.preflightCollectionHandoff(name,args)

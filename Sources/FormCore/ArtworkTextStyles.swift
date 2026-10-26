@@ -49,6 +49,7 @@ public enum TextStyleCommands {
     .init("hyphenation", \.hyphenation), .init("features", \.features),
     .init("featureSelections", \.featureSelections), .init("variations", \.variations),
     .init("kerningMode", \.kerningMode), .init("opticalSizing", \.opticalSizing),
+    .init("characterPosition", \.characterPosition),
     .init("tabStops", \.tabStops), .init("defaultTabInterval", \.defaultTabInterval),
     .init("language", \.language), .init("hyphenationLimits", \.hyphenationLimits),
     .init("alignToBaselineGrid", \.alignToBaselineGrid),

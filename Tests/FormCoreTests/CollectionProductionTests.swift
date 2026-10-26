@@ -86,6 +86,18 @@ final class CollectionProductionTests:XCTestCase {
     XCTAssertNotEqual(try p.studioDesignDigest(),originalStudio)
     XCTAssertEqual(p.objects[0].artwork?.elements[0].text,text.text)
     XCTAssertEqual(p.objects[0].artwork?.elements[0].fontSize,text.fontSize)
+    let beforePosition=try CollectionSource(project:p,plan:plan).data(),studioBeforePosition=try p.studioDesignDigest()
+    p.objects[0].artwork?.elements[0].typography?.characterPosition = .superscript
+    let positioned=try CollectionSource(project:p,plan:plan)
+    XCTAssertEqual(positioned.project.objects[0].artwork?.elements[0].typography?.characterPosition,.superscript)
+    XCTAssertEqual(positioned.project.objects[0].artwork?.elements[0].text,text.text)
+    XCTAssertEqual(positioned.project.objects[0].artwork?.elements[0].fontSize,text.fontSize)
+    XCTAssertEqual(positioned.project.minimumSchemaVersion,47)
+    XCTAssertNotEqual(try positioned.data(),beforePosition)
+    XCTAssertNotEqual(try p.studioDesignDigest(),studioBeforePosition)
+    p.objects[0].artwork?.elements[0].typography?.characterPosition=nil
+    XCTAssertEqual(try CollectionSource(project:p,plan:plan).data(),beforePosition)
+    XCTAssertEqual(try p.studioDesignDigest(),studioBeforePosition)
   }
   func testManagedThreeSizeSourceHasExactElasticLapOnceAndActualCutGeometry()throws {
     let root=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString);defer{try? FileManager.default.removeItem(at:root)}

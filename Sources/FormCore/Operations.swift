@@ -362,12 +362,12 @@ public final class OperationEngine {
         guard let object = p.objects.first(where: { $0.id == id }) else {
           throw FormError.missing("Object not found.")
         }
-        if ["font","optical","paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template","cut_layout","pattern_tiles"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
+        if ["font","optical","character_position","paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template","cut_layout","pattern_tiles"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
         var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
         if try PublicationCommands.editText(in:&p,objectID:id,ids:ids,command:command,arguments:a,prepareGlyph:onPrepareGlyph,prepareParagraphs:onPrepareParagraphs,prepareOptical:onPrepareOptical) {selected=ids;return}
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
         if command=="optical" {try onPrepareOptical?(art,ids,a)}
-        if ["font","optical"].contains(command) {try onPrepareParagraphs?(&art,art.swatchPaintTargets(for:ids))}
+        if ["font","optical","character_position"].contains(command) {try onPrepareParagraphs?(&art,art.swatchPaintTargets(for:ids))}
         if command=="glyph" {
           let targets=art.swatchPaintTargets(for:ids)
           let location=(a["location"] as? NSNumber)?.intValue

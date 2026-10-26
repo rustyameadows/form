@@ -73,7 +73,7 @@ public enum PublicationLists {
   public static func paragraphStyle(_ record:Record,in source:NSMutableAttributedString,range:NSRange) {
     guard range.length>0,NSMaxRange(range)<=source.length else{return}
     let base=source.attribute(.paragraphStyle,at:range.location,effectiveRange:nil) as? NSParagraphStyle ?? .default
-    let bodyFont=source.attribute(.font,at:range.location,effectiveRange:nil) as? NSFont ?? .systemFont(ofSize:14)
+    let bodyFont=(source.attribute(CharacterTypography.markerFontKey,at:range.location,effectiveRange:nil) ?? source.attribute(.font,at:range.location,effectiveRange:nil)) as? NSFont ?? .systemFont(ofSize:14)
     let font=record.item.fontName.flatMap{NSFont(name:$0,size:bodyFont.pointSize)} ?? bodyFont
     let width=shape(marker(record),font:font).width
     let indent=max(record.item.indent,width+12+Double(record.item.level)*18)
@@ -131,11 +131,11 @@ public enum PublicationLists {
       let glyph=layout.glyphIndexForCharacter(at:paragraph.location)
       guard glyph<layout.numberOfGlyphs,NSLocationInRange(glyph,glyphRange),let container=layout.textContainer(forGlyphAt:glyph,effectiveRange:nil) else{return}
       let attrs=storage.attributes(at:paragraph.location,effectiveRange:nil)
-      let bodyFont=attrs[.font] as? NSFont ?? .systemFont(ofSize:14)
+      let bodyFont=(attrs[CharacterTypography.markerFontKey] ?? attrs[.font]) as? NSFont ?? .systemFont(ofSize:14)
       let font=record.item.fontName.flatMap{NSFont(name:$0,size:bodyFont.pointSize)} ?? bodyFont
       let shape=shape(marker(record),font:font),width=shape.width
       let rect=layout.lineFragmentRect(forGlyphAt:glyph,effectiveRange:nil),position=layout.location(forGlyphAt:glyph)
-      let baseline=rect.minY+position.y
+      let baseline=rect.minY+position.y+((attrs[CharacterTypography.markerBaselineKey] as? NSNumber)?.doubleValue ?? 0)
       let style=attrs[.paragraphStyle] as? NSParagraphStyle ?? .default
       let rtl=style.baseWritingDirection == .rightToLeft || (style.baseWritingDirection == .natural && naturalRTL((storage.string as NSString).substring(with:paragraph)))
       let x=rtl ? container.size.width-style.headIndent+6:style.headIndent-6-width
@@ -155,10 +155,42 @@ public enum PublicationLists {
 }
 
 public final class PublicationLayoutManager:NSLayoutManager {
-  private var generatedFonts:[Int:NSFont]=[:]
-  public func fontForGeneratedGlyph(_ index:Int)->NSFont? {generatedFonts[index]}
+  private struct GeneratedFont {
+    var glyph:CGGlyph,property:NSLayoutManager.GlyphProperty,font:NSFont
+  }
+  private var generatedFonts:[Int:[GeneratedFont]]=[:]
+  private var ambiguousCharacters=Set<Int>()
+  private func resolvedGeneratedFont(_ index:Int)->(font:NSFont?,ambiguous:Bool) {
+    guard index>=0,index<numberOfGlyphs else{return(nil,false)}
+    let character=characterIndexForGlyph(at:index)
+    guard !ambiguousCharacters.contains(character),let records=generatedFonts[character],!records.isEmpty else{return(nil,ambiguousCharacters.contains(character))}
+    let currentGlyph=glyph(at:index),property=propertyForGlyph(at:index)
+    let matching=records.filter{UInt($0.glyph)==currentGlyph && $0.property==property}
+    let candidates=matching.isEmpty ? records:matching
+    let first=candidates[0].font
+    guard candidates.allSatisfy({$0.font.isEqual(first)}) else{return(nil,true)}
+    return(first,false)
+  }
+  public func fontForGeneratedGlyph(_ index:Int)->NSFont? {resolvedGeneratedFont(index).font}
+  /// Physical output must not guess if one source character was observed with
+  /// conflicting font/glyph identities. Same-face multi-glyph shaping is safe.
+  public func outlineFont(forGlyphAt index:Int,authored:NSFont?)throws->NSFont {
+    let result=resolvedGeneratedFont(index)
+    guard !result.ambiguous else{throw FormError.invalid("TextKit produced conflicting font identities for a shaped character. Its physical outline cannot be resolved safely; source text remains unchanged.")}
+    guard let font=result.font else{throw FormError.invalid("TextKit did not establish a font identity for this shaped glyph. Its physical outline cannot be resolved safely; source text remains unchanged.")}
+    return font
+  }
   public override func setGlyphs(_ glyphs:UnsafePointer<CGGlyph>,properties:UnsafePointer<NSLayoutManager.GlyphProperty>,characterIndexes:UnsafePointer<Int>,font:NSFont,forGlyphRange range:NSRange) {
-    for index in range.location..<NSMaxRange(range) {generatedFonts[index]=font}
+    // TextKit inserts/removes glyphs during complex-script shaping. Index by
+    // supplied source identity, then retain actual glyph/property/font evidence.
+    for offset in 0..<range.length {
+      let character=characterIndexes[offset],record=GeneratedFont(glyph:glyphs[offset],property:properties[offset],font:font)
+      var records=generatedFonts[character] ?? []
+      if !records.contains(where:{$0.glyph==record.glyph && $0.property==record.property && $0.font.isEqual(font)}) {
+        if records.count<16 {records.append(record);generatedFonts[character]=records}
+        else {ambiguousCharacters.insert(character)}
+      }
+    }
     super.setGlyphs(glyphs,properties:properties,characterIndexes:characterIndexes,font:font,forGlyphRange:range)
   }
   public override func drawGlyphs(forGlyphRange glyphsToShow:NSRange,at origin:CGPoint) {

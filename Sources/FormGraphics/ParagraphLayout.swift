@@ -83,11 +83,11 @@ import FormCore
     var result:[(path:CGPath,color:String,swatchID:UUID?)]=[]
     let factor=1/TypographyEngine.pointsPerMM
     for index in value.visible.location..<NSMaxRange(value.visible) {
-      if value.layout.propertyForGlyph(at:index).contains(.controlCharacter) { continue }
+      if value.layout.propertyForGlyph(at:index).contains(.controlCharacter) || value.layout.notShownAttribute(forGlyphAt:index) { continue }
       let character=value.layout.characterIndexForGlyph(at:index)
       guard character<value.storage.length else { continue }
       let attrs=value.storage.attributes(at:character,effectiveRange:nil)
-      let font=(value.layout as? PublicationLayoutManager)?.fontForGeneratedGlyph(index) ?? attrs[.font] as? NSFont ?? .systemFont(ofSize:e.fontSize)
+      let font=try (value.layout as! PublicationLayoutManager).outlineFont(forGlyphAt:index,authored:attrs[.font] as? NSFont)
       let glyph=value.layout.glyph(at:index)
       let path=CGMutablePath()
       let line=value.layout.lineFragmentRect(forGlyphAt:index,effectiveRange:nil)

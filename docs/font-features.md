@@ -41,3 +41,8 @@ Run `python3 scripts/smoke_font_features.py` against an isolated `FORM_LIBRARY_P
 Font discovery has a 256-face cache cleared on font changes. Layout uses the existing 800-entry cache: changed features rebuild text, placement reuses it. See [validation evidence](validation.md) for real native controls, mouse checks, and local timings.
 
 The full goal remains active. [Reusable text styles](reusable-text-styles.md) are now available. [Paragraph tabs and hyphenation](paragraph-composition.md) and [reversible Unicode case](text-case.md) extend this typography foundation. [Alternate-glyph selection](glyphs.md), [lists](paragraph-lists.md), and [linked stories/publications](publications.md) now have working native implementations. The [font browser and document replacement workflow](font-library.md) preserve those assignments while making installed faces and missing usage explicit.
+
+
+## Character position and small caps
+
+The single **Position** control handles Normal/Superscript/Subscript and retained font-specific vertical variants. Semantic position preserves nominal size/manual baseline and prefers complete actual font-form coverage, otherwise showing an explicit whole-span geometric fallback. Existing small-cap controls use actual font forms and report partial/unavailable coverage; unsupported source stays unchanged. Raw font-only vertical assignments remain readable when semantic position is omitted. See [character forms](character-forms.md) for precedence, native editing, source/glyph preservation and physical output limits.

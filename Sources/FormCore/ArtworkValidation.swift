@@ -220,6 +220,9 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
       try GlyphCommands.validate(glyphs,text:e.text)
     }
     var end = 0
+    if e.typography?.characterPosition != nil || e.textRuns?.contains(where:{$0.typography.characterPosition != nil})==true {
+      guard (e.textRuns?.count ?? 0)<=CharacterPositionCommands.maximumSourceSpans else{throw FormError.invalid("Character-position text supports at most 4,096 authored spans; split this source before adding more formatting.")}
+    }
     for run in (e.textRuns ?? []).sorted(by: { $0.location < $1.location }) {
       guard run.location >= end, run.length > 0, run.location <= e.text.utf16.count,
         run.length <= e.text.utf16.count - run.location, run.fontSize.isFinite,

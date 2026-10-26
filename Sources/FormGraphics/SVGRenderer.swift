@@ -173,7 +173,7 @@ import FormCore
   public static func document(
     _ art: Artwork, width: Double, height: Double, assets: URL, outlineText: Bool = true
   ) throws -> String {
-    "<?xml version=\"1.0\" encoding=\"UTF-8\"?><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"\(width)mm\" height=\"\(height)mm\" viewBox=\"0 0 \(width) \(height)\"><desc>FORM artwork. Physical units are millimeters. \(outlineText ? "Typography is outlined for portability.":"Live text requires the assigned fonts; verify shaping in the receiving application.")</desc>\(try fragment(art,width:width,height:height,assets:assets,outlineText:outlineText))</svg>"
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"\(width)mm\" height=\"\(height)mm\" viewBox=\"0 0 \(width) \(height)\"><desc>FORM artwork. Physical units are millimeters. \(outlineText ? "Typography is outlined for portability.":"Live text requires the assigned fonts; typography needing exact composition, character forms or optical sizing uses outlines. Verify remaining live text in the receiving application.")</desc>\(try fragment(art,width:width,height:height,assets:assets,outlineText:outlineText))</svg>"
   }
   private static func liveText(_ element: ArtworkElement) -> String {
     let attributed = TypographyEngine.attributed(element)

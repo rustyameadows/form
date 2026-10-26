@@ -218,6 +218,11 @@ extension StudioStore {
         ? art.elements.filter { $0.kind == "text" && $0.hidden != true && TypographyEngine.requiresComposedOutlines($0) }.count : 0,
     ]
     let opticalFallback=format=="svg" && arguments["outline_text"] as? Bool==false ? art.elements.filter{$0.kind=="text" && $0.hidden != true && OpticalTypography.requiresOutlines($0)}.count:0
+    let positionFallback=format=="svg" && arguments["outline_text"] as? Bool==false ? art.elements.filter{$0.kind=="text" && $0.hidden != true && CharacterTypography.requiresOutlines($0)}.count:0
+    let capsFallback=format=="svg" && arguments["outline_text"] as? Bool==false ? art.elements.filter{$0.kind=="text" && $0.hidden != true && SmallCapsTypography.requiresOutlines($0)}.count:0
+    result["character_position_text_outlined"]=positionFallback;result["character_position_warnings"]=CharacterTypography.warnings(art)
+    result["small_caps_text_outlined"]=capsFallback;result["small_caps_warnings"]=SmallCapsTypography.warnings(art)
+    if positionFallback>0 || capsFallback>0 {result["character_forms_fallback"]="Character position and small caps use shared native outlines for faithful font forms and geometric fallback; source words stay editable."}
     result["optical_text_outlined"]=opticalFallback
     result["optical_sizing_warnings"]=OpticalTypography.warnings(art)
     if opticalFallback>0 {result["optical_sizing_fallback"]="Optical-sizing text uses shared native outlines for precise SVG metrics; source text stays editable in FORM."}
