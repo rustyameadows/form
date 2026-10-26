@@ -2,7 +2,7 @@
 
 As of October 26, 2026.
 
-**FORM is a working native Mac alpha with substantial 2D, 3D and fabrication workflows. The complete product, typography and textile briefs are not finished.** The latest verified application checkpoint is **f75171d**, with **917 optimized tests passing**: 604 core/graphics/IPC and 313 native tests, with no failures or skips. The installed application matches that checkpoint.
+**FORM is a working native Mac alpha with substantial 2D, 3D and fabrication workflows. The complete product, typography and textile briefs are not finished.** The latest verified application integrates **portable artwork transfer (48) and physical page setup (49)**, with **983 optimized tests passing**: 640 core/graphics/IPC and 343 native tests, with no failures or skips. The installed signed application matches the tested source. See [integration evidence](evidence/transfer-page-native.json).
 
 This report distinguishes features in that application from local candidates and research. Test totals are validation checkpoints, not a percentage of product completion.
 
@@ -10,7 +10,7 @@ This report distinguishes features in that application from local candidates and
 
 - The goal service currently returns **no active goal**. The earlier Active label in the roadmap was stale as an execution indicator. The remaining requirements have not been completed or cancelled.
 - The available record does not establish why the goal stopped being attached. There is no basis to report that it stopped because the app was finished.
-- The feature agents reached isolated checkpoints. Their work is retained locally; completing an agent assignment did not integrate its work into the application.
+- The two requested feature candidates are now integrated and accepted together. The current pass is integration and stabilization only; it does not start the remaining feature roadmap. Separate cloth and broader SVG research remain local.
 - The application code is pushed to **codex/form-v0.1** in [draft pull request 1](https://github.com/rustyameadows/form/pull/1). It has not been merged. **main still contains the initial product brief and README**, so viewing main does not show the implementation.
 - The ordinary library was restored after validation. All five saved projects and Studio settings matched their preservation snapshots. No print was sent or started.
 
@@ -22,8 +22,8 @@ This report distinguishes features in that application from local candidates and
 | 3D Table and navigation | Continuous Table, parametric recipes and inspectors, selection/movement/groups, focus/isolation and stable named views. Four actual mouse directions preserve the expected axis and world-up frame; Perspective frames the whole project with or without selection. | Supported constructions remain recipe based. This is not a general solid-modeling or arbitrary garment-construction system. |
 | Connected 2D and 3D surfaces | Freeform Canvas with notes, references, type and graphics; physical frames and linked object artwork; single, split and separate-window arrangements sharing state and Undo. | General curved-surface projection, engineered cross-panel continuity and broader dieline relationships remain incomplete. |
 | Typography | Native rich text, installed fonts and replacement, actual font features/axes/glyphs, kerning, optical sizing, source-preserving superscript/subscript and genuine small caps, styles, language, lists, tabs, hyphenation and editable outlines. | Broader font/script and complex-document compatibility still needs acceptance work. Font files are not made portable automatically. |
-| Vector and image editing | Bézier nodes/handles, compounds, live booleans/divide, gradients, stroke controls/expansion, nested masks, reusable components/swatches, image crop/replace/adjustments and physical DPI. | Variable-width strokes, fuller SVG interchange and reliable complete cross-project clipboard transfer remain open. See the known defects below. |
-| Publications and print color | Linked stories, ordered physical pages, baseline grids, overset review, multipage booklet PDF, ICC conversion and declared CMYK/spot output for supported paints. | Master pages/running furniture, advanced paragraph keep controls, cross-references, imposition and broader production-color handling remain incomplete. |
+| Vector and image editing | Bézier nodes/handles, compounds, live booleans/divide, gradients, stroke controls/expansion, nested masks, reusable components/swatches, image crop/replace/adjustments and physical DPI. | Portable cross-project Copy/Cut/Paste now carries supported assets, named resources and component/mask dependencies, with bounded validation and safe failed-Cut behavior. Variable-width strokes and fuller SVG interchange remain open. |
+| Publications and print color | Linked stories, ordered physical pages, baseline grids, overset review, multipage booklet PDF, separate bleed/safe guides, vector page review, physical PDF boxes/crop marks, ICC conversion and declared CMYK/spot output for supported paints. | Master pages/running furniture, advanced paragraph keep controls, cross-references, imposition and broader production-color handling remain incomplete. |
 | Rendering Studio | Saved named compositions, exact subjects, lighting/surface choices, reference framing, output pixel sizes and PNG/render records with Undo. | Calibrated materials, photorealistic output and archived simulated garment poses are not established. |
 | 3D print preparation | Dedicated bed/settings/layer UI, component orientation/scale, persistent filament and printer libraries, and actual local Orca slicing with STL/G-code/3MF output. | Orca runs as a separate official app behind FORM's native UI. Physical P1S status is unverified; uploads and print-start commands are unavailable. |
 | Fabric and merchandise | Bomber, tee, cap and tote studies; physical decoration placement; editable repeats/colorways and fabric specifications. | These are supported studies and blanks, not a complete apparel catalog or garment-fit system. |
@@ -38,22 +38,18 @@ The [AFFINITIES acceptance workflow](design-acceptance.md) demonstrates the cred
 
 | Work | Current state | Required before it can count as shipped |
 | --- | --- | --- |
-| Portable artwork transfer | Completed isolated candidate with 866 tests, a signed bundle and private native/MCP checks. It carries assets/styles/components/masks and guards failed Cut publication. | Complete integration, full combined regression run, packaged acceptance and delivery. |
-| Physical page setup | Completed isolated candidate with 901 tests and independently measured PDFs. Separates bleed/safe guides and adds crop marks, real page boxes and vector review. | Complete integration, visible focused-field/review/Save-panel testing, process reopen and delivery. |
-| Combined transfer and page build | Both candidates have been merged into an isolated tree based on the verified app. **The latest build failed compilation on two argument-order errors in an added integration test.** | Repair those errors, retain new typography warnings in page output, then pass the full build/test/native gates. There is no passing combined-suite result yet. |
-| Stronger SVG admission | Prototype with 34 focused tests and rendered comparison. Shared parsing/work/resource limits are implemented only in the prototype. | Review and wire into native/MCP import, fix workspace import, run full acceptance and ship. |
+| Stronger SVG admission | Prototype with 34 focused tests and rendered comparison. Shared parsing/work/resource limits are implemented only in the prototype. | Review and wire the stronger limits into native/MCP import, run full acceptance and ship. The existing workspace-destination rejection is fixed separately in the current application. |
 | Cloth self-contact | Offline detection, scheduling/compiler and closest-feature/correction math checkpoints exist. Independent math and sanitizer tests pass. | Implement and verify accepted motion/contact response, lifecycle, performance and native integration. **No self-contact solver or completed physical time step has shipped.** |
 | Reusable publication furniture | Proposed shared headers/footers and live folios. | Design, implement and validate. No production code exists for this slice. |
 
-The isolated test totals overlap earlier suites and must not be added together. These candidates and prototypes remain in the ignored local validation workspace; they are not features in the installed 917-test app or code already delivered on GitHub.
+The isolated test totals overlap earlier suites and must not be added together. These remaining prototypes stay in the ignored local validation workspace. Transfer and page setup have passed their combined 983-test, installed MCP, native UI and process-reopen gates; the earlier isolated totals are historical.
 
-## Known defects and practical limits
+## Stabilization results and practical limits
+
+Failed Cut no longer deletes source, complete supported clipboard dependencies travel with artwork, and asynchronous Paste rejects a changed frame/project before editor handoff. Page output retains typography notices and cannot export stale review options. SVG import into the existing loose Canvas workspace now succeeds at physical scale. Focused regressions and packaged checks cover these repairs. No unresolved failure remains in this acceptance scope; that is not a claim that every product workflow is complete or free of defects.
 
 | Priority | Current issue | Practical consequence |
 | --- | --- | --- |
-| High | Cut does not confirm that Copy successfully published before deleting layers. | A failed clipboard write can still remove the selection. Undo is the recovery path. The unshipped transfer candidate addresses this. |
-| High | Existing clipboard records do not carry the complete dependency/resource graph. | Cross-project images, named styles, components and sibling masks can be missing or unreliable. |
-| Medium | SVG import offers the loose Canvas workspace, but the core operation rejects that destination. | Import into a finite artwork frame works; direct loose-workspace import needs repair. |
 | Medium | SVG responsiveness near input limits needs the stronger shared limits from the prototype. | Existing SVG support should not be treated as arbitrary-complexity interchange. |
 
 The most recently verified camera behavior follows the fixed [camera contract](camera-navigation.md): primary drag orbits, Shift-drag pans, and named Perspective/Top/Front views frame the whole project. The latest mouse checks passed. Later work must preserve those bindings and repeat the regression checks.
@@ -68,7 +64,7 @@ The broader textile brief also needs supplier/user blank import and replacement,
 
 ### Publication and production
 
-Linked stories and booklet output already work. Remaining publication work includes reusable furniture, page numbering, widow/orphan and keep controls, footnotes/cross-references, spreads/imposition and automatic page creation from overset. The local page-setup candidate must ship before its new safe-area workflow can be counted.
+Linked stories and booklet output already work. Remaining publication work includes reusable furniture, page numbering, widow/orphan and keep controls, footnotes/cross-references, spreads/imposition and automatic page creation from overset. Separate page safety/bleed and explicit physical page output are now integrated; they do not complete the remaining publication requirements.
 
 Production color still needs broader gradient/image/transparency and spot workflows, overprint/trapping/screening, comprehensive preflight and any claimed PDF/X certification. Textile production needs richer materials/process checks, purchasing/inventory/scheduling integration and complete technical packs. Software-generated outputs have not established physical manufacturing quality.
 
@@ -80,8 +76,8 @@ A release still needs a clean installation/distribution check and an explicit su
 
 ## Order for the next implementation work
 
-1. **Ship data-safety and page improvements:** repair the combined candidate, integrate complete artwork transfer and page setup, verify native/MCP/Undo/reopen, then commit and push.
-2. **Fix import and finish core publication workflows:** native workspace SVG import, stronger parsing limits, reusable furniture and live folios, followed by the remaining typography/layout requirements.
+1. **Completed in this stabilization pass:** integrate portable artwork transfer and page setup, repair clipboard lifecycle/workspace SVG defects, verify native/MCP/Undo/reopen, and deliver the tested source. The remaining items are future feature work.
+2. **Fix import and finish core publication workflows:** stronger SVG parsing limits, reusable furniture and live folios, followed by the remaining typography/layout requirements.
 3. **Develop the actual garment system:** collision response and cloth integration alongside real garment patterns, construction and the NASA bomber; keep mathematical prototypes distinct from working app behavior.
 4. **Complete manufacturing and release acceptance:** broader process/color coverage, technical packs, end-to-end demonstrations and clean installation. Verify P1S status only when its local credentials are supplied; sending or starting prints remains disabled.
 

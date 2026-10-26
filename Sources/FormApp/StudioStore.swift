@@ -70,6 +70,9 @@ enum TableTool: String, CaseIterable {
   private var noticeWork: DispatchWorkItem?
   var bridgeReady = false
   var choosingSVG = false
+  var artworkTransferProjectEpoch=UUID()
+  // Private tests can suspend a prepared transfer without blocking the UI actor.
+  var artworkTransferStageCheckpoint:(() async -> Void)?
   var project: Project? { engine.project }
   var selected: [ProductObject] {
     project?.objects.filter { !$0.isCanvasWorkspace && engine.selection.contains($0.id) } ?? []
@@ -137,7 +140,10 @@ enum TableTool: String, CaseIterable {
         artwork.elements[i].height=max(element.fontSize/TypographyEngine.pointsPerMM*1.4,size.height+0.5)
       }
     }
-    engine.onProjectWillChange = { [weak self] in self?.finishArtworkEditing() }
+    engine.onProjectWillChange = { [weak self] in
+      self?.invalidateArtworkTransferProject()
+      self?.finishArtworkEditing()
+    }
     engine.onProjectDidChange = { [weak self] in
       self?.closeDetachedCanvas()
       self?.printing.resetForProjectChange()
@@ -166,8 +172,20 @@ enum TableTool: String, CaseIterable {
             return
           }
           do {
+            guard !ArtworkTransferCommands.rejectsBatch(name,args) else{throw FormError.invalid("Portable file transfers require individual calls; batch cannot roll back external files.")}
+            if ArtworkTransferCommands.recognizes(name,args) {
+              Task { @MainActor [weak self] in
+                guard let self else{completion(.failure(FormError.missing("FORM is closing.")));return}
+                do {
+                  let result=try await self.artworkTransferCallAsync(args)
+                  if args["command"] as? String==ArtworkTransferCommands.importName {self.changed();try self.engine.flush();self.saving=false;self.showingHome=false}
+                  completion(.success(result))
+                }catch{completion(.failure(error))}
+              }
+              return
+            }
             if name == "form_cloth" {completion(.success(try self.bridgeClothCall(args)));return}
-            let readOnly = (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
+            let readOnly = (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
               [
                 "form_status", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones",
                 "form_list_materials", "form_get_print_setup", "form_get_slice_status",
@@ -188,6 +206,7 @@ enum TableTool: String, CaseIterable {
                 || (name == "form_publication" && ["list","get","preflight"].contains(args["command"] as? String ?? "list"))
             if !readOnly {
               try self.preflightCharacterPositionHandoff(name,args)
+              try self.preflightPageSetupHandoff(name,args)
               try self.preflightOpticalHandoff(name,args)
 
               try self.preflightCollectionHandoff(name,args)
@@ -224,6 +243,8 @@ enum TableTool: String, CaseIterable {
               if self.project != nil && name != "form_set_view" { self.showingHome = false }
               if ["form_undo","form_redo"].contains(name) {
                 self.historyRecordsChanged(from:beforeHistory)
+              } else if (name=="form_edit_artwork" && args["command"] as? String=="page_setup") || (beforeHistory.flatMap{old in self.project.map{ArtworkPageSetup.containsOnlyPageSetupChanges(old,$0)}} == true) {
+                self.metadataRecordsChanged()
               } else if (name=="form_production_job" && args["kind"] as? String=="collection") ||
                   (name=="form_set_view" && args["view"] as? String=="studio" && ["capture","update","rename","delete"].contains(args["studio_command"] as? String ?? "")) {
                 self.metadataRecordsChanged()
@@ -255,6 +276,7 @@ enum TableTool: String, CaseIterable {
   /// Every other source field compares exactly; physical history retains its
   /// established invalidation/reset behavior.
   func historyRecordsChanged(from before:Project?) {
+    if let before,let project,ArtworkPageSetup.containsOnlyPageSetupChanges(before,project) {metadataRecordsChanged();return}
     if var previous=before,var current=project,
       previous.studioPresentation != current.studioPresentation || previous.collectionProduction != current.collectionProduction {
       previous.studioPresentation=nil;current.studioPresentation=nil
@@ -262,7 +284,7 @@ enum TableTool: String, CaseIterable {
       previous.history=[];current.history=[]
       previous.updatedAt=Date(timeIntervalSince1970:0);current.updatedAt=previous.updatedAt
       previous.schemaVersion=1;current.schemaVersion=1
-      if previous==current {metadataRecordsChanged();return}
+      if previous==current || ArtworkPageSetup.containsOnlyPageSetupChanges(previous,current) {metadataRecordsChanged();return}
     }
     cloth.historyChanged()
     changed()
@@ -345,6 +367,7 @@ enum TableTool: String, CaseIterable {
     scene?.resetCamera()
   }
   func home() {
+    invalidateArtworkTransferProject()
     studioShots.reset()
     cloth.clear()
     closeDetachedCanvas()

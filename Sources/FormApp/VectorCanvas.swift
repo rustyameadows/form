@@ -576,7 +576,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let art = f.artwork
     context.saveGState()
     let region = f.isWorkspace ? visibleCanvasRect.offsetBy(dx:-f.rect.minX,dy:-f.rect.minY) : CGRect(origin:.zero,size:f.rect.size)
-    context.clip(to:region)
+    let pageGuides = !f.isWorkspace && f.object.recipeID=="artboard" && f.object.artworkSourceID==nil && art.boundary==nil
+    let guideRegion=pageGuides ? region.insetBy(dx:-art.bleed-1/scale,dy:-art.bleed-1/scale):region
+    context.clip(to:guideRegion)
     context.setLineWidth(0.5 / scale)
     if art.showGrid == true {
       let spacing = max(art.gridSpacing ?? 10, 5 / scale)
@@ -600,9 +602,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           ? .init(x:g.position,y:region.maxY) : .init(x:region.maxX,y:g.position))
       context.strokePath()
     }
-    context.setStrokeColor(NSColor(hex: "#B78D68").withAlphaComponent(0.5).cgColor)
-    if art.bleed > 0 && !f.isWorkspace {
-      context.stroke(CGRect(origin: .zero, size: f.rect.size).insetBy(dx: art.bleed, dy: art.bleed))
+    if pageGuides && art.showGuides != false {
+      context.setStrokeColor(NSColor(hex:"#C35339").withAlphaComponent(0.7).cgColor)
+      if art.bleed>0 {context.stroke(region.insetBy(dx:-art.bleed,dy:-art.bleed))}
+      if let safe=art.safeInset,safe>0,region.width>2*safe,region.height>2*safe {
+        context.setStrokeColor(NSColor(hex:"#248568").withAlphaComponent(0.7).cgColor);context.stroke(region.insetBy(dx:safe,dy:safe))
+      }
     }
     context.setLineDash(phase: 0, lengths: [])
     context.setStrokeColor(NSColor(hex: "#D45A37").cgColor)
@@ -2062,8 +2067,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   @objc func copy(_ sender: Any?) { session?.copy() }
   @objc func paste(_ sender: Any?) { session?.paste() }
   @objc func cut(_ sender: Any?) {
-    session?.copy()
-    session?.execute("delete")
+    session?.cutArtwork()
   }
   override func selectAll(_ sender: Any?) {
     guard let s = session else { return }

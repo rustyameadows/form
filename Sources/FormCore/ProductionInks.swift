@@ -121,7 +121,7 @@ extension Project {
 extension Artwork {
   /// Runtime guards do not change semantic document equality or undo history.
   public static func == (lhs:Artwork,rhs:Artwork)->Bool {
-    let appearance=lhs.background==rhs.background && lhs.outputColorProfile==rhs.outputColorProfile && lhs.elements==rhs.elements && lhs.bleed==rhs.bleed && lhs.backgroundOpacity==rhs.backgroundOpacity && lhs.backgroundSwatchID==rhs.backgroundSwatchID && lhs.boundary==rhs.boundary
+    let appearance=lhs.background==rhs.background && lhs.outputColorProfile==rhs.outputColorProfile && lhs.elements==rhs.elements && lhs.bleed==rhs.bleed && lhs.safeInset==rhs.safeInset && lhs.backgroundOpacity==rhs.backgroundOpacity && lhs.backgroundSwatchID==rhs.backgroundSwatchID && lhs.boundary==rhs.boundary
     let layout=lhs.unit==rhs.unit && lhs.guides==rhs.guides && lhs.gridSpacing==rhs.gridSpacing && lhs.showGrid==rhs.showGrid && lhs.snapEnabled==rhs.snapEnabled && lhs.nudge==rhs.nudge && lhs.showGuides==rhs.showGuides && lhs.canvasPosition==rhs.canvasPosition
     return appearance && layout && lhs.sewingSeams==rhs.sewingSeams && lhs.sewingLayout==rhs.sewingLayout && lhs.sewingTiles==rhs.sewingTiles && lhs.language==rhs.language && lhs.imports==rhs.imports
   }

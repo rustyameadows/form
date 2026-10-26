@@ -28,9 +28,10 @@ extension Project {
       throw FormError.invalid("Imported artwork dimensions must be 1–1000 mm.")
     }
     if let targetID {
-      guard let target = objects.first(where: { $0.id == targetID }), target.supportsArtworkFace
+      guard let target = objects.first(where: { $0.id == targetID }),
+        target.supportsArtworkFace || target.isCanvasWorkspace
       else {
-        throw FormError.invalid("Choose an artwork frame or a supported physical face.")
+        throw FormError.invalid("Choose the Canvas workspace, an artwork frame or a supported physical face.")
       }
       let owner = artworkOwner(target)
       guard !owner.locked else {

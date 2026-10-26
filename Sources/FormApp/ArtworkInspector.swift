@@ -695,10 +695,8 @@ struct ArtworkInspector: View {
       ArtworkUnitField("Nudge", value: session.art.nudge ?? 0.1, unit: session.unit) { v in
         session.mutate { $0.nudge = max(0.01, v) }
       }
-      if !object.isCanvasWorkspace {
-      ArtworkUnitField("Bleed / safe guide", value: session.art.bleed, unit: session.unit) { v in
-        session.mutate { $0.bleed = min(25, max(0, v)) }
-      }
+      if let p=store.project,(try? ArtworkPageSetup.source(p,objectID:object.id)) != nil {
+        ArtworkPageSetupControls(store:store,objectID:object.id).id(object.id)
       }
       HStack {
         Button("Vertical guide") { session.addGuide(axis:"x",position:object.isCanvasWorkspace ? session.canvas?.visibleCanvasRect.midX ?? 0 : ArtworkDrawing.dimensions(object).width/2) }

@@ -403,6 +403,7 @@ extension Artwork {
     result.elements = result.elements.filter { required.contains($0.id) }.map(\.withBakedListNumbers)
     result.sewingLayout = nil
     result.sewingTiles = nil
+    result.safeInset = nil
     result.retainRepresentedSewingSeams()
     if result.elements.contains(where: { $0.hasVisualOverflow }) {
       let masks = Set(result.elements.compactMap(\.clipID))
@@ -441,6 +442,7 @@ extension Artwork {
     result.nudge = nil
     result.canvasPosition = nil
     result.bleed = 0
+    result.safeInset = nil
     let masks = Set(elements.compactMap(\.clipID))
     result.elements = result.elements.filter { e in
       if e.hidden == true && !masks.contains(e.id) { return false }

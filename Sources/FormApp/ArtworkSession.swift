@@ -50,8 +50,16 @@ enum ArtworkTool: String, CaseIterable {
   weak var store: StudioStore?
   weak var canvas: VectorCanvasView?
   var imageDragStarts = 0
+  var transferPasteboard:NSPasteboard?
+  var transferPasteboardPublisher:((NSPasteboard,Data,NSPasteboard.PasteboardType)throws->Bool)?
+  var transferTask:Task<Void,Never>?
+  var transferGeneration=UUID()
+  var transferInFlight=false
+  var lastTransferError:String?
+  var lastTransferResult:[String:Any]?
+
   @Published var croppingImageID: UUID?
-  @Published var objectID: UUID?
+  @Published var objectID: UUID? {didSet{if objectID != oldValue {cancelArtworkTransfer()}}}
   @Published var linkedTargetID: UUID?
   @Published var selection = Set<UUID>() {
     didSet {
@@ -65,7 +73,7 @@ enum ArtworkTool: String, CaseIterable {
     }
   }
   @Published var nodes = Set<UUID>() { didSet { store?.objectWillChange.send() } }
-  @Published var scopeID: UUID?
+  @Published var scopeID: UUID? {didSet{if scopeID != oldValue {cancelArtworkTransfer()}}}
   @Published var componentReturn: ComponentEditingContext?
   @Published var selectedGradientStopID: UUID?
   @Published var maskEditing: MaskEditingContext?
@@ -522,34 +530,8 @@ enum ArtworkTool: String, CaseIterable {
     placeImages(panel.urls,point:point,replacing:replacing)
   }
 
-  func copy() {
-    let ids = art.descendants(of: selection)
-    guard !ids.isEmpty else { return }
-    do {
-      let data = try JSONEncoder.form.encode(art.elements.filter { ids.contains($0.id) })
-      NSPasteboard.general.clearContents()
-      NSPasteboard.general.setData(data, forType: .init("studio.form.artwork"))
-    } catch { store?.error = error.localizedDescription }
-  }
-  func paste() {
-    guard let data = NSPasteboard.general.data(forType: .init("studio.form.artwork")),
-      let source = try? JSONDecoder.form.decode([ArtworkElement].self, from: data)
-    else { return }
-    let mapping = Dictionary(uniqueKeysWithValues: source.map { ($0.id, UUID()) })
-    let pasted = source.map { e -> ArtworkElement in
-      var value = e
-      value.id = mapping[e.id]!
-      PathCommands.refreshNodeIDs(in: &value)
-      value.parentID = e.parentID.flatMap { mapping[$0] } ?? scopeID
-      value.clipID = e.clipID.flatMap { mapping[$0] }
-      if e.parentID == nil {
-        value.x += 10
-        value.y += 10
-      }
-      return value
-    }
-    add(pasted)
-  }
+  @discardableResult func copy() -> Bool {copyArtwork()}
+  func paste() {pasteArtwork()}
   func export(_ format: String) {
     guard let store, let object else { return }
     store.exportArtworkDialog(format,object:object,dpi:exportDPI,outlineText:exportOutline,

@@ -33,6 +33,7 @@ extension Project {
     art.requiresInkOutput=hasUsedProductionInks(in:art)
     if !keepingSwatchReferences {art=resolvingSwatches(in:art)}
     if owner.id != object.id {
+      art.safeInset=nil // Frame safety is not a declaration for a scaled product projection.
       let source = owner.artworkSize
       let target = object.artworkSize
       let factor = object.artworkFit == "fit" ? min(target.x / source.x, target.y / source.y) : 1
@@ -106,6 +107,7 @@ extension Project {
     self = candidate
   }
   public func validateArtworkLinks() throws {
+    try validatePageSetups()
     try validateCollectionProduction()
     try validateGarmentBlocks()
     try validateStudioPresentation()

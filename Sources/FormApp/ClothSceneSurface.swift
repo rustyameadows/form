@@ -49,7 +49,14 @@ import FormGraphics
     var data=(try? JSONEncoder.form.encode(object.cloth)) ?? Data()
     if let assembly=object.patternAssembly {
       data.append((try? JSONEncoder.form.encode(assembly)) ?? Data())
-      data.append(Data(((try? PatternAssemblyGenerator.sourceDigest(assembly,in:project)) ?? "invalid-source").utf8))
+      // Runtime geometry/pose identity alone ignores the two nonprinting page
+      // guides. Authoritative generator/product/preparation digests stay exact.
+      var physicalSource=project
+      if let i=physicalSource.objects.firstIndex(where:{$0.id==assembly.sourceObjectID}) {
+        physicalSource.objects[i].artwork?.bleed=0;physicalSource.objects[i].artwork?.safeInset=nil
+      }
+      data.append(Data("runtime-assembly-page-guides-v1".utf8))
+      data.append(Data(((try? PatternAssemblyGenerator.sourceDigest(assembly,in:physicalSource)) ?? "invalid-source").utf8))
       if let source=project.objects.first(where:{$0.id==assembly.sourceObjectID})?.artwork,
         let printArt=try? AssemblyMaterialRenderer.resolvedDecoration(source,project:project,sourceObjectID:assembly.sourceObjectID) {data.append((try? printArt.renderCacheData()) ?? Data())}
       for panel in assembly.panels {var snapshot=project;snapshot.materials.removeAll{$0.id==panel.material.id};snapshot.materials.append(panel.material)

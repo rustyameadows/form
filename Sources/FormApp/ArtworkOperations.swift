@@ -6,6 +6,7 @@ import UniformTypeIdentifiers
 
 extension StudioStore {
   func graphicsCall(_ name: String, _ args: [String: Any]) throws -> Any {
+    if ArtworkTransferCommands.recognizes(name,args) {return try artworkTransferCall(args)}
     if name == "form_cloth" {return try clothCall(args)}
     if ["form_textile_stock","form_production_job"].contains(name) {return try productionCall(name,arguments:args)}
     if ["form_story","form_publication","form_export_publication"].contains(name) {return try publicationGraphicsCall(name,args)}
@@ -103,6 +104,7 @@ extension StudioStore {
   }
   func exportArtwork(object suppliedObject: ProductObject, arguments: [String: Any]) throws -> Any {
     guard let object=self.project?.objects.first(where:{$0.id==suppliedObject.id}) else{throw FormError.missing("Choose an existing artwork object.")}
+    if arguments["page_output"] != nil {return try exportArtworkPage(objectID:object.id,arguments:arguments)}
     if arguments["pattern_tiles"] != nil, arguments["pattern_pieces"] as? Bool != true { throw FormError.invalid("Use pattern_tiles only with pattern_pieces:true for sewing template PDF output.") }
     if let value=arguments["ink_output"] {
       guard let mode=value as? String else{throw FormError.invalid("ink_output must be preview, composite, plates, or preflight.")}

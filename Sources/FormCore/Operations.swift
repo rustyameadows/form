@@ -321,10 +321,18 @@ public final class OperationEngine {
       }
       return result
     case "form_edit_artwork":
+      if ArtworkTransferCommands.recognizes(name,a) {
+        guard let onGraphics else{throw FormError.missing("Portable artwork transfer requires the running FORM app.")}
+        var input=a;input["_source"]=source;return try onGraphics(name,input)
+      }
       let id = try objectID()
       let command = try string("command")
       let ids = a["element_ids"] == nil ? Set<UUID>() : try idsArgument(a["element_ids"])
       var selected = Set<UUID>()
+      if command == "page_setup" {
+        try edit("Page setup",source:source) {p in try ArtworkPageSetup.apply(in:&p,objectID:id,arguments:a)}
+        return ["object_id":id.uuidString,"page_setup":true]
+      }
       if command == "garment_block" {
         guard let project else { throw FormError.missing("Open a project first.") }
         if GarmentBlockCommands.isReadOnly(a) { return try GarmentBlockCommands.read(project,arguments:a) }
@@ -752,6 +760,7 @@ public final class OperationEngine {
       redo()
       return ["redone": true]
     case "form_batch":
+      guard !ArtworkTransferCommands.rejectsBatch(name,a) else{throw FormError.invalid("Portable file transfers require individual calls; batch rollback cannot cover their external assets/files.")}
       guard let operations = a["operations"] as? [[String: Any]], !operations.isEmpty,
         operations.count <= 100
       else { throw FormError.invalid("Provide 1–100 operations.") }
@@ -833,6 +842,7 @@ public func validateColor(_ color: String) throws {
 public func validateArtwork(_ artwork: Artwork,maxTextCharacters:Int=10000) throws {
   try ParagraphLanguage.validate(artwork.language)
   try validateColor(artwork.background)
+  guard artwork.safeInset.map({$0.isFinite && $0>=0}) ?? true else{throw FormError.invalid("Safe inset must be finite and nonnegative.")}
   guard artwork.elements.count <= 5000, artwork.bleed.isFinite, (0...25).contains(artwork.bleed)
   else { throw FormError.invalid("Artwork supports up to 5000 elements and 0–25 mm bleed.") }
   for element in artwork.elements {

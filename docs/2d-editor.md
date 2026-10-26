@@ -85,7 +85,7 @@ See [precise paths and transformed native text](path-editing.md) for direct sele
 - The specification’s later variable-width stroke workflows.
 - Full SVG interchange fidelity beyond the [supported import subset](svg-import.md), including filters, patterns, gradient strokes, advanced SVG text, and external resources. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
 - Master pages, widow/orphan controls, spreads/imposition and deeper publication layout. [Structured lists](paragraph-lists.md), [linked stories, ordered physical pages, baseline grids and multipage PDF](publications.md), and [paragraph language](paragraph-language.md) now have working native implementations.
-- Cross-project clipboard transfer for linked named resources and local assets.
+- Portable artwork transfer now includes supported named resources, components, masks and local assets. See [bounds, supported contexts and publication safety](portable-artwork-transfer.md). Broader interchange remains limited to the documented formats.
 - Broader CMYK/spot gradient, image and transparency handling, full preflight, advanced surface placement, and the complete demonstration/acceptance suite. The supported declared-ink output already works.
 
 The current **Soft geometry** demonstration is an 8 × 10 inch composition with installed type, gradients, an editable compound shape, a matching outlined version, and physical SVG/PDF/raster exports. It does not replace the required clock dial, folding package, apparel/patch graphic, and instruction booklet demonstrations.
@@ -111,3 +111,7 @@ The font features inspector has one optical-size control: Font default, Automati
 ## Character forms
 
 One Position control applies Normal/Superscript/Subscript to selected text or a native character selection. Original words, nominal point size and manual baseline remain authored values; the inspector explains complete font forms versus whole-span geometry. Existing small-cap features report their actual coverage without synthesized capitals. Styles, exact glyph choices, shared stories and list markers retain their source semantics. See [behavior, bounded work and physical output](character-forms.md).
+
+## Physical page setup
+
+Independent rectangular frames have separate outward Bleed and inward Safe inset drafts with explicit Apply/one Undo. Read-only vector review exposes trim/bleed area and crop-mark gap/length; production PDF uses separately rendered physical boxes without reference guides or scaling. Existing no-option exports preserve their dimensions. [Workflow, strict source-only preflight, units and limits](physical-page-setup.md).

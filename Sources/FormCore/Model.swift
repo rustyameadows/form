@@ -141,7 +141,7 @@ public struct Artwork: Codable, Equatable, Sendable {
   /// Derived surface guard only; never encoded or used in visual signatures.
   public var requiresInkOutput=false
   private enum CodingKeys:String,CodingKey {
-    case background,outputColorProfile,sewingSeams,sewingLayout,sewingTiles,language,elements,bleed,unit,guides,gridSpacing,showGrid,snapEnabled,nudge,showGuides,canvasPosition,boundary,backgroundOpacity,backgroundSwatchID,imports
+    case background,outputColorProfile,sewingSeams,sewingLayout,sewingTiles,language,elements,bleed,safeInset,unit,guides,gridSpacing,showGrid,snapEnabled,nudge,showGuides,canvasPosition,boundary,backgroundOpacity,backgroundSwatchID,imports
   }
   public var sewingSeams: [SewingSeam]?
   public var sewingTiles: SewingTileOptions?
@@ -149,6 +149,8 @@ public struct Artwork: Codable, Equatable, Sendable {
   public var language: String?
   public var elements: [ArtworkElement]
   public var bleed: Double
+  /// Optional declared inward rectangular safety guide; omitted for legacy pages.
+  public var safeInset:Double?
   public var unit: PhysicalUnit?
   public var guides: [ArtworkGuide]?
   public var gridSpacing: Double?
@@ -404,6 +406,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if objects.contains(where:{$0.artwork?.safeInset != nil}) {return max(schemaVersion,49)}
     if requiresCharacterPositionSchema {return max(schemaVersion,47)}
     if collectionProduction.map({!$0.plans.isEmpty || !$0.captures.isEmpty}) == true {return max(schemaVersion,45)}
     if studioPresentation?.shots.isEmpty == false {return max(schemaVersion,43)}
