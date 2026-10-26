@@ -1,6 +1,8 @@
 # FORM implementation goal
 
-Status: **Active**. Expanded October 25, 2026 to include the freeform Canvas/Table relationship, the complete Textiles, Apparel & Merchandise brief, and the complete [2D Design, Typography & Vector Editing specification](2d-design-typography-vector-spec.md), alongside the [original product brief](product-brief.md), the supplied interface sketches, and local 3D-print preparation.
+Status: **Incomplete**. The October 26, 2026 audit found no active goal attached in the goal service; the product scope below remains unfinished. See [current project status](project-status.md) for shipped work, unshipped candidates and execution state.
+
+Expanded October 25, 2026 to include the freeform Canvas/Table relationship, the complete Textiles, Apparel & Merchandise brief, and the complete [2D Design, Typography & Vector Editing specification](2d-design-typography-vector-spec.md), alongside the [original product brief](product-brief.md), the supplied interface sketches, and local 3D-print preparation.
 
 ## Objective
 
@@ -12,7 +14,7 @@ The [Textiles, Apparel & Merchandise brief](textiles-apparel-merchandise-spec.md
 
 The new specification is a governing product document, not a claim that its features already exist. Its complete requirements remain in scope. Its explicit later-stage capabilities retain their staged sequence. Completion requires working native interactions and demonstrated output, rather than controls that only expose stored values.
 
-The goal service currently permits status changes but cannot rewrite the text of an active objective. This file records the expanded objective and completion requirements while that goal stays active.
+This file records the expanded objective and completion requirements. Historical checkpoint notes describe the state when they were recorded; an unchecked aggregate requirement can include implemented subfeatures. The current delivery and execution snapshot is maintained in the project status report.
 
 ## Delivery checkpoints
 

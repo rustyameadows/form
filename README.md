@@ -2,13 +2,15 @@
 
 A native Mac creative environment for designing and making physical things.
 
+**Project status:** [What works, what remains, and the current development state](docs/project-status.md) — updated October 26, 2026.
+
 Explore typography, notes, references, and graphics on a freeform 2D Canvas, connected to a continuous 3D Table for physical objects and materials. Use either surface alone, side by side, or with Canvas in a separate window. Start with the thing you want to make, then work directly with its dimensions, construction, and appearance.
 
 **Version 0.1 foundation:** A working native application with persistent projects, parametric objects, linked artwork, production exports, local Orca slicing, and a local MCP interface. **Codex handles the creative conversation; FORM makes no external AI model calls.**
 
-The next governing document is the [2D Design, Typography & Vector Editing specification](docs/2d-design-typography-vector-spec.md). Its professional editing requirements expand the [active implementation goal](docs/implementation-goal.md); the checklist distinguishes shipped foundations from remaining work.
+The next governing document is the [2D Design, Typography & Vector Editing specification](docs/2d-design-typography-vector-spec.md). Its professional editing requirements expand the [implementation roadmap](docs/implementation-goal.md); the checklist distinguishes shipped foundations from remaining work.
 
-**Active textile feature push:** [Textiles, Apparel & Merchandise](docs/textiles-apparel-merchandise-spec.md), led by a NASA-themed bomber jacket with custom patches, sewn-in tags, and embroidery. The [demo brief and sequence](docs/next-feature-push.md) are guiding active implementation alongside the remaining 2D/3D work.
+**Textile feature scope:** [Textiles, Apparel & Merchandise](docs/textiles-apparel-merchandise-spec.md), led by a NASA-themed bomber jacket with custom patches, sewn-in tags, and embroidery. The [demo brief and sequence](docs/next-feature-push.md) guide the remaining implementation alongside the remaining 2D/3D work.
 
 ## Build and open
 

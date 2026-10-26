@@ -84,9 +84,9 @@ See [precise paths and transformed native text](path-editing.md) for direct sele
 
 - The specification’s later variable-width stroke workflows.
 - Full SVG interchange fidelity beyond the [supported import subset](svg-import.md), including filters, patterns, gradient strokes, advanced SVG text, and external resources. Optional live-text SVG is less portable than outlined output and requires receiving-font/shaping review.
-- Small caps, master pages, widow/orphan controls, spreads/imposition and deeper publication layout. [Structured lists](paragraph-lists.md), [linked stories, ordered physical pages, baseline grids and multipage PDF](publications.md), and [paragraph language](paragraph-language.md) now have working native implementations.
+- Master pages, widow/orphan controls, spreads/imposition and deeper publication layout. [Structured lists](paragraph-lists.md), [linked stories, ordered physical pages, baseline grids and multipage PDF](publications.md), and [paragraph language](paragraph-language.md) now have working native implementations.
 - Cross-project clipboard transfer for linked named resources and local assets.
-- Color-managed production output, CMYK/spot separations, full preflight, advanced surface placement, and the complete demonstration/acceptance suite.
+- Broader CMYK/spot gradient, image and transparency handling, full preflight, advanced surface placement, and the complete demonstration/acceptance suite. The supported declared-ink output already works.
 
 The current **Soft geometry** demonstration is an 8 × 10 inch composition with installed type, gradients, an editable compound shape, a matching outlined version, and physical SVG/PDF/raster exports. It does not replace the required clock dial, folding package, apparel/patch graphic, and instruction booklet demonstrations.
 
