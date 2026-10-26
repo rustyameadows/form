@@ -231,6 +231,7 @@ public struct Typography: Codable, Equatable, Sendable {
   /// legacy single selector for that type; even/odd on/off pairs are exclusive.
   public var featureSelections: [Int: [Int]]?
   public var variations: [Int: Double] = [:]
+  public var opticalSizing:OpticalSizing?
   public var pairKerning: [Int: Double] = [:]
   /// nil retains the original spacing algorithm for existing documents.
   public var kerningMode: String?
@@ -242,7 +243,7 @@ public struct Typography: Codable, Equatable, Sendable {
     case fontName, tracking, leading, baseline, wordSpacing, horizontalScale, alignment,
       verticalAlignment, paragraphBefore, paragraphAfter, leftIndent, rightIndent, firstLineIndent,
       underline, strikethrough, ligatures, direction, frameMode, caseTreatment, hyphenation,
-      features, featureSelections, variations, pairKerning, kerningMode, tabStops, defaultTabInterval,
+      features, featureSelections, variations, opticalSizing, pairKerning, kerningMode, tabStops, defaultTabInterval,
       language, hyphenationLimits, alignToBaselineGrid
   }
   public init(from decoder: Decoder) throws {
@@ -278,6 +279,7 @@ public struct Typography: Codable, Equatable, Sendable {
     features = try c.decodeIfPresent([Int: Int].self, forKey: .features) ?? features
     featureSelections = try c.decodeIfPresent([Int: [Int]].self, forKey: .featureSelections)
     variations = try c.decodeIfPresent([Int: Double].self, forKey: .variations) ?? variations
+    opticalSizing=try c.decodeIfPresent(OpticalSizing.self,forKey:.opticalSizing)
     pairKerning = try c.decodeIfPresent([Int: Double].self, forKey: .pairKerning) ?? pairKerning
     kerningMode = try c.decodeIfPresent(String.self, forKey: .kerningMode)
     tabStops = try c.decodeIfPresent([TextTabStop].self, forKey: .tabStops)

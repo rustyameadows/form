@@ -239,6 +239,7 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
   }
 }
 public func validateTypography(_ t: Typography) throws {
+  try t.opticalSizing?.validate()
   try ParagraphLanguage.validate(t.language)
   try t.hyphenationLimits?.validate()
   let tabs = t.tabStops ?? []

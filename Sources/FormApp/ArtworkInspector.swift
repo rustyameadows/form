@@ -18,17 +18,18 @@ struct ArtworkUnitField: View {
   var body: some View {
     ArtworkInput(
       title: title, value: value / unit.millimeters, suffix: unit.rawValue,
-      parser: { try unit.parse($0) / unit.millimeters }
-    ) { onCommit($0 * unit.millimeters) }
+      parser: { try unit.parse($0) / unit.millimeters },onCommit:{onCommit($0 * unit.millimeters)})
   }
 }
 struct ScalarArtworkField: View {
-  let title: String, value: Double, unit: String, onCommit: (Double) -> Void
-  init(_ title: String, value: Double, unit: String = "", _ onCommit: @escaping (Double) -> Void) {
+  let title: String, value: Double, unit: String, onCommit: (Double) throws -> Void
+  var increment:TypographyIncrement?
+  init(_ title: String, value: Double, unit: String = "",increment:TypographyIncrement?=nil, _ onCommit: @escaping (Double) throws -> Void) {
     self.title = title
     self.value = value
     self.unit = unit
     self.onCommit = onCommit
+    self.increment=increment
   }
   var body: some View {
     ArtworkInput(
@@ -38,58 +39,73 @@ struct ScalarArtworkField: View {
           throw FormError.invalid("Enter a finite number.")
         }
         return value
-      }, onCommit: onCommit)
+      }, onCommit: onCommit,increment:increment)
   }
 }
 private struct ArtworkInput: View {
   let title: String, value: Double, suffix: String, parser: (String) throws -> Double,
-    onCommit: (Double) -> Void
+    onCommit: (Double) throws -> Void
+  var increment:TypographyIncrement?=nil
   @State private var draft = ""
   @State private var error = false
   @State private var lastCommitted = ""
+  @State private var exactCommitted=0.0
   @FocusState private var focused: Bool
   func formatted() -> String {
-    value.formatted(.number.precision(.fractionLength(0...4)).grouping(.never))
+    value.formatted(.number.precision(.fractionLength(0...(increment == nil ? 4:12))).grouping(.never))
   }
   func commit() {
     guard draft != lastCommitted else { return }
     do {
       let value = try parser(draft)
+      if let increment,!increment.range.contains(value) {error=true;return}
+      try onCommit(value)
       error = false
-      lastCommitted = draft
-      onCommit(value)
+      exactCommitted=value;lastCommitted=draft
     } catch { self.error = true }
+  }
+  private func step(_ direction:Int,_ large:Bool)->Bool {
+    guard let increment,increment.isCurrent() else{return false}
+    do {
+      let base=draft==lastCommitted ? exactCommitted:try parser(draft)
+      guard base.isFinite,increment.range.contains(base) else{error=true;return false}
+      let next=base+Double(direction)*increment.step*(large ? 10:1)
+      guard next.isFinite,increment.range.contains(next),next != base else{return false}
+      try onCommit(next)
+      exactCommitted=next;draft=next.formatted(.number.precision(.fractionLength(0...12)).grouping(.never));lastCommitted=draft;error=false;return true
+    }catch {self.error=true;return false}
+  }
+  @ViewBuilder private var editor:some View {
+    if let increment {
+      FocusedNumericArtworkField(text:$draft,title:title,invalid:error,onFocus:{focused=$0},onSubmit:commit,onCancel:{draft=formatted();lastCommitted=draft;exactCommitted=value;error=false},onBegin:increment.begin,onStep:step)
+    }else {TextField(title,text:$draft).focused($focused).onSubmit{commit()}}
   }
   var body: some View {
     HStack(spacing: 5) {
       Text(title).foregroundStyle(Palette.secondary)
       Spacer(minLength: 2)
-      TextField(title, text: $draft).multilineTextAlignment(.trailing).textFieldStyle(
-        .roundedBorder
-      ).frame(minWidth: 40, maxWidth: 77).focused($focused).foregroundStyle(
-        error ? Palette.accent : Palette.ink
-      ).onSubmit { commit() }.onChange(of: focused) { _, focus in
+      editor.multilineTextAlignment(.trailing).textFieldStyle(.roundedBorder).frame(minWidth:40,maxWidth:77).foregroundStyle(error ? Palette.accent:Palette.ink).onChange(of:focused) { _, focus in
         if !focus {
           commit()
           if !error {
             draft = formatted()
-            lastCommitted = draft
+            lastCommitted = draft;exactCommitted=value
           }
         }
       }.onAppear {
         draft = formatted()
-        lastCommitted = draft
+        lastCommitted = draft;exactCommitted=value
       }.onChange(of: value) { _, _ in
         if !focused || draft == lastCommitted {
           draft = formatted()
-          lastCommitted = draft
+          lastCommitted = draft;exactCommitted=value
           error = false
         }
       }
       .onChange(of: suffix) { _, _ in
         if !focused {
           draft = formatted()
-          lastCommitted = draft
+          lastCommitted = draft;exactCommitted=value
           error = false
         }
       }
@@ -345,18 +361,18 @@ struct ArtworkInspector: View {
         ).font(.system(size: 10)).foregroundStyle(Palette.accent)
       }
       HStack(spacing: 10) {
-        ScalarArtworkField("Size", value: session.inspectedSize, unit: "pt") {
+        ScalarArtworkField("Size", value: session.inspectedSize, unit: "pt", increment:session.numericIncrement(step:1,range:0.1...10000)) {
           session.typeSize(max(0.1, $0))
         }
-        ScalarArtworkField("Leading", value: type.leading, unit: "pt") { v in
+        ScalarArtworkField("Leading", value: type.leading, unit: "pt", increment:session.numericIncrement(step:1,range:0...10000)) { v in
           session.typography { $0.leading = max(0, v) }
         }
       }
       HStack(spacing: 10) {
-        ScalarArtworkField("Tracking", value: type.tracking, unit: "pt") { v in
+        ScalarArtworkField("Tracking", value: type.tracking, unit: "pt", increment:session.numericIncrement(step:0.1,range:-10000...10000)) { v in
           session.typography { $0.tracking = v }
         }
-        ScalarArtworkField("Baseline", value: type.baseline, unit: "pt") { v in
+        ScalarArtworkField("Baseline", value: type.baseline, unit: "pt", increment:session.numericIncrement(step:0.1,range:-10000...10000)) { v in
           session.typography { $0.baseline = v }
         }
       }
@@ -401,7 +417,7 @@ struct ArtworkInspector: View {
         Text("Selected characters keep their own fonts, sizes, colors, and spacing.").font(
           .system(size: 9)
         ).foregroundStyle(Palette.secondary)
-        ScalarArtworkField("Pair kerning", value: session.canvas?.manualKerningInspection() ?? 0, unit: "pt") {
+        ScalarArtworkField("Pair kerning", value: session.canvas?.manualKerningInspection() ?? 0, unit: "pt", increment:session.numericIncrement(step:0.1,range:-10000...10000)) {
           session.manualKerning($0)
         }
       }
@@ -420,28 +436,28 @@ struct ArtworkInspector: View {
             Text("Uppercase").tag("uppercase")
             Text("Lowercase").tag("lowercase")
           }.help("Changes displayed case and preserves the original words.")
-          ScalarArtworkField("Word spacing", value: type.wordSpacing, unit: "pt") { v in
+          ScalarArtworkField("Word spacing", value: type.wordSpacing, unit: "pt", increment:session.numericIncrement(step:0.1,range:-10000...10000)) { v in
             session.typography { $0.wordSpacing = v }
           }
-          ScalarArtworkField("Character width", value: type.horizontalScale, unit: "%") { v in
+          ScalarArtworkField("Character width", value: type.horizontalScale, unit: "%", increment:session.numericIncrement(step:1,range:1...1000)) { v in
             session.typography { $0.horizontalScale = min(1000, max(1, v)) }
           }
-          ScalarArtworkField("Space before", value: type.paragraphBefore, unit: "pt") { v in
+          ScalarArtworkField("Space before", value: type.paragraphBefore, unit: "pt", increment:session.numericIncrement(step:1,range:-10000...10000)) { v in
             session.typography { $0.paragraphBefore = v }
           }
-          ScalarArtworkField("Space after", value: type.paragraphAfter, unit: "pt") { v in
+          ScalarArtworkField("Space after", value: type.paragraphAfter, unit: "pt", increment:session.numericIncrement(step:1,range:-10000...10000)) { v in
             session.typography { $0.paragraphAfter = v }
           }
-          ScalarArtworkField("Left indent", value: type.leftIndent, unit: "pt") { v in
+          ScalarArtworkField("Left indent", value: type.leftIndent, unit: "pt", increment:session.numericIncrement(step:1,range:-10000...10000)) { v in
             session.typography { $0.leftIndent = v }
           }
-          ScalarArtworkField("Right indent", value: type.rightIndent, unit: "pt") { v in
+          ScalarArtworkField("Right indent", value: type.rightIndent, unit: "pt", increment:session.numericIncrement(step:1,range:-10000...10000)) { v in
             session.typography { $0.rightIndent = v }
           }
-          ScalarArtworkField("First line", value: type.firstLineIndent, unit: "pt") { v in
+          ScalarArtworkField("First line", value: type.firstLineIndent, unit: "pt", increment:session.numericIncrement(step:1,range:-10000...10000)) { v in
             session.typography { $0.firstLineIndent = v }
           }
-          ScalarArtworkField("Hyphenation", value: type.hyphenation*100, unit: "%") { v in
+          ScalarArtworkField("Hyphenation", value: type.hyphenation*100, unit: "%", increment:session.numericIncrement(step:1,range:0...100)) { v in
             session.typography { $0.hyphenation = min(1,max(0,v/100)) }
           }
           Button("Tab stops…") { session.showingTabs = true }

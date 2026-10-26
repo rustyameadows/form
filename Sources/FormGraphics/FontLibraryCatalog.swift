@@ -60,7 +60,8 @@ public struct InstalledFontFace:Equatable,Identifiable,Sendable {
     let details=FontCatalog.details(face),axes=details["axes"] as? [[String:Any]] ?? [],features=details["features"] as? [[String:Any]] ?? []
     var warnings=Set<String>()
     for type in types {
-      for (id,value) in type.variations {
+      if let warning=OpticalTypography.warning(type) {warnings.insert(warning)}
+      for (id,value) in type.variations where type.opticalSizing == nil || id != OpticalSizing.axisID {
         if let axis=axes.first(where:{$0["id"] as? Int==id}),let minimum=axis["minimum"] as? Double,let maximum=axis["maximum"] as? Double {
           if value<minimum || value>maximum {warnings.insert("Retained axis \(id) value \(value) is outside this face's supported range.")}
         } else {warnings.insert("Retained variation axis \(id) is not offered by \(face).")}

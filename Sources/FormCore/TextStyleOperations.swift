@@ -39,6 +39,7 @@ extension OperationEngine {
           var value = try jsonObject(type) as! [String: Any]
           for (key, field) in changes { value[key] = field is NSNull ? nil : field }
           type = try JSONDecoder.form.decode(Typography.self, from: JSONSerialization.data(withJSONObject: value))
+          if changes["opticalSizing"] is NSNull {type.setOpticalSizing(nil)}
         }
         let saved = try TextStyleCommands.save(in: &p, id: id,
           name: a["name"] as? String ?? old?.name ?? "Untitled style", typography: type,

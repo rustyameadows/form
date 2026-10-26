@@ -306,6 +306,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var downBounds = Rect2(0, 0, 1, 1), marquee: CGRect?
   private var snapLines: [(String, Double)] = []
   private var space = false
+  private var numericTextUndoManager:UndoManager?
+  private var numericTextUndoToken:UUID?
   private var textView: NSTextView?
   private var publicationEditor:PublicationEditingController?
   var hasMarkedTextInput:Bool {textView?.hasMarkedText() ?? false}
@@ -1612,6 +1614,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     needsDisplay = true
   }
   func finishText() {
+    endNumericTextInteraction()
     if let editor=publicationEditor {
       editor.finish();publicationEditor=nil;textView=nil;editingID=nil;publishedText=nil;publishedInput=nil
       originalTextInput=nil;originalTextElement=nil;session?.editingText=false;needsDisplay=true;return
@@ -1857,6 +1860,46 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     tv.didChangeText()
     return true
   }
+  @discardableResult func beginNumericTextInteraction()->UUID? {
+    endNumericTextInteraction()
+    guard let manager=textView?.undoManager else{return nil}
+    let token=UUID();manager.beginUndoGrouping();numericTextUndoManager=manager;numericTextUndoToken=token;return token
+  }
+  func endNumericTextInteraction(ifToken token:UUID?) {
+    guard let token,numericTextUndoToken==token else{return};endNumericTextInteraction()
+  }
+  func endNumericTextInteraction() {
+    let manager=numericTextUndoManager;numericTextUndoManager=nil;numericTextUndoToken=nil
+    if let manager,manager.groupingLevel>0 {manager.endUndoGrouping()}
+  }
+  func opticalSizingInspection()->[Typography]? {
+    guard let tv=textView else{return nil}
+    let range=tv.selectedRange(),fallback=session?.primary?.typography ?? .init()
+    if range.length==0 {return [textInspection()?.typography ?? fallback]}
+    var result:[Typography]=[]
+    tv.attributedString().enumerateAttributes(in:range) {raw,_,_ in
+      if let type=TypographyEngine.spans(from:NSAttributedString(string:"A",attributes:raw),fallback:fallback).first?.typography {result.append(type)}
+    }
+    return result
+  }
+  func applyOpticalSizing(_ value:OpticalSizing?)throws->Bool {
+    guard let tv=textView else{return false}
+    guard !hasMarkedTextInput else{throw FormError.invalid("Finish the current text input before changing optical sizing.")}
+    let range=GlyphEngine.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString()),fallback=session?.primary?.typography ?? .init()
+    if range.length==0 {
+      if let type=textInspection()?.typography {try OpticalTypography.validateEdit(value,fontName:type.fontName)}
+    }else {
+      var failure:Error?
+      tv.attributedString().enumerateAttributes(in:range) {raw,_,stop in
+        do {
+          let type=TypographyEngine.spans(from:NSAttributedString(string:"A",attributes:raw),fallback:fallback).first!.typography
+          try OpticalTypography.validateEdit(value,fontName:type.fontName)
+        }catch {failure=error;stop.pointee=true}
+      }
+      if let failure {throw failure}
+    }
+    return applyTextStyle{$0.setOpticalSizing(value)}
+  }
   func applyTextStyle(_ body: (inout Typography) -> Void) -> Bool {
     guard let tv = textView else { return false }
     tv.undoManager?.beginUndoGrouping()
@@ -1928,12 +1971,35 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func applyTextSize(_ size: Double) -> Bool {
     guard let tv = textView else { return false }
+    if opticalSizingInspection()?.contains(where:{$0.opticalSizing != nil})==true {return applyOpticalTextSize(size)}
     let range = tv.selectedRange()
     let font =
       (range.location < (tv.textStorage?.length ?? 0)
       ? tv.textStorage?.attribute(.font, at: range.location, effectiveRange: nil)
       : tv.typingAttributes[.font]) as? NSFont ?? .systemFont(ofSize: size)
     return changeText([.font: NSFont(descriptor: font.fontDescriptor, size: size) ?? font])
+  }
+  private func applyOpticalTextSize(_ size:Double)->Bool {
+    guard let tv=textView else{return false}
+    let range=GlyphEngine.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString()),fallback=session?.primary?.typography ?? .init()
+    let mapping=TextCase.source(tv.attributedString())
+    func resized(_ raw:[NSAttributedString.Key:Any],at location:Int)->[NSAttributedString.Key:Any] {
+      let run=TypographyEngine.spans(from:NSAttributedString(string:"A",attributes:raw),fallback:fallback,utf16Offset:mapping.sourceRange(.init(location:location,length:0)).location)[0]
+      var changed=run;changed.fontSize=size;changed=TextStyleCommands.recording(changed,from:run)
+      var type=changed.typography;type.inheritedLanguage=raw[LanguageHyphenation.inheritedLanguageKey] as? String
+      var attrs=TypographyEngine.attributes(type,size:size,color:changed.color,millimeters:false,swatchID:changed.swatchID,textStyle:changed.textStyle,paragraphStyle:changed.paragraphStyle)
+      if type.opticalSizing==nil,let old=raw[.font] as? NSFont {attrs[.font]=NSFont(descriptor:old.fontDescriptor,size:size) ?? old}
+      for key in [TextCase.sourceKey,GlyphEngine.overrideKey,PublicationLists.key] {attrs[key]=raw[key]}
+      return attrs
+    }
+    tv.undoManager?.beginUndoGrouping();defer{tv.undoManager?.endUndoGrouping()}
+    if range.length==0 {tv.typingAttributes=resized(tv.typingAttributes,at:range.location);session?.objectWillChange.send();return true}
+    guard tv.shouldChangeText(in:range,replacementString:nil) else{return true}
+    var replacements:[(NSRange,[NSAttributedString.Key:Any])]=[]
+    tv.attributedString().enumerateAttributes(in:range) {raw,part,_ in replacements.append((part,resized(raw,at:part.location)))}
+    tv.textStorage?.beginEditing();for (part,attrs) in replacements {tv.textStorage?.setAttributes(attrs,range:part)}
+    if let storage=tv.textStorage {TypographyEngine.updateSpacing(storage,range:range)}
+    tv.textStorage?.endEditing();tv.didChangeText();return true
   }
   func applyTextColor(_ color: String) -> Bool {
     changeText([.foregroundColor: FormColor.color(color)], removing: [TypographyEngine.swatchKey])

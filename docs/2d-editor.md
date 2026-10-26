@@ -104,3 +104,5 @@ Choose the intended CMYK profile in the frame's Color output section, then use S
 
 
 Finite physical frames and attached decoration inspectors expose **Prepare HTV / DTF…**. Application/delivery review, explicit mirror/background/white choices, physical cut/transfer files and immutable capture use the current editable source without changing camera or 3D Print controls. Saved archives remain available in **Production jobs → HTV / DTF preparations**, including after source deletion. [Supported workflow and limits](decoration-preparation.md).
+
+The font features inspector has one optical-size control: Font default, Automatic, Explicit and Off, with actual range and informational Stored axis/Mixed states. Automatic follows source points independently of zoom; existing omitted policies keep their original layout. Focused typography numbers support Up/Down, Shift×10, repeat grouping and exact Undo without global shortcuts. [Behavior, source boundaries and physical output](optical-sizing.md).

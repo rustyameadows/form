@@ -299,6 +299,7 @@ public enum MCP {
         [
           "role": ["type":["string","null"],"enum":["print","cut","score","stitch","engrave","guide",NSNull()],"description":"With command production, assign a manufacturing role to selected roots and inherit it through descendants; null clears to inherited/default print. A non-print ancestor controls its whole subtree; edit that group first. Legacy artwork is accepted as print."],
           "object_id": objectID, "mask_id": string, "font_name":string,
+          "optical_sizing":["type":["object","null"],"description":"With optical: {mode:automatic|explicit|none,points for explicit}. Source typographic points, independent of drawing scale/zoom. A new policy overrides but retains dormant legacy opsz axes; null intentionally clears both. Optional source UTF-16 range affects characters only; omitted policy preserves exact legacy behavior. Edited explicit values must fit the actual installed face range."],
           "command": ["type": "string", "enum": ArtworkCommands.names+["transfer"]],
           "language": ["type": ["string", "null"], "description": "For command language: BCP47 document default (for example en-US, de, tr), or null for automatic. Source words remain unchanged; text/rich-span Typography.language can override the document."],
           "operation": ["type":"string","enum":["create","update","configure","create_revision","detach","detach_size","list","get","report"],"description":"With garment_block. list/get/report are read-only and keep native drafts/focus. create uses the original three-size concept defaults unless block overrides are supplied. update regenerates eligible complete sources in one Undo; manual/missing/nonrigid conflicts reject atomically. configure saves chart metadata only. Removing metadata preserves all source art."],
@@ -358,7 +359,8 @@ public enum MCP {
          "command": ["type":"string","enum":["features","glyphs","alternates"]],
          "query": string,"offset":["type":"integer"],"limit":["type":"integer"],
          "text":string,"location":["type":"integer"],"length":["type":"integer"],
-         "typography":["type":"object","description":"Optional current typography for alternate shaping, including features, variable axes and case treatment."]],
+         "typography":["type":"object","description":"Optional current typography for alternate shaping, including features, variable axes, opticalSizing and case treatment."],
+         "font_size":["type":"number","description":"Nominal source points for automatic optical sizing in alternate discovery; default48 preview points. Preview enlargement does not change this optical context."]],
          required: ["font_name"], readOnly: true),
       tool(
         "form_convert_to_paths",

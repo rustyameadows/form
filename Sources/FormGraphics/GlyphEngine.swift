@@ -69,7 +69,8 @@ import FormCore
     guard uniform else {
       throw FormError.invalid("A single glyph needs matching font, size, color, and spacing across its source characters.")
     }
-    return (try GlyphCatalog.resolve(choice.glyph, font: font), font)
+    let type=TypographyEngine.assignedTypography(in:first)
+    return (try GlyphCatalog.resolve(choice.glyph,font:font,sourceFace:type?.opticalSizing != nil ? type?.fontName:nil),font)
   }
   public static func issues(_ element: ArtworkElement) -> [String] {
     let source = TypographyEngine.sourceAttributed(element)

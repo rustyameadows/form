@@ -13,6 +13,7 @@ struct GlyphPalette: View {
   @State private var sourceRange: NSRange?
   @State private var type=Typography()
   @State private var fontName=""
+  @State private var nominalPoints=48.0
   @State private var mode="alternates"
   @State private var query=""
   @State private var offset=0
@@ -33,7 +34,7 @@ struct GlyphPalette: View {
       error="Select one text object to browse its glyphs.";return
     }
     projectID=session.store?.project?.id;objectID=session.objectID;element=e
-    type=session.inspectedTypography;fontName=type.fontName
+    type=session.inspectedTypography;fontName=type.fontName;nominalPoints=session.inspectedSize
     if session.editingText,session.characterRange.length>0 {sourceRange=session.characterRange}
     else if e.text.count==1 {sourceRange=NSRange(location:0,length:e.text.utf16.count)}
     if sourceRange==nil {mode="all"}
@@ -44,7 +45,7 @@ struct GlyphPalette: View {
       error=""
       if mode=="alternates" {
         guard let range=sourceRange else {options=[];total=0;return}
-        options=try GlyphCatalog.alternates(fontName:fontName,text:e.text,range:range,typography:type)
+        options=try GlyphCatalog.alternates(fontName:fontName,text:e.text,range:range,typography:type,pointSize:nominalPoints)
         total=options.count
       } else {
         let page=try GlyphCatalog.page(fontName:fontName,query:query,offset:offset,limit:pageSize)
@@ -110,7 +111,7 @@ struct GlyphPalette: View {
               let selected=selectedGlyph.map{$0.fontName==option.glyph.fontName && $0.glyphID==option.glyph.glyphID} ?? option.current
               Button {apply(option.glyph)} label: {
                 VStack(spacing:3) {
-                  NativeGlyphPreview(glyph:option.glyph,type:type).frame(height:42)
+                  NativeGlyphPreview(glyph:option.glyph,type:type,nominalPoints:nominalPoints).frame(height:42)
                   Text(option.glyph.glyphName ?? "#\(option.glyph.glyphID)")
                     .font(.system(size:9)).lineLimit(1).truncationMode(.middle)
                 }.padding(.vertical,7).frame(maxWidth:.infinity)
@@ -156,22 +157,23 @@ struct GlyphPalette: View {
 
 private struct NativeGlyphPreview: NSViewRepresentable {
   let glyph:FontGlyph,type:Typography
+  let nominalPoints:Double
   func makeNSView(context:Context)->GlyphPreviewView {GlyphPreviewView()}
   func updateNSView(_ view:GlyphPreviewView,context:Context) {
-    view.glyph=glyph;view.type=type;view.needsDisplay=true
+    view.glyph=glyph;view.type=type;view.nominalPoints=nominalPoints;view.needsDisplay=true
   }
 }
 
 private final class GlyphPreviewView:NSView {
-  var glyph:FontGlyph?,type=Typography()
+  var glyph:FontGlyph?,type=Typography(),nominalPoints=48.0
   override func hitTest(_ point:NSPoint)->NSView? {nil}
   override func draw(_ dirtyRect:NSRect) {
     guard let glyph,let cg=NSGraphicsContext.current?.cgContext else {return}
-    var font=TypographyEngine.font(type,size:38)
+    var font=TypographyEngine.font(type,size:38,opticalPointSize:type.opticalSizing != nil ? nominalPoints:nil)
     if GlyphCatalog.canonicalName(font) != glyph.fontName {
-      var style=type;style.fontName=glyph.fontName;font=TypographyEngine.font(style,size:38)
+      var style=type;style.fontName=glyph.fontName;font=TypographyEngine.font(style,size:38,opticalPointSize:style.opticalSizing != nil ? nominalPoints:nil)
     }
-    guard var id=try? GlyphCatalog.resolve(glyph,font:font) else {return}
+    guard var id=try? GlyphCatalog.resolve(glyph,font:font,sourceFace:type.opticalSizing != nil ? type.fontName:nil) else {return}
     var box=CGRect.zero
     CTFontGetBoundingRectsForGlyphs(font as CTFont,.default,&id,&box,1)
     guard !box.isEmpty else {return}

@@ -123,6 +123,7 @@ enum TableTool: String, CaseIterable {
         element.height=max(element.fontSize/TypographyEngine.pointsPerMM*1.4,size.height+0.5)
       }
     }
+    engine.onPrepareOptical = {artwork,ids,arguments in try OpticalTypography.validateCommand(artwork,ids:ids,arguments:arguments)}
     engine.onPrepareParagraphs = { artwork, ids in
       for i in artwork.elements.indices where ids.contains(artwork.elements[i].id)
         && artwork.elements[i].kind=="text" && artwork.elements[i].typography?.frameMode=="point" {
@@ -181,6 +182,7 @@ enum TableTool: String, CaseIterable {
                 || (name == "form_story" && ["list","get","layout"].contains(args["command"] as? String ?? "list"))
                 || (name == "form_publication" && ["list","get","preflight"].contains(args["command"] as? String ?? "list"))
             if !readOnly {
+              try self.preflightOpticalHandoff(name,args)
               try self.preflightDecorationHandoff(name,args)
               try self.preflightInkHandoff(name,args)
               try self.preflightFontHandoff(name,args)

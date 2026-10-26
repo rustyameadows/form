@@ -15,10 +15,12 @@ public final class OperationEngine {
   public var onValidatePaint: ((Project, UUID, Set<UUID>) throws -> Void)?
   public var onPrepareSwatch:((Project,inout ArtworkSwatch)throws->Void)?
   public var onPrepareGlyph: ((inout ArtworkElement, GlyphOverride?) throws -> Void)?
+  public var onPrepareOptical: ((Artwork, Set<UUID>, [String:Any]) throws -> Void)?
   public var onPrepareParagraphs: ((inout Artwork, Set<UUID>) throws -> Void)?
   public var onProjectWillChange: (() -> Void)?
   public var onProjectDidChange: (() -> Void)?
   private var interaction: String?
+  private var interactionGeneration:UUID?
   private var interactionSnapshot: (project: Project, undo: [Project], redo: [Project])?
   private var lastCoalesce: String?
   private var lastEdit = Date.distantPast
@@ -69,14 +71,19 @@ public final class OperationEngine {
     selection = selection.intersection(Set(previous.objects.map(\.id)))
     lastCoalesce = nil
   }
-  public func beginInteraction(_ key: String) {
-    guard interaction != key else { return }
+  @discardableResult public func beginInteraction(_ key:String)->UUID {
+    if interaction==key,let token=interactionGeneration {return token}
     endInteraction()
     interaction = key
+    let token=UUID();interactionGeneration=token
     if let project {
       interactionSnapshot = (project, undoStack, redoStack)
     }
     lastCoalesce = nil
+    return token
+  }
+  public func endInteraction(ifGeneration token:UUID) {
+    guard interactionGeneration==token else{return};endInteraction()
   }
   public func endInteraction() {
     if let snapshot = interactionSnapshot, var value = project {
@@ -92,6 +99,7 @@ public final class OperationEngine {
       }
     }
     interaction = nil
+    interactionGeneration=nil
     interactionSnapshot = nil
     lastCoalesce = nil
   }
@@ -353,11 +361,12 @@ public final class OperationEngine {
         guard let object = p.objects.first(where: { $0.id == id }) else {
           throw FormError.missing("Object not found.")
         }
-        if ["font","paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template","cut_layout","pattern_tiles"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
+        if ["font","optical","paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template","cut_layout","pattern_tiles"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
         var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
-        if try PublicationCommands.editText(in:&p,objectID:id,ids:ids,command:command,arguments:a,prepareGlyph:onPrepareGlyph,prepareParagraphs:onPrepareParagraphs) {selected=ids;return}
+        if try PublicationCommands.editText(in:&p,objectID:id,ids:ids,command:command,arguments:a,prepareGlyph:onPrepareGlyph,prepareParagraphs:onPrepareParagraphs,prepareOptical:onPrepareOptical) {selected=ids;return}
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
-        if command=="font" {try onPrepareParagraphs?(&art,art.swatchPaintTargets(for:ids))}
+        if command=="optical" {try onPrepareOptical?(art,ids,a)}
+        if ["font","optical"].contains(command) {try onPrepareParagraphs?(&art,art.swatchPaintTargets(for:ids))}
         if command=="glyph" {
           let targets=art.swatchPaintTargets(for:ids)
           let location=(a["location"] as? NSNumber)?.intValue

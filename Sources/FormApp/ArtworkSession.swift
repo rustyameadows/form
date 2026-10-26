@@ -323,9 +323,9 @@ enum ArtworkTool: String, CaseIterable {
       store?.error = error.localizedDescription
     }
   }
-  func beginGesture() {
-    guard let id = objectID else { return }
-    store?.engine.beginInteraction("artwork-\(id)")
+  @discardableResult func beginGesture()->UUID? {
+    guard let id=objectID else{return nil}
+    return store?.engine.beginInteraction("artwork-\(id)")
   }
   func endGesture() { store?.engine.endInteraction() }
   func translate(dx: Double, dy: Double) {

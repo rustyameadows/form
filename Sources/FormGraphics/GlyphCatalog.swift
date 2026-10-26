@@ -62,8 +62,18 @@ public struct GlyphPage {
   private static let alternatives:NSCache<NSString,Alternatives> = {let c=NSCache<NSString,Alternatives>();c.countLimit=128;c.totalCostLimit=4_000_000;return c}()
   private static let aliases:NSCache<NSString,NSString> = {let c=NSCache<NSString,NSString>();c.countLimit=256;c.totalCostLimit=64_000;return c}()
   private static let baseNames:NSCache<NSString,NSString> = {let c=NSCache<NSString,NSString>();c.countLimit=128;c.totalCostLimit=64_000;return c}()
+  private static let backingSignatures:NSCache<NSString,NSString> = {let c=NSCache<NSString,NSString>();c.countLimit=64;return c}()
+  private static func backingSignature(_ font:NSFont)->String {
+    if let value=backingSignatures.object(forKey:font.fontName as NSString) {return value as String}
+    var hash=SHA256();var count=UInt32(CTFontGetGlyphCount(font as CTFont)).bigEndian;withUnsafeBytes(of:&count){hash.update(data:Data($0))}
+    let table=CTFontCopyAvailableTables(font as CTFont,[])
+    let tags:[UInt32]=table.map{raw in (0..<CFArrayGetCount(raw)).map{UInt32(UInt(bitPattern:CFArrayGetValueAtIndex(raw,$0)))}.sorted()} ?? []
+    for tag in tags {if let data=CTFontCopyTable(font as CTFont,tag,[]) {var label=tag.bigEndian;withUnsafeBytes(of:&label){hash.update(data:Data($0))};hash.update(data:data as Data)}}
+    let value=hash.finalize().map{String(format:"%02x",$0)}.joined();backingSignatures.setObject(value as NSString,forKey:font.fontName as NSString);return value
+  }
+  private static func sameBacking(_ first:NSFont,_ second:NSFont)->Bool {backingSignature(first)==backingSignature(second)}
   private static var builds=0,hits=0
-  public static func invalidate(){faces.removeAllObjects();alternatives.removeAllObjects();aliases.removeAllObjects();baseNames.removeAllObjects();GlyphEngine.invalidate()}
+  public static func invalidate(){faces.removeAllObjects();alternatives.removeAllObjects();aliases.removeAllObjects();baseNames.removeAllObjects();backingSignatures.removeAllObjects();GlyphEngine.invalidate()}
   /// Variable instances synthesize PostScript names. Pin glyph IDs to the file's default face.
   public static func canonicalName(_ font:NSFont)->String {
     if let name=aliases.object(forKey:font.fontName as NSString) {return name as String}
@@ -118,9 +128,14 @@ public struct GlyphPage {
     let name=entry.name(id).flatMap{CTFontGetGlyphWithName(entry.font as CTFont,$0 as CFString)==id ? $0 : nil}
     return FontGlyph(fontName:entry.font.fontName,glyphID:id,glyphName:name,fontSignature:entry.signature)
   }
-  public static func resolve(_ glyph:FontGlyph,font:NSFont)throws->CGGlyph {
+  public static func resolve(_ glyph:FontGlyph,font:NSFont,sourceFace:String?=nil)throws->CGGlyph {
     try GlyphCommands.validate(glyph)
-    guard canonicalName(font)==glyph.fontName else{throw FormError.invalid("Glyph \(glyph.glyphName ?? String(glyph.glyphID)) belongs to \(glyph.fontName). Restore that face or clear the glyph choice.")}
+    if canonicalName(font) != glyph.fontName {
+      // An explicit optical policy can turn a system/named face into a derived
+      // PostScript instance. Accept only its recorded source face AND identical
+      // glyph-index/font tables; never retarget an ID to a different font.
+      guard let sourceFace,let source=try? face(sourceFace),source.font.fontName==glyph.fontName,sameBacking(font,source.font) else{throw FormError.invalid("Glyph \(glyph.glyphName ?? String(glyph.glyphID)) belongs to \(glyph.fontName). Restore that face or clear the glyph choice.")}
+    }
     let entry=try face(glyph.fontName)
     if let name=glyph.glyphName {
       let resolved=CTFontGetGlyphWithName(font as CTFont,name as CFString)
@@ -131,8 +146,9 @@ public struct GlyphPage {
     guard entry.signature==glyph.fontSignature,glyph.glyphID<entry.count else{throw FormError.invalid("The font changed and this unnamed glyph needs review. Choose it again in the glyph palette.")}
     return CGGlyph(glyph.glyphID)
   }
-  public static func option(font:NSFont,id:Int,label:String?=nil)throws->GlyphOption {
-    let value=try glyph(fontName:font.fontName,id:id)
+  public static func option(font:NSFont,id:Int,label:String?=nil,sourceFace:String?=nil)throws->GlyphOption {
+    let value=try glyph(fontName:sourceFace ?? font.fontName,id:id)
+    if let sourceFace {_ = try resolve(value,font:font,sourceFace:sourceFace)}
     var glyph=CGGlyph(id),bounds=CGRect.zero,advance=CGSize.zero
     CTFontGetBoundingRectsForGlyphs(font as CTFont,.default,&glyph,&bounds,1)
     CTFontGetAdvancesForGlyphs(font as CTFont,.default,&glyph,&advance,1)
@@ -164,7 +180,7 @@ public struct GlyphPage {
     return GlyphPage(fontName:entry.font.fontName,signature:entry.signature,glyphCount:entry.count,
       total:ids.count,offset:offset,limit:limit,options:try page.map{try option(font:displayFont,id:$0)})
   }
-  public static func alternates(fontName:String,text:String,range:NSRange,typography:Typography=Typography())throws->[GlyphOption] {
+  public static func alternates(fontName:String,text:String,range:NSRange,typography:Typography=Typography(),pointSize:Double=48)throws->[GlyphOption] {
     _=try face(fontName)
     let source=text as NSString
     func boundary(_ i:Int)->Bool {
@@ -176,13 +192,16 @@ public struct GlyphPage {
       Range(range,in:text) != nil,
       !source.substring(with:range).unicodeScalars.contains(where:{[0,9,10,11,12,13,0x85,0x2028,0x2029].contains($0.value)}) else{throw FormError.invalid("Select 1–64 UTF-16 units in the font's source text.")}
     var style=typography;style.fontName=fontName;try validateTypography(style)
+    if style.opticalSizing != nil,(!pointSize.isFinite || !(0.1...10000).contains(pointSize)) {throw FormError.invalid("Use finite nominal document points for optical alternate discovery.")}
     let before=source.substring(to:range.location).suffix(64),after=source.substring(from:NSMaxRange(range)).prefix(64)
     let context=String(before)+source.substring(with:range)+String(after),selected=NSRange(location:before.utf16.count,length:range.length)
-    let keyData=try JSONSerialization.data(withJSONObject:["font":fontName,"signature":try signature(fontName),"text":context,"location":selected.location,"length":selected.length,"typography":try jsonObject(style)],options:.sortedKeys)
+    let keyData=try JSONSerialization.data(withJSONObject:["font":fontName,"signature":try signature(fontName),"text":context,"location":selected.location,"length":selected.length,"typography":try jsonObject(style),"optical_points":style.opticalSizing != nil ? pointSize:48],options:.sortedKeys)
     let key=SHA256.hash(data:keyData).map{String(format:"%02x",$0)}.joined() as NSString
     if let value=alternatives.object(forKey:key){hits+=1;return value.value}
     func shaped(_ type:Typography)->(Int,NSFont)? {
-      let source=NSAttributedString(string:context,attributes:TypographyEngine.attributes(type,size:48,color:"#000000",millimeters:false))
+      var attrs=TypographyEngine.attributes(type,size:48,color:"#000000",millimeters:false)
+      if type.opticalSizing != nil {attrs[.font]=TypographyEngine.font(type,size:48,opticalPointSize:pointSize)}
+      let source=NSAttributedString(string:context,attributes:attrs)
       let displayed=TypographyEngine.displayingCase(source),mapped=TextCase.source(displayed).displayRange(selected)
       let line=CTLineCreateWithAttributedString(displayed)
       var found:[(Int,NSFont)]=[]
@@ -199,11 +218,12 @@ public struct GlyphPage {
           found.append((Int(ids[i]),font))
         }
       }
-      guard found.count==1,found[0].0>0,found[0].1.fontName==TypographyEngine.font(type,size:48).fontName else{return nil}
+      let expected=TypographyEngine.font(type,size:48,opticalPointSize:type.opticalSizing != nil ? pointSize:nil)
+      guard found.count==1,found[0].0>0,found[0].1.fontName==expected.fontName || (type.opticalSizing != nil && sameBacking(found[0].1,expected)) else{return nil}
       return found[0]
     }
     var result:[GlyphOption]=[],seen=Set<Int>()
-    if let (id,font)=shaped(style) {var current=try option(font:font,id:id,label:"Current shaping");current.current=true;result.append(current);seen.insert(id)}
+    if let (id,font)=shaped(style) {var current=try option(font:font,id:id,label:"Current shaping",sourceFace:style.opticalSizing != nil ? fontName:nil);current.current=true;result.append(current);seen.insert(id)}
     let details=FontCatalog.details(fontName)
     for feature in details["features"] as? [[String:Any]] ?? [] {
       guard let type=feature["id"] as? Int else{continue}
@@ -213,7 +233,7 @@ public struct GlyphPage {
         if feature["exclusive"] as? Bool==true {changed.resetFeature(type);changed.features[type]=id}
         else {changed.setIndependentFeature(type,selector:id,value:id%2==0)}
         if let (glyph,font)=shaped(changed),seen.insert(glyph).inserted {
-          var choice=try option(font:font,id:glyph,label:"\(feature["name"] as? String ?? "Feature") · \(selector["name"] as? String ?? "Alternate")")
+          var choice=try option(font:font,id:glyph,label:"\(feature["name"] as? String ?? "Feature") · \(selector["name"] as? String ?? "Alternate")",sourceFace:style.opticalSizing != nil ? fontName:nil)
           choice.featureType=type;choice.selector=id;result.append(choice)
         }
       }

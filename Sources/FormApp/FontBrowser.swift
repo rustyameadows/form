@@ -137,10 +137,11 @@ struct FontFeaturesInspector: View {
   }
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
-      if !axes.isEmpty {
+      if axes.contains(where:{$0.id==OpticalSizing.axisID}) || session.opticalInspectionTypes.contains(where:{$0.opticalSizing != nil || $0.variations[OpticalSizing.axisID] != nil}) {OpticalSizingControls(session:session)}
+      if axes.contains(where:{$0.id != OpticalSizing.axisID}) {
         DisclosureGroup("Variable font axes") {
           VStack(alignment: .leading, spacing: 12) {
-            ForEach(axes) { axis in
+            ForEach(axes.filter{$0.id != OpticalSizing.axisID}) { axis in
               VStack(alignment: .leading, spacing: 5) {
                 HStack {
                   Text(axis.name).font(.system(size: 10))
@@ -162,7 +163,8 @@ struct FontFeaturesInspector: View {
                 ).controlSize(.mini)
                 ScalarArtworkField(
                   "Value",
-                  value: session.inspectedTypography.variations[axis.id] ?? axis.defaultValue
+                  value: session.inspectedTypography.variations[axis.id] ?? axis.defaultValue,
+                  increment:session.numericIncrement(step:axis.maximum-axis.minimum>=10 ? 1:min(0.01,max(0.000000001,(axis.maximum-axis.minimum)/100)),range:axis.minimum...axis.maximum)
                 ) { value in
                   session.typography {
                     $0.variations[axis.id] = min(axis.maximum, max(axis.minimum, value))

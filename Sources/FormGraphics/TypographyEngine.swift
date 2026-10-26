@@ -91,7 +91,7 @@ public enum FormColor {
     return (element.typography?.hyphenation ?? 0) > 0 || element.textRuns?.contains { $0.typography.hyphenation > 0 } == true
   }
   public static func requiresComposedOutlines(_ element: ArtworkElement) -> Bool {
-    usesParagraphLayout(element) || element.text.contains("\t") || !(element.glyphOverrides ?? []).isEmpty
+    usesParagraphLayout(element) || element.text.contains("\t") || !(element.glyphOverrides ?? []).isEmpty || element.typography?.opticalSizing != nil || element.textRuns?.contains{$0.typography.opticalSizing != nil}==true
   }
   private static func nativeTabs(_ style: Typography, factor: Double = 1) -> [NSTextTab] {
     guard let stops = style.tabStops else { return NSParagraphStyle.default.tabStops }
@@ -102,7 +102,11 @@ public enum FormColor {
       return NSTextTab(textAlignment: alignment, location: stop.location * factor, options: options)
     }
   }
-  public static func font(_ style: Typography, size: Double) -> NSFont {
+  static func assignedTypography(in attributes:[NSAttributedString.Key:Any])->Typography? {
+    (attributes[styleKey] as? Data).flatMap{try? JSONDecoder.form.decode(Typography.self,from:$0)}
+  }
+  public static func font(_ style: Typography, size: Double,opticalPointSize:Double?=nil) -> NSFont {
+    if style.opticalSizing != nil {return OpticalTypography.font(style,size:size,nominalPoints:opticalPointSize ?? size)}
     let base =
       NSFont(name: style.fontName, size: size) ?? NSFont.systemFont(ofSize: size, weight: .medium)
     var attrs: [NSFontDescriptor.AttributeName: Any] = [:]
@@ -148,7 +152,7 @@ public enum FormColor {
     p.lineBreakMode = .byWordWrapping
     var result: [NSAttributedString.Key: Any] = [
       styleKey: (try? JSONEncoder.form.encode(style)) ?? Data(),
-      .font: font(style, size: size * f), .foregroundColor: FormColor.color(color),
+      .font: font(style, size: size * f,opticalPointSize:size), .foregroundColor: FormColor.color(color),
       .paragraphStyle: p, .baselineOffset: style.baseline * f,
       .ligature: style.ligatures,
       .underlineStyle: style.underline ? NSUnderlineStyle.single.rawValue : 0,
@@ -156,6 +160,7 @@ public enum FormColor {
       .expansion: log(style.horizontalScale / 100),
     ]
     result.merge(spacingAttributes(style, adjustment: 0, factor: f)) { _, new in new }
+    if style.opticalSizing != nil,let font=result[.font] as? NSFont {result[OpticalTypography.resolvedFaceKey]=font.fontName}
     if let language=style.language ?? style.inheritedLanguage {result[LanguageHyphenation.languageKey]=language}
     if let language=style.inheritedLanguage {result[LanguageHyphenation.inheritedLanguageKey]=language}
     if let swatchID { result[swatchKey] = swatchID.uuidString }
@@ -557,13 +562,18 @@ public enum FormColor {
       let actualFeatures = font.fontDescriptor.object(forKey: .featureSettings) as? NSArray ?? []
       let preserveFeatures = attrs[styleKey] != nil && assignedFont.fontName == font.fontName
         && assignedFeatures.isEqual(actualFeatures)
-      let preserveAssignedName = attrs[styleKey] != nil && assignedFont.fontName == font.fontName
+      let preserveOpticalFace = style.opticalSizing != nil && attrs[OpticalTypography.resolvedFaceKey] as? String == font.fontName
+      let preserveAssignedName = attrs[styleKey] != nil && (assignedFont.fontName == font.fontName || preserveOpticalFace)
       if !preserveAssignedName { style.fontName = font.fontName }
       let assignedVariations=assignedFont.fontDescriptor.object(forKey:.variation) as? NSDictionary ?? [:]
       let actualVariations=font.fontDescriptor.object(forKey:.variation) as? NSDictionary ?? [:]
       if !(preserveAssignedName && assignedVariations.isEqual(actualVariations)),let values = font.fontDescriptor.object(forKey: .variation) as? [NSNumber: NSNumber] {
+        let legacyOptical=style.variations[OpticalSizing.axisID]
         style.variations = Dictionary(
-          uniqueKeysWithValues: values.map { ($0.key.intValue, $0.value.doubleValue) })
+          uniqueKeysWithValues: values.compactMap { entry in
+            style.opticalSizing != nil && entry.key.intValue==OpticalSizing.axisID ? nil:(entry.key.intValue,entry.value.doubleValue)
+          })
+        if style.opticalSizing != nil {style.variations[OpticalSizing.axisID]=legacyOptical}
       }
       if !preserveFeatures, let values = font.fontDescriptor.object(forKey: .featureSettings)
         as? [[NSFontDescriptor.FeatureKey: Any]]

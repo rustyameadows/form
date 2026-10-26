@@ -3,8 +3,9 @@ import Foundation
 extension PublicationCommands {
   public static func editText(in project:inout Project,objectID:UUID,ids:Set<UUID>,command:String,arguments:[String:Any],
     prepareGlyph:((inout ArtworkElement,GlyphOverride?)throws->Void)?=nil,
-    prepareParagraphs:((inout Artwork,Set<UUID>)throws->Void)?=nil) throws -> Bool {
-    guard ["paragraph","glyph","list","font"].contains(command),let object=project.objects.first(where:{$0.id==objectID}),var artwork=project.editableArtwork(object) else{return false}
+    prepareParagraphs:((inout Artwork,Set<UUID>)throws->Void)?=nil,
+    prepareOptical:((Artwork,Set<UUID>,[String:Any])throws->Void)?=nil) throws -> Bool {
+    guard ["paragraph","glyph","list","font","optical"].contains(command),let object=project.objects.first(where:{$0.id==objectID}),var artwork=project.editableArtwork(object) else{return false}
     let targets=artwork.swatchPaintTargets(for:ids)
     let linked=artwork.elements.filter{targets.contains($0.id) && $0.storyFrame != nil}
     guard !linked.isEmpty else{return false}
@@ -15,6 +16,7 @@ extension PublicationCommands {
       try ensureEditable(story,in:project)
       var source=story.sourceElement,art=Artwork(elements:[story.sourceElement])
       try ArtworkCommands.apply(command,to:&art,ids:[source.id],arguments:arguments,maxTextCharacters:100000)
+      if command=="optical" {try prepareOptical?(art,[source.id],arguments)}
       source=art.elements[0]
       if command=="glyph" {
         let location=(arguments["location"] as? NSNumber)?.intValue
@@ -34,6 +36,7 @@ extension PublicationCommands {
           try prepareGlyph?(&artwork.elements[i],choice)
         }
       }
+      if command=="optical" {try prepareOptical?(artwork,ordinary,arguments)}
       try prepareParagraphs?(&artwork,ordinary)
     }
     try project.setArtwork(artwork,for:objectID);return true

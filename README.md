@@ -55,6 +55,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Textile production records:** Studio thread inventory and declared embroidery equipment, portable thread assignment, immutable revision-linked jobs, measured needle paths versus explicit cost/usage assumptions, user sample/quality history, and local PDF/JSON/DST/SVG review packets. No stock deduction or machine operations. See [production jobs](docs/textile-production-jobs.md).
 - **Image editing:** Original files, aspect-aware placement, crop panning/zoom, numeric crop bounds, brightness/contrast/saturation, replacement that retains layout, drag/drop, and effective physical DPI. See the [LUMEN collection](docs/image-editing.md).
 - **Editable SVG import:** File → Import SVG Artwork (`⇧⌘I`) reviews native paths, groups, text, gradients, clips, and embedded images before creating a physical frame or adding to an existing surface. Originals stay in the project; unsupported features require explicit review. See the [SVG import guide](docs/svg-import.md).
+- **Optical typography:** Explicit Automatic/Explicit/Off sizing in source points, source-preserving styles/glyphs, precise physical SVG fallback, and focused numeric Up/Down/Shift/Undo. See [optical sizing and precision](docs/optical-sizing.md).
 - **Typography:** Reusable text styles with local overrides, independent character/paragraph links, installed fonts, native selected-character editing, reversible Unicode case, paragraph tabs/hyphenation, font kerning, OpenType features, variable axes, real alternate-glyph selection, Core Text shaping, and editable glyph outlines. See [FOLIO and text styles](docs/reusable-text-styles.md), [FOUNDRY and font features](docs/font-features.md), [AVENUE and kerning](docs/kerning.md), [LEDGER and paragraph composition](docs/paragraph-composition.md), [VERSO and text case](docs/text-case.md), [QUILL and alternate glyphs](docs/glyphs.md), and the [editor guide](docs/2d-editor.md).
 - **Iterations and variants:** Independent design iterations or linked parameter/artwork variants with their own materials and placement.
 - **Studio Library:** Persistent materials and equipment profiles, separate from individual projects.
@@ -146,6 +147,7 @@ python3 scripts/smoke_paths.py # Curve editing, transformed type, and linked var
 python3 scripts/smoke_clock.py --slice # Shared dial, immutable source links, physical exports, local Orca
 python3 scripts/benchmark_artwork.py # 600-element native canvas performance
 python3 scripts/smoke_production_inks.py # Declared CMYK/spot intents, knockout maps, guarded physical PDF, schema35
+python3 scripts/smoke_optical_typography.py # Disposable library; optical modes, source/glyph/style/story Undo and physical output
 python3 scripts/smoke_decoration_preparation.py # Disposable library only; HTV/DTF physical files and immutable packets
 python3 scripts/smoke_print_lifecycle.py # Project scope, local-worker cancellation, unseen mesh dimensions, Undo/Redo
 python3 scripts/smoke_print.py # Optional engine; local cube and hollow-shade slices

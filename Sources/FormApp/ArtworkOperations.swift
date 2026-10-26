@@ -1,4 +1,5 @@
 import AppKit
+import CoreFoundation
 import FormCore
 import FormGraphics
 import UniformTypeIdentifiers
@@ -35,7 +36,12 @@ extension StudioStore {
         let style = try args["typography"].map { try JSONDecoder.form.decode(Typography.self,
           from: JSONSerialization.data(withJSONObject: $0)) } ?? Typography()
         let range = try NSRange(location: integer("location", default: 0), length: integer("length", default: text.utf16.count))
-        let options = try GlyphCatalog.alternates(fontName: font, text: text, range: range, typography: style)
+        let points:Double
+        if let raw=args["font_size"] {
+          guard let value=raw as? NSNumber,CFGetTypeID(value) != CFBooleanGetTypeID(),value.doubleValue.isFinite,(0.1...10000).contains(value.doubleValue) else{throw FormError.invalid("Use finite 0.1–10000 nominal document points for alternate shaping.")}
+          points=value.doubleValue
+        }else{points=48}
+        let options = try GlyphCatalog.alternates(fontName:font,text:text,range:range,typography:style,pointSize:points)
         return ["font_name": font, "location": range.location, "length": range.length, "glyphs": options.map(\.json)]
       default: throw FormError.invalid("Font discovery command must be features, glyphs, or alternates.")
       }
@@ -159,7 +165,7 @@ extension StudioStore {
         outlineText: arguments["outline_text"] as? Bool ?? true
       ).write(to: url, atomically: true, encoding: .utf8)
     case "pdf":
-      let dpi = arguments["dpi"] as? Double ?? 300
+      let dpi = try artworkExportDPI(arguments)
       guard dpi.isFinite, (36...1200).contains(dpi) else { throw FormError.invalid("Choose 36–1200 DPI for PDF effects.") }
       try ArtworkRenderer.validateAppearanceOutput(art, assets: assets, pixelsPerMM: dpi / 25.4)
       var box = CGRect(
@@ -182,7 +188,7 @@ extension StudioStore {
       try profiledArtworkPDF(data as Data, artwork: art, assets: assets, title: object.name)
         .write(to: url, options: .atomic)
     case "png", "jpeg":
-      let dpi = arguments["dpi"] as? Double ?? 300
+      let dpi = try artworkExportDPI(arguments)
       guard dpi.isFinite, (36...1200).contains(dpi), width * dpi / 25.4 <= 16000,
         height * dpi / 25.4 <= 16000, width * height * pow(dpi / 25.4, 2) <= 100_000_000
       else {
@@ -211,6 +217,10 @@ extension StudioStore {
       "composed_text_outlined": format == "svg" && arguments["outline_text"] as? Bool == false
         ? art.elements.filter { $0.kind == "text" && $0.hidden != true && TypographyEngine.requiresComposedOutlines($0) }.count : 0,
     ]
+    let opticalFallback=format=="svg" && arguments["outline_text"] as? Bool==false ? art.elements.filter{$0.kind=="text" && $0.hidden != true && OpticalTypography.requiresOutlines($0)}.count:0
+    result["optical_text_outlined"]=opticalFallback
+    result["optical_sizing_warnings"]=OpticalTypography.warnings(art)
+    if opticalFallback>0 {result["optical_sizing_fallback"]="Optical-sizing text uses shared native outlines for precise SVG metrics; source text stays editable in FORM."}
     if declaredInks {result["ink_output"]="preview";result["ink_declarations_encoded"]=false;result["ink_notice"]="sRGB appearance preview; named/process ink declarations are not encoded in this output."}
     result["color_space"] = format == "pdf" ? art.outputColorProfile?.model ?? "sRGB" : "sRGB"
     if format == "pdf", let profile = art.outputColorProfile {
@@ -218,4 +228,12 @@ extension StudioStore {
     }
     return result
   }
+}
+
+private func artworkExportDPI(_ arguments: [String: Any]) throws -> Double {
+  guard let raw = arguments["dpi"] else { return 300 }
+  guard let number = raw as? NSNumber,
+    CFGetTypeID(number) != CFBooleanGetTypeID(), number.doubleValue.isFinite
+  else { throw FormError.invalid("Choose a finite numeric DPI value.") }
+  return number.doubleValue
 }
