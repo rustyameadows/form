@@ -56,7 +56,7 @@ final class ClothDocumentTests:XCTestCase {
 
   func testPackagedWorkflowPanelSeamsCloseWithinDeclaredHalfSecondStudy()throws {
     let project=Project(name:"Seam workflow"),source=try project.makeObject(recipeID:"clothTote",parameters:["resolution":8]),study=source.cloth!
-    var solver=try ClothSolver(mesh:study.mesh,settings:study.settings,colliders:study.colliders);try solver.start();try solver.advance(frames:30)
+    var solver=try ClothSolver(mesh:study.mesh,settings:study.settings,colliders:study.colliders);try solver.start();for _ in 0..<30 {try solver.advance(frames:1)}
     XCTAssertLessThan(solver.diagnostics.maximumSeamGapMm,2);XCTAssertLessThan(solver.diagnostics.maximumSurfacePenetrationMm,0.01)
     XCTAssertEqual(solver.elapsedSeconds,0.5,accuracy:1e-9)
   }

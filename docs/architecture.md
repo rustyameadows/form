@@ -13,7 +13,7 @@ The deliberate change to the original brief is agent delivery. **Codex is the cr
 | `FormApp` | SwiftUI shell, AppKit pointer and artwork interaction, Metal-backed SceneKit renderer, contextual controls, previews, studio, native file panels, PDF/SVG/PNG exports |
 | `FormMCP` | MCP over stdio; forwards tool calls to the running app over a user-owned Unix socket |
 
-No external Swift packages, model credentials, cloud services, or CAD licenses are required. The local polygon engine includes pinned Clipper2 C++ source under the Boost Software License 1.0; [provenance and notices](third-party-geometry.md) travel with that source. Optional slicing uses a separately installed official OrcaSlicer app; optional P1S status uses the local network.
+No external Swift packages, model credentials, cloud services, or CAD licenses are required. The local polygon engine includes pinned Clipper2 C++ source under Boost 1.0 and Mapbox Earcut source under ISC; [provenance and notices](third-party-geometry.md) travel with that source. Optional slicing uses a separately installed official OrcaSlicer app; optional P1S status uses the local network.
 
 ## The rendering boundary
 

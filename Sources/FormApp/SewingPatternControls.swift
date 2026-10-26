@@ -98,6 +98,7 @@ struct SewingPatternActions: View {
         Divider(); SectionLabel("SEWING PATTERN")
         Button("Preview cutting pattern") { preview = true }.accessibilityLabel("Preview cutting pattern")
         Button("Pair seam edges") { pairing = true }.accessibilityLabel("Pair seam edges")
+        if let source=session.objectID {Button("Arrange cloth assembly…") {store.createPatternAssembly(sourceID:source)}.accessibilityLabel("Arrange cloth assembly from source patterns")}
         Button("Material cutting layout") { session.canvas?.finishText(); cuttingLayout = true }.accessibilityLabel("Material cutting layout")
         if let checks = try? SewingPatterns.diagnostics(session.art) {
           ForEach(checks, id: \.seam.id) { check in

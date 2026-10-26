@@ -27,6 +27,7 @@ extension Samples {
     .init(
       id: "forms", name: "Objects in good company", title: "Material & form",
       summary: "Compare clay, wood, and aluminum.", symbol: "cube"),
+    .init(id:"pouchAssembly",name:"NASA / Curved pouch",title:"Pattern assembly",summary:"Original curved pieces, explicit supports, physical seams and editable material-space print.",symbol:"bag"),
   ]
   public static func make(_ template: String) throws -> Project {
     switch template {
@@ -37,6 +38,7 @@ extension Samples {
     case "merchandise":return try merchandiseCollection()
     case "fieldGuide":return try fieldGuide()
     case "clothLab":return try clothLab()
+    case "pouchAssembly":return try PatternAssemblySamples.project()
     case "cyanotype": return cyanotype()
     case "lamps": return lamps()
     case "forms": return studies()

@@ -7,10 +7,11 @@ public struct ClothStudy:Codable,Equatable,Sendable {
   public var mesh:ClothMesh
   public var settings:ClothSettings
   public var colliders:[ClothCollider]
-  public init(mesh:ClothMesh,settings:ClothSettings = .init(),colliders:[ClothCollider] = []) {
-    self.mesh=mesh;self.settings=settings;self.colliders=colliders
+  public var preparation:ClothAssemblyPreparation?
+  public init(mesh:ClothMesh,settings:ClothSettings = .init(),colliders:[ClothCollider] = [],preparation:ClothAssemblyPreparation? = nil) {
+    self.mesh=mesh;self.settings=settings;self.colliders=colliders;self.preparation=preparation
   }
-  public func validate()throws {_ = try ClothSolver(mesh:mesh,settings:settings,colliders:colliders)}
+  public func validate()throws {_ = try ClothSolver(mesh:mesh,settings:settings,colliders:colliders,preparation:preparation)}
   public var digest:String {get throws {
     try validate()
     return SHA256.hash(data:try JSONEncoder.form.encode(self)).map {String(format:"%02x",$0)}.joined()
@@ -71,7 +72,7 @@ public struct ClothSession:Sendable {
     guard !identity.revision.isEmpty,identity.revision.utf8.count<=256 else {throw FormError.invalid("Cloth source needs a bounded nonempty revision identity.")}
     let digest=try study.digest
     if source==identity,studyDigest==digest {return false}
-    let replacement=try ClothSolver(mesh:study.mesh,settings:study.settings,colliders:study.colliders)
+    let replacement=try ClothSolver(mesh:study.mesh,settings:study.settings,colliders:study.colliders,preparation:study.preparation)
     invalidateWork();source=identity;studyDigest=digest;solver=replacement;return true
   }
   /// Call when closing, changing project, deleting the object, or invalidating

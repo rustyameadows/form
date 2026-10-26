@@ -63,6 +63,7 @@ extension Project {
     guard let object = objects.first(where: { $0.id == objectID }) else {
       throw FormError.missing("Object not found.")
     }
+    guard object.patternAssembly==nil else {throw FormError.invalid("Edit the assembly's original pattern owner; its generated cloth is not a separate artwork source.")}
     let owner = artworkOwner(object)
     var artwork = recordingStyleOverrides
       ? artwork.recordingTextStyleOverrides(from: owner.artwork) : artwork

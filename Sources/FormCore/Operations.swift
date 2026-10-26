@@ -500,6 +500,7 @@ public final class OperationEngine {
         guard let index = p.objects.firstIndex(where: { $0.id == id }),
           let recipe = p.recipe(p.objects[index].recipeID)
         else { throw FormError.missing("Object not found.") }
+        if p.objects[index].patternAssembly != nil, !params.isEmpty || a["material_id"] != nil || a["color"] != nil || a["fabric_pattern"] != nil {throw FormError.invalid("Edit original pattern geometry and per-panel fabric snapshots through form_cloth configure. The assembly has no independent parametric solid or global finish.")}
         let merged = p.objects[index].parameters.merging(params) { _, new in new }
         try recipe.validate(merged)
         let oldCloth=p.objects[index].cloth
@@ -529,7 +530,7 @@ public final class OperationEngine {
           p.objects[index].color = color
         }
         if a["position"] != nil {
-          guard p.objects[index].clothAttachment==nil else {throw FormError.invalid("Use form_cloth attach material coordinates to move this decoration on its surface, or detach it first.")}
+          guard !p.objects[index].isClothAttached else {throw FormError.invalid("Use form_cloth attach material coordinates to move this decoration on its surface, or detach it first.")}
           p.objects[index].position = try vector(a["position"])
         }
         if let rotation = a["rotation"] as? Double {

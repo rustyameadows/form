@@ -168,7 +168,7 @@ struct AddObjectMenu: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
     Menu {
-      ForEach(Recipe.builtins.filter { $0.id != "reference" } + (store.project?.recipes ?? [])) {
+      ForEach(Recipe.builtins.filter { $0.id != "reference" && $0.id != "patternAssembly" } + (store.project?.recipes ?? [])) {
         recipe in
         Button {
           store.add(recipe)

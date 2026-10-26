@@ -64,7 +64,9 @@ struct ObjectInspector: View {
         Divider().overlay(Palette.line)
         ScrollView {
           VStack(alignment: .leading, spacing: 20) {
-            if object.cloth != nil {ClothInspector(controller:store.cloth.preview,object:object);Divider()}
+            if object.patternAssembly != nil {PatternAssemblyInspector(object:object);Divider()}
+            if object.isFlexibleSurface {ClothInspector(controller:store.cloth.preview,object:object);Divider()}
+            if object.patternAssembly==nil {
             VStack(alignment: .leading, spacing: 14) {
               SectionLabel("FORM & DIMENSIONS")
               ForEach(recipe.parameters) { parameter in
@@ -111,12 +113,13 @@ struct ObjectInspector: View {
               ).font(.system(size: 11)).foregroundStyle(Palette.secondary)
             }
             Divider()
-            if object.cloth == nil {ClothAttachmentInspector(object:object,project:project)}
+            }
+            if !object.isFlexibleSurface {ClothAttachmentInspector(object:object,project:project)}
             if object.textile != nil || TextileDesign.recipeIDs.contains(object.recipeID) {
               TextileInspector(object: object, project: project)
               Divider()
             }
-            if object.textile?.attachment == nil && object.clothAttachment == nil {
+            if object.textile?.attachment == nil && !object.isClothAttached {
             DisclosureGroup(isExpanded: $showPlacement) {
               VStack(spacing: 10) {
                 HStack(spacing: 8) {

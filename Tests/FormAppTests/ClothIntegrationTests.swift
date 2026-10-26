@@ -66,7 +66,14 @@ import XCTest
     XCTAssertGreaterThan(abs(label.position.y-initial.y),0.01)
     let inspection=try call(store,"get",decoration.id),placementData=try XCTUnwrap(inspection["placement"] as? [String:Any]),position=try XCTUnwrap(placementData["positionMm"] as? [String:Double])
     XCTAssertEqual(Double(label.position.y)*100,position["y"]!,accuracy:1e-3)
-    let bounds=try XCTUnwrap(store.scene!.clothBounds(for:id));XCTAssertLessThan(bounds.max.y,oldBounds.max.y)
+    let bounds=try XCTUnwrap(store.scene!.clothBounds(for:id)),frame=try XCTUnwrap(store.cloth.preview.frame)
+    // The tangent reset's highest point is its fixed support. The static sphere
+    // also remains part of focus bounds, so maxY is correctly unchanged.
+    XCTAssertLessThan(frame.positionsMm.map(\.y).min()!,store.project!.objects[0].cloth!.mesh.restPositionsMm.map(\.y).min()!)
+    XCTAssertEqual(bounds.max.y,oldBounds.max.y,accuracy:1e-8)
+    XCTAssertEqual(Double(bounds.min.x)*100,frame.positionsMm.map(\.x).min()!,accuracy:1e-6)
+    XCTAssertEqual(Double(bounds.max.x)*100,frame.positionsMm.map(\.x).max()!,accuracy:1e-6)
+    for point in frame.positionsMm {XCTAssertGreaterThanOrEqual(point.y/100,Double(bounds.min.y)-1e-8);XCTAssertLessThanOrEqual(point.y/100,Double(bounds.max.y)+1e-8)}
     XCTAssertEqual(store.scene!.camera,camera)
     let attachment=store.project!.objects.first {$0.id==decoration.id}!.clothAttachment!,oldMesh=store.project!.objects[0].cloth!.mesh,uv=try oldMesh.materialPoint(attachment.anchor)
     _ = try store.engine.call("form_update_object",arguments:["object_id":id.uuidString,"parameters":["resolution":8,"width":400]])

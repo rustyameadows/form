@@ -113,7 +113,8 @@ def main():
         assert cloth("get")["diagnostics"]["completedFrames"] == 0
         assert c.call("form_get_project")["camera"] == baseline_camera
         tote_definition = cloth("get", item=tote)["definition"]
-        seam = cloth("step", item=tote, frames=30)
+        for _ in range(30):
+            seam = cloth("step", item=tote, frames=1)
         assert seam["diagnostics"]["maximumSeamGapMm"] < 2
         tote_verified = verify_mesh(cloth("snapshot", item=tote), tote_definition)
         assert cloth("get",item=label)["placement"] != label_before

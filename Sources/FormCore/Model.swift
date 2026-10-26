@@ -207,6 +207,8 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var textile: TextileProduct?
   public var cloth: ClothStudy?
   public var clothAttachment: ClothAttachment?
+  public var patternAssembly:PatternAssemblyDefinition?
+  public var patternAssemblyAttachment:PatternAssemblyAttachment?
   public init(
     name: String, recipeID: String, parameters: [String: Double], materialID: String = "chalk",
     position: Vector3 = .init(), rotation: Double = 0, artwork: Artwork? = nil
@@ -401,6 +403,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var minimumSchemaVersion: Int {
     if objects.contains(where: { $0.artwork?.sewingTiles != nil }) { return max(schemaVersion, 40) }
     if decorationPreparations?.isEmpty==false {return max(schemaVersion,38)}
+    if objects.contains(where:{$0.patternAssembly != nil || $0.patternAssemblyAttachment != nil || $0.cloth?.preparation != nil}) {return max(schemaVersion,36)}
     if swatches?.contains(where:{$0.printInk != nil})==true {return max(schemaVersion,35)}
     if objects.contains(where:{MerchandiseBlanks.recipeIDs.contains($0.recipeID) || $0.textile?.process == .directPrint || $0.textile?.attachment.map{[TextileAttachment.Zone.front,.leftSide,.rightSide].contains($0.zone)} == true}) {return max(schemaVersion,34)}
     if objects.contains(where:{object in (object.artwork?.elements ?? []).contains(where:{e in

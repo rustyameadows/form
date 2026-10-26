@@ -32,6 +32,7 @@ private struct RenderSignature: Equatable {
   let cloth:ClothStudy?
   let merchandiseSurface:[String:Double]?
   let merchandiseMaterials:[FormCore.Material]?
+  let assemblyRevision:String?
 }
 
 @MainActor final class TableSceneController {
@@ -205,7 +206,7 @@ private struct RenderSignature: Equatable {
         asset: object.asset,
         fontRevision: project.editableArtwork(object) == nil && project.material(object.materialID).fabric?.pattern == nil ? 0 : GeometryFactory.fontRevision,
         textureLimit: textureLimit, textile: object.textile?.renderDefinition,
-        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth, merchandiseSurface:project.conformedMerchandiseSignature(object),merchandiseMaterials:project.merchandiseMaterialDependencies(object))
+        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth, merchandiseSurface:project.conformedMerchandiseSignature(object),merchandiseMaterials:project.merchandiseMaterialDependencies(object),assemblyRevision:object.patternAssembly==nil ? nil:ClothSceneSurface.sourceIdentity(object:object,project:project).revision)
       if let node=nodes[object.id],let prior=fingerprints[object.id],prior != fingerprint,
         canUpdateEmbroiderySurface(prior,fingerprint,object:object) {
         EmbroiderySceneSurface.update(node,object:object,project:project,assets:assets,textureLimit:textureLimit)
@@ -214,7 +215,7 @@ private struct RenderSignature: Equatable {
       } else if nodes[object.id] == nil || fingerprints[object.id] != fingerprint {
         nodes[object.id]?.removeFromParentNode()
         let node:SCNNode
-        if object.cloth != nil {
+        if object.isFlexibleSurface {
           do {
             let surface=try ClothSceneSurface(object:object,project:project,frame:store?.cloth.frame(for:object,in:project),assets:assets,textureLimit:textureLimit)
             clothSurfaces[object.id]=surface;clothIssues[object.id]=nil;node=surface.root
@@ -278,17 +279,17 @@ private struct RenderSignature: Equatable {
     node.position=SCNVector3(p.x/100,p.y/100,p.z/100);node.simdOrientation=simd_quatf(simd_float3x3(columns:(x,y,z)))
   }
   func updateClothFrame(_ frame:ClothFrame,objectID:UUID) {
-    guard let project=store?.project,project.id==projectID,let object=project.objects.first(where:{$0.id==objectID}),let surface=clothSurfaces[objectID],object.cloth?.mesh==surface.surface.mesh else {return}
+    guard let project=store?.project,project.id==projectID,let object=project.objects.first(where:{$0.id==objectID}),let surface=clothSurfaces[objectID],(try? AssemblyProducts.study(for:object,in:project))?.mesh==surface.surface.mesh else {return}
     do {
       try surface.update(frame);geometryBounds[objectID]=surface.geometricBounds
-      for object in project.objects where object.clothAttachment?.surfaceObjectID==objectID {
+      for object in project.objects where object.clothAttachment?.surfaceObjectID==objectID || object.patternAssemblyAttachment?.surfaceObjectID==objectID {
         if let node=nodes[object.id],let placement=try store?.cloth.placement(of:object,in:project) {applyClothPlacement(placement,to:node)}
       }
       rebuildSelection(lastSelection,studio:lastStudio);view?.needsDisplay=true
     } catch {clothIssues[objectID]=error.localizedDescription}
   }
   func resetClothFrame(objectID:UUID) {
-    guard let object=store?.project?.objects.first(where:{$0.id==objectID}),let study=object.cloth,let frame=try? ClothSolver(mesh:study.mesh,settings:study.settings,colliders:study.colliders).frame else {return}
+    guard let project=store?.project,let object=project.objects.first(where:{$0.id==objectID}),let study=try? AssemblyProducts.study(for:object,in:project),let frame=try? ClothSolver(mesh:study.mesh,settings:study.settings,colliders:study.colliders,preparation:study.preparation).frame else {return}
     updateClothFrame(frame,objectID:objectID)
   }
   func worldPosition(_ object:ProductObject)->Vector3 {
@@ -473,6 +474,39 @@ private struct RenderSignature: Equatable {
     }
     return nil
   }
+  /// Stable plane used only for a singly selected attached decoration. The
+  /// resulting pointer ray still has to hit its actual visible material panel.
+  func pointOnPlane(_ point:NSPoint,through origin:Vector3,normal:Vector3)->Vector3? {
+    guard let view else{return nil}
+    let near=view.unprojectPoint(.init(point.x,point.y,0)),far=view.unprojectPoint(.init(point.x,point.y,1))
+    let a=SIMD3<Double>(Double(near.x)*100,Double(near.y)*100,Double(near.z)*100),b=SIMD3<Double>(Double(far.x)*100,Double(far.y)*100,Double(far.z)*100),n=SIMD3<Double>(normal.x,normal.y,normal.z),p=SIMD3<Double>(origin.x,origin.y,origin.z),d=b-a,denominator=simd_dot(d,n)
+    guard denominator.isFinite,abs(denominator)>1e-9 else{return nil}
+    let t=simd_dot(p-a,n)/denominator
+    guard t.isFinite,(0...1).contains(t) else{return nil}
+    let q=a+d*t;return .init(q.x,q.y,q.z)
+  }
+  func attachmentTarget(_ target:Vector3,for object:ProductObject)->Vector3? {
+    guard let view,let project=store?.project,let parentID=object.patternAssemblyAttachment?.surfaceObjectID ?? object.clothAttachment?.surfaceObjectID,
+      let surface=clothSurfaces[parentID] else{return nil}
+    let panel:Int
+    if let attached=object.patternAssemblyAttachment,let parent=project.objects.first(where:{$0.id==parentID}),let product=try? AssemblyProducts.product(for:parent,in:project),let value=product.panels.first(where:{$0.id==attached.anchor.panel}) {panel=value.panelIndex}
+    else if let attached=object.clothAttachment {panel=surface.surface.mesh.panelID(forTriangle:attached.anchor.triangle)}
+    else {return nil}
+    let q=view.projectPoint(SCNVector3(target.x/100,target.y/100,target.z/100)),point=NSPoint(x:q.x,y:q.y)
+    guard point.x.isFinite,point.y.isFinite,view.bounds.contains(point) else{return nil}
+    let hits=view.hitTest(point,options:[.categoryBitMask:6,.ignoreHiddenNodes:true,.searchMode:SCNHitTestSearchMode.all.rawValue,.backFaceCulling:false])
+    for hit in hits {
+      var node:SCNNode?=hit.node,owner:UUID?
+      while let current=node {if let name=current.name,name.hasPrefix("object:"),let id=UUID(uuidString:String(name.dropFirst(7))) {owner=id;break};node=current.parent}
+      guard let owner else{continue}
+      if owner==object.id {continue}
+      guard owner==parentID,hit.node === surface.surface.node,surface.surface.panelIDsByGeometryElement.indices.contains(hit.geometryIndex),surface.surface.panelIDsByGeometryElement[hit.geometryIndex]==panel else{return nil}
+      let near=view.unprojectPoint(.init(point.x,point.y,0))
+      if clothSurfaces.values.contains(where:{$0.supportOccludes(from:near,to:hit.worldCoordinates)}) {return nil}
+      return .init(Double(hit.worldCoordinates.x)*100,Double(hit.worldCoordinates.y)*100,Double(hit.worldCoordinates.z)*100)
+    }
+    return nil
+  }
   func pointOnTable(_ point: NSPoint, height: Double) -> Vector3? {
     guard let view else { return nil }
     let near = view.unprojectPoint(.init(point.x, point.y, 0))
@@ -572,6 +606,8 @@ private struct RenderSignature: Equatable {
   private var previous = NSPoint.zero
   private var down = NSPoint.zero
   private var dragOrigin: Vector3?
+  private struct AttachmentDrag {var objectID:UUID,projectID:UUID,plane:Vector3,normal:Vector3,down:Vector3,initial:Vector3,sourceRevision:String,parentPosition:Vector3,parentRotation:Double}
+  private var attachmentDrag:AttachmentDrag?
   private var objectPositions: [UUID: Vector3] = [:]
   private var dragged = false
   private var pointerActive = false
@@ -594,6 +630,7 @@ private struct RenderSignature: Equatable {
     pointerActive = false
     dragged = false
     dragOrigin = nil
+    attachmentDrag = nil
     objectPositions = [:]
   }
   override func viewWillMove(toWindow newWindow: NSWindow?) {
@@ -632,6 +669,12 @@ private struct RenderSignature: Equatable {
       objectPositions = Dictionary(
         uniqueKeysWithValues: store.selected.filter { !$0.locked }.map { ($0.id, controller.worldPosition($0)) })
       dragOrigin = controller.pointOnTable(previous, height: store.primary.map {controller.worldPosition($0).y} ?? 0)
+      if store.selected.count==1,objectPositions.count==1,let object=store.primary,object.isClothAttached,let project=store.project,
+        let parentID=object.patternAssemblyAttachment?.surfaceObjectID ?? object.clothAttachment?.surfaceObjectID,let parent=project.objects.first(where:{$0.id==parentID}) {
+        let initial=controller.worldPosition(object),normal=CameraNavigation.basis(controller.camera).outward
+        if controller.attachmentTarget(initial,for:object)==nil {objectPositions=[:];return}
+        if let at=controller.pointOnPlane(previous,through:initial,normal:normal) {attachmentDrag = .init(objectID:object.id,projectID:project.id,plane:initial,normal:normal,down:at,initial:initial,sourceRevision:ClothSceneSurface.sourceIdentity(object:parent,project:project).revision,parentPosition:parent.position,parentRotation:parent.rotation)}
+      }
     }
   }
   override func mouseDragged(with event: NSEvent) {
@@ -661,6 +704,18 @@ private struct RenderSignature: Equatable {
       }
     case .move:
       lastAction = "move"
+      if let drag=attachmentDrag {
+        guard let store=controller.store,let project=store.project,project.id==drag.projectID,
+          let object=project.objects.first(where:{$0.id==drag.objectID}),object.isClothAttached,!object.locked,
+          let parentID=object.patternAssemblyAttachment?.surfaceObjectID ?? object.clothAttachment?.surfaceObjectID,let parent=project.objects.first(where:{$0.id==parentID}),parent.position==drag.parentPosition,parent.rotation==drag.parentRotation,
+          ClothSceneSurface.sourceIdentity(object:parent,project:project).revision==drag.sourceRevision,
+          let now=controller.pointOnPlane(point,through:drag.plane,normal:drag.normal) else{return}
+        let snap=event.modifierFlags.contains(.shift) ? 10.0:1.0
+        let proposed=Vector3(((drag.initial.x+now.x-drag.down.x)/snap).rounded()*snap,((drag.initial.y+now.y-drag.down.y)/snap).rounded()*snap,((drag.initial.z+now.z-drag.down.z)/snap).rounded()*snap)
+        guard let target=controller.attachmentTarget(proposed,for:object) else{return}
+        store.edit("Moved attached material point",coalescing:"move-selection") {p in try store.cloth.reposition(object.id,to:target,in:&p)}
+        return
+      }
       guard let origin = dragOrigin,
         let now = controller.pointOnTable(point, height: origin.y), let store = controller.store,
         !objectPositions.isEmpty
@@ -672,11 +727,11 @@ private struct RenderSignature: Equatable {
             // A selected decoration follows its moving garment. Moving both
             // independently would apply the same translation twice and make
             // the result depend on their saved object order.
-            if let parent = p.objects[i].textile?.attachment?.garmentID ?? p.objects[i].clothAttachment?.surfaceObjectID,
+            if let parent = p.objects[i].textile?.attachment?.garmentID ?? p.objects[i].clothAttachment?.surfaceObjectID ?? p.objects[i].patternAssemblyAttachment?.surfaceObjectID,
               self.objectPositions[parent] != nil { continue }
             let target = Vector3(((start.x + now.x - origin.x) / snap).rounded() * snap,
               start.y, ((start.z + now.z - origin.z) / snap).rounded() * snap)
-            if p.objects[i].clothAttachment != nil {try store.cloth.reposition(p.objects[i].id,to:target,in:&p)}
+            if p.objects[i].isClothAttached {try store.cloth.reposition(p.objects[i].id,to:target,in:&p)}
             else {p.setTextileWorldPosition(p.objects[i].id,to:target)}
           }
         }
@@ -695,6 +750,7 @@ private struct RenderSignature: Equatable {
     pointerActive = false
     phase = "ended"
     dragOrigin = nil
+    attachmentDrag = nil
     objectPositions = [:]
     controller?.store?.cameraChanged()
   }
@@ -827,7 +883,7 @@ private struct RenderSignature: Equatable {
   static func object(
     _ sourceObject: ProductObject, project: Project, assets: URL, textureLimit: Int = 2048
   ) -> SCNNode {
-    if sourceObject.cloth != nil,let cloth=try? ClothSceneSurface(object:sourceObject,project:project,assets:assets,textureLimit:textureLimit) {return cloth.root}
+    if sourceObject.isFlexibleSurface,let cloth=try? ClothSceneSurface(object:sourceObject,project:project,assets:assets,textureLimit:textureLimit) {return cloth.root}
     var object = sourceObject
     object.artwork = project.surfaceArtwork(sourceObject)
     object.artworkSourceID = nil

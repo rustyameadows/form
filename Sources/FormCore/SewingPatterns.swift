@@ -206,8 +206,11 @@ public enum SewingPatterns {
     let radians = piece.grainAngle * .pi / 180
     let grain = Point2(transform.a * cos(radians) + transform.c * sin(radians), transform.b * cos(radians) + transform.d * sin(radians))
     let norm = hypot(grain.x, grain.y)
+    // Editable convex paths also retain original edge UUIDs. This preserves
+    // legacy per-edge allowances while allowing guarded assembly references.
+    let boundaries=e.kind=="path" ? try SewingCurves.boundaries(e,in:art):[]
     return .init(elementID: e.id, piece: piece, stitch: points, cut: cut, normals: normals,
-      edgeLengths: lengths, grainDirection: .init(grain.x / norm, grain.y / norm))
+      edgeLengths: lengths, grainDirection: .init(grain.x / norm, grain.y / norm),boundaries:boundaries)
   }
   public static func validate(_ art: Artwork) throws {
     guard art.elements.contains(where: { $0.sewingPiece != nil }) || art.sewingSeams?.isEmpty == false else { return }

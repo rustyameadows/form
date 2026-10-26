@@ -1,6 +1,7 @@
 import AppKit
 import SceneKit
 import CryptoKit
+import simd
 import FormCore
 import FormGraphics
 
@@ -15,10 +16,14 @@ import FormGraphics
     return (SCNVector3(b.minimumMm.x/100,b.minimumMm.y/100,b.minimumMm.z/100),SCNVector3(b.maximumMm.x/100,b.maximumMm.y/100,b.maximumMm.z/100))
   }
   init(object:ProductObject,project:Project,frame:ClothFrame? = nil,assets:URL,textureLimit:Int = 2048)throws {
-    guard let study=object.cloth else {throw FormError.invalid("This object has no cloth study.")}
+    let assembly=try AssemblyProducts.product(for:object,in:project)
+    guard let study=object.cloth ?? assembly?.study else {throw FormError.invalid("This object has no cloth study.")}
     colliders=study.colliders
-    let initial=try frame ?? ClothSolver(mesh:study.mesh,settings:study.settings,colliders:study.colliders).frame
-    surface=try ClothSurface(mesh:study.mesh,frame:initial,material:Self.material(object:object,project:project,assets:assets,textureLimit:textureLimit))
+    let initial=try frame ?? ClothSolver(mesh:study.mesh,settings:study.settings,colliders:study.colliders,preparation:study.preparation).frame
+    if let assembly,let source=object.patternAssembly.flatMap({id in project.objects.first(where:{$0.id==id.sourceObjectID})?.artwork}) {
+      let materials=try Dictionary(uniqueKeysWithValues:assembly.panels.map {($0.panelIndex,try AssemblyMaterialRenderer.material(panel:$0,source:source,project:project,assets:assets,fontRevision:GeometryFactory.fontRevision,textureLimit:textureLimit))})
+      surface=try ClothSurface(mesh:study.mesh,frame:initial,panelMaterials:materials,fallbackMaterial:GeometryFactory.material(object,project:project))
+    } else {surface=try ClothSurface(mesh:study.mesh,frame:initial,material:Self.material(object:object,project:project,assets:assets,textureLimit:textureLimit))}
     surface.node.name="cloth.surface";surface.node.categoryBitMask=2;root.addChildNode(surface.node)
     for collider in study.colliders where collider.kind == .sphere {
       let sphere=SCNSphere(radius:collider.radiusMm/100);sphere.segmentCount=64
@@ -26,9 +31,31 @@ import FormGraphics
       let node=SCNNode(geometry:sphere);node.name="cloth.static-support";node.categoryBitMask=4;node.position=SCNVector3(collider.centerMm.x/100,collider.centerMm.y/100,collider.centerMm.z/100);root.addChildNode(node)
     }
   }
+  /// Supports are declared opaque analytic spheres. Test the actual segment
+  /// against those same physical shapes: SceneKit may not expose a primitive's
+  /// CPU hit mesh before its first rendered frame.
+  func supportOccludes(from startWorld:SCNVector3,to endWorld:SCNVector3)->Bool {
+    let a=root.convertPosition(startWorld,from:nil),b=root.convertPosition(endWorld,from:nil)
+    let start=SIMD3<Double>(Double(a.x)*100,Double(a.y)*100,Double(a.z)*100),end=SIMD3<Double>(Double(b.x)*100,Double(b.y)*100,Double(b.z)*100),direction=end-start,length=simd_length_squared(direction)
+    guard length.isFinite,length>1e-12 else{return false}
+    for shape in colliders where shape.kind == .sphere {
+      let center=SIMD3<Double>(shape.centerMm.x,shape.centerMm.y,shape.centerMm.z),t=max(0,min(1,simd_dot(center-start,direction)/length)),closest=start+direction*t,radius=max(0,shape.radiusMm-1e-5)
+      if simd_length_squared(closest-center)<radius*radius {return true}
+    }
+    return false
+  }
   func update(_ frame:ClothFrame)throws {try surface.update(frame)}
   static func sourceIdentity(object:ProductObject,project:Project)->ClothSourceIdentity {
     var data=(try? JSONEncoder.form.encode(object.cloth)) ?? Data()
+    if let assembly=object.patternAssembly {
+      data.append((try? JSONEncoder.form.encode(assembly)) ?? Data())
+      data.append(Data(((try? PatternAssemblyGenerator.sourceDigest(assembly,in:project)) ?? "invalid-source").utf8))
+      if let source=project.objects.first(where:{$0.id==assembly.sourceObjectID})?.artwork,
+        let printArt=try? AssemblyMaterialRenderer.resolvedDecoration(source,project:project,sourceObjectID:assembly.sourceObjectID) {data.append((try? printArt.renderCacheData()) ?? Data())}
+      for panel in assembly.panels {var snapshot=project;snapshot.materials.removeAll{$0.id==panel.material.id};snapshot.materials.append(panel.material)
+        if let repeatDesign=try? snapshot.resolvedFabricPattern(materialID:panel.material.id) {data.append((try? JSONEncoder.form.encode(repeatDesign.renderDefinition)) ?? Data())}
+      }
+    }
     data.append((try? JSONEncoder.form.encode(project.material(object.materialID))) ?? Data())
     data.append(Data((object.color ?? "").utf8))
     data.append(project.surfaceArtwork(object).flatMap {try? $0.renderCacheData()} ?? Data())

@@ -7,7 +7,7 @@ import SceneKit
   static func mesh(
     object: ProductObject, project: Project, assets: URL, configuration: PrintConfiguration
   ) throws -> PrintMesh {
-    guard object.cloth == nil else {throw FormError.invalid(ClothStudy.unsupportedPrintReason)}
+    guard !object.isFlexibleSurface else {throw FormError.invalid(ClothStudy.unsupportedPrintReason)}
     guard !TextileDesign.recipeIDs.contains(object.recipeID) else {
       throw FormError.invalid("This is a textile presentation product. Export its linked artwork; it is not an FDM-printable mesh.")
     }

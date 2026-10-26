@@ -12,7 +12,7 @@ The next governing document is the [2D Design, Typography & Vector Editing speci
 
 ## Build and open
 
-Requires macOS 14 or later and Xcode 16 or later with the Swift 6 toolchain. No external Swift packages or API keys are required. The app includes pinned Clipper2 geometry source under the Boost Software License 1.0; see [third-party geometry](docs/third-party-geometry.md).
+Requires macOS 14 or later and Xcode 16 or later with the Swift 6 toolchain. No external Swift packages or API keys are required. The app includes pinned Clipper2 geometry source under Boost 1.0 and Mapbox Earcut source under ISC; see [third-party geometry](docs/third-party-geometry.md).
 
 ```sh
 bash scripts/build.sh release
@@ -198,3 +198,5 @@ The [font library](docs/font-library.md) provides explicit installed-face previe
 [Tiled sewing patterns](docs/tiled-sewing-patterns.md) export A4, Letter and custom PDF sheets at actual size, with calibration and assembly marks outside the drawing. Native saved sheet options, exact Undo, packaged physical exports and actual app reopen pass in the 697-test integration. No printer is contacted.
 
 [HTV/DTF preparation](docs/decoration-preparation.md) adds physical cut/transfer files and immutable source-linked handoff packets. The updated [Flight bomber study](docs/flight-bomber-showcase.md) starts with five real stitch definitions and underlay. Native capture/export/Undo/reopen and independent files pass in the 719-test integration. Studio retains its presentation mode and lighting while orbiting, panning and zooming; camera bindings are unchanged.
+
+[Pattern-derived cloth assembly](docs/pattern-assembly-cloth.md) uses original curved sewing contours, guarded physical seam samples, explicit panel poses/supports and declared fabric mass. The NASA rounded-pouch study keeps construction geometry editable and maps only printable decoration at its original physical scale. Derived meshes and motion are transient; this is an uncalibrated open-surface study without self-collision, inferred construction or verified fit. New drape recipes start on the support tangent plane while saved initial meshes remain intact. The 767-test optimized integration, packaged physical audit and native Run/Stop/Reset, active-field Apply/Undo, material-label movement, camera and process-reopen checks pass.

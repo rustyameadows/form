@@ -53,7 +53,7 @@ import SwiftUI
           store.project?.objects.isEmpty != false)
       }
       CommandMenu("Object") {
-        ForEach(Recipe.builtins.filter { $0.id != "reference" }) { recipe in
+        ForEach(Recipe.builtins.filter { $0.id != "reference" && $0.id != "patternAssembly" }) { recipe in
           Button("Add \(recipe.name)") {
             if store.project == nil { store.createProject() }
             store.add(recipe)
