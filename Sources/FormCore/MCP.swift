@@ -425,15 +425,15 @@ public enum MCP {
               "perspective", "overhead", "front", "fit", "focus", "isolate", "show_all", "home",
               "table", "canvas", "split", "canvas_window", "artwork", "studio", "print_bed", "print_object",
             ],
-          ], "object_id": objectID, "element_ids": ["type": "array", "items": string],
+          ], "studio_command":["type":"string","enum":["list","get","capture","update","rename","delete","recall"]],"shot_id":objectID,"name":string,"reference_aspect":["type":"number"],"camera":["type":"object"],"lighting":["type":"string","enum":StudioShot.lightingIDs],"surface":["type":"string","enum":StudioShot.surfaces],"visibility":["type":"object","description":"mode:project or objects; objectIDs is an exact UUID list for objects. Missing subjects block rendering, never silently retarget."],"width":["type":"integer"],"height":["type":"integer"], "object_id": objectID, "element_ids": ["type": "array", "items": string],
           "node_ids": ["type": "array", "items": string],
         ], required: ["view"]),
       tool(
         "form_export",
-        "Export PNG studio render, PDF artwork, SVG dieline, or JSON component/material summary. Files are written to the project's Exports folder by default. Optional path selects an absolute output file.",
+        "Export PNG studio render, PDF artwork, SVG dieline, or JSON component/material summary. Saved shot_id exports exclusively to a new .render folder containing the actual PNG plus render.json; existing destinations are rejected. Optional width/height override saved pixels together. Legacy PNG stays 3000×2000. Files are written to the project's Exports folder by default. Optional path selects an absolute output file.",
         [
           "format": ["type": "string", "enum": ["png", "pdf", "svg", "json"]],
-          "object_id": objectID, "path": string,
+          "object_id": objectID, "path": string,"shot_id":objectID,"width":["type":"integer"],"height":["type":"integer"],
         ], required: ["format"]),
       tool(
         "form_batch",

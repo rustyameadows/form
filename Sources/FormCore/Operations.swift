@@ -8,6 +8,7 @@ public final class OperationEngine {
   public var selection: Set<UUID> = []
   public private(set) var undoStack: [Project] = []
   public private(set) var redoStack: [Project] = []
+  public var onStudioShotValidate:((StudioShot)throws->Void)?
   public var onView: ((String, [String: Any]) throws -> Any)?
   public var onExport: ((String, [String: Any]) throws -> Any)?
   public var onPrint: ((String, [String: Any]) throws -> Any)?
@@ -729,6 +730,13 @@ public final class OperationEngine {
       selection = [object.id]
       return try jsonObject(object)
     case "form_set_view":
+      if a["view"] as? String == "studio", a["studio_command"] != nil, a["studio_command"] as? String != "recall" {
+        guard let current=project else {throw FormError.missing("Open a project first.")}
+        if StudioShotCommands.isInspection(a) {return try StudioShotCommands.inspect(current,args:a)}
+        var result:StudioShot?
+        try edit("Edited Studio shot",source:source) {result=try StudioShotCommands.apply(&$0,args:a);if let result,["capture","update"].contains(a["studio_command"] as? String ?? ""){try onStudioShotValidate?(result)}}
+        return try result.map {try jsonObject($0)} ?? ["deleted":true]
+      }
       guard let onView else {
         throw FormError.missing("View controls require the running FORM app.")
       }

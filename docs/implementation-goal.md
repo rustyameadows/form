@@ -21,6 +21,7 @@ The goal service currently permits status changes but cannot rewrite the text of
 - [x] Continuous Metal-backed Table; native title bar; contextual inspectors; camera, focus, isolation, selection, movement, grouping, variants, and iterations.
 - [x] Validate researched constrained, world-up orbit: horizontal drags change yaw only, vertical drags change pitch only, no accumulated roll, immediate leveling of earlier banked views, fixed Shift-pan/zoom bindings, and reliable whole-project named views. Native mouse runs and core/AppKit tests are recorded in validation notes; CUA cannot hold Shift through its drag API, so Shift-pan uses direct AppKit event evidence.
 - [x] Home previews of saved scenes; modular packages; autosave; undo/redo; imported assets; Studio materials and equipment.
+- [x] Saved Studio compositions with named cameras/reference frames, exact subjects, versioned lights/surfaces, output pixels, shared Undo and exclusive PNG/render-record folders. The 835-test integration, actual native/MCP controls and independent outputs pass; see [Studio shots](studio-shots.md). Photorealism, calibrated materials and archived simulation poses remain open.
 - [x] Parametric constructions and custom recipes; linked artwork; PDF/SVG/PNG/component exports; local MCP registration and shared command engine.
 - [x] Dedicated Print workspace with physical P1S bed, component selection, orientation, scale, filament choice, slicing options, layer preview, and local outputs.
 - [x] Persistent Studio filament library; local printer profiles; Keychain credential storage; read-only TLS/MQTT status adapter.
@@ -160,3 +161,8 @@ The [schema31 cloth foundation](cloth-simulation-foundation.md) adds bounded XPB
 ### Optical sizing and focused numeric precision — milestone42 release checkpoint
 
 [Optical sizing](optical-sizing.md) implements real source-point automatic/explicit/disabled behavior, nil legacy preservation, character/style/story/glyph source boundaries, exact native key/Undo interactions and physical SVG/PDF/raster proof. The integrated 812-test optimized release, real packaged workflow, independent physical output and actual native controls/Undo/reopen/camera checks pass. All five ordinary projects and Studio/font preferences remain exact. This does not close the broader professional typography/publication/3D/textile requirements.
+
+
+### Saved Studio presentation — milestone43 release checkpoint
+
+[Studio shots](studio-shots.md) adds explicit named compositions, truthful saved framing, bounded display previews, lighting/surfaces, exact subject IDs and pixel-controlled PNG + source records. The 835-test signed release passes packaged and actual native Capture/Update/Rename/Delete, focused input/Undo, independent draft export, camera controls and actual process reopen. Ordinary projects/preferences remain exact. This does not close the broader rendering, cloth or textile goal.

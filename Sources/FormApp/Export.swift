@@ -26,6 +26,8 @@ extension StudioStore {
   }
   func export(format: String, arguments: [String: Any]) throws -> Any {
     guard let project else { throw FormError.missing("Open a project before exporting.") }
+    if arguments["shot_id"] != nil {return try exportSavedStudioShot(format:format,arguments:arguments)}
+    if arguments["width"] != nil || arguments["height"] != nil {throw FormError.invalid("Explicit Studio pixel dimensions require shot_id; the legacy current-view export is 3000 × 2000.")}
     let object: ProductObject?
     if let raw = arguments["object_id"] as? String {
       guard

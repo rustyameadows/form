@@ -1,0 +1,92 @@
+{
+  "application" : "FORM",
+  "application_version" : "16.0",
+  "design_sha256" : "a87e6e0f22684ae0c204787c37bab37a4a209c643e6a47f9f62691db3eae318d",
+  "effective_orthographic_scale" : 10.08,
+  "effective_vertical_fov_degrees" : 39,
+  "exported_at" : "2026-10-26T01:42:42Z",
+  "far_clip" : 1500,
+  "framing_warnings" : [
+
+  ],
+  "height" : 800,
+  "included_object_ids" : [
+    "1E67769B-AC2F-4B3A-8967-67E902A48C99",
+    "24D94038-4D9B-440D-9996-F40290172A46",
+    "3071D28C-82C2-4CC7-8E1D-34D8A73D5C52",
+    "322DADFE-2D9D-44E0-B84E-01AE4179E7F7",
+    "35BA99F3-82A4-4B9A-8B3F-C992A18830C8",
+    "37696011-209D-46DA-AE99-95C88D34A8D0",
+    "476E95FE-11C7-4884-86C1-0248D7AD638D",
+    "51312A24-7E76-40E4-86B6-2CB702CFF897",
+    "6DF18EBE-F211-4107-94B0-5D956D1A21D7",
+    "808249E5-EEEA-47D7-97CC-C9E2FCA07986",
+    "AD114C30-EBD9-4FF0-8AB9-1820F82BF379",
+    "C83A35BC-8A7E-4E30-8763-D20AC0636090",
+    "C9E0F241-03F1-4CEC-87A7-CD35ED54F9DE"
+  ],
+  "near_clip" : 0.01,
+  "os_version" : "Version 26.6.2 (Build 25G83)",
+  "physical_size_or_fit_claim" : false,
+  "png_sha256" : "9a10a7e3039896a720b7ce8421d6c334005b83cf2424a05e73e176e1bc4f10b6",
+  "presentation_renderer_version" : 1,
+  "project_id" : "D6D7A406-4B4C-4C4B-8F2F-625F9FB164B3",
+  "record_version" : 1,
+  "renderer" : "SceneKit \/ Metal \/ 4x MSAA \/ FORM Studio v1",
+  "resources" : [
+    {
+      "id" : "font:HelveticaNeue-CondensedBlack",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    },
+    {
+      "id" : "font:Menlo-Bold",
+      "sha256" : "dc256e0b39c2a6fec947129d421fef41b8b429f58f9b6e5d1b148c87f775c1f6"
+    }
+  ],
+  "shot" : {
+    "camera" : {
+      "azimuth" : 0.25,
+      "distance" : 28,
+      "elevation" : 0.94999999999999996,
+      "projection" : "perspective",
+      "target" : {
+        "x" : -1,
+        "y" : 0.20000000000000001,
+        "z" : 1.8
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "B997D482-3E06-4A6B-8C1D-D2067721E4C2",
+    "lighting" : "rim-v1",
+    "name" : "ORBITAL collection",
+    "pixels" : {
+      "height" : 800,
+      "width" : 1200
+    },
+    "referenceAspect" : 1.5,
+    "revision" : 1,
+    "surface" : "Daylight",
+    "visibility" : {
+      "mode" : "objects",
+      "objectIDs" : [
+        "37696011-209D-46DA-AE99-95C88D34A8D0",
+        "476E95FE-11C7-4884-86C1-0248D7AD638D",
+        "808249E5-EEEA-47D7-97CC-C9E2FCA07986",
+        "51312A24-7E76-40E4-86B6-2CB702CFF897",
+        "322DADFE-2D9D-44E0-B84E-01AE4179E7F7",
+        "35BA99F3-82A4-4B9A-8B3F-C992A18830C8",
+        "C83A35BC-8A7E-4E30-8763-D20AC0636090",
+        "AD114C30-EBD9-4FF0-8AB9-1820F82BF379",
+        "C9E0F241-03F1-4CEC-87A7-CD35ED54F9DE",
+        "24D94038-4D9B-440D-9996-F40290172A46",
+        "3071D28C-82C2-4CC7-8E1D-34D8A73D5C52",
+        "6DF18EBE-F211-4107-94B0-5D956D1A21D7",
+        "1E67769B-AC2F-4B3A-8967-67E902A48C99"
+      ]
+    }
+  },
+  "shot_id" : "B997D482-3E06-4A6B-8C1D-D2067721E4C2",
+  "shot_revision" : 1,
+  "source_archived" : false,
+  "width" : 1200
+}

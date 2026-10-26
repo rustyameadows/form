@@ -389,7 +389,7 @@ struct TableWorkspace: View {
   @State private var showingObjectControls = false
   var body: some View {
     ZStack {
-      TableCanvas()
+      StudioFramedTable(controller:store.studioShots)
       VStack {
         HStack(alignment: .top) {
           TableHeading()

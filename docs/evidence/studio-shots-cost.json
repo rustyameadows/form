@@ -1,0 +1,50 @@
+{
+  "configuration": "optimized release",
+  "base_git": "0218a202063f314ae497baaf695e61a2e24c4182",
+  "tests": {
+    "core_graphics_ipc": 534,
+    "native": 252,
+    "total": 786,
+    "new": 19,
+    "failures": 0,
+    "skips": 0,
+    "log": "studio-shots43-freeze-full-tests.log"
+  },
+  "render_measurements": {
+    "scope": "Scene sync, GPU snapshot and normalized bitmap creation; excludes resource hashing, glyph preflight, PNG encoding and folder delivery.",
+    "merchandise_1200x800_three_lights": {
+      "preview_cache_bytes": 0,
+      "last_render_pixel_bytes": 3840000,
+      "preview_cache_limit_bytes": 33554432,
+      "preview_cache_count": 0,
+      "render_count": 6,
+      "geometry_builds": 17,
+      "maximum_render_ms": 131.8129301071167,
+      "pixel_cap_is_total_memory_cap": false,
+      "stale_results": 0,
+      "process_peak_rss_bytes": 933150720
+    },
+    "single_product_portrait_landscape_wide_up_to_6M_pixels": {
+      "preview_cache_bytes": 0,
+      "last_render_pixel_bytes": 18000000,
+      "preview_cache_limit_bytes": 33554432,
+      "preview_cache_count": 0,
+      "render_count": 6,
+      "geometry_builds": 1,
+      "maximum_render_ms": 58.70497226715088,
+      "pixel_cap_is_total_memory_cap": false,
+      "stale_results": 0,
+      "process_peak_rss_bytes": 1175535616
+    }
+  },
+  "memory_note": "RSS is the cumulative process high-water mark of the full native test executable, including prior font/render/framework tests. It is not incremental Studio memory or a worst-case output guarantee. The 16,777,216 pixel cap does not bound total CPU/GPU memory.",
+  "preview_limits": {
+    "pixels": 2000000,
+    "longest_edge": 1600,
+    "cache_count": 8,
+    "cache_bytes": 33554432
+  },
+  "rendered_resources": "Actual source meshes and editable artwork on the existing original ORBITAL merchandise study. No external model or hardware operation.",
+  "pair_visibility": "Verified staged files, RENAME_EXCL directory delivery, sync requests, rollback/race/partial-file tests. No hardware power-loss durability guarantee.",
+  "packaged_smoke": "Prepared and syntax-checked; parent installed-app acceptance pending."
+}

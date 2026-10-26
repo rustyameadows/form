@@ -54,6 +54,7 @@ enum TableTool: String, CaseIterable {
   @Published var showGrid = false
   @Published var tableTool: TableTool = .orbit
   @Published var isolated: Set<UUID> = []
+  lazy var studioShots = StudioShotController(store:self)
   @Published var studioPreset = "Daylight"
   @Published var previewVersion = 0
   @Published var saving = false
@@ -89,6 +90,9 @@ enum TableTool: String, CaseIterable {
       if seedLibrary { try repository.seedIfEmpty() }
       projects = try repository.list()
     } catch { fatalError("FORM could not open its project library: \(error.localizedDescription)") }
+    engine.onStudioShotValidate = { [weak self] shot in
+      guard let self,let project=self.project else{return};try self.studioShots.runtimePreflight(project,shot)
+    }
     engine.onView = { [weak self] view, args in
       guard let self else { return [:] }
       try self.applyView(view, args)
@@ -163,7 +167,7 @@ enum TableTool: String, CaseIterable {
           }
           do {
             if name == "form_cloth" {completion(.success(try self.bridgeClothCall(args)));return}
-            let readOnly =
+            let readOnly = (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
               [
                 "form_status", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones",
                 "form_list_materials", "form_get_print_setup", "form_get_slice_status",
@@ -244,6 +248,7 @@ enum TableTool: String, CaseIterable {
   }
   func cameraChanged() {
     guard project != nil else { return }
+    studioShots.invalidatePreview()
     scheduleSave()
   }
   private func scheduleSave() {
@@ -296,6 +301,7 @@ enum TableTool: String, CaseIterable {
     } catch { self.error = error.localizedDescription }
   }
   private func restoreProjectWorkspace() {
+    studioShots.reset()
     isolated = []
     mode = .table
     if let first=project?.publications?.first?.pages.first,project?.objects.contains(where:{$0.id==first.objectID})==true {
@@ -308,6 +314,7 @@ enum TableTool: String, CaseIterable {
     scene?.resetCamera()
   }
   func home() {
+    studioShots.reset()
     cloth.clear()
     closeDetachedCanvas()
     surfaceLayout = .single
@@ -422,6 +429,13 @@ enum TableTool: String, CaseIterable {
     changed(save: false)
   }
   func applyView(_ view: String, _ args: [String: Any] = [:]) throws {
+    if view == "studio",args["studio_command"] as? String == "recall" {
+      guard Set(args.keys).isSubset(of: ["view", "studio_command", "shot_id"]) else {
+        throw FormError.invalid("Recall accepts only a saved shot ID. Change output or subjects with an explicit update.")
+      }
+      guard let project else{throw FormError.missing("Open a project first.")}
+      let shot=try StudioShotCommands.shot(in:project,id:args["shot_id"]);try studioShots.recall(shot.id);return
+    }
     if ["perspective", "overhead", "front", "fit", "focus", "isolate", "show_all"].contains(view) {
       synchronizeScene()
     }
@@ -503,6 +517,7 @@ enum TableTool: String, CaseIterable {
       project, selection: engine.selection, isolated: isolated, showGrid: showGrid,
       studio: mode == .studio, preset: studioPreset,
       assets: repository.url(for: project.id).appendingPathComponent("Assets"))
+    scene?.applyShotLighting(studioShots.lighting,studio:mode == .studio)
   }
   func toast(_ text: String, symbol: String = "checkmark") {
     noticeWork?.cancel()

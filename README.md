@@ -61,6 +61,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Studio Library:** Persistent materials and equipment profiles, separate from individual projects.
 - **Print preparation:** `⌘P` opens a dedicated physical print bed with object/component selection, orientation, scale, filament, layer height, walls, infill, supports, brim, and actual sliced layer previews. Project switches cancel local work and clear stale previews; settings and mesh share Undo/Redo.
 - **Filaments and local printers:** Studio settings preserve spool profiles, colors, temperatures, flow, density, cost, and remaining inventory. P1S connection settings use Keychain for the LAN code and a read-only TLS/MQTT status adapter. Sending or starting prints is disabled.
+- **Saved Studio shots:** Named camera compositions with exact subjects, lighting/surfaces, output pixels, reference framing and PNG + render-record folders; capture/update share Undo. See [Studio shots](docs/studio-shots.md).
 - **Rendering and making:** Studio backgrounds, camera framing, 3000 × 2000 PNG, physically sized PDF artwork, millimeter SVG dielines, and component/material JSON.
 - **Project knowledge:** Editable design decisions and open questions, saved activity history, optional Codex conversation references, and undo/redo across native and MCP edits.
 
@@ -148,6 +149,7 @@ python3 scripts/smoke_clock.py --slice # Shared dial, immutable source links, ph
 python3 scripts/benchmark_artwork.py # 600-element native canvas performance
 python3 scripts/smoke_production_inks.py # Declared CMYK/spot intents, knockout maps, guarded physical PDF, schema35
 python3 scripts/smoke_optical_typography.py # Disposable library; optical modes, source/glyph/style/story Undo and physical output
+python3 scripts/smoke_studio_shots.py # Disposable library; saved compositions, exact pixels, provenance and legacy output
 python3 scripts/smoke_decoration_preparation.py # Disposable library only; HTV/DTF physical files and immutable packets
 python3 scripts/smoke_print_lifecycle.py # Project scope, local-worker cancellation, unseen mesh dimensions, Undo/Redo
 python3 scripts/smoke_print.py # Optional engine; local cube and hollow-shade slices

@@ -1,0 +1,92 @@
+{
+  "application" : "FORM",
+  "application_version" : "0.1.0",
+  "design_sha256" : "95f255e1814eb856160734d2495b1e58aa345d83c3d7f86651f8ae1aef1ebb3a",
+  "effective_orthographic_scale" : 10.283823529411766,
+  "effective_vertical_fov_degrees" : 39.727453052912878,
+  "exported_at" : "2026-10-26T02:38:20Z",
+  "far_clip" : 1500,
+  "framing_warnings" : [
+
+  ],
+  "height" : 555,
+  "included_object_ids" : [
+    "02BD06A6-69F4-4C6C-B291-EE3A5AF3E80F",
+    "05520CD4-374C-45F8-8A24-A8A7500ED89B",
+    "1D5A9647-CC51-4E4F-A8C6-468831DF3614",
+    "1F4579B1-EF13-47ED-91AE-4D324F5C0E21",
+    "3A0F5230-606F-4FCB-8F13-8B9E8518A430",
+    "53E1643C-1BB1-421E-927F-2F9873B8F7D4",
+    "663391EF-41C0-455A-AA57-9B4D01A1A717",
+    "8A247EE8-AA54-481B-983C-77DC50674A50",
+    "A30844FF-0EEB-4EAF-B9C1-CE0E6E16479A",
+    "B3722321-8947-42B5-B39A-0DF87222A7BE",
+    "CFDCA94B-C42C-4D96-AC01-81A5B815938C",
+    "D8DD8D0B-A447-4FB3-BD77-020DA3FCB4B6",
+    "E72B0718-B8C4-463E-A172-415B6E035E1A"
+  ],
+  "near_clip" : 0.01,
+  "os_version" : "Version 26.6.2 (Build 25G83)",
+  "physical_size_or_fit_claim" : false,
+  "png_sha256" : "47215ffe36dce435b70aa775d6834741183ef37fd421cc98f1a07de9cc8185ac",
+  "presentation_renderer_version" : 1,
+  "project_id" : "E0282190-CFBC-47BF-B3B1-C8E6EDC490D7",
+  "record_version" : 1,
+  "renderer" : "SceneKit \/ Metal \/ 4x MSAA \/ FORM Studio v1",
+  "resources" : [
+    {
+      "id" : "font:HelveticaNeue-CondensedBlack",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    },
+    {
+      "id" : "font:Menlo-Bold",
+      "sha256" : "dc256e0b39c2a6fec947129d421fef41b8b429f58f9b6e5d1b148c87f775c1f6"
+    }
+  ],
+  "shot" : {
+    "camera" : {
+      "azimuth" : 0.25,
+      "distance" : 28,
+      "elevation" : 0.94999999999999996,
+      "projection" : "perspective",
+      "target" : {
+        "x" : -1,
+        "y" : 0.20000000000000001,
+        "z" : 1.8
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "4864D0EB-686A-40B5-9650-045808A4C259",
+    "lighting" : "soft-side-v1",
+    "name" : "ORBITAL native final",
+    "pixels" : {
+      "height" : 555,
+      "width" : 816
+    },
+    "referenceAspect" : 1.5,
+    "revision" : 1,
+    "surface" : "Daylight",
+    "visibility" : {
+      "mode" : "objects",
+      "objectIDs" : [
+        "02BD06A6-69F4-4C6C-B291-EE3A5AF3E80F",
+        "1F4579B1-EF13-47ED-91AE-4D324F5C0E21",
+        "A30844FF-0EEB-4EAF-B9C1-CE0E6E16479A",
+        "05520CD4-374C-45F8-8A24-A8A7500ED89B",
+        "3A0F5230-606F-4FCB-8F13-8B9E8518A430",
+        "E72B0718-B8C4-463E-A172-415B6E035E1A",
+        "663391EF-41C0-455A-AA57-9B4D01A1A717",
+        "1D5A9647-CC51-4E4F-A8C6-468831DF3614",
+        "B3722321-8947-42B5-B39A-0DF87222A7BE",
+        "8A247EE8-AA54-481B-983C-77DC50674A50",
+        "CFDCA94B-C42C-4D96-AC01-81A5B815938C",
+        "D8DD8D0B-A447-4FB3-BD77-020DA3FCB4B6",
+        "53E1643C-1BB1-421E-927F-2F9873B8F7D4"
+      ]
+    }
+  },
+  "shot_id" : "4864D0EB-686A-40B5-9650-045808A4C259",
+  "shot_revision" : 1,
+  "source_archived" : false,
+  "width" : 816
+}

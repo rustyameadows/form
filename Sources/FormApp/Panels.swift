@@ -291,7 +291,9 @@ struct PlacementField: View {
 struct StudioPanel: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
-    VStack(alignment: .leading, spacing: 18) {
+    ScrollView { VStack(alignment: .leading, spacing: 18) {
+      StudioShotsPanel(controller:store.studioShots)
+      Divider()
       SectionLabel("LIGHT, SURFACE & CAMERA")
       Text("A different light.").font(.system(size: 22, weight: .regular, design: .serif))
       Text("Find the right setting for what you've made.").font(.system(size: 12)).foregroundStyle(
@@ -337,7 +339,7 @@ struct StudioPanel: View {
           Palette.ink, in: RoundedRectangle(cornerRadius: 8)
         ).foregroundStyle(.white)
       }.buttonStyle(.plain)
-    }.padding(20).frame(width: 264).background(
+    }}.frame(maxHeight:700).padding(20).frame(width: 264).background(
       .regularMaterial, in: RoundedRectangle(cornerRadius: 16)
     ).overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(.white.opacity(0.9))).shadow(
       color: .black.opacity(0.08), radius: 24, y: 9)

@@ -383,6 +383,11 @@ private struct RenderSignature: Equatable {
     updateCamera()
   }
   func preset(_ name: String) {
+    if store?.studioShots.referenceAspect != nil {
+      store?.studioShots.leaveReview()
+      view?.window?.contentView?.needsLayout=true
+      view?.window?.contentView?.layoutSubtreeIfNeeded()
+    }
     if store != nil { view?.window?.makeFirstResponder(view) }
     view?.cancelPointerInteraction()
     camera.orientation = nil
@@ -595,6 +600,7 @@ private struct RenderSignature: Equatable {
       project, selection: store.engine.selection, isolated: store.isolated,
       showGrid: store.showGrid, studio: store.mode == .studio, preset: store.studioPreset,
       assets: store.repository.url(for: project.id).appendingPathComponent("Assets"))
+    view.controller?.applyShotLighting(store.studioShots.lighting,studio:store.mode == .studio)
   }
 }
 
