@@ -283,9 +283,11 @@ struct HomeView: View {
 
 struct ProjectCard: View {
   @EnvironmentObject var store: StudioStore
+  @Environment(\.homeTechnicalImage) private var homeTechnicalImage
   let project: ProjectSummary
   @State private var hover = false
   @State private var preview: NSImage?
+  @State private var technicalPreview = false
   var body: some View {
     Button {
       store.openProject(project.id)
@@ -331,8 +333,15 @@ struct ProjectCard: View {
       }
     }.buttonStyle(.plain).onHover { hover = $0 }
       .task(id: store.previewVersion) {
-        preview = NSImage(contentsOf: store.previewURL(project.id))
+        let cached = NSImage(contentsOf:store.previewURL(project.id))
+        preview = cached;technicalPreview = false
+        HomeTechnicalPreview.shared.retain(projectIDs:Set(store.projects.map(\.id)))
+        if let image = await homeTechnicalImage(project),!Task.isCancelled {
+          preview=image;technicalPreview=true
+        }
       }
+      .onDisappear {if !store.projects.contains(where:{$0.id==project.id}) {HomeTechnicalPreview.shared.discard(project.id)}}
+      .help(technicalPreview ? "Pattern drawing thumbnail. Open the project for precise physical dimensions.":"")
       .accessibilityLabel("Open \(project.name), \(project.contentDescription)")
   }
 }

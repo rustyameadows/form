@@ -23,7 +23,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 
 ## In the studio
 
-- **Home:** Saved project previews, search, blank projects, and editable starting studies. Featured cards start AFFINITIES, Cloth studies, or the merchandise collection; All studies and File → New from Study expose the full set.
+- **Home:** Saved project previews, search, blank projects, and editable starting studies. Featured cards start AFFINITIES, Cloth studies, or the merchandise collection; All studies and File → New from Study expose the full set. [Technical Canvas previews](docs/home-technical-preview.md) improve thin sewing contours for display while preserving source dimensions and cached files.
 - **AFFINITIES:** A complete editable 8 × 10 composition with rich typography, a masked Bézier landscape, an independent outlined alternate, and linked oak/graphite editions. It opens the source in split view. See the [15-step design workflow](docs/design-acceptance.md).
 - **The Table:** A continuous Metal-backed 3D workspace with physical scale, soft shadows, image references, material swatches, selection, movement, grouping, duplication, and persistent camera state.
 - **Connected Canvas:** Type, draw, or place images without an artboard, including negative coordinates. Drag artwork onto or off a physical region to update its 3D face with shared Undo. Resizable split and separate-window layouts keep one editor and shared project state. See [Canvas and Table](docs/design-surfaces.md).
@@ -52,6 +52,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Production roles:** Explicit print, cut, score, stitch, engrave, and guide intent; inherited manufacturing groups; local overlay visibility; separate SVG role layers and actual-size PDF pages from the same source. See [production roles](docs/production-roles.md).
 - **Regenerable embroidery:** Actual running, constant-width satin, and clipped compound-fill needle commands from editable artwork; dedicated native stitch/travel preview and playback, actual command-derived 3D thread surfaces, opt-in underlay/backtracking locks, thread/region controls, hoop preflight, physical SVG/JSON and DST with ordered thread sidecars. Independently decoded with Pyembroidery; no hardware calls or verified sew-out claim. See [embroidery](docs/embroidery.md).
 - **HTV / DTF preparation:** Actual-size knockout cut SVGs or transparent RGBA/profiled process files, explicit mirror/white/material review, and immutable source-linked packets with native Undo. See [decoration preparation](docs/decoration-preparation.md).
+- **Collection BOMs:** Explicit product runs, attached details once, source-based material allocation, portable stock, declared currency subtotals and immutable technical packets. See [collection production](docs/collection-production.md).
 - **Textile production records:** Studio thread inventory and declared embroidery equipment, portable thread assignment, immutable revision-linked jobs, measured needle paths versus explicit cost/usage assumptions, user sample/quality history, and local PDF/JSON/DST/SVG review packets. No stock deduction or machine operations. See [production jobs](docs/textile-production-jobs.md).
 - **Image editing:** Original files, aspect-aware placement, crop panning/zoom, numeric crop bounds, brightness/contrast/saturation, replacement that retains layout, drag/drop, and effective physical DPI. See the [LUMEN collection](docs/image-editing.md).
 - **Editable SVG import:** File → Import SVG Artwork (`⇧⌘I`) reviews native paths, groups, text, gradients, clips, and embedded images before creating a physical frame or adding to an existing surface. Originals stay in the project; unsupported features require explicit review. See the [SVG import guide](docs/svg-import.md).
@@ -150,6 +151,8 @@ python3 scripts/benchmark_artwork.py # 600-element native canvas performance
 python3 scripts/smoke_production_inks.py # Declared CMYK/spot intents, knockout maps, guarded physical PDF, schema35
 python3 scripts/smoke_optical_typography.py # Disposable library; optical modes, source/glyph/style/story Undo and physical output
 python3 scripts/smoke_studio_shots.py # Disposable library; saved compositions, exact pixels, provenance and legacy output
+
+python3 scripts/smoke_collections.py # Disposable library; explicit runs/BOM/stock, precise estimates, immutable packets and saved source deletion
 python3 scripts/smoke_decoration_preparation.py # Disposable library only; HTV/DTF physical files and immutable packets
 python3 scripts/smoke_print_lifecycle.py # Project scope, local-worker cancellation, unseen mesh dimensions, Undo/Redo
 python3 scripts/smoke_print.py # Optional engine; local cube and hollow-shade slices

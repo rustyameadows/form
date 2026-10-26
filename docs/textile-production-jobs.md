@@ -2,7 +2,7 @@
 
 FORM now records reusable Studio thread stock and embroidery equipment declarations, assigns portable thread snapshots to designs, captures immutable production revisions, and creates local review packets. Open **Studio Library → Threads & embroidery equipment**, or select a configured embroidery decoration and open **Production jobs & packet…**. The same operations are available through `form_textile_stock` and `form_production_job`.
 
-This is an initial local embroidery-production workflow. It does not connect to machines, queue work, reserve or deduct stock, infer prices, or convert user-entered approvals into verified sew-outs. Collection-wide scheduling, general fabric/ink costing, supplier purchasing, and other manufacturing-process packets remain in the full textile goal.
+This is an initial local embroidery-production workflow. It does not connect to machines, queue work, reserve or deduct stock, infer prices, or convert user-entered approvals into verified sew-outs. [Collection plans and technical packets](collection-production.md) now combine explicit runs, attached components, grounded allocations, portable stock and declared cost scopes. Scheduling, supplier purchasing, calibrated manufacturing consumption and broader process packets remain in the full textile goal.
 
 ## Shared records and portable assignment
 

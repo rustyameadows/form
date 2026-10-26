@@ -8,7 +8,7 @@ struct TextileProductionLibraryButton:View {
   @State private var jobs=false
   var body:some View {
     HStack {
-      Button {stocks=true} label:{Label("Threads & embroidery equipment",systemImage:"circle.circle")}
+      Button {stocks=true} label:{Label("Textile stock & equipment",systemImage:"circle.circle")}
       Spacer();Button {jobs=true} label:{Label("Production jobs",systemImage:"list.clipboard")}.disabled(store.project==nil)
     }.font(.system(size:11)).buttonStyle(.borderless)
       .sheet(isPresented:$stocks) {TextileProductionLibraryView().environmentObject(store)}
@@ -25,8 +25,8 @@ struct TextileProductionLibraryView:View {
   private var stock:TextileProductionLibrary {store.library.textileProduction ?? .init()}
   var body:some View {
     VStack(alignment:.leading,spacing:18) {
-      HStack {VStack(alignment:.leading,spacing:5) {Text("Threads & embroidery equipment").font(.system(size:24,design:.serif));Text("Studio records · portable snapshots on assignment · no automatic stock deduction").font(.system(size:10)).foregroundStyle(Palette.secondary)};Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)}
-      Picker("Library",selection:$section) {Text("Thread stock").tag(0);Text("Equipment declarations").tag(1)}.pickerStyle(.segmented)
+      HStack {VStack(alignment:.leading,spacing:5) {Text("Textile stock & equipment").font(.system(size:24,design:.serif));Text("Studio records · portable snapshots on assignment · no automatic stock deduction").font(.system(size:10)).foregroundStyle(Palette.secondary)};Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)}
+      Picker("Library",selection:$section) {Text("Thread stock").tag(0);Text("Equipment declarations").tag(1);Text("Blanks, trims & supplies").tag(2)}.pickerStyle(.segmented)
       ScrollView {
         LazyVStack(spacing:9) {
           if section==0 {
@@ -41,7 +41,7 @@ struct TextileProductionLibraryView:View {
               }.padding(12).background(.white,in:RoundedRectangle(cornerRadius:8))
             }
             if stock.threads.isEmpty {ContentUnavailableView("No thread stock recorded",systemImage:"circle.circle",description:Text("Add the threads you own, with supplier and stock information when known."))}
-          } else {
+          } else if section==2 {CollectionSupplyLibrary(store:store)} else {
             ForEach(stock.equipment) {item in
               HStack {Button {equipment=item} label:{VStack(alignment:.leading,spacing:5) {Text(item.name).font(.system(size:12,weight:.semibold));Text("\(item.hoops.count) declared hoops · \(item.formats.isEmpty ? "Formats unknown":item.formats.joined(separator:", ").uppercased())").font(.system(size:10)).foregroundStyle(Palette.secondary)}.frame(maxWidth:.infinity,alignment:.leading)}.buttonStyle(.plain)
                 Button {remove("remove_equipment",id:item.id)} label:{Image(systemName:"trash")}.buttonStyle(.borderless)
@@ -52,7 +52,7 @@ struct TextileProductionLibraryView:View {
         }
       }
       if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
-      HStack {Button(section==0 ? "Add thread stock":"Add equipment declaration") {if section==0 {thread = .init(name:"New thread",color:"#D7CAB0")} else {equipment = .init(name:"New embroidery equipment")}};Spacer();Text("Unknown prices and capacities remain unknown.").font(.system(size:10)).foregroundStyle(Palette.secondary)}
+      HStack {if section != 2 {Button(section==0 ? "Add thread stock":"Add equipment declaration") {if section==0 {thread = .init(name:"New thread",color:"#D7CAB0")} else {equipment = .init(name:"New embroidery equipment")}}};Spacer();Text("Unknown prices and capacities remain unknown.").font(.system(size:10)).foregroundStyle(Palette.secondary)}
     }.padding(26).frame(width:760,height:640).background(Palette.paper)
       .sheet(item:$thread) {item in StudioThreadEditor(item:item) {changed in try save("save_thread",key:"thread",value:changed);thread=nil}}
       .sheet(item:$equipment) {item in EmbroideryEquipmentEditor(item:item) {changed in try save("save_equipment",key:"equipment",value:changed);equipment=nil}}

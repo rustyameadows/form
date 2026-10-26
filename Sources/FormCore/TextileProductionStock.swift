@@ -71,11 +71,14 @@ public struct EmbroideryEquipment:Codable,Equatable,Identifiable,Sendable {
   }
 }
 public struct TextileProductionLibrary:Codable,Equatable,Sendable {
+  public var supplies:[StudioSupply]?
   public var threads:[StudioThread]=[]
   public var equipment:[EmbroideryEquipment]=[]
   public init() {}
   public func validate()throws {
     guard threads.count<=1000,equipment.count<=100,Set(threads.map(\.id)).count==threads.count,Set(equipment.map(\.id)).count==equipment.count else {throw FormError.invalid("Use at most 1,000 unique thread records and 100 embroidery equipment profiles.")}
+    guard (supplies?.count ?? 0)<=1000,Set((supplies ?? []).map(\.id)).count==(supplies?.count ?? 0) else{throw FormError.invalid("Use at most1,000 uniquely identified supply declarations.")}
+    for item in supplies ?? [] {try item.validate()}
     for item in threads {try item.validate()};for item in equipment {try item.validate()}
   }
 }

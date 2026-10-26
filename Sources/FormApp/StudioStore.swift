@@ -175,7 +175,8 @@ enum TableTool: String, CaseIterable {
                 "form_list_fonts", "form_font_features", "form_image_info", "form_export_publication",
               ].contains(name) || (name == "form_import_svg" && args["dry_run"] as? Bool == true)
                 || (name=="form_export_artwork" && args["ink_output"] as? String=="preflight")
-                || (name=="form_production_job" && args["kind"] as? String=="decoration" && ["preflight","export"].contains(args["command"] as? String ?? "list"))
+                || (name=="form_production_job" && ["decoration","collection"].contains(args["kind"] as? String ?? "") && ["preflight","export"].contains(args["command"] as? String ?? "list"))
+                || (name=="form_textile_stock" && ["save_supply","remove_supply"].contains(args["command"] as? String ?? "list"))
                 || (name == "form_replace_font" && args["dry_run"] as? Bool==true)
                 || (name == "form_component" && args["command"] as? String == "list")
                 || (name == "form_swatch" && args["command"] as? String == "list")
@@ -187,13 +188,15 @@ enum TableTool: String, CaseIterable {
                 || (name == "form_publication" && ["list","get","preflight"].contains(args["command"] as? String ?? "list"))
             if !readOnly {
               try self.preflightOpticalHandoff(name,args)
+
+              try self.preflightCollectionHandoff(name,args)
               try self.preflightDecorationHandoff(name,args)
               try self.preflightInkHandoff(name,args)
               try self.preflightFontHandoff(name,args)
               try self.preflightPublicationHandoff(name,args);self.finishArtworkEditing()
             }
+            let beforeHistory = self.project
             var result = try self.engine.call(name, arguments: args)
-            if ["form_undo","form_redo"].contains(name) {self.cloth.historyChanged()}
             if !readOnly { self.artworkSession.showingTabs = false;self.artworkSession.showingGlyphs=false }
             if name == "form_status", var status = result as? [String: Any] {
               status["renderer"] = self.scene?.diagnostics ?? [:]
@@ -218,7 +221,12 @@ enum TableTool: String, CaseIterable {
                 self.restoreProjectWorkspace()
               }
               if self.project != nil && name != "form_set_view" { self.showingHome = false }
-              self.changed()
+              if ["form_undo","form_redo"].contains(name) {
+                self.historyRecordsChanged(from:beforeHistory)
+              } else if (name=="form_production_job" && args["kind"] as? String=="collection") ||
+                  (name=="form_set_view" && args["view"] as? String=="studio" && ["capture","update","rename","delete"].contains(args["studio_command"] as? String ?? "")) {
+                self.metadataRecordsChanged()
+              } else {self.changed()}
               try self.engine.flush()
               self.saving = false
               self.toast("Updated from Codex", symbol: "sparkle")
@@ -235,6 +243,28 @@ enum TableTool: String, CaseIterable {
       try engine.call(name, arguments: args, source: "Studio")
       changed()
     } catch { self.error = error.localizedDescription }
+  }
+  /// Production plans and saved-shot definitions do not change physical source.
+  /// Refreshing their UI/autosave must not visit an evicted cloth mesh cache.
+  func metadataRecordsChanged() {
+    revision &+= 1
+    scheduleSave()
+  }
+  /// Only the two explicit metadata records may differ on this fast path.
+  /// Every other source field compares exactly; physical history retains its
+  /// established invalidation/reset behavior.
+  func historyRecordsChanged(from before:Project?) {
+    if var previous=before,var current=project,
+      previous.studioPresentation != current.studioPresentation || previous.collectionProduction != current.collectionProduction {
+      previous.studioPresentation=nil;current.studioPresentation=nil
+      previous.collectionProduction=nil;current.collectionProduction=nil
+      previous.history=[];current.history=[]
+      previous.updatedAt=Date(timeIntervalSince1970:0);current.updatedAt=previous.updatedAt
+      previous.schemaVersion=1;current.schemaVersion=1
+      if previous==current {metadataRecordsChanged();return}
+    }
+    cloth.historyChanged()
+    changed()
   }
   func changed(save: Bool = true) {
     let ids = Set(project?.objects.map(\.id) ?? [])
@@ -395,9 +425,9 @@ enum TableTool: String, CaseIterable {
       objectWillChange.send()
       return
     }
+    let before=project
     engine.undo()
-    cloth.historyChanged()
-    changed()
+    historyRecordsChanged(from:before)
     toast("Undone")
   }
   func redo() {
@@ -405,9 +435,9 @@ enum TableTool: String, CaseIterable {
       objectWillChange.send()
       return
     }
+    let before=project
     engine.redo()
-    cloth.historyChanged()
-    changed()
+    historyRecordsChanged(from:before)
     toast("Redone")
   }
   func group() {

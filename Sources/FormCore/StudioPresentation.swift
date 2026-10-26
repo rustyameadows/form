@@ -62,7 +62,7 @@ extension Project {
   }
   /// Committed design identity deliberately excludes navigation, history and shot metadata.
   public func studioDesignDigest()throws->String {
-    var source=self;source.camera = .init();source.studioPresentation=nil;source.history=[]
+    var source=self;source.camera = .init();source.studioPresentation=nil;source.collectionProduction=nil;source.history=[]
     source.createdAt=Date(timeIntervalSince1970:0);source.updatedAt=source.createdAt;source.schemaVersion=1
     return SHA256.hash(data:try JSONEncoder.form.encode(source)).map{String(format:"%02x",$0)}.joined()
   }

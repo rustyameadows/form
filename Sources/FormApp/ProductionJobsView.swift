@@ -16,7 +16,7 @@ private struct JobBOMDraft:Identifiable {
 struct ProductionJobsView:View {
   @EnvironmentObject var store:StudioStore
   @Environment(\.dismiss) var dismiss
-  @State private var decorationJobs=false
+  @State private var productionKind=0
   @State private var objectID:UUID?
   @State private var selectedJobID:UUID?
   @State private var captured:ProductionJobRevision?
@@ -51,8 +51,8 @@ struct ProductionJobsView:View {
   var body:some View {
     VStack(alignment:.leading,spacing:16) {
       HStack {VStack(alignment:.leading,spacing:4) {Text("Production jobs").font(.system(size:25,design:.serif));Text(store.project?.name ?? "Open a project").font(.system(size:11)).foregroundStyle(Palette.secondary)};Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)}
-      Picker("Production kind",selection:$decorationJobs) {Text("Embroidery").tag(false);Text("HTV / DTF preparations").tag(true)}.pickerStyle(.segmented).frame(width:360)
-      if decorationJobs {DecorationArchiveBrowser(store:store)} else {
+      Picker("Production kind",selection:$productionKind) {Text("Embroidery").tag(0);Text("HTV / DTF preparations").tag(1);Text("Collection BOM").tag(2)}.pickerStyle(.segmented).frame(width:520)
+      if productionKind==2 {CollectionProductionView(store:store)} else if productionKind==1 {DecorationArchiveBrowser(store:store)} else {
       HSplitView {
         VStack(alignment:.leading,spacing:8) {
           Text("CAPTURED JOBS").font(.system(size:9,weight:.semibold)).tracking(1)

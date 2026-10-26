@@ -16,7 +16,19 @@ import FormGraphics
     guard project.physicalObjectCount == 0,let workspace = project.canvasWorkspace else {
       return TableSceneController.preview(project:project,size:size,assets:assets)
     }
-    var art = project.editableArtwork(workspace) ?? .init(background:"#E7E7E1")
+    let composition = canvasComposition(artwork:project.editableArtwork(workspace) ?? .init(background:"#E7E7E1"),size:size)
+    return ArtworkRenderer.image(composition.artwork,width:composition.width,height:composition.height,assets:assets,
+      pixelsPerMM:composition.density,opaqueBackground:true)
+  }
+  struct CanvasComposition {
+    var artwork:Artwork
+    var width:Double
+    var height:Double
+    var density:Double
+  }
+  /// Shared framing only. The normal project-cache render keeps physical strokes.
+  static func canvasComposition(artwork:Artwork,size:CGSize)->CanvasComposition {
+    var art = artwork
     let maskIDs = Set(art.elements.compactMap(\.clipID))
     let ids = Set(art.elements.filter {
       $0.parentID == nil && $0.hidden != true && !maskIDs.contains($0.id)
@@ -35,8 +47,7 @@ import FormGraphics
       }
     }
     art.background = "#E7E7E1"; art.backgroundOpacity = 1; art.boundary = nil
-    return ArtworkRenderer.image(art,width:width,height:height,assets:assets,
-      pixelsPerMM:Double(max(1,size.width))/width,opaqueBackground:true)
+    return .init(artwork:art,width:width,height:height,density:Double(max(1,size.width))/width)
   }
   private static func publicationPage(_ artwork: Artwork, physicalSize: Point2, size: CGSize, assets: URL) -> NSImage? {
     guard size.width.isFinite, size.height.isFinite, physicalSize.x.isFinite, physicalSize.y.isFinite,

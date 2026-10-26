@@ -19,7 +19,7 @@ extension StudioStore {
   }
   func preflightDecorationHandoff(_ name:String,_ args:[String:Any]) throws {
     guard name=="form_production_job",let raw=args["kind"] else{return}
-    guard let kind=raw as? String,["embroidery","decoration"].contains(kind) else{throw FormError.invalid("Production job kind must be embroidery or decoration.")}
+    guard let kind=raw as? String,["embroidery","decoration","collection"].contains(kind) else{throw FormError.invalid("Production job kind must be embroidery, decoration or collection.")}
     guard kind=="decoration",artworkSession.editingText else{return}
     let command=args["command"] as? String ?? "list"
     if command=="remove" {

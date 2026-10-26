@@ -1,0 +1,35 @@
+{
+  "after_maximum_channel_contrast": 116,
+  "after_pixels_over_20_contrast": 6519,
+  "before_maximum_channel_contrast": 7,
+  "before_pixels_over_20_contrast": 0,
+  "cached_size_pixels": [
+    1000,
+    650
+  ],
+  "configuration": "release",
+  "every_original_package_file_and_cached_preview_unchanged": true,
+  "ink_support_preserved_with_two_pixel_allowance": true,
+  "native_hosted_card_cost": {
+    "cache_bytes": 2600000,
+    "cold_max_ms": 11.657953262329102,
+    "hosted_window_visible": false,
+    "main_actor_max_ms": 1.871943473815918,
+    "render_count": 1,
+    "source_and_disk_preview_unchanged": true,
+    "source_bytes": 62771,
+    "warm_max_ms": 21.06499671936035,
+    "work": 174
+  },
+  "original_default_render_pixel_identical": true,
+  "physical_pdf_media_boxes_points": [
+    [
+      0.0,
+      0.0,
+      3628.346,
+      8486.929
+    ]
+  ],
+  "physical_pdf_page_content_identical": true,
+  "physical_svg_sha256": "a400f65ad8d149369d695562955cf90def57e31d4bd8baa30eb18e4f4dc4b7fb"
+}

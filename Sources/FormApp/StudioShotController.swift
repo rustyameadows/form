@@ -117,15 +117,15 @@ import ImageIO
     if !capture {guard let id=editingID else{throw FormError.invalid("Select a saved shot before updating it.")};args["shot_id"]=id.uuidString}
     let result=try store!.engine.call("form_set_view",arguments:args,source:"Studio")
     if let value=result as? [String:Any],let saved=try? StudioShotCommands.shot(in:store!.project!,id:value["id"]) {selectDefinition(saved)}
-    store!.changed();error=nil
+    store!.metadataRecordsChanged();error=nil
   }
   func rename(_ id:UUID)throws {
     NSApp.keyWindow?.makeFirstResponder(nil)
     _ = try store!.engine.call("form_set_view",arguments:["view":"studio","studio_command":"rename","shot_id":id.uuidString,"name":name])
     if let saved=store?.project?.studioPresentation?.shots.first(where:{$0.id==id}) {name=saved.name;loadedDefinition=saved}
-    store!.changed()
+    store!.metadataRecordsChanged()
   }
-  func delete(_ id:UUID)throws {_ = try store!.engine.call("form_set_view",arguments:["view":"studio","studio_command":"delete","shot_id":id.uuidString]);store!.changed();reconcile()}
+  func delete(_ id:UUID)throws {_ = try store!.engine.call("form_set_view",arguments:["view":"studio","studio_command":"delete","shot_id":id.uuidString]);store!.metadataRecordsChanged();reconcile()}
   func perform(_ work:()throws->Void){do{try work();error=nil}catch{self.error=error.localizedDescription}}
   func requestPreview() {
     reconcile();generation+=1;let token=generation;previewTask?.cancel()

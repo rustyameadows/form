@@ -402,7 +402,9 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var studioPresentation: StudioPresentation?
   public var decorationPreparations:[DecorationPreparation]?
   public var garmentBlocks:[GarmentBlock]?
+  public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if collectionProduction.map({!$0.plans.isEmpty || !$0.captures.isEmpty}) == true {return max(schemaVersion,45)}
     if studioPresentation?.shots.isEmpty == false {return max(schemaVersion,43)}
     if requiresOpticalSizingSchema {return max(schemaVersion,42)}
     if garmentBlocks?.isEmpty == false || objects.contains(where: { $0.artwork?.elements.contains(where: { $0.sewingPiece?.hasConstructionMetadata == true }) == true }) { return max(schemaVersion, 41) }

@@ -162,3 +162,6 @@ Schema-28 digitizing adds optional `process:{threadDiameter,tieIn,tieOff,tieLeng
 
 
 `form_set_view view:"studio"` accepts `studio_command:list|get|capture|update|rename|delete|recall` for optional saved compositions. Inspection preserves active native drafts; capture/update/rename/delete share document Undo. `form_export format:"png", shot_id:"UUID"` writes a new absolute `.render` folder containing the PNG and its verified render record. Pixel overrides require both `width` and `height`; existing destinations reject. Bare Studio/current PNG behavior stays unchanged. See [saved Studio shots](studio-shots.md) for exact visibility, aspect containment, limits and schema 43.
+
+
+`form_production_job kind:collection` adds list/preflight/save_plan/remove_plan/create/get/remove/export for explicit run quantities, attached-component BOMs, declared currency/stock assumptions and immutable technical packets. `form_textile_stock` adds save_supply/remove_supply; library edits do not rewrite projects. No new tool, equipment operation, stock deduction or currency conversion. Complete plan saves are atomic; service calls reject inside object batches before input handoff. [Collection schemas, arithmetic and archive scope](collection-production.md).

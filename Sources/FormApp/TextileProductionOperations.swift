@@ -30,7 +30,8 @@ extension StudioStore {
   func productionCall(_ name:String,arguments:[String:Any],source:String = "Codex")throws -> Any {
     let command=arguments["command"] as? String ?? "list"
     if name=="form_production_job",let raw=arguments["kind"] {
-      guard let kind=raw as? String,["embroidery","decoration"].contains(kind) else{throw FormError.invalid("Production job kind must be embroidery or decoration.")}
+      guard let kind=raw as? String,["embroidery","decoration","collection"].contains(kind) else{throw FormError.invalid("Production job kind must be embroidery, decoration or collection.")}
+      if kind=="collection" {return try collectionCall(arguments,source:source)}
       if kind=="decoration" {return try decorationCall(arguments,source:source)}
     }
     func uuid(_ key:String)throws -> UUID {
@@ -41,6 +42,12 @@ extension StudioStore {
       var next=library,value=library.textileProduction ?? .init()
       switch command {
       case "list":return try jsonObject(value)
+      case "save_supply":
+        guard let raw=arguments["supply"] as? [String:Any] else{throw FormError.invalid("Provide a complete supply declaration.")}
+        guard Set(raw.keys).isSubset(of:["id","name","category","unit","available","unitPrice","currency","manufacturer","sku","supplier","location","notes","widthMM","sheetLengthMM"]) else{throw FormError.invalid("Unknown supply declaration property.")}
+        let item=try decode(StudioSupply.self,raw);try item.validate();var supplies=value.supplies ?? [];if let i=supplies.firstIndex(where:{$0.id==item.id}) {supplies[i]=item}else{supplies.append(item)};value.supplies=supplies;try value.validate();next.textileProduction=value;try next.save(to:repository.root);library=next;revision+=1;return try jsonObject(item)
+      case "remove_supply":
+        let id=try uuid("stock_id");guard value.supplies?.contains(where:{$0.id==id})==true else{throw FormError.missing("Supply declaration not found.")};value.supplies?.removeAll{$0.id==id};try value.validate();next.textileProduction=value;try next.save(to:repository.root);library=next;revision+=1;return ["removed":true,"portable_assignments_preserved":true]
       case "save_thread":
         guard let raw=arguments["thread"] as? [String:Any] else {throw FormError.invalid("Provide a thread stock record.")}
         var thread=try decode(StudioThread.self,raw);thread.updatedAt=Date();try thread.validate()
@@ -69,7 +76,7 @@ extension StudioStore {
           design.threads[index] = .init(stock:thread);try design.validate();p.objects[object].textile?.embroidery=design
         };changed()
         return ["object_id":objectID.uuidString,"thread_index":index,"stock":try jsonObject(thread)]
-      default:throw FormError.invalid("Stock commands: list, save_thread, remove_thread, save_equipment, remove_equipment, assign_thread.")
+      default:throw FormError.invalid("Stock commands: list, save_thread, remove_thread, save_equipment, remove_equipment, assign_thread, save_supply, remove_supply.")
       }
     }
     guard name=="form_production_job",let project else {throw FormError.missing("Open a project for production jobs.")}
