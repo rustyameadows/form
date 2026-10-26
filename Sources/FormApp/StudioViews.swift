@@ -408,8 +408,9 @@ struct WorkspaceView: View {
           Rectangle().fill(Palette.line).frame(width: 1)
           EnvironmentContextPanel()
         }
-      }
-    }.safeAreaInset(edge: .bottom, spacing: 0) { WorkspaceStatus() }
+      }.frame(minHeight: 0, maxHeight: .infinity)
+      WorkspaceStatus()
+    }
   }
 }
 
