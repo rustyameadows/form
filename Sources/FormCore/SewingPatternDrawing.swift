@@ -107,12 +107,36 @@ public enum SewingPatternDrawing {
         let outline = cutContour(g)
         elements.append(line(outline, closed: true, source: g.elementID, tag: "Cut contour", role: "cut", color: "#292D2C"))
       }
-      elements.append(line(g.stitch, closed: true, source: g.elementID, tag: "Stitch outline", role: "stitch", color: "#43718A", dash: [3, 2]))
+      if g.piece.unstitchedEdges?.isEmpty == false {
+        for edge in g.stitch.indices {
+          let ref = g.sourceEdges.first { $0.index == edge }
+          if !g.piece.isUnstitched(edge:edge,edgeID:ref?.id,endID:ref?.endID) {
+            elements.append(line([g.stitch[edge],g.stitch[(edge+1)%g.stitch.count]],closed:false,
+              source:g.elementID,tag:"Stitch edge \(edge+1)",role:"stitch",color:"#43718A",dash:[3,2]))
+          }
+        }
+      } else {
+        elements.append(line(g.stitch, closed: true, source: g.elementID, tag: "Stitch outline", role: "stitch", color: "#43718A", dash: [3, 2]))
+      }
       for edge in g.stitch.indices {
+        let sourceEdge=g.sourceEdges.first{$0.index==edge}
+        if g.piece.isUnstitched(edge:edge,edgeID:sourceEdge?.id,endID:sourceEdge?.endID) {continue}
         let a = g.stitch[edge], b = g.stitch[(edge + 1) % g.stitch.count], n = g.normals[edge]
         elements.append(text("E\(edge + 1)", x: (a.x + b.x) / 2 - n.x * 7 - 4, y: (a.y + b.y) / 2 - n.y * 7 - 2,
           width: 9, height: 5, source: g.elementID, tag: "Edge label \(edge + 1)"))
       }
+      }
+      for guide in try SewingConstructionGuides.resolve(g) {
+        let guideSource=id(g.elementID,"construction-"+guide.guide.id.uuidString)
+        let stitching = guide.guide.kind == .stitch
+        for (index,points) in guide.segments.enumerated() {
+          elements.append(line(points,closed:false,source:guideSource,tag:"Construction guide \(index+1)",
+            role:stitching ? "stitch":"guide",color:stitching ? "#43718A":"#A67B41",dash:stitching ? [2,1]:[6,2]))
+        }
+        let middle=Point2((guide.first.x+guide.last.x)/2,(guide.first.y+guide.last.y)/2)
+        let opening=guide.opening == nil ? "":String(format:" · leave %.1f mm opening",guide.guide.opening)
+        elements.append(text(guide.guide.label+opening,x:middle.x-70,y:middle.y-6,width:140,height:6,
+          source:guideSource,tag:"Construction guide label",color:stitching ? "#43718A":"#A67B41"))
       }
       let grain = grain(g), d = g.grainDirection, n = Point2(-d.y, d.x)
       elements.append(line(grain, closed: false, source: g.elementID, tag: "Grainline", role: "guide", color: "#A67B41"))

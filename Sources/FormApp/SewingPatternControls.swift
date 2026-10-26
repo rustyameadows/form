@@ -26,7 +26,10 @@ struct SewingPatternControls: View {
             }.font(.system(size: 10))
             Picker("Cut on fold", selection: Binding(get: { geometry.piece.onFoldEdge ?? -1 }, set: { value in session.update { e in e.sewingPiece?.onFoldEdge = value < 0 ? nil : value; e.sewingPiece?.onFoldEdgeID = value < 0 ? nil : geometry.sourceEdges.first(where: { $0.index == value })?.id; e.sewingPiece?.onFoldEndID = value < 0 ? nil : geometry.sourceEdges.first(where: { $0.index == value })?.endID } })) {
               Text("None").tag(-1)
-              ForEach(geometry.edgeLengths.indices.filter { !geometry.usesGeneralGeometry || geometry.boundaries.count == 1 && geometry.sourceEdges[$0].isStraight }, id: \.self) { Text("Edge \($0 + 1)").tag($0) }
+              ForEach(geometry.edgeLengths.indices.filter { index in
+                let edge=geometry.sourceEdges.first{$0.index==index}
+                return (!geometry.usesGeneralGeometry || geometry.boundaries.count == 1 && edge?.isStraight == true) && !piece.isUnstitched(edge:index,edgeID:edge?.id,endID:edge?.endID)
+              }, id: \.self) { Text("Edge \($0 + 1)").tag($0) }
             }.font(.system(size: 10))
             ForEach(geometry.edgeLengths.indices, id: \.self) { index in edge(index, geometry: geometry) }
             TextField("Construction notes", text: Binding(get: { piece.notes ?? "" }, set: { value in session.update { $0.sewingPiece?.notes = value } }), axis: .vertical)
@@ -49,7 +52,10 @@ struct SewingPatternControls: View {
         Text("EDGE \(index + 1)").font(.system(size: 8, weight: .semibold)).tracking(1)
         Spacer(); Text(String(format: "%.1f %@", session.unit.display(length), session.unit.rawValue)).font(.system(size: 9, design: .monospaced)).foregroundStyle(Palette.secondary)
       }
-      if piece.onFoldEdge == index {
+      let sourceEdge=geometry.sourceEdges.first{$0.index==index}
+      if piece.isUnstitched(edge:index,edgeID:sourceEdge?.id,endID:sourceEdge?.endID) {
+        Text("Raw construction boundary · no seam pairing · zero allowance").font(.system(size:9)).foregroundStyle(Palette.secondary)
+      } else if piece.onFoldEdge == index {
         Text("Place this edge on the fabric fold; no cut pass.").font(.system(size: 9)).foregroundStyle(Palette.secondary)
       } else {
         if !geometry.usesGeneralGeometry {
@@ -92,6 +98,7 @@ struct SewingPatternActions: View {
   @State private var pairing = false
   @State private var cuttingLayout = false
   @State private var roundedPouch = false
+  @State private var garmentBlocks = false
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
       if session.art.elements.contains(where: { $0.sewingPiece != nil }) {
@@ -110,12 +117,14 @@ struct SewingPatternActions: View {
           }
         }
       }
+      Button("Garment blocks and sizes…") { session.canvas?.finishText(); garmentBlocks=true }.font(.system(size:10)).accessibilityLabel("Garment blocks and sizes")
       Button("Add tote cutting study") { store.createTotePattern() }.font(.system(size: 10)).accessibilityLabel("Add tote cutting study")
       Button("Add measured rounded pouch…") { session.canvas?.finishText(); roundedPouch=true }.font(.system(size:10)).accessibilityLabel("Add measured rounded pouch")
     }.font(.system(size: 10)).sheet(isPresented: $preview) { SewingPatternPreview(session: session).environmentObject(store) }
       .sheet(isPresented: $pairing) { SewingSeamEditor(session: session).environmentObject(store) }
       .sheet(isPresented: $cuttingLayout) { SewingLayoutEditor(session: session).environmentObject(store) }
       .sheet(isPresented:$roundedPouch){RoundedPouchControls().environmentObject(store)}
+      .sheet(isPresented:$garmentBlocks){GarmentBlockEditor(session:session).environmentObject(store)}
   }
 }
 
@@ -133,7 +142,17 @@ private struct SewingSeamEditor: View {
   @State private var tolerance = 1.0
   @State private var reversed = true
   @State private var error = ""
-  private var pieces: [ArtworkElement] { session.art.elements.filter { $0.sewingPiece != nil } }
+  private var pieces: [ArtworkElement] { session.art.elements.filter { element in
+    guard element.sewingPiece != nil,let g=try? SewingPatterns.geometry(element,in:session.art) else{return false}
+    return !sewingEdges(g).isEmpty
+  } }
+  private func sewingEdges(_ geometry:SewingPieceGeometry)->[Int] {
+    geometry.edgeLengths.indices.filter{index in let ref=geometry.sourceEdges.first{$0.index==index};return !geometry.piece.isUnstitched(edge:index,edgeID:ref?.id,endID:ref?.endID)}
+  }
+  private func firstSewingEdge(_ id:UUID?)->Int {
+    guard let e=pieces.first(where:{$0.id==id}),let g=try? SewingPatterns.geometry(e,in:session.art) else{return 0}
+    return sewingEdges(g).first ?? 0
+  }
   var body: some View {
     VStack(alignment: .leading, spacing: 18) {
       Text("Pair seam edges").font(.system(size: 24, design: .serif))
@@ -147,6 +166,7 @@ private struct SewingSeamEditor: View {
       HStack { Button("Cancel") { dismiss() }; Spacer(); Button("Save seam") { save() }.keyboardShortcut(.defaultAction) }
     }.padding(28).frame(width: 540).background(Palette.paper).onAppear {
       first = pieces.first?.id; second = pieces.dropFirst().first?.id ?? first
+      firstEdge=firstSewingEdge(first);secondEdge=firstSewingEdge(second)
       if first == second, (pieces.first?.sewingPiece?.cutQuantity ?? 1) > 1 { secondCopy = 2 }
     }
   }
@@ -156,12 +176,12 @@ private struct SewingSeamEditor: View {
       Picker("Piece", selection: selected) { ForEach(pieces) { Text($0.sewingPiece!.name).tag(Optional($0.id)) } }
       if let e = pieces.first(where: { $0.id == selected.wrappedValue }), let geometry = try? SewingPatterns.geometry(e, in: session.art) {
         HStack {
-          Picker("Edge", selection: edge) { ForEach(geometry.edgeLengths.indices, id: \.self) { i in Text(String(format: "%d · %.1f mm", i + 1, geometry.edgeLengths[i])).tag(i) } }
+          Picker("Edge", selection: edge) { ForEach(sewingEdges(geometry), id: \.self) { i in Text(String(format: "%d · %.1f mm", i + 1, geometry.edgeLengths[i])).tag(i) } }
           Stepper("Copy \(copy.wrappedValue)", value: copy, in: 1...geometry.piece.cutQuantity)
         }
       }
     }.onChange(of: selected.wrappedValue) { _, value in
-      edge.wrappedValue = 0
+      edge.wrappedValue = firstSewingEdge(value)
       let quantity = pieces.first { $0.id == value }?.sewingPiece?.cutQuantity ?? 1
       copy.wrappedValue = isSecond && value == first && quantity > 1 ? 2 : 1
     }

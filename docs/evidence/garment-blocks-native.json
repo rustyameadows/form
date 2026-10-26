@@ -1,0 +1,130 @@
+{
+  "date": "2026-10-25",
+  "feature": "declared garment blocks and grading",
+  "tests": {
+    "total": 790,
+    "core_graphics_ipc": 548,
+    "native": 242,
+    "failures": 0,
+    "skips": 0,
+    "configuration": "release",
+    "new_garment_tests": 21,
+    "new_cross_assembly_tests": 2
+  },
+  "tools": 59,
+  "reader_schema": 41,
+  "equipment_operations": 0,
+  "ordinary_projects_exact": 5,
+  "studio_file_exact": true,
+  "bundle_sha256": "acc161b1d8784de2d44811561a6922c3eb7ba5960fcd5b35591f352fce8fb388",
+  "native_project_id": "16573BEC-DEA4-462E-AC70-CD18D76B1E8E",
+  "native_block_id": "2DA9C25A-44EB-45EE-9FFA-D4AA96C692AA",
+  "packaged": {
+    "project_id": "950899D6-C5E7-4165-BFBF-6374329F4845",
+    "block_id": "2CEA0877-D9EC-40E2-B632-9474C6390FE5",
+    "revision_id": "3F2F1965-4278-4884-B9BA-595ED6C9CB85",
+    "checks": [
+      "three editable sizes",
+      "full718mm sewing sides and explicit folds",
+      "source-ID stability",
+      "chart-only render preservation",
+      "atomic invalid/manual-edit rejection",
+      "independent duplicate/revision",
+      "complete-size transfer",
+      "metadata detach without source deletion",
+      "Undo/Redo/autosave/reopen",
+      "physical PDF/SVG and unchanged Studio library"
+    ],
+    "physical_proof": "/Users/rustymeadows/dev/form/.local/validation/garment-block-smoke",
+    "equipment_operations": 0,
+    "verified_fit": false
+  },
+  "independent_original_output": {
+    "reader": "pypdf",
+    "svg_parser": "Python ElementTree",
+    "sheet_mm": [
+      1220.0,
+      1016.0
+    ],
+    "front_back_cut_mm": [
+      570,
+      718
+    ],
+    "full_side_sewing_edges": 4,
+    "side_seam_mm": 718,
+    "nominal_finished_length_mm": 650,
+    "waist_fold_mm": 38,
+    "hem_fold_mm": 688,
+    "hem_turns_mm": [
+      15,
+      15
+    ],
+    "casing_opening_mm": 25,
+    "unstitched_source_edges": [
+      0,
+      2
+    ],
+    "calibration_square_mm": 50,
+    "native_size_review": null,
+    "verified_fit": false
+  },
+  "native": {
+    "focused_generate_hip_mm": 1000,
+    "generated_base_panel_mm": [
+      560,
+      718
+    ],
+    "generated_size_count": 3,
+    "source_bindings": 9,
+    "source_seams": 6,
+    "pointer_generate_captured_before_MCP_read": true,
+    "generation_one_native_undo_redo_exact": true,
+    "unapplied_1005_draft_and_selected_text_survive_read_only_list_get_report": true,
+    "draft_dismissal_entire_project_exact": true,
+    "focused_apply_hip_mm": 1012.5,
+    "applied_base_panel_width_mm": 566.25,
+    "pointer_apply_captured_before_MCP_read": true,
+    "all_piece_node_guide_seam_ids_preserved": true,
+    "apply_one_native_undo_entire_project_exact": true,
+    "chart_only_hip_grade_mm": 44,
+    "chart_only_source_and_camera_exact": true,
+    "chart_only_one_native_undo_exact": true,
+    "pending_source_update_explained": true,
+    "negative_measurement_visible_error_apply_disabled_source_exact": true,
+    "actual_process_quit_relaunch_home_reopen_entire_project_exact": true,
+    "native_editor_reopened_saved_measurement": 1000,
+    "source_camera_history_unchanged_by_export": true
+  },
+  "native_independent_pdf": {
+    "native_export": true,
+    "reader": "pypdf",
+    "pages": 1,
+    "sheet_mm": [
+      1240.0001305555554,
+      1015.9999999999999
+    ],
+    "hip_mm": 1000,
+    "cut_mm": [
+      580,
+      718
+    ],
+    "full_side_segments": 4,
+    "calibration_50mm_segments": 4,
+    "casing_opening_reference_mm": 25,
+    "sha256": "7137c5730b7207d8c3b444c4c9d2f6f118b497b6e998a7f8abe6618e1fa744e4",
+    "actual_580mm_segments": 15,
+    "actual_casing_gap_mm": 24.999856513888858
+  },
+  "integration": {
+    "convex_per_edge_sources_use_normal_geometry_dispatch": true,
+    "unstitched_raw_top_accepts_support_pin": true,
+    "unstitched_raw_top_rejects_assembly_seam": true,
+    "source_mass_uv_and_schema_verified": true
+  },
+  "limits": [
+    "Original example sizing, not a standardized chart or validated fit.",
+    "No garment-fit simulation, elastic extension model or verified sewing instructions.",
+    "Construction guides support guarded sharp convex straight contours; earlier curved sewing remains separately supported.",
+    "Manual owned-source conflicts require explicit review or independent revision; no automatic overwrite."
+  ]
+}

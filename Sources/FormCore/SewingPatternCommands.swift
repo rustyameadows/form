@@ -43,7 +43,7 @@ public enum SewingPatternCommands {
         }
         func bind(_ end:SewingSeamEnd)throws->SewingSeamEnd {
           var value=end
-          if let e=next.elements.first(where:{$0.id==end.elementID}),SewingPatterns.needsGeneralGeometry(e),value.endID==nil {
+          if let e=next.elements.first(where:{$0.id==end.elementID}),(SewingPatterns.needsGeneralGeometry(e) || e.sewingPiece?.hasConstructionMetadata == true),value.endID==nil {
             let g=try SewingPatterns.geometry(e,in:next)
             let index=try g.edgeIndex(value.edge,id:value.edgeID)
             value.edgeID=g.sourceEdges[index].id;value.endID=g.sourceEdges[index].endID

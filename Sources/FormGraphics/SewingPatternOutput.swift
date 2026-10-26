@@ -20,6 +20,11 @@ import FormCore
           "contour_tolerance_mm": g.usesGeneralGeometry ? SewingCurveLimits.contourToleranceMM : 0,
           "edge_length_errors_mm": g.edgeLengthErrors,
           "source_edges": g.sourceEdges.map { ["id": $0.id?.uuidString ?? "", "end_id":$0.endID?.uuidString ?? "", "contour_id":g.boundaries[$0.contour].id?.uuidString ?? "", "is_hole":g.boundaries[$0.contour].isHole, "index": $0.index, "contour": $0.contour, "length_mm": $0.length, "length_error_mm": $0.lengthError] as [String:Any] }, "grain_direction": [g.grainDirection.x, g.grainDirection.y],
+          "unstitched_edges":g.edgeLengths.indices.filter{index in let ref=g.sourceEdges.first{$0.index==index};return g.piece.isUnstitched(edge:index,edgeID:ref?.id,endID:ref?.endID)},
+          "construction_guides": ((try? SewingConstructionGuides.resolve(g)) ?? []).map{guide in
+            ["id":guide.guide.id.uuidString,"kind":guide.guide.kind.rawValue,"label":guide.guide.label,"offset_mm":guide.guide.offset,
+              "opening_mm":guide.guide.opening,"segments_mm":guide.segments.map{$0.map{[$0.x,$0.y]}}] as [String:Any]
+          },
           "on_fold_edge": g.piece.onFoldEdge.map { $0 as Any } ?? NSNull()] as [String: Any]
       },
       "seams": plan.seams.map { d in ["id": d.seam.id.uuidString, "name": d.seam.name,

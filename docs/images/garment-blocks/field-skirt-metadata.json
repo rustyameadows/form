@@ -1,0 +1,523 @@
+{
+  "calibration_square_mm" : 50,
+  "cloth_simulation" : false,
+  "cutting_template" : true,
+  "height_mm" : 1016,
+  "mismatched_seams" : 0,
+  "pieces" : [
+    {
+      "construction_guides" : [
+        {
+          "id" : "DC79CB0E-82E8-4A81-B3CE-892870ED34D4",
+          "kind" : "fold",
+          "label" : "Top turn-under",
+          "offset_mm" : 8,
+          "opening_mm" : 0,
+          "segments_mm" : [
+            [
+              [
+                30,
+                1001
+              ],
+              [
+                600,
+                1001
+              ]
+            ]
+          ]
+        },
+        {
+          "id" : "2BE1EA9A-05A8-4B5C-AC30-416F41737E1A",
+          "kind" : "fold",
+          "label" : "Nominal waist fold",
+          "offset_mm" : 38,
+          "opening_mm" : 0,
+          "segments_mm" : [
+            [
+              [
+                30,
+                1031
+              ],
+              [
+                600,
+                1031
+              ]
+            ]
+          ]
+        },
+        {
+          "id" : "ABDBDD96-9E54-43CE-8687-E6F92CD7175A",
+          "kind" : "fold",
+          "label" : "Nominal hem fold",
+          "offset_mm" : 688,
+          "opening_mm" : 0,
+          "segments_mm" : [
+            [
+              [
+                30,
+                1681
+              ],
+              [
+                600,
+                1681
+              ]
+            ]
+          ]
+        },
+        {
+          "id" : "ADEEBCA9-A363-4E56-8E46-015810D4650A",
+          "kind" : "fold",
+          "label" : "First half-hem turn",
+          "offset_mm" : 703,
+          "opening_mm" : 0,
+          "segments_mm" : [
+            [
+              [
+                30,
+                1696
+              ],
+              [
+                600,
+                1696
+              ]
+            ]
+          ]
+        },
+        {
+          "id" : "96D06EA0-BD5C-4F8D-B876-9BE41D3BBD03",
+          "kind" : "stitch",
+          "label" : "Casing stitching reference",
+          "offset_mm" : 68,
+          "opening_mm" : 0,
+          "segments_mm" : [
+            [
+              [
+                30,
+                1061
+              ],
+              [
+                600,
+                1061
+              ]
+            ]
+          ]
+        },
+        {
+          "id" : "8A9484A6-DEA1-4C65-B009-978CCB0C5435",
+          "kind" : "stitch",
+          "label" : "Hem stitching reference",
+          "offset_mm" : 673,
+          "opening_mm" : 0,
+          "segments_mm" : [
+            [
+              [
+                30,
+                1666
+              ],
+              [
+                600,
+                1666
+              ]
+            ]
+          ]
+        }
+      ],
+      "contour_tolerance_mm" : 0,
+      "cut_height_mm" : 718,
+      "cut_quantity" : 1,
+      "cut_width_mm" : 570,
+      "edge_length_errors_mm" : [
+
+      ],
+      "edge_lengths_mm" : [
+        550,
+        718,
+        550,
+        718
+      ],
+      "element_id" : "7A8532A1-BEB6-44EB-BA05-537EBC67399B",
+      "grain_direction" : [
+        6.123233995736766e-17,
+        1
+      ],
+      "hole_count" : 0,
+      "material_id" : null,
+      "name" : "Field gathered skirt \/ Study 02 \/ front",
+      "notches" : 2,
+      "on_fold_edge" : null,
+      "resolved_notches" : [
+
+      ],
+      "seam_allowances_mm" : [
+        0,
+        10,
+        0,
+        10
+      ],
+      "source_edges" : [
+        {
+          "contour" : 0,
+          "contour_id" : "8E711218-6997-4A52-BE04-7B6100A36222",
+          "end_id" : "DEAFF2AC-8241-4FD2-95BE-066483DE25AC",
+          "id" : "78FCB1F8-FB12-408B-A38B-BEF1F661882D",
+          "index" : 0,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 550
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "8E711218-6997-4A52-BE04-7B6100A36222",
+          "end_id" : "F19A461A-E944-4C42-9D59-84E592D994C3",
+          "id" : "DEAFF2AC-8241-4FD2-95BE-066483DE25AC",
+          "index" : 1,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 718
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "8E711218-6997-4A52-BE04-7B6100A36222",
+          "end_id" : "57D0B401-9B8D-4972-A88D-4A22049F1D5A",
+          "id" : "F19A461A-E944-4C42-9D59-84E592D994C3",
+          "index" : 2,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 550
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "8E711218-6997-4A52-BE04-7B6100A36222",
+          "end_id" : "78FCB1F8-FB12-408B-A38B-BEF1F661882D",
+          "id" : "57D0B401-9B8D-4972-A88D-4A22049F1D5A",
+          "index" : 3,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 718
+        }
+      ],
+      "unstitched_edges" : [
+        0,
+        2
+      ]
+    },
+    {
+      "construction_guides" : [
+        {
+          "id" : "5E92CF18-C43E-45B3-858E-055AFCC3BC72",
+          "kind" : "fold",
+          "label" : "Top turn-under",
+          "offset_mm" : 8,
+          "opening_mm" : 0,
+          "segments_mm" : [
+            [
+              [
+                660,
+                1001
+              ],
+              [
+                1230,
+                1001
+              ]
+            ]
+          ]
+        },
+        {
+          "id" : "CDDD03E4-6BC4-4E6E-A08E-646099A559BB",
+          "kind" : "fold",
+          "label" : "Nominal waist fold",
+          "offset_mm" : 38,
+          "opening_mm" : 0,
+          "segments_mm" : [
+            [
+              [
+                660,
+                1031
+              ],
+              [
+                1230,
+                1031
+              ]
+            ]
+          ]
+        },
+        {
+          "id" : "F6E420D9-BBCE-4412-9072-5E4D032CA19F",
+          "kind" : "fold",
+          "label" : "Nominal hem fold",
+          "offset_mm" : 688,
+          "opening_mm" : 0,
+          "segments_mm" : [
+            [
+              [
+                660,
+                1681
+              ],
+              [
+                1230,
+                1681
+              ]
+            ]
+          ]
+        },
+        {
+          "id" : "644D5C24-107B-46BF-9A8B-2662AEA86A1C",
+          "kind" : "fold",
+          "label" : "First half-hem turn",
+          "offset_mm" : 703,
+          "opening_mm" : 0,
+          "segments_mm" : [
+            [
+              [
+                660,
+                1696
+              ],
+              [
+                1230,
+                1696
+              ]
+            ]
+          ]
+        },
+        {
+          "id" : "F863ED88-5BF0-4EA8-8462-5C731F0AF51D",
+          "kind" : "stitch",
+          "label" : "Casing stitching reference",
+          "offset_mm" : 68,
+          "opening_mm" : 25,
+          "segments_mm" : [
+            [
+              [
+                660,
+                1061
+              ],
+              [
+                932.5,
+                1061
+              ]
+            ],
+            [
+              [
+                957.5,
+                1061
+              ],
+              [
+                1230,
+                1061
+              ]
+            ]
+          ]
+        },
+        {
+          "id" : "56D4FA75-A72E-4E9E-BCE6-411F11B49F19",
+          "kind" : "stitch",
+          "label" : "Hem stitching reference",
+          "offset_mm" : 673,
+          "opening_mm" : 0,
+          "segments_mm" : [
+            [
+              [
+                660,
+                1666
+              ],
+              [
+                1230,
+                1666
+              ]
+            ]
+          ]
+        }
+      ],
+      "contour_tolerance_mm" : 0,
+      "cut_height_mm" : 718,
+      "cut_quantity" : 1,
+      "cut_width_mm" : 570,
+      "edge_length_errors_mm" : [
+
+      ],
+      "edge_lengths_mm" : [
+        550,
+        718,
+        550,
+        718
+      ],
+      "element_id" : "BF93BE8C-3CAE-457C-8516-82201FE03E04",
+      "grain_direction" : [
+        6.123233995736766e-17,
+        1
+      ],
+      "hole_count" : 0,
+      "material_id" : null,
+      "name" : "Field gathered skirt \/ Study 02 \/ back",
+      "notches" : 2,
+      "on_fold_edge" : null,
+      "resolved_notches" : [
+
+      ],
+      "seam_allowances_mm" : [
+        0,
+        10,
+        0,
+        10
+      ],
+      "source_edges" : [
+        {
+          "contour" : 0,
+          "contour_id" : "DA06D4B1-0A2C-4233-9C0C-D4BBE43BDE45",
+          "end_id" : "6C95D07C-4F5F-434A-AA08-3DD6EC96F107",
+          "id" : "9494F859-BA1C-4363-A2AF-C84B2DCDCA1B",
+          "index" : 0,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 550
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "DA06D4B1-0A2C-4233-9C0C-D4BBE43BDE45",
+          "end_id" : "CA045CB0-D8DD-4F5F-9A5E-617635E682DE",
+          "id" : "6C95D07C-4F5F-434A-AA08-3DD6EC96F107",
+          "index" : 1,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 718
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "DA06D4B1-0A2C-4233-9C0C-D4BBE43BDE45",
+          "end_id" : "480CB76A-612A-4B5F-8BDA-F5FF6B6C228A",
+          "id" : "CA045CB0-D8DD-4F5F-9A5E-617635E682DE",
+          "index" : 2,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 550
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "DA06D4B1-0A2C-4233-9C0C-D4BBE43BDE45",
+          "end_id" : "9494F859-BA1C-4363-A2AF-C84B2DCDCA1B",
+          "id" : "480CB76A-612A-4B5F-8BDA-F5FF6B6C228A",
+          "index" : 3,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 718
+        }
+      ],
+      "unstitched_edges" : [
+        0,
+        2
+      ]
+    },
+    {
+      "construction_guides" : [
+
+      ],
+      "contour_tolerance_mm" : 0,
+      "cut_height_mm" : 25,
+      "cut_quantity" : 1,
+      "cut_width_mm" : 765,
+      "edge_length_errors_mm" : [
+
+      ],
+      "edge_lengths_mm" : [
+        765,
+        25,
+        765,
+        25
+      ],
+      "element_id" : "21813EFA-8A09-4FCE-BC97-6D2832151F25",
+      "grain_direction" : [
+        1,
+        0
+      ],
+      "hole_count" : 0,
+      "material_id" : null,
+      "name" : "Field gathered skirt \/ Study 02 \/ elastic",
+      "notches" : 0,
+      "on_fold_edge" : null,
+      "resolved_notches" : [
+
+      ],
+      "seam_allowances_mm" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "source_edges" : [
+        {
+          "contour" : 0,
+          "contour_id" : "8B8C5B8F-7786-4F68-A9DC-F68D951379FE",
+          "end_id" : "F1743419-2790-4D25-BBC9-8F2E934F17D9",
+          "id" : "AD697E7C-4A88-4369-ABD8-1168606CF00D",
+          "index" : 0,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 765
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "8B8C5B8F-7786-4F68-A9DC-F68D951379FE",
+          "end_id" : "CE6F2D98-0EA6-48C9-9D98-D45914791698",
+          "id" : "F1743419-2790-4D25-BBC9-8F2E934F17D9",
+          "index" : 1,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 25
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "8B8C5B8F-7786-4F68-A9DC-F68D951379FE",
+          "end_id" : "D2D4718D-F8E2-4A19-BE23-FCC3A96A6DD8",
+          "id" : "CE6F2D98-0EA6-48C9-9D98-D45914791698",
+          "index" : 2,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 765
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "8B8C5B8F-7786-4F68-A9DC-F68D951379FE",
+          "end_id" : "AD697E7C-4A88-4369-ABD8-1168606CF00D",
+          "id" : "D2D4718D-F8E2-4A19-BE23-FCC3A96A6DD8",
+          "index" : 3,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 25
+        }
+      ],
+      "unstitched_edges" : [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "seams" : [
+    {
+      "conclusive" : true,
+      "difference_mm" : 0,
+      "first_length_mm" : 718,
+      "id" : "803D4C6D-6951-44D3-8B7F-404AABBCFE1F",
+      "matches" : true,
+      "measurement_error_mm" : 0,
+      "name" : "Field gathered skirt \/ Study 02 \/ left side, full raw height",
+      "second_length_mm" : 718,
+      "tolerance_mm" : 1
+    },
+    {
+      "conclusive" : true,
+      "difference_mm" : 0,
+      "first_length_mm" : 718,
+      "id" : "F012BA33-887A-48B0-91EE-A88211D51965",
+      "matches" : true,
+      "measurement_error_mm" : 0,
+      "name" : "Field gathered skirt \/ Study 02 \/ right side, full raw height",
+      "second_length_mm" : 718,
+      "tolerance_mm" : 1
+    }
+  ],
+  "uncertain_seams" : 0,
+  "units" : "mm",
+  "width_mm" : 1220
+}

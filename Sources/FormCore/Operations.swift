@@ -316,6 +316,15 @@ public final class OperationEngine {
       let command = try string("command")
       let ids = a["element_ids"] == nil ? Set<UUID>() : try idsArgument(a["element_ids"])
       var selected = Set<UUID>()
+      if command == "garment_block" {
+        guard let project else { throw FormError.missing("Open a project first.") }
+        if GarmentBlockCommands.isReadOnly(a) { return try GarmentBlockCommands.read(project,arguments:a) }
+        var result:Any = [:]
+        try edit("Garment block: \(a["operation"] as? String ?? "create")",source:source) { p in
+          result=try GarmentBlockCommands.apply(in:&p,objectID:id,arguments:a)
+        }
+        return result
+      }
       if command == "transfer" {
         guard let target = UUID(uuidString:try string("target_object_id")) else {
           throw FormError.invalid("Provide a destination target_object_id.")

@@ -106,6 +106,7 @@ extension Project {
     self = candidate
   }
   public func validateArtworkLinks() throws {
+    try validateGarmentBlocks()
     try validatePublications()
     try validateCanvasWorkspace()
     try validateTextiles()

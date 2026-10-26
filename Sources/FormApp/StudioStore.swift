@@ -175,6 +175,7 @@ enum TableTool: String, CaseIterable {
                 || (name == "form_component" && args["command"] as? String == "list")
                 || (name == "form_swatch" && args["command"] as? String == "list")
                 || (name == "form_text_style" && args["command"] as? String == "list")
+                || (name == "form_edit_artwork" && GarmentBlockCommands.isReadOnly(args))
                 || (name == "form_color_profile" && ["list", "get"].contains(args["command"] as? String ?? "list"))
                 || (["form_textile_stock","form_production_job"].contains(name) && ["list","get"].contains(args["command"] as? String ?? "list"))
                 || (name == "form_story" && ["list","get","layout"].contains(args["command"] as? String ?? "list"))

@@ -3,7 +3,7 @@ import Foundation
 /// The native editor and MCP use these same deterministic document commands.
 public enum ArtworkCommands {
   public static let names = [
-    "production", "font", "pattern_tiles",
+    "production", "font", "pattern_tiles", "garment_block",
     "add", "replace", "delete", "duplicate", "group", "ungroup", "align", "distribute", "reorder",
     "flip", "clip", "release_clip", "paragraph", "glyph", "origin", "transform", "language", "list",
     "pattern_piece", "seam_pair", "pattern_template", "cut_layout",

@@ -32,9 +32,11 @@ public struct SewingPatternPiece: Codable, Equatable, Sendable {
   public var onFoldEdgeID: UUID?
   public var onFoldEndID: UUID?
   public var notches: [SewingNotch] = []
+  public var unstitchedEdges: [SewingConstructionEdge]?
+  public var constructionGuides: [SewingConstructionGuide]?
   public var notes: String?
   public init(name: String) { self.name = name }
-  private enum CodingKeys: String, CodingKey { case name, seamAllowance, edgeAllowances, materialID, cutQuantity, grainAngle, onFoldEdge, onFoldEdgeID, onFoldEndID, notches, notes }
+  private enum CodingKeys: String, CodingKey { case name, seamAllowance, edgeAllowances, materialID, cutQuantity, grainAngle, onFoldEdge, onFoldEdgeID, onFoldEndID, notches, notes, unstitchedEdges, constructionGuides }
   public init(from decoder: Decoder) throws {
     let c = try decoder.container(keyedBy: CodingKeys.self)
     name = try c.decode(String.self, forKey: .name)
@@ -48,6 +50,8 @@ public struct SewingPatternPiece: Codable, Equatable, Sendable {
     onFoldEndID = try c.decodeIfPresent(UUID.self, forKey: .onFoldEndID)
     notches = try c.decodeIfPresent([SewingNotch].self, forKey: .notches) ?? []
     notes = try c.decodeIfPresent(String.self, forKey: .notes)
+    unstitchedEdges = try c.decodeIfPresent([SewingConstructionEdge].self, forKey: .unstitchedEdges)
+    constructionGuides = try c.decodeIfPresent([SewingConstructionGuide].self, forKey: .constructionGuides)
   }
   public func allowance(for edge: Int) -> Double { edge == onFoldEdge ? 0 : edgeAllowances[edge] ?? seamAllowance }
 }
@@ -146,7 +150,7 @@ public enum SewingPatterns {
     }
   }
   public static func geometry(_ e: ArtworkElement, in art: Artwork) throws -> SewingPieceGeometry {
-    guard let piece = e.sewingPiece else { throw FormError.invalid("Select an annotated sewing pattern piece.") }
+    guard var piece = e.sewingPiece else { throw FormError.invalid("Select an annotated sewing pattern piece.") }
     var ancestor: ArtworkElement? = e, seen = Set<UUID>()
     let masks = Set(art.elements.compactMap(\.clipID))
     while let item = ancestor {
@@ -155,7 +159,8 @@ public enum SewingPatterns {
         item.blendMode == nil || item.blendMode == "normal" else { throw FormError.invalid(supportedShapes) }
       ancestor = item.parentID.flatMap { id in art.elements.first { $0.id == id } }
     }
-    if needsGeneralGeometry(e) || piece.onFoldEdgeID != nil || piece.notches.contains(where: { $0.edgeID != nil }) { return try cachedGeneralGeometry(e, in: art) }
+    if piece.hasConstructionMetadata, needsGeneralGeometry(e) { throw FormError.invalid(SewingConstructionGuides.supported) }
+    if !piece.hasConstructionMetadata && (needsGeneralGeometry(e) || piece.onFoldEdgeID != nil || piece.notches.contains(where: { $0.edgeID != nil })) { return try cachedGeneralGeometry(e, in: art) }
     let transform = art.worldTransform(e), points = try vertices(e).map(transform.apply), count = points.count
     let edges = points.indices.map { subtract(points[($0 + 1) % count], points[$0]) }
     let lengths = edges.map { hypot($0.x, $0.y) }, area = points.indices.reduce(0.0) { $0 + cross(points[$1], points[($1 + 1) % count]) } / 2
@@ -164,6 +169,33 @@ public enum SewingPatterns {
       throw FormError.invalid("Pattern pieces need nondegenerate physical edges at least 0.1 mm long.")
     }
     let sign = area > 0 ? 1.0 : -1.0
+    // Preserve original edge identities for assembly even without construction guides.
+    var boundaries: [SewingBoundary] = e.kind == "path" ? try SewingCurves.boundaries(e,in:art) : []
+    if piece.hasConstructionMetadata {
+      let nodes = e.kind == "path" ? e.path?.contours.first?.nodes : nil
+      let edges = points.indices.map { index in
+        SewingBoundaryEdge(id: nodes?[index].id, endID: nodes?[(index+1)%count].id,
+          index: index, contour: 0, points: [points[index],points[(index+1)%count]],
+          controls: [points[index],points[(index+1)%count]],length:lengths[index],lengthError:0,isStraight:true)
+      }
+      boundaries = [.init(id:e.path?.contours.first?.id ?? nodes?.first?.id,isHole:false,points:points,edges:edges)]
+      func boundIndex(_ legacy: Int, _ id: UUID?, _ end: UUID?) throws -> Int {
+        guard (id == nil) == (end == nil) else { throw FormError.invalid("Use both original source edge endpoints.") }
+        if let id {
+          guard let found = edges.first(where: { $0.id == id && $0.endID == end }) else {
+            throw FormError.invalid("A construction source edge was split, removed or reversed. Reassign its references explicitly.")
+          }
+          return found.index
+        }
+        return legacy
+      }
+      if piece.onFoldEdge != nil || piece.onFoldEdgeID != nil {
+        piece.onFoldEdge = try boundIndex(piece.onFoldEdge ?? 0,piece.onFoldEdgeID,piece.onFoldEndID)
+      }
+      for i in piece.notches.indices {
+        piece.notches[i].edge = try boundIndex(piece.notches[i].edge,piece.notches[i].edgeID,piece.notches[i].endID)
+      }
+    }
     guard edges.indices.allSatisfy({ cross(edges[$0], edges[($0 + 1) % count]) * sign > 1e-8 }) else {
       throw FormError.invalid("Pattern allowances currently require convex pieces without collinear corners. " + supportedShapes)
     }
@@ -206,11 +238,10 @@ public enum SewingPatterns {
     let radians = piece.grainAngle * .pi / 180
     let grain = Point2(transform.a * cos(radians) + transform.c * sin(radians), transform.b * cos(radians) + transform.d * sin(radians))
     let norm = hypot(grain.x, grain.y)
-    // Editable convex paths also retain original edge UUIDs. This preserves
-    // legacy per-edge allowances while allowing guarded assembly references.
-    let boundaries=e.kind=="path" ? try SewingCurves.boundaries(e,in:art):[]
-    return .init(elementID: e.id, piece: piece, stitch: points, cut: cut, normals: normals,
+    let result = SewingPieceGeometry(elementID: e.id, piece: piece, stitch: points, cut: cut, normals: normals,
       edgeLengths: lengths, grainDirection: .init(grain.x / norm, grain.y / norm),boundaries:boundaries)
+    _ = try SewingConstructionGuides.resolve(result)
+    return result
   }
   public static func validate(_ art: Artwork) throws {
     guard art.elements.contains(where: { $0.sewingPiece != nil }) || art.sewingSeams?.isEmpty == false else { return }
@@ -223,7 +254,9 @@ public enum SewingPatterns {
         seam.first != seam.second, seam.tolerance.isFinite, (0...25).contains(seam.tolerance) else { throw FormError.invalid("Name each seam, choose two different piece copies/edges, and use a 0–25 mm tolerance.") }
       for end in [seam.first, seam.second] {
         guard let piece = geometry[end.elementID], let edge = try? piece.edgeIndex(end.edge, id: end.edgeID, endID: end.endID),
-          (1...piece.piece.cutQuantity).contains(end.copy), edge != piece.piece.onFoldEdge else {
+          (1...piece.piece.cutQuantity).contains(end.copy), edge != piece.piece.onFoldEdge,
+          !piece.piece.isUnstitched(edge: edge,edgeID:piece.sourceEdges.first(where:{$0.index == edge})?.id,
+            endID:piece.sourceEdges.first(where:{$0.index == edge})?.endID) else {
           throw FormError.invalid("A seam refers to a missing piece, edge, or cut copy. Remove or update that seam first.")
         }
       }

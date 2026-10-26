@@ -61,3 +61,7 @@ call("form_export_artwork", {
 `pattern_piece` replaces the selected shapes' complete metadata; pass `piece: null` to remove annotations and their joins. `seam_pair` accepts a complete seam definition with optional saved UUID, `first` and `second` endpoints `{elementID, edge, copy}`, `name`, `reversed`, and `tolerance`. Edges are zero-based in the API; cut copies are one-based. Pass `seam: null` and `seam_id` to remove a pair. `pattern_template` appends source shapes to the current document; use the unbounded Canvas or create an approximately 800 × 750 mm frame first.
 
 `pattern_pieces: true` exports all annotated pieces by default, including loose Canvas pieces. Optional `element_ids` scopes the output. The returned result includes physical sheet dimensions, individual cut extents, actual edge lengths/allowances, quantities, notches, and seam diagnostics. This selector is exclusive with generic role export, fabric yardage, and embroidery output. Invalid geometry, allowances, notches, references, or locked edits fail atomically. Saved sewing annotations and seam records require schema 24; unrelated newer features may raise the project's minimum schema.
+
+## Managed garment sizes
+
+[Declared garment blocks and grading](garment-blocks.md) add an original gathered-skirt source with body/finished/raw dimensions, stable multi-size identities, explicit construction boundaries/guides, guarded regeneration and metadata-only detachment. The physical source remains editable; it is construction guidance, not verified fit.

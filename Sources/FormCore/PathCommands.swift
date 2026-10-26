@@ -4,7 +4,13 @@ import Foundation
 /// physical artwork coordinates, including every ancestor transform.
 public enum PathCommands {
   @discardableResult public static func refreshNodeIDs(in element: inout ArtworkElement)->[UUID:UUID] {
-    guard var path=element.path else{return [:]}
+    guard var path=element.path else {
+      if var piece=element.sewingPiece,var guides=piece.constructionGuides {
+        for i in guides.indices {guides[i].id=UUID()}
+        piece.constructionGuides=guides;element.sewingPiece=piece
+      }
+      return [:]
+    }
     var mapping:[UUID:UUID]=[:]
     for c in path.contours.indices {
       if path.contours[c].id != nil {path.contours[c].id=UUID()}
@@ -19,7 +25,16 @@ public enum PathCommands {
       for i in piece.notches.indices {
         piece.notches[i].edgeID=piece.notches[i].edgeID.flatMap{mapping[$0] ?? $0}
         piece.notches[i].endID=piece.notches[i].endID.flatMap{mapping[$0] ?? $0}
-      };element.sewingPiece=piece
+      }
+      if var edges=piece.unstitchedEdges {
+        for i in edges.indices { edges[i].edgeID=edges[i].edgeID.flatMap{mapping[$0] ?? $0};edges[i].endID=edges[i].endID.flatMap{mapping[$0] ?? $0} }
+        piece.unstitchedEdges=edges
+      }
+      if var guides=piece.constructionGuides {
+        for i in guides.indices { guides[i].id=UUID();guides[i].edge.edgeID=guides[i].edge.edgeID.flatMap{mapping[$0] ?? $0};guides[i].edge.endID=guides[i].edge.endID.flatMap{mapping[$0] ?? $0} }
+        piece.constructionGuides=guides
+      }
+      element.sewingPiece=piece
     }
     return mapping
   }

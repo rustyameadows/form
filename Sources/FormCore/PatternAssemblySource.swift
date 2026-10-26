@@ -30,7 +30,7 @@ public enum PatternAssemblySource {
         for first in [true,false] {
           var end=first ? art.sewingSeams![si].first:art.sewingSeams![si].second
           guard end.elementID==e.id else {continue}
-          let index=try SewingPatterns.generalGeometry(e,in:art).edgeIndex(end.edge,id:end.edgeID,endID:end.endID)
+          let index=try SewingPatterns.geometry(e,in:art).edgeIndex(end.edge,id:end.edgeID,endID:end.endID)
           guard let edge=edges.first(where:{$0.index==index}),let id=edge.id,let endID=edge.endID else {throw FormError.invalid("This seam has no stable source edge identity.")}
           end.edgeID=id;end.endID=endID
           if first {art.sewingSeams![si].first=end}else {art.sewingSeams![si].second=end}

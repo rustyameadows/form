@@ -400,7 +400,9 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var publications:[PublicationDocument]?
   public var productionJobs:[ProductionJob]?
   public var decorationPreparations:[DecorationPreparation]?
+  public var garmentBlocks:[GarmentBlock]?
   public var minimumSchemaVersion: Int {
+    if garmentBlocks?.isEmpty == false || objects.contains(where: { $0.artwork?.elements.contains(where: { $0.sewingPiece?.hasConstructionMetadata == true }) == true }) { return max(schemaVersion, 41) }
     if objects.contains(where: { $0.artwork?.sewingTiles != nil }) { return max(schemaVersion, 40) }
     if decorationPreparations?.isEmpty==false {return max(schemaVersion,38)}
     if objects.contains(where:{$0.patternAssembly != nil || $0.patternAssemblyAttachment != nil || $0.cloth?.preparation != nil}) {return max(schemaVersion,36)}

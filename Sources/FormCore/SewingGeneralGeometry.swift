@@ -53,7 +53,7 @@ extension SewingPatterns {
   public static func bindingStableEdges(_ piece: SewingPatternPiece, to e: ArtworkElement) throws
     -> SewingPatternPiece
   {
-    guard needsGeneralGeometry(e), let path = e.path else { return piece }
+    guard needsGeneralGeometry(e) || piece.hasConstructionMetadata, let path = e.path else { return piece }
     let edges = path.contours.flatMap(\.nodes)
     let ends = path.contours.flatMap { contour in
       contour.nodes.indices.map { contour.nodes[($0 + 1) % contour.nodes.count].id }
@@ -76,6 +76,19 @@ extension SewingPatterns {
       }
       if next.onFoldEdgeID == nil { next.onFoldEdgeID = edges[index].id }
       if next.onFoldEndID == nil { next.onFoldEndID = ends[index] }
+    }
+    func binding(_ ref:SewingConstructionEdge)throws->SewingConstructionEdge {
+      let index=ref.edgeID.flatMap { id in edges.firstIndex{$0.id == id} } ?? ref.edge
+      guard edges.indices.contains(index) else {throw FormError.invalid("Choose an existing construction source edge.")}
+      var value=ref
+      if value.edgeID == nil {value.edgeID=edges[index].id}
+      if value.endID == nil {value.endID=ends[index]}
+      return value
+    }
+    if let refs=next.unstitchedEdges {next.unstitchedEdges=try refs.map(binding)}
+    if var guides=next.constructionGuides {
+      for i in guides.indices {guides[i].edge=try binding(guides[i].edge)}
+      next.constructionGuides=guides
     }
     return next
   }
