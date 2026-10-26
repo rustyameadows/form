@@ -235,6 +235,7 @@ private struct RenderSignature: Equatable {
       }
       let node = nodes[object.id]!
       if object.recipeID == "clock" { GeometryFactory.updateClockHands(node, object: object) }
+      if object.recipeID == "deskClock" {DeskClockGeometry.updateHands(node,object:object)}
       let placement = project.textilePlacement(object)
       node.position = v(placement.position.x / 100, placement.position.y / 100, placement.position.z / 100)
       if let cloth=try? (store != nil ? store!.cloth.placement(of:object,in:project):project.clothPlacement(object)) {
@@ -806,7 +807,7 @@ private struct RenderSignature: Equatable {
     object.textile?.embroidery != nil ? artwork.embroideryRenderDefinition:artwork.renderDefinition
   }
   static func geometryParameters(_ object: ProductObject) -> [String: Double] {
-    object.recipeID == "clock"
+    ["clock","deskClock"].contains(object.recipeID)
       ? object.parameters.filter { !["hour", "minute", "hands"].contains($0.key) }
       : object.parameters
   }
@@ -929,6 +930,7 @@ private struct RenderSignature: Equatable {
     if let cached = cache.object(forKey: cacheKey) {
       let node = cached.clone()
       if object.recipeID == "clock" { updateClockHands(node, object: object) }
+      if object.recipeID == "deskClock" {DeskClockGeometry.updateHands(node,object:object)}
       return node
     }
     let root = SCNNode()
@@ -942,6 +944,7 @@ private struct RenderSignature: Equatable {
       root.addChildNode(TextileGeometry.bomber(object, project: project, assets: assets, textureLimit: textureLimit))
     case "textilePatch", "textileLabel":
       root.addChildNode(TextileGeometry.decoration(object, project: project, assets: assets, textureLimit: textureLimit))
+    case "deskClock":root.addChildNode(DeskClockGeometry.make(object,project:project,assets:assets,limit:textureLimit))
     case "clock":
       let d = object["diameter"]
       let r = d / 2
@@ -1176,7 +1179,7 @@ private struct RenderSignature: Equatable {
         }
       }
     }
-    if let artwork = object.artwork, !["sleeve", "booklet", "clock", "bomberJacket", "textilePatch", "textileLabel", "crewTee", "curvedCap", "canvasTote", "textilePrint"].contains(object.recipeID),
+    if let artwork = object.artwork, !["sleeve", "booklet", "clock", "deskClock", "bomberJacket", "textilePatch", "textileLabel", "crewTee", "curvedCap", "canvasTote", "textilePrint"].contains(object.recipeID),
       object["width"] > 0, object["depth"] > 0
     {
       let top = Double(root.boundingBox.max.y) * 100 + 0.04
@@ -1246,7 +1249,7 @@ private struct RenderSignature: Equatable {
     cache.countLimit = 24
     return cache
   }()
-  private static func artworkImage(
+  static func artworkImage(
     _ art: Artwork, width: Double, depth: Double, assets: URL, textureLimit: Int,
     definition: Data? = nil
   ) -> NSImage {

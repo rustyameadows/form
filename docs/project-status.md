@@ -2,7 +2,7 @@
 
 As of October 26, 2026.
 
-**FORM is a working native Mac alpha with substantial 2D, 3D and fabrication workflows. The complete product, typography and textile briefs are not finished.** The latest verified application integrates **portable artwork transfer (48) and physical page setup (49)**, with **983 optimized tests passing**: 640 core/graphics/IPC and 343 native tests, with no failures or skips. The installed signed application matches the tested source. See [integration evidence](evidence/transfer-page-native.json).
+**FORM is a working native Mac alpha with substantial 2D, 3D and fabrication workflows. The complete product, typography and textile briefs are not finished.** The latest verified application integrates **portable artwork transfer (48) and physical page setup (49)**, and the reference-led **MERIDIAN desk-clock construction (50)**, with **989 optimized tests passing**: 643 core/graphics/IPC and 346 native tests, with no failures or skips. The installed signed application matches the tested source. See [transfer/page integration evidence](evidence/transfer-page-native.json) and [desk-clock evidence](evidence/desk-clock-native.json).
 
 This report distinguishes features in that application from local candidates and research. Test totals are validation checkpoints, not a percentage of product completion.
 
@@ -10,16 +10,16 @@ This report distinguishes features in that application from local candidates and
 
 - The goal service currently returns **no active goal**. The earlier Active label in the roadmap was stale as an execution indicator. The remaining requirements have not been completed or cancelled.
 - The available record does not establish why the goal stopped being attached. There is no basis to report that it stopped because the app was finished.
-- The two requested feature candidates are now integrated and accepted together. The current pass is integration and stabilization only; it does not start the remaining feature roadmap. Separate cloth and broader SVG research remain local.
+- The transfer/page candidates are integrated and accepted together. The subsequent desk-clock request adds a bounded sculpted-clock construction and a real reference-led project; it does not restart the full roadmap. Separate cloth and broader SVG research remain local.
 - The application code is pushed to **codex/form-v0.1** in [draft pull request 1](https://github.com/rustyameadows/form/pull/1). It has not been merged. **main still contains the initial product brief and README**, so viewing main does not show the implementation.
-- The ordinary library was restored after validation. All five saved projects and Studio settings matched their preservation snapshots. No print was sent or started.
+- All five earlier projects and Studio settings remain exact. A sixth project, MERIDIAN, is open with its embedded reference, linked editable dial and clock in split view. Eight physical STL parts and dial SVG/PDF are exported; movement fit, mounts and lens remain follow-ups. No print was sent or started.
 
 ## What works in the verified application
 
 | Area | Implemented and verified | Important boundary |
 | --- | --- | --- |
 | Native project environment | Home previews, modular project packages, assets, autosave, Undo/Redo, iterations, linked variants and shared Studio records. | A complete release and clean-install acceptance pass remains ahead. |
-| 3D Table and navigation | Continuous Table, parametric recipes and inspectors, selection/movement/groups, focus/isolation and stable named views. Four actual mouse directions preserve the expected axis and world-up frame; Perspective frames the whole project with or without selection. | Supported constructions remain recipe based. This is not a general solid-modeling or arbitrary garment-construction system. |
+| 3D Table and navigation | Continuous Table, parametric recipes and inspectors, selection/movement/groups, focus/isolation and stable named views. Four actual mouse directions preserve the expected axis and world-up frame; Perspective frames the whole project with or without selection. | Supported constructions remain recipe based. MERIDIAN adds a smooth hollow desk-clock case and separate printable components; movement mounts, lens and mechanical fit remain unfinished. This is not a general solid-modeling or arbitrary garment-construction system. |
 | Connected 2D and 3D surfaces | Freeform Canvas with notes, references, type and graphics; physical frames and linked object artwork; single, split and separate-window arrangements sharing state and Undo. | General curved-surface projection, engineered cross-panel continuity and broader dieline relationships remain incomplete. |
 | Typography | Native rich text, installed fonts and replacement, actual font features/axes/glyphs, kerning, optical sizing, source-preserving superscript/subscript and genuine small caps, styles, language, lists, tabs, hyphenation and editable outlines. | Broader font/script and complex-document compatibility still needs acceptance work. Font files are not made portable automatically. |
 | Vector and image editing | Bézier nodes/handles, compounds, live booleans/divide, gradients, stroke controls/expansion, nested masks, reusable components/swatches, image crop/replace/adjustments and physical DPI. | Portable cross-project Copy/Cut/Paste now carries supported assets, named resources and component/mask dependencies, with bounded validation and safe failed-Cut behavior. Variable-width strokes and fuller SVG interchange remain open. |

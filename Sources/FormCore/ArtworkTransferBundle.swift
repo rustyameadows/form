@@ -53,7 +53,7 @@ public struct ArtworkTransferBundle: Sendable {
       if let values=value as? [Any] {guard values.count<=limits.work-work-stack.count else{throw FormError.invalid("Artwork-transfer array exceeds its work budget.")};stack += values.map{($0,depth+1)}}
       else if let values=value as? [String:Any] {guard values.count<=limits.work-work-stack.count else{throw FormError.invalid("Artwork-transfer object exceeds its work budget.")};stack += values.values.map{($0,depth+1)}}
     }
-    guard let object=raw as? [String:Any],let version=object["version"] as? Int,version==1,let schema=object["sourceSchema"] as? Int,(1...49).contains(schema),
+    guard let object=raw as? [String:Any],let version=object["version"] as? Int,version==1,let schema=object["sourceSchema"] as? Int,(1...50).contains(schema),
       let selection=object["selection"] as? [Any],!selection.isEmpty,selection.count<=limits.elements,
       let refs=object["assets"] as? [[String:Any]],refs.count<=limits.assets,
       let components=object["components"] as? [Any],components.count<=limits.components,
@@ -77,7 +77,7 @@ public struct ArtworkTransferBundle: Sendable {
   }
   public func validate(limits:ArtworkTransferLimits = .init())throws {
     let m=metadata,arts=[m.artwork]+m.components.map(\.artwork)
-    guard m.version==1,(1...49).contains(m.sourceSchema),!m.selection.isEmpty,
+    guard m.version==1,(1...50).contains(m.sourceSchema),!m.selection.isEmpty,
       m.components.count<=limits.components,m.styles.count<=limits.styles,m.swatches.count<=limits.swatches,m.assets.count<=limits.assets,
       Set(m.components.map(\.id)).count==m.components.count,Set(m.assets.map(\.sourceName)).count==m.assets.count,
       Set(m.styles.map(\.id)).count==m.styles.count,Set(m.swatches.map(\.id)).count==m.swatches.count,

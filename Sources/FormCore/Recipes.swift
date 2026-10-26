@@ -2,6 +2,7 @@ import Foundation
 
 extension Recipe {
   public static let builtins: [Recipe] = [
+    DeskClockDesign.recipe,
     .init(
       "clock", "Clock", "clock",
       "A physical dial with shaft opening, linked typography, and adjustable hand positions.",

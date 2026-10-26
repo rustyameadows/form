@@ -73,6 +73,7 @@ import SwiftUI
     return OrcaEngine.appURL(configured: store.library.orcaAppPath, library: store.repository.root)
   }
   var components: [String] {
+    if object?.recipeID=="deskClock" {return DeskClockDesign.components}
     if object?.recipeID == "clock" {
       return ["Dial", "Hour hand", "Minute hand", "Complete object"]
     }
@@ -150,6 +151,7 @@ import SwiftUI
     if saved == nil {
       if object?.recipeID == "lamp" { value.component = "Shade" }
       if object?.recipeID == "clock" { value.component = "Dial" }
+      if object?.recipeID == "deskClock" {value.component = "Case shell";value.rotation.x=90}
     }
     return value
   }

@@ -12,6 +12,19 @@ import SceneKit
       throw FormError.invalid("This is a textile presentation product. Export its linked artwork; it is not an FDM-printable mesh.")
     }
     let root = GeometryFactory.object(object, project: project, assets: assets)
+    if object.recipeID == "deskClock" {
+      guard DeskClockDesign.components.contains(configuration.component) else {throw FormError.invalid("Choose one desk-clock component; the assembled clock is not one fused print.")}
+      let construction=root.childNodes.first
+      let component=configuration.component=="Foot (print 4)" ? "Feet":configuration.component
+      for node in construction?.childNodes ?? [] where node.name != "deskClock."+component {node.removeFromParentNode()}
+      if component=="Feet",let group=construction?.childNodes.first,let foot=group.childNodes.first {
+        // One foot in its own fabrication coordinates. Four assembled feet at
+        // different depths must never become floating print islands.
+        for other in group.childNodes where other !== foot {other.removeFromParentNode()}
+        foot.position = .init(0,0.12,0);foot.eulerAngles = .init()
+      }
+      construction?.enumerateChildNodes {node,_ in if node.name=="display.inlay" {node.removeFromParentNode()}}
+    }
     if object.recipeID == "clock" {
       let selected = [
         "Dial": "clock.dial", "Hour hand": "clock.hour", "Minute hand": "clock.minute",

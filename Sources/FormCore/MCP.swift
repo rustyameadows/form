@@ -465,7 +465,7 @@ public enum MCP {
         readOnly: true),
       tool(
         "form_set_print_options",
-        "Set native print options with shared Undo/Redo; settings and preview remain synchronized. Rotation is {x,y,z} in printer degrees (Z up); scalePercent never changes original dimensions. Lamp components: Shade, Stem, Base, Complete object. Active slices reject setting edits.",
+        "Set native print options with shared Undo/Redo; settings and preview remain synchronized. Rotation is {x,y,z} in printer degrees (Z up); scalePercent never changes original dimensions. Desk-clock components: Case shell, Bezel, Inner surround, Dial, Back cover, Hour hand, Minute hand, Foot (print 4). Desk-clock components export separately, never as a fused assembled object; use rotation x:90 for case/dial, x:0 for the single foot. Lamp components: Shade, Stem, Base, Complete object. Active slices reject setting edits.",
         [
           "layerHeight": number, "infillPercent": number, "wallLoops": ["type": "integer"],
           "supports": ["type": "boolean"], "brimWidth": number, "scalePercent": number,

@@ -5,7 +5,8 @@ extension ProductObject {
     !isCanvasWorkspace && recipeID != "bomberJacket" && !MerchandiseBlanks.garmentIDs.contains(recipeID) && (recipeID == "clock" || self["width"] > 0 && self["depth"] > 0)
   }
   public var artworkSize: Point2 {
-    recipeID == "clock"
+    if recipeID=="deskClock" {return .init(self["width"],self["height"])}
+    return recipeID == "clock"
       ? .init(self["diameter"], self["diameter"])
       : .init(self["width"] > 0 ? self["width"] : 10, self["depth"] > 0 ? self["depth"] : 10)
   }
@@ -53,6 +54,7 @@ extension Project {
         art.boundary = boundary
       }
     }
+    if object.recipeID == "deskClock" {art.boundary=DeskClockDesign.boundary(object)}
     if object.recipeID == "clock" {
       art.boundary = ClockDesign.boundary(diameter: object["diameter"], bore: object["bore"])
     }
@@ -96,7 +98,7 @@ extension Project {
     // Detachment bakes the current placement so the physical result is preserved.
     var detached = sourceID == nil ? surfaceArtwork(objects[i], keepingSwatchReferences: true) : nil
     detached?.requiresInkOutput=false
-    if objects[i].recipeID == "clock" { detached?.boundary = nil }
+    if ["clock","deskClock"].contains(objects[i].recipeID) { detached?.boundary = nil }
     var candidate = self
     for n in candidate.objects.indices where candidate.objects[n].designID == design {
       candidate.objects[n].artworkSourceID = sourceID
@@ -161,7 +163,7 @@ extension Project {
       .map { object -> (UUID, Artwork?) in
         var art = surfaceArtwork(object, keepingSwatchReferences: true)
         art?.requiresInkOutput=false
-        if object.recipeID == "clock" { art?.boundary = nil }
+        if ["clock","deskClock"].contains(object.recipeID) { art?.boundary = nil }
         return (object.id, art)
       }
     for (id, art) in snapshots {

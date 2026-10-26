@@ -307,7 +307,7 @@ public struct Recipe: Codable, Equatable, Identifiable, Sendable {
         throw FormError.invalid("Vessel walls must leave an open neck.")
       }
     }
-    if id == "clock" {
+    if ["clock","deskClock"].contains(id) {
       for key in ["hour", "minute", "hands"] {
         guard let value = all[key], value.isFinite, value.rounded() == value else {
           throw FormError.invalid("Clock time and hand visibility require whole values.")
@@ -406,6 +406,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if objects.contains(where:{$0.recipeID=="deskClock"}) {return max(schemaVersion,50)}
     if objects.contains(where:{$0.artwork?.safeInset != nil}) {return max(schemaVersion,49)}
     if requiresCharacterPositionSchema {return max(schemaVersion,47)}
     if collectionProduction.map({!$0.plans.isEmpty || !$0.captures.isEmpty}) == true {return max(schemaVersion,45)}
