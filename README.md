@@ -1,5 +1,7 @@
 # LAB
 
+The [starter object library](docs/starter-object-library.md) adds searchable real product/form references, 28 editable starters, and reversible proposed garment blanks. Open **Add object → Object library…** or start **Gift shop / Working blanks** from Home.
+
 A native Mac creative environment for designing and making physical things.
 
 **Form, Function, Fabricate** are the three primary environments for one project. **Studio** remains a separate environment, available through the aperture icon and Studio menu, for lighting, saved shots and presentation. Canvas, Table, split view and a separate Canvas window are views of that shared project. See the [LAB thesis](docs/lab-working-thesis-v2.md) and [transition contract](docs/lab-transition.md).

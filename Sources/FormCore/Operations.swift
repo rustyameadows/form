@@ -47,6 +47,7 @@ public final class OperationEngine {
     guard var value = project else { throw FormError.missing("Open or create a project first.") }
     let before = value
     try body(&value)
+    value.refreshLibrarySelections()
     try value.validateArtworkLinks()
     value.schemaVersion = value.minimumSchemaVersion
     guard before != value else { return }
@@ -435,6 +436,7 @@ public final class OperationEngine {
         "selected_nodes": selectedNodes.map(\.uuidString),
         "selected_elements": selectedElements.map(\.uuidString),
       ]
+    case "form_object_library": return try objectLibraryCall(a, source: source)
     case "form_list_recipes": return try jsonObject(Recipe.builtins + (project?.recipes ?? []))
     case "form_link_artwork":
       let id = try objectID()
@@ -765,6 +767,7 @@ public final class OperationEngine {
         operations.count <= 100
       else { throw FormError.invalid("Provide 1–100 operations.") }
       let allowed = Set([
+        "form_object_library",
         "form_add_object", "form_update_object", "form_duplicate_object", "form_group_objects",
         "form_set_artwork", "form_add_note", "form_create_recipe", "form_delete_objects",
         "form_edit_artwork",

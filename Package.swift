@@ -13,7 +13,7 @@ let package = Package(
   targets: [
     .target(name: "CFormClipper", exclude: ["LICENSE", "UPSTREAM.json"], publicHeadersPath: "include", cxxSettings: [.headerSearchPath("vendor")]),
     .target(name:"CFormMesher",exclude:["LICENSE","UPSTREAM.json"],publicHeadersPath:"include",cxxSettings:[.headerSearchPath("vendor")]),
-    .target(name: "FormCore", dependencies: ["CFormClipper","CFormMesher"]),
+    .target(name: "FormCore", dependencies: ["CFormClipper","CFormMesher"], resources: [.process("Resources")]),
     .target(name: "FormGraphics", dependencies: ["FormCore"]),
     .executableTarget(name: "FormApp", dependencies: ["FormCore", "FormGraphics"]),
     .executableTarget(name: "FormMCP", dependencies: ["FormCore"]),

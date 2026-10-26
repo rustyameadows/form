@@ -211,6 +211,7 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var clothAttachment: ClothAttachment?
   public var patternAssembly:PatternAssemblyDefinition?
   public var patternAssemblyAttachment:PatternAssemblyAttachment?
+  public var librarySelection: ObjectLibrarySelection?
   public init(
     name: String, recipeID: String, parameters: [String: Double], materialID: String = "chalk",
     position: Vector3 = .init(), rotation: Double = 0, artwork: Artwork? = nil
@@ -228,11 +229,13 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   }
   public subscript(_ key: String) -> Double { parameters[key] ?? 0 }
   public var footprintWidth: Double {
+    if recipeID=="pulloverHoodie" {return self["width"]+self["sleeveLength"]*2}
     if recipeID=="crewTee" {return self["width"]+self["sleeveLength"]*2}
     if recipeID=="curvedCap" {return max(self["width"],self["brimWidth"])}
     return max(self["width"], self["shadeDiameter"], self["baseDiameter"], self["diameter"], 100)
   }
   public var footprintDepth: Double {
+    if recipeID=="pulloverHoodie" {return self["depth"]+self["hoodHeight"]}
     if recipeID=="curvedCap" {return self["width"]+self["depth"]}
     if recipeID=="canvasTote" {return self["depth"]+self["handleDrop"]}
     return max(self["depth"], self["shadeDiameter"], self["baseDiameter"], self["diameter"], 100)
@@ -406,6 +409,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if objects.contains(where:{$0.librarySelection != nil || StarterTextiles.recipeIDs.contains($0.recipeID)}) {return max(schemaVersion,51)}
     if objects.contains(where:{$0.recipeID=="deskClock"}) {return max(schemaVersion,50)}
     if objects.contains(where:{$0.artwork?.safeInset != nil}) {return max(schemaVersion,49)}
     if requiresCharacterPositionSchema {return max(schemaVersion,47)}

@@ -64,6 +64,7 @@ struct ObjectInspector: View {
         Divider().overlay(Palette.line)
         ScrollView {
           VStack(alignment: .leading, spacing: 20) {
+            if object.librarySelection != nil { ObjectLibraryInspector(object: object); Divider() }
             if object.patternAssembly != nil {PatternAssemblyInspector(object:object);Divider()}
             if object.isFlexibleSurface {ClothInspector(controller:store.cloth.preview,object:object);Divider()}
             if object.patternAssembly==nil {

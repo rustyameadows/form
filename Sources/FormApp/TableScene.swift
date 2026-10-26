@@ -906,6 +906,7 @@ private struct RenderSignature: Equatable {
     canonical.rotation = 0
     canonical.relationship = ""
     canonical.locked = false
+    canonical.librarySelection = nil
     canonical.textile = canonical.textile?.renderDefinition
     canonical.artwork = canonical.artwork.map {artworkDefinition($0,object:object)}
     let artworkData = canonical.artwork.flatMap { try? $0.renderCacheData() }
@@ -937,6 +938,8 @@ private struct RenderSignature: Equatable {
     let mat = material(object, project: project)
     switch object.recipeID {
     case "crewTee":root.addChildNode(MerchandiseGeometry.tee(object,project:project,assets:assets,limit:textureLimit))
+    case "pulloverHoodie", "cuffedBeanie", "hemmedTextile":
+      root.addChildNode(StarterTextileGeometry.make(object, project:project, assets:assets, limit:textureLimit))
     case "curvedCap":root.addChildNode(MerchandiseGeometry.cap(object,project:project,assets:assets,limit:textureLimit))
     case "canvasTote":root.addChildNode(MerchandiseGeometry.tote(object,project:project,assets:assets,limit:textureLimit))
     case "textilePrint":root.addChildNode(MerchandiseGeometry.directArtwork(object,project:project,assets:assets,limit:textureLimit))

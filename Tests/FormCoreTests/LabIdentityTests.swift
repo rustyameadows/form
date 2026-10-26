@@ -17,7 +17,8 @@ final class LabIdentityTests:XCTestCase {
     let response=try XCTUnwrap(MCP.respond(to:request,invoke:{_,_ in [:]})),result=try XCTUnwrap(response["result"] as? [String:Any]),server=try XCTUnwrap(result["serverInfo"] as? [String:String])
     XCTAssertEqual(server["name"],"lab");XCTAssertEqual(server["version"],LabIdentity.version)
     XCTAssertTrue(MCP.toolNames.contains("form_status"));XCTAssertTrue(MCP.toolNames.contains("form_get_project"))
-    XCTAssertEqual(MCP.toolNames.count,59)
+    XCTAssertTrue(MCP.toolNames.isSuperset(of: ["form_status", "form_get_project", "form_set_view"]))
+    XCTAssertEqual(MCP.toolNames.count, MCP.tools.count, "Tool identifiers must remain unique as capabilities grow.")
   }
   @MainActor func testLegacyStatusCallReadsExistingProjectWithoutMutation()throws {
     let root=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString);defer{try? FileManager.default.removeItem(at:root)}

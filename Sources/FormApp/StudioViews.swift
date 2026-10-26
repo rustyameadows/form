@@ -38,6 +38,7 @@ struct RootView: View {
     }
     .sheet(isPresented:$store.showingDocumentFonts) {DocumentFontsPanel(session:store.artworkSession)}
     .sheet(isPresented: $store.showingLibrary) { LibraryView().environmentObject(store) }
+    .sheet(isPresented: $store.showingObjectLibrary) { ObjectLibraryView().environmentObject(store) }
     .sheet(isPresented: $store.showingBridge) { BridgeView().environmentObject(store) }
     .sheet(isPresented: $store.showingProjectInfo) { ProjectInfoView().environmentObject(store) }
     .sheet(item: $store.svgImport) { review in
@@ -157,6 +158,11 @@ struct AddObjectMenu: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
     Menu {
+      Button {
+        store.libraryReplacementID = nil
+        store.showingObjectLibrary = true
+      } label: { Label("Object library…", systemImage: "square.grid.2x2") }
+      Divider()
       ForEach(Recipe.builtins.filter { $0.id != "reference" && $0.id != "patternAssembly" } + (store.project?.recipes ?? [])) {
         recipe in
         Button {

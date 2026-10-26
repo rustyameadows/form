@@ -55,6 +55,8 @@ enum TableTool: String, CaseIterable {
   @Published var notice: String?
   @Published var error: String?
   @Published var showingLibrary = false
+  @Published var showingObjectLibrary = false
+  @Published var libraryReplacementID: UUID?
   @Published var showingProjectInfo = false
   @Published var showingBridge = false
   @Published var showingPrint = false

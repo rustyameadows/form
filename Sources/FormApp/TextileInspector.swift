@@ -27,7 +27,7 @@ struct TextileInspector: View {
       Text(spec.measurementsVerified ? "Declared measurements verified":"Concept measurements · verify a physical sample")
         .font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       if spec.kind == .garment {
-        if ["crewTee","canvasTote"].contains(object.recipeID) {Toggle("Show back",isOn:Binding(get:{spec.laidFaceDown ?? false},set:{v in update{$0.laidFaceDown=v}}))}
+        if MerchandiseBlanks.garmentIDs.contains(object.recipeID), object.recipeID != "curvedCap" {Toggle("Show back",isOn:Binding(get:{spec.laidFaceDown ?? false},set:{v in update{$0.laidFaceDown=v}}))}
         if MerchandiseBlanks.garmentIDs.contains(object.recipeID) {
           ForEach(MerchandiseBlanks.zones(object),id:\.id) {zone in Text(String(format:"%@ · %.1f × %.1f mm",zone.name,zone.width,zone.height)).font(.system(size:9)).foregroundStyle(Palette.secondary)}
           Text("Independent decoration regions; sewing patterns and cloth studies remain separate.").font(.system(size:9)).foregroundStyle(Palette.secondary)

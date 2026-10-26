@@ -50,7 +50,7 @@ final class MerchandiseTests: XCTestCase {
     XCTAssertEqual(e.project, before)
     let tool = MCP.tools.first { $0["name"] as? String == "form_textile_zones" }!
     XCTAssertEqual((tool["annotations"] as? [String: Any])?["readOnlyHint"] as? Bool, true)
-    XCTAssertEqual(p.minimumSchemaVersion, 34)
+    XCTAssertEqual(p.minimumSchemaVersion, 51)
   }
   func testCapArcMillimetersMatchActualCylindricalCrownAndAvoidDomeOpening() throws {
     let p = Project(name: "Cap")

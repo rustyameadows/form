@@ -125,7 +125,14 @@ public enum MCP {
         "form_get_project",
         "Read all objects, editable parameters, recipes, artwork, materials, decisions, and history for the current project.",
         readOnly: true),
-      tool("form_textile_zones","Read exact bounded decoration regions of a crewTee, curvedCap or canvasTote. Returns physical centered zone dimensions, surface mapping and allowed processes. Curved cap art uses arc-length millimeters below the dome and clear of the back opening; it rejects rigid patches/labels/embroidery. This does not fit or mutate decorations.",["object_id":objectID],required:["object_id"],readOnly:true),
+      tool("form_textile_zones","Read bounded decoration regions of merchandise blanks, including tee, cap, tote, hoodie, beanie and hemmed textiles. Regions are preview geometry, not provider-approved production templates. Curved caps reject rigid patches/labels/embroidery. Does not fit or mutate decorations.",["object_id":objectID],required:["object_id"],readOnly:true),
+      tool("form_object_library", "Browse curated editable starters and the supplied 211-reference catalog. list/get/examples are read-only. add creates a concept or a real proposed blank with a portable source snapshot. replace changes compatible construction atomically, preserving independent artwork at its physical size; out-of-bounds regions reject. state chooses or releases a blank. Geometry remains approximate; no stock, pricing, order integration or production approval is implied. Form/material edits become custom variations.", [
+        "command": ["type":"string", "enum":["list","get","examples","add","replace","state"]],
+        "query":string, "domain":string, "ready_only":["type":"boolean"],
+        "offset":["type":"integer","minimum":0,"maximum":10000], "limit":["type":"integer","minimum":0,"maximum":211],
+        "entry_id":string, "reference_id":string, "object_id":objectID, "position":position,
+        "state":["type":"string","enum":["concept","proposedBlank","chosenBlank"]]
+      ], required:["command"]),
       tool(
         "form_list_recipes",
         "Discover built-in and project-defined parametric recipes, including their native inspector schemas, ranges, and defaults.",
