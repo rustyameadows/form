@@ -59,11 +59,11 @@ enum PrinterCredentials {
     try printer.validate()
     guard !printer.host.isEmpty, !printer.serial.isEmpty else {
       throw FormError.invalid(
-        "Enter this printer's local IP address and serial number in Studio settings.")
+        "Enter this printer's local IP address and serial number in LAB Library.")
     }
     guard let code = PrinterCredentials.read(printer.id) else {
       throw FormError.missing(
-        "Save the printer's LAN access code in Studio settings first. It stays in your Mac's Keychain."
+        "Save the printer's LAN access code in LAB Library first. It stays in your Mac's Keychain."
       )
     }
     disconnect()

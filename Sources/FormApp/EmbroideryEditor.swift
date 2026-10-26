@@ -69,7 +69,7 @@ struct EmbroideryEditor:View {
                   TextField("Thread name",text:$draft.threads[index].name).textFieldStyle(.roundedBorder)
                   Button {removeThread(index)} label:{Image(systemName:"minus.circle")}.disabled(draft.threads.count<=1)
                 }
-                Menu(draft.threads[index].stock.map {"Stock snapshot · "+$0.name} ?? "Assign Studio thread…") {
+                Menu(draft.threads[index].stock.map {"Stock snapshot · "+$0.name} ?? "Assign library thread…") {
                   ForEach(store.library.textileProduction?.threads ?? []) {stock in Button(stock.name+" / "+(stock.sku ?? stock.color)) {draft.threads[index] = .init(stock:stock)}}
                   if draft.threads[index].stock != nil {Divider();Button("Unlink stock snapshot") {draft.threads[index].stock=nil}}
                 }

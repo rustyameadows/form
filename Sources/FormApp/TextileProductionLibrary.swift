@@ -82,7 +82,7 @@ private struct StudioThreadEditor:View {
         TextField("Spool length (m)",text:$spool);TextField("Price per spool",text:$price);TextField("Currency · three-letter code",text:$currency)
         TextField("Notes",text:text(\.notes),axis:.vertical).lineLimit(2...4)
       }.textFieldStyle(.roundedBorder)
-      Text("Unit cost needs both a known spool price and length. Assignments capture this record; editing Studio stock does not rewrite projects or jobs.").font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
+      Text("Unit cost needs both a known spool price and length. Assignments capture this record; editing library stock does not rewrite projects or jobs.").font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(.red)}
       HStack {Button("Cancel") {dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save thread") {commit()}.keyboardShortcut(.defaultAction)}
     }.padding(26).frame(width:570).background(Palette.paper)

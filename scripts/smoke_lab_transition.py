@@ -20,7 +20,7 @@ def main():
         status = client.call('form_status')
         assert status['application'] == 'LAB' and status['library_path'] == library
         assert status['primary_environments'] == ['form', 'function', 'fabricate']
-        projects = client.call('form_list_projects')
+        projects = client.call('form_list_projects')['result']
         clock_project = next(p for p in projects if 'MERIDIAN' in p['name'])
         client.call('form_open_project', {'project_id': clock_project['id']})
         project = client.call('form_get_project')

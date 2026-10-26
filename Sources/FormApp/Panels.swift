@@ -240,20 +240,13 @@ struct ParameterControl: View {
   }
   var body: some View {
     VStack(spacing: 7) {
-      HStack {
-        Text(parameter.name).font(.system(size: 11, weight: .medium))
-        Spacer()
-        TextField(
-          parameter.name,
-          value: Binding(
-            get: { binding.wrappedValue / factor }, set: { binding.wrappedValue = $0 * factor }),
-          format: .number.precision(.fractionLength(0...2))
-        )
-        .font(.system(size: 11, weight: .medium, design: .monospaced)).multilineTextAlignment(
-          .trailing
-        ).textFieldStyle(.plain).frame(width: 57)
-        Text(displayedUnit).font(.system(size: 9)).foregroundStyle(Palette.secondary).frame(
-          minWidth: 17, alignment: .trailing)
+      let projectID = store.project?.id
+      ScalarArtworkField(parameter.name, value: object[parameter.id] / factor, unit: displayedUnit) { value in
+        let physical = value * factor
+        guard physical.isFinite, range.contains(physical) else { throw FormError.invalid("Enter a value within this parameter's supported range.") }
+        guard store.project?.id == projectID else { throw FormError.invalid("The parameter's project changed.") }
+        try store.engine.call("form_update_object", arguments: ["object_id": object.id.uuidString, "parameters": [parameter.id: physical]], source: "Studio")
+        store.changed()
       }
       Slider(
         value: Binding(

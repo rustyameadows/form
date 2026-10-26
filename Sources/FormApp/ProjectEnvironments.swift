@@ -162,10 +162,12 @@ struct EnvironmentContextPanel: View {
           VStack(alignment: .leading, spacing: 12) {
             if let project = store.project {
               ForEach(FabricationDestination.allCases) { destination in
+                let enabled = destination.available(in: project, object: store.primary)
                 Button { store.presentFabrication(destination) } label: {
                   Label(destination.title, systemImage: destination.symbol)
-                    .font(.system(size: 12)).frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, 6)
-                }.buttonStyle(.borderless).disabled(!destination.available(in: project, object: store.primary))
+                    .font(.system(size: 12)).foregroundStyle(enabled ? Palette.ink : Palette.secondary.opacity(0.5))
+                    .frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, 6)
+                }.buttonStyle(.borderless).disabled(!enabled)
               }
             }
             Divider()

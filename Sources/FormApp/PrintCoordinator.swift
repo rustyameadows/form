@@ -234,7 +234,7 @@ import SwiftUI
     try mesh.validate(on: printer)
     guard let app = engineURL else {
       throw FormError.missing(
-        "Choose the official OrcaSlicer app in Studio settings to enable local slicing.")
+        "Choose the official OrcaSlicer app in LAB Library to enable local slicing.")
     }
     let id = UUID().uuidString
     let directory = store.repository.url(for: project.id).appendingPathComponent(
