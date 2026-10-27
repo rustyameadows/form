@@ -28,7 +28,12 @@ enum GuidedProcess:String,CaseIterable,Identifiable {
     }
   }
   static func available(object:ProductObject,project:Project)->[Self] {
-    allCases.filter{$0 == .paper ? PaperConstruction.isPaper(object):$0.destination!.available(in:project,object:object)}
+    if PaperConstruction.isPaper(object){return [.paper]}
+    if let context=FabricEnvironmentContext(object:object,project:project){return allCases.filter{process in process.destination.map{context.fabricationRoutes.contains($0) && $0.available(in:project,object:object)} ?? false}}
+    return allCases.filter{process in
+      guard let destination=process.destination else{return false}
+      return (process != .decoration || object.recipeID=="artboard") && destination.available(in:project,object:object)
+    }
   }
 }
 
@@ -70,7 +75,7 @@ enum GuidedProcess:String,CaseIterable,Identifiable {
   var materialConfirmed:Bool {
     guard confirmedMaterial != nil,confirmedMaterial==materialFingerprint else{return false}
     if process == .print3D {let setup=store?.project?.printSetups?[object?.id.uuidString ?? ""];return setup?.filamentID==filamentID && setup?.printerID==printerID}
-    if let paper {return stockName==paper.stock.name && Double(caliper)==paper.stock.thicknessMM && (gsm.isEmpty ? nil:Double(gsm))==paper.stock.gsm && grain==paper.stock.grain && measured==paper.stock.verified && Double(sheetWidth)==paper.stock.sheetSizeMM?.x && Double(sheetHeight)==paper.stock.sheetSizeMM?.y}
+    if let paper {return stockName==paper.stock.name && Double(caliper)==paper.stock.thicknessMM && (gsm.isEmpty ? nil:Double(gsm))==paper.stock.gsm && grain==paper.stock.grain && measured==paper.stock.verified && (step != .material || (Double(sheetWidth)==paper.stock.sheetSizeMM?.x && Double(sheetHeight)==paper.stock.sheetSizeMM?.y))}
     return materialID==object?.materialID
   }
   init(store:StudioStore){self.store=store}
@@ -114,6 +119,7 @@ enum GuidedProcess:String,CaseIterable,Identifiable {
   func applyLayout()throws {
     guard let store,let d=paper else{return}
     guard let w=Double(sheetWidth),let h=Double(sheetHeight),let m=Double(margin),let g=Double(gap),[w,h,m,g].allSatisfy(\.isFinite),(1...64).contains(quantity) else{throw FormError.invalid("Enter finite sheet dimensions/margins and 1–64 prototypes.")}
+    if let stock=d.stock.sheetSizeMM, w>stock.x+1e-6 || h>stock.y+1e-6 {throw FormError.invalid("The preparation sheet exceeds the declared stock sheet. Review and confirm larger stock in Material first.")}
     let layout=try d.net().layout(sheetSize:.init(w,h),marginMM:m,gapMM:g,count:quantity,allowRotation:false)
     guard !layout.hasErrors else{throw FormError.invalid(layout.issues.map(\.message).joined(separator:"\n"))}
     store.paperSheetWidth=w;store.paperSheetHeight=h;store.paperSheetMargin=m;store.paperSheetGap=g;store.paperQuantity=quantity

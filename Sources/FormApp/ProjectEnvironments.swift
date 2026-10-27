@@ -170,7 +170,7 @@ struct EnvironmentContextPanel: View {
           if let source = object.artworkSourceID, let name = store.project?.objects.first(where: { $0.id == source })?.name {
             Label("Artwork source · " + name, systemImage: "link").font(.system(size: 10)).foregroundStyle(Palette.secondary).padding(14)
           }
-          ObjectInspector().id(object.id).frame(maxWidth: .infinity)
+          ObjectInspector(embedded:true).id(object.id).frame(maxWidth: .infinity,maxHeight:.infinity,alignment:.top)
         } else {
           Text("Choose a component to inspect its dimensions, parameters, placement and existing construction controls.")
             .font(.system(size: 12)).foregroundStyle(Palette.secondary).padding(18)
@@ -196,7 +196,7 @@ struct EnvironmentContextPanel: View {
           }.padding(16)
         }
       }
-    }.frame(width: 310).background(Palette.paper)
+    }.frame(width: 310).frame(maxHeight:.infinity,alignment:.top).background(Palette.paper)
       .accessibilityElement(children: .contain).accessibilityLabel(store.environment.title + " controls")
   }
 }

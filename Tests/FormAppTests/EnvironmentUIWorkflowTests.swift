@@ -28,6 +28,12 @@ import XCTest
     let lamp=store.primary!;XCTAssertTrue(GuidedProcess.available(object:lamp,project:before).contains(.print3D));XCTAssertFalse(GuidedProcess.available(object:lamp,project:before).contains(.paper))
     let fabric=try PatternAssemblySamples.project();let assembly=try XCTUnwrap(fabric.objects.first{$0.patternAssembly != nil})
     XCTAssertTrue(FabricEnvironmentContext.applies(to:assembly,in:fabric));let routes=GuidedProcess.available(object:assembly,project:fabric);XCTAssertTrue(routes.contains(.pattern));XCTAssertTrue(routes.contains(.layout));XCTAssertFalse(routes.contains(.print3D))
+    let paper=Samples.cyanotype();XCTAssertEqual(GuidedProcess.available(object:paper.objects[0],project:paper),[.paper])
+  }
+  func testPreparationSheetDimensionsRemainEditableWithoutLosingConfirmedStock()throws {
+    let store=try fixture(true),g=store.fabricationGuide;g.reconcile();g.choose(.paper);g.confirmMaterial();g.step = .prepare;let before=store.project!
+    g.sheetWidth="650";XCTAssertTrue(g.materialConfirmed);try g.applyLayout();XCTAssertEqual(store.paperSheetWidth,650);XCTAssertEqual(store.project,before)
+    g.sheetWidth="701";XCTAssertThrowsError(try g.applyLayout());XCTAssertEqual(store.paperSheetWidth,650);XCTAssertEqual(store.project,before)
   }
   func testPrintMaterialNeedsExplicitFilamentAndPrinterAndPreservesDesign()throws {
     let store=try fixture(),g=store.fabricationGuide,before=store.project!;g.reconcile();g.choose(.print3D);g.confirmMaterial();XCTAssertFalse(g.materialConfirmed);XCTAssertEqual(store.project,before)
@@ -43,6 +49,12 @@ import XCTest
     c.save();XCTAssertNil(c.error);XCTAssertEqual(store.project!.objects,before.objects);XCTAssertEqual(store.project!.camera,before.camera);XCTAssertEqual(store.project!.studioPresentation?.scenes?.count,1)
     store.undo();c.reconcile();XCTAssertNil(store.project!.studioPresentation);XCTAssertEqual(store.project,before)
   }
+  func testDuplicateSceneClearsPreviousDraftHistoryAndUsesDocumentUndo()throws {
+    let store=try fixture(),c=store.studioComposition;store.showEnvironment(.studio);c.reconcile();c.save()
+    let original=try XCTUnwrap(c.draft);c.selectedInstanceID=original.instances[0].id;c.duplicateInstance();XCTAssertTrue(c.undoDraft());XCTAssertFalse(c.dirty);XCTAssertTrue(c.canRedoDraft)
+    c.duplicateScene();XCTAssertNil(c.error);XCTAssertNotEqual(c.draft?.id,original.id);XCTAssertFalse(c.canUndoDraft);XCTAssertFalse(c.canRedoDraft);XCTAssertFalse(c.dirty)
+    store.undo();c.reconcile();XCTAssertEqual(c.scenes.count,1);XCTAssertEqual(c.draft?.id,original.id)
+  }
   func testActualCameraVideoHasRealFramesDurationProvenanceAndExclusiveOutput()async throws {
     let store=try fixture(),c=store.studioComposition,before=store.project!;c.reconcile();var scene=c.draft!;scene.pixels = .init(width:320,height:240);scene.motion.seconds=0.5;scene.motion.fps=12;scene.motion.orbitDegrees=45
     let output=store.repository.root.appendingPathComponent("test.motion")
@@ -57,6 +69,17 @@ import XCTest
     let record=try JSONSerialization.jsonObject(with:Data(contentsOf:external.appendingPathComponent("render.json"))) as! [String:Any]
     XCTAssertEqual(record["frames"] as? Int,6);XCTAssertEqual(record["mp4_sha256"] as? String,StudioRenderFolder.hash(try Data(contentsOf:video)));XCTAssertEqual(store.project,before)
     let bytes=try Data(contentsOf:video);await XCTAssertThrowsAsync{_ = try await c.export(scene,to:external,video:true)};XCTAssertEqual(try Data(contentsOf:video),bytes)
+  }
+  func testVideoSourceInvalidationAndCancellationLeaveNoPartialDelivery()async throws {
+    let store=try fixture(),project=store.project!,assets=store.repository.url(for:project.id).appendingPathComponent("Assets")
+    var scene=StudioComposition.fromProject(project);scene.pixels = .init(width:160,height:120);scene.motion.seconds=0.5;scene.motion.fps=12
+    let parent=FileManager.default.temporaryDirectory.appendingPathComponent("cancel-video-"+UUID().uuidString);try FileManager.default.createDirectory(at:parent,withIntermediateDirectories:false);defer{try? FileManager.default.removeItem(at:parent)}
+    var current=true
+    await XCTAssertThrowsAsync{_ = try await StudioSceneMedia.export(project:project,scene:scene,assets:assets,renderer:StudioShotRenderer(),to:parent.appendingPathComponent("stale.motion"),video:true,isCurrent:{current},progress:{if $0>0 {current=false}})}
+    XCTAssertTrue(try FileManager.default.contentsOfDirectory(atPath:parent.path).isEmpty)
+    let task=Task{_ = try await StudioSceneMedia.export(project:project,scene:scene,assets:assets,renderer:StudioShotRenderer(),to:parent.appendingPathComponent("cancelled.motion"),video:true,isCurrent:{true},progress:{_ in})};task.cancel()
+    do{try await task.value;XCTFail("Cancelled export delivered output.")}catch{XCTAssertTrue(error is CancellationError)}
+    XCTAssertTrue(try FileManager.default.contentsOfDirectory(atPath:parent.path).isEmpty);XCTAssertEqual(store.project,project)
   }
   private func XCTAssertThrowsAsync(_ body:()async throws->Void)async {do{try await body();XCTFail("Expected a rejected output.")}catch{}}
 }

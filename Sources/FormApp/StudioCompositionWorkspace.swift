@@ -119,11 +119,13 @@ struct StudioCompositionWorkspace:View {
       TextField("Instance name",text:Binding(get:{instance.name},set:{value in controller.changeInstance{$0.name=value}})).textFieldStyle(.roundedBorder)
       Toggle("Visible",isOn:Binding(get:{instance.visible},set:{value in controller.changeInstance{$0.visible=value}}))
       if instance.prop==nil {
-        Picker("Product / variant",selection:Binding<UUID?>(get:{instance.sourceObjectID},set:{value in controller.changeInstance{$0.sourceObjectID=value}})){
+        Picker("Product / variant",selection:Binding<UUID?>(get:{instance.sourceObjectID},set:{value in controller.changeInstance{$0.sourceObjectID=value;$0.materialID=nil}})){
           if !controller.products.contains(where:{$0.id==instance.sourceObjectID}) {Text("Missing source · replace").tag(instance.sourceObjectID)}
           ForEach(controller.products){object in Text(object.name).tag(Optional(object.id))}
         }.accessibilityLabel("Studio instance product variant")
-        Picker("Appearance",selection:Binding<String?>(get:{instance.materialID},set:{value in controller.changeInstance{$0.materialID=value}})){Text("From source design").tag(String?.none);ForEach(store.materials){material in Text(material.name).tag(Optional(material.id))}}
+        if controller.products.first(where:{$0.id==instance.sourceObjectID})?.meshAsset != nil {
+          Text("Material slots come from the authored source. Choose a source colorway to change them.").font(.system(size:10)).foregroundStyle(Palette.secondary)
+        }else {Picker("Appearance",selection:Binding<String?>(get:{instance.materialID},set:{value in controller.changeInstance{$0.materialID=value}})){Text("From source design").tag(String?.none);ForEach(store.materials){material in Text(material.name).tag(Optional(material.id))}}}
       }else if let prop=instance.prop {
         field("Prop width",value:prop.widthMM,unit:"mm"){value in controller.changeInstance{$0.prop?.widthMM=value}}
         field("Prop height",value:prop.heightMM,unit:"mm"){value in controller.changeInstance{$0.prop?.heightMM=value}}
@@ -156,15 +158,17 @@ struct StudioCompositionWorkspace:View {
           Slider(value:Binding(get:{controller.time},set:{controller.scrub($0)}),in:0...1).accessibilityLabel("Studio camera motion time")
           Text(String(format:"%.1f / %.1f s",controller.time*scene.motion.seconds,scene.motion.seconds)).font(.system(size:10,design:.monospaced)).frame(width:90)
         }
-        HStack {
-          Picker("Motion",selection:Binding(get:{scene.motion.mode},set:{value in controller.change{$0.motion.mode=value}})){Text("Orbit").tag(StudioMotion.Mode.orbit);Text("Start → end").tag(StudioMotion.Mode.between)}.frame(width:180)
-          field("Duration",value:scene.motion.seconds,unit:"s"){value in controller.change{$0.motion.seconds=value}}.frame(width:160)
-          if scene.motion.mode == .orbit {field("Orbit",value:scene.motion.orbitDegrees,unit:"°"){value in controller.change{$0.motion.orbitDegrees=value}}.frame(width:150)}
-          Picker("FPS",selection:Binding(get:{scene.motion.fps},set:{value in controller.change{$0.motion.fps=value}})){ForEach([12,24,30],id:\.self){Text(String($0)).tag($0)}}.frame(width:85)
+        ViewThatFits(in:.horizontal) {
+          HStack {motionKind(scene);motionDuration(scene);motionOrbit(scene);motionFPS(scene)}
+          VStack(alignment:.leading,spacing:10) {HStack{motionKind(scene);motionFPS(scene);Spacer(minLength:0)};HStack{motionDuration(scene);motionOrbit(scene);Spacer(minLength:0)}}
         }.font(.system(size:10))
       }
     }.padding(18).background(Palette.paper).overlay(alignment:.top){Divider()}.disabled(controller.busy)
   }
+  private func motionKind(_ scene:StudioComposition)->some View {Picker("Motion",selection:Binding(get:{scene.motion.mode},set:{value in controller.change{$0.motion.mode=value}})){Text("Orbit").tag(StudioMotion.Mode.orbit);Text("Start → end").tag(StudioMotion.Mode.between)}.frame(width:180)}
+  private func motionDuration(_ scene:StudioComposition)->some View {field("Duration",value:scene.motion.seconds,unit:"s"){value in controller.change{$0.motion.seconds=value}}.frame(width:160)}
+  @ViewBuilder private func motionOrbit(_ scene:StudioComposition)->some View {if scene.motion.mode == .orbit {field("Orbit",value:scene.motion.orbitDegrees,unit:"°"){value in controller.change{$0.motion.orbitDegrees=value}}.frame(width:150)}}
+  private func motionFPS(_ scene:StudioComposition)->some View {Picker("FPS",selection:Binding(get:{scene.motion.fps},set:{value in controller.change{$0.motion.fps=value}})){ForEach([12,24,30],id:\.self){Text(String($0)).tag($0)}}.frame(width:85)}
   private func field(_ title:String,value:Double,unit:String,set:@escaping(Double)->Void)->some View {
     HStack{Text(title);Spacer(minLength:4);TextField(title,value:Binding(get:{value},set:set),format:.number.grouping(.never).precision(.fractionLength(0...2))).textFieldStyle(.roundedBorder).frame(width:72).accessibilityLabel("Studio "+title);Text(unit).foregroundStyle(Palette.secondary).frame(width:22,alignment:.leading)}.font(.system(size:11))
   }

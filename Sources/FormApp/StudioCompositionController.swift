@@ -75,7 +75,7 @@ import SwiftUI
       self.draft=saved;baseline=saved;baselineWasSaved=true;undoDrafts=[];redoDrafts=[];store.metadataRecordsChanged();error=nil;store.toast("Scene saved")
     }catch{self.error=error.localizedDescription}
   }
-  func duplicateScene(){guard let store,let draft,scenes.contains(where:{$0.id==draft.id}),!dirty else{error="Save the scene before duplicating it.";return};do{let result=try store.engine.call("form_studio_scene",arguments:["command":"duplicate","scene_id":draft.id.uuidString],source:"Studio");let value=try JSONDecoder.form.decode(StudioComposition.self,from:JSONSerialization.data(withJSONObject:result));self.draft=value;baseline=value;store.metadataRecordsChanged();sync()}catch{self.error=error.localizedDescription}}
+  func duplicateScene(){guard let store,let draft,scenes.contains(where:{$0.id==draft.id}),!dirty else{error="Save the scene before duplicating it.";return};do{let result=try store.engine.call("form_studio_scene",arguments:["command":"duplicate","scene_id":draft.id.uuidString],source:"Studio");let value=try JSONDecoder.form.decode(StudioComposition.self,from:JSONSerialization.data(withJSONObject:result));stop();self.draft=value;baseline=value;baselineWasSaved=true;undoDrafts=[];redoDrafts=[];selectedInstanceID=nil;time=0;error=nil;store.metadataRecordsChanged();sync()}catch{self.error=error.localizedDescription}}
   func deleteScene(){guard let store,let id=draft?.id,scenes.contains(where:{$0.id==id}) else{return};do{_ = try store.engine.call("form_studio_scene",arguments:["command":"delete","scene_id":id.uuidString],source:"Studio");draft=nil;baseline=nil;owner=nil;store.metadataRecordsChanged();reconcile()}catch{self.error=error.localizedDescription}}
   func cameraEdited() {
     guard !playing,!busy,var value=draft else{return}
@@ -119,7 +119,8 @@ import SwiftUI
   }
   func exportDialog(video:Bool) {
     NSApp.keyWindow?.makeFirstResponder(nil)
-    guard let draft,!busy else{return}
+    guard var draft,!busy else{return}
+    if !video {draft.camera=stage.camera}
     let panel=NSSavePanel();panel.title=video ? "Export camera video · MP4 + record":"Export scene image · PNG + record";panel.nameFieldStringValue=draft.name+(video ? ".motion":".render");panel.message="Choose a new output folder. Existing destinations are preserved.";panel.canCreateDirectories=true
     guard panel.runModal() == .OK,let url=panel.url else{return}
     stop();busy=true;progress=0;error=nil

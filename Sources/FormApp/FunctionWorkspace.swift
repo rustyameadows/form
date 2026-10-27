@@ -39,6 +39,12 @@ struct FunctionWorkspace:View {
             Spacer()
             if let object=store.primary {Button("Edit appearance"){store.showEnvironment(.form);if PaperConstruction.isPaper(object){store.showPaper(.dieline,object:object,split:true)}}.buttonStyle(.plain).foregroundStyle(Palette.accent)}
           }.font(.system(size:11)).padding(.horizontal,22).padding(.bottom,14)
+          if let object=store.primary,PaperConstruction.isPaper(object),representation != "Assembly" {
+            HStack(spacing:15) {
+              Picker("Artwork side",selection:Binding(get:{store.paperInside},set:{store.setPaperInside($0,object:object)})){Text("Outside").tag(false);Text("Inside").tag(true)}.frame(width:190)
+              Toggle("Artwork",isOn:$store.paperShowingArtwork);Toggle("Guides",isOn:$store.paperShowingGuides);Spacer()
+            }.toggleStyle(.checkbox).font(.system(size:10)).padding(.horizontal,22).padding(.bottom,14)
+          }
           Divider()
           stage.frame(maxWidth:.infinity,maxHeight:.infinity)
           constructionSummary.padding(16).background(Palette.paper)

@@ -102,6 +102,7 @@ struct FabricationWorkspace:View {
     case .prepare:
       if !guide.materialConfirmed {confirmStock}
       else if let object=guide.object,guide.process == .paper {
+        paperSide(object)
         HStack(alignment:.top,spacing:18) {
           VStack(alignment:.leading,spacing:14) {
             SectionLabel("PHYSICAL SHEETS")
@@ -124,6 +125,7 @@ struct FabricationWorkspace:View {
       else if let object=guide.object,let process=guide.process {
         HStack(spacing:18) {ProductSchematic(object:object).frame(width:120,height:140);VStack(alignment:.leading,spacing:8){Text(object.name).font(.system(size:19,design:.serif));Text(process.title).font(.system(size:13));Label("Material declaration confirmed for this session",systemImage:"checkmark.circle").font(.system(size:11)).foregroundStyle(Palette.secondary)}}
         if process == .paper,let d=guide.paper {
+          paperSide(object)
           if let layout=try? PaperOutput.layout(store:store,definition:d) {Text("\(layout.placements.count) blanks · \(layout.sheetCount) sheets · \(Int(layout.sheetSize.x)) × \(Int(layout.sheetSize.y)) mm").font(.system(size:14,weight:.medium))}
           if let report=try? d.preflight(){ForEach(report.issues){issue in Label(issue.message,systemImage:issue.severity == .error ? "xmark.circle":"exclamationmark.circle").font(.system(size:11)).foregroundStyle(issue.severity == .error ? .red:Palette.secondary)}}
           HStack {Button("Cut & crease SVG…"){exportPaper(object,"svg")};Button("Sheet proof PDF…"){exportPaper(object,"pdf")};Button("Production packet…"){exportPaper(object,"packet")}.buttonStyle(.borderedProminent).tint(Palette.ink)}
@@ -180,6 +182,12 @@ struct FabricationWorkspace:View {
   private func number(_ title:String,text:Binding<String>,unit:String)->some View {
     HStack{Text(title);Spacer();TextField(title,text:text).textFieldStyle(.roundedBorder).frame(width:85).accessibilityLabel("Fabrication "+title);Text(unit).foregroundStyle(Palette.secondary).frame(width:33,alignment:.leading)}.font(.system(size:12))
   }
+  private func paperSide(_ object:ProductObject)->some View {
+    VStack(alignment:.leading,spacing:7) {
+      Picker("Proof / SVG artwork side",selection:Binding(get:{store.paperInside},set:{store.setPaperInside($0,object:object)})){Text("Outside").tag(false);Text("Inside · registered layout").tag(true)}.frame(maxWidth:420)
+      Text("The packet includes both available artwork sources. A single proof or SVG uses the selected side.").font(.system(size:10)).foregroundStyle(Palette.secondary)
+    }
+  }
   private var summary:some View {
     ScrollView {VStack(alignment:.leading,spacing:20) {
       SectionLabel("PREPARATION SUMMARY")
@@ -212,7 +220,7 @@ struct ProcessSequence:View {
   var body:some View {
     HStack(spacing:compact ? 9:20) {
       ForEach(Array(steps.enumerated()),id:\.offset) {index,item in
-        VStack(spacing:10) {Image(systemName:item.0).font(.system(size:compact ? 19:27,weight:.ultraLight)).frame(height:36);Text(item.1).font(.system(size:compact ? 9:11,weight:.medium))}.frame(maxWidth:.infinity)
+        VStack(spacing:10) {Image(systemName:item.0).font(.system(size:compact ? 19:27,weight:.ultraLight)).frame(height:36);Text(item.1).font(.system(size:compact ? 9:11,weight:.medium)).lineLimit(1).minimumScaleFactor(0.75)}.frame(maxWidth:.infinity)
         if index<steps.count-1 {Image(systemName:"arrow.right").font(.system(size:9)).foregroundStyle(Palette.secondary)}
       }
     }.padding(.vertical,18)

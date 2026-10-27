@@ -81,6 +81,7 @@ public struct StudioComposition:Codable,Equatable,Identifiable,Sendable {
         object.id=instance.id;object.color=prop.color;created.append(object);visible.insert(object.id);continue
       }
       guard let sourceID=instance.sourceObjectID,let source=originals[sourceID],!source.isCanvasWorkspace else{throw FormError.missing("A scene product is missing. Replace its source or remove the instance before rendering.")}
+      guard source.meshAsset==nil || instance.materialID==nil else{throw FormError.invalid("Imported meshes retain their authored material slots. Choose an authored source colorway for this instance.")}
       var family=[source],familyIDs:Set<UUID>=[source.id]
       for _ in 0..<8 {
         let children=project.objects.filter{object in

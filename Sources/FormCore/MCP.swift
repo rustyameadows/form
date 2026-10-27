@@ -460,7 +460,7 @@ public enum MCP {
         ], required: ["view"]),
       tool(
         "form_export",
-        "Export PNG studio render, PDF artwork, SVG dieline, or JSON component/material summary. Saved shot_id exports exclusively to a new .render folder containing the actual PNG plus render.json; existing destinations are rejected. Optional width/height override saved pixels together. Legacy PNG stays 3000×2000. Files are written to the project's Exports folder by default. Optional path selects an absolute output file.",
+        "Export PNG studio render, PDF artwork, SVG dieline, or JSON component/material summary. A saved scene_id exports PNG to a new .render folder or MP4 camera motion to a new .motion folder, with actual media and render.json. Saved shot_id exports PNG plus render.json to a new .render folder; optional width/height override shot pixels together. Existing folders are preserved. MP4 requires scene_id. Legacy PNG stays 3000×2000. Optional path is absolute; files default to the project's Exports folder.",
         [
           "format": ["type": "string", "enum": ["png", "mp4", "pdf", "svg", "json"]],
           "object_id": objectID, "path": string,"shot_id":objectID,"scene_id":objectID,"width":["type":"integer"],"height":["type":"integer"],
