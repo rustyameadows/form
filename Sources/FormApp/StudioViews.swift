@@ -273,7 +273,7 @@ struct HomeView: View {
             .system(size: 9, weight: .medium)
           ).tracking(1.6)
           Spacer()
-          Text("LAB  /  0.3").font(.system(size: 9, design: .monospaced))
+          Text("LAB  /  0.4").font(.system(size: 9, design: .monospaced))
         }.foregroundStyle(Palette.secondary.opacity(0.75)).padding(.top, 10).padding(.bottom, 24)
       }.padding(.horizontal, 52).frame(maxWidth: 1600)
         .frame(maxWidth: .infinity)

@@ -68,6 +68,7 @@ struct PaperWorkspaceView: View {
   let object: ProductObject
   private var definition: PaperConstruction? { try? .definition(for: object) }
   var body: some View {
+    GeometryReader { proxy in
     VStack(spacing: 0) {
       VStack(alignment: .leading, spacing: 12) {
         HStack {
@@ -75,24 +76,30 @@ struct PaperWorkspaceView: View {
             Text(store.environment == .form ? "COMPOSE THE SURFACES" : store.environment == .function ? "DEVELOP THE CONSTRUCTION" : "PREPARE THE PAPER GOODS")
               .font(.system(size:9,weight:.semibold)).tracking(1.5).foregroundStyle(Palette.secondary)
             Text(object.name).font(.system(size:18,weight:.medium,design:.serif)).lineLimit(1)
-          }
+          }.frame(minWidth:0,maxWidth:.infinity,alignment:.leading)
           Spacer()
           if let net = try? definition?.net() {
-            Text(String(format:"%.1f × %.1f mm flat",net.size.x,net.size.y)).font(.system(size:10,design:.monospaced)).foregroundStyle(Palette.secondary)
+            Text(String(format:"%.1f × %.1f mm flat",net.size.x,net.size.y)).font(.system(size:10,design:.monospaced)).foregroundStyle(Palette.secondary).fixedSize()
           }
         }
-        HStack(spacing:10) {
-          Picker("Paper view", selection:$store.paperRepresentation) {
-            ForEach(PaperRepresentation.allCases) { Text($0.title).tag($0) }
-          }.labelsHidden().pickerStyle(.segmented).frame(maxWidth:330)
-          Picker("Artwork side", selection:Binding(get:{store.paperInside},set:{store.setPaperInside($0,object:object)})) {
-            Text("Outside").tag(false); Text("Inside").tag(true)
-          }.labelsHidden().pickerStyle(.segmented).frame(width:150)
-          Spacer(minLength:0)
-          Toggle("Artwork",isOn:$store.paperShowingArtwork).toggleStyle(.checkbox).font(.system(size:10))
-          Toggle("Guides",isOn:$store.paperShowingGuides).toggleStyle(.checkbox).font(.system(size:10))
+        if proxy.size.width >= 700 {
+          HStack(spacing:10) {
+            representationPicker.frame(width:330)
+            sidePicker
+            Spacer(minLength:0)
+            visibilityControls
+          }
+        } else {
+          VStack(alignment:.leading,spacing:10) {
+            representationPicker.frame(width:min(330,max(1,proxy.size.width-36)))
+            HStack(spacing:10) {
+              sidePicker
+              Spacer(minLength:0)
+              visibilityControls
+            }
+          }
         }
-      }.padding(18).background(Palette.paper)
+      }.padding(18).frame(width:proxy.size.width,alignment:.leading).background(Palette.paper)
       Divider()
       if store.environment == .form && store.paperRepresentation == .dieline && store.paperShowingArtwork {
         if store.paperInside && definition?.insideArtworkSourceID == nil {
@@ -113,13 +120,31 @@ struct PaperWorkspaceView: View {
         Label(store.paperInside ? "Inside · registered layout" : "Outside artwork",systemImage:"square.on.square")
         Spacer()
         if store.paperRepresentation == .panels {
-          Button("Edit selected panel in dieline") { store.showPaper(.dieline,object:object); store.environment = .form }
+          Button("Edit panel") { store.showPaper(.dieline,object:object); store.environment = .form }
+            .help("Edit selected panel in dieline").accessibilityLabel("Edit selected panel in dieline")
         }
         Text(store.environment == .form ? "One artwork source · physical scale" : store.environment == .function ? "Select a panel · review its folds & joins" : "Actual-size output · local files only")
-      }.font(.system(size:10)).foregroundStyle(Palette.secondary).padding(.horizontal,18).frame(height:36).background(Palette.paper)
+      }.font(.system(size:10)).lineLimit(1).foregroundStyle(Palette.secondary).padding(.horizontal,18).frame(height:36).background(Palette.paper)
+    }.frame(width:proxy.size.width,height:proxy.size.height)
     }
     .onChange(of:object.id) { _,_ in store.paperSelectedPanelID = nil; store.paperSelectedFoldID = nil; store.activatePaperArtwork(object) }
     .focusedValue(\.designSurface,.artwork)
+  }
+  private var representationPicker:some View {
+    Picker("Paper view",selection:$store.paperRepresentation) {
+      ForEach(PaperRepresentation.allCases) {Text($0.title).tag($0)}
+    }.labelsHidden().pickerStyle(.segmented)
+  }
+  private var sidePicker:some View {
+    Picker("Artwork side",selection:Binding(get:{store.paperInside},set:{store.setPaperInside($0,object:object)})) {
+      Text("Outside").tag(false);Text("Inside").tag(true)
+    }.labelsHidden().pickerStyle(.segmented).frame(width:150)
+  }
+  private var visibilityControls:some View {
+    HStack(spacing:10) {
+      Toggle("Artwork",isOn:$store.paperShowingArtwork)
+      Toggle("Guides",isOn:$store.paperShowingGuides)
+    }.toggleStyle(.checkbox).font(.system(size:10)).fixedSize()
   }
 }
 
