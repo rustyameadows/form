@@ -1,0 +1,43 @@
+# Exact CAD kernel
+
+LAB's exact geometry target uses Open CASCADE Technology 8.0.1 through a narrow C ABI. `FormCADModel` contains durable renderer-neutral design intent, `FormCADKernel` owns transient shapes on an actor, and `FormCADModeling` evaluates the graph. Render meshes are derived artifacts, never the editable source of a native model.
+
+## Reproducing the dependency
+
+Run `scripts/install-occt.sh` from the repository. It verifies the official V8_0_1 source archive SHA-256 `0d6913eae4bcc09a3653ceced6dda1aec11c35a1513d4c06762c9b002092c68a` before extraction and builds shared libraries in `.local/engines/occt-8.0.1`. It does not modify Homebrew or system libraries. Commit `b8f597c677811d1f9f4d8a97f5ae2825c0353a42`, build configuration and provenance are pinned in `Sources/CFormCADKernel/UPSTREAM.json`. The current development build targets Apple silicon, macOS 14 and later. CMake/Ninja tools are isolated in `.local/cad-kernel/tools`.
+
+The source and release are published by [Open CASCADE](https://github.com/Open-Cascade-SAS/OCCT/releases/tag/V8_0_1). Shared library development linkage uses the workspace prefix; a distributed app must copy required transitive dylibs into its Frameworks directory and validate relocatable install names and signatures. See the upstream [build and integration documentation](https://occt3d.com/dev/doc/overview/html/).
+
+## Geometry and ownership
+
+Canonical geometry is millimeters, right handed, +Y up. Box dimensions are X width, Y height and Z depth; cylinders/cones use +Y. Plane bases are explicit: XY has normal +Z, XZ uses U +X / V −Z with normal +Y, YZ has normal +X. Profiles, placement transforms and revolution axes preserve this convention. Conversion to RealityKit meters happens only at the render boundary.
+
+The C interface exposes owned opaque handles, bounded errors and copied arrays. No OCCT class enters Swift document JSON. Kernel calls serialize even across actor instances because STEP settings include process globals. Cancellation is checked before/after calls and supported algorithms receive OCCT progress cancellation. A cancelled or failed operation never replaces the source. Algorithms that cannot stop mid-call finish before cancellation returns; cancellation is not a hard process termination.
+
+Supported operations execute the real kernel: analytic primitives, polygon profiles with holes, exact circular and line/Bezier/arc profiles, extrude, revolve, booleans, edge fillet/chamfer, normal-offset shell, polyline sweep, loft, transforms, patterns/compounds, minimum-distance measurement, BRep and STEP exchange. Shape validation checks topology, shell closure and positive solid volume. Rigid/uniform placement preserves analytic surfaces; nonuniform transforms may produce exact NURBS geometry. Mass properties use adaptive integration with a 1e−9 relative tolerance.
+
+Face/edge ordinals are scoped to the exact input feature fingerprint. They are not stable semantic names. The feature evaluator rejects old ordinal selections after upstream geometry changes. Unique axis-planar extrema selectors can survive dimensional edits; ambiguous candidates produce an explicit review diagnostic. Full persistent topological naming and arbitrary face remapping are not implemented.
+
+## Persistence, quality and bounds
+
+Native source is the feature graph plus exact per-output BRep. STEP is retained as exchange output; original imported STEP/BRep bytes are pinned by SHA-256. Self-contained STEP assembly import uses XCAF to retain the source tree, occurrence names, repeated part-definition keys, local/world placements, part RGBA and per-face colors. Each closed solid leaf becomes a source-pinned feature with a revision-scoped occurrence selector. Source face colors are applied only to the matching exact output fingerprint; ambiguous appearance after topology edits requires review. External STEP file references reject before XCAF Transfer can open them. Original construction history is unavailable. The low-level whole-shape STEP node remains available as an exact compound without reconstructed metadata. STEP export currently writes geometric body/compound STEP; it does not yet recreate assembly names/colors from the LAB tree.
+
+BRep persistence omits disposable triangulation. Tessellation exposes linear/angular deflection, analytic face-local normals, UVs, winding and per-triangle face ordinals. Preview, inspection and fabrication settings are independent of exact topology. CADMeshArchive has a strict versioned binary format, finite-value/index validation and allocation bounds. Bounds include 256 MiB imports, 100,000 faces, 200,000 edges/vertices, two million mesh triangles and bounded physical coordinates. The renderer has its own stricter vertex budget and reports unsupported payloads instead of substituting a primitive.
+
+Loft currently accepts single-loop closed sections; holes can be cut with separate exact operations. Sweep paths are polyline wires. Kernel success is a topology/geometry result, not a guarantee that a selected manufacturing process or machine can produce the object. Starter models record unresolved component measurements and connections.
+
+## Evidence
+
+The isolated native acceptance run exercised profile → extrude → cylinder cut → fillet → STEP/BRep round trip. The closed 29-face result had volume 73,099.794541821728 mm³ and 11,656 triangles. An impossible 100 mm fillet failed while the earlier source BRep remained byte-identical. Additional executed operations included exact circle profile, Bezier revolution, loft, sweep, shell, chamfer, compound, clearance and cancellation. The full batch took about 0.25 seconds on this development machine; this is a local observation, not a general benchmark.
+
+The graph acceptance run verified selective cache reuse, failed-feature retention of the previous valid model, stale ordinal rejection, source digest verification, exact source round trip and strict mesh archive decoding. Four editable examples were executed with defaults and a major dimension change: clock enclosure, Bezier vessel, lamp assembly and enclosure. Dedicated XCTest suites cover these behaviors; the application integration run should record its own full test results rather than treating standalone checks as a completed application audit.
+
+## Licensing and distribution
+
+OCCT is under [LGPL 2.1](https://github.com/Open-Cascade-SAS/OCCT/blob/V8_0_1/LICENSE_LGPL_21.txt) with its [additional exception](https://github.com/Open-Cascade-SAS/OCCT/blob/V8_0_1/OCCT_LGPL_EXCEPTION.txt). Both upstream texts are retained verbatim next to the bridge and installed with the dependency. The exception permits specified header use subject to its notice conditions; it is not a blanket exemption from LGPL obligations. Follow the upstream [license guidance](https://www.occt3d.com/dev/doc/overview/html/occt_public_license.html), retain prominent notices and exact source provenance, and preserve the ability to replace/relink the shared library as required. Public distribution needs the applicable source/notice/relinking arrangements and a review of the final packaging. This document records implementation choices, not legal certification.
+
+## STEP assembly acceptance
+
+A generated nested assembly fixture imports five hierarchy nodes and three exact leaf components, including two occurrences of the same named bracket definition. The original local transforms and world positions (140, 205, 306) / (165, 205, 306) mm survive. Part colors and a distinct blue source face are preserved in linear-sRGB, with stable source paths scoped to the original SHA and kernel version. A source file containing an external STEP reference rejects before external reading. The same leaf selectors were evaluated through the durable graph, staged as exact outputs, and round-tripped through model JSON; a metadata-only fingerprint pass reused every geometric feature.
+
+Assembly bounds include 4,096 nodes, depth 64, 256 solid leaves (the 256-feature graph budget also applies), 100,000 total faces and 200,000 total edges/vertices. Geometry cache estimates are bounded; display groups reject more than 255 distinct source face colors per component instead of silently discarding source color metadata. Original source bytes retain any unsupported metadata. Source up axis is chosen explicitly as Y or Z; Z-up adds a real rigid transform into the canonical Y-up document, preserving source matrices in the metadata.

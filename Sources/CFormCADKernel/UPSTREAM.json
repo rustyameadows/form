@@ -1,0 +1,11 @@
+{
+  "project": "Open CASCADE Technology",
+  "version": "8.0.1",
+  "tag": "V8_0_1",
+  "commit": "b8f597c677811d1f9f4d8a97f5ae2825c0353a42",
+  "annotated_tag": "c5605924864829ce8c1e1477f976ffb3880538a8",
+  "archive": "https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V8_0_1.tar.gz",
+  "archive_sha256": "0d6913eae4bcc09a3653ceced6dda1aec11c35a1513d4c06762c9b002092c68a",
+  "license": "LGPL-2.1-only WITH OCCT-exception-1.0",
+  "integration": "Unmodified shared OCCT libraries built locally; Form-owned narrow C ABI adapter. No OCCT source types enter Swift/document schemas."
+}
