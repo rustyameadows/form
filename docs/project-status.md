@@ -2,9 +2,9 @@
 
 As of October 26, 2026.
 
-**LAB is a working native Mac alpha; the complete product, typography and textile briefs are not finished.** LAB 0.4 adds constructed paper goods, connected panel/dieline/assembled reviews, physical stock/sheet/output preparation and task-specific paper/fabric contexts. It also fixes GPU mesh lifetime aliasing exposed by live 2D text drags. RealityKit, exact OCCT models, interchange and the starter library from 0.3 remain available. Form, Function and Fabricate remain primary; Studio remains secondary. See the [paper guide](constructed-paper-goods.md), [current acceptance](evidence/constructed-paper-native.json), [CAD guide](cad-foundation.md) and [environment guide](lab-environments.md).
+**LAB is a working native Mac alpha; the complete product, typography and textile briefs are not finished.** LAB 0.4 adds constructed paper goods, connected panel/dieline/assembled reviews, physical stock/sheet/output preparation and task-specific paper/fabric contexts. It also fixes GPU mesh lifetime aliasing exposed by live 2D text drags and confines native canvas/ruler painting to its editor bounds. RealityKit, exact OCCT models, interchange and the starter library from 0.3 remain available. Form, Function and Fabricate remain primary; Studio remains secondary. See the [paper guide](constructed-paper-goods.md), [current acceptance](evidence/constructed-paper-native.json), [CAD guide](cad-foundation.md) and [environment guide](lab-environments.md).
 
-The preceding LAB 0.2 transition passed 1,003 tests and native navigation/Undo/restart acceptance; its historical [evidence](evidence/lab-transition-native.json) remains available. The current paper acceptance records 1,133 passing tests; the [CAD checkpoint](evidence/cad-foundation-native.json) remains historical.
+The preceding LAB 0.2 transition passed 1,003 tests and native navigation/Undo/restart acceptance; its historical [evidence](evidence/lab-transition-native.json) remains available. The current paper acceptance records 1,135 passing tests; the [CAD checkpoint](evidence/cad-foundation-native.json) remains historical.
 
 The earlier portable artwork transfer (48), physical page setup (49), and MERIDIAN desk-clock construction (50) remain in the app. Their earlier acceptance records remain [transfer/page evidence](evidence/transfer-page-native.json) and [desk-clock evidence](evidence/desk-clock-native.json).
 
@@ -12,9 +12,9 @@ This report distinguishes features in that application from local candidates and
 
 ## Current execution and GitHub state
 
-- The CAD foundation goal is complete within its documented acceptance boundaries. The constructed-paper goal adds the supplied [guiding brief](constructed-goods-vision.md), envelope/carton demos, linked views, distinct task contexts and tested local outputs. These bounded upgrades do not complete the broader roadmap.
+- The CAD foundation goal is complete within its documented acceptance boundaries. The accepted constructed-paper pass adds the supplied [guiding brief](constructed-goods-vision.md), envelope/carton demos, linked views, distinct task contexts and tested local outputs. These bounded upgrades do not complete the broader roadmap.
 - The transfer/page candidates are integrated and accepted together. The subsequent desk-clock request adds a bounded sculpted-clock construction and a real reference-led project; it does not restart the full roadmap. Separate cloth and broader SVG research remain local.
-- Constructed goods are on **codex/paper-construction**, based on **codex/cad-foundation** in [draft pull request 2](https://github.com/rustyameadows/form/pull/2), which follows the accepted **codex/form-v0.1** application in [draft pull request 1](https://github.com/rustyameadows/form/pull/1). The implementation has not been merged to main; main still contains the initial product documentation.
+- Constructed goods are on **codex/paper-construction**, based on **codex/cad-foundation** in [draft pull request 2](https://github.com/rustyameadows/form/pull/2), which follows the accepted **codex/form-v0.1** application in [draft pull request 1](https://github.com/rustyameadows/form/pull/1). The paper pass is available in [draft pull request 3](https://github.com/rustyameadows/form/pull/3). The implementation has not been merged to main; main still contains the initial product documentation.
 - The six ordinary project packages were copied before this upgrade. All 128 pinned original source/asset files still match their hashes, including MERIDIAN artwork and its original reference. Native camera, CAD preview/cancel and packaged preservation checks run against disposable copies. Local slicing produces preview files; no print was sent or started.
 
 ## What works in the verified application
@@ -55,7 +55,6 @@ Failed Cut no longer deletes source, complete supported clipboard dependencies t
 
 | Priority | Current issue | Practical consequence |
 | --- | --- | --- |
-| Medium | Some paper header labels fail to repaint after entering Dieline or resizing its split. | Changing representation refreshes the labels; source artwork and model remain intact. Native repaint acceptance keeps the constructed-paper goal active. |
 | Medium | SVG responsiveness near input limits needs the stronger shared limits from the prototype. | Existing SVG support should not be treated as arbitrary-complexity interchange. |
 
 The most recently verified camera behavior follows the fixed [camera contract](camera-navigation.md): primary drag orbits, Shift-drag pans, and named Perspective/Top/Front views frame the whole project. The latest mouse checks passed. Later work must preserve those bindings and repeat the regression checks.

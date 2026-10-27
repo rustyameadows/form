@@ -1,13 +1,13 @@
 {
-  "record_version": 1,
+  "record_version": 2,
   "date": "2026-10-26",
   "scope": "LAB 0.4 constructed paper goods, task-specific paper/fabric views and live text-drag rendering repair. The broader product roadmap remains open.",
-  "source_code_commit": "1070a09",
+  "source_code_commit": "5df0437",
   "schema": 53,
   "MCP_tool_count": 63,
   "tests": {
     "command": "swift test -c release",
-    "total": 1133,
+    "total": 1135,
     "failures": 0,
     "skips": 0,
     "suites": {
@@ -17,11 +17,11 @@
       "FormCoreTests": 670,
       "FormCADModelingTests": 8,
       "FormCADKernelTests": 6,
-      "FormAppTests": 408
+      "FormAppTests": 410
     },
-    "log_sha256": "46ea29ac9a4d08a6544f17275070b43ec669258c3e14789fe2b166edd0d89f68",
-    "source_code_commit": "c1b0b36",
-    "post_suite_changes": "UI-only paper navigation buttons, stable two-row layout and preview clipping; release-compiled and native-reviewed. Dieline header repaint remains open."
+    "log_sha256": "86e052737f7f236f4669dfb8d7b542c73dbfe843fab513eb7694faa3b00fe797",
+    "source_code_commit": "5df0437",
+    "post_suite_changes": "No production-code changes; packaged/native acceptance and documentation only."
   },
   "live_drag_repair": {
     "real_mouse_drags": 2,
@@ -113,7 +113,7 @@
       "embroidery_texture_builds": 0,
       "embroidery_texture_max_edge": 1024,
       "geometry_builds": 3,
-      "last_sync_ms": 1.7609596252441406,
+      "last_sync_ms": 1.7889738082885742,
       "mesh_uploads": 32,
       "mouse": {
         "action": "none",
@@ -132,7 +132,9 @@
       "renderer_warnings": [],
       "renders_continuously": false,
       "texture_uploads": 6
-    }
+    },
+    "consecutive_final_passes": 2,
+    "initial_unreproduced_assertion": "An earlier isolated view/source-equality assertion failed without field-level evidence. The harness now saves before/after JSON on mismatch; two subsequent final-package runs pass unchanged assertions."
   },
   "compatibility_checks": [
     "smoke_mcp.py: explicit original sleeve, variants, custom recipe, atomic rollback, physical outputs and reopen",
@@ -146,7 +148,8 @@
     "paper Command-P opens Fabricate sheet preparation",
     "fabric Function reviews original pieces/allowances/grain/seams",
     "fabric Fabricate offers full-size and seven-page tiled pattern review",
-    "Panels narrow/wide actual mouse resizing keeps all controls visible with plain SwiftUI buttons"
+    "Panels narrow/wide actual mouse resizing keeps all controls visible with plain SwiftUI buttons",
+    "Dieline header, outside/inside, fit/scroll and actual split 854.5 \u2192 440 \u2192 855 points preserve visible labels after native bounds repair"
   ],
   "independent_proofs": {
     "renderer": "Poppler pdftoppm + pdfinfo",
@@ -177,21 +180,23 @@
     "original_source_asset_files_verified": 128,
     "added_project_packages": 2,
     "user_source_snapshot_preserved": true,
-    "binary_sha256": "a23c5e298c7239362a21a8e3f69bbe0c6d58d92059f89efa0066c6717321bbe7",
-    "source_code_commit": "1070a09",
+    "binary_sha256": "57e6f0e314746d26041d64d898a46291d1b6e896ff509edee889631973a0a6d8",
+    "source_code_commit": "5df0437",
     "native_split_controls_verified": true,
     "ad_hoc_signature_verified": true,
     "renderer": "RealityKit",
     "bundled_occt_shared_libraries": 26,
     "shipping_scenekit_dependency": false,
-    "distribution_notarized": false
+    "distribution_notarized": false,
+    "project_data_replaced_during_final_update": false
   },
   "installed_drag_acceptance": {
     "actual_mouse_drag": true,
     "artwork_updated_on_assembled_carton": true,
     "construction_camera_unchanged": true,
     "native_undo_restored_user_objects_and_history": true,
-    "renderer_warnings": []
+    "renderer_warnings": [],
+    "final_binary_reverified": true
   },
   "source_preservation": {
     "original_source_and_asset_files_exact": 128,
@@ -201,8 +206,21 @@
     "new_project_packages_added": 2,
     "recoverable_app_and_library_backups": true
   },
-  "goal_status": "active",
-  "remaining_acceptance": [
-    "Resolve native Dieline header label repaint after entering/resizing the editor. Switching representation currently refreshes the labels; source and geometry are unchanged."
-  ]
+  "goal_status": "complete",
+  "remaining_acceptance": [],
+  "native_canvas_boundary_repair": {
+    "cause": "Unclipped native canvas/ruler drawing and dirtyRect background fill overwrote neighboring SwiftUI labels.",
+    "old_outside_pixels_changed": 8448,
+    "new_outside_pixels_changed": 0,
+    "regressions": 2,
+    "balanced_context_restoration": true,
+    "native_dieline_header_resize_inside_outside_fit_scroll": true,
+    "split_widths_points": [
+      854.5,
+      440,
+      855
+    ],
+    "apple_guidance": "https://developer.apple.com/videos/play/wwdc2023/10054/",
+    "red_log_sha256": "1f059274082d1a29e65666f7132320e9531afde22d2977c888889da186757994"
+  }
 }

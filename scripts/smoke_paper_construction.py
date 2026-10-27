@@ -80,7 +80,11 @@ def main():
                         status = call('form_status')
                         assert status['environment'] == environment
                         assert status['paper_workspace']['representation'] == representation
-                        assert source(call('form_get_project')) == source(initial)
+                        actual = call('form_get_project')
+                        if source(actual) != source(initial):
+                            (folder / 'unexpected-view-before.json').write_text(json.dumps(initial, indent=2))
+                            (folder / 'unexpected-view-after.json').write_text(json.dumps(actual, indent=2))
+                            raise AssertionError((environment, representation, str(folder)))
                 outside = copy.deepcopy(paper.get('artwork'))
                 call('form_update_object', {'object_id': object_id, 'parameters': {'opening': 100}})
                 opened = call('form_get_project')
