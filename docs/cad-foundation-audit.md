@@ -12,11 +12,12 @@ Pinned preservation fixtures are the six ordinary packages: MERIDIAN/reference +
 
 ## Exact SceneKit dependency inventory
 
-There are **13 production Swift files with imports or actual SCN type use**, spanning FormApp and FormGraphics. FormCore has historical comments mentioning SceneKit but no SceneKit imports/types. Text matching only the word SceneKit overcounts comments/metadata and must not be used as a link-dependency gate.
+There are **14 production Swift files with imports or actual SCN type use**, spanning FormApp and FormGraphics. FormCore has historical comments mentioning SceneKit but no SceneKit imports/types. Text matching only the word SceneKit overcounts comments/metadata and must not be used as a link-dependency gate.
 
 | File | SCN identifier occurrences | Responsibility / migration surface |
 | --- | ---: | --- |
-| `Sources/FormApp/ClothCoordinator.swift` | 0 | SCNVector3/scene-node bounds crossing app cloth coordinator boundary |
+| `Sources/FormApp/ArtworkViews.swift` | 0 | Native object inset return types use TableSCNView; migrates with the event host |
+| `Sources/FormApp/ClothCoordinator.swift` | 0 | SceneKit import plus scene-node bounds crossing app cloth coordinator boundary |
 | `Sources/FormApp/ClothSceneSurface.swift` | 12 | Runtime cloth node updates, assembly supports and hit-occlusion mapping |
 | `Sources/FormApp/DeskClockGeometry.swift` | 34 | Sculpted clock buffers, component names, rolled rings, upright UVs and hand transforms |
 | `Sources/FormApp/EmbroiderySceneSurface.swift` | 5 | Needle-derived appearance maps and scoped face-material refresh |

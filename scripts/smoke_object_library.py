@@ -19,7 +19,7 @@ def main():
     library = folder / "Library"
     library.mkdir(parents=True)
     socket = "/tmp/object-library-" + token + ".sock"
-    app = ROOT / "build/LAB.app"
+    app = Path(os.environ.get("LAB_APP_PATH", ROOT / "build/LAB.app"))
     if not app.exists():
         app = ROOT / "build/FORM.app"
     binaries = app / "Contents/MacOS"

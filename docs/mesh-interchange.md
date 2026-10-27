@@ -94,7 +94,7 @@ After building the FormMeshAssets target, compile its small original fixture gen
 
 ```sh
 mkdir -p .local/cad-foundation/fixtures
-xcrun swiftc -I .build/out/Products/Release -L .build/out/Products/Release -lFormMeshAssets \
+xcrun swiftc -parse-as-library -target arm64-apple-macos15.0 -I .build/out/Products/Release -L .build/out/Products/Release -lFormMeshAssets \
   Tests/FormMeshAssetsTests/MeshAssetFixtures.swift scripts/generate_mesh_test_fixtures.swift \
   -o .local/cad-foundation/fixtures/generate-mesh-fixtures
 .local/cad-foundation/fixtures/generate-mesh-fixtures .local/cad-foundation/fixtures
@@ -113,7 +113,7 @@ Verified on installed Blender 5.2.1 LTS: the exported GLB has 33 mesh nodes, 7 m
 The tracked `scripts/render_mesh_fidelity.swift` harness compiles with the actual `MeshAssetSceneAdapter.swift`, FormMeshAssets and LabRendering. It reads the Blender camera manifest and uses the production neutral light values (key 3000, fill 600). It writes original-source, orange/green colorway, UV-patch and cleared-source PNGs plus measured renderer diagnostics, without the application library, CUA or a printer.
 
 ```sh
-xcrun swiftc -parse-as-library -I .build/out/Products/Release -L .build/out/Products/Release \
+xcrun swiftc -parse-as-library -target arm64-apple-macos15.0 -I .build/out/Products/Release -L .build/out/Products/Release \
   -lFormMeshAssets -lLabRendering Sources/FormApp/MeshAssetSceneAdapter.swift \
   scripts/render_mesh_fidelity.swift -o .local/cad-foundation/fixtures/render-mesh-fidelity
 .local/cad-foundation/fixtures/render-mesh-fidelity .local/cad-foundation/fixtures/blender
@@ -130,3 +130,17 @@ Derived orange `#C56836` and forest green `#32483B` colorways are visibly distin
 - Imported source part transforms are preserved and inspectable, but arbitrary per-part geometry editing, feature reconstruction, mesh repair and skin/morph animation are not exposed. Product placement/uniform scale, source-slot colorways and UV artwork are the supported edits.
 - General curved decal projection, UV seam repair, automatic reattachment after topology changes, calibrated textile print dimensions and supplier sewing-pattern reconstruction remain outside this foundation. UV0 mapping is explicit and carries an unverified physical scale.
 - Topology inspection does not detect self-intersections or disconnected internal shells, establish minimum walls, repair bad geometry or certify printability. Multi-solid CAD outputs need separate output components before this preparation path. Source display tessellation is reused; a dedicated fabrication-tolerance remesh is future work.
+
+### Separate detailed hard-surface device source
+
+`LAB-device-assembly.glb` remains the deliberately small two-instance cube used for bounded unit tests. It is not the hard-surface fidelity demonstration. The separate `scripts/generate_blender_device_fixture.py` authors an original receiver directly in Blender, without importing a supplier model:
+
+```sh
+/Applications/Blender.app/Contents/MacOS/Blender --background --threads 2 \
+  --python scripts/generate_blender_device_fixture.py -- \
+  --output .local/cad-foundation/fixtures/blender-device
+```
+
+The complete `.blend`, static GLB, fixed 1200 × 900 source PNG and source/camera manifest are written there. The device has a genuinely hollow rounded 3 mm housing, separate front/rear panels, 30 actual speaker perforations, rear vent slots, recessed display with alpha glass and emissive mesh lettering, a dial with 48 actual knurled flutes, separate tactile controls, cross-slot fasteners and four elastomer feet. Planar manufactured faces retain flat normals; curved bevels remain smooth. Original packed base/normal/metallic-roughness pixels are retained, with ten material slots. This is an original visual/mechanical test design and does not claim functional electronics or manufacturing certification.
+
+Verified on Blender 5.2.1 LTS with two render threads and sixteen Cycles samples: 41 mesh parts, 56,888 source/export triangles, 33,073 authored vertices and 44,103 imported vertices after UV/hard-normal splits, three original 128 × 128 images, and 2,453,200 GLB bytes. Measured imported bounds are (−90.0000035763, 0, −22.5000004284) to (90.0000035763, 109.9999994040, 22.4999993661) mm: approximately 180 × 110 × 45 mm. Source bounds agree within 0.000001 mm after documented axis conversion and export float precision. Real parser import plus normalized validation measured approximately 0.27 seconds in the isolated development harness. Source bytes are retained exactly; the inspection JSON records SHA-256 `f693050caa61332622574ac5487cc99fb716a1ed1e402905cac1561238b17e4f`.
