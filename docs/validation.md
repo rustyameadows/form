@@ -2,6 +2,14 @@
 
 Validated October 24–27, 2026 on the local Apple silicon Mac, macOS 26, Xcode 27 / Swift 6.4. The current CAD application requires macOS 15; earlier entries describe their then-current targets. Older supported OS versions have not been exercised on hardware. Build artifacts, downloaded engines, test libraries, exports, and detailed reports are kept under ignored `.local` / `build` directories.
 
+## System typography and configurable monochrome interface — October 27
+
+The complete optimized suite passes **1,156 tests**: 677 core, 424 native app, 14 rendering, 24 mesh, 3 geometry, 8 CAD modeling and 6 kernel tests, with zero failures. Four new appearance tests cover canonical/atomic preference persistence, isolated settings, readable custom hues and preservation of project, camera, drafts, library and geometry builds. A native print-workspace integration check confirms full-size viewport allocation and valid prepared geometry. The existing canvas clipping bitmap checks now expect the neutral gray background while retaining their original boundary assertions.
+
+Actual computer use reviews Home, connected and detached Form, rigid and fabric Function, guided Fabricate, Studio, notes, libraries, print preparation and Appearance. Invalid hex is rejected without replacing the active color. Custom violet applies live to controls and selections; resetting it leaves the complete project and camera exact, with geometry builds and mesh uploads unchanged. The library contents now scroll beneath a fixed accessible header, primary dialog actions use black, and the paper legend fits its narrow summary thumbnail. Source artwork, material colors, real font samples and production guide conventions remain authored content.
+
+[Native acceptance](evidence/interface-style-native.json) records the signed package, actual restart, final screen review and the ordinary library preservation hashes. [Style guide](interface-style.md) explains the scope and preference storage. Camera navigation and bindings are unchanged. The native print-bed display remains blank on this Mac and reproduces in the prior 0.5.0 bundle; independent GPU capture shows the prepared mesh and neutral bed correctly. Unsuccessful viewport experiments were removed, and this is recorded as an unresolved baseline display issue rather than a repaired regression.
+
 ## Distinct environment workflows and saved Studio compositions — October 27
 
 The integrated release passes **1,151 tests**: 677 core, 419 native app, 14 rendering, 24 mesh, 3 geometry, 8 CAD modeling and 6 kernel tests, with zero failures. Function retains medium-independent lamp/CAD and fabric/paper construction controls. Fabricate uses explicit source, process and material confirmation. Studio stores independent presentation instances, a separate camera and bounded camera motion; existing saved shots remain compatible.
