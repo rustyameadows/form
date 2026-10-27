@@ -1,5 +1,5 @@
 import AppKit
-import SceneKit
+import FormGeometry
 import Metal
 import XCTest
 @testable import FormCore
@@ -21,7 +21,7 @@ import XCTest
     let value=try store.bridgeClothCall(args)
     return try XCTUnwrap(value as? [String:Any])
   }
-  private func node(_ store:StudioStore,_ id:UUID)throws -> SCNNode {try XCTUnwrap(store.scene?.objectRoot.childNode(withName:"object:\(id.uuidString)",recursively:false))}
+  private func node(_ store:StudioStore,_ id:UUID)throws -> MeshNode {try XCTUnwrap(store.scene?.objectRoot.childNode(withName:"object:\(id.uuidString)",recursively:false))}
   func testRuntimeBridgeLeavesDraftCommitNotificationsHistoryFilesAndCameraUntouched()throws {
     let (store,root,id)=try fixture();defer {store.cloth.clear();try? FileManager.default.removeItem(at:root)}
     let before=store.project!,undo=store.engine.undoStack,redo=store.engine.redoStack,revision=store.revision,camera=store.scene!.camera,builds=store.scene!.geometryBuilds
@@ -138,8 +138,8 @@ import XCTest
     _ = try store.engine.call("form_delete_objects",arguments:["object_ids":[id.uuidString]])
     store.changed(save:false);XCTAssertNil(store.cloth.preview.frame);XCTAssertNil(store.cloth.preview.source)
   }
-  func testPrintedPanelMaterialCornersMatchCanvasOrientationOnRealMetal()throws {
-    guard let device=MTLCreateSystemDefaultDevice() else {throw XCTSkip("Actual cloth texture orientation needs Metal.")}
+  func testPrintedPanelMaterialCornersMatchCanvasOrientationOnRealMetal()async throws {
+    guard MTLCreateSystemDefaultDevice() != nil else {throw XCTSkip("Actual cloth texture orientation needs Metal.")}
     var project=Project(name:"Printed orientation")
     var object=try project.makeObject(recipeID:"clothTote",parameters:["width":200,"depth":200,"resolution":4],materialID:"linen")
     object.artwork = .init(background:"#FFFFFF",elements:[
@@ -150,12 +150,11 @@ import XCTest
     project.objects=[object]
     let cloth=try ClothSceneSurface(object:object,project:project,assets:FileManager.default.temporaryDirectory,textureLimit:256)
     cloth.surface.material.lightingModel = .constant
-    let scene=SCNScene();scene.background.contents=NSColor.white;scene.rootNode.addChildNode(cloth.root)
-    for (side,z) in [("front",CGFloat(5)),("back",CGFloat(-5))] {
-      let camera=SCNNode();camera.camera=SCNCamera();camera.camera!.usesOrthographicProjection=true;camera.camera!.orthographicScale=1.3
-      camera.position=SCNVector3(0,1.3,z);camera.eulerAngles.y=z<0 ? .pi:0;scene.rootNode.addChildNode(camera)
-      let renderer=SCNRenderer(device:device,options:nil);renderer.scene=scene;renderer.pointOfView=camera
-      let image=renderer.snapshot(atTime:0,with:.init(width:512,height:512),antialiasingMode:.none)
+    let scene=MeshScene();scene.background.contents=NSColor.white;scene.rootNode.addChildNode(cloth.root)
+    for (side,z) in [("front",Double(5)),("back",Double(-5))] {
+      let camera=MeshNode();camera.camera=MeshCamera();camera.camera!.usesOrthographicProjection=true;camera.camera!.orthographicScale=1.3
+      camera.position=MeshVector3(0,1.3,z);camera.eulerAngles.y=z<0 ? .pi:0;scene.rootNode.addChildNode(camera)
+      let image=try await RenderingTestSupport.capture(scene,camera:camera,size:.init(width:512,height:512))
       let bitmap=try XCTUnwrap(image.tiffRepresentation.flatMap(NSBitmapImageRep.init(data:)))
       let expected:[(Int,Int,Double,Double,Double)]=[(150,150,1,0,0),(360,150,0,1,0),(150,360,0,0,1),(360,360,1,1,0)]
       for (x,y,r,g,b) in expected {

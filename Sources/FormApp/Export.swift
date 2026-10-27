@@ -16,17 +16,44 @@ extension StudioStore {
     ]
     panel.canCreateDirectories = true
     if panel.runModal() == .OK, let url = panel.url {
-      do {
+      Task { do {
         var args: [String: Any] = ["path": url.path]
         if let object { args["object_id"] = object.id.uuidString }
-        _ = try export(format: format, arguments: args)
+        _ = try await exportAsync(format: format, arguments: args)
         toast("\(format.uppercased()) exported")
-      } catch { self.error = error.localizedDescription }
+      } catch { self.error = error.localizedDescription }}
     }
+  }
+  /// GPU completion suspends this task without blocking AppKit or the MCP bridge.
+  func exportAsync(format:String,arguments:[String:Any])async throws->Any {
+    guard let project else{throw FormError.missing("Open a project before exporting.")}
+    if arguments["shot_id"] != nil {return try await exportSavedStudioShot(format:format,arguments:arguments)}
+    guard format=="png" else{return try export(format:format,arguments:arguments)}
+    if arguments["width"] != nil || arguments["height"] != nil {throw FormError.invalid("Explicit Studio pixel dimensions require shot_id; the current-view export is 3000 × 2000.")}
+    var object=primary
+    if let raw=arguments["object_id"] as? String {
+      guard let found=project.objects.first(where:{$0.id.uuidString.caseInsensitiveCompare(raw) == .orderedSame}) else{throw FormError.missing("Object not found.")};object=found
+    }
+    let output:URL
+    if let path=arguments["path"] as? String {guard path.hasPrefix("/") else{throw FormError.invalid("Export path must be absolute.")};output=URL(fileURLWithPath:path)}
+    else {
+      let folder=repository.url(for:project.id).appendingPathComponent("Exports");try FileManager.default.createDirectory(at:folder,withIntermediateDirectories:true)
+      let title=(object?.name ?? project.name).replacingOccurrences(of:"/",with:"-").replacingOccurrences(of:":",with:"-");output=folder.appendingPathComponent(title+".png")
+    }
+    let assets=repository.url(for:project.id).appendingPathComponent("Assets")
+    for object in project.objects where isolated.isEmpty || isolated.contains(object.id) {if let art=project.surfaceArtwork(object){try ArtworkRenderer.validateGlyphOutput(art,assets:assets)}}
+    synchronizeScene()
+    let image:NSImage
+    if let scene {image=try await scene.snapshot(size:.init(width:3000,height:2000))}
+    else {image=try await TableSceneController.preview(project:project,size:.init(width:3000,height:2000),assets:assets,studio:true,preset:studioPreset)}
+    try Task.checkCancellation()
+    guard let data=image.pngData() else{throw FormError.invalid("Image rendering failed.")}
+    try data.write(to:output,options:.atomic)
+    return ["path":output.path,"format":format,"bytes":data.count]
   }
   func export(format: String, arguments: [String: Any]) throws -> Any {
     guard let project else { throw FormError.missing("Open a project before exporting.") }
-    if arguments["shot_id"] != nil {return try exportSavedStudioShot(format:format,arguments:arguments)}
+    if arguments["shot_id"] != nil {throw FormError.invalid("Saved shots require the asynchronous export route.")}
     if arguments["width"] != nil || arguments["height"] != nil {throw FormError.invalid("Explicit Studio pixel dimensions require shot_id; the legacy current-view export is 3000 × 2000.")}
     let object: ProductObject?
     if let raw = arguments["object_id"] as? String {
@@ -51,23 +78,7 @@ extension StudioStore {
       output = folder.appendingPathComponent(title + "." + format)
     }
     switch format {
-    case "png":
-      let assets=repository.url(for:project.id).appendingPathComponent("Assets")
-      for o in project.objects where isolated.isEmpty || isolated.contains(o.id) {
-        if let art=project.surfaceArtwork(o) { try ArtworkRenderer.validateGlyphOutput(art,assets:assets) }
-      }
-      synchronizeScene()
-      let image: NSImage
-      if let scene {
-        image = scene.snapshot(size: CGSize(width: 3000, height: 2000))
-      } else {
-        image = TableSceneController.preview(
-          project: project, size: CGSize(width: 3000, height: 2000),
-          assets: repository.url(for: project.id).appendingPathComponent("Assets"), studio: true,
-          preset: studioPreset)
-      }
-      guard let data = image.pngData() else { throw FormError.invalid("Image rendering failed.") }
-      try data.write(to: output, options: .atomic)
+    case "png":throw FormError.invalid("Image export requires the asynchronous export route.")
     case "svg":
       if let object, object.recipeID == "clock" {
         try ClockDesign.profileSVG(object).write(to: output, atomically: true, encoding: .utf8)
@@ -83,6 +94,7 @@ extension StudioStore {
       ).write(to: output, atomically: true, encoding: .utf8)
     case "pdf":
       guard let object else { throw FormError.invalid("Select a printable object first.") }
+      guard object.meshAsset==nil else{throw FormError.invalid("UV mapping does not verify physical artwork scale. Export the original artwork frame instead.")}
       let art =
         project.surfaceArtwork(object)
         ?? Artwork(background: project.material(object.materialID).color)

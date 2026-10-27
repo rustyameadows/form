@@ -97,7 +97,7 @@ enum FabricationDestination: String, CaseIterable, Identifiable {
       let spec = object.textile ?? TextileProduct.defaults(for: object.recipeID)
       guard let spec else { return false }
       return !object.locked && (spec.embroidery != nil || [.embroideredPatch, .directEmbroidery].contains(spec.process))
-    case .decoration: return object.supportsArtworkFace && project.editableArtwork(object) != nil
+    case .decoration: return object.meshAsset==nil && object.supportsArtworkFace && project.editableArtwork(object) != nil
     case .jobs, .collection: return true
     }
   }

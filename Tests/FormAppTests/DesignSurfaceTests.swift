@@ -90,9 +90,8 @@ import XCTest
     window.contentView = container
     defer {window.contentView = nil; window.close()}
     let scene = TableSceneController(store:store)
-    let table = TableSCNView(frame:.init(x:600,y:0,width:600,height:800))
+    let table = TableSceneView(frame:.init(x:600,y:0,width:600,height:800))
     table.controller = scene; scene.view = table; store.scene = scene
-    table.scene = scene.scene; table.pointOfView = scene.cameraNode
     let canvas = VectorCanvasView(frame:.init(x:0,y:0,width:600,height:800))
     canvas.session = store.artworkSession; store.artworkSession.canvas = canvas
     container.addSubview(table); container.addSubview(canvas)
@@ -246,7 +245,7 @@ import XCTest
     XCTAssertTrue(store.artworkSession.canvas === descendants(main,of:VectorCanvasView.self).first)
     store.showSplit(); settle(main)
     XCTAssertEqual(descendants(main,of:VectorCanvasView.self).count,1)
-    XCTAssertEqual(descendants(main,of:TableSCNView.self).filter {$0.controller?.store != nil}.count,1)
+    XCTAssertEqual(descendants(main,of:TableSceneView.self).filter {$0.controller?.store != nil}.count,1)
     let detached = hiddenController(store)
     settle(main); settle(detached.window!.contentView!)
     XCTAssertTrue(descendants(main,of:VectorCanvasView.self).isEmpty)

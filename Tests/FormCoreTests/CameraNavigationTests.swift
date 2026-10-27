@@ -1,4 +1,4 @@
-import SceneKit
+import FormGeometry
 import simd
 import XCTest
 
@@ -15,7 +15,7 @@ final class CameraNavigationTests: XCTestCase {
       preferences: preferences)
     XCTAssertGreaterThan(camera.azimuth, start.azimuth)
     XCTAssertGreaterThan(camera.elevation, start.elevation)
-    let node = SCNNode()
+    let node = MeshNode()
     SceneCamera.position(node, using: camera)
     XCTAssertGreaterThan(Double(node.position.x), start.target.x)
     XCTAssertGreaterThan(Double(node.position.y), start.target.y + start.distance * sin(start.elevation))
@@ -56,7 +56,7 @@ final class CameraNavigationTests: XCTestCase {
   }
 
   func testRepeatedOrbitAndPanKeepTheActualCameraOrthonormalAndPivotCentered() {
-    let node = SCNNode()
+    let node = MeshNode()
     var state = CameraState()
     for step in 0..<1200 {
       state = CameraNavigation.orbited(
@@ -214,13 +214,13 @@ final class CameraNavigationTests: XCTestCase {
       XCTAssertEqual(axes.right.y, 0, accuracy: 1e-12)
       XCTAssertGreaterThan(axes.up.y, 0)
       // Project a pair of distant points on the ground-plane horizon using the
-      // actual SceneKit camera matrix. Bank would give them different screen Y.
+      // actual renderer camera matrix. Bank would give them different screen Y.
       let a = Vector3(state.target.x - axes.outward.x * 100 - axes.right.x * 10, 0,
         state.target.z - axes.outward.z * 100 - axes.right.z * 10)
       let b = Vector3(state.target.x - axes.outward.x * 100 + axes.right.x * 10, 0,
         state.target.z - axes.outward.z * 100 + axes.right.z * 10)
       XCTAssertEqual(project(a, state, width: 1200, height: 800).y,
-        project(b, state, width: 1200, height: 800).y, accuracy: 0.005) // SceneKit float projection, in screen pixels.
+        project(b, state, width: 1200, height: 800).y, accuracy: 0.005) // Double camera projection, in screen pixels.
     }
     XCTAssertEqual(state.elevation, start.elevation, accuracy: 1e-10)
     let actualVertical = CameraNavigation.orbited(start, dx: 0, dy: 0.25, viewportHeight: 800)
@@ -327,8 +327,8 @@ final class CameraNavigationTests: XCTestCase {
   private func project(_ point: Vector3, _ state: CameraState, width: Double, height: Double)
     -> CGPoint
   {
-    let node = SCNNode()
-    let lens = SCNCamera()
+    let node = MeshNode()
+    let lens = MeshCamera()
     lens.fieldOfView = 39
     lens.projectionDirection = .vertical
     lens.usesOrthographicProjection = state.projection == "orthographic"

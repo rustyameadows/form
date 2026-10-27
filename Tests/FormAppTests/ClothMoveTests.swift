@@ -1,12 +1,12 @@
 import AppKit
-import SceneKit
+import FormGeometry
 import XCTest
 @testable import FormCore
 @testable import FormApp
 
 @MainActor final class ClothMoveTests:XCTestCase {
   @MainActor private final class Fixture {
-    let root:URL,store:StudioStore,window:NSWindow,view:TableSCNView,scene:TableSceneController,surfaceID:UUID,labelID:UUID
+    let root:URL,store:StudioStore,window:NSWindow,view:TableSceneView,scene:TableSceneController,surfaceID:UUID,labelID:UUID
     init(childFirst:Bool = false)throws {
       _ = NSApplication.shared;root=FileManager.default.temporaryDirectory.appendingPathComponent("cloth-move-\(UUID().uuidString)")
       let repository=try ProjectRepository(root:root);var p=Project(name:"Native cloth movement")
@@ -16,8 +16,8 @@ import XCTest
       surfaceID=surface.id;labelID=label.id;p.objects=childFirst ? [label,surface]:[surface,label];try repository.save(p)
       store=StudioStore(repository:repository,seedLibrary:false);try store.engine.open(p.id);store.showingHome=false
       window=NSWindow(contentRect:.init(x:0,y:0,width:1200,height:800),styleMask:[.titled],backing:.buffered,defer:false);window.isReleasedWhenClosed=false
-      view=TableSCNView(frame:.init(x:0,y:0,width:1200,height:800));scene=TableSceneController(store:store);view.controller=scene;scene.view=view;store.scene=scene
-      view.scene=scene.scene;view.pointOfView=scene.cameraNode;view.allowsCameraControl=false;view.rendersContinuously=false;window.contentView=view;window.makeFirstResponder(view)
+      view=TableSceneView(frame:.init(x:0,y:0,width:1200,height:800));scene=TableSceneController(store:store);view.controller=scene;scene.view=view;store.scene=scene
+      window.contentView=view;window.makeFirstResponder(view)
       store.synchronizeScene();scene.preset("overhead");store.setTableTool(.move)
     }
     func object(_ id:UUID)->ProductObject {store.project!.objects.first {$0.id==id}!}

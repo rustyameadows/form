@@ -139,7 +139,7 @@ import ImageIO
         await Task.yield();guard let self else{return}
         guard !Task.isCancelled,self.generation==token,self.store?.project?.id==project.id,(try? self.store?.project?.studioDesignDigest()) == (try? project.studioDesignDigest()) else{self.staleResults+=1;if self.generation==token {self.busy=false};return}
         do {
-          let image=try self.renderer.render(project:project,shot:shot,assets:assets,preview:true)
+          let image=try await self.renderer.render(project:project,shot:shot,assets:assets,preview:true)
           await Task.yield()
           guard !Task.isCancelled,self.generation==token,self.store?.project?.id==project.id,try self.store?.project?.studioDesignDigest()==project.studioDesignDigest() else{self.staleResults+=1;if self.generation==token {self.busy=false};return}
           self.preview=image;self.previewSourceDigest=try project.studioDesignDigest();self.busy=false;self.put(image,key:key,shotID:shot.id)
@@ -152,19 +152,25 @@ import ImageIO
     cache[key]=image;cacheShotIDs[key]=shotID;order.removeAll{$0==key};order.append(key);recountCache()
     while order.count>8 || cacheBytes>32*1024*1024 {let key=order.removeFirst();cache.removeValue(forKey:key);cacheShotIDs.removeValue(forKey:key);recountCache()}
   }
-  func export(_ shot:StudioShot,to url:URL)throws->URL {
+  func export(_ shot:StudioShot,to url:URL)async throws->URL {
     guard let store,let project=store.project else{throw FormError.missing("Open a project first.")};try shot.validate();try runtimePreflight(project,shot)
     guard url.pathExtension=="render",FileManager.default.fileExists(atPath:url.deletingLastPathComponent().path),!FileManager.default.fileExists(atPath:url.path) else{throw FormError.invalid("Choose a new .render folder in an existing parent. Existing destinations are never overwritten.")}
     let assets=store.repository.url(for:project.id).appendingPathComponent("Assets"),resources=try StudioShotRenderer.resources(project:project,assets:assets)
-    let image=try renderer.render(project:project,shot:shot,assets:assets,preview:false)
-    let data=try StudioPNG.encode(image,designDigest:project.studioDesignDigest())
-    let record:[String:Any]=["record_version":1,"project_id":project.id.uuidString,"shot_id":shot.id.uuidString,"shot_revision":shot.revision,"design_sha256":try project.studioDesignDigest(),"shot":try jsonObject(shot),"included_object_ids":try shot.visibility.resolved(in:project).map(\.uuidString).sorted(),"width":shot.pixels.width,"height":shot.pixels.height,"effective_vertical_fov_degrees":shot.outputFieldOfView,"effective_orthographic_scale":shot.camera.distance*CameraFraming.orthographicFactor*shot.expansion,"resources":resources,"framing_warnings":renderer.framingWarnings,"near_clip":0.01,"far_clip":1500,"application":"LAB","application_version":Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "development","renderer":"SceneKit / Metal / 4x MSAA / LAB Studio v1","presentation_renderer_version":1,"os_version":ProcessInfo.processInfo.operatingSystemVersionString,"exported_at":ISO8601DateFormatter().string(from:Date()),"png_sha256":StudioRenderFolder.hash(data),"source_archived":false,"physical_size_or_fit_claim":false]
+    let rendered=try await renderer.renderResult(project:project,shot:shot,assets:assets,preview:false)
+    let data=try StudioPNG.encode(rendered.image,designDigest:project.studioDesignDigest())
+    let record:[String:Any]=["record_version":1,"project_id":project.id.uuidString,"shot_id":shot.id.uuidString,"shot_revision":shot.revision,"design_sha256":try project.studioDesignDigest(),"shot":try jsonObject(shot),"included_object_ids":try shot.visibility.resolved(in:project).map(\.uuidString).sorted(),"width":shot.pixels.width,"height":shot.pixels.height,"effective_vertical_fov_degrees":shot.outputFieldOfView,"effective_orthographic_scale":shot.camera.distance*CameraFraming.orthographicFactor*shot.expansion,"resources":resources,"framing_warnings":rendered.framingWarnings,"near_clip":0.01,"far_clip":1500,"application":"LAB","application_version":Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "development","renderer":"RealityKit / Metal / LAB Studio v2","presentation_renderer_version":2,"os_version":ProcessInfo.processInfo.operatingSystemVersionString,"exported_at":ISO8601DateFormatter().string(from:Date()),"png_sha256":StudioRenderFolder.hash(data),"source_archived":false,"physical_size_or_fit_claim":false]
     let result=try StudioRenderFolder.write(png:data,record:record,to:url);lastExport=result;return result
   }
-  func exportDialog(){perform {
-    NSApp.keyWindow?.makeFirstResponder(nil);let shot=try draft()
-    if let exportDestination {if let url=exportDestination(shot) {_ = try export(shot,to:url)};return}
-    let panel=NSSavePanel();panel.nameFieldStringValue=shot.name+".render";panel.title="Export shot folder (PNG + record)";panel.message="Choose a new .render folder. It contains the named PNG and its source record; existing folders are never overwritten.";panel.canCreateDirectories=true
-    if panel.runModal() == .OK,let url=panel.url {let image=try export(shot,to:url);store?.toast("Shot PNG: \(image.lastPathComponent)")}
-  }}
+  func exportDialog(){
+    do {
+      NSApp.keyWindow?.makeFirstResponder(nil);let shot=try draft()
+      let destination:URL?
+      if let exportDestination {destination=exportDestination(shot)}
+      else {
+        let panel=NSSavePanel();panel.nameFieldStringValue=shot.name+".render";panel.title="Export shot folder (PNG + record)";panel.message="Choose a new .render folder. It contains the named PNG and its source record; existing folders are never overwritten.";panel.canCreateDirectories=true
+        destination=panel.runModal() == .OK ? panel.url:nil
+      }
+      if let destination {Task {do{let image=try await export(shot,to:destination);store?.toast("Shot PNG: \(image.lastPathComponent)")}catch{self.error=error.localizedDescription}}}
+    } catch {self.error=error.localizedDescription}
+  }
 }

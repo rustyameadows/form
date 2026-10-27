@@ -3,7 +3,7 @@ import FormCore
 import FormGraphics
 
 @MainActor enum ProjectPreview {
-  static func image(project:Project,size:CGSize,assets:URL) -> NSImage {
+  static func image(project:Project,size:CGSize,assets:URL)async throws -> NSImage {
     let pageIDs = Set((project.publications ?? []).flatMap { $0.pages.map(\.objectID) })
     let physicalIDs = Set(project.objects.filter { !$0.isCanvasWorkspace }.map(\.id))
     if !physicalIDs.isEmpty, physicalIDs.isSubset(of: pageIDs),
@@ -14,7 +14,7 @@ import FormGraphics
       return preview
     }
     guard project.physicalObjectCount == 0,let workspace = project.canvasWorkspace else {
-      return TableSceneController.preview(project:project,size:size,assets:assets)
+      return try await TableSceneController.preview(project:project,size:size,assets:assets)
     }
     let composition = canvasComposition(artwork:project.editableArtwork(workspace) ?? .init(background:"#E7E7E1"),size:size)
     return ArtworkRenderer.image(composition.artwork,width:composition.width,height:composition.height,assets:assets,

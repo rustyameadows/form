@@ -94,7 +94,7 @@ extension Project {
   public func decorationSourceSnapshot(objectID:UUID) throws -> DecorationSourceSnapshot {
     try validateArtworkLinks()
     guard let object=objects.first(where:{$0.id==objectID}),object.supportsArtworkFace,let art=surfaceArtwork(object,keepingSwatchReferences:true),
-      !object.isCanvasWorkspace else{throw FormError.invalid("Choose a physical decoration or finite artwork frame with source artwork.")}
+      !object.isCanvasWorkspace,object.meshAsset==nil else{throw FormError.invalid("Choose a physical decoration or finite artwork frame with source artwork. Imported UV placement does not declare physical production scale.")}
     var pending=[objectID],seen=Set<UUID>(),storyIDs=Set<UUID>(),captured:[ProductObject]=[]
     while let id=pending.popLast() {
       guard seen.insert(id).inserted else{continue}

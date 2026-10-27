@@ -1,5 +1,5 @@
 import XCTest
-import SceneKit
+import FormGeometry
 @testable import FormApp
 @testable import FormCore
 
@@ -35,7 +35,7 @@ import SceneKit
     let node=GeometryFactory.object(o,project:p,assets:FileManager.default.temporaryDirectory)
     let geometry=try XCTUnwrap(node.childNode(withName:"deskClock.Artwork",recursively:true)?.geometry)
     let positions=try XCTUnwrap(geometry.sources(for:.vertex).first),uv=try XCTUnwrap(geometry.sources(for:.texcoord).first)
-    func value(_ source:SCNGeometrySource,_ index:Int,_ component:Int)->Double {
+    func value(_ source:MeshGeometrySource,_ index:Int,_ component:Int)->Double {
       source.data.withUnsafeBytes {bytes in let offset=source.dataOffset+index*source.dataStride+component*source.bytesPerComponent;return source.bytesPerComponent==4 ? Double(bytes.loadUnaligned(fromByteOffset:offset,as:Float.self)):bytes.loadUnaligned(fromByteOffset:offset,as:Double.self)}
     }
     var top=0,bottom=0

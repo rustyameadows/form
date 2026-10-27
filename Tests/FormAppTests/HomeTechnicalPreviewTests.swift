@@ -7,14 +7,14 @@ import XCTest
 @testable import FormApp
 
 @MainActor final class HomeTechnicalPreviewTests:XCTestCase {
-  private func fixture()throws->(ProjectRepository,Project,ProjectSummary) {
+  private func fixture()async throws->(ProjectRepository,Project,ProjectSummary) {
     _=NSApplication.shared
     let root=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString);try FileManager.default.createDirectory(at:root,withIntermediateDirectories:true);addTeardownBlock{try? FileManager.default.removeItem(at:root)}
     let repository=try ProjectRepository(root:root);var project:Project
     if let path=ProcessInfo.processInfo.environment["FORM_HOME46_FIXTURE"] {project=try repository.load(url:URL(fileURLWithPath:path))}
     else {project=Project(name:"FIELD / Native size chart");project.updatedAt=Date(timeIntervalSince1970:1_720_000_000);let owner=try project.ensureCanvasWorkspace();var block=GarmentBlock();block.body.hip=1000;project.objects[project.objects.firstIndex{$0.id==owner.id}!].artwork=try GarmentBlockCommands.preview(block)}
     try repository.save(project)
-    let preview=ProjectPreview.image(project:project,size:.init(width:1000,height:650),assets:repository.url(for:project.id).appendingPathComponent("Assets"))
+    let preview=try await ProjectPreview.image(project:project,size:.init(width:1000,height:650),assets:repository.url(for:project.id).appendingPathComponent("Assets"))
     try XCTUnwrap(preview.pngData()).write(to:repository.url(for:project.id).appendingPathComponent("Preview.png"))
     return(repository,project,try XCTUnwrap(repository.list().first))
   }
@@ -24,8 +24,8 @@ import XCTest
   private func rgba(_ image:NSImage)throws->Data {let cg=try XCTUnwrap(image.cgImage(forProposedRect:nil,context:nil,hints:nil)),c=try XCTUnwrap(CGContext(data:nil,width:cg.width,height:cg.height,bitsPerComponent:8,bytesPerRow:cg.width*4,space:CGColorSpace(name:CGColorSpace.sRGB)!,bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue));c.draw(cg,in:.init(x:0,y:0,width:cg.width,height:cg.height));return Data(bytes:c.data!,count:cg.width*cg.height*4)}
   private func strokeLeaf(_ art:Artwork)throws->ArtworkElement {var e=try XCTUnwrap(art.elements.first{$0.kind=="path"});e.parentID=nil;e.affine=nil;e.x=0;e.y=0;return e}
   func testAllGradeFramingSourceCameraCacheAndPhysicalOutputStayExact()async throws {
-    let(repo,p,summary)=try fixture(),folder=repo.url(for:p.id),before=try hashes(folder),json=try JSONEncoder.form.encode(p),art=try XCTUnwrap(p.canvasWorkspace?.artwork),assets=folder.appendingPathComponent("Assets")
-    let old=ProjectPreview.image(project:p,size:HomeTechnicalInk.size,assets:assets),originalFrame=ProjectPreview.canvasComposition(artwork:art,size:HomeTechnicalInk.size),result=HomeTechnicalInk.evaluate(art)
+    let(repo,p,summary)=try await fixture(),folder=repo.url(for:p.id),before=try hashes(folder),json=try JSONEncoder.form.encode(p),art=try XCTUnwrap(p.canvasWorkspace?.artwork),assets=folder.appendingPathComponent("Assets")
+    let old=try await ProjectPreview.image(project:p,size:HomeTechnicalInk.size,assets:assets),originalFrame=ProjectPreview.canvasComposition(artwork:art,size:HomeTechnicalInk.size),result=HomeTechnicalInk.evaluate(art)
     let frame=try XCTUnwrap(result.composition);XCTAssertEqual(result.reason,"enhanced");XCTAssertLessThanOrEqual(result.work,50_000)
     XCTAssertEqual(frame.width,originalFrame.width);XCTAssertEqual(frame.height,originalFrame.height);XCTAssertEqual(frame.artwork.elements.filter{$0.parentID==nil}.count,3)
     for (a,b) in zip(originalFrame.artwork.elements,frame.artwork.elements) {var expected=a;expected.stroke?.width=b.stroke?.width ?? a.stroke?.width ?? 0;XCTAssertEqual(expected,b)}
@@ -34,8 +34,8 @@ import XCTest
     XCTAssertEqual(try SewingPatternOutput(source:art).svg(assets:assets),svg);XCTAssertEqual(p.camera,try repo.load(p.id).camera)
     if let path=ProcessInfo.processInfo.environment["FORM_HOME46_PROOF_DIR"] {let dir=URL(fileURLWithPath:path);try FileManager.default.createDirectory(at:dir,withIntermediateDirectories:true);try XCTUnwrap(old.pngData()).write(to:dir.appendingPathComponent("before-1000.png"));try XCTUnwrap(image.pngData()).write(to:dir.appendingPathComponent("after-1000.png"));try Data(svg.utf8).write(to:dir.appendingPathComponent("physical-before.svg"));try pdf.write(to:dir.appendingPathComponent("physical-before.pdf"));try Data(SewingPatternOutput(source:art).svg(assets:assets).utf8).write(to:dir.appendingPathComponent("physical-after.svg"));try SewingPatternOutput(source:art).pdf(assets:assets).write(to:dir.appendingPathComponent("physical-after.pdf"))}
   }
-  func testConformalRotationReflectionAndUniformScaleKeepCenterlines()throws {
-    let(_,p,_)=try fixture(),art=p.canvasWorkspace!.artwork!
+  func testConformalRotationReflectionAndUniformScaleKeepCenterlines()async throws {
+    let(_,p,_)=try await fixture(),art=p.canvasWorkspace!.artwork!
     for scale in [0.5,1.0,2.0] {for flip in [false,true] {
       var e=try strokeLeaf(art);e.affine=Affine2.translation(-600,300).followed(by:.rotation(37)).followed(by:.scale(flip ? -scale:scale,scale));e.transformOrigin = .init(0.1,0.8)
       let source=Artwork(elements:[e]),base=ProjectPreview.canvasComposition(artwork:source,size:HomeTechnicalInk.size),value=try XCTUnwrap(HomeTechnicalInk.evaluate(source).composition),next=value.artwork.elements[0]
@@ -44,8 +44,8 @@ import XCTest
     }}
     var wide=try strokeLeaf(art);wide.stroke!.width=100;let legible=HomeTechnicalInk.evaluate(.init(elements:[wide]));XCTAssertNil(legible.composition);XCTAssertEqual(legible.reason,"already-legible")
   }
-  func testMasksFillsHolesDashesEffectsMixedGraphicsAndNonuniformTransformsDecline()throws {
-    let(_,p,_)=try fixture();let leaf=try strokeLeaf(p.canvasWorkspace!.artwork!)
+  func testMasksFillsHolesDashesEffectsMixedGraphicsAndNonuniformTransformsDecline()async throws {
+    let(_,p,_)=try await fixture();let leaf=try strokeLeaf(p.canvasWorkspace!.artwork!)
     var cases=[Artwork]()
     var e=leaf;e.fillEnabled=true;cases.append(.init(elements:[e]))
     e=leaf;e.clipID=UUID();cases.append(.init(elements:[e]))
@@ -66,8 +66,8 @@ import XCTest
     e=leaf;e.id=UUID();cases.append(.init(elements:[leaf,e])) // overlapping outlines must not merge
     for source in cases {let before=source;let result=HomeTechnicalInk.evaluate(source);XCTAssertNil(result.composition);XCTAssertEqual(source,before);XCTAssertLessThanOrEqual(result.work,50_000)}
   }
-  func testWorkAndFeatureLimitsAreExplicitAndFailClosed()throws {
-    let(_,p,_)=try fixture(),art=p.canvasWorkspace!.artwork!
+  func testWorkAndFeatureLimitsAreExplicitAndFailClosed()async throws {
+    let(_,p,_)=try await fixture(),art=p.canvasWorkspace!.artwork!
     for budget in [0,5,40] {var limits=HomeTechnicalInk.Limits();limits.maximumWork=budget;let result=HomeTechnicalInk.evaluate(art,limits:limits);XCTAssertNil(result.composition);XCTAssertEqual(result.reason,"work-budget");XCTAssertLessThanOrEqual(result.work,budget)}
     var tiny=try strokeLeaf(art);tiny.height=0.001;XCTAssertNil(HomeTechnicalInk.evaluate(.init(elements:[tiny])).composition)
     var cycle=try strokeLeaf(art);cycle.parentID=cycle.id;XCTAssertNil(HomeTechnicalInk.evaluate(.init(elements:[cycle])).composition)
@@ -85,8 +85,8 @@ import XCTest
     limits.maximumWork=4000;let spacing=HomeTechnicalInk.evaluate(.init(elements:separated),limits:limits);XCTAssertNil(spacing.composition);XCTAssertEqual(spacing.reason,"work-budget");XCTAssertLessThanOrEqual(spacing.work,4000)
 
   }
-  func testAggregateBytesAreRejectedBeforeObjectDecodeAndManifestRacesDecline()throws {
-    let(repo,_,summary)=try fixture(),manifest=summary.url.appendingPathComponent("Manifest.json"),original=try Data(contentsOf:manifest)
+  func testAggregateBytesAreRejectedBeforeObjectDecodeAndManifestRacesDecline()async throws {
+    let(repo,_,summary)=try await fixture(),manifest=summary.url.appendingPathComponent("Manifest.json"),original=try Data(contentsOf:manifest)
     let raw=try JSONSerialization.jsonObject(with:original) as! [String:Any],ref=(raw["objects"] as! [[String:Any]])[0],object=summary.url.appendingPathComponent("Objects").appendingPathComponent(ref["file"] as! String)
     var padded=original;padded.append(Data(repeating:32,count:800_000));try padded.write(to:manifest)
     try Data(repeating:65,count:1_500_000).write(to:object) // deliberately invalid JSON; size rejection must happen first
@@ -97,7 +97,7 @@ import XCTest
     _=owner
   }
   func testCacheBoundedInvalidatedPurgedAndCancelledJobsCannotPublish()async throws {
-    let(repo,p,summary)=try fixture(),loader=HomeTechnicalPreview(),before=try hashes(repo.url(for:p.id))
+    let(repo,p,summary)=try await fixture(),loader=HomeTechnicalPreview(),before=try hashes(repo.url(for:p.id))
     let first=await loader.image(for:summary),second=await loader.image(for:summary);XCTAssertNotNil(first);XCTAssertNotNil(second);XCTAssertEqual(loader.renders,1);XCTAssertEqual(loader.hits,1)
     XCTAssertEqual(try hashes(repo.url(for:p.id)),before)
     var changed=p;let i=changed.objects[0].artwork!.elements.firstIndex{$0.kind=="path"}!;changed.objects[0].artwork!.elements[i].stroke!.color="#445566";try repo.save(changed)
@@ -109,7 +109,7 @@ import XCTest
     print("HOME46_COST",["cold_max_ms":loader.maximumColdMs,"warm_max_ms":loader.maximumWarmMs,"last_work":loader.lastWork,"last_source_bytes":loader.lastSourceBytes,"cache_bytes":loader.retainedBytes,"main_actor_max_ms":loader.maximumMainMs])
   }
   func testLateSourceAndDeletedProjectRequestsCannotReplaceCurrentImage()async throws {
-    let(repo,p,summary)=try fixture(),old=try HomeTechnicalPreview.snapshot(summary)
+    let(repo,p,summary)=try await fixture(),old=try HomeTechnicalPreview.snapshot(summary)
     var changed=p;let i=changed.objects[0].artwork!.elements.firstIndex{$0.kind=="path"}!;changed.objects[0].artwork!.elements[i].stroke!.color="#223344";try repo.save(changed)
     let fresh=try HomeTechnicalPreview.snapshot(summary),gate=HeldHomeSnapshot(old:old,fresh:fresh)
     let loader=HomeTechnicalPreview(readSnapshot:{_ in await gate.read()})
@@ -124,7 +124,7 @@ import XCTest
     let result=await removed.value;XCTAssertNil(result);XCTAssertEqual(deleted.count,0);XCTAssertEqual(deleted.renders,0)
   }
   func testUnsupportedAndPhysicalProjectsKeepTheirCachedPreview()async throws {
-    let(repo,p,summary)=try fixture();var changed=p
+    let(repo,p,summary)=try await fixture();var changed=p
     let i=changed.objects[0].artwork!.elements.firstIndex{$0.kind=="path"}!;changed.objects[0].artwork!.elements[i].fillEnabled=true;try repo.save(changed)
     let before=try hashes(summary.url),loader=HomeTechnicalPreview(),image=await loader.image(for:summary)
     XCTAssertNil(image);XCTAssertEqual(loader.renders,0);XCTAssertEqual(try hashes(summary.url),before)
@@ -133,7 +133,7 @@ import XCTest
     XCTAssertNil(ignored);XCTAssertEqual(loader.renders,0)
   }
   func testActualNativeProjectCardAndHomeUseDisplayOnlyInkWithBoundedWarmCost()async throws {
-    let(repo,p,summary)=try fixture(),before=try hashes(summary.url),store=StudioStore(repository:repo,seedLibrary:false),loader=HomeTechnicalPreview()
+    let(repo,p,summary)=try await fixture(),before=try hashes(summary.url),store=StudioStore(repository:repo,seedLibrary:false),loader=HomeTechnicalPreview()
     let window=NSWindow(contentRect:.init(x:0,y:0,width:345,height:300),styleMask:[.titled],backing:.buffered,defer:false);window.isReleasedWhenClosed=false
     var calls=0
     let enhanced:@MainActor (ProjectSummary) async->NSImage? = {row in calls+=1;return await loader.image(for:row)}

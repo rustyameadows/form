@@ -1,32 +1,32 @@
 import AppKit
 import FormCore
 import FormGraphics
-import SceneKit
+import FormGeometry
 import simd
 
 /// Lightweight, authored fabric forms. These are presentation blanks, not cloth simulation or sewing patterns.
 @MainActor enum TextileGeometry {
-  private static func point(_ x:Double,_ y:Double,_ z:Double)->SCNVector3 {.init(x/100,y/100,z/100)}
-  private static func material(_ color:String,_ roughness:Double=0.85)->SCNMaterial {
-    let m=SCNMaterial();m.lightingModel = .physicallyBased;m.diffuse.contents=NSColor(hex:color);m.roughness.contents=roughness;return m
+  private static func point(_ x:Double,_ y:Double,_ z:Double)->MeshVector3 {.init(x/100,y/100,z/100)}
+  private static func material(_ color:String,_ roughness:Double=0.85)->MeshMaterial {
+    let m=MeshMaterial();m.lightingModel = .physicallyBased;m.diffuse.contents=NSColor(hex:color);m.roughness.contents=roughness;return m
   }
-  private static func mesh(_ vertices:[SCNVector3],_ triangles:[Int32],_ material:SCNMaterial)->SCNNode {
+  private static func mesh(_ vertices:[MeshVector3],_ triangles:[Int32],_ material:MeshMaterial)->MeshNode {
     var normals=[SIMD3<Float>](repeating:.zero,count:vertices.count)
     let vectors=vertices.map{SIMD3<Float>(Float($0.x),Float($0.y),Float($0.z))}
     for i in stride(from:0,to:triangles.count,by:3) {
       let a=Int(triangles[i]),b=Int(triangles[i+1]),c=Int(triangles[i+2]),n=simd_cross(vectors[b]-vectors[a],vectors[c]-vectors[a])
       normals[a]+=n;normals[b]+=n;normals[c]+=n
     }
-    let normalSource=SCNGeometrySource(normals:normals.map { n in
+    let normalSource=MeshGeometrySource(normals:normals.map { n in
       let unit=simd_length_squared(n)>0 ? simd_normalize(n):SIMD3<Float>(0,1,0);return .init(CGFloat(unit.x),CGFloat(unit.y),CGFloat(unit.z))
     })
     let tex=vertices.map{CGPoint(x:Double($0.x)*3,y:Double($0.z)*3)}
-    let geo=SCNGeometry(sources:[SCNGeometrySource(vertices:vertices),normalSource,SCNGeometrySource(textureCoordinates:tex)],elements:[SCNGeometryElement(indices:triangles,primitiveType:.triangles)])
-    geo.materials=[material];let node=SCNNode(geometry:geo);node.categoryBitMask=2;return node
+    let geo=MeshGeometry(sources:[MeshGeometrySource(vertices:vertices),normalSource,MeshGeometrySource(textureCoordinates:tex)],elements:[MeshGeometryElement(indices:triangles,primitiveType:.triangles)])
+    geo.materials=[material];let node=MeshNode(geometry:geo);node.categoryBitMask=2;return node
   }
-  private static func line(_ points:[Vector3],radius:Double,material:SCNMaterial)->SCNNode {
-    var vertices:[SCNVector3]=[],faces:[Int32]=[]
-    guard points.count>1 else{return SCNNode()}
+  private static func line(_ points:[Vector3],radius:Double,material:MeshMaterial)->MeshNode {
+    var vertices:[MeshVector3]=[],faces:[Int32]=[]
+    guard points.count>1 else{return MeshNode()}
     let sides=5
     for i in 1..<points.count {
       let p=points[i-1],q=points[i],a=SIMD3<Double>(p.x,p.y,p.z),b=SIMD3<Double>(q.x,q.y,q.z)
@@ -52,12 +52,12 @@ import simd
     }
     return o["width"]*0.44
   }
-  static func bomber(_ o:ProductObject,project:Project, assets:URL? = nil, textureLimit:Int = 2048)->SCNNode {
-    let root=SCNNode(),cloth=GeometryFactory.material(o,project:project)
+  static func bomber(_ o:ProductObject,project:Project, assets:URL? = nil, textureLimit:Int = 2048)->MeshNode {
+    let root=MeshNode(),cloth=GeometryFactory.material(o,project:project)
     if let assets, let design = try? project.resolvedFabricPattern(materialID: o.materialID) {
       cloth.diffuse.contents = FabricPatternRenderer.texture(design, assets: assets, limit: textureLimit, fontRevision: GeometryFactory.fontRevision)
       let t = design.pattern.bomberTextureTransform(sourceSize: design.sourceSize)
-      var matrix = SCNMatrix4Identity
+      var matrix = MeshMatrix4Identity
       matrix.m11 = CGFloat(t.a); matrix.m12 = CGFloat(t.b); matrix.m21 = CGFloat(t.c); matrix.m22 = CGFloat(t.d)
       matrix.m41 = CGFloat(t.tx); matrix.m42 = CGFloat(t.ty)
       cloth.diffuse.contentsTransform = matrix
@@ -68,7 +68,7 @@ import simd
     let seams=material("#0D1B25",0.95),metal=material("#A8AAA6",0.33);metal.metalness.contents=0.85
     let w=o["width"],d=o["depth"],loft=o["loft"],rib=o["ribHeight"],neck=o["neckWidth"]
     let cols=32,rows=40,layer=(cols+1)*(rows+1)
-    var vertices:[SCNVector3]=[],indices:[Int32]=[]
+    var vertices:[MeshVector3]=[],indices:[Int32]=[]
     for back in [false,true] {
       for row in 0...rows {
         let z = -d/2+Double(row)/Double(rows)*(d-rib),half=halfWidth(o,z)
@@ -108,7 +108,7 @@ import simd
       let length=o["sleeveLength"],angle=o["sleeveAngle"] * .pi/180,sections=26,sides=18
       let start=Vector3(sign*w*0.41,16+loft*0.15,-d*0.28)
       let direction=Vector3(sign*cos(angle),0,sin(angle)),perpendicular=Vector3(-sign*sin(angle),0,cos(angle))
-      var points:[SCNVector3]=[],faces:[Int32]=[]
+      var points:[MeshVector3]=[],faces:[Int32]=[]
       for row in 0...sections {
         let t=Double(row)/Double(sections),radius=(w*0.155*(1-t)+o["cuffWidth"]*0.5*t)
         let yRadius=(loft*0.48*(1-t)+17*t)*(1+0.07*sin(t*45))
@@ -135,7 +135,7 @@ import simd
     var zip:[Vector3]=[]
     for i in 0...38 {let z = -d*0.36+Double(i)/38*d*0.83;zip.append(.init(0,TextileDesign.bodyTop(o,x:0,z:z)+1,z))}
     root.addChildNode(line(zip,radius:3.2,material:trim))
-    let teeth=SCNNode()
+    let teeth=MeshNode()
     for i in 0..<74 {let z = -d*0.355+Double(i)/74*d*0.82,y=TextileDesign.bodyTop(o,x:0,z:z)+3
       teeth.addChildNode(GeometryFactory.box(5.8,1.5,2.2,metal,y:y,z:z,corner:0.5))
     }
@@ -143,11 +143,11 @@ import simd
     let pull=GeometryFactory.box(8,3,20,metal,y:TextileDesign.bodyTop(o,x:0,z:-d*0.33)+5,z:-d*0.33,corner:2);pull.name="Zipper pull";root.addChildNode(pull)
     return root
   }
-  static func decoration(_ o:ProductObject,project:Project,assets:URL,textureLimit:Int)->SCNNode {
-    let root=SCNNode(),w=o["width"],h=o["depth"],thickness=o["height"],r=min(o["corner"],min(w,h)/2)
+  static func decoration(_ o:ProductObject,project:Project,assets:URL,textureLimit:Int)->MeshNode {
+    let root=MeshNode(),w=o["width"],h=o["depth"],thickness=o["height"],r=min(o["corner"],min(w,h)/2)
     let path=NSBezierPath(roundedRect:NSRect(x:-w/200,y:-h/200,width:w/100,height:h/100),xRadius:r/100,yRadius:r/100)
     path.flatness=0.0003
-    let shape=SCNShape(path:path,extrusionDepth:thickness/100);shape.chamferRadius=min(0.4,thickness/3)/100
+    let shape=MeshShape(path:path,extrusionDepth:thickness/100);shape.chamferRadius=min(0.4,thickness/3)/100
     let cloth=GeometryFactory.material(o,project:project),base=GeometryFactory.solid(shape,cloth)
     base.eulerAngles.x = -.pi/2;base.name="Independent textile base";root.addChildNode(base)
     root.name=EmbroiderySceneSurface.containerName

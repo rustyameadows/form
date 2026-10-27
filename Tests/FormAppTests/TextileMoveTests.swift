@@ -1,17 +1,17 @@
 import AppKit
-import SceneKit
+import FormGeometry
 import XCTest
 @testable import FormApp
 @testable import FormCore
 
-/// Exercises Move through AppKit handlers and actual SceneKit picking. Windows
+/// Exercises Move through AppKit handlers and actual renderer picking. Windows
 /// stay hidden; no operating-system input or printer connection is involved.
 @MainActor final class TextileMoveTests:XCTestCase {
   @MainActor private final class Fixture {
     let root:URL
     let store:StudioStore
     let window:NSWindow
-    let view:TableSCNView
+    let view:TableSceneView
     let scene:TableSceneController
     let jacketID:UUID
     let patchID:UUID
@@ -35,19 +35,17 @@ import XCTest
       store.showingHome = false
       window = NSWindow(contentRect:.init(x:0,y:0,width:1200,height:800),styleMask:[.titled],backing:.buffered,defer:false)
       window.isReleasedWhenClosed = false
-      view = TableSCNView(frame:.init(x:0,y:0,width:1200,height:800))
+      view = TableSceneView(frame:.init(x:0,y:0,width:1200,height:800))
       scene = TableSceneController(store:store)
       view.controller = scene; scene.view = view; store.scene = scene
-      view.scene = scene.scene; view.pointOfView = scene.cameraNode
-      view.allowsCameraControl = false; view.rendersContinuously = false
-      window.contentView = view
+        window.contentView = view
       window.makeFirstResponder(view)
       store.synchronizeScene()
       scene.preset("overhead")
       store.setTableTool(.move)
     }
     func object(_ id:UUID) -> ProductObject {store.project!.objects.first {$0.id == id}!}
-    func node(_ id:UUID) -> SCNNode {scene.objectRoot.childNode(withName:"object:\(id.uuidString)",recursively:false)!}
+    func node(_ id:UUID) -> MeshNode {scene.objectRoot.childNode(withName:"object:\(id.uuidString)",recursively:false)!}
     func select(_ ids:Set<UUID>) {
       store.engine.selection = ids
       store.synchronizeScene()
@@ -191,6 +189,6 @@ import XCTest
       }
     }
     XCTAssertEqual(f.scene.geometryBuilds,builds)
-    XCTAssertFalse(f.view.rendersContinuously)
+    XCTAssertTrue(f.scene.renderer!.viewport.isPaused);XCTAssertTrue(f.scene.renderer!.viewport.enableSetNeedsDisplay)
   }
 }

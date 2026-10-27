@@ -37,6 +37,8 @@ struct RootView: View {
       if let surface { store.activateDesignSurface(surface) }
     }
     .sheet(isPresented:$store.showingDocumentFonts) {DocumentFontsPanel(session:store.artworkSession)}
+    .background {ModelAssetImportPresenter(store:store)}
+    .background {CADModelEditorPresenter(store:store)}
     .sheet(isPresented: $store.showingLibrary) { LibraryView().environmentObject(store) }
     .sheet(isPresented: $store.showingObjectLibrary) { ObjectLibraryView().environmentObject(store) }
     .sheet(isPresented: $store.showingBridge) { BridgeView().environmentObject(store) }
@@ -67,7 +69,7 @@ struct StudioTopBar: View {
     HStack(spacing: 14) {
       if store.showingHome {
         Text("LAB").font(.system(size: 15, weight: .heavy, design: .rounded)).tracking(4)
-        Text("0.2").font(.system(size: 10, weight: .medium, design: .monospaced)).foregroundStyle(
+        Text("0.3").font(.system(size: 10, weight: .medium, design: .monospaced)).foregroundStyle(
           Palette.secondary
         ).padding(.horizontal, 7).padding(.vertical, 3).background(Palette.line, in: Capsule())
       } else {
@@ -162,8 +164,11 @@ struct AddObjectMenu: View {
         store.libraryReplacementID = nil
         store.showingObjectLibrary = true
       } label: { Label("Object library…", systemImage: "square.grid.2x2") }
+      Button {store.cad.openEditor()} label:{Label("Exact CAD model…",systemImage:"cube.transparent")}
+      Button {store.modelAssets.openImport()} label:{Label("Import 3D model…",systemImage:"square.and.arrow.down")}
+      Button {store.cad.openImport()} label:{Label("Import exact STEP / BRep…",systemImage:"cube.box")}
       Divider()
-      ForEach(Recipe.builtins.filter { $0.id != "reference" && $0.id != "patternAssembly" } + (store.project?.recipes ?? [])) {
+      ForEach(Recipe.builtins.filter { $0.id != "reference" && $0.id != "patternAssembly" && !["importedMesh", "cadModel"].contains($0.id) } + (store.project?.recipes ?? [])) {
         recipe in
         Button {
           store.add(recipe)
@@ -268,7 +273,7 @@ struct HomeView: View {
             .system(size: 9, weight: .medium)
           ).tracking(1.6)
           Spacer()
-          Text("LAB  /  0.2").font(.system(size: 9, design: .monospaced))
+          Text("LAB  /  0.3").font(.system(size: 9, design: .monospaced))
         }.foregroundStyle(Palette.secondary.opacity(0.75)).padding(.top, 10).padding(.bottom, 24)
       }.padding(.horizontal, 52).frame(maxWidth: 1600)
         .frame(maxWidth: .infinity)

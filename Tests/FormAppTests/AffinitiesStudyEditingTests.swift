@@ -197,7 +197,7 @@ import XCTest
     XCTAssertEqual(f.store.project!.objects, p.objects)
     if let proof {
       if MTLCreateSystemDefaultDevice() != nil {
-        let image = TableSceneController.preview(
+        let image = try await TableSceneController.preview(
           project: p, size: .init(width: 1500, height: 900), assets: f.root, fitContents: true)
         let rep = try XCTUnwrap(NSBitmapImageRep(data: image.tiffRepresentation!))
         try XCTUnwrap(rep.representation(using: .png, properties: [:])).write(

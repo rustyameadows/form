@@ -1,5 +1,5 @@
 import AppKit
-import SceneKit
+import FormGeometry
 import Metal
 import CoreText
 import XCTest
@@ -37,9 +37,9 @@ final class ClothSurfaceMappingTests:XCTestCase {
   func testGeometryKeepsPhysicalScaleMaterialUVAndTopologyAcrossFrames()throws {
     let mesh=try ClothMeshes.rectangle(widthMm:240,heightMm:200,columns:6,rows:5,areaDensityKgPerM2:0.2)
     var solver=try ClothSolver(mesh:mesh)
-    let material=SCNMaterial();material.diffuse.contents=NSColor.orange;material.roughness.contents=0.87;material.diffuse.wrapS = .repeat
+    let material=MeshMaterial();material.diffuse.contents=NSColor.orange;material.roughness.contents=0.87;material.diffuse.wrapS = .repeat
     let surface=try ClothSurface(mesh:mesh,frame:solver.frame,material:material),first=try XCTUnwrap(surface.node.geometry),uv=try XCTUnwrap(first.sources(for:.texcoord).first),element=try XCTUnwrap(first.elements.first)
-    surface.node.position=SCNVector3(3,4,5);try solver.start();try solver.advance(frames:3);try surface.update(solver.frame)
+    surface.node.position=MeshVector3(3,4,5);try solver.start();try solver.advance(frames:3);try surface.update(solver.frame)
     let next=try XCTUnwrap(surface.node.geometry)
     XCTAssertTrue(next.sources(for:.texcoord).first === uv);XCTAssertTrue(next.elements.first === element)
     XCTAssertTrue(next.materials.first === surface.material);XCTAssertFalse(surface.material === material)
@@ -52,8 +52,8 @@ final class ClothSurfaceMappingTests:XCTestCase {
     bad=solver.frame;bad.positionsMm[0].x = 1e100;XCTAssertThrowsError(try surface.update(bad));XCTAssertTrue(surface.node.geometry === next)
     bad=solver.frame;bad.normals[0].x = 1e100;XCTAssertThrowsError(try surface.update(bad));XCTAssertTrue(surface.node.geometry === next)
   }
-  func testComputedDrapeProducesNativeSceneKitProof()throws {
-    guard let device=MTLCreateSystemDefaultDevice() else {throw XCTSkip("Offscreen native cloth render needs Metal.")}
+  func testComputedDrapeProducesNativeRealityKitProof()async throws {
+    guard MTLCreateSystemDefaultDevice() != nil else {throw XCTSkip("Offscreen native cloth render needs Metal.")}
     var mesh=try ClothMeshes.rectangle(widthMm:320,heightMm:300,columns:16,rows:16,areaDensityKgPerM2:0.22,originMm:.init(0,125,0))
     mesh.pins=[.init(8*17+8,targetMm:.init(0,70.4,0))]
     var settings=ClothSettings();settings.substeps=8;settings.iterations=6;settings.velocityDampingPerSecond=1.5
@@ -67,16 +67,15 @@ final class ClothSurfaceMappingTests:XCTestCase {
     let text=NSAttributedString(string:"FORM  /  320 × 300 mm",attributes:[.font:NSFont.systemFont(ofSize:21,weight:.semibold),.foregroundColor:NSColor.white])
     imageContext.textPosition = .init(x:48,y:143);CTLineDraw(CTLineCreateWithAttributedString(text),imageContext)
     let texture=NSImage(cgImage:try XCTUnwrap(imageContext.makeImage()),size:.init(width:512,height:512))
-    let material=SCNMaterial();material.diffuse.contents=texture;material.roughness.contents=0.95
-    let surface=try ClothSurface(mesh:mesh,frame:solver.frame,material:material),scene=SCNScene()
+    let material=MeshMaterial();material.diffuse.contents=texture;material.roughness.contents=0.95
+    let surface=try ClothSurface(mesh:mesh,frame:solver.frame,material:material),scene=MeshScene()
     scene.background.contents=NSColor(calibratedWhite:0.92,alpha:1);scene.rootNode.addChildNode(surface.node)
-    let ball=SCNNode(geometry:SCNSphere(radius:0.7));ball.geometry?.firstMaterial?.diffuse.contents=NSColor(calibratedWhite:0.27,alpha:1);scene.rootNode.addChildNode(ball)
-    let floor=SCNNode(geometry:SCNPlane(width:7,height:7));floor.eulerAngles.x = -.pi/2;floor.position.y = -0.9;floor.geometry?.firstMaterial?.diffuse.contents=NSColor(calibratedWhite:0.8,alpha:1);scene.rootNode.addChildNode(floor)
-    let camera=SCNNode();camera.camera=SCNCamera();camera.camera?.usesOrthographicProjection=true;camera.camera?.orthographicScale=2.2;camera.position=SCNVector3(3,2.5,4);camera.look(at:SCNVector3(0,-0.1,0));scene.rootNode.addChildNode(camera)
-    let key=SCNNode();key.light=SCNLight();key.light?.type = .omni;key.light?.intensity=1300;key.position=SCNVector3(-3,5,4);scene.rootNode.addChildNode(key)
-    let ambient=SCNNode();ambient.light=SCNLight();ambient.light?.type = .ambient;ambient.light?.intensity=350;scene.rootNode.addChildNode(ambient)
-    let renderer=SCNRenderer(device:device,options:nil);renderer.scene=scene;renderer.pointOfView=camera
-    let image=renderer.snapshot(atTime:0,with:.init(width:1400,height:1100),antialiasingMode:.multisampling4X)
+    let ball=MeshNode(geometry:MeshSphere(radius:0.7));ball.geometry?.firstMaterial?.diffuse.contents=NSColor(calibratedWhite:0.27,alpha:1);scene.rootNode.addChildNode(ball)
+    let floor=MeshNode(geometry:MeshPlane(width:7,height:7));floor.eulerAngles.x = -.pi/2;floor.position.y = -0.9;floor.geometry?.firstMaterial?.diffuse.contents=NSColor(calibratedWhite:0.8,alpha:1);scene.rootNode.addChildNode(floor)
+    let camera=MeshNode();camera.camera=MeshCamera();camera.camera?.usesOrthographicProjection=true;camera.camera?.orthographicScale=2.2;camera.position=MeshVector3(3,2.5,4);camera.look(at:MeshVector3(0,-0.1,0));scene.rootNode.addChildNode(camera)
+    let key=MeshNode();key.light=MeshLight();key.light?.type = .omni;key.light?.intensity=1300;key.position=MeshVector3(-3,5,4);scene.rootNode.addChildNode(key)
+    let ambient=MeshNode();ambient.light=MeshLight();ambient.light?.type = .ambient;ambient.light?.intensity=350;scene.rootNode.addChildNode(ambient)
+    let image=try await GeometryRenderingProof.capture(scene,camera:camera,size:.init(width:1400,height:1100))
     let tiff=try XCTUnwrap(image.tiffRepresentation),rep=try XCTUnwrap(NSBitmapImageRep(data:tiff)),png=try XCTUnwrap(rep.representation(using:.png,properties:[:]))
     XCTAssertGreaterThan(png.count,10000)
     if let directory=ProcessInfo.processInfo.environment["FORM_CLOTH_PROOF_DIR"] {

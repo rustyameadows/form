@@ -97,7 +97,7 @@ import XCTest
     XCTAssertFalse((legacy["features"] as! [[String:Any]]).isEmpty)
     XCTAssertNil(store.project)
   }
-  func testUnresolvedGlyphBlocksArtworkAndPhysicalExportsBeforeWritingFiles() throws {
+  func testUnresolvedGlyphBlocksArtworkAndPhysicalExportsBeforeWritingFiles() async throws {
     _=NSApplication.shared
     let root=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     defer {try? FileManager.default.removeItem(at:root)}
@@ -111,7 +111,8 @@ import XCTest
     o.artwork=Artwork(elements:[e]);p.objects=[o];store.engine.project=p
     for format in ["png","pdf"] {
       let path=root.appendingPathComponent("physical."+format)
-      XCTAssertThrowsError(try store.export(format:format,arguments:["object_id":o.id.uuidString,"path":path.path]))
+      do {_ = try await store.exportAsync(format:format,arguments:["object_id":o.id.uuidString,"path":path.path]);XCTFail("Unresolved glyph unexpectedly exported physical \(format).")}
+      catch {XCTAssertFalse(error.localizedDescription.contains("asynchronous export route"))}
       XCTAssertFalse(FileManager.default.fileExists(atPath:path.path))
       let artwork=root.appendingPathComponent("artwork."+format)
       XCTAssertThrowsError(try store.exportArtwork(object:o,arguments:["format":format,"path":artwork.path]))

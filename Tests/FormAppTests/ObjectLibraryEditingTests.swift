@@ -1,7 +1,7 @@
 import AppKit
 import FormCore
 import Metal
-import SceneKit
+import FormGeometry
 import SwiftUI
 import XCTest
 @testable import FormApp
@@ -57,7 +57,7 @@ import XCTest
     XCTAssertEqual(s.project?.objects[0].librarySelection?.state,.chosenBlank)
     s.undo(); XCTAssertEqual(s.project,p)
   }
-  func testBrowserAndGarmentPreviewRenderFromActualNativeViews() throws {
+  func testBrowserAndGarmentPreviewRenderFromActualNativeViews() async throws {
     let s=try store(); defer{s.engine.project=nil}
     let host=NSHostingView(rootView:ObjectLibraryView().environmentObject(s))
     let window=NSWindow(contentRect:NSRect(x:0,y:0,width:960,height:680),styleMask:[.borderless],backing:.buffered,defer:false)
@@ -71,7 +71,7 @@ import XCTest
       try XCTUnwrap(rep.representation(using:.png,properties:[:])).write(to:folder.appendingPathComponent("library-browser.png"))
       let p=try Samples.giftShopCollection()
       var shot=StudioShot(name:"Starter assortment",camera:p.camera,referenceAspect:1.5);shot.pixels = .init(width:1500,height:1000)
-      let image=try StudioShotRenderer().render(project:p,shot:shot,assets:s.repository.root,preview:false)
+      let image=try await StudioShotRenderer().render(project:p,shot:shot,assets:s.repository.root,preview:false)
       let tiff=try XCTUnwrap(image.tiffRepresentation), bitmap=try XCTUnwrap(NSBitmapImageRep(data:tiff))
       try XCTUnwrap(bitmap.representation(using:.png,properties:[:])).write(to:folder.appendingPathComponent("starter-assortment.png"))
     }

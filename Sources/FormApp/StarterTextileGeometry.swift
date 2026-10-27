@@ -1,10 +1,10 @@
 import AppKit
 import FormCore
-import SceneKit
+import FormGeometry
 
 @MainActor enum StarterTextileGeometry {
-  static func make(_ o: ProductObject, project: Project, assets: URL, limit: Int) -> SCNNode {
-    let root = SCNNode(), w = o["width"], d = o["depth"], y = o["loft"]
+  static func make(_ o: ProductObject, project: Project, assets: URL, limit: Int) -> MeshNode {
+    let root = MeshNode(), w = o["width"], d = o["depth"], y = o["loft"]
     let mat = MerchandiseGeometry.cloth(o, project, assets, limit)
     let trim = MerchandiseGeometry.material(o.textile?.trimMaterialID ?? o.materialID, project)
     func path(_ points: [Point2]) -> NSBezierPath {
@@ -13,7 +13,7 @@ import SceneKit
       for v in points.dropFirst() { p.line(to: .init(x: v.x / 100, y: -v.y / 100)) }
       p.close(); return p
     }
-    func panel(_ p: NSBezierPath, _ height: Double, _ base: Double, _ name: String, _ m: SCNMaterial? = nil) {
+    func panel(_ p: NSBezierPath, _ height: Double, _ base: Double, _ name: String, _ m: MeshMaterial? = nil) {
       root.addChildNode(MerchandiseGeometry.shape(p, height: height, y: base, material: m ?? mat, name: name))
     }
     func rect(_ width: Double, _ height: Double, _ z: Double = 0) -> NSBezierPath {
@@ -29,7 +29,7 @@ import SceneKit
       let hood = NSBezierPath(roundedRect: NSRect(x: -hw/200, y: d/200-0.25,
         width: hw/100, height: hd/100), xRadius: hw/240, yRadius: hw/240)
       panel(hood, y*0.6, 1, "Open laid-out hood")
-      let lining = trim.copy() as! SCNMaterial
+      let lining = trim.copy() as! MeshMaterial
       lining.diffuse.contents = NSColor(hex:project.material(o.materialID).color).blended(withFraction:0.2,of:.black)
       panel(NSBezierPath(ovalIn:NSRect(x:-hw*0.3/100,y:(d/2+hd*0.12)/100,width:hw*0.6/100,height:hd*0.68/100)),
         0.5,y*0.6+1,"Hood lining visible through opening",lining)

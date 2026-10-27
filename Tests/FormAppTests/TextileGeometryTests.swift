@@ -1,12 +1,12 @@
 import AppKit
-import SceneKit
+import FormGeometry
 import Metal
 import XCTest
 @testable import FormApp
 @testable import FormCore
 
 @MainActor final class TextileGeometryTests:XCTestCase {
-  func testFlightStudyProducesANativeRenderedPreview() throws {
+  func testFlightStudyProducesANativeRenderedPreview() async throws {
     _=NSApplication.shared
     guard MTLCreateSystemDefaultDevice() != nil else {throw XCTSkip("Native textile preview needs Metal.")}
     let p=Samples.flightJacket(),garment=p.objects[0]
@@ -16,7 +16,7 @@ import XCTest
     controller.camera = .init();controller.camera.target = .init(garment.position.x/100,0.3,0)
     controller.camera.azimuth=0.04;controller.camera.elevation=1.18;controller.camera.distance=25
     controller.updateCamera()
-    let image=controller.snapshot(size:.init(width:1600,height:1200))
+    let image=try await controller.snapshot(size:.init(width:1600,height:1200))
     let png=try XCTUnwrap(image.pngData());XCTAssertGreaterThan(png.count,20000)
     if let path=ProcessInfo.processInfo.environment["FORM_TEXTILE_PREVIEW_PATH"] {
       try png.write(to:URL(fileURLWithPath:path))

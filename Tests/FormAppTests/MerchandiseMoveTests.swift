@@ -1,5 +1,5 @@
 import AppKit
-import SceneKit
+import FormGeometry
 import XCTest
 
 @testable import FormApp
@@ -29,15 +29,11 @@ import XCTest
           contentRect: .init(x: 0, y: 0, width: 1200, height: 800), styleMask: [.titled],
           backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
-        let view = TableSCNView(frame: .init(x: 0, y: 0, width: 1200, height: 800))
+        let view = TableSceneView(frame: .init(x: 0, y: 0, width: 1200, height: 800))
         let scene = TableSceneController(store: store)
         view.controller = scene
         scene.view = view
         store.scene = scene
-        view.scene = scene.scene
-        view.pointOfView = scene.cameraNode
-        view.allowsCameraControl = false
-        view.rendersContinuously = false
         window.contentView = view
         window.makeFirstResponder(view)
         defer {
@@ -57,8 +53,8 @@ import XCTest
           withName: "object:\(picked.id.uuidString)", recursively: false)!
         let local =
           combined
-          ? SCNVector3(0, ink["height"] / 100, 0)
-          : SCNVector3(-host["width"] * 0.3 / 100, 4 / 100, host["depth"] * 0.25 / 100)
+          ? MeshVector3(0, ink["height"] / 100, 0)
+          : MeshVector3(-host["width"] * 0.3 / 100, 4 / 100, host["depth"] * 0.25 / 100)
         let projected = view.projectPoint(objectNode.convertPosition(local, to: nil))
         let start = NSPoint(x: projected.x, y: projected.y)
         let end = NSPoint(x: start.x + 48, y: start.y - 29)

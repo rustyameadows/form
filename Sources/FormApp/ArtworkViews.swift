@@ -427,17 +427,13 @@ struct ObjectPreview: NSViewRepresentable {
   func makeCoordinator() -> TableSceneController {
     TableSceneController()
   }
-  func makeNSView(context: Context) -> TableSCNView {
-    let view = TableSCNView(frame: .zero)
+  func makeNSView(context: Context) -> TableSceneView {
+    let view = TableSceneView(frame: .zero)
     view.controller = context.coordinator
     context.coordinator.view = view
-    view.scene = context.coordinator.scene
-    view.pointOfView = context.coordinator.cameraNode
-    view.antialiasingMode = .multisampling4X
-    view.rendersContinuously = false
     return view
   }
-  func updateNSView(_ view: TableSCNView, context: Context) {
+  func updateNSView(_ view: TableSceneView, context: Context) {
     var preview = project
     var surface = object
     surface.artwork = project.surfaceArtwork(object)

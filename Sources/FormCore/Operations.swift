@@ -484,6 +484,7 @@ public final class OperationEngine {
     case "form_add_object":
       let p = try requireProject()
       let recipe = try string("recipe_id")
+      guard !["importedMesh", "cadModel"].contains(recipe) else {throw FormError.invalid("Use model import or CAD feature authoring to create an object with validated source geometry.")}
       if let raw = a["canvas_workspace"] {
         guard let flag = raw as? NSNumber,CFGetTypeID(flag) == CFBooleanGetTypeID() else {
           throw FormError.invalid("canvas_workspace must be a boolean.")
@@ -656,6 +657,7 @@ public final class OperationEngine {
       object.relationship = mode
       if mode != "variant" {
         if object.artworkSourceID != nil {
+          if object.recipeID == "importedMesh" {let size=p.artworkSize(object);object.meshAsset?.artworkSizeMM = .init(width:size.x,height:size.y)}
           object.artwork = p.surfaceArtwork(object,keepingSwatchReferences:true)
           object.artwork?.requiresInkOutput=false
           object.artworkSourceID = nil
@@ -663,6 +665,11 @@ public final class OperationEngine {
           if object.recipeID == "clock" { object.artwork?.boundary = nil }
         }
         object.designID = UUID()
+        if object.cadModel != nil {
+          object.cadModel!.id = UUID()
+          object.cadRepresentation?.modelID = object.cadModel!.id
+          object.cadRepresentation?.definitionSHA256 = try CADRepresentation.definitionHash(object.cadModel!)
+        }
         object.parentIterationID = id
       }
       if let material = a["material_id"] as? String { object.materialID = material }

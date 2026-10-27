@@ -1,13 +1,13 @@
 import AppKit
 import FormCore
 import FormGraphics
-import SceneKit
+import FormGeometry
 import simd
 
 @MainActor enum MerchandiseGeometry {
-  static func point(_ v: Vector3) -> SCNVector3 { .init(v.x / 100, v.y / 100, v.z / 100) }
-  static func material(_ id: String, _ project: Project) -> SCNMaterial {
-    let m = SCNMaterial()
+  static func point(_ v: Vector3) -> MeshVector3 { .init(v.x / 100, v.y / 100, v.z / 100) }
+  static func material(_ id: String, _ project: Project) -> MeshMaterial {
+    let m = MeshMaterial()
     m.lightingModel = .physicallyBased
     m.diffuse.contents = NSColor(hex: project.material(id).color)
     m.roughness.contents = 0.92
@@ -18,7 +18,7 @@ import simd
     _ o: ProductObject, _ project: Project, _ assets: URL, _ limit: Int,
     uvScale: Point2 = .init(1, 1)
   )
-    -> SCNMaterial
+    -> MeshMaterial
   {
     let m = GeometryFactory.material(o, project: project)
     m.isDoubleSided = true
@@ -32,7 +32,7 @@ import simd
       let t = Affine2.scale(1 / size.x, 1 / size.y).followed(
         by: design.pattern.latticeTransform.inverse!
       ).followed(by: .scale(uvScale.x, uvScale.y))
-      var transform = SCNMatrix4Identity
+      var transform = MeshMatrix4Identity
       transform.m11 = t.a
       transform.m12 = t.b
       transform.m21 = t.c
@@ -44,7 +44,7 @@ import simd
       m.diffuse.wrapT = .repeat
     }
     if (try? project.resolvedFabricPattern(materialID: o.materialID)) == nil {
-      var t = SCNMatrix4Identity
+      var t = MeshMatrix4Identity
       t.m11 = uvScale.x / 32
       t.m22 = uvScale.y / 32
       m.diffuse.contentsTransform = t
@@ -54,8 +54,8 @@ import simd
     return m
   }
   static func mesh(
-    _ points: [Vector3], _ uv: [CGPoint], _ faces: [Int32], _ mat: SCNMaterial, _ name: String
-  ) -> SCNNode {
+    _ points: [Vector3], _ uv: [CGPoint], _ faces: [Int32], _ mat: MeshMaterial, _ name: String
+  ) -> MeshNode {
     let vertices = points.map(point)
     let vectors = vertices.map { SIMD3<Float>(Float($0.x), Float($0.y), Float($0.z)) }
     var normals = [SIMD3<Float>](repeating: .zero, count: vertices.count)
@@ -68,26 +68,26 @@ import simd
       normals[b] += n
       normals[c] += n
     }
-    let ns = normals.map { n -> SCNVector3 in
+    let ns = normals.map { n -> MeshVector3 in
       let v = simd_length_squared(n) > 0 ? simd_normalize(n) : SIMD3<Float>(0, 1, 0)
       return .init(CGFloat(v.x), CGFloat(v.y), CGFloat(v.z))
     }
-    let g = SCNGeometry(
+    let g = MeshGeometry(
       sources: [
-        SCNGeometrySource(vertices: vertices), SCNGeometrySource(normals: ns),
-        SCNGeometrySource(textureCoordinates: uv),
-      ], elements: [SCNGeometryElement(indices: faces, primitiveType: .triangles)])
+        MeshGeometrySource(vertices: vertices), MeshGeometrySource(normals: ns),
+        MeshGeometrySource(textureCoordinates: uv),
+      ], elements: [MeshGeometryElement(indices: faces, primitiveType: .triangles)])
     g.materials = [mat]
-    let node = SCNNode(geometry: g)
+    let node = MeshNode(geometry: g)
     node.name = name
     node.categoryBitMask = 2
     return node
   }
   static func grid(
     columns: Int, rows: Int, sample: (Double, Double) -> Vector3, uv: (Double, Double) -> CGPoint,
-    material: SCNMaterial, name: String, reverse: Bool = false,
+    material: MeshMaterial, name: String, reverse: Bool = false,
     skip: ((Double, Double) -> Bool)? = nil
-  ) -> SCNNode {
+  ) -> MeshNode {
     var vertices: [Vector3] = []
     var tex: [CGPoint] = []
     var triangles: [Int32] = []
@@ -113,20 +113,20 @@ import simd
     }
     return mesh(vertices, tex, triangles, material, name)
   }
-  static func tube(_ points: [Vector3], radius: Double, material: SCNMaterial, name: String)
-    -> SCNNode
+  static func tube(_ points: [Vector3], radius: Double, material: MeshMaterial, name: String)
+    -> MeshNode
   {
-    let root = SCNNode()
+    let root = MeshNode()
     root.name = name
     for pair in zip(points, points.dropFirst()) {
       let a = SIMD3<Float>(Float(pair.0.x / 100), Float(pair.0.y / 100), Float(pair.0.z / 100))
       let b = SIMD3<Float>(Float(pair.1.x / 100), Float(pair.1.y / 100), Float(pair.1.z / 100))
       let delta = b - a
       guard simd_length(delta) > 0.000001 else { continue }
-      let g = SCNCylinder(radius: radius / 100, height: Double(simd_length(delta)))
+      let g = MeshCylinder(radius: radius / 100, height: Double(simd_length(delta)))
       g.radialSegmentCount = 5
       g.materials = [material]
-      let n = SCNNode(geometry: g)
+      let n = MeshNode(geometry: g)
       n.simdPosition = (a + b) / 2
       n.simdOrientation = simd_quatf(from: SIMD3<Float>(0, 1, 0), to: simd_normalize(delta))
       n.categoryBitMask = 2
@@ -135,20 +135,20 @@ import simd
     return root.flattenedClone()
   }
   static func shape(
-    _ path: NSBezierPath, height: Double, y: Double, material: SCNMaterial, name: String
-  ) -> SCNNode {
+    _ path: NSBezierPath, height: Double, y: Double, material: MeshMaterial, name: String
+  ) -> MeshNode {
     path.flatness = 0.0002
-    let g = SCNShape(path: path, extrusionDepth: height / 100)
+    let g = MeshShape(path: path, extrusionDepth: height / 100)
     g.materials = [material]
-    let n = SCNNode(geometry: g)
+    let n = MeshNode(geometry: g)
     n.eulerAngles.x = -.pi / 2
     n.position.y = CGFloat(y / 100) - g.boundingBox.min.z
     n.name = name
     n.categoryBitMask = 2
     return n
   }
-  static func tee(_ o: ProductObject, project: Project, assets: URL, limit: Int) -> SCNNode {
-    let root = SCNNode()
+  static func tee(_ o: ProductObject, project: Project, assets: URL, limit: Int) -> MeshNode {
+    let root = MeshNode()
     let w = o["width"]
     let d = o["depth"]
     let s = o["sleeveLength"]
@@ -199,8 +199,8 @@ import simd
     }
     return root
   }
-  static func cap(_ o: ProductObject, project: Project, assets: URL, limit: Int) -> SCNNode {
-    let root = SCNNode()
+  static func cap(_ o: ProductObject, project: Project, assets: URL, limit: Int) -> MeshNode {
+    let root = MeshNode()
     let mat = cloth(o, project, assets, limit)
     let r = o["width"] / 2
     let h = o["height"]
@@ -243,18 +243,18 @@ import simd
     }
     root.addChildNode(tube(band, radius: 3, material: trim, name: "Sweatband / open underside"))
     root.addChildNode(GeometryFactory.box(48, 5, 6, trim, y: 12, z: r - 1, corner: 2))
-    let button = SCNSphere(radius: 0.055)
+    let button = MeshSphere(radius: 0.055)
     button.segmentCount = 12
     button.materials = [trim]
-    let node = SCNNode(geometry: button)
+    let node = MeshNode(geometry: button)
     node.position = point(.init(0, h + 2, 0))
     node.name = "Covered crown button"
     node.categoryBitMask = 2
     root.addChildNode(node)
     return root
   }
-  static func tote(_ o: ProductObject, project: Project, assets: URL, limit: Int) -> SCNNode {
-    let root = SCNNode()
+  static func tote(_ o: ProductObject, project: Project, assets: URL, limit: Int) -> MeshNode {
+    let root = MeshNode()
     let w = o["width"]
     let d = o["depth"]
     let g = o["gusset"]
@@ -301,9 +301,9 @@ import simd
     return root
   }
   static func directArtwork(_ o: ProductObject, project: Project, assets: URL, limit: Int)
-    -> SCNNode
+    -> MeshNode
   {
-    guard let art = project.surfaceArtwork(o) else { return SCNNode() }
+    guard let art = project.surfaceArtwork(o) else { return MeshNode() }
     guard let a = o.textile?.attachment,
       let host = project.objects.first(where: { $0.id == a.garmentID }),
       host.recipeID == "curvedCap",
@@ -319,7 +319,7 @@ import simd
     let plane = GeometryFactory.artworkPlane(
       art, width: o["width"], depth: o["depth"], y: 0, assets: assets, textureLimit: limit)
     let mat =
-      plane.geometry?.firstMaterial?.copy() as? SCNMaterial ?? material("label-ecru", project)
+      plane.geometry?.firstMaterial?.copy() as? MeshMaterial ?? material("label-ecru", project)
     let angle = a.rotation * Double.pi / 180
     let c = cos(angle)
     let s = sin(angle)

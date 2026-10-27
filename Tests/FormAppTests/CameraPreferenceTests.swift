@@ -1,17 +1,17 @@
 import AppKit
-import SceneKit
+import FormGeometry
 import simd
 import XCTest
 @testable import FormApp
 @testable import FormCore
 @testable import FormGraphics
 
-/// Real AppKit event handlers and the actual SceneKit camera, without sending
+/// Real AppKit event handlers and the actual renderer camera, without sending
 /// operating-system input or touching the user's library.
 @MainActor final class CameraPreferenceTests: XCTestCase {
   @MainActor private final class ViewFixture {
     let window: NSWindow
-    let view: TableSCNView
+    let view: TableSceneView
     let controller: TableSceneController
     init(store: StudioStore? = nil) {
       _ = NSApplication.shared
@@ -19,11 +19,9 @@ import XCTest
         styleMask:[.titled],backing:.buffered,defer:false)
       window.isReleasedWhenClosed = false
       controller = TableSceneController(store:store)
-      view = TableSCNView(frame:NSRect(x:0,y:0,width:1200,height:800))
+      view = TableSceneView(frame:NSRect(x:0,y:0,width:1200,height:800))
       view.controller = controller; controller.view = view
-      view.scene = controller.scene; view.pointOfView = controller.cameraNode
-      view.allowsCameraControl = false; view.rendersContinuously = false
-      window.contentView = view
+        window.contentView = view
       window.makeFirstResponder(view)
       if let store { store.scene = controller; store.synchronizeScene() }
       controller.updateCamera()
@@ -336,8 +334,8 @@ import XCTest
         f.controller.pan(dx:-1200,dy:700); f.controller.zoom(350)
         f.controller.orbit(dx:-600,dy:-1100); f.controller.preset(name)
         XCTAssertEqual(f.controller.camera,expected)
-        XCTAssertTrue(f.controller.cameraNode.animationKeys.isEmpty)
-        XCTAssertTrue(f.controller.cameraNode.camera!.animationKeys.isEmpty)
+        XCTAssertTrue(f.controller.renderer!.camera.worldFromCameraMM == f.controller.cameraPayload().worldFromCameraMM)
+        XCTAssertEqual(f.controller.renderer!.camera.projection,f.controller.cameraPayload().projection)
       }
       XCTAssertEqual(f.controller.geometryBuilds,builds)
       XCTAssertEqual(store.project!.objects,objects)
@@ -375,11 +373,11 @@ import XCTest
     f.drag(70,40,flags:.shift)
     f.controller.fitAll()
     assertProjectVisible(f)
-    XCTAssertTrue(f.controller.cameraNode.animationKeys.isEmpty)
+    XCTAssertTrue(f.controller.renderer!.camera.worldFromCameraMM == f.controller.cameraPayload().worldFromCameraMM)
     XCTAssertEqual(f.controller.geometryBuilds,builds)
     XCTAssertEqual(store.project!.objects,objects)
     XCTAssertEqual(store.project!.history,history)
-    XCTAssertFalse(f.view.rendersContinuously)
+    XCTAssertTrue(f.controller.renderer!.viewport.isPaused);XCTAssertTrue(f.controller.renderer!.viewport.enableSetNeedsDisplay)
   }
   func testNamedProjectViewsKeepTheSamePivotAcrossSelectionsIsolationAndStudio() throws {
     let (f,store,root) = try scene(); defer { f.close(); try? FileManager.default.removeItem(at:root) }

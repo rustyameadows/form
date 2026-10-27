@@ -2,9 +2,11 @@ import Foundation
 
 extension ProductObject {
   public var supportsArtworkFace: Bool {
-    !isCanvasWorkspace && recipeID != "bomberJacket" && !MerchandiseBlanks.garmentIDs.contains(recipeID) && (recipeID == "clock" || self["width"] > 0 && self["depth"] > 0)
+    if recipeID == "importedMesh" {return meshAsset?.parts.contains(where:{$0.uvSets.contains(0)}) == true}
+    return !isCanvasWorkspace && recipeID != "bomberJacket" && !MerchandiseBlanks.garmentIDs.contains(recipeID) && (recipeID == "clock" || self["width"] > 0 && self["depth"] > 0)
   }
   public var artworkSize: Point2 {
+    if recipeID == "importedMesh", let size=meshAsset?.artworkSizeMM {return .init(size.width,size.height)}
     if recipeID=="deskClock" {return .init(self["width"],self["height"])}
     return recipeID == "clock"
       ? .init(self["diameter"], self["diameter"])
@@ -33,7 +35,7 @@ extension Project {
     var art = (try? resolvingComponents(in: source, keepingSwatchReferences: true)) ?? source
     art.requiresInkOutput=hasUsedProductionInks(in:art)
     if !keepingSwatchReferences {art=resolvingSwatches(in:art)}
-    if owner.id != object.id {
+    if owner.id != object.id && object.recipeID != "importedMesh" {
       art.safeInset=nil // Frame safety is not a declaration for a scaled product projection.
       let source = owner.artworkSize
       let target = object.artworkSize
@@ -97,6 +99,7 @@ extension Project {
     let design = objects[i].designID
     // Detachment bakes the current placement so the physical result is preserved.
     var detached = sourceID == nil ? surfaceArtwork(objects[i], keepingSwatchReferences: true) : nil
+    let sourceSize=artworkSize(objects[i])
     detached?.requiresInkOutput=false
     if ["clock","deskClock"].contains(objects[i].recipeID) { detached?.boundary = nil }
     var candidate = self
@@ -104,11 +107,16 @@ extension Project {
       candidate.objects[n].artworkSourceID = sourceID
       candidate.objects[n].artworkFit = sourceID == nil ? nil : fit
       candidate.objects[n].artwork = sourceID == nil ? detached : nil
+      if candidate.objects[n].recipeID == "importedMesh" {
+        let size=sourceID.flatMap{id in objects.first{$0.id==id}}.map{artworkSize($0)} ?? sourceSize
+        candidate.objects[n].meshAsset?.artworkSizeMM = .init(width:size.x,height:size.y)
+      }
     }
     try candidate.validateArtworkLinks()
     self = candidate
   }
   public func validateArtworkLinks() throws {
+    try validateModelRepresentations()
     try validateLibrarySelections()
     try validatePageSetups()
     try validateCollectionProduction()
@@ -161,17 +169,18 @@ extension Project {
       }
     }
     let snapshots = objects.filter { !ids.contains($0.id) && ids.contains(artworkOwner($0).id) }
-      .map { object -> (UUID, Artwork?) in
+      .map { object -> (UUID, Artwork?, Point2) in
         var art = surfaceArtwork(object, keepingSwatchReferences: true)
         art?.requiresInkOutput=false
         if ["clock","deskClock"].contains(object.recipeID) { art?.boundary = nil }
-        return (object.id, art)
+        return (object.id, art, artworkSize(object))
       }
-    for (id, art) in snapshots {
+    for (id, art, size) in snapshots {
       if let i = objects.firstIndex(where: { $0.id == id }) {
         objects[i].artwork = art
         objects[i].artworkSourceID = nil
         objects[i].artworkFit = nil
+        if objects[i].recipeID == "importedMesh" {objects[i].meshAsset?.artworkSizeMM = .init(width:size.x,height:size.y)}
       }
     }
   }

@@ -1,6 +1,6 @@
 import AppKit
 import CryptoKit
-import SceneKit
+import FormGeometry
 import FormCore
 
 /// Physical panel crops use the original source2D coordinates. Construction
@@ -23,9 +23,9 @@ import FormCore
     let components=try project.resolvingComponents(in:stories)
     return try decoration(project.resolvingSwatches(in:components))
   }
-  public static func material(panel:PatternAssemblyPanel,source:Artwork,project:Project,assets:URL,fontRevision:Int,textureLimit:Int = maximumTextureEdge)throws -> SCNMaterial {
+  public static func material(panel:PatternAssemblyPanel,source:Artwork,project:Project,assets:URL,fontRevision:Int,textureLimit:Int = maximumTextureEdge)throws -> MeshMaterial {
     let image=try texture(panel:panel,source:source,project:project,assets:assets,fontRevision:fontRevision,textureLimit:textureLimit)
-    let material=SCNMaterial();material.name="Assembly fabric / \(panel.material.id) / \(panel.id.key)";material.lightingModel = .physicallyBased;material.roughness.contents=panel.material.roughness;material.metalness.contents=panel.material.metallic;material.diffuse.contents=image;material.isDoubleSided=true;return material
+    let material=MeshMaterial();material.name="Assembly fabric / \(panel.material.id) / \(panel.id.key)";material.lightingModel = .physicallyBased;material.roughness.contents=panel.material.roughness;material.metalness.contents=panel.material.metallic;material.diffuse.contents=image;material.isDoubleSided=true;return material
   }
   public static func texture(panel:PatternAssemblyPanel,source:Artwork,project:Project,assets:URL,fontRevision:Int,textureLimit:Int = maximumTextureEdge)throws -> NSImage {
     let owner=project.objects.first(where:{$0.artwork?.elements.contains(where:{$0.id==panel.id.elementID})==true})

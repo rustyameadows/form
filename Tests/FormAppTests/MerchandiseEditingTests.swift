@@ -1,6 +1,6 @@
 import AppKit
 import Metal
-import SceneKit
+import FormGeometry
 import XCTest
 
 @testable import FormApp
@@ -12,7 +12,7 @@ import XCTest
     _ = NSApplication.shared
     return try Samples.merchandiseCollection()
   }
-  private func node(_ scene: TableSceneController, _ id: UUID) throws -> SCNNode {
+  private func node(_ scene: TableSceneController, _ id: UUID) throws -> MeshNode {
     try XCTUnwrap(
       scene.objectRoot.childNode(withName: "object:\(id.uuidString)", recursively: false))
   }
@@ -23,7 +23,7 @@ import XCTest
       assets: FileManager.default.temporaryDirectory, textureLimit: 768)
     return scene
   }
-  private func vertices(_ geometry: SCNGeometry) throws -> [Vector3] {
+  private func vertices(_ geometry: MeshGeometry) throws -> [Vector3] {
     let s = try XCTUnwrap(geometry.sources(for: .vertex).first)
     return s.data.withUnsafeBytes { raw in
       (0..<s.vectorCount).map { i in
@@ -59,7 +59,7 @@ import XCTest
       XCTAssertGreaterThan(y, 0)
       XCTAssertLessThan(y, cap["height"] * 0.72)
     }
-    XCTAssertNil(root.childNodes.first { $0.geometry is SCNPlane })
+    XCTAssertNil(root.childNodes.first { $0.geometry is MeshPlane })
   }
   func testHostMoveFlipAndMetadataReuseMeshesButCapDimensionsAndTrimColorsInvalidate() throws {
     var p = try project()
@@ -180,7 +180,7 @@ import XCTest
     store.undo()
     XCTAssertEqual(store.project!.objects, p.objects)
   }
-  func testNativeRenderedMerchandiseCollectionAndSeparateBlankFaces() throws {
+  func testNativeRenderedMerchandiseCollectionAndSeparateBlankFaces() async throws {
     guard MTLCreateSystemDefaultDevice() != nil else {
       throw XCTSkip("Native merchandise proof requires Metal.")
     }
@@ -192,7 +192,8 @@ import XCTest
       try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
     }
     let full = scene(p)
-    let png = try XCTUnwrap(full.snapshot(size: .init(width: 1500, height: 1100)).pngData())
+    let fullImage=try await full.snapshot(size:.init(width:1500,height:1100))
+    let png=try XCTUnwrap(fullImage.pngData())
     XCTAssertGreaterThan(png.count, 20000)
     if let folder {
       try png.write(to: folder.appendingPathComponent("orbital-merchandise-collection.png"))
@@ -219,7 +220,8 @@ import XCTest
         s.camera.elevation = recipe == "curvedCap" ? 0.28 : 1.05
         s.camera.azimuth = recipe == "curvedCap" ? 0.25 : 0.06
         s.updateCamera()
-        let data = try XCTUnwrap(s.snapshot(size: .init(width: 1200, height: 1000)).pngData())
+        let image=try await s.snapshot(size:.init(width:1200,height:1000))
+        let data=try XCTUnwrap(image.pngData())
         XCTAssertGreaterThan(data.count, 15000)
         if let folder {
           try data.write(
@@ -246,7 +248,7 @@ import XCTest
     XCTAssertGreaterThan(q.textilePlacement(back).position.y + back["height"], tee["loft"])
   }
 
-  func testCapRenderedUVQuadrantsStayUprightAndReadableFromOutside() throws {
+  func testCapRenderedUVQuadrantsStayUprightAndReadableFromOutside() async throws {
     guard MTLCreateSystemDefaultDevice() != nil else {
       throw XCTSkip("Native cap UV proof requires Metal.")
     }
@@ -271,17 +273,16 @@ import XCTest
     s.camera.azimuth = 0
     s.camera.viewportAspect = 900.0 / 700
     s.updateCamera()
-    let image = s.snapshot(size: .init(width: 900, height: 700))
+    let image = try await s.snapshot(size: .init(width: 900, height: 700))
     let rep = try XCTUnwrap(NSBitmapImageRep(data: image.pngData()!))
-    let view = SCNView(frame: .init(x: 0, y: 0, width: 900, height: 700))
-    view.scene = s.scene
-    view.pointOfView = s.cameraNode
+    let view = TableSceneView(frame: .init(x: 0, y: 0, width: 900, height: 700))
+    view.controller=s;s.view=view
     let zone = MerchandiseBlanks.zones(host).first { $0.id == .front }!
     func color(_ u: Double, _ v: Double) -> NSColor {
       let local = MerchandiseBlanks.sample(host, zone: zone, u: u, v: v, clearance: ink["height"])
         .point
       let a = host.rotation * Double.pi / 180
-      let world = SCNVector3(
+      let world = MeshVector3(
         (host.position.x + local.x * cos(a) + local.z * sin(a)) / 100,
         (host.position.y + local.y) / 100,
         (host.position.z - local.x * sin(a) + local.z * cos(a)) / 100)
