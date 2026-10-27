@@ -53,7 +53,7 @@ import XCTest
     store.studioComposition.reconcile(); store.studioComposition.addShelf()
     store.fabricationGuide.reconcile(); store.fabricationGuide.caliper = "0.47"
     let before = store.project, draft = store.studioComposition.draft, camera = scene.camera
-    let stageCamera = store.studioComposition.stage.camera, builds = scene.diagnostics["geometry_builds"] as? Int
+    let stageCamera = store.studioComposition.stage.camera, builds = try XCTUnwrap(scene.diagnostics["geometry_builds"] as? Int)
     let library = try JSONEncoder.form.encode(store.library), prefs = InterfaceAppearance(file: root.appendingPathComponent("Appearance.json"))
     try prefs.setAccent("#8822CC"); store.refreshInterfaceAppearance(accent: prefs.controlColor)
     XCTAssertEqual(store.project, before); XCTAssertEqual(scene.camera, camera); XCTAssertEqual(store.studioComposition.stage.camera, stageCamera)

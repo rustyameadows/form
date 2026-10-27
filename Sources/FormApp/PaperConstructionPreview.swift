@@ -123,7 +123,10 @@ private struct PaperConstructionPreviewSurface:NSViewRepresentable {
       if let path=PaperOutput.path(panel.polygon).copy(using:&transform) {hitPanelPaths.append((path,panel.id))}
     }
     context.restoreGState()
-    text("CUT · SOLID    CREASE · DASHED    GLUE · SHADED",at:.init(x:24,y:bounds.height-24),size:9)
+    let legendWidth = max(1, (bounds.width - 32) / 3)
+    for (index, label) in ["Cut · solid", "Crease · dash", "Glue · shade"].enumerated() {
+      text(label, at: .init(x: 16 + Double(index) * legendWidth, y: bounds.height - 24), size: 9)
+    }
   }
   private func drawSheets(_ net:PaperNet,context:CGContext,store:StudioStore) {
     guard let object,let definition=try? PaperConstruction.definition(for:object) else{return}

@@ -84,7 +84,7 @@ private struct StudioThreadEditor:View {
       }.textFieldStyle(.roundedBorder)
       Text("Unit cost needs both a known spool price and length. Assignments capture this record; editing library stock does not rewrite projects or jobs.").font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(Palette.ink)}
-      HStack {Button("Cancel") {dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save thread") {commit()}.keyboardShortcut(.defaultAction)}
+      HStack {Button("Cancel") {dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save thread") {commit()}.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)}
     }.padding(26).frame(width:570).background(Palette.paper)
   }
   private func commit() {
@@ -117,7 +117,7 @@ private struct EmbroideryEquipmentEditor:View {
       ScrollView {VStack {ForEach($hoops) {$hoop in HStack {TextField("Name",text:$hoop.name);TextField("Width",text:$hoop.width).frame(width:85);Text("×");TextField("Height",text:$hoop.height).frame(width:85);Button {hoops.removeAll {$0.id==hoop.id}} label:{Image(systemName:"minus.circle")}}.textFieldStyle(.roundedBorder)}}}.frame(height:150)
       Text("Checks compare declared hoop axes and DST support only. No automatic rotation, device connection, scheduling, or physical sewing capability is implied.").font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(Palette.ink)}
-      HStack {Button("Cancel") {dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save declaration") {commit()}.keyboardShortcut(.defaultAction)}
+      HStack {Button("Cancel") {dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save declaration") {commit()}.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)}
     }.padding(26).frame(width:660).background(Palette.paper)
   }
   private func commit() {

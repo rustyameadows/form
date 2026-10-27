@@ -98,7 +98,7 @@ struct FocusedNumericArtworkField:NSViewRepresentable {
     return field
   }
   func updateNSView(_ field:NumericArtworkTextField,context:Context) {
-    context.coordinator.parent=self;field.textColor=invalid ? .systemRed:.labelColor;field.toolTip=invalid ? "Enter a valid value in this field's supported range.":"Up/Down steps this focused value. Shift uses ten times the step."
+    context.coordinator.parent=self;field.textColor=invalid ? Palette.accentNS:.black;field.toolTip=invalid ? "Enter a valid value in this field's supported range.":"Up/Down steps this focused value. Shift uses ten times the step."
     context.coordinator.sync(field)
   }
   static func dismantleNSView(_ field:NumericArtworkTextField,coordinator:Coordinator) {(field.currentEditor() as? NumericArtworkFieldEditor)?.finishIncrement();field.delegate=nil}

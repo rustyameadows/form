@@ -242,14 +242,14 @@ struct PaperEnvironmentControls: View {
       SectionLabel("STOCK & PROTOTYPES")
       Text(d.stock.name).font(.system(size:13,weight:.medium))
       Text(String(format:"%.2f mm · %@",d.stock.thicknessMM,d.stock.verified ? "measured stock" : "unverified prototype stock")).font(.system(size:11)).foregroundStyle(Palette.secondary)
-      TextField("Sheet width · mm",value:$store.paperSheetWidth,format:.number).textFieldStyle(.roundedBorder)
-      TextField("Sheet height · mm",value:$store.paperSheetHeight,format:.number).textFieldStyle(.roundedBorder)
+      TextField("Sheet width · mm",value:$store.paperSheetWidth,format:.number).font(Palette.numericFont).textFieldStyle(.roundedBorder)
+      TextField("Sheet height · mm",value:$store.paperSheetHeight,format:.number).font(Palette.numericFont).textFieldStyle(.roundedBorder)
       Stepper("Prototype quantity: \(store.paperQuantity)",value:$store.paperQuantity,in:1...64)
-      TextField("Margin · mm",value:$store.paperSheetMargin,format:.number).textFieldStyle(.roundedBorder)
-      TextField("Gap · mm",value:$store.paperSheetGap,format:.number).textFieldStyle(.roundedBorder)
+      TextField("Margin · mm",value:$store.paperSheetMargin,format:.number).font(Palette.numericFont).textFieldStyle(.roundedBorder)
+      TextField("Gap · mm",value:$store.paperSheetGap,format:.number).font(Palette.numericFont).textFieldStyle(.roundedBorder)
       if let layout = try? PaperOutput.layout(store:store,definition:d) {
         Text("\(layout.sheetCount) sheets · \(layout.placements.count) blanks").font(.system(size:12,weight:.medium))
-        ForEach(layout.issues) {issue in Text(issue.message).font(.system(size:11)).foregroundStyle(issue.severity == .error ? .red : Palette.secondary)}
+        ForEach(layout.issues) {issue in Text(issue.message).font(.system(size:11)).foregroundStyle(issue.severity == .error ? Palette.ink : Palette.secondary)}
       }
       Button("Review sheet layout") { store.showPaper(.sheet,object:object) }
       Divider()
@@ -263,7 +263,7 @@ struct PaperEnvironmentControls: View {
     }.font(.system(size:11))
   }
   private func field(_ title:String,get:@escaping()->Double,set:@escaping(Double)->Void)->some View {
-    HStack {Text(title);Spacer();TextField(title,value:Binding(get:get,set:set),format:.number.precision(.fractionLength(0...2))).labelsHidden().frame(width:70).textFieldStyle(.roundedBorder);Text("mm").foregroundStyle(Palette.secondary)}.font(.system(size:11))
+    HStack {Text(title);Spacer();TextField(title,value:Binding(get:get,set:set),format:.number.precision(.fractionLength(0...2))).font(Palette.numericFont).labelsHidden().frame(width:70).textFieldStyle(.roundedBorder);Text("mm").foregroundStyle(Palette.secondary)}.font(.system(size:11))
   }
   private func addNote(_ d:PaperConstruction) {
     var value=d;value.annotations.append(.init(text:note,panelID:store.paperSelectedPanelID,edgeID:store.paperSelectedFoldID,view:store.mode == .table ? "assembled":store.paperRepresentation == .panels ? "panels":"dieline"));if store.configurePaper(object,definition:value) {note=""}
@@ -285,7 +285,7 @@ struct PaperEnvironmentControls: View {
     VStack(alignment:.leading,spacing:7) {
       Divider();SectionLabel("CONSTRUCTION REVIEW")
       if let report=try? d.preflight() {
-        ForEach(report.issues) {issue in Text(issue.message).font(.system(size:10)).foregroundStyle(issue.severity == .error ? .red : Palette.secondary)}
+        ForEach(report.issues) {issue in Text(issue.message).font(.system(size:10)).foregroundStyle(issue.severity == .error ? Palette.ink : Palette.secondary)}
       }
     }
   }

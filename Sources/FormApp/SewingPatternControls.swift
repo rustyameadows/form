@@ -160,10 +160,10 @@ struct SewingSeamEditor: View {
       endpoint("First edge", selected: $first, edge: $firstEdge, copy: $firstCopy)
       endpoint("Second edge", selected: $second, edge: $secondEdge, copy: $secondCopy, isSecond: true)
       Toggle("Reverse edge direction when matching", isOn: $reversed)
-      HStack { Text("Length tolerance (mm)"); TextField("Tolerance", value: $tolerance, format: .number).textFieldStyle(.roundedBorder).frame(width: 85) }
+      HStack { Text("Length tolerance (mm)"); TextField("Tolerance", value: $tolerance, format: .number).font(Palette.numericFont).textFieldStyle(.roundedBorder).frame(width: 85) }
       Text("Copy numbers refer to the piece's cut quantity. A mismatch stays visible in the pattern check and exported instructions; pairing does not simulate sewing or stretch.").font(.system(size: 10)).foregroundStyle(Palette.secondary)
       if !error.isEmpty { Text(error).foregroundStyle(Palette.ink).font(.system(size: 11)) }
-      HStack { Button("Cancel") { dismiss() }; Spacer(); Button("Save seam") { save() }.keyboardShortcut(.defaultAction) }
+      HStack { Button("Cancel") { dismiss() }; Spacer(); Button("Save seam") { save() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction) }
     }.padding(28).frame(width: 540).background(Palette.paper).onAppear {
       first = pieces.first?.id; second = pieces.dropFirst().first?.id ?? first
       firstEdge=firstSewingEdge(first);secondEdge=firstSewingEdge(second)

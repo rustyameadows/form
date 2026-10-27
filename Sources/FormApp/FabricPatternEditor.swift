@@ -140,7 +140,7 @@ struct FabricPatternEditor: View {
       if !error.isEmpty { Text(error).font(.system(size: 11)).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true) }
       HStack {
         Button("Remove pattern") { remove() }.disabled(store.project?.material(material.id).fabric?.pattern == nil)
-        Spacer(); Button("Apply fabric design") { _ = apply() }.keyboardShortcut(.defaultAction).disabled(design == nil)
+        Spacer(); Button("Apply fabric design") { _ = apply() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction).disabled(design == nil)
       }
     }.padding(26).frame(width: 1040, height: 735).background(Palette.paper)
   }

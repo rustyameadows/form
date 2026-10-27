@@ -110,7 +110,7 @@ private struct FabricMaterialEditor:View {
       HStack {Button("Cancel"){dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save fabric") {
         NSApp.keyWindow?.makeFirstResponder(nil)
         do {guard !draft.name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty else {throw FormError.invalid("Name the fabric.")};draft.fabric?.weightGSM=try number(gsm,"weight");draft.fabric?.usableWidth=try number(usableWidth,"usable width");draft.fabric?.inventoryMeters=try number(inventory,"inventory");try draft.fabric?.validate();save(draft)} catch {self.error=error.localizedDescription}
-      }.keyboardShortcut(.defaultAction)}
+      }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)}
     }.padding(28).frame(width:530).background(Palette.paper)
   }
 }

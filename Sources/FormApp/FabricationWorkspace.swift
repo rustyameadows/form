@@ -127,7 +127,7 @@ struct FabricationWorkspace:View {
         if process == .paper,let d=guide.paper {
           paperSide(object)
           if let layout=try? PaperOutput.layout(store:store,definition:d) {Text("\(layout.placements.count) blanks · \(layout.sheetCount) sheets · \(Int(layout.sheetSize.x)) × \(Int(layout.sheetSize.y)) mm").font(.system(size:14,weight:.medium))}
-          if let report=try? d.preflight(){ForEach(report.issues){issue in Label(issue.message,systemImage:issue.severity == .error ? "xmark.circle":"exclamationmark.circle").font(.system(size:11)).foregroundStyle(issue.severity == .error ? .red:Palette.secondary)}}
+          if let report=try? d.preflight(){ForEach(report.issues){issue in Label(issue.message,systemImage:issue.severity == .error ? "xmark.circle":"exclamationmark.circle").font(.system(size:11)).foregroundStyle(issue.severity == .error ? Palette.ink:Palette.secondary)}}
           HStack {Button("Cut & crease SVG…"){exportPaper(object,"svg")};Button("Sheet proof PDF…"){exportPaper(object,"pdf")};Button("Production packet…"){exportPaper(object,"packet")}.buttonStyle(.borderedProminent).tint(Palette.ink)}
         }else {Button("Open "+process.title){guide.openPreparation()}.buttonStyle(.borderedProminent).tint(Palette.ink)}
         ProcessSequence(process:process)

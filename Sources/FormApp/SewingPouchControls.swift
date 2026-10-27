@@ -95,7 +95,7 @@ struct RoundedPouchControls: View {
           .system(size: 10)
         ).foregroundStyle(Palette.secondary)
         Spacer()
-        Button("Create editable pattern") { create() }.keyboardShortcut(.defaultAction).disabled(
+        Button("Create editable pattern") { create() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction).disabled(
           template == nil)
       }
     }.padding(28).frame(width: 760).background(Palette.paper)

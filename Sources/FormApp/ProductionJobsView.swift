@@ -81,7 +81,7 @@ struct ProductionJobsView:View {
       Picker("Equipment declaration",selection:$equipmentID) {Text("Unknown / no profile").tag(UUID?.none);ForEach(equipment) {Text($0.name).tag(Optional($0.id))}}
       if let design=object?.textile?.embroidery {
         let check=EmbroideryCompatibility.check(design:design,equipment:equipment.first {$0.id==equipmentID},outputs:Array(outputs))
-        Text(check.status == .incompatible ? "Declared incompatibility: "+check.messages.joined(separator:" "):check.messages.joined(separator:" ")).font(.system(size:10)).foregroundStyle(check.status == .incompatible ? .red:Palette.secondary).fixedSize(horizontal:false,vertical:true)
+        Text(check.status == .incompatible ? "Declared incompatibility: "+check.messages.joined(separator:" "):check.messages.joined(separator:" ")).font(.system(size:10)).foregroundStyle(check.status == .incompatible ? Palette.ink:Palette.secondary).fixedSize(horizontal:false,vertical:true)
       }
       Picker("Revision lineage",selection:$supersedesID) {Text("Independent job").tag(UUID?.none);ForEach(jobs.filter {$0.objectID==objectID}) {Text("Supersedes "+$0.name).tag(Optional($0.id))}}
       HStack {ForEach(["dst","svg","json"],id:\.self) {format in Toggle(format.uppercased(),isOn:Binding(get:{outputs.contains(format)},set:{if $0 {outputs.insert(format)} else {outputs.remove(format)}})).toggleStyle(.checkbox)}}

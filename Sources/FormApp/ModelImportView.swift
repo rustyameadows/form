@@ -81,7 +81,7 @@ private struct ModelImportReviewContents:View {
       HStack {
         Text("Original files and normalized geometry stay in this project. No hardware is contacted.").font(.system(size:11)).foregroundStyle(Palette.secondary)
         Spacer()
-        Button("Import model") {do{try coordinator.commit(review)}catch{review.error=error.localizedDescription}}.buttonStyle(.borderedProminent).keyboardShortcut(.defaultAction).disabled(review.state != "ready")
+        Button("Import model") {do{try coordinator.commit(review)}catch{review.error=error.localizedDescription}}.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction).disabled(review.state != "ready")
       }
     }.padding(28).frame(width:900).background(Palette.paper)
   }

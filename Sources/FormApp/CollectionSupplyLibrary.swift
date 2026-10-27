@@ -38,7 +38,7 @@ struct CollectionSupplyEditor:View {
       }.textFieldStyle(.roundedBorder)
       Text("Exact nonnegative decimals; unknown values stay blank. Assignments are portable snapshots and refresh only when chosen explicitly.").font(.system(size:10)).foregroundStyle(Palette.secondary)
       if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(Palette.ink)}
-      HStack {Button("Cancel"){dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save supply"){do{try item.validate();try save(item)}catch{self.error=error.localizedDescription}}.keyboardShortcut(.defaultAction).accessibilityIdentifier("collection-supply-save")}
+      HStack {Button("Cancel"){dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save supply"){do{try item.validate();try save(item)}catch{self.error=error.localizedDescription}}.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction).accessibilityIdentifier("collection-supply-save")}
     }.padding(26).frame(width:570).background(Palette.paper)
   }
 }

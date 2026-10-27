@@ -96,7 +96,7 @@ struct EmbroideryEditor:View {
       if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
       HStack {
         Button("Remove digitizing settings") {remove()}.disabled(object?.textile?.embroidery==nil)
-        Spacer();Button("Save embroidery") {_ = apply()}.keyboardShortcut(.defaultAction)
+        Spacer();Button("Save embroidery") {_ = apply()}.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
       }
     }.padding(26).frame(width:1080,height:780).background(Palette.paper)
       .onAppear {rebuild()}.onChange(of:draft) {_,value in dirty=program?.design != value}

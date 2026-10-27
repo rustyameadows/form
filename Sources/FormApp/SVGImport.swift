@@ -266,7 +266,7 @@ struct SVGImportSheet: View {
             store.svgImport = nil
             store.toast("SVG artwork imported")
           } catch { store.error = error.localizedDescription }
-        }.keyboardShortcut(.defaultAction).disabled(review.result.hasWarnings && !acceptDifferences)
+        }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction).disabled(review.result.hasWarnings && !acceptDifferences)
       }.padding(20)
     }.frame(width: 900, height: 660).background(Palette.paper)
   }

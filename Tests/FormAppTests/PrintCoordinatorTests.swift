@@ -1,4 +1,5 @@
 import AppKit
+import SwiftUI
 import XCTest
 
 @testable import FormApp
@@ -25,6 +26,25 @@ import XCTest
     try store.engine.open(first.id)
     store.printing.open(objectID: a.id)
     return (store, a, b, second.id, root)
+  }
+  func testPrintWorkspaceAllocatesVisibleNativeBedAndRendersPreparedMesh() throws {
+    let (store, _, _, _, root) = try fixture()
+    defer { try? FileManager.default.removeItem(at: root) }
+    let window = NSWindow(contentRect: .init(x: 0, y: 0, width: 1120, height: 760), styleMask: [.titled], backing: .buffered, defer: false)
+    window.isReleasedWhenClosed = false
+    let host = NSHostingView(rootView: PrintWorkspace(printing: store.printing).environmentObject(store).labInterface())
+    window.contentView = host; window.orderBack(nil)
+    defer { window.close() }
+    host.layoutSubtreeIfNeeded(); RunLoop.main.run(until: Date().addingTimeInterval(0.08)); host.layoutSubtreeIfNeeded()
+    func beds(_ view: NSView) -> [TableSceneView] {
+      (view as? TableSceneView).map { [$0] } ?? view.subviews.flatMap(beds)
+    }
+    let bed = try XCTUnwrap(beds(host).first)
+    XCTAssertGreaterThan(bed.bounds.width, 500); XCTAssertGreaterThan(bed.bounds.height, 400)
+    let controller = try XCTUnwrap(bed.controller)
+    XCTAssertNil(controller.rendererIssue)
+    XCTAssertFalse(controller.adapter.renderables(scene: controller.scene).isEmpty)
+    XCTAssertGreaterThan(try XCTUnwrap(controller.renderer?.nativeView.bounds.width), 500)
   }
   private func preview(_ length: Double = 10) -> ToolpathPreview {
     ToolpathPreview.parse(

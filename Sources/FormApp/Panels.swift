@@ -361,7 +361,7 @@ struct BridgeView: View {
           .system(size: 29, weight: .light)
         ).foregroundStyle(Palette.accent)
         Spacer()
-        Button("Done") { dismiss() }.keyboardShortcut(.defaultAction)
+        Button("Done") { dismiss() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
       }
       VStack(alignment: .leading, spacing: 9) {
         Text("A conversation here.\nAn object on the Table.").font(
@@ -415,7 +415,7 @@ struct ProjectInfoView: View {
       HStack {
         Text("Project notebook").font(.system(size: 26, weight: .regular, design: .default))
         Spacer()
-        Button("Done") { dismiss() }.keyboardShortcut(.defaultAction)
+        Button("Done") { dismiss() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
       }
       if let project = store.project {
         TextField(
@@ -521,84 +521,88 @@ struct LibraryView: View {
           ).foregroundStyle(Palette.secondary)
         }
         Spacer()
-        Button("Done") { dismiss() }.keyboardShortcut(.defaultAction)
+        Button("Done") { dismiss() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
       }
-      Button {
-        printingSettings = true
-      } label: {
-        HStack(spacing: 12) {
-          Image(systemName: "printer").font(.system(size: 21, weight: .light))
-          VStack(alignment: .leading, spacing: 4) {
-            Text("Filaments & 3D printing").font(.system(size: 12, weight: .semibold))
-            Text(
-              "\(store.library.filaments.count) filaments · \(store.library.printers.count) printer profiles · OrcaSlicer"
-            ).font(.system(size: 10)).foregroundStyle(Palette.secondary)
-          }
-          Spacer()
-          Image(systemName: "arrow.up.right").font(.system(size: 11))
-        }.padding(14).background(.white, in: RoundedRectangle(cornerRadius: 9))
-      }.buttonStyle(.plain)
-      Button {
-        fabricSettings = true
-      } label: {
-        Label("Fabrics & textile materials", systemImage: "tshirt").font(.system(size:12,weight:.medium))
-      }.buttonStyle(.borderless)
-      SettingsLink { Label("App appearance…", systemImage: "slider.horizontal.3") }
-        .buttonStyle(.borderless).font(.system(size: 12))
-      TextileProductionLibraryButton()
-      SectionLabel("MATERIALS")
-      LazyVGrid(columns: [GridItem(.adaptive(minimum: 140))], spacing: 17) {
-        ForEach(store.library.materials) { material in
-          HStack(spacing: 10) {
-            RoundedRectangle(cornerRadius: 5).fill(Color(nsColor: NSColor(hex: material.color)))
-              .frame(width: 34, height: 40).overlay(
-                RoundedRectangle(cornerRadius: 5).strokeBorder(Palette.line))
-            VStack(alignment: .leading, spacing: 3) {
-              Text(material.name).font(.system(size: 11, weight: .medium))
-              Text(material.category).font(.system(size: 9)).foregroundStyle(Palette.secondary)
-            }
-            Spacer()
-          }
-        }
-      }
-      HStack {
-        TextField("Name a new material", text: $newName).textFieldStyle(.roundedBorder)
-        ColorPicker("Color", selection: $newColor, supportsOpacity: false).labelsHidden()
-        Button("Add material") {
-          let id = "custom_" + UUID().uuidString
-          store.library.materials.append(.init(id, newName, "Custom", NSColor(newColor).hexString))
-          store.saveLibrary()
-          newName = ""
-        }.disabled(newName.isEmpty)
-      }
-      Divider()
-      SectionLabel("STUDIO EQUIPMENT")
       ScrollView {
-        VStack(spacing: 14) {
-          ForEach(store.library.equipment) { equipment in
-            EquipmentEditor(equipment: equipment) { changed in
-              if let index = store.library.equipment.firstIndex(where: { $0.id == equipment.id }) {
-                store.library.equipment[index] = changed
-                store.saveLibrary()
+        VStack(alignment: .leading, spacing: 22) {
+          Button {
+            printingSettings = true
+          } label: {
+            HStack(spacing: 12) {
+              Image(systemName: "printer").font(.system(size: 21, weight: .light))
+              VStack(alignment: .leading, spacing: 4) {
+                Text("Filaments & 3D printing").font(.system(size: 12, weight: .semibold))
+                Text(
+                  "\(store.library.filaments.count) filaments · \(store.library.printers.count) printer profiles · OrcaSlicer"
+                ).font(.system(size: 10)).foregroundStyle(Palette.secondary)
               }
-            } onRemove: {
-              store.library.equipment.removeAll { $0.id == equipment.id }
-              store.saveLibrary()
+              Spacer()
+              Image(systemName: "arrow.up.right").font(.system(size: 11))
+            }.padding(14).background(.white, in: RoundedRectangle(cornerRadius: 9))
+          }.buttonStyle(.plain)
+          Button {
+            fabricSettings = true
+          } label: {
+            Label("Fabrics & textile materials", systemImage: "tshirt").font(.system(size:12,weight:.medium))
+          }.buttonStyle(.borderless)
+          SettingsLink { Label("App appearance…", systemImage: "slider.horizontal.3") }
+            .buttonStyle(.borderless).font(.system(size: 12))
+          TextileProductionLibraryButton()
+          SectionLabel("MATERIALS")
+          LazyVGrid(columns: [GridItem(.adaptive(minimum: 140))], spacing: 17) {
+            ForEach(store.library.materials) { material in
+              HStack(spacing: 10) {
+                RoundedRectangle(cornerRadius: 5).fill(Color(nsColor: NSColor(hex: material.color)))
+                  .frame(width: 34, height: 40).overlay(
+                    RoundedRectangle(cornerRadius: 5).strokeBorder(Palette.line))
+                VStack(alignment: .leading, spacing: 3) {
+                  Text(material.name).font(.system(size: 11, weight: .medium))
+                  Text(material.category).font(.system(size: 9)).foregroundStyle(Palette.secondary)
+                }
+                Spacer()
+              }
             }
           }
-        }
-      }.frame(height: min(CGFloat(store.library.equipment.count) * 66, 200))
-      Button {
-        store.library.equipment.append(
-          .init("Custom printer", width: 279.4, height: 431.8, format: "PDF"))
-        store.saveLibrary()
-      } label: {
-        Label("Add equipment profile", systemImage: "plus").font(.system(size: 11))
-      }.buttonStyle(.plain).foregroundStyle(Palette.accent)
-      Text("Equipment profiles guide prototype exports. Direct hardware control comes later.").font(
-        .system(size: 10)
-      ).foregroundStyle(Palette.secondary)
-    }.padding(30).frame(width: 680).background(Palette.paper).sheet(isPresented: $printingSettings)
+          HStack {
+            TextField("Name a new material", text: $newName).textFieldStyle(.roundedBorder)
+            ColorPicker("Color", selection: $newColor, supportsOpacity: false).labelsHidden()
+            Button("Add material") {
+              let id = "custom_" + UUID().uuidString
+              store.library.materials.append(.init(id, newName, "Custom", NSColor(newColor).hexString))
+              store.saveLibrary()
+              newName = ""
+            }.disabled(newName.isEmpty)
+          }
+          Divider()
+          SectionLabel("STUDIO EQUIPMENT")
+          ScrollView {
+            VStack(spacing: 14) {
+              ForEach(store.library.equipment) { equipment in
+                EquipmentEditor(equipment: equipment) { changed in
+                  if let index = store.library.equipment.firstIndex(where: { $0.id == equipment.id }) {
+                    store.library.equipment[index] = changed
+                    store.saveLibrary()
+                  }
+                } onRemove: {
+                  store.library.equipment.removeAll { $0.id == equipment.id }
+                  store.saveLibrary()
+                }
+              }
+            }
+          }.frame(height: min(CGFloat(store.library.equipment.count) * 66, 200))
+          Button {
+            store.library.equipment.append(
+              .init("Custom printer", width: 279.4, height: 431.8, format: "PDF"))
+            store.saveLibrary()
+          } label: {
+            Label("Add equipment profile", systemImage: "plus").font(.system(size: 11))
+          }.buttonStyle(.plain).foregroundStyle(Palette.accent)
+          Text("Equipment profiles guide prototype exports. Direct hardware control comes later.").font(
+            .system(size: 10)
+          ).foregroundStyle(Palette.secondary)
+        }.frame(maxWidth: .infinity, alignment: .leading).padding(.trailing, 8)
+      }
+    }.padding(30).frame(width: 680, height: 680).background(Palette.paper).sheet(isPresented: $printingSettings)
     { PrintingSettingsView(printing: store.printing).environmentObject(store) }
     .sheet(isPresented: $fabricSettings) { TextileFabricLibrary().environmentObject(store) }
   }

@@ -254,7 +254,7 @@ struct PrintNumber: View {
         value: Binding(
           get: { value }, set: { value = min(range.upperBound, max(range.lowerBound, $0)) }),
         format: .number.precision(.fractionLength(0...2))
-      ).multilineTextAlignment(.trailing).frame(width: 65).textFieldStyle(.roundedBorder)
+      ).font(Palette.numericFont).multilineTextAlignment(.trailing).frame(width: 65).textFieldStyle(.roundedBorder)
         .onSubmit { NSApp.keyWindow?.makeFirstResponder(nil) }
       Text(unit).foregroundStyle(Palette.secondary).fixedSize().frame(
         minWidth: 21, alignment: .leading)

@@ -17,7 +17,7 @@ struct PrintingSettingsView: View {
             .foregroundStyle(Palette.secondary)
         }
         Spacer()
-        Button("Done") { dismiss() }.keyboardShortcut(.defaultAction)
+        Button("Done") { dismiss() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
       }
       Picker("Printing settings", selection: $tab) {
         Text("Filament library").tag("Filaments")
@@ -279,7 +279,7 @@ struct LabeledField: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 7) {
       Text(title).font(.system(size: 10, weight: .medium))
-      TextField(prompt, text: $text).textFieldStyle(.roundedBorder)
+      TextField(prompt, text: $text).font(Palette.numericFont).textFieldStyle(.roundedBorder)
     }
   }
 }
