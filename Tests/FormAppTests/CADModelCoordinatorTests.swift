@@ -3,6 +3,8 @@ import Foundation
 import XCTest
 import FormCore
 import FormCADModel
+import LabRendering
+import simd
 @testable import FormApp
 
 @MainActor final class CADModelCoordinatorTests:XCTestCase {
@@ -96,7 +98,59 @@ import FormCADModel
     for payload in prepared.renderables{XCTAssertEqual(payload.mesh.parts.reduce(0){$0+$1.triangleIndices.count/3},payload.mesh.triangleCount)}
     var recolored=object;recolored.color="#CC3300";let appearance=CADSceneAdapter.renderables(prepared,for:recolored)
     XCTAssertEqual(appearance.map{$0.mesh.revision},prepared.renderables.map{$0.mesh.revision});XCTAssertTrue(appearance.allSatisfy{$0.materials.allSatisfy{$0.baseColor.x>0.7&&$0.baseColor.z==0}})
+    // The same source mesh can acquire new material parts. Picking must use
+    // the current representation's map, not an older cached partition.
+    try await eventually{store.cad.resolvedScene(for:object,assets:assets) != nil}
+    var changed=object;for a in changed.cadModel!.importedAssemblies!.indices{for n in changed.cadModel!.importedAssemblies![a].nodes.indices{changed.cadModel!.importedAssemblies![a].nodes[n].faceColors=[]}}
+    changed.cadModel!.revision+=1;changed.cadRepresentation!.definitionSHA256=try CADRepresentation.definitionHash(changed.cadModel!)
+    try store.engine.edit("Changed imported face appearance"){project in project.objects[0]=changed}
+    try await eventually{store.cad.resolvedScene(for:changed,assets:assets) != nil}
+    let current=try XCTUnwrap(store.cad.resolvedScene(for:changed,assets:assets)?.first),renderer=try RealityKitSceneRenderer(frame:.init(x:0,y:0,width:300,height:200));defer{renderer.reset()}
+    try await renderer.upsertAsync(current)
+    var minimum=SIMD3<Double>(repeating:.infinity),maximum=SIMD3<Double>(repeating:-.infinity);for p in current.mesh.positionsMM{minimum=simd_min(minimum,p);maximum=simd_max(maximum,p)}
+    let target=(minimum+maximum)/2;try renderer.setCamera(.looking(from:target+SIMD3(0,0,250),at:target))
+    let pick=try XCTUnwrap(renderer.pick(atTopLeft:.init(x:150,y:100),viewport:.init(width:300,height:200))),part=try XCTUnwrap(pick.partID)
+    let currentMap=try XCTUnwrap(CADSceneAdapter.prepare(for:changed,assets:assets).triangleFaces[current.componentID+"|"+part]),expectedFace=try XCTUnwrap(currentMap.indices.contains(pick.triangle) ? currentMap[pick.triangle]:nil)
+    XCTAssertEqual(store.cad.face(for:pick,object:changed)?["face_index"] as? Int,Int(expectedFace))
+    let oldMap=prepared.triangleFaces[current.componentID+"|"+part],oldFace=oldMap.flatMap{$0.indices.contains(pick.triangle) ? $0[pick.triangle]:nil}
+    XCTAssertNotEqual(oldFace,expectedFace)
     let external=source.deletingLastPathComponent().appendingPathComponent("external-reference.step"),bad=try store.cad.begin(CADModelExamples.enclosure());store.cad.preview(bad,importURL:external);try await settled(bad);XCTAssertEqual(bad.state,"failed");XCTAssertEqual(store.project?.objects.count,1)
+  }
+
+  private func eventually(_ condition:()->Bool)async throws {
+    for _ in 0..<1000{if condition(){return};try await Task.sleep(nanoseconds:10_000_000)}
+    XCTFail("CAD scene outcome timed out.");throw FormError.invalid("CAD scene test timed out.")
+  }
+  func testRegeneratedFamilyRecoversFromOldMissingResourceWithoutManualRetry()async throws {
+    let store=try fixture();defer{store.cad.reset();store.engine.project=nil}
+    let initial=try store.cad.begin(CADModelExamples.enclosure());store.cad.preview(initial);try await settled(initial);try store.cad.commit(initial);try await settled(initial)
+    let original=try XCTUnwrap(store.project?.objects.first)
+    _ = try store.engine.call("form_duplicate_object",arguments:["object_id":original.id.uuidString,"mode":"variant"])
+    let oldFamily=store.project!.objects,assets=store.repository.url(for:store.project!.id).appendingPathComponent("Assets")
+    try FileManager.default.removeItem(at:assets.appendingPathComponent(original.cadRepresentation!.components[0].brepAsset))
+    for object in oldFamily{XCTAssertNil(store.cad.resolvedScene(for:object,assets:assets))}
+    try await eventually{oldFamily.allSatisfy{store.cad.issue(for:$0) != nil}}
+    var definition=original.cadModel!;try definition.setParameter("width",value:132)
+    let repaired=try store.cad.begin(definition,target:original.id);store.cad.preview(repaired);try await settled(repaired);XCTAssertEqual(repaired.state,"ready",repaired.issue ?? "")
+    try store.cad.commit(repaired);try await settled(repaired);XCTAssertEqual(repaired.state,"committed",repaired.issue ?? "")
+    let family=store.project!.objects;XCTAssertTrue(family.allSatisfy{store.cad.issue(for:$0)==nil})
+    try await eventually{family.allSatisfy{store.cad.resolvedScene(for:$0,assets:assets) != nil}}
+    XCTAssertTrue(family.allSatisfy{store.cad.issue(for:$0)==nil});XCTAssertEqual(family[0].cadModel,family[1].cadModel)
+  }
+  func testLateOldRevisionLoadFailureCannotPoisonRegeneratedScene()async throws {
+    let store=try fixture();var suspended:CheckedContinuation<Void,Never>?,checkpointReached=false
+    defer{store.cad.sceneLoadCheckpoint=nil;suspended?.resume();store.cad.reset();store.engine.project=nil}
+    let initial=try store.cad.begin(CADModelExamples.enclosure());store.cad.preview(initial);try await settled(initial);try store.cad.commit(initial);try await settled(initial)
+    let old=try XCTUnwrap(store.project?.objects.first),oldHash=old.cadRepresentation!.definitionSHA256,assets=store.repository.url(for:store.project!.id).appendingPathComponent("Assets")
+    try FileManager.default.removeItem(at:assets.appendingPathComponent(old.cadRepresentation!.components[0].brepAsset))
+    store.cad.sceneLoadCheckpoint={object in if object.cadRepresentation?.definitionSHA256==oldHash{await withCheckedContinuation{continuation in suspended=continuation;checkpointReached=true}}}
+    _ = store.cad.resolvedScene(for:old,assets:assets);try await eventually{checkpointReached}
+    var definition=old.cadModel!;try definition.setParameter("width",value:144)
+    let repaired=try store.cad.begin(definition,target:old.id);store.cad.preview(repaired);try await settled(repaired);try store.cad.commit(repaired);try await settled(repaired);XCTAssertEqual(repaired.state,"committed",repaired.issue ?? "")
+    let continuation=suspended;suspended=nil;continuation?.resume()
+    let current=try XCTUnwrap(store.project?.objects.first)
+    try await eventually{store.cad.resolvedScene(for:current,assets:assets) != nil}
+    XCTAssertNil(store.cad.issue(for:current));XCTAssertNil(store.cad.failures[current.id])
   }
 
 }

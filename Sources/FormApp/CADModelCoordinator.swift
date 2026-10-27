@@ -33,20 +33,22 @@ import UniformTypeIdentifiers
   weak var store:StudioStore?
   @Published var review:CADModelReview?
   @Published private(set) var failures:[UUID:String]=[:]
+  private var failureKeys:[UUID:String]=[:],loadTokens:[String:UUID]=[:]
   private var epoch=UUID(),jobs:[UUID:CADModelReview]=[:]
   private var evaluator=CADModelEvaluator()
   private var scenes:[String:CADSceneAdapter.Prepared]=[:],sceneOrder:[String]=[],sceneBytes=0
   private var loads:[String:Task<Void,Never>]=[:],loadWorkers:[String:Task<CADSceneAdapter.Prepared,Error>]=[:]
   var preparationCheckpoint:(()async->Void)?
+  var sceneLoadCheckpoint:((ProductObject)async->Void)?
   init(store:StudioStore){self.store=store}
   nonisolated static func sourceSnapshot(_ project:Project)->Project {var p=project;p.camera = .init();return p}
   private func matches(_ job:CADModelReview)->Bool {guard let p=store?.project else{return false};return epoch==job.epoch&&p.id==job.projectID&&Self.sourceSnapshot(p)==job.source}
-  func reset(){epoch=UUID();for job in jobs.values{cancel(job)};jobs=[:];review=nil;for task in loads.values{task.cancel()};for worker in loadWorkers.values{worker.cancel()};loads=[:];loadWorkers=[:];scenes=[:];sceneOrder=[];sceneBytes=0;failures=[:];evaluator=CADModelEvaluator()}
+  func reset(){epoch=UUID();for job in jobs.values{cancel(job)};jobs=[:];review=nil;for task in loads.values{task.cancel()};for worker in loadWorkers.values{worker.cancel()};loads=[:];loadWorkers=[:];scenes=[:];sceneOrder=[];sceneBytes=0;failures=[:];failureKeys=[:];loadTokens=[:];evaluator=CADModelEvaluator()}
   func openEditor(objectID:UUID?=nil){do{guard let p=store?.project else{throw FormError.missing("Open a project first.")};let definition=try objectID.map{id in guard let o=p.objects.first(where:{$0.id==id}),let d=o.cadModel else{throw FormError.invalid("Choose an exact CAD model.")};return d} ?? CADModelExamples.enclosure();let job=try begin(definition,target:objectID);review=job}catch{store?.error=error.localizedDescription}}
   func openImport() {
     guard store?.project != nil else{store?.error="Open a project before importing exact geometry.";return}
     let panel=NSOpenPanel();panel.canChooseFiles=true;panel.canChooseDirectories=false;panel.allowsMultipleSelection=false;panel.allowedContentTypes=["step","stp","brep"].compactMap{UTType(filenameExtension:$0)};panel.title="Import exact CAD body"
-    panel.message="Preserve STEP/BRep geometry and original source. Imported construction history is unavailable."
+    panel.message="Preserve original exact geometry. STEP declares units; BRep assumes millimeters, so verify its source scale. Imported construction history is unavailable."
     let axis=NSPopUpButton(frame:.init(x:0,y:0,width:220,height:28));axis.addItems(withTitles:["Source uses Y up","Source uses Z up"]);panel.accessoryView=axis
     if panel.runModal() == .OK,let url=panel.url{do{let job=try importReview(url:url,name:nil,sourceUpAxis:axis.indexOfSelectedItem==1 ? "z":"y");review=job}catch{store?.error=error.localizedDescription}}
   }
@@ -97,7 +99,7 @@ import UniformTypeIdentifiers
         if importURL.pathExtension.lowercased()=="brep" {
           let node=CADFeatureNode(name:"Imported exact body",operation:.init(.importedBRep,source:.init(path:name,sha256:hash)));model.features=[node];model.outputs=[node.id]
           if sourceUpAxis=="z"{let placement=CADFeatureNode(name:"Z-up to Y-up source placement",operation:.init(.transform,inputs:[node.id],matrix:[1,0,0,0,0,0,1,0,0,-1,0,0,0,0,0,1]));model.features.append(placement);model.outputs=[placement.id]}
-          model.assumptions=["Exact BRep body with original bytes retained; source feature history is unavailable."]
+          model.assumptions=["Exact BRep body with original bytes retained; source feature history is unavailable.","BRep has no physical unit metadata. Millimeters are an unverified source-scale assumption; verify the original dimensions before fabrication."]
         }else{
           let kernel=await evaluator.kernel,assembly=try await kernel.readSTEPAssembly(from:url)
           guard assembly.sourceSHA256==hash,assembly.parts.count*(sourceUpAxis=="z" ? 2:1)<=256 else{throw FormError.invalid("STEP source changed or its leaf construction exceeds the 256-feature graph budget.")}
@@ -156,17 +158,18 @@ import UniformTypeIdentifiers
     job.task=Task{[weak self,weak job] in guard let self,let job else{return};var published:[URL]=[];do{
       published=try await withTaskCancellationHandler(operation:{try await worker.value},onCancel:{worker.cancel()})
       guard !Task.isCancelled,job.token==token,self.matches(job),let store=self.store else{throw FormError.invalid("The project changed before exact geometry publication.")}
-      var created:UUID?
+      var created:UUID?,publishedObjectIDs=Set<UUID>()
       try store.engine.edit(job.targetObjectID==nil ? "Created exact CAD model":"Updated exact CAD model",source:"CAD") {project in
         guard Self.sourceSnapshot(project)==job.source else{throw FormError.invalid("The CAD source revision is stale.")}
         if let id=job.targetObjectID {guard let i=project.objects.firstIndex(where:{$0.id==id}),!project.objects[i].locked else{throw FormError.invalid("The CAD object is missing or locked.")};let design=project.objects[i].designID,linked=project.objects[i].relationship=="variant" || project.objects.contains{$0.designID==design&&$0.relationship=="variant"}
           let family=project.objects.indices.filter{$0==i || linked&&project.objects[$0].designID==design}
           guard family.allSatisfy({!project.objects[$0].locked}) else{throw FormError.invalid("Unlock all linked CAD variants before editing their shared construction.")}
-          for member in family{var representation=prepared.representation;let styles=project.objects[member].cadRepresentation?.components ?? [];for c in representation.components.indices{if let old=styles.first(where:{$0.id==representation.components[c].id}){representation.components[c].materialID=old.materialID;representation.components[c].color=old.color}};project.objects[member].cadModel=prepared.definition;project.objects[member].cadRepresentation=representation}
+          for member in family{publishedObjectIDs.insert(project.objects[member].id);var representation=prepared.representation;let styles=project.objects[member].cadRepresentation?.components ?? [];for c in representation.components.indices{if let old=styles.first(where:{$0.id==representation.components[c].id}){representation.components[c].materialID=old.materialID;representation.components[c].color=old.color}};project.objects[member].cadModel=prepared.definition;project.objects[member].cadRepresentation=representation}
           project.objects[i].name=prepared.definition.name;created=id}
-        else{var object=try project.makeObject(recipeID:"cadModel",name:prepared.definition.name);object.position=try Self.newPosition(for:prepared.representation,in:project);object.cadModel=prepared.definition;object.cadRepresentation=prepared.representation;project.objects.append(object);created=object.id}
+        else{var object=try project.makeObject(recipeID:"cadModel",name:prepared.definition.name);object.position=try Self.newPosition(for:prepared.representation,in:project);object.cadModel=prepared.definition;object.cadRepresentation=prepared.representation;project.objects.append(object);created=object.id;publishedObjectIDs.insert(object.id)}
         try project.validateModelRepresentations()
       }
+      self.invalidateSceneFailures(for:publishedObjectIDs)
       job.state="committed";if let created{job.result=["object_id":created.uuidString,"revision":prepared.evaluation.revisionHash];store.select(created)};store.showingHome=false;store.changed();self.discard(job);if self.review?.id==job.id{self.review=nil}
     }catch{let remove=published;Task.detached(priority:.utility){for url in remove{try? FileManager.default.removeItem(at:url)}};guard job.token==token else{return};job.state=error is CancellationError ? "cancelled":"failed";job.issue=error.localizedDescription}}
   }
@@ -193,17 +196,43 @@ import UniformTypeIdentifiers
       if fm.fileExists(atPath:destination.path){_ = try CADSceneAdapter.verifiedAsset(name,sha256:digest,assets:assets,maximumBytes:512*1024*1024)}else{try data.write(to:destination,options:.withoutOverwriting);created.append(destination)}
     };try Task.checkCancellation();return created}catch{for url in created{try? fm.removeItem(at:url)};throw error}
   }
+  private nonisolated static func sceneKey(_ object:ProductObject)->String? {
+    guard let r=object.cadRepresentation else{return nil}
+    let resources=r.components.map{"\($0.id):\($0.brepAsset):\($0.brepSHA256):\($0.meshAsset):\($0.meshSHA256):\($0.featureFingerprint ?? "")"}.joined(separator:"|")
+    return "\(object.id):\(r.definitionSHA256):\(r.kernelVersion):\(r.meshDeflectionMM):\(resources)"
+  }
+  private func loadIsCurrent(objectID:UUID,key:String,token:UUID,projectEpoch:UUID)->Bool {
+    guard epoch==projectEpoch,loadTokens[key]==token,let current=store?.project?.objects.first(where:{$0.id==objectID}) else{return false}
+    return Self.sceneKey(current)==key
+  }
+  private func invalidateSceneFailures(for ids:Set<UUID>){
+    for id in ids{failures.removeValue(forKey:id);failureKeys.removeValue(forKey:id)}
+    for key in Array(loads.keys) where ids.contains(where:{key.hasPrefix($0.uuidString+":")}){loads.removeValue(forKey:key)?.cancel();loadWorkers.removeValue(forKey:key)?.cancel();loadTokens.removeValue(forKey:key)}
+  }
   func resolvedScene(for object:ProductObject,assets:URL)->[SceneRenderablePayload]? {
-    guard let representation=object.cadRepresentation else{return nil};let key="\(object.id):\(representation.definitionSHA256):\(representation.components.map{$0.meshSHA256}.joined())"
+    guard let key=Self.sceneKey(object) else{return nil}
     if let prepared=scenes[key]{return CADSceneAdapter.renderables(prepared,for:object,materials:store?.materials ?? FormCore.Material.presets)}
-    guard loads[key]==nil,failures[object.id]==nil else{return nil}
-    let token=epoch,worker=Task.detached(priority:.userInitiated){try CADSceneAdapter.prepare(for:object,assets:assets)};loadWorkers[key]=worker
-    loads[key]=Task{[weak self] in guard let self else{return};defer{if self.epoch==token{self.loads.removeValue(forKey:key);self.loadWorkers.removeValue(forKey:key)}};do{let prepared=try await withTaskCancellationHandler(operation:{try await worker.value},onCancel:{worker.cancel()});guard !Task.isCancelled,self.epoch==token else{return};self.remember(prepared,key:key);self.store?.changed(save:false)}catch{guard self.epoch==token else{return};self.failures[object.id]=error.localizedDescription;self.store?.changed(save:false)}};return nil
+    guard loads[key]==nil,failureKeys[object.id] != key else{return nil}
+    let projectEpoch=epoch,token=UUID(),worker=Task.detached(priority:.userInitiated){try CADSceneAdapter.prepare(for:object,assets:assets)};loadWorkers[key]=worker;loadTokens[key]=token
+    loads[key]=Task{[weak self] in
+      guard let self else{return}
+      defer{if self.epoch==projectEpoch,self.loadTokens[key]==token{self.loads.removeValue(forKey:key);self.loadWorkers.removeValue(forKey:key);self.loadTokens.removeValue(forKey:key)}}
+      do{
+        let prepared=try await withTaskCancellationHandler(operation:{try await worker.value},onCancel:{worker.cancel()})
+        if let checkpoint=self.sceneLoadCheckpoint{await checkpoint(object)}
+        guard !Task.isCancelled,self.loadIsCurrent(objectID:object.id,key:key,token:token,projectEpoch:projectEpoch) else{return}
+        self.failures.removeValue(forKey:object.id);self.failureKeys.removeValue(forKey:object.id);self.remember(prepared,key:key);self.store?.changed(save:false)
+      }catch{
+        if let checkpoint=self.sceneLoadCheckpoint{await checkpoint(object)}
+        guard !Task.isCancelled,self.loadIsCurrent(objectID:object.id,key:key,token:token,projectEpoch:projectEpoch) else{return}
+        self.failures[object.id]=error.localizedDescription;self.failureKeys[object.id]=key;self.store?.changed(save:false)
+      }
+    };return nil
   }
   private func remember(_ value:CADSceneAdapter.Prepared,key:String){while sceneBytes+value.approximateBytes>256*1024*1024,let first=sceneOrder.first{sceneOrder.removeFirst();if let old=scenes.removeValue(forKey:first){sceneBytes-=old.approximateBytes}};scenes[key]=value;sceneOrder.append(key);sceneBytes+=value.approximateBytes}
-  func issue(for object:ProductObject)->String?{failures[object.id]}
-  func retry(_ object:ProductObject,assets:URL){failures.removeValue(forKey:object.id);_ = resolvedScene(for:object,assets:assets)}
-  func face(for pick:ScenePick,object:ProductObject)->[String:Any]? {guard let r=object.cadRepresentation,let body=r.components.first(where:{pick.componentID.hasSuffix($0.id.uuidString)}),let prepared=scenes.values.first(where:{$0.triangleFaces[pick.componentID] != nil && $0.renderables.contains(where:{$0.componentID==pick.componentID && $0.mesh.revision.hasPrefix(body.meshSHA256)})}),let faces=prepared.triangleFaces[pick.componentID+"|"+(pick.partID ?? "")] ?? (pick.partID==nil ? prepared.triangleFaces[pick.componentID]:nil),faces.indices.contains(pick.triangle) else{return nil};return ["output_id":body.id.uuidString,"face_index":Int(faces[pick.triangle]),"model_revision":r.definitionSHA256,"ordinal_scope":"Inspect feature topology for its input fingerprint before selecting edges or faces."]}
+  func issue(for object:ProductObject)->String?{guard let key=Self.sceneKey(object),failureKeys[object.id]==key else{return nil};return failures[object.id]}
+  func retry(_ object:ProductObject,assets:URL){invalidateSceneFailures(for:[object.id]);_ = resolvedScene(for:object,assets:assets)}
+  func face(for pick:ScenePick,object:ProductObject)->[String:Any]? {guard let r=object.cadRepresentation,let body=r.components.first(where:{pick.componentID.hasSuffix($0.id.uuidString)}),let key=Self.sceneKey(object),let prepared=scenes[key],let faces=prepared.triangleFaces[pick.componentID+"|"+(pick.partID ?? "")] ?? (pick.partID==nil ? prepared.triangleFaces[pick.componentID]:nil),faces.indices.contains(pick.triangle) else{return nil};return ["output_id":body.id.uuidString,"face_index":Int(faces[pick.triangle]),"model_revision":r.definitionSHA256,"ordinal_scope":"Inspect feature topology for its input fingerprint before selecting edges or faces."]}
   func call(_ name:String,_ args:[String:Any])throws->Any {
     if let raw=args["command"],!(raw is String){throw FormError.invalid("command must be a string.")}
     let command=args["command"] as? String ?? "capabilities"

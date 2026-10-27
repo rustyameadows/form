@@ -73,6 +73,7 @@ struct ObjectInspector: View {
               Divider()
             }
             if object.patternAssembly==nil && object.meshAsset==nil {
+            if !recipe.parameters.isEmpty {
             VStack(alignment: .leading, spacing: 14) {
               SectionLabel("DIMENSIONS & PARAMETERS")
               ForEach(recipe.parameters) { parameter in
@@ -80,6 +81,7 @@ struct ObjectInspector: View {
               }
             }
             Divider()
+            }
             VStack(alignment: .leading, spacing: 11) {
               HStack {
                 SectionLabel("MATERIAL")

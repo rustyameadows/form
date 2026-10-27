@@ -12,6 +12,29 @@ import LabRendering
 @MainActor final class StudioShotRenderer {
   private var owner:UUID?
   private var controller:TableSceneController?
+  private struct CaptureWaiter {let id:UUID;let continuation:CheckedContinuation<Bool,Never>}
+  private var captureActive=false,captureWaiters:[CaptureWaiter]=[]
+  // Tests may pause a verified external load before publishing its scene buffers.
+  var externalPreparationCheckpoint:(()async->Void)?
+  private func acquireCapture()async throws {
+    try Task.checkCancellation()
+    if !captureActive {captureActive=true;return}
+    guard captureWaiters.count<8 else{throw FormError.invalid("Finish a pending Studio capture before queuing another.")}
+    let id=UUID()
+    let granted=await withTaskCancellationHandler(operation:{
+      await withCheckedContinuation{continuation in captureWaiters.append(.init(id:id,continuation:continuation))}
+    },onCancel:{Task { @MainActor [weak self] in self?.cancelCaptureWaiter(id)}})
+    guard granted else{throw CancellationError()}
+    if Task.isCancelled {releaseCapture();throw CancellationError()}
+  }
+  private func cancelCaptureWaiter(_ id:UUID) {
+    guard let index=captureWaiters.firstIndex(where:{$0.id==id}) else{return}
+    captureWaiters.remove(at:index).continuation.resume(returning:false)
+  }
+  private func releaseCapture() {
+    if captureWaiters.isEmpty {captureActive=false}
+    else {captureWaiters.removeFirst().continuation.resume(returning:true)}
+  }
   private(set) var renders=0,maximumMilliseconds=0.0,maximumProcessRSSBytes:Int64=0
   private(set) var lastPixelBytes=0
   private(set) var framingWarnings:[[String:Any]]=[]
@@ -24,10 +47,15 @@ import LabRendering
   }
   func renderResult(project:Project,shot:StudioShot,assets:URL,preview:Bool)async throws->RenderResult {
     try shot.validate();let ids=try shot.visibility.resolved(in:project)
+    // A capture owns this cached controller until the GPU has cloned/rendered
+    // its complete composition, including any external-source preparation.
+    // Waiting releases the UI actor; cancellation removes a queued preview.
+    try await acquireCapture();defer{releaseCapture()}
     for object in project.objects where ids.contains(object.id) {if let art=project.surfaceArtwork(object) {try ArtworkRenderer.validateGlyphOutput(art,assets:assets)}}
     let started=Date();defer{maximumMilliseconds=max(maximumMilliseconds,Date().timeIntervalSince(started)*1000);maximumProcessRSSBytes=max(maximumProcessRSSBytes,Self.rss())}
     if owner != project.id {clear();owner=project.id;controller=TableSceneController()}
-    let c=controller!;var copy=project;copy.camera=shot.camera;copy.camera.viewportAspect=shot.referenceAspect
+    let c=controller!;c.externalCapturePreparationCheckpoint=externalPreparationCheckpoint
+    var copy=project;copy.camera=shot.camera;copy.camera.viewportAspect=shot.referenceAspect
     c.sync(copy,selection:[],isolated:ids,showGrid:false,studio:true,preset:shot.surface,assets:assets)
     // sync intentionally restores a camera only on a new project. Explicit render
     // composition uses its own owner and never mutates the native editing scene.

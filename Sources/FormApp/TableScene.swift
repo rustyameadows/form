@@ -92,6 +92,7 @@ private struct RenderSignature: Equatable {
   private var captureAssets:URL?
   private var captureVisibility=Set<UUID>()
   private var externalCaptureRevision:String?
+  var externalCapturePreparationCheckpoint:(()async->Void)?
   func prepareExternalForCapture(project:Project,assets:URL)async throws {
     let objects=project.objects.filter{$0.meshAsset != nil || $0.cadRepresentation != nil}
     guard !objects.isEmpty else{return}
@@ -119,6 +120,7 @@ private struct RenderSignature: Equatable {
       return output
     }
     let payloads=try await withTaskCancellationHandler(operation:{try await worker.value},onCancel:{worker.cancel()})
+    if let checkpoint=externalCapturePreparationCheckpoint {await checkpoint()}
     try Task.checkCancellation()
     guard projectID==project.id,(try captureSource?.studioDesignDigest()) == (try project.studioDesignDigest()) else{throw FormError.invalid("The model changed while preparing its render. Capture again from the current source.")}
     extraRenderables=payloads
@@ -349,6 +351,12 @@ private struct RenderSignature: Equatable {
         for index in external.indices {external[index].visible=isolated.isEmpty || isolated.contains(object.id)}
         extraRenderables+=external
       }
+    }
+    // Cached external buffers belong to the source revision; visibility belongs
+    // to this composition, including offscreen controllers without a store.
+    for index in extraRenderables.indices {
+      let id=extraRenderables[index].objectID
+      extraRenderables[index].visible=live.contains(id) && (isolated.isEmpty || isolated.contains(id))
     }
     grid.isHidden = !showGrid || studio
     if selection != lastSelection || geometryChanged {
