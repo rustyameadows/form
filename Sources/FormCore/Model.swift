@@ -422,6 +422,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if studioPresentation?.scenes?.isEmpty == false {return max(schemaVersion,54)}
     if objects.contains(where:PaperConstruction.isPaper){return max(schemaVersion,53)}
     if objects.contains(where:{$0.meshAsset != nil || $0.cadModel != nil || $0.cadRepresentation != nil}) {return max(schemaVersion,52)}
     if objects.contains(where:{$0.librarySelection != nil || StarterTextiles.recipeIDs.contains($0.recipeID)}) {return max(schemaVersion,51)}

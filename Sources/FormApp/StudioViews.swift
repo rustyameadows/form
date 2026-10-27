@@ -69,7 +69,7 @@ struct StudioTopBar: View {
     HStack(spacing: 14) {
       if store.showingHome {
         Text("LAB").font(.system(size: 15, weight: .heavy, design: .rounded)).tracking(4)
-        Text("0.4").font(.system(size: 10, weight: .medium, design: .monospaced)).foregroundStyle(
+        Text("0.5").font(.system(size: 10, weight: .medium, design: .monospaced)).foregroundStyle(
           Palette.secondary
         ).padding(.horizontal, 7).padding(.vertical, 3).background(Palette.line, in: Capsule())
       } else {
@@ -116,19 +116,26 @@ struct StudioTopBar: View {
         }
         IconButton("Print preparation · ⌘P", symbol: "printer") { store.prepareSelectedPrint() }
         Menu {
+          if store.environment == .studio && !store.studioShowingShots {
+            Button("Composition image · PNG + record"){store.studioComposition.exportDialog(video:false)}
+            Button("Camera video · MP4 + record"){store.studioComposition.exportDialog(video:true)}
+          }else {
           Button("Studio image · PNG") { store.exportDialog("png") }
           Button("Printable artwork · PDF") { store.exportDialog("pdf") }.disabled(
             store.primary == nil)
           Button("Cut profile · SVG") { store.exportDialog("svg") }.disabled(
             !["sleeve", "clock", "paperEnvelope", "tuckCarton"].contains(store.primary?.recipeID ?? ""))
           Button("Component summary · JSON") { store.exportDialog("json") }
+          }
           Divider()
           Button("Save project copy…") { store.saveCopy() }
         } label: {
           Image(systemName: "square.and.arrow.up").font(.system(size: 14)).frame(
             width: 30, height: 30)
         }.menuStyle(.borderlessButton).fixedSize().help("Export")
-        AddObjectMenu()
+        if store.environment == .studio && !store.studioShowingShots {
+          Button("Save scene"){store.studioComposition.save()}.font(.system(size:12,weight:.semibold))
+        }else {AddObjectMenu()}
       }
     }
     .padding(.leading, 92).padding(.trailing, 22).frame(height: 62)
@@ -273,7 +280,7 @@ struct HomeView: View {
             .system(size: 9, weight: .medium)
           ).tracking(1.6)
           Spacer()
-          Text("LAB  /  0.4").font(.system(size: 9, design: .monospaced))
+          Text("LAB  /  0.5").font(.system(size: 9, design: .monospaced))
         }.foregroundStyle(Palette.secondary.opacity(0.75)).padding(.top, 10).padding(.bottom, 24)
       }.padding(.horizontal, 52).frame(maxWidth: 1600)
         .frame(maxWidth: .infinity)
@@ -403,6 +410,13 @@ struct WorkspaceView: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
     VStack(spacing: 0) {
+      if store.environment == .function {
+        FunctionWorkspace()
+      } else if store.environment == .fabricate {
+        FabricationWorkspace(guide:store.fabricationGuide)
+      } else if store.environment == .studio {
+        StudioCompositionWorkspace(controller:store.studioComposition)
+      } else {
       if store.environment != .studio {
         DesignSurfaceBar()
         if let object=store.primary,let project=store.project,FabricEnvironmentContext.applies(to:object,in:project) { FabricEnvironmentHeader(object:object) }
@@ -423,6 +437,7 @@ struct WorkspaceView: View {
           EnvironmentContextPanel()
         }
       }.frame(minHeight: 0, maxHeight: .infinity)
+      }
       WorkspaceStatus()
     }
   }

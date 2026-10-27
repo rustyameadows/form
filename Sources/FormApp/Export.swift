@@ -27,6 +27,7 @@ extension StudioStore {
   /// GPU completion suspends this task without blocking AppKit or the MCP bridge.
   func exportAsync(format:String,arguments:[String:Any])async throws->Any {
     guard let project else{throw FormError.missing("Open a project before exporting.")}
+    if arguments["scene_id"] != nil {return try await exportStudioComposition(format:format,arguments:arguments)}
     if arguments["shot_id"] != nil {return try await exportSavedStudioShot(format:format,arguments:arguments)}
     guard format=="png" else{return try export(format:format,arguments:arguments)}
     if arguments["width"] != nil || arguments["height"] != nil {throw FormError.invalid("Explicit Studio pixel dimensions require shot_id; the current-view export is 3000 × 2000.")}

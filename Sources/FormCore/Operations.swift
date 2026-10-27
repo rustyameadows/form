@@ -142,6 +142,7 @@ public final class OperationEngine {
       return project
     }
     switch name {
+    case "form_studio_scene":return try StudioSceneCommands.call(engine:self,arguments:a,source:source)
     case "form_paper":return try PaperCommands.call(engine:self,arguments:a,source:source)
     case "form_status":
       return [

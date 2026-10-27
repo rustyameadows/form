@@ -94,12 +94,13 @@ private struct RenderSignature: Equatable {
   private var captureSource:Project?
   private var captureAssets:URL?
   private var captureVisibility=Set<UUID>()
+  private var captureObjectIDs:Set<UUID>?
   private var externalCaptureRevision:String?
   var externalCapturePreparationCheckpoint:(()async->Void)?
   func prepareExternalForCapture(project:Project,assets:URL)async throws {
-    let objects=project.objects.filter{$0.meshAsset != nil || $0.cadRepresentation != nil}
+    let objects=project.objects.filter{!$0.isCanvasWorkspace && (captureObjectIDs?.contains($0.id) ?? true) && ($0.meshAsset != nil || $0.cadRepresentation != nil)}
     guard !objects.isEmpty else{return}
-    let revision=try project.studioDesignDigest()+"/"+assets.path
+    let revision=try project.studioDesignDigest()+"/"+assets.path+"/"+(captureObjectIDs?.map(\.uuidString).sorted().joined(separator:",") ?? "all")
     if externalCaptureRevision==revision {return}
     var artwork:[UUID:CGImage]=[:],artRevisions:[UUID:String]=[:]
     for object in objects where object.meshAsset != nil {
@@ -247,9 +248,9 @@ private struct RenderSignature: Equatable {
   }
   func sync(
     _ project: Project, selection: Set<UUID>, isolated: Set<UUID>, showGrid: Bool, studio: Bool,
-    preset: String, assets: URL, textureLimit: Int = 2048
+    preset: String, assets: URL, textureLimit: Int = 2048, renderObjectIDs:Set<UUID>?=nil
   ) {
-    captureSource=project;captureAssets=assets;captureVisibility=isolated
+    captureSource=project;captureAssets=assets;captureVisibility=isolated;captureObjectIDs=renderObjectIDs
     let started = CFAbsoluteTimeGetCurrent()
     defer { lastSyncMilliseconds = (CFAbsoluteTimeGetCurrent() - started) * 1000 }
     if projectID != project.id {
@@ -268,7 +269,7 @@ private struct RenderSignature: Equatable {
       camera = project.camera
       updateCamera()
     }
-    let physicalObjects = project.objects.filter { !$0.isCanvasWorkspace }
+    let physicalObjects = project.objects.filter { !$0.isCanvasWorkspace && (renderObjectIDs?.contains($0.id) ?? true) }
     let live = Set(physicalObjects.map(\.id))
     for id in Array(nodes.keys) where !live.contains(id) {
       nodes.removeValue(forKey: id)?.removeFromParentNode()
@@ -715,6 +716,9 @@ private struct RenderSignature: Equatable {
     }
   }
   var onEscape: (() -> Void)?
+  // Separate presentation viewports reuse the established navigation contract.
+  var onCameraInteraction:(()->Void)?
+  var onObjectPick:((UUID?)->Void)?
   private enum DragAction { case orbit, move }
   private var action: DragAction = .orbit
   private var previous = NSPoint.zero
@@ -871,13 +875,17 @@ private struct RenderSignature: Equatable {
     attachmentDrag = nil
     objectPositions = [:]
     controller?.store?.cameraChanged()
+    if !dragged,controller?.store==nil {onObjectPick?(controller?.objectID(at:convert(event.locationInWindow,from:nil)))}
+    onCameraInteraction?()
   }
   override func scrollWheel(with event: NSEvent) {
     let delta = -Double(event.scrollingDeltaY) * (event.hasPreciseScrollingDeltas ? 0.35 : 1)
     controller?.zoom(delta)
+    onCameraInteraction?()
   }
   override func magnify(with event: NSEvent) {
     controller?.zoom(-Double(event.magnification) * 100)
+    onCameraInteraction?()
   }
   override func keyDown(with event: NSEvent) {
     if event.keyCode == 53, let onEscape { onEscape(); return }

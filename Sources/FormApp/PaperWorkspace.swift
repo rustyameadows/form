@@ -21,6 +21,7 @@ extension StudioStore {
   func showPaper(_ representation: PaperRepresentation, object: ProductObject, split: Bool = false) {
     finishArtworkEditing()
     paperRepresentation = representation
+    functionRepresentation=representation.title
     if split {
       closeDetachedCanvas(); surfaceLayout = .split; showingHome = false; mode = .artwork
     } else if surfaceLayout == .single { mode = .artwork }

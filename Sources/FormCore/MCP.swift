@@ -72,6 +72,7 @@ public enum MCP {
       ]
     }
     return [
+      tool("form_studio_scene","Save and compose presentation scenes without duplicating or moving design objects. Scenes hold up to 128 independent linked product/variant instances or shelf props, their placement, camera, lighting, image dimensions and bounded camera motion. Save validates the complete scene with optimistic revision checks; missing product sources are retained for repair and block rendering. One Undo per edit. Video is camera motion, not a physics simulation.",["command":["type":"string","enum":["list","get","create","save","duplicate","delete"]],"scene_id":objectID,"scene":["type":"object"],"name":string],required:["command"]),
       tool("form_paper","Inspect and author original constructed envelopes/cartons in physical millimeters. Durable panels/folds/joins, registered outside/inside artwork and stock assumptions. Configure/annotations/ensure_inside/conversion are one Undo. Geometry changes preserve artwork coordinates and flag review; fit never stretches source. view/export use native graphics. Historical sleeves only change through explicit convert.",[
         "command":["type":"string","enum":["inspect","configure","annotations","ensure_inside","convert","preflight","layout","view","export"]],"object_id":objectID,"definition":["type":"object"],"parameters":parameters,"stock":["type":"object"],"annotations":["type":"array","items":["type":"object"]],"annotation":["type":"object"],"annotation_id":string,"acknowledge_artwork":["type":"boolean"],"contents":["type":"object"],"sheet_width":number,"sheet_height":number,"margin":number,"gap":number,"count":["type":"integer","minimum":1,"maximum":500],"allow_rotation":["type":"boolean"],"representation":["type":"string","enum":["panels","dieline","sheet"]],"inside":["type":"boolean"],"panel_id":string,"split":["type":"boolean"],"path":string,"format":["type":"string","enum":["svg","pdf","packet"]]
       ],required:["object_id"]),
@@ -461,8 +462,8 @@ public enum MCP {
         "form_export",
         "Export PNG studio render, PDF artwork, SVG dieline, or JSON component/material summary. Saved shot_id exports exclusively to a new .render folder containing the actual PNG plus render.json; existing destinations are rejected. Optional width/height override saved pixels together. Legacy PNG stays 3000×2000. Files are written to the project's Exports folder by default. Optional path selects an absolute output file.",
         [
-          "format": ["type": "string", "enum": ["png", "pdf", "svg", "json"]],
-          "object_id": objectID, "path": string,"shot_id":objectID,"width":["type":"integer"],"height":["type":"integer"],
+          "format": ["type": "string", "enum": ["png", "mp4", "pdf", "svg", "json"]],
+          "object_id": objectID, "path": string,"shot_id":objectID,"scene_id":objectID,"width":["type":"integer"],"height":["type":"integer"],
         ], required: ["format"]),
       tool(
         "form_batch",

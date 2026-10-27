@@ -19,12 +19,20 @@ enum ProjectEnvironment: String, CaseIterable, Identifiable {
 }
 
 extension StudioStore {
+  /// Technical/production tasks address one explicit component, even when its
+  /// visual arrangement belongs to a Form selection group.
+  func selectWorkingObject(_ id:UUID?) {
+    finishArtworkEditing()
+    guard let id,project?.objects.contains(where:{$0.id==id && !$0.isCanvasWorkspace})==true else{engine.selection=[];changed(save:false);return}
+    engine.selection=[id];changed(save:false)
+  }
   func showEnvironment(_ next: ProjectEnvironment) {
     guard project != nil else { return }
     showingHome = false
     guard next != environment else { return }
     finishArtworkEditing()
     if next == .studio {
+      studioShowingShots=false
       studioReturnSurface = (mode, surfaceLayout)
       closeDetachedCanvas()
       surfaceLayout = .single
@@ -147,7 +155,7 @@ struct EnvironmentContextPanel: View {
           .font(.system(size: 10, weight: .semibold)).tracking(1.5)
         Text(store.environment == .function ? "Dimensions, construction & relationships" : "Prepare the same source for making")
           .font(.system(size: 11)).foregroundStyle(Palette.secondary)
-        Picker("Object", selection: Binding<UUID?>(get: { store.primary?.id }, set: { store.select($0) })) {
+        Picker("Object", selection: Binding<UUID?>(get: { store.primary?.id }, set: { store.selectWorkingObject($0) })) {
           Text("Choose an object").tag(UUID?.none)
           ForEach(objects) { Text($0.name).tag(Optional($0.id)) }
         }.font(.system(size: 11)).accessibilityLabel("Environment object")
