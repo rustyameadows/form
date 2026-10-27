@@ -28,6 +28,7 @@ private struct PaperConstructionPreviewSurface:NSViewRepresentable {
   func makeNSView(context:Context)->PaperConstructionPreviewView {
     let view=PaperConstructionPreviewView(frame:.zero)
     // Keep the tall native drawing surface inside SwiftUI's scrolling viewport.
+    view.clipsToBounds=true
     view.wantsLayer=true
     view.layer?.masksToBounds=true
     return view

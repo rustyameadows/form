@@ -10,6 +10,11 @@ struct VectorCanvas: NSViewRepresentable {
   func makeNSView(context: Context) -> NSScrollView {
     let scroll = ArtworkScrollView()
     let view = VectorCanvasView()
+    // AppKit no longer clips most native views by default. Keep document and
+    // ruler drawing inside this embedded editor, including during live resize.
+    scroll.clipsToBounds = true
+    scroll.contentView.clipsToBounds = true
+    view.clipsToBounds = true
     view.setAccessibilityElement(true)
     view.setAccessibilityRole(.group)
     view.setAccessibilityLabel("Artwork canvas")
@@ -66,6 +71,7 @@ final class ArtworkRuler: NSRulerView {
   override init(scrollView: NSScrollView?, orientation: NSRulerView.Orientation) {
     super.init(scrollView: scrollView, orientation: orientation)
     ruleThickness = 23
+    clipsToBounds = true
   }
   required init(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
   override var isFlipped: Bool { true }
@@ -493,10 +499,13 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       drawCount += 1
       lastDrawMS = (CFAbsoluteTimeGetCurrent() - start) * 1000
     }
-    NSColor(hex: "#E7E7E1").setFill()
-    dirtyRect.fill()
-    guard let context = NSGraphicsContext.current?.cgContext, let session else { return }
+    guard let context = NSGraphicsContext.current?.cgContext else { return }
     context.saveGState()
+    defer { context.restoreGState() }
+    context.clip(to: bounds)
+    NSColor(hex: "#E7E7E1").setFill()
+    bounds.fill()
+    guard let session else { return }
     context.scaleBy(x: ppm, y: ppm)
     context.translateBy(x:-canvasOrigin.x,y:-canvasOrigin.y)
     let scale = ppm * zoom
@@ -591,7 +600,6 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         (label as NSString).draw(at:origin,withAttributes:attributes)
       }
     }
-    context.restoreGState()
   }
   private func drawOverlays(_ f: CanvasFrame, context: CGContext, scale: Double) {
     guard let session else { return }
