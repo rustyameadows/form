@@ -439,6 +439,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     super.viewDidMoveToWindow()
     DispatchQueue.main.async { [weak self] in
       self?.fitWhenReady()
+      self?.fitPaperPanelWhenRequested()
       self?.updateAccessibilityItems()
     }
   }
@@ -461,6 +462,16 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       toFit: documentRect(rect.insetBy(dx:-horizontal,dy:-vertical)))
     session?.zoom = Double(scroll.magnification)
     needsDisplay = true
+  }
+  private func fitPaperPanelWhenRequested() {
+    guard let session,let id=session.paperFocusPanelID,let paper=session.paperContext,
+      let panel=try? PaperConstruction.definition(for:paper).net().panels.first(where:{$0.id==id}),
+      let frame=activeFrame,let scroll=enclosingScrollView,scroll.contentSize.width>100 else{return}
+    session.paperFocusPanelID=nil
+    let b=panel.bounds
+    let rect=CGRect(x:frame.rect.minX+b.x,y:frame.rect.minY+b.y,width:b.width,height:b.height)
+    scroll.magnify(toFit:documentRect(rect.insetBy(dx:-8,dy:-8)))
+    session.zoom=Double(scroll.magnification);needsDisplay=true
   }
   func setZoom(_ value: Double) {
     guard let scroll = enclosingScrollView else { return }
@@ -529,6 +540,13 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           context.strokePath()
         }
       } else {
+        let paperNet = PaperConstruction.isPaper(f.surfaceObject) ? try? PaperConstruction.definition(for:f.surfaceObject).net() : nil
+        context.saveGState()
+        if let paperNet {
+          context.addPath(PaperOutput.clipPath(paperNet)); context.clip()
+          let stock = f.surfaceObject.color ?? session.store?.project?.material(f.surfaceObject.materialID).color ?? "#F7F5EF"
+          context.setFillColor(NSColor(hex:stock).cgColor);context.fill(CGRect(origin:.zero,size:f.rect.size))
+        }
         ArtworkRenderer.draw(
           f.artwork, width: f.rect.width, height: f.rect.height, assets: session.assets,
           production: false,
@@ -537,6 +555,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
             .union(ArtworkProduction.hiddenIDs(in:f.artwork,roles:session.hiddenProductionRoles))
             .union(publicationEditor?.excluded(in:f.id) ?? []),
           unbounded:f.isWorkspace)
+        context.restoreGState()
+        if let paperNet, session.store?.paperShowingGuides == true {
+          PaperOutput.drawStructure(paperNet,context:context,lineWidth:1/scale)
+        }
         if f.id == session.objectID {
           drawOverlays(f, context: context, scale: scale)
           if editingID == nil && !(dragMode == "move" && moveDropFrameID != nil) { drawSelection(context: context, scale: scale) }

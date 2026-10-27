@@ -6,8 +6,14 @@ import SwiftUI
 struct ArtworkWorkspace: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
-    ArtworkStudio(session:store.artworkSession).environmentObject(store)
-      .focusedValue(\.designSurface,.artwork)
+    Group {
+      if let object = store.primary, PaperConstruction.isPaper(object) {
+        PaperWorkspaceView(object: object)
+      } else if store.environment != .form,let object=store.primary,let project=store.project,
+        FabricEnvironmentContext(object:object,project:project)?.sourceID != nil {
+        FabricPatternWorkspace(object:object)
+      } else { ArtworkStudio(session:store.artworkSession) }
+    }.environmentObject(store).focusedValue(\.designSurface,.artwork)
   }
 }
 
@@ -189,7 +195,10 @@ struct ArtworkStudio: View {
         .labelsHidden().frame(width: 64)
       }.font(.system(size: 9)).padding(.horizontal, 16).frame(height: 37).background(Palette.paper)
     }.onAppear {
-      if session.object == nil { store.ensureCanvas() }
+      if session.object == nil {
+        if let object=store.primary,PaperConstruction.isPaper(object) {store.activatePaperArtwork(object)}
+        else {store.ensureCanvas()}
+      }
       session.reconcile()
     }.onChange(of: store.revision) { _, _ in session.reconcile() }
       .onChange(of: session.dieline) { _, dieline in

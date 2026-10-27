@@ -41,7 +41,10 @@ extension StudioStore {
       let title=(object?.name ?? project.name).replacingOccurrences(of:"/",with:"-").replacingOccurrences(of:":",with:"-");output=folder.appendingPathComponent(title+".png")
     }
     let assets=repository.url(for:project.id).appendingPathComponent("Assets")
-    for object in project.objects where isolated.isEmpty || isolated.contains(object.id) {if let art=project.surfaceArtwork(object){try ArtworkRenderer.validateGlyphOutput(art,assets:assets)}}
+    for object in project.objects where isolated.isEmpty || isolated.contains(object.id) {
+      let artworks=PaperConstruction.isPaper(object) ? [project.paperArtwork(for:object,inside:false),project.paperArtwork(for:object,inside:true)].compactMap{$0}:[project.surfaceArtwork(object)].compactMap{$0}
+      for art in artworks {try ArtworkRenderer.validateGlyphOutput(art,assets:assets)}
+    }
     synchronizeScene()
     let image:NSImage
     if let scene {image=try await scene.snapshot(size:.init(width:3000,height:2000))}
@@ -80,6 +83,10 @@ extension StudioStore {
     switch format {
     case "png":throw FormError.invalid("Image export requires the asynchronous export route.")
     case "svg":
+      if let object,PaperConstruction.isPaper(object) {
+        _ = try paperOutputCall(["command":"export","object_id":object.id.uuidString,"format":"svg","path":output.path])
+        break
+      }
       if let object, object.recipeID == "clock" {
         try ClockDesign.profileSVG(object).write(to: output, atomically: true, encoding: .utf8)
         break

@@ -57,7 +57,7 @@ import SwiftUI
               ? store.artworkSession.canvas?.canRedoText != true : store.engine.redoStack.isEmpty)
       }
       CommandGroup(replacing: .printItem) {
-        Button("Print…") { store.printing.open() }.keyboardShortcut("p").disabled(
+        Button("Print…") { store.prepareSelectedPrint() }.keyboardShortcut("p").disabled(
           store.project?.objects.isEmpty != false)
       }
       CommandMenu("Object") {

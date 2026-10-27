@@ -157,7 +157,7 @@ import simd
   public func capture(width:Int,height:Int,transparent:Bool=false,camera override:SceneCameraPayload?=nil)async throws->CGImage {
     guard width>0,height>0,width<=8192,height<=8192,Double(width)*Double(height)<=32_000_000 else{throw SceneRendererError.invalidCapture}
     let token=epoch,started=CFAbsoluteTimeGetCurrent(),renderer=try RealityRenderer(),root=sceneRoot.clone(recursive:true)
-    func removeAdornments(_ entity:Entity){for child in Array(entity.children){if child.name=="LAB selection"{child.removeFromParent()}else{removeAdornments(child)}}}
+    func removeAdornments(_ entity:Entity){for child in Array(entity.children){if child.name=="LAB selection" || child.name.hasSuffix("/paper.highlight"){child.removeFromParent()}else{removeAdornments(child)}}}
     removeAdornments(root)
     if let light=root.findEntity(named:"LAB environment") {
       func rebind(_ node:Entity){if node is ModelEntity {node.components.set(ImageBasedLightReceiverComponent(imageBasedLight:light))};for child in node.children {rebind(child)}}

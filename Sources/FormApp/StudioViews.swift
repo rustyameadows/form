@@ -69,7 +69,7 @@ struct StudioTopBar: View {
     HStack(spacing: 14) {
       if store.showingHome {
         Text("LAB").font(.system(size: 15, weight: .heavy, design: .rounded)).tracking(4)
-        Text("0.3").font(.system(size: 10, weight: .medium, design: .monospaced)).foregroundStyle(
+        Text("0.4").font(.system(size: 10, weight: .medium, design: .monospaced)).foregroundStyle(
           Palette.secondary
         ).padding(.horizontal, 7).padding(.vertical, 3).background(Palette.line, in: Capsule())
       } else {
@@ -114,13 +114,13 @@ struct StudioTopBar: View {
         IconButton("Materials & equipment", symbol: "square.stack.3d.up") {
           store.showingLibrary = true
         }
-        IconButton("Print preparation · ⌘P", symbol: "printer") { store.printing.open() }
+        IconButton("Print preparation · ⌘P", symbol: "printer") { store.prepareSelectedPrint() }
         Menu {
           Button("Studio image · PNG") { store.exportDialog("png") }
           Button("Printable artwork · PDF") { store.exportDialog("pdf") }.disabled(
             store.primary == nil)
           Button("Cut profile · SVG") { store.exportDialog("svg") }.disabled(
-            !["sleeve", "clock"].contains(store.primary?.recipeID ?? ""))
+            !["sleeve", "clock", "paperEnvelope", "tuckCarton"].contains(store.primary?.recipeID ?? ""))
           Button("Component summary · JSON") { store.exportDialog("json") }
           Divider()
           Button("Save project copy…") { store.saveCopy() }
@@ -403,7 +403,10 @@ struct WorkspaceView: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
     VStack(spacing: 0) {
-      if store.environment != .studio { DesignSurfaceBar() }
+      if store.environment != .studio {
+        DesignSurfaceBar()
+        if let object=store.primary,let project=store.project,FabricEnvironmentContext.applies(to:object,in:project) { FabricEnvironmentHeader(object:object) }
+      }
       HStack(spacing: 0) {
         Group {
           if store.surfaceLayout == .split {
@@ -444,9 +447,12 @@ struct TableWorkspace: View {
                   .font(.system(size: 11,weight:.medium)).lineLimit(1)
                   .padding(10).background(.regularMaterial,in:RoundedRectangle(cornerRadius:9))
               }.buttonStyle(.plain).popover(isPresented:$showingObjectControls) {
-                ObjectInspector().frame(maxHeight:650).environmentObject(store)
+                Group { if let object = store.primary, PaperConstruction.isPaper(object) { PaperEnvironmentControls(object: object).frame(width:300) } else { ObjectInspector() } }.frame(maxHeight:650).environmentObject(store)
               }
-            } else { ObjectInspector().id(store.primary?.id) }
+            } else {
+              if let object = store.primary, PaperConstruction.isPaper(object) { PaperEnvironmentControls(object:object).frame(width:300).frame(maxHeight:650).background(Palette.paper,in:RoundedRectangle(cornerRadius:10)) }
+              else { ObjectInspector().id(store.primary?.id) }
+            }
           }
         }.padding(24)
         Spacer(minLength: 0)

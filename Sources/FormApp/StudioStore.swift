@@ -50,6 +50,17 @@ enum TableTool: String, CaseIterable {
   var studioReturnSurface: (mode: WorkspaceMode, layout: DesignSurfaceLayout)?
   @Published var fabricationReview: FabricationReview?
   @Published var surfaceLayout: DesignSurfaceLayout = .single
+  @Published var paperRepresentation: PaperRepresentation = .panels
+  @Published var paperInside = false
+  @Published var paperSelectedPanelID: String?
+  @Published var paperSelectedFoldID: String?
+  @Published var paperShowingArtwork = true
+  @Published var paperShowingGuides = true
+  @Published var paperSheetWidth = 700.0
+  @Published var paperSheetHeight = 1000.0
+  @Published var paperQuantity = 3
+  @Published var paperSheetMargin = 10.0
+  @Published var paperSheetGap = 6.0
   var canvasWindowController: CanvasWindowController?
   @Published var projects: [ProjectSummary] = []
   @Published var notice: String?
@@ -159,6 +170,10 @@ enum TableTool: String, CaseIterable {
     engine.onProjectDidChange = { [weak self] in
       self?.closeDetachedCanvas()
       self?.environment = .form
+      self?.paperInside = false
+      self?.paperSelectedPanelID = nil
+      self?.paperSelectedFoldID = nil
+      self?.paperRepresentation = .panels
       self?.studioReturnSurface = nil
       self?.fabricationReview = nil
       self?.printing.resetForProjectChange()
@@ -219,6 +234,7 @@ enum TableTool: String, CaseIterable {
               return
             }
             let readOnly = (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
+              (name == "form_paper" && ["inspect", "preflight", "layout", "view", "export"].contains(args["command"] as? String ?? "inspect")) ||
               [
                 "form_status", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones",
                 "form_list_materials", "form_get_print_setup", "form_get_slice_status",
@@ -255,6 +271,9 @@ enum TableTool: String, CaseIterable {
               status["renderer"] = self.scene?.diagnostics ?? [:]
               status["artwork_renderer"] = self.artworkSession.canvas?.diagnostics ?? [:]
               status["environment"] = self.environment.rawValue
+              status["paper_workspace"] = ["representation": self.paperRepresentation.rawValue,
+                "inside": self.paperInside,"selected_panel_id":self.paperSelectedPanelID as Any? ?? NSNull(),"selected_fold_id":self.paperSelectedFoldID as Any? ?? NSNull(),
+                "sheet_size_mm":[self.paperSheetWidth,self.paperSheetHeight],"quantity":self.paperQuantity]
               status["primary_environments"] = ProjectEnvironment.primary.map(\.rawValue)
               status["studio_access"] = "secondary_icon_and_menu"
               status["design_surfaces"] = [

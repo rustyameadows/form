@@ -82,6 +82,7 @@ enum ArtworkTool: String, CaseIterable {
   }
   @Published var zoom = 1.0
   @Published var dieline = false
+  @Published var paperFocusPanelID: String?
   @Published var hiddenProductionRoles:Set<ArtworkProductionRole> = []
   @Published var preview = true
   @Published var editingText = false { didSet { store?.objectWillChange.send() } }
@@ -94,6 +95,12 @@ enum ArtworkTool: String, CaseIterable {
   @Published var showingGlyphs = false
   init(store: StudioStore) { self.store = store }
   var object: ProductObject? { store?.project?.objects.first { $0.id == objectID } }
+  var paperContext: ProductObject? {
+    guard let primary = store?.primary, PaperConstruction.isPaper(primary),
+      objectID == primary.id || objectID == primary.paperConstruction?.insideArtworkSourceID
+        || objectID == store?.project?.artworkOwner(primary).id else { return nil }
+    return primary
+  }
   var art: Artwork {
     object.flatMap { store?.project?.editableArtwork($0) } ?? .init(background: "#FFFFFF")
   }
@@ -195,17 +202,17 @@ enum ArtworkTool: String, CaseIterable {
   }
   var frames: [CanvasFrame] {
     guard let objects = store?.project?.objects else { return [] }
-    let related = objects.filter { $0.isCanvasWorkspace } + objects.filter { !$0.isCanvasWorkspace && ($0.recipeID == "artboard" || $0.id == objectID) }
+    let related = paperContext != nil ? objects.filter { $0.id == objectID } : objects.filter { $0.isCanvasWorkspace } + objects.filter { !$0.isCanvasWorkspace && ($0.recipeID == "artboard" || $0.id == objectID) }
     var x = 36.0
     var y = 40.0
     var rowHeight = 0.0
     var result: [CanvasFrame] = []
     var finiteIndex = 0
     for object in related {
-      let surface = object.id == objectID ? previewObject ?? object : object
+      let surface = object.id == objectID ? paperContext ?? previewObject ?? object : object
       let unfolding = dieline && object.id == objectID && surface.recipeID == "sleeve"
       let size =
-        unfolding ? Dieline.dimensions(surface) : ArtworkDrawing.dimensions(object)
+        unfolding ? Dieline.dimensions(surface) : ArtworkDrawing.dimensions(paperContext ?? object)
       if !object.isCanvasWorkspace, finiteIndex > 0 && finiteIndex % 3 == 0 {
         x = 36
         y += rowHeight + 44
@@ -237,7 +244,8 @@ enum ArtworkTool: String, CaseIterable {
   func reconcile() {
     if let maskEditing, !art.elements.contains(where: { $0.id == maskEditing.maskID }) { self.maskEditing = nil }
     if componentReturn != nil && object?.componentDefinition != true { componentReturn = nil }
-    if componentReturn == nil, object?.isCanvasWorkspace != true, let primary = store?.primary, primary.supportsArtworkFace {
+    let editingPaperInside = store?.paperInside == true && store?.primary?.paperConstruction?.insideArtworkSourceID == objectID
+    if componentReturn == nil, !editingPaperInside, object?.isCanvasWorkspace != true, let primary = store?.primary, primary.supportsArtworkFace {
       let owner = store?.project?.artworkOwner(primary) ?? primary
       linkedTargetID = owner.id == primary.id ? nil : primary.id
       if objectID != owner.id {

@@ -52,8 +52,13 @@ extension StudioStore {
     let source = current.objects.first { $0.id == sourceObjectID }
     guard destination.available(in: current, object: source) else { return }
     if destination == .print3D { printing.open(objectID: sourceObjectID); return }
-    if [.pattern, .layout].contains(destination), let id = sourceObjectID { artworkSession.activate(id) }
-    fabricationReview = .init(destination: destination, objectID: sourceObjectID, projectID: sourceProjectID)
+    var reviewObjectID=sourceObjectID
+    if [.pattern,.layout].contains(destination),let source {
+      let output=FabricEnvironmentContext.sourceObject(for:destination,object:source,project:current)
+      reviewObjectID=output.id
+      if activateFabricPatternSource(for:source.id)==nil {artworkSession.activate(output.id)}
+    }
+    fabricationReview = .init(destination: destination, objectID: reviewObjectID, projectID: sourceProjectID)
   }
 }
 
@@ -89,10 +94,12 @@ enum FabricationDestination: String, CaseIterable, Identifiable {
     guard let object, !object.isCanvasWorkspace else { return false }
     switch self {
     case .print3D:
-      return !object.isFlexibleSurface && object.textile == nil && object.patternAssembly == nil
+      return !PaperConstruction.isPaper(object) && !FabricEnvironmentContext.applies(to:object,in:project) && !object.isFlexibleSurface && object.textile == nil && object.patternAssembly == nil
         && !["reference", "swatch", "paperStack", "booklet", "sleeve", "artboard"].contains(object.recipeID)
     case .page: return (try? ArtworkPageSetup.source(project, objectID: object.id)) != nil
-    case .pattern, .layout: return project.editableArtwork(object)?.elements.contains(where: { $0.sewingPiece != nil }) == true
+    case .pattern, .layout:
+      let source=FabricEnvironmentContext.sourceObject(for:self,object:object,project:project)
+      return project.editableArtwork(source)?.elements.contains(where: { $0.sewingPiece != nil }) == true
     case .embroidery:
       let spec = object.textile ?? TextileProduct.defaults(for: object.recipeID)
       guard let spec else { return false }
@@ -146,7 +153,11 @@ struct EnvironmentContextPanel: View {
         }.font(.system(size: 11)).accessibilityLabel("Environment object")
       }.padding(16)
       Divider()
-      if store.environment == .function {
+      if let object=store.primary,PaperConstruction.isPaper(object) {
+        PaperEnvironmentControls(object:object)
+      }else if let object=store.primary,let project=store.project,FabricEnvironmentContext.applies(to:object,in:project) {
+        FabricEnvironmentControls(object:object).id(project.id.uuidString+object.id.uuidString)
+      }else if store.environment == .function {
         if let object = store.primary {
           if let source = object.artworkSourceID, let name = store.project?.objects.first(where: { $0.id == source })?.name {
             Label("Artwork source · " + name, systemImage: "link").font(.system(size: 10)).foregroundStyle(Palette.secondary).padding(14)

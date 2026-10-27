@@ -69,6 +69,9 @@ public final class MeshGeometryElement:NSObject {
   public var indices:[UInt32] {data.withUnsafeBytes{b in (0..<data.count/4).map{b.loadUnaligned(fromByteOffset:$0*4,as:UInt32.self)}}}
 }
 open class MeshGeometry:NSObject,NSCopying {
+  /// A renderer cache can outlive this object. Memory addresses can be recycled
+  /// for unrelated buffers, so resource identity must survive that reuse safely.
+  public let resourceID=UUID()
   private var storedSources:[MeshGeometrySource],storedElements:[MeshGeometryElement]
   public private(set) var resourceRevision:UInt64=0
   public var materials:[MeshMaterial]=[]

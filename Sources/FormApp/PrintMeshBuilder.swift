@@ -8,6 +8,7 @@ import FormCADModeling
   static func mesh(
     object: ProductObject, project: Project, assets: URL, configuration: PrintConfiguration
   ) throws -> PrintMesh {
+    guard !PaperConstruction.isPaper(object) else{throw FormError.invalid("This is a folded paper construction. Use Paper Fabricate for its flat print/cut/score files; it is not an FDM print solid.")}
     if object.meshAsset != nil || object.cadRepresentation != nil {
       return try sourceMesh(object:object,assets:assets,configuration:configuration)
     }
