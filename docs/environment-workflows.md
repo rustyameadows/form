@@ -27,7 +27,7 @@ Material confirmation is scoped to the active source and session. Changing the s
 
 ## Studio: compose a presentation
 
-Open Studio with the secondary aperture icon. The stage has its own camera; moving it does not move the design camera. Add existing products from the left menu, duplicate a selected instance, choose another product/variant as its source, and edit instance placement in millimeters. A shelf/riser prop has its own dimensions and color. Material overrides affect the instance; linked source geometry and artwork remain shared.
+Open Studio with the secondary aperture icon. The stage has its own camera; moving it does not move the design camera. Add existing products from the left menu, duplicate a selected instance, choose another product/variant as its source, and edit instance placement in millimeters. A shelf/riser prop has its own dimensions and color. Material overrides affect the instance; linked source geometry and artwork remain shared. Imported meshes retain their authored material slots instead of accepting a global override.
 
 **Save scene** or **Cmd-S** stores the composition. The saved-scene menu recalls it without rebuilding design objects. A scene contains independent instance identities, source references, placements, visibility, backdrop, lighting, output dimensions and motion settings. Unsaved changes are labelled as a scene draft. Draft Undo/Redo uses the normal Edit menu; saving is one document Undo operation. Save or discard an edited draft before choosing another scene.
 
@@ -35,7 +35,7 @@ The Camera inspector exposes yaw, elevation, distance, target and projection. **
 
 The camera-motion strip supports an orbit or an upright eased transition between captured start and end cameras. Capture start, reposition the camera, capture end, then scrub or play the motion. Playback is a presentation preview; committed product/cloth geometry remains static.
 
-Image output preserves the chosen pixel size, within the existing 16-megapixel bound. Video streams actual RealityKit frames into H.264 MP4, with even pixel dimensions fitted within a 1920-pixel longest edge, 12/24/30 fps and at most 600 frames over 0.5–20 seconds. Export has progress and cancellation. A source/project change during capture rejects delivery. Existing output destinations are preserved.
+Native image output captures the current visible camera, including a scrubbed motion frame; MCP output uses the saved scene camera. Image output preserves the chosen pixel size, within the existing 16-megapixel bound. Video streams actual RealityKit frames into H.264 MP4, with even pixel dimensions fitted within a 1920-pixel longest edge, 12/24/30 fps and at most 600 frames over 0.5–20 seconds. Export has progress and cancellation. A source/project change during capture rejects delivery. Existing output destinations are preserved.
 
 - An image is delivered in a new `.render` folder with PNG and `render.json`.
 - A video is delivered in a new `.motion` folder with `Video.mp4` and `render.json`.
@@ -58,6 +58,6 @@ Read the returned scene, edit its instance/source/placement/camera/motion fields
 {"command":"save","scene":{"id":"…","revision":1,"name":"Retail shelf 01","instances":[],"camera":{},"pixels":{},"lighting":"soft-side-v1","surface":"Daylight","motion":{}}}
 ```
 
-The second example shows the argument shape; use the complete valid definition returned by `create`/`get`. Native controls and MCP use the same model operations. `form_export` with a saved `scene_id` accepts `png` or `mp4` and a new absolute output-folder path. No external model or machine call is part of these operations.
+The second example shows the argument shape; use the complete valid definition returned by `create`/`get`. Native controls and MCP use the same model operations. `form_export` with a saved `scene_id` accepts `png` or `mp4` and a new absolute output-folder path. Scene-video bridge calls have a bounded 600-second response deadline because rendering real frames can exceed the ordinary 30-second interactive deadline. No external model or machine call is part of these operations.
 
 The [overhaul plan and acceptance](environment-ui-overhaul.md) retains the [Function](design/environment-ui/function-concept.png), [Fabricate](design/environment-ui/fabricate-concept.png) and [Studio](design/environment-ui/studio-concept.png) image-generation concepts. Exact prompts and built-in-tool provenance are in [prompts.json](design/environment-ui/prompts.json). Concepts are design references; actual native screenshots and test records establish acceptance.

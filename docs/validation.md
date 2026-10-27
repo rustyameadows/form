@@ -1,6 +1,16 @@
 # Validation record
 
-Validated October 24–25, 2026 on the local Apple silicon Mac, macOS 26, Xcode 27 / Swift 6.4. The package deployment target is macOS 14; older supported OS versions have not been exercised on hardware. Build artifacts, downloaded engines, test libraries, exports, and detailed reports are kept under ignored `.local` / `build` directories.
+Validated October 24–27, 2026 on the local Apple silicon Mac, macOS 26, Xcode 27 / Swift 6.4. The current CAD application requires macOS 15; earlier entries describe their then-current targets. Older supported OS versions have not been exercised on hardware. Build artifacts, downloaded engines, test libraries, exports, and detailed reports are kept under ignored `.local` / `build` directories.
+
+## Distinct environment workflows and saved Studio compositions — October 27
+
+The integrated release passes **1,151 tests**: 677 core, 419 native app, 14 rendering, 24 mesh, 3 geometry, 8 CAD modeling and 6 kernel tests, with zero failures. Function retains medium-independent lamp/CAD and fabric/paper construction controls. Fabricate uses explicit source, process and material confirmation. Studio stores independent presentation instances, a separate camera and bounded camera motion; existing saved shots remain compatible.
+
+Native computer use reviews lamp dimensions, original pouch patterns and seven matched seams, explicit paper-process selection, focused caliper Apply/Undo, and a preparation sheet edited to 650 mm without losing its fields. Narrow and wide Studio layouts retain timeline controls. Actual native playback/scrubbing and a Save-panel PNG use the visible interpolated camera exactly. Four real mouse directions return yaw and elevation within 2e−16 radians, preserving pivot/distance, source objects and design camera. Final AppKit regression coverage also verifies that a selection click at a scrubbed frame cannot rebase the starting camera.
+
+Real packaged checks exercise paper outputs, legacy saved shots, strict scene operations, independent instances, Undo/Redo, scene restart and PNG/MP4 hashes. A six-second/144-frame export exposed the ordinary 30-second bridge deadline: media completed correctly but its acknowledgement timed out. Scene-video calls now have a bounded 600-second deadline; ordinary calls retain 30 seconds. A controlled delayed-acknowledgement fixture confirms video success at 31.01 seconds and ordinary timeout at 30.01 seconds. The final packaged six-second/144-frame movie completes in 2.84 seconds for the five-instance 900 × 600 fixture. Cancellation and changed-source tests leave no partial delivery. The final long-export and installation record is in [native acceptance](evidence/environment-ui-native.json); [workflow and limits](environment-workflows.md) distinguish camera motion from object/cloth animation and generated concepts from native screenshots.
+
+An earlier concurrent-review run had one cache-identity reuse test fail. Its focused retry and both later isolated complete suites pass; no unrelated cache implementation or assertion was weakened. No machine job, print upload or external model call inside LAB is part of acceptance.
 
 ## Decoration handoff, authored bomber and Studio focus — October 25
 

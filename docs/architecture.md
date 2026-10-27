@@ -1,4 +1,4 @@
-# LAB 0.4 architecture
+# LAB 0.5 architecture
 
 This build follows the product brief and the October 24 interface sketches: one continuous Table, a compact native title bar, contextual floating inspectors, camera/focus/isolation controls, and a home screen of actual saved scene previews.
 
@@ -76,9 +76,13 @@ Image crop/adjustment fields require schema 9; schemas 1–8 still load. ImageIO
 
 `FORM_LIBRARY_PATH` selects a separate library for development or tests. `FORM_SOCKET_PATH` selects a separate local bridge. These settings require no change to a project document.
 
-Schema 51 adds portable starter-library choices and proposed blank snapshots. Schema 52 adds imported mesh references, exact feature models and validated exact/derived representations. Readers retain schemas 1–53. New representations use immutable flat resources under `Assets/`: source bytes, normalized mesh data, exact BRep and binary display meshes. Mesh/CAD handles and renderer entities are never serialized. Renderer migration alone does not upgrade an old project schema.
+Schema 51 adds portable starter-library choices and proposed blank snapshots. Schema 52 adds imported mesh references, exact feature models and validated exact/derived representations. Readers retain schemas 1–54. New representations use immutable flat resources under `Assets/`: source bytes, normalized mesh data, exact BRep and binary display meshes. Mesh/CAD handles and renderer entities are never serialized. Renderer migration alone does not upgrade an old project schema.
 
 Schema 53 adds optional paper constructions: stable panel/fold/edge/join IDs, caliper and stock, independent top opening, registered inside artwork sources and anchored annotations. One millimeter net supplies rigid folded geometry and physical cuts/creases; artwork coordinates survive dimension changes and receive an explicit review flag. Existing sleeves and old schemas load without conversion. Paper, CAD, imported meshes and cloth retain distinct source identities.
+
+Schema 54 adds optional saved Studio compositions. Scene instances refer to original product IDs and carry independent placement, variant/material choice, visibility and stable identities. Resolution creates temporary render objects while retaining original sources for artwork/attachment lookup. Design geometry and design-camera state remain unchanged. Native and MCP use the same revision-checked scene operations; scene drafts have local Undo, and saving is one document edit. Existing saved shots and older schemas remain compatible.
+
+Function, Fabricate and Studio now have purpose-specific native workspaces. Function supplies component navigation and medium-specific construction views with the existing technical editors. Fabricate keeps an explicit session-scoped source/process/material confirmation before preparation/output. Studio owns a separate stage/controller and streams bounded camera frames into H.264 rather than retaining a movie in memory. Source invalidation or cancellation prevents partial delivery; exclusive output folders preserve existing files. See [environment workflows](environment-workflows.md).
 
 ## Artwork and production
 

@@ -1,0 +1,237 @@
+{
+  "record_version": 1,
+  "date": "2026-10-27",
+  "scope": "LAB 0.5 distinct Function/Fabricate/Studio workspaces; medium-independent Function, explicit preparation, saved instances and actual camera media. Broader product roadmap remains unfinished.",
+  "source_code_commit": "7b42bed",
+  "schema": 54,
+  "MCP_tool_count": 64,
+  "tests": {
+    "command": "swift test -c release",
+    "total": 1151,
+    "failures": 0,
+    "skips": 0,
+    "suites": {
+      "LabRenderingTests": 14,
+      "FormMeshAssetsTests": 24,
+      "FormGeometryTests": 3,
+      "FormCoreTests": 677,
+      "FormCADModelingTests": 8,
+      "FormCADKernelTests": 6,
+      "FormAppTests": 419
+    },
+    "source_code_commit": "7b42bed",
+    "post_suite_changes": "Native/package acceptance and documentation only; no production-code changes."
+  },
+  "package": {
+    "version": "0.5.0",
+    "build": 5,
+    "binary_sha256": "68419787a5a8102edf302235991219253f7c9554e162541cf09acb4a2e7e1807",
+    "helper_sha256": "aef9a3fe8d5e6dfd9a7e36cd16dceb6c8d250e35b1a93d69bc6547206f40b1e2",
+    "signature": "ad hoc; codesign --verify --deep --strict passed",
+    "installed": "build/LAB.app",
+    "previous_bundle_recoverable": true
+  },
+  "native_review": {
+    "lamp_parameters_and_docked_controls": true,
+    "fabric_original_pieces_allowances_grain_and_7_seams": true,
+    "paper_process_only_for_carton": true,
+    "focused_stock_caliper_change_mm": [
+      0.45,
+      0.47
+    ],
+    "stock_and_confirmation_undo": true,
+    "original_objects_history_camera_scenes_restored": true,
+    "preparation_sheet_width_mm": 650,
+    "preparation_fields_retained_while_editing": true,
+    "independent_source_replacement_and_undo": true,
+    "native_motion_play_and_scrub": true,
+    "native_scrubbed_png_yaw": 0.8088905057124922,
+    "native_scrubbed_png_yaw_matches_exact_timeline": true,
+    "four_mouse_directions": {
+      "release_yaw_return_error_radians": 1.1102230246251565e-16,
+      "release_elevation_return_error_radians": 1.6653345369377348e-16,
+      "target_distance_projection_exact": true,
+      "design_isolation": "Native store-less stage; complete automated source/camera isolation plus packaged source checks."
+    },
+    "window_pixels": [
+      [
+        2200,
+        1602
+      ],
+      [
+        3420,
+        1644
+      ]
+    ],
+    "release_scrubbed_product_click_preserves_timeline_and_camera": true
+  },
+  "native_review_provenance": {
+    "lamp_fabric_material_and_initial_layout_review_source": "83f004f",
+    "release_four_direction_camera_scrubbed_selection_installed_reopen": "7b42bed",
+    "layout_source_unchanged_between_those_commits": true,
+    "screenshots": [
+      {
+        "path": "docs/validation/environment-ui/fabricate-material.png",
+        "pixels": [
+          4718592,
+          4292935744
+        ],
+        "sha256": "21d86cc5e0a8029e6823b2a0708cd0e0b09896111f52fbe4e5cf93e27bedd646"
+      },
+      {
+        "path": "docs/validation/environment-ui/fabricate-prepare.png",
+        "pixels": [
+          4718592,
+          4292935744
+        ],
+        "sha256": "b4a8867b255f816c8b592cd06e308d48190c52da2964dfead43b7859fff4ce6a"
+      },
+      {
+        "path": "docs/validation/environment-ui/function-fabric.png",
+        "pixels": [
+          4718592,
+          4292935744
+        ],
+        "sha256": "4024bc8c4df0e53df25453a193e41be6fe86b528e1a94763874852110f78582c"
+      },
+      {
+        "path": "docs/validation/environment-ui/function-lamp.png",
+        "pixels": [
+          4718592,
+          4292935744
+        ],
+        "sha256": "eee49def023b3bd78c5f981bc001e41d8a422a80647be800340fdebe7dd2faa3"
+      },
+      {
+        "path": "docs/validation/environment-ui/studio-installed.png",
+        "pixels": [
+          4718592,
+          4292935744
+        ],
+        "sha256": "907bf703f7263f5091f64720302a6ee8d7323eb49dd2d55a0d329283f8bd4962"
+      },
+      {
+        "path": "docs/validation/environment-ui/studio-narrow.png",
+        "pixels": [
+          4718592,
+          4292935744
+        ],
+        "sha256": "938609be254246116756e425f86eaf97438531e588034ecb919924883cf2c0b1"
+      },
+      {
+        "path": "docs/validation/environment-ui/studio-wide.png",
+        "pixels": [
+          4718592,
+          4292935744
+        ],
+        "sha256": "4479574cb4ef76e64961191e6b4da529195aeb4a388bb2a980ea85d473544042"
+      }
+    ]
+  },
+  "packaged_acceptance": {
+    "source_code_commit": "7b42bed",
+    "instances": 5,
+    "design_objects": 3,
+    "independent_instances_and_sources_preserved": true,
+    "scene_undo_redo_strict_validation_existing_destinations": true,
+    "restart_saved_scene": true,
+    "outputs": {
+      "png": {
+        "sha256": "e079672cf76494fe03a755db9975239f6f7811dddbfd6a28dc86aab6cfaf8daf",
+        "pixels": [
+          900,
+          600
+        ],
+        "scene_id": "1BA5E366-91D4-4E27-AE3B-0C3F177A838B",
+        "source_design_sha256": "c9b35844ae59397e85b03f5a590e78517bf7145592dff2ec6ca442853050ffd9"
+      },
+      "mp4": {
+        "sha256": "ed0b9eda519cb5dc2c1a17415cfa728f7766de688ce06d43ffb7c31760e787a7",
+        "pixels": [
+          900,
+          600
+        ],
+        "scene_id": "1BA5E366-91D4-4E27-AE3B-0C3F177A838B",
+        "source_design_sha256": "c9b35844ae59397e85b03f5a590e78517bf7145592dff2ec6ca442853050ffd9",
+        "frames": 144,
+        "seconds": 6,
+        "fps": 24,
+        "codec": "H.264"
+      }
+    },
+    "fixture_export_seconds": {
+      "png": 0.32788220804650337,
+      "mp4": 2.8370249998988584
+    },
+    "performance_scope": "One five-instance 900\u00d7600 retail fixture; not a general performance guarantee.",
+    "paper_and_legacy_shot_compatibility": {
+      "source_code_commit": "83f004f",
+      "paper_guides_and_output_source_unchanged_by_final_fixes": true,
+      "paper_report_sha256": "32993c826255dd0fa9c1aa524cd5053f7897e585c7b680744f129f8400a40ed6",
+      "legacy_shots_passed": true
+    }
+  },
+  "long_export_transport": {
+    "observed_issue": "A review export completed media but exceeded the old 30-second bridge acknowledgement deadline.",
+    "fix": "Only scene MP4 calls use a bounded 600-second receive deadline. Other calls retain 30 seconds.",
+    "delayed_acknowledgement_fixture": {
+      "fixture": "Controlled local Unix-socket delayed acknowledgements; no app/document/hardware operation.",
+      "results": {
+        "ordinary": {
+          "returncode": 1,
+          "seconds": 30.010148041998036,
+          "acknowledged": false
+        },
+        "scene_video": {
+          "returncode": 0,
+          "seconds": 31.014928999939002,
+          "acknowledged": true
+        }
+      }
+    },
+    "fixture_source_sha256": "05a980ffe12aa38469a93137ad64366d0020f197ab64c85060a66e151d227753",
+    "diagnostic_limit": "The initial bridge error did not record errno. The deadline diagnosis is inferred from the 30-second policy and completed media; the final deadline behavior is measured independently with controlled 31-second acknowledgements."
+  },
+  "preservation": {
+    "original_projects": 8,
+    "new_demo_projects": 1,
+    "projects_after": 9,
+    "original_library_records": 36,
+    "original_pinned_source_library_files": 204,
+    "fresh_full_library_backup": true,
+    "installed_version": "0.5.0",
+    "environment": "studio",
+    "demo_project_id": "5697AC6B-D3C1-4EE3-B206-0070CE50E2B0",
+    "all_original_pins_exact": true,
+    "original_pinned_files": 204,
+    "original_project_reopen_source_history_camera_pose_exact": true,
+    "derived_viewport_aspect_after_reopen": 2.4782608695652173,
+    "original_derived_viewport_aspect_restored": 1.1087962962962963,
+    "restoration_guard": "Complete manifest equality after normalizing viewportAspect only; original project closed; latest manifest backed up; compare before atomic replacement.",
+    "backup_pin_list_sha256": "e73739f9299d20579c2d2cb230830d7de2c801c99afb8c8aeedaeb826f07a848"
+  },
+  "concepts": {
+    "purpose": "Exploratory generated bitmap references, not application content or acceptance screenshots.",
+    "prompts": "docs/design/environment-ui/prompts.json",
+    "built_in_imagegen": true
+  },
+  "retry_history": "An earlier concurrent-review run failed one existing NSCache identity-reuse test. The focused test and both later isolated complete suites pass; no unrelated assertion or implementation was weakened.",
+  "log_sha256": {
+    "environment-ui-bridge-tests.log": "7ae7bd9b1c6e72a9f9d4170a35051ccfc3c4b39e541b779c52e729b6895a4c9a",
+    "environment-ui-final-package.log": "e78095ba86f92f6e2f25a914798518f000916f9a86a5c01ad4e56b11ae72339d",
+    "environment-ui-final-smoke.log": "d897b9436c1ff5e84634225c91063553498d4a62334f3cdef16300e999bf04d2",
+    "environment-ui-paper-compat.log": "22777cb62b180e3facfd39c758cd2c2bdbe9ed7b5ae973302f7f4acadd1cfd41",
+    "environment-ui-legacy-shots.log": "0676f8ca0700a0503a0e165a3816d872a5f4efbff818e565e637dde91b55e908",
+    "environment-ui-deadline-report.json": "826525b4a95907b23e2f67ed860c583a0dc11f336ef00f9d9ae209884a1b0f13"
+  },
+  "boundaries": [
+    "Function retains supported lamp/CAD/fabric/paper construction; no new electrical or general mechanical solver is claimed.",
+    "Motion animates the camera over committed geometry; no object animation, predictive fit or general cloth simulation is added.",
+    "Video is H.264, even dimensions fitted within 1920 longest edge, 12/24/30 fps, at most 600 frames over 0.5\u201320 seconds.",
+    "Scene instances link current design sources; media records do not archive all source bytes.",
+    "Material confirmation records explicit choices, not certification.",
+    "Existing shots and source schemas remain compatible; schema 54 is used only with saved scenes."
+  ],
+  "hardware_commands": [],
+  "external_model_calls_inside_LAB": false
+}

@@ -4,13 +4,13 @@ The [starter object library](docs/starter-object-library.md) adds searchable rea
 
 A native Mac creative environment for designing and making physical things.
 
-**Form, Function, Fabricate** are the three primary environments for one project. **Studio** remains a separate environment, available through the aperture icon and Studio menu, for lighting, saved shots and presentation. Canvas, Table, split view and a separate Canvas window are views of that shared project. See the [LAB thesis](docs/lab-working-thesis-v2.md) and [transition contract](docs/lab-transition.md).
+**Form, Function, Fabricate** are the three primary environments for one project. **Studio** remains a separate environment, available through the aperture icon and Studio menu, for saved compositions, lighting, camera motion and presentation. Canvas, Table, split view and a separate Canvas window are views of that shared project. See the [LAB thesis](docs/lab-working-thesis-v2.md) and [transition contract](docs/lab-transition.md).
 
-**Project status:** [What works, what remains, and the current development state](docs/project-status.md) — updated October 26, 2026.
+**Project status:** [What works, what remains, and the current development state](docs/project-status.md) — updated October 27, 2026.
 
 Explore typography, notes, references, and graphics on a freeform 2D Canvas, connected to a continuous 3D Table for physical objects and materials. Use either surface alone, side by side, or with Canvas in a separate window. Start with the thing you want to make, then work directly with its dimensions, construction, and appearance.
 
-**Version 0.4:** Constructed paper goods with linked Panels/Dieline/assembled views, independent top opening, stock and sheet preparation, and task-specific Form/Function/Fabricate controls for paper and existing fabric constructions. RealityKit, exact OCCT models, interchange, Studio and local Orca slicing remain available. See the [paper workflow and verified limits](docs/constructed-paper-goods.md). **Codex handles the creative conversation; LAB makes no external AI model calls.** See the [CAD guide and verified limits](docs/cad-foundation.md).
+**Version 0.5:** Distinct native workspaces for Function, guided Fabricate preparation, and Studio composition. Function remains medium-independent: lamp assemblies, exact CAD, fabric seams and cloth, and paper construction use their relevant controls. Fabricate makes source, process and material choices explicit. Studio adds independent product instances, saved scenes, camera controls and actual PNG/MP4 output. See the [environment workflows and verified limits](docs/environment-workflows.md). Constructed paper, RealityKit, exact OCCT models, interchange and local Orca slicing remain available. **Codex handles the creative conversation; LAB makes no external AI model calls.**
 
 The next governing document is the [2D Design, Typography & Vector Editing specification](docs/2d-design-typography-vector-spec.md). Its professional editing requirements expand the [implementation roadmap](docs/implementation-goal.md); the checklist distinguishes shipped foundations from remaining work.
 
@@ -28,7 +28,9 @@ open build/LAB.app
 
 For a faster development build, use `bash scripts/build.sh`. The script creates an ad hoc signed app bundle and includes the MCP executable. You can also open `Package.swift` in Xcode. The app has not been notarized for public distribution.
 
-## In the studio
+## Working in LAB
+
+- **Purpose-specific workspaces:** Function provides component/construction review; Fabricate guides explicit source, process, material, preparation and output choices. Studio composes independent product copies/variants and shelf props into saved scenes, with its own camera and real H.264 video. [Workflow](docs/environment-workflows.md), [design concepts and exact prompts](docs/design/environment-ui/prompts.json).
 
 - **Constructed paper goods:** Sun studies opens a flat-back, top-opening glued envelope; STILL opens a straight-tuck cosmetics carton. Stable panels/folds/glue joins connect editable outside/inside artwork to actual-caliper previews and local SVG/PDF production packets. Paper Print opens sheet preparation. [Workflow](docs/constructed-paper-goods.md), [acceptance](docs/evidence/constructed-paper-native.json).
 - **Home:** Saved project previews, search, blank projects, and editable starting studies. Featured cards start AFFINITIES, Cloth studies, or the merchandise collection; All studies and File → New from Study expose the full set. [Technical Canvas previews](docs/home-technical-preview.md) improve thin sewing contours for display while preserving source dimensions and cached files.

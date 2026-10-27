@@ -27,4 +27,4 @@ Camera motion is a presentation animation, not object/cloth/mechanical simulatio
 
 ## Status
 
-In progress. Concept exploration and architecture review started; implementation and native acceptance remain ahead.
+Accepted in the installed LAB 0.5 build. The complete 1,151-test suite, packaged paper/legacy-shot/scene workflows, real PNG/MP4 output, delayed bridge acknowledgement, native layouts and mouse interactions pass. Function was reviewed on lamps and fabric seam constructions as well as paper. All 204 original source/library files are exact after the preservation checks; the retail scene is a separate new demo. See [workflow and limits](environment-workflows.md) and [native acceptance](evidence/environment-ui-native.json).
