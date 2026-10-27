@@ -37,12 +37,15 @@ build/LAB.app/Contents/MacOS/lab-mcp --call form_add_object '{"recipe_id":"lamp"
 
 `form_set_view` accepts `form`, `function`, and `fabricate` for primary environments, and `studio` for the separate presentation environment. Switching these retains the same project, selection and camera. `form_status` reports `environment`, the three `primary_environments`, `studio_access`, and the existing `design_surfaces` state. `table`, `canvas`, `split`, `canvas_window`, and `artwork` remain surface commands; camera presets and saved Studio shot operations keep their existing behavior.
 
+Paper commands and physical arguments are illustrated in the [constructed-paper guide](constructed-paper-goods.md). `form_status.paper_workspace` reports representation, side, selected panel/fold, quantity and sheet dimensions. Current discovery exposes **63 tools**.
+
 ## Tools
 
 | Tools | Use |
 | --- | --- |
 | `form_status`, `form_list_projects`, `form_get_project` | Inspect the app, selection, renderer diagnostics, and saved/current projects |
-| `form_create_project`, `form_open_project` | Start blank, clock, cyanotype, lamps, or forms studies; continue a saved project |
+| `form_create_project`, `form_open_project` | Start blank, clock, cyanotype envelope, cosmetics carton, lamps, or forms studies; continue a saved project |
+| `form_paper` | Inspect/configure paper constructions, stable panels/folds/joins, annotations, independent inside sources, physical layout, linked views and exclusive SVG/PDF/packet export |
 | `form_list_recipes`, `form_list_materials` | Discover schemas, ranges, defaults, and material IDs |
 | `form_add_object`, `form_update_object`, `form_delete_objects` | Create and edit real native objects |
 | `form_create_recipe` | Define a new object category and its native inspector |

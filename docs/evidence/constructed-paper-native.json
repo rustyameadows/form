@@ -1,0 +1,208 @@
+{
+  "record_version": 1,
+  "date": "2026-10-26",
+  "scope": "LAB 0.4 constructed paper goods, task-specific paper/fabric views and live text-drag rendering repair. The broader product roadmap remains open.",
+  "source_code_commit": "1070a09",
+  "schema": 53,
+  "MCP_tool_count": 63,
+  "tests": {
+    "command": "swift test -c release",
+    "total": 1133,
+    "failures": 0,
+    "skips": 0,
+    "suites": {
+      "LabRenderingTests": 14,
+      "FormMeshAssetsTests": 24,
+      "FormGeometryTests": 3,
+      "FormCoreTests": 670,
+      "FormCADModelingTests": 8,
+      "FormCADKernelTests": 6,
+      "FormAppTests": 408
+    },
+    "log_sha256": "46ea29ac9a4d08a6544f17275070b43ec669258c3e14789fe2b166edd0d89f68",
+    "source_code_commit": "c1b0b36",
+    "post_suite_changes": "UI-only paper navigation buttons, stable two-row layout and preview clipping; release-compiled and native-reviewed. Dieline header repaint remains open."
+  },
+  "live_drag_repair": {
+    "real_mouse_drags": 2,
+    "directions": [
+      "right/down",
+      "left/down"
+    ],
+    "live_carton_remained_assembled": true,
+    "source_parameters_unchanged": true,
+    "camera_pose_unchanged": true,
+    "user_artwork_and_history_restored_exactly": true,
+    "native_stress_drag_steps": 96,
+    "GPU_lifetime_stress_instances": 64,
+    "renderer_warnings": []
+  },
+  "paper_packaged_acceptance": {
+    "models": {
+      "cyanotype": {
+        "panels": 9,
+        "folds": 8,
+        "cut_edges": 68,
+        "net_size_mm": {
+          "x": 473.4,
+          "y": 368.05000000000007
+        },
+        "stock": {
+          "grain": "unknown",
+          "gsm": 300,
+          "name": "Uncoated paperboard",
+          "notes": "Prototype assumptions; verify the chosen stock and crease tooling.",
+          "thicknessMM": 0.35,
+          "verified": false
+        },
+        "sheet_count": 2,
+        "prototypes": 3,
+        "checks": [
+          "purpose/view independence",
+          "semantic panel selection",
+          "top opening",
+          "full unfolding",
+          "source artwork physical preservation",
+          "Undo/Redo",
+          "invalid edit unchanged",
+          "actual PNG",
+          "physical layout",
+          "immutable packet hashes"
+        ]
+      },
+      "cosmetics": {
+        "panels": 13,
+        "folds": 12,
+        "cut_edges": 180,
+        "net_size_mm": {
+          "x": 219.8,
+          "y": 261.34999999999997
+        },
+        "stock": {
+          "grain": "unknown",
+          "gsm": 300,
+          "name": "Uncoated paperboard",
+          "notes": "Prototype assumptions; verify the chosen stock and crease tooling.",
+          "thicknessMM": 0.45,
+          "verified": false
+        },
+        "sheet_count": 1,
+        "prototypes": 3,
+        "checks": [
+          "purpose/view independence",
+          "semantic panel selection",
+          "top opening",
+          "full unfolding",
+          "source artwork physical preservation",
+          "Undo/Redo",
+          "invalid edit unchanged",
+          "actual PNG",
+          "physical layout",
+          "immutable packet hashes"
+        ]
+      }
+    },
+    "hardware_commands": [],
+    "restart_source_resources_verified": 22,
+    "renderer": {
+      "cloth_issues": {},
+      "cloth_surfaces": 0,
+      "embroidery_issues": {},
+      "embroidery_program_builds": 0,
+      "embroidery_sources": {},
+      "embroidery_texture_builds": 0,
+      "embroidery_texture_max_edge": 1024,
+      "geometry_builds": 3,
+      "last_sync_ms": 1.7609596252441406,
+      "mesh_uploads": 32,
+      "mouse": {
+        "action": "none",
+        "dx": 0,
+        "dy": 0,
+        "event_count": 0,
+        "gesture_count": 0,
+        "phase": "idle"
+      },
+      "object_nodes": 3,
+      "orbit_direction": "followPointer",
+      "orbit_speed": 0.75,
+      "preferred_fps": 60,
+      "renderer": "RealityKit",
+      "renderer_issue": "",
+      "renderer_warnings": [],
+      "renders_continuously": false,
+      "texture_uploads": 6
+    }
+  },
+  "compatibility_checks": [
+    "smoke_mcp.py: explicit original sleeve, variants, custom recipe, atomic rollback, physical outputs and reopen",
+    "smoke_studio_shots.py: saved shots, exact subjects, real PNG/render records, resource hashes and source preservation",
+    "smoke_print_lifecycle.py: local Orca slicing, project-scoped preparation and owned-worker cancellation"
+  ],
+  "native_controls": [
+    "construction width 64 \u2192 66 \u2192 Undo64; no stale-draft conflict",
+    "independent top-opening slider; body remains assembled",
+    "Back card selects semantic back panel in model/status",
+    "paper Command-P opens Fabricate sheet preparation",
+    "fabric Function reviews original pieces/allowances/grain/seams",
+    "fabric Fabricate offers full-size and seven-page tiled pattern review",
+    "Panels narrow/wide actual mouse resizing keeps all controls visible with plain SwiftUI buttons"
+  ],
+  "independent_proofs": {
+    "renderer": "Poppler pdftoppm + pdfinfo",
+    "sheet_mm": [
+      700,
+      1000
+    ],
+    "carton_count": 3,
+    "carton_sheets": 1,
+    "envelope_count": 3,
+    "envelope_sheets": 2,
+    "carton_image": "../validation/paper-construction/carton-sheet.png",
+    "envelope_first_sheet_image": "../validation/paper-construction/envelope-sheet.png"
+  },
+  "limits": [
+    "Rigid panels, not crease mechanics or predictive springback/adhesive/fit.",
+    "Stock caliper/GSM/grain and Superfine-inspired appearance are prototype declarations, not certified manufacturer measurements.",
+    "Inside artwork uses registered net coordinates; actual duplex feed/turn needs proof.",
+    "Cut-boundary artwork clipping; final bleed/trapping/color certification and machine tooling are not inferred.",
+    "No new general garment system, predictive cloth fit or self-contact solver.",
+    "Ad hoc local build; not a notarized distribution release."
+  ],
+  "hardware_commands": [],
+  "installed_app": {
+    "installed_version": "0.4.0",
+    "ordinary_library_projects_before": 6,
+    "ordinary_library_projects_after": 8,
+    "original_source_asset_files_verified": 128,
+    "added_project_packages": 2,
+    "user_source_snapshot_preserved": true,
+    "binary_sha256": "a23c5e298c7239362a21a8e3f69bbe0c6d58d92059f89efa0066c6717321bbe7",
+    "source_code_commit": "1070a09",
+    "native_split_controls_verified": true,
+    "ad_hoc_signature_verified": true,
+    "renderer": "RealityKit",
+    "bundled_occt_shared_libraries": 26,
+    "shipping_scenekit_dependency": false,
+    "distribution_notarized": false
+  },
+  "installed_drag_acceptance": {
+    "actual_mouse_drag": true,
+    "artwork_updated_on_assembled_carton": true,
+    "construction_camera_unchanged": true,
+    "native_undo_restored_user_objects_and_history": true,
+    "renderer_warnings": []
+  },
+  "source_preservation": {
+    "original_source_and_asset_files_exact": 128,
+    "existing_studio_items_exact": 35,
+    "user_objects_history_camera_pose_exact": true,
+    "original_projects_preserved": 6,
+    "new_project_packages_added": 2,
+    "recoverable_app_and_library_backups": true
+  },
+  "goal_status": "active",
+  "remaining_acceptance": [
+    "Resolve native Dieline header label repaint after entering/resizing the editor. Switching representation currently refreshes the labels; source and geometry are unchanged."
+  ]
+}

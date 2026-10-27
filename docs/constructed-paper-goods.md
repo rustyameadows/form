@@ -75,3 +75,10 @@ Change the working construction through one Undo operation:
 `preflight` accepts optional measured `contents`; `layout` accepts physical sheets/margins/gap/count; `annotations` adds or removes anchored notes. `ensure_inside` creates the editable inside source if needed. `export` writes SVG, PDF or a packet to a new absolute path. Invalid edits retain the previous accepted source.
 
 The [implementation acceptance](constructed-goods-implementation.md) and project evidence record the tested build and native review results. Supported fabric constructions remain the existing bounded pattern/assembly/cloth features; this reorganization does not establish calibrated garment fit or a complete garment factory workflow.
+
+
+## Reviewed physical proofs
+
+These proofs are generated from the editable demo sources at 700 × 1000 mm: [three cartons on one sheet](validation/paper-construction/carton-sheet.png) and [two envelopes on the first sheet](validation/paper-construction/envelope-sheet.png), with the third envelope on a second sheet. Cut and crease guides are intentionally visible in these review images; separate artwork files omit the guides.
+
+Live text changes reuse the paper's physical meshes. The regression suite covers actual native drag events and GPU captures, including the cache-lifetime failure reported during review. Editing ink does not alter folds, caliper or camera state.
