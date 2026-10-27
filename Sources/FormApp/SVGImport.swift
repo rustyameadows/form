@@ -199,7 +199,7 @@ struct SVGImportSheet: View {
             "\(review.result.width.formatted(.number.precision(.fractionLength(0...3)))) × \(review.result.height.formatted(.number.precision(.fractionLength(0...3)))) mm"
           )
           .font(.system(size: 11, design: .monospaced)).foregroundStyle(Palette.secondary)
-        }.padding(24).frame(maxWidth: .infinity).background(Color(nsColor: NSColor(hex: "#E9E9E3")))
+        }.padding(24).frame(maxWidth: .infinity).background(Palette.surface)
         Divider()
         ScrollView {
           VStack(alignment: .leading, spacing: 18) {

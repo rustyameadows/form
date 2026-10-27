@@ -12,7 +12,7 @@ import simd
     let renderer=try RealityKitSceneRenderer()
     for payload in scene where payload.visible {try await renderer.upsertAsync(payload)}
     try renderer.setCamera(camera)
-    try renderer.setLighting(.init(background:.init(0.94,0.94,0.92,1),keyIntensity:3200,fillIntensity:700))
+    try renderer.setLighting(.init(keyIntensity:3200,fillIntensity:700))
     let pixels=try await renderer.capture(width:width,height:height,transparent:transparent)
     try Task.checkCancellation()
     let bitmap=NSBitmapImageRep(cgImage:pixels);bitmap.size = .init(width:width,height:height)

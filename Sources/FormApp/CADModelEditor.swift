@@ -38,7 +38,7 @@ struct CADModelEditor:View {
             if !review.definition.parameters.isEmpty {
               Text("DIMENSIONS").font(.system(size:10,weight:.semibold)).tracking(1)
               ForEach(review.definition.parameters,id:\.name){parameter in
-                VStack(alignment:.leading,spacing:5){HStack{Text(CADDisplayLabels.name(parameter.name)).font(.system(size:12));Spacer();TextField(parameter.name,value:Binding(get:{review.definition.parameters.first{$0.name==parameter.name}?.value ?? parameter.value},set:{update(parameter.name,$0)}),format:.number.precision(.fractionLength(0...3))).frame(width:75).multilineTextAlignment(.trailing);Text(parameter.unit).font(.system(size:10)).foregroundStyle(.secondary)};Slider(value:Binding(get:{review.definition.parameters.first{$0.name==parameter.name}?.value ?? parameter.value},set:{update(parameter.name,$0)}),in:parameter.minimum...parameter.maximum)}
+                VStack(alignment:.leading,spacing:5){HStack{Text(CADDisplayLabels.name(parameter.name)).font(.system(size:12));Spacer();TextField(parameter.name,value:Binding(get:{review.definition.parameters.first{$0.name==parameter.name}?.value ?? parameter.value},set:{update(parameter.name,$0)}),format:.number.precision(.fractionLength(0...3))).font(Palette.numericFont).frame(width:75).multilineTextAlignment(.trailing);Text(parameter.unit).font(.system(size:10)).foregroundStyle(.secondary)};Slider(value:Binding(get:{review.definition.parameters.first{$0.name==parameter.name}?.value ?? parameter.value},set:{update(parameter.name,$0)}),in:parameter.minimum...parameter.maximum)}
               }
             }
             if let assemblies=review.definition.importedAssemblies{ForEach(Array(assemblies.enumerated()),id:\.offset){_,assembly in

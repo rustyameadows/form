@@ -27,7 +27,7 @@ import XCTest
     store.printing.open(objectID: a.id)
     return (store, a, b, second.id, root)
   }
-  func testPrintWorkspaceAllocatesVisibleNativeBedAndRendersPreparedMesh() throws {
+  func testPrintWorkspaceAllocatesVisibleNativeBedAndRendersPreparedMesh() async throws {
     let (store, _, _, _, root) = try fixture()
     defer { try? FileManager.default.removeItem(at: root) }
     let window = NSWindow(contentRect: .init(x: 0, y: 0, width: 1120, height: 760), styleMask: [.titled], backing: .buffered, defer: false)
@@ -45,6 +45,17 @@ import XCTest
     XCTAssertNil(controller.rendererIssue)
     XCTAssertFalse(controller.adapter.renderables(scene: controller.scene).isEmpty)
     XCTAssertGreaterThan(try XCTUnwrap(controller.renderer?.nativeView.bounds.width), 500)
+    let image = try await controller.snapshot(size: .init(width: 640, height: 480))
+    let pixels = try XCTUnwrap(image.cgImage(forProposedRect: nil, context: nil, hints: nil))
+    let bitmap = NSBitmapImageRep(cgImage: pixels)
+    var colored = 0
+    for y in 0..<bitmap.pixelsHigh { for x in 0..<bitmap.pixelsWide {
+      if let c = bitmap.colorAt(x: x, y: y)?.usingColorSpace(.sRGB), c.redComponent > c.greenComponent * 1.3, c.redComponent > c.blueComponent * 1.3 { colored += 1 }
+    } }
+    XCTAssertGreaterThan(colored, 20, "The prepared filament-colored object must appear in the actual rendered bed image.")
+    if let path = ProcessInfo.processInfo.environment["LAB_PRINT_PREVIEW_CAPTURE"] {
+      try XCTUnwrap(bitmap.representation(using: .png, properties: [:])).write(to: URL(fileURLWithPath: path), options: .atomic)
+    }
   }
   private func preview(_ length: Double = 10) -> ToolpathPreview {
     ToolpathPreview.parse(

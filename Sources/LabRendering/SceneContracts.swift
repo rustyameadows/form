@@ -137,7 +137,7 @@ public struct SceneLightingPayload: Sendable {
   public var fillIntensity: Float
   public var shadows: Bool
   public var toneMappingEnabled: Bool
-  public init(background: SIMD4<Float> = .init(0.94,0.93,0.91,1), keyDirection: SIMD3<Float> = .init(-0.5,-1,-0.6), keyColor: SIMD3<Float> = .init(1,0.96,0.9), keyIntensity: Float = 3000, fillIntensity: Float = 600, shadows: Bool = true, toneMappingEnabled: Bool = true) {self.toneMappingEnabled=toneMappingEnabled;self.background=background;self.keyDirection=keyDirection;self.keyColor=keyColor;self.keyIntensity=keyIntensity;self.fillIntensity=fillIntensity;self.shadows=shadows}
+  public init(background: SIMD4<Float> = .init(242.0/255,242.0/255,242.0/255,1), keyDirection: SIMD3<Float> = .init(-0.5,-1,-0.6), keyColor: SIMD3<Float> = .init(1,1,1), keyIntensity: Float = 3000, fillIntensity: Float = 600, shadows: Bool = true, toneMappingEnabled: Bool = true) {self.toneMappingEnabled=toneMappingEnabled;self.background=background;self.keyDirection=keyDirection;self.keyColor=keyColor;self.keyIntensity=keyIntensity;self.fillIntensity=fillIntensity;self.shadows=shadows}
 }
 public struct SceneRay: Sendable { public var originMM: SIMD3<Double>;public var direction: SIMD3<Double>;public init(originMM:SIMD3<Double>,direction:SIMD3<Double>){self.originMM=originMM;self.direction=simd_normalize(direction)} }
 public struct ScenePick: Sendable {public var objectID:UUID;public var componentID:String;public var partID:String?;public var triangle:Int;public var distanceMM:Double;public var pointMM:SIMD3<Double>}

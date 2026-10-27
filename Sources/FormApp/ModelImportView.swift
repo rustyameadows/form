@@ -178,7 +178,7 @@ private struct ModelImportPreview:NSViewRepresentable {
     guard coordinator.key != reference.normalizedSHA256,let renderer=coordinator.renderer else{return}
     coordinator.key=reference.normalizedSHA256;coordinator.task?.cancel();renderer.reset()
     let size=reference.boundsMM.size,maximum=max(1,max(size.x,max(size.y,size.z))),target=SIMD3<Double>(0,size.y/2,0),camera=SceneCameraPayload.looking(from:target+SIMD3(maximum*0.16,maximum*0.08,maximum*1.8),at:target)
-    try? renderer.setCamera(camera);try? renderer.setLighting(.init(background:.init(0.92,0.92,0.89,1)))
+    try? renderer.setCamera(camera);try? renderer.setLighting(.init(background:.init(242.0/255,242.0/255,242.0/255,1)))
     coordinator.task=Task {
       do {let appearance=try MeshAssetSceneAdapter.appearance(scene,reference:reference)
         for payload in MeshAssetSceneAdapter.renderables(appearance,objectID:coordinator.id) {guard !Task.isCancelled else{return};try await renderer.upsertAsync(payload)}
