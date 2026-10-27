@@ -63,7 +63,7 @@ public final class ProjectRepository {
   public func load(url: URL) throws -> Project {
     let manifest = try JSONDecoder.form.decode(
       Manifest.self, from: Data(contentsOf: url.appendingPathComponent("Manifest.json")))
-    guard (1...52).contains(manifest.project.schemaVersion) else {
+    guard (1...53).contains(manifest.project.schemaVersion) else {
       throw FormError.invalid("This project uses a newer file format. Update LAB to open it.")
     }
     var project = manifest.project
@@ -157,6 +157,7 @@ public struct StudioLibrary: Codable, Equatable {
     for material in TextileDesign.materials where !materials.contains(where: { $0.id == material.id }) {
       materials.append(material)
     }
+    if !materials.contains(where:{$0.id=="paper-superfine"}),let paper=Material.presets.first(where:{$0.id=="paper-superfine"}){materials.append(paper)}
     equipment =
       try values.decodeIfPresent([Equipment].self, forKey: .equipment) ?? StudioLibrary().equipment
     filaments =

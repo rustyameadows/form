@@ -142,6 +142,7 @@ public final class OperationEngine {
       return project
     }
     switch name {
+    case "form_paper":return try PaperCommands.call(engine:self,arguments:a,source:source)
     case "form_status":
       return [
         "application": LabIdentity.name, "version": LabIdentity.version,
@@ -499,7 +500,7 @@ public final class OperationEngine {
       let parameters = try numericParameters(a["parameters"])
       var object = try p.makeObject(
         recipeID: recipe, name: a["name"] as? String, parameters: parameters,
-        materialID: a["material_id"] as? String ?? MerchandiseBlanks.defaultMaterial(recipe) ?? "chalk", position: try vector(a["position"]))
+        materialID: a["material_id"] as? String ?? (PaperConstruction.recipeIDs.contains(recipe) ? "paper-superfine":MerchandiseBlanks.defaultMaterial(recipe) ?? "chalk"), position: try vector(a["position"]))
       if let color = a["color"] as? String {
         try validateColor(color)
         object.color = color
@@ -527,6 +528,7 @@ public final class OperationEngine {
         "Updated object parameters", source: source,
         coalescing: source == "Studio" ? "parameters-\(id)" : nil
       ) { p in
+        let previousPaperObjects=p.objects
         guard let index = p.objects.firstIndex(where: { $0.id == id }),
           let recipe = p.recipe(p.objects[index].recipeID)
         else { throw FormError.missing("Object not found.") }
@@ -605,6 +607,11 @@ public final class OperationEngine {
               try p.setCloth(definition,for:linkedID)
             }
           }
+        }
+        let shared=p.objects[index].relationship=="variant" || p.objects.contains{$0.designID==p.objects[index].designID&&$0.relationship=="variant"}
+        for i in p.objects.indices where PaperConstruction.isPaper(p.objects[i]) && (p.objects[i].id==id || shared&&p.objects[i].designID==p.objects[index].designID){
+          if !params.isEmpty,p.objects[i].locked{throw FormError.invalid("Unlock linked paper constructions before changing their dimensions.")}
+          p.objects[i]=try PaperConstructionEngine.synchronized(p.objects[i],previous:previousPaperObjects.first{$0.id==p.objects[i].id})
         }
       }
       return try jsonObject(requireProject().objects.first { $0.id == id }!)

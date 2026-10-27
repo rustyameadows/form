@@ -5,6 +5,7 @@ extension Recipe {
     .init("importedMesh", "Imported visual mesh", "shippingbox", "Source-preserved visual mesh with explicit units, hierarchy and material slots. No reconstructed CAD or sewing history.", [.init("scalePercent", "Uniform scale", 100, 0.1...10000, unit:"%", step:1)]),
     .init("cadModel", "Exact feature model", "cube.transparent", "A validated native feature graph or imported exact CAD body. Create through the CAD modeling commands.", []),
     DeskClockDesign.recipe,
+    PaperRecipes.envelope,PaperRecipes.carton,
     .init(
       "clock", "Clock", "clock",
       "A physical dial with shaft opening, linked typography, and adjustable hand positions.",
@@ -111,7 +112,9 @@ extension Recipe {
 }
 
 public enum Samples {
-  public static func cyanotype() -> Project {
+  public static func cyanotype() -> Project {try! PaperSamples.sunStudies()}
+  /// Historical recipe retained for explicit legacy fixtures; saved projects never migrate automatically.
+  public static func legacyCyanotype() -> Project {
     var project = Project(
       name: "Sun studies", subtitle: "A cyanotype kit, made for a little wonder.")
     var sleeve = try! project.makeObject(

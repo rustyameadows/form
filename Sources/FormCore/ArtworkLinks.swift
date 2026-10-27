@@ -2,10 +2,12 @@ import Foundation
 
 extension ProductObject {
   public var supportsArtworkFace: Bool {
+    if PaperConstruction.isPaper(self){return true}
     if recipeID == "importedMesh" {return meshAsset?.parts.contains(where:{$0.uvSets.contains(0)}) == true}
     return !isCanvasWorkspace && recipeID != "bomberJacket" && !MerchandiseBlanks.garmentIDs.contains(recipeID) && (recipeID == "clock" || self["width"] > 0 && self["depth"] > 0)
   }
   public var artworkSize: Point2 {
+    if PaperConstruction.isPaper(self),let source=try? PaperConstruction.definition(for:self),let net=try? source.net(){return net.size}
     if recipeID == "importedMesh", let size=meshAsset?.artworkSizeMM {return .init(size.width,size.height)}
     if recipeID=="deskClock" {return .init(self["width"],self["height"])}
     return recipeID == "clock"
@@ -35,7 +37,7 @@ extension Project {
     var art = (try? resolvingComponents(in: source, keepingSwatchReferences: true)) ?? source
     art.requiresInkOutput=hasUsedProductionInks(in:art)
     if !keepingSwatchReferences {art=resolvingSwatches(in:art)}
-    if owner.id != object.id && object.recipeID != "importedMesh" {
+    if owner.id != object.id && object.recipeID != "importedMesh" && !PaperConstruction.isPaper(object) {
       art.safeInset=nil // Frame safety is not a declaration for a scaled product projection.
       let source = owner.artworkSize
       let target = object.artworkSize
@@ -86,6 +88,7 @@ extension Project {
     guard objects[i].supportsArtworkFace else {
       throw FormError.invalid("This object has no supported flat artwork surface.")
     }
+    if PaperConstruction.isPaper(objects[i]),fit != "actual"{throw FormError.invalid("Paper artwork uses registered full-net millimeters. Use actual-size placement; automatic fit would stretch the construction artwork.")}
     guard ["actual", "fit"].contains(fit) else {
       throw FormError.invalid("Artwork fit must be actual or fit.")
     }
@@ -116,6 +119,7 @@ extension Project {
     self = candidate
   }
   public func validateArtworkLinks() throws {
+    try validatePaperConstructions()
     try validateModelRepresentations()
     try validateLibrarySelections()
     try validatePageSetups()
