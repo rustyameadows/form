@@ -15,7 +15,7 @@ struct PaperConstructionPreview:View {
         ScrollView(.vertical) {
           PaperConstructionPreviewSurface(object:object,representation:representation)
             .frame(width:proxy.size.width,height:max(proxy.size.height,Double(rows)*160+55))
-        }
+        }.clipped()
       }
     } else {PaperConstructionPreviewSurface(object:object,representation:representation)}
   }
@@ -25,7 +25,13 @@ private struct PaperConstructionPreviewSurface:NSViewRepresentable {
   @EnvironmentObject var store:StudioStore
   let object:ProductObject
   let representation:PaperRepresentation
-  func makeNSView(context:Context)->PaperConstructionPreviewView {PaperConstructionPreviewView(frame:.zero)}
+  func makeNSView(context:Context)->PaperConstructionPreviewView {
+    let view=PaperConstructionPreviewView(frame:.zero)
+    // Keep the tall native drawing surface inside SwiftUI's scrolling viewport.
+    view.wantsLayer=true
+    view.layer?.masksToBounds=true
+    return view
+  }
   func updateNSView(_ view:PaperConstructionPreviewView,context:Context) {
     view.store=store;view.object=object;view.representation=representation;view.synchronize()
   }

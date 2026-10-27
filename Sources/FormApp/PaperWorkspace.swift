@@ -82,21 +82,12 @@ struct PaperWorkspaceView: View {
             Text(String(format:"%.1f × %.1f mm flat",net.size.x,net.size.y)).font(.system(size:10,design:.monospaced)).foregroundStyle(Palette.secondary).fixedSize()
           }
         }
-        if proxy.size.width >= 700 {
+        VStack(alignment:.leading,spacing:10) {
+          representationPicker.frame(width:min(330,max(1,proxy.size.width-36)))
           HStack(spacing:10) {
-            representationPicker.frame(width:330)
             sidePicker
             Spacer(minLength:0)
             visibilityControls
-          }
-        } else {
-          VStack(alignment:.leading,spacing:10) {
-            representationPicker.frame(width:min(330,max(1,proxy.size.width-36)))
-            HStack(spacing:10) {
-              sidePicker
-              Spacer(minLength:0)
-              visibilityControls
-            }
           }
         }
       }.padding(18).frame(width:proxy.size.width,alignment:.leading).background(Palette.paper)
@@ -131,14 +122,26 @@ struct PaperWorkspaceView: View {
     .focusedValue(\.designSurface,.artwork)
   }
   private var representationPicker:some View {
-    Picker("Paper view",selection:$store.paperRepresentation) {
-      ForEach(PaperRepresentation.allCases) {Text($0.title).tag($0)}
-    }.labelsHidden().pickerStyle(.segmented)
+    HStack(spacing:2) {
+      ForEach(PaperRepresentation.allCases) { value in
+        Button {store.paperRepresentation=value} label: {
+          Text(value.title).frame(maxWidth:.infinity).padding(.vertical,4)
+            .background(store.paperRepresentation == value ? Color.white:.clear,in:RoundedRectangle(cornerRadius:4))
+        }.buttonStyle(.plain).accessibilityValue(store.paperRepresentation == value ? "Selected":"")
+      }
+    }.font(.system(size:11)).padding(2).background(.black.opacity(0.05),in:RoundedRectangle(cornerRadius:6))
+      .accessibilityElement(children:.contain).accessibilityLabel("Paper view")
   }
   private var sidePicker:some View {
-    Picker("Artwork side",selection:Binding(get:{store.paperInside},set:{store.setPaperInside($0,object:object)})) {
-      Text("Outside").tag(false);Text("Inside").tag(true)
-    }.labelsHidden().pickerStyle(.segmented).frame(width:150)
+    HStack(spacing:2) {
+      ForEach([false,true],id:\.self) { inside in
+        Button {store.setPaperInside(inside,object:object)} label: {
+          Text(inside ? "Inside":"Outside").frame(maxWidth:.infinity).padding(.vertical,4)
+            .background(store.paperInside == inside ? Color.white:.clear,in:RoundedRectangle(cornerRadius:4))
+        }.buttonStyle(.plain).accessibilityValue(store.paperInside == inside ? "Selected":"")
+      }
+    }.font(.system(size:11)).padding(2).background(.black.opacity(0.05),in:RoundedRectangle(cornerRadius:6)).frame(width:150)
+      .accessibilityElement(children:.contain).accessibilityLabel("Artwork side")
   }
   private var visibilityControls:some View {
     HStack(spacing:10) {
