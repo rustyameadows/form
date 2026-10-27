@@ -24,10 +24,12 @@ def main():
     env = dict(os.environ, LAB_LIBRARY_PATH=str(library), FORM_LIBRARY_PATH=str(library),
                LAB_SOCKET_PATH=socket, FORM_SOCKET_PATH=socket)
     process = None
+    seconds, fps = (6, 24) if os.environ.get('LAB_UI_LONG_VIDEO') == '1' else (1, 12)
 
     def call(name, args=None, fail=False):
         p = subprocess.run([str(helper), '--call', name, json.dumps(args or {})], env=env,
-                           capture_output=True, text=True, timeout=180)
+                           capture_output=True, text=True,
+                           timeout=660 if name == 'form_export' and (args or {}).get('format') == 'mp4' else 180)
         if fail:
             assert p.returncode != 0, (name, p.stdout)
             return p.stderr
@@ -63,7 +65,7 @@ def main():
             scene['camera'].update(azimuth=.55, elevation=.35, distance=5, target={'x': .4, 'y': .7, 'z': 0})
             scene['camera'].pop('orientation', None)
             scene['pixels'] = {'width': 900, 'height': 600}
-            scene['motion'].update(seconds=1, fps=12, orbitDegrees=30)
+            scene['motion'].update(seconds=seconds, fps=fps, orbitDegrees=30)
             scene = call('form_studio_scene', {'command': 'save', 'scene': scene})
             saved = call('form_get_project')
             assert saved['objects'] == source['objects'] and saved['camera'] == source['camera']
@@ -76,16 +78,19 @@ def main():
             call('form_studio_scene', {'command': 'save', 'scene': bad}, fail=True)
             assert call('form_get_project')['studioPresentation']['scenes'] == [scene]
             outputs = {}
+            durations = {}
             for kind, suffix in [('png', 'render'), ('mp4', 'motion')]:
                 dest = folder / ('retail.' + suffix)
+                started = time.monotonic()
                 result = call('form_export', {'format': kind, 'scene_id': scene['id'], 'path': str(dest)})
+                durations[kind] = time.monotonic() - started
                 record = json.loads(Path(result['record']).read_text())
                 data = Path(result['path']).read_bytes()
                 assert record[kind + '_sha256'] == hashlib.sha256(data).hexdigest()
                 if kind == 'png':
                     assert struct.unpack('>II', data[16:24]) == (900, 600)
                 else:
-                    assert record['frames'] == 12 and record['seconds'] == 1 and record['codec'] == 'H.264'
+                    assert record['frames'] == seconds * fps and record['seconds'] == seconds and record['codec'] == 'H.264'
                 call('form_export', {'format': kind, 'scene_id': scene['id'], 'path': str(dest)}, fail=True)
                 assert Path(result['path']).read_bytes() == data
                 outputs[kind] = result
@@ -102,6 +107,7 @@ def main():
             call('form_set_view', {'view': 'studio'})
             report = {'project_id': project_id, 'scene_id': scene['id'], 'instances': len(scene['instances']),
                 'design_objects_preserved': True, 'saved_scene_restart': True, 'outputs': outputs,
+                'export_seconds': durations, 'video': {'seconds': seconds, 'fps': fps, 'frames': seconds * fps},
                 'checks': ['strict invalid fields', 'independent copies', 'source camera unchanged',
                            'scene Undo/Redo', 'PNG/MP4 actual outputs and hashes', 'existing destinations preserved'],
                 'hardware_commands': []}

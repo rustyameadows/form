@@ -55,6 +55,19 @@ import XCTest
     c.duplicateScene();XCTAssertNil(c.error);XCTAssertNotEqual(c.draft?.id,original.id);XCTAssertFalse(c.canUndoDraft);XCTAssertFalse(c.canRedoDraft);XCTAssertFalse(c.dirty)
     store.undo();c.reconcile();XCTAssertEqual(c.scenes.count,1);XCTAssertEqual(c.draft?.id,original.id)
   }
+  func testStageClickAtScrubbedFrameDoesNotRebaseSavedCameraButDragDoes()throws {
+    let store=try fixture(),c=store.studioComposition;c.reconcile();c.scrub(0.5);let before=c.draft
+    let view=TableSceneView(frame:.init(x:0,y:0,width:900,height:600)),window=NSWindow(contentRect:view.frame,styleMask:[.borderless],backing:.buffered,defer:false)
+    window.isReleasedWhenClosed=false;window.contentView=view;view.controller=c.stage;c.stage.view=view
+    defer{c.stage.view=nil;window.close()}
+    view.onCameraInteraction={c.cameraEdited()}
+    func event(_ type:NSEvent.EventType,_ p:NSPoint)->NSEvent {NSEvent.mouseEvent(with:type,location:view.convert(p,to:nil),modifierFlags:[],timestamp:0,windowNumber:window.windowNumber,context:nil,eventNumber:1,clickCount:1,pressure:type == .leftMouseUp ? 0:1)!}
+    let start=NSPoint(x:300,y:300),end=NSPoint(x:400,y:300)
+    view.mouseDown(with:event(.leftMouseDown,start));view.mouseUp(with:event(.leftMouseUp,start))
+    XCTAssertEqual(c.draft,before);XCTAssertEqual(c.time,0.5)
+    view.mouseDown(with:event(.leftMouseDown,start));view.mouseDragged(with:event(.leftMouseDragged,end));view.mouseUp(with:event(.leftMouseUp,end))
+    XCTAssertNotEqual(c.draft?.camera,before?.camera);XCTAssertEqual(c.time,0);XCTAssertEqual(c.draft?.camera.elevation,before?.camera.elevation)
+  }
   func testActualCameraVideoHasRealFramesDurationProvenanceAndExclusiveOutput()async throws {
     let store=try fixture(),c=store.studioComposition,before=store.project!;c.reconcile();var scene=c.draft!;scene.pixels = .init(width:320,height:240);scene.motion.seconds=0.5;scene.motion.fps=12;scene.motion.orbitDegrees=45
     let output=store.repository.root.appendingPathComponent("test.motion")

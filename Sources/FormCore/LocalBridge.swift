@@ -65,7 +65,10 @@ public enum LocalBridgeClient {
     defer { close(fd) }
     var noSignal: Int32 = 1
     setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &noSignal, socklen_t(MemoryLayout<Int32>.size))
-    var timeout = timeval(tv_sec: 30, tv_usec: 0)
+    // Scene video streams up to 600 real GPU frames before publishing. Keep the
+    // bounded export connected beyond the ordinary interactive-operation limit.
+    let sceneVideo = name == "form_export" && arguments["format"] as? String == "mp4" && arguments["scene_id"] as? String != nil
+    var timeout = timeval(tv_sec: sceneVideo ? 600 : 30, tv_usec: 0)
     setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, socklen_t(MemoryLayout<timeval>.size))
     var addr = try address(socketPath)
     guard withAddress(&addr, { Darwin.connect(fd, $0, $1) }) == 0 else {

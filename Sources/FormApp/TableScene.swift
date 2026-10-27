@@ -876,7 +876,7 @@ private struct RenderSignature: Equatable {
     objectPositions = [:]
     controller?.store?.cameraChanged()
     if !dragged,controller?.store==nil {onObjectPick?(controller?.objectID(at:convert(event.locationInWindow,from:nil)))}
-    onCameraInteraction?()
+    if dragged {onCameraInteraction?()}
   }
   override func scrollWheel(with event: NSEvent) {
     let delta = -Double(event.scrollingDeltaY) * (event.hasPreciseScrollingDeltas ? 0.35 : 1)
