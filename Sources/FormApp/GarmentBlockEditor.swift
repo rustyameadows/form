@@ -12,7 +12,7 @@ struct GarmentBlockEditor:View {
   var body:some View {
     VStack(alignment:.leading,spacing:13) {
       HStack {
-        Text("Garment blocks and sizes").font(.system(size:24,design:.serif))
+        Text("Garment blocks and sizes").font(.system(size: 24, weight: .semibold))
         Spacer()
         Picker("Block",selection:Binding(get:{controller.blockID},set:{controller.select($0)})) {
           Text("New original block").tag(Optional<UUID>.none)
@@ -65,8 +65,8 @@ struct GarmentBlockEditor:View {
         Text("Source needs review").font(.system(size:11,weight:.medium))
         ScrollView {VStack(alignment:.leading,spacing:3){ForEach(Array(controller.conflicts.enumerated()),id:\.offset){_,message in Text(message).font(.system(size:10)).foregroundStyle(Palette.accent)}}}.frame(maxHeight:65)
       }
-      if !controller.error.isEmpty {Text(controller.error).font(.system(size:10)).foregroundStyle(.red)}
-      if !controller.draft.error.isEmpty {Text(controller.draft.error).font(.system(size:10)).foregroundStyle(.red)}
+      if !controller.error.isEmpty {Text(controller.error).font(.system(size:10)).foregroundStyle(Palette.ink)}
+      if !controller.draft.error.isEmpty {Text(controller.draft.error).font(.system(size:10)).foregroundStyle(Palette.ink)}
       HStack {
         if controller.blockID != nil {
           Button("Detach block metadata"){controller.detach()}.accessibilityLabel("Detach garment block metadata")
@@ -87,7 +87,7 @@ struct GarmentBlockEditor:View {
             .accessibilityLabel("Generate editable garment sizes").buttonStyle(.borderedProminent)
         }
       }
-      if !review.error.isEmpty {Text(review.error).font(.system(size:10)).foregroundStyle(.red)}
+      if !review.error.isEmpty {Text(review.error).font(.system(size:10)).foregroundStyle(Palette.ink)}
     }.padding(24).frame(width:1180,height:850).background(Palette.paper)
       .onAppear{controller.refreshPreview()}
       .onChange(of:store.revision){_,_ in controller.refreshContext()}
@@ -160,7 +160,7 @@ struct GarmentBlockDraftControls:View {
         }.padding(10)
         }
       }
-      if !draft.error.isEmpty {Text(draft.error).font(.system(size:10)).foregroundStyle(.red)}
+      if !draft.error.isEmpty {Text(draft.error).font(.system(size:10)).foregroundStyle(Palette.ink)}
     }.onChange(of:draft.signature){_,_ in onChange()}
   }
   private func overrideField(_ name:String,text:Binding<String>)->some View {

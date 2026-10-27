@@ -28,7 +28,7 @@ struct EmbroideryEditor:View {
     VStack(alignment:.leading,spacing:14) {
       HStack {
         VStack(alignment:.leading,spacing:3) {
-          Text("Embroidery").font(.system(size:25,design:.serif))
+          Text("Embroidery").font(.system(size: 25, weight: .semibold))
           Text(object?.name ?? "Decoration").font(.system(size:11)).foregroundStyle(Palette.secondary)
         }
         Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)
@@ -93,7 +93,7 @@ struct EmbroideryEditor:View {
           }.padding(.trailing,8)
         }.frame(width:325)
       }
-      if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
+      if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
       HStack {
         Button("Remove digitizing settings") {remove()}.disabled(object?.textile?.embroidery==nil)
         Spacer();Button("Save embroidery") {_ = apply()}.keyboardShortcut(.defaultAction)
@@ -212,12 +212,12 @@ final class EmbroideryPreviewView:NSView {
   var through=Int.max
   override var isFlipped:Bool {true}
   override func draw(_ dirtyRect:NSRect) {
-    NSColor(hex:"#F3F0E8").setFill();bounds.fill()
+    NSColor(hex:"#F2F2F2").setFill();bounds.fill()
     guard let program,let context=NSGraphicsContext.current?.cgContext else {return}
     let w=program.design.hoopWidth,h=program.design.hoopHeight,scale=min((bounds.width-46)/w,(bounds.height-46)/h)
     guard scale>0 else {return}
     context.saveGState();context.translateBy(x:bounds.midX,y:bounds.midY);context.scaleBy(x:scale,y:scale)
-    context.setStrokeColor(NSColor(hex:"#9FA8A0").cgColor);context.setLineWidth(0.3)
+    context.setStrokeColor(NSColor(hex:"#999999").cgColor);context.setLineWidth(0.3)
     context.stroke(.init(x:-w/2,y:-h/2,width:w,height:h))
     let m=program.design.margin
     context.setLineDash(phase:0,lengths:[1,1]);context.setLineWidth(0.15)

@@ -128,11 +128,11 @@ struct ArtworkStudio: View {
         } else {
           VStack(spacing: 17) {
             Image(systemName: "rectangle.badge.plus").font(.system(size: 36, weight: .ultraLight))
-            Text("A place to begin.").font(.system(size: 24, design: .serif))
+            Text("A place to begin.").font(.system(size: 24, weight: .semibold))
             Text("Draw freely, then add a frame when you need a physical size.").font(.system(size: 12))
               .foregroundStyle(Palette.secondary)
           }.frame(maxWidth: .infinity, maxHeight: .infinity).background(
-            Color(nsColor: NSColor(hex: "#E7E7E1")))
+            Color(nsColor: NSColor(hex: "#F2F2F2")))
         }
         if !compact || compactInspector {
           Divider()

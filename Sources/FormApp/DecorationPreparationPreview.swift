@@ -40,7 +40,7 @@ struct DecorationPreparationPreview:NSViewRepresentable {
         context.addPath(plan.deliveryPath(region.path));context.setFillColor((selectedMaterial==nil ? FormColor.color(region.color):NSColor.black).cgColor);context.fillPath()
       }
     }
-    if plan.options.process == .htv,plan.options.weedMargin>0 {context.setStrokeColor(NSColor.systemOrange.cgColor);context.setLineWidth(1/scale);context.stroke(.init(x:0,y:0,width:plan.pageWidth,height:plan.pageHeight))}
+    if plan.options.process == .htv,plan.options.weedMargin>0 {context.setStrokeColor(NSColor.black.cgColor);context.setLineWidth(1/scale);context.stroke(.init(x:0,y:0,width:plan.pageWidth,height:plan.pageHeight))}
     context.restoreGState();context.setStrokeColor(NSColor(calibratedWhite:0.72,alpha:1).cgColor);context.setLineWidth(1);context.stroke(board)
   }
 }

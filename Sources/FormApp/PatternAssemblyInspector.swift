@@ -16,7 +16,7 @@ struct PatternAssemblyInspector:View {
         Button("Edit original pattern on Canvas") {
           store.showSurface(.artwork);store.artworkSession.activate(definition.sourceObjectID)
         }.accessibilityLabel("Edit original assembly pattern on Canvas")
-        if let issue=store.scene?.diagnostics["cloth_issues"] as? [String:String],let message=issue[object.id.uuidString] {Text(message).font(.caption).foregroundStyle(.red).textSelection(.enabled)}
+        if let issue=store.scene?.diagnostics["cloth_issues"] as? [String:String],let message=issue[object.id.uuidString] {Text(message).font(.caption).foregroundStyle(Palette.ink).textSelection(.enabled)}
         Text("Open cloth · original stitch contours and explicit poses. No self-collision, calibrated fit or zipper simulation.").font(.caption).foregroundStyle(.secondary)
       }.sheet(isPresented:$editing) {PatternAssemblyEditor(objectID:object.id,definition:definition).environmentObject(store)}
     }
@@ -65,7 +65,7 @@ struct PatternAssemblyEditor:View {
           Section("Limits") {Text("No self-collision, inferred garment construction, air pressure, calibrated fabric properties or verified fit. Supports and static contacts are explicit. Solver parameters are edited in Cloth settings.").font(.callout).foregroundStyle(.secondary)}
         }.formStyle(.grouped).tabItem {Text("Mesh & limits")}
       }
-      if let issue {Text(issue).font(.caption).foregroundStyle(.red).textSelection(.enabled)}
+      if let issue {Text(issue).font(.caption).foregroundStyle(Palette.ink).textSelection(.enabled)}
       HStack {Text("Current motion is transient and resets on Apply.").font(.caption).foregroundStyle(.secondary);Spacer();Button("Cancel") {dismiss()};Button("Apply") {save()}.buttonStyle(.borderedProminent).accessibilityLabel("Apply assembly declaration")}
     }.padding(24).frame(width:680,height:760)
   }

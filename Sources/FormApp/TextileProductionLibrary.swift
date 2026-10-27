@@ -25,7 +25,7 @@ struct TextileProductionLibraryView:View {
   private var stock:TextileProductionLibrary {store.library.textileProduction ?? .init()}
   var body:some View {
     VStack(alignment:.leading,spacing:18) {
-      HStack {VStack(alignment:.leading,spacing:5) {Text("Textile stock & equipment").font(.system(size:24,design:.serif));Text("Studio records · portable snapshots on assignment · no automatic stock deduction").font(.system(size:10)).foregroundStyle(Palette.secondary)};Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)}
+      HStack {VStack(alignment:.leading,spacing:5) {Text("Textile stock & equipment").font(.system(size: 24, weight: .semibold));Text("Studio records · portable snapshots on assignment · no automatic stock deduction").font(.system(size:10)).foregroundStyle(Palette.secondary)};Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)}
       Picker("Library",selection:$section) {Text("Thread stock").tag(0);Text("Equipment declarations").tag(1);Text("Blanks, trims & supplies").tag(2)}.pickerStyle(.segmented)
       ScrollView {
         LazyVStack(spacing:9) {
@@ -51,7 +51,7 @@ struct TextileProductionLibraryView:View {
           }
         }
       }
-      if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
+      if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
       HStack {if section != 2 {Button(section==0 ? "Add thread stock":"Add equipment declaration") {if section==0 {thread = .init(name:"New thread",color:"#D7CAB0")} else {equipment = .init(name:"New embroidery equipment")}}};Spacer();Text("Unknown prices and capacities remain unknown.").font(.system(size:10)).foregroundStyle(Palette.secondary)}
     }.padding(26).frame(width:760,height:640).background(Palette.paper)
       .sheet(item:$thread) {item in StudioThreadEditor(item:item) {changed in try save("save_thread",key:"thread",value:changed);thread=nil}}
@@ -73,7 +73,7 @@ private struct StudioThreadEditor:View {
   private func text(_ key:WritableKeyPath<StudioThread,String?>)->Binding<String> {Binding(get:{item[keyPath:key] ?? ""},set:{item[keyPath:key]=ProductionNumberInput.text($0)})}
   var body:some View {
     VStack(alignment:.leading,spacing:16) {
-      Text("Thread stock").font(.system(size:24,design:.serif))
+      Text("Thread stock").font(.system(size: 24, weight: .semibold))
       Form {
         TextField("Name",text:$item.name)
         ColorPicker("Color",selection:Binding(get:{Color(nsColor:NSColor(hex:item.color))},set:{item.color=NSColor($0).hexString}),supportsOpacity:false)
@@ -83,7 +83,7 @@ private struct StudioThreadEditor:View {
         TextField("Notes",text:text(\.notes),axis:.vertical).lineLimit(2...4)
       }.textFieldStyle(.roundedBorder)
       Text("Unit cost needs both a known spool price and length. Assignments capture this record; editing library stock does not rewrite projects or jobs.").font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
-      if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(.red)}
+      if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(Palette.ink)}
       HStack {Button("Cancel") {dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save thread") {commit()}.keyboardShortcut(.defaultAction)}
     }.padding(26).frame(width:570).background(Palette.paper)
   }
@@ -104,7 +104,7 @@ private struct EmbroideryEquipmentEditor:View {
   init(item:EmbroideryEquipment,save:@escaping(EmbroideryEquipment)throws->Void) {self.save=save;_item=State(initialValue:item);_hoops=State(initialValue:item.hoops.map {.init(name:$0.name,width:String($0.width),height:String($0.height))});_formats=State(initialValue:item.formats.joined(separator:", "));_needles=State(initialValue:item.needleCount.map {String($0)} ?? "")}
   var body:some View {
     VStack(alignment:.leading,spacing:15) {
-      Text("Embroidery equipment declaration").font(.system(size:23,design:.serif))
+      Text("Embroidery equipment declaration").font(.system(size: 23, weight: .semibold))
       Form {
         TextField("Name",text:$item.name)
         TextField("Manufacturer",text:Binding(get:{item.manufacturer ?? ""},set:{item.manufacturer=ProductionNumberInput.text($0)}))
@@ -116,7 +116,7 @@ private struct EmbroideryEquipmentEditor:View {
       HStack {Text("SUPPORTED HOOPS · MM").font(.system(size:9,weight:.semibold));Spacer();Button("Add hoop") {hoops.append(.init(name:"Hoop \(hoops.count+1)",width:"",height:""))}}
       ScrollView {VStack {ForEach($hoops) {$hoop in HStack {TextField("Name",text:$hoop.name);TextField("Width",text:$hoop.width).frame(width:85);Text("×");TextField("Height",text:$hoop.height).frame(width:85);Button {hoops.removeAll {$0.id==hoop.id}} label:{Image(systemName:"minus.circle")}}.textFieldStyle(.roundedBorder)}}}.frame(height:150)
       Text("Checks compare declared hoop axes and DST support only. No automatic rotation, device connection, scheduling, or physical sewing capability is implied.").font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
-      if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(.red)}
+      if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(Palette.ink)}
       HStack {Button("Cancel") {dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save declaration") {commit()}.keyboardShortcut(.defaultAction)}
     }.padding(26).frame(width:660).background(Palette.paper)
   }

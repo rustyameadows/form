@@ -30,7 +30,7 @@ struct DecorationArchiveBrowser:View {
       }.padding(.trailing,14)}.frame(minWidth:225,idealWidth:250,maxWidth:290)
       VStack(alignment:.leading,spacing:10) {
         if let job=selected,let revision,let proof {
-          HStack {VStack(alignment:.leading,spacing:4) {Text(job.name).font(.system(size:20,design:.serif));Text("Captured \(job.quantity) items · \(job.process.rawValue.uppercased()) · source unchanged by export").font(.system(size:11)).foregroundStyle(Palette.secondary)};Spacer();Button("Export packet…"){export(job)}}
+          HStack {VStack(alignment:.leading,spacing:4) {Text(job.name).font(.system(size: 20, weight: .semibold));Text("Captured \(job.quantity) items · \(job.process.rawValue.uppercased()) · source unchanged by export").font(.system(size:11)).foregroundStyle(Palette.secondary)};Spacer();Button("Export packet…"){export(job)}}
           PhysicalDocumentNavigation(controller:review)
           PhysicalDocumentCanvas(controller:review,data:proof,identifier:PhysicalDocumentController.key(project:store.project?.id,object:job.id,kind:"decoration-archive-review"))
             .frame(maxWidth:.infinity,maxHeight:.infinity).clipShape(RoundedRectangle(cornerRadius:7))
@@ -44,7 +44,7 @@ struct DecorationArchiveBrowser:View {
             }}.frame(maxHeight:150)
           }.font(.system(size:11))
         }else {ContentUnavailableView("No preparation selected",systemImage:"shippingbox",description:Text(error.isEmpty ? "Choose a captured revision to review its immutable files.":error)).frame(maxWidth:.infinity,maxHeight:.infinity)}
-        if !error.isEmpty {Text(error).font(.system(size:10)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
+        if !error.isEmpty {Text(error).font(.system(size:10)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
         Text("Delivery files are distinct from reference/source files. Vendor/RIP white handling and physical material/application compatibility remain explicit, unverified decisions.").font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       }.padding(.leading,16).frame(minWidth:500)
     }

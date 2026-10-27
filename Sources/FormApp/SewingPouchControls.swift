@@ -51,7 +51,7 @@ struct RoundedPouchControls: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 18) {
       HStack {
-        Text("Measured rounded pouch").font(.system(size: 25, design: .serif))
+        Text("Measured rounded pouch").font(.system(size: 25, weight: .semibold))
         Spacer()
         Button("Cancel") { dismiss() }
       }
@@ -89,7 +89,7 @@ struct RoundedPouchControls: View {
           ).frame(width: 390, height: 440)
         }
       }
-      if !error.isEmpty { Text(error).foregroundStyle(.red).font(.system(size: 11)) }
+      if !error.isEmpty { Text(error).foregroundStyle(Palette.ink).font(.system(size: 11)) }
       HStack {
         Text("Creates a new source frame; your current drawing stays intact.").font(
           .system(size: 10)

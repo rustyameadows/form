@@ -85,7 +85,7 @@ struct FocusedNumericArtworkField:NSViewRepresentable {
   func makeNSView(context:Context)->NumericArtworkTextField {
     let field=NumericArtworkTextField();field.cell=NumericArtworkFieldCell(textCell:"");field.delegate=context.coordinator
     field.isEditable=true;field.isSelectable=true;field.isBezeled=true;field.bezelStyle = .roundedBezel;field.drawsBackground=true;field.alignment = .right
-    field.font=NSFont.systemFont(ofSize:10);field.placeholderString=title;field.setAccessibilityLabel(title)
+    field.font=NSFont.monospacedSystemFont(ofSize:10,weight:.regular);field.placeholderString=title;field.setAccessibilityLabel(title)
     field.lineBreakMode = .byClipping;field.cell?.usesSingleLineMode=true;field.cell?.isScrollable=true
     field.setContentHuggingPriority(.defaultLow,for:.horizontal)
     let coordinator=context.coordinator

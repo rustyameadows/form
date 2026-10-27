@@ -43,7 +43,7 @@ struct ObjectLibraryView: View {
     VStack(spacing:0) {
       HStack {
         VStack(alignment:.leading, spacing:5) {
-          Text(replacement == nil ? "Object library" : "Change blank").font(.system(size:27, design:.serif))
+          Text(replacement == nil ? "Object library" : "Change blank").font(.system(size: 27, weight: .semibold))
           Text("\(ObjectLibrary.starters.count) editable starters · 211 form references").font(.system(size:12)).foregroundStyle(.secondary)
         }
         Spacer()
@@ -90,7 +90,7 @@ struct ObjectLibraryView: View {
   private func detail(_ r: ObjectLibraryReference) -> some View {
     ScrollView {
       VStack(alignment:.leading,spacing:18) {
-        Text(r.name).font(.system(size:24,design:.serif))
+        Text(r.name).font(.system(size: 24, weight: .semibold))
         Text(r.domain + " / " + r.category).font(.caption).foregroundStyle(.secondary)
         Text(r.distinction)
         Text(r.options).font(.system(size:12)).foregroundStyle(.secondary)
@@ -139,7 +139,7 @@ struct ObjectLibraryView: View {
       VStack(alignment:.leading,spacing:22) {
         ForEach(ObjectLibrary.catalog.workExamples.filter { query.isEmpty || ($0.name + " " + $0.components).localizedCaseInsensitiveContains(query) },id:\.name) { example in
           VStack(alignment:.leading,spacing:9) {
-            Text(example.name).font(.system(size:20,design:.serif))
+            Text(example.name).font(.system(size: 20, weight: .semibold))
             Text(example.components)
             Text(example.sizing).foregroundStyle(.secondary)
             Text(example.notes).font(.system(size:12))

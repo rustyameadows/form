@@ -29,7 +29,7 @@ struct ObjectInspector: View {
           TextField(
             "Object name",
             text: Binding(get: { object.name }, set: { store.update(object, ["name": $0]) })
-          ).textFieldStyle(.plain).font(.system(size: 19, weight: .medium, design: .serif))
+          ).textFieldStyle(.plain).font(.system(size: 19, weight: .medium, design: .default))
             .lineLimit(2)
           HStack(spacing: 6) {
             Text(recipe.name).font(.system(size: 10)).foregroundStyle(Palette.secondary)
@@ -190,8 +190,8 @@ struct ObjectInspector: View {
             Palette.secondary)
         }.padding(.horizontal, 18).padding(.vertical, 14)
       }.frame(width: embedded ? nil:Self.width).frame(maxHeight:embedded ? .infinity:590,alignment:.top)
-        .background {if embedded {Palette.paper}else{RoundedRectangle(cornerRadius:16).fill(.regularMaterial)}}
-        .overlay {if !embedded {RoundedRectangle(cornerRadius:16).strokeBorder(.white.opacity(0.9))}}
+        .background {if embedded {Palette.paper}else{RoundedRectangle(cornerRadius:16).fill(Palette.paper)}}
+        .overlay {if !embedded {RoundedRectangle(cornerRadius:16).strokeBorder(Palette.line)}}
         .shadow(color: .black.opacity(embedded ? 0:0.08), radius: 24, x: 0, y: 9)
     }
   }
@@ -296,7 +296,7 @@ struct StudioPanel: View {
       StudioShotsPanel(controller:store.studioShots)
       Divider()
       SectionLabel("LIGHT, SURFACE & CAMERA")
-      Text("A different light.").font(.system(size: 22, weight: .regular, design: .serif))
+      Text("A different light.").font(.system(size: 22, weight: .regular, design: .default))
       Text("Find the right setting for what you've made.").font(.system(size: 12)).foregroundStyle(
         Palette.secondary)
       Divider()
@@ -309,7 +309,7 @@ struct StudioPanel: View {
               Color(
                 nsColor: NSColor(
                   hex: preset == "Daylight"
-                    ? "#E9E9E5" : preset == "Warm paper" ? "#D9C6A0" : "#3E4345"))
+                    ? "#F2F2F2" : preset == "Warm paper" ? "#D9C6A0" : "#3E4345"))
             ).frame(width: 30, height: 30).overlay(Circle().strokeBorder(Palette.line))
             Text(preset).font(.system(size: 12))
             Spacer()
@@ -341,8 +341,8 @@ struct StudioPanel: View {
         ).foregroundStyle(.white)
       }.buttonStyle(.plain)
     }}.frame(maxHeight:700).padding(20).frame(width: 264).background(
-      .regularMaterial, in: RoundedRectangle(cornerRadius: 16)
-    ).overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(.white.opacity(0.9))).shadow(
+      Palette.paper, in: RoundedRectangle(cornerRadius: 16)
+    ).overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Palette.line)).shadow(
       color: .black.opacity(0.08), radius: 24, y: 9)
   }
 }
@@ -365,13 +365,13 @@ struct BridgeView: View {
       }
       VStack(alignment: .leading, spacing: 9) {
         Text("A conversation here.\nAn object on the Table.").font(
-          .system(size: 30, weight: .regular, design: .serif))
+          .system(size: 30, weight: .regular, design: .default))
         Text(
           "Describe what you want to make in Codex. LAB exposes the same editable objects and controls through a local MCP connection."
         ).font(.system(size: 13)).foregroundStyle(Palette.secondary).lineSpacing(4)
       }
       HStack {
-        Circle().fill(store.bridgeReady ? .green : .orange).frame(width: 7, height: 7)
+        Circle().fill(store.bridgeReady ? Palette.ink : Palette.secondary).frame(width: 7, height: 7)
         Text(store.bridgeReady ? "Local bridge is ready" : "Local bridge is unavailable").font(
           .system(size: 12, weight: .medium))
         Spacer()
@@ -396,7 +396,7 @@ struct BridgeView: View {
         Text("Try a starting point").font(.system(size: 12, weight: .semibold))
         Text(
           "“Create a warm orange table lamp, about 350 mm tall. Let me adjust the shade diameter, stem height, and base width.”"
-        ).font(.system(size: 13, design: .serif)).lineSpacing(4).foregroundStyle(Palette.secondary)
+        ).font(.system(size: 13, design: .default)).lineSpacing(4).foregroundStyle(Palette.secondary)
       }
       Text(
         "Keep LAB open while connected. Changes appear live, save locally, and can be undone in the app. Custom recipes become native parameter controls."
@@ -413,7 +413,7 @@ struct ProjectInfoView: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 20) {
       HStack {
-        Text("Project notebook").font(.system(size: 26, weight: .regular, design: .serif))
+        Text("Project notebook").font(.system(size: 26, weight: .regular, design: .default))
         Spacer()
         Button("Done") { dismiss() }.keyboardShortcut(.defaultAction)
       }
@@ -510,12 +510,12 @@ struct LibraryView: View {
   @State private var newName = ""
   @State private var printingSettings = false
   @State private var fabricSettings = false
-  @State private var newColor = Color(nsColor: NSColor(hex: "#B7B6A1"))
+  @State private var newColor = Color(nsColor: NSColor(hex: "#808080"))
   var body: some View {
     VStack(alignment: .leading, spacing: 22) {
       HStack {
         VStack(alignment: .leading, spacing: 5) {
-          Text("LAB Library").font(.system(size: 28, weight: .regular, design: .serif))
+          Text("LAB Library").font(.system(size: 28, weight: .regular, design: .default))
           Text("Materials and tools that follow you from project to project.").font(
             .system(size: 12)
           ).foregroundStyle(Palette.secondary)
@@ -543,6 +543,8 @@ struct LibraryView: View {
       } label: {
         Label("Fabrics & textile materials", systemImage: "tshirt").font(.system(size:12,weight:.medium))
       }.buttonStyle(.borderless)
+      SettingsLink { Label("App appearance…", systemImage: "slider.horizontal.3") }
+        .buttonStyle(.borderless).font(.system(size: 12))
       TextileProductionLibraryButton()
       SectionLabel("MATERIALS")
       LazyVGrid(columns: [GridItem(.adaptive(minimum: 140))], spacing: 17) {

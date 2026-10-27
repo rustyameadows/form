@@ -165,7 +165,7 @@ private struct RenderSignature: Equatable {
     self.store = store
     do {renderer=try RealityKitSceneRenderer()}catch{rendererIssue=error.localizedDescription}
     if let saved = store?.project?.camera { camera = saved }
-    scene.background.contents = NSColor(hex: "#EEEDE8")
+    scene.background.contents = NSColor(hex: "#F2F2F2")
     scene.rootNode.addChildNode(objectRoot)
     cameraNode.camera = MeshCamera()
     cameraNode.camera?.fieldOfView = 39
@@ -182,12 +182,12 @@ private struct RenderSignature: Equatable {
     ambient.light = MeshLight()
     ambient.light?.type = .ambient
     ambient.light?.intensity = 400
-    ambient.light?.color = NSColor(hex: "#F7F7F2")
+    ambient.light?.color = NSColor(hex: "#FFFFFF")
     scene.rootNode.addChildNode(ambient)
     keyLight.light = MeshLight()
     keyLight.light?.type = .directional
     keyLight.light?.intensity = 800
-    keyLight.light?.color = NSColor(hex: "#FFF5E7")
+    keyLight.light?.color = NSColor(hex: "#FFFFFF")
     keyLight.light?.castsShadow = true
     keyLight.light?.shadowMode = .forward
     keyLight.light?.shadowRadius = 5
@@ -204,13 +204,13 @@ private struct RenderSignature: Equatable {
     fill.light = MeshLight()
     fill.light?.type = .omni
     fill.light?.intensity = 100
-    fill.light?.color = NSColor(hex: "#E2EAF6")
+    fill.light?.color = NSColor(hex: "#FFFFFF")
     fill.position = v(8, 7, -5)
     scene.rootNode.addChildNode(fill)
     let floor = MeshFloor()
     floor.reflectivity = 0
     let surface = MeshMaterial()
-    surface.diffuse.contents = NSColor(hex: "#EEEDE8")
+    surface.diffuse.contents = NSColor(hex: "#F2F2F2")
     surface.roughness.contents = 1
     surface.lightingModel = .physicallyBased
     floor.materials = [surface]
@@ -237,7 +237,7 @@ private struct RenderSignature: Equatable {
     grid.categoryBitMask = 4
     let material = MeshMaterial()
     material.lightingModel = .constant
-    material.diffuse.contents = NSColor(hex: "#B3B6AF").withAlphaComponent(0.21)
+    material.diffuse.contents = NSColor(hex: "#B3B3B3").withAlphaComponent(0.21)
     material.writesToDepthBuffer = false
     grid.geometry?.materials = [material]
   }
@@ -380,8 +380,8 @@ private struct RenderSignature: Equatable {
     if studio != lastStudio || preset != lastPreset {
       let color =
         studio
-        ? (preset == "Warm paper" ? "#E9DFCA" : preset == "Graphite" ? "#3E4345" : "#E9E9E5")
-        : "#EEEDE8"
+        ? (preset == "Warm paper" ? "#E9DFCA" : preset == "Graphite" ? "#3E4345" : "#F2F2F2")
+        : "#F2F2F2"
       scene.background.contents = NSColor(hex: color)
       floorNode.geometry?.firstMaterial?.diffuse.contents = NSColor(hex: color)
       keyLight.light?.intensity = studio ? 850 : 800
@@ -417,6 +417,10 @@ private struct RenderSignature: Equatable {
     return project.textilePlacement(object).position
   }
   func clothBounds(for id:UUID)->(min:MeshVector3,max:MeshVector3)? {clothSurfaces[id]?.geometricBounds}
+  func refreshInterfaceAccent(_ color: NSColor) {
+    for node in selectionNodes { node.geometry?.firstMaterial?.diffuse.contents = color }
+    if !selectionNodes.isEmpty { renderScene() }
+  }
   private func rebuildSelection(_ selection: Set<UUID>, studio: Bool) {
     selectionNodes.forEach { $0.removeFromParentNode() }
     selectionNodes = []
@@ -446,7 +450,7 @@ private struct RenderSignature: Equatable {
         elements: [MeshGeometryElement(indices: indices, primitiveType: .line)])
       let material = MeshMaterial()
       material.lightingModel = .constant
-      material.diffuse.contents = NSColor(hex: "#CF6945")
+      material.diffuse.contents = Palette.accentNS
       material.readsFromDepthBuffer = false
       material.writesToDepthBuffer = false
       geometry.materials = [material]

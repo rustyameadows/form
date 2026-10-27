@@ -76,7 +76,7 @@ struct PaperWorkspaceView: View {
           VStack(alignment:.leading, spacing:4) {
             Text(store.environment == .form ? "COMPOSE THE SURFACES" : store.environment == .function ? "DEVELOP THE CONSTRUCTION" : "PREPARE THE PAPER GOODS")
               .font(.system(size:9,weight:.semibold)).tracking(1.5).foregroundStyle(Palette.secondary)
-            Text(object.name).font(.system(size:18,weight:.medium,design:.serif)).lineLimit(1)
+            Text(object.name).font(.system(size:18,weight:.medium,design: .default)).lineLimit(1)
           }.frame(minWidth:0,maxWidth:.infinity,alignment:.leading)
           Spacer()
           if let net = try? definition?.net() {
@@ -97,7 +97,7 @@ struct PaperWorkspaceView: View {
         if store.paperInside && definition?.insideArtworkSourceID == nil {
           VStack(spacing:14) {
             Image(systemName:"square.on.square").font(.system(size:32)).foregroundStyle(Palette.secondary)
-            Text("An independent inside artwork source").font(.system(size:18,design:.serif))
+            Text("An independent inside artwork source").font(.system(size: 18, weight: .semibold))
             Text("Registered to the same flat construction. Creating it leaves the outside artwork intact.").font(.system(size:12)).foregroundStyle(Palette.secondary)
             Button("Create inside artwork") { store.createPaperInside(object) }
           }.frame(maxWidth:.infinity,maxHeight:.infinity)

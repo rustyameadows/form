@@ -2,16 +2,9 @@ import AppKit
 import FormCore
 import SwiftUI
 
-enum Palette {
-  static let ink = Color(nsColor: NSColor(hex: "#292D2B"))
-  static let secondary = Color(nsColor: NSColor(hex: "#7C8078"))
-  static let accent = Color(nsColor: NSColor(hex: "#C96543"))
-  static let paper = Color(nsColor: NSColor(hex: "#F7F6F2"))
-  static let line = Color.black.opacity(0.08)
-}
-
 struct RootView: View {
   @EnvironmentObject var store: StudioStore
+  @ObservedObject private var appearance = InterfaceAppearance.shared
   @FocusedValue(\.designSurface) private var focusedDesignSurface: WorkspaceMode?
   var body: some View {
     VStack(spacing: 0) {
@@ -25,14 +18,15 @@ struct RootView: View {
       if let notice = store.notice {
         Label(notice, systemImage: "checkmark.circle.fill").font(.system(size: 12, weight: .medium))
           .padding(.horizontal, 17).padding(.vertical, 11).background(
-            .regularMaterial, in: Capsule()
-          ).overlay(Capsule().strokeBorder(.white.opacity(0.8)))
+            Palette.paper, in: Capsule()
+          ).overlay(Capsule().strokeBorder(Palette.line))
           .shadow(color: .black.opacity(0.08), radius: 16, y: 5).padding(.bottom, 54).transition(
             .move(edge: .bottom).combined(with: .opacity)
           ).allowsHitTesting(false)
       }
     }
     .animation(.easeOut(duration: 0.18), value: store.notice)
+    .onReceive(NotificationCenter.default.publisher(for: .labAppearanceChanged)) { _ in store.refreshInterfaceAppearance() }
     .onChange(of:focusedDesignSurface) { _,surface in
       if let surface { store.activateDesignSurface(surface) }
     }
@@ -60,6 +54,7 @@ struct RootView: View {
     } message: {
       Text(store.error ?? "")
     }
+    .labInterface()
   }
 }
 
@@ -68,8 +63,8 @@ struct StudioTopBar: View {
   var body: some View {
     HStack(spacing: 14) {
       if store.showingHome {
-        Text("LAB").font(.system(size: 15, weight: .heavy, design: .rounded)).tracking(4)
-        Text("0.5").font(.system(size: 10, weight: .medium, design: .monospaced)).foregroundStyle(
+        Text("LAB").font(.system(size: 15, weight: .heavy, design: .default)).tracking(4)
+        Text(LabIdentity.version).font(.system(size: 10, weight: .medium, design: .monospaced)).foregroundStyle(
           Palette.secondary
         ).padding(.horizontal, 7).padding(.vertical, 3).background(Palette.line, in: Capsule())
       } else {
@@ -108,6 +103,9 @@ struct StudioTopBar: View {
           ).foregroundStyle(Palette.secondary)
         }.buttonStyle(.plain)
         Rectangle().fill(Palette.line).frame(width: 1, height: 20)
+        SettingsLink { Image(systemName: "gearshape").font(.system(size: 15)) }
+          .buttonStyle(.plain).foregroundStyle(Palette.secondary).help("Appearance settings · ⌘,")
+          .accessibilityLabel("Appearance settings")
         IconButton("LAB Library", symbol: "square.stack.3d.up") { store.showingLibrary = true }
       } else {
         IconButton("Project notes", symbol: "text.alignleft") { store.showingProjectInfo = true }
@@ -215,7 +213,7 @@ struct HomeView: View {
           VStack(alignment: .leading, spacing: 11) {
             Text("A PLACE TO MAKE THINGS").font(.system(size: 10, weight: .semibold)).tracking(2.3)
               .foregroundStyle(Palette.secondary)
-            Text("Your lab.").font(.system(size: 43, weight: .regular, design: .serif)).tracking(
+            Text("Your lab.").font(.system(size: 43, weight: .regular, design: .default)).tracking(
               -1.1)
             Text("Pick up where you left off, or put a new idea on the table.").font(
               .system(size: 14)
@@ -280,7 +278,7 @@ struct HomeView: View {
             .system(size: 9, weight: .medium)
           ).tracking(1.6)
           Spacer()
-          Text("LAB  /  0.5").font(.system(size: 9, design: .monospaced))
+          Text("LAB  /  \(LabIdentity.version)").font(.system(size: 9, design: .monospaced))
         }.foregroundStyle(Palette.secondary.opacity(0.75)).padding(.top, 10).padding(.bottom, 24)
       }.padding(.horizontal, 52).frame(maxWidth: 1600)
         .frame(maxWidth: .infinity)
@@ -301,7 +299,7 @@ struct ProjectCard: View {
     } label: {
       VStack(alignment: .leading, spacing: 13) {
         ZStack(alignment: .bottomLeading) {
-          RoundedRectangle(cornerRadius: 11).fill(Color(nsColor: NSColor(hex: "#ECEBE5")))
+          RoundedRectangle(cornerRadius: 11).fill(Color(nsColor: NSColor(hex: "#F2F2F2")))
           if let preview {
             GeometryReader { geometry in
               Image(nsImage: preview).resizable().scaledToFill().frame(
@@ -315,7 +313,7 @@ struct ProjectCard: View {
           Text(project.contentDescription.uppercased()).font(
             .system(size: 8, weight: .semibold, design: .monospaced)
           ).tracking(1).padding(.horizontal, 9).padding(.vertical, 6).background(
-            .regularMaterial, in: Capsule()
+            Palette.paper, in: Capsule()
           ).padding(14)
           if hover {
             Image(systemName: "arrow.up.right").font(.system(size: 12, weight: .medium)).padding(9)
@@ -460,7 +458,7 @@ struct TableWorkspace: View {
               Button { showingObjectControls.toggle() } label: {
                 Label(store.primary?.name ?? "Object controls", systemImage: "slider.horizontal.3")
                   .font(.system(size: 11,weight:.medium)).lineLimit(1)
-                  .padding(10).background(.regularMaterial,in:RoundedRectangle(cornerRadius:9))
+                  .padding(10).background(Palette.paper,in:RoundedRectangle(cornerRadius:9))
               }.buttonStyle(.plain).popover(isPresented:$showingObjectControls) {
                 Group { if let object = store.primary, PaperConstruction.isPaper(object) { PaperEnvironmentControls(object: object).frame(width:300) } else { ObjectInspector() } }.frame(maxHeight:650).environmentObject(store)
               }
@@ -519,7 +517,7 @@ struct EmptyTableView: View {
     VStack(spacing: 17) {
       Image(systemName: "cube.transparent").font(.system(size: 44, weight: .ultraLight))
         .foregroundStyle(Palette.secondary.opacity(0.6))
-      Text("Something starts here.").font(.system(size: 28, weight: .regular, design: .serif))
+      Text("Something starts here.").font(.system(size: 28, weight: .regular, design: .default))
       Text("Place an object, bring in a reference, or make something with Codex.").font(
         .system(size: 13)
       ).foregroundStyle(Palette.secondary)
@@ -528,7 +526,7 @@ struct EmptyTableView: View {
         Button("Connect Codex") { store.showingBridge = true }.buttonStyle(.plain).font(
           .system(size: 12, weight: .medium))
       }.padding(.top, 6)
-    }.padding(35).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 18))
+    }.padding(35).background(Palette.paper, in: RoundedRectangle(cornerRadius: 18))
   }
 }
 
@@ -569,8 +567,8 @@ struct CameraControls: View {
       }.disabled(store.selected.isEmpty)
       IconButton("Toggle 100 mm grid", symbol: "grid") { store.showGrid.toggle() }
 
-    }.padding(6).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 13)).overlay(
-      RoundedRectangle(cornerRadius: 13).strokeBorder(.white.opacity(0.75))
+    }.padding(6).background(Palette.paper, in: RoundedRectangle(cornerRadius: 13)).overlay(
+      RoundedRectangle(cornerRadius: 13).strokeBorder(Palette.line)
     ).shadow(color: .black.opacity(0.06), radius: 14, y: 5)
   }
 }
@@ -579,7 +577,7 @@ struct WorkspaceStatus: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
     HStack(spacing: 10) {
-      Circle().fill(Color(nsColor: NSColor(hex: "#7C9278"))).frame(width: 5, height: 5)
+      Circle().fill(Color(nsColor: NSColor(hex: "#111111"))).frame(width: 5, height: 5)
       Text(store.saving ? "Saving…" : "Saved locally").font(.system(size: 10))
       Text("/").foregroundStyle(.black.opacity(0.15))
       Text(store.project?.contentDescription ?? "0 objects").font(.system(size: 10))
@@ -600,7 +598,7 @@ struct WorkspaceStatus: View {
         store.showingBridge = true
       } label: {
         HStack(spacing: 5) {
-          Circle().fill(store.bridgeReady ? Color.green.opacity(0.65) : .gray).frame(
+          Circle().fill(store.bridgeReady ? Palette.ink.opacity(0.65) : .gray).frame(
             width: 4, height: 4)
           Text("Codex bridge").font(.system(size: 10))
         }

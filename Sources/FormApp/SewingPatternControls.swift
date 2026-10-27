@@ -16,7 +16,7 @@ struct SewingPatternControls: View {
         VStack(alignment: .leading, spacing: 11) {
           if let piece = element.sewingPiece, let geometry {
             TextField("Piece name", text: Binding(get: { piece.name }, set: { value in session.update { $0.sewingPiece?.name = value } }))
-              .font(.system(size: 12, design: .serif)).textFieldStyle(.roundedBorder)
+              .font(.system(size: 12, design: .default)).textFieldStyle(.roundedBorder)
             ArtworkUnitField("Seam allowance", value: piece.seamAllowance, unit: session.unit) { value in session.update { $0.sewingPiece?.seamAllowance = value } }
             Stepper("Cut \(piece.cutQuantity)", value: Binding(get: { piece.cutQuantity }, set: { value in session.update { $0.sewingPiece?.cutQuantity = value } }), in: 1...100).font(.system(size: 11))
             ScalarArtworkField("Grain angle", value: piece.grainAngle, unit: "°") { value in session.update { $0.sewingPiece?.grainAngle = value } }
@@ -155,14 +155,14 @@ struct SewingSeamEditor: View {
   }
   var body: some View {
     VStack(alignment: .leading, spacing: 18) {
-      Text("Pair seam edges").font(.system(size: 24, design: .serif))
+      Text("Pair seam edges").font(.system(size: 24, weight: .semibold))
       TextField("Seam name", text: $name).textFieldStyle(.roundedBorder)
       endpoint("First edge", selected: $first, edge: $firstEdge, copy: $firstCopy)
       endpoint("Second edge", selected: $second, edge: $secondEdge, copy: $secondCopy, isSecond: true)
       Toggle("Reverse edge direction when matching", isOn: $reversed)
       HStack { Text("Length tolerance (mm)"); TextField("Tolerance", value: $tolerance, format: .number).textFieldStyle(.roundedBorder).frame(width: 85) }
       Text("Copy numbers refer to the piece's cut quantity. A mismatch stays visible in the pattern check and exported instructions; pairing does not simulate sewing or stretch.").font(.system(size: 10)).foregroundStyle(Palette.secondary)
-      if !error.isEmpty { Text(error).foregroundStyle(.red).font(.system(size: 11)) }
+      if !error.isEmpty { Text(error).foregroundStyle(Palette.ink).font(.system(size: 11)) }
       HStack { Button("Cancel") { dismiss() }; Spacer(); Button("Save seam") { save() }.keyboardShortcut(.defaultAction) }
     }.padding(28).frame(width: 540).background(Palette.paper).onAppear {
       first = pieces.first?.id; second = pieces.dropFirst().first?.id ?? first

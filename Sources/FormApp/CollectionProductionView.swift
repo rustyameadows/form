@@ -119,12 +119,12 @@ struct CollectionProductionView:View {
       }.font(.system(size:11)).padding(.trailing,14).frame(minWidth:180,idealWidth:210,maxWidth:260)
       VStack(alignment:.leading,spacing:10) {
         if let archive,let id=selectedCapture {
-          HStack {Text(archive.plan.name).font(.system(size:20,design:.serif));Spacer();Button("Review PDF"){showingProof=true};Button("Export packet…"){export(id)}}
+          HStack {Text(archive.plan.name).font(.system(size: 20, weight: .semibold));Spacer();Button("Review PDF"){showingProof=true};Button("Export packet…"){export(id)}}
           HStack {Text("Current source: "+currentSource+" / plan: "+currentPlan);Spacer();Button("Compare current"){compare(archive)}}.font(.system(size:10)).foregroundStyle(Palette.secondary)
           Text("Immutable captured source / "+archive.sourceDigest).font(.system(size:9,design:.monospaced)).textSelection(.enabled)
           ScrollView {summary(archive.report)}
         } else {
-          HStack {TextField("Collection plan name",text:$draft.name).font(.system(size:18,design:.serif));Spacer();Button("Use ORBITAL quantities"){draft.orbital(store)}}
+          HStack {TextField("Collection plan name",text:$draft.name).font(.system(size: 18, weight: .semibold));Spacer();Button("Use ORBITAL quantities"){draft.orbital(store)}}
           ScrollView {LazyVStack(alignment:.leading,spacing:14) {
             runs
             Text("BOM / SOURCE AND DECLARED QUANTITIES").font(.system(size:10,weight:.semibold)).tracking(1)
@@ -138,7 +138,7 @@ struct CollectionProductionView:View {
           }.padding(.trailing,8)}
           HStack {Button("Cancel"){draft.cancelled=true;dismiss()}.accessibilityIdentifier("collection-cancel");Button("Save plan"){perform{try draft.save(store)}}.accessibilityIdentifier("collection-save");Spacer();Button("Capture technical packet"){perform{try draft.capture(store);if let id=draft.capturedID,let c=source.collectionProduction?.captures.first(where:{$0.id==id}) {open(c)}}}.buttonStyle(.borderedProminent).accessibilityIdentifier("collection-capture")}
         }
-        if !draft.error.isEmpty {Text(draft.error).font(.system(size:11)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
+        if !draft.error.isEmpty {Text(draft.error).font(.system(size:11)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
         Text("Quantities/rates are declarations or source calculations. Unknowns remain visible. No purchasing, inventory transaction, physical verification or machine action.").font(.system(size:10)).foregroundStyle(Palette.secondary)
       }.padding(.leading,14).frame(minWidth:600)
     }.textFieldStyle(.roundedBorder)

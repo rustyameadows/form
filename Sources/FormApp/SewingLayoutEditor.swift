@@ -16,7 +16,7 @@ struct SewingLayoutEditor: View {
     VStack(alignment: .leading, spacing: 14) {
       HStack(alignment: .top) {
         VStack(alignment: .leading, spacing: 4) {
-          Text("Material cutting layout").font(.system(size: 25, design: .serif))
+          Text("Material cutting layout").font(.system(size: 25, weight: .semibold))
           Text(model.sourceName + " · source pieces remain editable").font(.system(size: 11)).foregroundStyle(Palette.secondary)
         }
         Spacer()
@@ -48,8 +48,8 @@ struct SewingLayoutEditor: View {
           }.padding(.trailing, 7)
         }.frame(width: 305)
       }
-      if !model.error.isEmpty { Text(model.error).foregroundStyle(.red).font(.system(size: 11)).fixedSize(horizontal: false, vertical: true) }
-      if !exportError.isEmpty { Text(exportError).foregroundStyle(.red).font(.system(size: 11)).fixedSize(horizontal: false, vertical: true) }
+      if !model.error.isEmpty { Text(model.error).foregroundStyle(Palette.ink).font(.system(size: 11)).fixedSize(horizontal: false, vertical: true) }
+      if !exportError.isEmpty { Text(exportError).foregroundStyle(Palette.ink).font(.system(size: 11)).fixedSize(horizontal: false, vertical: true) }
       if !model.notice.isEmpty { Text(model.notice).font(.system(size: 10)).foregroundStyle(Palette.secondary) }
     }.padding(24).frame(width: 1160, height: 790).background(Palette.paper)
       .onChange(of: store.revision) { _, _ in _ = model.refreshContext() }
@@ -94,7 +94,7 @@ struct SewingLayoutEditor: View {
   @ViewBuilder private var selectedControls: some View {
     Divider(); SectionLabel("CUT COPIES")
     if let p = model.selected {
-      Text(model.source.elements.first { $0.id == p.elementID }?.sewingPiece?.name ?? "Missing source piece").font(.system(size: 13, design: .serif))
+      Text(model.source.elements.first { $0.id == p.elementID }?.sewingPiece?.name ?? "Missing source piece").font(.system(size: 13, design: .default))
       Text("Copy " + p.copies.map(String.init).joined(separator: ", ")).font(.system(size: 10)).foregroundStyle(Palette.secondary)
       number("X", key: "poseX", value: p.x, unit: "mm") { value in if let value { model.editPlacement(p.id) { $0.x = value } } }
       number("Y", key: "poseY", value: p.y, unit: "mm") { value in if let value { model.editPlacement(p.id) { $0.y = value } } }

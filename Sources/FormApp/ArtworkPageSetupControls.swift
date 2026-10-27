@@ -17,7 +17,7 @@ struct ArtworkPageSetupControls:View {
       Text("Bleed extends beyond trim. Safe inset is an inward rectangular guide; it is not printed.").font(.system(size:9)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       HStack {Button("Apply page setup"){draft.apply()}.accessibilityIdentifier("apply-page-setup");Button("Review physical page…"){review=true}}
         .font(.system(size:10))
-      if !draft.error.isEmpty {Text(draft.error).font(.system(size:10)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
+      if !draft.error.isEmpty {Text(draft.error).font(.system(size:10)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
     }.onChange(of:focus){_,value in draft.focused=Set([value].compactMap{$0});draft.synchronize()}
       .onChange(of:store.revision){_,_ in draft.synchronize()}
       .sheet(isPresented:$review){ArtworkPageReview(store:store,objectID:draft.objectID)}
@@ -34,7 +34,7 @@ struct ArtworkPageReview:View {
   init(store:StudioStore,objectID:UUID,model:ArtworkPageReviewModel?=nil){self.store=store;_model=StateObject(wrappedValue:model ?? ArtworkPageReviewModel(store:store,objectID:objectID))}
   var body:some View {
     VStack(alignment:.leading,spacing:14) {
-      HStack {Text("Physical page").font(.system(size:25,design:.serif));Spacer();Button("Done"){dismiss()}.keyboardShortcut(.cancelAction)}
+      HStack {Text("Physical page").font(.system(size: 25, weight: .semibold));Spacer();Button("Done"){dismiss()}.keyboardShortcut(.cancelAction)}
       HStack {
         Picker("Output area",selection:$model.area){Text("Trim only").tag(ArtworkPageArea.trim);Text("Include bleed").tag(ArtworkPageArea.bleed)}.frame(width:240)
         Toggle("Crop marks",isOn:$model.cropMarks).toggleStyle(.checkbox)
@@ -57,7 +57,7 @@ struct ArtworkPageReview:View {
       }
       if let g=model.geometry {Text(String(format:"Trim %.3f × %.3f mm · Sheet %.3f × %.3f mm · Included bleed %.3f mm · %d crop segments",g.trimMm.width,g.trimMm.height,g.mediaMm.width,g.mediaMm.height,g.includedBleedMm,g.marks.count)).font(.system(size:10,design:.monospaced))}
       Text("Review uses applied source/setup; pending editor drafts are not committed. Reference guides use sRGB overlays. Export uses the assigned ICC profile unless explicit ink preview is selected, and prepares a separate production PDF with no guides, scaling or registration marks.").font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
-      HStack {if !model.error.isEmpty {Text(model.error).foregroundStyle(.red).font(.system(size:10))};Spacer();Button("Export production PDF…"){export()} .disabled(!model.matchesReview)}
+      HStack {if !model.error.isEmpty {Text(model.error).foregroundStyle(Palette.ink).font(.system(size:10))};Spacer();Button("Export production PDF…"){export()} .disabled(!model.matchesReview)}
     }.padding(24).frame(width:1120,height:820).background(Palette.paper)
       .onAppear{model.refresh()}.onChange(of:store.revision){_,_ in model.refresh()}
       .onChange(of:model.area){_,_ in model.refresh()}.onChange(of:model.cropMarks){_,_ in model.refresh()}.onChange(of:model.previewInks){_,_ in model.refresh()}.onChange(of:model.referenceGuides){_,_ in model.refresh()}

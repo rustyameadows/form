@@ -40,7 +40,7 @@ struct CharacterPositionControls:View {
         Text(methods.contains("font-authored") ? "Font forms and geometric fallback across the selection.":"Geometric fallback · 65% size; nominal size and manual baseline stay unchanged.").font(.system(size:9)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       }else if methods.contains("font-authored") {Text("Font-authored forms · original words and nominal size retained.").font(.system(size:9)).foregroundStyle(Palette.secondary)}
       ForEach(Array(Set(records.filter{$0.method=="geometric-fallback-v1"}.map(\.reason))).sorted().prefix(2),id:\.self){Text($0).font(.system(size:9)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)}
-      if !error.isEmpty {Text(error).font(.system(size:9)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
+      if !error.isEmpty {Text(error).font(.system(size:9)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
     }
   }
 }

@@ -181,7 +181,7 @@ struct SVGImportSheet: View {
         Image(systemName: "square.and.arrow.down").font(.system(size: 24, weight: .light))
           .foregroundStyle(Palette.accent)
         VStack(alignment: .leading, spacing: 5) {
-          Text("Bring artwork into LAB").font(.system(size: 25, design: .serif))
+          Text("Bring artwork into LAB").font(.system(size: 25, weight: .semibold))
           Text(review.name).font(.system(size: 12)).foregroundStyle(Palette.secondary).lineLimit(1)
         }
         Spacer()

@@ -12,7 +12,7 @@ struct PrintingSettingsView: View {
     VStack(alignment: .leading, spacing: 20) {
       HStack {
         VStack(alignment: .leading, spacing: 6) {
-          Text("The printing studio").font(.system(size: 28, weight: .regular, design: .serif))
+          Text("The printing studio").font(.system(size: 28, weight: .regular, design: .default))
           Text("Your filaments, your machines, your local workflow.").font(.system(size: 12))
             .foregroundStyle(Palette.secondary)
         }
@@ -81,7 +81,7 @@ struct FilamentEditor: View {
     VStack(alignment: .leading, spacing: 15) {
       SectionLabel("SPOOL & MATERIAL")
       TextField("Filament name", text: $draft.name).font(
-        .system(size: 17, weight: .medium, design: .serif)
+        .system(size: 17, weight: .medium, design: .default)
       ).textFieldStyle(.roundedBorder)
       HStack {
         TextField("Manufacturer", text: $draft.vendor).textFieldStyle(.roundedBorder)
@@ -149,7 +149,7 @@ struct PrinterSettingsPanel: View {
           monitor.connected ? "Connected" : "Not connected",
           systemImage: monitor.connected ? "checkmark.circle.fill" : "circle.dotted"
         ).font(.system(size: 11)).foregroundStyle(
-          monitor.connected ? Color.green : Palette.secondary)
+          monitor.connected ? Palette.ink : Palette.secondary)
       }
       HStack {
         TextField("Printer name", text: $draft.name).textFieldStyle(.roundedBorder)
@@ -291,7 +291,7 @@ struct PrinterReadout: View {
     VStack(alignment: .leading, spacing: 7) {
       SectionLabel(title)
       Text(verbatim: value.map { String(describing: $0) + suffix } ?? "—").font(
-        .system(size: 24, weight: .regular, design: .serif))
+        .system(size: 24, weight: .regular, design: .default))
     }
   }
 }
@@ -306,7 +306,7 @@ struct EngineSettingsPanel: View {
           .foregroundStyle(Palette.accent)
         VStack(alignment: .leading, spacing: 5) {
           Text("OrcaSlicer, inside your workflow.").font(
-            .system(size: 22, weight: .regular, design: .serif))
+            .system(size: 22, weight: .regular, design: .default))
           Text("Native LAB controls. Real local Orca slicing.").font(.system(size: 12))
             .foregroundStyle(Palette.secondary)
         }
@@ -315,7 +315,7 @@ struct EngineSettingsPanel: View {
       if let engine = printing.engineURL {
         Label(
           "Engine available · \(OrcaEngine.version(engine))", systemImage: "checkmark.circle.fill"
-        ).foregroundStyle(Color.green).font(.system(size: 12))
+        ).foregroundStyle(Palette.ink).font(.system(size: 12))
         Text(engine.path).font(.system(size: 10, design: .monospaced)).textSelection(.enabled)
           .foregroundStyle(Palette.secondary)
       } else {

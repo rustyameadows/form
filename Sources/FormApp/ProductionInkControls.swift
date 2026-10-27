@@ -99,7 +99,7 @@ struct ProductionInkEditor:View {
   }
   var body:some View {
     VStack(alignment:.leading,spacing:15) {
-      Text("Production ink").font(.system(size:22,design:.serif))
+      Text("Production ink").font(.system(size: 22, weight: .semibold))
       Text(swatch.name).font(.system(size:12)).foregroundStyle(Palette.secondary)
       Picker("Kind",selection:$draft.kind) {Text("Process CMYK").tag(ProductionInk.Kind.processCMYK);Text("Named spot ink").tag(ProductionInk.Kind.spot)}.pickerStyle(.segmented)
       if draft.kind == .spot {

@@ -30,7 +30,7 @@ private struct ModelImportReviewContents:View {
     VStack(alignment:.leading,spacing:16) {
       HStack {
         VStack(alignment:.leading,spacing:4) {
-          Text("Import 3D model").font(.system(size:26,design:.serif))
+          Text("Import 3D model").font(.system(size: 26, weight: .semibold))
           Text(review.url.lastPathComponent).font(.system(size:12)).foregroundStyle(Palette.secondary)
         }
         Spacer();Button("Cancel") {coordinator.cancel(review)}.keyboardShortcut(.cancelAction)
@@ -77,7 +77,7 @@ private struct ModelImportReviewContents:View {
           }.frame(width:290,height:320)
         }
       }else {Text("Choose source units and read the model to inspect its actual geometry before importing.").font(.system(size:13)).foregroundStyle(Palette.secondary).frame(maxWidth:.infinity,minHeight:180)}
-      if let error=review.error {Text(error).font(.system(size:12)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
+      if let error=review.error {Text(error).font(.system(size:12)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
       HStack {
         Text("Original files and normalized geometry stay in this project. No hardware is contacted.").font(.system(size:11)).foregroundStyle(Palette.secondary)
         Spacer()
@@ -119,7 +119,7 @@ struct ModelAssetInspector:View {
         Text(String(format:"%.1f × %.1f × %.1f mm",size.x*s,size.y*s,size.z*s)).font(.system(size:11,design:.monospaced))
         Text("\(reference.parts.count) parts · \(reference.triangleCount.formatted()) triangles\nUniform scale and placement; source CAD history unavailable.").font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
         if let issue=store.modelAssets.issue(for:object) {
-          Text(issue).font(.system(size:10)).foregroundStyle(.red)
+          Text(issue).font(.system(size:10)).foregroundStyle(Palette.ink)
           Button("Retry loading") {store.modelAssets.retry(object,assets:store.repository.url(for:store.project!.id).appendingPathComponent("Assets"))}.font(.system(size:10))
         }
         if !reference.materials.isEmpty {
@@ -154,7 +154,7 @@ struct ModelAssetInspector:View {
           ForEach(reference.parts){Text($0.name).font(.system(size:9))}
           ForEach(reference.warnings,id:\.self){Text($0).font(.system(size:9)).foregroundStyle(Palette.secondary)}
         }.font(.system(size:10))
-        if !error.isEmpty {Text(error).font(.system(size:10)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
+        if !error.isEmpty {Text(error).font(.system(size:10)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
       }.onAppear {slot=reference.materials.first?.index ?? 0;sourceID=object.artworkSourceID;synchronizeSlot()}
     }
   }

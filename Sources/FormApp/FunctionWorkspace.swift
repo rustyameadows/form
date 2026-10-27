@@ -7,7 +7,7 @@ struct EnvironmentPageHeading:View {
   var body:some View {
     VStack(alignment:.leading,spacing:7) {
       Text(eyebrow.uppercased()).font(.system(size:9,weight:.semibold)).tracking(1.8).foregroundStyle(Palette.secondary)
-      Text(title).font(.system(size:26,design:.serif))
+      Text(title).font(.system(size: 26, weight: .semibold))
       if !detail.isEmpty {Text(detail).font(.system(size:11)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)}
     }
   }

@@ -84,7 +84,7 @@ private struct ArtworkInput: View {
     HStack(spacing: 5) {
       Text(title).foregroundStyle(Palette.secondary)
       Spacer(minLength: 2)
-      editor.multilineTextAlignment(.trailing).textFieldStyle(.roundedBorder).frame(minWidth:40,maxWidth:77).foregroundStyle(error ? Palette.accent:Palette.ink).onChange(of:focused) { _, focus in
+      editor.font(Palette.numericFont).multilineTextAlignment(.trailing).textFieldStyle(.roundedBorder).frame(minWidth:40,maxWidth:77).foregroundStyle(error ? Palette.accent:Palette.ink).onChange(of:focused) { _, focus in
         if !focus {
           commit()
           if !error {
@@ -157,7 +157,7 @@ struct ArtworkInspector: View {
               TextField(
                 "Layer name",
                 text: Binding(get: { e.title }, set: { name in session.update { $0.name = name } })
-              ).font(.system(size: 15, design: .serif)).textFieldStyle(.plain)
+              ).font(.system(size: 15, design: .default)).textFieldStyle(.plain)
             }
             transformControls
             SewingPatternControls(session: session, element: e)
@@ -759,7 +759,7 @@ private struct ArtworkFrameName: View {
     lastCommitted = draft
   }
   var body: some View {
-    TextField("Frame name", text: $draft).font(.system(size: 20, design: .serif))
+    TextField("Frame name", text: $draft).font(.system(size: 20, weight: .semibold))
       .textFieldStyle(.plain).focused($focused).onSubmit { commit() }
       .onAppear {
         draft = value

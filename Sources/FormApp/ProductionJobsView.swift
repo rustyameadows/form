@@ -50,7 +50,7 @@ struct ProductionJobsView:View {
   private var equipment:[EmbroideryEquipment] {store.library.textileProduction?.equipment ?? []}
   var body:some View {
     VStack(alignment:.leading,spacing:16) {
-      HStack {VStack(alignment:.leading,spacing:4) {Text("Production jobs").font(.system(size:25,design:.serif));Text(store.project?.name ?? "Open a project").font(.system(size:11)).foregroundStyle(Palette.secondary)};Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)}
+      HStack {VStack(alignment:.leading,spacing:4) {Text("Production jobs").font(.system(size: 25, weight: .semibold));Text(store.project?.name ?? "Open a project").font(.system(size:11)).foregroundStyle(Palette.secondary)};Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)}
       Picker("Production kind",selection:$productionKind) {Text("Embroidery").tag(0);Text("HTV / DTF preparations").tag(1);Text("Collection BOM").tag(2)}.pickerStyle(.segmented).frame(width:520)
       if productionKind==2 {CollectionProductionView(store:store)} else if productionKind==1 {DecorationArchiveBrowser(store:store)} else {
       HSplitView {
@@ -64,7 +64,7 @@ struct ProductionJobsView:View {
         }.frame(minWidth:200,idealWidth:225,maxWidth:280).padding(.trailing,16)
         ScrollView {Group {if let selected,let captured {history(selected,captured)} else {creation}}.padding(.horizontal,16)}.frame(minWidth:520)
       }
-      if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
+      if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
       Text("No machine connection, stock reservation, or deduction. A user-reported approval or completion is recorded against its source digest; it does not automatically verify physical sewing.")
         .font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       }
@@ -74,7 +74,7 @@ struct ProductionJobsView:View {
   }
   private var creation:some View {
     VStack(alignment:.leading,spacing:13) {
-      Text("Capture a production revision").font(.system(size:19,design:.serif))
+      Text("Capture a production revision").font(.system(size: 19, weight: .semibold))
       Text("The needle program, editable source, physical specification, assigned thread stock, equipment declaration, and assumptions become a portable immutable snapshot.").font(.system(size:11)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       Picker("Decoration",selection:$objectID) {Text("Choose decoration").tag(UUID?.none);ForEach(objects) {Text($0.name).tag(Optional($0.id))}}
       HStack {TextField("Job name",text:$name);TextField("Quantity",text:$quantity).frame(width:100)}.textFieldStyle(.roundedBorder)
@@ -104,7 +104,7 @@ struct ProductionJobsView:View {
   private func history(_ job:ProductionJob,_ revision:ProductionJobRevision)->some View {
     let estimate=ProductionCostEstimate.estimate(revision)
     return VStack(alignment:.leading,spacing:13) {
-      HStack {VStack(alignment:.leading,spacing:3) {Text(job.name).font(.system(size:20,design:.serif));Text("\(job.quantity) items · \(revision.object.name)").font(.system(size:11)).foregroundStyle(Palette.secondary)};Spacer();Button("Export packet…") {export(job)}}
+      HStack {VStack(alignment:.leading,spacing:3) {Text(job.name).font(.system(size: 20, weight: .semibold));Text("\(job.quantity) items · \(revision.object.name)").font(.system(size:11)).foregroundStyle(Palette.secondary)};Spacer();Button("Export packet…") {export(job)}}
       Text("Source "+job.sourceDigest).font(.system(size:9,design:.monospaced)).textSelection(.enabled)
       Text("Revision "+job.revisionDigest).font(.system(size:9,design:.monospaced)).textSelection(.enabled)
       HStack {Text("Current source: "+currentSource).foregroundStyle(Palette.secondary);Spacer();Button("Compare current") {compare(job)}}.font(.system(size:10))

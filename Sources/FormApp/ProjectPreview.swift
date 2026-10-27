@@ -16,7 +16,7 @@ import FormGraphics
     guard project.physicalObjectCount == 0,let workspace = project.canvasWorkspace else {
       return try await TableSceneController.preview(project:project,size:size,assets:assets)
     }
-    let composition = canvasComposition(artwork:project.editableArtwork(workspace) ?? .init(background:"#E7E7E1"),size:size)
+    let composition = canvasComposition(artwork:project.editableArtwork(workspace) ?? .init(background:"#F2F2F2"),size:size)
     return ArtworkRenderer.image(composition.artwork,width:composition.width,height:composition.height,assets:assets,
       pixelsPerMM:composition.density,opaqueBackground:true)
   }
@@ -46,7 +46,7 @@ import FormGraphics
         art.elements[index].affine = translation.followed(by:art.elements[index].affine ?? .init())
       }
     }
-    art.background = "#E7E7E1"; art.backgroundOpacity = 1; art.boundary = nil
+    art.background = "#F2F2F2"; art.backgroundOpacity = 1; art.boundary = nil
     return .init(artwork:art,width:width,height:height,density:Double(max(1,size.width))/width)
   }
   private static func publicationPage(_ artwork: Artwork, physicalSize: Point2, size: CGSize, assets: URL) -> NSImage? {
@@ -59,7 +59,7 @@ import FormGraphics
     let scale = min((w - 2 * gutter) / physicalSize.x, (h - 2 * gutter) / physicalSize.y)
     let page = CGRect(x: (w - physicalSize.x * scale) / 2, y: (h - physicalSize.y * scale) / 2,
       width: physicalSize.x * scale, height: physicalSize.y * scale)
-    context.setFillColor(FormColor.color("#E7E7E1").cgColor); context.fill(CGRect(x: 0, y: 0, width: w, height: h))
+    context.setFillColor(FormColor.color("#F2F2F2").cgColor); context.fill(CGRect(x: 0, y: 0, width: w, height: h))
     context.saveGState()
     context.setShadow(offset: CGSize(width: 0, height: -3), blur: 12, color: NSColor.black.withAlphaComponent(0.13).cgColor)
     context.setFillColor(NSColor.white.cgColor); context.fill(page)

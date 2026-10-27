@@ -123,7 +123,7 @@ struct FabricationWorkspace:View {
     case .review:
       if !guide.materialConfirmed {confirmStock}
       else if let object=guide.object,let process=guide.process {
-        HStack(spacing:18) {ProductSchematic(object:object).frame(width:120,height:140);VStack(alignment:.leading,spacing:8){Text(object.name).font(.system(size:19,design:.serif));Text(process.title).font(.system(size:13));Label("Material declaration confirmed for this session",systemImage:"checkmark.circle").font(.system(size:11)).foregroundStyle(Palette.secondary)}}
+        HStack(spacing:18) {ProductSchematic(object:object).frame(width:120,height:140);VStack(alignment:.leading,spacing:8){Text(object.name).font(.system(size: 19, weight: .semibold));Text(process.title).font(.system(size:13));Label("Material declaration confirmed for this session",systemImage:"checkmark.circle").font(.system(size:11)).foregroundStyle(Palette.secondary)}}
         if process == .paper,let d=guide.paper {
           paperSide(object)
           if let layout=try? PaperOutput.layout(store:store,definition:d) {Text("\(layout.placements.count) blanks · \(layout.sheetCount) sheets · \(Int(layout.sheetSize.x)) × \(Int(layout.sheetSize.y)) mm").font(.system(size:14,weight:.medium))}
@@ -180,7 +180,7 @@ struct FabricationWorkspace:View {
     }.padding(24).background(Color.white.opacity(0.7),in:RoundedRectangle(cornerRadius:10))
   }
   private func number(_ title:String,text:Binding<String>,unit:String)->some View {
-    HStack{Text(title);Spacer();TextField(title,text:text).textFieldStyle(.roundedBorder).frame(width:85).accessibilityLabel("Fabrication "+title);Text(unit).foregroundStyle(Palette.secondary).frame(width:33,alignment:.leading)}.font(.system(size:12))
+    HStack{Text(title);Spacer();TextField(title,text:text).font(Palette.numericFont).textFieldStyle(.roundedBorder).frame(width:85).accessibilityLabel("Fabrication "+title);Text(unit).foregroundStyle(Palette.secondary).frame(width:33,alignment:.leading)}.font(.system(size:12))
   }
   private func paperSide(_ object:ProductObject)->some View {
     VStack(alignment:.leading,spacing:7) {
@@ -193,7 +193,7 @@ struct FabricationWorkspace:View {
       SectionLabel("PREPARATION SUMMARY")
       if let object=guide.object {
         ProductSchematic(object:object).frame(height:170)
-        Text(object.name).font(.system(size:18,design:.serif))
+        Text(object.name).font(.system(size: 18, weight: .semibold))
         Text(guide.process?.title ?? "Process · not chosen").font(.system(size:12))
         Divider()
         if let d=guide.paper {
@@ -238,7 +238,7 @@ struct ProductSchematic:View {
         let front=Path(CGRect(x:x,y:y+d,width:w,height:h-d))
         var side=Path();side.move(to:.init(x:x+w,y:y+d));side.addLines([.init(x:x+w+d,y:y),.init(x:x+w+d,y:y+h-d),.init(x:x+w,y:y+h)]);side.closeSubpath()
         var top=Path();top.move(to:.init(x:x,y:y+d));top.addLines([.init(x:x+d,y:y),.init(x:x+w+d,y:y),.init(x:x+w,y:y+d)]);top.closeSubpath()
-        context.fill(front,with:.color(Color(nsColor:NSColor(hex:object.color ?? "#F0EEE5"))))
+        context.fill(front,with:.color(Color(nsColor:NSColor(hex:object.color ?? "#FFFFFF"))))
         context.fill(side,with:.color(.black.opacity(0.12)));context.fill(top,with:.color(.white.opacity(0.8)))
         for path in [front,side,top] {context.stroke(path,with:.color(Palette.secondary.opacity(0.5)),lineWidth:0.7)}
       }
@@ -249,7 +249,7 @@ struct ProductSchematic:View {
 struct PaperStockSwatch:View {
   var body:some View {
     Canvas {context,size in
-      let rect=CGRect(origin:.zero,size:size);context.fill(Path(roundedRect:rect,cornerRadius:5),with:.color(Color(nsColor:NSColor(hex:"#F1EFE5"))))
+      let rect=CGRect(origin:.zero,size:size);context.fill(Path(roundedRect:rect,cornerRadius:5),with:.color(Color(nsColor:NSColor(hex:"#F2F2F2"))))
       for i in 0..<850 {let x=Double((i*73)%997)/997*size.width,y=Double((i*139)%991)/991*size.height;context.fill(Path(ellipseIn:.init(x:x,y:y,width:0.7,height:0.7)),with:.color(.black.opacity(0.06)))}
       var corner=Path();corner.move(to:.init(x:size.width-42,y:size.height));corner.addLines([.init(x:size.width,y:size.height-42),.init(x:size.width,y:size.height)]);corner.closeSubpath();context.fill(corner,with:.color(.black.opacity(0.07)))
     }.accessibilityLabel("Illustrative uncoated paper swatch")
