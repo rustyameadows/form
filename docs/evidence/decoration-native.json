@@ -1,0 +1,136 @@
+{
+  "date": "2026-10-25",
+  "tests": {
+    "total": 719,
+    "core_graphics_ipc": 497,
+    "native": 222,
+    "failures": 0,
+    "skips": 0
+  },
+  "tools": 59,
+  "reader_schema": 40,
+  "equipment_operations": 0,
+  "ordinary_projects_exact": 5,
+  "studio_file_exact": true,
+  "feature": "decoration preparation",
+  "project_id": "2DB0497E-7744-4CA2-9E4B-2673E8EBFB4A",
+  "native": {
+    "actual_computer_use": true,
+    "layout_overflow_found_and_fixed": true,
+    "dtf": {
+      "focused_dpi": 127.5,
+      "tab_before_capture": false,
+      "disk_checked_before_bridge": true,
+      "one_exact_undo_redo": true,
+      "job_id": "7B86D384-AD47-4D9E-9B54-E6E2C085F2A1"
+    },
+    "htv": {
+      "focused_weed_mm": 4.25,
+      "mirror": true,
+      "material": "Ivory matte vinyl sample",
+      "one_exact_undo_redo": true,
+      "job_id": "599872B1-CEE7-44FB-B154-3DEFF02F310D"
+    },
+    "invalid_dpi": {
+      "value": -5,
+      "visible_rejection": true,
+      "entire_project_unchanged": true
+    },
+    "native_save_dialog_export": true,
+    "archive_zoom_percent": 400,
+    "archive_page": 2,
+    "archive_pan_initial": [
+      0.5002901915264074,
+      0.5003362474781439
+    ],
+    "archive_mouse_pan": [
+      {
+        "direction": "right",
+        "scroll": [
+          0.2681369704004643,
+          0.5003362474781439
+        ]
+      },
+      {
+        "direction": "left",
+        "scroll": [
+          0.5002901915264074,
+          0.5003362474781439
+        ]
+      },
+      {
+        "direction": "down",
+        "scroll": [
+          0.5002901915264074,
+          0.3994620040349698
+        ]
+      },
+      {
+        "direction": "up",
+        "scroll": [
+          0.5002901915264074,
+          0.5003362474781439
+        ]
+      }
+    ],
+    "per_revision_viewport_restoration": true,
+    "global_native_archive_after_source_deletion": true,
+    "actual_process_restart_home_reopen_entire_project_exact": true
+  },
+  "dtf_independent": {
+    "process": "dtf",
+    "packet_digest": "e5ee13b8ad554932e14449606d9fb8737af186ed2d02f758a8e4032c1904d09a",
+    "files": 8,
+    "source_objects": 3,
+    "physical_files": {
+      "Color.png": {
+        "width": 482,
+        "height": 151,
+        "bit_depth": 8,
+        "color_type": 6,
+        "interlace": 0,
+        "dpi_x": 127.5334,
+        "dpi_y": 127.8382,
+        "width_mm": 95.9968133837881,
+        "height_mm": 30.001986886548778
+      },
+      "Reference-underbase.svg": {
+        "width_mm": 96.0,
+        "height_mm": 30.0,
+        "paths": 1
+      },
+      "Reference-underbase.png": {
+        "width": 482,
+        "height": 151,
+        "bit_depth": 8,
+        "color_type": 6,
+        "interlace": 0,
+        "dpi_x": 127.5334,
+        "dpi_y": 127.8382,
+        "width_mm": 95.9968133837881,
+        "height_mm": 30.001986886548778
+      }
+    },
+    "scope": "Digital hashes/physical dimensions; no physical-machine, material or thermal validation."
+  },
+  "htv_independent": {
+    "process": "htv",
+    "packet_digest": "29f0f023f99d8a8352ce03f1bb0a6e309179970d5b1154d65f528837596c10d8",
+    "files": 6,
+    "source_objects": 3,
+    "physical_files": {
+      "Cut-01.svg": {
+        "width_mm": 104.5,
+        "height_mm": 38.5,
+        "paths": 1
+      }
+    },
+    "scope": "Digital hashes/physical dimensions; no physical-machine, material or thermal validation."
+  },
+  "native_zip_sha256": "8dd76000864608d3f8a5ed561dcc3b5cb6dc3bb38c0e50b7891429d8ba61c6d0",
+  "limitations": [
+    "Opaque flat vector subset only; no raster/gradient/transparency production support.",
+    "No device white channel, screening, thermal recipe or calibrated material compatibility.",
+    "Physical application unverified; no inventory deduction or equipment operation."
+  ]
+}

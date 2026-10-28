@@ -1,0 +1,177 @@
+{
+  "recorded_project_id": "A7D5F930-623F-4624-94C5-0324BD50B6D0",
+  "workflow": "Portable scripts/smoke_design_workflow.py derives from the actually executed design_acceptance.py; this record describes that executed run, not a future smoke invocation.",
+  "template_data_from": "design-native-reopened.json",
+  "font_edit": {
+    "before_points": 67,
+    "after_points": 69,
+    "undo_points": 67,
+    "history_entries_before": 14,
+    "history_entries_after": 15,
+    "history_entries_undo": 14,
+    "changed_object_ids": [
+      "14EAD417-2373-4BD4-A97A-9148239FE261"
+    ],
+    "undo_exact_objects": true
+  },
+  "node_edit": {
+    "changed_object_ids": [
+      "14EAD417-2373-4BD4-A97A-9148239FE261"
+    ],
+    "history_entries_before": 14,
+    "history_entries_after": 15,
+    "undo_exact_objects": true
+  },
+  "actual_quit_relaunch_reopen": {
+    "same_objects": true,
+    "same_history": true
+  },
+  "physical_exports": {
+    "composition.pdf": {
+      "bytes": 23154,
+      "color_space": "sRGB",
+      "composed_text_outlined": 0,
+      "format": "pdf",
+      "height_mm": 254,
+      "width_mm": 203.2,
+      "artifact": "composition.pdf"
+    },
+    "composition.svg": {
+      "bytes": 106409,
+      "color_space": "sRGB",
+      "composed_text_outlined": 0,
+      "format": "svg",
+      "height_mm": 254,
+      "width_mm": 203.2,
+      "artifact": "composition.svg"
+    },
+    "composition.png": {
+      "bytes": 252782,
+      "color_space": "sRGB",
+      "composed_text_outlined": 0,
+      "format": "png",
+      "height_mm": 254,
+      "width_mm": 203.2,
+      "artifact": "composition.png"
+    },
+    "outlined-alternate.pdf": {
+      "bytes": 27004,
+      "color_space": "sRGB",
+      "composed_text_outlined": 0,
+      "format": "pdf",
+      "height_mm": 254,
+      "width_mm": 203.2,
+      "artifact": "outlined-alternate.pdf"
+    },
+    "outlined-alternate.svg": {
+      "bytes": 110278,
+      "color_space": "sRGB",
+      "composed_text_outlined": 0,
+      "format": "svg",
+      "height_mm": 254,
+      "width_mm": 203.2,
+      "artifact": "outlined-alternate.svg"
+    },
+    "outlined-alternate.png": {
+      "bytes": 252078,
+      "color_space": "sRGB",
+      "composed_text_outlined": 0,
+      "format": "png",
+      "height_mm": 254,
+      "width_mm": 203.2,
+      "artifact": "outlined-alternate.png"
+    },
+    "physical-face.pdf": {
+      "bytes": 23154,
+      "color_space": "sRGB",
+      "composed_text_outlined": 0,
+      "format": "pdf",
+      "height_mm": 254,
+      "width_mm": 203.2,
+      "artifact": "physical-face.pdf"
+    },
+    "physical-face.svg": {
+      "bytes": 106409,
+      "color_space": "sRGB",
+      "composed_text_outlined": 0,
+      "format": "svg",
+      "height_mm": 254,
+      "width_mm": 203.2,
+      "artifact": "physical-face.svg"
+    },
+    "physical-face.png": {
+      "bytes": 252782,
+      "color_space": "sRGB",
+      "composed_text_outlined": 0,
+      "format": "png",
+      "height_mm": 254,
+      "width_mm": 203.2,
+      "artifact": "physical-face.png"
+    }
+  },
+  "native_actions_recorded": "Actual native field edit, mouse-selected node within rotated clipped group, keyboard nudge, Undo, app quit/relaunch and Home reopen were executed in the parent acceptance run. Screenshots and full status/source records are identified by hashes below.",
+  "evidence_files": [
+    {
+      "name": "design-acceptance-report.json",
+      "bytes": 4067,
+      "sha256": "665b54a2c010bf332dcd82208372f873ef8cbac36fb1f270578528bacad2085d"
+    },
+    {
+      "name": "design-native-before.json",
+      "bytes": 183723,
+      "sha256": "c1bf054d1ab21fdb1e73db2320ba6c307409b1d27a4c0edc44dc11be661e921a"
+    },
+    {
+      "name": "design-native-linked-before.json",
+      "bytes": 184672,
+      "sha256": "0552d121f04950375bf5daf3fa8eab4a2cae01063cfefffc698bce1394f216c6"
+    },
+    {
+      "name": "design-native-linked-size.json",
+      "bytes": 184845,
+      "sha256": "d836d8b1f700c6fe54cce75a2790ab87a95ef96d65d01e95d4c2ad2425531856"
+    },
+    {
+      "name": "design-native-undo.json",
+      "bytes": 183770,
+      "sha256": "52c6c91fa210b3c3f623b919f391777a1fe61c7bce0a48f9e76cd93c05fa43f9"
+    },
+    {
+      "name": "design-native-node-before.json",
+      "bytes": 183768,
+      "sha256": "ebe73bd6ff13b2d457582cb1f84ae17fa0b50719230cd3f6e86af04c1afb126c"
+    },
+    {
+      "name": "design-native-node-edited.json",
+      "bytes": 184176,
+      "sha256": "9249ce02133007ec081b7ff94fbe772cf4bc8f0f041e119df88be08c0b56830c"
+    },
+    {
+      "name": "design-native-node-undo.json",
+      "bytes": 183771,
+      "sha256": "68f02593f0d963dc739b132cf29ce2274ef9764be5a76a10458d3806b846c738"
+    },
+    {
+      "name": "design-native-reopened.json",
+      "bytes": 182945,
+      "sha256": "d8d5c364757b907d223757ad854899468ea8d7a8d2a97b97c70666224fda3504"
+    }
+  ],
+  "native_study_release": {
+    "tests": 680,
+    "core_graphics": 474,
+    "native_app": 206,
+    "Home_All_studies_File_discovery": true,
+    "native_creation_split_source_edition_focus": true,
+    "native_font_edit_points": [
+      67,
+      69,
+      67
+    ],
+    "source_only_autosave_before_MCP": true,
+    "exact_one_Undo": true,
+    "actual_quit_relaunch_Home_reopen": true,
+    "ordinary_project_count_preserved": 5,
+    "Studio_SHA_preserved": true
+  }
+}

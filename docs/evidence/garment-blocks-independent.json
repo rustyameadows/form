@@ -1,0 +1,45 @@
+{
+  "reader": "pypdf",
+  "svg_parser": "Python ElementTree",
+  "sheet_mm": [
+    1220.0,
+    1016.0
+  ],
+  "front_back_cut_mm": [
+    570,
+    718
+  ],
+  "full_side_sewing_edges": 4,
+  "side_seam_mm": 718,
+  "nominal_finished_length_mm": 650,
+  "waist_fold_mm": 38,
+  "hem_fold_mm": 688,
+  "hem_turns_mm": [
+    15,
+    15
+  ],
+  "casing_opening_mm": 25,
+  "unstitched_source_edges": [
+    0,
+    2
+  ],
+  "calibration_square_mm": 50,
+  "native_size_review": {
+    "pages": 3,
+    "physical_page_sizes_mm": [
+      [
+        1200.0000694444443,
+        1006.000161111111
+      ],
+      [
+        1240.0001305555554,
+        1015.9999999999999
+      ],
+      [
+        1279.9998388888887,
+        1025.9998388888887
+      ]
+    ]
+  },
+  "verified_fit": false
+}

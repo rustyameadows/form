@@ -1,0 +1,192 @@
+{
+  "date": "2026-10-26",
+  "scope": "Reference-led sculpted desk clock first version, authored through the actual local MCP bridge and native UI.",
+  "tests": {
+    "core_graphics_ipc": 643,
+    "native": 346,
+    "total": 989,
+    "failures": 0,
+    "skips": 0
+  },
+  "release": {
+    "tests": 989,
+    "core_tests": 643,
+    "native_tests": 346,
+    "code_files": 446,
+    "binaries": {
+      "FORM": "3a79c23aab045a04fdbe0bb433be4cb7485840b553eb7411c558072ba4be2dc1",
+      "form-mcp": "082bca4286e8e7ce0d83f01fb601873daab431e9d78246eb38b65a1a56663225"
+    }
+  },
+  "project": {
+    "name": "MERIDIAN / Desk clock 01",
+    "project_id": "C0005BAF-7595-47DC-B48E-557488699063",
+    "clock_id": "4BC04F28-1B00-4AAE-9FEE-E9069730DF02",
+    "dial_master_id": "1EF4A003-97FB-4378-8F00-04E3DD9D08CB",
+    "reference_embedded_before_modeling": true,
+    "reference_bytes_sha256": "5ca2243ca3d69beb11426224c7cdbde0adb3cc45dab7a610955499712d6107dc",
+    "reference_locked_but_editable": true,
+    "dial_master_linked_at_actual_size": true,
+    "final_view": "Canvas and Table split; reference, dial master, notes and clock visible",
+    "saved_studio_shots": 3,
+    "case_mm": [
+      180,
+      166,
+      54
+    ],
+    "wall_mm": 3,
+    "dial_thickness_mm": 2,
+    "dial_bore_mm": 8.2
+  },
+  "native_ui": [
+    "Original reference viewed on Canvas",
+    "Hollow case inspected on print bed at actual dimensions",
+    "Eight component STL Save dialogs completed",
+    "Corrected upright dial verified in actual render and native Table",
+    "Reference and editable dial master viewed alongside the 3D model"
+  ],
+  "stl_exports": {
+    "01-Case-shell.stl": {
+      "triangles": 36864,
+      "nondegenerate_triangles": 36864,
+      "all_edges_two_incident_faces": true,
+      "size_mm": [
+        179.99999618530273,
+        165.99999618530273,
+        54.000003814697266
+      ],
+      "signed_volume_mm3": 94206.17361576554,
+      "sha256": "151ec7971b6b5b5ae5d352afc148e567de777251324047990170226dd69d219f"
+    },
+    "02-Bezel.stl": {
+      "triangles": 36864,
+      "nondegenerate_triangles": 36864,
+      "all_edges_two_incident_faces": true,
+      "size_mm": [
+        178.59998321533203,
+        164.60000228881836,
+        2.399998903274536
+      ],
+      "signed_volume_mm3": 3076.712597562251,
+      "sha256": "0bb21b208bf5354d1484fb1e5616a1b11a0612f1c89017a3958fbca3ddea53d4"
+    },
+    "03-Inner-surround.stl": {
+      "triangles": 36864,
+      "nondegenerate_triangles": 36864,
+      "all_edges_two_incident_faces": true,
+      "size_mm": [
+        173.3999366760254,
+        159.39999389648438,
+        6.999999523162842
+      ],
+      "signed_volume_mm3": 27601.98792374867,
+      "sha256": "00e05767db900f8e7cf974faedd95fc2cd0d5ccb3c2663c9ad7666cf39bbbc18"
+    },
+    "04-Dial.stl": {
+      "triangles": 4096,
+      "nondegenerate_triangles": 4096,
+      "all_edges_two_incident_faces": true,
+      "size_mm": [
+        158.99979400634766,
+        145.00000381469727,
+        1.9999996423721313
+      ],
+      "signed_volume_mm3": 41886.65588173677,
+      "sha256": "a76dc9511ca12729d86bb3f2dcd338d2834aef5794d817e9c63e8101455212e7"
+    },
+    "05-Back-cover.stl": {
+      "triangles": 2048,
+      "nondegenerate_triangles": 2048,
+      "all_edges_two_incident_faces": true,
+      "size_mm": [
+        173.49993896484375,
+        159.5,
+        1.9999980926513672
+      ],
+      "signed_volume_mm3": 50025.152816138696,
+      "sha256": "5e822a1fab4df7fe290caf04358e3380db244a7d6b0ea2cbd9d50dc3391b7d4a"
+    },
+    "06-Hour-hand.stl": {
+      "triangles": 20,
+      "nondegenerate_triangles": 20,
+      "all_edges_two_incident_faces": true,
+      "size_mm": [
+        48.35382080078125,
+        36.33428955078125,
+        0.9000003337860107
+      ],
+      "signed_volume_mm3": 295.2333087713194,
+      "sha256": "0773c3b5d80efc6403060efa0257030eed237309f26d9def80a53c1ed5b14054"
+    },
+    "07-Minute-hand.stl": {
+      "triangles": 20,
+      "nondegenerate_triangles": 20,
+      "all_edges_two_incident_faces": true,
+      "size_mm": [
+        75.14797973632812,
+        25.60370635986328,
+        0.9000003337860107
+      ],
+      "signed_volume_mm3": 175.15428360795156,
+      "sha256": "ee26b8ee0f0360056136e60e5ce1df178b0241704bbc169f23c1f8d29c829d29"
+    },
+    "08-Foot-print-four.stl": {
+      "triangles": 768,
+      "nondegenerate_triangles": 768,
+      "all_edges_two_incident_faces": true,
+      "size_mm": [
+        5.399993896484375,
+        5.399993896484375,
+        24.0
+      ],
+      "signed_volume_mm3": 385.5561778085587,
+      "sha256": "8375215871b122414eb1c3d548ee8a9e5b2fc1dd6fda5928bb6659d9c11b4c51"
+    }
+  },
+  "dial_pdf": {
+    "pages": 1,
+    "size_mm": [
+      179.99999277777775,
+      166.00000666666665
+    ],
+    "editable_source_elements": 19
+  },
+  "preservation": {
+    "existing_projects_exact": 5,
+    "studio_settings_exact": true,
+    "reference_bytes_exact": true,
+    "schema50_reopen": true,
+    "native_time_edit_undo_exact": true,
+    "native_time_edit_geometry_rebuilds": 0,
+    "slice_jobs": 0,
+    "printer_connected": false,
+    "print_commands_enabled": false,
+    "final_layout": {
+      "artwork_object_id": "E6F0642E-C287-4332-ADD6-C436AB01E1B1",
+      "canvas_window_open": false,
+      "canvas_workspace_id": "E6F0642E-C287-4332-ADD6-C436AB01E1B1",
+      "focused_surface": "canvas",
+      "layout": "split"
+    },
+    "linked_master_edit_undo_and_reopen": true
+  },
+  "geometry_fixes": [
+    "Normalize outline to actual requested dimensions",
+    "Map positive model Y to the physical top of artwork",
+    "Shared foot cap vertices; centered binary STL roundtrip catches primitive cap seam",
+    "A single foot in fabrication coordinates avoids floating assembled leg islands"
+  ],
+  "remaining": [
+    "Measured movement/shaft/hand fit",
+    "Rear fixings, movement bosses, dial retention and foot mounts",
+    "Clear shaped lens and rebate",
+    "Material/process tolerances and physical test coupons",
+    "General component materials and profile/loft tools",
+    "MCP form_set_artwork date-format asymmetry for SVG imports; adapted numerically for this project without dropping provenance"
+  ],
+  "hardware_contacted": false,
+  "slice_jobs": 0,
+  "prints_sent": 0,
+  "external_model_calls": false,
+  "user_photo_published_to_repository": false
+}

@@ -1,0 +1,245 @@
+{
+  "date": "2026-10-25",
+  "feature": "optical sizing and focused typography numeric keys",
+  "reader_schema": 42,
+  "tools": 59,
+  "tests": {
+    "total": 812,
+    "core_graphics_ipc": 559,
+    "native": 253,
+    "failures": 0,
+    "skips": 0,
+    "configuration": "release",
+    "new_optical_tests": 20,
+    "new_export_density_tests": 2
+  },
+  "bundle_sha256": "1dab5605be8120102dc381425905ffa43d19e15a177b19b9b5b8a8f71ef2ead3",
+  "mcp_sha256": "74284fd6d30d8603ed7df2d9a2842d89f970648364489a3a300f669456ce894a",
+  "packaged": {
+    "project_id": "7C6F4435-2E98-492D-AE7E-4D8620A0471F",
+    "sheet_id": "3F15DBF2-4825-4DB5-BF8D-C95B69892A57",
+    "body_id": "F3C7C135-552E-4C21-9EE7-9A135F69E9BE",
+    "story_id": "6267978C-042E-4C63-B1AE-EEE6739DF342",
+    "style_id": "96154727-77AD-4096-8E89-4FA6D3F53736",
+    "glyph": {
+      "fontName": ".AppleSystemUIFont",
+      "fontSignature": "790b95377e2399fa013277314e2527c531e2e85f16d0eef574f5cf1c4e0680cf",
+      "glyphID": 238,
+      "glyphName": "Q"
+    },
+    "tools": 59,
+    "exports": {
+      "svg": {
+        "bytes": 18102,
+        "color_space": "sRGB",
+        "composed_text_outlined": 1,
+        "format": "svg",
+        "height_mm": 165,
+        "optical_sizing_fallback": "Optical-sizing text uses shared native outlines for precise SVG metrics; source text stays editable in FORM.",
+        "optical_sizing_warnings": [],
+        "optical_text_outlined": 1,
+        "path": "/Users/rustymeadows/dev/form/.local/validation/optical-typography.svg",
+        "width_mm": 230
+      },
+      "pdf": {
+        "bytes": 13551,
+        "color_space": "sRGB",
+        "composed_text_outlined": 0,
+        "format": "pdf",
+        "height_mm": 165,
+        "optical_sizing_warnings": [],
+        "optical_text_outlined": 0,
+        "path": "/Users/rustymeadows/dev/form/.local/validation/optical-typography.pdf",
+        "width_mm": 230
+      },
+      "png": {
+        "bytes": 61611,
+        "color_space": "sRGB",
+        "composed_text_outlined": 0,
+        "format": "png",
+        "height_mm": 165,
+        "optical_sizing_warnings": [],
+        "optical_text_outlined": 0,
+        "path": "/Users/rustymeadows/dev/form/.local/validation/optical-typography.png",
+        "width_mm": 230
+      }
+    },
+    "native_acceptance_pending": false,
+    "checks": "Real optical modes; strict focused command/range; glyph identity; source/style/story preservation; reset; font replacement; atomic rollback; one Undo; physical SVG fallback/PDF/PNG; schema42 reopen",
+    "hardware_contacted": false,
+    "external_model_calls": false
+  },
+  "independent_output": {
+    "png_pixels": [
+      1358,
+      974
+    ],
+    "png_dpi": [
+      149.9616,
+      149.93619999999999
+    ],
+    "pdf_page_mm": [
+      229.9999986111111,
+      164.99998749999997
+    ],
+    "svg_mm": [
+      230,
+      165
+    ],
+    "sha256": {
+      "png": "299df3c8aaaa0229cc499ad2f4c89cd6595ab76f1f7aaee40d157521422cf3bd",
+      "pdf": "4a0d986f19fcb2e050de9fa4cb97a9994eac2efe36803d843e4c85b87a267870",
+      "svg": "6628647ce69101942914f6388ef3c88102c14b6513752b60be09112e12c68c66"
+    },
+    "independent_readers": [
+      "Pillow",
+      "pypdf",
+      "ElementTree"
+    ]
+  },
+  "native": {
+    "modes": [
+      "Automatic",
+      "Explicit",
+      "Off",
+      "Font default"
+    ],
+    "glyph_source_styles_frames_and_camera_preserved": true,
+    "font_default_deliberately_clears_policy_and_stored_opsz": true,
+    "focused_up_points": [
+      32,
+      33
+    ],
+    "focused_shift_down_points": [
+      33,
+      23
+    ],
+    "distinct_presses_have_distinct_undo": true,
+    "focused_command_z_and_redo_entire_project_exact": true,
+    "font_size_precision_points": [
+      32.125,
+      33.125
+    ],
+    "precision_one_undo_entire_project_exact": true,
+    "held_key_ms": 1200,
+    "held_key_observed_steps": 1,
+    "held_key_note": "Computer-use held input delivered one step; repeated NSEvent grouping is covered by native AppKit tests, not claimed as an observed OS autorepeat.",
+    "actual_process_restart_and_native_home_reopen_entire_project_exact": true,
+    "actual_canvas_and_controls_visually_reviewed": true,
+    "disk_snapshots_before_mcp_read": true
+  },
+  "camera": {
+    "directions": {
+      "before": {
+        "azimuth": 0.55,
+        "distance": 12,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.6,
+          "z": 0
+        },
+        "viewportAspect": 1.8957871396895787
+      },
+      "right": {
+        "azimuth": 0.22347637331037346,
+        "distance": 12,
+        "elevation": 0.7000000000000001,
+        "orientation": {
+          "w": 0.9335145792250401,
+          "x": -0.34075942175677354,
+          "y": 0.10474552026956008,
+          "z": 0.038235099604227246
+        },
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.6,
+          "z": 0
+        },
+        "viewportAspect": 1.8957871396895787
+      },
+      "down": {
+        "azimuth": 0.22347637331037343,
+        "distance": 12,
+        "elevation": 0.9612189013517012,
+        "orientation": {
+          "w": 0.8811835882625577,
+          "x": -0.45943654286357943,
+          "y": 0.09887369245179069,
+          "z": 0.05155133169215619
+        },
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.6,
+          "z": 0
+        },
+        "viewportAspect": 1.8957871396895787
+      },
+      "up": {
+        "azimuth": 0.22347637331037343,
+        "distance": 12,
+        "elevation": 0.7,
+        "orientation": {
+          "w": 0.9335145792250401,
+          "x": -0.3407594217567735,
+          "y": 0.10474552026956006,
+          "z": 0.03823509960422724
+        },
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.6,
+          "z": 0
+        },
+        "viewportAspect": 1.8957871396895787
+      },
+      "left": {
+        "azimuth": 0.55,
+        "distance": 12,
+        "elevation": 0.6999999999999998,
+        "orientation": {
+          "w": 0.9040759688087128,
+          "x": -0.3300134901066022,
+          "y": 0.25508378283385996,
+          "z": 0.09311284930349475
+        },
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.6,
+          "z": 0
+        },
+        "viewportAspect": 1.8957871396895787
+      }
+    },
+    "source_history_exact": true,
+    "round_trip_tolerance": 1e-12,
+    "binding": "Drag orbit / Shift-drag pan / scroll zoom",
+    "mode_retained": "table",
+    "first_drag_materializes_legacy_orientation": true
+  },
+  "ordinary_preservation": {
+    "ordinary_projects_exact": 5,
+    "settings_exact": {
+      "Studio.json": {
+        "exists": true,
+        "sha256": "ae30ed51d678c467a029b117053885e4c5917d08eedd1dcd4a2a8c7477866446"
+      },
+      "FontPreferences.json": {
+        "exists": false,
+        "sha256": null
+      }
+    },
+    "all_equal": true
+  },
+  "equipment_operations": 0,
+  "external_model_calls": 0,
+  "limits": [
+    "Optical size depends on an installed supported font axis; retained unsupported assignments remain explicit warnings.",
+    "New optical live-SVG output uses a counted outline fallback; FORM source remains editable.",
+    "This checkpoint does not complete the broader typography, publication, 3D or textile goal."
+  ]
+}

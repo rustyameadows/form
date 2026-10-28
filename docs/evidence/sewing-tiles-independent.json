@@ -1,0 +1,29 @@
+{
+  "reader": "pypdf",
+  "renderer": "Poppler",
+  "pages": 7,
+  "tiles": 6,
+  "rows": 3,
+  "columns": 2,
+  "sheet_mm": [
+    210,
+    297
+  ],
+  "source_mm": [
+    300,
+    538
+  ],
+  "calibration_square_mm": 50,
+  "calibration_rule_mm": 100,
+  "scale": 1,
+  "coverage_and_trim_partition": "no gaps or duplication after trimming",
+  "ink_samples": 907,
+  "overlap_ink_samples": 36,
+  "raster_samples": 43090,
+  "mean_rgb_error": 6.90453329935672e-05,
+  "source_pixels_checked": 2767680,
+  "all_source_pixels_mean_rgb_error": 0.0026766515755722257,
+  "gutter_mark_segments_checked": 104,
+  "footer_labels_checked": 6,
+  "all_marks_outside_source": true
+}

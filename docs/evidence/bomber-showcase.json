@@ -1,0 +1,187 @@
+{
+  "date": "2026-10-25",
+  "tests": {
+    "total": 719,
+    "core_graphics_ipc": 497,
+    "native": 222,
+    "failures": 0,
+    "skips": 0
+  },
+  "tools": 59,
+  "reader_schema": 40,
+  "equipment_operations": 0,
+  "ordinary_projects_exact": 5,
+  "studio_file_exact": true,
+  "feature": "authored flight bomber and Studio focus",
+  "native_project_id": "9BB6662D-4E59-4CAB-A101-E74DE21FCBCE",
+  "native_objects": 15,
+  "digitized_placements": 5,
+  "needle_reader": {
+    "reader": "pyembroidery 1.5.1",
+    "decoded_records": 2274,
+    "stitches": 1417,
+    "thread_passes": 4
+  },
+  "underlay_stitches": 91,
+  "native": {
+    "home_creation": true,
+    "actual_mouse_patch_selection_focus": true,
+    "preconfigured_stitch_review": true,
+    "actual_process_restart_home_reopen_entire_project_exact": true,
+    "camera": {
+      "baseline": {
+        "azimuth": 0.12,
+        "distance": 42,
+        "elevation": 1,
+        "projection": "perspective",
+        "target": {
+          "x": 3,
+          "y": 0.2,
+          "z": 1.4
+        },
+        "viewportAspect": 1.8957871396895787
+      },
+      "mouse_movements": [
+        {
+          "direction": "right",
+          "camera": {
+            "azimuth": -0.20652362668962654,
+            "distance": 42,
+            "elevation": 0.9999999999999999,
+            "orientation": {
+              "w": 0.8729078855980891,
+              "x": -0.47687175130651466,
+              "y": -0.09045980430414198,
+              "z": -0.049418416322134805
+            },
+            "projection": "perspective",
+            "target": {
+              "x": 3,
+              "y": 0.2,
+              "z": 1.4
+            },
+            "viewportAspect": 1.8957871396895787
+          }
+        },
+        {
+          "direction": "down",
+          "camera": {
+            "azimuth": -0.20652362668962645,
+            "distance": 42,
+            "elevation": 1.2612189013517012,
+            "orientation": {
+              "w": 0.8033660441496647,
+              "x": -0.5864962429894904,
+              "y": -0.08325315458523844,
+              "z": -0.060778847621009435
+            },
+            "projection": "perspective",
+            "target": {
+              "x": 3,
+              "y": 0.2,
+              "z": 1.4
+            },
+            "viewportAspect": 1.8957871396895787
+          }
+        },
+        {
+          "direction": "up",
+          "camera": {
+            "azimuth": -0.20652362668962643,
+            "distance": 42,
+            "elevation": 1.0000000000000002,
+            "orientation": {
+              "w": 0.872907885598089,
+              "x": -0.4768717513065148,
+              "y": -0.09045980430414192,
+              "z": -0.04941841632213479
+            },
+            "projection": "perspective",
+            "target": {
+              "x": 3,
+              "y": 0.2,
+              "z": 1.4
+            },
+            "viewportAspect": 1.8957871396895787
+          }
+        },
+        {
+          "direction": "returned",
+          "camera": {
+            "azimuth": 0.1200000000000001,
+            "distance": 42,
+            "elevation": 1.0000000000000002,
+            "orientation": {
+              "w": 0.8760033871166897,
+              "x": -0.47856283149344164,
+              "y": 0.05262336642744194,
+              "z": 0.028748276103273677
+            },
+            "projection": "perspective",
+            "target": {
+              "x": 3,
+              "y": 0.2,
+              "z": 1.4
+            },
+            "viewportAspect": 1.8957871396895787
+          }
+        }
+      ],
+      "angular_return_tolerance_radians": 1e-12,
+      "target_distance_exact": true,
+      "objects_history_exact": true,
+      "geometry_program_texture_builds_before": [
+        32,
+        9,
+        9
+      ],
+      "geometry_program_texture_builds_after": [
+        32,
+        9,
+        9
+      ],
+      "perspective_whole_project_selection_independent_exits_isolation": true
+    },
+    "studio_focus": {
+      "native_orbit_and_wheel_retain_mode_preset": true,
+      "preset": "Warm paper",
+      "actual_AppKit_orbit_Shift_pan_wheel_and_explicit_Table_switch": true,
+      "focused_camera_surface_tests": 28,
+      "resource_counts_before": [
+        15,
+        5,
+        5
+      ],
+      "resource_counts_after": [
+        15,
+        5,
+        5
+      ],
+      "wheel_input_kind": "one CUA page-scroll invocation; not a single wheel notch",
+      "wheel_distance_before": 50.24317893950082,
+      "wheel_distance_after": 3.0897024606693093
+    }
+  },
+  "renders": {
+    "mission-patch-detail.png": {
+      "pixels": [
+        3000,
+        2000
+      ],
+      "sha256": "4bf05c345ab33b832eb17cbb578a20cbc4cc90ef0013538b3399373d5dfb313d"
+    },
+    "collection-studio.png": {
+      "pixels": [
+        3000,
+        2000
+      ],
+      "sha256": "7f3731843deca0ee107a3c6f6f64d272a7a8ccab084ba3ad13bc82a5c33f9721"
+    }
+  },
+  "limitations": [
+    "Generic dimensioned presentation blank; no calibrated garment fit or cutting pattern.",
+    "Small lettering and physical sew-out need review. Global locks remain explicitly off in this sample.",
+    "Outer merrow-style border and woven name tape are construction appearance studies.",
+    "No equipment operation."
+  ]
+}

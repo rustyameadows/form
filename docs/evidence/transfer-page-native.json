@@ -1,0 +1,284 @@
+{
+  "date": "2026-10-26",
+  "scope": "Integrate portable artwork transfer48 and physical page setup49; stabilize existing behavior only.",
+  "base_commit": "e6d7b095941fa036b4d72e1cffc5aee4df9e42ea",
+  "tests": {
+    "core_graphics_ipc": 640,
+    "native": 343,
+    "total": 983,
+    "failures": 0,
+    "skips": 0
+  },
+  "release": {
+    "signed": true,
+    "warnings": 0,
+    "errors": 0,
+    "code_files_verified": 442,
+    "binary_sha256": {
+      "FORM": "54c4305de924a82a2838361e71e29a0c70a76f8f73939aee36e27b8edfb86742",
+      "form-mcp": "394287011af5e9a96fba6a79ea9a7f3ab23af5dd008fb3c3a42ea8c5b84ac4b9"
+    }
+  },
+  "packaged_workflows": [
+    "portable transfer: deleted original PNG; exact bytes/components/UUID remaps; Undo/Redo; rollback; reopen",
+    "physical page: source-only preflight; strict selectors; real trim/bleed/marked PDF; old default unchanged; existing bytes preserved",
+    "existing loose Canvas SVG: same destination; 2in by 72pt retained as 50.8 by 25.4 mm; exact Undo/Redo/reopen"
+  ],
+  "native": {
+    "page_apply_mm": {
+      "bleed": 5.125,
+      "safe_inset": 8.375
+    },
+    "focused_apply_without_tab": true,
+    "exact_undo_redo": true,
+    "invalid_75mm_rejected_and_visible": true,
+    "clear_safe_reversible": true,
+    "page_geometry_builds": [
+      15,
+      15
+    ],
+    "dirty_review_export_disabled": true,
+    "refresh_gap_mm": 5,
+    "pdf_pan_zoom_percent": 400,
+    "pdf_four_direction_100pixel_reversals_exact": true,
+    "native_save_dialog_export": true,
+    "reference_guides_on_during_export": true,
+    "output_notices_regression_test": true,
+    "camera_mouse_drag_pixels": 200,
+    "camera_four_directions_orthogonal": true,
+    "camera_reverse_error_radians_less_than": 1e-12,
+    "camera_geometry_builds": [
+      30,
+      30
+    ],
+    "perspective_whole_project_identical_with_selection": true,
+    "camera_bindings_changed": false,
+    "shift_drag_validation": "Existing direct AppKit tests; CUA does not hold Shift during drag."
+  },
+  "pdf": {
+    "bleed-crop.pdf": {
+      "boxes_mm": {
+        "MediaBox": [
+          0.0,
+          0.0,
+          218.50001,
+          168.5
+        ],
+        "CropBox": [
+          0.0,
+          0.0,
+          218.50001,
+          168.5
+        ],
+        "TrimBox": [
+          9.25,
+          9.25,
+          209.25,
+          159.24999
+        ],
+        "BleedBox": [
+          5.0,
+          5.0,
+          213.50002,
+          163.50001
+        ]
+      },
+      "stroke_operations": 8,
+      "pages": 1,
+      "text": "FORM / PHYSICAL PAGE"
+    },
+    "bleed.pdf": {
+      "boxes_mm": {
+        "MediaBox": [
+          0.0,
+          0.0,
+          208.49999,
+          158.49999
+        ],
+        "CropBox": [
+          0.0,
+          0.0,
+          208.49999,
+          158.49999
+        ],
+        "TrimBox": [
+          4.25,
+          4.25,
+          204.25001,
+          154.25
+        ],
+        "BleedBox": [
+          0.0,
+          0.0,
+          208.49999,
+          158.49999
+        ]
+      },
+      "stroke_operations": 0,
+      "pages": 1,
+      "text": "FORM / PHYSICAL PAGE"
+    },
+    "legacy.pdf": {
+      "boxes_mm": {
+        "MediaBox": [
+          0.0,
+          0.0,
+          199.99999,
+          150.00002
+        ],
+        "TrimBox": [
+          0.0,
+          0.0,
+          199.99999,
+          150.00002
+        ]
+      },
+      "stroke_operations": 0,
+      "pages": 1,
+      "text": "FORM / PHYSICAL PAGE"
+    },
+    "trim-crop.pdf": {
+      "boxes_mm": {
+        "MediaBox": [
+          0.0,
+          0.0,
+          210.0,
+          160.0
+        ],
+        "CropBox": [
+          0.0,
+          0.0,
+          210.0,
+          160.0
+        ],
+        "TrimBox": [
+          5.0,
+          5.0,
+          205.00001,
+          155.00001
+        ],
+        "BleedBox": [
+          5.0,
+          5.0,
+          205.00001,
+          155.00001
+        ]
+      },
+      "stroke_operations": 8,
+      "pages": 1,
+      "text": "FORM / PHYSICAL PAGE"
+    },
+    "trim.pdf": {
+      "boxes_mm": {
+        "MediaBox": [
+          0.0,
+          0.0,
+          199.99999,
+          150.00002
+        ],
+        "CropBox": [
+          0.0,
+          0.0,
+          199.99999,
+          150.00002
+        ],
+        "TrimBox": [
+          0.0,
+          0.0,
+          199.99999,
+          150.00002
+        ],
+        "BleedBox": [
+          0.0,
+          0.0,
+          199.99999,
+          150.00002
+        ]
+      },
+      "stroke_operations": 0,
+      "pages": 1,
+      "text": "FORM / PHYSICAL PAGE"
+    },
+    "native-page.pdf": {
+      "boxes_mm": {
+        "MediaBox": [
+          0.0,
+          0.0,
+          228.25001,
+          178.25
+        ],
+        "CropBox": [
+          0.0,
+          0.0,
+          228.25001,
+          178.25
+        ],
+        "TrimBox": [
+          14.125,
+          14.125,
+          214.125,
+          164.12499
+        ],
+        "BleedBox": [
+          9.0,
+          9.0,
+          219.25001,
+          169.25001
+        ]
+      },
+      "stroke_operations": 8,
+      "pages": 1,
+      "text": "FORM / PHYSICAL PAGE"
+    },
+    "matching-page.pdf": {
+      "boxes_mm": {
+        "MediaBox": [
+          0.0,
+          0.0,
+          228.25001,
+          178.25
+        ],
+        "CropBox": [
+          0.0,
+          0.0,
+          228.25001,
+          178.25
+        ],
+        "TrimBox": [
+          14.125,
+          14.125,
+          214.125,
+          164.12499
+        ],
+        "BleedBox": [
+          9.0,
+          9.0,
+          219.25001,
+          169.25001
+        ]
+      },
+      "stroke_operations": 8,
+      "pages": 1,
+      "text": "FORM / PHYSICAL PAGE"
+    },
+    "native_mcp_content_exact": true,
+    "production_render_visually_reviewed": true,
+    "reference_guides_on_during_native_export": true
+  },
+  "preservation": {
+    "ordinary_projects_exact": 5,
+    "studio_json_exact": true,
+    "font_preferences_file_still_absent": true,
+    "ordinary_home_count": 5,
+    "copied_collection_nonpreview_files_exact": 26,
+    "process_restart_page_and_collection_exact": true
+  },
+  "proof_sha256": {
+    "native-page.pdf": "49d78838d439af2a6bd8a0e25d61546c24c0837da3107ee5a9e2b6a2ca143aef",
+    "native-page.png": "c7faab66e13b61ec2c21cc3b86bdaafa0a7e4b4465c189c2c6d0f0c4fe3f8815"
+  },
+  "remaining_scope": "Full product/typography/textile briefs incomplete. Broader SVG admission and cloth math remain unintegrated. No goal/automation started.",
+  "external_model_calls": false,
+  "hardware_contacted": false,
+  "human_clipboard_accessed": false
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "folder": "classic-v1.render",
+    "pixels": [
+      1200,
+      800
+    ],
+    "sha256_verified": true,
+    "png_chunk_crc_verified": true,
+    "lighting": "classic-v1",
+    "subjects": 13,
+    "resource_hashes": 2,
+    "source_archived": false,
+    "pixel_cap_is_memory_cap": false
+  },
+  {
+    "folder": "soft-side-v1.render",
+    "pixels": [
+      1200,
+      800
+    ],
+    "sha256_verified": true,
+    "png_chunk_crc_verified": true,
+    "lighting": "soft-side-v1",
+    "subjects": 13,
+    "resource_hashes": 2,
+    "source_archived": false,
+    "pixel_cap_is_memory_cap": false
+  },
+  {
+    "folder": "rim-v1.render",
+    "pixels": [
+      1200,
+      800
+    ],
+    "sha256_verified": true,
+    "png_chunk_crc_verified": true,
+    "lighting": "rim-v1",
+    "subjects": 13,
+    "resource_hashes": 2,
+    "source_archived": false,
+    "pixel_cap_is_memory_cap": false
+  }
+]

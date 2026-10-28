@@ -1,0 +1,685 @@
+{
+  "calibration_square_mm" : 50,
+  "cloth_simulation" : false,
+  "cutting_template" : true,
+  "height_mm" : 538,
+  "mismatched_seams" : 0,
+  "pieces" : [
+    {
+      "contour_tolerance_mm" : 0.02,
+      "cut_height_mm" : 200,
+      "cut_quantity" : 2,
+      "cut_width_mm" : 280,
+      "edge_length_errors_mm" : [
+        0,
+        0,
+        0.00034549416936677235,
+        0,
+        0.00034549416936710542,
+        0
+      ],
+      "edge_lengths_mm" : [
+        260,
+        145,
+        54.985584433257785,
+        190,
+        54.985584433257841,
+        145
+      ],
+      "element_id" : "0C177714-6314-4E7B-BA45-20676E070B27",
+      "grain_direction" : [
+        6.123233995736766e-17,
+        1
+      ],
+      "hole_count" : 0,
+      "material_id" : "flight-nylon",
+      "name" : "Rounded pouch main panel",
+      "notches" : 2,
+      "on_fold_edge" : null,
+      "resolved_notches" : [
+        {
+          "cut_opening_length_mm" : 3,
+          "edge_id" : "E0D3B038-EFF5-47B7-A145-7F2BAEE29B97",
+          "id" : "1F18940B-4BC6-4FA0-8180-4E134EB1B031",
+          "mouth_a_mm" : [
+            315,
+            141.00000000000006
+          ],
+          "mouth_b_mm" : [
+            315,
+            144.00000000000006
+          ],
+          "source_distance_mm" : 72.5,
+          "tip_mm" : [
+            312,
+            142.5
+          ]
+        },
+        {
+          "cut_opening_length_mm" : 3,
+          "edge_id" : "F121A341-92B5-434E-8C8F-069E2B92596C",
+          "id" : "8E0CCE26-F575-4A9B-9238-FE6C4B919C7B",
+          "mouth_a_mm" : [
+            35,
+            144.00000000000011
+          ],
+          "mouth_b_mm" : [
+            35,
+            141.00000000000011
+          ],
+          "source_distance_mm" : 72.5,
+          "tip_mm" : [
+            38,
+            142.5
+          ]
+        }
+      ],
+      "seam_allowances_mm" : [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "source_edges" : [
+        {
+          "contour" : 0,
+          "contour_id" : "C7109626-E97D-4726-A81B-20B1CE530333",
+          "end_id" : "E0D3B038-EFF5-47B7-A145-7F2BAEE29B97",
+          "id" : "404EAA65-7174-487F-B0D6-754310925A2B",
+          "index" : 0,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 260
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "C7109626-E97D-4726-A81B-20B1CE530333",
+          "end_id" : "AA209FC8-2F9E-4752-95CC-472F9CBD098D",
+          "id" : "E0D3B038-EFF5-47B7-A145-7F2BAEE29B97",
+          "index" : 1,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 145
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "C7109626-E97D-4726-A81B-20B1CE530333",
+          "end_id" : "619C1962-D9EC-42DD-8132-8886D2BC5871",
+          "id" : "AA209FC8-2F9E-4752-95CC-472F9CBD098D",
+          "index" : 2,
+          "is_hole" : false,
+          "length_error_mm" : 0.00034549416936677235,
+          "length_mm" : 54.985584433257785
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "C7109626-E97D-4726-A81B-20B1CE530333",
+          "end_id" : "0624B1EF-B83C-43AE-AD62-5B2A91345BC8",
+          "id" : "619C1962-D9EC-42DD-8132-8886D2BC5871",
+          "index" : 3,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 190
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "C7109626-E97D-4726-A81B-20B1CE530333",
+          "end_id" : "F121A341-92B5-434E-8C8F-069E2B92596C",
+          "id" : "0624B1EF-B83C-43AE-AD62-5B2A91345BC8",
+          "index" : 4,
+          "is_hole" : false,
+          "length_error_mm" : 0.00034549416936710542,
+          "length_mm" : 54.985584433257841
+        },
+        {
+          "contour" : 0,
+          "contour_id" : "C7109626-E97D-4726-A81B-20B1CE530333",
+          "end_id" : "404EAA65-7174-487F-B0D6-754310925A2B",
+          "id" : "F121A341-92B5-434E-8C8F-069E2B92596C",
+          "index" : 5,
+          "is_hole" : false,
+          "length_error_mm" : 0,
+          "length_mm" : 145
+        }
+      ]
+    },
+    {
+      "contour_tolerance_mm" : 0,
+      "cut_height_mm" : 60,
+      "cut_quantity" : 2,
+      "cut_width_mm" : 280,
+      "edge_length_errors_mm" : [
+
+      ],
+      "edge_lengths_mm" : [
+        260,
+        40,
+        260,
+        40
+      ],
+      "element_id" : "4238C8F6-A111-4F8F-9A4C-C63EABA2C921",
+      "grain_direction" : [
+        6.123233995736766e-17,
+        1
+      ],
+      "hole_count" : 0,
+      "material_id" : "flight-nylon",
+      "name" : "Zipper facing",
+      "notches" : 0,
+      "on_fold_edge" : null,
+      "resolved_notches" : [
+
+      ],
+      "seam_allowances_mm" : [
+        10,
+        10,
+        10,
+        10
+      ],
+      "source_edges" : [
+
+      ]
+    }
+  ],
+  "seams" : [
+    {
+      "conclusive" : true,
+      "difference_mm" : 0,
+      "first_length_mm" : 145,
+      "id" : "513CB15F-B01E-47B4-AB67-A8ABCA81E69A",
+      "matches" : true,
+      "measurement_error_mm" : 0,
+      "name" : "Panel perimeter 1",
+      "second_length_mm" : 145,
+      "tolerance_mm" : 0.5
+    },
+    {
+      "conclusive" : true,
+      "difference_mm" : 0,
+      "first_length_mm" : 54.985584433257785,
+      "id" : "B8C90C6B-FD3D-41A2-82CC-FC00D6BA2EC5",
+      "matches" : true,
+      "measurement_error_mm" : 0.0006909883387335447,
+      "name" : "Lower curved seam 2",
+      "second_length_mm" : 54.985584433257785,
+      "tolerance_mm" : 0.5
+    },
+    {
+      "conclusive" : true,
+      "difference_mm" : 0,
+      "first_length_mm" : 190,
+      "id" : "1502600F-E4D0-4134-A5D4-2A357357863C",
+      "matches" : true,
+      "measurement_error_mm" : 0,
+      "name" : "Panel perimeter 3",
+      "second_length_mm" : 190,
+      "tolerance_mm" : 0.5
+    },
+    {
+      "conclusive" : true,
+      "difference_mm" : 0,
+      "first_length_mm" : 54.985584433257841,
+      "id" : "88B524D6-3317-4D10-A125-5529555D87F3",
+      "matches" : true,
+      "measurement_error_mm" : 0.00069098833873421084,
+      "name" : "Lower curved seam 4",
+      "second_length_mm" : 54.985584433257841,
+      "tolerance_mm" : 0.5
+    },
+    {
+      "conclusive" : true,
+      "difference_mm" : 0,
+      "first_length_mm" : 145,
+      "id" : "C5465C19-47CC-4569-8FC8-AB0B47C79090",
+      "matches" : true,
+      "measurement_error_mm" : 0,
+      "name" : "Panel perimeter 5",
+      "second_length_mm" : 145,
+      "tolerance_mm" : 0.5
+    },
+    {
+      "conclusive" : true,
+      "difference_mm" : 0,
+      "first_length_mm" : 260,
+      "id" : "E0F9C00D-279C-489D-B6E0-53BFD7A0657B",
+      "matches" : true,
+      "measurement_error_mm" : 0,
+      "name" : "Zipper facing 1",
+      "second_length_mm" : 260,
+      "tolerance_mm" : 1
+    },
+    {
+      "conclusive" : true,
+      "difference_mm" : 0,
+      "first_length_mm" : 260,
+      "id" : "AF7C7034-5DDB-4153-A738-EB8080064007",
+      "matches" : true,
+      "measurement_error_mm" : 0,
+      "name" : "Zipper facing 2",
+      "second_length_mm" : 260,
+      "tolerance_mm" : 1
+    }
+  ],
+  "tiled" : {
+    "assembly" : "Match the row\/column labels, cut straight between paired gray gutter ticks, then butt matching trimmed edges and tape. All ticks and crosshairs are outside the source drawing. The overlap is repeated alignment reference, not a scale change.",
+    "calibration_page" : 1,
+    "calibration_rule_mm" : 100,
+    "calibration_square_mm" : 50,
+    "columns" : 2,
+    "design_height_mm" : 259,
+    "design_width_mm" : 184,
+    "footer_mm" : 12,
+    "margins_mm" : {
+      "bottom" : 10,
+      "left" : 10,
+      "right" : 10,
+      "top" : 10
+    },
+    "mark_gutter_mm" : 3,
+    "overlap_mm" : 10,
+    "page_count" : 7,
+    "rows" : 3,
+    "scale" : 1,
+    "sheet_height_mm" : 297,
+    "sheet_width_mm" : 210,
+    "source_height_mm" : 538,
+    "source_width_mm" : 300,
+    "tile_count" : 6,
+    "tiles" : [
+      {
+        "column" : 1,
+        "content_on_sheet_mm" : {
+          "height" : 259,
+          "width" : 184,
+          "x" : 13,
+          "y" : 13
+        },
+        "id" : "R1-C1",
+        "pdf_page" : 2,
+        "registration_marks" : [
+          {
+            "edge" : "right",
+            "label" : "R1:C1|C2",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 192,
+                "y" : 11.5
+              },
+              {
+                "x" : 192,
+                "y" : 273.5
+              }
+            ]
+          },
+          {
+            "edge" : "bottom",
+            "label" : "C1:R1|R2",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 11.5,
+                "y" : 267
+              },
+              {
+                "x" : 198.5,
+                "y" : 267
+              }
+            ]
+          }
+        ],
+        "row" : 1,
+        "source_mm" : {
+          "height" : 259,
+          "width" : 184,
+          "x" : 0,
+          "y" : 0
+        },
+        "trim_on_sheet_mm" : {
+          "height" : 254,
+          "width" : 179,
+          "x" : 13,
+          "y" : 13
+        },
+        "trim_source_mm" : {
+          "height" : 254,
+          "width" : 179,
+          "x" : 0,
+          "y" : 0
+        }
+      },
+      {
+        "column" : 2,
+        "content_on_sheet_mm" : {
+          "height" : 259,
+          "width" : 126,
+          "x" : 13,
+          "y" : 13
+        },
+        "id" : "R1-C2",
+        "pdf_page" : 3,
+        "registration_marks" : [
+          {
+            "edge" : "left",
+            "label" : "R1:C1|C2",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 18,
+                "y" : 11.5
+              },
+              {
+                "x" : 18,
+                "y" : 273.5
+              }
+            ]
+          },
+          {
+            "edge" : "bottom",
+            "label" : "C2:R1|R2",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 11.5,
+                "y" : 267
+              },
+              {
+                "x" : 140.5,
+                "y" : 267
+              }
+            ]
+          }
+        ],
+        "row" : 1,
+        "source_mm" : {
+          "height" : 259,
+          "width" : 126,
+          "x" : 174,
+          "y" : 0
+        },
+        "trim_on_sheet_mm" : {
+          "height" : 254,
+          "width" : 121,
+          "x" : 18,
+          "y" : 13
+        },
+        "trim_source_mm" : {
+          "height" : 254,
+          "width" : 121,
+          "x" : 179,
+          "y" : 0
+        }
+      },
+      {
+        "column" : 1,
+        "content_on_sheet_mm" : {
+          "height" : 259,
+          "width" : 184,
+          "x" : 13,
+          "y" : 13
+        },
+        "id" : "R2-C1",
+        "pdf_page" : 4,
+        "registration_marks" : [
+          {
+            "edge" : "right",
+            "label" : "R2:C1|C2",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 192,
+                "y" : 11.5
+              },
+              {
+                "x" : 192,
+                "y" : 273.5
+              }
+            ]
+          },
+          {
+            "edge" : "top",
+            "label" : "C1:R1|R2",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 11.5,
+                "y" : 18
+              },
+              {
+                "x" : 198.5,
+                "y" : 18
+              }
+            ]
+          },
+          {
+            "edge" : "bottom",
+            "label" : "C1:R2|R3",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 11.5,
+                "y" : 267
+              },
+              {
+                "x" : 198.5,
+                "y" : 267
+              }
+            ]
+          }
+        ],
+        "row" : 2,
+        "source_mm" : {
+          "height" : 259,
+          "width" : 184,
+          "x" : 0,
+          "y" : 249
+        },
+        "trim_on_sheet_mm" : {
+          "height" : 249,
+          "width" : 179,
+          "x" : 13,
+          "y" : 18
+        },
+        "trim_source_mm" : {
+          "height" : 249,
+          "width" : 179,
+          "x" : 0,
+          "y" : 254
+        }
+      },
+      {
+        "column" : 2,
+        "content_on_sheet_mm" : {
+          "height" : 259,
+          "width" : 126,
+          "x" : 13,
+          "y" : 13
+        },
+        "id" : "R2-C2",
+        "pdf_page" : 5,
+        "registration_marks" : [
+          {
+            "edge" : "left",
+            "label" : "R2:C1|C2",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 18,
+                "y" : 11.5
+              },
+              {
+                "x" : 18,
+                "y" : 273.5
+              }
+            ]
+          },
+          {
+            "edge" : "top",
+            "label" : "C2:R1|R2",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 11.5,
+                "y" : 18
+              },
+              {
+                "x" : 140.5,
+                "y" : 18
+              }
+            ]
+          },
+          {
+            "edge" : "bottom",
+            "label" : "C2:R2|R3",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 11.5,
+                "y" : 267
+              },
+              {
+                "x" : 140.5,
+                "y" : 267
+              }
+            ]
+          }
+        ],
+        "row" : 2,
+        "source_mm" : {
+          "height" : 259,
+          "width" : 126,
+          "x" : 174,
+          "y" : 249
+        },
+        "trim_on_sheet_mm" : {
+          "height" : 249,
+          "width" : 121,
+          "x" : 18,
+          "y" : 18
+        },
+        "trim_source_mm" : {
+          "height" : 249,
+          "width" : 121,
+          "x" : 179,
+          "y" : 254
+        }
+      },
+      {
+        "column" : 1,
+        "content_on_sheet_mm" : {
+          "height" : 40,
+          "width" : 184,
+          "x" : 13,
+          "y" : 13
+        },
+        "id" : "R3-C1",
+        "pdf_page" : 6,
+        "registration_marks" : [
+          {
+            "edge" : "right",
+            "label" : "R3:C1|C2",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 192,
+                "y" : 11.5
+              },
+              {
+                "x" : 192,
+                "y" : 54.5
+              }
+            ]
+          },
+          {
+            "edge" : "top",
+            "label" : "C1:R2|R3",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 11.5,
+                "y" : 18
+              },
+              {
+                "x" : 198.5,
+                "y" : 18
+              }
+            ]
+          }
+        ],
+        "row" : 3,
+        "source_mm" : {
+          "height" : 40,
+          "width" : 184,
+          "x" : 0,
+          "y" : 498
+        },
+        "trim_on_sheet_mm" : {
+          "height" : 35,
+          "width" : 179,
+          "x" : 13,
+          "y" : 18
+        },
+        "trim_source_mm" : {
+          "height" : 35,
+          "width" : 179,
+          "x" : 0,
+          "y" : 503
+        }
+      },
+      {
+        "column" : 2,
+        "content_on_sheet_mm" : {
+          "height" : 40,
+          "width" : 126,
+          "x" : 13,
+          "y" : 13
+        },
+        "id" : "R3-C2",
+        "pdf_page" : 7,
+        "registration_marks" : [
+          {
+            "edge" : "left",
+            "label" : "R3:C1|C2",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 18,
+                "y" : 11.5
+              },
+              {
+                "x" : 18,
+                "y" : 54.5
+              }
+            ]
+          },
+          {
+            "edge" : "top",
+            "label" : "C2:R2|R3",
+            "points_on_sheet_mm" : [
+              {
+                "x" : 11.5,
+                "y" : 18
+              },
+              {
+                "x" : 140.5,
+                "y" : 18
+              }
+            ]
+          }
+        ],
+        "row" : 3,
+        "source_mm" : {
+          "height" : 40,
+          "width" : 126,
+          "x" : 174,
+          "y" : 498
+        },
+        "trim_on_sheet_mm" : {
+          "height" : 35,
+          "width" : 121,
+          "x" : 18,
+          "y" : 18
+        },
+        "trim_source_mm" : {
+          "height" : 35,
+          "width" : 121,
+          "x" : 179,
+          "y" : 503
+        }
+      }
+    ],
+    "units" : "mm"
+  },
+  "uncertain_seams" : 0,
+  "units" : "mm",
+  "width_mm" : 300
+}

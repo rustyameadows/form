@@ -1,0 +1,155 @@
+{
+  "date": "2026-10-25",
+  "feature": "original-pattern cloth assembly",
+  "tests": {
+    "total": 767,
+    "core_graphics_ipc": 529,
+    "native": 238,
+    "failures": 0,
+    "skips": 0,
+    "configuration": "release",
+    "debug_preparation_lifecycle_retest": {
+      "tests": 3,
+      "failures": 0,
+      "watchdog_seconds": 240,
+      "numerical_limits_unchanged": true
+    }
+  },
+  "tools": 59,
+  "reader_schema": 40,
+  "feature_schema": 36,
+  "bundle_sha256": "948b06a3f8371127729f1084b640b769545681aa9c01140b3d780fcf4a7a7e8e",
+  "equipment_operations": 0,
+  "ordinary_projects_exact": 5,
+  "studio_file_exact": true,
+  "native_project_id": "B86CD03E-A20E-453D-8EA0-D4F027CA4796",
+  "mesh": {
+    "verified": true,
+    "vertices": 872,
+    "triangles": 1514,
+    "constraints": 4108,
+    "panels": 4,
+    "source_seam_samples": 102,
+    "every_sewn_boundary_vertex_paired": true,
+    "minimum_triangle_angle_degrees": 5.696240389303921,
+    "mass_ratio": 36.23112542256126,
+    "maximum_independent_arc_sample_error_mm": 0.0006822003371552794,
+    "total_mass_kg": 0.02040240402959592,
+    "independent_cubic_areas_mm2": [
+      46274.764303752105,
+      46274.764303752105,
+      10400.0,
+      10400.0
+    ]
+  },
+  "physical_run": {
+    "frames": 240,
+    "seconds": 4,
+    "strain": {
+      "final": {
+        "maximum": 1.0208637566600536,
+        "p95": 1.0019848678364394,
+        "minimum": 0.9383511850339659,
+        "maximum_absolute_error_mm": 0.15816212709037636
+      },
+      "worst_transient": 1.12804340398054,
+      "samples": [
+        {
+          "frame": 1,
+          "maximum": 1.1056399855076395,
+          "p95": 1.0130802241321795
+        },
+        {
+          "frame": 30,
+          "maximum": 1.0242069006084331,
+          "p95": 1.0022343249090269
+        },
+        {
+          "frame": 60,
+          "maximum": 1.0222236777776645,
+          "p95": 1.0020366404923076
+        },
+        {
+          "frame": 90,
+          "maximum": 1.0209555355232984,
+          "p95": 1.0020278082565182
+        },
+        {
+          "frame": 120,
+          "maximum": 1.020880841984873,
+          "p95": 1.0019914747708887
+        },
+        {
+          "frame": 150,
+          "maximum": 1.0210698192781988,
+          "p95": 1.001982315104036
+        },
+        {
+          "frame": 180,
+          "maximum": 1.0208735525678612,
+          "p95": 1.0019829645400944
+        },
+        {
+          "frame": 210,
+          "maximum": 1.0208245811224217,
+          "p95": 1.0019865259473086
+        },
+        {
+          "frame": 240,
+          "maximum": 1.0208637566600536,
+          "p95": 1.0019848678364394
+        }
+      ]
+    }
+  },
+  "native": {
+    "stop_during_preparation_passes": 112,
+    "paused_physical_frames": 0,
+    "paused_pose_exact": true,
+    "resume_to_full_run": true,
+    "final_positions_equal_packaged_run": true,
+    "reset_initial_pose_exact": true,
+    "focused_mesh_spacing_mm": [
+      22,
+      26
+    ],
+    "pointer_apply_saved_before_MCP_read": true,
+    "mesh_only_one_history_change": true,
+    "one_undo_entire_project_exact": true,
+    "cancel_focused_draft_exact": true,
+    "horizontal_vertical_material_label_moves_each_one_undo": true,
+    "material_move_camera_exact": true,
+    "original_source_canvas_opened": true,
+    "first_canvas_creation_explicit_history": true,
+    "camera_four_actual_mouse_directions_axes_and_return": true,
+    "angular_return_tolerance_radians": 1e-12,
+    "camera_target_distance_exact": true,
+    "camera_geometry_builds": [
+      11,
+      11
+    ],
+    "perspective_whole_project_selection_independent": true,
+    "actual_process_restart_home_reopen_entire_project_exact": true,
+    "runtime_not_saved": true,
+    "print_open_surface_rejected_and_commands_disabled": true
+  },
+  "performance": {
+    "dedicated_preparation_wall_ms": 3494.192957878113,
+    "dedicated_worker_max_ms": 14.3510103225708,
+    "dedicated_main_publication_max_ms": 2.115011215209961,
+    "dedicated_stop_call_ms": 0.9160041809082031,
+    "stale_worker_rejected": true,
+    "full_release_native_step_median_ms": 16.054987907409668,
+    "full_release_native_step_p95_ms": 16.989946365356445,
+    "full_release_bridge_step_with_metadata_ms": 25.31599998474121,
+    "idle_solver_evaluations": 0,
+    "idle_mesh_texture_builds": 0,
+    "scope": "Specific fixture and machine load; not a general frame-rate guarantee."
+  },
+  "limitations": [
+    "No self-collision or cloth-on-cloth contact; calculated folds can intersect.",
+    "Uncalibrated material and bending proxy, no predictive fit or verified sewing instructions.",
+    "Separate-panel joining is explicit bounded numerical preparation, not physical elapsed time.",
+    "Initial source remains editable; derived mesh and motion are not saved."
+  ]
+}

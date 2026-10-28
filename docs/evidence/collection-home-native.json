@@ -1,0 +1,209 @@
+{
+  "validated_at_utc": "2026-10-26T04:21:00.088521+00:00",
+  "milestones": [
+    45,
+    46
+  ],
+  "accepted_base": "e2a35b1f3849931f0056fcd403f1f4ca6d68a780",
+  "build": {
+    "FORM": "757ad2d02788b7374122caf4240c48b621cfb53a6b817679afe8b987d1c7fa8c",
+    "form-mcp": "426616d3f1c55675c2b3bbc99a21b0949c61984b423201fd04916cae7602bafd",
+    "tests": {
+      "core_graphics_ipc": 579,
+      "native": 302,
+      "total": 881,
+      "failures": 0,
+      "skips": 0
+    },
+    "source_code_sha_verified": true
+  },
+  "tools": 59,
+  "maximum_project_reader_schema": 45,
+  "hardware_contacted": false,
+  "external_model_calls": false,
+  "inventory_deducted": false,
+  "native": {
+    "project_id": "C97BBCA6-EBDA-426C-A98A-BD2F7ED3CD84",
+    "plan_id": "1B6F23B1-00F8-49FF-BCF9-2B32587F2256",
+    "capture_id": "1B772FB6-A84E-4B05-AB14-61A0013C42F4",
+    "run_quantities": [
+      12,
+      8,
+      6,
+      4
+    ],
+    "physical_occurrences": 110,
+    "attached_occurrences": 80,
+    "source_artwork_counted_as_products": false,
+    "focused_quantity_save": {
+      "value": 7,
+      "occurrences": 85,
+      "history_steps": 1,
+      "source_camera_geometry_exact": true
+    },
+    "quantity_undo_redo_entire_project_and_clean_display_exact": true,
+    "invalid_quantity": "1.5",
+    "invalid_price": "2.5x",
+    "invalid_saves_preserve_entire_project": true,
+    "cancel_does_not_publish": true,
+    "focused_component_price": {
+      "unit_price": "2.125",
+      "currency": "USD",
+      "known_subtotal": "25.5",
+      "history_steps": 1,
+      "undo_entire_project_and_clean_display_exact": true
+    },
+    "focused_supply": {
+      "unit_price": "0.123456789012",
+      "currency": "USD",
+      "available": "20",
+      "project_history_unchanged": true,
+      "invalid_edit_preserves_entire_stock": true
+    },
+    "capture": {
+      "history_steps": 1,
+      "undo_returns_to_editable_plan": true,
+      "undo_redo_entire_project_exact": true,
+      "source_camera_geometry_exact": true
+    },
+    "review": {
+      "pages": 6,
+      "zoom_percent": 400,
+      "actual_mouse_pan_directions": [
+        "right",
+        "left",
+        "down",
+        "up"
+      ],
+      "horizontal_scroll_values_after_right_and_reverse": [
+        0.2468513853904282,
+        0.4987405541561713
+      ],
+      "vertical_scroll_values_before_down_after_down_after_reverse": [
+        0.5003599712023038,
+        0.3923686105111591,
+        0.5003599712023038
+      ],
+      "entire_project_unchanged": true
+    },
+    "export": {
+      "job_id": "1B772FB6-A84E-4B05-AB14-61A0013C42F4",
+      "files": 9,
+      "native_zip_byte_identical": true,
+      "entire_project_exact": true,
+      "zip_sha256": "0119849171cd72887838c6a036b74264828250376af1d620f03ae1bb6e9642a9"
+    },
+    "comparison_states": [
+      {
+        "change": "plan name only",
+        "current_source": "matches",
+        "current_plan": "changed"
+      },
+      {
+        "change": "actual bomber width +1mm",
+        "current_source": "changed",
+        "current_plan": "changed"
+      },
+      {
+        "change": "Undo physical source only",
+        "current_source": "matches",
+        "current_plan": "changed"
+      },
+      {
+        "change": "Undo plan name",
+        "current_source": "matches",
+        "current_plan": "matches"
+      }
+    ],
+    "two_comparison_undos_restore_entire_project": true,
+    "actual_process_restart": {
+      "entire_project_exact": true,
+      "entire_studio_stock_exact": true,
+      "archive_comparisons_match": true,
+      "all_native_zip_bytes_exact": true
+    }
+  },
+  "camera": {
+    "actual_mouse": {
+      "right": {
+        "azimuth": -0.010609450675850618,
+        "elevation": 1,
+        "world_up_orientation_error": 0.0,
+        "geometry_builds": 30,
+        "all_non_camera_source_and_history_exact": true
+      },
+      "left": {
+        "azimuth": 0.12,
+        "elevation": 0.9999999999999998,
+        "world_up_orientation_error": 0.0,
+        "geometry_builds": 30,
+        "all_non_camera_source_and_history_exact": true
+      },
+      "down": {
+        "azimuth": 0.12,
+        "elevation": 1.1306094506758504,
+        "world_up_orientation_error": 0.0,
+        "geometry_builds": 30,
+        "all_non_camera_source_and_history_exact": true
+      },
+      "up": {
+        "azimuth": 0.12000000000000001,
+        "elevation": 1.0000000000000002,
+        "world_up_orientation_error": 2.220446049250313e-16,
+        "geometry_builds": 30,
+        "all_non_camera_source_and_history_exact": true
+      }
+    },
+    "reversal_tolerance_radians": 1e-12,
+    "whole_project_perspective_identical_with_or_without_selection": true,
+    "whole_project_objects": 15,
+    "bindings_unchanged": true,
+    "shift_pan_evidence": "Existing direct AppKit event tests; CUA drag cannot hold Shift."
+  },
+  "home": {
+    "eligible_source_physical_stroke_mm": 0.25,
+    "display_floor_cached_pixels": 1,
+    "source_cached_preview_and_camera_unchanged": true,
+    "native_home_pattern_publication_and_3d_cards_reviewed": true,
+    "native_canvas_inspector_stroke_verified": true,
+    "unsupported_sources_keep_original_cache": true,
+    "all_copied_fixture_files_exact": 57,
+    "restart_pattern_thumbnail_present": true
+  },
+  "independent": {
+    "packaged_packet_files": 9,
+    "packaged_occurrences": 110,
+    "packaged_attached_details": 80,
+    "packaged_geometry_builds": [
+      15,
+      15
+    ],
+    "source_deleted_saved_reopen_export_bytes_exact": true,
+    "native_packet": {
+      "files_verified": 9,
+      "bytes_verified": 183828,
+      "review_pages": 6,
+      "rounding_lines": 0,
+      "currency_subtotals": {},
+      "physical_occurrences": 110,
+      "independent_dst": [],
+      "physical_patterns": [],
+      "derived_reference_pages": 0
+    },
+    "pdf_heading_pagination_reviewed": true,
+    "pdf_scope": "Technical source/quantity/provenance review; schematic envelope is not a cutting pattern or verified physical blank."
+  },
+  "ordinary_library": {
+    "ordinary_projects": 5,
+    "entire_projects_exact": true,
+    "studio_and_font_preferences_exact": true,
+    "settings_files": [
+      "Studio.json"
+    ],
+    "copied_home_fixtures_every_file_exact": true,
+    "copied_fixture_file_count": 57
+  },
+  "restored_home_projects": 5,
+  "goal_status": "active",
+  "full_goal_complete": false
+}

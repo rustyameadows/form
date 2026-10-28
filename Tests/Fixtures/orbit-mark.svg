@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120mm" height="80mm" viewBox="0 0 600 400">
+<title>ORBIT — objects in good company</title>
+<desc>An original editable SVG study of curves, typography, clipped imagery, and physical scale.</desc>
+<style>.ink{fill:#263C64}.detail{fill:none;stroke:#263C64;stroke-width:1.5}.caption{font-family:Arial;font-size:12;letter-spacing:1.8;fill:#263C64}</style>
+<defs>
+  <linearGradient id="horizon" x1="0" y1="0" x2="1" y2="1" gradientTransform="rotate(-12 .5 .5)"><stop offset="0" stop-color="#E5D7A8"/><stop offset=".55" stop-color="#D29A6F"/><stop offset="1" stop-color="#C76748"/></linearGradient>
+  <radialGradient id="planet"><stop offset="0" stop-color="#D78359"/><stop offset="1" stop-color="#B95B3F"/></radialGradient>
+  <clipPath id="texture-window"><circle cx="512" cy="61" r="24"/></clipPath>
+  <g id="tick"><path d="M0 -5V5" class="detail"/></g>
+</defs>
+<g id="illustration" transform="translate(38 30)">
+  <path id="horizon-shape" d="M52 156 Q143 62 244 116 T458 144 L458 193 H52Z" fill="url(#horizon)"/>
+  <path id="orbit-back" d="M104 105 C156 42 371 35 421 99" class="detail" stroke-dasharray="5 5" stroke-dashoffset="2"/>
+  <circle id="planet-disc" cx="262" cy="99" r="63" fill="url(#planet)"/>
+  <path id="orbit-front" d="M104 105 C128 190 395 180 421 99" class="detail"/>
+  <path id="latitude" d="M205 76 Q263 106 321 76" fill="none" stroke="#F2E7CD" stroke-width="1.5" stroke-opacity=".65"/>
+  <path id="meridian" d="M263 36 C214 62 214 135 263 162 C310 135 310 62 263 36Z" fill="none" stroke="#F2E7CD" stroke-width="1.5" stroke-opacity=".65"/>
+  <path id="trajectory" d="M76 185 A128 62 -10 0 1 443 185" fill="none" stroke="#263C64" stroke-width="1.2"/>
+  <circle cx="113" cy="123" r="4" class="ink"/><circle cx="404" cy="132" r="4" class="ink"/>
+</g>
+<g id="registration" transform="translate(68 38)"><use href="#tick"/><use href="#tick" x="10"/><use href="#tick" x="20"/></g>
+<image id="material-sample" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAANklEQVR4nGO4dOns/+vXL/2/c+f6/4cP7/wnlc9AiWYQn4ESzSA+AyWaQXyG0TAYDYPRMADzAW23hq6vqMRQAAAAAElFTkSuQmCC" x="484" y="33" width="56" height="56" clip-path="url(#texture-window)"/>
+<circle cx="512" cy="61" r="24" class="detail"/>
+<text id="edition" x="40" y="260" class="caption">FORM / EDITION 001</text>
+<text id="wordmark" x="36" y="325" font-family="Arial" font-weight="bold" font-size="70" letter-spacing="7" class="ink">ORBIT</text>
+<path d="M42 345H558" class="detail" stroke-opacity=".35"/>
+<text id="descriptor" x="42" y="373" class="caption">OBJECTS IN GOOD COMPANY.</text>
+<text x="558" y="373" font-family="Arial" font-size="12" text-anchor="end" class="ink">01 — 26</text>
+</svg>

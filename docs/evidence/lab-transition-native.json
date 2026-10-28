@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-26",
+  "application": "LAB",
+  "version": "0.2.0",
+  "source_commit": "fce57a03121c4f2b778362d5b7f432c66eedef6f",
+  "tests": {
+    "configuration": "release",
+    "core_graphics_ipc": 646,
+    "native": 357,
+    "total": 1003,
+    "failures": 0,
+    "skips": 0
+  },
+  "package": {
+    "path": "build/LAB.app",
+    "strict_signature_verified": true,
+    "tested_release_products_vs_installed_macho_section_hashes": {
+      "app": {
+        "mapped_code_data_sections": 38,
+        "all_match": true
+      },
+      "helper": {
+        "mapped_code_data_sections": 32,
+        "all_match": true
+      }
+    },
+    "signature_and_linkedit_metadata_excluded_from_code_comparison": true,
+    "tracked_code_resource_files": 312,
+    "source_manifest_sha256": "4a2de2fdfe67919ffbe07ae89df3c88bfa7bab48ec2c2c8996d608f7198a89e9"
+  },
+  "navigation": {
+    "primary": [
+      "form",
+      "function",
+      "fabricate"
+    ],
+    "studio": "secondary aperture icon and Studio menu",
+    "views": [
+      "canvas",
+      "table",
+      "split",
+      "detached canvas"
+    ],
+    "native_detached_studio_return_preserves_finite_source": true,
+    "native_parameter_partial_input_does_not_mutate": true,
+    "native_parameter_environment_handoff_and_command_z": true,
+    "split_footer_camera_and_canvas_controls_fully_visible": true
+  },
+  "compatibility": {
+    "bundle_identifier": "studio.form.mac",
+    "document_identifier": "studio.form.project",
+    "extension": "form",
+    "ordinary_library": "Application Support/FORM",
+    "legacy_app_helper_and_default_socket_verified": true,
+    "mcp_server_name": "lab",
+    "established_form_tools": 59,
+    "lab_environment_variables_override_legacy": true,
+    "keychain_credentials_accessed": false
+  },
+  "native": {
+    "isolated_packaged_mcp_source_selection_camera_and_undo_pass": true,
+    "dedicated_print_bed_and_filament_ui_verified": true,
+    "studio_icon_and_menu_both_used": true,
+    "lab_library_4_filaments_1_printer_profile_preserved": true,
+    "original_reference_visible_on_canvas": true,
+    "horizontal_mouse_drag_yaw_changed_elevation_difference": 1.3877787807814457e-17,
+    "actual_quit_relaunch_and_saved_reopen": true
+  },
+  "preservation": {
+    "restart_source_and_camera_pose_exact": true,
+    "project_count": 6,
+    "projects": {
+      "82B2BA97-A3C6-4B91-8AE0-9B1C4C40CC21.form": {
+        "source_exact_except_viewport_camera": true,
+        "changed_project_keys": []
+      },
+      "E9E8BA17-733C-45EE-A45C-1A264459869F.form": {
+        "source_exact_except_viewport_camera": true,
+        "changed_project_keys": []
+      },
+      "835B4F58-92CA-4B35-950A-25A8E2309A5F.form": {
+        "source_exact_except_viewport_camera": true,
+        "changed_project_keys": []
+      },
+      "C0005BAF-7595-47DC-B48E-557488699063.form": {
+        "source_exact_except_viewport_camera": true,
+        "changed_project_keys": [
+          "camera"
+        ]
+      },
+      "BEB4D0EF-1ABA-47D5-84AF-4C8384F66EA3.form": {
+        "source_exact_except_viewport_camera": true,
+        "changed_project_keys": []
+      },
+      "B1B91AAC-81AC-4DF6-A259-8036831C65EC.form": {
+        "source_exact_except_viewport_camera": true,
+        "changed_project_keys": []
+      }
+    },
+    "shared_settings_exact": true,
+    "original_file_count": 183,
+    "changed_derived_or_viewport_files": [
+      "C0005BAF-7595-47DC-B48E-557488699063.form/Preview.png",
+      "C0005BAF-7595-47DC-B48E-557488699063.form/Manifest.json"
+    ],
+    "assets_and_object_files_exact": true,
+    "only_changed_meridian_camera_key": "viewportAspect"
+  },
+  "boundaries": {
+    "external_model_calls": false,
+    "printer_commands_or_print_start": false,
+    "complete_product_roadmap": false,
+    "new_engineering_simulator_or_cnc_driver": false
+  },
+  "private_evidence": ".local/lab-transition (not published; contains the user reference and local project data)"
+}

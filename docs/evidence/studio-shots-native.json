@@ -1,0 +1,246 @@
+{
+  "date": "2026-10-25",
+  "feature": "saved Studio compositions and PNG render records",
+  "reader_schema": 43,
+  "tools": 59,
+  "tests": {
+    "total": 835,
+    "core_graphics_ipc": 564,
+    "native": 271,
+    "configuration": "release",
+    "failures": 0,
+    "skips": 0,
+    "new_studio_tests": 19,
+    "additional_parent_native_tests": 4
+  },
+  "bundle_sha256": "00b98aef782c3ee14d0b9af15c4aca78b29cd272e614ac6e982d20ef944beb08",
+  "mcp_sha256": "9575bc5317ce2636ebd21ce7a99d84f0b0b2cc8f59e9d31fe86beb5eeffa429c",
+  "packaged": {
+    "project_id": "E0282190-CFBC-47BF-B3B1-C8E6EDC490D7",
+    "shot_id": "8088CA6D-F404-4C8D-B9FB-C8BEE0FB7CEE",
+    "png": ".local/validation/studio-shots-smoke/1aaee2a7-fee8-4f10-b763-e54c960eca01.render/1aaee2a7-fee8-4f10-b763-e54c960eca01.png",
+    "record": ".local/validation/studio-shots-smoke/1aaee2a7-fee8-4f10-b763-e54c960eca01.render/render.json",
+    "decoded_pixels": [
+      800,
+      1200
+    ],
+    "legacy_pixels": [
+      3000,
+      2000
+    ],
+    "png_sha256": "2dce268aed425b13fd8286b098c2e024ca33f29613033de4906e2602ae041aa6",
+    "hardware_operations": 0,
+    "ordinary_library_writes": 0
+  },
+  "packaged_independent": [
+    {
+      "folder": "1aaee2a7-fee8-4f10-b763-e54c960eca01.render",
+      "pixels": [
+        800,
+        1200
+      ],
+      "sha256_verified": true,
+      "png_chunk_crc_verified": true,
+      "lighting": "soft-side-v1",
+      "subjects": 13,
+      "resource_hashes": 2,
+      "source_archived": false,
+      "pixel_cap_is_memory_cap": false
+    }
+  ],
+  "native_project_id": "E0282190-CFBC-47BF-B3B1-C8E6EDC490D7",
+  "native_shot_id": "4864D0EB-686A-40B5-9650-045808A4C259",
+  "native": {
+    "focused_capture_pixels": [
+      813,
+      555
+    ],
+    "capture_selects_new_definition_without_recalling_or_refitting": true,
+    "immediate_focused_update_pixels": [
+      909,
+      555
+    ],
+    "update_changes_only_new_shot": true,
+    "original_shot_source_and_camera_exact": true,
+    "update_undo_restores_entire_project_and_displayed_813": true,
+    "capture_undo_preserves_independent_reference_frame_and_entire_project": true,
+    "redo_original_id_exact": true,
+    "read_only_list_get_preserves_active_draft_and_selected_text": true,
+    "selected_text_verification": "815 with15 selected, read-only list/get, type16 yields816",
+    "native_export_draft_pixels": [
+      816,
+      555
+    ],
+    "export_saved_definition_stays_813_and_entire_project_exact": true,
+    "fractional_3_5_visible_rejection_project_exact": true,
+    "rename_changes_name_only_and_preserves_invalid_width_draft": true,
+    "rename_undo_restores_saved_name_and_project_but_keeps_raw_3_5": true,
+    "delete_metadata_only_with_same_world_camera_pose": true,
+    "delete_active_frame_note": "Removing the active reference frame updates viewportAspect1.5\u21921.8957871396895787; direction/pivot/distance remain exact. Undo restores the record without automatic recall. Explicit recall restores the complete original project.",
+    "delete_undo_and_explicit_recall_entire_project_exact": true,
+    "perspective_exits_reference_frame_and_frames_all17_objects": true,
+    "perspective_selected_or_unselected_entire_project_exact": true,
+    "actual_quit_relaunch_native_home_reopen_entire_project_exact": true,
+    "persisted_shot_native_recall_entire_original_project_exact": true,
+    "actual_installed_controls_and_render_visually_reviewed": true,
+    "native_mutation_disk_snapshots_before_mcp_reads": true
+  },
+  "native_independent": [
+    {
+      "folder": "studio43-native-final.render",
+      "pixels": [
+        816,
+        555
+      ],
+      "sha256_verified": true,
+      "png_chunk_crc_verified": true,
+      "lighting": "soft-side-v1",
+      "subjects": 13,
+      "resource_hashes": 2,
+      "source_archived": false,
+      "pixel_cap_is_memory_cap": false
+    }
+  ],
+  "camera": {
+    "directions": {
+      "captured": {
+        "azimuth": 0.25,
+        "distance": 28,
+        "elevation": 0.95,
+        "projection": "perspective",
+        "target": {
+          "x": -1,
+          "y": 0.2,
+          "z": 1.8
+        },
+        "viewportAspect": 1.5
+      },
+      "camera-right": {
+        "azimuth": -0.1365148441916576,
+        "distance": 28,
+        "elevation": 0.95,
+        "orientation": {
+          "w": 0.887221884784032,
+          "x": -0.4562734735416553,
+          "y": -0.060653704686620014,
+          "z": -0.0311925088809892
+        },
+        "projection": "perspective",
+        "target": {
+          "x": -1,
+          "y": 0.2,
+          "z": 1.8
+        },
+        "viewportAspect": 1.5
+      },
+      "camera-down": {
+        "azimuth": -0.1365148441916576,
+        "distance": 28,
+        "elevation": 1.2592118753533261,
+        "orientation": {
+          "w": 0.8063774649124946,
+          "x": -0.5874551383542375,
+          "y": -0.05512688704094961,
+          "z": -0.040160563089636614
+        },
+        "projection": "perspective",
+        "target": {
+          "x": -1,
+          "y": 0.2,
+          "z": 1.8
+        },
+        "viewportAspect": 1.5
+      },
+      "camera-up": {
+        "azimuth": -0.13651484419165755,
+        "distance": 28,
+        "elevation": 0.95,
+        "orientation": {
+          "w": 0.887221884784032,
+          "x": -0.4562734735416553,
+          "y": -0.060653704686619986,
+          "z": -0.031192508880989185
+        },
+        "projection": "perspective",
+        "target": {
+          "x": -1,
+          "y": 0.2,
+          "z": 1.8
+        },
+        "viewportAspect": 1.5
+      },
+      "camera-left": {
+        "azimuth": 0.2500000000000001,
+        "distance": 28,
+        "elevation": 0.95,
+        "orientation": {
+          "w": 0.8823541638785287,
+          "x": -0.4537701404252434,
+          "y": 0.11087233296979208,
+          "z": 0.05701854896885035
+        },
+        "projection": "perspective",
+        "target": {
+          "x": -1,
+          "y": 0.2,
+          "z": 1.8
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    "angle_tolerance": 1e-12,
+    "source_metadata_history_exact": true,
+    "target_distance_exact": true,
+    "renderer_counts": {
+      "geometry_builds": [
+        17,
+        17
+      ],
+      "embroidery_program_builds": [
+        0,
+        0
+      ],
+      "embroidery_texture_builds": [
+        0,
+        0
+      ]
+    },
+    "mode": "studio",
+    "preset": "Soft side",
+    "reference_frame_retained": true
+  },
+  "ordinary_preservation": {
+    "ordinary_projects_exact": 5,
+    "studio_and_font_preferences_exact": true,
+    "settings": {
+      "Studio.json": {
+        "exists": true,
+        "sha256": "ae30ed51d678c467a029b117053885e4c5917d08eedd1dcd4a2a8c7477866446"
+      },
+      "FontPreferences.json": {
+        "exists": false,
+        "sha256": null
+      }
+    },
+    "ordinary_home_visible_projects": 5
+  },
+  "cost": {
+    "merchandise_max_render_ms": 78.52399349212646,
+    "merchandise_render_calls": 6,
+    "single_product_max_render_ms": 24.063944816589355,
+    "whole_native_test_process_peak_rss_bytes": 1246904320,
+    "rss_is_incremental_render_memory": false,
+    "pixel_cap_is_total_memory_cap": false,
+    "preview_cache_limit_bytes": 33554432,
+    "preview_cache_entry_limit": 8,
+    "preview_pixel_limit": 2000000
+  },
+  "equipment_operations": 0,
+  "external_model_calls": 0,
+  "limits": [
+    "Presentation renderer, without photorealistic or calibrated material/fit claims.",
+    "Saved shots render current committed source; hashes identify inputs but do not archive editable source or runtime cloth poses.",
+    "Affected unpersisted cloth motion/preparation rejects rather than advancing or resetting simulation.",
+    "New .render destinations are exclusive; existing folders are never overwritten."
+  ]
+}
