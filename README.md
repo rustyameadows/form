@@ -10,7 +10,7 @@ A native Mac creative environment for designing and making physical things.
 
 Explore typography, notes, references, and graphics on a freeform 2D Canvas, connected to a continuous 3D Table for physical objects and materials. Use either surface alone, side by side, or with Canvas in a separate window. Start with the thing you want to make, then work directly with its dimensions, construction, and appearance.
 
-**Version 0.3 foundation:** RealityKit views, exact OCCT feature models, source-preserving GLB/glTF/STL and STEP import, native modeling reviews, linked artwork, production exports, local Orca slicing and a local MCP interface. **Codex handles the creative conversation; LAB makes no external AI model calls.** See the [CAD guide and verified limits](docs/cad-foundation.md).
+**Version 0.4:** Constructed paper goods with linked Panels/Dieline/assembled views, independent top opening, stock and sheet preparation, and task-specific Form/Function/Fabricate controls for paper and existing fabric constructions. RealityKit, exact OCCT models, interchange, Studio and local Orca slicing remain available. See the [paper workflow and verified limits](docs/constructed-paper-goods.md). **Codex handles the creative conversation; LAB makes no external AI model calls.** See the [CAD guide and verified limits](docs/cad-foundation.md).
 
 The next governing document is the [2D Design, Typography & Vector Editing specification](docs/2d-design-typography-vector-spec.md). Its professional editing requirements expand the [implementation roadmap](docs/implementation-goal.md); the checklist distinguishes shipped foundations from remaining work.
 
@@ -30,6 +30,7 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 
 ## In the studio
 
+- **Constructed paper goods:** Sun studies opens a flat-back, top-opening glued envelope; STILL opens a straight-tuck cosmetics carton. Stable panels/folds/glue joins connect editable outside/inside artwork to actual-caliper previews and local SVG/PDF production packets. Paper Print opens sheet preparation. [Workflow](docs/constructed-paper-goods.md), [acceptance](docs/evidence/constructed-paper-native.json).
 - **Home:** Saved project previews, search, blank projects, and editable starting studies. Featured cards start AFFINITIES, Cloth studies, or the merchandise collection; All studies and File → New from Study expose the full set. [Technical Canvas previews](docs/home-technical-preview.md) improve thin sewing contours for display while preserving source dimensions and cached files.
 - **AFFINITIES:** A complete editable 8 × 10 composition with rich typography, a masked Bézier landscape, an independent outlined alternate, and linked oak/graphite editions. It opens the source in split view. See the [15-step design workflow](docs/design-acceptance.md).
 - **Sculpted desk clock:** A reference-led hollow curved case, separate physical components and editable dial, with native dimensions and component STL preparation. See [MERIDIAN and the remaining fit decisions](docs/desk-clock-study.md).
@@ -133,6 +134,7 @@ The Table starts in Orbit mode. Horizontal rotation is unlimited around a fixed 
 
 ```sh
 bash scripts/test.sh
+LAB_APP_PATH="$PWD/build/LAB.app" python3 scripts/smoke_paper_construction.py # Disposable native paper acceptance
 python3 scripts/smoke_mcp.py  # Requires the running app; creates a validation project
 python3 scripts/smoke_artwork.py # Typography/vector composition and physical exports
 python3 scripts/smoke_svg.py # Editable import, source preservation, fidelity review, physical exports

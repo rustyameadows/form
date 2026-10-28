@@ -51,7 +51,10 @@ import LabRendering
     // its complete composition, including any external-source preparation.
     // Waiting releases the UI actor; cancellation removes a queued preview.
     try await acquireCapture();defer{releaseCapture()}
-    for object in project.objects where ids.contains(object.id) {if let art=project.surfaceArtwork(object) {try ArtworkRenderer.validateGlyphOutput(art,assets:assets)}}
+    for object in project.objects where ids.contains(object.id) {
+      let artworks=PaperConstruction.isPaper(object) ? [project.paperArtwork(for:object,inside:false),project.paperArtwork(for:object,inside:true)].compactMap{$0}:[project.surfaceArtwork(object)].compactMap{$0}
+      for art in artworks {try ArtworkRenderer.validateGlyphOutput(art,assets:assets)}
+    }
     let started=Date();defer{maximumMilliseconds=max(maximumMilliseconds,Date().timeIntervalSince(started)*1000);maximumProcessRSSBytes=max(maximumProcessRSSBytes,Self.rss())}
     if owner != project.id {clear();owner=project.id;controller=TableSceneController()}
     let c=controller!;c.externalCapturePreparationCheckpoint=externalPreparationCheckpoint

@@ -6,6 +6,7 @@ import UniformTypeIdentifiers
 
 extension StudioStore {
   func graphicsCall(_ name: String, _ args: [String: Any]) throws -> Any {
+    if name == "form_paper" { return try paperOutputCall(args) }
     if name == "form_model_asset" {return try modelAssets.call(args)}
     if name == "form_cad" {return try cad.call(name,args)}
     if ArtworkTransferCommands.recognizes(name,args) {return try artworkTransferCall(args)}

@@ -20,7 +20,8 @@ extension Samples {
       summary: "One editable dial. Two physical clocks.", symbol: "clock"),
     .init(
       id: "cyanotype", name: "Sun studies", title: "Fold & print",
-      summary: "Artwork, paper, and an unfolding package.", symbol: "shippingbox"),
+      summary: "A registered paper envelope, original cyanotype graphics and twenty 8 × 10 sheets.", symbol: "shippingbox"),
+    .init(id:"cosmetics",name:"STILL / Daily ritual",title:"Construct a carton",summary:"A straight tuck carton, restrained graphics and a registered inside message.",symbol:"shippingbox"),
     .init(
       id: "lamps", name: "Soft light", title: "Light & proportion",
       summary: "Explore a family of parametric lamps.", symbol: "lamp.desk"),
@@ -42,6 +43,7 @@ extension Samples {
     case "clothLab":return try clothLab()
     case "pouchAssembly":return try PatternAssemblySamples.project()
     case "cyanotype": return cyanotype()
+    case "cosmetics":return try PaperSamples.cosmetics()
     case "lamps": return lamps()
     case "forms": return studies()
     default: throw FormError.invalid("Unknown study template.")

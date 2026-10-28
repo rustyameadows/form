@@ -128,7 +128,7 @@ struct SewingPatternActions: View {
   }
 }
 
-private struct SewingSeamEditor: View {
+struct SewingSeamEditor: View {
   @EnvironmentObject var store: StudioStore
   @Environment(\.dismiss) var dismiss
   @ObservedObject var session: ArtworkSession

@@ -12,7 +12,8 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     object.textile?.embroidery != nil ? artwork.embroideryRenderDefinition:artwork.renderDefinition
   }
   static func geometryParameters(_ object: ProductObject) -> [String: Double] {
-    ["clock","deskClock"].contains(object.recipeID)
+    if PaperConstruction.isPaper(object) {return object.parameters.filter{!["fold","foldPercent","opening","openingPercent"].contains($0.key)}}
+    return ["clock","deskClock"].contains(object.recipeID)
       ? object.parameters.filter { !["hour", "minute", "hands"].contains($0.key) }
       : object.parameters
   }
@@ -116,9 +117,11 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     canonical.artwork = canonical.artwork.map {artworkDefinition($0,object:object)}
     let artworkData = canonical.artwork.flatMap { try? $0.renderCacheData() }
     canonical.artwork = nil
+    canonical.paperConstruction=canonical.paperConstruction.map(PaperGeometry.geometryDefinition)
     canonical.parameters = geometryParameters(object)
     var signature = (try? JSONEncoder.form.encode(canonical)) ?? Data()
     if let artworkData { signature.append(artworkData) }
+    if let revision=PaperGeometry.sourceRevision(object,project:project){signature.append(Data(revision.utf8))}
     signature.append((try? JSONEncoder.form.encode(project.material(object.materialID).withoutFabricPattern)) ?? Data())
     if let pattern = try? project.resolvedFabricPattern(materialID: object.materialID) {
       signature.append((try? JSONEncoder.form.encode(pattern.renderDefinition)) ?? Data())
@@ -137,11 +140,15 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
       let node = cached.clone()
       if object.recipeID == "clock" { updateClockHands(node, object: object) }
       if object.recipeID == "deskClock" {DeskClockGeometry.updateHands(node,object:object)}
+      if PaperConstruction.isPaper(object){try? PaperGeometry.updatePose(node,object:object)}
       return node
     }
     let root = MeshNode()
     let mat = material(object, project: project)
     switch object.recipeID {
+    case "paperEnvelope","tuckCarton":
+      do{root.addChildNode(try PaperGeometry.make(object,project:project,assets:assets,limit:textureLimit))}
+      catch{root.name="paper.invalid: "+error.localizedDescription}
     case "crewTee":root.addChildNode(MerchandiseGeometry.tee(object,project:project,assets:assets,limit:textureLimit))
     case "pulloverHoodie", "cuffedBeanie", "hemmedTextile":
       root.addChildNode(StarterTextileGeometry.make(object, project:project, assets:assets, limit:textureLimit))
@@ -387,7 +394,7 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
         }
       }
     }
-    if let artwork = object.artwork, !["sleeve", "booklet", "clock", "deskClock", "bomberJacket", "textilePatch", "textileLabel", "crewTee", "curvedCap", "canvasTote", "textilePrint"].contains(object.recipeID),
+    if let artwork = object.artwork, !PaperConstruction.isPaper(object), !["sleeve", "booklet", "clock", "deskClock", "bomberJacket", "textilePatch", "textileLabel", "crewTee", "curvedCap", "canvasTote", "textilePrint"].contains(object.recipeID),
       object["width"] > 0, object["depth"] > 0
     {
       let top = Double(root.boundingBox.max.y) * 100 + 0.04

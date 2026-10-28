@@ -1,4 +1,4 @@
-# LAB 0.3 architecture
+# LAB 0.4 architecture
 
 This build follows the product brief and the October 24 interface sketches: one continuous Table, a compact native title bar, contextual floating inspectors, camera/focus/isolation controls, and a home screen of actual saved scene previews.
 
@@ -29,11 +29,13 @@ New CAD/imported geometry, neutral meshes and camera payloads use Double millime
 
 Local camera navigation preferences live in UserDefaults, outside the project and its undo history. `CameraPreferences` defines orbit direction, bounded speed, and wheel reversal. Table and Studio controllers read the store directly; artwork and print preview cameras read the same live preferences through a closure without owning or changing the document camera. Mouse navigation updates camera transforms without rebuilding object geometry.
 
+CPU mesh instances carry lifetime-stable UUID resource identities; GPU cache keys never depend on reusable object addresses. Paper geometry has a separate content-addressed template cache bounded to 512 entries / 32 MiB, keyed by polygon, caliper, registered UV bounds and material channels. Appearance wrappers remain independent. Moving text or changing paper ink/tint reuses physical buffers without changing panel poses.
+
 The renderer updates an object only when its geometry, material, or artwork fingerprint changes. Moving an object updates its transform. Shared node templates reuse immutable geometry and texture data; caches have bounded costs. The view targets 60 Hz while interacting and does not render continuously while idle. Paper stacks cap the number of represented sheet edges independently of the real sheet count.
 
 ## Parametric objects
 
-Built-in constructions include clocks, paper stacks, booklets, scored folding sleeves, lamps, hollow revolved vessels, boxes, cylinders, extruded polygon profiles, material swatches, artwork sheets, and image references.
+Built-in constructions include clocks, paper stacks, booklets, scored folding sleeves, glued envelopes, straight-tuck cartons, lamps, hollow revolved vessels, boxes, cylinders, extruded polygon profiles, material swatches, artwork sheets, and image references.
 
 Custom project recipes consist of parameter schemas and primitive parts. Part dimensions, placement, and rotation use a bounded arithmetic grammar with parameter variables, parentheses, and `+ - * /`. No expression executes Swift, JavaScript, shell commands, or Foundation predicate code. The same schema generates the native inspector and validates MCP edits.
 
@@ -74,13 +76,17 @@ Image crop/adjustment fields require schema 9; schemas 1–8 still load. ImageIO
 
 `FORM_LIBRARY_PATH` selects a separate library for development or tests. `FORM_SOCKET_PATH` selects a separate local bridge. These settings require no change to a project document.
 
-Schema 51 adds portable starter-library choices and proposed blank snapshots. Schema 52 adds imported mesh references, exact feature models and validated exact/derived representations. Readers retain schemas 1–52. New representations use immutable flat resources under `Assets/`: source bytes, normalized mesh data, exact BRep and binary display meshes. Mesh/CAD handles and renderer entities are never serialized. Renderer migration alone does not upgrade an old project schema.
+Schema 51 adds portable starter-library choices and proposed blank snapshots. Schema 52 adds imported mesh references, exact feature models and validated exact/derived representations. Readers retain schemas 1–53. New representations use immutable flat resources under `Assets/`: source bytes, normalized mesh data, exact BRep and binary display meshes. Mesh/CAD handles and renderer entities are never serialized. Renderer migration alone does not upgrade an old project schema.
+
+Schema 53 adds optional paper constructions: stable panel/fold/edge/join IDs, caliper and stock, independent top opening, registered inside artwork sources and anchored annotations. One millimeter net supplies rigid folded geometry and physical cuts/creases; artwork coordinates survive dimension changes and receive an explicit review flag. Existing sleeves and old schemas load without conversion. Paper, CAD, imported meshes and cloth retain distinct source identities.
 
 ## Artwork and production
 
 Artwork is a validated hierarchy of text, vector shapes/paths, groups, masks, and imported images in millimeter coordinates. Affine transforms preserve nested group geometry. The AppKit canvas uses a magnifying scroll view, physical rulers/guides, direct handles, and native rich text. Core Text shapes in typographic points; rendering and outlines convert at the millimeter boundary. Shared font-metric decoration paths keep underlines and strikethroughs consistent between text and outlines. Cached text layouts exclude placement from their keys; image and geometry caches account for actual bitmap dimensions.
 
 Native character undo remains granular while editing. The domain engine groups the complete editing session into one step and removes cancelled/no-op interactions while preserving a prior redo branch. Project switches commit active text and numeric/name drafts before saving the old project. Agent mutations use the same boundary; inspection calls preserve editing focus.
+
+Paper Function and Fabricate present construction and physical sheet reviews independently of the selected representation. Existing fabric sources present original pieces/seams in Function and full-size/tiled pattern preparation in Fabricate. These views share the original document, selection and Undo. `form_paper` uses the same operations for inspection, edits, review and exclusive local packets. See [paper workflows](constructed-paper-goods.md).
 
 The sleeve recipe derives its assembled geometry and unfolded cut/score layout from the same width, height, spine, stock, tab, and fold parameters. PDF exports preserve physical page dimensions and include bleed/crop marks. SVG dielines preserve millimeter units and distinguish cut lines from scores. PNG renders are 3000 × 2000. Component summaries are JSON.
 

@@ -36,6 +36,7 @@ private struct RenderSignature: Equatable {
   let merchandiseMaterials:[FormCore.Material]?
   let assemblyRevision:String?
   let modelRevision:String?
+  let paperRevision:String?
 }
 
 @MainActor final class TableSceneController {
@@ -60,6 +61,8 @@ private struct RenderSignature: Equatable {
     embroideryIssues[object.id]=status.issue;embroideryDigests[object.id]=status.digest
   }
   private var fingerprints: [UUID: RenderSignature] = [:]
+  private struct PaperPoseState:Equatable {let fold:Double;let opening:Double}
+  private var paperPoseStates:[UUID:PaperPoseState]=[:]
   private var geometryBounds: [UUID: (min: MeshVector3, max: MeshVector3)] = [:]
   private var selectionNodes: [MeshNode] = []
   private var lastSelection = Set<UUID>()
@@ -256,6 +259,7 @@ private struct RenderSignature: Equatable {
       clothSurfaces=[:];clothIssues=[:]
       embroideryIssues=[:];embroideryDigests=[:]
       fingerprints = [:]
+      paperPoseStates=[:]
       geometryBounds = [:]
       selectionNodes = []
       lastSelection = []
@@ -270,6 +274,7 @@ private struct RenderSignature: Equatable {
       nodes.removeValue(forKey: id)?.removeFromParentNode()
       clothSurfaces.removeValue(forKey:id);clothIssues.removeValue(forKey:id)
       fingerprints.removeValue(forKey: id)
+      paperPoseStates.removeValue(forKey:id)
       embroideryIssues.removeValue(forKey:id);embroideryDigests.removeValue(forKey:id)
       geometryBounds.removeValue(forKey: id)
     }
@@ -283,7 +288,7 @@ private struct RenderSignature: Equatable {
         asset: object.asset,
         fontRevision: project.editableArtwork(object) == nil && project.material(object.materialID).fabric?.pattern == nil ? 0 : GeometryFactory.fontRevision,
         textureLimit: textureLimit, textile: object.textile?.renderDefinition,
-        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth, merchandiseSurface:project.conformedMerchandiseSignature(object),merchandiseMaterials:project.merchandiseMaterialDependencies(object),assemblyRevision:object.patternAssembly==nil ? nil:ClothSceneSurface.sourceIdentity(object:object,project:project).revision,modelRevision:object.meshAsset.map{$0.geometryRevision+"/"+$0.appearanceRevision} ?? object.cadRepresentation?.definitionSHA256)
+        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth, merchandiseSurface:project.conformedMerchandiseSignature(object),merchandiseMaterials:project.merchandiseMaterialDependencies(object),assemblyRevision:object.patternAssembly==nil ? nil:ClothSceneSurface.sourceIdentity(object:object,project:project).revision,modelRevision:object.meshAsset.map{$0.geometryRevision+"/"+$0.appearanceRevision} ?? object.cadRepresentation?.definitionSHA256,paperRevision:PaperGeometry.sourceRevision(object,project:project))
       if let node=nodes[object.id],let prior=fingerprints[object.id],prior != fingerprint,
         canUpdateEmbroiderySurface(prior,fingerprint,object:object) {
         EmbroiderySceneSurface.update(node,object:object,project:project,assets:assets,textureLimit:textureLimit)
@@ -322,6 +327,14 @@ private struct RenderSignature: Equatable {
       }
       if object.recipeID == "clock" { GeometryFactory.updateClockHands(node, object: object) }
       if object.recipeID == "deskClock" {DeskClockGeometry.updateHands(node,object:object)}
+      if PaperConstruction.isPaper(object),let paper=try? PaperConstruction.definition(for:object) {
+        let highlighted=(!studio && selection.contains(object.id) && store?.primary?.id==object.id) ? store?.paperSelectedPanelID:nil
+        try? PaperGeometry.updatePose(node,object:object,selectedPanelID:highlighted)
+        let pose=PaperPoseState(fold:paper.foldPercent,opening:paper.openingPercent)
+        if paperPoseStates[object.id] != pose {
+          geometryBounds[object.id]=node.boundingBox;geometryChanged=true;paperPoseStates[object.id]=pose
+        }
+      }
       let placement = project.textilePlacement(object)
       node.position = v(placement.position.x / 100, placement.position.y / 100, placement.position.z / 100)
       if let cloth=try? (store != nil ? store!.cloth.placement(of:object,in:project):project.clothPlacement(object)) {
@@ -570,6 +583,10 @@ private struct RenderSignature: Equatable {
   }
   func logicalNode(for id:UUID)->MeshNode? {nodes[id]}
   func localBounds(for id:UUID)->(min:MeshVector3,max:MeshVector3)? {geometryBounds[id] ?? nodes[id]?.boundingBox}
+  func paperPanelID(at point:NSPoint)->String? {
+    guard let hit=view?.sceneHits(point).first else{return nil}
+    return PaperGeometry.panelID(from:hit.node)
+  }
   func objectID(at point:NSPoint)->UUID? {
     guard let view else{return nil}
     return renderer?.pick(atTopLeft:.init(x:point.x,y:view.bounds.height-point.y),viewport:view.bounds.size)?.objectID
@@ -839,8 +856,12 @@ private struct RenderSignature: Equatable {
     guard pointerActive else { return }
     if !dragged, let controller, let store = controller.store {
       let point = convert(event.locationInWindow, from: nil)
+      let objectID=controller.objectID(at:point)
       if action != .move {
-        store.select(controller.objectID(at: point), extending: event.modifierFlags.contains(.shift))
+        store.select(objectID, extending:event.modifierFlags.contains(.shift))
+      }
+      if !event.modifierFlags.contains(.shift),let objectID,let panelID=controller.paperPanelID(at:point) {
+        store.selectPaperPanel(objectID:objectID,panelID:panelID)
       }
       if event.clickCount == 2 { controller.focusSelection() }
     }

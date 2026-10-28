@@ -8,26 +8,26 @@ import simd
 @MainActor final class GeometryPayloadAdapter {
   struct Hit {var node:MeshNode;var geometryIndex:Int;var worldCoordinates:MeshVector3;var objectID:UUID}
   private struct Cached {var revision:String;var payload:SceneMeshPayload}
-  private var meshes:[ObjectIdentifier:Cached]=[:]
+  private var meshes:[String:Cached]=[:]
   private(set) var nodes:[String:MeshNode]=[:]
   private(set) var warnings:[String]=[]
   private let guideID=UUID()
   private let fallbackMaterial=MeshMaterial()
   func clear(){meshes.removeAll();nodes.removeAll();warnings=[]}
   func renderables(scene:MeshScene)->[SceneRenderablePayload] {
-    nodes=[:];warnings=[];var output=[SceneRenderablePayload](),used=Set<ObjectIdentifier>()
+    nodes=[:];warnings=[];var output=[SceneRenderablePayload](),used=Set<String>()
     func walk(_ node:MeshNode,path:String,owner:UUID?,hidden:Bool,opacity:Double) {
       var owner=owner,path=path
       if let name=node.name,name.hasPrefix("object:"),let id=UUID(uuidString:String(name.dropFirst(7))) {owner=id;path="object:"+id.uuidString}
       let hidden=hidden || node.isHidden,opacity=opacity*node.opacity
       if let geometry=node.geometry {
-        geometry.prepare();let key=ObjectIdentifier(geometry);used.insert(key)
+        geometry.prepare();let identity=geometry.resourceID.uuidString,physicalID=Self.paperPhysicalID(geometry),key=physicalID ?? "identity:\(identity)";used.insert(key)
         let materials=geometry.materials.isEmpty ? [fallbackMaterial]:geometry.materials
         let uvRevision=materials.map{Self.meshUVRevision($0)}.joined(separator:";")
         let revision="\(geometry.resourceRevision):\(uvRevision)"
         let mesh:SceneMeshPayload
         if let cached=meshes[key],cached.revision==revision {mesh=cached.payload}
-        else {mesh=Self.mesh(geometry,id:"recipe:\(key)",revision:revision,materials:materials);meshes[key] = .init(revision:revision,payload:mesh)}
+        else {mesh=Self.mesh(geometry,id:physicalID ?? "recipe:\(identity)",revision:revision,materials:materials);meshes[key] = .init(revision:revision,payload:mesh)}
         if !mesh.positionsMM.isEmpty,!mesh.parts.isEmpty {
           let component="graph/"+path;nodes[component]=node
           let transform=Self.transform(node.worldTransform.raw)
@@ -52,6 +52,13 @@ import simd
     }
     walk(scene.rootNode,path:"root",owner:nil,hidden:false,opacity:1)
     meshes=meshes.filter{used.contains($0.key)};return output
+  }
+  /// Reserved for PaperGeometry's content-addressed immutable buffer templates.
+  /// Mutated buffers and all other recipe names retain ordinary identity caching.
+  private static func paperPhysicalID(_ geometry:MeshGeometry)->String? {
+    guard geometry.resourceRevision==0,let name=geometry.name,name.hasPrefix("paper.mesh:"),name.utf8.count==75,
+      name.utf8.dropFirst(11).allSatisfy({(48...57).contains($0) || (97...102).contains($0)}) else{return nil}
+    return name
   }
   private static func uvRevision(_ material:MeshMaterial)->String {
     [material.diffuse,material.normal,material.roughness,material.metalness,material.emission].map{"\($0.resourceID):\($0.resourceRevision):\($0.intensity):\($0.wrapS):\($0.wrapT)"}.joined(separator:",")

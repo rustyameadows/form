@@ -69,6 +69,7 @@ public struct Material: Codable, Equatable, Identifiable, Sendable {
     .init("clay", "Unglazed clay", "Ceramic", "#B57860", roughness: 0.92, thickness: 4),
     .init("linen", "Natural linen", "Fabric", "#D4CDBB", roughness: 1, thickness: 0.8),
     .init("petg", "Frosted PETG", "Plastic", "#C4D6D3", roughness: 0.48, thickness: 1.2),
+    .init("paper-superfine", "Uncoated white paper", "Paper", "#F7F5EF", roughness:0.94, metallic:0, thickness:0.35),
   ] + TextileDesign.materials
 }
 
@@ -217,6 +218,7 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var meshAsset: MeshAssetReference?
   public var cadModel: CADModelDefinition?
   public var cadRepresentation: CADRepresentation?
+  public var paperConstruction:PaperConstruction?
   public init(
     name: String, recipeID: String, parameters: [String: Double], materialID: String = "chalk",
     position: Vector3 = .init(), rotation: Double = 0, artwork: Artwork? = nil
@@ -234,6 +236,7 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   }
   public subscript(_ key: String) -> Double { parameters[key] ?? 0 }
   public var footprintWidth: Double {
+    if PaperConstruction.isPaper(self),let source=try? PaperConstruction.definition(for:self){return source.foldPercent==0 ? ((try? source.net().size.x) ?? source.dimensions.width):source.dimensions.width+2*source.stock.thicknessMM}
     if let meshAsset {return meshAsset.boundsMM.size.x * max(0.001,self["scalePercent"]/100)}
     if let cadRepresentation {return cadRepresentation.maximum.x-cadRepresentation.minimum.x}
     if recipeID=="pulloverHoodie" {return self["width"]+self["sleeveLength"]*2}
@@ -242,6 +245,7 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
     return max(self["width"], self["shadeDiameter"], self["baseDiameter"], self["diameter"], 100)
   }
   public var footprintDepth: Double {
+    if PaperConstruction.isPaper(self),let source=try? PaperConstruction.definition(for:self){return source.foldPercent==0 ? ((try? source.net().size.y) ?? source.dimensions.height):source.dimensions.depth+2*source.stock.thicknessMM}
     if let meshAsset {return meshAsset.boundsMM.size.z * max(0.001,self["scalePercent"]/100)}
     if let cadRepresentation {return cadRepresentation.maximum.z-cadRepresentation.minimum.z}
     if recipeID=="pulloverHoodie" {return self["depth"]+self["hoodHeight"]}
@@ -418,6 +422,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if objects.contains(where:PaperConstruction.isPaper){return max(schemaVersion,53)}
     if objects.contains(where:{$0.meshAsset != nil || $0.cadModel != nil || $0.cadRepresentation != nil}) {return max(schemaVersion,52)}
     if objects.contains(where:{$0.librarySelection != nil || StarterTextiles.recipeIDs.contains($0.recipeID)}) {return max(schemaVersion,51)}
     if objects.contains(where:{$0.recipeID=="deskClock"}) {return max(schemaVersion,50)}
@@ -516,6 +521,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
       name: name ?? recipe.name, recipeID: recipeID,
       parameters: recipe.defaults.merging(parameters) { _, new in new }, materialID: materialID ?? MerchandiseBlanks.defaultMaterial(recipeID) ?? "chalk",
       position: position)
+    if PaperConstruction.recipeIDs.contains(recipeID){object.paperConstruction=try PaperConstruction.definition(for:object);if materialID==nil{object.materialID="paper-superfine"}}
     object.textile = TextileProduct.defaults(for: recipeID)
     if ClothDesign.recipeIDs.contains(recipeID) {object.cloth = try ClothDesign.definition(for:object)}
     if recipeID=="textilePrint" {object.artwork=MerchandiseBlanks.blankArtwork(width:object["width"],height:object["depth"])}

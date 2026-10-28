@@ -68,9 +68,11 @@ def main():
         client.process.stdin.flush()
         tools = client.discover(["form_create_project", "form_get_project", "form_batch", "form_export"])
         assert len({tool["name"] for tool in tools}) == len(tools)
-        project = client.call("form_create_project", {"name": "MCP validation", "template": "cyanotype", "conversation_reference": "FORM local integration test"})
-        sleeve = next(obj for obj in project["objects"] if obj["recipeID"] == "sleeve")
-        paper = next(obj for obj in project["objects"] if obj["recipeID"] == "paperStack")
+        # Keep the original sleeve compatibility checks independent of the evolving
+        # Home study. New envelope/carton acceptance lives in smoke_paper_construction.
+        project = client.call("form_create_project", {"name": "MCP validation", "template": "blank", "conversation_reference": "LAB local integration test"})
+        sleeve = client.call("form_add_object", {"recipe_id": "sleeve", "parameters": {"width": 216}})
+        paper = client.call("form_add_object", {"recipe_id": "paperStack"})
         client.call("form_update_object", {"object_id": paper["id"], "parameters": {"sheets": 24}})
         client.call("form_update_object", {"object_id": paper["id"], "parameters": {"sheets": -1}}, expect_error=True)
         assert next(obj for obj in client.call("form_get_project")["objects"] if obj["id"] == paper["id"])["parameters"]["sheets"] == 24
@@ -81,7 +83,7 @@ def main():
         by_id = {obj["id"]: obj for obj in current["objects"]}
         assert by_id[variant["id"]]["parameters"]["width"] == 220
         assert by_id[iteration["id"]]["parameters"]["width"] == 216
-        art = sleeve["artwork"]
+        art = sleeve.get("artwork") or {"background": "#263D70", "elements": []}
         art["elements"].append({"id": str(uuid.uuid4()), "kind": "text", "x": 18, "y": 256, "width": 185, "height": 15, "text": "MADE WITH CODEX + FORM", "color": "#E4D8A9", "fontSize": 8})
         client.call("form_set_artwork", {"object_id": sleeve["id"], "artwork": art})
         recipe = {
