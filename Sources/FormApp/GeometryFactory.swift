@@ -354,6 +354,10 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
       }
     default:
       if let recipe = project.recipe(object.recipeID) {
+        if let definition=recipe.solid {
+          do {root.addChildNode(try SolidRecipeGeometry.make(object,definition:definition,project:project))}
+          catch {root.name="solid.invalid: "+error.localizedDescription}
+        }
         for part in recipe.parts {
           guard let p = try? part.evaluate(object.parameters) else { continue }
           let geo: MeshGeometry
@@ -422,7 +426,13 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     }
     countImages(root)
     root.enumerateChildNodes { node, _ in countImages(node) }
-    cache.setObject(root.clone(), forKey: cacheKey, cost: max(30_000, imageBytes))
+    var meshBytes=0
+    func countMesh(_ node:MeshNode) {
+      guard let geometry=node.geometry else{return}
+      meshBytes += geometry.sources.reduce(0){$0+$1.data.count}+geometry.elements.reduce(0){$0+$1.data.count}
+    }
+    countMesh(root);root.enumerateChildNodes{node,_ in countMesh(node)}
+    cache.setObject(root.clone(), forKey: cacheKey, cost: max(30_000, imageBytes+meshBytes))
     return root
   }
   static func artworkPlane(

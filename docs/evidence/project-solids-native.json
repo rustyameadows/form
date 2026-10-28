@@ -1,0 +1,127 @@
+{
+  "date": "2026-10-28",
+  "version": "0.5.2",
+  "schema": 55,
+  "code_commit": "08b946e",
+  "installed_binary_sha256": "2db45b11a1161f2586645e5f4cb5d2e71e78927ba23af492d529d6da050c90c4",
+  "mcp_tool_count": 65,
+  "application_rule": "Application code implements generic operations; authored models remain project-owned data.",
+  "tests": {
+    "suites": [
+      [
+        "LabRenderingTests.xctest",
+        "14",
+        "0"
+      ],
+      [
+        "FormMeshAssetsTests.xctest",
+        "24",
+        "0"
+      ],
+      [
+        "FormGeometryTests.xctest",
+        "3",
+        "0"
+      ],
+      [
+        "FormCoreTests.xctest",
+        "681",
+        "0"
+      ],
+      [
+        "FormCADModelingTests.xctest",
+        "8",
+        "0"
+      ],
+      [
+        "FormCADKernelTests.xctest",
+        "6",
+        "0"
+      ],
+      [
+        "FormAppTests.xctest",
+        "428",
+        "0"
+      ]
+    ],
+    "total": 1164,
+    "log_sha256": "0824fb791de12905002e5b2ce624b08946df69e03315e6bf4a13e996ac519ec9"
+  },
+  "native_acceptance": [
+    "one ordinary installed app",
+    "MCP project-owned recipe authoring and revision",
+    "retained exact reference asset on Canvas",
+    "native numeric and slider control changes",
+    "actual mouse orbit in Table and Studio",
+    "saved composition camera and full-turn playback",
+    "source model, controls, notes and scenes preserved after reopen"
+  ],
+  "model_sample": {
+    "height_mm": 101.6,
+    "size_xyz_mm": [
+      76.41490257139017,
+      101.6,
+      71.92928881010934
+    ],
+    "primitives": 4295,
+    "triangles": 1004752,
+    "components": 1,
+    "topology": {
+      "boundaryEdges": 0,
+      "degenerateTriangles": 0,
+      "inconsistentlyOrientedEdges": 0,
+      "nonManifoldEdges": 0,
+      "selfIntersectionsChecked": false,
+      "signedVolumeMM3": 28575.05107401099,
+      "triangles": 1004752,
+      "weldedVertices": 501892,
+      "weldToleranceMM": 1e-05
+    },
+    "exported_stl": {
+      "triangles": 1004752,
+      "welded_vertices": 501892,
+      "boundary_edges": 0,
+      "non_manifold_edges": 0,
+      "winding_conflicts": 0,
+      "degenerate_triangles": 0,
+      "volume_mm3": 28575.1,
+      "size_mm": [
+        76.4149,
+        71.9293,
+        101.6
+      ]
+    }
+  },
+  "parameter_checks": {
+    "controls": 14,
+    "cases": 30,
+    "passed": 30,
+    "coverage": "Each control minimum/maximum plus two combined size/branch extremes. These are sampled checks, not exhaustive combinations.",
+    "mesher_and_inspection_seconds_median": 1.5090226874453947
+  },
+  "library_preservation": {
+    "original_files_verified": 209,
+    "mismatches": []
+  },
+  "recording": {
+    "seconds": 3024.295,
+    "width": 3420,
+    "height": 1644,
+    "parts": 2,
+    "audio_tracks": 0,
+    "join": "passthrough, no cuts or speed changes",
+    "scope": "LAB window from recording start; one application restart separates the source parts. Earlier uncaptured work is not reconstructed.",
+    "private_media_published": false,
+    "status": "earlier checkpoint; continued parts are being recorded"
+  },
+  "scope_limits": [
+    "Sampled implicit solids complement exact BRep CAD.",
+    "Geometric checks do not certify physical manufacture.",
+    "No printer commands.",
+    "No native construction-tree editor added; the full definition is edited through MCP, while parameters are editable natively.",
+    "Existing split-view object_id targeting expects editable artwork; open the Canvas workspace then Split for a solid without artwork."
+  ],
+  "status": "rejected visual checkpoint; engineering evidence retained",
+  "visual_acceptance": false,
+  "goal_status": "active"
+}
