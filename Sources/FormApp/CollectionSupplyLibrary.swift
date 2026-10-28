@@ -10,7 +10,7 @@ struct CollectionSupplyLibrary:View {
     LazyVStack(alignment:.leading,spacing:10) {
       Text("Blank, trim and consumable declarations. Thread and fabric inventory retain their existing identities. No record is created automatically and nothing is deducted.").font(.system(size:11)).foregroundStyle(Palette.secondary)
       ForEach(store.library.textileProduction?.supplies ?? []) {s in HStack {
-        Button{editing=s}label:{VStack(alignment:.leading,spacing:4) {Text(s.name).fontWeight(.medium);Text(s.category+" / "+(s.available ?? "Unknown")+" "+s.unit.rawValue+" available");Text([s.manufacturer,s.sku,s.supplier].compactMap{$0}.joined(separator:" · ")).foregroundStyle(Palette.secondary)}.frame(maxWidth:.infinity,alignment:.leading)}.buttonStyle(.plain)
+        Button{editing=s}label:{VStack(alignment:.leading,spacing:4) {Text(s.name).fontWeight(.medium);Text("\(s.category) / \(s.available ?? "Unknown") \(s.unit.rawValue) available");Text([s.manufacturer,s.sku,s.supplier].compactMap{$0}.joined(separator:" · ")).foregroundStyle(Palette.secondary)}.frame(maxWidth:.infinity,alignment:.leading)}.buttonStyle(.plain)
         Button{do{_ = try store.productionCall("form_textile_stock",arguments:["command":"remove_supply","stock_id":s.id.uuidString],source:"Studio")}catch{self.error=error.localizedDescription}}label:{Image(systemName:"trash")}.buttonStyle(.borderless)
       }.padding(12).background(.white,in:RoundedRectangle(cornerRadius:8))}
       Button("Add supply declaration"){editing = .init(name:"New supply")}
