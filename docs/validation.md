@@ -828,3 +828,15 @@ The packaged bridge passes envelope/carton purpose/view independence, stable rel
 
 
 The installed final binary is from `5df0437`. An actual Botanical serum text drag updates ink on the intact assembled carton; construction and camera pose remain exact, with no renderer warnings. Native Undo/Save restores the full user source/history and original placement. Reopening preserves the complete saved project; 128 pinned original files and 35 existing Studio records remain exact. Two final packaged paper runs pass; an earlier isolated view-equality assertion failed without a field diff, so the harness now retains full before/after JSON on any mismatch. Neither subsequent run reproduces that assertion. No fabrication was sent or started. The bounded paper acceptance is complete; broader product limitations remain documented.
+
+## Project-owned solid modeling — October 28, 2026
+
+LAB 0.5.2 passes **1,164 tests** (681 core, 428 native app, 14 rendering, 24 mesh, 3 geometry, 8 modeling, 6 kernel). Generic fixtures cover expression bounds, repeated-group scopes, source replacement, Undo/reopen, fused junctions, oriented bodies, explicit enclosed-void filling, variable elliptical sweeps, and fabrication parity.
+
+Native acceptance uses a private project definition, without any object-specific application generator. Four design reviews and 30 sampled control cases verify spatial geometry, finite tips and fine detail. Actual native fields and sliders change geometry; real mouse drags and Studio playback inspect it from multiple sides. Reopen retains the reference, recipe, objects, notes and scenes. Independent inspection of the actual float STL finds zero open/non-manifold edges, winding conflicts or degenerate faces at **101.6 mm** height. A 12-second 1600×1600 full-turn Studio MP4 and **50:24** unsped window recording are preserved privately with the project; no user reference or recording is published to Git. All 209 preexisting library source files retain their hashes.
+
+See [engineering evidence](evidence/project-solids-native.json) and [the modeling contract](parametric-solids.md). The user rejected the model’s visual quality; reference matching and the expanded modeling task list remain active. These checks do not establish visual acceptance, physical print strength or completion of the broader product roadmap.
+
+## Analytic construction engineering checkpoint — October 28, 2026
+
+LAB 0.5.3 passes **1,174 tests**: 686 Core, 429 App, 14 rendering, 24 mesh, seven geometry, eight modeling and six kernel. New coverage includes curved analytic profiles, cap winding, stable frames, malformed profiles, path/local scope, aggregate limits, persistence/Undo/schema 56, normal retention and shared fabrication geometry. Native MCP inspection and rendering exercise the installed bridge. Analytic assemblies retain independent closed shells; they are not Boolean-unioned or certified for manufacture. Reference-led visual modeling remains active and unaccepted.

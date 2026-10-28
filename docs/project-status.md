@@ -1,9 +1,13 @@
 # LAB project status
 
-As of October 27, 2026.
+As of October 28, 2026.
 
 **LAB is a working native Mac alpha; the complete product, typography and textile briefs are not finished.** The LAB 0.5 environment UI pass adds distinct Function, guided Fabricate and saved-composition Studio workspaces. Function remains medium-independent, with lamp/CAD, fabric/seam/cloth and paper controls. Fabricate makes process/material assumptions editable and explicit. Studio adds independent product instances, saved scenes, a separate camera, camera-motion playback and real PNG/MP4 output. See [environment workflows](environment-workflows.md).
 
+
+LAB **0.5.3** adds generic analytic profiled sweeps with preserved normals and bounded expression-driven curves. The complete suite passes **1,174 tests**. The ordinary app is installed for recorded visual iteration; the requested model remains under active refinement and has not passed visual acceptance.
+
+LAB **0.5.2** adds generic, project-owned parametric solid constructions with repeated groups, local expressions, rounded/elliptical sweeps, oriented ellipsoids, explicit void filling and shared Table/Studio/fabrication geometry. The complete optimized suite passes **1,164 tests**. A reference-led project exercises 14 native controls, 30 sampled parameter cases, actual mouse/Studio interaction, a verified float STL and retained full-session footage. Models stay in project packages; the permanent rule is in `AGENTS.md`. See the [modeling guide](parametric-solids.md), [active task list](generic-solid-modeling-work.md) and [engineering checkpoint](evidence/project-solids-native.json). The user rejected the authored model’s visual quality. Reference matching, a detailed 24-inch master, genuine growth variation, 24 real references and 24 recorded variants remain active work; these tests do not establish visual acceptance.
 
 LAB **0.5.1** adds SF interface typography, SF Mono technical values, monochrome panels and neutral gray workspaces, with one configurable local accent in Settings → Appearance. Its complete optimized suite passes **1,156 tests**. [Style contract](interface-style.md) and [native acceptance](evidence/interface-style-native.json) record the screen review, preference persistence and preservation checks.
 
@@ -19,7 +23,8 @@ This report distinguishes features in that application from local candidates and
 
 - The CAD foundation goal is complete within its documented acceptance boundaries. The accepted constructed-paper pass adds the supplied [guiding brief](constructed-goods-vision.md), envelope/carton demos, linked views, distinct task contexts and tested local outputs. These bounded upgrades do not complete the broader roadmap.
 - The transfer/page candidates are integrated and accepted together. The subsequent desk-clock request adds a bounded sculpted-clock construction and a real reference-led project; it does not restart the full roadmap. Separate cloth and broader SVG research remain local.
-- The system-style pass is installed as LAB 0.5.1 on **codex/system-style**, based on **codex/environment-ui**. It preserves all nine ordinary project packages and the existing library.
+- The project-owned solid upgrade is installed as LAB 0.5.2 on **codex/project-solid-modeling**, based on **codex/system-style**. The new user project is separate from its nine preserved predecessors.
+- The system-style pass shipped as LAB 0.5.1 on **codex/system-style**, based on **codex/environment-ui**. It preserves all nine ordinary project packages and the existing library.
 - The preceding environment UI pass shipped as LAB 0.5 and on [codex/environment-ui](https://github.com/rustyameadows/form/tree/codex/environment-ui), based on **codex/paper-construction**. Its design concepts and exact prompts are committed under `docs/design/environment-ui/`.
 - Constructed goods are on **codex/paper-construction**, based on **codex/cad-foundation** in [draft pull request 2](https://github.com/rustyameadows/form/pull/2), which follows the accepted **codex/form-v0.1** application in [draft pull request 1](https://github.com/rustyameadows/form/pull/1). The paper pass is available in [draft pull request 3](https://github.com/rustyameadows/form/pull/3). The implementation has not been merged to main; main still contains the initial product documentation.
 - The UI update preserves eight ordinary project packages and all 36 saved library records using a fresh backup and 204 pinned source/library files. Its retail composition is added as a separate demo package.
@@ -43,7 +48,7 @@ This report distinguishes features in that application from local candidates and
 | Sewing and cloth | Editable straight/curved pieces, allowances/notches/seams, cutting layouts, tiled actual-size patterns, a managed size/grade study and bounded pattern-derived pouch/cloth simulation. | No cloth self-collision or predictive fit is integrated. General garment assembly remains unfinished. |
 | Embroidery and decoration | Actual running/satin/fill commands, underlay/ties, thread preview, DST and physical outputs; bounded HTV/DTF preparation and immutable packets. | Production digitizing/compensation, broader processes and verified physical sew-out/application remain incomplete. |
 | Collection production | Explicit product/spare runs, once-counted attachments, purchase-versus-make estimates, declared stock/rates and frozen PDF/JSON/CSV/ZIP technical packets. | No automatic purchasing, inventory deduction, factory scheduling or complete manufacturing technical pack. |
-| Codex workflow | 64 local MCP tools operate the same document operations as the native app. | The creative conversation stays in Codex. External AI model calls inside FORM are intentionally outside this version. |
+| Codex workflow | 65 local MCP tools operate the same document operations as the native app. | The creative conversation stays in Codex. External AI model calls inside FORM are intentionally outside this version. |
 
 The [AFFINITIES acceptance workflow](design-acceptance.md) demonstrates the credible-canvas foundation. [Character-form evidence](evidence/character-forms-native.json), [collection and Home evidence](evidence/collection-home-native.json), and [validation notes](validation.md) record the tested scope. Some older broad roadmap checkboxes contain already implemented subfeatures; they should not be read as a list of wholly missing systems.
 
