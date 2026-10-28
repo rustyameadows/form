@@ -1,5 +1,5 @@
 import AppKit
-import SceneKit
+import FormGeometry
 import Metal
 import XCTest
 @testable import FormCore
@@ -54,29 +54,28 @@ import XCTest
       XCTAssertEqual(solver.frame.positionsMm[pin.vertex].z,pin.targetMm.z,accuracy:1e-9)
     }
   }
-  func testBeforeAfterResetAndComputedDrapeUseIdenticalRealMetalCamera()throws {
+  func testBeforeAfterResetAndComputedDrapeUseIdenticalRealMetalCamera()async throws {
     guard let device=MTLCreateSystemDefaultDevice() else {throw XCTSkip("The paired cloth comparison requires offscreen Metal.")}
     let (old,tangent)=try comparison()
     for (name,study) in [("old",old),("tangent",tangent)] {
       var solver=try ClothSolver(mesh:study.mesh,settings:study.settings,colliders:study.colliders)
-      try render(study,frame:solver.frame,device:device,name:"drape-reset-\(name)")
+      try await render(study,frame:solver.frame,device:device,name:"drape-reset-\(name)")
       try solver.start();for _ in 0..<90 {try solver.advance()}
-      try render(study,frame:solver.frame,device:device,name:"drape-computed-\(name)")
+      try await render(study,frame:solver.frame,device:device,name:"drape-computed-\(name)")
     }
   }
-  private func render(_ study:ClothStudy,frame:ClothFrame,device:MTLDevice,name:String)throws {
-    let material=SCNMaterial();material.diffuse.contents=NSColor(srgbRed:0.72,green:0.49,blue:0.24,alpha:1);material.roughness.contents=0.95
-    let surface=try ClothSurface(mesh:study.mesh,frame:frame,material:material),scene=SCNScene()
+  private func render(_ study:ClothStudy,frame:ClothFrame,device:MTLDevice,name:String)async throws {
+    let material=MeshMaterial();material.diffuse.contents=NSColor(srgbRed:0.72,green:0.49,blue:0.24,alpha:1);material.roughness.contents=0.95
+    let surface=try ClothSurface(mesh:study.mesh,frame:frame,material:material),scene=MeshScene()
     scene.background.contents=NSColor(white:0.92,alpha:1);scene.rootNode.addChildNode(surface.node)
     for c in study.colliders where c.kind == .sphere {
-      let sphere=SCNNode(geometry:SCNSphere(radius:c.radiusMm/100));sphere.position=SCNVector3(c.centerMm.x/100,c.centerMm.y/100,c.centerMm.z/100);sphere.geometry?.firstMaterial?.diffuse.contents=NSColor(white:0.3,alpha:1);scene.rootNode.addChildNode(sphere)
+      let sphere=MeshNode(geometry:MeshSphere(radius:c.radiusMm/100));sphere.position=MeshVector3(c.centerMm.x/100,c.centerMm.y/100,c.centerMm.z/100);sphere.geometry?.firstMaterial?.diffuse.contents=NSColor(white:0.3,alpha:1);scene.rootNode.addChildNode(sphere)
     }
-    let floor=SCNNode(geometry:SCNPlane(width:6,height:6));floor.eulerAngles.x = -.pi/2;floor.geometry?.firstMaterial?.diffuse.contents=NSColor(white:0.83,alpha:1);scene.rootNode.addChildNode(floor)
-    let camera=SCNNode();camera.camera=SCNCamera();camera.camera?.usesOrthographicProjection=true;camera.camera?.orthographicScale=2.2;camera.position=SCNVector3(3,3.4,4);camera.look(at:SCNVector3(0,0.8,0));scene.rootNode.addChildNode(camera)
-    let key=SCNNode();key.light=SCNLight();key.light?.type = .omni;key.light?.intensity=1400;key.position=SCNVector3(-3,6,4);scene.rootNode.addChildNode(key)
-    let ambient=SCNNode();ambient.light=SCNLight();ambient.light?.type = .ambient;ambient.light?.intensity=380;scene.rootNode.addChildNode(ambient)
-    let renderer=SCNRenderer(device:device,options:nil);renderer.scene=scene;renderer.pointOfView=camera
-    let image=renderer.snapshot(atTime:0,with:.init(width:1100,height:900),antialiasingMode:.multisampling4X),bitmap=try XCTUnwrap(NSBitmapImageRep(data:try XCTUnwrap(image.tiffRepresentation))),png=try XCTUnwrap(bitmap.representation(using:.png,properties:[:]))
+    let floor=MeshNode(geometry:MeshPlane(width:6,height:6));floor.eulerAngles.x = -.pi/2;floor.geometry?.firstMaterial?.diffuse.contents=NSColor(white:0.83,alpha:1);scene.rootNode.addChildNode(floor)
+    let camera=MeshNode();camera.camera=MeshCamera();camera.camera?.usesOrthographicProjection=true;camera.camera?.orthographicScale=2.2;camera.position=MeshVector3(3,3.4,4);camera.look(at:MeshVector3(0,0.8,0));scene.rootNode.addChildNode(camera)
+    let key=MeshNode();key.light=MeshLight();key.light?.type = .omni;key.light?.intensity=1400;key.position=MeshVector3(-3,6,4);scene.rootNode.addChildNode(key)
+    let ambient=MeshNode();ambient.light=MeshLight();ambient.light?.type = .ambient;ambient.light?.intensity=380;scene.rootNode.addChildNode(ambient)
+    let image=try await GeometryRenderingProof.capture(scene,camera:camera,size:.init(width:1100,height:900)),bitmap=try XCTUnwrap(NSBitmapImageRep(data:try XCTUnwrap(image.tiffRepresentation))),png=try XCTUnwrap(bitmap.representation(using:.png,properties:[:]))
     XCTAssertGreaterThan(png.count,10000)
     if let directory=ProcessInfo.processInfo.environment["FORM_ASSEMBLY_PROOF_DIR"] {try png.write(to:URL(fileURLWithPath:directory).appendingPathComponent(name+".png"))}
   }

@@ -1,0 +1,370 @@
+{
+  "record_version": 1,
+  "date": "2026-10-26",
+  "scope": "LAB 0.3 CAD foundation upgrade; broader product, typography and apparel briefs remain open",
+  "host": {
+    "architecture": "arm64",
+    "processor": "Apple M5",
+    "memory_gib": 24,
+    "os": "macOS 26.6.2"
+  },
+  "package": {
+    "version": "0.3.0",
+    "source_code_commit": "a5dad38",
+    "binary_sha256": "3a6f9945e180f9e149947110fcfd369c4e09437866a52aa7a8352a2df658d8d0",
+    "ad_hoc_signature_verified": true,
+    "occt_version": "8.0.1",
+    "bundled_occt_shared_libraries": 26,
+    "renderer": "RealityKit",
+    "shipping_scenekit_dependency": false,
+    "distribution_notarized": false
+  },
+  "tests": {
+    "command": "swift test --skip-build -c release",
+    "fresh_build_before_run": true,
+    "total": 1101,
+    "failures": 0,
+    "skips": 0,
+    "suites": {
+      "LabRenderingTests": 14,
+      "FormMeshAssetsTests": 24,
+      "FormGeometryTests": 3,
+      "FormCoreTests": 659,
+      "FormCADModelingTests": 8,
+      "FormCADKernelTests": 6,
+      "FormAppTests": 387
+    },
+    "log_sha256": "1d5c2a349d5bfed9a99b9fd54045fbf08f4307b56b4d5723816541873332bbf6",
+    "post_suite_changes": "Native import assumption and feature-input labels only; compiled and exercised in final packaged smoke."
+  },
+  "native_camera_and_CAD_review": {
+    "tested_on": "disposable copy of saved ordinary library",
+    "source_objects_and_history_unchanged": true,
+    "mouse_gestures": [
+      "right",
+      "down",
+      "left",
+      "up",
+      "diagonal",
+      "reverse diagonal",
+      "two211degree horizontal sweeps"
+    ],
+    "camera_roundtrip_error_max": 5.551115123125783e-17,
+    "camera_right_y": 0,
+    "named_views": "native Perspective/Top/Front frame full project; selection reserves inspector space without changing subject center",
+    "shift_pan": "native AppKit event tests",
+    "native_CAD_review": "preview120\u2192edit132\u2192preview132\u2192cancel retained originals"
+  },
+  "packaged_checks": {
+    "preservation_candidate_smokes": [
+      "smoke_lab_transition.py",
+      "smoke_studio_shots.py",
+      "smoke_canvas.py",
+      "smoke_merchandise.py",
+      "smoke_embroidery_surface.py",
+      "smoke_pattern_assembly.py",
+      "smoke_page_setup.py"
+    ],
+    "final_signed_package_smokes": [
+      "smoke_artwork_transfer.py",
+      "smoke_studio_shots.py",
+      "smoke_print_lifecycle.py",
+      "smoke_mcp.py",
+      "smoke_cad_foundation.py",
+      "smoke_object_library.py"
+    ],
+    "exact_native_MCP_checks": [
+      "native packaged bridge",
+      "real exact operations",
+      "parameter edit",
+      "Undo/Redo",
+      "failed edit unchanged",
+      "STEP volume/bounds roundtrip",
+      "imported visual colorway",
+      "actual PNG",
+      "process restart/reopen",
+      "resource hashes unchanged"
+    ],
+    "source_resources_verified_after_process_restart": 26,
+    "renderer_issue": "",
+    "renderer_warnings": []
+  },
+  "exact_models": {
+    "clockEnclosure": {
+      "features": 20,
+      "components": [
+        {
+          "name": "Upright clock orientation",
+          "valid": true,
+          "closed": true,
+          "solids": 1,
+          "triangles": 46052,
+          "minimum_mm": {
+            "x": -88.9,
+            "y": 0,
+            "z": 0
+          },
+          "maximum_mm": {
+            "x": 88.9,
+            "y": 177.8,
+            "z": 50.8
+          },
+          "volume_mm3": 123018.23836670567
+        }
+      ],
+      "verified_edited_diameter_mm": 190
+    },
+    "vase": {
+      "features": 3,
+      "components": [
+        {
+          "name": "Normal wall and open rim",
+          "valid": true,
+          "closed": true,
+          "solids": 1,
+          "triangles": 100442,
+          "minimum_mm": {
+            "x": -57.46912096985092,
+            "y": -1e-07,
+            "z": -57.46912096985092
+          },
+          "maximum_mm": {
+            "x": 57.46912096985092,
+            "y": 180.00000010000002,
+            "z": 57.46912096985092
+          },
+          "volume_mm3": 180988.85914321046
+        }
+      ]
+    },
+    "lamp": {
+      "features": 13,
+      "components": [
+        {
+          "name": "Bored base",
+          "valid": true,
+          "closed": true,
+          "solids": 1,
+          "triangles": 38520,
+          "minimum_mm": {
+            "x": -80,
+            "y": 0,
+            "z": -80.0000001
+          },
+          "maximum_mm": {
+            "x": 80,
+            "y": 14,
+            "z": 80
+          },
+          "volume_mm3": 280728.427488567
+        },
+        {
+          "name": "Hollow support",
+          "valid": true,
+          "closed": true,
+          "solids": 1,
+          "triangles": 1008,
+          "minimum_mm": {
+            "x": -6,
+            "y": 13,
+            "z": -6
+          },
+          "maximum_mm": {
+            "x": 6,
+            "y": 300,
+            "z": 6
+          },
+          "volume_mm3": 26823.70347451305
+        },
+        {
+          "name": "Shade occurrence placement",
+          "valid": true,
+          "closed": true,
+          "solids": 1,
+          "triangles": 7364,
+          "minimum_mm": {
+            "x": -90,
+            "y": 250,
+            "z": -90
+          },
+          "maximum_mm": {
+            "x": 90,
+            "y": 350,
+            "z": 90
+          },
+          "volume_mm3": 136123.53585176083
+        }
+      ],
+      "measured_component_clearance": {
+        "distance_mm": 0,
+        "interference_volume_mm3": 93.46238144429635
+      },
+      "fit_note": "Base/support overlap is an authored insertion, not a validated mechanical joint."
+    },
+    "enclosure": {
+      "features": 4,
+      "components": [
+        {
+          "name": "Soft enclosure edges",
+          "valid": true,
+          "closed": true,
+          "solids": 1,
+          "triangles": 22786,
+          "minimum_mm": {
+            "x": -1.1102230246251565e-16,
+            "y": -1.1102230246251565e-16,
+            "z": -80
+          },
+          "maximum_mm": {
+            "x": 120,
+            "y": 45.0000001,
+            "z": 1.1102230246251565e-16
+          },
+          "volume_mm3": 65352.57727512033
+        }
+      ]
+    }
+  },
+  "step_roundtrip": {
+    "bytes": 53591,
+    "sha256": "85ed2ba2e5d601addcb2e4d46f3c1e66d46afe353ac416562c8ac078d3373e1f",
+    "volume_error_mm3": 1.1641532182693481e-10
+  },
+  "step_assembly": {
+    "leaf_occurrences": 3,
+    "nested_hierarchy": true,
+    "repeated_part_identity_preserved": true,
+    "occurrence_names_and_placements_preserved": true,
+    "part_and_face_colors_preserved": true,
+    "original_source_preserved": true,
+    "regenerated_export_scope": "geometry per selected output"
+  },
+  "imported_assets": {
+    "jacket": {
+      "triangles": 174600,
+      "parts": 33,
+      "materials": 7,
+      "bounds_mm": {
+        "maximum": {
+          "x": 644.9999809265137,
+          "y": 605.0000190734863,
+          "z": 148.38317036628723
+        },
+        "minimum": {
+          "x": -644.9999809265137,
+          "y": -25.00000037252903,
+          "z": -126.73762440681458
+        }
+      },
+      "editability": "visualMesh",
+      "source_sha256": "8480a8bc8154f6d41a8bf19b6a298086ecdd9145b53f7c04e19b278cbb03d82d"
+    },
+    "receiver": {
+      "triangles": 56888,
+      "parts": 47,
+      "materials": 10,
+      "bounds_mm": {
+        "maximum": {
+          "x": 90.00000357627869,
+          "y": 109.99999940395355,
+          "z": 22.499999366118573
+        },
+        "minimum": {
+          "x": -90.00000357627869,
+          "y": 0,
+          "z": -22.500000428408384
+        }
+      },
+      "editability": "visualMesh",
+      "source_sha256": "f693050caa61332622574ac5487cc99fb716a1ed1e402905cac1561238b17e4f"
+    }
+  },
+  "jacket_appearance": {
+    "source_sha256": "8480a8bc8154f6d41a8bf19b6a298086ecdd9145b53f7c04e19b278cbb03d82d",
+    "mesh_builds": 33,
+    "geometry_rebuilt_for_appearance": false,
+    "material_builds": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "clear_restores_source_signatures": true,
+    "adapter_warnings": [],
+    "UV_mapping_scope": "appearance only; physical output uses independent source artwork frame"
+  },
+  "renderer_stress": {
+    "camera_update_p95_ms": 0.03707408905029297,
+    "capture_count": 12,
+    "capture_median_ms": 17.38893985748291,
+    "capture_p95_ms": 29.361963272094727,
+    "initial_upload_ms": 19.125938415527344,
+    "instanced_triangles": 2359296,
+    "instances": 64,
+    "material_builds": 1,
+    "measurement": "Offscreen capture includes resource clone, GPU completion and sRGB readback. It is not viewport FPS.",
+    "mesh_builds": 1,
+    "mesh_cache_bytes": 4423680,
+    "output_pixels": [
+      1200,
+      800
+    ],
+    "peak_process_rss_bytes": 165658624,
+    "source_triangles": 36864,
+    "warnings": []
+  },
+  "picking_stress": {
+    "instances": 64,
+    "visible_triangles": 2097152,
+    "p95_ms": 0.10502338409423828,
+    "maximum_ms": 0.11301040649414062,
+    "source": "final release test log"
+  },
+  "starter_library": {
+    "tool_count": 62,
+    "references": 211,
+    "assortment_objects": 7,
+    "checks": [
+      "packaged resource and tool discovery",
+      "isolated native socket",
+      "read-only catalog",
+      "real proposed product snapshots",
+      "source/physical placement preservation",
+      "Undo/Redo",
+      "choice/custom transition",
+      "saved reopen"
+    ]
+  },
+  "ordinary_project_install_preservation": {
+    "source_asset_files_verified": 128,
+    "source_hash_mismatches": [],
+    "source_objects_unchanged": true,
+    "history_unchanged": true,
+    "camera_pose_unchanged": true,
+    "environment": "fabricate",
+    "layout": "split",
+    "focused_surface": "table",
+    "selection_restored": true,
+    "version": "0.3.0",
+    "renderer": "RealityKit",
+    "complete_project_JSON_unchanged": true
+  },
+  "fabrication": {
+    "engine": "OrcaSlicer",
+    "version": "2.4.2",
+    "actual_local_slice_layers": 900,
+    "print_commands_enabled": false,
+    "printer_commands": [],
+    "hardware_connection_attempted": false
+  },
+  "limits": [
+    "No full sketch solver or persistent topological naming",
+    "No USD/OBJ import or edited-scene GLB/USDZ export",
+    "No arbitrary mesh repair or animated/skinned import",
+    "No calibrated curved UV fabrication mapping or production garment reconstruction",
+    "BRep import uses explicitly unverified millimeter assumption",
+    "Regenerated STEP export is geometry-only; original full source remains preserved",
+    "No manufacturing-fit certification, physical print or sew-out",
+    "Fixture measurements are not whole-app sustained FPS or memory guarantees"
+  ]
+}

@@ -5,14 +5,15 @@ import SwiftUI
 
 @MainActor private enum StudyPreviews {
   static let cache = NSCache<NSString, NSImage>()
-  static func image(_ template: StudyTemplate, assets: URL) -> NSImage? {
+  static func image(_ template: StudyTemplate, assets: URL)async -> NSImage? {
     if let value = cache.object(forKey: "\(template.id)/\(GeometryFactory.fontRevision)" as NSString) { return value }
     guard let project = try? Samples.make(template.id) else { return nil }
     let image: NSImage
     if template.id == "affinities", let source = project.objects.first(where: { $0.name == AffinitiesStudy.sourceName }), let art = source.artwork {
       image = ArtworkRenderer.image(art, width: source["width"], height: source["depth"], assets: assets, pixelsPerMM: 720 / source["width"], opaqueBackground: true)
     } else {
-      image = TableSceneController.preview(project: project, size: .init(width: 720, height: 390), assets: assets, fitContents: true)
+      guard let rendered=try? await TableSceneController.preview(project: project, size: .init(width: 720, height: 390), assets: assets, fitContents: true) else{return nil}
+      image=rendered
     }
     cache.countLimit = 4
     cache.totalCostLimit = 8_000_000
@@ -53,7 +54,7 @@ struct StudyCard: View {
       .clipShape(RoundedRectangle(cornerRadius: 10)).overlay(
         RoundedRectangle(cornerRadius: 10).strokeBorder(Palette.line))
     }.buttonStyle(.plain).onHover { hovering = $0 }
-      .task(id: GeometryFactory.fontRevision) { image = StudyPreviews.image(template, assets: store.repository.root) }
+      .task(id: GeometryFactory.fontRevision) { image = await StudyPreviews.image(template, assets: store.repository.root) }
       .accessibilityLabel("Start \(template.title) study")
   }
 }

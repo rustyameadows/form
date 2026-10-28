@@ -9,7 +9,7 @@ public enum MCP {
     "form_list_printers", "form_connect_printer",
   ]
   public static let graphicsToolNames: Set<String> = [
-    "form_import_image", "form_image_info",
+    "form_import_image", "form_image_info", "form_model_asset", "form_cad",
     "form_list_fonts", "form_font_features", "form_replace_font", "form_convert_to_paths", "form_boolean_artwork",
     "form_export_artwork", "form_import_svg",
     "form_export_publication", "form_textile_stock", "form_production_job", "form_color_profile", "form_cloth",
@@ -72,6 +72,17 @@ public enum MCP {
       ]
     }
     return [
+      tool("form_model_asset", "Preserve and review static GLB/glTF/STL assets, then publish explicitly. import returns a background job_id; poll status until ready and call commit for one Undo. Camera changes do not invalidate a job; design edits and project switches do. Imported objects retain original bytes, hierarchy, materials, explicit units and a visualMesh editability declaration. Material colorways and UV0 artwork use original slots; UV artwork is visual placement with unverified physical scale. No recovered CAD or sewing history, printer upload or start.",[
+        "command":["type":"string","enum":["formats","import","status","commit","cancel","inspect","material","artwork"]],
+        "path":string,"job_id":objectID,"object_id":objectID,"name":string,
+        "source_units":["type":"string","enum":["millimeter","centimeter","meter","inch"]],
+        "material_index":["type":"integer","minimum":0],"color":string,"metallic":number,"roughness":number,"opacity":number,"clear":["type":"boolean"],"source_object_id":objectID,"primitive_ids":["type":"array","items":string]
+      ],required:["command"]),
+      tool("form_cad", "Author and inspect durable typed exact CAD features in millimeters (+Y up), backed by OCCT. Discover templates/capabilities; plan validates without mutation. create/evaluate/parameter/feature/import_step return background preview jobs; poll status and explicitly commit a ready job for one Undo. Failed/stale/cancelled evaluations retain the last accepted object. Topology edge/face index selections require the exact input feature revision; analytic semantic selections reject ambiguity. STEP/BRep imports preserve exact solids, not reconstructed history or materials. Export requires a ready job, output_id and new absolute local STEP/BRep path. No machine actions.",[
+        "command":["type":"string","enum":["capabilities","templates","plan","create","evaluate","parameter","feature","status","commit","cancel","inspect","topology","render","export","import_step","clearance"]],
+        "job_id":objectID,"object_id":objectID,"view":["type":"string","enum":["perspective","front","top"]],"width":["type":"integer","minimum":1,"maximum":8192,"description":"Render pixel width; combined dimensions must not exceed32megapixels."],"height":["type":"integer","minimum":1,"maximum":8192],"transparent":["type":"boolean"],"template":["type":"string","enum":["enclosure","clockEnclosure","vase","lamp"]],"definition":["type":"object","description":"Complete CADModelDefinition: id/version/revision/name, parameters [{name,value,minimum,maximum,unit}], features [{id,name,operation,suppressed}], outputs [feature UUID], assumptions and unresolvedMeasurements. templates returns executable definitions. Typed operation kinds and fields are discoverable through capabilities/templates; bounded arithmetic expressions reference declared parameters."],
+        "name":string,"value":number,"values":["type":"object","additionalProperties":number],"feature_id":objectID,"feature":["type":"object"],"operation":["type":"object"],"action":["type":"string","enum":["append","replace","suppress","remove"]],"suppressed":["type":"boolean"],"output":["type":"boolean"],"outputs":["type":"array","items":string],"path":string,"source_up_axis":["type":"string","enum":["y","z"]],"quality":["type":"string","enum":["preview","inspection","fabrication"]],"format":["type":"string","enum":["step","brep"]],"output_id":objectID,"first_output_id":objectID,"second_output_id":objectID
+      ],required:["command"]),
       tool(
         "form_status", "Read LAB's current project, selection, version, and library location.",
         readOnly: true),
@@ -125,7 +136,14 @@ public enum MCP {
         "form_get_project",
         "Read all objects, editable parameters, recipes, artwork, materials, decisions, and history for the current project.",
         readOnly: true),
-      tool("form_textile_zones","Read exact bounded decoration regions of a crewTee, curvedCap or canvasTote. Returns physical centered zone dimensions, surface mapping and allowed processes. Curved cap art uses arc-length millimeters below the dome and clear of the back opening; it rejects rigid patches/labels/embroidery. This does not fit or mutate decorations.",["object_id":objectID],required:["object_id"],readOnly:true),
+      tool("form_textile_zones","Read bounded decoration regions of merchandise blanks, including tee, cap, tote, hoodie, beanie and hemmed textiles. Regions are preview geometry, not provider-approved production templates. Curved caps reject rigid patches/labels/embroidery. Does not fit or mutate decorations.",["object_id":objectID],required:["object_id"],readOnly:true),
+      tool("form_object_library", "Browse curated editable starters and the supplied 211-reference catalog. list/get/examples are read-only. add creates a concept or a real proposed blank with a portable source snapshot. replace changes compatible construction atomically, preserving independent artwork at its physical size; out-of-bounds regions reject. state chooses or releases a blank. Geometry remains approximate; no stock, pricing, order integration or production approval is implied. Form/material edits become custom variations.", [
+        "command": ["type":"string", "enum":["list","get","examples","add","replace","state"]],
+        "query":string, "domain":string, "ready_only":["type":"boolean"],
+        "offset":["type":"integer","minimum":0,"maximum":10000], "limit":["type":"integer","minimum":0,"maximum":211],
+        "entry_id":string, "reference_id":string, "object_id":objectID, "position":position,
+        "state":["type":"string","enum":["concept","proposedBlank","chosenBlank"]]
+      ], required:["command"]),
       tool(
         "form_list_recipes",
         "Discover built-in and project-defined parametric recipes, including their native inspector schemas, ranges, and defaults.",

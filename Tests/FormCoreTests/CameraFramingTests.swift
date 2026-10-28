@@ -1,4 +1,4 @@
-import SceneKit
+import FormGeometry
 import XCTest
 
 @testable import FormCore
@@ -11,7 +11,7 @@ final class CameraFramingTests: XCTestCase {
   func testPerspectiveFitsDepthAndBothViewportAxes() {
     verify(projection: "perspective")
   }
-  func testOrthographicFitsBothAxesUsingActualSceneKitProjection() {
+  func testOrthographicFitsBothAxesUsingNeutralCameraProjection() {
     verify(projection: "orthographic")
   }
   func testNoFiniteBoundsKeepsExistingCamera() {
@@ -76,8 +76,8 @@ final class CameraFramingTests: XCTestCase {
             XCTAssertEqual(fitted.target, plain.target)
             XCTAssertEqual(fitted.viewportAspect, aspect)
             XCTAssertGreaterThanOrEqual(fitted.distance, plain.distance)
-            let node = SCNNode()
-            let lens = SCNCamera()
+            let node = MeshNode()
+            let lens = MeshCamera()
             lens.fieldOfView = 39
             lens.projectionDirection = .vertical
             lens.usesOrthographicProjection = projection == "orthographic"
@@ -142,8 +142,8 @@ final class CameraFramingTests: XCTestCase {
           input.elevation = elevation
           input.projection = projection
           let fitted = CameraFraming.fitted(input, points: corners, aspect: aspect)
-          let node = SCNNode()
-          let camera = SCNCamera()
+          let node = MeshNode()
+          let camera = MeshCamera()
           camera.fieldOfView = 39
           camera.projectionDirection = .vertical
           camera.usesOrthographicProjection = projection == "orthographic"
@@ -168,8 +168,8 @@ final class CameraFramingTests: XCTestCase {
   }
   private func assertProjectedCornersInside(_ fitted: CameraState, aspect: Double,
     file: StaticString = #filePath, line: UInt = #line) {
-    let node = SCNNode()
-    let lens = SCNCamera()
+    let node = MeshNode()
+    let lens = MeshCamera()
     lens.fieldOfView = 39
     lens.projectionDirection = .vertical
     lens.usesOrthographicProjection = fitted.projection == "orthographic"

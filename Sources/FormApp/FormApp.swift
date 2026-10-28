@@ -16,6 +16,14 @@ import SwiftUI
     .windowStyle(.hiddenTitleBar)
     .defaultSize(width: 1440, height: 940)
     .commands {
+      CommandGroup(replacing:.appInfo){
+        Button("About LAB"){
+          NSApp.orderFrontStandardAboutPanel(options:[.credits:NSAttributedString(string:"Exact geometry uses Open CASCADE Technology 8.0.1, licensed under LGPL 2.1 with the OCCT exception. Third-party notices include the exact corresponding source archive and rebuild instructions. 2D geometry uses Clipper2 (Boost 1.0) and Mapbox Earcut (ISC).")])
+        }
+        Button("Third-party notices…"){
+          if let root=Bundle.main.resourceURL?.appendingPathComponent("ThirdPartyNotices"){NSWorkspace.shared.open(root)}
+        }
+      }
       CommandGroup(replacing: .newItem) {
         Button("New Project") { store.createProject() }.keyboardShortcut("n")
         Menu("New from Study") {
@@ -53,7 +61,11 @@ import SwiftUI
           store.project?.objects.isEmpty != false)
       }
       CommandMenu("Object") {
-        ForEach(Recipe.builtins.filter { $0.id != "reference" && $0.id != "patternAssembly" }) { recipe in
+        Button("New Exact CAD Model…"){store.cad.openEditor()}.disabled(store.project==nil)
+        Button("Import 3D Model…"){store.modelAssets.openImport()}.disabled(store.project==nil)
+        Button("Import Exact STEP / BRep…"){store.cad.openImport()}.disabled(store.project==nil)
+        Divider()
+        ForEach(Recipe.builtins.filter { $0.id != "reference" && $0.id != "patternAssembly" && !["importedMesh","cadModel"].contains($0.id) }) { recipe in
           Button("Add \(recipe.name)") {
             if store.project == nil { store.createProject() }
             store.add(recipe)

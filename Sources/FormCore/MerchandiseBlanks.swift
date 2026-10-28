@@ -18,10 +18,13 @@ public struct MerchandiseSurface: Equatable, Sendable {
 /// Authored presentation blanks and bounded decoration surfaces, separate from sewing patterns/cloth.
 public enum MerchandiseBlanks {
   public static let capSeamAngles: [Double] = [-2.42, -0.72, 0.72, 2.42]
-  public static let garmentIDs: Set<String> = ["crewTee", "curvedCap", "canvasTote"]
+  public static let garmentIDs: Set<String> = Set(["crewTee", "curvedCap", "canvasTote"]).union(StarterTextiles.recipeIDs)
   public static let recipeIDs = garmentIDs.union(["textilePrint"])
   public static func defaultMaterial(_ recipe: String) -> String? {
     switch recipe {
+    case "pulloverHoodie": return "library-fleece"
+    case "cuffedBeanie": return "library-acrylic"
+    case "hemmedTextile": return "library-polyester"
     case "crewTee": return "jersey-ecru"
     case "curvedCap": return "merch-twill"
     case "canvasTote": return "merch-canvas"
@@ -29,7 +32,7 @@ public enum MerchandiseBlanks {
     default: return nil
     }
   }
-  public static let recipes: [Recipe] = [
+  public static let recipes: [Recipe] = StarterTextiles.recipes + [
     .init(
       "crewTee", "Crew-neck tee", "tshirt",
       "A dimensioned generic flat-lay jersey blank with a real neck opening, rib collar, short sleeves and bounded independent decorations.",
@@ -83,7 +86,7 @@ public enum MerchandiseBlanks {
         usableWidth: 1500)
       return m
     }
-    return [
+    return StarterTextiles.materials + [
       fabric("jersey-ecru", "Cotton jersey · ecru", "#E9E2D2", .knit, 220, 0.8),
       fabric("jersey-navy", "Cotton jersey · navy", "#152D43", .knit, 220, 0.8),
       fabric("merch-rib", "Cotton rib · ecru", "#D8D1BF", .knit, 320, 1.4),
@@ -112,17 +115,18 @@ public enum MerchandiseBlanks {
     var spec = TextileProduct(
       kind: recipe == "textilePrint" ? .patch : .garment,
       process: recipe == "textilePrint" ? .directPrint : .decoratedBlank)
-    spec.blankName =
+    spec.blankName = StarterTextiles.recipes.first(where: { $0.id == recipe })?.name ?? (
       recipe == "crewTee"
       ? "Generic crew-neck tee"
       : recipe == "curvedCap"
-        ? "Generic curved-front cap" : recipe == "canvasTote" ? "Generic canvas tote" : nil
+        ? "Generic curved-front cap" : recipe == "canvasTote" ? "Generic canvas tote" : nil)
     spec.size = recipe == "textilePrint" ? nil : "Concept dimensions"
     spec.trimMaterialID =
-      recipe == "crewTee" ? "merch-rib" : recipe == "canvasTote" ? "merch-webbing" : "merch-twill"
+      StarterTextiles.recipeIDs.contains(recipe) ? defaultMaterial(recipe) : recipe == "crewTee" ? "merch-rib" : recipe == "canvasTote" ? "merch-webbing" : "merch-twill"
     return spec
   }
   public static func zones(_ o: ProductObject) -> [MerchandiseZone] {
+    if StarterTextiles.recipeIDs.contains(o.recipeID) { return StarterTextiles.zones(o) }
     let w = o["width"]
     let d = o["depth"]
     func flat(
@@ -221,6 +225,9 @@ public enum MerchandiseBlanks {
       )
     }
     if garmentIDs.contains(object.recipeID) {
+      if object.recipeID == "pulloverHoodie", object["pocketWidth"] > object["width"] * 0.8 || object["pocketHeight"] + object["ribHeight"] > object["depth"] * 0.5 {
+        throw FormError.invalid("The hoodie pocket and hem must fit the body.")
+      }
       guard project.material(object.materialID).fabric != nil else {
         throw FormError.invalid("Choose a fabric material for this merchandise blank.")
       }
@@ -282,7 +289,7 @@ extension Project {
       MerchandiseBlanks.garmentIDs.contains(o.recipeID)
     else {
       throw FormError.invalid(
-        "Choose a crewTee, curvedCap or canvasTote to inspect bounded decoration regions.")
+        "Choose a merchandise blank to inspect bounded decoration regions.")
     }
     return [
       "object_id": o.id.uuidString, "recipe_id": o.recipeID, "units": "mm",

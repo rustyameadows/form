@@ -79,7 +79,7 @@ extension Project {
 
 extension MerchandiseBlanks {
   public static func displayHeight(_ o: ProductObject) -> Double {
-    o.recipeID == "crewTee" ? o["loft"] + 4 : o["gusset"] + 12
+    o.recipeID == "canvasTote" ? o["gusset"] + 12 : o["loft"] + 4
   }
   public static func displayPoint(_ p: Vector3, host: ProductObject) -> Vector3 {
     host.textile?.laidFaceDown == true ? .init(-p.x, displayHeight(host) - p.y, p.z) : p

@@ -6,6 +6,8 @@ import UniformTypeIdentifiers
 
 extension StudioStore {
   func graphicsCall(_ name: String, _ args: [String: Any]) throws -> Any {
+    if name == "form_model_asset" {return try modelAssets.call(args)}
+    if name == "form_cad" {return try cad.call(name,args)}
     if ArtworkTransferCommands.recognizes(name,args) {return try artworkTransferCall(args)}
     if name == "form_cloth" {return try clothCall(args)}
     if ["form_textile_stock","form_production_job"].contains(name) {return try productionCall(name,arguments:args)}
@@ -104,6 +106,7 @@ extension StudioStore {
   }
   func exportArtwork(object suppliedObject: ProductObject, arguments: [String: Any]) throws -> Any {
     guard let object=self.project?.objects.first(where:{$0.id==suppliedObject.id}) else{throw FormError.missing("Choose an existing artwork object.")}
+    guard object.meshAsset==nil else{throw FormError.invalid("UV placement has no verified physical scale. Export the original artwork frame for physical output, or use a scene PNG for the model preview.")}
     if arguments["page_output"] != nil {return try exportArtworkPage(objectID:object.id,arguments:arguments)}
     if arguments["pattern_tiles"] != nil, arguments["pattern_pieces"] as? Bool != true { throw FormError.invalid("Use pattern_tiles only with pattern_pieces:true for sewing template PDF output.") }
     if let value=arguments["ink_output"] {

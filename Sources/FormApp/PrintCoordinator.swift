@@ -1,5 +1,6 @@
 import AppKit
 import FormCore
+import FormMeshAssets
 import SwiftUI
 
 @MainActor final class PrintCoordinator: ObservableObject {
@@ -15,6 +16,7 @@ import SwiftUI
   @Published var status = "Ready to prepare"
   @Published var validationError: String?
   @Published var busy = false
+  @Published private(set) var preparing = false
   @Published var jobID: String?
   @Published var outputDirectory: URL?
   @Published var log = ""
@@ -27,6 +29,9 @@ import SwiftUI
   let monitor = BambuMonitor()
   private var process: Process?
   private var cancelled = false
+  private var preparationToken=UUID()
+  private var preparationTask:Task<Void,Never>?
+  private var preparationWorker:Task<PrintMesh,Error>?
   private(set) var preparedProjectID: UUID?
   private struct PreparationInput: Equatable {
     var projectID: UUID
@@ -35,6 +40,7 @@ import SwiftUI
     var recipe: Recipe?
     var parameters: [String: Double]
     var asset: String?
+    var geometrySource:String?
     var configuration: PrintConfiguration
     var printer: PrinterProfile
     var filament: FilamentProfile
@@ -73,6 +79,7 @@ import SwiftUI
     return OrcaEngine.appURL(configured: store.library.orcaAppPath, library: store.repository.root)
   }
   var components: [String] {
+    if let object,let source=PrintMeshBuilder.sourceComponents(object) {return source}
     if object?.recipeID=="deskClock" {return DeskClockDesign.components}
     if object?.recipeID == "clock" {
       return ["Dial", "Hour hand", "Minute hand", "Complete object"]
@@ -85,7 +92,13 @@ import SwiftUI
     return .init(
       projectID: project.id, objectID: object.id, recipeID: object.recipeID,
       recipe: project.recipe(object.recipeID), parameters: object.parameters, asset: object.asset,
+      geometrySource: geometrySource(object),
       configuration: configuration, printer: printer, filament: filament)
+  }
+  private func geometrySource(_ object:ProductObject)->String? {
+    if let mesh=object.meshAsset {return "mesh:"+mesh.normalizedSHA256+":"+mesh.sourceSHA256}
+    if let cad=object.cadRepresentation {return "cad:"+cad.definitionSHA256+":"+cad.components.map{$0.id.uuidString+":"+$0.brepSHA256+":"+$0.meshSHA256}.joined(separator:"|")}
+    return nil
   }
   private func invalidateSlice() {
     // Invalidate ownership before stopping the worker. A completion queued on
@@ -96,6 +109,7 @@ import SwiftUI
     process = nil
     busy = false
     cancelled = false
+    preparationToken=UUID();preparationTask?.cancel();preparationWorker?.cancel();preparationTask=nil;preparationWorker=nil;preparing=false
     if oldProcess?.isRunning == true { oldProcess?.terminate() }
   }
   private func clearPreview(status: String) {
@@ -149,6 +163,7 @@ import SwiftUI
     if value.printerID == nil { value.printerID = store?.library.printers.first?.id }
     if value.filamentID == nil { value.filamentID = store?.library.filaments.first?.id }
     if saved == nil {
+      if let object,let first=PrintMeshBuilder.sourceComponents(object)?.first {value.component=first}
       if object?.recipeID == "lamp" { value.component = "Shade" }
       if object?.recipeID == "clock" { value.component = "Dial" }
       if object?.recipeID == "deskClock" {value.component = "Case shell";value.rotation.x=90}
@@ -193,28 +208,44 @@ import SwiftUI
       try configuration.validate(nozzle: printer.nozzleDiameter)
       try filament.validate(for: printer)
       try printer.validate()
+      if object.meshAsset != nil || object.cadRepresentation != nil {
+        let token=preparationToken,epoch=store.artworkTransferProjectEpoch,input=currentInput,configuration=self.configuration,printer=self.printer,assets=store.repository.url(for:project.id).appendingPathComponent("Assets")
+        preparing=true;status="Checking source mesh topology…"
+        let worker=Task.detached(priority:.userInitiated) {try PrintMeshBuilder.sourceMesh(object:object,assets:assets,configuration:configuration).centered(on:printer)}
+        preparationWorker=worker
+        preparationTask=Task { [weak self] in
+          guard let self else{return}
+          defer {if self.preparationToken==token {self.preparing=false;self.preparationWorker=nil;self.preparationTask=nil}}
+          do {
+            let generated=try await withTaskCancellationHandler(operation:{try await worker.value},onCancel:{worker.cancel()})
+            guard !Task.isCancelled,self.preparationToken==token,self.store?.artworkTransferProjectEpoch==epoch,self.currentInput==input else{return}
+            self.publish(generated,object:object,persist:persist,sourceMesh:true)
+          }catch {
+            guard !Task.isCancelled,self.preparationToken==token,self.store?.artworkTransferProjectEpoch==epoch,self.currentInput==input else{return}
+            self.status="Check print setup";self.validationError=error.localizedDescription
+          }
+        }
+        return
+      }
       let generated = try PrintMeshBuilder.mesh(
         object: object, project: project,
         assets: store.repository.url(for: project.id).appendingPathComponent("Assets"),
         configuration: configuration
       ).centered(on: printer)
-      mesh = generated
-      meshVersion += 1
-      status = "Ready to slice locally"
-      do {
-        try generated.validate(on: printer)
-        validationError = nil
-      } catch { validationError = error.localizedDescription }
-      if persist {
-        lastStoredConfiguration = configuration
-        store.edit("Updated print setup", coalescing: "print-\(object.id)") { p in
-          if p.printSetups == nil { p.printSetups = [:] }
-          p.printSetups?[object.id.uuidString] = configuration
-        }
-      }
+      publish(generated,object:object,persist:persist,sourceMesh:false)
     } catch {
       status = "Check print setup"
       validationError = error.localizedDescription
+    }
+  }
+  private func publish(_ generated:PrintMesh,object:ProductObject,persist:Bool,sourceMesh:Bool) {
+    mesh=generated;meshVersion+=1;status="Ready to slice locally"
+    do {try generated.validate(on:printer);validationError=nil}catch{validationError=error.localizedDescription}
+    if sourceMesh {log="Closed oriented topology checked. Self-intersections, minimum wall thickness, clearances and manufacturing suitability remain unverified. Source CAD tessellation is the accepted stored mesh; no automatic repair or fusion was applied."}
+    if persist {
+      lastStoredConfiguration=configuration
+      let value=configuration
+      store?.edit("Updated print setup",coalescing:"print-\(object.id)") {p in if p.printSetups==nil {p.printSetups=[:]};p.printSetups?[object.id.uuidString]=value}
     }
   }
   func chooseObject(_ id: UUID) {
@@ -226,7 +257,7 @@ import SwiftUI
   func slice() throws {
     reconcile()
     guard !busy else { throw FormError.invalid("A slicing job is already running.") }
-    guard let store, let project = store.project, let object, let mesh else {
+    guard !preparing,preparedInput==currentInput,let store, let project = store.project, let object, let mesh else {
       throw FormError.invalid("Choose a printable object first.")
     }
     try configuration.validate(nozzle: printer.nozzleDiameter)
@@ -351,6 +382,7 @@ import SwiftUI
     }
   }
   func cancel() {
+    if preparing {invalidateSlice();clearPreview(status:"Preparation cancelled");return}
     guard busy else { return }
     cancelled = true
     if process?.isRunning == true { process?.terminate() }
@@ -386,6 +418,7 @@ import SwiftUI
       "validation_error": validationError as Any? ?? NSNull(), "engine_available": engineURL != nil,
       "engine_version": engineURL.map(OrcaEngine.version) as Any? ?? NSNull(), "status": status,
       "busy": busy, "job_id": jobID as Any? ?? NSNull(),
+      "preparing":preparing,"components":components,"geometry_source_revision":object.flatMap{geometrySource($0)} as Any? ?? NSNull(),
       "output_directory": outputDirectory?.path as Any? ?? NSNull(),
       "layers": toolpath?.layers.count ?? 0, "estimated_time": toolpath?.estimatedTime ?? "",
       "filament_grams": toolpath?.filamentGrams ?? "", "print_commands_enabled": false,

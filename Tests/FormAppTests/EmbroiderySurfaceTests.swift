@@ -1,6 +1,6 @@
 import AppKit
 import Metal
-import SceneKit
+import FormGeometry
 import XCTest
 @testable import FormApp
 @testable import FormCore
@@ -23,8 +23,8 @@ import XCTest
     var copy=patch;copy.id=UUID();copy.designID=UUID();copy.name="Independent process";copy.position.x=120
     p.objects=[source,patch,copy];return (p,patch.id,copy.id)
   }
-  private func node(_ scene:TableSceneController,_ id:UUID)throws -> SCNNode {try XCTUnwrap(scene.objectRoot.childNode(withName:"object:\(id.uuidString)",recursively:false))}
-  private func face(_ node:SCNNode)throws -> SCNNode {try XCTUnwrap(node.childNode(withName:EmbroiderySceneSurface.faceName,recursively:true))}
+  private func node(_ scene:TableSceneController,_ id:UUID)throws -> MeshNode {try XCTUnwrap(scene.objectRoot.childNode(withName:"object:\(id.uuidString)",recursively:false))}
+  private func face(_ node:MeshNode)throws -> MeshNode {try XCTUnwrap(node.childNode(withName:EmbroiderySceneSurface.faceName,recursively:true))}
   func testSourceProcessAndFontEditsUpdateOnlyFaceMaterialAndShareActualProgram()throws {
     var (p,id,copyID)=try fixture()
     let scene=TableSceneController(),assets=FileManager.default.temporaryDirectory
@@ -96,7 +96,7 @@ import XCTest
     XCTAssertEqual(store.project,updated)
     store.engine.undo();XCTAssertEqual(store.project,original);store.engine.redo();XCTAssertEqual(store.project,updated)
   }
-  func testNativeSceneRendersActualNeedleSurfaceWithBoundedFaceMaps()throws {
+  func testNativeSceneRendersActualNeedleSurfaceWithBoundedFaceMaps()async throws {
     guard MTLCreateSystemDefaultDevice() != nil else {throw XCTSkip("Native needle preview requires Metal.")}
     var (p,id,_)=try fixture();p.objects.removeAll {$0.id != id};p.objects[0].artworkSourceID=nil
     let (source,_,_)=try fixture();p.objects[0].artwork=source.objects[0].artwork
@@ -105,7 +105,7 @@ import XCTest
     p.objects[0].textile?.embroidery?.regions[1].elementIDs=[ids[1]]
     let scene=TableSceneController();scene.sync(p,selection:[],isolated:[],showGrid:false,studio:true,preset:"Daylight",assets:FileManager.default.temporaryDirectory,textureLimit:1024)
     scene.camera.target = .init();scene.camera.distance=2;scene.camera.elevation=1.05;scene.camera.azimuth=0.1;scene.updateCamera()
-    let png=try XCTUnwrap(scene.snapshot(size:.init(width:1000,height:800)).pngData());XCTAssertGreaterThan(png.count,10000)
+    let rendered=try await scene.snapshot(size:.init(width:1000,height:800));let png=try XCTUnwrap(rendered.pngData());XCTAssertGreaterThan(png.count,10000)
     if let folder=ProcessInfo.processInfo.environment["FORM_EMBROIDERY_PROCESS_PROOF_DIR"] {
       try png.write(to:URL(fileURLWithPath:folder).appendingPathComponent("native-stitch-surface.png"))
     }

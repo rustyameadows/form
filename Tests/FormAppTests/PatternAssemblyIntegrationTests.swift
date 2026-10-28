@@ -1,5 +1,5 @@
 import AppKit
-import SceneKit
+import FormGeometry
 import XCTest
 @testable import FormCore
 @testable import FormGraphics

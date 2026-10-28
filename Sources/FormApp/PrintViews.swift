@@ -1,6 +1,6 @@
 import AppKit
 import FormCore
-import SceneKit
+import FormGeometry
 import SwiftUI
 
 struct PrintWorkspace: View {
@@ -267,19 +267,15 @@ struct PrintBedCanvas: NSViewRepresentable {
   func makeCoordinator() -> BedRenderer {
     BedRenderer()
   }
-  func makeNSView(context: Context) -> TableSCNView {
-    let view = TableSCNView(frame: .zero)
+  func makeNSView(context: Context) -> TableSceneView {
+    let view = TableSceneView(frame: .zero)
     view.onEscape = { [weak printing] in printing?.store?.showingPrint = false }
     view.controller = context.coordinator.controller
     context.coordinator.controller.view = view
-    view.scene = context.coordinator.controller.scene
-    view.pointOfView = context.coordinator.controller.cameraNode
-    view.antialiasingMode = .multisampling4X
-    view.rendersContinuously = false
     view.setAccessibilityLabel("Print bed preview, object and sliced layers")
     return view
   }
-  func updateNSView(_ view: TableSCNView, context: Context) {
+  func updateNSView(_ view: TableSceneView, context: Context) {
     context.coordinator.update(printing)
     view.needsDisplay = true
   }
@@ -287,11 +283,11 @@ struct PrintBedCanvas: NSViewRepresentable {
 
 @MainActor final class BedRenderer {
   let controller = TableSceneController()
-  private let content = SCNNode(), pathRoot = SCNNode(), plateRoot = SCNNode()
+  private let content = MeshNode(), pathRoot = MeshNode(), plateRoot = MeshNode()
   private var lastMesh = -1, lastPath = -1
   private var lastBed = ""
   private var lastCamera = -1
-  private var layers: [SCNNode] = []
+  private var layers: [MeshNode] = []
   init() {
     controller.scene.rootNode.addChildNode(content)
     controller.scene.rootNode.addChildNode(pathRoot)
@@ -302,29 +298,27 @@ struct PrintBedCanvas: NSViewRepresentable {
     controller.camera.target.y = 0.25
     controller.updateCamera()
   }
-  private func point(_ p: Vector3, _ printer: PrinterProfile) -> SCNVector3 {
+  private func point(_ p: Vector3, _ printer: PrinterProfile) -> MeshVector3 {
     .init((p.x - printer.bedWidth / 2) / 100, p.z / 100, -(p.y - printer.bedDepth / 2) / 100)
   }
   func update(_ printing: PrintCoordinator) {
     let printer = printing.printer
     let key = "\(printer.bedWidth)-\(printer.bedDepth)"
-    SCNTransaction.begin()
-    SCNTransaction.disableActions = true
     if key != lastBed {
       plateRoot.childNodes.forEach { $0.removeFromParentNode() }
       lastBed = key
-      let material = SCNMaterial()
+      let material = MeshMaterial()
       material.lightingModel = .physicallyBased
       material.diffuse.contents = NSColor(hex: "#6C7470")
       material.roughness.contents = 0.8
-      let bed = SCNNode(
-        geometry: SCNBox(
+      let bed = MeshNode(
+        geometry: MeshBox(
           width: printer.bedWidth / 100, height: 0.045, length: printer.bedDepth / 100,
           chamferRadius: 0.035))
       bed.geometry?.materials = [material]
       bed.position.y = -0.028
       plateRoot.addChildNode(bed)
-      var points: [SCNVector3] = []
+      var points: [MeshVector3] = []
       for i in stride(from: 0.0, through: printer.bedWidth, by: 10) {
         points += [
           point(.init(i, 0, 0.1), printer), point(.init(i, printer.bedDepth, 0.1), printer),
@@ -335,20 +329,20 @@ struct PrintBedCanvas: NSViewRepresentable {
           point(.init(0, i, 0.1), printer), point(.init(printer.bedWidth, i, 0.1), printer),
         ]
       }
-      let grid = SCNGeometry(
-        sources: [SCNGeometrySource(vertices: points)],
+      let grid = MeshGeometry(
+        sources: [MeshGeometrySource(vertices: points)],
         elements: [
-          SCNGeometryElement(indices: Array(0..<Int32(points.count)), primitiveType: .line)
+          MeshGeometryElement(indices: Array(0..<Int32(points.count)), primitiveType: .line)
         ])
-      let line = SCNMaterial()
+      let line = MeshMaterial()
       line.lightingModel = .constant
       line.diffuse.contents = NSColor.white.withAlphaComponent(0.16)
       grid.materials = [line]
-      plateRoot.addChildNode(SCNNode(geometry: grid))
-      let exclusion = SCNNode(geometry: SCNPlane(width: 0.18, height: 0.28))
+      plateRoot.addChildNode(MeshNode(geometry: grid))
+      let exclusion = MeshNode(geometry: MeshPlane(width: 0.18, height: 0.28))
       exclusion.eulerAngles.x = -.pi / 2
       exclusion.position = point(.init(9, 14, 0.3), printer)
-      let warning = SCNMaterial()
+      let warning = MeshMaterial()
       warning.lightingModel = .constant
       warning.diffuse.contents = NSColor(hex: "#D45A37").withAlphaComponent(0.6)
       exclusion.geometry?.materials = [warning]
@@ -361,18 +355,18 @@ struct PrintBedCanvas: NSViewRepresentable {
         let vertices = mesh.triangles.flatMap {
           [point($0.a, printer), point($0.b, printer), point($0.c, printer)]
         }
-        let geo = SCNGeometry(
-          sources: [SCNGeometrySource(vertices: vertices)],
+        let geo = MeshGeometry(
+          sources: [MeshGeometrySource(vertices: vertices)],
           elements: [
-            SCNGeometryElement(indices: Array(0..<Int32(vertices.count)), primitiveType: .triangles)
+            MeshGeometryElement(indices: Array(0..<Int32(vertices.count)), primitiveType: .triangles)
           ])
-        let material = SCNMaterial()
+        let material = MeshMaterial()
         material.lightingModel = .physicallyBased
         material.diffuse.contents = NSColor(hex: printing.filament.color)
         material.roughness.contents = 0.6
         material.isDoubleSided = true
         geo.materials = [material]
-        content.addChildNode(SCNNode(geometry: geo))
+        content.addChildNode(MeshNode(geometry: geo))
       }
     }
     if printing.toolpathVersion != lastPath {
@@ -380,21 +374,21 @@ struct PrintBedCanvas: NSViewRepresentable {
       pathRoot.childNodes.forEach { $0.removeFromParentNode() }
       layers = []
       if let path = printing.toolpath {
-        var grouped = [[SCNVector3]](repeating: [], count: path.layers.count)
+        var grouped = [[MeshVector3]](repeating: [], count: path.layers.count)
         for segment in path.segments where segment.layer < grouped.count {
           grouped[segment.layer] += [point(segment.from, printer), point(segment.to, printer)]
         }
-        let material = SCNMaterial()
+        let material = MeshMaterial()
         material.lightingModel = .constant
         material.diffuse.contents = NSColor(hex: printing.filament.color)
         for points in grouped {
-          let geo = SCNGeometry(
-            sources: [SCNGeometrySource(vertices: points)],
+          let geo = MeshGeometry(
+            sources: [MeshGeometrySource(vertices: points)],
             elements: [
-              SCNGeometryElement(indices: Array(0..<Int32(points.count)), primitiveType: .line)
+              MeshGeometryElement(indices: Array(0..<Int32(points.count)), primitiveType: .line)
             ])
           geo.materials = [material]
-          let node = SCNNode(geometry: geo)
+          let node = MeshNode(geometry: geo)
           pathRoot.addChildNode(node)
           layers.append(node)
         }
@@ -418,6 +412,6 @@ struct PrintBedCanvas: NSViewRepresentable {
       }
       controller.updateCamera(animated: true)
     }
-    SCNTransaction.commit()
+    controller.renderScene()
   }
 }

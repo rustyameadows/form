@@ -27,11 +27,13 @@ extension Samples {
     .init(
       id: "forms", name: "Objects in good company", title: "Material & form",
       summary: "Compare clay, wood, and aluminum.", symbol: "cube"),
+    .init(id:"giftShop",name:"Gift shop / Working blanks",title:"Start a small collection",summary:"Two tees, hoodie, cap, beanie, bandana and tote with inspectable proposed product selections.",symbol:"tshirt"),
     .init(id:"pouchAssembly",name:"NASA / Curved pouch",title:"Pattern assembly",summary:"Original curved pieces, explicit supports, physical seams and editable material-space print.",symbol:"bag"),
   ]
   public static func make(_ template: String) throws -> Project {
     switch template {
     case "blank": return Project(name: "Untitled study")
+    case "giftShop": return try giftShopCollection()
     case "affinities": return try affinities()
     case "clock": return clock()
     case "flightJacket": return flightJacket()

@@ -1,5 +1,7 @@
 # LAB
 
+The [starter object library](docs/starter-object-library.md) adds searchable real product/form references, 28 editable starters, and reversible proposed garment blanks. Open **Add object → Object library…** or start **Gift shop / Working blanks** from Home.
+
 A native Mac creative environment for designing and making physical things.
 
 **Form, Function, Fabricate** are the three primary environments for one project. **Studio** remains a separate environment, available through the aperture icon and Studio menu, for lighting, saved shots and presentation. Canvas, Table, split view and a separate Canvas window are views of that shared project. See the [LAB thesis](docs/lab-working-thesis-v2.md) and [transition contract](docs/lab-transition.md).
@@ -8,7 +10,7 @@ A native Mac creative environment for designing and making physical things.
 
 Explore typography, notes, references, and graphics on a freeform 2D Canvas, connected to a continuous 3D Table for physical objects and materials. Use either surface alone, side by side, or with Canvas in a separate window. Start with the thing you want to make, then work directly with its dimensions, construction, and appearance.
 
-**Version 0.2 transition:** A working native application with persistent projects, parametric objects, linked artwork, production exports, local Orca slicing, and a local MCP interface. **Codex handles the creative conversation; LAB makes no external AI model calls.**
+**Version 0.3 foundation:** RealityKit views, exact OCCT feature models, source-preserving GLB/glTF/STL and STEP import, native modeling reviews, linked artwork, production exports, local Orca slicing and a local MCP interface. **Codex handles the creative conversation; LAB makes no external AI model calls.** See the [CAD guide and verified limits](docs/cad-foundation.md).
 
 The next governing document is the [2D Design, Typography & Vector Editing specification](docs/2d-design-typography-vector-spec.md). Its professional editing requirements expand the [implementation roadmap](docs/implementation-goal.md); the checklist distinguishes shipped foundations from remaining work.
 
@@ -16,9 +18,10 @@ The next governing document is the [2D Design, Typography & Vector Editing speci
 
 ## Build and open
 
-Requires macOS 14 or later and Xcode 16 or later with the Swift 6 toolchain. No external Swift packages or API keys are required. The app includes pinned Clipper2 geometry source under Boost 1.0 and Mapbox Earcut source under ISC; see [third-party geometry](docs/third-party-geometry.md).
+This CAD upgrade branch requires an Apple silicon Mac running macOS 15 or later and Xcode with the Swift 6 toolchain. No external Swift packages or API keys are required. Build the pinned native OCCT 8.0.1 dependency once; subsequent app builds reuse it. The app includes Clipper2 (Boost 1.0), Mapbox Earcut (ISC), and dynamically linked OCCT (LGPL 2.1 with its exception). See [CAD architecture and licensing](docs/cad-kernel.md) and [third-party geometry](docs/third-party-geometry.md).
 
 ```sh
+bash scripts/install-occt.sh
 bash scripts/build.sh release
 open build/LAB.app
 ```
@@ -30,6 +33,8 @@ For a faster development build, use `bash scripts/build.sh`. The script creates 
 - **Home:** Saved project previews, search, blank projects, and editable starting studies. Featured cards start AFFINITIES, Cloth studies, or the merchandise collection; All studies and File → New from Study expose the full set. [Technical Canvas previews](docs/home-technical-preview.md) improve thin sewing contours for display while preserving source dimensions and cached files.
 - **AFFINITIES:** A complete editable 8 × 10 composition with rich typography, a masked Bézier landscape, an independent outlined alternate, and linked oak/graphite editions. It opens the source in split view. See the [15-step design workflow](docs/design-acceptance.md).
 - **Sculpted desk clock:** A reference-led hollow curved case, separate physical components and editable dial, with native dimensions and component STL preparation. See [MERIDIAN and the remaining fit decisions](docs/desk-clock-study.md).
+- **Exact modeling:** Editable clock enclosure, curved vessel, featured lamp and enclosure constructions, with real booleans, fillets, shells, sweeps and STEP output. Use **Add object → Exact CAD model…** or `form_cad`. [CAD workflow](docs/cad-foundation.md).
+- **Imported 3D assets:** GLB/glTF/STL review, original hierarchy/materials/textures/units, visible independent colorways and UV artwork; STEP assemblies retain names, placements and face colors. [Interchange scope](docs/mesh-interchange.md).
 - **The Table:** A continuous Metal-backed 3D workspace with physical scale, soft shadows, image references, material swatches, selection, movement, grouping, duplication, and persistent camera state.
 - **Connected Canvas:** Type, draw, or place images without an artboard, including negative coordinates. Drag artwork onto or off a physical region to update its 3D face with shared Undo. Resizable split and separate-window layouts keep one editor and shared project state. See [Canvas and Table](docs/design-surfaces.md).
 - **Textile foundation:** Dimensioned flight-bomber blanks, garment-relative patches and sewn labels, shared editable artwork, two NASA-themed colorways, and editable Studio fabric specifications/inventory. The [ORBITAL study](docs/textile-foundation.md) is a concept blank and decoration workflow; the broader garment-pattern, cloth-simulation, and production-sew-out requirements remain unfinished.

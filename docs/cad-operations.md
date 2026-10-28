@@ -1,0 +1,30 @@
+# Supported native CAD operations
+
+All dimensions and distances are millimeters. Geometry uses Double precision, right handed +Y up. Inputs are persistent feature UUIDs, not raw kernel pointers. Every result passes OCCT topology validation. Final model outputs must be closed positive-volume solids; profiles can remain intermediate faces. A failed feature preserves the previous accepted model and reports its feature UUID/name. Modeling tolerance is separate from display tessellation.
+
+| Operation | Supported inputs and parameters | Exact output and failure boundary |
+| --- | --- | --- |
+| `box`, `cylinder`, `cone`, `sphere`, `torus` | Positive physical dimensions; cone radii may include one zero; torus major radius exceeds minor | Analytic solid; degenerate dimensions reject |
+| `profile` | One planar outer polygon and up to 63 hole loops, explicit orthonormal plane; named scalar expressions | Planar face; nonplanarity, crossing/invalid wire or invalid holes reject |
+| `circleProfile`, `curveProfile` | Exact circle or connected line, quadratic/cubic Bezier and three-point circular arcs in a plane | Closed planar face; incomplete, disconnected or self-intersecting profiles reject. This is not a general constrained-spline solver |
+| `offsetProfile` | One single-loop planar face and signed `distance` (positive outward, negative inward) | Real OCCT wire offset with circular joins, rebuilt planar face; collapsed/split/invalid loops reject. Holes and general offset surfaces are outside this operation |
+| `extrude`, `extrudeCut` | Profile + `distance`/unit direction; cut also takes a target body | Exact prism or body subtraction; non-solid/invalid outcomes reject |
+| `revolve`, `revolveCut` | Profile, axis origin/unit direction, `angleDegrees` (default 360); cut also takes target | Exact surface of revolution/solid or cut; crossing axis, degenerate sweep and invalid solid reject |
+| `sweep` | Closed profile plus 2–10,000 polyline path points | Kernel pipe solid; self-intersection, discontinuity or unsuitable section placement reject |
+| `loft` | 2–64 single-loop closed section faces, optional `ruled` | Exact loft solid; incompatible ordering, crossings and invalid output reject. Hollow lofts use separate cut features |
+| `union`, `subtract`, `intersect`, `join` | Two valid solids | Actual kernel boolean. `join` expresses a constructive union. Empty or invalid results reject; disconnected union may retain multiple solids |
+| `hole` | Target body, circle `radius`, cut `depth`, origin/plane and optional unit direction | Exact cylindrical cut. Depth is explicit; countersinks/threads and automatic through-all extent are not inferred |
+| `slot` | Target body, overall `length`, `width`, cut `depth`, origin/plane/direction | Exact capsule-shaped cut (two lines and two circular ends). Length must exceed width |
+| `pocket`, `boss` | Target body + closed profile, extrusion `distance` and unit direction | Exact prism subtraction/addition. Profile placement defines cut or overlap; disconnected or invalid geometry is reported by the kernel |
+| `fillet`, `chamfer` | Body, revision-scoped edge ordinals or all edges, radius/distance | Actual edge finishing; excessive radius, unsupported corners or changed ordinal fingerprint reject |
+| `shell` | Body, removed faces selected by input fingerprint or unique planar extrema, positive wall `thickness` | Inward normal-offset shell forming a closed wall solid. Invalid offsets/ambiguous opening faces reject; not arbitrary surface thickening |
+| `transform`, `copy`, `mirror` | Shape + affine row-major 4×4 matrix, or explicit mirror plane | Exact transformed geometry. Rigid/uniform placement preserves analytical surfaces; nonuniform scale may use exact NURBS |
+| `linearPattern`, `circularPattern` | Source shape, bounded count, physical step vector or axis/origin/angular step | Compound of exact placed occurrences, not necessarily fused. Invalid/oversized count or placement rejects |
+| `assembly` | Existing valid component shapes | Exact compound preserves occurrence geometry/placements; no assembly constraint or mechanism solver is implied |
+| `importedBRep`, `importedSTEP` | Bounded source bytes pinned by relative asset name and SHA-256 | Source exact geometry. STEP has unit conversion to mm; imported history is unavailable. XCAF import preserves hierarchy, occurrence names, source part/face colors and placement for self-contained assemblies. External file references reject; regenerated STEP export currently writes geometric bodies without restoring the metadata tree |
+
+Named parameter expressions allow `+ - * /`, parentheses, scientific literals, names, `pi` and `tau`. All graphs validate dependencies, operation-specific fields, dimensional bounds and expression complexity before evaluation. Selected face/edge ordinals require the matching input fingerprint; dimensions that change it require explicit reinspection. Unique planar extrema may be used only when there is exactly one matching face.
+
+Display quality presets are Preview (0.2 mm / 0.35 rad), Inspection (0.05 mm / 0.15 rad), and Fine fabrication (0.02 mm / 0.1 rad). These control derived tessellation and do not change the BRep source. Fine meshes still enter the existing print-preparation checks; the preset is not manufacturing certification.
+
+An executed acceptance model combined hole, slot, pocket and boss features and measured 155,404.24796047478 mm³ against the analytic expected 155,404.24796047385 mm³. Linear and circular patterns retained two and three closed solids; mirror/copy remained exact. Expanding a radius-10 profile by 2 mm then extruding 5 mm measured 2,261.9467105846506 mm³, matching π × 12² × 5. Collapsed inward offset was rejected. These behaviors have corresponding regression tests.

@@ -1,4 +1,6 @@
 import Foundation
+import FormMeshAssets
+import FormCADModel
 
 public struct Vector3: Codable, Equatable, Sendable {
   public var x: Double
@@ -211,6 +213,10 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var clothAttachment: ClothAttachment?
   public var patternAssembly:PatternAssemblyDefinition?
   public var patternAssemblyAttachment:PatternAssemblyAttachment?
+  public var librarySelection: ObjectLibrarySelection?
+  public var meshAsset: MeshAssetReference?
+  public var cadModel: CADModelDefinition?
+  public var cadRepresentation: CADRepresentation?
   public init(
     name: String, recipeID: String, parameters: [String: Double], materialID: String = "chalk",
     position: Vector3 = .init(), rotation: Double = 0, artwork: Artwork? = nil
@@ -228,11 +234,17 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   }
   public subscript(_ key: String) -> Double { parameters[key] ?? 0 }
   public var footprintWidth: Double {
+    if let meshAsset {return meshAsset.boundsMM.size.x * max(0.001,self["scalePercent"]/100)}
+    if let cadRepresentation {return cadRepresentation.maximum.x-cadRepresentation.minimum.x}
+    if recipeID=="pulloverHoodie" {return self["width"]+self["sleeveLength"]*2}
     if recipeID=="crewTee" {return self["width"]+self["sleeveLength"]*2}
     if recipeID=="curvedCap" {return max(self["width"],self["brimWidth"])}
     return max(self["width"], self["shadeDiameter"], self["baseDiameter"], self["diameter"], 100)
   }
   public var footprintDepth: Double {
+    if let meshAsset {return meshAsset.boundsMM.size.z * max(0.001,self["scalePercent"]/100)}
+    if let cadRepresentation {return cadRepresentation.maximum.z-cadRepresentation.minimum.z}
+    if recipeID=="pulloverHoodie" {return self["depth"]+self["hoodHeight"]}
     if recipeID=="curvedCap" {return self["width"]+self["depth"]}
     if recipeID=="canvasTote" {return self["depth"]+self["handleDrop"]}
     return max(self["depth"], self["shadeDiameter"], self["baseDiameter"], self["diameter"], 100)
@@ -406,6 +418,8 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if objects.contains(where:{$0.meshAsset != nil || $0.cadModel != nil || $0.cadRepresentation != nil}) {return max(schemaVersion,52)}
+    if objects.contains(where:{$0.librarySelection != nil || StarterTextiles.recipeIDs.contains($0.recipeID)}) {return max(schemaVersion,51)}
     if objects.contains(where:{$0.recipeID=="deskClock"}) {return max(schemaVersion,50)}
     if objects.contains(where:{$0.artwork?.safeInset != nil}) {return max(schemaVersion,49)}
     if requiresCharacterPositionSchema {return max(schemaVersion,47)}

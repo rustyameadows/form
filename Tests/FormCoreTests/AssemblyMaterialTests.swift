@@ -1,5 +1,5 @@
 import AppKit
-import SceneKit
+import FormGeometry
 import XCTest
 @testable import FormCore
 @testable import FormGraphics
@@ -68,11 +68,11 @@ import XCTest
   func testPanelMaterialsAndFixedUVsSurviveActualSolverUpdates()throws {
     let (project,definition)=try PatternAssemblySamples.roundedPouch(),product=try PatternAssemblyGenerator.generate(definition,in:project)
     let source=project.objects[0].artwork!
-    var byPanel:[Int:SCNMaterial]=[:]
+    var byPanel:[Int:MeshMaterial]=[:]
     for p in product.panels {byPanel[p.panelIndex]=try AssemblyMaterialRenderer.material(panel:p,source:source,project:project,assets:assets,fontRevision:0)}
     let builds=AssemblyMaterialRenderer.textureBuilds
     var solver=try ClothSolver(mesh:product.study.mesh,settings:product.study.settings,colliders:product.study.colliders,preparation:product.study.preparation)
-    let surface=try ClothSurface(mesh:product.study.mesh,frame:solver.frame,panelMaterials:byPanel,fallbackMaterial:SCNMaterial()),first=try XCTUnwrap(surface.node.geometry),uv=try XCTUnwrap(first.sources(for:.texcoord).first)
+    let surface=try ClothSurface(mesh:product.study.mesh,frame:solver.frame,panelMaterials:byPanel,fallbackMaterial:MeshMaterial()),first=try XCTUnwrap(surface.node.geometry),uv=try XCTUnwrap(first.sources(for:.texcoord).first)
     XCTAssertEqual(first.elements.count,4);XCTAssertEqual(first.materials.count,4)
     XCTAssertEqual(first.elements.reduce(0){$0+$1.primitiveCount},product.study.mesh.triangles.count)
     for p in product.panels {

@@ -47,6 +47,7 @@ public final class OperationEngine {
     guard var value = project else { throw FormError.missing("Open or create a project first.") }
     let before = value
     try body(&value)
+    value.refreshLibrarySelections()
     try value.validateArtworkLinks()
     value.schemaVersion = value.minimumSchemaVersion
     guard before != value else { return }
@@ -435,6 +436,7 @@ public final class OperationEngine {
         "selected_nodes": selectedNodes.map(\.uuidString),
         "selected_elements": selectedElements.map(\.uuidString),
       ]
+    case "form_object_library": return try objectLibraryCall(a, source: source)
     case "form_list_recipes": return try jsonObject(Recipe.builtins + (project?.recipes ?? []))
     case "form_link_artwork":
       let id = try objectID()
@@ -482,6 +484,7 @@ public final class OperationEngine {
     case "form_add_object":
       let p = try requireProject()
       let recipe = try string("recipe_id")
+      guard !["importedMesh", "cadModel"].contains(recipe) else {throw FormError.invalid("Use model import or CAD feature authoring to create an object with validated source geometry.")}
       if let raw = a["canvas_workspace"] {
         guard let flag = raw as? NSNumber,CFGetTypeID(flag) == CFBooleanGetTypeID() else {
           throw FormError.invalid("canvas_workspace must be a boolean.")
@@ -654,6 +657,7 @@ public final class OperationEngine {
       object.relationship = mode
       if mode != "variant" {
         if object.artworkSourceID != nil {
+          if object.recipeID == "importedMesh" {let size=p.artworkSize(object);object.meshAsset?.artworkSizeMM = .init(width:size.x,height:size.y)}
           object.artwork = p.surfaceArtwork(object,keepingSwatchReferences:true)
           object.artwork?.requiresInkOutput=false
           object.artworkSourceID = nil
@@ -661,6 +665,11 @@ public final class OperationEngine {
           if object.recipeID == "clock" { object.artwork?.boundary = nil }
         }
         object.designID = UUID()
+        if object.cadModel != nil {
+          object.cadModel!.id = UUID()
+          object.cadRepresentation?.modelID = object.cadModel!.id
+          object.cadRepresentation?.definitionSHA256 = try CADRepresentation.definitionHash(object.cadModel!)
+        }
         object.parentIterationID = id
       }
       if let material = a["material_id"] as? String { object.materialID = material }
@@ -765,6 +774,7 @@ public final class OperationEngine {
         operations.count <= 100
       else { throw FormError.invalid("Provide 1–100 operations.") }
       let allowed = Set([
+        "form_object_library",
         "form_add_object", "form_update_object", "form_duplicate_object", "form_group_objects",
         "form_set_artwork", "form_add_note", "form_create_recipe", "form_delete_objects",
         "form_edit_artwork",

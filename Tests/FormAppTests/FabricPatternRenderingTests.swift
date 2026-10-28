@@ -1,5 +1,5 @@
 import AppKit
-import SceneKit
+import FormGeometry
 import XCTest
 @testable import FormApp
 @testable import FormCore
@@ -130,9 +130,9 @@ import XCTest
     controller.sync(changed, selection: [], isolated: [], showGrid: true, studio: false, preset: "Perspective", assets: assets)
     XCTAssertGreaterThan(controller.geometryBuilds, builds)
     let node = GeometryFactory.object(garment, project: changed, assets: assets)
-    var patternedMaterial: SCNMaterial?
+    var patternedMaterial: MeshMaterial?
     node.enumerateChildNodes { child, _ in
-      if let material = child.geometry?.firstMaterial, !SCNMatrix4EqualToMatrix4(material.diffuse.contentsTransform, SCNMatrix4Identity) { patternedMaterial = material }
+      if let material = child.geometry?.firstMaterial, material.diffuse.contentsTransform.raw != MeshMatrix4Identity.raw { patternedMaterial = material }
     }
     let material = try XCTUnwrap(patternedMaterial)
     XCTAssertTrue(material.diffuse.contents is NSImage); XCTAssertEqual(material.diffuse.wrapS, .repeat)

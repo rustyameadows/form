@@ -55,6 +55,8 @@ enum TableTool: String, CaseIterable {
   @Published var notice: String?
   @Published var error: String?
   @Published var showingLibrary = false
+  @Published var showingObjectLibrary = false
+  @Published var libraryReplacementID: UUID?
   @Published var showingProjectInfo = false
   @Published var showingBridge = false
   @Published var showingPrint = false
@@ -69,6 +71,8 @@ enum TableTool: String, CaseIterable {
   @Published var library: StudioLibrary
   var scene: TableSceneController?
   lazy var printing = PrintCoordinator(store: self)
+  lazy var modelAssets=ModelAssetCoordinator(store:self)
+  lazy var cad=CADModelCoordinator(store:self)
   @Published var showingDocumentFonts=false
   var fontLibraryPreferences=FontLibraryPreferences.environment()
   lazy var cloth = ClothCoordinator(store:self)
@@ -158,6 +162,8 @@ enum TableTool: String, CaseIterable {
       self?.studioReturnSurface = nil
       self?.fabricationReview = nil
       self?.printing.resetForProjectChange()
+      self?.modelAssets.reset()
+      self?.cad.reset()
       self?.cloth.clear()
       self?.showingPrint = false
       self?.artworkSession.showingTextStyles = false
@@ -196,6 +202,22 @@ enum TableTool: String, CaseIterable {
               return
             }
             if name == "form_cloth" {completion(.success(try self.bridgeClothCall(args)));return}
+            if name == "form_model_asset" || name == "form_cad" {
+              // Coordinators own field handoff and the single guarded publication.
+              // Polling/preparing a job must never commit an active text draft.
+              completion(.success(try self.graphicsCall(name,args)))
+              return
+            }
+            if name == "form_export", (args["format"] as? String == "png" || args["shot_id"] != nil) {
+              guard let format=args["format"] as? String,["png","pdf","svg","json"].contains(format) else{throw FormError.invalid("Export requires a supported format.")}
+              if args["shot_id"] == nil {self.finishArtworkEditing();try self.engine.flush()}
+              Task { @MainActor [weak self] in
+                guard let self else {completion(.failure(FormError.missing("LAB is closing.")));return}
+                do {completion(.success(try await self.exportAsync(format:format,arguments:args)))}
+                catch {completion(.failure(error))}
+              }
+              return
+            }
             let readOnly = (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
               [
                 "form_status", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones",
@@ -603,26 +625,32 @@ enum TableTool: String, CaseIterable {
   func previewURL(_ id: UUID) -> URL {
     repository.url(for: id).appendingPathComponent("Preview.png")
   }
+  private var previewCaptureTasks:[UUID:Task<Void,Never>]=[:]
+  private var previewCaptureGenerations:[UUID:UUID]=[:]
   func capturePreview() {
-    guard let project else { return }
-    do {
-      let image = ProjectPreview.image(
-        project: project, size: CGSize(width: 1000, height: 650),
-        assets: repository.url(for: project.id).appendingPathComponent("Assets"))
-      try image.pngData()?.write(to: previewURL(project.id), options: .atomic)
-      previewVersion += 1
-    } catch { self.error = "Could not save project preview: \(error.localizedDescription)" }
+    guard let project else{return};enqueuePreview(project)
+  }
+  private func enqueuePreview(_ snapshot:Project) {
+    let id=snapshot.id,token=UUID(),assets=repository.url(for:snapshot.id).appendingPathComponent("Assets")
+    previewCaptureTasks[id]?.cancel();previewCaptureGenerations[id]=token
+    previewCaptureTasks[id]=Task { [weak self] in
+      do {
+        let image=try await ProjectPreview.image(project:snapshot,size:CGSize(width:1000,height:650),assets:assets)
+        guard let self,!Task.isCancelled,self.previewCaptureGenerations[id]==token else{return}
+        guard let data=image.pngData() else{throw FormError.invalid("Project preview encoding failed.")}
+        try data.write(to:self.previewURL(id),options:.atomic);self.previewVersion+=1
+        self.previewCaptureTasks[id]=nil;self.previewCaptureGenerations[id]=nil
+      }catch {
+        guard let self,!Task.isCancelled,self.previewCaptureGenerations[id]==token else{return}
+        self.previewCaptureTasks[id]=nil;self.previewCaptureGenerations[id]=nil
+        self.error="Could not save project preview: \(error.localizedDescription)"
+      }
+    }
   }
   func generateMissingPreviews() {
-    for (index, summary) in projects.enumerated()
-    where !FileManager.default.fileExists(atPath: previewURL(summary.id).path) {
-      DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.3) { [weak self] in
-        guard let self, let project = try? self.repository.load(summary.id) else { return }
-        let image = ProjectPreview.image(
-          project: project, size: CGSize(width: 1000, height: 650),
-          assets: self.repository.url(for: project.id).appendingPathComponent("Assets"))
-        try? image.pngData()?.write(to: self.previewURL(project.id), options: .atomic)
-        self.previewVersion += 1
+    for (index,summary) in projects.enumerated() where !FileManager.default.fileExists(atPath:previewURL(summary.id).path) {
+      DispatchQueue.main.asyncAfter(deadline:.now()+Double(index)*0.3) { [weak self] in
+        guard let self,let project=try? self.repository.load(summary.id) else{return};self.enqueuePreview(project)
       }
     }
   }

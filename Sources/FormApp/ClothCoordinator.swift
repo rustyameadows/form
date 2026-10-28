@@ -1,5 +1,5 @@
 import Foundation
-import SceneKit
+import FormGeometry
 import FormCore
 import FormGraphics
 

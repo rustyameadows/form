@@ -1,12 +1,16 @@
 import AppKit
 import FormCore
-import SceneKit
+import FormGeometry
+import FormMeshAssets
+import FormCADModeling
 
 @MainActor enum PrintMeshBuilder {
-  private static let preparationRenderer = SCNRenderer(device: nil, options: nil)
   static func mesh(
     object: ProductObject, project: Project, assets: URL, configuration: PrintConfiguration
   ) throws -> PrintMesh {
+    if object.meshAsset != nil || object.cadRepresentation != nil {
+      return try sourceMesh(object:object,assets:assets,configuration:configuration)
+    }
     guard !object.isFlexibleSurface else {throw FormError.invalid(ClothStudy.unsupportedPrintReason)}
     guard !TextileDesign.recipeIDs.contains(object.recipeID) else {
       throw FormError.invalid("This is a textile presentation product. Export its linked artwork; it is not an FDM-printable mesh.")
@@ -45,14 +49,13 @@ import SceneKit
     var triangles: [MeshTriangle] = []
     var failure: Error?
     root.enumerateChildNodes { node, stop in
-      guard let original = node.geometry, !(original is SCNPlane) else { return }
+      guard let original = node.geometry, !(original is MeshPlane) else { return }
       // Parametric primitives can initially expose a unit placeholder mesh.
       // Explicit preparation bakes their dimensions and chamfers even when the
       // object has never appeared in a rendered view. STL needs no materials.
-      let geometry = original.copy() as! SCNGeometry
+      let geometry = original.copy() as! MeshGeometry
       geometry.materials = []
-      guard preparationRenderer.prepare(geometry, shouldAbortBlock: nil),
-        let source = geometry.sources(for: .vertex).first
+      guard let source = geometry.sources(for: .vertex).first
       else {
         failure = FormError.invalid("Could not prepare the object's mesh for export.")
         stop.pointee = true
@@ -75,7 +78,7 @@ import SceneKit
               : bytes.loadUnaligned(fromByteOffset: offset, as: Double.self)
           }
         }
-        let p = node.convertPosition(SCNVector3(values[0], values[1], values[2]), to: root)
+        let p = node.convertPosition(FormGeometry.MeshVector3(values[0], values[1], values[2]), to: root)
         var point = Vector3(Double(p.x) * 100, -Double(p.z) * 100, Double(p.y) * 100)
         let rotation = configuration.rotation
         for (axis, degrees) in [(0, rotation.x), (1, rotation.y), (2, rotation.z)] {
@@ -140,5 +143,62 @@ import SceneKit
       throw FormError.invalid("This object has no printable solid geometry.")
     }
     return .init(triangles: triangles)
+  }
+
+  /// Stable source identities are embedded in labels so repeated names remain unambiguous.
+  nonisolated static func sourceComponents(_ object:ProductObject)->[String]? {
+    if let reference=object.meshAsset {
+      var seen=Set<String>()
+      return reference.parts.compactMap {part in guard seen.insert(part.nodeID).inserted else{return nil};return part.name+" ["+part.nodeID+"]"}
+    }
+    if let representation=object.cadRepresentation {return representation.components.map{$0.name+" ["+$0.id.uuidString+"]"}}
+    return nil
+  }
+
+  /// Heavy source reads/topology inspection run independently of the native viewport.
+  /// Print coordinates are mm, right-handed Z-up: source (x,y,z) -> (x,-z,y).
+  nonisolated static func sourceMesh(object:ProductObject,assets:URL,configuration:PrintConfiguration)throws->PrintMesh {
+    let choices=sourceComponents(object) ?? []
+    func identity(_ label:String)->Substring? {guard let start=label.lastIndex(of:"["),label.last=="]" else{return nil};return label[label.index(after:start)..<label.index(before:label.endIndex)]}
+    guard let selected=choices.firstIndex(where:{$0==configuration.component || identity($0) != nil && identity($0)==identity(configuration.component)}) else{throw FormError.invalid("Choose one named source component. Imported assemblies are not fused into a single print.")}
+    var positions:[FormMeshAssets.MeshPoint3]=[],indices:[UInt32]=[]
+    if let reference=object.meshAsset {
+      let document=try ModelAssetCoordinator.readAsset(reference,assets:assets)
+      var nodeIDs:[String]=[]
+      for part in reference.parts where !nodeIDs.contains(part.nodeID) {nodeIDs.append(part.nodeID)}
+      guard nodeIDs.indices.contains(selected),let node=document.nodes.first(where:{$0.id==nodeIDs[selected]}),node.inSelectedScene,let meshIndex=node.meshIndex else{throw FormError.invalid("The selected imported component is unavailable.")}
+      for primitive in document.meshes[meshIndex].primitives {
+        try Task.checkCancellation()
+        let transformed=try MeshAssetGeometry.transformed(primitive,by:node.worldTransform),base=UInt32(positions.count)
+        guard indices.count/3+transformed.indices.count/3<=300_000 else{throw FormError.invalid("Print topology inspection supports at most 300,000 triangles per component. Simplify or repair a fabrication copy first.")}
+        positions.append(contentsOf:transformed.positionsMM.map{.init($0.x*object["scalePercent"]/100,$0.y*object["scalePercent"]/100,$0.z*object["scalePercent"]/100)})
+        indices.append(contentsOf:transformed.indices.map{$0+base})
+      }
+    }else if let representation=object.cadRepresentation,let model=object.cadModel {
+      try representation.validate(for:model)
+      let component=representation.components[selected]
+      guard component.valid,component.closed,component.solidCount==1 else{throw FormError.invalid("Choose a single validated closed CAD solid; multi-solid outputs require separate components before printing.")}
+      _=try CADSceneAdapter.verifiedAsset(component.brepAsset,sha256:component.brepSHA256,assets:assets,maximumBytes:256*1024*1024)
+      let data=try CADSceneAdapter.verifiedAsset(component.meshAsset,sha256:component.meshSHA256,assets:assets,maximumBytes:256*1024*1024),mesh=try CADMeshArchive.decode(data)
+      guard mesh.indices.count/3==component.triangleCount,mesh.indices.count/3<=300_000 else{throw FormError.invalid("The CAD fabrication mesh is stale or exceeds the 300,000-triangle topology inspection limit.")}
+      positions=mesh.positions.map{.init($0.x,$0.y,$0.z)};indices=mesh.indices
+    }else{throw FormError.invalid("No preserved fabrication source is available.")}
+    let primitive=MeshAssetPrimitive(id:"print-source",positionsMM:positions,normals:[],indices:indices)
+    let report=try MeshTopology.inspect(primitive)
+    guard report.isClosedOrientedSurface,report.signedVolumeMM3>1e-9 else{throw FormError.invalid("This component is not a verified outward closed mesh (\(report.boundaryEdges) boundary edges, \(report.nonManifoldEdges) non-manifold edges, \(report.inconsistentlyOrientedEdges) winding conflicts, \(report.degenerateTriangles) degenerate triangles). Repair it before print preparation. Visual garments and open surfaces are not printable solids.")}
+    func point(_ index:UInt32)->Vector3 {
+      let p=positions[Int(index)];var value=Vector3(p.x,-p.z,p.y)
+      for (axis,degrees) in [(0,configuration.rotation.x),(1,configuration.rotation.y),(2,configuration.rotation.z)] {
+        let a=degrees*Double.pi/180,c=cos(a),s=sin(a),old=value
+        if axis==0 {value.y=old.y*c-old.z*s;value.z=old.y*s+old.z*c}
+        if axis==1 {value.x=old.x*c+old.z*s;value.z = -old.x*s+old.z*c}
+        if axis==2 {value.x=old.x*c-old.y*s;value.y=old.x*s+old.y*c}
+      }
+      let scale=configuration.scalePercent/100
+      return .init(value.x*scale,value.y*scale,value.z*scale)
+    }
+    var triangles:[MeshTriangle]=[];triangles.reserveCapacity(indices.count/3)
+    for i in stride(from:0,to:indices.count,by:3) {if i%8190==0 {try Task.checkCancellation()};triangles.append(.init(point(indices[i]),point(indices[i+1]),point(indices[i+2])))}
+    return .init(triangles:triangles)
   }
 }

@@ -1,5 +1,5 @@
 import AppKit
-import SceneKit
+import FormGeometry
 import XCTest
 @testable import FormCore
 @testable import FormGraphics
@@ -7,7 +7,7 @@ import XCTest
 
 @MainActor final class PatternAssemblyMoveTests:XCTestCase {
   @MainActor private final class Fixture {
-    let root:URL,store:StudioStore,window:NSWindow,view:TableSCNView,scene:TableSceneController,surfaceID:UUID,labelID:UUID
+    let root:URL,store:StudioStore,window:NSWindow,view:TableSceneView,scene:TableSceneController,surfaceID:UUID,labelID:UUID
     init(childFirst:Bool = false)throws {
       _ = NSApplication.shared;root=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
       var (p,d)=try PatternAssemblySamples.roundedPouch();d.maximumEdgeMm=42
@@ -21,15 +21,15 @@ import XCTest
       let repository=try ProjectRepository(root:root);try repository.save(p)
       store=StudioStore(repository:repository,seedLibrary:false);try store.engine.open(p.id);store.showingHome=false
       window=NSWindow(contentRect:.init(x:0,y:0,width:1200,height:800),styleMask:[.titled],backing:.buffered,defer:false);window.isReleasedWhenClosed=false
-      view=TableSCNView(frame:.init(x:0,y:0,width:1200,height:800));scene=TableSceneController(store:store);view.controller=scene;scene.view=view;store.scene=scene
-      view.scene=scene.scene;view.pointOfView=scene.cameraNode;view.allowsCameraControl=false;view.rendersContinuously=false;window.contentView=view;window.makeFirstResponder(view)
+      view=TableSceneView(frame:.init(x:0,y:0,width:1200,height:800));scene=TableSceneController(store:store);view.controller=scene;scene.view=view;store.scene=scene
+      window.contentView=view;window.makeFirstResponder(view)
       store.synchronizeScene();scene.preset("front");store.setTableTool(.move)
       select([labelID])
     }
     func object(_ id:UUID)->ProductObject {store.project!.objects.first{$0.id==id}!}
     func select(_ ids:Set<UUID>) {store.engine.selection=ids;store.synchronizeScene();scene.focusSelection()}
     func placement()throws -> ClothSurfacePlacement {try XCTUnwrap(store.cloth.placement(of:object(labelID),in:store.project!))}
-    func screen(_ p:Vector3)->NSPoint {let q=view.projectPoint(SCNVector3(p.x/100,p.y/100,p.z/100));return .init(x:q.x,y:q.y)}
+    func screen(_ p:Vector3)->NSPoint {let q=view.projectPoint(MeshVector3(p.x/100,p.y/100,p.z/100));return .init(x:q.x,y:q.y)}
     func event(_ type:NSEvent.EventType,_ p:NSPoint)->NSEvent {NSEvent.mouseEvent(with:type,location:view.convert(p,to:nil),modifierFlags:[],timestamp:0,windowNumber:window.windowNumber,context:nil,eventNumber:1,clickCount:1,pressure:type == .leftMouseUp ? 0:1)!}
     func drag(_ delta:NSPoint)throws {
       let start=screen(try placement().positionMm),end=NSPoint(x:start.x+delta.x,y:start.y+delta.y),before=store.project!

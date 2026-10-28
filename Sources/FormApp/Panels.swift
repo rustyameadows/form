@@ -14,7 +14,7 @@ struct ObjectInspector: View {
         VStack(alignment: .leading, spacing: 12) {
           HStack {
             Label(
-              store.selected.count > 1 ? "\(store.selected.count) OBJECTS" : "PARAMETRIC OBJECT",
+              store.selected.count > 1 ? "\(store.selected.count) OBJECTS" : object.meshAsset != nil ? "VISUAL MESH" : object.cadModel != nil ? (object.cadRepresentation?.editability == "importedCADBody" ? "IMPORTED CAD BODY":"FEATURE MODEL") : "PARAMETRIC OBJECT",
               systemImage: recipe.symbol
             ).font(.system(size: 9, weight: .semibold)).tracking(1).foregroundStyle(
               Palette.secondary)
@@ -64,9 +64,16 @@ struct ObjectInspector: View {
         Divider().overlay(Palette.line)
         ScrollView {
           VStack(alignment: .leading, spacing: 20) {
+            if object.librarySelection != nil { ObjectLibraryInspector(object: object); Divider() }
             if object.patternAssembly != nil {PatternAssemblyInspector(object:object);Divider()}
             if object.isFlexibleSurface {ClothInspector(controller:store.cloth.preview,object:object);Divider()}
-            if object.patternAssembly==nil {
+            if object.meshAsset != nil {ModelAssetInspector(object:object);Divider()}
+            if let model=object.cadModel {
+              VStack(alignment:.leading,spacing:10){SectionLabel("EXACT CONSTRUCTION");Text("\(model.features.count) features · \(model.outputs.count) components").font(.system(size:11));Button("Edit dimensions & features…"){store.cad.openEditor(objectID:object.id)}.disabled(object.locked);if let representation=object.cadRepresentation{Text("OCCT \(representation.kernelVersion) · \(representation.editability == "importedCADBody" ? "Imported exact solids":"Editable feature model")").font(.system(size:10)).foregroundStyle(Palette.secondary)}}
+              Divider()
+            }
+            if object.patternAssembly==nil && object.meshAsset==nil {
+            if !recipe.parameters.isEmpty {
             VStack(alignment: .leading, spacing: 14) {
               SectionLabel("DIMENSIONS & PARAMETERS")
               ForEach(recipe.parameters) { parameter in
@@ -74,6 +81,7 @@ struct ObjectInspector: View {
               }
             }
             Divider()
+            }
             VStack(alignment: .leading, spacing: 11) {
               HStack {
                 SectionLabel("MATERIAL")
@@ -114,7 +122,7 @@ struct ObjectInspector: View {
             }
             Divider()
             }
-            if !object.isFlexibleSurface {ClothAttachmentInspector(object:object,project:project)}
+            if !object.isFlexibleSurface && object.meshAsset==nil && object.cadModel==nil {ClothAttachmentInspector(object:object,project:project)}
             if object.textile != nil || TextileDesign.recipeIDs.contains(object.recipeID) {
               TextileInspector(object: object, project: project)
               Divider()

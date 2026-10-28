@@ -1,7 +1,7 @@
 import AppKit
 import CryptoKit
 import ImageIO
-import SceneKit
+import FormGeometry
 import SwiftUI
 import XCTest
 @testable import FormApp
@@ -49,22 +49,34 @@ private final class StudioShotFrameProbe {var frames:[String:CGRect]=[:]}
     let invalid=root.appendingPathComponent("Invalid.render");var bad=r;bad["width"]=200;XCTAssertThrowsError(try StudioRenderFolder.write(png:png,record:bad,to:invalid));XCTAssertFalse(fm.fileExists(atPath:invalid.path))
     XCTAssertFalse(try fm.contentsOfDirectory(atPath:root.path).contains{$0.hasPrefix(".form-shot-")})
   }
-  func testSavedExportIsPhysicalPixelsPortableRecordAndLeavesSourceAndCameraExact()throws {
+  func testSavedExportIsPhysicalPixelsPortableRecordAndLeavesSourceAndCameraExact()async throws {
     let s=try fixture(),before=s.project!,viewBuilds=s.scene!.geometryBuilds,shot=shot(s)
-    let folder=s.repository.root.appendingPathComponent("Hero.render"),url=try s.studioShots.export(shot,to:folder)
+    let folder=s.repository.root.appendingPathComponent("Hero.render"),url=try await s.studioShots.export(shot,to:folder)
     let data=try Data(contentsOf:url),source=try XCTUnwrap(CGImageSourceCreateWithData(data as CFData,nil)),props=try XCTUnwrap(CGImageSourceCopyPropertiesAtIndex(source,0,nil) as? [CFString:Any]),record=try JSONSerialization.jsonObject(with:Data(contentsOf:folder.appendingPathComponent("render.json"))) as! [String:Any]
     XCTAssertEqual(props[kCGImagePropertyPixelWidth] as? Int,480);XCTAssertEqual(props[kCGImagePropertyPixelHeight] as? Int,320)
-    XCTAssertEqual(record["presentation_renderer_version"] as? Int,1);XCTAssertNotNil(record["os_version"] as? String);XCTAssertEqual(record["png_sha256"] as? String,StudioRenderFolder.hash(data));XCTAssertEqual(record["design_sha256"] as? String,try before.studioDesignDigest());XCTAssertEqual(record["included_object_ids"] as? [String],[before.objects[0].id.uuidString])
+    XCTAssertEqual(record["presentation_renderer_version"] as? Int,2);XCTAssertNotNil(record["os_version"] as? String);XCTAssertEqual(record["png_sha256"] as? String,StudioRenderFolder.hash(data));XCTAssertEqual(record["design_sha256"] as? String,try before.studioDesignDigest());XCTAssertEqual(record["included_object_ids"] as? [String],[before.objects[0].id.uuidString])
     let json=String(decoding:try Data(contentsOf:folder.appendingPathComponent("render.json")),as:UTF8.self);XCTAssertFalse(json.contains("/Users/"));XCTAssertFalse(json.contains(s.repository.root.path))
     XCTAssertEqual(s.project,before);XCTAssertTrue(s.engine.undoStack.isEmpty);XCTAssertEqual(s.scene!.geometryBuilds,viewBuilds)
-    let second=s.repository.root.appendingPathComponent("Same.render");_=try s.studioShots.export(shot,to:second);XCTAssertEqual(s.studioShots.renderer.geometryBuilds,1)
+    let second=s.repository.root.appendingPathComponent("Same.render");_=try await s.studioShots.export(shot,to:second);XCTAssertEqual(s.studioShots.renderer.geometryBuilds,1)
   }
-  func testPerspectiveAndOrthographicPreviewMatchOutputWithoutLiveFramingMutation()throws {
+  func testConcurrentStudioCapturesKeepTheirOwnFramingWarnings()async throws {
+    let store=try fixture(),project=store.project!,renderer=store.studioShots.renderer
+    let normal=shot(store),assets=store.repository.url(for:project.id).appendingPathComponent("Assets")
+    var outside=normal;outside.camera.target.x+=100_000
+    let first=Task {try await renderer.renderResult(project:project,shot:normal,assets:assets,preview:true)}
+    let second=Task {try await renderer.renderResult(project:project,shot:outside,assets:assets,preview:true)}
+    let visible=try await first.value,offscreen=try await second.value
+    XCTAssertTrue(visible.framingWarnings.isEmpty)
+    XCTAssertEqual(offscreen.framingWarnings.count,1)
+    XCTAssertEqual(offscreen.framingWarnings.first?["object_id"] as? String,project.objects[0].id.uuidString)
+    XCTAssertEqual(store.project,project)
+  }
+  func testPerspectiveAndOrthographicPreviewMatchOutputWithoutLiveFramingMutation()async throws {
     let s=try fixture(),before=s.project!,render=s.studioShots.renderer
     for projection in ["perspective","orthographic"] {for pixels in [StudioPixels(width:450,height:300),.init(width:300,height:450),.init(width:900,height:300)] {
       var shot=shot(s);shot.camera.projection=projection;shot.pixels=pixels
-      let small=try render.render(project:before,shot:shot,assets:s.repository.url(for:before.id).appendingPathComponent("Assets"),preview:true)
-      let full=try render.render(project:before,shot:shot,assets:s.repository.url(for:before.id).appendingPathComponent("Assets"),preview:false)
+      let small=try await render.render(project:before,shot:shot,assets:s.repository.url(for:before.id).appendingPathComponent("Assets"),preview:true)
+      let full=try await render.render(project:before,shot:shot,assets:s.repository.url(for:before.id).appendingPathComponent("Assets"),preview:false)
       XCTAssertEqual(small.pngData(),full.pngData());XCTAssertEqual(s.project,before)
     }}
     XCTAssertEqual(render.geometryBuilds,1);XCTAssertGreaterThan(render.maximumProcessRSSBytes,0);XCTAssertGreaterThan(render.maximumMilliseconds,0)
@@ -133,7 +145,7 @@ extension StudioShotEditingTests {
     let up=try XCTUnwrap(NSEvent.mouseEvent(with:.leftMouseUp,location:point,modifierFlags:[],timestamp:t+0.01,windowNumber:window.windowNumber,context:nil,eventNumber:2,clickCount:1,pressure:0))
     NSApp.postEvent(up,atStart:false);NSApp.sendEvent(down);NSApp.sendEvent(up);RunLoop.main.run(until:Date().addingTimeInterval(0.03))
   }
-  func testActualMouseCaptureAndExportCommitActivePixelDraftWithoutExtraUndo()throws {
+  func testActualMouseCaptureAndExportCommitActivePixelDraftWithoutExtraUndo()async throws {
     let s=try fixture(),c=s.studioShots
     let window=NSWindow(contentRect:.init(x:-10000,y:-10000,width:264,height:780),styleMask:[.titled],backing:.buffered,defer:false);window.isReleasedWhenClosed=false
     let host=panelHost(s);window.contentView=host;window.orderBack(nil);window.makeKey();host.layoutSubtreeIfNeeded();RunLoop.main.run(until:Date().addingTimeInterval(0.05));defer{window.close()}
@@ -145,6 +157,7 @@ extension StudioShotEditingTests {
     try enter("512",placeholder:"Width",window:window,host:host)
     c.exportDestination={_ in s.repository.root.appendingPathComponent("Native.render")}
     try click("Export shot folder (PNG + record)",window:window,host:host)
+    for _ in 0..<200 where c.lastExport==nil && c.error==nil {try await Task.sleep(nanoseconds:10_000_000)}
     XCTAssertNil(c.error);let url=try XCTUnwrap(c.lastExport),data=try Data(contentsOf:url),source=try XCTUnwrap(CGImageSourceCreateWithData(data as CFData,nil))
     let props=CGImageSourceCopyPropertiesAtIndex(source,0,nil) as! [CFString:Any];XCTAssertEqual(props[kCGImagePropertyPixelWidth] as? Int,512)
     XCTAssertEqual(s.project,saved);XCTAssertEqual(s.engine.undoStack.count,count)
@@ -173,16 +186,16 @@ extension StudioShotEditingTests {
     for y in 0..<h {for x in 0..<w {let i=(y*w+x)*4,r=Int(bytes[i]),g=Int(bytes[i+1]),b=Int(bytes[i+2]);if r>40 && r*10>g*13 && r*10>b*13 {lowX=min(lowX,x);lowY=min(lowY,y);highX=max(highX,x);highY=max(highY,y)}}}
     XCTAssertLessThan(lowX,highX);return [Double(lowX)/Double(w),Double(lowY)/Double(h),Double(highX)/Double(w),Double(highY)/Double(h)]
   }
-  func testLargePreviewCompositionAndLegacyDefaultPixelsAgreeOnActualRenderedProduct()throws {
+  func testLargePreviewCompositionAndLegacyDefaultPixelsAgreeOnActualRenderedProduct()async throws {
     let s=try fixture();s.engine.project!.objects[0].color="#D7444D";s.synchronizeScene();let original=s.project!
     var shot=shot(s,width:3000,height:2000)
     for pixels in [StudioPixels(width:3000,height:2000),.init(width:2000,height:3000),.init(width:3000,height:1500)] {
       shot.pixels=pixels
-      let preview=try s.studioShots.renderer.render(project:original,shot:shot,assets:s.repository.root,preview:true),full=try s.studioShots.renderer.render(project:original,shot:shot,assets:s.repository.root,preview:false)
+      let preview=try await s.studioShots.renderer.render(project:original,shot:shot,assets:s.repository.root,preview:true),full=try await s.studioShots.renderer.render(project:original,shot:shot,assets:s.repository.root,preview:false)
       XCTAssertLessThanOrEqual(preview.representations[0].pixelsWide*preview.representations[0].pixelsHigh,2_000_000)
       let a=try redBounds(preview),b=try redBounds(full);for i in a.indices {XCTAssertEqual(a[i],b[i],accuracy:0.002)}
       if pixels.width==3000 && pixels.height==2000 {
-        let url=s.repository.root.appendingPathComponent("Legacy.png");_=try s.export(format:"png",arguments:["path":url.path])
+        let url=s.repository.root.appendingPathComponent("Legacy.png");_=try await s.exportAsync(format:"png",arguments:["path":url.path])
         let legacy=try XCTUnwrap(NSImage(contentsOf:url));XCTAssertEqual(legacy.representations[0].pixelsWide,3000);XCTAssertEqual(legacy.representations[0].pixelsHigh,2000)
         XCTAssertEqual(try redBounds(legacy),b)
       }
@@ -190,7 +203,7 @@ extension StudioShotEditingTests {
     XCTAssertEqual(s.project,original);XCTAssertEqual(s.engine.undoStack.count,0)
     print("STUDIO43_MEASURED_COST",s.studioShots.diagnostics)
   }
-  func testActualMerchandiseLightingProofAndDependencyHashAreSourcePreserving()throws {
+  func testActualMerchandiseLightingProofAndDependencyHashAreSourcePreserving()async throws {
     let s=try fixture();var p=try Samples.merchandiseCollection();p.camera.viewportAspect=1.5;s.engine.project=p;s.studioShots.reconcile()
     var shot=StudioShot(name:"ORBITAL collection",camera:p.camera,referenceAspect:1.5);shot.pixels = .init(width:1200,height:800)
     shot.visibility = .init(mode:.objects,objectIDs:p.objects.filter{$0.recipeID != "artboard" && !$0.isCanvasWorkspace}.map(\.id))
@@ -198,8 +211,8 @@ extension StudioShotEditingTests {
     XCTAssertTrue(resources.allSatisfy{!($0["id"] ?? "").contains("/") || ($0["id"] ?? "").hasPrefix("asset:")})
     var images=[Data]()
     for light in StudioShot.lightingIDs {
-      shot.lighting=light;let image=try s.studioShots.renderer.render(project:p,shot:shot,assets:assets,preview:false),data=try StudioPNG.encode(image,designDigest:p.studioDesignDigest());images.append(data)
-      if let path=ProcessInfo.processInfo.environment["FORM_STUDIO_PROOF_DIR"] {let folder=URL(fileURLWithPath:path);try FileManager.default.createDirectory(at:folder,withIntermediateDirectories:true);try data.write(to:folder.appendingPathComponent("merchandise-"+light+".png"));let render=s.repository.root.appendingPathComponent(light+".render");let output=try s.studioShots.export(shot,to:render);try FileManager.default.copyItem(at:render,to:folder.appendingPathComponent(light+".render"));XCTAssertTrue(FileManager.default.fileExists(atPath:output.path))}
+      shot.lighting=light;let image=try await s.studioShots.renderer.render(project:p,shot:shot,assets:assets,preview:false),data=try StudioPNG.encode(image,designDigest:p.studioDesignDigest());images.append(data)
+      if let path=ProcessInfo.processInfo.environment["FORM_STUDIO_PROOF_DIR"] {let folder=URL(fileURLWithPath:path);try FileManager.default.createDirectory(at:folder,withIntermediateDirectories:true);try data.write(to:folder.appendingPathComponent("merchandise-"+light+".png"));let render=s.repository.root.appendingPathComponent(light+".render");let output=try await s.studioShots.export(shot,to:render);try FileManager.default.copyItem(at:render,to:folder.appendingPathComponent(light+".render"));XCTAssertTrue(FileManager.default.fileExists(atPath:output.path))}
     }
     XCTAssertEqual(Set(images.map{StudioRenderFolder.hash($0)}).count,3);XCTAssertEqual(s.project,p)
     print("STUDIO43_MERCHANDISE_COST",s.studioShots.diagnostics)

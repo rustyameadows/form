@@ -2,6 +2,8 @@ import Foundation
 
 extension Recipe {
   public static let builtins: [Recipe] = [
+    .init("importedMesh", "Imported visual mesh", "shippingbox", "Source-preserved visual mesh with explicit units, hierarchy and material slots. No reconstructed CAD or sewing history.", [.init("scalePercent", "Uniform scale", 100, 0.1...10000, unit:"%", step:1)]),
+    .init("cadModel", "Exact feature model", "cube.transparent", "A validated native feature graph or imported exact CAD body. Create through the CAD modeling commands.", []),
     DeskClockDesign.recipe,
     .init(
       "clock", "Clock", "clock",
