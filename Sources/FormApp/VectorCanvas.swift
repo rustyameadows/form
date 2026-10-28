@@ -79,7 +79,7 @@ final class ArtworkRuler: NSRulerView {
     NSColor(hex: "#FFFFFF").setFill()
     bounds.fill()
     guard let canvas = scrollView?.documentView as? VectorCanvasView, let session = canvas.session,
-      let frame = session.frames.first(where: { $0.id == session.objectID })
+      let frame = session.activeCanvasFrame
     else { return }
     let horizontal = orientation == .horizontalRuler
     let unit = session.unit
@@ -121,7 +121,7 @@ final class ArtworkRuler: NSRulerView {
   }
   override func mouseDown(with event: NSEvent) {
     guard let canvas = scrollView?.documentView as? VectorCanvasView, let s = canvas.session,
-      let frame = s.frames.first(where: { $0.id == s.objectID })
+      let frame = s.activeCanvasFrame, frame.projection == nil
     else { return }
     let point = canvas.canvasPoint(canvas.convert(event.locationInWindow, from: nil))
     let horizontal = orientation == .horizontalRuler
@@ -134,7 +134,7 @@ final class ArtworkRuler: NSRulerView {
   }
   override func mouseDragged(with event: NSEvent) {
     guard let canvas = scrollView?.documentView as? VectorCanvasView, let s = canvas.session,
-      let frame = s.frames.first(where: { $0.id == s.objectID }), let id = guideID
+      let frame = s.activeCanvasFrame, let id = guideID
     else { return }
     let p = canvas.canvasPoint(canvas.convert(event.locationInWindow, from: nil))
     s.mutate { art in
@@ -364,7 +364,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   override var acceptsFirstResponder: Bool { true }
   override var isOpaque: Bool { true }
   var zoom: Double { Double(enclosingScrollView?.magnification ?? 1) }
-  var activeFrame: CanvasFrame? { frames.first { $0.id == session?.objectID } }
+  var activeFrame: CanvasFrame? {
+    frames.first { $0.id == session?.activeFrameID }
+      ?? frames.first { $0.projection?.sourceID == session?.objectID && $0.projection?.isProof == true }
+  }
   func canvasPoint(_ point:CGPoint) -> CGPoint {
     .init(x:point.x/ppm+canvasOrigin.x,y:point.y/ppm+canvasOrigin.y)
   }
@@ -378,7 +381,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     .init(origin:canvasPoint(visibleRect.origin),size:.init(width:visibleRect.width/ppm,height:visibleRect.height/ppm))
   }
   func frame(atCanvasPoint point:CGPoint) -> CanvasFrame? {
-    frames.last { !$0.isWorkspace && $0.rect.contains(point) } ?? frames.first { $0.isWorkspace }
+    frames.last { !$0.isWorkspace && $0.contains(point) } ?? frames.first { $0.isWorkspace }
   }
   func contentBounds(all:Bool) -> CGRect {
     let chosen = all ? frames : activeFrame.map { [$0] } ?? []
@@ -480,7 +483,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let frame=activeFrame,let scroll=enclosingScrollView,scroll.contentSize.width>100 else{return}
     session.paperFocusPanelID=nil
     let b=panel.bounds
-    let rect=CGRect(x:frame.rect.minX+b.x,y:frame.rect.minY+b.y,width:b.width,height:b.height)
+    let rect = frame.projection?.panelID == id ? frame.rect
+      : CGRect(x:frame.rect.minX+b.x,y:frame.rect.minY+b.y,width:b.width,height:b.height)
     scroll.magnify(toFit:documentRect(rect.insetBy(dx:-8,dy:-8)))
     session.zoom=Double(scroll.magnification);needsDisplay=true
   }
@@ -525,7 +529,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       context.setFillColor(NSColor.white.cgColor)
       context.fill(f.rect)
       context.restoreGState()
-      let title = f.object.name.uppercased()
+      let title = f.title.uppercased()
       let attributes: [NSAttributedString.Key: Any] = [
         .font: NSFont.systemFont(ofSize: 9 / scale, weight: .medium),
         .foregroundColor: NSColor(hex: "#666666"),
@@ -535,7 +539,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       }
       context.saveGState()
       context.translateBy(x: f.rect.minX, y: f.rect.minY)
-      if session.dieline, f.surfaceObject.recipeID == "sleeve", f.id == session.objectID {
+      if session.dieline, f.surfaceObject.recipeID == "sleeve", f.id == activeFrame?.id {
         context.setFillColor(NSColor.white.cgColor)
         context.fill(.init(origin: .zero, size: f.rect.size))
         context.saveGState()
@@ -554,8 +558,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           context.strokePath()
         }
       } else {
-        let paperNet = PaperConstruction.isPaper(f.surfaceObject) ? try? PaperConstruction.definition(for:f.surfaceObject).net() : nil
+        let paperNet = PaperConstruction.isPaper(f.surfaceObject) && f.projection?.panelID == nil
+          ? try? PaperConstruction.definition(for:f.surfaceObject).net() : nil
         context.saveGState()
+        if let projection = f.projection, !projection.isProof {
+          context.addPath(PaperOutput.path(projection.boundary)); context.clip()
+        }
         if let paperNet {
           context.addPath(PaperOutput.clipPath(paperNet)); context.clip()
           let stock = f.surfaceObject.color ?? session.store?.project?.material(f.surfaceObject.materialID).color ?? "#F7F5EF"
@@ -564,7 +572,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         ArtworkRenderer.draw(
           f.artwork, width: f.rect.width, height: f.rect.height, assets: session.assets,
           production: false,
-          excluding: (f.id == session.objectID ? Set([editingID].compactMap { $0 }).union(
+          excluding: (f.id == activeFrame?.id ? Set([editingID].compactMap { $0 }).union(
             dragMode == "move" && moveDropFrameID != nil ? session.art.descendants(of:startSelection) : []) : [])
             .union(ArtworkProduction.hiddenIDs(in:f.artwork,roles:session.hiddenProductionRoles))
             .union(publicationEditor?.excluded(in:f.id) ?? []),
@@ -573,7 +581,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         if let paperNet, session.store?.paperShowingGuides == true {
           PaperOutput.drawStructure(paperNet,context:context,lineWidth:1/scale,interface:true)
         }
-        if f.id == session.objectID {
+        if let projection = f.projection, !projection.isProof {
+          context.addPath(PaperOutput.path(projection.boundary))
+          context.setStrokeColor((f.id == activeFrame?.id ? Palette.accentNS : Palette.secondaryNS).cgColor)
+          context.setLineWidth(1 / scale); context.strokePath()
+        }
+        if f.id == activeFrame?.id && f.editable {
           drawOverlays(f, context: context, scale: scale)
           if editingID == nil && !(dragMode == "move" && moveDropFrameID != nil) { drawSelection(context: context, scale: scale) }
         }
@@ -585,7 +598,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         context.stroke(f.rect.insetBy(dx:-2/scale,dy:-2/scale))
       }
     }
-    if dragMode == "move",moveDropFrameID != nil,let active = activeFrame,
+    if dragMode == "move",moveDropFrameID != nil,let active = activeFrame, active.projection == nil,
       let exported = try? session.art.exporting(startSelection) {
       context.saveGState()
       context.translateBy(x:active.rect.minX+exported.bounds.x,y:active.rect.minY+exported.bounds.y)
@@ -864,7 +877,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       NSCursor.closedHand.push()
       return
     }
-    if let frame = frame(atCanvasPoint:physical), frame.id != s.objectID {
+    if let frame = frame(atCanvasPoint:physical), frame.id != activeFrame?.id {
       finishText()
       s.activate(frame.id)
       frames = s.frames
@@ -885,7 +898,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       s.beginGesture()
       return
     }
-    guard let f = activeFrame, !s.dieline else { return }
+    guard let f = activeFrame, !s.dieline, f.editable else { return }
     let p = point(event)
     finishText()
     window?.makeFirstResponder(self)
@@ -1084,10 +1097,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     if dragMode == "frame" {
       let p = canvasPoint(convert(event.locationInWindow, from: nil))
-      var art = snapshot
-      art.canvasPosition = .init(
-        frameDragOrigin.x+p.x-down.x,frameDragOrigin.y+p.y-down.y)
-      s.save(art)
+      s.moveCanvasFrame(to: .init(
+        frameDragOrigin.x+p.x-down.x,frameDragOrigin.y+p.y-down.y))
       return
     }
     if dragMode == "pen" {
@@ -1124,9 +1135,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         height: abs(p.y - down.y))
       marquee = rect
       let ids = Set(
-        value.elements.filter {
-          $0.parentID == s.scopeID && value.editable($0)
-            && rect.intersects(CGRect(value.bounds(of: $0)))
+        s.selectionCandidates(in: value).filter {
+          rect.intersects(CGRect(value.bounds(of: $0)))
         }.map(\.id))
       s.selection = event.modifierFlags.contains(.shift) ? startSelection.union(ids) : ids
       needsDisplay = true
@@ -1206,7 +1216,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     if dragMode == "move" {
       moveDropPoint = canvasPoint(convert(event.locationInWindow,from:nil))
       let destination = frame(atCanvasPoint:moveDropPoint)
-      moveDropFrameID = destination?.id == s.objectID ? nil : destination?.id
+      moveDropFrameID = activeFrame?.projection == nil && destination?.projection == nil
+        && destination?.id != activeFrame?.id ? destination?.id : nil
       var dx = p.x - down.x
       var dy = p.y - down.y
       if event.modifierFlags.contains(.shift) { if abs(dx) > abs(dy) { dy = 0 } else { dx = 0 } }
@@ -1261,7 +1272,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   override func mouseUp(with event: NSEvent) {
     if dragMode == "move",let s = session,let source = activeFrame,
       let destination = frame(atCanvasPoint:canvasPoint(convert(event.locationInWindow,from:nil))),
-      destination.id != source.id,point(event) != down {
+      destination.id != source.id, source.projection == nil, destination.projection == nil, point(event) != down {
       let offset = Point2(source.rect.minX-destination.rect.minX,source.rect.minY-destination.rect.minY)
       if !s.transferSelection(to:destination.id,offset:offset) { s.save(snapshot) }
       synchronize()
@@ -1322,7 +1333,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let p = convert(sender.draggingLocation,from:nil)
     let physical = canvasPoint(p)
     let old = dropFrameID
-    dropFrameID = frame(atCanvasPoint:physical)?.id
+    dropFrameID = frame(atCanvasPoint:physical).flatMap { $0.editable ? $0.id : nil }
     if old != dropFrameID { needsDisplay = true }
     let extensions = Set(["png","jpg","jpeg","tif","tiff","heic","heif","gif","bmp","webp","pdf","svg"])
     let supported = droppedURLs(sender).contains { extensions.contains($0.pathExtension.lowercased()) }
@@ -2105,9 +2116,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     session?.cutArtwork()
   }
   override func selectAll(_ sender: Any?) {
-    guard let s = session else { return }
-    s.choose(
-      Set(s.art.elements.filter { $0.parentID == s.scopeID && s.art.editable($0) }.map(\.id)))
+    session?.selectAllInActiveFrame()
   }
   override func keyDown(with event: NSEvent) {
     guard let s = session else { return }

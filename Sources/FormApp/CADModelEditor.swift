@@ -64,6 +64,10 @@ struct CADModelEditor:View {
       Divider()
       VStack(alignment:.leading,spacing:10){
         if let issue=review.issue{Text(issue).font(.system(size:12)).foregroundStyle(Palette.ink).textSelection(.enabled).fixedSize(horizontal:false,vertical:true)}
+        ForEach(coordinator.surfacePlacementIssues(review)){issue in
+          Label(issue.surfaceID+": "+issue.message,systemImage:"exclamationmark.triangle")
+            .font(.system(size:11)).foregroundStyle(.orange).fixedSize(horizontal:false,vertical:true)
+        }
         HStack{if busy{ProgressView().controlSize(.small);Text(review.state=="publishing" ? "Publishing exact source…":"Evaluating exact features…").font(.system(size:11))}else{Text(review.state=="ready" ? "Preview validated. Apply to the project when ready.":"Dimension changes stay in this review until you apply.").font(.system(size:11)).foregroundStyle(.secondary)};Spacer();Button("Preview"){coordinator.preview(review)}.disabled(busy);Button(review.targetObjectID==nil ? "Add to project":"Apply changes"){do{try coordinator.commit(review)}catch{review.issue=error.localizedDescription}}.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction).disabled(review.state != "ready")}
       }.padding(20)
     }.frame(width:1000,height:740).background(Palette.paper)

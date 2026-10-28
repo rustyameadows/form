@@ -12,9 +12,11 @@ import UniformTypeIdentifiers
   let result: SVGImportResult
   let projectID: UUID?
   let target: ProductObject?
+  let projection: CanvasSourceProjection?
   let assets: URL
   let preview: NSImage
-  init(data: Data, name: String, result: SVGImportResult, projectID: UUID?, target: ProductObject?)
+  init(data: Data, name: String, result: SVGImportResult, projectID: UUID?, target: ProductObject?,
+       projection: CanvasSourceProjection? = nil)
     throws
   {
     self.data = data
@@ -22,6 +24,7 @@ import UniformTypeIdentifiers
     self.result = result
     self.projectID = projectID
     self.target = target
+    self.projection = projection
     assets = FileManager.default.temporaryDirectory.appendingPathComponent(
       "FORM-SVG-\(UUID().uuidString)", isDirectory: true)
     try FileManager.default.createDirectory(at: assets, withIntermediateDirectories: true)
@@ -81,7 +84,8 @@ extension StudioStore {
     }
     return try commitSVG(result, data: data, name: name, targetID: target)
   }
-  func commitSVG(_ result: SVGImportResult, data: Data, name: String, targetID: UUID?) throws
+  func commitSVG(_ result: SVGImportResult, data: Data, name: String, targetID: UUID?,
+                 projection: CanvasSourceProjection? = nil) throws
     -> [String: Any]
   {
     guard let project else {
@@ -95,6 +99,26 @@ extension StudioStore {
     // Validate the complete candidate before creating any project assets.
     var candidate = project
     let objectID = try candidate.importArtwork(result.artwork, source: source, targetID: targetID)
+    if let projection {
+      guard targetID == projection.sourceID, objectID == projection.sourceID,
+        artworkSession.frames.first(where: { $0.id == projection.id })?.projection == projection,
+        let target = project.objects.first(where: { $0.id == objectID }),
+        let imported = candidate.objects.first(where: { $0.id == objectID }),
+        let inverse = projection.sourceToLocal.inverse,
+        var art = candidate.editableArtwork(imported)
+      else { throw FormError.invalid("The import surface changed. Review the SVG destination again.") }
+      let size = project.artworkOwner(target).artworkSize
+      let canonicalCenter = Point2((size.x-result.width)/2, (size.y-result.height)/2)
+      let localCenter = Point2((projection.size.x-result.width)/2, (projection.size.y-result.height)/2)
+      let placement = inverse.followed(by: .translation(localCenter.x, localCenter.y))
+        .followed(by: .translation(-canonicalCenter.x, -canonicalCenter.y))
+      let roots = Set(result.artwork.elements.filter { $0.parentID == nil }.map(\.id))
+      for i in art.elements.indices where roots.contains(art.elements[i].id) {
+        art.elements[i].affine = placement.followed(by: art.elements[i].affine ?? .init())
+      }
+      try candidate.setArtwork(art, for: objectID)
+      try candidate.validateArtworkLinks()
+    }
     let folder = repository.url(for: project.id).appendingPathComponent("Assets")
     var files = result.assets
     files[original] = data
@@ -117,11 +141,12 @@ extension StudioStore {
       for url in written { try? FileManager.default.removeItem(at: url) }
       throw error
     }
-    engine.selection = [objectID]
+    engine.selection = [projection?.constructionID ?? objectID]
     showingHome = false
     mode = .artwork
     artworkSession.objectID = objectID
-    artworkSession.linkedTargetID = targetID != objectID ? targetID : nil
+    artworkSession.projectionFrameID = projection?.id
+    artworkSession.linkedTargetID = projection?.constructionID ?? (targetID != objectID ? targetID : nil)
     artworkSession.scopeID = nil
     let roots = result.artwork.elements.filter { $0.parentID == nil && $0.hidden != true }.map(\.id)
     artworkSession.selection = Set(roots)
@@ -158,7 +183,8 @@ extension StudioStore {
             $0.supportsArtworkFace || $0.isCanvasWorkspace ? self.project?.artworkOwner($0) : nil
           }
           self.svgImport = try .init(
-            data: data, name: name, result: result, projectID: self.project?.id, target: target)
+            data: data, name: name, result: result, projectID: self.project?.id, target: target,
+            projection: self.mode == .artwork ? self.artworkSession.activeProjection : nil)
         } catch { self.error = error.localizedDescription }
       }
     }
@@ -210,7 +236,7 @@ struct SVGImportSheet: View {
             Divider()
             SectionLabel("DESTINATION")
             if let target = review.target {
-              Toggle("Add to \(target.name)", isOn: $addToCurrent).toggleStyle(.checkbox).font(
+              Toggle("Add to \(review.projection?.title ?? target.name)", isOn: $addToCurrent).toggleStyle(.checkbox).font(
                 .system(size: 12))
             }
             Text(
@@ -262,7 +288,8 @@ struct SVGImportSheet: View {
             if store.project == nil { store.createProject() }
             _ = try store.commitSVG(
               review.result, data: review.data, name: review.name,
-              targetID: addToCurrent ? review.target?.id : nil)
+              targetID: addToCurrent ? review.target?.id : nil,
+              projection: addToCurrent ? review.projection : nil)
             store.svgImport = nil
             store.toast("SVG artwork imported")
           } catch { store.error = error.localizedDescription }

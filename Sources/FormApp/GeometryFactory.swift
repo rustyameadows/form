@@ -113,6 +113,7 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     canonical.relationship = ""
     canonical.locked = false
     canonical.librarySelection = nil
+    canonical.canvasProjectionPositions = nil
     canonical.textile = canonical.textile?.renderDefinition
     canonical.artwork = canonical.artwork.map {artworkDefinition($0,object:object)}
     let artworkData = canonical.artwork.flatMap { try? $0.renderCacheData() }
