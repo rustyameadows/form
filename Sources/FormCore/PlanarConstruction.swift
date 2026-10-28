@@ -34,6 +34,28 @@ public struct PlanarHingeDefinition: Codable, Equatable, Sendable {
   }
 }
 
+/// Authored connection metadata resolves through the same parameter expressions
+/// as panel geometry. PaperJoin remains the numerical result used downstream.
+public struct PlanarJoinDefinition: Codable, Equatable, Identifiable, Sendable {
+  public var id: String
+  public var name: String
+  public var firstPanelID: String
+  public var secondPanelID: String
+  public var kind: String
+  public var overlapMM: CADScalar
+  public var notes: String
+  public init(id: String, name: String, firstPanelID: String, secondPanelID: String,
+    kind: String = "glue", overlapMM: CADScalar, notes: String = "") {
+    self.id=id; self.name=name; self.firstPanelID=firstPanelID; self.secondPanelID=secondPanelID
+    self.kind=kind; self.overlapMM=overlapMM; self.notes=notes
+  }
+  public init(_ resolved: PaperJoin) {
+    self.init(id:resolved.id,name:resolved.name,firstPanelID:resolved.firstPanelID,
+      secondPanelID:resolved.secondPanelID,kind:resolved.kind,
+      overlapMM:CADScalar(resolved.overlapMM),notes:resolved.notes)
+  }
+}
+
 public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
   public var version: Int = 1
   public var name: String
@@ -42,14 +64,14 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
   public var stockThickness: CADScalar
   public var panels: [PlanarPanelDefinition]
   public var hinges: [PlanarHingeDefinition]
-  public var joins: [PaperJoin]
+  public var joins: [PlanarJoinDefinition]
   public var rootPanelID: String
   public var requirements: [CADModelRequirement]?
   public var derived: [String:CADScalar]?
   public var connections: [PlanarConnectionRequirement]?
   public init(name: String, parameters: [CADModelParameter] = [], size: CADExpressionPoint2,
     stockThickness: CADScalar = 0.35, panels: [PlanarPanelDefinition],
-    hinges: [PlanarHingeDefinition] = [], joins: [PaperJoin] = [], rootPanelID: String,
+    hinges: [PlanarHingeDefinition] = [], joins: [PlanarJoinDefinition] = [], rootPanelID: String,
     requirements: [CADModelRequirement]? = nil,derived:[String:CADScalar]? = nil,
     connections:[PlanarConnectionRequirement]? = nil) {
     self.name=name; self.parameters=parameters; self.size=size; self.stockThickness=stockThickness
@@ -143,9 +165,17 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
       if try Self.overlaps(resolved[i].polygon,resolved[j].polygon) {throw FormError.invalid("Flat construction panels '\(resolved[i].id)' and '\(resolved[j].id)' overlap.")}
     }}
     guard Set(joins.map(\.id)).count==joins.count,joins.allSatisfy({validID($0.id) && ids.contains($0.firstPanelID)
-      && ids.contains($0.secondPanelID) && $0.firstPanelID != $0.secondPanelID && $0.overlapMM.isFinite
-      && $0.overlapMM>=0 && $0.overlapMM<=10000 && $0.name.utf8.count<=160 && $0.notes.utf8.count<=2048}) else {
+      && ids.contains($0.secondPanelID) && $0.firstPanelID != $0.secondPanelID
+      && $0.name.utf8.count<=160 && $0.notes.utf8.count<=2048}) else {
       throw FormError.invalid("Construction joins require unique identities, existing panels and a finite nonnegative overlap.")
+    }
+    let resolvedJoins: [PaperJoin] = try joins.map { join in
+      let overlap=try number(join.overlapMM)
+      guard overlap.isFinite,overlap>=0,overlap<=10000 else {
+        throw FormError.invalid("Construction join '\(join.id)' requires an overlap within 0–10000 mm.")
+      }
+      return .init(id:join.id,name:join.name,firstPanelID:join.firstPanelID,
+        secondPanelID:join.secondPanelID,kind:join.kind,overlapMM:overlap,notes:join.notes)
     }
     guard (connections?.count ?? 0)<=128,Set((connections ?? []).map(\.id)).count==(connections?.count ?? 0) else {
       throw FormError.invalid("Use up to 128 uniquely identified construction connection requirements.")
@@ -160,7 +190,7 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
         throw FormError.invalid("Connection '\(connection.id)' requires distinct existing panels, anchors in their polygons and a maximum gap within 0–10000 mm.")
       }
     }
-    return PaperNet(size:extent,panels:resolved,folds:folds,joins:joins,
+    return PaperNet(size:extent,panels:resolved,folds:folds,joins:resolvedJoins,
       cutEdges:Self.cutEdges(panels:resolved,folds:folds),rootPanelID:rootPanelID)
   }
   private static func signedArea(_ p:[Point2])->Double {p.indices.reduce(0){s,i in let q=p[(i+1)%p.count];return s+p[i].x*q.y-q.x*p[i].y}/2}

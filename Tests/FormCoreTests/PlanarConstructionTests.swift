@@ -198,7 +198,10 @@ final class PlanarConstructionTests: XCTestCase {
       let initial=PaperConstructionEngine.defaults(recipeID:recipe)
       let definition=try ConstructionExamples.legacyDefinition(initial)
       XCTAssertFalse(definition.derived?.isEmpty ?? true)
-      for edits:[String:Double] in [[:],["width":180,"height":240,"depth":22,"cornerRadius":7],["width":180,"height":240,"depth":22,"cornerRadius":0]] {
+      for edits:[String:Double] in [[:],["width":180,"height":240,"depth":22,"cornerRadius":7],
+        ["width":180,"height":240,"depth":22,"cornerRadius":0],
+        ["glueTab":22],["topFlap":31,"bottomFlap":19],
+        ["width":180,"height":240,"depth":22,"cornerRadius":0,"glueTab":20,"topFlap":37,"bottomFlap":29]] {
         var legacy=PaperConstructionEngine.applying(edits,to:initial),authored=initial
         authored.kind = .authored;authored.authored=definition
         authored=PaperConstructionEngine.applying(edits,to:authored)
@@ -208,6 +211,40 @@ final class PlanarConstructionTests: XCTestCase {
         }
       }
     }
+  }
+  func testJoinOverlapExpressionsResolveParametersAndRejectInvalidValues() throws {
+    var definition=ConstructionCommands.foldAndGlueExample()
+    XCTAssertEqual(definition.joins[0].overlapMM.expression,"glueTab")
+    let first=try XCTUnwrap(definition.net().joins.first)
+    XCTAssertEqual(first.overlapMM,12)
+    try definition.setParameters(["glueTab":18])
+    let changed=try XCTUnwrap(definition.net().joins.first)
+    XCTAssertEqual(changed.overlapMM,18)
+    XCTAssertEqual(changed.id,first.id);XCTAssertEqual(changed.firstPanelID,first.firstPanelID)
+    XCTAssertEqual(changed.secondPanelID,first.secondPanelID);XCTAssertEqual(changed.kind,first.kind)
+    definition.joins[0].overlapMM="glueTab-2"
+    XCTAssertEqual(try definition.net().joins.first?.overlapMM,16)
+    for expression in ["missingParameter","1/0","-1","10001"] {
+      var invalid=definition;invalid.joins[0].overlapMM=CADScalar(expression)
+      XCTAssertThrowsError(try invalid.net())
+    }
+  }
+  func testLiteralJoinSourceJSONRemainsReadableAndPersistsWithoutInferringExpressions() throws {
+    let original=ConstructionCommands.foldAndGlueExample(),joins=try original.net().joins
+    var raw=try XCTUnwrap(jsonObject(original) as? [String:Any])
+    // The previous source representation encoded overlapMM as a JSON number.
+    raw["joins"]=try jsonObject(joins)
+    let literal=try JSONDecoder.form.decode(PlanarConstructionDefinition.self,
+      from:JSONSerialization.data(withJSONObject:raw))
+    XCTAssertEqual(try literal.net().joins,joins)
+    let roundTrip=try JSONDecoder.form.decode(PlanarConstructionDefinition.self,from:JSONEncoder.form.encode(literal))
+    XCTAssertEqual(roundTrip,literal)
+    var edited=literal;try edited.setParameters(["glueTab":18])
+    XCTAssertEqual(try edited.net().joins,joins,"Numeric saved source keeps its authored literal meaning.")
+    let e=try engine(),id=try create(e,literal)
+    try e.flush()
+    let loaded=try e.repository.load(e.project!.id)
+    XCTAssertEqual(loaded.objects.first{$0.id==id}?.paperConstruction?.authored,literal)
   }
   func testExplicitConversionPreservesSourceIDsArtworkAnnotationsAndUndo() throws {
     let e=try engine();var project=e.project!
@@ -232,7 +269,21 @@ final class PlanarConstructionTests: XCTestCase {
     XCTAssertEqual(converted.parameters,original.parameters);XCTAssertEqual(e.undoStack.count,undo+1)
     XCTAssertEqual(converted.paperConstruction?.kind,.authored)
     try assertSameGeometry(source,try PaperConstruction.definition(for:converted))
+    let edits:[String:Double]=["glueTab":20,"topFlap":32,"bottomFlap":28]
+    _ = try e.call("form_construction",arguments:["command":"parameter","object_id":original.id.uuidString,"values":edits])
+    let parameterEdited=e.project!.objects[0]
+    try assertSameGeometry(PaperConstructionEngine.applying(edits,to:source),
+      try PaperConstruction.definition(for:parameterEdited))
+    XCTAssertEqual(parameterEdited.id,original.id);XCTAssertEqual(parameterEdited.designID,original.designID)
+    XCTAssertEqual(parameterEdited.artwork,original.artwork)
+    XCTAssertEqual(parameterEdited.artworkSourceID,original.artworkSourceID)
+    XCTAssertEqual(parameterEdited.canvasProjectionPositions,original.canvasProjectionPositions)
+    XCTAssertEqual(parameterEdited.paperConstruction?.annotations,source.annotations)
+    XCTAssertEqual(parameterEdited.paperConstruction?.insideArtwork,source.insideArtwork)
+    XCTAssertEqual(e.undoStack.count,undo+2)
+    e.undo();XCTAssertEqual(e.project!.objects[0],converted)
     e.undo();XCTAssertEqual(e.project,project)
     e.redo();XCTAssertEqual(e.project!.objects[0],converted)
+    e.redo();XCTAssertEqual(e.project!.objects[0],parameterEdited)
   }
 }

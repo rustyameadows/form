@@ -101,8 +101,15 @@ public enum ConstructionExamples {
         .init(id:"top-fit",lhs:"topFlap",relation:.lessThan,rhs:"height/2",message:"Top flap must fit the body height."),
         .init(id:"bottom-fit",lhs:"bottomFlap",relation:.lessThan,rhs:"height/2",message:"Bottom flap must fit the body height.")]
       let net=try p.net()
+      let overlapExpressions:[String:CADScalar]=["join.side-glue":"glueTab-2",
+        "join.bottom":"bottomFlap","join.top-tuck":"topFlap"]
+      let joins=net.joins.map { join in
+        var source=PlanarJoinDefinition(join)
+        source.overlapMM=overlapExpressions[join.id] ?? source.overlapMM
+        return source
+      }
       let result=PlanarConstructionDefinition(name:p.kind == .envelope ? "Constructed envelope":"Straight tuck carton",parameters:parameters,
-        size:point("_netW","_netH"),stockThickness:"stock",panels:panels,hinges:hinges,joins:net.joins,rootPanelID:net.rootPanelID,
+        size:point("_netW","_netH"),stockThickness:"stock",panels:panels,hinges:hinges,joins:joins,rootPanelID:net.rootPanelID,
         requirements:requirements,derived:derived)
       _ = try result.net();return result
     }

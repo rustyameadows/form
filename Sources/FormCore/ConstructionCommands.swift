@@ -265,7 +265,7 @@ public enum ConstructionCommands {
         layerOffsetMM:child=="glue" ? "stock":0)
     }
     return .init(name:"Fold and glue sleeve",parameters:parameters,size:.init("seamX+glueTab","height"),stockThickness:"stock",
-      panels:panels,hinges:hinges,joins:[.init(id:"side-seam",name:"Glue seam",firstPanelID:"glue",secondPanelID:"front",overlapMM:12)],rootPanelID:"front",
+      panels:panels,hinges:hinges,joins:[.init(id:"side-seam",name:"Glue seam",firstPanelID:"glue",secondPanelID:"front",overlapMM:"glueTab")],rootPanelID:"front",
       derived:["seamX":"2*(width+depth)"],connections:[.init(id:"side-contact",firstPanelID:"glue",secondPanelID:"front",
         firstPoint:.init("seamX+glueTab/2","height/2"),secondPoint:.init("glueTab/2","height/2"),maximumGapMM:"stock*2")])
   }
