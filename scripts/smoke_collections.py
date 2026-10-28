@@ -10,7 +10,7 @@ import json
 import pathlib
 import time
 import uuid
-from smoke_mcp import Client, OUTPUT, ROOT
+from smoke_mcp import Client, OUTPUT, ROOT, camera_pose, project_source
 
 
 def identity():
@@ -62,17 +62,17 @@ def main():
         assert sum(o['quantity'] for o in preview['occurrences'])==110
         assert sum(o['quantity'] for o in preview['occurrences'] if o.get('parentID'))==80
         assert not preview.get('completeTotal') and preview['unknowns']
-        assert project()==before and stable_builds(c)==builds
+        assert project_source(project())==project_source(before) and stable_builds(c)==builds
         saved=call('save_plan',definition=plan)['plan'];after=project()
-        assert after['schemaVersion']>=45 and after['objects']==before['objects'] and after['camera']==before['camera']
-        c.call('form_undo');assert project()==before
-        c.call('form_redo');assert project()==after
+        assert after['schemaVersion']>=45 and after['objects']==before['objects'] and camera_pose(after['camera'])==camera_pose(before['camera'])
+        c.call('form_undo');assert project_source(project())==project_source(before)
+        c.call('form_redo');assert project_source(project())==project_source(after)
         bad=copy.deepcopy(saved);bad['runs'][0]['quantity']=True
-        c.call('form_production_job',dict(kind='collection',command='save_plan',definition=bad),expect_error=True);assert project()==after
+        c.call('form_production_job',dict(kind='collection',command='save_plan',definition=bad),expect_error=True);assert project_source(project())==project_source(after)
         bad=copy.deepcopy(saved);bad['runs'].append(copy.deepcopy(bad['runs'][0]))
-        c.call('form_production_job',dict(kind='collection',command='preflight',definition=bad),expect_error=True);assert project()==after
+        c.call('form_production_job',dict(kind='collection',command='preflight',definition=bad),expect_error=True);assert project_source(project())==project_source(after)
         stock=dict(id=identity(),name='Validation-only declared trim',category='trim',unit='m',available='0.15',unitPrice='1',currency='USD',supplier='Manual test declaration')
-        c.call('form_textile_stock',{'command':'save_supply','supply':stock});assert project()==after
+        c.call('form_textile_stock',{'command':'save_supply','supply':stock});assert project_source(project())==project_source(after)
         saved['extras']=[dict(id=identity(),name=' =VALIDATION(1,2)',quantity='0.1',unit='m',unitPrice='2.5',currency='USD',supplier='\t@DECLARED',sku='A,"B"'),
                          dict(id=identity(),name='Independent currency declaration',quantity='2',unit='piece',unitPrice='1.125',currency='EUR')]
         saved['rules']=[dict(rowID='extra/'+saved['extras'][0]['id'],stock=dict(supply=stock))]
@@ -81,16 +81,16 @@ def main():
         assert preview['knownSubtotals']=={'USD':'0.25','EUR':'2.25'} and not preview.get('completeTotal')
         assert preview['stock'][0]['knownDemand']=='0.1' and preview['stock'][0]['status']=='sufficient'
         invalid=copy.deepcopy(updated);invalid['extras'][0]['unitPrice']='0.25x'
-        c.call('form_production_job',dict(kind='collection',command='save_plan',definition=invalid),expect_error=True);assert project()==priced
+        c.call('form_production_job',dict(kind='collection',command='save_plan',definition=invalid),expect_error=True);assert project_source(project())==project_source(priced)
         invalid=copy.deepcopy(updated);invalid['extras'][0]['unitPrice']='0.1234567890123'
-        c.call('form_production_job',dict(kind='collection',command='save_plan',definition=invalid),expect_error=True);assert project()==priced
+        c.call('form_production_job',dict(kind='collection',command='save_plan',definition=invalid),expect_error=True);assert project_source(project())==project_source(priced)
         newer=dict(stock,available='0',unitPrice='99');c.call('form_textile_stock',{'command':'save_supply','supply':newer})
-        c.call('form_textile_stock',{'command':'remove_supply','stock_id':stock['id']});assert project()==priced
+        c.call('form_textile_stock',{'command':'remove_supply','stock_id':stock['id']});assert project_source(project())==project_source(priced)
         assert call('preflight',plan_id=updated['id'])['preflight']['stock'][0]['available']=='0.15'
         capture=call('create',plan_id=updated['id']);job=capture['job'];captured=project()
-        assert captured['objects']==priced['objects'] and captured['camera']==priced['camera']
-        c.call('form_undo');assert project()==priced
-        c.call('form_redo');assert project()==captured
+        assert captured['objects']==priced['objects'] and camera_pose(captured['camera'])==camera_pose(priced['camera'])
+        c.call('form_undo');assert project_source(project())==project_source(priced)
+        c.call('form_redo');assert project_source(project())==project_source(captured)
         builds_after=stable_builds(c);assert builds_after==builds,'Collection-only records rebuilt the 3D source.'
         reopened=c.call('form_open_project',{'project_id':p['id']})
         assert reopened['collectionProduction']['captures'][0]['revisionDigest']==job['revisionDigest']

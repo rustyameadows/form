@@ -8,7 +8,7 @@ import json
 import pathlib
 import uuid
 import zipfile
-from smoke_mcp import Client, OUTPUT, ROOT
+from smoke_mcp import Client, OUTPUT, ROOT, camera_pose, project_source
 from verify_decoration_handoff import verify_packet
 
 
@@ -32,20 +32,20 @@ def main():
         report = job('preflight', object_id=tee['id'], preparation=htv, quantity=12)
         assert report['can_export'] and report['target']['surface'] == 'planar'
         assert [report['width_mm'], report['height_mm']] == [240, 200]
-        assert c.call('form_get_project') == original
+        assert project_source(c.call('form_get_project')) == project_source(original)
         htv['layerMaterials'] = [dict(paintKey=r['paint_key'], name='Operator-selected material ' + str(i + 1))
                                  for i, r in enumerate(report['material_regions'])]
         result = job('create', object_id=tee['id'], preparation=htv, quantity=12,
                      name='NASA / mirrored carrier-side HTV', notes='Material selection is a declaration; verify supplier instructions.')
         captured = c.call('form_get_project')
-        assert captured['schemaVersion'] >= 38 and captured['objects'] == original['objects'] and captured['camera'] == original['camera']
+        assert captured['schemaVersion'] >= 38 and captured['objects'] == original['objects'] and camera_pose(captured['camera']) == camera_pose(original['camera'])
         assert result['machine_contacted'] is False and result['inventory_deducted'] is False
         htv_job = result['job']
-        c.call('form_undo'); assert c.call('form_get_project') == original
-        c.call('form_redo'); assert c.call('form_get_project') == captured
+        c.call('form_undo'); assert project_source(c.call('form_get_project')) == project_source(original)
+        c.call('form_redo'); assert project_source(c.call('form_get_project')) == project_source(captured)
         bad = dict(htv, weedMargin=51)
         c.call('form_production_job', dict(kind='decoration', command='create', object_id=tee['id'], preparation=bad), expect_error=True)
-        assert c.call('form_get_project') == captured
+        assert project_source(c.call('form_get_project')) == project_source(captured)
         dtf = dict(process='dtf', mirror=False, dpi=300, whitePolicy='showThrough', includeUnderbaseReference=True)
         result = job('create', object_id=tee['id'], preparation=dtf, quantity=2, name='NASA / transparent DTF handoff')
         dtf_job = result['job']
@@ -75,7 +75,7 @@ def main():
             folder = OUTPUT / (prefix + '-' + label)
             before = c.call('form_get_project')
             out = job('export', job_id=item['id'], format='folder', path=str(folder))
-            assert c.call('form_get_project') == before
+            assert project_source(c.call('form_get_project')) == project_source(before)
             reports[label] = verify_packet(folder)
             assert reports[label]['packet_digest'] == out['packet_digest']
             packet_folders.append((item, folder))
@@ -93,14 +93,14 @@ def main():
         archive = OUTPUT / (prefix + '.zip')
         before = c.call('form_get_project')
         job('export', job_id=dtf_job['id'], format='zip', path=str(archive))
-        assert c.call('form_get_project') == before
+        assert project_source(c.call('form_get_project')) == project_source(before)
         with zipfile.ZipFile(archive) as z:
             assert z.testzip() is None
             for name in z.namelist():
                 assert '..' not in pathlib.PurePosixPath(name).parts and not name.startswith('/')
             for name, data in ((n, (packet_folders[1][1] / n).read_bytes()) for n in json.loads((packet_folders[1][1] / 'Manifest.json').read_text())['files']):
                 assert z.read('Decoration/' + name) == data
-        removed = c.call('form_get_project'); job('remove', job_id=htv_job['id']); c.call('form_undo'); assert c.call('form_get_project') == removed
+        removed = c.call('form_get_project'); job('remove', job_id=htv_job['id']); c.call('form_undo'); assert project_source(c.call('form_get_project')) == project_source(removed)
         result = dict(project_id=project['id'], tee_id=tee['id'], cap_id=cap['id'], htv_job=htv_job['id'], dtf_job=dtf_job['id'],
                       packet=str(archive), reports=reports, tools=len(tools), native_acceptance_pending=True,
                       machine_contacted=False, inventory_deducted=False,

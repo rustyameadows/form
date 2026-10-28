@@ -57,6 +57,23 @@ final class CADKernelTests:XCTestCase {
     for (p,n) in zip(fine.positions,fine.normals){XCTAssertGreaterThan(p.x*n.x+p.y*n.y+p.z*n.z,39.9)}
     let after=try await k.inspect(sphere);XCTAssertEqual(after,sphere.info)
   }
+  func testFailedLoftPreservesNativeStatusAndCanBeRepaired()async throws {
+    let kernel=CADKernel()
+    let lower=try await kernel.circleProfile(radius:10),duplicate=try await kernel.circleProfile(radius:10),coplanar=try await kernel.circleProfile(radius:20)
+    // Three coplanar sections deterministically fail the native smooth fitter
+    // without an expensive high-edge model or an invalid input profile.
+    do {
+      _ = try await kernel.loft([lower,duplicate,coplanar])
+      XCTFail("Coplanar smooth sections must not publish a solid.")
+    }catch let error as CADKernelError {
+      XCTAssertEqual(error.code,.operationFailed)
+      XCTAssertTrue(error.message.contains("OCCT ThruSections status Failed (6)"),error.message)
+    }
+    let upper=try await kernel.circleProfile(radius:20,plane:.init(origin:.init(0,50,0),u:.init(1,0,0),v:.init(0,0,-1)))
+    let repaired=try await kernel.loft([lower,upper])
+    XCTAssertTrue(repaired.info.valid && repaired.info.closed)
+    XCTAssertEqual(repaired.info.volumeMM3,Double.pi*50/3*(100+200+400),accuracy:1e-5)
+  }
   func testPublishedExactReportStaysCorrectAcrossDerivedGeometryMeshingAndFreshRead()async throws {
     let kernel=CADKernel(),root=try folder(),source=try await kernel.box(width:20,height:30,depth:40)
     XCTAssertEqual(source.info.volumeMM3,24000,accuracy:1e-7)

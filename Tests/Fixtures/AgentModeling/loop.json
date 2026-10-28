@@ -1,0 +1,756 @@
+[
+  {
+    "name": "enclosure",
+    "parameter": "width",
+    "definition": {
+      "assumptions": [],
+      "features": [
+        {
+          "id": "f951b36b-06b1-533c-aeef-168766a5ed97",
+          "name": "Dimensioned enclosure profile",
+          "operation": {
+            "inputs": [],
+            "kind": "profile",
+            "points": [
+              {
+                "x": "0",
+                "y": "0"
+              },
+              {
+                "x": "width",
+                "y": "0"
+              },
+              {
+                "x": "width",
+                "y": "depth"
+              },
+              {
+                "x": "0",
+                "y": "depth"
+              }
+            ],
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "699d6163-ed22-5df4-9256-f11b0bbf84eb",
+          "name": "Extruded enclosure",
+          "operation": {
+            "inputs": [
+              "f951b36b-06b1-533c-aeef-168766a5ed97"
+            ],
+            "kind": "extrude",
+            "values": {
+              "distance": "height"
+            }
+          },
+          "suppressed": false
+        },
+        {
+          "id": "5516b242-a6be-5257-b61c-3b53109c7d2b",
+          "name": "Rear opening and normal wall",
+          "operation": {
+            "inputs": [
+              "699d6163-ed22-5df4-9256-f11b0bbf84eb"
+            ],
+            "kind": "shell",
+            "selection": {
+              "faceAtMaximum": {
+                "axis": "y"
+              }
+            },
+            "values": {
+              "thickness": "wall"
+            }
+          },
+          "suppressed": false
+        },
+        {
+          "id": "14c82b6b-e8e4-5030-8196-ee741af0a51c",
+          "name": "Soft enclosure edges",
+          "operation": {
+            "inputs": [
+              "5516b242-a6be-5257-b61c-3b53109c7d2b"
+            ],
+            "kind": "fillet",
+            "selection": {
+              "allEdges": {}
+            },
+            "values": {
+              "radius": "edgeRadius"
+            }
+          },
+          "suppressed": false
+        }
+      ],
+      "id": "7b3534ef-eaa6-5519-bfeb-86000de8acc3",
+      "name": "Structured enclosure",
+      "outputs": [
+        "14c82b6b-e8e4-5030-8196-ee741af0a51c"
+      ],
+      "parameters": [
+        {
+          "maximum": 200,
+          "minimum": 80,
+          "name": "width",
+          "unit": "mm",
+          "value": 120
+        },
+        {
+          "maximum": 140,
+          "minimum": 50,
+          "name": "depth",
+          "unit": "mm",
+          "value": 80
+        },
+        {
+          "maximum": 90,
+          "minimum": 25,
+          "name": "height",
+          "unit": "mm",
+          "value": 45
+        },
+        {
+          "maximum": 0.7,
+          "minimum": 0.3,
+          "name": "edgeRadius",
+          "unit": "mm",
+          "value": 0.7
+        },
+        {
+          "maximum": 4,
+          "minimum": 1.5,
+          "name": "wall",
+          "unit": "mm",
+          "value": 2.5
+        }
+      ],
+      "revision": 0,
+      "unresolvedMeasurements": [
+        "Verify closure, component clearances, mounting features and process tolerances."
+      ],
+      "version": 1
+    }
+  },
+  {
+    "name": "clockEnclosure",
+    "parameter": "diameter",
+    "definition": {
+      "assumptions": [
+        "Geometry uses document millimeters. Mount locations and bore sizes are authored placeholders."
+      ],
+      "features": [
+        {
+          "id": "4e112c3e-a0bd-53b7-b9cc-e520ce4698a1",
+          "name": "Analytic case blank",
+          "operation": {
+            "inputs": [],
+            "kind": "cylinder",
+            "values": {
+              "height": "depth",
+              "radius": "diameter/2"
+            }
+          },
+          "suppressed": false
+        },
+        {
+          "id": "ef16fb53-40e7-5bbe-8b43-66cf487ccce3",
+          "name": "Rolled outer edges",
+          "operation": {
+            "inputs": [
+              "4e112c3e-a0bd-53b7-b9cc-e520ce4698a1"
+            ],
+            "kind": "fillet",
+            "selection": {
+              "allEdges": {}
+            },
+            "values": {
+              "radius": "edgeRadius"
+            }
+          },
+          "suppressed": false
+        },
+        {
+          "id": "03887d19-1821-50c5-af9e-8f7e0a0ab262",
+          "name": "Rear cavity tool",
+          "operation": {
+            "inputs": [],
+            "kind": "cylinder",
+            "values": {
+              "height": "depth-wall+1",
+              "radius": "diameter/2-wall"
+            }
+          },
+          "suppressed": false
+        },
+        {
+          "id": "44db075e-f40f-52ca-bb89-fed55650ac09",
+          "name": "Rear cavity position",
+          "operation": {
+            "inputs": [
+              "03887d19-1821-50c5-af9e-8f7e0a0ab262"
+            ],
+            "kind": "transform",
+            "matrix": [
+              "1",
+              "0",
+              "0",
+              "0",
+              "0",
+              "1",
+              "0",
+              "wall",
+              "0",
+              "0",
+              "1",
+              "0",
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "e1b7118f-6e5a-5958-b389-455cd2985799",
+          "name": "Open rear and retained front wall",
+          "operation": {
+            "inputs": [
+              "ef16fb53-40e7-5bbe-8b43-66cf487ccce3",
+              "44db075e-f40f-52ca-bb89-fed55650ac09"
+            ],
+            "kind": "subtract",
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "0bbc6c66-69b0-5e9a-beef-30e078bdcb0f",
+          "name": "Dial recess tool",
+          "operation": {
+            "inputs": [],
+            "kind": "cylinder",
+            "values": {
+              "height": "wall/2+1",
+              "radius": "diameter/2-bezelWidth"
+            }
+          },
+          "suppressed": false
+        },
+        {
+          "id": "3e2f020f-e986-5ffd-a4b6-015ade532cce",
+          "name": "Dial recess position",
+          "operation": {
+            "inputs": [
+              "0bbc6c66-69b0-5e9a-beef-30e078bdcb0f"
+            ],
+            "kind": "transform",
+            "matrix": [
+              "1",
+              "0",
+              "0",
+              "0",
+              "0",
+              "1",
+              "0",
+              "-1",
+              "0",
+              "0",
+              "1",
+              "0",
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "5d7bea68-419b-5dd3-8aba-8746107b30a0",
+          "name": "Recessed dial seat",
+          "operation": {
+            "inputs": [
+              "e1b7118f-6e5a-5958-b389-455cd2985799",
+              "3e2f020f-e986-5ffd-a4b6-015ade532cce"
+            ],
+            "kind": "subtract",
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "75e83862-ffa1-5513-879a-0b21d6a72d81",
+          "name": "Movement mount boss",
+          "operation": {
+            "inputs": [],
+            "kind": "cylinder",
+            "values": {
+              "height": "wall*2",
+              "radius": "mountBore/2+3.5"
+            }
+          },
+          "suppressed": false
+        },
+        {
+          "id": "59e689cd-c15a-5181-83a5-c47b2b6d72c3",
+          "name": "Mount position",
+          "operation": {
+            "inputs": [
+              "75e83862-ffa1-5513-879a-0b21d6a72d81"
+            ],
+            "kind": "transform",
+            "matrix": [
+              "1",
+              "0",
+              "0",
+              "mountSpacing/2",
+              "0",
+              "1",
+              "0",
+              "wall",
+              "0",
+              "0",
+              "1",
+              "mountSpacing/2",
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "51cb7794-b3f6-5b21-91ee-43a139e67648",
+          "name": "Four mounting bosses",
+          "operation": {
+            "inputs": [
+              "59e689cd-c15a-5181-83a5-c47b2b6d72c3"
+            ],
+            "kind": "circularPattern",
+            "values": {
+              "angleStepDegrees": "90",
+              "count": "4"
+            }
+          },
+          "suppressed": false
+        },
+        {
+          "id": "9a2dc387-ff45-5d1c-b7bd-2a7cb1afa7fd",
+          "name": "Connected movement mounts",
+          "operation": {
+            "inputs": [
+              "5d7bea68-419b-5dd3-8aba-8746107b30a0",
+              "51cb7794-b3f6-5b21-91ee-43a139e67648"
+            ],
+            "kind": "union",
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "0d5fd094-320b-5fab-951f-26093a1a8e75",
+          "name": "Mount pilot tool",
+          "operation": {
+            "inputs": [],
+            "kind": "cylinder",
+            "values": {
+              "height": "wall*2+1",
+              "radius": "mountBore/2"
+            }
+          },
+          "suppressed": false
+        },
+        {
+          "id": "872fa71b-d31f-571f-93c1-6c33ec4bb444",
+          "name": "Blind pilot position",
+          "operation": {
+            "inputs": [
+              "0d5fd094-320b-5fab-951f-26093a1a8e75"
+            ],
+            "kind": "transform",
+            "matrix": [
+              "1",
+              "0",
+              "0",
+              "mountSpacing/2",
+              "0",
+              "1",
+              "0",
+              "wall+1.5",
+              "0",
+              "0",
+              "1",
+              "mountSpacing/2",
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "a3ae9504-e454-5d73-a895-55afc872c674",
+          "name": "Four blind pilots",
+          "operation": {
+            "inputs": [
+              "872fa71b-d31f-571f-93c1-6c33ec4bb444"
+            ],
+            "kind": "circularPattern",
+            "values": {
+              "angleStepDegrees": "90",
+              "count": "4"
+            }
+          },
+          "suppressed": false
+        },
+        {
+          "id": "0ae20c02-74a1-527b-8ce6-d2740d011912",
+          "name": "Mount pilot holes",
+          "operation": {
+            "inputs": [
+              "9a2dc387-ff45-5d1c-b7bd-2a7cb1afa7fd",
+              "a3ae9504-e454-5d73-a895-55afc872c674"
+            ],
+            "kind": "subtract",
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "03460286-e550-5218-b8f2-03acafbbd251",
+          "name": "Dial shaft tool",
+          "operation": {
+            "inputs": [],
+            "kind": "cylinder",
+            "values": {
+              "height": "wall+3",
+              "radius": "shaftDiameter/2"
+            }
+          },
+          "suppressed": false
+        },
+        {
+          "id": "2cf25ec2-e2b7-57fa-bf17-40e473ef805e",
+          "name": "Shaft position",
+          "operation": {
+            "inputs": [
+              "03460286-e550-5218-b8f2-03acafbbd251"
+            ],
+            "kind": "transform",
+            "matrix": [
+              "1",
+              "0",
+              "0",
+              "0",
+              "0",
+              "1",
+              "0",
+              "-1",
+              "0",
+              "0",
+              "1",
+              "0",
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "4e83bbd8-2907-55d8-a645-26afafdcaf4c",
+          "name": "Shaft clearance",
+          "operation": {
+            "inputs": [
+              "0ae20c02-74a1-527b-8ce6-d2740d011912",
+              "2cf25ec2-e2b7-57fa-bf17-40e473ef805e"
+            ],
+            "kind": "subtract",
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "a2635b20-edcf-54d3-9d2d-83b63b651091",
+          "name": "Upright clock orientation",
+          "operation": {
+            "inputs": [
+              "4e83bbd8-2907-55d8-a645-26afafdcaf4c"
+            ],
+            "kind": "transform",
+            "matrix": [
+              "1",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "-1",
+              "diameter/2",
+              "0",
+              "1",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "1"
+            ],
+            "values": {}
+          },
+          "suppressed": false
+        }
+      ],
+      "id": "3ca92eb8-0101-5a72-876d-07a800b48de6",
+      "name": "Seven-inch clock enclosure",
+      "outputs": [
+        "a2635b20-edcf-54d3-9d2d-83b63b651091"
+      ],
+      "parameters": [
+        {
+          "maximum": 240,
+          "minimum": 140,
+          "name": "diameter",
+          "unit": "mm",
+          "value": 177.8
+        },
+        {
+          "maximum": 80,
+          "minimum": 35,
+          "name": "depth",
+          "unit": "mm",
+          "value": 50.8
+        },
+        {
+          "maximum": 5,
+          "minimum": 2.5,
+          "name": "wall",
+          "unit": "mm",
+          "value": 3
+        },
+        {
+          "maximum": 14,
+          "minimum": 5,
+          "name": "bezelWidth",
+          "unit": "mm",
+          "value": 7
+        },
+        {
+          "maximum": 2,
+          "minimum": 0.3,
+          "name": "edgeRadius",
+          "unit": "mm",
+          "value": 1.2
+        },
+        {
+          "maximum": 12,
+          "minimum": 5,
+          "name": "shaftDiameter",
+          "unit": "mm",
+          "value": 8.2
+        },
+        {
+          "maximum": 52,
+          "minimum": 26,
+          "name": "mountSpacing",
+          "unit": "mm",
+          "value": 36
+        },
+        {
+          "maximum": 4.5,
+          "minimum": 2,
+          "name": "mountBore",
+          "unit": "mm",
+          "value": 3.2
+        }
+      ],
+      "revision": 0,
+      "unresolvedMeasurements": [
+        "Verify actual clock movement footprint, depth, shaft length and mounting pattern.",
+        "Specify dial retention, lens, rear cover, fasteners and physical fit before production."
+      ],
+      "version": 1
+    }
+  },
+  {
+    "name": "vase",
+    "parameter": "height",
+    "definition": {
+      "assumptions": [
+        "Wall is an inward exact-kernel offset; it is not a texture or open visual shell."
+      ],
+      "features": [
+        {
+          "id": "6bddc42c-2d0d-5a1a-8a12-923a786c38f4",
+          "name": "Bezier vessel silhouette",
+          "operation": {
+            "curves": [
+              {
+                "control1": {
+                  "x": "bulgeRadius",
+                  "y": "height*0.15"
+                },
+                "control2": {
+                  "x": "bulgeRadius",
+                  "y": "height*0.70"
+                },
+                "end": {
+                  "x": "rimRadius",
+                  "y": "height"
+                },
+                "kind": "cubicBezier",
+                "start": {
+                  "x": "baseRadius",
+                  "y": "0"
+                }
+              },
+              {
+                "end": {
+                  "x": "0",
+                  "y": "height"
+                },
+                "kind": "line",
+                "start": {
+                  "x": "rimRadius",
+                  "y": "height"
+                }
+              },
+              {
+                "end": {
+                  "x": "0",
+                  "y": "0"
+                },
+                "kind": "line",
+                "start": {
+                  "x": "0",
+                  "y": "height"
+                }
+              },
+              {
+                "end": {
+                  "x": "baseRadius",
+                  "y": "0"
+                },
+                "kind": "line",
+                "start": {
+                  "x": "0",
+                  "y": "0"
+                }
+              }
+            ],
+            "inputs": [],
+            "kind": "curveProfile",
+            "plane": {
+              "origin": {
+                "x": "0",
+                "y": "0",
+                "z": "0"
+              },
+              "u": {
+                "x": 1,
+                "y": 0,
+                "z": 0
+              },
+              "v": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+              }
+            },
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "d16e07e1-b0d1-55d2-8909-d5b8a9aed052",
+          "name": "Exact revolved vessel",
+          "operation": {
+            "inputs": [
+              "6bddc42c-2d0d-5a1a-8a12-923a786c38f4"
+            ],
+            "kind": "revolve",
+            "values": {}
+          },
+          "suppressed": false
+        },
+        {
+          "id": "2d722535-bf5d-5558-89f7-1c07a4e0105c",
+          "name": "Normal wall and open rim",
+          "operation": {
+            "inputs": [
+              "d16e07e1-b0d1-55d2-8909-d5b8a9aed052"
+            ],
+            "kind": "shell",
+            "selection": {
+              "faceAtMaximum": {
+                "axis": "y"
+              }
+            },
+            "values": {
+              "thickness": "wall"
+            }
+          },
+          "suppressed": false
+        }
+      ],
+      "id": "2c6a4469-df85-577d-9ae8-55aeddd55ec9",
+      "name": "Sculptural vessel",
+      "outputs": [
+        "2d722535-bf5d-5558-89f7-1c07a4e0105c"
+      ],
+      "parameters": [
+        {
+          "maximum": 280,
+          "minimum": 90,
+          "name": "height",
+          "unit": "mm",
+          "value": 180
+        },
+        {
+          "maximum": 45,
+          "minimum": 22,
+          "name": "baseRadius",
+          "unit": "mm",
+          "value": 28
+        },
+        {
+          "maximum": 65,
+          "minimum": 28,
+          "name": "rimRadius",
+          "unit": "mm",
+          "value": 40
+        },
+        {
+          "maximum": 95,
+          "minimum": 45,
+          "name": "bulgeRadius",
+          "unit": "mm",
+          "value": 65
+        },
+        {
+          "maximum": 5,
+          "minimum": 1.5,
+          "name": "wall",
+          "unit": "mm",
+          "value": 3
+        }
+      ],
+      "revision": 0,
+      "unresolvedMeasurements": [
+        "Validate chosen material, print orientation and process settings for a physical sample."
+      ],
+      "version": 1
+    }
+  }
+]

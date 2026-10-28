@@ -1,0 +1,296 @@
+{
+  "id": "1b2da14d-0f98-5613-a103-8bfa06754284",
+  "version": 2,
+  "revision": 0,
+  "name": "Parametric container and fitted cap",
+  "parameters": [
+    {
+      "name": "width",
+      "value": 100,
+      "minimum": 80,
+      "maximum": 180,
+      "unit": "mm"
+    },
+    {
+      "name": "height",
+      "value": 45,
+      "minimum": 25,
+      "maximum": 80,
+      "unit": "mm"
+    },
+    {
+      "name": "depth",
+      "value": 70,
+      "minimum": 50,
+      "maximum": 120,
+      "unit": "mm"
+    },
+    {
+      "name": "wall",
+      "value": 3,
+      "minimum": 1.5,
+      "maximum": 4,
+      "unit": "mm"
+    },
+    {
+      "name": "fit",
+      "value": 0.4,
+      "minimum": 0.2,
+      "maximum": 0.8,
+      "unit": "mm"
+    },
+    {
+      "name": "lidDepth",
+      "value": 12,
+      "minimum": 8,
+      "maximum": 20,
+      "unit": "mm"
+    }
+  ],
+  "features": [
+    {
+      "id": "137f74e5-3a5c-56c9-aeaf-26f8b2a14fcf",
+      "name": "Body stock",
+      "operation": {
+        "kind": "box",
+        "inputs": [],
+        "values": {
+          "width": "width",
+          "height": "height",
+          "depth": "depth"
+        }
+      }
+    },
+    {
+      "id": "38345eee-8105-5844-8d14-af148f32c55c",
+      "name": "Open container",
+      "operation": {
+        "kind": "shell",
+        "inputs": [
+          "137f74e5-3a5c-56c9-aeaf-26f8b2a14fcf"
+        ],
+        "values": {
+          "thickness": "wall"
+        },
+        "selection": {
+          "faceAtMaximum": {
+            "axis": "y"
+          }
+        }
+      }
+    },
+    {
+      "id": "e9d4fe89-aee3-56fb-9214-8534b643099e",
+      "name": "Cap stock",
+      "operation": {
+        "kind": "box",
+        "inputs": [],
+        "values": {
+          "width": "width+2*(fit+wall)",
+          "height": "lidDepth",
+          "depth": "depth+2*(fit+wall)"
+        }
+      }
+    },
+    {
+      "id": "0f1ea0da-971d-5714-a7ab-e6be0b69815b",
+      "name": "Cap interior",
+      "operation": {
+        "kind": "shell",
+        "inputs": [
+          "e9d4fe89-aee3-56fb-9214-8534b643099e"
+        ],
+        "values": {
+          "thickness": "wall"
+        },
+        "selection": {
+          "faceAtMaximum": {
+            "axis": "y"
+          }
+        }
+      }
+    },
+    {
+      "id": "0932caf0-f0b4-529f-ad53-862cda26b447",
+      "name": "Fitted cap",
+      "operation": {
+        "kind": "transform",
+        "inputs": [
+          "0f1ea0da-971d-5714-a7ab-e6be0b69815b"
+        ],
+        "values": {},
+        "matrix": [
+          1,
+          0,
+          0,
+          "-fit-wall",
+          0,
+          -1,
+          0,
+          "height+wall+fit",
+          0,
+          0,
+          -1,
+          "depth+fit+wall",
+          0,
+          0,
+          0,
+          1
+        ]
+      }
+    }
+  ],
+  "outputs": [
+    "38345eee-8105-5844-8d14-af148f32c55c",
+    "0932caf0-f0b4-529f-ad53-862cda26b447"
+  ],
+  "requirements": [
+    {
+      "id": "cap-depth",
+      "lhs": "lidDepth",
+      "relation": ">",
+      "rhs": "wall+2",
+      "message": "The cap needs a usable skirt below its top."
+    }
+  ],
+  "outputRequirements": [
+    {
+      "id": "body-volume",
+      "outputID": "38345eee-8105-5844-8d14-af148f32c55c",
+      "metric": "volume",
+      "relation": ">",
+      "value": 0,
+      "message": "The container must retain material."
+    },
+    {
+      "id": "cap-clearance",
+      "outputID": "38345eee-8105-5844-8d14-af148f32c55c",
+      "otherOutputID": "0932caf0-f0b4-529f-ad53-862cda26b447",
+      "metric": "clearance",
+      "relation": "==",
+      "value": "fit",
+      "tolerance": 1e-05,
+      "message": "The cap must retain the requested physical fit."
+    },
+    {
+      "id": "no-interference",
+      "outputID": "38345eee-8105-5844-8d14-af148f32c55c",
+      "otherOutputID": "0932caf0-f0b4-529f-ad53-862cda26b447",
+      "metric": "interference",
+      "relation": "<=",
+      "value": 0,
+      "tolerance": 1e-05,
+      "message": "The cap and container must not intersect."
+    }
+  ],
+  "surfaces": [
+    {
+      "id": "front",
+      "name": "Front",
+      "outputFeatureID": "38345eee-8105-5844-8d14-af148f32c55c",
+      "selection": {
+        "faceAtMaximum": {
+          "axis": "z"
+        }
+      },
+      "origin": {
+        "x": 0,
+        "y": "height",
+        "z": "depth"
+      },
+      "uAxis": {
+        "x": 1,
+        "y": 0,
+        "z": 0
+      },
+      "vAxis": {
+        "x": 0,
+        "y": -1,
+        "z": 0
+      },
+      "width": "width",
+      "height": "height"
+    },
+    {
+      "id": "right",
+      "name": "Right",
+      "outputFeatureID": "38345eee-8105-5844-8d14-af148f32c55c",
+      "selection": {
+        "faceAtMaximum": {
+          "axis": "x"
+        }
+      },
+      "origin": {
+        "x": "width",
+        "y": "height",
+        "z": "depth"
+      },
+      "uAxis": {
+        "x": 0,
+        "y": 0,
+        "z": -1
+      },
+      "vAxis": {
+        "x": 0,
+        "y": -1,
+        "z": 0
+      },
+      "width": "depth",
+      "height": "height"
+    },
+    {
+      "id": "left",
+      "name": "Left",
+      "outputFeatureID": "38345eee-8105-5844-8d14-af148f32c55c",
+      "selection": {
+        "faceAtMinimum": {
+          "axis": "x"
+        }
+      },
+      "origin": {
+        "x": 0,
+        "y": "height",
+        "z": 0
+      },
+      "uAxis": {
+        "x": 0,
+        "y": 0,
+        "z": 1
+      },
+      "vAxis": {
+        "x": 0,
+        "y": -1,
+        "z": 0
+      },
+      "width": "depth",
+      "height": "height"
+    },
+    {
+      "id": "lid",
+      "name": "Lid",
+      "outputFeatureID": "0932caf0-f0b4-529f-ad53-862cda26b447",
+      "selection": {
+        "faceAtMaximum": {
+          "axis": "y"
+        }
+      },
+      "origin": {
+        "x": "-fit-wall",
+        "y": "height+wall+fit",
+        "z": "-fit-wall"
+      },
+      "uAxis": {
+        "x": 1,
+        "y": 0,
+        "z": 0
+      },
+      "vAxis": {
+        "x": 0,
+        "y": 0,
+        "z": 1
+      },
+      "width": "width+2*(fit+wall)",
+      "height": "depth+2*(fit+wall)"
+    }
+  ]
+}
