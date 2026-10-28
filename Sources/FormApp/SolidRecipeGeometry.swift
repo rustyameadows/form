@@ -20,12 +20,12 @@ import CryptoKit
     for primitive in construction.primitives {
       let v=primitive.values,center=SIMD3(v["x"]!,v["y"]!,v["z"]!)
       if primitive.kind=="segment" {
-        solid.segment(center,.init(v["endX"]!,v["endY"]!,v["endZ"]!),v["radius"]!,v["endRadius"]!,blend:v["blend"] ?? 0)
+        solid.segment(center,.init(v["endX"]!,v["endY"]!,v["endZ"]!),v["radius"]!,v["endRadius"]!,aspect:v["aspect"] ?? 1,endAspect:v["endAspect"] ?? 1,roll:v["roll"] ?? 0,blend:v["blend"] ?? 0)
       }else{
         solid.ellipsoid(center,radii:.init(v["radiusX"]!,v["radiusY"]!,v["radiusZ"]!),axis:.init(v["axisX"] ?? 0,v["axisY"] ?? 1,v["axisZ"] ?? 0),roll:v["roll"] ?? 0,blend:v["blend"] ?? 0)
       }
     }
-    var mesh=try solid.mesh(spacing:construction.spacing,floorY:construction.floorY)
+    var mesh=try solid.mesh(spacing:construction.spacing,floorY:construction.floorY,fillVoids:construction.fillVoids)
     if let height=construction.normalizeHeight {
       let low=mesh.positions.map(\.y).min()!,high=mesh.positions.map(\.y).max()!,scale=height/(high-low)
       mesh.positions=mesh.positions.map{.init($0.x*scale,($0.y-low)*scale,$0.z*scale)}

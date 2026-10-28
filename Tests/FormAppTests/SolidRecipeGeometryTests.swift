@@ -34,4 +34,21 @@ import simd
     XCTAssertEqual(mesh.size.z,source.positions.map(\.y).max()! - source.positions.map(\.y).min()!,accuracy:1e-8)
     XCTAssertEqual(source.positions.map(\.y).min()!,-2,accuracy:1e-5)
   }
+  func testExplicitVoidFillingPreservesExteriorAndRemovesOnlyEnclosedAir()throws {
+    var solid=OrganicSolid()
+    for x in [-5.0,5] {for y in [-5.0,5] {for z in [-5.0,5] {solid.ellipsoid(.init(x,y,z),radii:.init(repeating:7.5))}}}
+    let open=try solid.mesh(spacing:0.4),filled=try solid.mesh(spacing:0.4,fillVoids:true)
+    func report(_ mesh:(positions:[SIMD3<Double>],indices:[UInt32]))throws->MeshTopologyReport {
+      try MeshTopology.inspect(.init(id:"rounded-volume",positionsMM:mesh.positions.map{.init($0.x,$0.y,$0.z)},normals:[],indices:mesh.indices),maximumTriangles:2_000_000)
+    }
+    let a=try report(open),b=try report(filled)
+    XCTAssertTrue(a.isClosedOrientedSurface,"\(a)");XCTAssertTrue(b.isClosedOrientedSurface,"\(b)");XCTAssertGreaterThan(b.signedVolumeMM3,a.signedVolumeMM3)
+    XCTAssertLessThan(filled.indices.count,open.indices.count)
+  }
+  func testVariableEllipticalSweepKeepsRoundedEndsAndClosedTopology()throws {
+    var solid=OrganicSolid();solid.segment(.init(0,0,0),.init(0,0,20),3,0.6,aspect:0.3,endAspect:1,roll:0.4)
+    let mesh=try solid.mesh(spacing:0.25)
+    let report=try MeshTopology.inspect(.init(id:"fin",positionsMM:mesh.positions.map{.init($0.x,$0.y,$0.z)},normals:[],indices:mesh.indices),maximumTriangles:2_000_000)
+    XCTAssertTrue(report.isClosedOrientedSurface,"\(report)");XCTAssertGreaterThan(report.signedVolumeMM3,30)
+  }
 }

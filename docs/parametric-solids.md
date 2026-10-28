@@ -9,6 +9,7 @@ A solid contains:
 - `spacing`: an expression giving the physical sampling interval, 0.15–2 mm.
 - `floorY`: optional planar trim, retaining geometry above that physical Y coordinate.
 - `normalizeHeight`: optional final uniform scale to an explicit physical height, with the standing surface moved to Y=0.
+- `fillVoids`: optional explicit filling of enclosed air. Openings connected to exterior air remain open. Disabled by default.
 - `nodes`: bounded construction groups and primitives.
 
 Every numeric primitive value is an expression string. Expressions support arithmetic, `pi`, parameter variables, ordered local bindings, and these functions: `sin`, `cos`, `sqrt`, `abs`, `floor`, `ceil`, `round`, `fract`, `pow`, `atan2`, `min`, `max`, `clamp`, `mix`, and zero-based `pick(index, choices…)`. Function angles are radians. The parser does not execute code or evaluate Foundation expressions.
@@ -19,10 +20,10 @@ The two initial solid primitives are:
 
 | Kind | Required expression values | Optional values |
 | --- | --- | --- |
-| `segment` | `x, y, z, endX, endY, endZ, radius, endRadius` | `blend` |
+| `segment` | `x, y, z, endX, endY, endZ, radius, endRadius` | `blend, aspect, endAspect, roll` |
 | `ellipsoid` | `x, y, z, radiusX, radiusY, radiusZ` | `axisX, axisY, axisZ, roll, blend` |
 
-A segment is a rounded tapered solid between two endpoints. Sampling a curve with overlapping segments forms a variable-radius spine. An ellipsoid's third radius follows its axis; roll rotates its other two axes. Blending is a bounded smooth union distance in mm; zero preserves the ordinary union. Colors and materials belong to the instantiated object.
+A segment is a rounded tapered solid between two endpoints. Optional cross-section aspect ratios (0.25–1) vary independently at its ends; roll rotates their plane. This supports flattened fins and transitions to finite circular tips. Sampling a curve with overlapping segments forms a variable-radius spine. An ellipsoid's third radius follows its axis; roll rotates its other two axes. Blending is a bounded smooth union distance in mm; zero preserves the ordinary union. Colors and materials belong to the instantiated object.
 
 For example, a reusable radial connector can be described with a repeated group. Its `arms` and `reach` are ordinary recipe parameters:
 
@@ -44,7 +45,7 @@ For example, a reusable radial connector can be described with a repeated group.
 }
 ```
 
-Table, Studio and print preparation consume the same indexed surface. Primitives are fused volumetrically; they are not exported as intersecting display shells. The mesher uses consistent shared edge identities, outward winding and an optional flat sole. Geometry and render caches count actual buffers toward their memory budgets. Separate GPU chunks retain shared source normals and respect existing payload limits.
+Table, Studio and print preparation consume the same indexed surface. Primitives are fused volumetrically; they are not exported as intersecting display shells. The mesher uses consistent shared edge identities, outward winding and an optional flat sole. Sign-preserving distance conditioning and topology-checked short-edge collapse remove numerical slivers and reduce upload cost without reversing faces. Geometry and render caches count actual buffers toward their memory budgets. Separate GPU chunks retain shared source normals and respect existing payload limits.
 
 Use `form_solid` with `command: "inspect"` and an `object_id` to read actual bounds, triangle/vertex counts, connectivity, closed/oriented topology, volume and elapsed time. `export_stl` adds an unused absolute `.stl` path and exports the inspected millimeter surface in Z-up fabrication coordinates. It does not contact a printer. Existing destinations are preserved.
 
