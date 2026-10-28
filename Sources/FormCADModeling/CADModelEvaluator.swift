@@ -5,14 +5,24 @@ import FormCADKernel
 
 public struct CADFeatureEvaluation: Sendable {
   public var id:UUID,name:String,kind:CADFeatureKind,fingerprint:String,fromCache:Bool,suppressed:Bool,info:CADShapeInfo
+  public var durationMS:Double=0
 }
 public struct CADModelEvaluation: Sendable {
   public var modelID:UUID,modelRevision:Int,revisionHash:String,definition:CADModelDefinition
   public var outputs:[UUID:CADShape],features:[CADFeatureEvaluation],rebuiltFeatureIDs:[UUID]
+  public var durationMS:Double=0
+  public var checks:[CADGeometryCheckResult]=[]
+  public var surfaces:[CADResolvedPlanarSurface]=[]
+  public var surfaceIssues:[CADSurfaceResolutionIssue]=[]
   public var outputOrder:[UUID]{definition.outputs}
 }
 public struct CADModelEvaluationFailure: LocalizedError, Sendable {
   public let featureID:UUID?,message:String,previousValidRevisionHash:String?
+  public var category:String="evaluation"
+  public var requirementID:String?
+  public var parameterValues:[String:Double]=[:]
+  public var resolvedValues:[String:Double]=[:]
+  public var inputFeatureIDs:[UUID]=[]
   public var errorDescription:String?{message}
 }
 public struct CADFeatureTopology: Sendable {
@@ -63,8 +73,9 @@ public actor CADModelEvaluator {
   private static func digest<T:Encodable>(_ value:T)throws->String{let encoder=JSONEncoder();encoder.outputFormatting=[.sortedKeys,.withoutEscapingSlashes];return SHA256.hash(data:try encoder.encode(value)).map{String(format:"%02x",$0)}.joined()}
   private func current(_ id:UUID,_ token:UUID)throws{try Task.checkCancellation();guard generations[id]==token else{throw CancellationError()}}
   public func evaluate(_ model:CADModelDefinition,resourcesAt root:URL?=nil,expectedRevisionHash:String?=nil) async throws->CADModelEvaluation {
+    let evaluationStarted=ProcessInfo.processInfo.systemUptime
     let token=UUID();generations[model.id]=token;activeModels.insert(model.id);defer{if generations[model.id]==token{activeModels.remove(model.id)}};let previous=accepted[model.id]?.revisionHash
-    var featureID:UUID?
+    var featureID:UUID?,resolvedValues:[String:Double]=[:],inputFeatureIDs:[UUID]=[]
     do {
       let revision=try Self.revisionHash(model)
       if let expectedRevisionHash,accepted[model.id]?.revisionHash != expectedRevisionHash{throw CADModelError("Stale CAD edit: the accepted model changed. Reinspect its revision before submitting.")}
@@ -74,8 +85,10 @@ public actor CADModelEvaluator {
       for node in order{if let source=node.operation.source{if let hash=verifiedHashes[source.path]{guard hash==source.sha256.lowercased() else{throw CADModelError("Two features pin different source hashes to the same resource path.")}}else{verifiedSources[source.path]=try sourceURL(source,root:root);verifiedHashes[source.path]=source.sha256.lowercased()}}}
       var pending:[UUID:CachedFeature]=[:],reports:[CADFeatureEvaluation]=[],rebuilt:[UUID]=[],shapeIDs=Set<UUID>(),pendingBytes=0
       for node in order {
+        let featureStarted=ProcessInfo.processInfo.systemUptime
         try current(model.id,token);featureID=node.id
         var count=0;let operation=try node.operation.resolved(using:parameters,count:&count)
+        resolvedValues=try operation.values.mapValues{try CADExpression.evaluate($0.expression,variables:[:])};inputFeatureIDs=operation.inputs
         let inputs=try operation.inputs.map {id->CADShape in guard let input=pending[id]?.shape else{throw CADModelError("A dependent feature has no valid exact output.")};return input}
         let dependencyHashes=try operation.inputs.map{id->String in guard let value=pending[id]?.fingerprint else{throw CADModelError("A source feature fingerprint is missing.")};return value}
         struct Signature:Encodable{var version:Int=1,kernelVersion:String=CADKernel.version,operation:CADFeatureOperation,dependencies:[String],suppressed:Bool}
@@ -91,16 +104,49 @@ public actor CADModelEvaluator {
         }else{shape=try await build(operation,inputs:inputs,dependencyHashes:dependencyHashes,resourcesAt:root,verifiedSources:verifiedSources);try current(model.id,token);hit=false;rebuilt.append(node.id)}
         if shapeIDs.insert(shape.id).inserted{pendingBytes+=Self.estimatedBytes(shape);guard pendingBytes<=topologyCacheBudgetBytes else{throw CADModelError("This exact model exceeds the conservative topology memory budget (\(topologyCacheBudgetBytes) bytes). Reduce feature/part complexity; the prior valid model is retained.")}}
         pending[node.id] = .init(fingerprint:fingerprint,shape:shape)
-        reports.append(.init(id:node.id,name:node.name,kind:operation.kind,fingerprint:fingerprint,fromCache:hit,suppressed:node.suppressed,info:shape.info))
+        reports.append(.init(id:node.id,name:node.name,kind:operation.kind,fingerprint:fingerprint,fromCache:hit,suppressed:node.suppressed,info:shape.info,durationMS:(ProcessInfo.processInfo.systemUptime-featureStarted)*1000))
       }
       try current(model.id,token)
       let outputs=try Dictionary(uniqueKeysWithValues:model.outputs.map{id->(UUID,CADShape) in guard let shape=pending[id]?.shape,shape.info.valid,shape.info.closed,shape.info.solids>0 else{throw CADModelError("A committed CAD output must be a valid closed solid. Profiles remain source features.")};return(id,shape)})
-      let result=CADModelEvaluation(modelID:model.id,modelRevision:model.revision,revisionHash:revision,definition:model,outputs:outputs,features:reports,rebuiltFeatureIDs:rebuilt)
+      var checks:[CADGeometryCheckResult]=[]
+      for check in model.outputRequirements ?? [] {
+        try current(model.id,token);featureID=check.outputID
+        inputFeatureIDs=[check.outputID]+[check.otherOutputID].compactMap{$0}
+        let measured=try await measure(check,outputs:outputs),expected=try CADExpression.evaluate(check.value.expression,variables:parameters)
+        try current(model.id,token);resolvedValues=["measured":measured,"required":expected]
+        try check.validate(measured:measured,values:parameters)
+        checks.append(.init(id:check.id,outputID:check.outputID,otherOutputID:check.otherOutputID,metric:check.metric,measured:measured,expected:expected,relation:check.relation,tolerance:check.tolerance))
+      }
+      var result=CADModelEvaluation(modelID:model.id,modelRevision:model.revision,revisionHash:revision,definition:model,outputs:outputs,features:reports,rebuiltFeatureIDs:rebuilt,durationMS:0,checks:checks)
+      let surfaceResults=try await resolvePlanarSurfaces(result,previous:accepted[model.id]?.definition.surfaces ?? [])
+      try current(model.id,token)
+      result.surfaces=surfaceResults.surfaces;result.surfaceIssues=surfaceResults.issues
+      result.durationMS=(ProcessInfo.processInfo.systemUptime-evaluationStarted)*1000
       try makeRoom(for:model.id,bytes:pendingBytes)
       modelBytes-=modelCosts[model.id] ?? 0;modelCosts[model.id]=pendingBytes;modelBytes+=pendingBytes;modelOrder.removeAll{$0==model.id};modelOrder.append(model.id)
       cache[model.id]=pending;accepted[model.id]=result;return result
     }catch is CancellationError{throw CancellationError()}
-    catch{let label=featureID.flatMap{id in model.features.first{$0.id==id}}.map{"Feature '\($0.name)' (\($0.operation.kind.rawValue)): "} ?? "";throw CADModelEvaluationFailure(featureID:featureID,message:label+error.localizedDescription,previousValidRevisionHash:previous)}
+    catch{
+      let label=featureID.flatMap{id in model.features.first{$0.id==id}}.map{"Feature '\($0.name)' (\($0.operation.kind.rawValue)): "} ?? ""
+      let requirement=error as? CADRequirementFailure
+      let category=requirement != nil ? "requirement":(error as? CADKernelError).map{"kernel.\($0.code.rawValue)"} ?? "validation"
+      throw CADModelEvaluationFailure(featureID:featureID,message:label+error.localizedDescription,previousValidRevisionHash:previous,category:category,requirementID:requirement?.requirementID,parameterValues:model.parameterValues,resolvedValues:resolvedValues,inputFeatureIDs:inputFeatureIDs)
+    }
+  }
+  private func measure(_ check:CADOutputRequirement,outputs:[UUID:CADShape]) async throws->Double {
+    guard let shape=outputs[check.outputID] else{throw CADModelError("Geometry requirement output is unavailable.")}
+    switch check.metric {
+    case .width:return shape.info.size.x
+    case .height:return shape.info.size.y
+    case .depth:return shape.info.size.z
+    case .volume:return shape.info.volumeMM3
+    case .area:return shape.info.areaMM2
+    case .solids:return Double(shape.info.solids)
+    case .clearance,.interference:
+      guard let id=check.otherOutputID,let other=outputs[id] else{throw CADModelError("Geometry requirement's second output is unavailable.")}
+      let measured=try await kernel.clearance(shape,other)
+      return check.metric == .clearance ? measured.distanceMM:measured.interferenceVolumeMM3
+    }
   }
   private func number(_ value:CADScalar)throws->Double{try CADExpression.evaluate(value.expression,variables:[:])}
   private func point(_ p:CADExpressionPoint)throws->CADPoint3{.init(try number(p.x),try number(p.y),try number(p.z))}
@@ -114,6 +160,20 @@ public actor CADModelEvaluator {
     case .allEdges:guard !faces else{throw CADModelError("Shell requires faces, not all edges.")};return []
     case let .edges(revisionHash,indices):guard !faces,revisionHash==hash else{throw CADModelError("Selected CAD edges belong to another revision; reinspection is required instead of silently remapping topology.")};return indices
     case let .faces(revisionHash,indices):guard faces,revisionHash==hash else{throw CADModelError("Selected CAD faces belong to another revision; reinspection is required instead of silently remapping topology.")};return indices
+    case let .faceAtCenter(datum,tolerance):
+      guard faces,tolerance.isFinite,tolerance>0,tolerance<=1 else{throw CADModelError("Face center selection requires a finite positive tolerance at most 1 mm.")}
+      let p=try point(datum),list=try await kernel.faces(source)
+      let matches=list.filter{hypot(hypot($0.center.x-p.x,$0.center.y-p.y),$0.center.z-p.z)<=tolerance}
+      guard matches.count==1 else{throw CADModelError("The authored face center maps to \(matches.count) faces. Review this reference rather than silently choosing another surface.")}
+      return [matches[0].index]
+    case .straightEdgesAtMaximum(let axis),.straightEdgesAtMinimum(let axis):
+      guard !faces,["x","y","z"].contains(axis) else{throw CADModelError("Use a straight-edge selector with x, y or z axis.")}
+      func coordinate(_ p:CADPoint3)->Double{axis=="x" ? p.x:axis=="y" ? p.y:p.z}
+      let maximum:Bool;if case .straightEdgesAtMaximum=selection{maximum=true}else{maximum=false}
+      let bound=coordinate(maximum ? source.info.maximum:source.info.minimum),list=try await kernel.edges(source)
+      let matches=list.filter{$0.curveType==0&&abs(coordinate($0.start)-bound)<=1e-6&&abs(coordinate($0.end)-bound)<=1e-6}
+      guard !matches.isEmpty else{throw CADModelError("No straight edges remain on the authored bounding plane. Inspect this reference before applying the feature.")}
+      return matches.map(\.index)
     case .facesAtExtrema(let axis):
       guard faces,["x","y","z"].contains(axis) else{throw CADModelError("Use a face selector with x, y or z axis.")}
       let low=try await selected(.faceAtMinimum(axis:axis),source:source,hash:hash,faces:true),high=try await selected(.faceAtMaximum(axis:axis),source:source,hash:hash,faces:true)
@@ -126,6 +186,11 @@ public actor CADModelEvaluator {
       let list=try await kernel.faces(source),matches=list.filter{abs(coordinate($0.minimum)-bound)<=1e-6&&abs(coordinate($0.maximum)-bound)<=1e-6}
       guard matches.count==1 else{throw CADModelError("The semantic face anchor maps to \(matches.count) faces. Review this topology change before applying the feature.")};return [matches[0].index]
     }
+  }
+  func surfaceFaceIndex(_ selection:CADTopologySelection,source:CADShape,fingerprint:String) async throws->UInt32 {
+    let faces=try await selected(selection,source:source,hash:fingerprint,faces:true)
+    guard faces.count==1 else{throw CADModelError("A physical artwork surface must resolve to exactly one face; this selector matched \(faces.count).")}
+    return faces[0]
   }
   private func build(_ op:CADFeatureOperation,inputs:[CADShape],dependencyHashes:[String],resourcesAt root:URL?,verifiedSources:[String:URL]) async throws->CADShape {
     func v(_ key:String,_ fallback:Double?=nil)throws->Double{if let raw=op.values[key]{return try number(raw)};if let fallback{return fallback};throw CADModelError("Missing scalar '\(key)' for \(op.kind.rawValue).")}
