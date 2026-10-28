@@ -240,7 +240,7 @@ enum TableTool: String, CaseIterable {
             let readOnly = (name=="form_studio_scene" && ["list","get"].contains(args["command"] as? String ?? "")) || (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
               (name == "form_paper" && ["inspect", "preflight", "layout", "view", "export"].contains(args["command"] as? String ?? "inspect")) ||
               [
-                "form_status", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones",
+                "form_status", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones", "form_solid",
                 "form_list_materials", "form_get_print_setup", "form_get_slice_status",
                 "form_list_filaments", "form_list_printers", "form_get_artwork",
                 "form_list_fonts", "form_font_features", "form_image_info", "form_export_publication",

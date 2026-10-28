@@ -10,6 +10,8 @@ A native Mac creative environment for designing and making physical things.
 
 Explore typography, notes, references, and graphics on a freeform 2D Canvas, connected to a continuous 3D Table for physical objects and materials. Use either surface alone, side by side, or with Canvas in a separate window. Start with the thing you want to make, then work directly with its dimensions, construction, and appearance.
 
+**Version 0.5.2:** project-owned parametric solid constructions, bounded expressions and repeated groups, fused organic surfaces, and MCP geometry inspection/STL export. See the [modeling guide](docs/parametric-solids.md).
+
 **Version 0.5.1:** SF interface typography, SF Mono technical values, black-and-white panels and neutral gray workspaces. One app accent is configurable in **LAB → Settings… → Appearance (⌘,)**. See the [interface style guide](docs/interface-style.md).
 
 **Version 0.5:** Distinct native workspaces for Function, guided Fabricate preparation, and Studio composition. Function remains medium-independent: lamp assemblies, exact CAD, fabric seams and cloth, and paper construction use their relevant controls. Fabricate makes source, process and material choices explicit. Studio adds independent product instances, saved scenes, camera controls and actual PNG/MP4 output. See the [environment workflows and verified limits](docs/environment-workflows.md). Constructed paper, RealityKit, exact OCCT models, interchange and local Orca slicing remain available. **Codex handles the creative conversation; LAB makes no external AI model calls.**

@@ -1,4 +1,4 @@
-# LAB 0.5.1 architecture
+# LAB 0.5.2 architecture
 
 This build follows the product brief and the October 24 interface sketches: one continuous Table, a compact native title bar, contextual floating inspectors, camera/focus/isolation controls, and a home screen of actual saved scene previews.
 
@@ -82,7 +82,7 @@ Image crop/adjustment fields require schema 9; schemas 1–8 still load. ImageIO
 
 `FORM_LIBRARY_PATH` selects a separate library for development or tests. `FORM_SOCKET_PATH` selects a separate local bridge. These settings require no change to a project document.
 
-Schema 51 adds portable starter-library choices and proposed blank snapshots. Schema 52 adds imported mesh references, exact feature models and validated exact/derived representations. Readers retain schemas 1–54. New representations use immutable flat resources under `Assets/`: source bytes, normalized mesh data, exact BRep and binary display meshes. Mesh/CAD handles and renderer entities are never serialized. Renderer migration alone does not upgrade an old project schema.
+Schema 51 adds portable starter-library choices and proposed blank snapshots. Schema 52 adds imported mesh references, exact feature models and validated exact/derived representations. Readers retain schemas 1–55. New representations use immutable flat resources under `Assets/`: source bytes, normalized mesh data, exact BRep and binary display meshes. Mesh/CAD handles and renderer entities are never serialized. Renderer migration alone does not upgrade an old project schema.
 
 Schema 53 adds optional paper constructions: stable panel/fold/edge/join IDs, caliper and stock, independent top opening, registered inside artwork sources and anchored annotations. One millimeter net supplies rigid folded geometry and physical cuts/creases; artwork coordinates survive dimension changes and receive an explicit review flag. Existing sleeves and old schemas load without conversion. Paper, CAD, imported meshes and cloth retain distinct source identities.
 
@@ -171,3 +171,5 @@ Saved Studio compositions persist optional versioned camera/reference-frame, exa
 Schema 45 stores optional collection plans and small immutable capture references without altering ProductObject rendering fields or old production-job shapes. CollectionQuantities expands physical occurrences and actual copy/layout identities without cloth generation. CollectionDecimal combines strict bounded inputs, exact add/multiply checks and explicitly reported version-1 12-place half-even division. Captures retain original source/preset/stock dependencies plus exact output assets; schema-29 deliveries derive once at capture and schema-38 files copy byte-for-byte. All later exports copy verified bytes. One metadata refresh/autosave path covers collection records and saved-shot definitions. History takes that path only when every other normalized source field compares exactly; physical edits retain normal print/cloth reconciliation. The two production/presentation digests exclude each other’s metadata. [Collection production](collection-production.md).
 
 Home technical thumbnails use a bounded read-only source loader and a small memory-only image cache. A conservative one-pixel display floor applies only to eligible separated sewing contours; editor/physical output and cached files retain the original source. [Bounds and fallback](home-technical-preview.md).
+
+Schema 55 adds optional project-owned parametric solid constructions to recipes. Bounded expression evaluation expands generic repeated groups into segments and ellipsoids; the shared implicit mesher supplies indexed physical geometry to Table, Studio and fabrication. No application generator is keyed to user model names or IDs. See [parametric solids](parametric-solids.md).

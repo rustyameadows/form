@@ -4,7 +4,7 @@ import Foundation
 /// the application must not fork a user's library, defaults, Keychain or clients.
 public enum LabIdentity {
   public static let name = "LAB"
-  public static let version = "0.5.1"
+  public static let version = "0.5.2"
   public static let bundleIdentifier = "studio.form.mac"
   public static let projectTypeIdentifier = "studio.form.project"
   public static let projectExtension = "form"

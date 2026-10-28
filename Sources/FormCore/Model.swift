@@ -276,9 +276,10 @@ public struct Recipe: Codable, Equatable, Identifiable, Sendable {
   public var summary: String
   public var parameters: [Parameter]
   public var parts: [PartDefinition]
+  public var solid:ParametricSolid?
   public init(
     _ id: String, _ name: String, _ symbol: String, _ summary: String, _ parameters: [Parameter],
-    parts: [PartDefinition] = []
+    parts: [PartDefinition] = [], solid:ParametricSolid? = nil
   ) {
     self.id = id
     self.name = name
@@ -286,6 +287,7 @@ public struct Recipe: Codable, Equatable, Identifiable, Sendable {
     self.summary = summary
     self.parameters = parameters
     self.parts = parts
+    self.solid = solid
   }
   public var defaults: [String: Double] {
     Dictionary(uniqueKeysWithValues: parameters.map { ($0.id, $0.value) })
@@ -302,6 +304,7 @@ public struct Recipe: Codable, Equatable, Identifiable, Sendable {
       }
     }
     let all = defaults.merging(values) { _, new in new }
+    if let solid {_ = try solid.evaluate(all)}
     for parameter in parameters where ["sheets", "pages"].contains(parameter.unit) {
       guard all[parameter.id]!.rounded() == all[parameter.id]! else {
         throw FormError.invalid("\(parameter.name) must be a whole number.")
@@ -422,6 +425,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if recipes.contains(where:{$0.solid != nil}) {return max(schemaVersion,55)}
     if studioPresentation?.scenes?.isEmpty == false {return max(schemaVersion,54)}
     if objects.contains(where:PaperConstruction.isPaper){return max(schemaVersion,53)}
     if objects.contains(where:{$0.meshAsset != nil || $0.cadModel != nil || $0.cadRepresentation != nil}) {return max(schemaVersion,52)}

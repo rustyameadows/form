@@ -9,7 +9,7 @@ public enum MCP {
     "form_list_printers", "form_connect_printer",
   ]
   public static let graphicsToolNames: Set<String> = [
-    "form_import_image", "form_image_info", "form_model_asset", "form_cad",
+    "form_import_image", "form_image_info", "form_model_asset", "form_cad", "form_solid",
     "form_list_fonts", "form_font_features", "form_replace_font", "form_convert_to_paths", "form_boolean_artwork",
     "form_export_artwork", "form_import_svg",
     "form_export_publication", "form_textile_stock", "form_production_job", "form_color_profile", "form_cloth",
@@ -195,17 +195,22 @@ public enum MCP {
         ], required: ["object_ids"]),
       tool(
         "form_create_recipe",
-        "Define a new parametric object type in this project. Parameters: id,name,value,minimum,maximum, optional unit/step. Parts: kind (box/cylinder/cone/sphere/torus), values (arithmetic expression strings for width/height/depth/radius/topRadius/bottomRadius/ringRadius/pipeRadius/x/y/z/rotationX/rotationY/rotationZ/corner), optional hex color. Expressions support variables, numbers, + - * / and parentheses. Values are mm, rotations degrees. Parts inherit the object's material. This creates first-class editable controls without executing code.",
+        "Define a project-owned parametric object with native controls. Parameters: id,name,value,minimum,maximum, optional unit/step. Use parts (box/cylinder/cone/sphere/torus) OR parts:[] plus solid. Solid: spacing expression (0.15–2 mm), optional floorY and normalizeHeight expressions, nodes. Nodes: kind group/segment/ellipsoid; optional count expression and unique index variable; ordered bindings [{name,expression}]. group has children. segment values: x/y/z,endX/endY/endZ,radius/endRadius,blend. ellipsoid values: x/y/z,radiusX/radiusY/radiusZ,optional axisX/Y/Z and roll (radians),blend. All values are expression strings. Solid nodes fuse into one indexed surface shared by Table, Studio and fabrication. Limits: 12k expanded primitives, depth12, 512KB source. Expressions: + - * /, pi, parentheses; sin/cos/sqrt/abs/floor/ceil/round/fract; pow/atan2/min/max; clamp/mix; pick(zero-based index,choices...). Angles in radians inside functions; traditional part rotations degrees. No code execution. User models remain project data.",
         [
+          "replace":["type":"boolean","description":"Explicitly replace a project-owned recipe, retaining matching object parameters with validation and shared Undo. Built-ins cannot be replaced."],
           "recipe": [
             "type": "object",
             "properties": [
               "id": string, "name": string, "summary": string, "symbol": string,
               "parameters": ["type": "array", "items": ["type": "object"]],
               "parts": ["type": "array", "items": ["type": "object"]],
+              "solid":["type":"object"],
             ], "required": ["id", "name", "parameters", "parts"],
           ]
         ], required: ["recipe"]),
+      tool("form_solid","Inspect the actual fused surface of a project-defined solid recipe: physical bounds, indexed connectivity, closed/oriented topology, volume and duration. export_stl writes that same geometry in millimeters, Z up, to an unused absolute .stl path. No slicing or printer commands. Geometry checks do not certify manufacture.",[
+        "command":["type":"string","enum":["inspect","export_stl"]],"object_id":objectID,"path":string
+      ],required:["object_id"]),
       tool(
         "form_set_artwork",
         "Replace linked surface artwork. Artwork: background, bleed (mm), elements, optional unit/guides/gridSpacing/snapEnabled. Elements: id,kind (text/rectangle/ellipse/line/image/polygon/star/path/group), x,y,width,height in mm, text,color,fontSize in pt. Optional name,rotation,opacity,hidden,locked,parentID,stroke,gradient,path,typography,textRuns,productionRole. Typography preserves installed fontName, tracking, leading, alignment, variable axes/features, paragraphs and UTF-16 rich text ranges. The native editor and 3D material use the same definition.",
