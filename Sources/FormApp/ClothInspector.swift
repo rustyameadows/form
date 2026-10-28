@@ -53,7 +53,7 @@ private struct ClothSettingsEditor:View {
           value("Contact thickness (mm)",value:$settings.collisionThicknessMm);value("Friction coefficient",value:$settings.friction)
         }
       }.formStyle(.grouped)
-      if let error {Text(error).foregroundStyle(.red).font(.callout).textSelection(.enabled)}
+      if let error {Text(error).foregroundStyle(Palette.ink).font(.callout).textSelection(.enabled)}
       HStack {Text("Apply resets the preview and is undoable.").font(.caption).foregroundStyle(.secondary);Spacer();Button("Cancel") {dismiss()};Button("Apply") {save()}.buttonStyle(.borderedProminent)}
     }.padding(24).frame(width:560,height:700)
   }
@@ -90,7 +90,7 @@ struct ClothAttachmentInspector:View {
           Text("Independent on Table").tag(UUID?.none)
           ForEach(surfaces) {surface in Text(surface.name).tag(Optional(surface.id))}
         }.disabled(object.locked || object.textile?.attachment != nil)
-        if let issue=assemblyIssue {Text(issue).font(.caption).foregroundStyle(.red).textSelection(.enabled)}
+        if let issue=assemblyIssue {Text(issue).font(.caption).foregroundStyle(Palette.ink).textSelection(.enabled)}
         if let a=assemblyAttachment,let surface,let product=assemblyProduct,let panel=assemblyPanel {
           Picker("Panel",selection:Binding(get:{panel.panelIndex},set:{attach(to:surface.id,panel:$0)})) {ForEach(product.panels,id:\.panelIndex) {p in Text("\(p.name) / copy \(p.id.copy)").tag(p.panelIndex)}}
           coordinate("Across (mm)",value:a.anchor.materialPointMm.x) {attach(to:surface.id,u:$0/panel.materialSizeMm.x)}

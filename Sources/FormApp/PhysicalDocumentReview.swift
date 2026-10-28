@@ -211,7 +211,7 @@ struct PhysicalDocumentViewport: Equatable {
     displayMode = .singlePage
     displayBox = .mediaBox
     displaysPageBreaks = true
-    backgroundColor = NSColor(hex: "#D9D8D2")
+    backgroundColor = NSColor(hex: "#F2F2F2")
     minScaleFactor = 0.01
     maxScaleFactor = 16
     autoScales = true

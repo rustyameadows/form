@@ -30,7 +30,7 @@ private struct ModelImportReviewContents:View {
     VStack(alignment:.leading,spacing:16) {
       HStack {
         VStack(alignment:.leading,spacing:4) {
-          Text("Import 3D model").font(.system(size:26,design:.serif))
+          Text("Import 3D model").font(.system(size: 26, weight: .semibold))
           Text(review.url.lastPathComponent).font(.system(size:12)).foregroundStyle(Palette.secondary)
         }
         Spacer();Button("Cancel") {coordinator.cancel(review)}.keyboardShortcut(.cancelAction)
@@ -77,11 +77,11 @@ private struct ModelImportReviewContents:View {
           }.frame(width:290,height:320)
         }
       }else {Text("Choose source units and read the model to inspect its actual geometry before importing.").font(.system(size:13)).foregroundStyle(Palette.secondary).frame(maxWidth:.infinity,minHeight:180)}
-      if let error=review.error {Text(error).font(.system(size:12)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
+      if let error=review.error {Text(error).font(.system(size:12)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
       HStack {
         Text("Original files and normalized geometry stay in this project. No hardware is contacted.").font(.system(size:11)).foregroundStyle(Palette.secondary)
         Spacer()
-        Button("Import model") {do{try coordinator.commit(review)}catch{review.error=error.localizedDescription}}.buttonStyle(.borderedProminent).keyboardShortcut(.defaultAction).disabled(review.state != "ready")
+        Button("Import model") {do{try coordinator.commit(review)}catch{review.error=error.localizedDescription}}.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction).disabled(review.state != "ready")
       }
     }.padding(28).frame(width:900).background(Palette.paper)
   }
@@ -119,7 +119,7 @@ struct ModelAssetInspector:View {
         Text(String(format:"%.1f × %.1f × %.1f mm",size.x*s,size.y*s,size.z*s)).font(.system(size:11,design:.monospaced))
         Text("\(reference.parts.count) parts · \(reference.triangleCount.formatted()) triangles\nUniform scale and placement; source CAD history unavailable.").font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
         if let issue=store.modelAssets.issue(for:object) {
-          Text(issue).font(.system(size:10)).foregroundStyle(.red)
+          Text(issue).font(.system(size:10)).foregroundStyle(Palette.ink)
           Button("Retry loading") {store.modelAssets.retry(object,assets:store.repository.url(for:store.project!.id).appendingPathComponent("Assets"))}.font(.system(size:10))
         }
         if !reference.materials.isEmpty {
@@ -154,7 +154,7 @@ struct ModelAssetInspector:View {
           ForEach(reference.parts){Text($0.name).font(.system(size:9))}
           ForEach(reference.warnings,id:\.self){Text($0).font(.system(size:9)).foregroundStyle(Palette.secondary)}
         }.font(.system(size:10))
-        if !error.isEmpty {Text(error).font(.system(size:10)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
+        if !error.isEmpty {Text(error).font(.system(size:10)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
       }.onAppear {slot=reference.materials.first?.index ?? 0;sourceID=object.artworkSourceID;synchronizeSlot()}
     }
   }
@@ -178,7 +178,7 @@ private struct ModelImportPreview:NSViewRepresentable {
     guard coordinator.key != reference.normalizedSHA256,let renderer=coordinator.renderer else{return}
     coordinator.key=reference.normalizedSHA256;coordinator.task?.cancel();renderer.reset()
     let size=reference.boundsMM.size,maximum=max(1,max(size.x,max(size.y,size.z))),target=SIMD3<Double>(0,size.y/2,0),camera=SceneCameraPayload.looking(from:target+SIMD3(maximum*0.16,maximum*0.08,maximum*1.8),at:target)
-    try? renderer.setCamera(camera);try? renderer.setLighting(.init(background:.init(0.92,0.92,0.89,1)))
+    try? renderer.setCamera(camera);try? renderer.setLighting(.init(background:.init(242.0/255,242.0/255,242.0/255,1)))
     coordinator.task=Task {
       do {let appearance=try MeshAssetSceneAdapter.appearance(scene,reference:reference)
         for payload in MeshAssetSceneAdapter.renderables(appearance,objectID:coordinator.id) {guard !Task.isCancelled else{return};try await renderer.upsertAsync(payload)}

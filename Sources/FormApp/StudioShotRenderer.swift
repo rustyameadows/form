@@ -123,13 +123,13 @@ extension TableSceneController {
     let ambient=scene.rootNode.childNodes.first{$0.light?.type == .ambient},fill=scene.rootNode.childNodes.first{$0.light?.type == .omni}
     let classic=id=="classic-v1" || !studio
     ambient?.light?.intensity=classic ? 400:id=="soft-side-v1" ? 250:200
-    ambient?.light?.color=NSColor(hex:"#F7F7F2")
+    ambient?.light?.color=NSColor(hex:studio ? "#F7F7F2":"#FFFFFF")
     keyLight.light?.intensity=classic ? (studio ? 850:800):id=="soft-side-v1" ? 900:650
     keyLight.position=classic ? MeshVector3(-6,12,7):id=="soft-side-v1" ? MeshVector3(-8,8,5):MeshVector3(-7,8,5)
-    keyLight.look(at:MeshVector3Zero);keyLight.light?.color=NSColor(hex:classic ? "#FFF5E7":"#F8F7F1")
+    keyLight.look(at:MeshVector3Zero);keyLight.light?.color=NSColor(hex:studio ? (classic ? "#FFF5E7":"#F8F7F1"):"#FFFFFF")
     keyLight.light?.shadowRadius=studio ? 9:5
     fill?.light?.intensity=classic ? 100:id=="soft-side-v1" ? 180:400
     fill?.position=classic ? MeshVector3(8,7,-5):id=="soft-side-v1" ? MeshVector3(6,5,-2):MeshVector3(6,6,-6)
-    fill?.light?.color=NSColor(hex:"#E2EAF6")
+    fill?.light?.color=NSColor(hex:studio ? "#E2EAF6":"#FFFFFF")
   }
 }

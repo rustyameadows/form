@@ -53,7 +53,7 @@ struct FabricPatternEditor: View {
     VStack(alignment: .leading, spacing: 16) {
       HStack {
         VStack(alignment: .leading, spacing: 4) {
-          Text("Fabric repeat").font(.system(size: 25, design: .serif))
+          Text("Fabric repeat").font(.system(size: 25, weight: .semibold))
           Text("\(material.name) · design saved in this project").font(.system(size: 11)).foregroundStyle(Palette.secondary)
         }
         Spacer(); Button("Done") { dismiss() }.keyboardShortcut(.cancelAction)
@@ -137,10 +137,10 @@ struct FabricPatternEditor: View {
           }.padding(.trailing, 8)
         }.frame(width: 310)
       }
-      if !error.isEmpty { Text(error).font(.system(size: 11)).foregroundStyle(.red).fixedSize(horizontal: false, vertical: true) }
+      if !error.isEmpty { Text(error).font(.system(size: 11)).foregroundStyle(Palette.ink).fixedSize(horizontal: false, vertical: true) }
       HStack {
         Button("Remove pattern") { remove() }.disabled(store.project?.material(material.id).fabric?.pattern == nil)
-        Spacer(); Button("Apply fabric design") { _ = apply() }.keyboardShortcut(.defaultAction).disabled(design == nil)
+        Spacer(); Button("Apply fabric design") { _ = apply() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction).disabled(design == nil)
       }
     }.padding(26).frame(width: 1040, height: 735).background(Palette.paper)
   }
@@ -220,7 +220,7 @@ private final class FabricPreviewNSView: NSView {
   override var isFlipped: Bool { true }
   override func draw(_ dirtyRect: NSRect) {
     guard let design, let context = NSGraphicsContext.current?.cgContext else { return }
-    NSColor(hex: "#E4E3DE").setFill(); bounds.fill()
+    NSColor(hex: "#F2F2F2").setFill(); bounds.fill()
     let width = design.pattern.outputWidth, height = design.pattern.outputLength
     let scale = min((bounds.width - 44) / width, (bounds.height - 44) / height)
     guard scale > 0 else { return }

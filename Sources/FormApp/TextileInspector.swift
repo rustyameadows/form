@@ -83,7 +83,7 @@ struct TextileInspector: View {
             .buttonStyle(.bordered).disabled(object.locked)
           if spec.embroidery != nil {Button("Production jobs & packet…") {showingProduction=true}.buttonStyle(.borderless)}
           if let issue=store.scene?.embroideryIssue(for:object.id) {
-            Text("Embroidery needs attention: "+issue).font(.system(size:10)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)
+            Text("Embroidery needs attention: "+issue).font(.system(size:10)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)
           }
           Text(spec.embroidery == nil ? "Artwork appearance study. Configure digitizing to generate actual stitches.":"Actual stitches drive the physical face. Open Embroidery for needle paths, process settings, hoop checks, and DST output.")
             .font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)

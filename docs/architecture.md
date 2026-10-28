@@ -1,4 +1,4 @@
-# LAB 0.5 architecture
+# LAB 0.5.1 architecture
 
 This build follows the product brief and the October 24 interface sketches: one continuous Table, a compact native title bar, contextual floating inspectors, camera/focus/isolation controls, and a home screen of actual saved scene previews.
 
@@ -32,6 +32,12 @@ Local camera navigation preferences live in UserDefaults, outside the project an
 CPU mesh instances carry lifetime-stable UUID resource identities; GPU cache keys never depend on reusable object addresses. Paper geometry has a separate content-addressed template cache bounded to 512 entries / 32 MiB, keyed by polygon, caliper, registered UV bounds and material channels. Appearance wrappers remain independent. Moving text or changing paper ink/tint reuses physical buffers without changing panel poses.
 
 The renderer updates an object only when its geometry, material, or artwork fingerprint changes. Moving an object updates its transform. Shared node templates reuse immutable geometry and texture data; caches have bounded costs. The view targets 60 Hz while interacting and does not render continuously while idle. Paper stacks cap the number of represented sheet edges independently of the real sheet count.
+
+## Interface appearance
+
+`InterfaceAppearance` owns the local accent preference. SwiftUI roots, settings, detached Canvas and native editing/selection surfaces share one color. Application typography uses SF with SF Mono for technical values. The palette is white/black with neutral gray surfaces; authored artwork, material colors, source font samples and explicit Studio backdrops remain content.
+
+The preference lives in UserDefaults for the ordinary app and in a separate `Appearance.json` for an explicitly isolated library. Validation and atomic persistence precede publication. Pale choices are toned to preserve readable controls on white. Appearance refresh invalidates UI drawing and existing selection materials without touching project source, undo history, camera state or geometry caches. See the [interface contract](interface-style.md).
 
 ## Parametric objects
 

@@ -19,7 +19,7 @@ struct CADModelEditor:View {
   var body:some View {
     VStack(spacing:0){
       HStack(alignment:.firstTextBaseline){
-        VStack(alignment:.leading,spacing:4){Text("Exact model").font(.system(size:27,design:.serif));Text("Millimeters · Editable construction").font(.system(size:11)).foregroundStyle(.secondary)}
+        VStack(alignment:.leading,spacing:4){Text("Exact model").font(.system(size: 27, weight: .semibold));Text("Millimeters · Editable construction").font(.system(size:11)).foregroundStyle(.secondary)}
         Spacer();Button("Cancel"){coordinator.cancel(review)}.keyboardShortcut(.cancelAction)
       }.padding(24)
       Divider()
@@ -38,7 +38,7 @@ struct CADModelEditor:View {
             if !review.definition.parameters.isEmpty {
               Text("DIMENSIONS").font(.system(size:10,weight:.semibold)).tracking(1)
               ForEach(review.definition.parameters,id:\.name){parameter in
-                VStack(alignment:.leading,spacing:5){HStack{Text(CADDisplayLabels.name(parameter.name)).font(.system(size:12));Spacer();TextField(parameter.name,value:Binding(get:{review.definition.parameters.first{$0.name==parameter.name}?.value ?? parameter.value},set:{update(parameter.name,$0)}),format:.number.precision(.fractionLength(0...3))).frame(width:75).multilineTextAlignment(.trailing);Text(parameter.unit).font(.system(size:10)).foregroundStyle(.secondary)};Slider(value:Binding(get:{review.definition.parameters.first{$0.name==parameter.name}?.value ?? parameter.value},set:{update(parameter.name,$0)}),in:parameter.minimum...parameter.maximum)}
+                VStack(alignment:.leading,spacing:5){HStack{Text(CADDisplayLabels.name(parameter.name)).font(.system(size:12));Spacer();TextField(parameter.name,value:Binding(get:{review.definition.parameters.first{$0.name==parameter.name}?.value ?? parameter.value},set:{update(parameter.name,$0)}),format:.number.precision(.fractionLength(0...3))).font(Palette.numericFont).frame(width:75).multilineTextAlignment(.trailing);Text(parameter.unit).font(.system(size:10)).foregroundStyle(.secondary)};Slider(value:Binding(get:{review.definition.parameters.first{$0.name==parameter.name}?.value ?? parameter.value},set:{update(parameter.name,$0)}),in:parameter.minimum...parameter.maximum)}
               }
             }
             if let assemblies=review.definition.importedAssemblies{ForEach(Array(assemblies.enumerated()),id:\.offset){_,assembly in
@@ -63,8 +63,8 @@ struct CADModelEditor:View {
       }
       Divider()
       VStack(alignment:.leading,spacing:10){
-        if let issue=review.issue{Text(issue).font(.system(size:12)).foregroundStyle(.red).textSelection(.enabled).fixedSize(horizontal:false,vertical:true)}
-        HStack{if busy{ProgressView().controlSize(.small);Text(review.state=="publishing" ? "Publishing exact source…":"Evaluating exact features…").font(.system(size:11))}else{Text(review.state=="ready" ? "Preview validated. Apply to the project when ready.":"Dimension changes stay in this review until you apply.").font(.system(size:11)).foregroundStyle(.secondary)};Spacer();Button("Preview"){coordinator.preview(review)}.disabled(busy);Button(review.targetObjectID==nil ? "Add to project":"Apply changes"){do{try coordinator.commit(review)}catch{review.issue=error.localizedDescription}}.buttonStyle(.borderedProminent).keyboardShortcut(.defaultAction).disabled(review.state != "ready")}
+        if let issue=review.issue{Text(issue).font(.system(size:12)).foregroundStyle(Palette.ink).textSelection(.enabled).fixedSize(horizontal:false,vertical:true)}
+        HStack{if busy{ProgressView().controlSize(.small);Text(review.state=="publishing" ? "Publishing exact source…":"Evaluating exact features…").font(.system(size:11))}else{Text(review.state=="ready" ? "Preview validated. Apply to the project when ready.":"Dimension changes stay in this review until you apply.").font(.system(size:11)).foregroundStyle(.secondary)};Spacer();Button("Preview"){coordinator.preview(review)}.disabled(busy);Button(review.targetObjectID==nil ? "Add to project":"Apply changes"){do{try coordinator.commit(review)}catch{review.issue=error.localizedDescription}}.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction).disabled(review.state != "ready")}
       }.padding(20)
     }.frame(width:1000,height:740).background(Palette.paper)
   }

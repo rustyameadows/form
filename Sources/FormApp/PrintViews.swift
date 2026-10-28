@@ -20,7 +20,7 @@ struct PrintWorkspace: View {
         Image(systemName: "printer").font(.system(size: 22, weight: .light)).foregroundStyle(
           Palette.accent)
         VStack(alignment: .leading, spacing: 4) {
-          Text("Print preparation").font(.system(size: 23, weight: .regular, design: .serif))
+          Text("Print preparation").font(.system(size: 23, weight: .regular, design: .default))
           Text("A physical object, ready for its next form.").font(.system(size: 11))
             .foregroundStyle(Palette.secondary)
         }
@@ -77,12 +77,12 @@ struct PrintWorkspace: View {
                   ).foregroundStyle(Palette.secondary)
                 }
               }.padding(14).frame(width: 300).background(
-                .regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+                Palette.paper, in: RoundedRectangle(cornerRadius: 12))
               Spacer()
               HStack(spacing: 5) {
                 IconButton("Fit print bed", symbol: "square.dashed") { printing.frame("bed") }
                 IconButton("Focus object", symbol: "viewfinder") { printing.frame("object") }
-              }.padding(6).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 11))
+              }.padding(6).background(Palette.paper, in: RoundedRectangle(cornerRadius: 11))
             }.padding(20)
           }
         }
@@ -178,7 +178,7 @@ struct PrintWorkspace: View {
               Divider()
               SectionLabel("SLICE RESULT")
               Text(path.estimatedTime.isEmpty ? "\(path.layers.count) layers" : path.estimatedTime)
-                .font(.system(size: 17, weight: .medium, design: .serif))
+                .font(.system(size: 17, weight: .medium, design: .default))
               Text(
                 "\(path.filamentGrams.isEmpty ? "—" : path.filamentGrams) g filament  ·  \(path.layers.count) layers"
               ).font(.system(size: 10)).foregroundStyle(Palette.secondary)
@@ -254,7 +254,7 @@ struct PrintNumber: View {
         value: Binding(
           get: { value }, set: { value = min(range.upperBound, max(range.lowerBound, $0)) }),
         format: .number.precision(.fractionLength(0...2))
-      ).multilineTextAlignment(.trailing).frame(width: 65).textFieldStyle(.roundedBorder)
+      ).font(Palette.numericFont).multilineTextAlignment(.trailing).frame(width: 65).textFieldStyle(.roundedBorder)
         .onSubmit { NSApp.keyWindow?.makeFirstResponder(nil) }
       Text(unit).foregroundStyle(Palette.secondary).fixedSize().frame(
         minWidth: 21, alignment: .leading)
@@ -309,7 +309,7 @@ struct PrintBedCanvas: NSViewRepresentable {
       lastBed = key
       let material = MeshMaterial()
       material.lightingModel = .physicallyBased
-      material.diffuse.contents = NSColor(hex: "#6C7470")
+      material.diffuse.contents = NSColor(hex: "#666666")
       material.roughness.contents = 0.8
       let bed = MeshNode(
         geometry: MeshBox(
@@ -344,7 +344,7 @@ struct PrintBedCanvas: NSViewRepresentable {
       exclusion.position = point(.init(9, 14, 0.3), printer)
       let warning = MeshMaterial()
       warning.lightingModel = .constant
-      warning.diffuse.contents = NSColor(hex: "#D45A37").withAlphaComponent(0.6)
+      warning.diffuse.contents = NSColor(hex: "#111111").withAlphaComponent(0.6)
       exclusion.geometry?.materials = [warning]
       plateRoot.addChildNode(exclusion)
     }

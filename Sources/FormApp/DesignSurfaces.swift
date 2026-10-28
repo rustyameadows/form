@@ -108,7 +108,7 @@ extension StudioStore {
     window.title = "\(store.project?.name ?? "LAB") · Canvas"
     window.minSize = .init(width:860,height:600)
     window.isReleasedWhenClosed = false
-    window.contentView = NSHostingView(rootView:DetachedCanvasView().environmentObject(store))
+    window.contentView = NSHostingView(rootView:DetachedCanvasView().environmentObject(store).labInterface())
     super.init(window:window)
     window.delegate = self
     window.center()

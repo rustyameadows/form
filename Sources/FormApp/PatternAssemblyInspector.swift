@@ -16,7 +16,7 @@ struct PatternAssemblyInspector:View {
         Button("Edit original pattern on Canvas") {
           store.showSurface(.artwork);store.artworkSession.activate(definition.sourceObjectID)
         }.accessibilityLabel("Edit original assembly pattern on Canvas")
-        if let issue=store.scene?.diagnostics["cloth_issues"] as? [String:String],let message=issue[object.id.uuidString] {Text(message).font(.caption).foregroundStyle(.red).textSelection(.enabled)}
+        if let issue=store.scene?.diagnostics["cloth_issues"] as? [String:String],let message=issue[object.id.uuidString] {Text(message).font(.caption).foregroundStyle(Palette.ink).textSelection(.enabled)}
         Text("Open cloth · original stitch contours and explicit poses. No self-collision, calibrated fit or zipper simulation.").font(.caption).foregroundStyle(.secondary)
       }.sheet(isPresented:$editing) {PatternAssemblyEditor(objectID:object.id,definition:definition).environmentObject(store)}
     }
@@ -65,7 +65,7 @@ struct PatternAssemblyEditor:View {
           Section("Limits") {Text("No self-collision, inferred garment construction, air pressure, calibrated fabric properties or verified fit. Supports and static contacts are explicit. Solver parameters are edited in Cloth settings.").font(.callout).foregroundStyle(.secondary)}
         }.formStyle(.grouped).tabItem {Text("Mesh & limits")}
       }
-      if let issue {Text(issue).font(.caption).foregroundStyle(.red).textSelection(.enabled)}
+      if let issue {Text(issue).font(.caption).foregroundStyle(Palette.ink).textSelection(.enabled)}
       HStack {Text("Current motion is transient and resets on Apply.").font(.caption).foregroundStyle(.secondary);Spacer();Button("Cancel") {dismiss()};Button("Apply") {save()}.buttonStyle(.borderedProminent).accessibilityLabel("Apply assembly declaration")}
     }.padding(24).frame(width:680,height:760)
   }
@@ -104,7 +104,7 @@ struct PatternAssemblyEditor:View {
     guard let panel=definition.panels.first,let source,let e=source.elements.first(where:{$0.id==panel.panel.elementID}),let edge=try? SewingCurves.boundaries(e,in:source).filter({!$0.isHole}).flatMap(\.edges).first,let id=edge.id,let end=edge.endID else {return}
     definition.pins.append(.init(panel:panel.panel,edgeID:id,endID:end,fraction:0.5))
   }
-  private func scalar(_ label:String,value:Binding<Double>)->some View {TextField(label,value:value,format:.number.precision(.fractionLength(0...8))).textFieldStyle(.roundedBorder)}
+  private func scalar(_ label:String,value:Binding<Double>)->some View {TextField(label,value:value,format:.number.precision(.fractionLength(0...8))).font(Palette.numericFont).textFieldStyle(.roundedBorder)}
   private func vector(_ label:String,value:Binding<Vector3>)->some View {HStack {Text(label);Spacer();scalar("X",value:value.x);scalar("Y",value:value.y);scalar("Z",value:value.z)}}
   private func save() {
     NSApp.keyWindow?.makeFirstResponder(nil)

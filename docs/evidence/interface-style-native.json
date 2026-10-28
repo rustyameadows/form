@@ -1,0 +1,261 @@
+{
+  "record_version": 1,
+  "date": "2026-10-27",
+  "scope": "LAB 0.5.1 interface style: SF, SF Mono, neutral black/white/gray surfaces and one configurable app accent. Authored content retains its fonts and colors.",
+  "source_code_commit": "2497c19197723e8a34923a71d585bf38c03dfdc2",
+  "schema": 54,
+  "MCP_tool_count": 64,
+  "tests": {
+    "command": "swift test -c release",
+    "total": 1156,
+    "failures": 0,
+    "skips": 0,
+    "suites": {
+      "LabRenderingTests": {
+        "tests": 14,
+        "failures": 0
+      },
+      "FormMeshAssetsTests": {
+        "tests": 24,
+        "failures": 0
+      },
+      "FormGeometryTests": {
+        "tests": 3,
+        "failures": 0
+      },
+      "FormCoreTests": {
+        "tests": 677,
+        "failures": 0
+      },
+      "FormCADModelingTests": {
+        "tests": 8,
+        "failures": 0
+      },
+      "FormCADKernelTests": {
+        "tests": 6,
+        "failures": 0
+      },
+      "FormAppTests": {
+        "tests": 424,
+        "failures": 0
+      }
+    },
+    "log_sha256": "c15e408658f07d3fbf309e806f362096d67da41fbdda50dd678b31ec4d6cad9f",
+    "post_suite_changes": "Documentation and acceptance captures only; production and test source unchanged."
+  },
+  "package": {
+    "version": "0.5.1",
+    "build": "6",
+    "binary_sha256": "3315aa3f0ba8650386c332769d48c1f76846e545ee3db70d8ae791c4333bec30",
+    "helper_sha256": "170b03a6594c7f6a28db48d261ce5e1169be0dace9897613bf3ca6c729da5944",
+    "signature": "ad hoc; codesign --verify --deep --strict passed",
+    "installed": "build/LAB.app",
+    "previous_bundle_recoverable": true
+  },
+  "appearance": {
+    "default_accent": "#245BFF",
+    "settings": "LAB > Settings > Appearance; Command-comma; Home gear and Library link",
+    "native_invalid_hex_rejected": "#GG1122",
+    "native_custom_hex_applied": "#7B2FDD",
+    "native_process_restart_retained_custom_hex": true,
+    "native_reset_restored_default": true,
+    "ordinary_preference_did_not_receive_test_color": true,
+    "isolated_preference_file_separate_from_user_defaults": true,
+    "minimum_white_control_contrast": 4.5,
+    "native_system_focus_rings_window_controls_and_panels_keep_OS_appearance": true
+  },
+  "live_refresh": {
+    "complete_project_exact": true,
+    "camera_exact": true,
+    "geometry_builds_before_after": [
+      3,
+      3
+    ],
+    "mesh_uploads_before_after": [
+      15,
+      15
+    ],
+    "design_and_camera_input_bindings_unchanged": true
+  },
+  "native_review": {
+    "screens": [
+      "Home",
+      "Form Canvas/Table/split",
+      "Detached Canvas",
+      "Function lamp components",
+      "Function fabric pattern and seam dialog",
+      "Fabricate process and material",
+      "Studio composition and narrow layout",
+      "Appearance and restart",
+      "Project notebook",
+      "LAB Library and scrolled equipment",
+      "Filament library",
+      "Object library",
+      "Exact CAD preview/cancel",
+      "Print preparation chrome"
+    ],
+    "findings_fixed": [
+      "Scrollable library below fixed header",
+      "Narrow paper legend fits",
+      "Black primary dialog actions",
+      "SF Mono print/CAD/technical values",
+      "Neutral CAD/import/SVG review backgrounds"
+    ],
+    "screenshots": [
+      {
+        "path": "validation/system-style/appearance-custom.png",
+        "sha256": "318f9bee8dc1e91366e9daef525915ae19b1cf44b065df6d78a951b83167e140",
+        "review_source_commit": "95d987e"
+      },
+      {
+        "path": "validation/system-style/appearance-installed.png",
+        "sha256": "21ea5b23d1e8c8b0a2937de34599d526c480420b1d5ed83e35b0954c12579fb5",
+        "review_source_commit": "2497c19"
+      },
+      {
+        "path": "validation/system-style/appearance-restarted.png",
+        "sha256": "d2399dbfc520be0fbc5ae955f70f31237962348e87fcf5f29e1d14daac275a7a",
+        "review_source_commit": "cb9d1ce"
+      },
+      {
+        "path": "validation/system-style/cad-review.png",
+        "sha256": "fb8924c3326af5029ee3d5a58b0bc539566bc7d05abbde32f2185c43c1e765b5",
+        "review_source_commit": "2497c19"
+      },
+      {
+        "path": "validation/system-style/canvas-detached.png",
+        "sha256": "9eff710214d24edacfc4a58905523971577f77baa00c46ec7187ae58baa18395",
+        "review_source_commit": "95d987e"
+      },
+      {
+        "path": "validation/system-style/fabricate.png",
+        "sha256": "861ebfaa70824885ab9d38cb3e07cdb1359110c45ec33e450c7b6a06f774c2ac",
+        "review_source_commit": "cb9d1ce"
+      },
+      {
+        "path": "validation/system-style/filament-library.png",
+        "sha256": "54f9cfc3e3249e2434f1a6ea11f4d224e7209e479a1ed8eb87773b8e2a93a11b",
+        "review_source_commit": "2497c19"
+      },
+      {
+        "path": "validation/system-style/form-split.png",
+        "sha256": "3cde051c6e2aad03631742e348aea7d81d38ee59acf97f825339d29323f19103",
+        "review_source_commit": "95d987e"
+      },
+      {
+        "path": "validation/system-style/function-fabric.png",
+        "sha256": "c9914926c25a3b0bde86cb7e0c17e4eb68f6ff6d9bee33d8abcfa137258a6e5b",
+        "review_source_commit": "95d987e"
+      },
+      {
+        "path": "validation/system-style/function-lamp-custom.png",
+        "sha256": "e66300d49e9284de77f17326b67cda9937252c5ae187b3fb6c91cf3e81617484",
+        "review_source_commit": "95d987e"
+      },
+      {
+        "path": "validation/system-style/home.png",
+        "sha256": "6732e3ade42029fa700b1e1c7350d7c9ed5c96113d5c631079bc98ad7e320917",
+        "review_source_commit": "95d987e"
+      },
+      {
+        "path": "validation/system-style/library-scrolled.png",
+        "sha256": "caf1460cc2d3fc627fe6d90df51b58009e4456d9e79ca9f06b2396934fe41293",
+        "review_source_commit": "cb9d1ce"
+      },
+      {
+        "path": "validation/system-style/library.png",
+        "sha256": "f89e994220272a5bd53c4b657e99afcda473389f25f23776215dca175964345a",
+        "review_source_commit": "cb9d1ce"
+      },
+      {
+        "path": "validation/system-style/object-library.png",
+        "sha256": "78ed70bfc90596751c85aceaa708c3c12e97380b26f56b27f71392fc6c192c0d",
+        "review_source_commit": "cb9d1ce"
+      },
+      {
+        "path": "validation/system-style/print-preparation-baseline.png",
+        "sha256": "348884ad8d4c30fb1b4d570e1c311b64b98a05de40d4ed484ba173288d0ca508",
+        "review_source_commit": "6a04004"
+      },
+      {
+        "path": "validation/system-style/print-preparation.png",
+        "sha256": "5aac4858e5a3472d1f9b21276b45065c6775c202eb03a4354df0d2d70655deb0",
+        "review_source_commit": "2497c19"
+      },
+      {
+        "path": "validation/system-style/project-notes.png",
+        "sha256": "8850fd718a91c8d6f1c6565278db469e6386ee4e36da2d5f96a077aaf4bb5c28",
+        "review_source_commit": "cb9d1ce"
+      },
+      {
+        "path": "validation/system-style/studio-narrow.png",
+        "sha256": "ef87ca85283367cbc265dd9d2a4a1b00985f23d70faf3d85efd6b0a8b52ed20d",
+        "review_source_commit": "95d987e"
+      },
+      {
+        "path": "validation/system-style/studio.png",
+        "sha256": "aacd7c3d96621ff8ce4f1846327e33db87c2d0d458e4f87802afbba062b0b253",
+        "review_source_commit": "95d987e"
+      }
+    ]
+  },
+  "packaged_checks": {
+    "paper": {
+      "report_sha256": "ce823804f5a14ff9f0afad9367d9dc535c6b86c513ab3e6d5c7da8c2a1ec57dd",
+      "result": "passed",
+      "models": [
+        "cyanotype",
+        "cosmetics"
+      ],
+      "restart_source_resources_verified": 22
+    },
+    "media": {
+      "report_sha256": "1a2ce59fbf6899ee2d9b367674e3852236a630fa01af86c8126f96a742d18f04",
+      "result": "passed",
+      "instances": 5,
+      "design_objects_preserved": true,
+      "saved_scene_restart": true,
+      "video": {
+        "seconds": 6,
+        "fps": 24,
+        "frames": 144
+      },
+      "export_seconds": {
+        "png": 0.30976991599891335,
+        "mp4": 2.825745499925688
+      }
+    }
+  },
+  "ordinary_library_preservation": {
+    "projects": 9,
+    "pinned_source_and_library_files": 208,
+    "mismatches": [],
+    "pin_manifest_sha256": "a37fd0269c536271b38c5978c5cfdedc3635bf5e63a0a38451e0450c6fce5f29",
+    "library_records": {
+      "equipment": 2,
+      "filaments": 4,
+      "materials": 29,
+      "printers": 1
+    },
+    "saved_library_records_total": 36,
+    "preview_caches_regenerated": 9,
+    "previous_previews_recoverable": true,
+    "old_binary_sha256": "68419787a5a8102edf302235991219253f7c9554e162541cf09acb4a2e7e1807",
+    "ordinary_projects_were_not_opened_for_style_acceptance": true
+  },
+  "known_issues": [
+    {
+      "id": "native-print-bed-display",
+      "status": "open",
+      "finding": "The native print sheet shows a blank viewport on this Mac. The same isolated lamp reproduces it in LAB 0.5.0 before this style pass.",
+      "baseline_binary_sha256": "68419787a5a8102edf302235991219253f7c9554e162541cf09acb4a2e7e1807",
+      "independent_display_capture_confirmed": true,
+      "GPU_prepared_object_and_bed_capture_correct": true,
+      "regression_test": "PrintCoordinatorTests.testPrintWorkspaceAllocatesVisibleNativeBedAndRendersPreparedMesh checks viewport allocation and actual filament-colored object pixels.",
+      "speculative_viewport_lifecycle_and_layout_experiments_removed": true,
+      "style_pass_does_not_claim_repair": true
+    }
+  ],
+  "hardware_commands": [],
+  "external_model_calls": 0
+}

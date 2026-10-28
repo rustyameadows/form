@@ -117,7 +117,7 @@ struct ClothPreviewControls:View {
           .font(.caption).monospacedDigit().foregroundStyle(.secondary)
         if let p=d.preparation {
           Text(p.status == .preparing ? "\(d.status == .running ? "Preparing assembly":"Preparation paused") · \(p.passes)/\(p.maximumPasses) passes" : p.status == .pending ? "Source pose · Run prepares the assembly before physical time starts." : p.status == .ready ? "Assembly ready · preparation meets the declared length-error gate." : "Preparation failed · physical time is blocked.")
-            .font(.caption).foregroundStyle(p.status == .failed ? Color.red:Color.secondary)
+            .font(.caption).foregroundStyle(p.status == .failed ? Palette.ink:Color.secondary)
           if p.status != .pending {Text("Candidate length error: \(p.maximumRelativeError*100,format:.number.precision(.fractionLength(2)))% max · \(p.p95RelativeError*100,format:.number.precision(.fractionLength(2)))% P95").font(.caption).monospacedDigit().foregroundStyle(.secondary)}
         }
         if let join=d.initialJoin {
@@ -125,10 +125,10 @@ struct ClothPreviewControls:View {
             .font(.caption).foregroundStyle(.secondary)
             .help("Records the first projection of initially separate declared panels. Current frame stretch is shown above. Ideal seam and support reactions are not estimated.")
         }
-        if d.maximumSurfacePenetrationMm>0.01 {Text("Contact penetration: \(d.maximumSurfacePenetrationMm,format:.number.precision(.fractionLength(3))) mm. Use smaller steps or a finer mesh.").font(.caption).foregroundStyle(.orange)}
+        if d.maximumSurfacePenetrationMm>0.01 {Text("Contact penetration: \(d.maximumSurfacePenetrationMm,format:.number.precision(.fractionLength(3))) mm. Use smaller steps or a finer mesh.").font(.caption).foregroundStyle(Palette.ink)}
         if d.status == .timeLimit {Text("Study time limit reached. Reset to run again.").font(.caption).foregroundStyle(.secondary)}
       }
-      if let error=controller.lastError {Text(error).font(.caption).foregroundStyle(.red).textSelection(.enabled)}
+      if let error=controller.lastError {Text(error).font(.caption).foregroundStyle(Palette.ink).textSelection(.enabled)}
       Text("Cloth study · declared material parameters, static contacts. Predictive fit and self-collision are not available.").font(.caption).foregroundStyle(.secondary)
     }
   }

@@ -11,7 +11,7 @@ struct TextileFabricLibrary: View {
     VStack(alignment:.leading,spacing:20) {
       HStack {
         VStack(alignment:.leading,spacing:6) {
-          Text("Fabrics & textile materials").font(.system(size:25,design:.serif))
+          Text("Fabrics & textile materials").font(.system(size: 25, weight: .semibold))
           Text("Physical specifications and studio inventory, shared across projects.").font(.system(size:11)).foregroundStyle(Palette.secondary)
         }
         Spacer();Button("Done"){dismiss()}.keyboardShortcut(.cancelAction)
@@ -90,7 +90,7 @@ private struct FabricMaterialEditor:View {
   }
   var body:some View {
     VStack(alignment:.leading,spacing:18) {
-      Text("Fabric specification").font(.system(size:24,design:.serif))
+      Text("Fabric specification").font(.system(size: 24, weight: .semibold))
       Form {
         TextField("Material name",text:$draft.name)
         ColorPicker("Color",selection:Binding(get:{Color(nsColor:NSColor(hex:draft.color))},set:{draft.color=NSColor($0).hexString}),supportsOpacity:false)
@@ -106,11 +106,11 @@ private struct FabricMaterialEditor:View {
         TextField("Care / production notes",text:Binding(get:{draft.fabric?.care ?? ""},set:{draft.fabric?.care=$0}))
         Toggle("Specifications verified against the material",isOn:Binding(get:{draft.fabric?.specificationsVerified ?? false},set:{draft.fabric?.specificationsVerified=$0}))
       }.textFieldStyle(.roundedBorder)
-      if !error.isEmpty {Text(error).foregroundStyle(.red).font(.system(size:11))}
+      if !error.isEmpty {Text(error).foregroundStyle(Palette.ink).font(.system(size:11))}
       HStack {Button("Cancel"){dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save fabric") {
         NSApp.keyWindow?.makeFirstResponder(nil)
         do {guard !draft.name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty else {throw FormError.invalid("Name the fabric.")};draft.fabric?.weightGSM=try number(gsm,"weight");draft.fabric?.usableWidth=try number(usableWidth,"usable width");draft.fabric?.inventoryMeters=try number(inventory,"inventory");try draft.fabric?.validate();save(draft)} catch {self.error=error.localizedDescription}
-      }.keyboardShortcut(.defaultAction)}
+      }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)}
     }.padding(28).frame(width:530).background(Palette.paper)
   }
 }

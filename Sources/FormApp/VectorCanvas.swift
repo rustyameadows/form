@@ -22,7 +22,7 @@ struct VectorCanvas: NSViewRepresentable {
     scroll.hasVerticalScroller = true
     scroll.autohidesScrollers = true
     scroll.drawsBackground = true
-    scroll.backgroundColor = NSColor(hex: "#E7E7E1")
+    scroll.backgroundColor = NSColor(hex: "#F2F2F2")
     scroll.allowsMagnification = true
     scroll.minMagnification = 0.08
     scroll.maxMagnification = 24
@@ -76,7 +76,7 @@ final class ArtworkRuler: NSRulerView {
   required init(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
   override var isFlipped: Bool { true }
   override func drawHashMarksAndLabels(in rect: NSRect) {
-    NSColor(hex: "#F6F5F0").setFill()
+    NSColor(hex: "#FFFFFF").setFill()
     bounds.fill()
     guard let canvas = scrollView?.documentView as? VectorCanvasView, let session = canvas.session,
       let frame = session.frames.first(where: { $0.id == session.objectID })
@@ -105,7 +105,7 @@ final class ArtworkRuler: NSRulerView {
         to: horizontal
           ? .init(x: position, y: bounds.maxY - (major ? 9 : 4))
           : .init(x: bounds.maxX - (major ? 9 : 4), y: position))
-      NSColor(hex: "#A5AAA5").setStroke()
+      NSColor(hex: "#AAAAAA").setStroke()
       path.lineWidth = 0.5
       path.stroke()
       if major {
@@ -113,8 +113,8 @@ final class ArtworkRuler: NSRulerView {
         (label as NSString).draw(
           at: horizontal ? .init(x: position + 3, y: 2) : .init(x: 1, y: position + 2),
           withAttributes: [
-            .font: NSFont.monospacedDigitSystemFont(ofSize: 8, weight: .regular),
-            .foregroundColor: NSColor(hex: "#6D756F"),
+            .font: NSFont.monospacedSystemFont(ofSize: 8, weight: .regular),
+            .foregroundColor: NSColor(hex: "#666666"),
           ])
       }
     }
@@ -177,6 +177,7 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
       storage.addLayoutManager(layout);layout.addTextContainer(container);ownedStorage=storage
     }
     super.init(frame:frameRect,textContainer:container)
+    selectedTextAttributes = [.backgroundColor: Palette.accentNS.withAlphaComponent(0.18)]
     textStorage?.delegate=self
   }
   required init?(coder:NSCoder) {fatalError("init(coder:) has not been implemented")}
@@ -319,6 +320,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var numericTextUndoManager:UndoManager?
   private var numericTextUndoToken:UUID?
   private var textView: NSTextView?
+  func refreshInterfaceAccent(_ color: NSColor) {
+    textView?.selectedTextAttributes = [.backgroundColor: color.withAlphaComponent(0.18)]
+    needsDisplay = true
+  }
   private var publicationEditor:PublicationEditingController?
   var hasMarkedTextInput:Bool {textView?.hasMarkedText() ?? false}
   var activeStoryView:CanvasTextView? {publicationEditor == nil ? nil:textView as? CanvasTextView}
@@ -503,7 +508,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     context.saveGState()
     defer { context.restoreGState() }
     context.clip(to: bounds)
-    NSColor(hex: "#E7E7E1").setFill()
+    NSColor(hex: "#F2F2F2").setFill()
     bounds.fill()
     guard let session else { return }
     context.scaleBy(x: ppm, y: ppm)
@@ -523,7 +528,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let title = f.object.name.uppercased()
       let attributes: [NSAttributedString.Key: Any] = [
         .font: NSFont.systemFont(ofSize: 9 / scale, weight: .medium),
-        .foregroundColor: NSColor(hex: "#69736C"),
+        .foregroundColor: NSColor(hex: "#666666"),
       ]
       (title as NSString).draw(
         at: .init(x: f.rect.minX, y: f.rect.minY - 15 / scale), withAttributes: attributes)
@@ -538,10 +543,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         ArtworkRenderer.draw(
           f.artwork, width: f.surfaceObject["width"], height: f.rect.height, assets: session.assets)
         context.restoreGState()
-        context.setStrokeColor(NSColor(hex: "#D45A37").cgColor)
+        context.setStrokeColor(Palette.accentNS.cgColor)
         context.setLineWidth(1 / scale)
         context.stroke(.init(origin: .zero, size: f.rect.size))
-        context.setStrokeColor(NSColor(hex: "#4589B0").cgColor)
+        context.setStrokeColor(NSColor(hex: "#666666").cgColor)
         context.setLineDash(phase: 0, lengths: [4 / scale, 3 / scale])
         for x in Dieline.scores(f.surfaceObject) {
           context.move(to: .init(x: x, y: 0))
@@ -566,7 +571,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           unbounded:f.isWorkspace)
         context.restoreGState()
         if let paperNet, session.store?.paperShowingGuides == true {
-          PaperOutput.drawStructure(paperNet,context:context,lineWidth:1/scale)
+          PaperOutput.drawStructure(paperNet,context:context,lineWidth:1/scale,interface:true)
         }
         if f.id == session.objectID {
           drawOverlays(f, context: context, scale: scale)
@@ -575,7 +580,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       }
       context.restoreGState()
       if (dropFrameID == f.id || moveDropFrameID == f.id) && !f.isWorkspace {
-        context.setStrokeColor(NSColor.systemBlue.cgColor)
+        context.setStrokeColor(Palette.accentNS.cgColor)
         context.setLineWidth(3/scale)
         context.stroke(f.rect.insetBy(dx:-2/scale,dy:-2/scale))
       }
@@ -592,7 +597,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if let destination = frames.first(where: { $0.id == moveDropFrameID }) {
         let label = "Move to \(destination.isWorkspace ? "Canvas" : destination.object.name)"
         let attributes:[NSAttributedString.Key:Any] = [.font:NSFont.systemFont(ofSize:10/scale,weight:.medium),
-          .foregroundColor:NSColor.systemBlue]
+          .foregroundColor:Palette.accentNS]
         let size = (label as NSString).size(withAttributes:attributes)
         let origin = CGPoint(x:moveDropPoint.x+12/scale,y:moveDropPoint.y+12/scale)
         context.setFillColor(NSColor.white.withAlphaComponent(0.95).cgColor)
@@ -612,7 +617,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     context.setLineWidth(0.5 / scale)
     if art.showGrid == true {
       let spacing = max(art.gridSpacing ?? 10, 5 / scale)
-      context.setStrokeColor(NSColor(hex: "#A6ACA6").withAlphaComponent(0.3).cgColor)
+      context.setStrokeColor(NSColor(hex: "#AAAAAA").withAlphaComponent(0.3).cgColor)
       for x in stride(from: floor(region.minX/spacing)*spacing, through:region.maxX, by: spacing) {
         context.move(to: .init(x: x, y:region.minY))
         context.addLine(to: .init(x: x, y:region.maxY))
@@ -623,7 +628,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       }
       context.strokePath()
     }
-    context.setStrokeColor(NSColor(hex: "#5B8DA9").withAlphaComponent(0.7).cgColor)
+    context.setStrokeColor(NSColor(hex: "#777777").withAlphaComponent(0.7).cgColor)
     context.setLineDash(phase: 0, lengths: [4 / scale, 3 / scale])
     for g in art.showGuides == false ? [] : art.guides ?? [] {
       context.move(to: g.axis == "x" ? .init(x:g.position,y:region.minY) : .init(x:region.minX,y:g.position))
@@ -633,14 +638,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       context.strokePath()
     }
     if pageGuides && art.showGuides != false {
-      context.setStrokeColor(NSColor(hex:"#C35339").withAlphaComponent(0.7).cgColor)
+      context.setStrokeColor(NSColor(hex:"#000000").withAlphaComponent(0.7).cgColor)
       if art.bleed>0 {context.stroke(region.insetBy(dx:-art.bleed,dy:-art.bleed))}
       if let safe=art.safeInset,safe>0,region.width>2*safe,region.height>2*safe {
-        context.setStrokeColor(NSColor(hex:"#248568").withAlphaComponent(0.7).cgColor);context.stroke(region.insetBy(dx:safe,dy:safe))
+        context.setStrokeColor(NSColor(hex:"#666666").withAlphaComponent(0.7).cgColor);context.stroke(region.insetBy(dx:safe,dy:safe))
       }
     }
     context.setLineDash(phase: 0, lengths: [])
-    context.setStrokeColor(NSColor(hex: "#D45A37").cgColor)
+    context.setStrokeColor(Palette.accentNS.cgColor)
     context.setLineWidth(1 / scale)
     for (axis, p) in snapLines {
       context.move(to: axis == "x" ? .init(x:p,y:region.minY) : .init(x:region.minX,y:p))
@@ -649,7 +654,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       context.strokePath()
     }
     if let marquee {
-      context.setFillColor(NSColor(hex: "#D45A37").withAlphaComponent(0.08).cgColor)
+      context.setFillColor(Palette.accentNS.withAlphaComponent(0.08).cgColor)
       context.fill(marquee)
       context.stroke(marquee)
     }
@@ -660,12 +665,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       for node in pen.dropFirst() { p.addLine(to: .init(node.anchor)) }
       p.addLine(to: hover)
       context.addPath(p)
-      context.setStrokeColor(NSColor(hex: "#D45A37").cgColor)
+      context.setStrokeColor(Palette.accentNS.cgColor)
       context.setLineWidth(1 / scale)
       context.strokePath()
     }
     if session.scopeID != nil {
-      context.setStrokeColor(NSColor(hex: "#D45A37").withAlphaComponent(0.3).cgColor)
+      context.setStrokeColor(Palette.accentNS.withAlphaComponent(0.3).cgColor)
       context.setLineWidth(1 / scale)
       if let group = art.elements.first(where: { $0.id == session.scopeID }) {
         context.stroke(CGRect(art.bounds(of: group)))
@@ -702,7 +707,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     _ p: CGPoint, context: CGContext, scale: Double, circle: Bool = false, filled: Bool = false
   ) {
     let r = CGRect(x: p.x - 3 / scale, y: p.y - 3 / scale, width: 6 / scale, height: 6 / scale)
-    context.setFillColor((filled ? NSColor(hex: "#D45A37") : NSColor.white).cgColor)
+    context.setFillColor((filled ? Palette.accentNS : NSColor.white).cgColor)
     let path = circle ? CGPath(ellipseIn: r, transform: nil) : CGPath(rect: r, transform: nil)
     context.addPath(path)
     context.drawPath(using: .fillStroke)
@@ -713,7 +718,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     if let id = s.croppingImageID, let e = art.elements.first(where: { $0.id == id }) {
       context.saveGState()
       context.concatenate(art.worldTransform(e).cg)
-      context.setStrokeColor(NSColor.systemBlue.cgColor)
+      context.setStrokeColor(Palette.accentNS.cgColor)
       context.setLineWidth(1.2 / scale)
       context.stroke(CGRect(x:0,y:0,width:e.width,height:e.height))
       context.setLineDash(phase:0,lengths:[3/scale,3/scale])
@@ -724,7 +729,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       context.strokePath(); context.restoreGState()
       return
     }
-    context.setStrokeColor(NSColor(hex: "#D45A37").cgColor)
+    context.setStrokeColor(Palette.accentNS.cgColor)
     context.setLineWidth(1.2 / scale)
     context.stroke(CGRect(b))
     handles(b).forEach { dot($0, context: context, scale: scale) }
@@ -773,7 +778,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         let r = CGRect(x:item.point.x-4.5/scale,y:item.point.y-4.5/scale,width:9/scale,height:9/scale)
         context.setFillColor(NSColor(hex:item.stop.color).cgColor)
         context.fillEllipse(in:r)
-        context.setStrokeColor((s.selectedGradientStopID == item.stop.id ? NSColor(hex:"#D45A37") : NSColor.white).cgColor)
+        context.setStrokeColor((s.selectedGradientStopID == item.stop.id ? Palette.accentNS : NSColor.white).cgColor)
         context.setLineWidth((s.selectedGradientStopID == item.stop.id ? 2 : 1)/scale)
         context.strokeEllipse(in:r)
       }
@@ -782,7 +787,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     if let e = s.primary, e.kind == "text", TypographyEngine.overflows(e) {
       let r = CGRect(
         x: b.maxX - 8 / scale, y: b.maxY - 8 / scale, width: 8 / scale, height: 8 / scale)
-      context.setFillColor(NSColor(hex: "#D45A37").cgColor)
+      context.setFillColor(Palette.accentNS.cgColor)
       context.fill(r)
     }
   }

@@ -43,7 +43,7 @@ import XCTest
       let color = try XCTUnwrap(image.colorAt(x: x, y: y)?.usingColorSpace(.deviceRGB))
       // The square is centered, so bitmap row direction does not affect the boundary.
       if (32..<96).contains(x) && (32..<96).contains(y) {
-        if matches(color, 231/255, 231/255, 225/255) { paintedInside += 1 }
+        if matches(color, 242/255, 242/255, 242/255) { paintedInside += 1 }
       } else if !matches(color, 1, 0, 1) { changedOutside += 1 }
     } }
     XCTAssertEqual(changedOutside, 0, "An oversized dirtyRect must not paint neighboring UI.")

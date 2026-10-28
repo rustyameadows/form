@@ -31,7 +31,7 @@ struct DecorationPreparationView:View {
   var body:some View {
     VStack(alignment:.leading,spacing:14) {
       HStack {
-        VStack(alignment:.leading,spacing:4) {Text("Decoration preparation").font(.system(size:25,design:.serif));Text(store.project?.objects.first{$0.id==draft.objectID}?.name ?? "Source unavailable").font(.system(size:11)).foregroundStyle(Palette.secondary)}
+        VStack(alignment:.leading,spacing:4) {Text("Decoration preparation").font(.system(size: 25, weight: .semibold));Text(store.project?.objects.first{$0.id==draft.objectID}?.name ?? "Source unavailable").font(.system(size:11)).foregroundStyle(Palette.secondary)}
         Spacer();Picker("View",selection:$saved) {Text("Prepare").tag(false);Text("Saved preparations").tag(true)}.pickerStyle(.segmented).labelsHidden().frame(width:290)
         Button("Done"){dismiss()}.keyboardShortcut(.cancelAction)
       }.fixedSize(horizontal:false,vertical:true).layoutPriority(1)
@@ -39,7 +39,7 @@ struct DecorationPreparationView:View {
       else {
         HSplitView {preview.frame(minWidth:560);ScrollView {controls.padding(.leading,16)}.frame(minWidth:325,idealWidth:355,maxWidth:395)}.frame(maxHeight:.infinity).clipped()
         VStack(alignment:.leading,spacing:7) {
-          if !draft.error.isEmpty {Text(draft.error).font(.system(size:10)).foregroundStyle(.red).fixedSize(horizontal:false,vertical:true)}
+          if !draft.error.isEmpty {Text(draft.error).font(.system(size:10)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
           HStack {Text("Capture records current source and exact files as one undoable revision.").font(.system(size:10)).foregroundStyle(Palette.secondary);Spacer();DecorationCaptureButton(draft:draft){saved=true}}
         }.fixedSize(horizontal:false,vertical:true).layoutPriority(1)
       }
@@ -105,7 +105,7 @@ struct DecorationPreparationView:View {
         }
         Text("Paint previews do not identify a matching vinyl. Cut regions use visible knockout geometry; no overlap or tacking recipe is inferred.").font(.system(size:10)).foregroundStyle(Palette.secondary)
       }
-      if let plan=draft.plan {ForEach(Array(plan.issues.enumerated()),id:\.offset) {_,issue in Text(issue.message).font(.system(size:10)).foregroundStyle(issue.severity=="error" ? Color.red:Palette.secondary).fixedSize(horizontal:false,vertical:true)}}
+      if let plan=draft.plan {ForEach(Array(plan.issues.enumerated()),id:\.offset) {_,issue in Text(issue.message).font(.system(size:10)).foregroundStyle(issue.severity=="error" ? Palette.ink:Palette.secondary).fixedSize(horizontal:false,vertical:true)}}
       Divider();field("Preparation name",$draft.name);field("Quantity",$draft.quantity)
       TextField("Material / film declarations · optional",text:$draft.materialNotes,axis:.vertical).lineLimit(2...3).textFieldStyle(.roundedBorder)
       TextField("Equipment / application notes · unknown if blank",text:$draft.equipmentNotes,axis:.vertical).lineLimit(2...3).textFieldStyle(.roundedBorder)

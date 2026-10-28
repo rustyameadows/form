@@ -17,7 +17,7 @@ struct SewingPatternPreview: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 14) {
       HStack {
-        Text("Cutting pattern").font(.system(size: 25, design: .serif))
+        Text("Cutting pattern").font(.system(size: 25, weight: .semibold))
         Spacer()
         Picker("Pattern output", selection: $model.tiled) {
           Text("Large format").tag(false)
@@ -61,8 +61,8 @@ struct SewingPatternPreview: View {
           .accessibilityLabel("Pattern export DPI")
         Text("Vector geometry and preview zoom stay independent.").font(.system(size: 10)).foregroundStyle(Palette.secondary)
       }
-      if model.proof != nil, !model.error.isEmpty { Text(model.error).foregroundStyle(.red).font(.system(size: 11)) }
-      if !review.error.isEmpty { Text(review.error).foregroundStyle(.red).font(.system(size: 11)) }
+      if model.proof != nil, !model.error.isEmpty { Text(model.error).foregroundStyle(Palette.ink).font(.system(size: 11)) }
+      if !review.error.isEmpty { Text(review.error).foregroundStyle(Palette.ink).font(.system(size: 11)) }
     }.padding(26).frame(width: 1120, height: 830).background(Palette.paper)
       .onAppear { model.refresh() }
       .onChange(of: session.art) { _, _ in model.refresh() }
@@ -101,7 +101,7 @@ struct SewingLayoutPDFReview: View {
     VStack(alignment: .leading, spacing: 14) {
       HStack {
         VStack(alignment: .leading, spacing: 4) {
-          Text("Cutting layout PDF").font(.system(size: 25, design: .serif))
+          Text("Cutting layout PDF").font(.system(size: 25, weight: .semibold))
           Text(model.sourceName + " · vector physical proof").font(.system(size: 11))
             .foregroundStyle(Palette.secondary)
         }
@@ -128,8 +128,8 @@ struct SewingLayoutPDFReview: View {
           "No valid layout proof", systemImage: "doc",
           description: Text(error.isEmpty ? "Complete a valid cutting layout first." : error))
       }
-      if proof != nil, !error.isEmpty { Text(error).foregroundStyle(.red).font(.system(size: 11)) }
-      if !review.error.isEmpty { Text(review.error).foregroundStyle(.red).font(.system(size: 11)) }
+      if proof != nil, !error.isEmpty { Text(error).foregroundStyle(Palette.ink).font(.system(size: 11)) }
+      if !review.error.isEmpty { Text(review.error).foregroundStyle(Palette.ink).font(.system(size: 11)) }
     }.padding(24).frame(width: 1080, height: 790).background(Palette.paper)
       .onAppear {
         includeFabric = model.showFabric

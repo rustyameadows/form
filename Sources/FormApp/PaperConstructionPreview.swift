@@ -67,7 +67,7 @@ private struct PaperConstructionPreviewSurface:NSViewRepresentable {
     } catch {net=nil;image=nil;cachedArtwork=nil;cachedSize=nil;cachedAssets=nil;problem=error.localizedDescription}
     needsDisplay=true
   }
-  private func text(_ value:String,at point:CGPoint,size:Double=11,color:NSColor=NSColor(hex:"#7C8078")) {
+  private func text(_ value:String,at point:CGPoint,size:Double=11,color:NSColor=NSColor(hex:"#666666")) {
     (value as NSString).draw(at:point,withAttributes:[.font:NSFont.systemFont(ofSize:size),.foregroundColor:color])
   }
   private func drawImage(net:PaperNet,context:CGContext) {
@@ -78,7 +78,7 @@ private struct PaperConstructionPreviewSurface:NSViewRepresentable {
     context.restoreGState()
   }
   override func draw(_ dirtyRect:NSRect) {
-    NSColor(hex:"#E9EAE5").setFill();bounds.fill();hitPanels=[];hitPanelPaths=[]
+    NSColor(hex:"#F2F2F2").setFill();bounds.fill();hitPanels=[];hitPanelPaths=[]
     guard let context=NSGraphicsContext.current?.cgContext,let net,let store else {
       text(problem ?? "Choose a paper construction",at:.init(x:24,y:30));return
     }
@@ -93,13 +93,13 @@ private struct PaperConstructionPreviewSurface:NSViewRepresentable {
     let cellWidth=(bounds.width-40)/Double(columns),cellHeight=min(240,max(115,(bounds.height-55)/Double(max(rows,1))))
     for (index,panel) in net.panels.enumerated() {
       let card=CGRect(x:20+Double(index%columns)*cellWidth+5,y:16+Double(index/columns)*cellHeight+5,width:cellWidth-10,height:cellHeight-10)
-      context.setFillColor(NSColor(hex:"#F5F5F0").cgColor);context.addPath(CGPath(roundedRect:card,cornerWidth:10,cornerHeight:10,transform:nil));context.fillPath()
+      context.setFillColor(NSColor(hex:"#FFFFFF").cgColor);context.addPath(CGPath(roundedRect:card,cornerWidth:10,cornerHeight:10,transform:nil));context.fillPath()
       let b=panel.bounds,scale=min((card.width-36)/max(1,b.width),(card.height-56)/max(1,b.height))
       let x=card.midX-b.width*scale/2,y=card.minY+12+(card.height-56-b.height*scale)/2
       context.saveGState();context.translateBy(x:x,y:y);context.scaleBy(x:scale,y:scale);context.translateBy(x:-b.x,y:-b.y)
       context.addPath(PaperOutput.path(panel.polygon));context.clip();drawImage(net:net,context:context);context.restoreGState()
-      if store.paperSelectedPanelID==panel.id {context.setStrokeColor(NSColor(hex:"#C96543").cgColor);context.setLineWidth(2);context.addPath(CGPath(roundedRect:card.insetBy(dx:1,dy:1),cornerWidth:9,cornerHeight:9,transform:nil));context.strokePath()}
-      text(panel.name,at:.init(x:card.minX+12,y:card.maxY-35),size:11,color:NSColor(hex:"#292D2B"))
+      if store.paperSelectedPanelID==panel.id {context.setStrokeColor(Palette.accentNS.cgColor);context.setLineWidth(2);context.addPath(CGPath(roundedRect:card.insetBy(dx:1,dy:1),cornerWidth:9,cornerHeight:9,transform:nil));context.strokePath()}
+      text(panel.name,at:.init(x:card.minX+12,y:card.maxY-35),size:11,color:NSColor(hex:"#000000"))
       text(String(format:"%.1f × %.1f mm",b.width,b.height),at:.init(x:card.minX+12,y:card.maxY-20),size:9)
       hitPanels.append((card,panel.id))
     }
@@ -110,20 +110,23 @@ private struct PaperConstructionPreviewSurface:NSViewRepresentable {
     let x=(bounds.width-net.size.x*scale)/2,y=(bounds.height-net.size.y*scale)/2
     context.saveGState();context.translateBy(x:x,y:y);context.scaleBy(x:scale,y:scale)
     drawImage(net:net,context:context)
-    if store.paperShowingGuides {PaperOutput.drawStructure(net,context:context,lineWidth:1/scale)}
+    if store.paperShowingGuides {PaperOutput.drawStructure(net,context:context,lineWidth:1/scale,interface:true)}
     if let fold=net.folds.first(where:{$0.id==store.paperSelectedFoldID}) {
-      context.setStrokeColor(NSColor(hex:"#C96543").cgColor);context.setLineWidth(2.5/scale)
+      context.setStrokeColor(Palette.accentNS.cgColor);context.setLineWidth(2.5/scale)
       context.move(to:.init(x:fold.start.x,y:fold.start.y));context.addLine(to:.init(x:fold.end.x,y:fold.end.y));context.strokePath()
     }
     for panel in net.panels {
       let b=panel.bounds
-      if panel.id==store.paperSelectedPanelID {context.addPath(PaperOutput.path(panel.polygon));context.setFillColor(NSColor(hex:"#C96543").withAlphaComponent(0.18).cgColor);context.fillPath()}
+      if panel.id==store.paperSelectedPanelID {context.addPath(PaperOutput.path(panel.polygon));context.setFillColor(Palette.accentNS.withAlphaComponent(0.18).cgColor);context.fillPath()}
       hitPanels.append((.init(x:x+b.x*scale,y:y+b.y*scale,width:b.width*scale,height:b.height*scale),panel.id))
       var transform=CGAffineTransform(a:scale,b:0,c:0,d:scale,tx:x,ty:y)
       if let path=PaperOutput.path(panel.polygon).copy(using:&transform) {hitPanelPaths.append((path,panel.id))}
     }
     context.restoreGState()
-    text("CUT",at:.init(x:24,y:bounds.height-24),size:9,color:NSColor(hex:"#CA6543"));text("CREASE",at:.init(x:72,y:bounds.height-24),size:9,color:NSColor(hex:"#397D9A"));text("GLUE",at:.init(x:140,y:bounds.height-24),size:9,color:NSColor(hex:"#9B8056"))
+    let legendWidth = max(1, (bounds.width - 32) / 3)
+    for (index, label) in ["Cut · solid", "Crease · dash", "Glue · shade"].enumerated() {
+      text(label, at: .init(x: 16 + Double(index) * legendWidth, y: bounds.height - 24), size: 9)
+    }
   }
   private func drawSheets(_ net:PaperNet,context:CGContext,store:StudioStore) {
     guard let object,let definition=try? PaperConstruction.definition(for:object) else{return}
@@ -143,7 +146,7 @@ private struct PaperConstructionPreviewSurface:NSViewRepresentable {
           context.saveGState();context.translateBy(x:p.origin.x,y:p.origin.y)
           if p.rotationDegrees != 0 {context.translateBy(x:net.size.y,y:0);context.rotate(by:p.rotationDegrees * .pi/180)}
           drawImage(net:net,context:context)
-          if store.paperShowingGuides {PaperOutput.drawStructure(net,context:context,lineWidth:0.8/scale)}
+          if store.paperShowingGuides {PaperOutput.drawStructure(net,context:context,lineWidth:0.8/scale,interface:true)}
           context.restoreGState()
         }
         context.restoreGState()

@@ -85,7 +85,7 @@ struct FocusedNumericArtworkField:NSViewRepresentable {
   func makeNSView(context:Context)->NumericArtworkTextField {
     let field=NumericArtworkTextField();field.cell=NumericArtworkFieldCell(textCell:"");field.delegate=context.coordinator
     field.isEditable=true;field.isSelectable=true;field.isBezeled=true;field.bezelStyle = .roundedBezel;field.drawsBackground=true;field.alignment = .right
-    field.font=NSFont.systemFont(ofSize:10);field.placeholderString=title;field.setAccessibilityLabel(title)
+    field.font=NSFont.monospacedSystemFont(ofSize:10,weight:.regular);field.placeholderString=title;field.setAccessibilityLabel(title)
     field.lineBreakMode = .byClipping;field.cell?.usesSingleLineMode=true;field.cell?.isScrollable=true
     field.setContentHuggingPriority(.defaultLow,for:.horizontal)
     let coordinator=context.coordinator
@@ -98,7 +98,7 @@ struct FocusedNumericArtworkField:NSViewRepresentable {
     return field
   }
   func updateNSView(_ field:NumericArtworkTextField,context:Context) {
-    context.coordinator.parent=self;field.textColor=invalid ? .systemRed:.labelColor;field.toolTip=invalid ? "Enter a valid value in this field's supported range.":"Up/Down steps this focused value. Shift uses ten times the step."
+    context.coordinator.parent=self;field.textColor=invalid ? Palette.accentNS:.black;field.toolTip=invalid ? "Enter a valid value in this field's supported range.":"Up/Down steps this focused value. Shift uses ten times the step."
     context.coordinator.sync(field)
   }
   static func dismantleNSView(_ field:NumericArtworkTextField,coordinator:Coordinator) {(field.currentEditor() as? NumericArtworkFieldEditor)?.finishIncrement();field.delegate=nil}

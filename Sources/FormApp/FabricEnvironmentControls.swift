@@ -86,7 +86,7 @@ struct FabricEnvironmentControls:View {
       ScrollView {
         VStack(alignment:.leading,spacing:18) {
           VStack(alignment:.leading,spacing:5) {
-            Text(object.name).font(.system(size:18,design:.serif))
+            Text(object.name).font(.system(size: 18, weight: .semibold))
             Text(store.environment == .function ? "Construction source & relationships":"Cut, stitch & prepare")
               .font(.system(size:11)).foregroundStyle(Palette.secondary)
           }
@@ -218,7 +218,7 @@ private struct FabricPatternConstructionSheet:View {
   private var pieces:[ArtworkElement] {session.art.elements.filter{$0.sewingPiece != nil}}
   var body:some View {
     VStack(alignment:.leading,spacing:16) {
-      HStack {Text("Original fabric construction").font(.system(size:23,design:.serif));Spacer();Button("Done") {store.finishArtworkEditing();dismiss()}.keyboardShortcut(.cancelAction)}
+      HStack {Text("Original fabric construction").font(.system(size: 23, weight: .semibold));Spacer();Button("Done") {store.finishArtworkEditing();dismiss()}.keyboardShortcut(.cancelAction)}
       Text("Edit stitch boundaries, physical allowances, cut copies, grain, notches and notes. Source dimensions remain in millimeters.").font(.system(size:11)).foregroundStyle(Palette.secondary)
       HStack(alignment:.top,spacing:22) {
         ScrollView {VStack(alignment:.leading,spacing:8){ForEach(pieces) {piece in Button {session.choose([piece.id])} label:{Text(piece.sewingPiece!.name).frame(maxWidth:.infinity,alignment:.leading).padding(8).background(session.primary?.id==piece.id ? Palette.accent.opacity(0.1):.clear,in:RoundedRectangle(cornerRadius:5))}.buttonStyle(.plain)}}}.frame(width:185)
@@ -278,7 +278,7 @@ private struct FabricPatternProofWorkspace:View {
           VStack(alignment:.leading,spacing:4) {
             Text(producing ? "PREPARE THE CUTTING PATTERN":"DEVELOP THE FABRIC CONSTRUCTION")
               .font(.system(size:9,weight:.semibold)).tracking(1.5).foregroundStyle(Palette.secondary)
-            Text(object.name).font(.system(size:18,weight:.medium,design:.serif)).lineLimit(1)
+            Text(object.name).font(.system(size:18,weight:.medium,design: .default)).lineLimit(1)
           }
           Spacer(minLength:8)
           Button("Edit source in Form") {store.editFabricPatternSourceOnCanvas(for:object.id)}.font(.system(size:11))
@@ -317,8 +317,8 @@ private struct FabricPatternProofWorkspace:View {
           }
           Text(String(format:"%.1f × %.1f mm source · %d piece templates · %d pages",model.size.x,model.size.y,model.pieceCount,model.pageCount))
             .font(.system(size:10,design:.monospaced)).foregroundStyle(Palette.secondary)
-          if !model.error.isEmpty,model.proof != nil {Text(model.error).font(.system(size:11)).foregroundStyle(.red)}
-          if !review.error.isEmpty {Text(review.error).font(.system(size:11)).foregroundStyle(.red)}
+          if !model.error.isEmpty,model.proof != nil {Text(model.error).font(.system(size:11)).foregroundStyle(Palette.ink)}
+          if !review.error.isEmpty {Text(review.error).font(.system(size:11)).foregroundStyle(Palette.ink)}
         }.frame(maxWidth:.infinity,maxHeight:.infinity)
       }.padding(16).frame(maxWidth:.infinity,maxHeight:.infinity)
       Divider()

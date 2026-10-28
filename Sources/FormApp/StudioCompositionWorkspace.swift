@@ -170,6 +170,6 @@ struct StudioCompositionWorkspace:View {
   @ViewBuilder private func motionOrbit(_ scene:StudioComposition)->some View {if scene.motion.mode == .orbit {field("Orbit",value:scene.motion.orbitDegrees,unit:"°"){value in controller.change{$0.motion.orbitDegrees=value}}.frame(width:150)}}
   private func motionFPS(_ scene:StudioComposition)->some View {Picker("FPS",selection:Binding(get:{scene.motion.fps},set:{value in controller.change{$0.motion.fps=value}})){ForEach([12,24,30],id:\.self){Text(String($0)).tag($0)}}.frame(width:85)}
   private func field(_ title:String,value:Double,unit:String,set:@escaping(Double)->Void)->some View {
-    HStack{Text(title);Spacer(minLength:4);TextField(title,value:Binding(get:{value},set:set),format:.number.grouping(.never).precision(.fractionLength(0...2))).textFieldStyle(.roundedBorder).frame(width:72).accessibilityLabel("Studio "+title);Text(unit).foregroundStyle(Palette.secondary).frame(width:22,alignment:.leading)}.font(.system(size:11))
+    HStack{Text(title);Spacer(minLength:4);TextField(title,value:Binding(get:{value},set:set),format:.number.grouping(.never).precision(.fractionLength(0...2))).font(Palette.numericFont).textFieldStyle(.roundedBorder).frame(width:72).accessibilityLabel("Studio "+title);Text(unit).foregroundStyle(Palette.secondary).frame(width:22,alignment:.leading)}.font(.system(size:11))
   }
 }

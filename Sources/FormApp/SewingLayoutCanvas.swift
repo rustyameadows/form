@@ -9,7 +9,7 @@ struct SewingLayoutCanvas: NSViewRepresentable {
     let scroll = NSScrollView()
     scroll.hasHorizontalScroller = true; scroll.hasVerticalScroller = true
     scroll.allowsMagnification = true; scroll.minMagnification = 0.02; scroll.maxMagnification = 12
-    scroll.drawsBackground = true; scroll.backgroundColor = NSColor(hex: "#E6E7E2")
+    scroll.drawsBackground = true; scroll.backgroundColor = NSColor(hex: "#F2F2F2")
     let canvas = SewingLayoutCanvasView(frame: .init(x: 0, y: 0, width: 800, height: 700))
     canvas.controller = controller; scroll.documentView = canvas
     return scroll
@@ -83,7 +83,7 @@ struct SewingLayoutCanvas: NSViewRepresentable {
   }
   override func draw(_ dirtyRect: NSRect) {
     guard let c = controller, let context = NSGraphicsContext.current?.cgContext else { return }
-    NSColor(hex: "#E6E7E2").setFill(); dirtyRect.fill()
+    NSColor(hex: "#F2F2F2").setFill(); dirtyRect.fill()
     let poses = c.previewPlacements, configuredWidth = c.layout.workingWidth ?? 0, height = displayLength
     let width = configuredWidth.isFinite && configuredWidth > 0 && configuredWidth <= 3000 ? configuredWidth : 0
     let unit = 1 / max(0.001, zoom * ppm)
@@ -94,7 +94,7 @@ struct SewingLayoutCanvas: NSViewRepresentable {
       context.saveGState(); context.clip(to: stock)
       let visibleA = physicalPoint(visibleRect.origin), visibleB = physicalPoint(.init(x: visibleRect.maxX, y: visibleRect.maxY))
       let step = zoom * ppm > 8 ? 10.0 : 100.0
-      context.setStrokeColor(NSColor(hex: "#DDE1DA").cgColor); context.setLineWidth(0.5 * unit)
+      context.setStrokeColor(NSColor(hex: "#DDDDDD").cgColor); context.setLineWidth(0.5 * unit)
       for x in stride(from: max(0, floor(visibleA.x / step) * step), through: min(width, visibleB.x), by: step) { context.move(to: .init(x: x, y: 0)); context.addLine(to: .init(x: x, y: height)) }
       for y in stride(from: max(0, floor(visibleA.y / step) * step), through: min(height, visibleB.y), by: step) { context.move(to: .init(x: 0, y: y)); context.addLine(to: .init(x: width, y: y)) }
       context.strokePath()
@@ -107,12 +107,12 @@ struct SewingLayoutCanvas: NSViewRepresentable {
         context.restoreGState()
       }
       context.restoreGState()
-      context.setStrokeColor(NSColor(hex: "#9CA59C").cgColor); context.setLineWidth(unit); context.stroke(stock)
+      context.setStrokeColor(NSColor(hex: "#999999").cgColor); context.setLineWidth(unit); context.stroke(stock)
       if c.layout.stock == .foldedPair {
-        context.setStrokeColor(NSColor(hex: "#A67B41").cgColor); context.setLineDash(phase: 0, lengths: [8,4]); context.move(to: .init(x: 0,y: 0)); context.addLine(to: .init(x: 0,y: height)); context.strokePath(); context.setLineDash(phase: 0,lengths: [])
+        context.setStrokeColor(NSColor(hex: "#666666").cgColor); context.setLineDash(phase: 0, lengths: [8,4]); context.move(to: .init(x: 0,y: 0)); context.addLine(to: .init(x: 0,y: height)); context.strokePath(); context.setLineDash(phase: 0,lengths: [])
       }
       if c.layout.surface == .roll, let required = c.report?.requiredLength, required > 0 {
-        context.setStrokeColor(NSColor(hex: "#3E7269").cgColor); context.setLineDash(phase: 0, lengths: [6,3])
+        context.setStrokeColor(Palette.accentNS.cgColor); context.setLineDash(phase: 0, lengths: [6,3])
         context.move(to: .init(x: 0,y: required)); context.addLine(to: .init(x: width,y: required)); context.strokePath(); context.setLineDash(phase: 0,lengths: [])
       }
     }
@@ -122,12 +122,12 @@ struct SewingLayoutCanvas: NSViewRepresentable {
       let cuts = SewingLayoutGeometry.cuttingPaths(pose)
       let region=CGMutablePath();for contour in pose.materialContours {region.addPath(path(contour,closed:true))}
       if !c.showFabric || width <= 0 {
-        context.setFillColor(NSColor(hex: "#EFEBDD").cgColor); context.addPath(region); context.drawPath(using:.eoFill)
+        context.setFillColor(NSColor(hex: "#FFFFFF").cgColor); context.addPath(region); context.drawPath(using:.eoFill)
       }
-      if bad { context.setFillColor(NSColor.systemRed.withAlphaComponent(0.12).cgColor); context.addPath(region); context.drawPath(using:.eoFill) }
-      context.setStrokeColor((selected ? NSColor(hex: "#3E7269") : bad ? NSColor.systemRed : NSColor(hex: "#454E47")).cgColor)
+      if bad { context.setFillColor(NSColor.black.withAlphaComponent(0.12).cgColor); context.addPath(region); context.drawPath(using:.eoFill) }
+      context.setStrokeColor((selected ? Palette.accentNS : bad ? NSColor.black : NSColor(hex: "#111111")).cgColor)
       context.setLineWidth((selected ? 2 : 1) * unit); for cut in cuts {context.addPath(path(cut.points,closed:cut.closed))}; context.strokePath()
-      context.setStrokeColor(NSColor(hex: "#A67B41").cgColor); context.setLineWidth(0.8 * unit)
+      context.setStrokeColor(NSColor(hex: "#666666").cgColor); context.setLineWidth(0.8 * unit)
       let grain = SewingPatternDrawing.grainline(pose.geometry).map(pose.transform.apply)
       context.addPath(path(grain,closed:false)); context.strokePath()
       let d = pose.grainDirection, n = Point2(-d.y,d.x)
@@ -143,7 +143,7 @@ struct SewingLayoutCanvas: NSViewRepresentable {
     for pose in poses where pose.bounds.width * ppm * zoom >= 45 && pose.bounds.height * ppm * zoom >= 18 {
       let point = documentPoint(.init(pose.bounds.x + 2, pose.bounds.y + 2))
       let title = "Copy " + pose.placement.copies.map(String.init).joined(separator: ",") + " · " + pose.geometry.piece.name
-      let attributes: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: 10 / zoom, weight: .medium), .foregroundColor: NSColor(hex: "#263C35"), .backgroundColor: NSColor.white.withAlphaComponent(0.88), .paragraphStyle: labelStyle]
+      let attributes: [NSAttributedString.Key: Any] = [.font: NSFont.systemFont(ofSize: 10 / zoom, weight: .medium), .foregroundColor: NSColor(hex: "#000000"), .backgroundColor: NSColor.white.withAlphaComponent(0.88), .paragraphStyle: labelStyle]
       (title as NSString).draw(in: .init(x: point.x,y: point.y,width: max(1,pose.bounds.width*ppm-4*ppm),height: 18/zoom),withAttributes: attributes)
     }
     if width <= 0 {

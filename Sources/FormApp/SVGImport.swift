@@ -181,7 +181,7 @@ struct SVGImportSheet: View {
         Image(systemName: "square.and.arrow.down").font(.system(size: 24, weight: .light))
           .foregroundStyle(Palette.accent)
         VStack(alignment: .leading, spacing: 5) {
-          Text("Bring artwork into LAB").font(.system(size: 25, design: .serif))
+          Text("Bring artwork into LAB").font(.system(size: 25, weight: .semibold))
           Text(review.name).font(.system(size: 12)).foregroundStyle(Palette.secondary).lineLimit(1)
         }
         Spacer()
@@ -199,7 +199,7 @@ struct SVGImportSheet: View {
             "\(review.result.width.formatted(.number.precision(.fractionLength(0...3)))) × \(review.result.height.formatted(.number.precision(.fractionLength(0...3)))) mm"
           )
           .font(.system(size: 11, design: .monospaced)).foregroundStyle(Palette.secondary)
-        }.padding(24).frame(maxWidth: .infinity).background(Color(nsColor: NSColor(hex: "#E9E9E3")))
+        }.padding(24).frame(maxWidth: .infinity).background(Palette.surface)
         Divider()
         ScrollView {
           VStack(alignment: .leading, spacing: 18) {
@@ -266,7 +266,7 @@ struct SVGImportSheet: View {
             store.svgImport = nil
             store.toast("SVG artwork imported")
           } catch { store.error = error.localizedDescription }
-        }.keyboardShortcut(.defaultAction).disabled(review.result.hasWarnings && !acceptDifferences)
+        }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction).disabled(review.result.hasWarnings && !acceptDifferences)
       }.padding(20)
     }.frame(width: 900, height: 660).background(Palette.paper)
   }
