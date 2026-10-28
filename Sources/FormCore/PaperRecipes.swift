@@ -20,8 +20,14 @@ extension Project {
   public func validatePaperConstructions()throws {
     for object in objects where PaperConstruction.isPaper(object){
       guard object.meshAsset==nil,object.cadModel==nil,object.cadRepresentation==nil,object.cloth==nil,object.patternAssembly==nil,object.textile==nil else{throw FormError.invalid("Paper construction cannot share an object with a visual mesh, CAD, cloth, pattern assembly or textile source.")}
-      let source=try PaperConstruction.definition(for:object),expected=source.kind == .envelope ? "paperEnvelope":"tuckCarton"
-      guard object.recipeID==expected else{throw FormError.invalid("Paper construction kind must match its paper recipe.")}
+      let source=try PaperConstruction.definition(for:object)
+      if source.kind != .authored {
+        let expected=source.kind == .envelope ? "paperEnvelope":"tuckCarton"
+        guard object.recipeID==expected else{throw FormError.invalid("Paper construction kind must match its paper recipe.")}
+      } else {
+        guard let recipe=recipe(object.recipeID),Set(recipe.parameters.map(\.id))==Set(PaperConstructionEngine.parameters(source).keys) else {throw FormError.invalid("Authored construction controls must match its saved parameter source.")}
+        try recipe.validate(object.parameters)
+      }
       _ = try source.net()
       if object.artworkSourceID != nil,object.artworkFit != "actual"{throw FormError.invalid("Paper construction artwork must remain registered at actual size.")}
       if let id=source.insideArtworkSourceID{guard id != object.id,let inside=objects.first(where:{$0.id==id}),inside.recipeID=="artboard",!inside.isCanvasWorkspace,inside.artworkSourceID==nil,inside.artwork != nil else{throw FormError.invalid("Paper inside artwork must reference an independent artwork sheet. Detach it before removing its source.")}}

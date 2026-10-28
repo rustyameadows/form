@@ -81,7 +81,7 @@ final class ArtworkTransferTests:XCTestCase {
     var duplicate=b;duplicate.metadata.artwork.elements.append(e);XCTAssertThrowsError(try duplicate.encoded());XCTAssertEqual(p,before)
   }
   func testResourceCountsAggregateAssetBudgetsAndNewerSchemaFailClosed()throws {
-    var(p,id)=try project();let e=ArtworkElement(kind:"rectangle",x:0,y:0);try install(Artwork(elements:[e]),in:&p,id);var bundle=try capture(p,id,[e.id]);bundle.metadata.sourceSchema=54;XCTAssertThrowsError(try bundle.encoded())
+    var(p,id)=try project();let e=ArtworkElement(kind:"rectangle",x:0,y:0);try install(Artwork(elements:[e]),in:&p,id);var bundle=try capture(p,id,[e.id]);bundle.metadata.sourceSchema=56;XCTAssertThrowsError(try bundle.encoded())
     var images=(0..<33).map{ArtworkElement(kind:"image",x:0,y:0,asset:"\($0).png")};try install(Artwork(elements:images),in:&p,id);var reads=0
     XCTAssertThrowsError(try ArtworkTransferGraph.capture(project:p,objectID:id,ids:Set(images.map(\.id)),readAsset:{_,_ in reads+=1;return Data([1])}));XCTAssertEqual(reads,0)
     images=Array(images.prefix(2));try install(Artwork(elements:images),in:&p,id);var limits=ArtworkTransferLimits();limits.individualAssetBytes=16;limits.totalAssetBytes=24

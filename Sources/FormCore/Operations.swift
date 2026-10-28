@@ -144,6 +144,8 @@ public final class OperationEngine {
     switch name {
     case "form_studio_scene":return try StudioSceneCommands.call(engine:self,arguments:a,source:source)
     case "form_paper":return try PaperCommands.call(engine:self,arguments:a,source:source)
+    case "form_construction":return try ConstructionCommands.call(engine:self,arguments:a,source:source)
+    case "form_surface":return try PhysicalSurfaceCommands.call(engine:self,arguments:a,source:source)
     case "form_status":
       return [
         "application": LabIdentity.name, "version": LabIdentity.version,

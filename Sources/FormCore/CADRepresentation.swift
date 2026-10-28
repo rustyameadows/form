@@ -18,6 +18,7 @@ public struct CADComponentRepresentation:Codable,Equatable,Identifiable,Sendable
   public init(id:UUID,name:String,brepAsset:String,brepSHA256:String,meshAsset:String,meshSHA256:String,minimum:Vector3,maximum:Vector3,volumeMM3:Double,valid:Bool,closed:Bool,solidCount:Int,faceCount:Int,edgeCount:Int,vertexCount:Int,triangleCount:Int){self.id=id;self.name=name;self.brepAsset=brepAsset;self.brepSHA256=brepSHA256;self.meshAsset=meshAsset;self.meshSHA256=meshSHA256;self.minimum=minimum;self.maximum=maximum;self.volumeMM3=volumeMM3;self.valid=valid;self.closed=closed;self.solidCount=solidCount;self.faceCount=faceCount;self.edgeCount=edgeCount;self.vertexCount=vertexCount;self.triangleCount=triangleCount}
 }
 public struct CADRepresentation:Codable,Equatable,Sendable {
+  public var resolvedSurfaces:[CADResolvedPlanarSurface]?
   public var modelID:UUID
   public var definitionSHA256:String
   public var kernelVersion:String
@@ -38,6 +39,16 @@ public struct CADRepresentation:Codable,Equatable,Sendable {
       guard c.materialID == nil || (!c.materialID!.isEmpty && c.materialID!.utf8.count<=160),c.color == nil || c.color!.range(of:"^#[0-9A-Fa-f]{6}$",options:.regularExpression) != nil else{throw FormError.invalid("Use a bounded material identity and RGB color for CAD appearance.")}
       guard file(c.brepAsset),file(c.meshAsset),c.brepAsset != c.meshAsset,digest(c.brepSHA256),digest(c.meshSHA256),c.name.utf8.count<=256,c.valid,c.closed,c.solidCount>0,c.solidCount<=10000,c.faceCount>0,c.edgeCount>0,c.vertexCount>0,c.vertexCount<=6_000_000,c.triangleCount>0,c.triangleCount<=2_000_000,c.volumeMM3.isFinite,c.volumeMM3>0,
         [c.minimum.x,c.minimum.y,c.minimum.z,c.maximum.x,c.maximum.y,c.maximum.z].allSatisfy({$0.isFinite && abs($0)<=1e7}),c.minimum.x<=c.maximum.x,c.minimum.y<=c.maximum.y,c.minimum.z<=c.maximum.z else{throw FormError.invalid("CAD output must reference bounded immutable resources and validated closed solid geometry.")}
+    }
+    if let surfaces=resolvedSurfaces {
+      guard surfaces.count<=128,Set(surfaces.map(\.id)).count==surfaces.count else {throw FormError.invalid("Named CAD surface identities must be unique and bounded.")}
+      for surface in surfaces {
+        try surface.validate()
+        guard let component=components.first(where:{$0.id==surface.outputFeatureID}),component.featureFingerprint==surface.fingerprint,
+          surface.faceIndex>0,surface.faceIndex<=component.faceCount,surface.width.isFinite,surface.height.isFinite,surface.width>0,surface.height>0 else {
+          throw FormError.invalid("Named CAD surface is missing its validated component or exact face revision.")
+        }
+      }
     }
   }
 }

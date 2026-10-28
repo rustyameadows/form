@@ -199,11 +199,9 @@ public enum TextStyleCommands {
     // Materialize only inherited properties. Unused sources and physical
     // consumers keep their immutable object files; renderers see ordinary text.
     for i in candidate.objects.indices {
-      guard var art = candidate.objects[i].artwork else { continue }
-      for j in art.elements.indices {
-        art.elements[j]=refreshed(art.elements[j],style:style)
+      candidate.objects[i].updateStoredArtworks{art in
+        for j in art.elements.indices {art.elements[j]=refreshed(art.elements[j],style:style)}
       }
-      candidate.objects[i].artwork = art
     }
     for i in candidate.textStories?.indices ?? 0..<0 {
       let changed=refreshed(candidate.textStories![i].sourceElement,style:style)
@@ -218,8 +216,8 @@ public enum TextStyleCommands {
     guard project.textStyles?.contains(where: { $0.id == id }) == true else { throw FormError.missing("Text style not found.") }
     var candidate = project
     for i in candidate.objects.indices {
-      guard var art = candidate.objects[i].artwork else { continue }
-      for j in art.elements.indices {
+      candidate.objects[i].updateStoredArtworks{art in
+        for j in art.elements.indices {
         if art.elements[j].textStyle?.styleID == id { art.elements[j].textStyle = nil }
         if art.elements[j].paragraphStyle?.styleID == id { art.elements[j].paragraphStyle = nil }
         for r in art.elements[j].textRuns?.indices ?? 0..<0 where art.elements[j].textRuns?[r].textStyle?.styleID == id {
@@ -228,8 +226,8 @@ public enum TextStyleCommands {
         for r in art.elements[j].textRuns?.indices ?? 0..<0 where art.elements[j].textRuns?[r].paragraphStyle?.styleID == id {
           art.elements[j].textRuns?[r].paragraphStyle = nil
         }
+        }
       }
-      candidate.objects[i].artwork = art
     }
     candidate.textStyles?.removeAll { $0.id == id }
     for i in candidate.textStories?.indices ?? 0..<0 {
@@ -358,7 +356,7 @@ extension Project {
       }
       try validateTypography(style.typography)
     }
-    let artworks=objects.compactMap(\.artwork)+(textStories ?? []).map{Artwork(elements:[$0.sourceElement])}
+    let artworks=storedArtworks+(textStories ?? []).map{Artwork(elements:[$0.sourceElement])}
     for art in artworks {
       guard art.referencedTextStyles.isSubset(of: ids) else { throw FormError.invalid("Artwork references a missing text style.") }
       let byID = Dictionary(uniqueKeysWithValues: styles.map { ($0.id, $0) })

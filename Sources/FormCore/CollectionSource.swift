@@ -8,7 +8,7 @@ public struct CollectionSource:Codable,Equatable,Sendable {
   public var decorationJobs:[DecorationPreparation]
   public init(project:Project,plan:CollectionProductionPlan)throws {
     guard project.objects.count<=CollectionLimits.objects,project.materials.count<=256,project.recipes.count<=256,(project.textStyles?.count ?? 0)<=256,(project.swatches?.count ?? 0)<=256,(project.textStories?.count ?? 0)<=128 else{throw FormError.invalid("The original collection source exceeds its early object/style/material bounds.")}
-    let arts=project.objects.compactMap(\.artwork),elements=arts.flatMap(\.elements)
+    let arts=project.storedArtworks,elements=arts.flatMap(\.elements)
     let sourceCharacters=elements.reduce(0){$0+$1.text.utf8.count}+(project.textStories ?? []).reduce(0){$0+$1.text.utf8.count}
     let nodes=elements.reduce(0){$0+($1.path?.contours.reduce(0){$0+$1.nodes.count} ?? 0)}
     let vertices=project.objects.reduce(0){$0+($1.cloth?.mesh.restPositionsMm.count ?? 0)}
@@ -19,8 +19,10 @@ public struct CollectionSource:Codable,Equatable,Sendable {
     var materialIDs=Set(project.objects.flatMap{[$0.materialID,$0.textile?.liningMaterialID,$0.textile?.trimMaterialID].compactMap{$0}})
     for o in project.objects {
       materialIDs.formUnion(o.patternAssembly?.panels.map{$0.material.id} ?? [])
-      materialIDs.formUnion(o.artwork?.elements.compactMap{$0.sewingPiece?.materialID} ?? [])
-      if let id=o.artwork?.sewingLayout?.materialID {materialIDs.insert(id)}
+      for art in o.storedArtworks {
+        materialIDs.formUnion(art.elements.compactMap{$0.sewingPiece?.materialID})
+        if let id=art.sewingLayout?.materialID{materialIDs.insert(id)}
+      }
     }
     for b in project.garmentBlocks ?? [] {materialIDs.formUnion([b.style.materialID,b.style.elasticMaterialID].compactMap{$0})}
     for id in materialIDs.sorted() where !copy.materials.contains(where:{$0.id==id}) {let material=project.material(id);if material.id==id {copy.materials.append(material)}}
