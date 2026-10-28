@@ -119,7 +119,10 @@ private struct RenderSignature: Equatable {
           let scene=try MeshAssetSceneAdapter.prepare(document:document,reference:reference)
           let appearance=try MeshAssetSceneAdapter.appearance(scene,reference:reference,artwork:images[object.id],artworkRevision:revisions[object.id] ?? "none")
           output+=MeshAssetSceneAdapter.renderables(appearance,objectID:object.id,positionMM:.init(object.position.x,object.position.y,object.position.z),yawDegrees:object.rotation,scalePercent:object["scalePercent"])
-        } else {output+=try CADSceneAdapter.load(for:object,assets:assets,materials:materials)}
+        } else {
+          let prepared=try CADSceneAdapter.prepare(for:object,assets:assets)
+          output+=try await CADSurfaceAppearance.apply(prepared,object:object,project:project,assets:assets,materials:materials)
+        }
       }
       return output
     }

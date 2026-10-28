@@ -10,7 +10,7 @@ struct CollectionArchive {
 }
 extension StudioStore {
   func collectionOriginalAssetMetadata(_ source:CollectionSource)throws->[CollectionOriginalAsset] {
-    let project=source.project,arts=project.objects.compactMap(\.artwork),profiles=arts.compactMap(\.outputColorProfile)+(project.swatches ?? []).compactMap{$0.printInk?.profile}
+    let project=source.project,arts=project.storedArtworks,profiles=arts.compactMap(\.outputColorProfile)+(project.swatches ?? []).compactMap{$0.printInk?.profile}
     var byName:[String:ArtworkOutputProfile]=[:];for p in profiles {if let old=byName[p.asset],old.sha256 != p.sha256 {throw FormError.invalid("Original profiles have conflicting asset identities.")};byName[p.asset]=p}
     let names=Set(arts.flatMap{($0.elements.compactMap(\.asset))+($0.imports?.map(\.asset) ?? [])}).union(byName.keys)
     guard names.count<=CollectionLimits.files-12 else{throw FormError.invalid("Too many original assets before reading any source file.")}

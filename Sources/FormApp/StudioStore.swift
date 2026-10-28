@@ -239,6 +239,8 @@ enum TableTool: String, CaseIterable {
             }
             let readOnly = (name=="form_studio_scene" && ["list","get"].contains(args["command"] as? String ?? "")) || (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
               (name == "form_paper" && ["inspect", "preflight", "layout", "view", "export"].contains(args["command"] as? String ?? "inspect")) ||
+              (name == "form_construction" && ConstructionCommands.isReadOnly(args)) ||
+              (name == "form_surface" && PhysicalSurfaceCommands.isReadOnly(args)) ||
               [
                 "form_status", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones",
                 "form_list_materials", "form_get_print_setup", "form_get_slice_status",
