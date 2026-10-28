@@ -840,3 +840,7 @@ See [engineering evidence](evidence/project-solids-native.json) and [the modelin
 ## Analytic construction engineering checkpoint — October 28, 2026
 
 LAB 0.5.3 passes **1,174 tests**: 686 Core, 429 App, 14 rendering, 24 mesh, seven geometry, eight modeling and six kernel. New coverage includes curved analytic profiles, cap winding, stable frames, malformed profiles, path/local scope, aggregate limits, persistence/Undo/schema 56, normal retention and shared fabrication geometry. Native MCP inspection and rendering exercise the installed bridge. Analytic assemblies retain independent closed shells; they are not Boolean-unioned or certified for manufacture. Reference-led visual modeling remains active and unaccepted.
+
+## Modeling handoff checkpoint — October 28, 2026
+
+The final 0.5.4 source passes **1,188 tests** (697 Core, 432 App, 14 rendering, 24 mesh, seven geometry, eight modeling, six kernel). New tests cover cached-expression parity/error order/concurrency/bounds, separate preview validation/persistence/cancellation, detached construction, production/preview cache separation and normalized physical size. All 209 preexisting library files still match their pinned hashes. [Handoff evidence](evidence/modeling-handoff-engineering.json) separates this engineering result from incomplete native slider and visual-model acceptance.

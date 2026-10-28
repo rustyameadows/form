@@ -136,3 +136,7 @@ The original supplied turntable image is the visual source of truth: a cute, car
 ## Active recorded detail rounds
 
 The generic analytic bridge is installed in ordinary LAB 0.5.3; 1,174 regression tests pass. Actual native detail rounds 01 and 02 improve explicit plate edges and tapered blade surfaces. Both remain intermediate studies: plate end/face character and crown density still need comparison and refinement before whole-model acceptance. The required 24 real-tree photos and six extra detail images are captured privately with attribution. The original toy sheet remains authoritative. The additional user photo is embedded on Canvas. No visual-completion claim follows from these engineering results.
+
+## User-requested handoff
+
+Work is handed off at the user’s request. Remaining unchecked items are incomplete. LAB 0.5.4 source passes 1,188 tests; compiled expression caching and preview-source/worker foundations are committed. Native responsive parameter dragging, stronger tall-growth anatomy, final visual acceptance, 24 generated configurations and the separate small fabrication adaptation remain open. See [the concrete handoff](modeling-handoff.md). The modeling goal is not marked complete.

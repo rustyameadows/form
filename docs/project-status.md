@@ -2,6 +2,8 @@
 
 As of October 28, 2026.
 
+**Current handoff:** the project-solid-modeling branch passes 1,188 tests and includes expression caching, validated preview source and a cancellation-aware CPU construction worker. Native live-slider preview publication and the reference-led model remain incomplete. See [the handoff](modeling-handoff.md); this checkpoint does not mark the modeling goal complete.
+
 **LAB is a working native Mac alpha; the complete product, typography and textile briefs are not finished.** The LAB 0.5 environment UI pass adds distinct Function, guided Fabricate and saved-composition Studio workspaces. Function remains medium-independent, with lamp/CAD, fabric/seam/cloth and paper controls. Fabricate makes process/material assumptions editable and explicit. Studio adds independent product instances, saved scenes, a separate camera, camera-motion playback and real PNG/MP4 output. See [environment workflows](environment-workflows.md).
 
 
