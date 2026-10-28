@@ -1,5 +1,7 @@
 # LAB product roadmap
 
+The [agent modeling engine implementation plan](agent-modeling-engine-plan.md) defines the next engine push: accelerate model evaluation and repair, verify parameter relationships, preserve surface bindings, and make constructions authorable through the installed app's agent tools.
+
 Status: **Broader product scope incomplete.** The October 26 audit found no active goal attached at that checkpoint. The user's subsequent LAB transition request was tracked by a bounded implementation goal, defined in the [transition contract](lab-transition.md). It reorganizes the application around Form, Function and Fabricate, with Studio retained as a secondary environment. Completing that structural transition does not complete or cancel the broader requirements below. See [current project status](project-status.md) for verified delivery and remaining product work.
 
 Expanded October 25, 2026 to include the freeform Canvas/Table relationship, the complete Textiles, Apparel & Merchandise brief, and the complete [2D Design, Typography & Vector Editing specification](2d-design-typography-vector-spec.md), alongside the [original product brief](product-brief.md), the supplied interface sketches, and local 3D-print preparation.

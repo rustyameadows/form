@@ -8,6 +8,8 @@ A native Mac creative environment for designing and making physical things.
 
 **Project status:** [What works, what remains, and the current development state](docs/project-status.md) — updated October 27, 2026.
 
+**Next engine push:** [Agent modeling engine implementation plan](docs/agent-modeling-engine-plan.md) — faster evaluation and repair, parameter validation, stable artwork surfaces, and agent-authored constructions.
+
 Explore typography, notes, references, and graphics on a freeform 2D Canvas, connected to a continuous 3D Table for physical objects and materials. Use either surface alone, side by side, or with Canvas in a separate window. Start with the thing you want to make, then work directly with its dimensions, construction, and appearance.
 
 **Version 0.5.2:** project-owned parametric solid constructions, bounded expressions and repeated groups, fused organic surfaces, and MCP geometry inspection/STL export. See the [modeling guide](docs/parametric-solids.md).
