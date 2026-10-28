@@ -52,6 +52,7 @@ public struct StudioShot:Codable,Equatable,Identifiable,Sendable {
 }
 public struct StudioPresentation:Codable,Equatable,Sendable {
   public var shots:[StudioShot] = []
+  public var scenes:[StudioComposition]?
   public init(shots:[StudioShot] = []) {self.shots=shots}
 }
 extension Project {
@@ -59,6 +60,10 @@ extension Project {
     guard let value=studioPresentation else{return}
     guard value.shots.count<=64,Set(value.shots.map(\.id)).count==value.shots.count else {throw FormError.invalid("A project supports at most 64 uniquely identified Studio shots.")}
     for shot in value.shots {try shot.validate()}
+    let scenes=value.scenes ?? []
+    guard scenes.count<=32,Set(scenes.map(\.id)).count==scenes.count else{throw FormError.invalid("A project supports at most 32 uniquely identified Studio scenes.")}
+    let designIDs=Set(objects.map(\.id))
+    for scene in scenes {try scene.validate();guard Set(scene.instances.map(\.id)).isDisjoint(with:designIDs) else{throw FormError.invalid("Scene instance IDs must be separate from design object IDs.")}}
   }
   /// Committed design identity deliberately excludes navigation, history and shot metadata.
   public func studioDesignDigest()throws->String {
@@ -84,7 +89,7 @@ public enum StudioShotCommands {
     if command == "capture",args["shot_id"] != nil {throw FormError.invalid("Capture creates a new shot ID.")}
     var value=project.studioPresentation ?? .init()
     let existing=command == "capture" ? nil:try shot(in:project,id:args["shot_id"])
-    if command == "delete" {value.shots.removeAll{$0.id==existing!.id};project.studioPresentation=value.shots.isEmpty ? nil:value;return nil}
+    if command == "delete" {value.shots.removeAll{$0.id==existing!.id};project.studioPresentation=value.shots.isEmpty && (value.scenes?.isEmpty ?? true) ? nil:value;return nil}
     var shot:StudioShot
     if let existing {shot=existing} else {
       guard value.shots.count<64 else{throw FormError.invalid("A project supports at most 64 Studio shots.")}

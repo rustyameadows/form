@@ -37,7 +37,7 @@ build/LAB.app/Contents/MacOS/lab-mcp --call form_add_object '{"recipe_id":"lamp"
 
 `form_set_view` accepts `form`, `function`, and `fabricate` for primary environments, and `studio` for the separate presentation environment. Switching these retains the same project, selection and camera. `form_status` reports `environment`, the three `primary_environments`, `studio_access`, and the existing `design_surfaces` state. `table`, `canvas`, `split`, `canvas_window`, and `artwork` remain surface commands; camera presets and saved Studio shot operations keep their existing behavior.
 
-Paper commands and physical arguments are illustrated in the [constructed-paper guide](constructed-paper-goods.md). `form_status.paper_workspace` reports representation, side, selected panel/fold, quantity and sheet dimensions. Current discovery exposes **63 tools**.
+Paper commands and physical arguments are illustrated in the [constructed-paper guide](constructed-paper-goods.md). `form_status.paper_workspace` reports representation, side, selected panel/fold, quantity and sheet dimensions. Current discovery exposes **64 tools**.
 
 ## Tools
 
@@ -67,7 +67,8 @@ Paper commands and physical arguments are illustrated in the [constructed-paper 
 | `form_cloth` | Configure real cloth, bounded runtime controls, actual mesh snapshots and material-point attachments; open surfaces are rejected for slicing |
 | `form_add_note` | Design decisions and open questions |
 | `form_set_view` | Camera presets, focus, isolation, and workspace modes |
-| `form_export` | PNG, PDF, SVG, and component/material JSON |
+| `form_studio_scene` | Saved composition scenes with independent product instances, camera, light and motion |
+| `form_export` | PNG, scene MP4, PDF, SVG, and component/material JSON |
 | `form_batch`, `form_undo`, `form_redo` | Atomic multi-object work and reversible edits |
 | `form_open_print`, `form_get_print_setup`, `form_set_print_options` | Open the native bed workspace, inspect and save component/filament/slice settings |
 | `form_slice`, `form_get_slice_status`, `form_cancel_slice` | Run and inspect local Orca jobs; no printer transmission |
@@ -174,3 +175,5 @@ Schema-28 digitizing adds optional `process:{threadDiameter,tieIn,tieOff,tieLeng
 
 
 `form_production_job kind:collection` adds list/preflight/save_plan/remove_plan/create/get/remove/export for explicit run quantities, attached-component BOMs, declared currency/stock assumptions and immutable technical packets. `form_textile_stock` adds save_supply/remove_supply; library edits do not rewrite projects. No new tool, equipment operation, stock deduction or currency conversion. Complete plan saves are atomic; service calls reject inside object batches before input handoff. [Collection schemas, arithmetic and archive scope](collection-production.md).
+
+`form_studio_scene` adds revision-checked `list/get/create/save/duplicate/delete` operations. `form_export format:"png"|"mp4", scene_id:"UUID"` writes a new `.render` or `.motion` folder with actual media and a source/resource record. Scene instances retain independent placement and refer to original design sources. See [composition workflow, limits and argument shape](environment-workflows.md#mcp).

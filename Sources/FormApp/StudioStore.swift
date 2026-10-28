@@ -51,6 +51,7 @@ enum TableTool: String, CaseIterable {
   @Published var fabricationReview: FabricationReview?
   @Published var surfaceLayout: DesignSurfaceLayout = .single
   @Published var paperRepresentation: PaperRepresentation = .panels
+  @Published var functionRepresentation="Assembly"
   @Published var paperInside = false
   @Published var paperSelectedPanelID: String?
   @Published var paperSelectedFoldID: String?
@@ -76,6 +77,9 @@ enum TableTool: String, CaseIterable {
   @Published var tableTool: TableTool = .orbit
   @Published var isolated: Set<UUID> = []
   lazy var studioShots = StudioShotController(store:self)
+  lazy var studioComposition = StudioCompositionController(store:self)
+  @Published var studioShowingShots=false
+  lazy var fabricationGuide = FabricationGuide(store:self)
   @Published var studioPreset = "Daylight"
   @Published var previewVersion = 0
   @Published var saving = false
@@ -223,8 +227,8 @@ enum TableTool: String, CaseIterable {
               completion(.success(try self.graphicsCall(name,args)))
               return
             }
-            if name == "form_export", (args["format"] as? String == "png" || args["shot_id"] != nil) {
-              guard let format=args["format"] as? String,["png","pdf","svg","json"].contains(format) else{throw FormError.invalid("Export requires a supported format.")}
+            if name == "form_export", (args["format"] as? String == "png" || args["shot_id"] != nil || args["scene_id"] != nil) {
+              guard let format=args["format"] as? String,["png","mp4","pdf","svg","json"].contains(format),format != "mp4" || args["scene_id"] != nil else{throw FormError.invalid("Export requires a supported format; MP4 needs a saved scene_id.")}
               if args["shot_id"] == nil {self.finishArtworkEditing();try self.engine.flush()}
               Task { @MainActor [weak self] in
                 guard let self else {completion(.failure(FormError.missing("LAB is closing.")));return}
@@ -233,7 +237,7 @@ enum TableTool: String, CaseIterable {
               }
               return
             }
-            let readOnly = (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
+            let readOnly = (name=="form_studio_scene" && ["list","get"].contains(args["command"] as? String ?? "")) || (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
               (name == "form_paper" && ["inspect", "preflight", "layout", "view", "export"].contains(args["command"] as? String ?? "inspect")) ||
               [
                 "form_status", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones",
@@ -300,7 +304,7 @@ enum TableTool: String, CaseIterable {
                 self.historyRecordsChanged(from:beforeHistory)
               } else if (name=="form_edit_artwork" && args["command"] as? String=="page_setup") || (beforeHistory.flatMap{old in self.project.map{ArtworkPageSetup.containsOnlyPageSetupChanges(old,$0)}} == true) {
                 self.metadataRecordsChanged()
-              } else if (name=="form_production_job" && args["kind"] as? String=="collection") ||
+              } else if name=="form_studio_scene" || (name=="form_production_job" && args["kind"] as? String=="collection") ||
                   (name=="form_set_view" && args["view"] as? String=="studio" && ["capture","update","rename","delete"].contains(args["studio_command"] as? String ?? "")) {
                 self.metadataRecordsChanged()
               } else {self.changed()}
@@ -504,6 +508,7 @@ enum TableTool: String, CaseIterable {
     perform("form_delete_objects", ["object_ids": selected.map { $0.id.uuidString }])
   }
   func undo() {
+    if environment == .studio,!studioShowingShots,studioComposition.undoDraft(){toast("Undone scene edit");return}
     if mode == .artwork, artworkSession.canvas?.undoText() == true {
       objectWillChange.send()
       return
@@ -514,6 +519,7 @@ enum TableTool: String, CaseIterable {
     toast("Undone")
   }
   func redo() {
+    if environment == .studio,!studioShowingShots,studioComposition.redoDraft(){toast("Redone scene edit");return}
     if mode == .artwork, artworkSession.canvas?.redoText() == true {
       objectWillChange.send()
       return

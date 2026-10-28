@@ -105,6 +105,7 @@ import ImageIO
     selectDefinition(shot)
     try runtimePreflight(project,shot)
     store.showSurface(.studio);store.synchronizeScene()
+    store.studioShowingShots=true
     store.scene?.view?.cancelPointerInteraction();store.engine.project?.camera=shot.camera
     store.scene?.camera=shot.camera;store.scene?.updateCamera()
     reviewingID=shot.id;referenceAspect=shot.referenceAspect

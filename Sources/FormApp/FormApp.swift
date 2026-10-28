@@ -39,6 +39,11 @@ import SwiftUI
       }
       CommandGroup(replacing: .saveItem) {
         Button("Save") {
+          NSApp.keyWindow?.makeFirstResponder(nil)
+          if store.environment == .studio,!store.studioShowingShots {
+            store.studioComposition.save()
+            guard store.studioComposition.error==nil else{return}
+          }
           store.save()
           store.capturePreview()
           store.toast("All changes saved")
@@ -50,11 +55,11 @@ import SwiftUI
       CommandGroup(replacing: .undoRedo) {
         Button("Undo") { store.undo() }.keyboardShortcut("z").disabled(
           store.artworkSession.editingText
-            ? store.artworkSession.canvas?.canUndoText != true : store.engine.undoStack.isEmpty)
+            ? store.artworkSession.canvas?.canUndoText != true : store.engine.undoStack.isEmpty && !(store.environment == .studio && !store.studioShowingShots && store.studioComposition.canUndoDraft))
         Button("Redo") { store.redo() }.keyboardShortcut("z", modifiers: [.command, .shift])
           .disabled(
             store.artworkSession.editingText
-              ? store.artworkSession.canvas?.canRedoText != true : store.engine.redoStack.isEmpty)
+              ? store.artworkSession.canvas?.canRedoText != true : store.engine.redoStack.isEmpty && !(store.environment == .studio && !store.studioShowingShots && store.studioComposition.canRedoDraft))
       }
       CommandGroup(replacing: .printItem) {
         Button("Print…") { store.prepareSelectedPrint() }.keyboardShortcut("p").disabled(

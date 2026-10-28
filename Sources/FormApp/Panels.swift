@@ -4,6 +4,7 @@ import SwiftUI
 
 struct ObjectInspector: View {
   static let width: CGFloat = 286
+  var embedded=false
   @EnvironmentObject var store: StudioStore
   @State private var showPlacement = false
   var body: some View {
@@ -188,11 +189,10 @@ struct ObjectInspector: View {
           Image(systemName: "arrow.up.right").font(.system(size: 10)).foregroundStyle(
             Palette.secondary)
         }.padding(.horizontal, 18).padding(.vertical, 14)
-      }.frame(width: Self.width).frame(maxHeight: 590)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16)).overlay(
-          RoundedRectangle(cornerRadius: 16).strokeBorder(.white.opacity(0.9))
-        )
-        .shadow(color: .black.opacity(0.08), radius: 24, x: 0, y: 9)
+      }.frame(width: embedded ? nil:Self.width).frame(maxHeight:embedded ? .infinity:590,alignment:.top)
+        .background {if embedded {Palette.paper}else{RoundedRectangle(cornerRadius:16).fill(.regularMaterial)}}
+        .overlay {if !embedded {RoundedRectangle(cornerRadius:16).strokeBorder(.white.opacity(0.9))}}
+        .shadow(color: .black.opacity(embedded ? 0:0.08), radius: 24, x: 0, y: 9)
     }
   }
 }

@@ -19,12 +19,20 @@ enum ProjectEnvironment: String, CaseIterable, Identifiable {
 }
 
 extension StudioStore {
+  /// Technical/production tasks address one explicit component, even when its
+  /// visual arrangement belongs to a Form selection group.
+  func selectWorkingObject(_ id:UUID?) {
+    finishArtworkEditing()
+    guard let id,project?.objects.contains(where:{$0.id==id && !$0.isCanvasWorkspace})==true else{engine.selection=[];changed(save:false);return}
+    engine.selection=[id];changed(save:false)
+  }
   func showEnvironment(_ next: ProjectEnvironment) {
     guard project != nil else { return }
     showingHome = false
     guard next != environment else { return }
     finishArtworkEditing()
     if next == .studio {
+      studioShowingShots=false
       studioReturnSurface = (mode, surfaceLayout)
       closeDetachedCanvas()
       surfaceLayout = .single
@@ -147,7 +155,7 @@ struct EnvironmentContextPanel: View {
           .font(.system(size: 10, weight: .semibold)).tracking(1.5)
         Text(store.environment == .function ? "Dimensions, construction & relationships" : "Prepare the same source for making")
           .font(.system(size: 11)).foregroundStyle(Palette.secondary)
-        Picker("Object", selection: Binding<UUID?>(get: { store.primary?.id }, set: { store.select($0) })) {
+        Picker("Object", selection: Binding<UUID?>(get: { store.primary?.id }, set: { store.selectWorkingObject($0) })) {
           Text("Choose an object").tag(UUID?.none)
           ForEach(objects) { Text($0.name).tag(Optional($0.id)) }
         }.font(.system(size: 11)).accessibilityLabel("Environment object")
@@ -162,7 +170,7 @@ struct EnvironmentContextPanel: View {
           if let source = object.artworkSourceID, let name = store.project?.objects.first(where: { $0.id == source })?.name {
             Label("Artwork source · " + name, systemImage: "link").font(.system(size: 10)).foregroundStyle(Palette.secondary).padding(14)
           }
-          ObjectInspector().id(object.id).frame(maxWidth: .infinity)
+          ObjectInspector(embedded:true).id(object.id).frame(maxWidth: .infinity,maxHeight:.infinity,alignment:.top)
         } else {
           Text("Choose a component to inspect its dimensions, parameters, placement and existing construction controls.")
             .font(.system(size: 12)).foregroundStyle(Palette.secondary).padding(18)
@@ -188,7 +196,7 @@ struct EnvironmentContextPanel: View {
           }.padding(16)
         }
       }
-    }.frame(width: 310).background(Palette.paper)
+    }.frame(width: 310).frame(maxHeight:.infinity,alignment:.top).background(Palette.paper)
       .accessibilityElement(children: .contain).accessibilityLabel(store.environment.title + " controls")
   }
 }
