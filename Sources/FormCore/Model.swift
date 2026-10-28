@@ -304,7 +304,7 @@ public struct Recipe: Codable, Equatable, Identifiable, Sendable {
       }
     }
     let all = defaults.merging(values) { _, new in new }
-    if let solid {_ = try solid.evaluate(all)}
+    if let solid {try solid.validateDefinitions(all)}
     for parameter in parameters where ["sheets", "pages"].contains(parameter.unit) {
       guard all[parameter.id]!.rounded() == all[parameter.id]! else {
         throw FormError.invalid("\(parameter.name) must be a whole number.")
@@ -425,6 +425,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if recipes.contains(where:{$0.solid?.previewNodes != nil}) {return max(schemaVersion,57)}
     if recipes.contains(where:{$0.solid?.hasAnalyticSweeps==true}) {return max(schemaVersion,56)}
     if recipes.contains(where:{$0.solid != nil}) {return max(schemaVersion,55)}
     if studioPresentation?.scenes?.isEmpty == false {return max(schemaVersion,54)}

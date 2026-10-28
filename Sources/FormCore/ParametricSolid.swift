@@ -51,14 +51,38 @@ public struct ParametricSolid:Codable,Equatable,Sendable {
   public var normalizeHeight:String?
   public var fillVoids:Bool?
   public var nodes:[SolidNode]
-  public init(spacing:String="0.32",floorY:String?=nil,normalizeHeight:String?=nil,fillVoids:Bool?=nil,nodes:[SolidNode]){self.spacing=spacing;self.floorY=floorY;self.normalizeHeight=normalizeHeight;self.fillVoids=fillVoids;self.nodes=nodes}
-  public func evaluate(_ parameters:[String:Double])throws->EvaluatedSolid {
+  /// Optional project-authored geometry for responsive native editing. Exports
+  /// and final evaluation continue to use `nodes` unless explicitly requested.
+  public var previewNodes:[SolidNode]?
+  public init(spacing:String="0.32",floorY:String?=nil,normalizeHeight:String?=nil,fillVoids:Bool?=nil,nodes:[SolidNode],previewNodes:[SolidNode]?=nil){self.spacing=spacing;self.floorY=floorY;self.normalizeHeight=normalizeHeight;self.fillVoids=fillVoids;self.nodes=nodes;self.previewNodes=previewNodes}
+  /// A standalone definition for editing, retaining physical scale and settings.
+  /// Removing the alternate nodes makes evaluation and cache identity explicit.
+  public var editingPreviewDefinition:ParametricSolid {
+    var definition=self
+    definition.nodes=previewNodes ?? nodes
+    definition.previewNodes=nil
+    return definition
+  }
+  /// Validate both retained representations when accepting project source. An
+  /// ordinary evaluation only visits its selected representation once.
+  public func validateDefinitions(_ parameters:[String:Double])throws {
+    _ = try evaluate(parameters)
+    if previewNodes != nil {_ = try evaluate(parameters,useEditingPreview:true)}
+  }
+  public func evaluate(_ parameters:[String:Double],useEditingPreview:Bool=false)throws->EvaluatedSolid {
+    try Task.checkCancellation()
+    let selectedNodes=useEditingPreview ? (previewNodes ?? nodes) : nodes
     func expression(_ s:String,_ vars:[String:Double])throws->Double {try Expression.evaluate(s,variables:vars)}
     func identifier(_ s:String)->Bool {s != "pi" && s.range(of:"^[a-zA-Z][a-zA-Z0-9_]{0,47}$",options:.regularExpression) != nil}
     let spacing=try expression(spacing,parameters),floorY=try floorY.map{try expression($0,parameters)},height=try normalizeHeight.map{try expression($0,parameters)}
     guard (0.15...2).contains(spacing),floorY.map({abs($0)<=1000}) ?? true,height.map({(1...1000).contains($0)}) ?? true else{throw FormError.invalid("Solid spacing must be 0.15–2 mm; optional floor within ±1000 mm and normalized height 1–1000 mm.")}
-    var result:[(kind:String,values:[String:Double])]=[],sweeps:[EvaluatedSolidSweep]=[],visits=0,estimatedTriangles=0
+    var result:[(kind:String,values:[String:Double])]=[],sweeps:[EvaluatedSolidSweep]=[],visits=0,estimatedTriangles=0,workUnits=0
+    func cancellationCheckpoint()throws {
+      workUnits+=1
+      if workUnits & 127 == 0 {try Task.checkCancellation()}
+    }
     func visit(_ node:SolidNode,_ input:[String:Double],_ depth:Int)throws {
+      try cancellationCheckpoint()
       visits+=1;guard visits<=30_000,depth<=12 else{throw FormError.invalid("Solid construction exceeds its node/depth budget.")}
       let count=try expression(node.count ?? "1",input)
       guard count>=0,count<=1000,count.rounded()==count else{throw FormError.invalid("Solid repetition requires a whole count from 0 to 1000.")}
@@ -66,6 +90,7 @@ public struct ParametricSolid:Codable,Equatable,Sendable {
       else if node.index != nil {throw FormError.invalid("A solid index requires an explicit repeat count.")}
       guard (node.bindings?.count ?? 0)<=32 else{throw FormError.invalid("Use at most 32 local bindings per node.")}
       for i in 0..<Int(count) {
+        try cancellationCheckpoint()
         var vars=input;if let index=node.index {vars[index]=Double(i)}
         for binding in node.bindings ?? [] {
           guard identifier(binding.name),vars[binding.name]==nil else{throw FormError.invalid("Solid binding names must be unique within their scope.")}
@@ -86,6 +111,7 @@ public struct ParametricSolid:Codable,Equatable,Sendable {
           guard required.isSubset(of:Set(path.values.keys)),Set(path.values.keys).isSubset(of:allowed) else{throw FormError.invalid("Sweep section expressions require x/y/z/radiusX/radiusY and optional roll.")}
           var sections:[[String:Double]]=[]
           for sample in 0..<Int(samples) {
+            try cancellationCheckpoint()
             var local=vars;local[path.variable]=Double(sample)/Double(Int(samples)-1)
             for binding in path.bindings ?? [] {
               guard identifier(binding.name),local[binding.name]==nil else{throw FormError.invalid("Sweep bindings must be unique in their curve scope.")}
@@ -120,10 +146,11 @@ public struct ParametricSolid:Codable,Equatable,Sendable {
         }
       }
     }
-    guard !nodes.isEmpty,nodes.count<=256 else{throw FormError.invalid("Use 1–256 root solid nodes.")}
-    for node in nodes {try visit(node,parameters,0)}
+    guard !selectedNodes.isEmpty,selectedNodes.count<=256 else{throw FormError.invalid("Use 1–256 root solid nodes.")}
+    for node in selectedNodes {try visit(node,parameters,0)}
     guard !result.isEmpty || !sweeps.isEmpty else{throw FormError.invalid("A solid must produce at least one primitive or sweep.")}
     if !sweeps.isEmpty,floorY != nil {throw FormError.invalid("Planar floor trimming applies to sampled solids only; author capped analytic sweeps above the desired plane.")}
+    try Task.checkCancellation()
     return .init(primitives:result,sweeps:sweeps,spacing:spacing,floorY:floorY,normalizeHeight:height,fillVoids:fillVoids ?? false)
   }
   public var hasAnalyticSweeps:Bool {
