@@ -2,6 +2,8 @@
 
 October 28, 2026. Branch: `codex/project-solid-modeling`. PR base: `main`.
 
+Draft [PR #7](https://github.com/rustyameadows/form/pull/7) contains the committed application work. All 1,188 tests pass. LAB 0.5.4 (build 9) packages successfully and passes deep/strict signature verification. The verified bundle is at `.local/solid-upgrade/LAB.app`; it has not been launched or installed over the running app. The single ordinary app remains open at the user's completed local slice preview.
+
 ## Committed application work
 
 - Generic project-owned constructive recipes, scoped expressions, repeated groups, sampled unions and analytic profiled sweeps. User models are project data; no project-specific generator is in application code.
@@ -27,5 +29,7 @@ The 24 distinct generated growth configurations and contact sheet were not compl
 ## Handoff assets and boundaries
 
 Private authoring definitions, actual renders, source comparisons, research metadata, performance/resource audits and recording parts are retained locally and in the user project where already saved. They are excluded from Git. Session recordings include actual delays and failures; they are not evidence of a responsive configurator. Existing project data and the user's last parameter choices must be preserved.
+
+The project's `Handoff/README.md` indexes copied authoring sources, 20 actual render-round folders and the reference research. `Exports/LAB-recorded-session-through-handoff.mov` joins all five available recording parts at their original speed: 2:29:58, 3420 × 1644, no audio. Recording interruptions remain documented; the join does not reconstruct uncaptured intervals.
 
 The full remaining checklist is in [generic-solid-modeling-work.md](generic-solid-modeling-work.md). Historical engineering results are in [validation.md](validation.md); passing tests do not complete the model or interaction requirements. No completion claim is made for the paused modeling goal.

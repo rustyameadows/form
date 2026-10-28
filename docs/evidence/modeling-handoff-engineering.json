@@ -61,5 +61,12 @@
     "scope": "Available actual LAB-window footage, including stalls/failures; capture interruptions documented. Not smooth configurator acceptance."
   },
   "printer_commands_sent": false,
-  "release_packaging": "pending final check"
+  "release_packaging": {
+    "status": "built; deep strict signature verification passed",
+    "version": "0.5.4",
+    "binary_sha256": "b549243acf97ba15a6e5cc8950fbc4a84aae4481f1a6ce5583b1abaff1e9363a",
+    "installed": false,
+    "reason": "The running ordinary LAB 0.5.3 is left at the user\u2019s completed local slice preview; no restart or second app instance.",
+    "build": "9"
+  }
 }
