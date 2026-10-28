@@ -425,6 +425,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if recipes.contains(where:{$0.solid?.hasAnalyticSweeps==true}) {return max(schemaVersion,56)}
     if recipes.contains(where:{$0.solid != nil}) {return max(schemaVersion,55)}
     if studioPresentation?.scenes?.isEmpty == false {return max(schemaVersion,54)}
     if objects.contains(where:PaperConstruction.isPaper){return max(schemaVersion,53)}

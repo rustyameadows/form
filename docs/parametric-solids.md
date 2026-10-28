@@ -1,6 +1,6 @@
 # Project-defined parametric solids
 
-LAB supports two complementary modeling sources: exact CAD feature graphs for engineering geometry, and project-defined implicit solids for rounded or organic forms. A solid recipe is editable project data. Application code handles generic operations and never dispatches on the recipe's name or ID.
+LAB supports exact CAD feature graphs for engineering geometry and project-defined constructions combining sampled solids with analytic profiled sweeps. A solid recipe is editable project data. Application code handles generic operations and never dispatches on the recipe's name or ID.
 
 `form_create_recipe` accepts ordinary `parts`, or `parts: []` with a `solid` definition. An explicit `replace: true` revises a project-owned recipe as one Undo operation. Existing matching object parameters are retained and validated. Built-in recipes cannot be replaced. `form_add_object` instantiates the definition; native inspector sliders and `form_update_object` use the same controls and validation.
 
@@ -45,10 +45,39 @@ For example, a reusable radial connector can be described with a repeated group.
 }
 ```
 
-Table, Studio and print preparation consume the same indexed surface. Primitives are fused volumetrically; they are not exported as intersecting display shells. The mesher uses consistent shared edge identities, outward winding and an optional flat sole. Sign-preserving distance conditioning and topology-checked short-edge collapse remove numerical slivers and reduce upload cost without reversing faces. Geometry and render caches count actual buffers toward their memory budgets. Separate GPU chunks retain shared source normals and respect existing payload limits.
+Table, Studio and print preparation consume the same indexed surface. Sampled segment/ellipsoid primitives are fused volumetrically. The mesher uses consistent shared edge identities, outward winding and an optional flat sole. Sign-preserving distance conditioning and topology-checked short-edge collapse remove numerical slivers and reduce upload cost without reversing faces. Geometry and render caches count actual buffers toward their memory budgets. Separate GPU chunks retain shared source normals and respect existing payload limits.
+
+## Analytic profiled sweeps
+
+Schema 56 adds `kind: "sweep"` nodes. These directly tessellate a curved, varying closed profile, retaining smooth faces or crisp profile creases independently of voxel pitch. Their `sweep` payload contains:
+
+- `samples`: expression for 2–128 path samples; `variable`: a unique local coordinate running from 0 to 1.
+- `bindings`: optional ordered local bindings evaluated at each path coordinate.
+- `values`: expression strings for `x`, `y`, `z`, `radiusX`, `radiusY`, and optional `roll` in radians.
+- `sides`: 3–64 ellipse sides, default 16; or `profile`: 3–64 simple closed polygon points `[[x,y],...]` within ±10. Omit a repeated final endpoint and collinear corners.
+- `initialNormal`: optional three expression strings setting the first profile X axis. It must be nonzero and not parallel to the first path segment.
+- `smoothProfile`: default true. False retains each profile edge's crease. End caps retain separate normals in either mode.
+
+The curve uses stable parallel transport. Section radii remain positive, 0.005–500 mm, including deliberate finite capped tips. Coordinates remain within ±1000 mm. Repeated nodes can instance the same authored curve with local bindings. Aggregate analytic output is limited to 1.8 million triangles, and the combined surface to two million triangles/four million indexed vertices. `floorY` is unavailable in analytic assemblies; author capped geometry above the intended sole instead.
+
+For example, a gently curved, tapered formed strip:
+
+```json
+{
+  "kind": "sweep",
+  "sweep": {
+    "samples": "24", "variable": "u",
+    "values": {"x":"3*sin(u*pi/2)","y":"length*u","z":"0","radiusX":"mix(5,0.2,u)","radiusY":"0.6"},
+    "profile": [[-1,-0.5],[-0.8,-1],[0.8,-1],[1,-0.5],[1,0.5],[0.8,1],[-0.8,1],[-1,0.5]],
+    "initialNormal": ["1","0","0"], "smoothProfile": false
+  }
+}
+```
+
+Analytic surfaces assemble without Boolean union. Intersecting closed shells are not automatically one valid fabrication solid. Inspection reports `representation`, `analytic_sweeps`, geometrically welded component count and an explicit qualification. Topology checks do not test all self-intersections. Preserve the detailed assembly and evaluate a separate union/manufacturing representation when needed; never silently replace the authored master with a coarse sampled surface.
 
 Use `form_solid` with `command: "inspect"` and an `object_id` to read actual bounds, triangle/vertex counts, connectivity, closed/oriented topology, volume and elapsed time. `export_stl` adds an unused absolute `.stl` path and exports the inspected millimeter surface in Z-up fabrication coordinates. It does not contact a printer. Existing destinations are preserved.
 
 Limits are explicit: 24 recipe parameters, 512 KB solid source through MCP, 256 roots or children per group, depth 12, 32 local bindings per node, repeat count 0–1000, 12,000 expanded primitives, coordinates within ±1000 mm, radii 0.1–500 mm, blend 0–3 mm, 80 million field samples and two million output triangles. Out-of-budget construction fails with an error. Small features require a sufficiently fine sampling interval.
 
-These are sampled design solids, not exact BRep geometry. Topology inspection does not certify print strength, resolve process-specific support requirements, or establish safe consumer-toy use. Exact feature models remain the appropriate source for toleranced engineering interfaces. Schema 55 preserves solid definitions; older project schemas remain unchanged until they use a new capability.
+These constructions are not exact BRep geometry. Topology inspection does not certify print strength, resolve process-specific support requirements, or establish safe consumer-toy use. Exact feature models remain the appropriate source for toleranced engineering interfaces. Schema 55 preserves sampled definitions; schema 56 preserves analytic sweeps. Older project schemas remain unchanged until they use a new capability.

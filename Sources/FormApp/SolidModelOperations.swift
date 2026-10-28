@@ -15,9 +15,14 @@ extension StudioStore {
     let low=mesh.positions.reduce(SIMD3<Double>(repeating:.infinity),simd_min),high=mesh.positions.reduce(SIMD3<Double>(repeating: -.infinity),simd_max)
     var parent=Array(mesh.positions.indices)
     func find(_ n:Int)->Int {var i=n;while parent[i] != i{parent[i]=parent[parent[i]];i=parent[i]};return i}
+    // Analytic cap/crease vertices intentionally split their shading normals.
+    // Weld coincident positions before reporting connected geometric shells.
+    var welded:[[Int64]:Int]=[:]
+    for (i,p) in mesh.positions.enumerated() {let key=[p.x,p.y,p.z].map{Int64(($0*100_000).rounded())};if let first=welded[key]{parent[i]=first}else{welded[key]=i}}
     for i in stride(from:0,to:mesh.indices.count,by:3){let a=find(Int(mesh.indices[i]));for j in 1...2{parent[find(Int(mesh.indices[i+j]))]=a}}
     let components=Set(mesh.indices.map{find(Int($0))}).count
-    var result:[String:Any]=["object_id":id.uuidString,"primitives":evaluated.primitives.count,"vertices":mesh.positions.count,"triangles":mesh.indices.count/3,"components":components,"topology":try jsonObject(report),"minimum_mm":[low.x,low.y,low.z],"maximum_mm":[high.x,high.y,high.z],"size_mm":[high.x-low.x,high.y-low.y,high.z-low.z],"seconds":Date().timeIntervalSince(start),"qualification":"Geometric inspection only; verify process, supports and physical strength before manufacture."]
+    let qualification=evaluated.sweeps.isEmpty ? "Geometric inspection only; verify process, supports and physical strength before manufacture." : "Analytic assembled surfaces preserve authored detail. Intersecting shells are not Boolean-unioned; self-intersections and physical manufacture require separate validation."
+    var result:[String:Any]=["object_id":id.uuidString,"primitives":evaluated.primitives.count,"analytic_sweeps":evaluated.sweeps.count,"representation":evaluated.sweeps.isEmpty ? "sampled_union":"analytic_assembly","vertices":mesh.positions.count,"triangles":mesh.indices.count/3,"components":components,"topology":try jsonObject(report),"minimum_mm":[low.x,low.y,low.z],"maximum_mm":[high.x,high.y,high.z],"size_mm":[high.x-low.x,high.y-low.y,high.z-low.z],"seconds":Date().timeIntervalSince(start),"qualification":qualification]
     if command=="export_stl" {
       guard report.isClosedOrientedSurface,report.signedVolumeMM3>0 else{throw FormError.invalid("Repair the solid's topology before STL export.")}
       guard let path=args["path"] as? String,path.hasPrefix("/"),URL(fileURLWithPath:path).pathExtension.lowercased()=="stl",!FileManager.default.fileExists(atPath:path) else{throw FormError.invalid("Provide an unused absolute .stl path.")}

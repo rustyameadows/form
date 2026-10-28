@@ -51,4 +51,17 @@ import simd
     let report=try MeshTopology.inspect(.init(id:"fin",positionsMM:mesh.positions.map{.init($0.x,$0.y,$0.z)},normals:[],indices:mesh.indices),maximumTriangles:2_000_000)
     XCTAssertTrue(report.isClosedOrientedSurface,"\(report)");XCTAssertGreaterThan(report.signedVolumeMM3,30)
   }
+  func testAnalyticConstructionPreservesProfileNormalsPhysicalScaleAndExport()throws {
+    let definition=ParametricSolid(normalizeHeight:"120",nodes:[.init(kind:"sweep",sweep:.init(samples:"16",variable:"u",values:["x":"3*sin(u*pi/2)","y":"40*u","z":"0","radiusX":"mix(6,2,u)","radiusY":"1"],profile:[[-1,-0.5],[-0.8,-1],[0.8,-1],[1,-0.5],[1,0.5],[0.8,1],[-0.8,1],[-1,0.5]],initialNormal:["1","0","0"],smoothProfile:false))])
+    let recipe=Recipe("formedStrip","Formed strip","cube","",[.init("length","Length",1,0.5...2)],solid:definition)
+    var project=Project(name:"Profile construction");project.recipes=[recipe];let object=try project.makeObject(recipeID:recipe.id)
+    let mesh=try SolidRecipeGeometry.surface(definition,parameters:object.parameters)
+    XCTAssertEqual(mesh.normals.count,mesh.positions.count)
+    XCTAssertTrue(mesh.normals.allSatisfy{abs(simd_length($0)-1)<1e-9})
+    XCTAssertEqual(mesh.positions.map(\.y).max()!-mesh.positions.map(\.y).min()!,120,accuracy:1e-9)
+    let report=try MeshTopology.inspect(.init(id:"formed",positionsMM:mesh.positions.map{.init($0.x,$0.y,$0.z)},normals:[],indices:mesh.indices),maximumTriangles:2_000_000)
+    XCTAssertTrue(report.isClosedOrientedSurface,"\(report)");XCTAssertGreaterThan(report.signedVolumeMM3,0)
+    let print=try PrintMeshBuilder.mesh(object:object,project:project,assets:FileManager.default.temporaryDirectory,configuration:.init())
+    XCTAssertEqual(print.triangles.count,mesh.indices.count/3);XCTAssertEqual(print.size.z,120,accuracy:1e-8)
+  }
 }
