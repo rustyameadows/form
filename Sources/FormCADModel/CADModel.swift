@@ -59,11 +59,11 @@ public struct CADSourceReference: Codable, Equatable, Sendable {
   public init(path:String,sha256:String,partPath:String?=nil){self.path=path;self.sha256=sha256;self.partPath=partPath}
 }
 public enum CADFeatureKind:String,Codable,CaseIterable,Sendable {
-  case hole,slot,pocket,boss,offsetProfile,copy,join,box,cylinder,cone,sphere,torus,profile,circleProfile,curveProfile,extrude,extrudeCut,revolve,revolveCut,union,subtract,intersect,fillet,chamfer,shell,sweep,loft,transform,linearPattern,circularPattern,mirror,assembly,importedBRep,importedSTEP
+  case hole,slot,pocket,boss,offsetProfile,copy,join,box,cylinder,cone,sphere,torus,profile,circleProfile,curveProfile,extrude,extrudeCut,revolve,revolveCut,union,subtract,intersect,fillet,chamfer,shell,refine,sweep,loft,transform,linearPattern,circularPattern,mirror,assembly,importedBRep,importedSTEP
   public var inputRange:ClosedRange<Int>{switch self{case .box,.cylinder,.cone,.sphere,.torus,.profile,.circleProfile,.curveProfile,.importedBRep,.importedSTEP:return 0...0;case .union,.subtract,.intersect,.extrudeCut,.revolveCut,.pocket,.boss,.join:return 2...2;case .loft:return 2...64;case .assembly:return 1...1024;default:return 1...1}}
   public var scalarKeys:Set<String>{switch self{case .hole:return ["radius","depth"];case .slot:return ["length","width","depth"];case .pocket,.boss,.offsetProfile:return ["distance"];case .box:return ["width","height","depth"];case .cylinder:return ["radius","height"];case .cone:return ["bottomRadius","topRadius","height"];case .sphere,.circleProfile:return ["radius"];case .torus:return ["majorRadius","minorRadius"];case .extrude,.extrudeCut:return ["distance"];case .revolve,.revolveCut:return ["angleDegrees"];case .fillet:return ["radius"];case .chamfer:return ["distance"];case .shell:return ["thickness"];case .linearPattern:return ["count"];case .circularPattern:return ["count","angleStepDegrees"];default:return []}}
   public var requiredScalarKeys:Set<String>{switch self{case .revolve,.revolveCut:return [];default:return scalarKeys}}
-  public var canSuppressToFirstInput:Bool{[.hole,.slot,.pocket,.boss,.offsetProfile,.copy,.fillet,.chamfer,.shell,.transform,.linearPattern,.circularPattern,.mirror,.extrudeCut,.revolveCut].contains(self)}
+  public var canSuppressToFirstInput:Bool{[.hole,.slot,.pocket,.boss,.offsetProfile,.copy,.fillet,.chamfer,.shell,.refine,.transform,.linearPattern,.circularPattern,.mirror,.extrudeCut,.revolveCut].contains(self)}
 }
 public struct CADFeatureOperation: Codable, Equatable, Sendable {
   public var kind:CADFeatureKind
@@ -96,19 +96,48 @@ public struct CADModelParameter: Codable, Equatable, Sendable {
   public init(_ name:String,_ value:Double,_ range:ClosedRange<Double>,unit:String="mm"){self.name=name;self.value=value;minimum=range.lowerBound;maximum=range.upperBound;self.unit=unit}
 }
 public struct CADModelDefinition: Codable, Equatable, Identifiable, Sendable {
-  public var id:UUID,version:Int,revision:Int,name:String,parameters:[CADModelParameter],features:[CADFeatureNode],outputs:[UUID]
-  public var assumptions:[String],unresolvedMeasurements:[String]
-  public var importedAssemblies:[CADImportedAssembly]?
-  public var requirements:[CADModelRequirement]?
-  public var outputRequirements:[CADOutputRequirement]?
-  public var surfaces:[CADPlanarSurface]?
+  private var sourceMemo = CADModelSourceMemo()
+  // Invalidate on every write, including nested Array/Dictionary writeback.
+  // Equality alone is insufficient for canonical bytes (signed zero and
+  // canonically equivalent Unicode strings can compare equal).
+  public var id:UUID {didSet{sourceMemo=CADModelSourceMemo()}}
+  public var version:Int {didSet{sourceMemo=CADModelSourceMemo()}}
+  public var revision:Int {didSet{sourceMemo=CADModelSourceMemo()}}
+  public var name:String {didSet{sourceMemo=CADModelSourceMemo()}}
+  public var parameters:[CADModelParameter] {didSet{sourceMemo=CADModelSourceMemo()}}
+  public var features:[CADFeatureNode] {didSet{sourceMemo=CADModelSourceMemo()}}
+  public var outputs:[UUID] {didSet{sourceMemo=CADModelSourceMemo()}}
+  public var assumptions:[String] {didSet{sourceMemo=CADModelSourceMemo()}}
+  public var unresolvedMeasurements:[String] {didSet{sourceMemo=CADModelSourceMemo()}}
+  public var importedAssemblies:[CADImportedAssembly]? {didSet{sourceMemo=CADModelSourceMemo()}}
+  public var requirements:[CADModelRequirement]? {didSet{sourceMemo=CADModelSourceMemo()}}
+  public var outputRequirements:[CADOutputRequirement]? {didSet{sourceMemo=CADModelSourceMemo()}}
+  public var surfaces:[CADPlanarSurface]? {didSet{sourceMemo=CADModelSourceMemo()}}
   public init(id:UUID=UUID(),version:Int=1,revision:Int=0,name:String,parameters:[CADModelParameter]=[],features:[CADFeatureNode],outputs:[UUID],assumptions:[String]=[],unresolvedMeasurements:[String]=[],importedAssemblies:[CADImportedAssembly]?=nil,requirements:[CADModelRequirement]=[],outputRequirements:[CADOutputRequirement]=[],surfaces:[CADPlanarSurface]=[]){self.id=id;self.version=version==1 && (!requirements.isEmpty || !outputRequirements.isEmpty || !surfaces.isEmpty) ? 2:version;self.revision=revision;self.name=name;self.parameters=parameters;self.features=features;self.outputs=outputs;self.assumptions=assumptions;self.unresolvedMeasurements=unresolvedMeasurements;self.importedAssemblies=importedAssemblies;self.requirements=requirements.isEmpty ? nil:requirements;self.outputRequirements=outputRequirements.isEmpty ? nil:outputRequirements;self.surfaces=surfaces.isEmpty ? nil:surfaces}
   enum CodingKeys:String,CodingKey{case id,version,revision,name,parameters,features,outputs,assumptions,unresolvedMeasurements,importedAssemblies,requirements,outputRequirements,surfaces}
   public init(from decoder:Decoder)throws{let c=try decoder.container(keyedBy:CodingKeys.self);id=try c.decode(UUID.self,forKey:.id);version=try c.decode(Int.self,forKey:.version);revision=try c.decodeIfPresent(Int.self,forKey:.revision) ?? 0;name=try c.decode(String.self,forKey:.name);parameters=try c.decodeIfPresent([CADModelParameter].self,forKey:.parameters) ?? [];features=try c.decode([CADFeatureNode].self,forKey:.features);outputs=try c.decode([UUID].self,forKey:.outputs);assumptions=try c.decodeIfPresent([String].self,forKey:.assumptions) ?? [];unresolvedMeasurements=try c.decodeIfPresent([String].self,forKey:.unresolvedMeasurements) ?? [];importedAssemblies=try c.decodeIfPresent([CADImportedAssembly].self,forKey:.importedAssemblies);requirements=try c.decodeIfPresent([CADModelRequirement].self,forKey:.requirements);outputRequirements=try c.decodeIfPresent([CADOutputRequirement].self,forKey:.outputRequirements);surfaces=try c.decodeIfPresent([CADPlanarSurface].self,forKey:.surfaces)}
   public var parameterValues:[String:Double]{Dictionary(parameters.map{($0.name,$0.value)},uniquingKeysWith:{$1})}
+  public static func ==(lhs:Self,rhs:Self)->Bool {
+    lhs.id==rhs.id && lhs.version==rhs.version && lhs.revision==rhs.revision && lhs.name==rhs.name
+      && lhs.parameters==rhs.parameters && lhs.features==rhs.features && lhs.outputs==rhs.outputs
+      && lhs.assumptions==rhs.assumptions && lhs.unresolvedMeasurements==rhs.unresolvedMeasurements
+      && lhs.importedAssemblies==rhs.importedAssemblies && lhs.requirements==rhs.requirements
+      && lhs.outputRequirements==rhs.outputRequirements && lhs.surfaces==rhs.surfaces
+  }
+  /// The existing canonical JSON fingerprint, reused only by unchanged values.
+  /// Resource and representation verification still run independently.
+  public func sourceFingerprint()throws->String {
+    try sourceMemo.hash {
+      let encoder=JSONEncoder();encoder.outputFormatting=[.sortedKeys,.withoutEscapingSlashes]
+      return try encoder.encode(self)
+    }
+  }
   public mutating func setParameter(_ name:String,value:Double)throws{guard let i=parameters.firstIndex(where:{$0.name==name}),value.isFinite,value>=parameters[i].minimum,value<=parameters[i].maximum else{throw CADModelError("Unknown or out-of-range CAD parameter '\(name)'.")};if parameters[i].value != value{parameters[i].value=value;revision+=1}}
   /// Validates stable references, expression syntax, bounds and dependency order.
   public func validatedOrder(checkRequirements:Bool=true)throws->[CADFeatureNode]{
+    try sourceMemo.order(checkRequirements:checkRequirements){try uncachedValidatedOrder(checkRequirements:checkRequirements)}
+  }
+  private func uncachedValidatedOrder(checkRequirements:Bool)throws->[CADFeatureNode]{
     guard (version==1 || version==2),revision>=0,revision<=1_000_000_000,!name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty,name.utf8.count<=256,parameters.count<=128,features.count>0,features.count<=256,outputs.count>0,outputs.count<=256 else{throw CADModelError("Unsupported CAD model version or bounded graph size.")}
     guard assumptions.count<=128,unresolvedMeasurements.count<=128,(assumptions+unresolvedMeasurements).allSatisfy({$0.utf8.count<=2048}) else{throw CADModelError("Keep model assumptions and unresolved measurements bounded.")}
     try validateImportedAssemblies()

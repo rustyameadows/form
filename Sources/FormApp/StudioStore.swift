@@ -88,6 +88,7 @@ enum TableTool: String, CaseIterable {
   lazy var printing = PrintCoordinator(store: self)
   lazy var modelAssets=ModelAssetCoordinator(store:self)
   lazy var cad=CADModelCoordinator(store:self)
+  let constructionValidation=ConstructionValidationCoordinator()
   @Published var showingDocumentFonts=false
   var fontLibraryPreferences=FontLibraryPreferences.environment()
   lazy var cloth = ClothCoordinator(store:self)
@@ -227,6 +228,18 @@ enum TableTool: String, CaseIterable {
               completion(.success(try self.graphicsCall(name,args)))
               return
             }
+            if name == "form_construction",args["command"] as? String == "validate_cases" {
+              guard let project=self.engine.project else{throw FormError.missing("Open a project before validating a construction.")}
+              let request=try ConstructionCommands.validationRequest(project:project,arguments:args)
+              if request.requiresExactSolids {
+                Task { @MainActor [weak self] in
+                  guard let self else{completion(.failure(FormError.missing("LAB is closing.")));return}
+                  do{completion(.success(try await self.constructionValidationCallAsync(request)))}
+                  catch{completion(.failure(error))}
+                }
+                return
+              }
+            }
             if name == "form_export", (args["format"] as? String == "png" || args["shot_id"] != nil || args["scene_id"] != nil) {
               guard let format=args["format"] as? String,["png","mp4","pdf","svg","json"].contains(format),format != "mp4" || args["scene_id"] != nil else{throw FormError.invalid("Export requires a supported format; MP4 needs a saved scene_id.")}
               if args["shot_id"] == nil {self.finishArtworkEditing();try self.engine.flush()}
@@ -351,6 +364,7 @@ enum TableTool: String, CaseIterable {
     changed()
   }
   func changed(save: Bool = true) {
+    constructionValidation.projectDidChange(project)
     let ids = Set(project?.objects.map(\.id) ?? [])
     engine.selection.formIntersection(ids)
     let visible = isolated.intersection(ids)

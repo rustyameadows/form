@@ -50,14 +50,23 @@ new arbitrary four-panel source. All four outside panel colors render; the
 inside renders orange independently. Adding inside artwork leaves the outside
 artwork dictionary and outside blue mask unchanged.
 
-**Inside text orientation remains a separate review issue:** the asymmetric
-`INSIDE R` marker appears reflected when viewed from the inside in the audited
-package. Both sides currently use front-registered canonical coordinates and identical
-UVs by design. The physical inside projection/tool context is missing.
-Channel/color presence is verified; that alone does not establish upright inside
-typography. The source export and native comparison are retained
-in `.local/validation/sample-visual-audit-fixed`. This report does not mark that
-orientation check as passing.
+The first audited package exposed a separate inside-authoring defect: its raw
+front-registered `INSIDE R` marker read reflected from the physical inside.
+The subsequent generic-frame correction preserves canonical registration and
+the existing global mesh UVs, while applying the reverse physical view for
+authoring and its inverse when saving. Existing saved artwork is preserved.
+
+| Outside physical face | Inside physical face |
+| --- | --- |
+| ![Readable outside R](validation/paper-rendering/outside-readable-R.png) | ![Readable inside R](validation/paper-rendering/inside-readable-R.png) |
+
+These are actual 640×640 Metal captures from the final native regression host.
+Both faces show an upright asymmetric `R`, red upper-left, blue upper-right and
+green lower-right. Tests also check unchanged registered SVG output, reflected
+Canvas cut clipping/guides, ordinary and whole-net insertion/path editing, three
+separate Undos, and grouping repeated node movement within one explicit gesture.
+The focused run passes 104 methods in 9.097 seconds. The new packaged build is a
+separate gate; the earlier 12-overview sweep above used the renderer-fix package.
 
 ## Shipped example sweep
 

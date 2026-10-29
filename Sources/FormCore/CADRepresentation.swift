@@ -28,7 +28,7 @@ public struct CADRepresentation:Codable,Equatable,Sendable {
   public init(modelID:UUID,definitionSHA256:String,kernelVersion:String,editability:String="nativeFeatureModel",components:[CADComponentRepresentation],meshDeflectionMM:Double=0.05){self.modelID=modelID;self.definitionSHA256=definitionSHA256;self.kernelVersion=kernelVersion;self.editability=editability;self.components=components;self.meshDeflectionMM=meshDeflectionMM}
   public var minimum:Vector3 {.init(components.map(\.minimum.x).min() ?? 0,components.map(\.minimum.y).min() ?? 0,components.map(\.minimum.z).min() ?? 0)}
   public var maximum:Vector3 {.init(components.map(\.maximum.x).max() ?? 0,components.map(\.maximum.y).max() ?? 0,components.map(\.maximum.z).max() ?? 0)}
-  public static func definitionHash(_ definition:CADModelDefinition)throws->String {let e=JSONEncoder();e.outputFormatting=[.sortedKeys,.withoutEscapingSlashes];return SHA256.hash(data:try e.encode(definition)).map{String(format:"%02x",$0)}.joined()}
+  public static func definitionHash(_ definition:CADModelDefinition)throws->String {try definition.sourceFingerprint()}
   public func validate(for model:CADModelDefinition)throws {
     _=try model.validatedOrder()
     guard modelID==model.id,definitionSHA256 == (try Self.definitionHash(model)),!kernelVersion.isEmpty,kernelVersion.utf8.count<=64,["nativeFeatureModel","importedCADBody"].contains(editability),!components.isEmpty,components.count<=256,Set(components.map(\.id))==Set(model.outputs),Set(components.map(\.id)).count==components.count,meshDeflectionMM.isFinite,meshDeflectionMM>0,meshDeflectionMM<=5 else{throw FormError.invalid("Exact CAD source, outputs or revision metadata do not match the feature model.")}

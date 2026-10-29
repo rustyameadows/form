@@ -10,6 +10,7 @@ if [ -f "$lab_sdk_cpp_headers/type_traits" ]; then
   export CPLUS_INCLUDE_PATH="$lab_sdk_cpp_headers${CPLUS_INCLUDE_PATH:+:$CPLUS_INCLUDE_PATH}"
 fi
 unset lab_sdk_cpp_headers
+python3 scripts/occt-patches.py verify "${LAB_OCCT_ROOT:-$PWD/.local/engines/occt-8.0.1}"
 app_path="${LAB_BUILD_APP_PATH:-$PWD/build/LAB.app}"
 legacy_path="$PWD/build/FORM.app"
 # Never replace a live executable. Custom candidate builds leave the installed app alone.

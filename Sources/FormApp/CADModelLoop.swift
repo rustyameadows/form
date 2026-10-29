@@ -14,7 +14,7 @@ import FormCADModeling
   var elapsedMS=0.0
   init(job:CADModelReview,revision:String){jobID=job.id;self.revision=revision;token=job.token}
   var response:[String:Any] {
-    var value:[String:Any] = ["request_id":id.uuidString,"job_id":jobID.uuidString,"revision":revision,"state":state,"units":"mm","results":results,"elapsed_ms":elapsedMS]
+    var value:[String:Any] = ["request_id":id.uuidString,"job_id":jobID.uuidString,"revision":revision,"kernel_version":CADKernel.version,"state":state,"units":"mm","results":results,"elapsed_ms":elapsedMS]
     if let issue{value["error"]=issue};return value
   }
 }
@@ -91,6 +91,17 @@ extension CADModelCoordinator {
         let report=try await withTaskCancellationHandler(operation:{try await worker.value},onCancel:{worker.cancel()})
         guard !Task.isCancelled,job.token==request.token,self.matches(job) else{throw CancellationError()}
         request.results=[["kind":"validation","revision":request.revision,"state":"complete","report":try jsonObject(report)]];request.state="complete"
+      } catch let interrupted as CADParameterValidationInterrupted {
+        request.state=interrupted.reason == .cancelled ? "cancelled":"failed"
+        request.issue=interrupted.localizedDescription
+        do {
+          request.results=[["kind":"validation","revision":request.revision,"state":request.state,
+            "report":try jsonObject(interrupted.report)]]
+        } catch {
+          request.state="failed";request.issue=error.localizedDescription
+          request.results=[["kind":"validation","state":"failed",
+            "diagnostic":self.diagnostic(error,job:job,category:"validation_report")]]
+        }
       }catch{request.state=error is CancellationError ? "cancelled":"failed";request.issue=error.localizedDescription;request.results=[["kind":"validation","state":request.state,"diagnostic":self.diagnostic(error,job:job,category:"validation")]]}
       request.elapsedMS=(ProcessInfo.processInfo.systemUptime-started)*1000
     }
@@ -98,7 +109,7 @@ extension CADModelCoordinator {
   }
 
   func diagnostic(_ error:Error,job:CADModelReview,category:String="evaluation")->[String:Any] {
-    var result:[String:Any] = ["category":category,"model_id":job.definition.id.uuidString,"draft_revision":(try? CADModelEvaluator.revisionHash(job.definition)) as Any? ?? NSNull(),"message":error.localizedDescription,"parameters":job.definition.parameterValues]
+    var result:[String:Any] = ["category":category,"model_id":job.definition.id.uuidString,"kernel_version":CADKernel.version,"draft_revision":(try? CADModelEvaluator.revisionHash(job.definition)) as Any? ?? NSNull(),"message":error.localizedDescription,"parameters":job.definition.parameterValues]
     if let failure=error as? CADModelEvaluationFailure {
       result["category"]=failure.category;result["requirement_id"]=failure.requirementID as Any? ?? NSNull();result["resolved_values"]=failure.resolvedValues;result["input_ids"]=failure.inputFeatureIDs.map(\.uuidString)
       result["previous_valid_revision"]=failure.previousValidRevisionHash as Any? ?? NSNull()
@@ -211,6 +222,7 @@ extension CADModelCoordinator {
           do {
             switch kind {
             case "summary":
+              result["kernel_version"]=CADKernel.version;result["numeric_metadata"]=Self.numericMetadataProvenance(prepared.representation,saved:false)
               result["outputs"]=try prepared.evaluation.outputOrder.map{id->[String:Any] in guard let output=prepared.evaluation.outputs[id] else{throw FormError.missing("Exact output is unavailable.")};return ["output_id":id.uuidString,"info":try jsonObject(output.info)]}
               result["features"]=prepared.evaluation.features.map{["feature_id":$0.id.uuidString,"name":$0.name,"operation":$0.kind.rawValue,"fingerprint":$0.fingerprint,"from_cache":$0.fromCache] as [String:Any]}
               result["checks"]=try jsonObject(prepared.evaluation.checks)

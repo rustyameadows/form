@@ -3,6 +3,7 @@ import Foundation
 import XCTest
 import FormCore
 import FormCADModel
+import FormCADKernel
 import FormCADModeling
 import LabRendering
 import simd
@@ -383,4 +384,51 @@ import simd
     XCTAssertEqual(store.project,before);XCTAssertEqual(store.engine.undoStack.count,undoCount)
   }
 
+  func testOlderNumericMetadataRemainsReadableUntilExplicitEvaluationAndUndoableCommit()async throws {
+    let store=try fixture();defer{store.cad.reset();store.engine.project=nil}
+    let body=CADFeatureNode(name:"Box",operation:.init(.box,values:["width":20,"height":30,"depth":40]))
+    let model=CADModelDefinition(name:"Saved numeric provenance",features:[body],outputs:[body.id])
+    let initial=try store.cad.begin(model);store.cad.preview(initial);try await settled(initial)
+    XCTAssertEqual(initial.state,"ready",initial.issue ?? "")
+    try store.cad.commit(initial);try await settled(initial)
+    var legacy=try XCTUnwrap(store.project),object=try XCTUnwrap(legacy.objects.first)
+    object.cadRepresentation!.kernelVersion="8.0.1"
+    object.cadRepresentation!.components[0].volumeMM3=12345
+    legacy.objects[0]=object
+    let assets=store.repository.url(for:legacy.id).appendingPathComponent("Assets"),component=try XCTUnwrap(object.cadRepresentation?.components.first)
+    let exact=assets.appendingPathComponent(component.brepAsset),mesh=assets.appendingPathComponent(component.meshAsset)
+    let exactBytes=try Data(contentsOf:exact),meshBytes=try Data(contentsOf:mesh)
+    // Simulate an actual older saved project. Clear the current engine value
+    // before open(), whose normal flush must not replace this legacy fixture.
+    store.cad.reset();store.engine.project=nil
+    try store.repository.save(legacy);try store.engine.open(legacy.id)
+    let loaded=try XCTUnwrap(store.project),encoded=try JSONEncoder.form.encode(loaded)
+    let inspected=try XCTUnwrap(store.cad.call("form_cad",["command":"inspect","object_id":object.id.uuidString]) as? [String:Any])
+    let provenance=try XCTUnwrap(inspected["numeric_metadata"] as? [String:Any])
+    XCTAssertEqual(inspected["kernel_version"] as? String,CADKernel.version)
+    XCTAssertEqual(provenance["recorded_kernel_version"] as? String,"8.0.1")
+    XCTAssertEqual(provenance["current_kernel_version"] as? String,"8.0.1+form.gprop1")
+    XCTAssertEqual(provenance["state"] as? String,"other_kernel_build")
+    XCTAssertEqual(provenance["recomputed_on_load"] as? Bool,false)
+    XCTAssertEqual(provenance["reevaluate_to_refresh"] as? Bool,true)
+    XCTAssertEqual(store.project?.objects.first?.cadRepresentation?.components.first?.volumeMM3,12345)
+    let display=try await Task.detached{try CADSceneAdapter.load(for:object,assets:assets)}.value
+    XCTAssertEqual(display.count,1);XCTAssertGreaterThan(display[0].mesh.triangleCount,0)
+    XCTAssertEqual(try JSONEncoder.form.encode(try XCTUnwrap(store.project)),encoded)
+    XCTAssertTrue(store.engine.undoStack.isEmpty)
+    let refresh=try store.cad.begin(model,target:object.id);store.cad.preview(refresh);try await settled(refresh)
+    XCTAssertEqual(refresh.state,"ready",refresh.issue ?? "")
+    let status=store.cad.status(refresh),fresh=try XCTUnwrap(status["numeric_metadata"] as? [String:Any]),saved=try XCTUnwrap(status["saved_numeric_metadata"] as? [String:Any])
+    XCTAssertEqual(fresh["state"] as? String,"current_kernel_build")
+    XCTAssertEqual(saved["state"] as? String,"other_kernel_build")
+    XCTAssertEqual(store.project,loaded,"A preview must not rewrite saved numeric metadata")
+    try store.cad.commit(refresh);try await settled(refresh)
+    XCTAssertEqual(refresh.state,"committed",refresh.issue ?? "")
+    XCTAssertEqual(store.engine.undoStack.count,1)
+    let current=try XCTUnwrap(store.project?.objects.first?.cadRepresentation)
+    XCTAssertEqual(current.kernelVersion,CADKernel.version)
+    XCTAssertEqual(current.components[0].volumeMM3,24000,accuracy:1e-6)
+    XCTAssertEqual(try Data(contentsOf:exact),exactBytes);XCTAssertEqual(try Data(contentsOf:mesh),meshBytes)
+    store.engine.undo();XCTAssertEqual(store.project,loaded)
+  }
 }

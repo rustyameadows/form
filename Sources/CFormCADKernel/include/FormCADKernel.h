@@ -44,6 +44,8 @@ size_t fcad_step_node_count(const FCADSTEPDocument*);
 FCADStatus fcad_step_node_info(FCADContext*,const FCADSTEPDocument*,size_t index,FCADSTEPNodeInfo*,FCADFailure*);
 FCADStatus fcad_step_part(FCADContext*,const FCADSTEPDocument*,const char*part_path,FCADShape**,FCADFailure*);
 FCADStatus fcad_step_face_colors(FCADContext*,const FCADSTEPDocument*,size_t node_index,FCADFaceColor*,size_t capacity,FCADFailure*);
+/* Full runtime build identity, including checked Form numerical patches.
+   Persisted topology selectors and newly measured metadata use this string. */
 const char *fcad_version(void);
 FCADContext *fcad_context_create(void);
 void fcad_context_cancel(FCADContext *context);
@@ -69,6 +71,10 @@ FCADStatus fcad_fillet(FCADContext*,const FCADShape*,const uint32_t *edges,size_
 FCADStatus fcad_chamfer(FCADContext*,const FCADShape*,const uint32_t *edges,size_t count,double distance,FCADShape**,FCADFailure*);
 /* Faces removed are explicit. Positive thickness hollows inward. */
 FCADStatus fcad_shell(FCADContext*,const FCADShape*,const uint32_t *remove_faces,size_t count,double thickness,FCADShape**,FCADFailure*);
+/* Explicit same-domain cleanup, including tangent Bezier/B-spline spans.
+   Accepts a profile or solid; never modifies the input. Geometry tolerance is
+   1e-7 mm; C1 angular classification is 1e-9 rad. Input budget: 10,000 faces/edges. */
+FCADStatus fcad_refine(FCADContext*,const FCADShape*,FCADShape**,FCADFailure*);
 /* Offset a single-loop planar face. Positive expands; negative contracts. */
 FCADStatus fcad_offset_profile(FCADContext*,const FCADShape*,double distance,FCADShape**,FCADFailure*);
 FCADStatus fcad_sweep(FCADContext*,const FCADShape *profile,const FCADPoint *path,size_t path_count,FCADShape**,FCADFailure*);

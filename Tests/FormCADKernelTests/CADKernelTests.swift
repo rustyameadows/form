@@ -5,7 +5,7 @@ import FormCADKernel
 final class CADKernelTests:XCTestCase {
   private func folder()throws->URL{let url=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString);try FileManager.default.createDirectory(at:url,withIntermediateDirectories:true);addTeardownBlock{try? FileManager.default.removeItem(at:url)};return url}
   func testMillimeterAxesAnalyticPrimitivesAndRigidTransforms() async throws {
-    let k=CADKernel();XCTAssertEqual(CADKernel.version,"8.0.1")
+    let k=CADKernel();XCTAssertEqual(CADKernel.version,"8.0.1+form.gprop1")
     let box=try await k.box(width:80,height:50,depth:20);XCTAssertEqual(box.info.size,.init(80,50,20));XCTAssertEqual(box.info.volumeMM3,80000,accuracy:1e-6)
     let cylinder=try await k.cylinder(radius:10,height:40);XCTAssertEqual(cylinder.info.size.y,40,accuracy:1e-7);XCTAssertEqual(cylinder.info.volumeMM3,Double.pi*100*40,accuracy:1e-6)
     let turned=try await k.transform(cylinder,rowMajorMatrix:[1,0,0,40,0,0,-1,25,0,1,0,-10,0,0,0,1]);XCTAssertEqual(turned.info.volumeMM3,cylinder.info.volumeMM3,accuracy:1e-6)

@@ -18,6 +18,12 @@ if [ ! -x "$base/tools/bin/cmake" ] || [ ! -x "$base/tools/bin/ninja" ]; then
   python3 -m venv "$base/tools"
   "$base/tools/bin/python" -m pip install --cache-dir "$base/pip-cache" cmake==3.31.6 ninja==1.11.1.4
 fi
+"$base/tools/bin/python" scripts/occt-patches.py apply "$base/OCCT-8_0_1"
+occt_sdk_cpp_headers="$(xcrun --show-sdk-path)/usr/include/c++/v1"
+if [ -f "$occt_sdk_cpp_headers/type_traits" ]; then
+  export CPLUS_INCLUDE_PATH="$occt_sdk_cpp_headers${CPLUS_INCLUDE_PATH:+:$CPLUS_INCLUDE_PATH}"
+fi
+unset occt_sdk_cpp_headers
 jobs="${LAB_CAD_BUILD_JOBS:-4}"
 case "$jobs" in ''|*[!0-9]*) echo "LAB_CAD_BUILD_JOBS must be an integer." >&2; exit 1;; esac
 [ "$jobs" -ge 1 ] && [ "$jobs" -le 32 ] || { echo "Use 1–32 build jobs." >&2; exit 1; }
@@ -37,5 +43,5 @@ case "$jobs" in ''|*[!0-9]*) echo "LAB_CAD_BUILD_JOBS must be an integer." >&2; 
 "$base/tools/bin/cmake" --install "$base/build"
 mkdir -p "$prefix/share/licenses/occt"
 cp Sources/CFormCADKernel/LICENSE_LGPL_21.txt Sources/CFormCADKernel/OCCT_LGPL_EXCEPTION.txt Sources/CFormCADKernel/UPSTREAM.json "$prefix/share/licenses/occt/"
-cp Sources/CFormCADKernel/UPSTREAM.json "$prefix/FORM-OCCT-PROVENANCE.json"
+"$base/tools/bin/python" scripts/occt-patches.py record "$prefix" "$base/OCCT-8_0_1"
 printf '\nOCCT 8.0.1 installed locally: %s\n' "$prefix"

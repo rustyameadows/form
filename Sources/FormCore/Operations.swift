@@ -73,6 +73,8 @@ public final class OperationEngine {
     selection = selection.intersection(Set(previous.objects.map(\.id)))
     lastCoalesce = nil
   }
+  /// Native command adapters may preserve a matching gesture without exposing its mutable state.
+  public func isInteracting(with key:String)->Bool {interaction==key}
   @discardableResult public func beginInteraction(_ key:String)->UUID {
     if interaction==key,let token=interactionGeneration {return token}
     endInteraction()
@@ -189,8 +191,11 @@ public final class OperationEngine {
       guard let object = project?.objects.first(where: { $0.id == id }) else {
         throw FormError.missing("Object not found.")
       }
-      let art = project!.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
-      return try jsonObject(a["resolved"] as? Bool == true ? project!.resolvingComponents(in: art) : art)
+      let context=try a["physical_frame"].map{try PhysicalArtworkFrameContext.resolve(in:project!,objectID:id,raw:$0)}
+      let owner=context.flatMap{value in project!.objects.first{$0.id==value.sourceObjectID}} ?? object
+      let art=project!.editableArtwork(owner) ?? Artwork(background:"#FFFFFF")
+      let resolved=a["resolved"] as? Bool == true ? try project!.resolvingComponents(in:art):art
+      return try jsonObject(context?.frame.display(resolved) ?? resolved)
     case "form_component":
       let command = try string("command")
       if command == "list" {
@@ -326,12 +331,20 @@ public final class OperationEngine {
       }
       return result
     case "form_edit_artwork":
+      if a["physical_frame"] != nil,ArtworkTransferCommands.recognizes(name,a) {
+        throw FormError.invalid("Portable transfers use their canonical source contract; physical_frame is not supported for file transfers.")
+      }
       if ArtworkTransferCommands.recognizes(name,a) {
         guard let onGraphics else{throw FormError.missing("Portable artwork transfer requires the running LAB app.")}
         var input=a;input["_source"]=source;return try onGraphics(name,input)
       }
-      let id = try objectID()
-      let command = try string("command")
+      let physicalID=try objectID()
+      let context=try a["physical_frame"].map{try PhysicalArtworkFrameContext.resolve(in:requireProject(),objectID:physicalID,raw:$0)}
+      let id=context?.sourceObjectID ?? physicalID
+      let command=try string("command")
+      if context != nil,["page_setup","transfer","garment_block","pattern_piece","seam_pair","pattern_template","cut_layout","pattern_tiles"].contains(command) {
+        throw FormError.invalid("This source/process command does not accept physical_frame; use its canonical source contract.")
+      }
       let ids = a["element_ids"] == nil ? Set<UUID>() : try idsArgument(a["element_ids"])
       var selected = Set<UUID>()
       if command == "page_setup" {
@@ -376,8 +389,13 @@ public final class OperationEngine {
           throw FormError.missing("Object not found.")
         }
         if ["font","optical","character_position","paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template","cut_layout","pattern_tiles"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
-        var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
+        if let context,(p.objects.first{$0.id==context.physicalObjectID}?.locked == true || p.artworkOwner(object).locked) {
+          throw FormError.invalid("Unlock the construction and its artwork source before editing a physical frame.")
+        }
+        let original=p.editableArtwork(object) ?? Artwork(background:"#FFFFFF")
+        var art=original
         if try PublicationCommands.editText(in:&p,objectID:id,ids:ids,command:command,arguments:a,prepareGlyph:onPrepareGlyph,prepareParagraphs:onPrepareParagraphs,prepareOptical:onPrepareOptical) {selected=ids;return}
+        if let context {art=context.frame.display(original)}
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
         if command=="optical" {try onPrepareOptical?(art,ids,a)}
         if ["font","optical","character_position"].contains(command) {try onPrepareParagraphs?(&art,art.swatchPaintTargets(for:ids))}
@@ -393,7 +411,8 @@ public final class OperationEngine {
           let targets=command=="language" ? Set(art.elements.map(\.id)):art.swatchPaintTargets(for:ids)
           try onPrepareParagraphs?(&art,targets)
         }
-        try p.setArtwork(art, for: id)
+        let canonical=try context.map{try $0.frame.source(from:art,original:original)} ?? art
+        try p.setArtwork(canonical,for:id)
       }
       return ["selected_elements": selected.map(\.uuidString)]
     case "form_edit_path":

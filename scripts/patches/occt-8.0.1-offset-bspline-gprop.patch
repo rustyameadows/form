@@ -1,0 +1,147 @@
+--- a/src/ModelingAlgorithms/TKTopAlgo/BRepGProp/BRepGProp_Face.cxx
++++ b/src/ModelingAlgorithms/TKTopAlgo/BRepGProp/BRepGProp_Face.cxx
+@@ -21,6 +21,8 @@
+ #include <Geom_BezierSurface.hxx>
+ #include <Geom_BSplineCurve.hxx>
+ #include <Geom_BSplineSurface.hxx>
++#include <Geom_OffsetSurface.hxx>
++#include <Geom_RectangularTrimmedSurface.hxx>
+ #include <Geom_SurfaceOfLinearExtrusion.hxx>
+ #include <GeomAdaptor_Curve.hxx>
+ #include <gp_Pnt.hxx>
+@@ -32,12 +34,42 @@
+ #include <TopoDS_Edge.hxx>
+ #include <TopoDS_Face.hxx>
+ 
++// Offset surfaces preserve their basis UV parameterization. Their basis knots
++// are integration breakpoints even though the evaluated surface remains the
++// original offset (including its existing trims, location and orientation).
++static occ::handle<Geom_BSplineSurface> OffsetBSplineBasis(
++  occ::handle<Geom_Surface> theSurface)
++{
++  bool isOffset = false;
++  for (int depth = 0; depth < 64 && !theSurface.IsNull(); ++depth)
++  {
++    if (theSurface->IsKind(STANDARD_TYPE(Geom_OffsetSurface)))
++    {
++      isOffset = true;
++      theSurface = occ::down_cast<Geom_OffsetSurface>(theSurface)->BasisSurface();
++    }
++    else if (theSurface->IsKind(STANDARD_TYPE(Geom_RectangularTrimmedSurface)))
++    {
++      theSurface = occ::down_cast<Geom_RectangularTrimmedSurface>(theSurface)->BasisSurface();
++    }
++    else
++    {
++      return isOffset ? occ::down_cast<Geom_BSplineSurface>(theSurface)
++                      : occ::handle<Geom_BSplineSurface>();
++    }
++  }
++  return {};
++}
++
+ static const double Epsilon1 = Epsilon(1.);
+ 
+ //=================================================================================================
+ 
+ int BRepGProp_Face::UIntegrationOrder() const
+ {
++  const auto basis = OffsetBSplineBasis(mySurface.GeomSurfaceOriginal());
++  if (!basis.IsNull())
++    return std::max(8, 2 * std::max(4, (basis->UDegree() + 1) * (basis->NbUKnots() - 1)));
+ 
+   int Nu;
+   switch (mySurface.GetType())
+@@ -74,6 +106,9 @@
+ 
+ int BRepGProp_Face::VIntegrationOrder() const
+ {
++  const auto basis = OffsetBSplineBasis(mySurface.GeomSurfaceOriginal());
++  if (!basis.IsNull())
++    return std::max(8, 2 * std::max(4, (basis->VDegree() + 1) * (basis->NbVKnots() - 1)));
+   int Nv;
+   switch (mySurface.GetType())
+   {
+@@ -228,6 +263,11 @@
+ 
+ int BRepGProp_Face::SIntOrder(const double Eps) const
+ {
++  const auto basis = OffsetBSplineBasis(mySurface.GeomSurfaceOriginal());
++  if (!basis.IsNull())
++    return std::min(RealToInt(std::ceil(SCoeff(Eps) * std::max(basis->UDegree() + 1,
++                                                            basis->VDegree() + 1))),
++                    math::GaussPointsMax());
+   int Nv, Nu;
+   switch (mySurface.GetType())
+   {
+@@ -272,6 +312,8 @@
+ 
+ int BRepGProp_Face::SUIntSubs() const
+ {
++  const auto basis = OffsetBSplineBasis(mySurface.GeomSurfaceOriginal());
++  if (!basis.IsNull()) return basis->NbUKnots() - 1;
+   int N;
+   switch (mySurface.GetType())
+   {
+@@ -307,6 +349,8 @@
+ 
+ int BRepGProp_Face::SVIntSubs() const
+ {
++  const auto basis = OffsetBSplineBasis(mySurface.GeomSurfaceOriginal());
++  if (!basis.IsNull()) return basis->NbVKnots() - 1;
+   int N;
+   switch (mySurface.GetType())
+   {
+@@ -342,6 +386,12 @@
+ 
+ void BRepGProp_Face::UKnots(NCollection_Array1<double>& Knots) const
+ {
++  const auto basis = OffsetBSplineBasis(mySurface.GeomSurfaceOriginal());
++  if (!basis.IsNull())
++  {
++    for (int i = Knots.Lower(); i <= Knots.Upper(); ++i) Knots(i) = basis->UKnot(i);
++    return;
++  }
+   switch (mySurface.GetType())
+   {
+     case GeomAbs_Plane:
+@@ -377,6 +427,12 @@
+ 
+ void BRepGProp_Face::VKnots(NCollection_Array1<double>& Knots) const
+ {
++  const auto basis = OffsetBSplineBasis(mySurface.GeomSurfaceOriginal());
++  if (!basis.IsNull())
++  {
++    for (int i = Knots.Lower(); i <= Knots.Upper(); ++i) Knots(i) = basis->VKnot(i);
++    return;
++  }
+   switch (mySurface.GetType())
+   {
+     case GeomAbs_Plane:
+@@ -668,6 +724,14 @@
+                                                                    const double theUMax) const
+ {
+   occ::handle<NCollection_HArray1<double>> theUKnots;
++  const auto offsetBasis = OffsetBSplineBasis(mySurface.GeomSurfaceOriginal());
++  if (myIsUseSpan && !offsetBasis.IsNull())
++  {
++    const occ::handle<NCollection_HArray1<double>> basisKnots =
++      new NCollection_HArray1<double>(offsetBasis->UKnots());
++    GetRealKnots(theUMin, theUMax, basisKnots, theUKnots);
++    return theUKnots;
++  }
+   bool isSBSpline = mySurface.GetType() == GeomAbs_BSplineSurface;
+   bool isCBSpline = false;
+ 
+@@ -732,6 +796,11 @@
+                                                                    const double theTMax) const
+ {
+   occ::handle<NCollection_HArray1<double>> theTKnots;
++  if (myIsUseSpan && !OffsetBSplineBasis(mySurface.GeomSurfaceOriginal()).IsNull())
++  {
++    GetCurveKnots(theTMin, theTMax, myCurve, theTKnots);
++    return theTKnots;
++  }
+   bool isBSpline = mySurface.GetType() == GeomAbs_BSplineSurface;
+ 
+   if (myIsUseSpan && isBSpline)

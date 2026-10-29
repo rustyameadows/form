@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 
 
 def run(*args):
@@ -17,6 +18,8 @@ def dependencies(binary):
 
 
 def package(bundle, prefix, repository):
+    subprocess.check_call([sys.executable, str(repository / "scripts/occt-patches.py"),
+                           "verify", str(prefix)])
     executable = bundle / "Contents/MacOS/LAB"
     frameworks = bundle / "Contents/Frameworks"
     frameworks.mkdir(parents=True, exist_ok=True)
@@ -64,8 +67,10 @@ def package(bundle, prefix, repository):
     notices.mkdir(parents=True, exist_ok=True)
     for filename in ("LICENSE_LGPL_21.txt", "OCCT_LGPL_EXCEPTION.txt", "UPSTREAM.json"):
         shutil.copyfile(repository / "Sources/CFormCADKernel" / filename, notices / filename)
-    for filename in ("install-occt.sh", "package-occt.py"):
+    for filename in ("install-occt.sh", "package-occt.py", "occt-patches.py"):
         shutil.copyfile(repository / "scripts" / filename, notices / filename)
+    shutil.copytree(repository / "scripts/patches", notices / "patches")
+    shutil.copyfile(prefix / "FORM-OCCT-PROVENANCE.json", notices / "BUILD-PROVENANCE.json")
     shutil.copyfile(repository / "docs/cad-kernel.md", notices / "BUILD-AND-LICENSE.md")
     archive = repository / ".local/cad-kernel/OCCT-V8_0_1.tar.gz"
     provenance = json.loads((notices / "UPSTREAM.json").read_text())

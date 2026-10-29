@@ -675,7 +675,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           context.addPath(PaperOutput.path(projection.boundary)); context.clip()
         }
         if let paperNet {
-          context.addPath(PaperOutput.clipPath(paperNet)); context.clip()
+          var transform = CGAffineTransform(a:f.projection?.sourceToLocal.a ?? 1,b:f.projection?.sourceToLocal.b ?? 0,
+            c:f.projection?.sourceToLocal.c ?? 0,d:f.projection?.sourceToLocal.d ?? 1,
+            tx:f.projection?.sourceToLocal.tx ?? 0,ty:f.projection?.sourceToLocal.ty ?? 0)
+          context.addPath(PaperOutput.clipPath(paperNet).copy(using:&transform)!); context.clip()
           let stock = f.surfaceObject.color ?? session.store?.project?.material(f.surfaceObject.materialID).color ?? "#F7F5EF"
           context.setFillColor(NSColor(hex:stock).cgColor);context.fill(CGRect(origin:.zero,size:f.rect.size))
         }
@@ -690,7 +693,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           unbounded:f.isWorkspace)
         context.restoreGState()
         if let paperNet, session.store?.paperShowingGuides == true {
+          context.saveGState()
+          if let transform=f.projection?.sourceToLocal {
+            context.concatenate(.init(a:transform.a,b:transform.b,c:transform.c,d:transform.d,tx:transform.tx,ty:transform.ty))
+          }
           PaperOutput.drawStructure(paperNet,context:context,lineWidth:1/scale,interface:true)
+          context.restoreGState()
         }
         if let sewing {
           context.saveGState()
@@ -927,8 +935,15 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   private func point(_ event: NSEvent) -> CGPoint {
     let p = canvasPoint(convert(event.locationInWindow, from: nil))
+    // Native view/ruler transforms can leave inverse-roundtrip noise such as
+    // -50.00000000000006 mm. Keep pointer-authored coordinates stable at a
+    // billionth of a millimeter; raw source/API geometry retains its precision.
+    func physical(_ value: CGFloat) -> CGFloat {
+      guard value.isFinite, abs(value) < 1_000_000 else { return value }
+      return (value * 1_000_000_000).rounded() / 1_000_000_000
+    }
     return .init(
-      x:p.x-(activeFrame?.rect.minX ?? 0),y:p.y-(activeFrame?.rect.minY ?? 0))
+      x:physical(p.x-(activeFrame?.rect.minX ?? 0)),y:physical(p.y-(activeFrame?.rect.minY ?? 0)))
   }
   private func gradientHandles(_ element: ArtworkElement, in art: Artwork)
     -> (a: CGPoint, b: CGPoint, stops: [(stop: GradientStop, point: CGPoint)])? {

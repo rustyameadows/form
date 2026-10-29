@@ -8,6 +8,7 @@ public struct CADFeatureEvaluation: Sendable {
   public var durationMS:Double=0
 }
 public struct CADModelEvaluation: Sendable {
+  public var kernelVersion:String{CADKernel.version}
   public var modelID:UUID,modelRevision:Int,revisionHash:String,definition:CADModelDefinition
   public var outputs:[UUID:CADShape],features:[CADFeatureEvaluation],rebuiltFeatureIDs:[UUID]
   public var durationMS:Double=0
@@ -69,7 +70,7 @@ public actor CADModelEvaluator {
       evict(victim)
     }
   }
-  public static func revisionHash(_ model:CADModelDefinition)throws->String{try digest(model)}
+  public static func revisionHash(_ model:CADModelDefinition)throws->String{try model.sourceFingerprint()}
   private static func digest<T:Encodable>(_ value:T)throws->String{let encoder=JSONEncoder();encoder.outputFormatting=[.sortedKeys,.withoutEscapingSlashes];return SHA256.hash(data:try encoder.encode(value)).map{String(format:"%02x",$0)}.joined()}
   private func current(_ id:UUID,_ token:UUID)throws{try Task.checkCancellation();guard generations[id]==token else{throw CancellationError()}}
   public func evaluate(_ model:CADModelDefinition,resourcesAt root:URL?=nil,expectedRevisionHash:String?=nil) async throws->CADModelEvaluation {
@@ -198,6 +199,7 @@ public actor CADModelEvaluator {
     let axis=try unit(op.direction ?? .yAxis)
     switch op.kind {
     case .copy:return try await kernel.transform(first(),rowMajorMatrix:[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1])
+    case .refine:return try await kernel.refine(first())
     case .join:return try await kernel.boolean(.union,inputs[0],inputs[1])
     case .offsetProfile:return try await kernel.offsetProfile(first(),distance:v("distance"))
     case .hole:

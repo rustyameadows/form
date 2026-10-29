@@ -314,7 +314,7 @@ import UniformTypeIdentifiers
       return(try CADModelExamples.make(args["template"] as? String ?? "enclosure"),nil)
     }
     switch command {
-    case "capabilities":return ["kernel":"OCCT 8.0.1","units":"mm","up_axis":"Y","commands":["capabilities","templates","plan","create","evaluate","parameter","feature","patch","status","commit","cancel","inspect","topology","export","import_step","clearance","render","evidence","evidence_status","evidence_cancel","validate","validation_status"],"feature_kinds":CADFeatureKind.allCases.map(\.rawValue),"publication":"Private in-memory previews retain exact geometry. Commit serializes and publishes one guarded Undo transaction.","patch_actions":["parameters","append","replace","remove","suppress","outputs","requirements","output_requirements","surfaces"],"evidence_kinds":["summary","topology","clearance","render","export"],"limits":["features":256,"source_bytes":256*1024*1024,"mesh_triangles":2_000_000],"import_editability":"Exact STEP components with hierarchy, names, placements and source colors. Original feature history is unavailable."] as [String:Any]
+    case "capabilities":return ["kernel":"OCCT \(CADKernel.version)","kernel_version":CADKernel.version,"units":"mm","up_axis":"Y","commands":["capabilities","templates","plan","create","evaluate","parameter","feature","patch","status","commit","cancel","inspect","topology","export","import_step","clearance","render","evidence","evidence_status","evidence_cancel","validate","validation_status"],"feature_kinds":CADFeatureKind.allCases.map(\.rawValue),"publication":"Private in-memory previews retain exact geometry. Commit serializes and publishes one guarded Undo transaction.","patch_actions":["parameters","append","replace","remove","suppress","outputs","requirements","output_requirements","surfaces"],"evidence_kinds":["summary","topology","clearance","render","export"],"limits":["features":256,"source_bytes":256*1024*1024,"mesh_triangles":2_000_000],"import_editability":"Exact STEP components with hierarchy, names, placements and source colors. Original feature history is unavailable."] as [String:Any]
     case "templates":return try CADModelExamples.names.map{try jsonObject(CADModelExamples.make($0))}
     case "plan":let (d,_)=try model();let order=try d.validatedOrder();return ["definition":try jsonObject(d),"revision":try CADModelEvaluator.revisionHash(d),"order":order.map{$0.id.uuidString},"assumptions":d.assumptions,"unresolved_measurements":d.unresolvedMeasurements]
     case "create","evaluate":let (d,target)=try model();let requests=try suppliedEvidence(args);let j=try begin(d,target:target);if let quality=args["quality"] as? String{j.quality=quality};j.pendingEvidence=requests;preview(j);return status(j)
@@ -330,8 +330,8 @@ import UniformTypeIdentifiers
     case "status":return status(try job())
     case "commit":let j=try job();try commit(j);return status(j)
     case "cancel":let j=try job();cancel(j);return status(j)
-    case "inspect":let(d,target)=try model();var result:[String:Any]=["definition":try jsonObject(d),"revision":try CADModelEvaluator.revisionHash(d),"editability":d.features.contains{$0.operation.source != nil} ? "importedCADBody":"nativeFeatureModel"]
-      if let target,let r=store?.project?.objects.first(where:{$0.id==target})?.cadRepresentation{result["representation"]=try jsonObject(r)};return result
+    case "inspect":let(d,target)=try model();var result:[String:Any]=["definition":try jsonObject(d),"revision":try CADModelEvaluator.revisionHash(d),"kernel_version":CADKernel.version,"editability":d.features.contains{$0.operation.source != nil} ? "importedCADBody":"nativeFeatureModel"]
+      if let target,let r=store?.project?.objects.first(where:{$0.id==target})?.cadRepresentation{result["representation"]=try jsonObject(r);result["numeric_metadata"]=Self.numericMetadataProvenance(r,saved:true)};return result
     case "import_step":guard let path=args["path"] as? String,path.hasPrefix("/") else{throw FormError.invalid("Provide an absolute local STEP or BRep path.")};let j=try importReview(url:URL(fileURLWithPath:path),name:args["name"] as? String,sourceUpAxis:args["source_up_axis"] as? String ?? "y");return status(j)
     case "topology","clearance","render","export":
       let j=try job();var request=args;request.removeValue(forKey:"command");request.removeValue(forKey:"job_id");request["kind"]=command
@@ -341,12 +341,21 @@ import UniformTypeIdentifiers
     }
   }
   func status(_ job:CADModelReview)->[String:Any] {
-    var result:[String:Any]=["job_id":job.id.uuidString,"state":job.state,"model_id":job.definition.id.uuidString,"definition_revision":job.definition.revision,"draft_revision":(try? CADModelEvaluator.revisionHash(job.definition)) as Any? ?? NSNull(),"result":job.result,"timings_ms":job.timings,"evidence":evidenceRequests.values.filter{$0.jobID==job.id}.map{["request_id":$0.id.uuidString,"revision":$0.revision,"state":$0.state,"elapsed_ms":$0.elapsedMS] as [String:Any]}]
+    var result:[String:Any]=["job_id":job.id.uuidString,"state":job.state,"model_id":job.definition.id.uuidString,"kernel_version":CADKernel.version,"definition_revision":job.definition.revision,"draft_revision":(try? CADModelEvaluator.revisionHash(job.definition)) as Any? ?? NSNull(),"result":job.result,"timings_ms":job.timings,"evidence":evidenceRequests.values.filter{$0.jobID==job.id}.map{["request_id":$0.id.uuidString,"revision":$0.revision,"state":$0.state,"elapsed_ms":$0.elapsedMS] as [String:Any]}]
     if let issue=job.issue{result["error"]=issue}
     if let diagnostic=job.diagnostic{result["diagnostic"]=diagnostic}
     result["surface_artwork_issues"]=try? jsonObject(surfacePlacementIssues(job))
     if let p=job.prepared{result["revision"]=p.evaluation.revisionHash;result["representation"]=try? jsonObject(p.representation);result["durable_assets"]=p.durable;result["rebuilt_features"]=p.evaluation.rebuiltFeatureIDs.map(\.uuidString);result["surfaces"]=try? jsonObject(p.evaluation.surfaces);result["surface_issues"]=try? jsonObject(p.evaluation.surfaceIssues);result["features"]=p.evaluation.features.map{["feature_id":$0.id.uuidString,"name":$0.name,"operation":$0.kind.rawValue,"from_cache":$0.fromCache,"duration_ms":$0.durationMS] as [String:Any]}}
+    if let p=job.prepared{result["numeric_metadata"]=Self.numericMetadataProvenance(p.representation,saved:false)}
+    if let id=job.targetObjectID,let saved=job.source.objects.first(where:{$0.id==id})?.cadRepresentation{result["saved_numeric_metadata"]=Self.numericMetadataProvenance(saved,saved:true)}
     return result
+  }
+  nonisolated static func numericMetadataProvenance(_ representation:CADRepresentation,saved:Bool)->[String:Any] {
+    let sameBuild=representation.kernelVersion==CADKernel.version
+    return ["recorded_kernel_version":representation.kernelVersion,"current_kernel_version":CADKernel.version,
+      "source":saved ? "saved_representation":"evaluated_result","state":sameBuild ? "current_kernel_build":"other_kernel_build",
+      "recomputed_on_load":false,"reevaluate_to_refresh":!sameBuild,
+      "refresh_action":"Preview/evaluate the source, inspect the result, then commit to replace saved numeric metadata in one Undo transaction."]
   }
   func surfacePlacementIssues(_ job:CADModelReview)->[PhysicalSurfaceArtworkPlacementIssue] {
     guard let id=job.targetObjectID else{return []}

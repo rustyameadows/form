@@ -69,14 +69,16 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
   public var requirements: [CADModelRequirement]?
   public var derived: [String:CADScalar]?
   public var connections: [PlanarConnectionRequirement]?
+  public var solidChecks: [PlanarSolidRequirement]?
   public init(name: String, parameters: [CADModelParameter] = [], size: CADExpressionPoint2,
     stockThickness: CADScalar = 0.35, panels: [PlanarPanelDefinition],
     hinges: [PlanarHingeDefinition] = [], joins: [PlanarJoinDefinition] = [], rootPanelID: String,
     requirements: [CADModelRequirement]? = nil,derived:[String:CADScalar]? = nil,
-    connections:[PlanarConnectionRequirement]? = nil) {
+    connections:[PlanarConnectionRequirement]? = nil, solidChecks:[PlanarSolidRequirement]? = nil) {
     self.name=name; self.parameters=parameters; self.size=size; self.stockThickness=stockThickness
     self.panels=panels; self.hinges=hinges; self.joins=joins; self.rootPanelID=rootPanelID
     self.requirements=requirements;self.derived=derived;self.connections=connections
+    self.solidChecks=solidChecks;self.version=solidChecks?.isEmpty == false ? 2:1
   }
   public var values: [String: Double] { Dictionary(parameters.map { ($0.name,$0.value) }, uniquingKeysWith: { a,_ in a }) }
   public func number(_ scalar: CADScalar) throws -> Double {
@@ -99,7 +101,7 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
     parameters=next
   }
   public func net() throws -> PaperNet {
-    guard version==1,!name.isEmpty,name.utf8.count<=160,parameters.count<=64,
+    guard (version==1 || version==2),(version>=2 || solidChecks?.isEmpty != false),!name.isEmpty,name.utf8.count<=160,parameters.count<=64,
       Set(parameters.map(\.name)).count==parameters.count,
       parameters.allSatisfy({CADExpression.validName($0.name) && !["fold","opening"].contains($0.name)
         && [$0.value,$0.minimum,$0.maximum].allSatisfy(\.isFinite)
@@ -190,6 +192,10 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
         throw FormError.invalid("Connection '\(connection.id)' requires distinct existing panels, anchors in their polygons and a maximum gap within 0–10000 mm.")
       }
     }
+    guard (solidChecks?.count ?? 0)<=128,Set((solidChecks ?? []).map(\.id)).count==(solidChecks?.count ?? 0) else {
+      throw FormError.invalid("Use up to 128 uniquely identified explicit panel-pair solid checks.")
+    }
+    for check in solidChecks ?? [] {try check.validateDefinition(panelIDs:ids,values:variables)}
     return PaperNet(size:extent,panels:resolved,folds:folds,joins:resolvedJoins,
       cutEdges:Self.cutEdges(panels:resolved,folds:folds),rootPanelID:rootPanelID)
   }

@@ -42,6 +42,22 @@
         1000
       ],
       "retouched": false
+    },
+    "inside-readable-R.png": {
+      "sha256": "bbd9ec17e7239a3946d19e602c813281e4d655ae875528c814e447de6fbee2d8",
+      "pixels": [
+        640,
+        640
+      ],
+      "retouched": false
+    },
+    "outside-readable-R.png": {
+      "sha256": "1c6914b5a06419ea859b3cb98be2e55f6282250652418e531f5145aa82a726d7",
+      "pixels": [
+        640,
+        640
+      ],
+      "retouched": false
     }
   },
   "blue_mask_predicate": "B > R +25 and B > G +12 and R <180 in decoded8bitRGB",
@@ -157,10 +173,21 @@
     }
   ],
   "inside_orientation": {
-    "status": "UNRESOLVED_AUTHORING_PROJECTION_CONTEXT",
-    "observed": "Raw upright text in the front-registered inside source reads reflected from the physical inside.",
-    "contract": "Both sides currently use front-registered canonical coordinates and identicalUVs by design. The missing physical inside projection/tool context must be addressed without silently changing that registration.",
-    "not_counted_as_pass": true
+    "status": "NATIVE_PHYSICAL_FRAME_PROOF_PASSED",
+    "earlier_package_observation": "Raw upright text in the front-registered inside source reads reflected from the physical inside.",
+    "contract": "Both sides currently use front-registered canonical coordinates and identicalUVs by design.",
+    "native_test_host_sha256": "6812d4756317155b83346e9db17f3271053b37733330ad357b63b3d4191673f1",
+    "native_test_methods": [
+      "PhysicalArtworkFrameRenderingTests.testUprightInsideArtworkUsesUnchangedGlobalUVAndActualReverseFacePixels",
+      "PhysicalArtworkFrameRenderingTests.testInsideWholeNetCanvasReflectsCutClipAndGuidesWithoutChangingRegisteredExport"
+    ],
+    "review": "Both actual physical faces show upright R, red upper-left, blue upper-right, green lower-right; global UVs and canonical export registration are preserved.",
+    "focused_run": {
+      "methods": 104,
+      "failures": 0,
+      "elapsed_seconds": 9.097
+    },
+    "packaged_repeat_pending": true
   },
   "reproducer": "scripts/verify_sample_visuals.py",
   "reproducer_complete_run": {

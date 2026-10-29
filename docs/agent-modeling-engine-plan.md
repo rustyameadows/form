@@ -63,7 +63,7 @@ Acceptance:
 - [x] Rapid superseding edits, cancellation, and project switches keep resources bounded and prevent stale results from becoming accepted or published.
 - [ ] Native mechanical, authored-construction and fabric controls have recorded real interaction measurements, and rapid changes preserve the latest requested state.
 
-Verification status: native keyboard input, intermediate GPU frames, explicit CAD Preview, Cancel and rejection of late work pass with the production controls. Held-pointer latency is still unverified: CUA supplied mouse events with no held-button state, and the optional physical-drag probe is unanswered. The benchmark records cold median/p95 with one observation per case (three aggregate); RSS is sampled at case boundaries, and staged-file measurements are unavailable. These limits do not change the demonstrated warm benchmark result.
+Verification status: native keyboard input, intermediate GPU frames, explicit CAD Preview, Cancel and rejection of late work pass with the production controls. Held-pointer latency is still unverified: CUA supplied mouse events with no held-button state. A human gesture reached the probe, but its original endpoint check rejected it before saving; the rebuilt probe now accepts any meaningful changed fold value and uses the corrected visible renderer. A complete saved measurement is still pending. The benchmark records cold median/p95 with one observation per case (three aggregate); RSS is sampled at case boundaries, and staged-file measurements are unavailable. These limits do not change the demonstrated warm benchmark result.
 
 ### 2 Make drafts easy to revise and failures easy to repair
 

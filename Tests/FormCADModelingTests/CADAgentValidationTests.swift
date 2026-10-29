@@ -99,7 +99,38 @@ final class CADAgentValidationTests: XCTestCase {
     let task = Task { try await CADParameterValidation.run(model: model, cases: [], includeExtrema: true) }
     task.cancel()
     do { _ = try await task.value; XCTFail("Cancelled validation returned success.") }
-    catch is CancellationError {} catch { XCTFail("Cancellation must stay distinguishable: \(error)") }
+    catch let error as CADParameterValidationInterrupted {
+      XCTAssertEqual(error.reason,.cancelled)
+      XCTAssertFalse(error.report.allPassed)
+      XCTAssertEqual(error.report.cases.map(\.name),cases.map(\.name))
+      XCTAssertTrue(error.report.cases.allSatisfy{$0.outcome != nil})
+      XCTAssertTrue(error.report.cases.contains{$0.outcome == .notRun})
+      XCTAssertEqual(error.report.interruption,.cancelled)
+    } catch { XCTFail("Cancellation must retain distinguishable per-case outcomes: \(error)") }
+  }
+
+  func testBudgetRetainsEveryCaseAndDoesNotTurnUnattemptedWorkIntoFailures() async throws {
+    let model=fixture()
+    let cases=(0..<128).map{CADParameterCase(name:"case-\($0)",values:["width":60+Double($0 % 20)])}
+    do {
+      _ = try await CADParameterValidation.run(model:model,cases:cases,maximumCases:128,maximumDurationSeconds:0.01)
+      XCTFail("128 independent evaluations unexpectedly fit the 10ms budget")
+    } catch let error as CADParameterValidationInterrupted {
+      let report=error.report
+      XCTAssertEqual(error.reason,.budgetExceeded)
+      XCTAssertEqual(report.interruption,.budgetExceeded)
+      XCTAssertFalse(report.allPassed)
+      XCTAssertEqual(report.cases.map(\.name),cases.map(\.name))
+      XCTAssertTrue(report.cases.allSatisfy{$0.outcome != nil})
+      XCTAssertTrue(report.cases.contains{$0.outcome == .notRun})
+      for item in report.cases where item.outcome == .notRun {
+        XCTAssertFalse(item.passed);XCTAssertTrue(item.measurements.isEmpty);XCTAssertEqual(item.durationMS,0)
+      }
+      let encoded=try JSONEncoder().encode(report)
+      let decoded=try JSONDecoder().decode(CADParameterValidationReport.self,from:encoded)
+      XCTAssertEqual(decoded.cases.map(\.outcome),report.cases.map(\.outcome))
+      XCTAssertEqual(decoded.sourceRevision,try CADModelEvaluator.revisionHash(model))
+    }
   }
 
   func testAuthoredFaceDatumSurvivesDimensionsAndMissingTargetRequiresReview() async throws {

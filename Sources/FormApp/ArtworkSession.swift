@@ -152,10 +152,13 @@ enum ArtworkTool: String, CaseIterable {
     args["node_ids"] = nodes.map(\.uuidString)
     args["operation"] = operation
     do {
-      if activeProjection?.panelID != nil {
+      if let projection=activeProjection,projection.panelID != nil || projection.sourceToLocal != Affine2() {
         var value = art
         let result = try PathCommands.edit(operation, artwork: &value, elements: selection,
           nodes: nodes, arguments: args)
+        // Discrete commands match the raw command engine's Undo boundary;
+        // only an explicit native gesture may coalesce multiple path updates.
+        if !store.engine.isInteracting(with:"artwork-\(object.id)") {store.engine.endInteraction()}
         save(value); nodes = result.nodes; selection = result.elements
         return
       }
@@ -463,10 +466,13 @@ enum ArtworkTool: String, CaseIterable {
     input["command"] = command
     if !selection.isEmpty { input["element_ids"] = selection.map(\.uuidString) }
     do {
-      if activeProjection?.panelID != nil,
+      if let projection=activeProjection,(projection.panelID != nil || projection.sourceToLocal != Affine2()),
         ["add", "replace", "delete", "duplicate", "group", "ungroup", "align", "distribute", "reorder", "flip", "clip", "release_clip", "origin", "transform"].contains(command) {
         var value = art
         let selected = try ArtworkCommands.apply(command, to: &value, ids: selection, arguments: input)
+        // saveArtwork also serves continuous typing. A command without an
+        // explicit gesture must not merge with a preceding discrete command.
+        if !store.engine.isInteracting(with:"artwork-\(object.id)") {store.engine.endInteraction()}
         save(value); selection = selected
         return
       }
