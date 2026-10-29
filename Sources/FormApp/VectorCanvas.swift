@@ -43,6 +43,7 @@ struct VectorCanvas: NSViewRepresentable {
       [weak session, weak view] _, change in
       DispatchQueue.main.async {
         if let value = change.newValue {
+          view?.ensureViewportCoverage()
           session?.zoom = Double(value)
           view?.needsDisplay = true
           scroll.horizontalRulerView?.needsDisplay = true
@@ -65,9 +66,18 @@ struct VectorCanvas: NSViewRepresentable {
 }
 
 final class ArtworkScrollView: NSScrollView {
+  override func setFrameSize(_ newSize: NSSize) {
+    let canvas = documentView as? VectorCanvasView
+    let anchor = canvas?.viewportLayoutAnchor
+    super.setFrameSize(newSize)
+    canvas?.ensureViewportCoverage(preserving: anchor)
+  }
   override func layout() {
+    let canvas = documentView as? VectorCanvasView
+    let anchor = canvas?.viewportLayoutAnchor
     super.layout()
-    (documentView as? VectorCanvasView)?.fitWhenReady()
+    canvas?.ensureViewportCoverage(preserving: anchor)
+    canvas?.fitWhenReady()
   }
 }
 
@@ -318,6 +328,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var fitted = false
   private(set) var canvasOrigin = CGPoint.zero
   private var canvasExtent = CGRect.null
+  private var growingCanvas = false
+  private var navigatingViewport = false
   private var down = CGPoint.zero, windowDown = CGPoint.zero, panOrigin = CGPoint.zero
   private var snapshot = Artwork(), startSelection = Set<UUID>(), dragMode = "", handle = 0
   private var startNodes = Set<UUID>()
@@ -402,6 +414,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       report["clip_bounds_points"] = geometry(clip.bounds)
       report["clip_visible_points"] = geometry(clip.visibleRect)
       report["clip_document_visible_points"] = geometry(clip.documentVisibleRect)
+      report["full_clip_in_canvas_points"] = geometry(convert(clip.bounds, from: clip))
       report["unobscured_clip_points"] = geometry(fittingViewport(in: scroll))
       report["content_insets_points"] = ["top": scroll.contentInsets.top, "left": scroll.contentInsets.left,
         "bottom": scroll.contentInsets.bottom, "right": scroll.contentInsets.right]
@@ -483,15 +496,27 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let clip = scroll.contentView, before = viewportDiagnostics
     let target = clip.convert(documentRect(rect), from: self), viewport = fittingViewport(in: scroll)
     guard target.width > 0, target.height > 0, viewport.width > 0, viewport.height > 0 else { return }
+    navigatingViewport = true
+    defer { navigatingViewport = false }
     fitRequests += 1
     let magnification = scroll.magnification * min(viewport.width / target.width, viewport.height / target.height)
     scroll.setMagnification(magnification, centeredAt: target.center)
     // Recompute the native clip region after scaling. Custom hosts with visible
     // rulers still center within their unobscured viewport.
+    for _ in 0..<2 {
+      let fitted = clip.convert(documentRect(rect), from: self), available = fittingViewport(in: scroll)
+      let desired = CGRect(x: clip.bounds.minX + fitted.midX - available.midX,
+        y: clip.bounds.minY + fitted.midY - available.midY,
+        width: clip.bounds.width, height: clip.bounds.height)
+      let required = canvasRect(convert(desired, from: clip)).insetBy(dx: -80, dy: -80)
+      if !expandCanvas(toInclude: required) { break }
+    }
     let fittedTarget = clip.convert(documentRect(rect), from: self), available = fittingViewport(in: scroll)
     clip.scroll(to: CGPoint(x: clip.bounds.minX + fittedTarget.midX - available.midX,
       y: clip.bounds.minY + fittedTarget.midY - available.midY))
     scroll.reflectScrolledClipView(clip)
+    expandCanvas(toInclude: visibleCanvasRect.insetBy(dx: -80, dy: -80))
+    viewportCoordinatesChanged()
     lastFitDiagnostics = ["request": fitRequests, "mode": mode,
       "requested_canvas_rect_mm": geometry(rect), "target_clip_points": geometry(target),
       "before": before, "after": viewportDiagnostics]
@@ -513,8 +538,15 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private func documentRect(_ rect:CGRect) -> CGRect {
     .init(origin:documentPoint(rect.origin),size:.init(width:rect.width*ppm,height:rect.height*ppm))
   }
+  private func canvasRect(_ rect: CGRect) -> CGRect {
+    .init(origin: canvasPoint(rect.origin),
+      size: .init(width: rect.width / ppm, height: rect.height / ppm))
+  }
   var visibleCanvasRect:CGRect {
-    .init(origin:canvasPoint(visibleRect.origin),size:.init(width:visibleRect.width/ppm,height:visibleRect.height/ppm))
+    if let clip = enclosingScrollView?.contentView {
+      return canvasRect(convert(clip.bounds, from: clip))
+    }
+    return canvasRect(visibleRect)
   }
   func frame(atCanvasPoint point:CGPoint) -> CanvasFrame? {
     frames.last { !$0.isWorkspace && $0.contains(point) } ?? frames.first { $0.isWorkspace }
@@ -550,21 +582,63 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     return result.isNull ? CGRect(x:0,y:0,width:400,height:260) : result
   }
-  private func expandCanvas(toInclude rect:CGRect) {
-    let before = visibleCanvasRect.origin
-    let requested = CGRect(x:floor(rect.minX/160)*160,y:floor(rect.minY/160)*160,
-      width:(ceil(rect.maxX/160)-floor(rect.minX/160))*160,
-      height:(ceil(rect.maxY/160)-floor(rect.minY/160))*160)
+  private func centerViewport(on world: CGPoint, in scroll: NSScrollView) {
+    let clip = scroll.contentView, point = clip.convert(documentPoint(world), from: self)
+    let desired = CGPoint(x: clip.bounds.minX + point.x - clip.bounds.midX,
+      y: clip.bounds.minY + point.y - clip.bounds.midY)
+    guard abs(desired.x - clip.bounds.minX) > 1e-7 || abs(desired.y - clip.bounds.minY) > 1e-7 else { return }
+    clip.scroll(to: desired)
+    scroll.reflectScrolledClipView(clip)
+  }
+  private func viewportCoordinatesChanged() {
+    updateAccessibilityItems()
+    textView?.inputContext?.invalidateCharacterCoordinates()
+    needsDisplay = true
+  }
+  var viewportLayoutAnchor: CGPoint? {
+    guard !growingCanvas, !navigatingViewport, !canvasExtent.isNull else { return nil }
+    return visibleCanvasRect.center
+  }
+  func ensureViewportCoverage(preserving center: CGPoint? = nil) {
+    guard !growingCanvas, !navigatingViewport, !canvasExtent.isNull,
+      let scroll = enclosingScrollView else { return }
+    let current = visibleCanvasRect
+    guard current.width > 0, current.height > 0 else { return }
+    let anchor = center ?? current.center
+    let desired = CGRect(x: anchor.x - current.width / 2, y: anchor.y - current.height / 2,
+      width: current.width, height: current.height)
+    let grew = expandCanvas(toInclude: current.union(desired).insetBy(dx: -80, dy: -80),
+      preserving: anchor)
+    if !grew, center != nil { centerViewport(on: anchor, in: scroll) }
+    if grew || visibleCanvasRect != current { viewportCoordinatesChanged() }
+  }
+  @discardableResult private func expandCanvas(toInclude rect:CGRect,
+    preserving center: CGPoint? = nil) -> Bool {
+    guard !growingCanvas, !rect.isNull, rect.width.isFinite, rect.height.isFinite,
+      rect.minX.isFinite, rect.minY.isFinite else { return false }
+    let anchor = center ?? visibleCanvasRect.center
+    // Avoid roundoff-driven growth at an exact 160 mm document boundary.
+    let minX = floor(rect.minX / 160 + 1e-9), minY = floor(rect.minY / 160 + 1e-9)
+    let maxX = ceil(rect.maxX / 160 - 1e-9), maxY = ceil(rect.maxY / 160 - 1e-9)
+    let requested = CGRect(x: minX * 160, y: minY * 160,
+      width: (maxX - minX) * 160, height: (maxY - minY) * 160)
     let next = canvasExtent.isNull ? requested : canvasExtent.union(requested)
-    guard next != canvasExtent else { return }
+    guard next != canvasExtent else { return false }
+    growingCanvas = true
+    defer { growingCanvas = false }
     canvasExtent = next
     canvasOrigin = next.origin
     setFrameSize(.init(width:max(600,next.width*ppm),height:max(500,next.height*ppm)))
     if let scroll = enclosingScrollView {
       scroll.tile()
-      scroll.contentView.scroll(to:documentPoint(before))
-      scroll.reflectScrolledClipView(scroll.contentView)
+      centerViewport(on: anchor, in: scroll)
     }
+    if let editor = publicationEditor { editor.reposition() }
+    else if let id = editingID, let element = session?.art.elements.first(where: { $0.id == id }) {
+      positionTextHost(element, layoutOnly: true)
+    }
+    needsDisplay = true
+    return true
   }
   func synchronize() {
     guard let session else { return }
@@ -615,7 +689,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
   }
   func fitWhenReady() {
-    guard !fitted, !frames.isEmpty, window != nil, let scroll = enclosingScrollView,
+    guard !growingCanvas, !navigatingViewport, !fitted, !frames.isEmpty, window != nil, let scroll = enclosingScrollView,
       scroll.contentSize.width > 100, scroll.contentSize.height > 100
     else { return }
     fitted = true
@@ -648,10 +722,24 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func setZoom(_ value: Double) {
     guard let scroll = enclosingScrollView else { return }
-    let center = scroll.contentView.convert(visibleRect.center, from: self)
-    scroll.setMagnification(CGFloat(min(24, max(0.08, value))), centeredAt: center)
+    let viewport = visibleCanvasRect, anchor = viewport.center
+    let magnification = CGFloat(min(24, max(0.08, value)))
+    let ratio = scroll.magnification / magnification
+    navigatingViewport = true
+    defer { navigatingViewport = false }
+    let required = CGRect(x: anchor.x - viewport.width * ratio / 2,
+      y: anchor.y - viewport.height * ratio / 2,
+      width: viewport.width * ratio, height: viewport.height * ratio)
+    expandCanvas(toInclude: required.insetBy(dx: -80, dy: -80), preserving: anchor)
+    let center = scroll.contentView.convert(documentPoint(anchor), from: self)
+    scroll.setMagnification(magnification, centeredAt: center)
+    let actual = visibleCanvasRect
+    expandCanvas(toInclude: CGRect(x: anchor.x - actual.width / 2,
+      y: anchor.y - actual.height / 2, width: actual.width, height: actual.height)
+      .insetBy(dx: -80, dy: -80), preserving: anchor)
+    centerViewport(on: anchor, in: scroll)
     session?.zoom = Double(scroll.magnification)
-    needsDisplay = true
+    viewportCoordinatesChanged()
   }
   override func updateTrackingAreas() {
     super.updateTrackingAreas()
@@ -1898,13 +1986,13 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     session?.endGesture()
     needsDisplay = true
   }
-  private func positionTextHost(_ element: ArtworkElement) {
+  private func positionTextHost(_ element: ArtworkElement, layoutOnly: Bool = false) {
     guard let s = session, let f = activeFrame, let host = textHost, let clip = textClip else {
       return
     }
     let element=element.inheritingLanguage(s.art.language)
     let world = s.art.worldTransform(element)
-    if let tv = textView as? CanvasTextView {
+    if !layoutOnly, let tv = textView as? CanvasTextView {
       tv.verticalOffset = TypographyEngine.verticalOffset(element, points: true)
       tv.horizontalOffset = TypographyEngine.horizontalOffset(element, points: true)
       if element.typography?.frameMode=="point" {

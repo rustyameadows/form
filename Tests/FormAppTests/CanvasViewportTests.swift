@@ -54,6 +54,15 @@ import XCTest
       width: try XCTUnwrap(rect["width"] as? Double), height: try XCTUnwrap(rect["height"] as? Double))
   }
 
+  private func assertFullClipCovered(_ canvas: VectorCanvasView, scroll: NSScrollView,
+    file: StaticString = #filePath, line: UInt = #line) {
+    let actual = canvas.convert(scroll.contentView.bounds, from: scroll.contentView)
+    XCTAssertTrue(canvas.bounds.insetBy(dx: -0.001, dy: -0.001).contains(actual),
+      "Document \(canvas.bounds) leaves native clip \(actual) outside the Canvas", file: file, line: line)
+  }
+
+  private func center(_ rect: CGRect) -> CGPoint { .init(x: rect.midX, y: rect.midY) }
+
   func testActualCanvasHasNoNativeRulerOrBorderGuttersAndRetainsPhysicalFit() async throws {
     let (store, _, scroll, canvas) = try await fixture()
     let before = try XCTUnwrap(store.project), undoCount = store.engine.undoStack.count
@@ -136,6 +145,80 @@ import XCTest
     XCTAssertTrue(scroll.magnification.isFinite)
     XCTAssertGreaterThanOrEqual(scroll.magnification, scroll.minMagnification)
     XCTAssertLessThanOrEqual(scroll.magnification, scroll.maxMagnification)
+    XCTAssertEqual(store.project, before)
+    XCTAssertEqual(store.engine.undoStack.count, undoCount)
+  }
+
+  func testPaperFloatingFitCoversWholeNativeViewportAndRoutesWhitespaceAfterZoomAndResize() async throws {
+    let (store, window, scroll, canvas) = try await fixture()
+    window.setContentSize(.init(width: 1020, height: 817))
+    window.contentView?.layoutSubtreeIfNeeded()
+    canvas.fittingInsets = NSEdgeInsets(top: 16, left: 266, bottom: 72, right: 318)
+    let before = try XCTUnwrap(store.project), undoCount = store.engine.undoStack.count
+    for origin in [CGPoint.zero, CGPoint(x: -130, y: 75)] {
+      canvas.setFrameOrigin(origin); canvas.fit(all: true)
+      assertFullClipCovered(canvas, scroll: scroll)
+      let viewport = try fittedViewport(canvas)
+      for frame in store.artworkSession.frames where !frame.isWorkspace {
+        let document = CGRect(origin: canvas.documentPoint(frame.rect.origin),
+          size: .init(width: frame.rect.width * 72 / 25.4, height: frame.rect.height * 72 / 25.4))
+        XCTAssertTrue(viewport.insetBy(dx: -0.001, dy: -0.001)
+          .contains(scroll.contentView.convert(document, from: canvas)))
+      }
+      let host = try XCTUnwrap(window.contentView)
+      for fraction in [CGPoint(x: 0.5, y: 0.5), CGPoint(x: 0.04, y: 0.94), CGPoint(x: 0.96, y: 0.94)] {
+        let p = CGPoint(x: scroll.bounds.minX + scroll.bounds.width * fraction.x,
+          y: scroll.bounds.minY + scroll.bounds.height * fraction.y)
+        let actual = host.hitTest(scroll.convert(p, to: host.superview))
+        XCTAssertTrue(actual === canvas || actual?.isDescendant(of: canvas) == true,
+          "Native whitespace hit \(String(describing: actual)) bypassed Canvas")
+      }
+    }
+    let anchor = center(canvas.visibleCanvasRect)
+    canvas.setZoom(0.08)
+    assertFullClipCovered(canvas, scroll: scroll)
+    assertPoint(center(canvas.visibleCanvasRect), anchor)
+    let resizeAnchor = center(canvas.visibleCanvasRect)
+    window.setContentSize(.init(width: 1280, height: 940))
+    window.contentView?.layoutSubtreeIfNeeded(); scroll.layout()
+    assertFullClipCovered(canvas, scroll: scroll)
+    assertPoint(center(canvas.visibleCanvasRect), resizeAnchor)
+    let stableFrame = canvas.frame
+    for _ in 0..<8 { scroll.layout() }
+    XCTAssertEqual(canvas.frame, stableFrame, "Repeated layout must not keep expanding the native document")
+    XCTAssertEqual(store.project, before)
+    XCTAssertEqual(store.engine.undoStack.count, undoCount)
+  }
+
+  func testViewportExpansionKeepsNativeTextHostAndMarkedInputAnchoredWithoutSourceChanges() async throws {
+    let (store, window, scroll, canvas) = try await fixture()
+    var project = try XCTUnwrap(store.project)
+    let workspace = try project.ensureCanvasWorkspace()
+    let index = try XCTUnwrap(project.objects.firstIndex { $0.id == workspace.id })
+    let element = ArtworkElement(kind: "text", x: -40, y: -25, width: 80, height: 24,
+      text: "Viewport text", fontSize: 16)
+    project.objects[index].artwork?.elements = [element]
+    store.engine.project = project
+    store.artworkSession.activate(workspace.id); canvas.synchronize(); canvas.fit(all: true)
+    canvas.beginText(element)
+    let text = try XCTUnwrap(descendants(canvas).compactMap { $0 as? CanvasTextView }.first)
+    text.setMarkedText("仮", selectedRange: .init(location: 1, length: 0),
+      replacementRange: .init(location: NSNotFound, length: 0))
+    XCTAssertTrue(text.hasMarkedText())
+    let before = try XCTUnwrap(store.project), undoCount = store.engine.undoStack.count
+    let anchor = canvas.canvasPoint(text.convert(.zero, to: canvas))
+    let marked = text.markedRange(), selected = text.selectedRange(), size = text.frame.size
+    let responder = window.firstResponder
+    let originalOrigin = canvas.canvasOrigin
+    canvas.setZoom(0.08)
+    assertFullClipCovered(canvas, scroll: scroll)
+    XCTAssertNotEqual(canvas.canvasOrigin, originalOrigin)
+    XCTAssertTrue(descendants(canvas).contains { $0 === text })
+    XCTAssertTrue(window.firstResponder === responder)
+    assertPoint(canvas.canvasPoint(text.convert(.zero, to: canvas)), anchor)
+    XCTAssertEqual(text.markedRange(), marked)
+    XCTAssertEqual(text.selectedRange(), selected)
+    XCTAssertEqual(text.frame.size, size)
     XCTAssertEqual(store.project, before)
     XCTAssertEqual(store.engine.undoStack.count, undoCount)
   }
