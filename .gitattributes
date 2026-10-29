@@ -1,3 +1,6 @@
 # Preserve upstream legal text and byte-pinned OCCT-generated test sources.
 Sources/CFormCADKernel/LICENSE_LGPL_21.txt -whitespace
 Tests/FormCADKernelTests/Fixtures/*.step -whitespace
+Tests/FormCADKernelTests/Fixtures/*.brep -text -whitespace
+# Patch context includes upstream blank-line prefixes; preserve its exact bytes.
+scripts/patches/*.patch -text -whitespace
