@@ -1364,9 +1364,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let proposed = CGPoint(x:panOrigin.x-(p.x-windowDown.x)/(zoom*ppm),y:panOrigin.y+(p.y-windowDown.y)/(zoom*ppm))
       let region = CGRect(origin:proposed,size:visibleCanvasRect.size)
       expandCanvas(toInclude:region.insetBy(dx:-80,dy:-80))
-      enclosingScrollView?.contentView.scroll(
-        to:documentPoint(region.origin))
-      enclosingScrollView?.reflectScrolledClipView(enclosingScrollView!.contentView)
+      if let scroll = enclosingScrollView { centerViewport(on: region.center, in: scroll) }
+      viewportCoordinatesChanged()
       return
     }
     let p = point(event)

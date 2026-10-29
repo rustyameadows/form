@@ -222,4 +222,38 @@ import XCTest
     XCTAssertEqual(store.project, before)
     XCTAssertEqual(store.engine.undoStack.count, undoCount)
   }
+
+  func testNativeHandPanKeepsExpectedWorldPositionAcrossShiftedOriginAndExtentGrowth() async throws {
+    let (store, window, scroll, canvas) = try await fixture()
+    canvas.fit(all: true)
+    canvas.setFrameOrigin(.init(x: -130, y: 75))
+    store.artworkSession.tool = .hand
+    let before = try XCTUnwrap(store.project), undoCount = store.engine.undoStack.count
+    let viewport = canvas.visibleCanvasRect, originalOrigin = canvas.canvasOrigin
+    let clip = scroll.contentView
+    let down = clip.convert(CGPoint(x: clip.bounds.midX, y: clip.bounds.midY), to: nil)
+    let delta = CGPoint(x: 200, y: -150)
+    let end = CGPoint(x: down.x + delta.x, y: down.y + delta.y)
+    let scale = CGFloat(canvas.zoom) * 72 / 25.4
+    let expected = CGPoint(x: viewport.minX - delta.x / scale,
+      y: viewport.minY + delta.y / scale)
+    let host = try XCTUnwrap(window.contentView)
+    let hit = host.hitTest(host.superview?.convert(down, from: nil) ?? down)
+    XCTAssertTrue(hit === canvas)
+    func event(_ kind: NSEvent.EventType, at point: CGPoint, number: Int) throws -> NSEvent {
+      try XCTUnwrap(NSEvent.mouseEvent(with: kind, location: point, modifierFlags: [],
+        timestamp: ProcessInfo.processInfo.systemUptime, windowNumber: window.windowNumber,
+        context: nil, eventNumber: number, clickCount: 1, pressure: kind == .leftMouseUp ? 0 : 1))
+    }
+    // Dispatch through the actual window hit view; subsequent drag/up belong to
+    // the same held Canvas gesture, including after native extent expansion.
+    hit?.mouseDown(with: try event(.leftMouseDown, at: down, number: 1))
+    canvas.mouseDragged(with: try event(.leftMouseDragged, at: end, number: 2))
+    canvas.mouseUp(with: try event(.leftMouseUp, at: end, number: 3))
+    XCTAssertNotEqual(canvas.canvasOrigin, originalOrigin)
+    assertPoint(canvas.visibleCanvasRect.origin, expected)
+    assertFullClipCovered(canvas, scroll: scroll)
+    XCTAssertEqual(store.project, before)
+    XCTAssertEqual(store.engine.undoStack.count, undoCount)
+  }
 }
