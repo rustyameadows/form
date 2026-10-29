@@ -307,6 +307,7 @@ struct ArtworkLayers: View {
           HStack(spacing: 8) {
             Image(systemName: frame.isWorkspace ? "square.dashed" : frame.projection?.isProof == true ? "shippingbox" : frame.projection != nil ? "link" : frame.object.componentDefinition == true ? "diamond.fill" : frame.object.recipeID == "artboard" ? "rectangle" : "link")
             Text(frame.isWorkspace ? "Canvas" : frame.title).lineLimit(1)
+              .truncationMode(.middle).help(frame.isWorkspace ? "Canvas" : frame.title)
             Spacer()
           }.font(.system(size: 11)).padding(.horizontal, 14).padding(.vertical, 9).background(
             session.activeCanvasFrame?.id == frame.id ? Color.white : .clear)

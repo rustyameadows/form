@@ -11,6 +11,9 @@ public struct SewingPatternPlan: Sendable {
 /// Derived technical geometry is rebuilt from the current editable contours; never persist it over
 /// the source. Cut contours include real V notches, and a cut-on-fold edge is omitted from cutting.
 public enum SewingPatternDrawing {
+  public enum Coordinates: Sendable {
+    case sheet, source
+  }
   /// The complete physical material footprint. A fold boundary is included here for area and
   /// collision checks even though that boundary is omitted from the actual cutting pass.
   public static func cutContour(_ geometry: SewingPieceGeometry) -> [Point2] {
@@ -73,7 +76,7 @@ public enum SewingPatternDrawing {
     return result + [end]
   }
   private static func grain(_ g: SewingPieceGeometry) -> [Point2] { generalGrain(g) }
-  public static func plan(_ source: Artwork, selection: Set<UUID> = []) throws -> SewingPatternPlan {
+  public static func plan(_ source: Artwork, selection: Set<UUID> = [], coordinates: Coordinates = .sheet) throws -> SewingPatternPlan {
     try validateArtwork(source)
     let chosen = selection.isEmpty ? Set(source.elements.map(\.id)) : source.descendants(of: Set(source.selectionRoots(selection).map(\.id)))
     let pieces = try source.elements.filter { $0.sewingPiece != nil && chosen.contains($0.id) && visible($0, in: source) }.map { try SewingPatterns.geometry($0, in: source) }
@@ -157,6 +160,13 @@ public enum SewingPatternDrawing {
     }
     var art = Artwork(background: "#FFFFFF", elements: elements, bleed: 0); art.unit = .mm
     let bounds = elements.dropFirst().reduce(art.bounds(of: elements[0])) { $0.union(art.bounds(of: $1)) }
+    if case .source = coordinates {
+      // Canvas uses the same technical paths in their original physical frame.
+      // Calibration, seam schedules and page translation belong to sheet output.
+      art.backgroundOpacity = 0
+      try validateArtwork(art)
+      return .init(artwork: art, frameSize: .init(bounds.width, bounds.height), pieces: pieces, seams: seams)
+    }
     let calibrationID = pieces[0].elementID, x = bounds.x, y = bounds.maxY + 20
     art.elements.append(line([.init(x,y),.init(x+50,y),.init(x+50,y+50),.init(x,y+50)], closed: true,
       source: calibrationID, tag: "50 mm calibration square", role: "guide", color: "#344D5D"))
