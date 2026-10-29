@@ -1,0 +1,12 @@
+{
+  "model": "model.json",
+  "model_sha256": "01f6a5d27715f68390d8566771a42aec2e781a0985f4cd4e0b4b284663a8dd4f",
+  "join_count": 2496,
+  "canonical_bytes": 2002474,
+  "maximum_coordinate_difference_from_uncompacted_mm": 3.808509063674137e-12,
+  "maximum_position_gap_mm": 0.0,
+  "maximum_first_derivative_gap": 2.4066082460194593e-11,
+  "maximum_second_derivative_gap": 8.901679393602535e-11,
+  "scope": "Nominal section-curve joins only; this does not prove axial loft fairness or reference fidelity.",
+  "generator_reproduces_selected_model_byte_for_byte": true
+}

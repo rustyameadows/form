@@ -1,0 +1,14 @@
+{
+  "label": "AI-generated independent design reference",
+  "generator": "Built-in image_gen tool; no API-key CLI",
+  "frozen_at_utc": "2026-10-28T22:50:36.037797+00:00",
+  "image": "ai-generated-reference.png",
+  "sha256": "0598ba5345aba541a50e93ad40f7c671bf32f7ad433e696a838b4254b5b38ae5",
+  "prompt": "reference-prompt.txt",
+  "model_existed_when_generated": false,
+  "notes": [
+    "The image is a design brief, not ground-truth manufactured geometry.",
+    "Front/top apparent width and neck size differ slightly; visual assessment must acknowledge generated multi-view inconsistency.",
+    "Do not regenerate the reference to fit a later model."
+  ]
+}
