@@ -104,7 +104,7 @@ struct ArtworkLayers: View {
             .help("Close Canvas layers").accessibilityLabel("Close Canvas layers")
         }
       }.padding(.horizontal, 14).padding(.vertical, 12)
-      Divider()
+      InspectorDivider().padding(.horizontal, InspectorStyle.panelPadding)
       ScrollView {
         VStack(alignment: .leading, spacing: 0) {
           ForEach(session.frames) { frame in
@@ -121,7 +121,7 @@ struct ArtworkLayers: View {
                 session.activeCanvasFrame?.id == frame.id ? Color.white : .clear)
             }.buttonStyle(.plain)
           }
-          Divider().padding(.top, 12)
+          InspectorDivider().padding(.top, 12).padding(.horizontal, InspectorStyle.panelPadding)
           HStack {
             SectionLabel("LAYERS")
             Spacer()
@@ -245,37 +245,5 @@ struct ArtworkLayers: View {
         }
       }.frame(minHeight: 0, maxHeight: .infinity)
     }.background(Palette.paper)
-  }
-}
-
-struct ObjectPreview: NSViewRepresentable {
-  @EnvironmentObject var store: StudioStore
-  let object: ProductObject
-  let project: Project
-  let assets: URL
-  func makeCoordinator() -> TableSceneController {
-    TableSceneController()
-  }
-  func makeNSView(context: Context) -> TableSceneView {
-    let view = TableSceneView(frame: .zero)
-    view.controller = context.coordinator
-    context.coordinator.view = view
-    return view
-  }
-  func updateNSView(_ view: TableSceneView, context: Context) {
-    var preview = project
-    var surface = object
-    surface.artwork = project.surfaceArtwork(object)
-    surface.artworkSourceID = nil
-    surface.artworkFit = nil
-    preview.objects = [surface]
-    preview.objects[0].position = .init()
-    preview.objects[0].rotation = 0
-    let builds = context.coordinator.geometryBuilds
-    let initial = context.coordinator.objectRoot.childNodes.isEmpty
-    context.coordinator.sync(
-      preview, selection: [], isolated: [], showGrid: false, studio: false, preset: "Daylight",
-      assets: assets, textureLimit: 1024)
-    if initial || builds != context.coordinator.geometryBuilds { context.coordinator.fitAll() }
   }
 }

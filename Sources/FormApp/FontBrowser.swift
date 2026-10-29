@@ -17,7 +17,9 @@ struct FontBrowserButton: View {
         ).lineLimit(1)
         Spacer()
         Image(systemName: "chevron.up.chevron.down").font(.system(size: 9))
-      }.font(.system(size: 13)).padding(9).background(.white, in: RoundedRectangle(cornerRadius: 6))
+      }.font(InspectorStyle.labelFont).padding(.horizontal, 9).frame(height: InspectorStyle.controlHeight)
+        .background(Palette.surface, in: RoundedRectangle(cornerRadius: InspectorStyle.controlRadius))
+        .overlay(RoundedRectangle(cornerRadius: InspectorStyle.controlRadius).strokeBorder(Palette.line.opacity(0.7)).allowsHitTesting(false))
     }.buttonStyle(.plain).popover(isPresented: $showing) { FontBrowser(session: session) }
   }
 }
@@ -48,11 +50,11 @@ struct FontBrowser: View {
   var body:some View {
     VStack(spacing:12) {
       HStack {
-        TextField("Search family, style or face",text:$query).textFieldStyle(.roundedBorder)
+        TextField("Search family, style or face",text:$query).textFieldStyle(InspectorTextFieldStyle())
         Button {favoriteOnly.toggle()} label:{Image(systemName:favoriteOnly ? "star.fill":"star")}
           .buttonStyle(.plain).help("Show favorite font faces")
       }
-      TextField("Preview text",text:$sample).textFieldStyle(.roundedBorder)
+      TextField("Preview text",text:$sample).textFieldStyle(InspectorTextFieldStyle())
         .onChange(of:sample) {_,value in if value.count>128 {sample=String(value.prefix(128))}}
       HStack {SectionLabel("FONT FACES ON THIS MAC");Spacer();Text(faces.count == 1 ? "1 face":"\(faces.count) faces").font(.system(size:9)).foregroundStyle(Palette.secondary)}
       ScrollView {
@@ -151,7 +153,7 @@ struct FontFeaturesInspector: View {
                     session.typography { $0.variations.removeValue(forKey: axis.id) }
                   }.buttonStyle(.plain).font(.system(size: 9)).foregroundStyle(Palette.accent)
                 }
-                Slider(
+                InspectorSlider(
                   value: Binding(
                     get: {
                       min(
@@ -221,7 +223,7 @@ struct FontFeaturesInspector: View {
                           Text("Default").tag(-1)
                           Text("On").tag(1)
                           Text("Off").tag(0)
-                        }.labelsHidden().pickerStyle(.segmented).controlSize(.mini)
+                        }.labelsHidden().inspectorSegmented().controlSize(.mini)
                     }.padding(.vertical, 3)
                   }
                 }

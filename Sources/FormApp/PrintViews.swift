@@ -63,7 +63,7 @@ struct PrintWorkspace: View {
                           format: "Z %.2f mm",
                           path.layers[min(printing.layer, max(0, path.layers.count - 1))]))
                     }.font(.system(size: 10, design: .monospaced))
-                    Slider(
+                    InspectorSlider(
                       value: Binding(
                         get: { Double(printing.layer) }, set: { printing.layer = Int($0.rounded()) }
                       ), in: 0...Double(max(1, path.layers.count - 1))
@@ -248,20 +248,12 @@ struct PrintNumber: View {
     self.unit = unit
     self.range = range
   }
-  var body: some View {
-    HStack {
-      Text(title)
-      Spacer()
-      TextField(
-        title,
-        value: Binding(
-          get: { value }, set: { value = min(range.upperBound, max(range.lowerBound, $0)) }),
-        format: .number.precision(.fractionLength(0...2))
-      ).font(Palette.numericFont).multilineTextAlignment(.trailing).frame(width: 65).textFieldStyle(.roundedBorder)
-        .onSubmit { NSApp.keyWindow?.makeFirstResponder(nil) }
-      Text(unit).foregroundStyle(Palette.secondary).fixedSize().frame(
-        minWidth: 21, alignment: .leading)
-    }.font(.system(size: 11))
+  @ViewBuilder var body: some View {
+    if unit == "mm" {
+      ArtworkUnitField(title, value: value, unit: .mm) { value = min(range.upperBound, max(range.lowerBound, $0)) }
+    } else {
+      ScalarArtworkField(title, value: value, unit: unit) { value = min(range.upperBound, max(range.lowerBound, $0)) }
+    }
   }
 }
 

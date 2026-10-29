@@ -23,7 +23,7 @@ struct ArtworkPageSetupControls:View {
       .sheet(isPresented:$review){ArtworkPageReview(store:store,objectID:draft.objectID)}
   }
   private func field(_ label:String,_ text:Binding<String>,key:String,prompt:String)->some View {
-    HStack {Text(label).font(.system(size:10)).foregroundStyle(Palette.secondary);Spacer();TextField(prompt,text:text).textFieldStyle(.roundedBorder).multilineTextAlignment(.trailing).frame(width:110).focused($focus,equals:key).accessibilityLabel(label+" page setup");Text(draft.unit.rawValue).font(.system(size:9)).foregroundStyle(Palette.secondary)}
+    HStack {Text(label).font(.system(size:10)).foregroundStyle(Palette.secondary);Spacer();TextField(prompt,text:text).textFieldStyle(InspectorTextFieldStyle()).multilineTextAlignment(.trailing).frame(width:110).focused($focus,equals:key).accessibilityLabel(label+" page setup");Text(draft.unit.rawValue).font(.system(size:9)).foregroundStyle(Palette.secondary)}
   }
 }
 struct ArtworkPageReview:View {
@@ -37,12 +37,12 @@ struct ArtworkPageReview:View {
       HStack {Text("Physical page").font(.system(size: 25, weight: .semibold));Spacer();Button("Done"){dismiss()}.keyboardShortcut(.cancelAction)}
       HStack {
         Picker("Output area",selection:$model.area){Text("Trim only").tag(ArtworkPageArea.trim);Text("Include bleed").tag(ArtworkPageArea.bleed)}.frame(width:240)
-        Toggle("Crop marks",isOn:$model.cropMarks).toggleStyle(.checkbox)
-        Text("Gap mm");TextField("Mark gap",text:$model.gap).textFieldStyle(.roundedBorder).frame(width:65)
-        Text("Length mm");TextField("Mark length",text:$model.length).textFieldStyle(.roundedBorder).frame(width:65)
+        Toggle("Crop marks",isOn:$model.cropMarks).inspectorToggle()
+        Text("Gap mm");TextField("Mark gap",text:$model.gap).textFieldStyle(InspectorTextFieldStyle()).frame(width:65)
+        Text("Length mm");TextField("Mark length",text:$model.length).textFieldStyle(InspectorTextFieldStyle()).frame(width:65)
         Button("Refresh review"){model.refresh()}
       }.font(.system(size:10))
-      HStack {Toggle("Reference guides",isOn:$model.referenceGuides).toggleStyle(.checkbox);Text("Blue · trim   Red · bleed   Green · safe inset").foregroundStyle(Palette.secondary);Spacer();Toggle("Explicit sRGB ink preview",isOn:$model.previewInks).toggleStyle(.checkbox)}.font(.system(size:10))
+      HStack {Toggle("Reference guides",isOn:$model.referenceGuides).inspectorToggle();Text("Blue · trim   Red · bleed   Green · safe inset").foregroundStyle(Palette.secondary);Spacer();Toggle("Explicit sRGB ink preview",isOn:$model.previewInks).inspectorToggle()}.font(.system(size:10))
       if let data=model.proof {
         PhysicalDocumentNavigation(controller:review)
         PhysicalDocumentCanvas(controller:review,data:data,identifier:model.identity).frame(maxWidth:.infinity,maxHeight:.infinity).clipShape(RoundedRectangle(cornerRadius:6))

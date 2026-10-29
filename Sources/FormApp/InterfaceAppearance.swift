@@ -101,10 +101,10 @@ struct AppearanceSettingsView: View {
       Text("Settings").font(.system(size: 24, weight: .semibold))
       Text("SF for the interface. SF Mono for values and technical details.").foregroundStyle(Palette.secondary)
       Divider()
-      ColorPicker("Accent color", selection: Binding(get: { Color(nsColor: appearance.selectedColor) }, set: { color in apply { try appearance.setAccent(NSColor(color)) } }), supportsOpacity: false)
+      InspectorColorPicker("Accent color", selection: Binding(get: { Color(nsColor: appearance.selectedColor) }, set: { color in apply { try appearance.setAccent(NSColor(color)) } }), supportsOpacity: false)
         .accessibilityLabel("App accent color")
       HStack {
-        TextField("#RRGGBB", text: $hex).font(Palette.numericFont).textFieldStyle(.roundedBorder).frame(width: 120).accessibilityLabel("Accent hex color").onSubmit(applyHex)
+        TextField("#RRGGBB", text: $hex).font(Palette.numericFont).textFieldStyle(InspectorTextFieldStyle()).frame(width: 120).accessibilityLabel("Accent hex color").onSubmit(applyHex)
         Button("Apply", action: applyHex).accessibilityLabel("Apply app accent")
         Spacer()
         Button("Reset to blue") { apply { try appearance.setAccent(InterfaceAppearance.defaultAccent) } }

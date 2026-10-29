@@ -80,9 +80,10 @@ struct ComponentInspector: View {
         get: { reference.color != nil },
         set: { session.component("override", ["color": $0 ? "#263C64" : NSNull()]) }))
       if let color = reference.color {
-        ColorPicker("Instance fill", selection: Binding(
+        InspectorColorPicker("Instance fill", selection: Binding(
           get: { Color(nsColor: NSColor(hex: color)) },
-          set: { session.component("override", ["color": NSColor($0).hexString]) }), supportsOpacity: false)
+          set: { session.component("override", ["color": NSColor($0).hexString]) }), supportsOpacity: false,
+          targetID: session.inspectorColorTarget("component-fill"), onEditingChanged: session.inspectorEditing)
         SwatchPicker(session: session, target: "fill", swatchID: reference.colorSwatchID)
       }
       if let part {
@@ -97,11 +98,11 @@ struct ComponentInspector: View {
             $0.color = enabled ? part.color : nil; $0.colorSwatchID = nil
           } }))
         if let color = change?.color {
-          ColorPicker("Part fill", selection: Binding(
+          InspectorColorPicker("Part fill", selection: Binding(
             get: { Color(nsColor: NSColor(hex: color)) },
             set: { value in session.overridePart(part.id) {
               $0.color = NSColor(value).hexString; $0.colorSwatchID = nil
-            } }), supportsOpacity: false)
+            } }), supportsOpacity: false, targetID: session.inspectorColorTarget("part-\(part.id)"), onEditingChanged: session.inspectorEditing)
           SwatchPicker(session: session, target: "component_part", swatchID: change?.colorSwatchID, partID: part.id)
         }
         if part.kind == "text" {
@@ -141,7 +142,7 @@ private struct ComponentTextField: View {
     onCommit(draft)
   }
   var body: some View {
-    TextField("Text override", text: $draft).textFieldStyle(.roundedBorder).focused($focused)
+    TextField("Text override", text: $draft).textFieldStyle(InspectorTextFieldStyle()).focused($focused)
       .onSubmit { commit() }
       .onAppear { draft = value; committed = value }
       .onChange(of: focused) { _, active in if !active { commit() } }

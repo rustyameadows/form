@@ -36,7 +36,7 @@ private struct ModelImportReviewContents:View {
         Spacer();Button("Cancel") {coordinator.cancel(review)}.keyboardShortcut(.cancelAction)
       }
       HStack {
-        TextField("Model name",text:$review.name).textFieldStyle(.roundedBorder)
+        TextField("Model name",text:$review.name).textFieldStyle(InspectorTextFieldStyle())
         Picker("Source units",selection:Binding<String>(get:{review.sourceUnit?.rawValue ?? "declared"},set:{value in review.sourceUnit=MeshSourceUnit(rawValue:value)})) {
           Text(review.url.pathExtension.lowercased()=="stl" ? "Choose units…":"Declared meters").tag("declared")
           ForEach(MeshSourceUnit.allCases,id:\.self){Text($0.rawValue.capitalized).tag($0.rawValue)}
@@ -124,10 +124,10 @@ struct ModelAssetInspector:View {
         }
         if !reference.materials.isEmpty {
           Picker("Material slot",selection:$slot) {ForEach(reference.materials){Text($0.name).tag($0.index)}}.font(.system(size:11)).onChange(of:slot){_,_ in synchronizeSlot()}
-          ColorPicker("Surface color",selection:Binding(get:{color},set:{color=$0;colorChanged=true}),supportsOpacity:false).font(.system(size:11))
+          InspectorColorPicker("Surface color",selection:Binding(get:{color},set:{color=$0;colorChanged=true}),supportsOpacity:false).font(.system(size:11))
           Text("Textured slots keep their weave contrast in a derived colorway; original texture bytes stay retained.").font(.system(size:9)).foregroundStyle(Palette.secondary)
-          HStack{Text("Metallic");Slider(value:$metallic,in:0...1)}.font(.system(size:10))
-          HStack{Text("Roughness");Slider(value:$roughness,in:0...1)}.font(.system(size:10))
+          HStack{Text("Metallic");InspectorSlider(value:$metallic,in:0...1)}.font(.system(size:10))
+          HStack{Text("Roughness");InspectorSlider(value:$roughness,in:0...1)}.font(.system(size:10))
           HStack {
             Button("Apply material") {
               var args:[String:Any]=["command":"material","material_index":slot,"metallic":metallic,"roughness":roughness]

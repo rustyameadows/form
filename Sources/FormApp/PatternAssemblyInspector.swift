@@ -104,7 +104,7 @@ struct PatternAssemblyEditor:View {
     guard let panel=definition.panels.first,let source,let e=source.elements.first(where:{$0.id==panel.panel.elementID}),let edge=try? SewingCurves.boundaries(e,in:source).filter({!$0.isHole}).flatMap(\.edges).first,let id=edge.id,let end=edge.endID else {return}
     definition.pins.append(.init(panel:panel.panel,edgeID:id,endID:end,fraction:0.5))
   }
-  private func scalar(_ label:String,value:Binding<Double>)->some View {TextField(label,value:value,format:.number.precision(.fractionLength(0...8))).font(Palette.numericFont).textFieldStyle(.roundedBorder)}
+  private func scalar(_ label:String,value:Binding<Double>)->some View {TextField(label,value:value,format:.number.precision(.fractionLength(0...8))).font(Palette.numericFont).textFieldStyle(InspectorTextFieldStyle())}
   private func vector(_ label:String,value:Binding<Vector3>)->some View {HStack {Text(label);Spacer();scalar("X",value:value.x);scalar("Y",value:value.y);scalar("Z",value:value.z)}}
   private func save() {
     NSApp.keyWindow?.makeFirstResponder(nil)

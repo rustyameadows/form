@@ -19,7 +19,7 @@ struct StudioCompositionWorkspace:View {
             HStack(alignment:.top) {
               EnvironmentPageHeading(eyebrow:"Studio · composition stage",title:controller.draft?.name ?? "Compose a scene.",detail:"Arrange linked products for an image or camera motion. Your design objects stay in place.")
               Spacer(minLength:0)
-              Toggle("Guides",isOn:$guides).toggleStyle(.checkbox).font(.system(size:10))
+              Toggle("Guides",isOn:$guides).inspectorToggle().font(.system(size:10))
             }.padding(20)
             stage.frame(minHeight:260,maxHeight:.infinity)
             timeline
@@ -87,8 +87,8 @@ struct StudioCompositionWorkspace:View {
           else if inspector=="Instance" {instanceEditor}
           else {lighting(scene)}
           Divider();SectionLabel("IMAGE OUTPUT")
-          TextField("Scene name",text:Binding(get:{controller.draft?.name ?? ""},set:{value in controller.change{$0.name=value}})).textFieldStyle(.roundedBorder).accessibilityLabel("Studio scene name")
-          HStack {TextField("Width",value:Binding(get:{scene.pixels.width},set:{value in controller.change{$0.pixels.width=value}}),format:.number.grouping(.never));Text("×");TextField("Height",value:Binding(get:{scene.pixels.height},set:{value in controller.change{$0.pixels.height=value}}),format:.number.grouping(.never));Text("px")}.textFieldStyle(.roundedBorder).font(.system(size:11))
+          TextField("Scene name",text:Binding(get:{controller.draft?.name ?? ""},set:{value in controller.change{$0.name=value}})).textFieldStyle(InspectorTextFieldStyle()).accessibilityLabel("Studio scene name")
+          HStack {TextField("Width",value:Binding(get:{scene.pixels.width},set:{value in controller.change{$0.pixels.width=value}}),format:.number.grouping(.never));Text("×");TextField("Height",value:Binding(get:{scene.pixels.height},set:{value in controller.change{$0.pixels.height=value}}),format:.number.grouping(.never));Text("px")}.textFieldStyle(InspectorTextFieldStyle()).font(.system(size:11))
           Button("Export image…"){controller.exportDialog(video:false)}.frame(maxWidth:.infinity).accessibilityLabel("Export Studio composition image")
           let pixels=StudioSceneMedia.videoPixels(scene.pixels)
           Text("Video: \(pixels.width) × \(pixels.height) · H.264 · camera motion").font(.system(size:10)).foregroundStyle(Palette.secondary)
@@ -116,7 +116,7 @@ struct StudioCompositionWorkspace:View {
   @ViewBuilder private var instanceEditor:some View {
     if let instance=controller.selected {
       SectionLabel("PRESENTATION INSTANCE")
-      TextField("Instance name",text:Binding(get:{instance.name},set:{value in controller.changeInstance{$0.name=value}})).textFieldStyle(.roundedBorder)
+      TextField("Instance name",text:Binding(get:{instance.name},set:{value in controller.changeInstance{$0.name=value}})).textFieldStyle(InspectorTextFieldStyle())
       Toggle("Visible",isOn:Binding(get:{instance.visible},set:{value in controller.changeInstance{$0.visible=value}}))
       if instance.prop==nil {
         Picker("Product / variant",selection:Binding<UUID?>(get:{instance.sourceObjectID},set:{value in controller.changeInstance{$0.sourceObjectID=value;$0.materialID=nil}})){
@@ -130,7 +130,7 @@ struct StudioCompositionWorkspace:View {
         field("Prop width",value:prop.widthMM,unit:"mm"){value in controller.changeInstance{$0.prop?.widthMM=value}}
         field("Prop height",value:prop.heightMM,unit:"mm"){value in controller.changeInstance{$0.prop?.heightMM=value}}
         field("Prop depth",value:prop.depthMM,unit:"mm"){value in controller.changeInstance{$0.prop?.depthMM=value}}
-        TextField("Prop color #RRGGBB",text:Binding(get:{prop.color},set:{value in controller.changeInstance{$0.prop?.color=value}})).textFieldStyle(.roundedBorder)
+        TextField("Prop color #RRGGBB",text:Binding(get:{prop.color},set:{value in controller.changeInstance{$0.prop?.color=value}})).textFieldStyle(InspectorTextFieldStyle())
       }
       Divider();SectionLabel("PLACEMENT · MILLIMETERS")
       field("X",value:instance.positionMM.x,unit:"mm"){value in controller.changeInstance{$0.positionMM.x=value}}
@@ -155,7 +155,7 @@ struct StudioCompositionWorkspace:View {
       if let scene=controller.draft {
         HStack(spacing:14) {
           Button{controller.playing ? controller.stop():controller.play()}label:{Image(systemName:controller.playing ? "pause.fill":"play.fill").frame(width:28,height:28)}.accessibilityLabel("Play Studio camera motion")
-          Slider(value:Binding(get:{controller.time},set:{controller.scrub($0)}),in:0...1).accessibilityLabel("Studio camera motion time")
+          InspectorSlider(value:Binding(get:{controller.time},set:{controller.scrub($0)}),in:0...1).accessibilityLabel("Studio camera motion time")
           Text(String(format:"%.1f / %.1f s",controller.time*scene.motion.seconds,scene.motion.seconds)).font(.system(size:10,design:.monospaced)).frame(width:90)
         }
         ViewThatFits(in:.horizontal) {
@@ -169,7 +169,8 @@ struct StudioCompositionWorkspace:View {
   private func motionDuration(_ scene:StudioComposition)->some View {field("Duration",value:scene.motion.seconds,unit:"s"){value in controller.change{$0.motion.seconds=value}}.frame(width:160)}
   @ViewBuilder private func motionOrbit(_ scene:StudioComposition)->some View {if scene.motion.mode == .orbit {field("Orbit",value:scene.motion.orbitDegrees,unit:"°"){value in controller.change{$0.motion.orbitDegrees=value}}.frame(width:150)}}
   private func motionFPS(_ scene:StudioComposition)->some View {Picker("FPS",selection:Binding(get:{scene.motion.fps},set:{value in controller.change{$0.motion.fps=value}})){ForEach([12,24,30],id:\.self){Text(String($0)).tag($0)}}.frame(width:85)}
-  private func field(_ title:String,value:Double,unit:String,set:@escaping(Double)->Void)->some View {
-    HStack{Text(title);Spacer(minLength:4);TextField(title,value:Binding(get:{value},set:set),format:.number.grouping(.never).precision(.fractionLength(0...2))).font(Palette.numericFont).textFieldStyle(.roundedBorder).frame(width:72).accessibilityLabel("Studio "+title);Text(unit).foregroundStyle(Palette.secondary).frame(width:22,alignment:.leading)}.font(.system(size:11))
+  @ViewBuilder private func field(_ title:String,value:Double,unit:String,set:@escaping(Double)->Void)->some View {
+    if unit == "mm" { ArtworkUnitField(title, value: value, unit: store.project?.unit == "in" ? .inches : .mm, set) }
+    else { ScalarArtworkField(title, value: value, unit: unit, set) }
   }
 }

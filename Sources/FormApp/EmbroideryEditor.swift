@@ -40,7 +40,7 @@ struct EmbroideryEditor:View {
           if let program {
             Text("\(program.stitchCount.formatted()) stitches · \(program.commands.filter {$0.action == .jump}.count) travels · \(program.threadOrder.count) thread passes")
               .font(.system(size:11,design:.monospaced)).foregroundStyle(Palette.secondary)
-            Slider(value:$through,in:0...Double(max(1,program.commands.count)),step:1).accessibilityLabel("Stitch playback")
+            InspectorSlider(value:$through,in:0...Double(max(1,program.commands.count)),step:1).accessibilityLabel("Stitch playback")
           }
           HStack {
             Toggle("Show travel + trims",isOn:$showJumps).toggleStyle(.checkbox)
@@ -73,7 +73,7 @@ struct EmbroideryEditor:View {
                   ForEach(store.library.textileProduction?.threads ?? []) {stock in Button(stock.name+" / "+(stock.sku ?? stock.color)) {draft.threads[index] = .init(stock:stock)}}
                   if draft.threads[index].stock != nil {Divider();Button("Unlink stock snapshot") {draft.threads[index].stock=nil}}
                 }
-                ColorPicker("Color",selection:Binding(get:{Color(nsColor:NSColor(hex:draft.threads[index].color))},set:{draft.threads[index].color=NSColor($0).hexString}),supportsOpacity:false).disabled(draft.threads[index].stock != nil)
+                InspectorColorPicker("Color",selection:Binding(get:{Color(nsColor:NSColor(hex:draft.threads[index].color))},set:{draft.threads[index].color=NSColor($0).hexString}),supportsOpacity:false).disabled(draft.threads[index].stock != nil)
                 HStack {
                   TextField("Brand",text:Binding(get:{draft.threads[index].brand ?? ""},set:{draft.threads[index].brand=$0.isEmpty ? nil:$0}))
                   TextField("Catalog",text:Binding(get:{draft.threads[index].catalog ?? ""},set:{draft.threads[index].catalog=$0.isEmpty ? nil:$0}))

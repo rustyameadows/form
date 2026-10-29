@@ -160,7 +160,7 @@ struct SewingTileSettings: View {
       Text(field.title).foregroundStyle(Palette.secondary)
       Spacer(minLength: 2)
       TextField(field.title, text: $draft.values[field.rawValue])
-        .textFieldStyle(.roundedBorder).multilineTextAlignment(.trailing).frame(width: 62)
+        .textFieldStyle(InspectorTextFieldStyle()).multilineTextAlignment(.trailing).frame(width: 62)
         .accessibilityLabel(field.title + " in millimeters")
       Text("mm").foregroundStyle(Palette.secondary)
     }.font(.system(size: 10))

@@ -34,8 +34,8 @@ struct TextileInspector: View {
         }
 
         Picker("Trim fabric",selection:Binding(get:{spec.trimMaterialID ?? TextileProduct.defaults(for:object.recipeID)?.trimMaterialID ?? object.materialID},set:{v in update{$0.trimMaterialID=v}})) {ForEach(store.materials.filter{$0.fabric != nil}){m in Text(m.name).tag(m.id)}}
-        TextField("Blank / product name",text:Binding(get:{spec.blankName ?? ""},set:{v in update{$0.blankName=v}})).textFieldStyle(.roundedBorder)
-        TextField("Size",text:Binding(get:{spec.size ?? ""},set:{v in update{$0.size=v}})).textFieldStyle(.roundedBorder)
+        TextField("Blank / product name",text:Binding(get:{spec.blankName ?? ""},set:{v in update{$0.blankName=v}})).textFieldStyle(InspectorTextFieldStyle())
+        TextField("Size",text:Binding(get:{spec.size ?? ""},set:{v in update{$0.size=v}})).textFieldStyle(InspectorTextFieldStyle())
       } else {
         if object.recipeID=="textilePrint" {
           Text("Direct surface artwork").font(.system(size:11,weight:.medium))
@@ -44,9 +44,9 @@ struct TextileInspector: View {
         Picker("Process",selection:Binding(get:{spec.process},set:{v in update{$0.process=v}})) {
           ForEach(TextileProduct.Process.allCases.filter{$0 != .decoratedBlank && $0 != .directPrint},id:\.self) {p in Text(p.name).tag(p)}
         }
-        TextField("Border treatment",text:Binding(get:{spec.border ?? ""},set:{v in update{$0.border=v}})).textFieldStyle(.roundedBorder)
-        TextField("Backing",text:Binding(get:{spec.backing ?? ""},set:{v in update{$0.backing=v}})).textFieldStyle(.roundedBorder)
-        TextField("Attachment method",text:Binding(get:{spec.attachmentMethod ?? ""},set:{v in update{$0.attachmentMethod=v}})).textFieldStyle(.roundedBorder)
+        TextField("Border treatment",text:Binding(get:{spec.border ?? ""},set:{v in update{$0.border=v}})).textFieldStyle(InspectorTextFieldStyle())
+        TextField("Backing",text:Binding(get:{spec.backing ?? ""},set:{v in update{$0.backing=v}})).textFieldStyle(InspectorTextFieldStyle())
+        TextField("Attachment method",text:Binding(get:{spec.attachmentMethod ?? ""},set:{v in update{$0.attachmentMethod=v}})).textFieldStyle(InspectorTextFieldStyle())
         }
         Picker("Garment",selection:Binding<UUID?>(get:{spec.attachment?.garmentID},set:{id in
           if let id,let host=project.objects.first(where:{$0.id==id}) {update{$0.attachment = .init(garmentID:id,zone:MerchandiseBlanks.zones(host).first?.id ?? .leftChest,clearance:object.recipeID=="textilePrint" ? 0:1)}}
@@ -70,7 +70,7 @@ struct TextileInspector: View {
           HStack {
             Text("Angle");Spacer()
             TextField("Attachment angle",value:Binding(get:{attachment.rotation},set:{v in update{$0.attachment?.rotation=v}}),format:.number.precision(.fractionLength(0...1)))
-              .textFieldStyle(.roundedBorder).frame(width:70)
+              .textFieldStyle(InspectorTextFieldStyle()).frame(width:70)
             Text("°").foregroundStyle(Palette.secondary)
           }
           Button("Focus garment") {
@@ -99,7 +99,7 @@ struct TextileInspector: View {
       }
       }
       TextField("Product / process notes",text:Binding(get:{spec.notes ?? ""},set:{v in update{$0.notes=v}}),axis:.vertical)
-        .lineLimit(2...5).textFieldStyle(.roundedBorder)
+        .lineLimit(2...5).textFieldStyle(InspectorTextFieldStyle())
     }.font(.system(size:11))
       .sheet(isPresented:$showingEmbroidery) {EmbroideryEditor(object:object,project:project).environmentObject(store)}
       .sheet(isPresented:$showingProduction) {ProductionJobsView(objectID:object.id).environmentObject(store)}

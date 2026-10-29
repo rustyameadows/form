@@ -54,7 +54,7 @@ struct ArtworkStudio: View {
                 showingInspector.toggle()
               }
             }.padding(.leading, 18).padding(.trailing, 8).frame(height: 40)
-            Divider()
+            InspectorDivider().padding(.horizontal, InspectorStyle.panelPadding)
             ArtworkInspector(session: session)
           }.frame(width: 286, height: panelHeight)
             .modifier(CanvasFloatingPanel()).padding(16)

@@ -113,10 +113,12 @@ struct SwatchPalette: View {
           ForEach(store.project?.swatches ?? []) { value in
             VStack(alignment: .leading, spacing: 7) {
               HStack {
-                ColorPicker("Swatch color", selection: Binding(
+                InspectorColorPicker("Swatch color", selection: Binding(
                   get: { Color(nsColor: FormColor.color(value.color)) },
                   set: { session.swatch("update", ["swatch_id": value.id.uuidString,
-                    "color": FormColor.hex(NSColor($0))]) }), supportsOpacity: false).labelsHidden().disabled(value.printInk != nil)
+                    "color": FormColor.hex(NSColor($0))]) }), supportsOpacity: false,
+                  targetID: "swatch-\(store.project?.id.uuidString ?? "")-\(value.id)",
+                  onEditingChanged: store.inspectorInteraction("swatch-\(value.id)")).labelsHidden().disabled(value.printInk != nil)
                 SwatchTextField(title: "Swatch name", value: value.name) {
                   session.swatch("update", ["swatch_id": value.id.uuidString, "name": $0])
                 }

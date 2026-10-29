@@ -93,7 +93,7 @@ private struct FabricMaterialEditor:View {
       Text("Fabric specification").font(.system(size: 24, weight: .semibold))
       Form {
         TextField("Material name",text:$draft.name)
-        ColorPicker("Color",selection:Binding(get:{Color(nsColor:NSColor(hex:draft.color))},set:{draft.color=NSColor($0).hexString}),supportsOpacity:false)
+        InspectorColorPicker("Color",selection:Binding(get:{Color(nsColor:NSColor(hex:draft.color))},set:{draft.color=NSColor($0).hexString}),supportsOpacity:false)
         TextField("Composition",text:Binding(get:{draft.fabric?.composition ?? ""},set:{draft.fabric?.composition=$0}))
         Picker("Structure",selection:Binding(get:{draft.fabric?.structure ?? .woven},set:{draft.fabric?.structure=$0})) {
           ForEach(FabricProfile.Structure.allCases,id:\.self){Text($0.rawValue.capitalized).tag($0)}
@@ -105,7 +105,7 @@ private struct FabricMaterialEditor:View {
         TextField("SKU",text:Binding(get:{draft.fabric?.sku ?? ""},set:{draft.fabric?.sku=$0}))
         TextField("Care / production notes",text:Binding(get:{draft.fabric?.care ?? ""},set:{draft.fabric?.care=$0}))
         Toggle("Specifications verified against the material",isOn:Binding(get:{draft.fabric?.specificationsVerified ?? false},set:{draft.fabric?.specificationsVerified=$0}))
-      }.textFieldStyle(.roundedBorder)
+      }.textFieldStyle(InspectorTextFieldStyle())
       if !error.isEmpty {Text(error).foregroundStyle(Palette.ink).font(.system(size:11))}
       HStack {Button("Cancel"){dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save fabric") {
         NSApp.keyWindow?.makeFirstResponder(nil)

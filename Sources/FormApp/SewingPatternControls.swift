@@ -16,7 +16,7 @@ struct SewingPatternControls: View {
         VStack(alignment: .leading, spacing: 11) {
           if let piece = element.sewingPiece, let geometry {
             TextField("Piece name", text: Binding(get: { piece.name }, set: { value in session.update { $0.sewingPiece?.name = value } }))
-              .font(.system(size: 12, design: .default)).textFieldStyle(.roundedBorder)
+              .font(.system(size: 12, design: .default)).textFieldStyle(InspectorTextFieldStyle())
             ArtworkUnitField("Seam allowance", value: piece.seamAllowance, unit: session.unit) { value in session.update { $0.sewingPiece?.seamAllowance = value } }
             Stepper("Cut \(piece.cutQuantity)", value: Binding(get: { piece.cutQuantity }, set: { value in session.update { $0.sewingPiece?.cutQuantity = value } }), in: 1...100).font(.system(size: 11))
             ScalarArtworkField("Grain angle", value: piece.grainAngle, unit: "°") { value in session.update { $0.sewingPiece?.grainAngle = value } }
@@ -33,7 +33,7 @@ struct SewingPatternControls: View {
             }.font(.system(size: 10))
             ForEach(geometry.edgeLengths.indices, id: \.self) { index in edge(index, geometry: geometry) }
             TextField("Construction notes", text: Binding(get: { piece.notes ?? "" }, set: { value in session.update { $0.sewingPiece?.notes = value } }), axis: .vertical)
-              .font(.system(size: 10)).textFieldStyle(.roundedBorder).lineLimit(2...5)
+              .font(.system(size: 10)).textFieldStyle(InspectorTextFieldStyle()).lineLimit(2...5)
             Button("Remove piece annotation") { session.execute("pattern_piece", ["piece": NSNull()]) }.font(.system(size: 10))
           } else {
             Text("The selected shape becomes the finished stitch outline. Allowances are generated outside it in physical millimeters.").font(.system(size: 10)).foregroundStyle(Palette.secondary)
@@ -156,11 +156,11 @@ struct SewingSeamEditor: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 18) {
       Text("Pair seam edges").font(.system(size: 24, weight: .semibold))
-      TextField("Seam name", text: $name).textFieldStyle(.roundedBorder)
+      TextField("Seam name", text: $name).textFieldStyle(InspectorTextFieldStyle())
       endpoint("First edge", selected: $first, edge: $firstEdge, copy: $firstCopy)
       endpoint("Second edge", selected: $second, edge: $secondEdge, copy: $secondCopy, isSecond: true)
       Toggle("Reverse edge direction when matching", isOn: $reversed)
-      HStack { Text("Length tolerance (mm)"); TextField("Tolerance", value: $tolerance, format: .number).font(Palette.numericFont).textFieldStyle(.roundedBorder).frame(width: 85) }
+      HStack { Text("Length tolerance (mm)"); TextField("Tolerance", value: $tolerance, format: .number).font(Palette.numericFont).textFieldStyle(InspectorTextFieldStyle()).frame(width: 85) }
       Text("Copy numbers refer to the piece's cut quantity. A mismatch stays visible in the pattern check and exported instructions; pairing does not simulate sewing or stretch.").font(.system(size: 10)).foregroundStyle(Palette.secondary)
       if !error.isEmpty { Text(error).foregroundStyle(Palette.ink).font(.system(size: 11)) }
       HStack { Button("Cancel") { dismiss() }; Spacer(); Button("Save seam") { save() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction) }

@@ -8,8 +8,8 @@ extension Notification.Name {
 }
 
 struct ArtworkUnitField: View {
-  let title: String, value: Double, unit: PhysicalUnit, onCommit: (Double) -> Void
-  init(_ title: String, value: Double, unit: PhysicalUnit, _ onCommit: @escaping (Double) -> Void) {
+  let title: String, value: Double, unit: PhysicalUnit, onCommit: (Double) throws -> Void
+  init(_ title: String, value: Double, unit: PhysicalUnit, _ onCommit: @escaping (Double) throws -> Void) {
     self.title = title
     self.value = value
     self.unit = unit
@@ -18,7 +18,7 @@ struct ArtworkUnitField: View {
   var body: some View {
     ArtworkInput(
       title: title, value: value / unit.millimeters, suffix: unit.rawValue,
-      parser: { try unit.parse($0) / unit.millimeters },onCommit:{onCommit($0 * unit.millimeters)})
+      parser: { try unit.parse($0) / unit.millimeters },onCommit:{try onCommit($0 * unit.millimeters)})
   }
 }
 struct ScalarArtworkField: View {
@@ -81,10 +81,9 @@ private struct ArtworkInput: View {
     }else {TextField(title,text:$draft).focused($focused).onSubmit{commit()}}
   }
   var body: some View {
-    HStack(spacing: 5) {
-      Text(title).foregroundStyle(Palette.secondary)
-      Spacer(minLength: 2)
-      editor.font(Palette.numericFont).multilineTextAlignment(.trailing).textFieldStyle(.roundedBorder).frame(minWidth:40,maxWidth:77).foregroundStyle(error ? Palette.accent:Palette.ink).onChange(of:focused) { _, focus in
+    InspectorRow(title) {
+      InspectorValueBox(suffix: suffix, invalid: error, focused: focused) {
+      editor.font(InspectorStyle.valueFont).multilineTextAlignment(.trailing).textFieldStyle(.plain).frame(minWidth:32,maxWidth:77).foregroundStyle(error ? Palette.accent:Palette.ink).onChange(of:focused) { _, focus in
         if !focus {
           commit()
           if !error {
@@ -112,8 +111,8 @@ private struct ArtworkInput: View {
       .onReceive(NotificationCenter.default.publisher(for: .formCommitArtworkFields)) { _ in
         commit()
       }
-      if !suffix.isEmpty { Text(suffix).foregroundStyle(Palette.secondary).fixedSize() }
-    }.font(.system(size: 10))
+      }
+    }.font(InspectorStyle.labelFont)
   }
 }
 
@@ -124,38 +123,11 @@ struct ArtworkInspector: View {
   var type: Typography { session.inspectedTypography }
   var body: some View {
     ScrollView {
-      VStack(alignment: .leading, spacing: 17) {
+      VStack(alignment: .leading, spacing: InspectorStyle.sectionSpacing) {
         if let object = session.object {
+          LinkedObjectInspectorModule(session: session)
           if let review=session.activeCanvasFrame?.sourceReview {
-            Text(review).font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
-          }
-          if let projection = session.activeProjection {
-            SectionLabel(projection.isProof ? "DIELINE PROOF" : "LINKED SURFACE")
-            Text(projection.title).font(.system(size: 13, weight: .medium))
-            Text(projection.isProof
-              ? "Artwork edits update every linked view. Construction settings control the derived cut and fold geometry."
-              : "Artwork edits update every linked view and physical surface at their original physical scale.")
-              .font(.system(size: 10)).foregroundStyle(Palette.secondary)
-            if object.recipeID == "artboard" {
-              Button("Show artwork source") { session.activate(object.id); session.canvas?.fit(all: false) }
-                .font(.system(size: 10))
-            }
-          }
-          if session.preview,let preview = session.previewObject, let project = store.project {
-            HStack {
-              SectionLabel("LIVE OBJECT")
-              Spacer()
-              Image(systemName: "link").foregroundStyle(Palette.accent)
-            }
-            ObjectPreview(
-              object:preview,project:project,assets:session.assets
-            ).frame(
-              height: 155
-            ).clipped()
-            if let target = session.previewObject, session.linkedTargetID != nil {
-              Text("Editing \(object.name) · linked to \(target.name)")
-                .font(.system(size: 9)).foregroundStyle(Palette.secondary)
-            }
+            Text(review).font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
           }
           if let e {
             HStack {
@@ -180,7 +152,7 @@ struct ArtworkInspector: View {
             if session.elements.count == 1, e.component != nil {
               ComponentInspector(session: session, element: e)
             }
-            Divider()
+            InspectorDivider()
             if e.kind == "text" || session.elements.allSatisfy({ $0.kind == "text" }) {
               if session.elements.count == 1 {
                 Button(session.editingText ? "Finish text editing" : "Edit text on canvas") {
@@ -193,7 +165,7 @@ struct ArtworkInspector: View {
                 }.font(.system(size: 10))
               }
               typographyControls
-              Divider()
+              InspectorDivider()
             }
             MaskInspector(session: session, element: e)
             if !session.art.elements.contains(where: { $0.clipID == e.id }) {
@@ -219,7 +191,7 @@ struct ArtworkInspector: View {
             }
             if session.elements.allSatisfy({ $0.kind == "path" }) { pathControls }
             if e.kind == "image" { ImageInspector(session: session,element: e) }
-            Divider()
+            InspectorDivider()
             HStack {
               IconButton("Bring forward", symbol: "square.3.layers.3d.top.filled") {
                 session.execute("reorder", ["mode": "forward"])
@@ -241,8 +213,8 @@ struct ArtworkInspector: View {
           Text("Create an artwork frame to begin.").font(.system(size: 12)).foregroundStyle(
             Palette.secondary)
         }
-      }.padding(18)
-    }.background(Palette.paper).disabled(session.elements.contains { session.art.isLocked($0) })
+      }.padding(InspectorStyle.panelPadding)
+    }.inspectorSurface().background(Palette.paper).disabled(session.elements.contains { session.art.isLocked($0) })
   }
   @ViewBuilder var transformControls: some View {
     if let b = session.selectionBounds {
@@ -303,12 +275,12 @@ struct ArtworkInspector: View {
           Button("Make compound path") { session.editPath("combine") }
             .disabled(!session.elements.allSatisfy { $0.kind == "path" })
           Button("Convert shapes to paths") { session.convert("shape") }
-          Divider()
+          InspectorDivider()
           Button("Union") { session.boolean("union") }
           Button("Subtract") { session.boolean("subtract") }
           Button("Intersect") { session.boolean("intersect") }
           Button("Exclude") { session.boolean("exclude") }
-          Divider()
+          InspectorDivider()
           Button("Divide into editable regions") { session.boolean("union", mode: "divide") }
         }
         Button("Use bottom shape as clipping mask") { session.makeMask() }.buttonStyle(.plain).font(
@@ -357,8 +329,8 @@ struct ArtworkInspector: View {
     }
   }
   var typographyControls: some View {
-    VStack(alignment: .leading, spacing: 12) {
-      SectionLabel("TYPOGRAPHY")
+    VStack(alignment: .leading, spacing: InspectorStyle.rowSpacing + 2) {
+      InspectorSectionHeader("TYPE")
       TextStylePicker(session: session)
       FontBrowserButton(session: session)
       if let font = NSFont(name: type.fontName, size: 12), let family = font.familyName {
@@ -368,14 +340,14 @@ struct ArtworkInspector: View {
             get: { type.fontName }, set: { name in session.chooseFont(name) })
         ) {
           ForEach(FontCatalog.faces(family), id: \.name) { face in Text(face.style).tag(face.name) }
-        }.labelsHidden().font(.system(size: 11))
+        }.labelsHidden().inspectorPicker()
       } else {
         Label(
           "Missing: \(type.fontName). Choose a replacement above.",
           systemImage: "exclamationmark.triangle"
         ).font(.system(size: 10)).foregroundStyle(Palette.accent)
       }
-      HStack(spacing: 10) {
+      VStack(spacing: InspectorStyle.rowSpacing) {
         ScalarArtworkField("Size", value: session.inspectedSize, unit: "pt", increment:session.numericIncrement(step:1,range:0.1...10000)) {
           session.typeSize(max(0.1, $0))
         }
@@ -383,7 +355,14 @@ struct ArtworkInspector: View {
           session.typography { $0.leading = max(0, v) }
         }
       }
-      HStack(spacing: 10) {
+      HStack(spacing: 8) {
+        Text("A").font(.system(size: 10)).foregroundStyle(Palette.secondary)
+        InspectorSlider(value: Binding(get: { session.inspectedSize }, set: { session.typeSize($0) }),
+          in: 1...max(144, session.inspectedSize), step: 1, label: "Font size",
+          onEditingChanged: session.inspectorEditing)
+        Text("A").font(.system(size: 17)).foregroundStyle(Palette.secondary)
+      }
+      VStack(spacing: InspectorStyle.rowSpacing) {
         ScalarArtworkField("Tracking", value: type.tracking, unit: "pt", increment:session.numericIncrement(step:0.1,range:-10000...10000)) { v in
           session.typography { $0.tracking = v }
         }
@@ -400,26 +379,16 @@ struct ArtworkInspector: View {
         Text("Original spacing").tag("legacy")
       }.font(.system(size: 10))
         .help("Font metrics uses the face's built-in pair spacing. Tracking and manual pair adjustments remain independent. Original spacing preserves older artwork.")
-      Picker(
-        "Alignment",
-        selection: Binding(
-          get: { type.alignment }, set: { v in session.typography { $0.alignment = v } })
-      ) {
-        Text("Left").tag("left")
-        Text("Center").tag("center")
-        Text("Right").tag("right")
-        Text("Justify").tag("justified")
-      }.labelsHidden().pickerStyle(.segmented).font(.system(size: 9))
-      HStack {
-        Toggle(
-          "Underline",
-          isOn: Binding(
-            get: { type.underline }, set: { v in session.typography { $0.underline = v } }))
-        Toggle(
-          "Strike",
-          isOn: Binding(
-            get: { type.strikethrough }, set: { v in session.typography { $0.strikethrough = v } }))
-      }.toggleStyle(.checkbox).font(.system(size: 10))
+      InspectorSymbolChoice(title: "Text alignment", selection: Binding(
+        get: { type.alignment }, set: { value in session.typography { $0.alignment = value } }), choices: [
+          ("left", "Align left", "text.alignleft"), ("center", "Align center", "text.aligncenter"),
+          ("right", "Align right", "text.alignright"), ("justified", "Justify", "text.justify")])
+      HStack(spacing: InspectorStyle.rowSpacing) {
+        InspectorSymbolToggle(title: "Underline", symbol: "underline", isOn: Binding(
+          get: { type.underline }, set: { value in session.typography { $0.underline = value } }))
+        InspectorSymbolToggle(title: "Strikethrough", symbol: "strikethrough", isOn: Binding(
+          get: { type.strikethrough }, set: { value in session.typography { $0.strikethrough = value } }))
+      }
       Picker(
         "Text frame",
         selection: Binding(
@@ -518,7 +487,9 @@ struct ArtworkInspector: View {
       if let e=session.primary,let issue=GlyphEngine.issues(session.colored(e)).first {
         Text(issue).font(.system(size:10)).foregroundStyle(Palette.accent)
       }
-      FontFeaturesInspector(session: session)
+      DisclosureGroup("Font features & variations") {
+        FontFeaturesInspector(session: session).padding(.top, InspectorStyle.rowSpacing)
+      }.font(InspectorStyle.labelFont).tint(Palette.secondary)
       Button("Convert to editable outlines") {
         session.canvas?.finishText()
         session.convert()
@@ -536,13 +507,14 @@ struct ArtworkInspector: View {
               isOn: Binding(
                 get: { e.fillEnabled != false }, set: { v in session.update { $0.fillEnabled = v } }
               )
-            ).toggleStyle(.checkbox)
+            ).inspectorToggle()
             Spacer()
-            ColorPicker(
+            InspectorColorPicker(
               "Fill color",
               selection: Binding(
                 get: { Color(nsColor: FormColor.color(session.inspectedColor)) },
-                set: { session.textColor(FormColor.hex(NSColor($0))) }), supportsOpacity: false
+                set: { session.textColor(FormColor.hex(NSColor($0))) }), supportsOpacity: false,
+              targetID: session.inspectorColorTarget("fill"), onEditingChanged: session.inspectorEditing
             ).labelsHidden()
           }.font(.system(size: 10))
           SwatchPicker(session: session, target: "fill", swatchID: session.inspectedFillSwatchID,
@@ -571,7 +543,7 @@ struct ArtworkInspector: View {
   }
   var pathControls: some View {
     VStack(alignment: .leading, spacing: 10) {
-      Divider()
+      InspectorDivider()
       SectionLabel("PATH NODES")
       HStack {
         Button("Direct select") {
@@ -636,7 +608,7 @@ struct ArtworkInspector: View {
             set: { value in
               session.editPath(value ? "close" : "open")
             })
-        ).font(.system(size: 10)).toggleStyle(.checkbox)
+        ).font(.system(size: 10)).inspectorToggle()
         if session.elements.count == 1, path.contours.count > 1 {
           Button("Release compound path") { session.editPath("release") }.font(.system(size: 10))
         }
@@ -675,14 +647,15 @@ struct ArtworkInspector: View {
           .system(size: 11, design: .monospaced)
         ).foregroundStyle(Palette.secondary)
       }
-      ColorPicker(
+      InspectorColorPicker(
         "Paper / background",
         selection: Binding(
           get: { Color(nsColor: FormColor.color(session.backgroundColor)) },
           set: { color in session.mutate {
             $0.background = FormColor.hex(NSColor(color)); $0.backgroundSwatchID = nil
           } }),
-        supportsOpacity: false
+        supportsOpacity: false, targetID: session.inspectorColorTarget("background"),
+        onEditingChanged: session.inspectorEditing
       ).font(.system(size: 10))
       SwatchPicker(session: session, target: "background", swatchID: session.art.backgroundSwatchID)
       ScalarArtworkField(
@@ -691,19 +664,19 @@ struct ArtworkInspector: View {
         session.mutate { $0.backgroundOpacity = min(1, max(0, value / 100)) }
       }
       }
-      Divider()
+      InspectorDivider()
       SectionLabel("PRECISION")
       Toggle(
         "Snap to edges, centers & guides",
         isOn: Binding(
           get: { session.art.snapEnabled != false },
           set: { v in session.mutate { $0.snapEnabled = v } })
-      ).font(.system(size: 10)).toggleStyle(.checkbox)
+      ).font(.system(size: 10)).inspectorToggle()
       Toggle(
         "Show grid",
         isOn: Binding(
           get: { session.art.showGrid == true }, set: { v in session.mutate { $0.showGrid = v } })
-      ).font(.system(size: 10)).toggleStyle(.checkbox)
+      ).font(.system(size: 10)).inspectorToggle()
       ArtworkUnitField("Grid spacing", value: session.art.gridSpacing ?? 10, unit: session.unit) {
         v in session.mutate { $0.gridSpacing = max(0.1, v) }
       }

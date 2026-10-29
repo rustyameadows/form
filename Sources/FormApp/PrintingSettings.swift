@@ -23,7 +23,7 @@ struct PrintingSettingsView: View {
         Text("Filament library").tag("Filaments")
         Text("Local printers").tag("Printers")
         Text("Slicing engine").tag("Engine")
-      }.pickerStyle(.segmented).labelsHidden()
+      }.inspectorSegmented().labelsHidden()
       if tab == "Filaments" {
         HStack(alignment: .top, spacing: 24) {
           VStack(alignment: .leading, spacing: 8) {
@@ -82,14 +82,14 @@ struct FilamentEditor: View {
       SectionLabel("SPOOL & MATERIAL")
       TextField("Filament name", text: $draft.name).font(
         .system(size: 17, weight: .medium, design: .default)
-      ).textFieldStyle(.roundedBorder)
+      ).textFieldStyle(InspectorTextFieldStyle())
       HStack {
-        TextField("Manufacturer", text: $draft.vendor).textFieldStyle(.roundedBorder)
+        TextField("Manufacturer", text: $draft.vendor).textFieldStyle(InspectorTextFieldStyle())
         Picker("Material", selection: $draft.polymer) {
           ForEach(["PLA", "PETG", "ABS", "ASA", "TPU", "PC", "PA"], id: \.self) { Text($0) }
         }.labelsHidden().frame(width: 105)
       }.font(.system(size: 11))
-      ColorPicker(
+      InspectorColorPicker(
         "Color",
         selection: Binding(
           get: { Color(nsColor: NSColor(hex: draft.color)) },
@@ -114,7 +114,7 @@ struct FilamentEditor: View {
         PrintNumber("Cost / kg", value: $draft.costPerKg, unit: "$", range: 0...1000)
       }
       TextField("Notes, supplier, finish, drying preferences…", text: $draft.notes, axis: .vertical)
-        .lineLimit(2...3).textFieldStyle(.roundedBorder).font(.system(size: 11))
+        .lineLimit(2...3).textFieldStyle(InspectorTextFieldStyle()).font(.system(size: 11))
       HStack {
         if let message { Text(message).font(.system(size: 10)).foregroundStyle(Palette.accent) }
         Spacer()
@@ -152,7 +152,7 @@ struct PrinterSettingsPanel: View {
           monitor.connected ? Palette.ink : Palette.secondary)
       }
       HStack {
-        TextField("Printer name", text: $draft.name).textFieldStyle(.roundedBorder)
+        TextField("Printer name", text: $draft.name).textFieldStyle(InspectorTextFieldStyle())
         Picker(
           "Saved printer",
           selection: Binding(
@@ -179,7 +179,7 @@ struct PrinterSettingsPanel: View {
             PrinterCredentials.read(draft.id) == nil
               ? "8-character code from printer" : "Saved in Keychain · enter to replace",
             text: $code
-          ).textFieldStyle(.roundedBorder)
+          ).textFieldStyle(InspectorTextFieldStyle())
         }
         Picker("Nozzle", selection: $draft.nozzleDiameter) {
           ForEach([0.2, 0.4, 0.6, 0.8], id: \.self) { Text(String(format: "%.1f mm", $0)).tag($0) }
@@ -279,7 +279,7 @@ struct LabeledField: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 7) {
       Text(title).font(.system(size: 10, weight: .medium))
-      TextField(prompt, text: $text).font(Palette.numericFont).textFieldStyle(.roundedBorder)
+      TextField(prompt, text: $text).font(Palette.numericFont).textFieldStyle(InspectorTextFieldStyle())
     }
   }
 }

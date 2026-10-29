@@ -150,7 +150,7 @@ struct ImageInspector: View {
   private func adjustment(_ title:String,value:Double,range:ClosedRange<Double>,key:String) -> some View {
     VStack(spacing:4) {
       ScalarArtworkField(title,value:value*100,unit:"%") { session.editImage(adjustments:[key:$0/100]) }
-      Slider(value:Binding(get:{value},set:{session.editImage(adjustments:[key:$0])}),in:range)
+      InspectorSlider(value:Binding(get:{value},set:{session.editImage(adjustments:[key:$0])}),in:range)
         .accessibilityLabel(title)
     }
   }
