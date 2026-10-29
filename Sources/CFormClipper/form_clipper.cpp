@@ -34,5 +34,13 @@ extern "C" FCPaths fc_boolean(const double *c,const int32_t *n,int32_t count,con
   try {return pack(BooleanOp(op==0?ClipType::Difference:ClipType::Intersection,FillRule::NonZero,unpack(c,n,count),unpack(cc,cn,clip_count)));}
   catch(...){return FCPaths{nullptr,nullptr,0,3};}
 }
+extern "C" FCPaths fc_union(const double *c,const int32_t *n,int32_t count) {
+  try {return pack(Union(unpack(c,n,count),FillRule::NonZero));}
+  catch(...){return FCPaths{nullptr,nullptr,0,3};}
+}
+extern "C" double fc_intersection_area(const double *c,const int32_t *n,int32_t count,const double *cc,const int32_t *cn,int32_t clip_count) {
+  try {return std::abs(Area(BooleanOp(ClipType::Intersection,FillRule::NonZero,unpack(c,n,count),unpack(cc,cn,clip_count))))/1000000.0;}
+  catch(...){return std::nan("");}
+}
 extern "C" void fc_free(FCPaths p){std::free(p.coordinates);std::free(p.counts);}
 extern "C" const char *fc_version(void){return CLIPPER2_VERSION;}

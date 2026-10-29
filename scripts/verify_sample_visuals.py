@@ -55,7 +55,7 @@ def main():
    shot=client.call('form_set_view',dict(view='studio',studio_command='capture',name=name,camera=camera,reference_aspect=camera.get('viewportAspect',1),lighting='soft-side-v1',surface='Daylight',visibility=visibility or dict(mode='objects',objectIDs=[oid]),width=width,height=height))
    rendered=client.call('form_export',dict(format='png',shot_id=shot['id'],path=str(out/(name+'.render'))));image=Image.open(rendered['path']);assert image.size==(width,height)
    record=dict(case=name,object_id=oid,shot=shot,render=rendered,sha256=digest(rendered['path']));report['cases'].append(record);save();return rendered['path']
-  def flat_camera(obj,net,inside=False):return dict(azimuth=math.radians(obj.get('rotation',0)),elevation=(-1 if inside else 1)*math.pi/2,distance=max(net['size']['x'],net['size']['y'])*1.16/72,target={axis:obj['position'][axis]/100 for axis in ['x','y','z']},projection='orthographic',viewportAspect=1)
+  def flat_camera(obj,net,inside=False):return dict(azimuth=math.radians(obj.get('rotation',0))+(math.pi if inside else 0),elevation=(-1 if inside else 1)*math.pi/2,distance=max(net['size']['x'],net['size']['y'])*1.16/72,target={axis:obj['position'][axis]/100 for axis in ['x','y','z']},projection='orthographic',viewportAspect=1)
   client.call('form_create_project',dict(name='Native cyanotype conversion pixel audit',template='cyanotype'));project=client.call('form_get_project');obj=next(o for o in project['objects'] if o['recipeID']=='paperEnvelope');oid=obj['id'];original=obj['artwork'];(out/'pristine-project.json').write_text(json.dumps(project,indent=2)+'\n');yaw=math.radians(obj.get('rotation',0));target=dict(x=obj['position']['x']/100,y=obj['position']['y']/100+obj['parameters']['height']/200,z=obj['position']['z']/100);cameras={side:dict(azimuth=yaw+(0 if side=='front' else math.pi),elevation=.05,distance=4.7,target=target,projection='orthographic',viewportAspect=1) for side in ['front','back']};pictures={}
   for phase in ['pristine','converted']:
    if phase=='converted':report['conversion']=client.call('form_construction',dict(command='convert',object_id=oid))
@@ -64,7 +64,24 @@ def main():
   for side in ['front','back']:
    before,after=mask(pictures['pristine-'+side],'blue'),mask(pictures['converted-'+side],'blue');counts=[pixels(before),pixels(after)];intersection=pixels(ImageChops.multiply(before,after));union=pixels(ImageChops.lighter(before,after));iou=intersection/union if union else 0;assert min(counts)>1000 and iou>.995,(side,counts,iou);report['conversion_pixel_checks'][side]=dict(blue_pixels=counts,mask_iou=iou)
   net=client.call('form_paper',dict(command='inspect',object_id=oid))['net'];client.call('form_update_object',dict(object_id=oid,parameters=dict(fold=0,opening=0)));outside=capture('flat-outside',oid,flat_camera(obj,net));blank=capture('flat-inside-blank',oid,flat_camera(obj,net,True));assert pixels(mask(blank,'blue'))==0
-  inside=client.call('form_paper',dict(command='ensure_inside',object_id=oid))['inside_source_id'];front=next(panel for panel in net['panels'] if panel['id']=='front')['polygon'];x=min(v['x'] for v in front)+25;y=min(v['y'] for v in front)+45;art=dict(background='#F7F5EF',backgroundOpacity=0,bleed=0,elements=[element('rectangle',x,y,60,50,'#DB7330'),element('text',x+5,y+12,50,25,'#202020','INSIDE R',18)]);client.call('form_set_artwork',dict(object_id=inside,artwork=art));inside_image=capture('flat-inside-marker',oid,flat_camera(obj,net,True));outside_after=capture('flat-outside-after-inside',oid,flat_camera(obj,net));assert pixels(mask(inside_image,'orange'))>1000;assert pixels(mask(outside_after,'orange'))==0;assert pixels(ImageChops.difference(mask(outside,'blue'),mask(outside_after,'blue')))==0;assert next(o for o in client.call('form_get_project')['objects'] if o['id']==oid)['artwork']==original;report['inside_outside_channels_preserved']=True
+  inside=client.call('form_paper',dict(command='ensure_inside',object_id=oid))['inside_source_id']
+  client.call('form_set_artwork',dict(object_id=inside,artwork=dict(background='#F7F5EF',backgroundOpacity=0,bleed=0,elements=[])))
+  markers=[element('rectangle',25,45,60,50,'#DB7330'),element('text',30,57,50,25,'#202020','INSIDE R',18)]
+  frame=dict(surface_id='front',side='inside')
+  client.call('form_edit_artwork',dict(object_id=oid,physical_frame=frame,command='add',elements=markers))
+  registered=client.call('form_get_artwork',dict(object_id=inside))
+  readable=client.call('form_get_artwork',dict(object_id=oid,physical_frame=frame))
+  assert all(e.get('affine',{}).get('a',1)<0 for e in registered['elements'])
+  assert all(abs(e.get('affine',{}).get('a',1)-1)<1e-9 for e in readable['elements'])
+  assert {uuid.UUID(e['id']) for e in registered['elements']}=={uuid.UUID(e['id']) for e in markers},(registered['elements'],markers)
+  report['inside_physical_frame']=dict(source_object_id=inside,frame=frame,registered_source_reflected_once=True,readable_frame_roundtrip=True)
+  inside_image=capture('flat-inside-marker',oid,flat_camera(obj,net,True))
+  outside_after=capture('flat-outside-after-inside',oid,flat_camera(obj,net))
+  assert pixels(mask(inside_image,'orange'))>1000
+  assert pixels(mask(outside_after,'orange'))==0
+  assert pixels(ImageChops.difference(mask(outside,'blue'),mask(outside_after,'blue')))==0
+  assert next(o for o in client.call('form_get_project')['objects'] if o['id']==oid)['artwork']==original
+  report['inside_outside_channels_preserved']=True
   client.call('form_create_project',dict(name='Arbitrary construction color audit',template='blank'));definition=client.call('form_construction',dict(command='capabilities'))['example'];new=client.call('form_construction',dict(command='create',name='Unregistered source',definition=definition));newid=new['object_id'];newnet=new['net'];colors=['#254F91','#C54131','#31945C','#773D94'];elements=[]
   for panel,color in zip(newnet['panels'],colors):
    xs=[v['x'] for v in panel['polygon']];ys=[v['y'] for v in panel['polygon']];elements.append(element('rectangle',min(xs)+2,min(ys)+2,max(xs)-min(xs)-4,max(ys)-min(ys)-4,color))

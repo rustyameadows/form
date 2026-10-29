@@ -416,7 +416,9 @@ public final class OperationEngine {
       }
       return ["selected_elements": selected.map(\.uuidString)]
     case "form_edit_path":
-      let id = try objectID()
+      let physicalID=try objectID()
+      let context=try a["physical_frame"].map{try PhysicalArtworkFrameContext.resolve(in:requireProject(),objectID:physicalID,raw:$0)}
+      let id=context?.sourceObjectID ?? physicalID
       let elementIDs: Set<UUID>
       if let raw = a["element_ids"] {
         guard a["element_id"] == nil, let values = raw as? [String], !values.isEmpty else {
@@ -445,15 +447,20 @@ public final class OperationEngine {
         coalescing: source == "Studio" && interaction == "artwork-\(id)" ? "artwork-\(id)" : nil
       ) { p in
         guard let object = p.objects.first(where: { $0.id == id }),
-          var art = p.editableArtwork(object)
+          let original = p.editableArtwork(object)
         else {
           throw FormError.missing("Path element not found.")
         }
+        if let context,(p.objects.first{$0.id==context.physicalObjectID}?.locked == true || p.artworkOwner(object).locked) {
+          throw FormError.invalid("Unlock the construction and its artwork source before editing a physical frame.")
+        }
+        var art=context?.frame.display(original) ?? original
         let result = try PathCommands.edit(
           operation, artwork: &art, elements: elementIDs, nodes: nodes, arguments: a)
         selectedNodes = result.nodes
         selectedElements = result.elements
-        try p.setArtwork(art, for: id)
+        let canonical=try context.map{try $0.frame.source(from:art,original:original)} ?? art
+        try p.setArtwork(canonical,for:id)
       }
       return [
         "selected_nodes": selectedNodes.map(\.uuidString),
@@ -555,11 +562,15 @@ public final class OperationEngine {
           let recipe = p.recipe(p.objects[index].recipeID)
         else { throw FormError.missing("Object not found.") }
         if p.objects[index].patternAssembly != nil, !params.isEmpty || a["material_id"] != nil || a["color"] != nil || a["fabric_pattern"] != nil {throw FormError.invalid("Edit original pattern geometry and per-panel fabric snapshots through form_cloth configure. The assembly has no independent parametric solid or global finish.")}
+        if p.objects[index].locked,(!params.isEmpty && p.objects[index].artworkParameterBindings?.isEmpty == false || a["artwork_parameter_bindings"] != nil) {
+          throw FormError.invalid("Unlock the canonical artwork source before editing its parameters or bindings.")
+        }
         let merged = p.objects[index].parameters.merging(params) { _, new in new }
         try recipe.validate(merged)
         let oldCloth=p.objects[index].cloth
         if oldCloth != nil,!params.isEmpty,p.objects[index].locked {throw FormError.invalid("Unlock the cloth source before rebuilding its mesh.")}
         p.objects[index].parameters = merged
+        if let raw=a["artwork_parameter_bindings"] {p.objects[index].artworkParameterBindings=try ArtworkParameterBindings.decode(raw)}
         if !params.isEmpty,ClothDesign.recipeIDs.contains(p.objects[index].recipeID) {
           let rebuilt=try ClothDesign.definition(for:p.objects[index],settings:oldCloth?.settings)
           try p.setCloth(rebuilt,for:id)
@@ -629,6 +640,13 @@ public final class OperationEngine {
               try p.setCloth(definition,for:linkedID)
             }
           }
+        }
+        if !params.isEmpty || a["artwork_parameter_bindings"] != nil {
+          // Preserve the established shared-parameter family before resolving
+          // any member's own canonical artwork fields from those controls.
+          let design=p.objects[index].designID
+          let owners=p.objects.filter{$0.designID==design && $0.artworkParameterBindings?.isEmpty == false}.map(\.id)
+          for owner in owners {try p.applyArtworkParameterBindings(to:owner)}
         }
         let shared=p.objects[index].relationship=="variant" || p.objects.contains{$0.designID==p.objects[index].designID&&$0.relationship=="variant"}
         for i in p.objects.indices where PaperConstruction.isPaper(p.objects[i]) && (p.objects[i].id==id || shared&&p.objects[i].designID==p.objects[index].designID){
@@ -906,8 +924,8 @@ public func decodeRecipe(_ value: [String: Any]) throws -> Recipe {
     id.range(of: "^[a-zA-Z][a-zA-Z0-9_]{0,63}$", options: .regularExpression) != nil,
     let name = value["name"] as? String, !name.isEmpty,
     let params = value["parameters"] as? [[String: Any]], !params.isEmpty, params.count <= 24,
-    let parts = value["parts"] as? [[String: Any]], !parts.isEmpty, parts.count <= 100
-  else { throw FormError.invalid("A recipe needs an ID, name, 1–24 parameters, and 1–100 parts.") }
+    let parts = value["parts"] as? [[String: Any]], parts.count <= 100
+  else { throw FormError.invalid("A recipe needs an ID, name, 1–24 parameters, and 0–100 primitive parts. An independent canonical artwork source may use an empty parts array.") }
   let parameters: [Parameter] = try params.map { p in
     guard let key = p["id"] as? String, key != "pi",
       key.range(of: "^[a-zA-Z][a-zA-Z0-9_]{0,47}$", options: .regularExpression) != nil,

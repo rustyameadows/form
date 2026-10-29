@@ -22,6 +22,29 @@ final class PhysicalSurfaceArtworkTests:XCTestCase {
     var model=ProductObject(name:"Body",recipeID:"cadModel",parameters:[:]);model.cadModel=definition;model.cadRepresentation=representation
     p.objects=[sheet,model];engine.project=p;return(engine,model.id,sheet.id)
   }
+  func testNamedExactSurfaceUsesPolygonSafetyRatherThanItsBoundingRectangle()throws {
+    let (engine,id,sourceID)=try fixture()
+    try engine.edit("Declared triangular print region"){p in
+      let i=p.objects.firstIndex{$0.id==id}!
+      p.objects[i].cadModel!.surfaces![0].boundary=[.init(0,0),.init(100,0),.init(0,50)]
+      p.objects[i].cadRepresentation!.definitionSHA256=try CADRepresentation.definitionHash(p.objects[i].cadModel!)
+      p.objects[i].cadRepresentation!.resolvedSurfaces![0].boundary=[.init(0,0),.init(100,0),.init(0,50)]
+    }
+    let before=try XCTUnwrap(engine.project),undo=engine.undoStack.count
+    let intent=PhysicalArtworkIntent(surface:.init(kind:.cadSurface,surfaceID:"top"),bleedMM:2,safeInsetMM:3)
+    _ = try engine.call("form_surface",arguments:["command":"set_intent","object_id":id.uuidString,"intent":try jsonObject(intent)])
+    let current=try XCTUnwrap(engine.project),object=try XCTUnwrap(current.objects.first{$0.id==id})
+    let report=try current.physicalArtworkIntentReport(for:object),guide=try XCTUnwrap(report.guides.first)
+    XCTAssertTrue(report.issues.isEmpty);XCTAssertFalse(guide.safe.isEmpty)
+    for p in guide.safe.flatMap({$0}) {
+      XCTAssertGreaterThanOrEqual(p.x,2.999);XCTAssertGreaterThanOrEqual(p.y,2.999)
+      XCTAssertLessThanOrEqual(p.x/100+p.y/50,1-3*hypot(0.01,0.02)+0.0001)
+    }
+    XCTAssertEqual(object.cadRepresentation,before.objects.first{$0.id==id}?.cadRepresentation)
+    XCTAssertEqual(current.objects.first{$0.id==sourceID},before.objects.first{$0.id==sourceID})
+    XCTAssertEqual(engine.undoStack.count,undo+1)
+    engine.undo();XCTAssertEqual(engine.project,before)
+  }
   func testNamedBindingIsOneUndoAndPreservesOriginalSource()throws {
     let (e,modelID,sourceID)=try fixture(),before=e.project!
     _ = try e.call("form_surface",arguments:["command":"bind","object_id":modelID.uuidString,"surface_id":"top","source_object_id":sourceID.uuidString])

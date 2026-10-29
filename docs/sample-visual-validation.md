@@ -65,8 +65,12 @@ Both faces show an upright asymmetric `R`, red upper-left, blue upper-right and
 green lower-right. Tests also check unchanged registered SVG output, reflected
 Canvas cut clipping/guides, ordinary and whole-net insertion/path editing, three
 separate Undos, and grouping repeated node movement within one explicit gesture.
-The focused run passes 104 methods in 9.097 seconds. The new packaged build is a
-separate gate; the earlier 12-overview sweep above used the renderer-fix package.
+The focused run passes 104 methods in 9.097 seconds. A fresh packaged repeat also passes on executable
+`3a056e34961e046e27b779f53a963fb3e273bbd7f1c587b0a8e3d39281f66bfc`: 21 captures cover all 12 overviews, unchanged conversion masks and the
+inside-frame registered-source/readable-view roundtrip. A separate nine-capture
+repeat uses the reverse-face camera orientation and visibly reads `INSIDE R`
+upright. Reports are in `.local/validation/sample-physical-frame-debug-r2`
+and `.local/validation/sample-physical-frame-debug-camera`.
 
 ## Shipped example sweep
 
@@ -92,7 +96,10 @@ This is overview coverage of every shipped template plus detailed paper
 regressions. It does not establish every backside, parameter combination,
 material property or fabrication setting. Full native images, source snapshots
 and per-template observations are under
-`.local/validation/sample-visual-audit-fixed/sample-sweep.json`.
+`.local/validation/sample-visual-audit-fixed/sample-sweep.json`; the fresh
+packaged repeat is `.local/validation/sample-physical-frame-debug-r2/report.json`.
+
+The final binding/source debug package (`57661a707a36a905c332c5d61919731818fab920b3bfdfa9d54e1174062638f5`) repeats all 21 captures successfully. All 12 overview images are pixel-identical to the personally reviewed prior sweep; all nine detailed views are pixel-identical to the corrected-camera proof, including upright inside lettering. Raw reports and independent image comparisons are in `.local/validation/sample-binding-source-final`.
 
 ## Reproduce
 

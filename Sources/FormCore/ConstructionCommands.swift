@@ -21,6 +21,11 @@ public enum ConstructionCommands {
       return ["units":"mm","commands":fields.keys.sorted(),"source":"PlanarConstructionDefinition",
         "definition_fields":["version","name","parameters","derived","size","stockThickness","panels","hinges","joins","rootPanelID","requirements","connections","solidChecks"],
         "source_versions":[1,2],
+        "artwork_parameter_source":"Existing independent canonical artwork plus Recipe controls. Set artwork_parameter_bindings through form_update_object; no additional sewing document or generator. inspect/parameter/validate_cases accept that source object_id.",
+        "artwork_binding_fields":["id","elementID","property","value"],
+        "artwork_case_evidence_budget":ArtworkConstructionValidationRequest.maximumEvidenceUnits,
+        "artwork_binding_properties":ArtworkParameterBinding.Property.allCases.map(\.rawValue),
+        "case_outcomes":["passed","failed","cancelled","budget_exceeded","not_run"],
         "solid_check_metrics":["clearance","interference"],
         "solid_check_relations":CADModelRequirement.Relation.allCases.map(\.rawValue),
         "solid_check_tolerance":"Existing comparison semantics: tolerance applies to == and !=; inequalities use the authored threshold exactly.",
@@ -64,6 +69,23 @@ public enum ConstructionCommands {
     }
     guard let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),
       let object=project.objects.first(where:{$0.id==id}) else{throw FormError.missing("Choose an existing construction object.")}
+    if object.artworkParameterBindings?.isEmpty == false {
+      if command=="inspect" {return ["object_id":id.uuidString,"source_kind":"canonical_artwork_parameters",
+        "source_revision":try ArtworkConstructionValidationRequest.revision(in:project,objectID:id),
+        "parameters":object.parameters,"bindings":try jsonObject(object.artworkParameterBindings!),
+        "recipe":try jsonObject(project.recipe(object.recipeID)!)] as [String:Any]}
+      if command=="validate_cases" {
+        _ = try artworkValidationRequest(project:project,arguments:args)
+        throw FormError.invalid("Canonical artwork case validation uses LAB's asynchronous source lifecycle. Run form_construction validate_cases through the app.")
+      }
+      if command=="parameter" {
+        if let expected=args["expected_revision"] {
+          guard let expected=expected as? String,expected == (try ArtworkConstructionValidationRequest.revision(in:project,objectID:id)) else {throw FormError.invalid("The artwork source changed; inspect it before applying this edit.")}
+        }
+        return try engine.call("form_update_object",arguments:["object_id":id.uuidString,"parameters":try numeric(args["values"])],source:source)
+      }
+      throw FormError.invalid("This object already uses canonical artwork parameter bindings. Edit those declarations through form_update_object.")
+    }
     if command=="convert" {
       guard !object.locked else{throw FormError.invalid("Unlock the construction before converting its source.")}
       let legacy=try PaperConstruction.definition(for:object)
@@ -94,7 +116,8 @@ public enum ConstructionCommands {
     }
     if command=="inspect" {return try inspection(object)}
     if command=="validate_cases" {
-      return try jsonObject(validationRequest(project:project,arguments:args).validateGeometryCases())
+      do {return try jsonObject(validationRequest(project:project,arguments:args).validateGeometryCases())}
+      catch let interrupted as PlanarConstructionValidationInterrupted {return try jsonObject(interrupted.report)}
     }
     guard !object.locked else{throw FormError.invalid("Unlock the construction before editing it.")}
     if let expected=args["expected_revision"] {
@@ -187,7 +210,13 @@ public enum ConstructionCommands {
     }
     let source=try PaperConstruction.definition(for:object)
     guard let definition=source.authored else{throw FormError.missing("Choose an agent-authored construction.")}
-    var cases=[PlanarParameterCase(name:"default",values:definition.values)]
+    let cases=try parameterCases(arguments:args,defaults:definition.values,
+      parameters:definition.parameters.map{($0.name,$0.minimum,$0.maximum)})
+    return .init(projectID:project.id,objectID:id,sourceRevision:try revision(definition),
+      definition:definition,fold:source.foldPercent,opening:source.openingPercent,cases:cases)
+  }
+  static func parameterCases(arguments args:[String:Any],defaults:[String:Double],parameters:[(String,Double,Double)])throws->[PlanarParameterCase] {
+    var cases=[PlanarParameterCase(name:"default",values:defaults)]
     if let raw=args["cases"] {
       guard let requested=raw as? [[String:Any]],requested.count<=64 else{throw FormError.invalid("Provide at most 64 parameter cases.")}
       cases=[]
@@ -199,16 +228,23 @@ public enum ConstructionCommands {
     }
     if let raw=args["extrema"] {
       guard let flag=raw as? NSNumber,CFGetTypeID(flag)==CFBooleanGetTypeID() else{throw FormError.invalid("extrema must be a boolean.")}
-      if flag.boolValue {for parameter in definition.parameters {
-        cases.append(.init(name:parameter.name+".minimum",values:[parameter.name:parameter.minimum]))
-        cases.append(.init(name:parameter.name+".maximum",values:[parameter.name:parameter.maximum]))
+      if flag.boolValue {for parameter in parameters {
+        cases.append(.init(name:parameter.0+".minimum",values:[parameter.0:parameter.1]))
+        cases.append(.init(name:parameter.0+".maximum",values:[parameter.0:parameter.2]))
       }}
     }
     guard !cases.isEmpty,cases.count<=64,Set(cases.map(\.name)).count==cases.count else {
       throw FormError.invalid("Use 1–64 uniquely named cases including requested extrema.")
     }
-    return .init(projectID:project.id,objectID:id,sourceRevision:try revision(definition),
-      definition:definition,fold:source.foldPercent,opening:source.openingPercent,cases:cases)
+    return cases
+  }
+  public static func artworkValidationRequest(project:Project,arguments args:[String:Any])throws->ArtworkConstructionValidationRequest {
+    guard args["command"] as? String == "validate_cases",Set(args.keys).isSubset(of:["command","object_id","cases","extrema"]),
+      let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),let object=project.objects.first(where:{$0.id==id}),
+      let recipe=project.recipe(object.recipeID) else{throw FormError.invalid("Choose an existing canonical artwork source and only cases/extrema validation arguments.")}
+    let defaults=try project.artworkBindingParameters(for:object)
+    let cases=try parameterCases(arguments:args,defaults:defaults,parameters:recipe.parameters.map{($0.id,$0.minimum,$0.maximum)})
+    return try .init(project:project,objectID:id,cases:cases)
   }
   public static func validationSourceIsCurrent(_ request:PlanarConstructionValidationRequest,in project:Project?) -> Bool {
     guard let project,project.id==request.projectID,let object=project.objects.first(where:{$0.id==request.objectID}),

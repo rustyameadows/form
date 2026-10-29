@@ -187,14 +187,40 @@
       "failures": 0,
       "elapsed_seconds": 9.097
     },
-    "packaged_repeat_pending": true
+    "packaged_repeat_pending": false,
+    "packaged_repeat": {
+      "executable_sha256": "3a056e34961e046e27b779f53a963fb3e273bbd7f1c587b0a8e3d39281f66bfc",
+      "complete_report": ".local/validation/sample-physical-frame-debug-r2/report.json",
+      "native_captures": 21,
+      "sample_overviews": 12,
+      "conversion_masks_iou": {
+        "front": 1.0,
+        "back": 1.0
+      },
+      "readable_frame_roundtrip": true,
+      "corrected_reverse_face_camera_report": ".local/validation/sample-physical-frame-debug-camera/report.json",
+      "corrected_reverse_face_camera_captures": 9,
+      "asymmetric_inside_marker_visually_upright": true
+    }
   },
   "reproducer": "scripts/verify_sample_visuals.py",
   "reproducer_complete_run": {
     "native_captures": 21,
     "sample_overviews": 12,
     "core_pixel_checks_passed": true,
-    "human_visual_review_still_required": true
+    "human_visual_review_still_required": false,
+    "review_scope": "All 12 actual overview images personally inspected; physical inside lettering separately inspected with reverse-face camera. This is not every backside or parameter combination."
   },
-  "coverage_limit": "Every shipped template overview plus detailed paper paths; no claim about every backside, parameter envelope or manufacturing setting."
+  "coverage_limit": "Every shipped template overview plus detailed paper paths; no claim about every backside, parameter envelope or manufacturing setting.",
+  "latest_packaged_repeat": {
+    "executable_sha256": "57661a707a36a905c332c5d61919731818fab920b3bfdfa9d54e1174062638f5",
+    "report": ".local/validation/sample-binding-source-final/report.json",
+    "native_captures": 21,
+    "sample_overviews": 12,
+    "core_pixel_checks_passed": true,
+    "all12_overviews_pixel_identical_to_personally_reviewed_prior": true,
+    "all9_core_views_pixel_identical_to_corrected_camera_proof": true,
+    "overview_equivalence": ".local/validation/sample-binding-source-final/overview-pixel-equivalence.json",
+    "core_equivalence": ".local/validation/sample-binding-source-final/core-pixel-equivalence.json"
+  }
 }

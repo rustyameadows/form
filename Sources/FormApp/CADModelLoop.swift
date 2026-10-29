@@ -12,9 +12,11 @@ import FormCADModeling
   let id=UUID(),jobID:UUID,revision:String,token:UUID
   var state="pending",results:[[String:Any]]=[],issue:String?
   var elapsedMS=0.0
+  var isParameterValidation=false,cancellationRequested=false
   init(job:CADModelReview,revision:String){jobID=job.id;self.revision=revision;token=job.token}
   var response:[String:Any] {
     var value:[String:Any] = ["request_id":id.uuidString,"job_id":jobID.uuidString,"revision":revision,"kernel_version":CADKernel.version,"state":state,"units":"mm","results":results,"elapsed_ms":elapsedMS]
+    if cancellationRequested{value["cancellation_requested"]=true}
     if let issue{value["error"]=issue};return value
   }
 }
@@ -49,7 +51,12 @@ extension CADModelCoordinator {
     if ["evidence_status","validation_status","evidence_cancel"].contains(command) {
       let id=try CADLoopInput.id(args["request_id"],label:"request_id")
       guard let request=evidenceRequests[id] else{throw FormError.missing("CAD evidence request is unavailable.")}
-      if command=="evidence_cancel",request.state=="pending"{jobs[request.jobID]?.evidenceTasks[id]?.cancel();request.state="cancelled"}
+      if command=="evidence_cancel",request.state=="pending" {
+        jobs[request.jobID]?.evidenceTasks[id]?.cancel();request.cancellationRequested=true
+        // A validation request becomes terminal only when every declared case
+        // has a retained outcome, including work interrupted before it began.
+        if !request.isParameterValidation{request.state="cancelled"}
+      }
       return request.response
     }
     let id=try CADLoopInput.id(args["job_id"],label:"job_id")
@@ -82,15 +89,19 @@ extension CADModelCoordinator {
     guard evidenceRequests.values.filter({$0.state=="pending"}).count<8 else{throw FormError.invalid("Finish a CAD evidence request before starting another.")}
     while evidenceRequests.count>=64,let old=evidenceRequests.values.first(where:{$0.state != "pending"}){evidenceRequests.removeValue(forKey:old.id)}
     let definition=job.definition,request=CADEvidenceRequest(job:job,revision:try CADModelEvaluator.revisionHash(definition)),resources=job.prepared?.stage.appendingPathComponent("Sources",isDirectory:true) ?? store!.repository.url(for:job.projectID).appendingPathComponent("Assets"),started=ProcessInfo.processInfo.systemUptime
+    request.isParameterValidation=true
     evidenceRequests[request.id]=request
     let worker=Task.detached(priority:.userInitiated){try await CADParameterValidation.run(model:definition,cases:cases,includeExtrema:extrema,maximumCases:Int(budget),resourcesAt:resources,maximumDurationSeconds:duration)}
     job.evidenceTasks[request.id]=Task{[weak self,weak job] in
       guard let self,let job else{worker.cancel();return}
       defer{job.evidenceTasks.removeValue(forKey:request.id)}
       do {
-        let report=try await withTaskCancellationHandler(operation:{try await worker.value},onCancel:{worker.cancel()})
-        guard !Task.isCancelled,job.token==request.token,self.matches(job) else{throw CancellationError()}
-        request.results=[["kind":"validation","revision":request.revision,"state":"complete","report":try jsonObject(report)]];request.state="complete"
+        var report=try await withTaskCancellationHandler(operation:{try await worker.value},onCancel:{worker.cancel()})
+        if Task.isCancelled || request.cancellationRequested || job.token != request.token || !self.matches(job) {
+          report.allPassed=false;report.interruption = .cancelled
+          request.state="cancelled";request.issue=ParameterValidationInterruption.cancelled.message
+        } else {request.state="complete"}
+        request.results=[["kind":"validation","revision":request.revision,"state":request.state,"report":try jsonObject(report)]]
       } catch let interrupted as CADParameterValidationInterrupted {
         request.state=interrupted.reason == .cancelled ? "cancelled":"failed"
         request.issue=interrupted.localizedDescription
@@ -174,7 +185,13 @@ extension CADModelCoordinator {
   }
 
   func cancelEvidence(for job:CADModelReview) {
-    for (id,task) in job.evidenceTasks {task.cancel();if let request=evidenceRequests[id],request.state=="pending"{request.state="cancelled"}}
+    for (id,task) in job.evidenceTasks {
+      task.cancel()
+      if let request=evidenceRequests[id],request.state=="pending" {
+        request.cancellationRequested=true
+        if !request.isParameterValidation{request.state="cancelled"}
+      }
+    }
     job.evidenceTasks=[:]
   }
 

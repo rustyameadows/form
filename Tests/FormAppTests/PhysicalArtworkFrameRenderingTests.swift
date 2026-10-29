@@ -132,6 +132,12 @@ import XCTest
     XCTAssertNil(store.error)
     XCTAssertEqual(try XCTUnwrap(session.nodeBounds).x,previous.x+2,accuracy:1e-8,"Whole-net node edits must use the same inverse frame as Add")
     XCTAssertEqual(store.engine.undoStack.count,undo+3)
+    let native=try XCTUnwrap(store.project)
+    _ = try store.engine.call("form_edit_path",arguments:["object_id":id.uuidString,"physical_frame":["side":"inside"],
+      "element_id":path.id.uuidString,"operation":"transform","node_ids":session.nodes.map(\.uuidString),"matrix":["tx":-2.0]])
+    XCTAssertEqual(try XCTUnwrap(session.nodeBounds).x,previous.x,accuracy:1e-8,"Native and API node tools must share the same whole-net inside frame")
+    XCTAssertEqual(store.engine.undoStack.count,undo+4)
+    store.engine.undo();XCTAssertEqual(store.project?.objects,native.objects)
     store.engine.undo();store.engine.undo();store.engine.undo()
     XCTAssertEqual(store.project?.objects,before.objects)
   }

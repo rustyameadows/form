@@ -8,9 +8,10 @@ struct CanvasFrame: Identifiable {
   var surfaceObject: ProductObject
   var rect: CGRect
   var artwork: Artwork
+  var sourceReview:String? = nil
   var projection: CanvasSourceProjection? = nil
   var id: UUID { projection?.id ?? object.id }
-  var title: String { projection?.title ?? object.name }
+  var title: String { projection?.title ?? (object.name + (sourceReview == nil ? "":" · Registered source")) }
   var isWorkspace: Bool { object.isCanvasWorkspace }
   var editable: Bool { !object.locked }
   @MainActor func contains(_ point: CGPoint) -> Bool {
@@ -227,10 +228,32 @@ enum ArtworkTool: String, CaseIterable {
     if let point { arguments["origin"] = ["x":point.x,"y":point.y] }
     execute("origin",arguments)
   }
+  private func hasSewingSourceRole(_ object:ProductObject,in project:Project)->Bool {
+    project.isIndependentSewingSource(object) || project.objects.contains{$0.patternAssembly?.sourceObjectID==object.id}
+  }
+  private func hasCanonicalSourceRole(_ object:ProductObject,in project:Project)->Bool {
+    object.componentDefinition == true || hasSewingSourceRole(object,in:project)
+  }
+  private func paperUses(of sourceID:UUID,in project:Project)->[(object:ProductObject,inside:Bool)] {
+    var uses:[(ProductObject,Bool)]=[]
+    for object in project.objects where PaperConstruction.isPaper(object) {
+      if object.paperConstruction?.insideArtworkSourceID==sourceID {uses.append((object,true))}
+      if object.id != sourceID && project.artworkOwner(object).id==sourceID {uses.append((object,false))}
+    }
+    return uses
+  }
   var frames: [CanvasFrame] {
-    guard let objects = store?.project?.objects else { return [] }
-    let related = objects.filter { $0.isCanvasWorkspace } + objects.filter {
-      !$0.isCanvasWorkspace && !PaperConstruction.isPaper($0) && ($0.recipeID == "artboard" || $0.id == objectID)
+    guard let project=store?.project else{return []}
+    let objects=project.objects
+    let related = objects.filter { $0.isCanvasWorkspace } + objects.filter {object in
+      guard !object.isCanvasWorkspace,!PaperConstruction.isPaper(object),
+        object.recipeID=="artboard" || project.isIndependentFlatArtworkSource(object) || project.isIndependentSewingSource(object) || object.artworkParameterBindings?.isEmpty == false || object.id==objectID else{return false}
+      if hasCanonicalSourceRole(object,in:project) || componentReturn != nil && object.id==objectID {return true}
+      let uses=paperUses(of:object.id,in:project)
+      let selected=uses.first{$0.object.id==store?.primary?.id}
+      if let owner=selected ?? (uses.count==1 ? uses.first:nil),
+        (try? PaperConstruction.definition(for:owner.object).net()) != nil {return false}
+      return true
     }
     var x = 36.0
     var y = 40.0
@@ -261,7 +284,13 @@ enum ArtworkTool: String, CaseIterable {
               let resolved=store?.project?.resolvingTextStories(in:artwork,objectID:store?.project?.artworkOwner(object).id ?? object.id) ?? artwork
               return (try? store?.project?.resolvingComponents(in:resolved)) ?? resolved
             }
-            ?? .init(background: "#FFFFFF")))
+            ?? .init(background: "#FFFFFF"),
+          sourceReview:!paperUses(of:object.id,in:project).isEmpty && object.componentDefinition == true
+            ? "This registered source is also a component definition. Its original editor stays in canonical coordinates; select a construction for its readable paper face."
+            : !paperUses(of:object.id,in:project).isEmpty && hasSewingSourceRole(object,in:project)
+            ? "This source also owns sewing geometry. Its original contours stay in canonical source coordinates; select a construction for its readable paper face."
+            : paperUses(of:object.id,in:project).count>1
+              ? "This registered artwork has multiple physical owners. Select a construction to edit its readable face; this fallback preserves canonical source coordinates.":nil))
       if !object.isCanvasWorkspace {
         x += size.0 + 36
         rowHeight = max(rowHeight, size.1)
@@ -293,7 +322,8 @@ enum ArtworkTool: String, CaseIterable {
       var panelRowHeight = 0.0
       for projection in projections {
         let fallback = projection.isProof ? Point2(36, constructionY) : Point2(panelX, panelY)
-        let origin = construction.canvasProjectionPositions?[projection.key] ?? fallback
+        let origin = construction.canvasProjectionPositions?[projection.key]
+          ?? construction.canvasProjectionPositions?[projection.legacyKey] ?? fallback
         result.append(.init(object: source, surfaceObject: construction,
           rect: .init(x: origin.x, y: origin.y, width: projection.size.x, height: projection.size.y),
           artwork: projection.display(artwork), projection: projection))
@@ -323,8 +353,9 @@ enum ArtworkTool: String, CaseIterable {
         let projection = CanvasSourceProjection(constructionID: model.id, sourceID: source.id,
           panelID: surface.id, inside: false, title: model.name + " · " + surface.name,
           size: .init(surface.width, surface.height), sourceToLocal: .init(),
-          boundary: surface.boundary.map { .init($0.x, $0.y) })
-        let point = model.canvasProjectionPositions?[projection.key] ?? .init(surfaceX, surfaceY)
+          boundary: surface.boundary.map { .init($0.x, $0.y) },surfaceKind:.cadSurface)
+        let point = model.canvasProjectionPositions?[projection.key]
+          ?? model.canvasProjectionPositions?[projection.legacyKey] ?? .init(surfaceX, surfaceY)
         result.append(.init(object: source, surfaceObject: model,
           rect: .init(x: point.x, y: point.y, width: surface.width, height: surface.height),
           artwork: artwork, projection: projection))
@@ -358,12 +389,29 @@ enum ArtworkTool: String, CaseIterable {
     if let projectionFrameID, !frames.contains(where: { $0.id == projectionFrameID }) {
       self.projectionFrameID = nil
     }
+    if componentReturn==nil,projectionFrameID==nil,let primary=store?.primary,primary.id==objectID,let project=store?.project,
+      paperUses(of:primary.id,in:project).count==1,!hasCanonicalSourceRole(primary,in:project) {
+      activate(primary.id)
+    }
     if previewObject?.recipeID != "sleeve" { dieline = false }
     selection.formIntersection(Set(art.elements.map(\.id)))
     pruneNodeSelection()
     if scopeID != nil && !art.elements.contains(where: { $0.id == scopeID }) { scopeID = nil }
   }
   func activate(_ id: UUID) {
+    if let project=store?.project {
+      let uses=paperUses(of:id,in:project)
+      if uses.count==1,let owner=uses.first,let source=project.objects.first(where:{$0.id==id}),!hasCanonicalSourceRole(source,in:project),
+        (try? PaperConstruction.definition(for:owner.object).net()) != nil {
+        canvas?.finishText();cancelArtworkTransfer()
+        store?.paperInside=owner.inside
+        if store?.primary?.id != owner.object.id {store?.select(owner.object.id)}
+        objectID=id;projectionFrameID=nil;linkedTargetID=owner.object.id
+        if let proof=frames.first(where:{$0.projection?.constructionID==owner.object.id && $0.projection?.sourceID==id && $0.projection?.isProof == true}) {
+          activate(proof.id);return
+        }
+      }
+    }
     if let frame = frames.first(where: { $0.id == id }), let projection = frame.projection {
       guard projectionFrameID != id else { return }
       canvas?.finishText(); cancelArtworkTransfer()

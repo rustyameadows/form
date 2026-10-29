@@ -199,7 +199,7 @@ import XCTest
     let local = try XCTUnwrap(bundle.metadata.artwork.elements.first { $0.id == text.id })
     let copiedOrigin = bundle.metadata.artwork.worldTransform(local).apply(.init())
     XCTAssertEqual(copiedOrigin.x, 4, accuracy: 1e-8); XCTAssertEqual(copiedOrigin.y, 2, accuracy: 1e-8)
-    var future = bundle; future.metadata.sourceSchema = 56
+    var future = bundle; future.metadata.sourceSchema = Project.maximumSchemaVersion+1
     XCTAssertThrowsError(try future.encoded(), "Unknown future source schemas remain rejected.")
     XCTAssertEqual(store.project, before)
     session.activate(side.id); session.pasteArtwork()

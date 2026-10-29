@@ -89,7 +89,7 @@ extension Project {
         if let id=binding.sourceObjectID {
           guard binding.artwork==nil,binding.detachedSourceObjectID==nil,binding.storySnapshots==nil,
             id != object.id,let source=objects.first(where:{$0.id==id}),
-            source.recipeID=="artboard",!source.isCanvasWorkspace,source.artworkSourceID==nil,source.artwork != nil else {
+            isIndependentFlatArtworkSource(source),!source.isCanvasWorkspace,source.artworkSourceID==nil,source.artwork != nil else {
             throw FormError.invalid("A physical surface must reference an independent artwork frame in this project.")
           }
         }else{
@@ -161,6 +161,9 @@ public enum PhysicalSurfaceCommands {
   public static func isReadOnly(_ args:[String:Any])->Bool {(args["command"] as? String ?? "inspect") == "inspect"}
   public static func call(engine:OperationEngine,arguments args:[String:Any],source:String)throws->Any {
     let command=args["command"] as? String ?? "inspect"
+    if ["set_intent","clear_intent"].contains(command) {
+      return try PhysicalArtworkIntentCommands.call(engine:engine,arguments:args,source:source)
+    }
     guard ["inspect","bind","unbind"].contains(command),Set(args.keys).isSubset(of:["command","object_id","surface_id","source_object_id"]),
       let project=engine.project,let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),let object=project.objects.first(where:{$0.id==id}) else{throw FormError.invalid("Choose an existing object and a surface command.")}
     if command=="inspect" {
@@ -170,20 +173,23 @@ public enum PhysicalSurfaceCommands {
         return ["object_id":raw,"surfaces":try jsonObject(surfaces),"bindings":try jsonObject(object.surfaceArtworkBindings ?? []),
           "unresolved_bindings":missing.map(\.surfaceID),
           "surface_artwork_issues":try jsonObject(project.physicalSurfaceArtworkPlacementIssues(for:object)),
+          "artwork_intent":try jsonObject(project.physicalArtworkIntentReport(for:object)),
           "units":"mm"] as [String:Any]
       }
       if PaperConstruction.isPaper(object) {
         let net=try PaperConstruction.definition(for:object).net()
-        return ["object_id":raw,"surfaces":try jsonObject(net.panels),"source_object_id":project.artworkOwner(object).id.uuidString,"units":"mm"] as [String:Any]
+        return ["object_id":raw,"surfaces":try jsonObject(net.panels),"source_object_id":project.artworkOwner(object).id.uuidString,
+          "artwork_intent":try jsonObject(project.physicalArtworkIntentReport(for:object)),"units":"mm"] as [String:Any]
       }
-      return ["object_id":raw,"source_object_id":project.artworkOwner(object).id.uuidString,"size_mm":[object.artworkSize.x,object.artworkSize.y],"units":"mm"] as [String:Any]
+      return ["object_id":raw,"source_object_id":project.artworkOwner(object).id.uuidString,"size_mm":[object.artworkSize.x,object.artworkSize.y],
+        "artwork_intent":try jsonObject(project.physicalArtworkIntentReport(for:object)),"units":"mm"] as [String:Any]
     }
     guard !object.locked,let surface=args["surface_id"] as? String,object.cadModel != nil else{throw FormError.invalid("Choose an unlocked model and a named surface.")}
     var next=object.surfaceArtworkBindings ?? []
     if command=="bind" {
       guard object.cadRepresentation?.resolvedSurfaces?.contains(where:{$0.id==surface}) == true,
         let rawSource=args["source_object_id"] as? String,let sourceID=UUID(uuidString:rawSource),
-        let artworkSource=project.objects.first(where:{$0.id==sourceID}),artworkSource.recipeID=="artboard",!artworkSource.isCanvasWorkspace,
+        let artworkSource=project.objects.first(where:{$0.id==sourceID}),project.isIndependentFlatArtworkSource(artworkSource),!artworkSource.isCanvasWorkspace,
         artworkSource.artworkSourceID==nil,artworkSource.artwork != nil else{throw FormError.invalid("Choose a resolved physical surface and an independent artwork frame.")}
       next.removeAll{$0.surfaceID==surface}
       next.append(.init(surfaceID:surface,sourceObjectID:sourceID,widthMM:artworkSource.artworkSize.x,heightMM:artworkSource.artworkSize.y))

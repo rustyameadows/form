@@ -12,10 +12,16 @@ struct CanvasSourceProjection: Equatable {
   let size: Point2
   let sourceToLocal: Affine2
   let boundary: [Point2]
+  var surfaceKind:PhysicalArtworkSurfaceIdentity.Kind = .panel
+
+  var physicalIdentity:PhysicalArtworkSurfaceIdentity {
+    .init(kind:isProof ? .net:surfaceKind,surfaceID:panelID,side:inside ? .inside:.outside)
+  }
 
   var key: String {
-    "\(constructionID.uuidString):\(inside ? "inside" : "outside"):\(panelID ?? "net")"
+    "\(constructionID.uuidString):\(physicalIdentity.key)"
   }
+  var legacyKey:String {"\(constructionID.uuidString):\(inside ? "inside" : "outside"):\(panelID ?? "net")"}
   var id: UUID {
     let b = Array(SHA256.hash(data: Data(key.utf8)).prefix(16))
     return UUID(uuid: (b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7],

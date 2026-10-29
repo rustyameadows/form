@@ -1,5 +1,6 @@
 import Foundation
 import FormCore
+import FormCADModel
 import FormCADKernel
 
 /// Exact measurements are ephemeral derived views of the original construction;
@@ -18,7 +19,6 @@ enum PlanarSolidValidation {
   static func run(_ request:PlanarConstructionValidationRequest,
     maximumDurationSeconds:Double=10,
     checkpoint:(@Sendable () async throws -> Void)?=nil) async throws -> PlanarConstructionValidationReport {
-    try Task.checkCancellation()
     guard maximumDurationSeconds.isFinite,(0.01...30).contains(maximumDurationSeconds),
       (1...64).contains(request.cases.count),Set(request.cases.map(\.name)).count==request.cases.count else {
       throw FormError.invalid("Construction exact validation needs 1–64 unique cases and a 0.01–30 second budget.")
@@ -28,48 +28,38 @@ enum PlanarSolidValidation {
       throw FormError.invalid("Construction exact validation exceeds 1024 declared panel-pair queries; request fewer cases or pairs.")
     }
     let started=ProcessInfo.processInfo.systemUptime
+    if Task.isCancelled {throw request.interrupted(.cancelled,completed:[],durationMS:0)}
     let worker=Task.detached(priority:.userInitiated) {
-      try await evaluate(request,maximumDurationSeconds:maximumDurationSeconds,checkpoint:checkpoint)
+      try await evaluate(request,maximumDurationSeconds:maximumDurationSeconds,started:started,checkpoint:checkpoint)
     }
-    do {
-      return try await withTaskCancellationHandler {
-        try await withThrowingTaskGroup(of:PlanarConstructionValidationReport.self) { group in
-          group.addTask {try await worker.value}
-          group.addTask {
-            try await Task.sleep(nanoseconds:UInt64(maximumDurationSeconds*1_000_000_000))
-            worker.cancel()
-            throw FormError.invalid("Construction exact validation exceeded its time budget; no complete report was accepted.")
-          }
-          defer {group.cancelAll();worker.cancel()}
-          guard let result=try await group.next() else{throw CancellationError()}
-          return result
-        }
-      } onCancel:{worker.cancel()}
-    } catch {
-      if Task.isCancelled {throw CancellationError()}
-      if ProcessInfo.processInfo.systemUptime-started>=maximumDurationSeconds {
-        throw FormError.invalid("Construction exact validation exceeded its time budget; no complete report was accepted.")
-      }
-      throw error
+    let deadline=Task.detached {
+      try await Task.sleep(nanoseconds:UInt64(maximumDurationSeconds*1_000_000_000))
+      worker.cancel()
     }
+    defer {deadline.cancel()}
+    // Await the worker's terminal report; cancellation/deadline never loses
+    // the current case or leaves accumulating exact geometry behind.
+    return try await withTaskCancellationHandler {try await worker.value} onCancel:{worker.cancel()}
   }
   private static func evaluate(_ request:PlanarConstructionValidationRequest,
-    maximumDurationSeconds:Double,checkpoint:(@Sendable () async throws -> Void)?) async throws -> PlanarConstructionValidationReport {
-    let started=ProcessInfo.processInfo.systemUptime,kernel=CADKernel()
+    maximumDurationSeconds:Double,started:Double,checkpoint:(@Sendable () async throws -> Void)?) async throws -> PlanarConstructionValidationReport {
+    let kernel=CADKernel()
+    var results:[PlanarConstructionCaseResult]=[],active:PlanarConstructionCaseResult?
     func checkBudget() throws {
-      try Task.checkCancellation()
-      guard ProcessInfo.processInfo.systemUptime-started<maximumDurationSeconds else {
-        throw FormError.invalid("Construction exact validation exceeded its time budget; no complete report was accepted.")
-      }
+      let reason:ParameterValidationInterruption?
+      if ProcessInfo.processInfo.systemUptime-started>=maximumDurationSeconds {reason = .budgetExceeded}
+      else {reason = Task.isCancelled ? .cancelled:nil}
+      if let reason {throw request.interrupted(reason,completed:results,active:active,durationMS:(ProcessInfo.processInfo.systemUptime-started)*1000)}
     }
     // At most one flat slab per stable source panel; geometry-changing cases
     // replace its handle rather than retaining every historical variant.
-    var flat:[String:Slab]=[:],results:[PlanarConstructionCaseResult]=[]
+    var flat:[String:Slab]=[:]
     for item in request.cases {
-      try checkBudget()
+      active=nil;try checkBudget()
       var prepared=request.prepare(item)
+      active=prepared.result;try checkBudget()
       guard let source=prepared.definition,let net=prepared.net,let stock=prepared.stockThicknessMM else {
-        results.append(prepared.result);continue
+        results.append(prepared.result);active=nil;continue
       }
       do {
         try await checkpoint?();try checkBudget()
@@ -113,14 +103,18 @@ enum PlanarSolidValidation {
           }
           reports.append(try check.measurement(check.metric == .clearance ? measurement.distanceMM:measurement.interferenceVolumeMM3,
             values:values,stockThicknessMM:stock))
+          prepared.result.solidChecks=reports;active=prepared.result
         }
         prepared.result.solidChecks=reports
         prepared.result.passed = prepared.result.passed && reports.allSatisfy(\.passed)
-      } catch {
+      } catch let interrupted as PlanarConstructionValidationInterrupted {throw interrupted}
+      catch {
         try checkBudget()
         prepared.result.passed=false;prepared.result.error=error.localizedDescription
       }
-      results.append(prepared.result)
+      prepared.result.outcome=prepared.result.passed ? .passed:.failed
+      active=prepared.result;try checkBudget()
+      results.append(prepared.result);active=nil
     }
     try checkBudget()
     return request.report(results:results,durationMS:(ProcessInfo.processInfo.systemUptime-started)*1000)
@@ -132,6 +126,8 @@ enum PlanarSolidValidation {
 @MainActor final class ConstructionValidationCoordinator {
   private var task:Task<PlanarConstructionValidationReport,Error>?
   private var active:PlanarConstructionValidationRequest?
+  private var artworkTask:Task<ArtworkConstructionValidationReport,Error>?
+  private var activeArtwork:ArtworkConstructionValidationRequest?
   private var generation=0
   func validate(_ request:PlanarConstructionValidationRequest,
     maximumDurationSeconds:Double=10,
@@ -143,22 +139,47 @@ enum PlanarSolidValidation {
       maximumDurationSeconds:maximumDurationSeconds,checkpoint:checkpoint)}
     task=work
     defer {if token==generation{task=nil;active=nil}}
-    let result=try await withTaskCancellationHandler {try await work.value} onCancel:{work.cancel()}
-    guard token==generation,isCurrent() else {
-      throw FormError.invalid("The construction source or project changed; the obsolete validation report was discarded.")
+    func verifyCurrent() throws {
+      guard token==generation else{throw CancellationError()}
+      guard isCurrent() else {
+        throw FormError.invalid("The construction source or project changed; the obsolete validation report was discarded.")
+      }
     }
-    return result
+    do {
+      let result=try await withTaskCancellationHandler {try await work.value} onCancel:{work.cancel()}
+      try verifyCurrent();return result
+    } catch {try verifyCurrent();throw error}
+  }
+  func validate(_ request:ArtworkConstructionValidationRequest,
+    maximumDurationSeconds:Double=10,checkpoint:(@Sendable () async throws->Void)?=nil,
+    isCurrent:()->Bool) async throws -> ArtworkConstructionValidationReport {
+    cancel();let token=generation;activeArtwork=request
+    let work=Task {try await request.run(maximumDurationSeconds:maximumDurationSeconds,checkpoint:checkpoint)}
+    artworkTask=work
+    defer{if token==generation{artworkTask=nil;activeArtwork=nil}}
+    func verifyCurrent()throws {
+      guard token==generation else{throw CancellationError()}
+      guard isCurrent() else{throw FormError.invalid("The artwork source or project changed; the obsolete validation report was discarded.")}
+    }
+    do {
+      let result=try await withTaskCancellationHandler {try await work.value} onCancel:{work.cancel()}
+      try verifyCurrent();return result
+    } catch {try verifyCurrent();throw error}
   }
   func projectDidChange(_ project:Project?) {
+    if let activeArtwork,!activeArtwork.isCurrent(in:project) {cancel();return}
     guard let active else{return}
     if !ConstructionCommands.validationSourceIsCurrent(active,in:project) {cancel()}
   }
-  func cancel() {generation+=1;task?.cancel();task=nil;active=nil}
+  func cancel() {generation+=1;task?.cancel();artworkTask?.cancel();task=nil;active=nil;artworkTask=nil;activeArtwork=nil}
 }
 
 extension StudioStore {
   func constructionValidationCallAsync(_ args:[String:Any]) async throws -> Any {
     guard let project=engine.project else{throw FormError.missing("Open a project before validating a construction.")}
+    if let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),project.objects.first(where:{$0.id==id})?.artworkParameterBindings?.isEmpty == false {
+      return try await constructionValidationCallAsync(ConstructionCommands.artworkValidationRequest(project:project,arguments:args))
+    }
     let request=try ConstructionCommands.validationRequest(project:project,arguments:args)
     return try await constructionValidationCallAsync(request)
   }
@@ -166,9 +187,22 @@ extension StudioStore {
     guard ConstructionCommands.validationSourceIsCurrent(request,in:engine.project) else {
       throw FormError.invalid("The construction source changed before validation began.")
     }
-    let report=try await constructionValidation.validate(request) { [weak self] in
-      ConstructionCommands.validationSourceIsCurrent(request,in:self?.engine.project)
+    do {
+      let report=try await constructionValidation.validate(request) { [weak self] in
+        ConstructionCommands.validationSourceIsCurrent(request,in:self?.engine.project)
+      }
+      return try jsonObject(report)
+    } catch let interrupted as PlanarConstructionValidationInterrupted {
+      // The coordinator rejects obsolete source/project results before this.
+      return try jsonObject(interrupted.report)
     }
-    return try jsonObject(report)
   }
+  func constructionValidationCallAsync(_ request:ArtworkConstructionValidationRequest) async throws -> Any {
+    guard request.isCurrent(in:engine.project) else{throw FormError.invalid("The artwork source changed before validation began.")}
+    do {
+      let report=try await constructionValidation.validate(request){[weak self] in request.isCurrent(in:self?.engine.project)}
+      return try jsonObject(report)
+    } catch let error as ArtworkConstructionValidationInterrupted {return try jsonObject(error.report)}
+  }
+
 }

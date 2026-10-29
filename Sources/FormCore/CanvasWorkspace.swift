@@ -153,6 +153,7 @@ extension Project {
     var candidate = self
     try PublicationCommands.transferFrames(in:&candidate,from:sourceOwner.id,to:targetOwner.id,mapping:mapping)
     try candidate.transferGarmentBlockBindings(from:sourceOwner.id,to:targetOwner.id,moved:all,mapping:mapping,destination:destination)
+    try candidate.transferPhysicalArtworkIntents(from:sourceOwner.id,to:targetOwner.id,moved:all,mapping:mapping)
     try candidate.setArtwork(remaining,for:sourceOwner.id,recordingStyleOverrides:false)
     try candidate.setArtwork(destination,for:targetOwner.id,recordingStyleOverrides:false)
     try candidate.validateArtworkLinks()

@@ -230,6 +230,14 @@ enum TableTool: String, CaseIterable {
             }
             if name == "form_construction",args["command"] as? String == "validate_cases" {
               guard let project=self.engine.project else{throw FormError.missing("Open a project before validating a construction.")}
+              if let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),project.objects.first(where:{$0.id==id})?.artworkParameterBindings?.isEmpty == false {
+                let request=try ConstructionCommands.artworkValidationRequest(project:project,arguments:args)
+                Task { @MainActor [weak self] in
+                  guard let self else{completion(.failure(FormError.missing("LAB is closing.")));return}
+                  do{completion(.success(try await self.constructionValidationCallAsync(request)))}catch{completion(.failure(error))}
+                }
+                return
+              }
               let request=try ConstructionCommands.validationRequest(project:project,arguments:args)
               if request.requiresExactSolids {
                 Task { @MainActor [weak self] in

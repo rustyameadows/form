@@ -81,4 +81,40 @@ final class PhysicalArtworkFrameTests:XCTestCase {
     let t=visible.affine ?? .init();XCTAssertEqual(t.a,1,accuracy:1e-9);XCTAssertEqual(t.d,1,accuracy:1e-9)
     XCTAssertEqual(visible.text,"A small moment,\njust for you.")
   }
+  func testExistingPathToolSharesInsideFrameAndPreservesCanonicalSourceAndOneUndo() throws {
+    let (engine,id,insideID)=try fixture(),context:[String:Any]=["surface_id":"left","side":"inside"]
+    var path=ArtworkElement(kind:"path",x:7,y:9,width:40,height:30,color:"#245BFF")
+    path.rotation=13
+    path.path = .init(width:40,height:30,contours:[.init([
+      .init(.init(2,3),outgoing:.init(8,1)),.init(.init(37,7),incoming:.init(29,12)),.init(.init(11,26))])])
+    _ = try engine.call("form_edit_artwork",arguments:["object_id":id.uuidString,"physical_frame":context,"command":"add","elements":[try jsonObject(path)]])
+    let before=try XCTUnwrap(engine.project),undo=engine.undoStack.count,node=try XCTUnwrap(path.path?.contours.first?.nodes.first?.id)
+    func position(_ art:Artwork) throws -> Point2 {
+      let element=try XCTUnwrap(art.elements.first{$0.id==path.id}),shape=try XCTUnwrap(element.path)
+      let anchor=try XCTUnwrap(shape.contours.flatMap(\.nodes).first{$0.id==node}?.anchor)
+      return art.worldTransform(element).followed(by:.scale(element.width/shape.width,element.height/shape.height)).apply(anchor)
+    }
+    let displayed=try artwork(engine.call("form_get_artwork",arguments:["object_id":id.uuidString,"physical_frame":context])),p=try position(displayed)
+    var args:[String:Any]=["object_id":id.uuidString,"physical_frame":context,"element_id":path.id.uuidString,
+      "operation":"transform","node_ids":[node.uuidString],"matrix":["tx":2.0,"ty":-1.0]]
+    _ = try engine.call("form_edit_path",arguments:args)
+    let result=try artwork(engine.call("form_get_artwork",arguments:["object_id":id.uuidString,"physical_frame":context])),q=try position(result)
+    XCTAssertEqual(q.x,p.x+2,accuracy:1e-8);XCTAssertEqual(q.y,p.y-1,accuracy:1e-8)
+    XCTAssertEqual(result.elements.first?.path?.contours.flatMap(\.nodes).map(\.id),path.path?.contours.flatMap(\.nodes).map(\.id))
+    XCTAssertEqual(engine.undoStack.count,undo+1)
+    XCTAssertEqual(engine.project?.objects.first{$0.id==id},before.objects.first{$0.id==id})
+    let canonical=try artwork(engine.call("form_get_artwork",arguments:["object_id":insideID.uuidString]))
+    let transform=try XCTUnwrap(canonical.elements.first?.affine)
+    XCTAssertLessThan(transform.a*transform.d-transform.b*transform.c,0)
+    try engine.flush();XCTAssertEqual(try engine.repository.load(before.id).objects,engine.project?.objects)
+    engine.undo();XCTAssertEqual(engine.project?.objects,before.objects)
+    let rawBefore=try artwork(engine.call("form_get_artwork",arguments:["object_id":insideID.uuidString])),r=try position(rawBefore)
+    args["object_id"]=insideID.uuidString;args.removeValue(forKey:"physical_frame")
+    _ = try engine.call("form_edit_path",arguments:args)
+    let rawAfter=try artwork(engine.call("form_get_artwork",arguments:["object_id":insideID.uuidString])),s=try position(rawAfter)
+    XCTAssertEqual(s.x,r.x+2,accuracy:1e-8);XCTAssertEqual(s.y,r.y-1,accuracy:1e-8)
+    engine.undo();XCTAssertEqual(engine.project?.objects,before.objects)
+    args["object_id"]=id.uuidString;args["physical_frame"]=["surface_id":"missing","side":"inside"]
+    XCTAssertThrowsError(try engine.call("form_edit_path",arguments:args));XCTAssertEqual(engine.project?.objects,before.objects)
+  }
 }

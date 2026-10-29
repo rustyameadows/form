@@ -350,6 +350,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var fitRequests = 0
   private var lastFitDiagnostics: [String: Any]?
   private let sewingGuides = CanvasSewingGuideCache()
+  private let physicalArtworkGuides = CanvasPhysicalArtworkGuideCache()
   var diagnostics: [String: Any] {
     var result = TypographyEngine.diagnostics
     result["image_drag_starts"] = session?.imageDragStarts ?? 0
@@ -359,6 +360,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     result["last_draw_ms"] = lastDrawMS
     result["sewing_guide_builds"] = sewingGuides.builds
     result["sewing_guide_entries"] = sewingGuides.count
+    result["physical_guide_builds"] = physicalArtworkGuides.builds
+    result["physical_guide_entries"] = physicalArtworkGuides.count
     result["frames"] = frames.count
     result["accessibility_updates"] = accessibilityUpdates
     result["live_preview"] = session?.preview ?? false
@@ -483,14 +486,33 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   func frame(atCanvasPoint point:CGPoint) -> CanvasFrame? {
     frames.last { !$0.isWorkspace && $0.contains(point) } ?? frames.first { $0.isWorkspace }
   }
+  private func physicalGuideReport(for frame:CanvasFrame,attempted:inout Set<UUID>,
+    reports:inout [UUID:PhysicalArtworkIntentReport]) -> PhysicalArtworkIntentReport? {
+    guard frame.artwork.showGuides != false,
+      !PaperConstruction.isPaper(frame.surfaceObject) || session?.store?.paperShowingGuides == true,
+      let project=session?.store?.project else{return nil}
+    let id=frame.surfaceObject.id
+    if attempted.insert(id).inserted {reports[id]=physicalArtworkGuides.report(for:frame.surfaceObject,in:project)}
+    return reports[id]
+  }
   func contentBounds(all:Bool) -> CGRect {
     let chosen = all ? frames : activeFrame.map { [$0] } ?? []
     var result = CGRect.null
+    var reports:[UUID:PhysicalArtworkIntentReport]=[:],attempted=Set<UUID>()
     for frame in chosen {
-      if !frame.isWorkspace { result = result.union(frame.rect); continue }
+      let report=physicalGuideReport(for:frame,attempted:&attempted,reports:&reports)
+      if !frame.isWorkspace {
+        if let report {
+          result=result.union(frame.physicalGuideBounds(report:report,scale:max(0.001,ppm*zoom)))
+        } else {result=result.union(frame.rect)}
+        continue
+      }
       let masks = Set(frame.artwork.elements.compactMap(\.clipID))
       for element in frame.artwork.elements where element.parentID == nil && element.hidden != true && !masks.contains(element.id) {
         result = result.union(CGRect(frame.artwork.bounds(of:element)).offsetBy(dx:frame.rect.minX,dy:frame.rect.minY))
+      }
+      if let report {
+        result=result.union(frame.physicalGuideBounds(report:report,scale:max(0.001,ppm*zoom)))
       }
     }
     return result.isNull ? CGRect(x:0,y:0,width:400,height:260) : result
@@ -513,9 +535,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func synchronize() {
     guard let session else { return }
-    if projectID != session.store?.project?.id { canvasExtent = .null; canvasOrigin = .zero; sewingGuides.clear() }
+    if projectID != session.store?.project?.id { canvasExtent = .null; canvasOrigin = .zero; sewingGuides.clear();physicalArtworkGuides.clear() }
     frames = session.frames
     sewingGuides.retain(Set(frames.map(\.id)))
+    physicalArtworkGuides.retain(Set(frames.map{$0.surfaceObject.id}))
     expandCanvas(toInclude:contentBounds(all:true).union(CGRect(x:0,y:0,width:400,height:260)).insetBy(dx:-180,dy:-180))
     if projectID != session.store?.project?.id {
       projectID = session.store?.project?.id
@@ -585,7 +608,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let frame=activeFrame,let scroll=enclosingScrollView,scroll.contentSize.width>100 else{return}
     session.paperFocusPanelID=nil
     let b=panel.bounds
-    let rect = frame.projection?.panelID == id ? frame.rect
+    let rect = frame.projection?.panelID == id ? contentBounds(all:false)
       : CGRect(x:frame.rect.minX+b.x,y:frame.rect.minY+b.y,width:b.width,height:b.height)
     magnifyToFit(rect.insetBy(dx:-8,dy:-8),mode:"paper_panel")
     session.zoom=Double(scroll.magnification);needsDisplay=true
@@ -620,9 +643,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     context.scaleBy(x: ppm, y: ppm)
     context.translateBy(x:-canvasOrigin.x,y:-canvasOrigin.y)
     let scale = ppm * zoom
-    for f in frames
-    where f.isWorkspace || dirtyRect.intersects(documentRect(f.rect.insetBy(dx:-12,dy:-12)))
-    {
+    var reports:[UUID:PhysicalArtworkIntentReport]=[:],attempted=Set<UUID>()
+    for f in frames {
+      let guideReport=physicalGuideReport(for:f,attempted:&attempted,reports:&reports)
+      let drawingBounds=guideReport.map{f.physicalGuideBounds(report:$0,scale:max(0.001,scale))} ?? f.rect
+      guard f.isWorkspace || dirtyRect.intersects(documentRect(drawingBounds.insetBy(dx:-12,dy:-12))) else{continue}
       if !f.isWorkspace {
       context.saveGState()
       context.setShadow(
@@ -692,6 +717,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
             .union(publicationEditor?.excluded(in:f.id) ?? []),
           unbounded:f.isWorkspace)
         context.restoreGState()
+        if let guideReport {
+          drawPhysicalArtworkGuides(f,report:guideReport,context:context,scale:scale,active:f.id==activeFrame?.id)
+        }
         if let paperNet, session.store?.paperShowingGuides == true {
           context.saveGState()
           if let transform=f.projection?.sourceToLocal {

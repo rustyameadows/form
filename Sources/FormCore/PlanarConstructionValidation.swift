@@ -43,39 +43,68 @@ public struct PlanarConstructionValidationRequest: Sendable {
       result.values=candidate.values.merging(["fold":requestedFold,"opening":requestedOpening]){_,new in new}
       result.passed=connections.allSatisfy(\.passed);result.sizeMM=[net.size.x,net.size.y]
       result.panels=net.panels.count;result.folds=net.folds.count;result.resolvedPanels=poses.count
-      result.poses=poses;result.connectionChecks=connections
+      result.poses=poses;result.connectionChecks=connections;result.outcome=result.passed ? .passed:.failed
       return .init(result:result,definition:candidate,net:net,poses:poses,stockThicknessMM:stock)
     } catch {
-      result.error=error.localizedDescription
+      result.error=error.localizedDescription;result.outcome = .failed
       if let failure=error as? CADRequirementFailure {
         result.requirementID=failure.requirementID;result.lhs=failure.lhs;result.rhs=failure.rhs
       }
       return .init(result:result,definition:nil,net:nil,poses:[],stockThicknessMM:nil)
     }
   }
+  public func caseValues(_ item:PlanarParameterCase) -> [String:Double] {
+    definition.values.merging(["fold":fold,"opening":opening]){_,new in new}.merging(item.values){_,new in new}
+  }
+  public func interrupted(_ reason:ParameterValidationInterruption,completed:[PlanarConstructionCaseResult],
+    active:PlanarConstructionCaseResult?=nil,durationMS:Double) -> PlanarConstructionValidationInterrupted {
+    var results=completed
+    if var active {
+      active.passed=false;active.outcome=reason.caseOutcome;active.error=reason.message
+      results.append(active)
+    }
+    for item in cases.dropFirst(results.count) {
+      var result=PlanarConstructionCaseResult(name:item.name,values:caseValues(item),passed:false)
+      result.outcome = .notRun;result.error="Not evaluated because the batch was interrupted."
+      results.append(result)
+    }
+    return .init(report:report(results:results,durationMS:durationMS,interruption:reason),reason:reason)
+  }
   public func validateGeometryCases(maximumDurationSeconds:Double=10) throws -> PlanarConstructionValidationReport {
+    try validateGeometryCases(maximumDurationSeconds:maximumDurationSeconds,uptime:{ProcessInfo.processInfo.systemUptime})
+  }
+  /// A monotonic clock seam keeps deadline lifecycle regression tests deterministic.
+  func validateGeometryCases(maximumDurationSeconds:Double,uptime:()->Double) throws -> PlanarConstructionValidationReport {
     guard !requiresExactSolids else {
       throw FormError.invalid("Declared panel-pair solid checks require LAB's installed exact runtime. Use form_construction validate_cases through the app.")
     }
-    let started=ProcessInfo.processInfo.systemUptime
+    guard maximumDurationSeconds.isFinite,(0.01...30).contains(maximumDurationSeconds),
+      (1...64).contains(cases.count),Set(cases.map(\.name)).count==cases.count else {
+      throw FormError.invalid("Construction validation needs 1–64 unique cases and a 0.01–30 second budget.")
+    }
+    let started=uptime()
     var results:[PlanarConstructionCaseResult]=[]
+    func reason() -> ParameterValidationInterruption? {
+      if uptime()-started>=maximumDurationSeconds{return .budgetExceeded}
+      return Task.isCancelled ? .cancelled:nil
+    }
     for item in cases {
-      try Task.checkCancellation()
-      guard ProcessInfo.processInfo.systemUptime-started<maximumDurationSeconds else {
-        throw FormError.invalid("Construction parameter validation exceeded its time budget; no complete report was accepted.")
-      }
-      results.append(prepare(item).result)
+      if let reason=reason() {throw interrupted(reason,completed:results,durationMS:(uptime()-started)*1000)}
+      let current=prepare(item).result
+      if let reason=reason() {throw interrupted(reason,completed:results,active:current,durationMS:(uptime()-started)*1000)}
+      results.append(current)
     }
-    guard ProcessInfo.processInfo.systemUptime-started<=maximumDurationSeconds else {
-      throw FormError.invalid("Construction parameter validation exceeded its time budget; no complete report was accepted.")
-    }
-    return report(results:results,durationMS:(ProcessInfo.processInfo.systemUptime-started)*1000)
+    if let reason=reason() {throw interrupted(reason,completed:results,durationMS:(uptime()-started)*1000)}
+    return report(results:results,durationMS:(uptime()-started)*1000)
   }
-  public func report(results:[PlanarConstructionCaseResult],durationMS:Double) -> PlanarConstructionValidationReport {
-    .init(sourceRevision:sourceRevision,passed:results.count==cases.count && results.allSatisfy(\.passed),
+  public func report(results:[PlanarConstructionCaseResult],durationMS:Double,
+    interruption:ParameterValidationInterruption?=nil) -> PlanarConstructionValidationReport {
+    .init(sourceRevision:sourceRevision,passed:interruption==nil && results.count==cases.count && results.allSatisfy(\.passed),
       cases:results,elapsedMS:durationMS,
-      solidModel:requiresExactSolids ? "Sharp centered nominal-stock slabs; existing panel polygons at (x,-y), z=±stock/2, transformed by the reported resolved poses. Only explicitly declared pairs/conditions are checked.":nil)
+      solidModel:requiresExactSolids ? "Sharp centered nominal-stock slabs; existing panel polygons at (x,-y), z=±stock/2, transformed by the reported resolved poses. Only explicitly declared pairs/conditions are checked.":nil,
+      interruption:interruption)
   }
+
 }
 
 public struct PlanarPreparedValidationCase: Sendable {
@@ -89,6 +118,7 @@ public struct PlanarConstructionCaseResult: Codable, Equatable, Sendable {
   public var name: String
   public var values: [String:Double]
   public var passed: Bool
+  public var outcome:ParameterCaseOutcome?
   public var sizeMM: [Double]?
   public var panels: Int?
   public var folds: Int?
@@ -101,7 +131,7 @@ public struct PlanarConstructionCaseResult: Codable, Equatable, Sendable {
   public var lhs: Double?
   public var rhs: Double?
   enum CodingKeys:String,CodingKey {
-    case name,values,passed,panels,folds,poses,error,lhs,rhs
+    case name,values,passed,outcome,panels,folds,poses,error,lhs,rhs
     case sizeMM="size_mm",resolvedPanels="resolved_panels",connectionChecks="connection_checks"
     case solidChecks="solid_checks",requirementID="requirement_id"
   }
@@ -113,8 +143,16 @@ public struct PlanarConstructionValidationReport: Codable, Equatable, Sendable {
   public var cases: [PlanarConstructionCaseResult]
   public var elapsedMS: Double
   public var solidModel: String?
+  public var interruption:ParameterValidationInterruption?
   enum CodingKeys:String,CodingKey {
-    case passed,cases
+    case passed,cases,interruption
     case sourceRevision="source_revision",elapsedMS="elapsed_ms",solidModel="solid_model"
   }
+}
+
+/// Failed batch result retaining every declared name/value and explicit outcome.
+public struct PlanarConstructionValidationInterrupted:Error,LocalizedError,Sendable {
+  public let report:PlanarConstructionValidationReport
+  public let reason:ParameterValidationInterruption
+  public var errorDescription:String? {reason.message}
 }

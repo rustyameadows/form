@@ -126,6 +126,9 @@ struct ArtworkInspector: View {
     ScrollView {
       VStack(alignment: .leading, spacing: 17) {
         if let object = session.object {
+          if let review=session.activeCanvasFrame?.sourceReview {
+            Text(review).font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
+          }
           if let projection = session.activeProjection {
             SectionLabel(projection.isProof ? "DIELINE PROOF" : "LINKED SURFACE")
             Text(projection.title).font(.system(size: 13, weight: .medium))

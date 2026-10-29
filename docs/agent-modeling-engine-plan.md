@@ -2,7 +2,7 @@
 
 Status: core implementation verified; final acceptance remains partially complete. October 28, 2026.
 
-Implementation and verification are on `codex/agent-modeling-engine`. The prior release snapshot covers 1,227 methods; the generic paper-rendering correction adds three passing regressions and 33 focused checks. The fixed-case warm benchmark meets its target at 2.027× faster aggregate median and 11.9% lower p95. All 17 fabric workflows pass, including the complete original 240-frame sewn-assembly run. The [sample audit](sample-visual-validation.md) checks all 12 shipped overviews and records remaining inside-frame limitations. See the [verification record](agent-modeling-engine-validation.md) for evidence and measurement limits. Unchecked conditions below remain open.
+Implementation and verification are on `codex/agent-modeling-engine`. The reconciled current registry accounts for 1,284 passing methods through the complete baseline and focused reruns, including the diagnosed and repaired shared-variant regression. The fixed-case warm benchmark meets its target at 2.027× faster aggregate median and 11.9% lower p95. All 17 fabric workflows pass, including the complete original 240-frame sewn-assembly run. The [sample audit](sample-visual-validation.md) checks all 12 shipped overviews and the corrected physical inside-frame roundtrip in a fresh package. See the [verification record](agent-modeling-engine-validation.md) for evidence and measurement limits. Unchecked conditions below remain open.
 
 Make LAB's existing modeling engine fast and dependable enough for an agent to construct a model, evaluate it, inspect the result, measure it, repair it, and verify its parameters in a short repeatable loop. The user receives an editable model whose controls, construction relationships, artwork, and saved source continue to work after the agent finishes.
 
@@ -95,10 +95,10 @@ Acceptance:
 - [x] A fixture that succeeds at its default and fails at a boundary produces a reproducible, repairable report with the exact case values.
 - [x] An agent repairs the construction and reruns the same cases successfully.
 - [x] Batch validation leaves the accepted model, artwork, history, and user selection intact.
-- [ ] All declared cases have explicit outcomes; cancellation or an exceeded budget cannot appear as a successful check.
-- [ ] Fabric/sewing parameter cases evaluate source contours, allowances, seam references, material coordinates and attachment resolution through the shared case lifecycle.
+- [x] All declared cases have explicit outcomes; cancellation or an exceeded budget cannot appear as a successful check.
+- [x] Fabric/sewing parameter cases evaluate source contours, allowances, seam references, material coordinates and attachment resolution through the shared case lifecycle.
 
-Verification limit: aborted CAD/construction batches currently fail the whole request closed, but do not retain explicit outcomes for every unattempted case. Shared fabric expression requirements and the full fabric regression suite are implemented; a fabric source-geometry/seam/attachment case runner is not yet demonstrated.
+Verification status: CAD, folded constructions and canonical sewn sources retain explicit completed, interrupted and unattempted outcomes. The packaged unfamiliar sewn-source workflow measures actual cut/stitch contours, seam lengths, rest assemblies, material coordinates and attachment anchors; its intentional seam/anchor failures are repaired against the same cases. Read-only validation preserves accepted source/history/selection. See [canonical artwork parameters](artwork-parameter-sources.md) and the verification record.
 
 ### 4 Preserve intended targets and connect named surfaces
 
@@ -115,7 +115,7 @@ Acceptance:
 - [x] Changing a parameter preserves the intended physical artwork scale and orientation; any required placement review is explicit.
 - [x] Surface edits, bindings, named resources, and source ownership survive publication, Undo/Redo, duplication, and save/reopen.
 - [ ] Trim, polygon safety and bleed intent map into flat/upright construction views, with explicit collapse and overlap review.
-- [ ] Inside physical-frame editing displays upright content while preserving the existing front-registered canonical source and print/export registration.
+- [x] Inside physical-frame editing displays upright content while preserving the existing front-registered canonical source and print/export registration.
 
 ### 5 Make construction relationships authorable
 
@@ -135,9 +135,9 @@ Acceptance:
 - [x] The agent changes its dimensions, inspects several fold positions and its flat layout, and checks declared joins through revision-linked evidence.
 - [x] Upright panel artwork and an image spanning two panels share the intended sources across flat and folded representations; one edit has consistent Undo.
 - [x] The new model saves/reopens with editable parameters and construction relationships. Existing paper projects retain their appearance, artwork, and editability.
-- [ ] Declared panel-pair checks measure folded finite-thickness clearance/interference, with explicit allowances for intended hinge/glue contact.
+- [x] Declared panel-pair checks measure folded finite-thickness clearance/interference, with explicit allowances for intended hinge/glue contact.
 
-Verification status: all four listed construction checks pass. Fold cases validate flat geometry, requested poses and declared neutral-plane anchor gaps. Exact interference between folded, finite-thickness panel solids has not been demonstrated; the connection checks do not establish collision-free folding.
+Verification status: the original four construction checks and explicit folded-stock pair checks pass. The packaged check detects an 800 mm³ overlap, accepts intended contact and a 0.3 mm gap, repairs the same source, and preserves artwork/history/selection through Undo and reopen. These declared-pair checks do not establish collision-free motion through every possible fold.
 
 ### 6 Prove complete agent workflows and ship the tools
 

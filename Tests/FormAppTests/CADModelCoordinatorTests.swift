@@ -384,6 +384,28 @@ import simd
     XCTAssertEqual(store.project,before);XCTAssertEqual(store.engine.undoStack.count,undoCount)
   }
 
+  func testValidationCancelWaitsForAllCaseOutcomesWithoutChangingAcceptedSource()async throws {
+    let store=try fixture();defer{store.cad.reset();store.engine.project=nil}
+    let job=try store.cad.begin(loopFixture());store.cad.preview(job);try await settled(job)
+    let before=store.project,definition=job.definition
+    let cases=(0..<128).map{["name":"cancel-\($0)","values":[:]] as [String:Any]}
+    let request=try store.cad.startParameterValidation(job,args:["cases":cases,"maximum_cases":128])
+    let pending=try XCTUnwrap(store.cad.loopCall("evidence_cancel",["request_id":request.id.uuidString]) as? [String:Any])
+    XCTAssertEqual(pending["state"] as? String,"pending")
+    XCTAssertEqual(pending["cancellation_requested"] as? Bool,true)
+    try await eventually{request.state != "pending"}
+    XCTAssertEqual(request.state,"cancelled",request.issue ?? "")
+    let report=try XCTUnwrap(request.results.first?["report"] as? [String:Any])
+    let outcomes=try XCTUnwrap(report["cases"] as? [[String:Any]])
+    XCTAssertEqual(outcomes.count,128)
+    XCTAssertEqual(outcomes.compactMap{$0["name"] as? String},(0..<128).map{"cancel-\($0)"})
+    XCTAssertEqual(outcomes.compactMap{$0["outcome"] as? String}.count,128)
+    XCTAssertEqual(report["interruption"] as? String,"cancelled")
+    XCTAssertEqual(report["allPassed"] as? Bool,false)
+    XCTAssertEqual(store.project,before);XCTAssertEqual(job.definition,definition)
+    XCTAssertTrue(store.engine.undoStack.isEmpty)
+  }
+
   func testOlderNumericMetadataRemainsReadableUntilExplicitEvaluationAndUndoableCommit()async throws {
     let store=try fixture();defer{store.cad.reset();store.engine.project=nil}
     let body=CADFeatureNode(name:"Box",operation:.init(.box,values:["width":20,"height":30,"depth":40]))

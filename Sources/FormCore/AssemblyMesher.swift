@@ -20,7 +20,7 @@ public enum AssemblyMesher {
   public static let maximumOperations=32_000_000
   private struct Budget {
     var used=0,limit:Int
-    mutating func charge(_ count:Int = 1)throws {guard count>=0,used<=limit-count else {throw FormError.invalid("Pattern meshing exceeded its declared work budget. Simplify the piece or use larger mesh spacing.")};used+=count}
+    mutating func charge(_ count:Int = 1)throws {try Task.checkCancellation();guard count>=0,used<=limit-count else {throw FormError.invalid("Pattern meshing exceeded its declared work budget. Simplify the piece or use larger mesh spacing.")};used+=count}
   }
   private struct Edge:Hashable,Comparable {
     var a:Int,b:Int

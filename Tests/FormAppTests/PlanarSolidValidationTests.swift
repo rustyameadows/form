@@ -5,10 +5,14 @@ import FormCADModel
 @testable import FormApp
 
 @MainActor final class PlanarSolidValidationTests:XCTestCase {
+  private actor Counter {var value=0;func next()->Int{value+=1;return value}}
   private final class Gate {
     var entered=false
+    var visits=0
+    let pauseAt:Int
     var continuation:CheckedContinuation<Void,Never>?
-    func wait() async {entered=true;await withCheckedContinuation{continuation=$0}}
+    init(pauseAt:Int=1){self.pauseAt=pauseAt}
+    func wait() async {visits+=1;guard visits==pauseAt else{return};entered=true;await withCheckedContinuation{continuation=$0}}
     func release(){continuation?.resume();continuation=nil}
   }
   private func source(triangles:Bool=false) -> PlanarConstructionDefinition {
@@ -114,11 +118,52 @@ import FormCADModel
   func testCancellationAndDeadlineCannotReturnSuccessfulChecks() async throws {
     let (store,id)=try fixture(),input=try request(store,id),before=store.project,undo=store.engine.undoStack.count
     let cancelled=Task {try await PlanarSolidValidation.run(input)};cancelled.cancel()
-    do{_ = try await cancelled.value;XCTFail("Cancelled checks passed")}catch is CancellationError{}catch{XCTFail("Expected cancellation")}
+    do{_ = try await cancelled.value;XCTFail("Cancelled checks passed")}
+    catch let error as PlanarConstructionValidationInterrupted {
+      XCTAssertEqual(error.reason,.cancelled);XCTAssertFalse(error.report.passed)
+      XCTAssertEqual(error.report.cases.map(\.name),input.cases.map(\.name))
+      XCTAssertEqual(error.report.cases.map(\.outcome),[.notRun]);XCTAssertEqual(error.report.cases.first?.values,input.caseValues(input.cases[0]))
+    } catch{XCTFail("Expected a typed partial report, got \(error)")}
     do {
-      _ = try await PlanarSolidValidation.run(input,maximumDurationSeconds:0.02,checkpoint:{try await Task.sleep(nanoseconds:2_000_000_000)})
+      _ = try await PlanarSolidValidation.run(input,maximumDurationSeconds:0.2,checkpoint:{try await Task.sleep(nanoseconds:2_000_000_000)})
       XCTFail("Over-budget checks passed")
-    } catch {XCTAssertTrue(error.localizedDescription.contains("time budget"))}
+    } catch let error as PlanarConstructionValidationInterrupted {
+      XCTAssertEqual(error.reason,.budgetExceeded);XCTAssertEqual(error.report.interruption,.budgetExceeded)
+      XCTAssertFalse(error.report.passed);XCTAssertEqual(error.report.cases.map(\.name),input.cases.map(\.name))
+      XCTAssertTrue(error.report.cases.allSatisfy{$0.outcome == .budgetExceeded || $0.outcome == .notRun})
+      XCTAssertEqual(error.report.cases.first?.values,input.caseValues(input.cases[0]))
+    } catch {XCTFail("Expected a typed deadline report, got \(error)")}
+    XCTAssertEqual(store.project,before);XCTAssertEqual(store.engine.undoStack.count,undo)
+  }
+  func testInterruptedBatchRetainsCompletedMeasurementsCurrentCaseAndEveryUnattemptedValue() async throws {
+    let (store,id)=try fixture(),before=store.project,undo=store.engine.undoStack.count
+    let input=try request(store,id,cases:[["name":"completed-contact","values":["layer":0.4]],
+      ["name":"interrupted-overlap","values":["layer":0]],
+      ["name":"unattempted-gap","values":["layer":0.7,"expectedGap":0.3]]])
+    let gate=Gate(pauseAt:2),work=Task {try await PlanarSolidValidation.run(input,checkpoint:{await gate.wait()})}
+    try await waitForGate(gate);work.cancel();gate.release()
+    do{_ = try await work.value;XCTFail("Cancelled batch was accepted")}
+    catch let error as PlanarConstructionValidationInterrupted {
+      XCTAssertEqual(error.reason,.cancelled);XCTAssertFalse(error.report.passed)
+      XCTAssertEqual(error.report.cases.map(\.outcome),[.passed,.cancelled,.notRun])
+      XCTAssertEqual(error.report.cases.map(\.name),input.cases.map(\.name))
+      XCTAssertEqual(error.report.cases.map(\.values),input.cases.map{input.caseValues($0)})
+      XCTAssertEqual(try XCTUnwrap(error.report.cases[0].solidChecks?.first).measured,0,accuracy:1e-7)
+      XCTAssertFalse(try XCTUnwrap(error.report.cases[1].poses).isEmpty,"The interrupted current case retains its prepared geometry evidence")
+      XCTAssertNil(error.report.cases[2].poses)
+    } catch {XCTFail("Expected a typed partial report, got \(error)")}
+    let counter=Counter()
+    do {
+      _ = try await PlanarSolidValidation.run(input,maximumDurationSeconds:2,checkpoint:{
+        if await counter.next()==2 {try await Task.sleep(nanoseconds:5_000_000_000)}
+      })
+      XCTFail("Over-budget batch was accepted")
+    } catch let error as PlanarConstructionValidationInterrupted {
+      XCTAssertEqual(error.reason,.budgetExceeded);XCTAssertFalse(error.report.passed)
+      XCTAssertEqual(error.report.cases.map(\.outcome),[.passed,.budgetExceeded,.notRun])
+      XCTAssertEqual(error.report.cases.map(\.values),input.cases.map{input.caseValues($0)})
+      XCTAssertEqual(try XCTUnwrap(error.report.cases[0].solidChecks?.first).measured,0,accuracy:1e-7)
+    } catch {XCTFail("Expected a typed deadline report, got \(error)")}
     XCTAssertEqual(store.project,before);XCTAssertEqual(store.engine.undoStack.count,undo)
   }
 }

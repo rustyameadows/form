@@ -15,7 +15,7 @@ struct FabricEnvironmentContext {
   static func applies(to object:ProductObject,in project:Project)->Bool {
     guard !PaperConstruction.isPaper(object),!object.isCanvasWorkspace else{return false}
     if object.isFlexibleSurface || object.textile != nil || TextileProduct.defaults(for:object.recipeID) != nil || object.clothAttachment != nil || object.patternAssemblyAttachment != nil {return true}
-    return object.recipeID=="artboard" && project.editableArtwork(object)?.elements.contains{$0.sewingPiece != nil}==true
+    return project.isIndependentSewingSource(object)
   }
   init?(object:ProductObject,project:Project) {
     guard Self.applies(to:object,in:project) else{return nil}
@@ -111,6 +111,14 @@ struct FabricEnvironmentControls:View {
         Button("Pair source seam edges…") {if store.activateFabricPatternSource(for:object.id) != nil {seams=true}}
           .disabled(source.locked).accessibilityLabel("Pair original fabric seam edges")
         Button("Edit source on Canvas") {store.editFabricPatternSourceOnCanvas(for:object.id)}
+        if source.artworkParameterBindings?.isEmpty == false,let recipe=project.recipe(source.recipeID) {
+          SectionLabel("SOURCE PARAMETERS")
+          ForEach(recipe.parameters) {parameter in
+            ParameterControl(parameter:parameter,object:source).accessibilityIdentifier("source-parameter-"+parameter.id)
+          }.disabled(source.locked)
+          Text("These saved controls regenerate the original pattern fields; source edge identities and material coordinates remain linked.")
+            .font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
+        }
         if let artwork=source.artwork,let diagnostics=try? SewingPatterns.diagnostics(artwork) {
           ForEach(diagnostics,id:\.seam.id) {check in
             Label(check.seam.name+(check.isConclusive ? (check.matches ? " · matched":String(format:" · %.1f mm mismatch",check.difference)):" · needs measurement review"),systemImage:check.isConclusive && check.matches ? "checkmark.circle":"exclamationmark.circle")
@@ -125,7 +133,7 @@ struct FabricEnvironmentControls:View {
     }
     if object.patternAssembly != nil {PatternAssemblyInspector(object:object);Divider()}
     if object.isFlexibleSurface {ClothInspector(controller:store.cloth.preview,object:object);Divider()}
-    if object.patternAssembly==nil,let recipe=project.recipe(object.recipeID),!recipe.parameters.isEmpty {
+    if object.patternAssembly==nil,object.artworkParameterBindings?.isEmpty != false,let recipe=project.recipe(object.recipeID),!recipe.parameters.isEmpty {
       VStack(alignment:.leading,spacing:12) {
         SectionLabel("CONSTRUCTION DIMENSIONS")
         ForEach(recipe.parameters) {ParameterControl(parameter:$0,object:object)}

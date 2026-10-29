@@ -203,6 +203,7 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var parentIterationID: UUID?
   public var relationship: String
   public var artwork: Artwork?
+  public var artworkParameterBindings:[ArtworkParameterBinding]?
   public var artworkSourceID: UUID?
   public var artworkFit: String?
   public var componentDefinition: Bool?
@@ -221,6 +222,7 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var paperConstruction:PaperConstruction?
   public var canvasProjectionPositions:[String:Point2]?
   public var surfaceArtworkBindings:[PhysicalSurfaceArtworkBinding]?
+  public var physicalArtworkIntents:[PhysicalArtworkIntent]?
   public init(
     name: String, recipeID: String, parameters: [String: Double], materialID: String = "chalk",
     position: Vector3 = .init(), rotation: Double = 0, artwork: Artwork? = nil
@@ -405,6 +407,7 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
+  public static let maximumSchemaVersion=56
   public var schemaVersion = 1
   public var id: UUID = UUID()
   public var name: String
@@ -430,6 +433,8 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if objects.contains(where:{$0.artworkParameterBindings != nil}) {return max(schemaVersion,56)}
+    if objects.contains(where:{$0.physicalArtworkIntents != nil}) {return max(schemaVersion,56)}
     if recipes.contains(where:{$0.requirements?.isEmpty == false}) || objects.contains(where:{$0.cadModel?.version ?? 1 > 1}) {return max(schemaVersion,55)}
     if objects.contains(where:{$0.paperConstruction?.authored != nil || $0.canvasProjectionPositions != nil || $0.surfaceArtworkBindings != nil}) {return max(schemaVersion,55)}
     if studioPresentation?.scenes?.isEmpty == false {return max(schemaVersion,54)}
