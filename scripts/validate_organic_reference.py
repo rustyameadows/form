@@ -27,6 +27,11 @@ def main():
     parser.add_argument("--output",type=Path,required=True)
     parser.add_argument("--keep-app",action="store_true")
     parser.add_argument("--quality",choices=["preview","inspection","fabrication"],default="inspection")
+    parser.add_argument("--lighting",choices=["classic-v1","soft-side-v1","rim-v1"],default="soft-side-v1")
+    parser.add_argument("--front-elevation",type=float,default=.24)
+    parser.add_argument("--quarter-azimuth",type=float,default=-.55)
+    parser.add_argument("--quarter-elevation",type=float,default=.50)
+    parser.add_argument("--build-configuration",default="unspecified")
     args=parser.parse_args()
     output=args.output.resolve()
     assert output.is_relative_to((ROOT/".local").resolve())
@@ -43,7 +48,8 @@ def main():
         helper_sha256=hashlib.sha256(helper.read_bytes()).hexdigest(),
         model=str(args.model.resolve()),model_sha256=hashlib.sha256(args.model.read_bytes()).hexdigest(),
         reference_manifest=str(reference),reference_sha256=manifest["sha256"],
-        library=str(library),socket=socket,quality=args.quality,iterations=[])
+        library=str(library),socket=socket,quality=args.quality,
+        lighting=args.lighting,build_configuration=args.build_configuration,iterations=[])
     process=None;client=None;successful=False
     def save(): (output/"report.json").write_text(json.dumps(report,indent=2)+"\n")
     started=time.monotonic()
@@ -60,6 +66,7 @@ def main():
                 time.sleep(.1)
             client=Client()
             assert Path(client.call("form_status")["library_path"]).resolve()==library
+            report["capabilities"]=client.call("form_cad",{"command":"capabilities"})
             project=client.call("form_create_project",{"name":"Organic / frozen-reference bud vase","template":"blank"})
             report["project_id"]=project["id"];save()
             definition=json.loads(args.model.read_text())
@@ -106,13 +113,13 @@ def main():
             target={axis:(position[axis]+(minimum[axis]+maximum[axis])/2)/100
                     for axis in ("x","y","z")}
             shots=[]
-            for view,azimuth,elevation in (("front",0,.08),("top",0,1.5707963267948966),
-                                          ("three-quarter",.55,.45)):
+            for view,azimuth,elevation in (("front",0,args.front_elevation),("top",0,1.5707963267948966),
+                                          ("three-quarter",args.quarter_azimuth,args.quarter_elevation)):
                 camera=dict(azimuth=azimuth,elevation=elevation,distance=3.2,
                             target=target,projection="orthographic",viewportAspect=1)
                 shot=client.call("form_set_view",dict(view="studio",studio_command="capture",
                     name="Organic reference / "+view,camera=camera,reference_aspect=1,
-                    lighting="soft-side-v1",surface="Daylight",
+                    lighting=args.lighting,surface="Daylight",
                     visibility=dict(mode="objects",objectIDs=[object_id]),width=1000,height=1000))
                 rendered=client.call("form_export",dict(format="png",shot_id=shot["id"],
                     path=str(output/(view+"-studio.render"))))

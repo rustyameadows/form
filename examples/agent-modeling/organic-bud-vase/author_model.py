@@ -1,173 +1,155 @@
 #!/usr/bin/env python3
-"""Author ordinary CAD model data from the frozen independent design reference.
+"""Author the unchanged organic reference with ordinary parametric CAD operations.
 
-Only familiar cubic section curves, a smooth loft and an inward shell are used.
-This script is example content; it is never imported or registered by the app.
+This is model content. It uses existing cubic curve profiles, loft and shell.
+Run without arguments to regenerate model.json; --body-only produces a diagnostic solid.
 """
-import argparse
-import json
-import math
+import argparse,json,math,uuid
 from pathlib import Path
-import re
-import uuid
 
-HERE=Path(__file__).resolve().parent
-def identity(name):
-    return str(uuid.uuid5(uuid.NAMESPACE_URL,"form-organic-reference-vase/"+name))
+ROOT=Path(__file__).resolve().parents[3]
+PEAK=.47
+NECK=.94
+SIGNIFICANT_DIGITS=12
+BASE_LOBES=0.0
+ANGULAR_SECONDARY=-.18
+ANGULAR_PHASE=.055
+STATIONS=[0,.08,.19,.32,.47,.60,.72,.82,.90,.96,1]
+DENSE_STATIONS=[0,.04,.10,.20,.34,.47,.55,.63,.70,.76,.82,.87,.92,.96,1]
+FAIR_STATIONS=[0,.025,.06,.11,.18,.26,.35,.42,.47,.52,.57,.62,.67,.72,.77,.82,.87,.92,.96,1]
+NECK_STATIONS=[0,.06,.11,.18,.26,.35,.47,.52,.57,.62,.67,.72,.77,.82,.87,.92,.94,.96,.98,1]
+STATION_LAYOUT='neck-transition'
 
+def ident(name):return str(uuid.uuid5(uuid.NAMESPACE_URL,'form-organic-analytic/'+name))
+def smooth(t):return t*t*t*(10+t*(-15+6*t))
+def number(x):
+ if abs(x)<1e-13:return '0'
+ s=format(x,f'.{SIGNIFICANT_DIGITS}g').replace('-0.','-.')
+ return s[1:] if s.startswith('0.') else s
 
-def model(flutes=32,flute_depth=.35,segments=192,style="rounded",curve_mode="periodic-c2",compact=True):
-    parameters=[
-        ("height",180,150,210,"mm"),("bellyRadius",64,54,72,"mm"),
-        ("baseRadius",32,25,38,"mm"),("neckRadius",13,11,16,"mm"),
-        ("neckOffset",16,8,24,"mm"),("shoulderHeight",120,108,135,"mm"),
-        ("depthScale",1.05,.90,1.16,"ratio"),("lobeAmount",.17,.10,.22,"ratio"),
-        ("fluteDepth",flute_depth,0,.75,"mm"),("wall",3,2.2,3.5,"mm")]
-    # Height, radius, lobe strength, flute strength, neck offset. The upper
-    # sections settle into a narrow neck through one continuous loft.
-    sections=[
-        ("0","baseRadius",0,0,0),
-        ("shoulderHeight*.04","baseRadius*.8+bellyRadius*.15",.10,.12,.01),
-        ("shoulderHeight*.12","bellyRadius*.58",.45,.35,.03),
-        ("shoulderHeight*.27","bellyRadius*.83",.80,.75,.06),
-        ("shoulderHeight*.48","bellyRadius*1.03",1,1,.10),
-        ("shoulderHeight*.68","bellyRadius*1.08",1,1,.14),
-        ("shoulderHeight*.86","bellyRadius*.98",.95,.90,.22),
-        ("shoulderHeight","bellyRadius*.77",.80,.60,.36),
-        ("shoulderHeight+(height-shoulderHeight)*.25","bellyRadius*.49",.45,.20,.66),
-        ("shoulderHeight+(height-shoulderHeight)*.50","neckRadius*1.04",.06,.025,.94),
-        ("shoulderHeight+(height-shoulderHeight)*.65","neckRadius*.98",0,.008,1),
-        ("shoulderHeight+(height-shoulderHeight)*.82","neckRadius*.98",0,0,1),
-        ("height","neckRadius",0,0,1)]
-    if style=="rounded":
-        parameters=[(n,68 if n=="bellyRadius" else 26 if n=="neckOffset" else .18 if n=="lobeAmount" else v,
-                     lo,78 if n=="bellyRadius" else 34 if n=="neckOffset" else hi,u)
-                    for n,v,lo,hi,u in parameters]
-        sections=[
-            ("0","baseRadius",.12,0,0),
-            ("shoulderHeight*.04","bellyRadius*.62",.36,.12,.01),
-            ("shoulderHeight*.12","bellyRadius*.79",.66,.35,.03),
-            ("shoulderHeight*.27","bellyRadius*.96",.88,.75,.06),
-            ("shoulderHeight*.48","bellyRadius*1.05",1,1,.10),
-            ("shoulderHeight*.68","bellyRadius*1.03",1,1,.14),
-            ("shoulderHeight*.86","bellyRadius*.90",.93,.90,.22),
-            ("shoulderHeight","bellyRadius*.68",.72,.60,.36),
-            ("shoulderHeight+(height-shoulderHeight)*.25","bellyRadius*.39",.35,.20,.66),
-            ("shoulderHeight+(height-shoulderHeight)*.50","neckRadius*1.04",.04,.025,.94),
-            ("shoulderHeight+(height-shoulderHeight)*.65","neckRadius*.98",.002,.008,1),
-            ("shoulderHeight+(height-shoulderHeight)*.82","neckRadius*.98",.002,0,1),
-            ("height","neckRadius",.002,0,1)]
-    features=[]
-    step=2*math.pi/segments
-    def coefficients(theta,lobes,fluting):
-        c,s=math.cos(theta),math.sin(theta)
-        if style=="rounded":
-            modulation=1-.15*math.cos(theta)+.08*math.sin(theta)
-            derivative=.15*math.sin(theta)+.08*math.cos(theta)
-            wave=math.cos(3*theta)*modulation+.02*math.cos(theta)
-            slope=-3*math.sin(3*theta)*modulation+math.cos(3*theta)*derivative-.02*math.sin(theta)
-        else:
-            wave=.75*math.cos(3*theta)+.30*math.cos(2*theta)-.15*math.cos(theta+.7)
-            slope=-2.25*math.sin(3*theta)-.60*math.sin(2*theta)+.15*math.sin(theta+.7)
-        rib=math.cos(flutes*theta);drib=-flutes*math.sin(flutes*theta)
-        return ((c,lobes*wave*c,fluting*rib*c),
-                (s,lobes*wave*s,fluting*rib*s),
-                (-s,lobes*(slope*c-wave*s),fluting*(drib*c-rib*s)),
-                (c,lobes*(slope*s+wave*c),fluting*(drib*s+rib*c)))
-    def coordinate(radius,values,depth=False):
-        a,b,c=values
-        if compact:
-            def number(value):
-                if abs(value)<1e-14:return "0"
-                text=f"{value:.14g}"
-                text=text.replace("-0.","-.")
-                return text[1:] if text.startswith("0.") else text
-            match=re.fullmatch(r"([A-Za-z][A-Za-z0-9]*)(?:\*([0-9.]+))?",radius)
-            if match:
-                radius=match[1];factor=float(match[2] or 1);a*=factor;b*=factor
-            else:
-                radius="("+radius+")"
-            value=radius+"*("+number(a)+("+" if b>=0 else "-")+"lobeAmount*"+number(abs(b))+")"
-            if abs(c)>=1e-14:value+=("+" if c>=0 else "-")+"fluteDepth*"+number(abs(c))
-        else:
-            value=f"({radius})*({a:.15g}+lobeAmount*({b:.15g}))+fluteDepth*({c:.15g})"
-        return "depthScale*("+value+")" if depth else value
-    def point(radius,x,y):
-        return dict(x=coordinate(radius,x),y=coordinate(radius,y,True))
-    for index,(height,radius,lobes,fluting,offset) in enumerate(sections):
-        curves=[]
-        controls=[coefficients(i*step,lobes,fluting) for i in range(segments)]
-        def blend(weights,axis):
-            return [sum(weight*controls[i%segments][axis][k] for i,weight in weights) for k in range(3)]
-        for edge in range(segments):
-            if curve_mode=="periodic-c2":
-                weights=[
-                    [(edge-1,1/6),(edge,4/6),(edge+1,1/6)],
-                    [(edge,4/6),(edge+1,2/6)],
-                    [(edge,2/6),(edge+1,4/6)],
-                    [(edge,1/6),(edge+1,4/6),(edge+2,1/6)]]
-                points=[(blend(w,0),blend(w,1)) for w in weights]
-                # Uniform cubic control filtering attenuates a sinusoid. Keep
-                # the authored flute-depth control approximately physical.
-                gain=1/(2/3+math.cos(flutes*step)/3)
-                for x,y in points:x[2]*=gain;y[2]*=gain
-                curves.append(dict(kind="cubicBezier",**{
-                    key:point(radius,*p) for key,p in zip(["start","control1","control2","end"],points)}))
-            else:
-                a=controls[edge]
-                b=controls[(edge+1)%segments]
-                control1=([a[0][k]+step*a[2][k]/3 for k in range(3)],
-                          [a[1][k]+step*a[3][k]/3 for k in range(3)])
-                control2=([b[0][k]-step*b[2][k]/3 for k in range(3)],
-                          [b[1][k]-step*b[3][k]/3 for k in range(3)])
-                curves.append(dict(kind="cubicBezier",start=point(radius,a[0],a[1]),
-                    control1=point(radius,*control1),control2=point(radius,*control2),
-                    end=point(radius,b[0],b[1])))
-        features.append(dict(id=identity("section-"+str(index)),name=f"Organic section {index+1:02}",
-            operation=dict(kind="curveProfile",inputs=[],values={},curves=curves,
-                plane=dict(origin=dict(x=f"neckOffset*{offset}",y=height,z=0),
-                           u=dict(x=1,y=0,z=0),v=dict(x=0,y=0,z=-1)))))
-    loft=identity("continuous-loft")
-    features.append(dict(id=loft,name="Continuous asymmetric lobed and fluted skin",
-        operation=dict(kind="loft",inputs=[f["id"] for f in features],values={},ruled=False)))
-    output=identity("normal-wall")
-    features.append(dict(id=output,name="Open mouth and true normal ceramic wall",
-        operation=dict(kind="shell",inputs=[loft],values=dict(thickness="wall"),
-            selection=dict(faceAtMaximum=dict(axis="y")))))
-    definition=dict(id=identity("model"),version=2,revision=0,
-        name="Organic reference study / offset three-lobed bud vase",
-        parameters=[dict(name=n,value=v,minimum=lo,maximum=hi,unit=u) for n,v,lo,hi,u in parameters],
-        features=features,outputs=[output],
-        requirements=[
-            dict(id="neck-wall",lhs="wall",relation="<",rhs="neckRadius*.35",message="Keep an open neck with a bounded wall."),
-            dict(id="shoulder-room",lhs="shoulderHeight",relation="<",rhs="height*.80",message="Leave room for the blended shoulder and neck.")],
-        outputRequirements=[
-            dict(id="single-solid",outputID=output,metric="solids",relation="==",value=1,message="The vase must remain one closed material solid."),
-            dict(id="height",outputID=output,metric="height",relation="==",value="height",tolerance=.02,message="Retain the authored physical height.")],
-        assumptions=["Authored after the frozen AI-generated three-view design reference.",
-                     f"{flutes} shallow longitudinal flutes are physical curved geometry, not a texture.",
-                     "The section curves, smooth loft and normal shell are ordinary document features."],
-        unresolvedMeasurements=["Visual silhouette, shoulder blending, neck placement and flute scale require comparison with the frozen reference."])
-    if style=="rounded" and curve_mode=="periodic-c2" and compact:
-        definition["revision"]=5
-        definition["name"]="Organic reference study / compact C2 clover and fine fluting"
-        for check in definition["outputRequirements"]:
-            if check["id"]=="height":check["tolerance"]=.2
-        definition["assumptions"].append("Periodic C2 cubic B-spline controls encoded in existing cubic Bezier segments, six controls per flute; scalar coefficients factored and compacted within existing document bounds.")
-    return definition
+def law(t):
+ """Linear radius/translation bases, C2 across belly and cylindrical neck."""
+ if t<=PEAK:
+  v=t/PEAK;f=.6*(1-(1-v)**3)+.4*(1-(1-v)**2)
+  radii=(1-f,f,0)
+  lobes=BASE_LOBES+(1-BASE_LOBES)*smooth(v)
+  offsets=(smooth(v),0)
+ elif t<NECK:
+  u=(t-PEAK)/(NECK-PEAK);g=1-smooth(u**1.25)
+  # Match the lower law's second derivative for every radius setting.
+  correction=-.4*((NECK-PEAK)/PEAK)**2*u*u*(1-u)**3
+  radii=(-correction,g+correction,1-g)
+  blend=smooth(u**1.4);offsets=(1-blend,blend);lobes=g
+ else:radii=(0,0,1);offsets=(0,1);lobes=0
+ nominal=sum(w*r for w,r in zip(radii,(30,69,14.5)))
+ # Section scaling supplies one radius factor; this supplies the second.
+ rib=nominal/69
+ return radii,lobes,rib,offsets
 
+def combination(terms):
+ out=''
+ for name,weight in terms:
+  if abs(weight)<1e-13:continue
+  part=name if abs(abs(weight)-1)<1e-13 else name+'*'+number(abs(weight))
+  out+=('-' if weight<0 else '+' if out else '')+part
+ return out or '0'
 
-if __name__=="__main__":
-    parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output",type=Path,default=HERE/"model.json")
-    parser.add_argument("--flutes",type=int,default=32)
-    parser.add_argument("--flute-depth",type=float,default=.35)
-    parser.add_argument("--segments",type=int,default=192)
-    parser.add_argument("--style",choices=["original","rounded"],default="rounded")
-    parser.add_argument("--curve-mode",choices=["hermite","periodic-c2"],default="periodic-c2")
-    parser.add_argument("--compact",action="store_true",default=True)
-    parser.add_argument("--no-compact",dest="compact",action="store_false")
-    args=parser.parse_args()
-    definition=model(args.flutes,args.flute_depth,args.segments,args.style,args.curve_mode,args.compact)
-    args.output.write_text(json.dumps(definition,indent=2)+"\n")
-    print(args.output)
+def angular_wave(a):
+ """A soft three-lobed polar contour, with an optional broad-tip correction."""
+ phase=a+ANGULAR_PHASE
+ return (math.cos(3*phase)+ANGULAR_SECONDARY*math.cos(6*phase))*(1-.15*math.cos(a)+.08*math.sin(a))+.02*math.cos(a)
+
+def model(segments=192,flutes=48,flute_depth=.25,body_only=False,belly_offset=-10.0,neck_offset=16.0,depth_ratio=1.015,lobe_amount=.12,neck_depth_offset=-17,stations=20,refine=True,belly_radius=73.0,minimum_lobes=.10):
+ params=[('height',180,150,210,'mm'),('bellyHeight',84.6,72,96,'mm'),('bellyRadius',belly_radius,62,76,'mm'),('baseRadius',30,26,34,'mm'),('neckRadius',14.5,12.5,16,'mm'),('bellyOffset',belly_offset,-12,0,'mm'),('neckOffset',neck_offset,16,30,'mm'),('neckDepthOffset',neck_depth_offset,-22,-12,'mm'),('depthScale',depth_ratio,.94,1.04,'ratio'),('lobeAmount',lobe_amount,minimum_lobes,.27,'ratio'),('fluteDepth',flute_depth,0,.25,'mm'),('wall',3,2.5,3.5,'mm')]
+ selected_stations={11:STATIONS,15:DENSE_STATIONS,20:FAIR_STATIONS if STATION_LAYOUT=='balanced' else NECK_STATIONS}[stations]
+ if flutes and segments<4*flutes:raise ValueError('Use at least four C2 control samples per physical flute.')
+ features=[];step=2*math.pi/segments
+ for j,t in enumerate(selected_stations):
+  radius_weights,lobes,rib,offsets=law(t)
+  radius=combination(zip(['baseRadius','bellyRadius','neckRadius'],radius_weights))
+  if '+' in radius or '-' in radius:radius='('+radius+')'
+  controls=[]
+  for i in range(segments):
+   a=i*step;c,s=math.cos(a),math.sin(a)
+   wave=angular_wave(a)
+   controls.append(((c,lobes*wave*c,rib*math.cos(flutes*a)*c),(s,lobes*wave*s,rib*math.cos(flutes*a)*s)))
+  gain=1/(2/3+math.cos(flutes*step)/3) if flutes else 1
+  def coordinate(coefficients,depth):
+   a,b,c=coefficients
+   factor=number(a)+('+' if b>=0 else '-')+'lobeAmount*'+number(abs(b)) if abs(b)>1e-13 else number(a)
+   value='('+factor+')'
+   if flutes and abs(c)>1e-13:value+=('+' if c>=0 else '-')+'fluteDepth/bellyRadius*'+number(abs(c)*gain)
+   assert len(value)<=256,(len(value),value)
+   return value
+  curves=[]
+  for i in range(segments):
+   weights=[[(i-1,1/6),(i,4/6),(i+1,1/6)],[(i,4/6),(i+1,2/6)],[(i,2/6),(i+1,4/6)],[(i,1/6),(i+1,4/6),(i+2,1/6)]]
+   points=[]
+   for w in weights:
+    xy=[[sum(weight*controls[k%segments][axis][coefficient] for k,weight in w) for coefficient in range(3)] for axis in range(2)]
+    points.append(dict(x=coordinate(xy[0],False),y=coordinate(xy[1],True)))
+   curves.append(dict(kind='cubicBezier',**dict(zip(['start','control1','control2','end'],points))))
+  sketch=ident('unit-ring-'+str(j))
+  features.append(dict(id=sketch,name=f'Unit section curve {j+1:02}',operation=dict(kind='curveProfile',inputs=[],values={},curves=curves,plane=dict(origin=dict(x=0,y=0,z=0),u=dict(x=1,y=0,z=0),v=dict(x=0,y=0,z=-1)))))
+  profile=sketch
+  if refine:
+   profile=ident('refined-ring-'+str(j));features.append(dict(id=profile,name=f'Refine tangent section spans {j+1:02}',operation=dict(kind='refine',inputs=[sketch],values={})))
+  vertical_weight=math.sin(math.pi*t)**2/math.sin(math.pi*PEAK)**2
+  vertical=combination([('height',t-PEAK*vertical_weight),('bellyHeight',vertical_weight)])
+  features.append(dict(id=ident('ring-'+str(j)),name=f'Placed analytic section {j+1:02}',operation=dict(kind='transform',inputs=[profile],values={},matrix=[radius,0,0,combination(zip(['bellyOffset','neckOffset'],offsets)),0,1,0,vertical,0,0,'depthScale*'+radius,'neckDepthOffset*'+number(offsets[1]),0,0,0,1])))
+ loft=ident('body');features.append(dict(id=loft,name='Continuous analytic body',operation=dict(kind='loft',inputs=[ident('ring-'+str(j)) for j in range(len(selected_stations))],values={},ruled=False)))
+ output=loft
+ if not body_only:
+  output=ident('normal-wall');features.append(dict(id=output,name='True normal wall and open mouth',operation=dict(kind='shell',inputs=[loft],values=dict(thickness='wall'),selection=dict(faceAtMaximum=dict(axis='y')))))
+ requirements=[dict(id='neck-wall',lhs='wall',relation='<',rhs='neckRadius*.35',message='Retain a bounded physical wall and open neck.')]
+ if flutes:
+  lobe_floor=1.2*(1+abs(ANGULAR_SECONDARY))
+  requirements.append(dict(id='detail-curvature-margin',lhs='wall*fluteDepth*'+str(flutes*flutes)+'*1.22',relation='<',rhs='pow(bellyRadius*(1-lobeAmount*'+number(lobe_floor)+'),2)*.75',message='Keep a conservative ridge-curvature margin for the declared normal wall; kernel validation is still required.'))
+ checks=[dict(id='one-solid',outputID=output,metric='solids',relation='==',value=1,message='Retain one valid material solid.'),dict(id='height',outputID=output,metric='height',relation='==',value='height',tolerance=.2,message='Retain the authored physical height.')]
+ if not body_only:
+  checks.extend([dict(id='material-not-filled',outputID=output,metric='volume',relation='<',value='wall*height*bellyRadius*8',message='Reject a filled body or grossly excessive material volume.'),dict(id='material-not-vanishing',outputID=output,metric='volume',relation='>',value='wall*height*bellyRadius*3',message='Reject a vanishing or grossly undersized material wall.')])
+ return dict(id='0c6fde30-700c-5094-bc75-15a17bc5ecdc',version=2,revision=11,name='Organic analytic source study'+(' / body only' if body_only else ' / normal shell'),parameters=[dict(name=n,value=v,minimum=lo,maximum=hi,unit=u) for n,v,lo,hi,u in params],features=features,outputs=[output],requirements=requirements,outputRequirements=checks,assumptions=['Experimental source-only candidate against the frozen AI design reference.','Axial radius/offset laws have matched C2 joins for every declared parameter value.','Every section uses periodic C2 cubic Bezier correspondence.',f'{flutes} physical longitudinal flutes; radial depth fades toward the neck.',f'Axial law: peak={PEAK}; neck={NECK}; base_lobes={BASE_LOBES}.',f'Angular section: secondary={ANGULAR_SECONDARY}; phase={ANGULAR_PHASE}.','BODY ONLY: silhouette study, not a hollow or physically accepted vessel.' if body_only else 'Wall is a true inward normal shell, not radial inner-loft subtraction.'],unresolvedMeasurements=['Visual acceptance and the declared parameter envelope require actual native evaluation.'])
+
+if __name__=='__main__':
+ p=argparse.ArgumentParser(description=__doc__)
+ p.add_argument('--output',type=Path,default=Path(__file__).with_name('model.json'))
+ p.add_argument('--segments',type=int,default=192)
+ p.add_argument('--flutes',type=int,default=48)
+ p.add_argument('--flute-depth',type=float,default=.25)
+ g=p.add_mutually_exclusive_group()
+ g.add_argument('--body-only',action='store_true')
+ g.add_argument('--shell',action='store_false',dest='body_only',help=argparse.SUPPRESS)
+ p.set_defaults(body_only=False)
+ p.add_argument('--belly-radius',type=float,default=73.0)
+ p.add_argument('--belly-offset',type=float,default=-10.0)
+ p.add_argument('--neck-offset',type=float,default=16.0)
+ p.add_argument('--depth-ratio',type=float,default=1.015)
+ p.add_argument('--lobes',type=float,default=.12)
+ p.add_argument('--minimum-lobes',type=float,default=.10)
+ p.add_argument('--neck-depth-offset',type=float,default=-17)
+ p.add_argument('--stations',type=int,choices=[11,15,20],default=20)
+ p.add_argument('--station-layout',choices=['balanced','neck-transition'],default='neck-transition')
+ p.add_argument('--revision',type=int,default=11)
+ p.add_argument('--model-id',type=uuid.UUID,default=uuid.UUID('0c6fde30-700c-5094-bc75-15a17bc5ecdc'))
+ p.add_argument('--no-refine',action='store_true')
+ p.add_argument('--digits',type=int,choices=[12,13],default=12)
+ p.add_argument('--base-lobes',type=float,default=0.0)
+ p.add_argument('--lobe-harmonic',type=float,default=-.18)
+ p.add_argument('--phase',type=float,default=.055)
+ a=p.parse_args()
+ SIGNIFICANT_DIGITS=a.digits
+ BASE_LOBES=a.base_lobes
+ ANGULAR_SECONDARY=a.lobe_harmonic
+ ANGULAR_PHASE=a.phase
+ STATION_LAYOUT=a.station_layout
+ m=model(a.segments,a.flutes,a.flute_depth,a.body_only,a.belly_offset,
+         a.neck_offset,a.depth_ratio,a.lobes,a.neck_depth_offset,a.stations,
+         not a.no_refine,a.belly_radius,a.minimum_lobes)
+ m['revision']=a.revision
+ if a.model_id:m['id']=str(a.model_id)
+ data=json.dumps(m,indent=2)+'\n'
+ a.output.parent.mkdir(parents=True,exist_ok=True)
+ a.output.write_text(data)
+ print(json.dumps(dict(path=str(a.output),
+       canonical_bytes=len(json.dumps(m,separators=(',',':')).encode()),
+       features=len(m['features']))))

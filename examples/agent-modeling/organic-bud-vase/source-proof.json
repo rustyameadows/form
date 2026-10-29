@@ -1,12 +1,19 @@
 {
-  "model": "model.json",
-  "model_sha256": "01f6a5d27715f68390d8566771a42aec2e781a0985f4cd4e0b4b284663a8dd4f",
-  "join_count": 2496,
-  "canonical_bytes": 2002474,
-  "maximum_coordinate_difference_from_uncompacted_mm": 3.808509063674137e-12,
-  "maximum_position_gap_mm": 0.0,
-  "maximum_first_derivative_gap": 2.4066082460194593e-11,
-  "maximum_second_derivative_gap": 8.901679393602535e-11,
-  "scope": "Nominal section-curve joins only; this does not prove axial loft fairness or reference fidelity.",
-  "generator_reproduces_selected_model_byte_for_byte": true
+  "source_sha256": "df7937f1b5917027be9ecd678d6a5713aaf5c5504e67b47ab024459d1e9c3e12",
+  "model_id": "0c6fde30-700c-5094-bc75-15a17bc5ecdc",
+  "definition_revision": 11,
+  "profiles": 20,
+  "bezier_spans_per_profile": 192,
+  "joins": 3840,
+  "curve_scalar_coordinates": 30720,
+  "canonical_definition_bytes": 2690172,
+  "physical_flutes": 48,
+  "radial_flute_amplitude_mm": 0.25,
+  "source_continuity_at_nominal_values": {
+    "endpoint_mm": 0.0,
+    "first_derivative_mm": 5.403945945459738e-10,
+    "second_derivative_mm": 1.1414452917127829e-09,
+    "tangent_angle_rad": 2.3171803090076928e-10
+  },
+  "method": "Resolve authored Bezier controls with nominal parameters and full affine placement; compare adjoining endpoint and first/second derivatives, including periodic closing joins. This source arithmetic check is separate from native solid/parameter/visual acceptance."
 }

@@ -157,15 +157,15 @@ Use additional construction briefs after the runtime is frozen to verify that su
 
 Acceptance:
 
-- [ ] Each workflow completes construct → evaluate → inspect → measure → repair → parameter validation → publish through agent tools.
+- [x] Each workflow completes construct → evaluate → inspect → measure → repair → parameter validation → publish through agent tools.
 - [x] The same installed build accepts the additional construction briefs without source edits or model-specific plugins.
 - [x] Native controls can edit the resulting parameters, and save/reopen plus Undo/Redo preserve the accepted source and its bindings.
 - [x] Existing geometry, cancellation, stale-publication, artwork, and project-lifecycle regressions pass. Native Canvas/Table checks confirm the rendered model and surface orientation.
 - [x] Fabric repeats and colorways, sewing/curved-pattern geometry, cutting/sewing layouts, textile decoration and embroidery, garment blocks, pattern assemblies, cloth preparation/simulation/attachments, material assignments, and saved production records pass their existing relevant regressions. Native and bridge checks verify editable flat sources, assembled appearance, save/reopen, and shared Undo.
 - [x] Tool descriptions and focused examples match the shipped behavior, including diagnostics and parameter validation. The benchmark demonstrates the latency target from milestone 1.
-- [ ] The organic example passes a documented multi-angle visual review of silhouette, proportions, blend quality and fine detail. A valid solid alone is insufficient.
+- [x] The organic example passes a documented multi-angle visual review of silhouette, proportions, blend quality and fine detail. A valid solid alone is insufficient.
 
-Verification status: the enclosure, curved-vessel, unfamiliar folded-construction and fabric workflows have their recorded tool and regression evidence. The organic candidate has been repaired, evaluated, rendered and committed as model data, but its complete exposed-parameter case campaign and visual acceptance are not yet demonstrated. Earlier organic renders remain recorded visual failures; a later valid solid or pending comparison does not close that gate. Native parameter checks here establish keyboard and Preview/Cancel behavior; held-pointer measurements remain open under milestone 1.
+Verification status: the enclosure, curved-vessel, unfamiliar folded-construction and fabric workflows have recorded tool and regression evidence. The selected organic source passes visual geometry review in three angles under two shipped lighting presets; photographic finish and illumination remain unmatched. Its full finite campaign retains 30 named values: 27 native geometry passes and 3 expected authored curvature-guard rejections, with no unexpected final failures. One-Undo publication, Undo/Redo and reopen preserve source/assets. Original failures and a cooperative budget overrun are retained. The latter exposed a native mass-integration cancellation gap being addressed separately. Held-pointer measurements remain open under milestone 1.
 
 ## Execution order and completion
 
