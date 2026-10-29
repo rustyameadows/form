@@ -190,7 +190,7 @@ import SwiftUI
           store.project == nil)
       }
     }
-    Settings { AppearanceSettingsView(appearance: .shared) }
+    Settings { AppearanceSettingsView(appearance: .shared, store: store) }
   }
 }
 

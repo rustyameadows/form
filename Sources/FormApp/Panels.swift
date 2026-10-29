@@ -406,6 +406,7 @@ struct BridgeView: View {
 }
 
 struct ProjectInfoView: View {
+  var onClose: (() -> Void)? = nil
   @EnvironmentObject var store: StudioStore
   @Environment(\.dismiss) var dismiss
   @State private var note = ""
@@ -415,7 +416,7 @@ struct ProjectInfoView: View {
       HStack {
         Text("Project notebook").font(.system(size: 26, weight: .regular, design: .default))
         Spacer()
-        Button("Done") { dismiss() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
+        Button("Done") { close() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
       }
       if let project = store.project {
         TextField(
@@ -481,7 +482,7 @@ struct ProjectInfoView: View {
               }
             }
           }.padding(.vertical, 5)
-        }.frame(maxHeight: 290)
+        }.frame(maxWidth: .infinity, maxHeight: .infinity)
         HStack {
           Picker("Type", selection: $kind) {
             Text("Decision").tag("decision")
@@ -495,8 +496,10 @@ struct ProjectInfoView: View {
             .textSelection(.enabled).foregroundStyle(Palette.secondary)
         }
       }
-    }.padding(28).frame(width: 590).background(Palette.paper)
+    }.padding(28).frame(minWidth: 590, minHeight: 440).frame(maxWidth: .infinity, maxHeight: .infinity).background(Palette.paper)
+    .onExitCommand { close() }
   }
+  private func close() { if let onClose { onClose() } else { dismiss() } }
   func add() {
     guard !note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
     store.perform("form_add_note", ["text": note, "kind": kind])
@@ -505,6 +508,7 @@ struct ProjectInfoView: View {
 }
 
 struct LibraryView: View {
+  var onClose: (() -> Void)? = nil
   @EnvironmentObject var store: StudioStore
   @Environment(\.dismiss) var dismiss
   @State private var newName = ""
@@ -521,7 +525,7 @@ struct LibraryView: View {
           ).foregroundStyle(Palette.secondary)
         }
         Spacer()
-        Button("Done") { dismiss() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
+        Button("Done") { close() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
       }
       ScrollView {
         VStack(alignment: .leading, spacing: 22) {
@@ -602,10 +606,12 @@ struct LibraryView: View {
           ).foregroundStyle(Palette.secondary)
         }.frame(maxWidth: .infinity, alignment: .leading).padding(.trailing, 8)
       }
-    }.padding(30).frame(width: 680, height: 680).background(Palette.paper).sheet(isPresented: $printingSettings)
+    }.padding(30).frame(minWidth: 680, minHeight: 520).frame(maxWidth: .infinity, maxHeight: .infinity).background(Palette.paper).sheet(isPresented: $printingSettings)
     { PrintingSettingsView(printing: store.printing).environmentObject(store) }
     .sheet(isPresented: $fabricSettings) { TextileFabricLibrary().environmentObject(store) }
+    .onExitCommand { close() }
   }
+  private func close() { if let onClose { onClose() } else { dismiss() } }
 }
 
 struct EquipmentEditor: View {

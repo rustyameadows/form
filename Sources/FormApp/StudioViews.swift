@@ -33,18 +33,14 @@ struct RootView: View {
     .sheet(isPresented:$store.showingDocumentFonts) {DocumentFontsPanel(session:store.artworkSession)}
     .background {ModelAssetImportPresenter(store:store)}
     .background {CADModelEditorPresenter(store:store)}
-    .sheet(isPresented: $store.showingLibrary) { LibraryView().environmentObject(store) }
+    .background { StudioUtilityWindowPresenter(store: store).frame(width: 0, height: 0) }
     .sheet(isPresented: $store.showingObjectLibrary) { ObjectLibraryView().environmentObject(store) }
     .sheet(isPresented: $store.showingBridge) { BridgeView().environmentObject(store) }
-    .sheet(isPresented: $store.showingProjectInfo) { ProjectInfoView().environmentObject(store) }
     .sheet(item: $store.svgImport) { review in
       SVGImportSheet(review: review).environmentObject(store)
     }
     .sheet(item: $store.fabricationReview) { review in
       FabricationReviewView(review: review).environmentObject(store)
-    }
-    .sheet(isPresented: $store.showingPrint) {
-      PrintWorkspace(printing: store.printing).environmentObject(store)
     }
     .alert(
       "LAB",
@@ -61,38 +57,40 @@ struct RootView: View {
 struct StudioTopBar: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
-    HStack(spacing: 14) {
+    HStack(spacing: 8) {
       if store.showingHome {
         Text("LAB").font(.system(size: 15, weight: .heavy, design: .default)).tracking(4)
         Text(LabIdentity.version).font(.system(size: 10, weight: .medium, design: .monospaced)).foregroundStyle(
           Palette.secondary
         ).padding(.horizontal, 7).padding(.vertical, 3).background(Palette.line, in: Capsule())
       } else {
-        IconButton("Home", symbol: "square.grid.2x2") { store.home() }
-        Rectangle().fill(Palette.line).frame(width: 1, height: 20)
+        IconButton("Home", symbol: "square.grid.2x2", size: 28) { store.home() }
+        Rectangle().fill(Palette.line).frame(width: 1, height: 16)
         Text(store.project?.name ?? "Untitled study").font(.system(size: 13, weight: .semibold))
-          .lineLimit(1).frame(maxWidth: 210, alignment: .leading)
+          .lineLimit(1).frame(maxWidth: 170, alignment: .leading)
       }
-      Spacer(minLength: 10)
+      Spacer(minLength: 8)
       if !store.showingHome {
         HStack(spacing: 3) {
           ForEach(ProjectEnvironment.primary) { environment in
             Button { store.showEnvironment(environment) } label: {
               Text(environment.title)
-                .font(.system(size: 12, weight: store.environment == environment ? .semibold : .medium))
-                .padding(.horizontal, 15).padding(.vertical, 8)
-                .background(store.environment == environment ? Color.white : Color.clear, in: RoundedRectangle(cornerRadius: 7))
+                .font(.system(size: 11, weight: store.environment == environment ? .semibold : .medium))
+                .lineLimit(1).fixedSize(horizontal: true, vertical: false)
+                .padding(.horizontal, 10).padding(.vertical, 5)
+                .background(store.environment == environment ? Color.white : Color.clear, in: RoundedRectangle(cornerRadius: 5))
             }.buttonStyle(.plain)
               .foregroundStyle(store.environment == environment ? Palette.ink : Palette.secondary)
               .accessibilityLabel(environment.title + " environment")
           }
-        }.padding(4).background(.black.opacity(0.035), in: RoundedRectangle(cornerRadius: 11))
+        }.padding(3).background(.black.opacity(0.035), in: RoundedRectangle(cornerRadius: 8))
         Button { store.showEnvironment(.studio) } label: {
-          Image(systemName: "camera.aperture").font(.system(size: 16)).frame(width: 34, height: 34)
+          Image(systemName: "camera.aperture").font(.system(size: 14)).frame(width: 28, height: 28)
             .foregroundStyle(store.environment == .studio ? Palette.accent : Palette.secondary)
-            .background(store.environment == .studio ? Palette.accent.opacity(0.09) : .clear, in: RoundedRectangle(cornerRadius: 8))
+            .background(store.environment == .studio ? Palette.accent.opacity(0.09) : .clear, in: RoundedRectangle(cornerRadius: 6))
         }.buttonStyle(.plain).help("Studio · lighting, saved shots & presentation").accessibilityLabel("Studio environment")
-        Spacer(minLength: 10)
+        if store.environment == .form { DesignSurfaceMenu() }
+        Spacer(minLength: 8)
       }
       if store.showingHome {
         Button {
@@ -102,17 +100,29 @@ struct StudioTopBar: View {
             .system(size: 12)
           ).foregroundStyle(Palette.secondary)
         }.buttonStyle(.plain)
-        Rectangle().fill(Palette.line).frame(width: 1, height: 20)
+        Rectangle().fill(Palette.line).frame(width: 1, height: 16)
         SettingsLink { Image(systemName: "gearshape").font(.system(size: 15)) }
-          .buttonStyle(.plain).foregroundStyle(Palette.secondary).help("Appearance settings · ⌘,")
-          .accessibilityLabel("Appearance settings")
-        IconButton("LAB Library", symbol: "square.stack.3d.up") { store.showingLibrary = true }
+          .buttonStyle(.plain).foregroundStyle(Palette.secondary).help("Settings · ⌘,")
+          .accessibilityLabel("Settings")
+        IconButton("LAB Library", symbol: "square.stack.3d.up", size: 28) { store.showingLibrary = true }
+        Button { store.createProject() } label: {
+          Label("New project", systemImage: "plus").font(.system(size: 12, weight: .semibold))
+            .padding(.horizontal, 10).frame(height: 28).foregroundStyle(.white)
+            .background(Palette.ink, in: RoundedRectangle(cornerRadius: 6))
+        }.buttonStyle(.plain).accessibilityLabel("New project")
       } else {
-        IconButton("Project notes", symbol: "text.alignleft") { store.showingProjectInfo = true }
-        IconButton("Materials & equipment", symbol: "square.stack.3d.up") {
+        SettingsLink {
+          Image(systemName: "gearshape").font(.system(size: 14)).frame(width: 28, height: 28)
+        }.buttonStyle(.plain).foregroundStyle(Palette.secondary)
+          .help("Project and Canvas units · ⌘,").accessibilityLabel("Settings")
+        IconButton("Codex connection", symbol: "point.3.connected.trianglepath.dotted", size: 28) {
+          store.showingBridge = true
+        }
+        IconButton("Project notes", symbol: "text.alignleft", size: 28) { store.showingProjectInfo = true }
+        IconButton("Materials & equipment", symbol: "square.stack.3d.up", size: 28) {
           store.showingLibrary = true
         }
-        IconButton("Print preparation · ⌘P", symbol: "printer") { store.prepareSelectedPrint() }
+        IconButton("Print preparation · ⌘P", symbol: "printer", size: 28) { store.prepareSelectedPrint() }
         Menu {
           if store.environment == .studio && !store.studioShowingShots {
             Button("Composition image · PNG + record"){store.studioComposition.exportDialog(video:false)}
@@ -129,14 +139,14 @@ struct StudioTopBar: View {
           Button("Save project copy…") { store.saveCopy() }
         } label: {
           Image(systemName: "square.and.arrow.up").font(.system(size: 14)).frame(
-            width: 30, height: 30)
+            width: 28, height: 28)
         }.menuStyle(.borderlessButton).fixedSize().help("Export")
         if store.environment == .studio && !store.studioShowingShots {
           Button("Save scene"){store.studioComposition.save()}.font(.system(size:12,weight:.semibold))
-        }else {AddObjectMenu()}
+        }else {AddObjectMenu(compact: true)}
       }
     }
-    .padding(.leading, 92).padding(.trailing, 22).frame(height: 62)
+    .padding(.leading, 92).padding(.trailing, 16).frame(height: 32)
     .background(Palette.paper)
   }
 }
@@ -144,17 +154,19 @@ struct StudioTopBar: View {
 struct IconButton: View {
   var title: String
   var symbol: String
+  var size: CGFloat
   var action: () -> Void
   @State private var hover = false
-  init(_ title: String, symbol: String, action: @escaping () -> Void) {
+  init(_ title: String, symbol: String, size: CGFloat = 32, action: @escaping () -> Void) {
     self.title = title
     self.symbol = symbol
+    self.size = size
     self.action = action
   }
   var body: some View {
     Button(action: action) {
       Image(systemName: symbol).font(.system(size: 14, weight: .medium)).frame(
-        width: 32, height: 32
+        width: size, height: size
       ).background(hover ? Palette.line : Color.clear, in: RoundedRectangle(cornerRadius: 7))
     }
     .buttonStyle(.plain).onHover { hover = $0 }.help(title).accessibilityLabel(title)
@@ -163,6 +175,7 @@ struct IconButton: View {
 
 struct AddObjectMenu: View {
   @EnvironmentObject var store: StudioStore
+  var compact = false
   var body: some View {
     Menu {
       Button {
@@ -189,8 +202,8 @@ struct AddObjectMenu: View {
       }
     } label: {
       Label("Add object", systemImage: "plus").font(.system(size: 12, weight: .semibold)).padding(
-        .horizontal, 12
-      ).padding(.vertical, 8).background(Palette.ink, in: RoundedRectangle(cornerRadius: 8))
+        .horizontal, compact ? 10 : 12
+      ).padding(.vertical, compact ? 5 : 8).background(Palette.ink, in: RoundedRectangle(cornerRadius: compact ? 6 : 8))
         .foregroundStyle(.white)
     }
     .menuStyle(.borderlessButton).fixedSize().help("Add a physical object or reference")
@@ -209,25 +222,6 @@ struct HomeView: View {
   var body: some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 32) {
-        HStack(alignment: .bottom) {
-          VStack(alignment: .leading, spacing: 11) {
-            Text("A PLACE TO MAKE THINGS").font(.system(size: 10, weight: .semibold)).tracking(2.3)
-              .foregroundStyle(Palette.secondary)
-            Text("Your lab.").font(.system(size: 43, weight: .regular, design: .default)).tracking(
-              -1.1)
-            Text("Pick up where you left off, or put a new idea on the table.").font(
-              .system(size: 14)
-            ).foregroundStyle(Palette.secondary)
-          }
-          Spacer()
-          Button {
-            store.createProject()
-          } label: {
-            Label("New project", systemImage: "plus").font(.system(size: 13, weight: .semibold))
-              .padding(.horizontal, 18).padding(.vertical, 12).foregroundStyle(.white).background(
-                Palette.ink, in: RoundedRectangle(cornerRadius: 9))
-          }.buttonStyle(.plain)
-        }.padding(.top, 48).padding(.bottom, 8)
         HStack {
           Text("PROJECTS").font(.system(size: 10, weight: .semibold)).tracking(1.6)
           Text(String(store.projects.count)).font(.system(size: 10, design: .monospaced))
@@ -240,7 +234,7 @@ struct HomeView: View {
             .background(.black.opacity(0.025), in: RoundedRectangle(cornerRadius: 7))
           Button("Open…") { store.openPackage() }.buttonStyle(.plain).font(.system(size: 12))
             .padding(.leading, 12)
-        }
+        }.padding(.top, 24)
         LazyVGrid(
           columns: [GridItem(.adaptive(minimum: 310, maximum: 520), spacing: 25)],
           alignment: .leading, spacing: 30
@@ -380,27 +374,36 @@ struct NewProjectCard: View {
   }
 }
 
-struct DesignSurfaceBar: View {
+struct DesignSurfaceMenu: View {
   @EnvironmentObject var store: StudioStore
+  private var title: String {
+    switch store.surfaceLayout {
+    case .split: return "Split"
+    case .detached: return "Windows"
+    case .single: return store.mode.rawValue
+    }
+  }
   var body: some View {
-    HStack(spacing: 8) {
-      Text("VIEWS").font(.system(size: 9, weight: .semibold)).tracking(1).foregroundStyle(Palette.secondary)
+    Menu {
       ForEach([WorkspaceMode.artwork, .table], id: \.self) { surface in
         Button { store.showSurface(surface) } label: {
           Label(surface.rawValue, systemImage: surface == .artwork ? "square.and.pencil" : "cube.transparent")
-            .font(.system(size: 11, weight: .medium)).padding(.horizontal, 10).padding(.vertical, 5)
-            .background(store.surfaceLayout == .single && store.mode == surface ? Color.white : .clear, in: RoundedRectangle(cornerRadius: 5))
-        }.buttonStyle(.plain).accessibilityLabel(surface.rawValue + " view")
+        }.accessibilityLabel(surface.rawValue + " view")
       }
       Button { store.showSplit() } label: {
-        Label("Split", systemImage: "rectangle.split.2x1").font(.system(size: 11)).padding(.horizontal, 10).padding(.vertical, 5)
-          .background(store.surfaceLayout == .split ? Color.white : .clear, in: RoundedRectangle(cornerRadius: 5))
-      }.buttonStyle(.plain).help("Canvas and Table side by side").accessibilityLabel("Split Canvas and Table")
-      Button { store.detachCanvas() } label: { Image(systemName: "arrow.up.forward.square").frame(width: 28, height: 28) }
-        .buttonStyle(.plain).help("Open Canvas in a separate window").accessibilityLabel("Open Canvas window")
-      Spacer()
-      Text("One project · connected surfaces").font(.system(size: 10)).foregroundStyle(Palette.secondary)
-    }.padding(.horizontal, 24).frame(height: 38).background(Palette.line.opacity(0.3))
+        Label("Split", systemImage: "rectangle.split.2x1")
+      }.help("Canvas and Table side by side").accessibilityLabel("Split Canvas and Table")
+      Divider()
+      Button { store.detachCanvas() } label: {
+        Label("Open Canvas window", systemImage: "arrow.up.forward.square")
+      }.accessibilityLabel("Open Canvas window")
+    } label: {
+      Label(title, systemImage: "rectangle.on.rectangle")
+        .font(.system(size: 11, weight: .medium)).padding(.horizontal, 8).frame(height: 28)
+        .background(Palette.line.opacity(0.5), in: RoundedRectangle(cornerRadius: 6))
+    }.menuStyle(.borderlessButton).fixedSize()
+      .help("Canvas, Table, Split, or a separate Canvas window")
+      .accessibilityLabel("Workspace views").accessibilityValue(title)
   }
 }
 
@@ -416,7 +419,6 @@ struct WorkspaceView: View {
         StudioCompositionWorkspace(controller:store.studioComposition)
       } else {
       if store.environment != .studio {
-        DesignSurfaceBar()
         if let object=store.primary,let project=store.project,FabricEnvironmentContext.applies(to:object,in:project) { FabricEnvironmentHeader(object:object) }
       }
       HStack(spacing: 0) {
@@ -436,7 +438,6 @@ struct WorkspaceView: View {
         }
       }.frame(minHeight: 0, maxHeight: .infinity)
       }
-      WorkspaceStatus()
     }
   }
 }
@@ -472,10 +473,6 @@ struct TableWorkspace: View {
         HStack(alignment: .bottom) {
           CameraControls()
           Spacer()
-          if store.project?.objects.isEmpty == false && store.surfaceLayout != .split {
-            Text(store.mode == .studio ? "A different light. The same objects." : store.tableTool.hint)
-              .font(.system(size: 10)).foregroundStyle(Palette.secondary).padding(.bottom,14)
-          }
         }.padding(.horizontal,24).padding(.bottom,18)
       }
       if store.project?.objects.filter({ !$0.isCanvasWorkspace }).isEmpty == true { EmptyTableView() }
@@ -486,28 +483,14 @@ struct TableWorkspace: View {
 struct TableHeading: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
-    VStack(alignment: .leading, spacing: 8) {
-      HStack(spacing: 9) {
-        Text(store.mode == .studio ? "STUDIO" : "THE TABLE").font(
-          .system(size: 10, weight: .semibold)
-        ).tracking(1.7)
-        if !store.isolated.isEmpty {
-          Text("ISOLATED").font(.system(size: 8, weight: .semibold)).tracking(0.7).foregroundStyle(
-            Palette.accent
-          ).padding(.horizontal, 7).padding(.vertical, 4).background(
-            Palette.accent.opacity(0.09), in: Capsule())
-        }
-      }
-      Text(store.isolated.isEmpty ? store.project?.subtitle ?? "" : "A little space to focus.")
-        .font(.system(size: 12)).foregroundStyle(Palette.secondary)
-      if !store.isolated.isEmpty {
-        Button {
-          store.isolate()
-        } label: {
-          Label("Back to all objects", systemImage: "arrow.uturn.backward").font(.system(size: 11))
-        }.buttonStyle(.plain).foregroundStyle(Palette.accent).padding(.top, 4)
-      }
-    }.padding(.top, 5).allowsHitTesting(!store.isolated.isEmpty)
+    if !store.isolated.isEmpty {
+      Button { store.isolate() } label: {
+        Label("Back to all objects", systemImage: "arrow.uturn.backward")
+          .font(.system(size: 11, weight: .medium)).padding(8)
+          .background(Palette.paper, in: RoundedRectangle(cornerRadius: 7))
+      }.buttonStyle(.plain).foregroundStyle(Palette.accent)
+        .accessibilityLabel("Back to all objects")
+    }
   }
 }
 
@@ -570,41 +553,5 @@ struct CameraControls: View {
     }.padding(6).background(Palette.paper, in: RoundedRectangle(cornerRadius: 13)).overlay(
       RoundedRectangle(cornerRadius: 13).strokeBorder(Palette.line)
     ).shadow(color: .black.opacity(0.06), radius: 14, y: 5)
-  }
-}
-
-struct WorkspaceStatus: View {
-  @EnvironmentObject var store: StudioStore
-  var body: some View {
-    HStack(spacing: 10) {
-      Circle().fill(Color(nsColor: NSColor(hex: "#111111"))).frame(width: 5, height: 5)
-      Text(store.saving ? "Saving…" : "Saved locally").font(.system(size: 10))
-      Text("/").foregroundStyle(.black.opacity(0.15))
-      Text(store.project?.contentDescription ?? "0 objects").font(.system(size: 10))
-      if !store.selected.isEmpty {
-        Text("·  \(store.selected.count) selected").font(.system(size: 10))
-      }
-      Spacer()
-      Menu {
-        Button("Millimeters") { store.edit("Changed units") { $0.unit = "mm" } }
-        Button("Inches") { store.edit("Changed units") { $0.unit = "in" } }
-      } label: {
-        Text(store.project?.unit == "in" ? "INCHES" : "MILLIMETERS").font(
-          .system(size: 8, weight: .semibold, design: .monospaced)
-        ).tracking(1)
-      }.menuStyle(.borderlessButton).fixedSize()
-      Rectangle().fill(Palette.line).frame(width: 1, height: 12)
-      Button {
-        store.showingBridge = true
-      } label: {
-        HStack(spacing: 5) {
-          Circle().fill(store.bridgeReady ? Palette.ink.opacity(0.65) : .gray).frame(
-            width: 4, height: 4)
-          Text("Codex bridge").font(.system(size: 10))
-        }
-      }.buttonStyle(.plain)
-    }.foregroundStyle(Palette.secondary).padding(.horizontal, 24).frame(height: 31).background(
-      Palette.paper
-    ).overlay(alignment: .top) { Rectangle().fill(Palette.line).frame(height: 1) }
   }
 }

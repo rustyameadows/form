@@ -63,6 +63,7 @@ enum TableTool: String, CaseIterable {
   @Published var paperSheetMargin = 10.0
   @Published var paperSheetGap = 6.0
   var canvasWindowController: CanvasWindowController?
+  weak var utilityWindows: StudioUtilityWindows?
   @Published var projects: [ProjectSummary] = []
   @Published var notice: String?
   @Published var error: String?
@@ -169,6 +170,7 @@ enum TableTool: String, CaseIterable {
       }
     }
     engine.onProjectWillChange = { [weak self] in
+      self?.utilityWindows?.closeProjectWindows()
       self?.invalidateArtworkTransferProject()
       self?.finishArtworkEditing()
     }
@@ -186,6 +188,8 @@ enum TableTool: String, CaseIterable {
       self?.cad.reset()
       self?.cloth.clear()
       self?.showingPrint = false
+      self?.showingProjectInfo = false
+      self?.utilityWindows?.reconcileProject()
       self?.artworkSession.showingTextStyles = false
       self?.artworkSession.showingPalette = false
       self?.artworkSession.showingTabs = false
@@ -450,6 +454,7 @@ enum TableTool: String, CaseIterable {
     scene?.resetCamera()
   }
   func home() {
+    utilityWindows?.closeProjectWindows()
     environment = .form
     mode = .table
     studioReturnSurface = nil
