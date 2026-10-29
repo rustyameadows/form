@@ -120,14 +120,22 @@ struct AppearanceSettingsView: View {
       Divider()
       VStack(alignment: .leading, spacing: 14) {
         Text("Units").font(.system(size: 13, weight: .semibold))
-        Picker("Project dimensions", selection: Binding(
+        HStack {
+          Text("Project dimensions")
+          Spacer()
+          Picker("Project dimensions", selection: Binding(
           get: { store.project?.unit ?? "mm" },
           set: { unit in store.edit("Changed units") { $0.unit = unit } }
         )) {
           Text("Millimeters").tag("mm")
           Text("Inches").tag("in")
-        }.disabled(store.showingHome || store.project == nil)
-        Picker("Canvas units", selection: Binding(
+          }.labelsHidden().pickerStyle(.menu).frame(width: 150)
+            .disabled(store.showingHome || store.project == nil)
+        }
+        HStack {
+          Text("Canvas units")
+          Spacer()
+          Picker("Canvas units", selection: Binding(
           get: { store.artworkSession.unit },
           set: { unit in
             NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
@@ -138,7 +146,9 @@ struct AppearanceSettingsView: View {
           Text("Centimeters").tag(PhysicalUnit.cm)
           Text("Inches").tag(PhysicalUnit.inches)
           Text("Points").tag(PhysicalUnit.points)
-        }.disabled(store.showingHome || store.artworkSession.object == nil)
+          }.labelsHidden().pickerStyle(.menu).frame(width: 150)
+            .disabled(store.showingHome || store.artworkSession.object == nil)
+        }
       }
     }.padding(28).frame(width: 460).background(Palette.paper).labInterface()
       .onAppear { hex = appearance.accentHex }

@@ -146,7 +146,7 @@ struct StudioTopBar: View {
         }else {AddObjectMenu(compact: true)}
       }
     }
-    .padding(.leading, 92).padding(.trailing, 16).frame(height: 34)
+    .padding(.leading, 92).padding(.trailing, 16).frame(height: 32)
     .background(Palette.paper)
   }
 }
