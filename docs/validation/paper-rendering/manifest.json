@@ -1,0 +1,173 @@
+{
+  "baseline_executable_sha256": "0153ebb0e3b827da59e9d7dab544beb24e3a641cb466da08ca9726fef062b227",
+  "fixed_executable_sha256": "dff597455bb86ead46045541392c99e14f2208c710d29e0b60710821975fb259",
+  "capture_pipeline": "Public form_set_view Studio capture + form_export PNG; actual RealityKit native rendering.",
+  "images": {
+    "before-converted-front.png": {
+      "sha256": "ad1b21671996f963c4eeb4b1365acb3911bce9db387e80951bd52686f585ae8c",
+      "pixels": [
+        1000,
+        1000
+      ],
+      "retouched": false
+    },
+    "fixed-converted-back.png": {
+      "sha256": "0339b999057af7b460794efbe2a7e895880bd4936a0c4c477a625f54eea20fc3",
+      "pixels": [
+        1000,
+        1000
+      ],
+      "retouched": false
+    },
+    "pristine-front.png": {
+      "sha256": "fc58c1774514aebe2de1c2a4b23ae05c3b93bc673f4cee1a564e38c99683f70b",
+      "pixels": [
+        1000,
+        1000
+      ],
+      "retouched": false
+    },
+    "new-authored-four-panels.png": {
+      "sha256": "a78e11219e19769692e3c8db6f83cb43bc7af1ea5f0c8efd2609d3af9b1e935d",
+      "pixels": [
+        1000,
+        1000
+      ],
+      "retouched": false
+    },
+    "fixed-converted-front.png": {
+      "sha256": "c52fca9ee6419ed15e641490706892953a830373c08f9c5054af843aab5d6019",
+      "pixels": [
+        1000,
+        1000
+      ],
+      "retouched": false
+    }
+  },
+  "blue_mask_predicate": "B > R +25 and B > G +12 and R <180 in decoded8bitRGB",
+  "pixel_results": [
+    {
+      "case": "pristine-front",
+      "blue_pixels": 27336
+    },
+    {
+      "case": "pristine-back",
+      "blue_pixels": 3381
+    },
+    {
+      "case": "converted-front",
+      "blue_pixels": 27336
+    },
+    {
+      "case": "converted-back",
+      "blue_pixels": 3381
+    },
+    {
+      "case": "retained-isolated-front",
+      "blue_pixels": 27336
+    },
+    {
+      "case": "retained-isolated-back",
+      "blue_pixels": 3381
+    }
+  ],
+  "conversion_blue_mask_iou": {
+    "front": {
+      "blue_mask_iou": 1.0,
+      "passed": true
+    },
+    "back": {
+      "blue_mask_iou": 1.0,
+      "passed": true
+    }
+  },
+  "source_artwork_preserved": true,
+  "source_placement_preserved": true,
+  "inside_outside_channel_checks": true,
+  "arbitrary_authored_color_pixels": {
+    "blue": 280302,
+    "red": 57556,
+    "green": 57808,
+    "purple": 73034
+  },
+  "retained_large_tote_removed_blue_pixels": [
+    348,
+    348
+  ],
+  "sample_registry": [
+    {
+      "template": "affinities",
+      "overview_review": "Four source/alternate/oak/graphite compositions visibly retain the wordmark and masked landscape.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "clothLab",
+      "overview_review": "NASA/grid drape, NASA seam panels and attached label visibly rendered in initial rest state.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "merchandise",
+      "overview_review": "Tee/cap/tote shapes and their NASA/ORBITAL decoration sources are visibly present.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "fieldGuide",
+      "overview_review": "Cover and both flowed-text pages rendered with illustration and body type.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "flightJacket",
+      "overview_review": "Both jacket colorways, chest/sleeve patches, tape and label sources rendered.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "clock",
+      "overview_review": "Both clocks retain numerals/signature and hands; independent flat source visible.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "cyanotype",
+      "overview_review": "Envelope now visibly carries Sun studies/leaf; paper stack and booklet remain distinct.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "cosmetics",
+      "overview_review": "STILL carton type, bottle and registered inside source frame rendered.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "lamps",
+      "overview_review": "Three complete colored lamps with hollow shades, stems and bases rendered.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "forms",
+      "overview_review": "Clay hollow vessel, wood block and metal cylinder rendered.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "giftShop",
+      "overview_review": "All seven intentionally unprinted merchandise blank shapes rendered.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "pouchAssembly",
+      "overview_review": "Printed NASA pouch rest-state assembly and independent pattern source rendered.",
+      "overview_review_passed": true
+    }
+  ],
+  "inside_orientation": {
+    "status": "UNRESOLVED_AUTHORING_PROJECTION_CONTEXT",
+    "observed": "Raw upright text in the front-registered inside source reads reflected from the physical inside.",
+    "contract": "Both sides currently use front-registered canonical coordinates and identicalUVs by design. The missing physical inside projection/tool context must be addressed without silently changing that registration.",
+    "not_counted_as_pass": true
+  },
+  "reproducer": "scripts/verify_sample_visuals.py",
+  "reproducer_complete_run": {
+    "native_captures": 21,
+    "sample_overviews": 12,
+    "core_pixel_checks_passed": true,
+    "human_visual_review_still_required": true
+  },
+  "coverage_limit": "Every shipped template overview plus detailed paper paths; no claim about every backside, parameter envelope or manufacturing setting."
+}

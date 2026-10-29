@@ -10,11 +10,13 @@ Apple silicon, macOS 26.6.2, Swift 6.3.3 Command Line Tools, pinned OCCT 8.0.1, 
 
 This machine lacks Xcode's XCTest launcher. The existing test methods and assertions ran with the official `swiftlang/swift-corelibs-xctest` `swift-6.0-RELEASE` runtime, compiled against Apple Foundation. A source-discovered runner registers the real synchronous and asynchronous test methods and links the original SwiftPM objects. Native tests use the same light appearance as the production app. Test failures were retained and investigated; no assertions or cache policies were disabled to obtain a passing result.
 
-The complete original registry and focused current-source reruns cover **1,227 current test methods, with no remaining failures, skips or unexercised methods**, including native parameter interaction, native loft diagnostics, Canvas fitting and shared sewing guides. The long original run includes complete cloth simulations; fresh reruns resolve host appearance, helper location, superseded fixtures and resource-pressure cache counters. Detailed method-to-run reconciliation is retained under `.local/testing` with the original logs.
+The prior release registry and focused reruns cover **1,227 test methods**, including native parameter interaction, native loft diagnostics, Canvas fitting and shared sewing guides. Three additional authored-paper renderer regressions now pass, alongside 33 focused paper/Canvas/native-control checks. Their failing baseline exposed a gap that the earlier source/lifecycle and legacy-paper tests did not cover. Ongoing engine and inside-frame additions have separate pending checks; this record does not claim those unfinished changes are verified. The long original run includes complete cloth simulations, with method-to-run reconciliation retained under `.local/testing`.
 
 Standard Xcode verification remains `bash scripts/test.sh`. `scripts/build.sh` now finds the selected SDK's C++ headers and builds on this Command Line Tools installation without the earlier local environment workaround.
 
-The final signed native package is `build/LAB-engine-shared-canvas.app`, executable SHA-256 `0153ebb0e3b827da59e9d7dab544beb24e3a641cb466da08ca9726fef062b227`. It has no XCTest/Testing runtime linkage. A real Mac app review opens the retained paper-and-tote project and shows all 11 finite frames, the full dieline, upright artwork views, and sewn cut/stitch/notch/grain guides on one Canvas. Repeated native Fit leaves the complete saved project/history/camera JSON identical and retains one sewing-guide build. The app remains open in its disposable library. Actual native viewport/status evidence is under `.local/validation/native-canvas-final`; the independent real-host proof verifies that no ruler covers any fitted finite frame.
+The current signed review package is `build/LAB-engine-shared-canvas.app`, executable SHA-256 `dff597455bb86ead46045541392c99e14f2208c710d29e0b60710821975fb259`, with no XCTest/Testing runtime linkage. It fixes generic authored-paper rendering and is open in the retained project, showing the actual cyanotype envelope title and leaf in Table. Relaunch preserves every source object and history entry; evidence is `.local/validation/cyanotype-live-repair`. The earlier shared-Canvas package (`0153ebb0…b227`) verifies all 11 finite frames, full dieline, upright views and sewn guides; repeating Fit preserves the full project JSON and reuses one guide build. Native viewport evidence remains under `.local/validation/native-canvas-final`.
+
+The [sample visual audit](sample-visual-validation.md) reproduces the missing converted envelope before the fix and compares native artwork pixels afterward. Both original/converted front and back masks match with IoU 1.000. A complete run captures 21 views, including all 12 shipped template overviews, and tests a new arbitrary construction. Inside channel registration passes, while upright inside authoring/projection parity remains explicitly unresolved.
 
 ## Fixed-case modeling-loop benchmark
 
@@ -66,12 +68,12 @@ Native parameter measurements distinguish live fold/fabric controls from CAD dra
 
 | Interaction | Observed result |
 | --- | --- |
-| Authored live fold | 56 inputs and 56 visible frames; event→source p95 47.3 ms; last input→GPU capture 77.4 ms |
-| Live fabric dimension | 72 inputs and 72 visible frames; event→source p95 66.3 ms; last input→GPU capture 98.7 ms |
-| Mechanical CAD draft | 72 inputs; event→draft p95 12.8 ms; explicit Preview→validated GPU capture 288.3 ms |
+| Authored live fold | 56 inputs and 56 visible frames; event→source p95 53.3 ms; last input→GPU capture 87.7 ms |
+| Live fabric dimension | 72 inputs and 72 visible frames; event→source p95 69.6 ms; last input→GPU capture 107.0 ms |
+| Mechanical CAD draft | 72 inputs; event→draft p95 13.8 ms; explicit Preview→validated GPU capture 281.5 ms |
 | Native Cancel/new Preview | Old work remains cancelled; releasing it cannot replace the latest ready width-135 model |
 
-These are observed debug-host timings, not fixed production latency guarantees. Tests retain generous timeout guardrails and assert correctness, intermediate frames and latest-state ownership. Evidence is `.local/validation/native-control-verified`.
+These are fresh observed debug-host timings after the authored-paper rendering fix, not fixed production latency guarantees. They supersede the earlier fold capture timing, whose renderer could omit an authored object. Tests retain generous timeout guardrails and assert correctness, intermediate frames and latest-state ownership. Evidence is `.local/validation/native-control-paper-fix`.
 
 Held-pointer latency remains a separate measurement. CUA sends correctly positioned mouse-down/drag/up events, but the native host records no held button; standard sliders ignore that synthesized tracking. The controls were not changed to accommodate it. An optional physical-drag probe remains available in a private native window and saves its report automatically on release.
 
