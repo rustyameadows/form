@@ -27,6 +27,20 @@ struct ArtworkStudio: View {
   private var compact: Bool { store.surfaceLayout == .split }
   var body: some View {
     VStack(spacing: 0) {
+      HStack(spacing: 0) {
+        if session.maskEditing != nil {
+          Button("Back to contents", systemImage: "chevron.left") { session.returnFromMask() }
+            .buttonStyle(.plain).font(.system(size: 11)).padding(.leading, 12)
+        } else if session.componentReturn != nil {
+          Button("Back to instance", systemImage: "chevron.left") { session.returnToComponent() }
+            .buttonStyle(.plain).font(.system(size: 11)).padding(.leading, 12)
+        }
+        if session.scopeID != nil && session.maskEditing == nil {
+          Button("Leave group", systemImage: "chevron.left") {
+            session.scopeID = nil
+            session.choose([])
+          }.buttonStyle(.plain).font(.system(size: 11)).padding(.leading, 12)
+        }
       ScrollView(.horizontal,showsIndicators:false) {
       HStack(spacing: 3) {
         if compact {
@@ -124,8 +138,28 @@ struct ArtworkStudio: View {
             }
           }.padding(22).frame(width: 300)
         }
-      }.padding(.horizontal, 16).frame(height: 50)
-      }.frame(height:50).background(Palette.paper)
+      }.padding(.horizontal, 12).frame(height: 42)
+      }
+      Divider().frame(height: 19)
+      Menu {
+        Button("Zoom in") { session.setZoom(session.zoom * 1.2) }
+        Button("Zoom out") { session.setZoom(session.zoom / 1.2) }
+        Divider()
+        ForEach([0.25, 0.5, 1, 2, 4, 8], id: \.self) { zoom in
+          Button("\(Int(zoom * 100))%") { session.setZoom(zoom) }
+        }
+        Divider()
+        Button("Fit Canvas contents · ⌘0") { session.fit() }
+      } label: {
+        HStack(spacing: 5) {
+          Image(systemName: "magnifyingglass")
+          Text("\(Int((session.zoom * 100).rounded()))%")
+            .monospacedDigit()
+        }.font(.system(size: 10))
+      }.menuStyle(.borderlessButton).fixedSize().padding(.horizontal, 12)
+        .help("Canvas zoom and fit").accessibilityLabel("Canvas zoom")
+        .accessibilityValue("\(Int((session.zoom * 100).rounded())) percent")
+      }.frame(height: 42).background(Palette.paper)
       Divider()
       HStack(spacing: 0) {
         if !compact || compactLayers {
@@ -148,61 +182,6 @@ struct ArtworkStudio: View {
           ArtworkInspector(session: session).frame(width:286)
         }
       }
-      Divider()
-      HStack(spacing: 14) {
-        Text(session.isConstructionProof ? "LINKED DIELINE PROOF" : session.activeProjection?.panelID != nil ? "LINKED SURFACE" : session.maskEditing != nil ? "EDITING MASK" : session.scopeID == nil ? "CANVAS" : "EDITING GROUP").font(
-          .system(size: 8, weight: .medium, design: .monospaced)
-        ).tracking(0.8)
-        if session.maskEditing != nil {
-          Button("Back to contents") { session.returnFromMask() }
-            .buttonStyle(.plain).foregroundStyle(Palette.accent)
-        } else if session.componentReturn != nil {
-          Button("Back to instance") { session.returnToComponent() }
-            .buttonStyle(.plain).foregroundStyle(Palette.accent)
-        }
-        if session.scopeID != nil && session.maskEditing == nil {
-          Button("Leave group") {
-            session.scopeID = nil
-            session.choose([])
-          }.buttonStyle(.plain).foregroundStyle(Palette.accent)
-        }
-        Text(
-            session.isConstructionProof ? "Edit shared artwork · Construction settings control cut and fold geometry" : session.editingText
-            ? "Native text editing · Esc to finish"
-            : "Space-drag to pan · Pinch to zoom · Option bypasses snapping"
-        ).foregroundStyle(Palette.secondary).lineLimit(1)
-        Spacer()
-        Button {
-          session.setZoom(session.zoom / 1.2)
-        } label: {
-          Image(systemName: "minus")
-        }.buttonStyle(.plain)
-        Menu("\(Int((session.zoom*100).rounded()))%") {
-          ForEach([0.25, 0.5, 1, 2, 4, 8], id: \.self) { zoom in
-            Button("\(Int(zoom*100))%") { session.setZoom(zoom) }
-          }
-          Divider()
-          Button("Fit Canvas contents") { session.fit() }
-        }.menuStyle(.borderlessButton).frame(width: 65)
-        Button {
-          session.setZoom(session.zoom * 1.2)
-        } label: {
-          Image(systemName: "plus")
-        }.buttonStyle(.plain)
-        IconButton("Fit Canvas contents · ⌘0", symbol: "arrow.up.left.and.arrow.down.right") {
-          session.fit()
-        }
-        Picker(
-          "Units",
-          selection: Binding(
-            get: { session.unit },
-            set: { unit in
-              NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
-              session.mutate { $0.unit = unit }
-            })
-        ) { ForEach(PhysicalUnit.allCases, id: \.self) { Text($0.rawValue.uppercased()).tag($0) } }
-        .labelsHidden().frame(width: 64)
-      }.font(.system(size: 9)).padding(.horizontal, 16).frame(height: 37).background(Palette.paper)
     }.onAppear {
       if session.object == nil {
         if let object=store.primary,PaperConstruction.isPaper(object) {store.activatePaperArtwork(object)}

@@ -7,6 +7,7 @@ struct PrintWorkspace: View {
   @EnvironmentObject var store: StudioStore
   @Environment(\.dismiss) var dismiss
   @ObservedObject var printing: PrintCoordinator
+  var onClose: (() -> Void)? = nil
   @State private var settings = false
   private func setting<Value>(_ path: WritableKeyPath<PrintConfiguration, Value>) -> Binding<Value>
   {
@@ -33,7 +34,7 @@ struct PrintWorkspace: View {
         } label: {
           Image(systemName: "slider.horizontal.3")
         }.buttonStyle(.plain).help("Filaments, printers & slicing engine")
-        Button("Done") { dismiss() }.keyboardShortcut(.cancelAction)
+        Button("Done") { close() }.keyboardShortcut(.cancelAction)
       }.padding(.horizontal, 25).frame(height: 76)
       Divider()
       HStack(spacing: 0) {
@@ -226,12 +227,14 @@ struct PrintWorkspace: View {
           }.buttonStyle(.plain).disabled(!printing.canSlice)
         }
       }.padding(.horizontal, 22).frame(height: 70)
-    }.frame(width: 1120, height: 760).background(Palette.paper)
+    }.frame(minWidth: 980, minHeight: 640).frame(maxWidth: .infinity, maxHeight: .infinity).background(Palette.paper)
       .sheet(isPresented: $settings) {
         PrintingSettingsView(printing: printing).environmentObject(store)
       }
       .onChange(of: store.library) { _, _ in printing.reconcile() }
+      .onExitCommand { close() }
   }
+  private func close() { if let onClose { onClose() } else { dismiss() } }
 }
 
 struct PrintNumber: View {

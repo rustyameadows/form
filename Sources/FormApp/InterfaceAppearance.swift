@@ -93,11 +93,12 @@ extension View { func labInterface() -> some View { modifier(InterfaceStyle()) }
 
 struct AppearanceSettingsView: View {
   @ObservedObject var appearance: InterfaceAppearance
+  @ObservedObject var store: StudioStore
   @State private var hex = ""
   @State private var issue: String?
   var body: some View {
     VStack(alignment: .leading, spacing: 24) {
-      Text("Appearance").font(.system(size: 24, weight: .semibold))
+      Text("Settings").font(.system(size: 24, weight: .semibold))
       Text("SF for the interface. SF Mono for values and technical details.").foregroundStyle(Palette.secondary)
       Divider()
       ColorPicker("Accent color", selection: Binding(get: { Color(nsColor: appearance.selectedColor) }, set: { color in apply { try appearance.setAccent(NSColor(color)) } }), supportsOpacity: false)
@@ -116,6 +117,29 @@ struct AppearanceSettingsView: View {
       }.padding(16).background(Palette.surface, in: RoundedRectangle(cornerRadius: 8))
       if let issue { Label(issue, systemImage: "exclamationmark.circle").font(.system(size: 11)).fixedSize(horizontal: false, vertical: true) }
       Text("Applies throughout LAB. Pale colors use a darker tone for readable controls on white.").font(.system(size: 11)).foregroundStyle(Palette.secondary)
+      Divider()
+      VStack(alignment: .leading, spacing: 14) {
+        Text("Units").font(.system(size: 13, weight: .semibold))
+        Picker("Project dimensions", selection: Binding(
+          get: { store.project?.unit ?? "mm" },
+          set: { unit in store.edit("Changed units") { $0.unit = unit } }
+        )) {
+          Text("Millimeters").tag("mm")
+          Text("Inches").tag("in")
+        }.disabled(store.showingHome || store.project == nil)
+        Picker("Canvas units", selection: Binding(
+          get: { store.artworkSession.unit },
+          set: { unit in
+            NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
+            store.artworkSession.mutate { $0.unit = unit }
+          }
+        )) {
+          Text("Millimeters").tag(PhysicalUnit.mm)
+          Text("Centimeters").tag(PhysicalUnit.cm)
+          Text("Inches").tag(PhysicalUnit.inches)
+          Text("Points").tag(PhysicalUnit.points)
+        }.disabled(store.showingHome || store.artworkSession.object == nil)
+      }
     }.padding(28).frame(width: 460).background(Palette.paper).labInterface()
       .onAppear { hex = appearance.accentHex }
       .onChange(of: appearance.accentHex) { _, value in hex = value; issue = nil }
