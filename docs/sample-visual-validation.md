@@ -120,3 +120,5 @@ sample registry. It retains images for explicit layout and orientation review;
 it never treats a PNG's existence as complete visual acceptance. The `--session`
 option attaches only to an explicitly supplied validation session. It never
 contacts hardware or runs a cloth simulation.
+
+The bounds-fixed main candidate (`677276e2edc36cf0c559c137aa5fb0a544f9f58cfa848d574e610ac4fe11462a`) passes all 21 captures/all 12 templates and detailed artwork checks. Twenty raw images are pixel/byte-identical to the prior checkpoint. The flight-jacket overview used a different saved reference aspect; a single matched-aspect capture is pixel-identical with identical PNG image-data chunks. Its provenance text differs with the isolated shot metadata and is retained separately. Reports are under `.local/validation/sample-main-merge-final/`.

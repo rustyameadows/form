@@ -232,5 +232,15 @@
     "all9_core_views_pixel_identical_to_corrected_camera_proof": true,
     "overview_equivalence": ".local/validation/sample-binding-source-final/overview-pixel-equivalence.json",
     "core_equivalence": ".local/validation/sample-binding-source-final/core-pixel-equivalence.json"
+  },
+  "bounds_fixed_main_candidate": {
+    "app_sha256": "677276e2edc36cf0c559c137aa5fb0a544f9f58cfa848d574e610ac4fe11462a",
+    "report": ".local/validation/sample-main-merge-final/report.json",
+    "captures": 21,
+    "templates": 12,
+    "core_checks_passed": true,
+    "raw_byte_and_pixel_identical_pairs": 20,
+    "remaining_pair": "flightJacket: camera referenceAspect differed; matched-aspect render has identical decoded pixels and PNG image-data chunks, differing provenance text only.",
+    "matched_evidence": ".local/validation/sample-main-merge-final/matched-input-equivalence.json"
   }
 }

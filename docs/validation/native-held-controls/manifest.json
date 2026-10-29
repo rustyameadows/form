@@ -1,0 +1,135 @@
+{
+  "status": "PASSED_WITH_EXPLICIT_MEASUREMENT_DEFINITIONS",
+  "phases": [
+    {
+      "phase": "authored-fold",
+      "initial_value": 100,
+      "final_value": 97.33282930107528,
+      "held_button_observed": true,
+      "source_stable_after_capture_guard": true,
+      "cad_state": "live",
+      "sampled_source_updates": 74,
+      "source_update_span_seconds": 7.799162833485752,
+      "sampled_source_update_interval_median_ms": 59.74779138341546,
+      "sampled_source_update_interval_p95_ms": 364.87233359366655,
+      "files": {
+        "authored-fold.json": {
+          "sha256": "727e478328d33c43cbb447faa40bead3efd92e23db42f46372bf9852b523b1ea",
+          "unmodified_raw_artifact": true
+        },
+        "authored-fold-before.png": {
+          "sha256": "a93ca3bb93cb0ded55bc1ab3caa9f515925114db0e6dc8fc1f39e8eec67a695a",
+          "unmodified_raw_artifact": true
+        },
+        "authored-fold-latest.png": {
+          "sha256": "6f96ad5159637ef7619bb8ad8b08b3762f4d835065e35106105167de1f04e2ea",
+          "unmodified_raw_artifact": true
+        }
+      }
+    },
+    {
+      "phase": "fabric-width",
+      "initial_value": 320,
+      "final_value": 282,
+      "held_button_observed": true,
+      "source_stable_after_capture_guard": true,
+      "cad_state": "live",
+      "sampled_source_updates": 10,
+      "source_update_span_seconds": 1.3241046667099,
+      "sampled_source_update_interval_median_ms": 126.1637918651104,
+      "sampled_source_update_interval_p95_ms": 286.1617081798613,
+      "files": {
+        "fabric-width.json": {
+          "sha256": "6ba4afa02cc95062a4038dc216d0a9b1cb5d79390703408f44f14a4e2eac6464",
+          "unmodified_raw_artifact": true
+        },
+        "fabric-width-before.png": {
+          "sha256": "991030499d318b5f812a5f39fc1a1f95b7adab882b750fecab32e6f6c47cc946",
+          "unmodified_raw_artifact": true
+        },
+        "fabric-width-latest.png": {
+          "sha256": "642bb29061641a33bce8da6b0c7c0e23197d3c0d407ff17af6255b1594540d11",
+          "unmodified_raw_artifact": true
+        }
+      }
+    },
+    {
+      "phase": "mechanical-preview",
+      "initial_value": 120,
+      "final_value": 148.94890873015873,
+      "held_button_observed": true,
+      "source_stable_after_capture_guard": true,
+      "cad_state": "ready",
+      "sampled_source_updates": 17,
+      "source_update_span_seconds": 0.40808395855128765,
+      "sampled_source_update_interval_median_ms": 24.968583369627595,
+      "sampled_source_update_interval_p95_ms": 35.865708254277706,
+      "files": {
+        "mechanical-preview.json": {
+          "sha256": "9ed65ef39f7fc9106cb14bef19a3235fe08c954e6b53494be6d89281dd40724e",
+          "unmodified_raw_artifact": true
+        },
+        "mechanical-preview-before.png": {
+          "sha256": "c9591aea21265967577f32c34695efd92249f0d047a4e10002ed8a2ddf2f70c1",
+          "unmodified_raw_artifact": true
+        },
+        "mechanical-preview-latest.png": {
+          "sha256": "a45106994389cf6ecdcc4c8bec3ac361957c5dec75afac06f8b10b36bcedd4bb",
+          "unmodified_raw_artifact": true
+        }
+      }
+    }
+  ],
+  "measurement_limits": [
+    "Raw event_to_source_ms fields use a single mouseDown anchor because local NSEvent monitors do not observe intervening native slider tracking events. They are gesture elapsed times, not per-event input latency.",
+    "Update intervals are sampled source cadence, not response-time guarantees; frame counters do not validate every intermediate pixel.",
+    "The original authored-fold latest image exposed growing selection-bound feedback. It is retained as failure evidence; the fixed production replay verifies all exact values with a fixed camera and correct physical bounds.",
+    "The CAD slider changes a draft; actual accepted preview is explicit. Final ready/prepared-value guard passed."
+  ],
+  "host_executable_sha256": "8db05cae5e559cec6c0dc0f2579e11c9a89bb8869a9ae1781ff5a83c92fb21fc",
+  "production_control_snapshot_package_sha256": "57661a707a36a905c332c5d61919731818fab920b3bfdfa9d54e1174062638f5",
+  "pending": [],
+  "resolved_fold_regression": {
+    "commit": "6ad800e8f6b9e572b4bfd014d270d612e3922127",
+    "cause": "Previous selected outline was included in repeated physical bounds measurement. Fit amplified the growing interface box.",
+    "fixed_scope": "TableScene physical bounds exclude interface adornments; repeated paper poses and in-place embroidery retain bounds, camera and actual rendered pixels.",
+    "native_regression_gate": "130/130 pass;1287 reconciled current methods pass.",
+    "original_fold_latest_png": "Retained original failure evidence, not accepted as the fixed geometry result."
+  },
+  "action_replay": {
+    "app_sha256": "677276e2edc36cf0c559c137aa5fb0a544f9f58cfa848d574e610ac4fe11462a",
+    "runtime": "8.0.1+form.gprop2",
+    "status": "passed",
+    "exact_ordered_actions": 101,
+    "changed_live_payloads_and_completed_captures": 84,
+    "cad_draft_actions": 17,
+    "latest_stability_ms": 150,
+    "method": "Production NSSlider target/action dispatch, serialized with capture backpressure. CAD Preview invokes the same coordinator action as the shipped Button.",
+    "timing_definition": "Action dispatch\u2192matching source and action dispatch\u2192changed scene plus completed620x620 offscreen GPUcapture. Includes instrumentation overhead. Not hardware arrival\u2192display or original gesture cadence.",
+    "action_to_source_p95_ms": {
+      "authored_fold": 9.403,
+      "fabric_width": 15.106,
+      "cad_draft": 0.755
+    },
+    "action_to_capture_p95_ms": {
+      "authored_fold": 79.766,
+      "fabric_width": 141.08
+    },
+    "cad_preview_ready_ms": 166.80970834568143,
+    "cad_preview_capture_ms": 204.6116665005684,
+    "files": {
+      "authored-fold.json": "17dd4b5663fbbc772670e6956ad45234c891af83b4543d2cdf49fa9b2ff3b301",
+      "authored-fold-before.png": "17b958cc5d5317a27fdfe14eab72823a598ee28e61251bf4dbb24f92c7b07891",
+      "authored-fold-latest.png": "a752c71c7e91022cd78d3e38c03a0f562f1fc952745662e6de623f9686d420aa",
+      "fabric-width.json": "46a77278ee03106e653ae1b172321317f034250051a8f162564233912720d3d0",
+      "fabric-width-before.png": "c03496f157494abd2a94a6d0de467d3381a7c2f0899041ae019f7e4b2adefe87",
+      "fabric-width-latest.png": "e9bd9e0ff114b0d8c806981f81b7fd63c9f554b66ddaa3de002404871890f0c5",
+      "mechanical-preview.json": "0db3aaff146755c5c797971d4ebe9e46aad0d16a0da3b93fe15e590f35979f63",
+      "mechanical-preview-before.png": "c9591aea21265967577f32c34695efd92249f0d047a4e10002ed8a2ddf2f70c1",
+      "mechanical-preview-latest.png": "b6033626ca9057c2ab90c29f8d8016057baa96a2c909721411d1661b3da34297",
+      "summary.json": "13243481ba47c117bd1a60424e2857d7e3b8c60cf761a8144b46531ae035bf48"
+    },
+    "fixed_camera_and_exact_input_hashes_verified": true,
+    "cad_accepted_project_unchanged": true
+  }
+}

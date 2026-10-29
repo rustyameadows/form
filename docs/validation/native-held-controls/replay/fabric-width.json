@@ -1,0 +1,286 @@
+{
+  "before_model_bounds_mm" : [
+    -160.00000238418579,
+    0,
+    -150,
+    160.00000238418579,
+    140.40000438690186,
+    150
+  ],
+  "before_png_sha256" : "c03496f157494abd2a94a6d0de467d3381a7c2f0899041ae019f7e4b2adefe87",
+  "cad_accepted_project_unchanged" : false,
+  "final_value" : 282,
+  "fixed_capture_camera" : {
+    "far_mm" : 150000,
+    "matrix" : [
+      0.8525245220595058,
+      0,
+      -0.522687228930659,
+      0,
+      -0.33672435777038673,
+      0.7648421872844885,
+      -0.54921137591459268,
+      0,
+      0.39977324344099335,
+      0.64421768723769102,
+      0.65204672016565546,
+      0,
+      431.36012001317744,
+      765.31860396049399,
+      703.56622430227981,
+      1
+    ],
+    "near_mm" : 1,
+    "projection" : "perspective:39.0"
+  },
+  "initial_value" : 320,
+  "input_count" : 10,
+  "input_sha256" : "6ba4afa02cc95062a4038dc216d0a9b1cb5d79390703408f44f14a4e2eac6464",
+  "latest_model_bounds_mm" : [
+    -140.99999666213989,
+    0,
+    -150,
+    140.99999666213989,
+    140.40000438690186,
+    150
+  ],
+  "latest_png_sha256" : "e9bd9e0ff114b0d8c806981f81b7fd63c9f554b66ddaa3de002404871890f0c5",
+  "latest_stable_150ms" : true,
+  "measurement_notes" : "Every exact saved value dispatched through production NSSlider target\/action, serialized with capture backpressure for live modes. No hardware-event\/display-latency claim. Capture completion includes scene inspection and offscreen620x620 rendering overhead. CAD source edits remain draft until one explicit production Preview action.",
+  "native_slider_range" : [
+    0,
+    1
+  ],
+  "parameter_range" : [
+    100,
+    800
+  ],
+  "phase" : "fabric-width",
+  "rows" : [
+    {
+      "action_to_capture_ms" : 140.7607919536531,
+      "action_to_changed_payload_ms" : 130.66362496465445,
+      "action_to_source_ms" : 14.901416841894388,
+      "action_uptime" : 3710905.0201822501,
+      "actual" : 318,
+      "expected" : 318,
+      "gpu_pixels_sha256" : "56fbb1360a45b54060515358635788c06416e502571e7f41ba9ec1819fcba14e",
+      "index" : 0,
+      "model_bounds_mm" : [
+        -159.00000333786011,
+        0,
+        -150,
+        159.00000333786011,
+        140.40000438690186,
+        150
+      ],
+      "native_value" : 0.31428571428571428,
+      "payload_sha256" : "cb7a64808c84ff909b854ba0d32c962bb0bca29b52de26e3b776221e2600f34f"
+    },
+    {
+      "action_to_capture_ms" : 140.82333352416754,
+      "action_to_changed_payload_ms" : 129.35441685840487,
+      "action_to_source_ms" : 14.652833342552185,
+      "action_uptime" : 3710905.1631367919,
+      "actual" : 574,
+      "expected" : 574,
+      "gpu_pixels_sha256" : "39f1d042a5d5175639f2f3f476b59d575cd3bb6ed887c8095a546ea93eacee74",
+      "index" : 1,
+      "model_bounds_mm" : [
+        -286.9999885559082,
+        0,
+        -150,
+        286.9999885559082,
+        140.40000438690186,
+        150
+      ],
+      "native_value" : 0.31142857142857144,
+      "payload_sha256" : "8e4245e4acb29dcbb1d16ba73ec99a9cc9e92cc54c531238d59061e406fde32d"
+    },
+    {
+      "action_to_capture_ms" : 140.38479188457131,
+      "action_to_changed_payload_ms" : 129.55595832318068,
+      "action_to_source_ms" : 15.084541868418455,
+      "action_uptime" : 3710905.3061093334,
+      "actual" : 575,
+      "expected" : 575,
+      "gpu_pixels_sha256" : "1a8cf84aa58b9539a1ded75561d5e661643e812f523c777a96086c3c44349e3d",
+      "index" : 2,
+      "model_bounds_mm" : [
+        -287.5,
+        0,
+        -150,
+        287.5,
+        140.40000438690186,
+        150
+      ],
+      "native_value" : 0.67714285714285716,
+      "payload_sha256" : "6141be8290679db8940ba9344919fdaba70303678419fc1c1c7a0fca10c2b62f"
+    },
+    {
+      "action_to_capture_ms" : 140.16587473452091,
+      "action_to_changed_payload_ms" : 129.75924974307418,
+      "action_to_source_ms" : 14.942958019673824,
+      "action_uptime" : 3710905.4487360837,
+      "actual" : 573,
+      "expected" : 573,
+      "gpu_pixels_sha256" : "ca1c4a185b78aef98cf1b9aec3f715b2ffe0a7903d3937721db0a7019dbd4563",
+      "index" : 3,
+      "model_bounds_mm" : [
+        -286.50000095367432,
+        0,
+        -150,
+        286.50000095367432,
+        140.40000438690186,
+        150
+      ],
+      "native_value" : 0.6785714285714286,
+      "payload_sha256" : "7048bbab9a8c8ce95d9ca820ca698eef965a9631b0969cdf0f8cfc7beda6dbcf"
+    },
+    {
+      "action_to_capture_ms" : 141.08045864850283,
+      "action_to_changed_payload_ms" : 129.39254194498062,
+      "action_to_source_ms" : 14.99679172411561,
+      "action_uptime" : 3710905.5908430833,
+      "actual" : 505,
+      "expected" : 505,
+      "gpu_pixels_sha256" : "907863b34645f22eb101d23bb451bf36bcaaec8601648f1be3f3354ded9b4585",
+      "index" : 4,
+      "model_bounds_mm" : [
+        -252.50000953674316,
+        0,
+        -150,
+        252.50000953674316,
+        140.40000438690186,
+        150
+      ],
+      "native_value" : 0.67571428571428571,
+      "payload_sha256" : "4b3a3dc9a2a32ad94feb66954b63666411729e324edf0b99499f659bb029d6a4"
+    },
+    {
+      "action_to_capture_ms" : 138.32466676831245,
+      "action_to_changed_payload_ms" : 127.63562519103289,
+      "action_to_source_ms" : 14.764833264052868,
+      "action_uptime" : 3710905.7337730834,
+      "actual" : 433,
+      "expected" : 433,
+      "gpu_pixels_sha256" : "9b2e3d0e37398db6dc94593110e0728bdbd97be4e5791bf16fb306894fb462f5",
+      "index" : 5,
+      "model_bounds_mm" : [
+        -216.49999618530273,
+        0,
+        -150,
+        216.49999618530273,
+        140.40000438690186,
+        150
+      ],
+      "native_value" : 0.57857142857142863,
+      "payload_sha256" : "423f1051ce802065d7e6eed5debf242e3443c76ebde41c123fefe2c76d45fde9"
+    },
+    {
+      "action_to_capture_ms" : 139.61233338341117,
+      "action_to_changed_payload_ms" : 128.41224996373057,
+      "action_to_source_ms" : 15.000208280980587,
+      "action_uptime" : 3710905.8744174587,
+      "actual" : 381,
+      "expected" : 381,
+      "gpu_pixels_sha256" : "60fc15c82d4d1e335d033e184314383b6e3d6f83267da4878e653d699c7f2857",
+      "index" : 6,
+      "model_bounds_mm" : [
+        -190.49999713897705,
+        0,
+        -150,
+        190.49999713897705,
+        140.40000438690186,
+        150
+      ],
+      "native_value" : 0.4757142857142857,
+      "payload_sha256" : "55babffa61d740b90a6f1d24e64c4e9f145a339bd9c3cd8578e8a482aac15e50"
+    },
+    {
+      "action_to_capture_ms" : 140.68962540477514,
+      "action_to_changed_payload_ms" : 129.82900021597743,
+      "action_to_source_ms" : 15.075250063091516,
+      "action_uptime" : 3710906.01623525,
+      "actual" : 380,
+      "expected" : 380,
+      "gpu_pixels_sha256" : "e99d0678c1ac9bbba7a8582407d07ef32982acf8d0ce70293b764f791e6e1ec6",
+      "index" : 7,
+      "model_bounds_mm" : [
+        -189.99999761581421,
+        0,
+        -150,
+        189.99999761581421,
+        140.40000438690186,
+        150
+      ],
+      "native_value" : 0.40142857142857141,
+      "payload_sha256" : "b3e8e7cdf7bf2653dd12464e5e69ff6190e26e541a91e07318aaffbbf7f8067a"
+    },
+    {
+      "action_to_capture_ms" : 138.91737535595894,
+      "action_to_changed_payload_ms" : 127.10637506097555,
+      "action_to_source_ms" : 14.580125454813242,
+      "action_uptime" : 3710906.159150125,
+      "actual" : 340,
+      "expected" : 340,
+      "gpu_pixels_sha256" : "fd9026c228b7af71566113cae62a7e1ab1ef171700aacd1044e7e9e84c6bb368",
+      "index" : 8,
+      "model_bounds_mm" : [
+        -170.00000476837158,
+        0,
+        -150,
+        170.00000476837158,
+        140.40000438690186,
+        150
+      ],
+      "native_value" : 0.40000000000000002,
+      "payload_sha256" : "b927a9289221c0bb6537e37926f07c25e22c1f3f56a7be5da2b3fce42f2c59f8"
+    },
+    {
+      "action_to_capture_ms" : 139.77970834821463,
+      "action_to_changed_payload_ms" : 129.15762513875961,
+      "action_to_source_ms" : 15.106083359569311,
+      "action_uptime" : 3710906.3003687919,
+      "actual" : 282,
+      "expected" : 282,
+      "gpu_pixels_sha256" : "996578a002cf5d757d76296d07050e989713eaf8584e38e795a8a3ef1afb25b1",
+      "index" : 9,
+      "model_bounds_mm" : [
+        -140.99999666213989,
+        0,
+        -150,
+        140.99999666213989,
+        140.40000438690186,
+        150
+      ],
+      "native_value" : 0.34285714285714286,
+      "payload_sha256" : "9eba5e84aa5777aef567693de67ec764d05d900c1decdf1d7edef1eafbbe7b97"
+    }
+  ],
+  "runtime" : "8.0.1+form.gprop2",
+  "status" : "passed",
+  "viewport_camera_after" : {
+    "far_mm" : 150000,
+    "matrix" : [
+      0.8525245220595058,
+      0,
+      -0.522687228930659,
+      0,
+      -0.33672435777038673,
+      0.7648421872844885,
+      -0.54921137591459268,
+      0,
+      0.39977324344099335,
+      0.64421768723769102,
+      0.65204672016565546,
+      0,
+      431.36012001317744,
+      765.31860396049399,
+      703.56622430227981,
+      1
+    ],
+    "near_mm" : 1,
+    "projection" : "perspective:39.0"
+  }
+}
