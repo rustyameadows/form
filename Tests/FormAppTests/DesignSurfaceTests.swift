@@ -111,11 +111,12 @@ import XCTest
 
   func testStandaloneCanvasAndTableVisitsPreserveDocumentAndUseTheSharedCanvas() throws {
     let (store,root) = try fixture(withCanvas:true); defer {clean(store,root)}
-    let before = try XCTUnwrap(store.project),workspace = try XCTUnwrap(before.canvasWorkspace)
+    let before = try XCTUnwrap(store.project)
+    _ = try XCTUnwrap(before.canvasWorkspace)
     let physicalSheet = before.objects.first { $0.recipeID == "artboard" && !$0.isCanvasWorkspace }!
     store.artworkSession.activate(physicalSheet.id)
     store.showSurface(.artwork)
-    XCTAssertEqual(store.artworkSession.objectID,workspace.id)
+    XCTAssertEqual(store.artworkSession.objectID,physicalSheet.id)
     XCTAssertEqual(store.surfaceLayout,.single)
     XCTAssertEqual(store.mode,.artwork)
     store.showSurface(.table)
@@ -242,7 +243,8 @@ import XCTest
     defer {window.contentView = nil; window.close()}
     settle(main)
     XCTAssertEqual(descendants(main,of:VectorCanvasView.self).count,1)
-    XCTAssertTrue(store.artworkSession.canvas === descendants(main,of:VectorCanvasView.self).first)
+    let retainedCanvas = try XCTUnwrap(descendants(main,of:VectorCanvasView.self).first)
+    XCTAssertTrue(store.artworkSession.canvas === retainedCanvas)
     store.showSplit(); settle(main)
     XCTAssertEqual(descendants(main,of:VectorCanvasView.self).count,1)
     XCTAssertEqual(descendants(main,of:TableSceneView.self).filter {$0.controller?.store != nil}.count,1)
@@ -251,10 +253,12 @@ import XCTest
     XCTAssertTrue(descendants(main,of:VectorCanvasView.self).isEmpty)
     let separate = descendants(detached.window!.contentView!,of:VectorCanvasView.self)
     XCTAssertEqual(separate.count,1)
+    XCTAssertTrue(separate.first === retainedCanvas)
     XCTAssertTrue(store.artworkSession.canvas === separate.first)
     store.dockCanvas(); settle(main)
     let docked = descendants(main,of:VectorCanvasView.self)
     XCTAssertEqual(docked.count,1)
+    XCTAssertTrue(docked.first === retainedCanvas)
     XCTAssertTrue(store.artworkSession.canvas === docked.first)
     XCTAssertFalse(window.isVisible)
     XCTAssertFalse(detached.window!.isVisible)

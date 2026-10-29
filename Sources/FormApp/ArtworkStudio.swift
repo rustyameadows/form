@@ -12,18 +12,15 @@ struct ArtworkStudio: View {
   @State private var productionOutput = "print"
   @State private var showingLayers = true
   @State private var showingInspector = true
-  @State private var compactLayers = false
-  @State private var compactInspector = false
-  private var compact: Bool { store.surfaceLayout == .split }
+  @State private var toolsWidth: CGFloat = 700
   private var hasContextNavigation: Bool {
     session.maskEditing != nil || session.componentReturn != nil || session.scopeID != nil
   }
 
   var body: some View {
     GeometryReader { geometry in
-      let narrow = geometry.size.width < 900
-      let layers = narrow ? compactLayers : showingLayers
-      let inspector = narrow ? compactInspector : showingInspector
+      let layers = showingLayers
+      let inspector = showingInspector
       let panelHeight = max(180, geometry.size.height - 116)
       ZStack {
         if store.project != nil {
@@ -42,7 +39,7 @@ struct ArtworkStudio: View {
       .background(Palette.surface)
       .overlay(alignment: .topLeading) {
         if layers {
-          ArtworkLayers(session: session, onClose: { toggleLayers(narrow: narrow) })
+          ArtworkLayers(session: session, onClose: { showingLayers.toggle() })
             .frame(width: 234, height: min(panelHeight, 480))
             .modifier(CanvasFloatingPanel()).padding(16)
         }
@@ -54,7 +51,7 @@ struct ArtworkStudio: View {
               SectionLabel("INSPECTOR")
               Spacer()
               IconButton("Hide Canvas inspector", symbol: "xmark", size: 24) {
-                toggleInspector(narrow: narrow)
+                showingInspector.toggle()
               }
             }.padding(.leading, 18).padding(.trailing, 8).frame(height: 40)
             Divider()
@@ -68,8 +65,15 @@ struct ArtworkStudio: View {
           if hasContextNavigation {
             contextNavigation.padding(8).modifier(CanvasFloatingPanel())
           }
-          tools(narrow: narrow, abbreviated: geometry.size.width < 760,
-            layers: layers, inspector: inspector)
+          ScrollView(.horizontal, showsIndicators: true) {
+            tools(layers: layers, inspector: inspector)
+              .background {
+                GeometryReader { toolbar in
+                  Color.clear.onAppear { toolsWidth = toolbar.size.width }
+                    .onChange(of: toolbar.size.width) { _, width in toolsWidth = width }
+                }
+              }
+          }.frame(width: min(toolsWidth, max(1, geometry.size.width - 32)), height: 44)
             .modifier(CanvasFloatingPanel())
         }.padding(16)
       }
@@ -86,27 +90,8 @@ struct ArtworkStudio: View {
       if dieline { session.canvas?.finishText() }
       DispatchQueue.main.async { session.fit() }
     }
-    .onChange(of: store.mode) { _, mode in
-      if mode != .artwork && store.surfaceLayout == .single { session.canvas?.finishText() }
-    }
   }
 
-  private func toggleLayers(narrow: Bool) {
-    if narrow {
-      compactLayers.toggle()
-      if compactLayers { compactInspector = false }
-    } else { showingLayers.toggle() }
-  }
-  private func toggleInspector(narrow: Bool) {
-    if narrow {
-      compactInspector.toggle()
-      if compactInspector { compactLayers = false }
-    } else { showingInspector.toggle() }
-  }
-  private func openInspector(narrow: Bool) {
-    if narrow { compactInspector = true; compactLayers = false }
-    else { showingInspector = true }
-  }
   private func chooseTool(_ tool: ArtworkTool) {
     session.canvas?.finishText()
     session.tool = tool
@@ -129,29 +114,15 @@ struct ArtworkStudio: View {
     }.buttonStyle(.plain).font(.system(size: 11))
   }
 
-  private func tools(narrow: Bool, abbreviated: Bool, layers: Bool, inspector: Bool) -> some View {
+  private func tools(layers: Bool, inspector: Bool) -> some View {
     HStack(spacing: 3) {
-      IconButton("Canvas & Surfaces", symbol: "sidebar.left", size: 32) { toggleLayers(narrow: narrow) }
+      IconButton("Canvas & Surfaces", symbol: "sidebar.left", size: 32) { showingLayers.toggle() }
         .background(layers ? Palette.surface : .clear, in: RoundedRectangle(cornerRadius: 7))
         .accessibilityValue(layers ? "Shown" : "Hidden")
-      IconButton("Canvas inspector", symbol: "sidebar.right", size: 32) { toggleInspector(narrow: narrow) }
+      IconButton("Canvas inspector", symbol: "sidebar.right", size: 32) { showingInspector.toggle() }
         .background(inspector ? Palette.surface : .clear, in: RoundedRectangle(cornerRadius: 7))
         .accessibilityValue(inspector ? "Shown" : "Hidden")
       Divider().frame(height: 20).padding(.horizontal, 4)
-      if abbreviated {
-        Menu {
-          ForEach(ArtworkTool.allCases, id: \.self) { tool in
-            Button { chooseTool(tool) } label: {
-              Label(tool.rawValue.capitalized + " · " + tool.shortcut, systemImage: tool.symbol)
-            }
-          }
-        } label: {
-          Image(systemName: session.tool.symbol).font(.system(size: 13)).frame(width: 32, height: 32)
-            .background(Palette.surface, in: RoundedRectangle(cornerRadius: 6))
-        }.menuStyle(.borderlessButton).fixedSize().help(session.tool.rawValue.capitalized + " · Canvas tools")
-          .accessibilityLabel("Canvas tools")
-          .accessibilityValue(session.tool.rawValue.capitalized)
-      } else {
         ForEach(ArtworkTool.allCases, id: \.self) { tool in
           Button { chooseTool(tool) } label: {
             Image(systemName: tool.symbol).font(.system(size: 13)).frame(width: 30, height: 32)
@@ -160,14 +131,13 @@ struct ArtworkStudio: View {
             .accessibilityLabel(tool.rawValue.capitalized + " tool")
             .accessibilityValue(session.tool == tool ? "Selected" : "")
         }
-      }
       Divider().frame(height: 20).padding(.horizontal, 4)
-      actions(narrow: narrow)
+      actions
       zoomMenu.padding(.horizontal, 6)
     }.padding(6).fixedSize(horizontal: true, vertical: false)
   }
 
-  private func actions(narrow: Bool) -> some View {
+  private var actions: some View {
     Menu {
       Button("Place image…", systemImage: "photo.badge.plus") { session.importImage() }
       Button("Import editable SVG…", systemImage: "square.and.arrow.down") { store.importSVGDialog() }
@@ -197,8 +167,8 @@ struct ArtworkStudio: View {
       Divider()
       Button(session.preview ? "Hide live 3D preview" : "Show live 3D preview", systemImage: "cube.transparent") {
         session.preview.toggle()
-        if session.preview { openInspector(narrow: narrow) }
-      }.disabled(session.previewObject == nil || compact)
+        if session.preview { showingInspector = true }
+      }.disabled(session.previewObject == nil)
       Button("Export artwork…", systemImage: "square.and.arrow.up") { exportOptions = true }
         .disabled(session.object == nil || session.object?.isCanvasWorkspace == true && session.selection.isEmpty)
     } label: {

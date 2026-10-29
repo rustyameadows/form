@@ -35,7 +35,7 @@ struct VectorCanvas: NSViewRepresentable {
     view.registerForDraggedTypes([.fileURL, .png, .tiff])
     view.session = session
     view.fittingInsets = fittingInsets
-    session.canvas = view
+    if session.canvas == nil || session.canvas?.window == nil { session.canvas = view }
     scroll.hasHorizontalRuler = false
     scroll.hasVerticalRuler = false
     scroll.rulersVisible = false
@@ -57,7 +57,7 @@ struct VectorCanvas: NSViewRepresentable {
     guard let view = scroll.documentView as? VectorCanvasView else { return }
     view.session = session
     view.fittingInsets = fittingInsets
-    session.canvas = view
+    if view.window != nil, !view.isHiddenOrHasHiddenAncestor { session.canvas = view }
     view.synchronize()
     scroll.horizontalRulerView?.needsDisplay = true
     scroll.verticalRulerView?.needsDisplay = true
@@ -682,7 +682,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   override func viewDidMoveToWindow() {
     super.viewDidMoveToWindow()
+    if window != nil, !isHiddenOrHasHiddenAncestor {
+      session?.canvas = self
+      session?.zoom = zoom
+    }
     DispatchQueue.main.async { [weak self] in
+      guard self?.window != nil else { return }
       self?.fitWhenReady()
       self?.fitPaperPanelWhenRequested()
       self?.updateAccessibilityItems()

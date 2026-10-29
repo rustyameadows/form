@@ -50,6 +50,8 @@ enum TableTool: String, CaseIterable {
   var studioReturnSurface: (mode: WorkspaceMode, layout: DesignSurfaceLayout)?
   @Published var fabricationReview: FabricationReview?
   @Published var surfaceLayout: DesignSurfaceLayout = .single
+  @Published var splitDirection: DesignSurfaceSplitDirection = .sideBySide
+  weak var designSurfaceHost: DesignSurfaceHostController?
   @Published var paperRepresentation: PaperRepresentation = .panels
   @Published var functionRepresentation="Assembly"
   @Published var paperInside = false
@@ -176,6 +178,7 @@ enum TableTool: String, CaseIterable {
     }
     engine.onProjectDidChange = { [weak self] in
       self?.closeDetachedCanvas()
+      self?.designSurfaceHost?.resetForProjectChange()
       self?.environment = .form
       self?.paperInside = false
       self?.paperSelectedPanelID = nil
@@ -467,6 +470,7 @@ enum TableTool: String, CaseIterable {
     finishArtworkEditing()
     save()
     capturePreview()
+    designSurfaceHost?.resetForProjectChange()
     showingHome = true
     engine.selection = []
     isolated = []

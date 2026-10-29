@@ -9,7 +9,8 @@ import SwiftUI
   var body: some Scene {
     WindowGroup("LAB", id: "studio") {
       RootView().environmentObject(store)
-        .frame(minWidth: store.surfaceLayout == .split ? 1280 : 1020, minHeight: 700)
+        .frame(minWidth: store.surfaceLayout == .split && store.splitDirection == .sideBySide ? 1280 : 1020,
+          minHeight: store.surfaceLayout == .split && store.splitDirection == .stacked ? 900 : 700)
         .preferredColorScheme(.light)
         .onAppear { delegate.store = store }
     }
@@ -172,7 +173,11 @@ import SwiftUI
         Divider()
         Button("Canvas") { store.showSurface(.artwork) }.disabled(store.project == nil)
         Button("Table") { store.showSurface(.table) }.disabled(store.project == nil)
-        Button("Split Canvas and Table") { store.showSplit() }.disabled(store.project == nil)
+        Button("Split Side by Side") { store.showSplit(.sideBySide) }.disabled(store.project == nil)
+        Button("Split Stacked") { store.showSplit(.stacked) }.disabled(store.project == nil)
+        Button("Flip Split Direction") {
+          store.showSplit(store.splitDirection == .sideBySide ? .stacked : .sideBySide)
+        }.disabled(store.project == nil || store.surfaceLayout != .split)
         Button("Open Canvas Window") { store.detachCanvas() }.disabled(store.project == nil)
       }
       CommandMenu("Studio") {

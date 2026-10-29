@@ -34,6 +34,7 @@ struct RootView: View {
     .background {ModelAssetImportPresenter(store:store)}
     .background {CADModelEditorPresenter(store:store)}
     .background { StudioUtilityWindowPresenter(store: store).frame(width: 0, height: 0) }
+    .background { DesignSurfaceLifecyclePresenter(store: store).frame(width: 0, height: 0) }
     .sheet(isPresented: $store.showingObjectLibrary) { ObjectLibraryView().environmentObject(store) }
     .sheet(isPresented: $store.showingBridge) { BridgeView().environmentObject(store) }
     .sheet(item: $store.svgImport) { review in
@@ -378,7 +379,7 @@ struct DesignSurfaceMenu: View {
   @EnvironmentObject var store: StudioStore
   private var title: String {
     switch store.surfaceLayout {
-    case .split: return "Split"
+    case .split: return store.splitDirection == .stacked ? "Stacked" : "Split"
     case .detached: return "Windows"
     case .single: return store.mode.rawValue
     }
@@ -392,7 +393,16 @@ struct DesignSurfaceMenu: View {
       }
       Button { store.showSplit() } label: {
         Label("Split", systemImage: "rectangle.split.2x1")
-      }.help("Canvas and Table side by side").accessibilityLabel("Split Canvas and Table")
+      }.help("Show Canvas and Table together").accessibilityLabel("Split Canvas and Table")
+      Picker("Split direction", selection: Binding(get: { store.splitDirection }, set: { store.showSplit($0) })) {
+        Text("Side by side").tag(DesignSurfaceSplitDirection.sideBySide)
+        Text("Stacked").tag(DesignSurfaceSplitDirection.stacked)
+      }
+      if store.surfaceLayout == .split {
+        Button("Flip split direction", systemImage: "arrow.triangle.2.circlepath") {
+          store.showSplit(store.splitDirection == .sideBySide ? .stacked : .sideBySide)
+        }
+      }
       Divider()
       Button { store.detachCanvas() } label: {
         Label("Open Canvas window", systemImage: "arrow.up.forward.square")
@@ -422,16 +432,8 @@ struct WorkspaceView: View {
         if let object=store.primary,let project=store.project,FabricEnvironmentContext.applies(to:object,in:project) { FabricEnvironmentHeader(object:object) }
       }
       HStack(spacing: 0) {
-        Group {
-          if store.surfaceLayout == .split {
-            HSplitView {
-              ArtworkWorkspace().frame(minWidth: 440)
-              TableWorkspace().frame(minWidth: 360)
-            }
-          } else if store.surfaceLayout == .detached || store.mode != .artwork {
-            TableWorkspace()
-          } else { ArtworkWorkspace() }
-        }.frame(maxWidth: .infinity, maxHeight: .infinity)
+        DesignSurfaceWorkspace(store: store)
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
         if [.function, .fabricate].contains(store.environment) {
           Rectangle().fill(Palette.line).frame(width: 1)
           EnvironmentContextPanel()
@@ -444,38 +446,33 @@ struct WorkspaceView: View {
 
 struct TableWorkspace: View {
   @EnvironmentObject var store: StudioStore
-  @State private var showingObjectControls = false
   var body: some View {
-    ZStack {
-      StudioFramedTable(controller:store.studioShots)
-      VStack {
-        HStack(alignment: .top) {
-          TableHeading()
-          Spacer()
-          if store.mode == .studio {
-            StudioPanel()
-          } else if store.primary != nil && store.environment == .form {
-            if store.surfaceLayout == .split {
-              Button { showingObjectControls.toggle() } label: {
-                Label(store.primary?.name ?? "Object controls", systemImage: "slider.horizontal.3")
-                  .font(.system(size: 11,weight:.medium)).lineLimit(1)
-                  .padding(10).background(Palette.paper,in:RoundedRectangle(cornerRadius:9))
-              }.buttonStyle(.plain).popover(isPresented:$showingObjectControls) {
-                Group { if let object = store.primary, PaperConstruction.isPaper(object) { PaperEnvironmentControls(object: object).frame(width:300) } else { ObjectInspector() } }.frame(maxHeight:650).environmentObject(store)
-              }
-            } else {
-              if let object = store.primary, PaperConstruction.isPaper(object) { PaperEnvironmentControls(object:object).frame(width:300).frame(maxHeight:650).background(Palette.paper,in:RoundedRectangle(cornerRadius:10)) }
-              else { ObjectInspector().id(store.primary?.id) }
+    GeometryReader { viewport in
+      ZStack {
+        StudioFramedTable(controller:store.studioShots)
+        VStack {
+          HStack(alignment: .top) {
+            TableHeading()
+            Spacer()
+            if store.mode == .studio {
+              StudioPanel()
+            } else if store.primary != nil && store.environment == .form {
+              Group {
+                if let object = store.primary, PaperConstruction.isPaper(object) {
+                  PaperEnvironmentControls(object:object).frame(width:300)
+                    .background(Palette.paper,in:RoundedRectangle(cornerRadius:10))
+                } else { ObjectInspector().id(store.primary?.id) }
+              }.frame(maxHeight: min(650, max(160, viewport.size.height - 120)))
             }
-          }
-        }.padding(24)
-        Spacer(minLength: 0)
-        HStack(alignment: .bottom) {
-          CameraControls()
-          Spacer()
-        }.padding(.horizontal,24).padding(.bottom,18)
+          }.padding(24)
+          Spacer(minLength: 0)
+          HStack(alignment: .bottom) {
+            CameraControls(maxWidth: max(1, viewport.size.width - 48))
+            Spacer()
+          }.padding(.horizontal,24).padding(.bottom,18)
+        }
+        if store.project?.objects.filter({ !$0.isCanvasWorkspace }).isEmpty == true { EmptyTableView() }
       }
-      if store.project?.objects.filter({ !$0.isCanvasWorkspace }).isEmpty == true { EmptyTableView() }
     }.focusedValue(\.designSurface,store.mode == .studio ? .studio : .table)
   }
 }
@@ -515,7 +512,10 @@ struct EmptyTableView: View {
 
 struct CameraControls: View {
   @EnvironmentObject var store: StudioStore
+  var maxWidth: CGFloat = .infinity
+  @State private var contentWidth: CGFloat = 600
   var body: some View {
+    ScrollView(.horizontal, showsIndicators: true) {
     HStack(spacing: 3) {
       ForEach(TableTool.allCases, id: \.self) { tool in
         Button {
@@ -550,8 +550,16 @@ struct CameraControls: View {
       }.disabled(store.selected.isEmpty)
       IconButton("Toggle 100 mm grid", symbol: "grid") { store.showGrid.toggle() }
 
-    }.padding(6).background(Palette.paper, in: RoundedRectangle(cornerRadius: 13)).overlay(
-      RoundedRectangle(cornerRadius: 13).strokeBorder(Palette.line)
+    }.padding(6).fixedSize(horizontal: true, vertical: false)
+      .background {
+        GeometryReader { toolbar in
+          Color.clear.onAppear { contentWidth = toolbar.size.width }
+            .onChange(of: toolbar.size.width) { _, width in contentWidth = width }
+        }
+      }
+    }.frame(width: min(contentWidth, maxWidth), height: 44)
+      .background(Palette.paper, in: RoundedRectangle(cornerRadius: 13)).overlay(
+      RoundedRectangle(cornerRadius: 13).strokeBorder(Palette.line).allowsHitTesting(false)
     ).shadow(color: .black.opacity(0.06), radius: 14, y: 5)
   }
 }
