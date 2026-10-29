@@ -482,6 +482,12 @@ private struct RenderSignature: Equatable {
       store?.engine.project?.camera = camera
     }
   }
+  func viewportResized(_ source: TableSceneView) {
+    guard view === source else { return }
+    // Layout changes only the derived viewport aspect. Fit, named views and
+    // shot recall remain explicit actions and retain ownership of camera pose.
+    updateCamera()
+  }
   func resetCamera() {
     view?.cancelPointerInteraction()
     if let p = store?.project {
@@ -577,7 +583,7 @@ private struct RenderSignature: Equatable {
       // subject-centered orbit pivot or the camera's actual viewport aspect.
       insets = .init(
         top: 80 / max(1, viewport.height),
-        right: (store.mode == .studio ? 264 + 48 : store.surfaceLayout == .split || store.primary == nil || store.environment != .form ? 0 : ObjectInspector.width + 48) / max(1, viewport.width),
+        right: (store.mode == .studio ? 264 + 48 : store.primary == nil || store.environment != .form ? 0 : ObjectInspector.width + 48) / max(1, viewport.width),
         bottom: 80 / max(1, viewport.height))
     }
     let fitted = CameraFraming.fitted(
@@ -788,7 +794,7 @@ private struct RenderSignature: Equatable {
     super.setFrameSize(newSize)
     if changed {
       cancelPointerInteraction()
-      controller?.updateCamera()
+      controller?.viewportResized(self)
     }
   }
   override func mouseDown(with event: NSEvent) {

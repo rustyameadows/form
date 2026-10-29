@@ -141,7 +141,7 @@ struct ArtworkInspector: View {
                 .font(.system(size: 10))
             }
           }
-          if session.preview,store.surfaceLayout != .split,let preview = session.previewObject, let project = store.project {
+          if session.preview,let preview = session.previewObject, let project = store.project {
             HStack {
               SectionLabel("LIVE OBJECT")
               Spacer()
