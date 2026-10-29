@@ -4,17 +4,42 @@ public enum PaperConstructionEngine {
   public static func definition(for object:ProductObject)throws->PaperConstruction {
     guard PaperConstruction.isPaper(object) else{throw FormError.invalid("Choose a constructed envelope or carton.")}
     var source=object.paperConstruction ?? defaults(recipeID:object.recipeID)
+    if source.authored != nil {
+      source=applying(object.parameters,to:source)
+      source.stock.thicknessMM=try source.authored!.number(source.authored!.stockThickness)
+      let net=try source.authored!.net()
+      source.dimensions = .init(width:object.parameters["width"] ?? net.size.x,
+        height:object.parameters["height"] ?? net.size.y,depth:object.parameters["depth"] ?? max(1,source.stock.thicknessMM))
+    }
     if PaperConstruction.recipeIDs.contains(object.recipeID){source=applying(object.parameters,to:source)}
     try validate(source);return source
   }
   public static func defaults(recipeID:String)->PaperConstruction {
     recipeID=="tuckCarton" ? .init(kind:.straightTuckCarton,dimensions:.init(width:64,height:138,depth:38),stock:.init(thicknessMM:0.45),clearanceMM:1,glueTabMM:14,topFlapMM:23,bottomFlapMM:23,cornerRadiusMM:3):.init(kind:.envelope,dimensions:.init(width:216,height:275,depth:12))
   }
-  public static func parameters(_ s:PaperConstruction)->[String:Double]{["width":s.dimensions.width,"height":s.dimensions.height,"depth":s.dimensions.depth,"stock":s.stock.thicknessMM,"clearance":s.clearanceMM,"glueTab":s.glueTabMM,"topFlap":s.topFlapMM,"bottomFlap":s.bottomFlapMM,"cornerRadius":s.cornerRadiusMM,"fold":s.foldPercent,"opening":s.openingPercent]}
+  public static func parameters(_ s:PaperConstruction)->[String:Double]{
+    if let authored=s.authored {return authored.values.merging(["fold":s.foldPercent,"opening":s.openingPercent]){_,new in new}}
+    return ["width":s.dimensions.width,"height":s.dimensions.height,"depth":s.dimensions.depth,"stock":s.stock.thicknessMM,"clearance":s.clearanceMM,"glueTab":s.glueTabMM,"topFlap":s.topFlapMM,"bottomFlap":s.bottomFlapMM,"cornerRadius":s.cornerRadiusMM,"fold":s.foldPercent,"opening":s.openingPercent]
+  }
   public static func applying(_ values:[String:Double],to original:PaperConstruction)->PaperConstruction {
-    var s=original;if let v=values["width"]{s.dimensions.width=v};if let v=values["height"]{s.dimensions.height=v};if let v=values["depth"]{s.dimensions.depth=v};if let v=values["stock"]{s.stock.thicknessMM=v};if let v=values["clearance"]{s.clearanceMM=v};if let v=values["glueTab"]{s.glueTabMM=v};if let v=values["topFlap"]{s.topFlapMM=v};if let v=values["bottomFlap"]{s.bottomFlapMM=v};if let v=values["cornerRadius"]{s.cornerRadiusMM=v};if let v=values["fold"]{s.foldPercent=v};if let v=values["opening"]{s.openingPercent=v};return s
+    var s=original
+    if var authored=original.authored {
+      for i in authored.parameters.indices {if let v=values[authored.parameters[i].name]{authored.parameters[i].value=v}}
+      s.authored=authored
+    }
+    if let v=values["width"]{s.dimensions.width=v};if let v=values["height"]{s.dimensions.height=v};if let v=values["depth"]{s.dimensions.depth=v};if let v=values["stock"]{s.stock.thicknessMM=v};if let v=values["clearance"]{s.clearanceMM=v};if let v=values["glueTab"]{s.glueTabMM=v};if let v=values["topFlap"]{s.topFlapMM=v};if let v=values["bottomFlap"]{s.bottomFlapMM=v};if let v=values["cornerRadius"]{s.cornerRadiusMM=v};if let v=values["fold"]{s.foldPercent=v};if let v=values["opening"]{s.openingPercent=v};return s
   }
   public static func validate(_ s:PaperConstruction)throws {
+    if s.kind == .authored {
+      guard s.version==1,let authored=s.authored,s.foldPercent.isFinite,(0...100).contains(s.foldPercent),
+        s.openingPercent.isFinite,(0...100).contains(s.openingPercent),s.annotations.count<=256,
+        s.stock.name.utf8.count<=256,s.stock.notes.utf8.count<=2048,
+        s.insideArtwork==nil || s.insideArtworkSourceID==nil else {throw FormError.invalid("Invalid authored construction state.")}
+      _ = try authored.net()
+      if let art=s.insideArtwork{try validateArtwork(art)}
+      return
+    }
+    guard s.authored==nil else{throw FormError.invalid("Authored geometry requires the authored construction kind.")}
     let d=s.dimensions,values=[d.width,d.height,d.depth,s.stock.thicknessMM,s.clearanceMM,s.glueTabMM,s.topFlapMM,s.bottomFlapMM,s.cornerRadiusMM,s.foldPercent,s.openingPercent]
     guard s.version==1,values.allSatisfy(\.isFinite),(30...1200).contains(d.width),(40...1600).contains(d.height),(1...600).contains(d.depth),(0.08...2).contains(s.stock.thicknessMM),(0...20).contains(s.clearanceMM),(6...60).contains(s.glueTabMM),(8...150).contains(s.topFlapMM),(8...150).contains(s.bottomFlapMM),(0...20).contains(s.cornerRadiusMM),(0...100).contains(s.foldPercent),(0...100).contains(s.openingPercent),d.depth<=d.width,d.depth<=d.height*0.8,s.glueTabMM<d.width/2,s.topFlapMM<d.height/2,s.bottomFlapMM<d.height/2 else{throw FormError.invalid("Paper dimensions, stock and flap sizes must be finite and form a physically bounded net. Depth cannot exceed width or 80% of height; glue/tuck flaps must be smaller than half their body dimension.")}
     guard !s.stock.name.isEmpty,s.stock.name.utf8.count<=256,(s.stock.vendor?.utf8.count ?? 0)<=512,s.stock.notes.utf8.count<=2048,s.stock.gsm.map({$0.isFinite&&(30...1200).contains($0)}) ?? true else{throw FormError.invalid("Declare bounded stock names, thickness and optional GSM; omit unknown measured values.")}
@@ -54,6 +79,7 @@ public enum PaperConstructionEngine {
   }
   public static func net(_ s:PaperConstruction)throws->PaperNet {
     try validate(s)
+    if let authored=s.authored{return try authored.net()}
     let stock=s.stock.thicknessMM,w=s.dimensions.width+stock,h=s.dimensions.height+stock,d=s.dimensions.depth+stock,g=s.glueTabMM,top=d+s.topFlapMM,bottom=top+h,netWidth=2*(w+d)+g,netHeight=top+h+d+s.bottomFlapMM
     var panels:[PaperPanel]=[],folds:[PaperFold]=[],joins:[PaperJoin]=[]
     func add(_ id:String,_ name:String,_ role:PaperPanel.Role,_ polygon:[Point2],parent:String?=nil,start:Point2?=nil,end:Point2?=nil,angle:Double=0){let foldID=parent.map{"fold.\($0).\(id)"};panels.append(.init(id:id,name:name,role:role,polygon:polygon,parentID:parent,foldID:foldID));if let parent,let start,let end,let foldID{folds.append(.init(id:foldID,parentPanelID:parent,childPanelID:id,start:start,end:end,angleDegrees:angle))}}
@@ -112,9 +138,10 @@ public enum PaperConstructionEngine {
     let opening=source.openingPercent/100
     func localMatrix(_ panel:PaperPanel,_ fold:PaperFold,_ amount:Double)->[Double]{let p=fold.start,axis=Vector3(fold.end.x-p.x,-fold.end.y+p.y,0);var m=multiply(translation(p.x,-p.y,0),multiply(rotate(axis:axis,radians:fold.angleDegrees * .pi/180*amount),translation(-p.x,p.y,0)))
       let layer:Double=panel.id=="glue" ? 1:panel.id=="bottom-tuck" || panel.id=="top-tuck" ? 2:panel.role == .dust ? 1:0
-      if layer>0{m=multiply(m,translation(0,0,-source.stock.thicknessMM*layer*amount))};return m}
+      let offset=source.authored != nil ? fold.layerOffsetMM ?? 0:source.stock.thicknessMM*layer
+      if offset != 0{m=multiply(m,translation(0,0,-offset*amount))};return m}
     for _ in 0..<net.panels.count{if remaining.isEmpty{break};var next:[PaperPanel]=[];for panel in remaining{guard let parent=panel.parentID,let parentMatrix=matrices[parent],let parentClosed=closedMatrices[parent],let fold=net.folds.first(where:{$0.id==panel.foldID}) else{next.append(panel);continue}
-      let top=panel.id.hasPrefix("top-") || panel.id.hasPrefix("dust-top-")
+      let top=source.authored != nil ? fold.opensWithTop == true:panel.id.hasPrefix("top-") || panel.id.hasPrefix("dust-top-")
       matrices[panel.id]=multiply(parentMatrix,localMatrix(panel,fold,amount*(top ? 1-opening:1)))
       closedMatrices[panel.id]=multiply(parentClosed,localMatrix(panel,fold,amount))
     };remaining=next}

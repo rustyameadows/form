@@ -40,8 +40,12 @@ public enum PaperSamples {
     carton.artwork?.backgroundOpacity=0
     let side=net.panels.first{$0.id=="side-right"}!.bounds
     var sideTitle=text("STILL / DAILY RITUAL",side.x+6,side.y+26,side.width-12,70,8,ink);sideTitle.rotation=0;carton.artwork!.elements.append(sideTitle)
-    let tuck=net.panels.first{$0.id=="top-tuck"}!.bounds
-    var inside=try project.makeObject(recipeID:"artboard",name:"STILL · Inside registered",parameters:["width":net.size.x,"depth":net.size.y],materialID:"paper-superfine",position:.init(255,0,50));inside.artwork = .init(background:"#F7F5EF",elements:[text("A small moment,\njust for you.",tuck.x+10,tuck.y+5,tuck.width-20,max(14,tuck.height-8),8,ink)]);inside.artwork?.backgroundOpacity=0;inside.artwork?.canvasPosition = .init(440,40)
+    var inside=try project.makeObject(recipeID:"artboard",name:"STILL · Inside registered",parameters:["width":net.size.x,"depth":net.size.y],materialID:"paper-superfine",position:.init(255,0,50))
+    let insideFrame=try PhysicalArtworkFrame.paper(net:net,panelID:"top-tuck",inside:true)
+    var registered=Artwork(background:"#F7F5EF");registered.backgroundOpacity=0;registered.canvasPosition = .init(440,40)
+    var faceArtwork=registered
+    faceArtwork.elements=[text("A small moment,\njust for you.",10,5,insideFrame.size.x-20,max(14,insideFrame.size.y-8),8,ink)]
+    inside.artwork=try insideFrame.source(from:faceArtwork,original:registered)
     definition.insideArtworkSourceID=inside.id;carton.paperConstruction=definition;carton.rotation = -12
     var bottle=try project.makeObject(recipeID:"cylinder",name:"Serum bottle · scale study",parameters:["diameter":30,"height":106],materialID:"petg",position:.init(60,0,-15));bottle.color="#B07C43"
     project.objects=[carton,bottle,inside];project.notes=[.init("Original STILL graphics are registered to the carton net. The inside message has its own editable registered source."),.init("Carton retention, actual contents, stock caliper, grain and duplex feed remain prototype assumptions.",kind:"question")];project.history=[.init("Created the STILL straight tuck carton study.")];project.camera.distance=7;project.camera.elevation=0.68;project.schemaVersion=53;return project

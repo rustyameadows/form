@@ -1,6 +1,8 @@
 # Agent modeling engine implementation plan
 
-Status: planned implementation. October 28, 2026.
+Status: implementation and acceptance verified. October 29, 2026.
+
+Implementation and verification are on `codex/agent-modeling-engine`. The reconciled current registry accounts for 1,287 passing methods through the complete baseline and focused reruns, including the diagnosed and repaired shared-variant regression. The fixed-case warm benchmark meets its target at 2.071× faster aggregate median with no p95 regression. All 17 fabric workflows pass, including the complete original 240-frame sewn-assembly run. The [sample audit](sample-visual-validation.md) checks all 12 shipped overviews and the corrected physical inside-frame roundtrip in a fresh package. See the [verification record](agent-modeling-engine-validation.md) for evidence and measurement limits. The final native regression and exact recorded-control replay close the acceptance checks below; [PR #8](https://github.com/rustyameadows/form/pull/8) integrates the work with main.
 
 Make LAB's existing modeling engine fast and dependable enough for an agent to construct a model, evaluate it, inspect the result, measure it, repair it, and verify its parameters in a short repeatable loop. The user receives an editable model whose controls, construction relationships, artwork, and saved source continue to work after the agent finishes.
 
@@ -13,6 +15,8 @@ An agent must be able to introduce a previously unseen design through LAB's supp
 Use conventional modeling operations, parameter expressions, geometry, transforms, and connections through the existing agent tool surface. Publish their schemas, units, supported fields, and concise examples through capability discovery so the agent can work from the tool descriptions. Extend this surface coherently as general capabilities become necessary.
 
 Model definitions, exposed parameter controls, assertions, component identities, and artwork bindings are saved project content. Native controls and agent commands evaluate that same source. All evaluation and display run through LAB's installed runtime.
+
+Dielines and sewing patterns share the same Canvas, physical source geometry, selection and editing conventions, artwork ownership, parameter validation, and assembly navigation. Cut/fold and cut/seam/stitch relationships express different material processes within that shared experience. Exact solid evaluation, rigid folding, and deforming cloth retain the calculations appropriate to their material while sharing source identity, commands, revisions, diagnostics, and publication. Fabric workflows participate in the same modeling loop.
 
 The core loop is:
 
@@ -34,6 +38,7 @@ The implementation already has useful geometry and lifecycle machinery. Preserve
 | Agent inspection | Planning, status, topology, clearance, and rendered previews | Independent evidence requests and a concise combined evaluation report |
 | Surface identity | Persistent feature/output IDs, revision-pinned face ordinals, and limited semantic face selectors | Durable authored targets and multiple named physical artwork surfaces |
 | Paper construction | Registered flat artwork, panels, cut edges, folds, joins, and folded previews | Agent-authored construction topology and relationships using general operations |
+| Fabric and sewn construction | Fabric repeats/colorways, sewing contours and allowances, material layouts, pattern assemblies, cloth, attached artwork, and decoration/production records | Shared parameter checks and Canvas interaction, preserved source/material coordinates, and complete textile regression coverage |
 | Project integration | Guarded publication, immutable assets, save/reopen, and shared Undo | The same guarantees for revised models, surface bindings, and general constructions |
 
 Implementation anchors: [feature graph](cad-feature-graph.md), [operation contracts](cad-operations.md), [CAD coordinator](../Sources/FormApp/CADModelCoordinator.swift), [evaluator](../Sources/FormCADModeling/CADModelEvaluator.swift), [artwork links](../Sources/FormCore/ArtworkLinks.swift), and [paper construction engine](../Sources/FormCore/PaperConstructionEngine.swift).
@@ -46,14 +51,19 @@ Create a reproducible baseline harness around the real `form_cad` path before ch
 
 Instrument validation, exact evaluation, tessellation, render preparation, image capture, and publication separately. Report per-feature cost, rebuilt feature IDs, cache reuse, elapsed time, and retained resources. Measure tool submissions and elapsed time from an edit request to usable evidence, including asynchronous waits.
 
+Measure real native parameter interaction as well. Record event-to-source and event-to-visible-result latency while dragging representative live controls. Report draft editing separately where CAD requires an explicit Preview. Exercise rapid changes, cancellation and superseding previews so delayed work cannot replace the latest result.
+
 Split interactive evaluation from durable publication. `CADModelCoordinator.prepare` currently calls `stageSources` with `includeSTEP: true`, stages geometry, and copies preview assets before a review becomes ready. Keep the exact result and display buffers in a bounded review session; create durable project artifacts when publishing. Generate additional archival output only when an operation requires it. Retain source verification and commit-time revision checks.
 
 Acceptance:
 
-- [ ] The harness records cold and warm median/p95 latency, tool submissions, cache reuse, and resource use for the same fixture cases before and after the change.
-- [ ] The representative warm-edit benchmark targets at least a 2× reduction in aggregate median edit-to-evidence latency with no aggregate p95 regression. Compare identical fixture definitions, display quality, evidence requests, and cache conditions; retain per-case median/p95 results alongside the aggregate.
-- [ ] Unrelated features reuse exact geometry. Artwork, material, camera, and canvas-arrangement changes retain geometric caches when source geometry is unchanged.
-- [ ] Rapid superseding edits, cancellation, and project switches keep resources bounded and prevent stale results from becoming accepted or published.
+- [x] The harness records cold and warm median/p95 latency, tool submissions, cache reuse, and resource use for the same fixture cases before and after the change.
+- [x] The representative warm-edit benchmark targets at least a 2× reduction in aggregate median edit-to-evidence latency with no aggregate p95 regression. Compare identical fixture definitions, display quality, evidence requests, and cache conditions; retain per-case median/p95 results alongside the aggregate.
+- [x] Unrelated features reuse exact geometry. Artwork, material, camera, and canvas-arrangement changes retain geometric caches when source geometry is unchanged.
+- [x] Rapid superseding edits, cancellation, and project switches keep resources bounded and prevent stale results from becoming accepted or published.
+- [x] Native mechanical, authored-construction and fabric controls have recorded real interaction measurements, and rapid changes preserve the latest requested state.
+
+Verification status: production keyboard/Preview/Cancel checks and all three real held-pointer gestures pass. The human samples expose 74 live-fold, 10 fabric-width and 17 CAD-draft source updates with retained latest values; CAD reaches the explicitly previewed draft. The physical logger's local event monitor misses native slider-tracking events, so its raw mouseDown-anchored delay fields are not claimed as input latency. A bounded replay sends every exact recorded value through the production NSSlider target/action and captures each changed live scene with a fixed camera. All 101 actions pass: action→source p95 is 9.40 ms fold, 15.11 ms fabric and 0.755 ms CAD draft; completed offscreen-capture p95 is 79.77/141.08 ms for fold/fabric, and explicit CAD Preview→capture is 204.61 ms. These serialized action/evidence timings include instrumentation and are not hardware-event→display or frame-rate guarantees. The physical test also exposed selection-outline feedback in bounds; the fix passes repeated-pose/Fit/rendered-pixel and embroidery regressions. Benchmark cold/RSS/staging limits remain disclosed. See the [raw physical and replay evidence](validation/native-held-controls/manifest.json).
 
 ### 2 Make drafts easy to revise and failures easy to repair
 
@@ -65,10 +75,10 @@ Separate model evaluation from evidence tasks. Topology, clearance, and render c
 
 Acceptance:
 
-- [ ] An agent creates an invalid fillet, reads the structured failure, repairs that failed draft, and publishes once without resubmitting the complete model or losing the valid result.
-- [ ] A multi-feature patch evaluates once; stale expected revisions reject without partial mutation.
-- [ ] Multiple requested renders and measurements complete without cancelling one another or overwriting earlier evidence.
-- [ ] Reports identify the evaluated revision, output/feature IDs, units, requested checks, and image references. The agent can submit an edit plus its evidence request together.
+- [x] An agent creates an invalid fillet, reads the structured failure, repairs that failed draft, and publishes once without resubmitting the complete model or losing the valid result.
+- [x] A multi-feature patch evaluates once; stale expected revisions reject without partial mutation.
+- [x] Multiple requested renders and measurements complete without cancelling one another or overwriting earlier evidence.
+- [x] Reports identify the evaluated revision, output/feature IDs, units, requested checks, and image references. The agent can submit an edit plus its evidence request together.
 
 ### 3 Verify parameter relationships and model requirements
 
@@ -78,12 +88,17 @@ Add a batch validation operation using explicit named parameter cases, minimum/d
 
 Attach geometric checks to the cases: expected output/solid counts, closed-solid validity where applicable, physical dimensions, volume, declared clearance or interference, and surface-binding resolution. Return the failing parameter values, violated requirement, first failing feature, and relevant measurements. Distinguish the finite tested cases from a proof over every possible parameter value.
 
+Reuse the same saved parameter requirements for procedural fabric and construction recipes. Sewing cases check source contour validity, allowances, seam references, material coordinates, and attachment resolution. Cloth checks retain their declared solver and preparation conditions rather than applying closed-solid criteria to a fabric surface.
+
 Acceptance:
 
-- [ ] A fixture that succeeds at its default and fails at a boundary produces a reproducible, repairable report with the exact case values.
-- [ ] An agent repairs the construction and reruns the same cases successfully.
-- [ ] Batch validation leaves the accepted model, artwork, history, and user selection intact.
-- [ ] All declared cases have explicit outcomes; cancellation or an exceeded budget cannot appear as a successful check.
+- [x] A fixture that succeeds at its default and fails at a boundary produces a reproducible, repairable report with the exact case values.
+- [x] An agent repairs the construction and reruns the same cases successfully.
+- [x] Batch validation leaves the accepted model, artwork, history, and user selection intact.
+- [x] All declared cases have explicit outcomes; cancellation or an exceeded budget cannot appear as a successful check.
+- [x] Fabric/sewing parameter cases evaluate source contours, allowances, seam references, material coordinates and attachment resolution through the shared case lifecycle.
+
+Verification status: CAD, folded constructions and canonical sewn sources retain explicit completed, interrupted and unattempted outcomes. The packaged unfamiliar sewn-source workflow measures actual cut/stitch contours, seam lengths, rest assemblies, material coordinates and attachment anchors; its intentional seam/anchor failures are repaired against the same cases. Read-only validation preserves accepted source/history/selection. See [canonical artwork parameters](artwork-parameter-sources.md) and the verification record.
 
 ### 4 Preserve intended targets and connect named surfaces
 
@@ -95,10 +110,12 @@ Use the existing artwork source ownership, physical units, typography, and Undo 
 
 Acceptance:
 
-- [ ] An authored object exposes at least three independently addressable surfaces with upright text, and updates correctly in Canvas and Table.
-- [ ] Dimension edits preserve uniquely resolvable feature targets and surface bindings. Removing a surface or creating an ambiguous match returns the affected identities and an actionable review state.
-- [ ] Changing a parameter preserves the intended physical artwork scale and orientation; any required placement review is explicit.
-- [ ] Surface edits, bindings, named resources, and source ownership survive publication, Undo/Redo, duplication, and save/reopen.
+- [x] An authored object exposes at least three independently addressable surfaces with upright text, and updates correctly in Canvas and Table.
+- [x] Dimension edits preserve uniquely resolvable feature targets and surface bindings. Removing a surface or creating an ambiguous match returns the affected identities and an actionable review state.
+- [x] Changing a parameter preserves the intended physical artwork scale and orientation; any required placement review is explicit.
+- [x] Surface edits, bindings, named resources, and source ownership survive publication, Undo/Redo, duplication, and save/reopen.
+- [x] Trim, polygon safety and bleed intent map into flat/upright construction views, with explicit collapse and overlap review.
+- [x] Inside physical-frame editing displays upright content while preserving the existing front-registered canonical source and print/export registration.
 
 ### 5 Make construction relationships authorable
 
@@ -110,34 +127,45 @@ Make the envelope and carton constructions ordinary reusable model examples on t
 
 Expose a construction's derived flat layout and named upright surface frames on the shared Canvas, using the surface resolver from milestone 4. Panel navigation selects or frames those sources. Editing upright artwork updates the flat representation and assembled Table object. Parametric controls continue to own construction geometry; the flat layout supplies a linked proof of that geometry and artwork.
 
+Use the existing vector Canvas for sewing pieces and dielines with common tools, source navigation, physical units, selection, artwork editing, and Undo behavior. Preserve sewing-specific seam/allowance/grain/notch controls and paper-specific hinge/crease/join controls as contextual properties. Preserve fabric repeat phase, source artwork, and material coordinates through flat-to-assembled changes. Every change to these shared paths must exercise both rigid and sewn constructions.
+
 Acceptance:
 
-- [ ] After the generic capabilities ship, an agent authors a new fold-and-glue construction through tools using the same installed build, with no product registration or application source change.
-- [ ] The agent changes its dimensions, inspects several fold positions and its flat layout, and checks declared joins through revision-linked evidence.
-- [ ] Upright panel artwork and an image spanning two panels share the intended sources across flat and folded representations; one edit has consistent Undo.
-- [ ] The new model saves/reopens with editable parameters and construction relationships. Existing paper projects retain their appearance, artwork, and editability.
+- [x] After the generic capabilities ship, an agent authors a new fold-and-glue construction through tools using the same installed build, with no product registration or application source change.
+- [x] The agent changes its dimensions, inspects several fold positions and its flat layout, and checks declared joins through revision-linked evidence.
+- [x] Upright panel artwork and an image spanning two panels share the intended sources across flat and folded representations; one edit has consistent Undo.
+- [x] The new model saves/reopens with editable parameters and construction relationships. Existing paper projects retain their appearance, artwork, and editability.
+- [x] Declared panel-pair checks measure folded finite-thickness clearance/interference, with explicit allowances for intended hinge/glue contact.
+
+Verification status: the original four construction checks and explicit folded-stock pair checks pass. The packaged check detects an 800 mm³ overlap, accepts intended contact and a 0.3 mm gap, repairs the same source, and preserves artwork/history/selection through Undo and reopen. These declared-pair checks do not establish collision-free motion through every possible fold.
 
 ### 6 Prove complete agent workflows and ship the tools
 
 Run the real local bridge against a packaged app and an isolated project library. Keep complete model definitions and parameter cases as fixtures, with scripts that reproduce numerical checks and capture the relevant native views. For each acceptance model, retain a concise record of tool submissions, failures, repairs, timings, parameter outcomes, and final source revision.
 
-Use three focused workflows:
+Use five focused workflows:
 
 | Workflow | Required proof |
 | --- | --- |
 | Enclosure with a fitted lid | Parameter-driven walls, openings and attachment features; measured mating gap; local repair of an intentional failed feature; dimension changes preserve intended targets |
 | Curved vessel | Profile/revolution and wall construction; valid opening and solid; interacting height/radius/thickness cases; useful failure feedback and selective rebuilding |
 | Previously unseen folded package | Agent-authored panel arrangement and hinges; cut/fold relationships; named upright artwork surfaces; flat/folded consistency; parameter and connection checks |
+| Fabric and sewn assembly | Existing fabric repeat/colorway and sewing-piece artwork remain editable on Canvas; allowances/notches/grain, seam identities, material phase and attached decoration remain connected to the assembled cloth; preparation/Run/Stop/Reset, dimension edits, persistence and Undo remain correct |
+| Reference-led organic object | Freeze an independent multi-view visual reference before modeling; author curved, blended forms and fine detail through familiar geometry operations; compare actual front, top and perspective renders against the reference and record visual mismatches alongside geometric validation |
 
 Use additional construction briefs after the runtime is frozen to verify that success generalizes beyond the checked-in examples. New models are supplied as project content through the published tool surface. Record any missing generic capability as an engine defect and rerun the gate after addressing it.
 
 Acceptance:
 
-- [ ] Each workflow completes construct → evaluate → inspect → measure → repair → parameter validation → publish through agent tools.
-- [ ] The same installed build accepts the additional construction briefs without source edits or model-specific plugins.
-- [ ] Native controls can edit the resulting parameters, and save/reopen plus Undo/Redo preserve the accepted source and its bindings.
-- [ ] Existing geometry, cancellation, stale-publication, artwork, and project-lifecycle regressions pass. Native Canvas/Table checks confirm the rendered model and surface orientation.
-- [ ] Tool descriptions and focused examples match the shipped behavior, including diagnostics and parameter validation. The benchmark demonstrates the latency target from milestone 1.
+- [x] Each workflow completes construct → evaluate → inspect → measure → repair → parameter validation → publish through agent tools.
+- [x] The same installed build accepts the additional construction briefs without source edits or model-specific plugins.
+- [x] Native controls can edit the resulting parameters, and save/reopen plus Undo/Redo preserve the accepted source and its bindings.
+- [x] Existing geometry, cancellation, stale-publication, artwork, and project-lifecycle regressions pass. Native Canvas/Table checks confirm the rendered model and surface orientation.
+- [x] Fabric repeats and colorways, sewing/curved-pattern geometry, cutting/sewing layouts, textile decoration and embroidery, garment blocks, pattern assemblies, cloth preparation/simulation/attachments, material assignments, and saved production records pass their existing relevant regressions. Native and bridge checks verify editable flat sources, assembled appearance, save/reopen, and shared Undo.
+- [x] Tool descriptions and focused examples match the shipped behavior, including diagnostics and parameter validation. The benchmark demonstrates the latency target from milestone 1.
+- [x] The organic example passes a documented multi-angle visual review of silhouette, proportions, blend quality and fine detail. A valid solid alone is insufficient.
+
+Verification status: the enclosure, curved-vessel, unfamiliar folded-construction and fabric workflows have recorded tool and regression evidence. The selected organic source passes visual geometry review in three angles under two shipped lighting presets; photographic finish and illumination remain unmatched. Its full finite campaign retains 30 named values: 27 native geometry passes and 3 expected authored curvature-guard rejections, with no unexpected final failures. One-Undo publication, Undo/Redo and reopen preserve source/assets. Original failures and a cooperative budget overrun are retained. The latter exposed a native mass-integration cancellation gap now fixed by gprop2 polling, with unchanged numerical results and actual packaged 2-second/8-second interruption proofs. The recorded physical interactions and explicitly scoped control-action timing replay close milestone 1.
 
 ## Execution order and completion
 

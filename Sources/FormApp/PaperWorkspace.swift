@@ -17,6 +17,17 @@ extension StudioStore {
     paperSelectedPanelID = panelID
     if let foldID=paperSelectedFoldID,net.folds.first(where:{$0.id==foldID})?.childPanelID != panelID {paperSelectedFoldID=nil}
     changed(save: false)
+    if environment == .form, mode == .artwork {
+      focusConstructionCanvas(objectID: objectID, panelID: panelID)
+    }
+  }
+  func focusConstructionCanvas(objectID: UUID, panelID: String?) {
+    guard let frame = artworkSession.frames.first(where: {
+      $0.projection?.constructionID == objectID && $0.projection?.panelID == panelID
+    }) else { return }
+    artworkSession.activate(frame.id)
+    artworkSession.canvas?.synchronize()
+    artworkSession.canvas?.fit(all: false)
   }
   func showPaper(_ representation: PaperRepresentation, object: ProductObject, split: Bool = false) {
     finishArtworkEditing()
@@ -27,7 +38,10 @@ extension StudioStore {
     } else if surfaceLayout == .single { mode = .artwork }
     select(object.id)
     activatePaperArtwork(object)
-    if representation == .dieline { artworkSession.paperFocusPanelID = paperSelectedPanelID }
+    if environment == .form {
+      focusConstructionCanvas(objectID: object.id,
+        panelID: representation == .panels ? paperSelectedPanelID ?? (try? PaperConstruction.definition(for: object).net().rootPanelID) : nil)
+    }
     changed(save: false)
   }
   func activatePaperArtwork(_ object: ProductObject) {
@@ -40,9 +54,11 @@ extension StudioStore {
   }
   func setPaperInside(_ inside: Bool, object: ProductObject) {
     guard inside != paperInside else { return }
+    let panel = artworkSession.activeProjection?.panelID
     finishArtworkEditing()
     paperInside = inside
     activatePaperArtwork(object)
+    focusConstructionCanvas(objectID: object.id, panelID: panel)
     changed(save: false)
   }
   func createPaperInside(_ object: ProductObject) {
@@ -196,9 +212,27 @@ struct PaperEnvironmentControls: View {
   }
   private func construction(_ d:PaperConstruction) -> some View {
     VStack(alignment:.leading,spacing:12) {
-      SectionLabel(d.kind == .envelope ? "GLUED ENVELOPE" : "STRAIGHT TUCK CARTON")
-      Text(d.kind == .envelope ? "Flat back · side seam · top opening" : "Four body panels · glue seam · tuck & dust flaps").font(.system(size:11)).foregroundStyle(Palette.secondary)
+      SectionLabel(d.authored?.name.uppercased() ?? (d.kind == .envelope ? "GLUED ENVELOPE" : "STRAIGHT TUCK CARTON"))
+      if d.authored == nil {
+        Text(d.kind == .envelope ? "Flat back · side seam · top opening" : "Four body panels · glue seam · tuck & dust flaps").font(.system(size:11)).foregroundStyle(Palette.secondary)
+      }
       if draft != nil {
+        if let authored = d.authored {
+          ForEach(authored.parameters, id: \.name) { parameter in
+            HStack {
+              Text(parameter.name); Spacer()
+              TextField(parameter.name, value: Binding(get: {
+                draft?.authored?.parameters.first(where: { $0.name == parameter.name })?.value ?? parameter.value
+              }, set: { value in
+                if let i = draft?.authored?.parameters.firstIndex(where: { $0.name == parameter.name }) {
+                  draft?.authored?.parameters[i].value = value
+                }
+              }), format: .number.precision(.fractionLength(0...3)))
+                .font(Palette.numericFont).labelsHidden().frame(width: 70).textFieldStyle(.roundedBorder)
+              Text(parameter.unit).foregroundStyle(Palette.secondary)
+            }.font(.system(size: 11))
+          }
+        } else {
         field("Internal width",get:{draft!.dimensions.width},set:{draft!.dimensions.width=$0})
         field("Internal height",get:{draft!.dimensions.height},set:{draft!.dimensions.height=$0})
         field("Internal depth",get:{draft!.dimensions.depth},set:{draft!.dimensions.depth=$0})
@@ -207,6 +241,7 @@ struct PaperEnvironmentControls: View {
         field("Glue tab",get:{draft!.glueTabMM},set:{draft!.glueTabMM=$0})
         field("Top flap",get:{draft!.topFlapMM},set:{draft!.topFlapMM=$0})
         field("Bottom flap",get:{draft!.bottomFlapMM},set:{draft!.bottomFlapMM=$0})
+        }
         Button("Apply construction") { applyDraft() }.buttonStyle(.borderedProminent).disabled(draftIssue != nil)
         if let draftIssue { Text(draftIssue).font(.system(size:10)).foregroundStyle(Palette.accent); Button("Reload current construction") {reloadDraft()} }
       }

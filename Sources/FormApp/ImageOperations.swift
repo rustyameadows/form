@@ -27,7 +27,8 @@ extension StudioStore {
     return ["images": images, "object_id": id.uuidString, "units": "physical millimeters; DPI includes crop and resolved surface transforms"]
   }
 
-  func importImage(_ args: [String: Any], source: String = "Codex") throws -> [String: Any] {
+  func importImage(_ args: [String: Any], source: String = "Codex",
+    placement: ((inout ArtworkElement) -> Void)? = nil) throws -> [String: Any] {
     guard let p = project, let raw = args["object_id"] as? String, let id = UUID(uuidString: raw),
       let object = p.objects.first(where: { $0.id == id }), object.supportsArtworkFace || object.isCanvasWorkspace,
       let path = args["path"] as? String, path.hasPrefix("/") else {
@@ -103,6 +104,7 @@ extension StudioStore {
       }
       let fitted = ImageCrop.filling(pixelWidth: aspect,pixelHeight:1,width:width,height:height)
       if fitted != .full { e.imageCrop = fitted }
+      placement?(&e)
       elementID = e.id; art.elements.append(e)
     }
     var candidate = p

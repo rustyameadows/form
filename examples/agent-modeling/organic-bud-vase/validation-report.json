@@ -1,0 +1,844 @@
+{
+  "reference": {
+    "file": "ai-generated-reference.png",
+    "sha256": "0598ba5345aba541a50e93ad40f7c671bf32f7ad433e696a838b4254b5b38ae5",
+    "kind": "AI-generated independent design reference, frozen before modeling",
+    "camera_calibration_available": false
+  },
+  "source": {
+    "file": "model.json",
+    "sha256": "df7937f1b5917027be9ecd678d6a5713aaf5c5504e67b47ab024459d1e9c3e12",
+    "model_id": "0c6fde30-700c-5094-bc75-15a17bc5ecdc",
+    "revision": 11,
+    "generator": "author_model.py",
+    "generator_defaults_byte_identical": true,
+    "canonical_definition_bytes": 2690172,
+    "operations": {
+      "curveProfile": 20,
+      "refine": 20,
+      "transform": 20,
+      "loft": 1,
+      "shell": 1
+    },
+    "parameters": [
+      {
+        "name": "height",
+        "value": 180,
+        "minimum": 150,
+        "maximum": 210,
+        "unit": "mm"
+      },
+      {
+        "name": "bellyHeight",
+        "value": 84.6,
+        "minimum": 72,
+        "maximum": 96,
+        "unit": "mm"
+      },
+      {
+        "name": "bellyRadius",
+        "value": 73.0,
+        "minimum": 62,
+        "maximum": 76,
+        "unit": "mm"
+      },
+      {
+        "name": "baseRadius",
+        "value": 30,
+        "minimum": 26,
+        "maximum": 34,
+        "unit": "mm"
+      },
+      {
+        "name": "neckRadius",
+        "value": 14.5,
+        "minimum": 12.5,
+        "maximum": 16,
+        "unit": "mm"
+      },
+      {
+        "name": "bellyOffset",
+        "value": -10.0,
+        "minimum": -12,
+        "maximum": 0,
+        "unit": "mm"
+      },
+      {
+        "name": "neckOffset",
+        "value": 16.0,
+        "minimum": 16,
+        "maximum": 30,
+        "unit": "mm"
+      },
+      {
+        "name": "neckDepthOffset",
+        "value": -17,
+        "minimum": -22,
+        "maximum": -12,
+        "unit": "mm"
+      },
+      {
+        "name": "depthScale",
+        "value": 1.015,
+        "minimum": 0.94,
+        "maximum": 1.04,
+        "unit": "ratio"
+      },
+      {
+        "name": "lobeAmount",
+        "value": 0.12,
+        "minimum": 0.1,
+        "maximum": 0.27,
+        "unit": "ratio"
+      },
+      {
+        "name": "fluteDepth",
+        "value": 0.25,
+        "minimum": 0,
+        "maximum": 0.25,
+        "unit": "mm"
+      },
+      {
+        "name": "wall",
+        "value": 3,
+        "minimum": 2.5,
+        "maximum": 3.5,
+        "unit": "mm"
+      }
+    ],
+    "requirements": [
+      {
+        "id": "neck-wall",
+        "lhs": "wall",
+        "relation": "<",
+        "rhs": "neckRadius*.35",
+        "message": "Retain a bounded physical wall and open neck."
+      },
+      {
+        "id": "detail-curvature-margin",
+        "lhs": "wall*fluteDepth*2304*1.22",
+        "relation": "<",
+        "rhs": "pow(bellyRadius*(1-lobeAmount*1.416),2)*.75",
+        "message": "Keep a conservative ridge-curvature margin for the declared normal wall; kernel validation is still required."
+      }
+    ],
+    "output_requirements": [
+      {
+        "id": "one-solid",
+        "outputID": "2e0b7089-829d-551d-beb8-5bd3146bab9f",
+        "metric": "solids",
+        "relation": "==",
+        "value": 1,
+        "message": "Retain one valid material solid."
+      },
+      {
+        "id": "height",
+        "outputID": "2e0b7089-829d-551d-beb8-5bd3146bab9f",
+        "metric": "height",
+        "relation": "==",
+        "value": "height",
+        "tolerance": 0.2,
+        "message": "Retain the authored physical height."
+      },
+      {
+        "id": "material-not-filled",
+        "outputID": "2e0b7089-829d-551d-beb8-5bd3146bab9f",
+        "metric": "volume",
+        "relation": "<",
+        "value": "wall*height*bellyRadius*8",
+        "message": "Reject a filled body or grossly excessive material volume."
+      },
+      {
+        "id": "material-not-vanishing",
+        "outputID": "2e0b7089-829d-551d-beb8-5bd3146bab9f",
+        "metric": "volume",
+        "relation": ">",
+        "value": "wall*height*bellyRadius*3",
+        "message": "Reject a vanishing or grossly undersized material wall."
+      }
+    ]
+  },
+  "app": {
+    "executable_sha256": "0ace2600c78751dad4b134ed29da0d9653ff4fa7d1a5008556530e2caa099e91",
+    "build_configuration": "DEBUG",
+    "kernel_version": "8.0.1+form.gprop1",
+    "definition_submission_limit_bytes": 4194304
+  },
+  "nominal_geometry": {
+    "component": {
+      "brepAsset": "cad-081f6ce4a209f90aa8e98457701ce50581ee6360171e9769613e46bb71884bd1.brep",
+      "brepSHA256": "081f6ce4a209f90aa8e98457701ce50581ee6360171e9769613e46bb71884bd1",
+      "closed": true,
+      "edgeCount": 6,
+      "faceCount": 5,
+      "featureFingerprint": "ee781ab751207bfd90a35ee9c831862dfa0d4190b77b801a99aec14b58bf3f3b",
+      "id": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+      "maximum": {
+        "x": 69.48579941078214,
+        "y": 180.00000010000102,
+        "z": 77.07955387717361
+      },
+      "meshAsset": "cad-8c8a2ab129f0947c935f94b366bf587fb4263892e4e3c055c58990c83cb65115.mesh",
+      "meshSHA256": "8c8a2ab129f0947c935f94b366bf587fb4263892e4e3c055c58990c83cb65115",
+      "minimum": {
+        "x": -76.94087297683257,
+        "y": -1e-07,
+        "z": -79.57964926689183
+      },
+      "name": "True normal wall and open mouth",
+      "solidCount": 1,
+      "triangleCount": 498536,
+      "valid": true,
+      "vertexCount": 4,
+      "volumeMM3": 215977.6982621778
+    },
+    "all_saved_checks_retained": true,
+    "ready_seconds": 43.630327291,
+    "timing_scope": "Descriptive DEBUG quality run, not an algorithm comparison."
+  },
+  "visual_geometry": {
+    "approved": true,
+    "criteria": [
+      "silhouette and proportions",
+      "blended shoulder and neck",
+      "continuous readable modeled physical flutes",
+      "actual hollow opening in oblique views"
+    ],
+    "photoreal_equivalence": false,
+    "all_lighting_appearance_claim": false,
+    "unmatched": [
+      "photographic ceramic finish",
+      "illumination",
+      "cavity brightness"
+    ],
+    "images_unretouched": true,
+    "native_views": [
+      {
+        "view": "front",
+        "lighting": "soft-side-v1",
+        "file": "render-front-soft-side.png",
+        "sha256": "ab2ab22369f60508a8f4a8d4a9c38645ade8990f203aab77412d90884e363ba8",
+        "width": 1000,
+        "height": 1000,
+        "camera": {
+          "azimuth": 0,
+          "distance": 3.2,
+          "elevation": 0.24,
+          "projection": "orthographic",
+          "target": {
+            "x": -0.03754613617796238,
+            "y": 0.9000000000000411,
+            "z": -0.012247023733289808
+          },
+          "viewportAspect": 1
+        }
+      },
+      {
+        "view": "top",
+        "lighting": "soft-side-v1",
+        "file": "render-top-soft-side.png",
+        "sha256": "4e7a8a7ccbb87b47fd206502bc4e58e97f9db9eac41592cb95fdcb18a0accadc",
+        "width": 1000,
+        "height": 1000,
+        "camera": {
+          "azimuth": 0,
+          "distance": 3.2,
+          "elevation": 1.5707963267948966,
+          "projection": "orthographic",
+          "target": {
+            "x": -0.03754613617796238,
+            "y": 0.9000000000000411,
+            "z": -0.012247023733289808
+          },
+          "viewportAspect": 1
+        }
+      },
+      {
+        "view": "three-quarter",
+        "lighting": "soft-side-v1",
+        "file": "render-three-quarter-soft-side.png",
+        "sha256": "bce6a00784acd593ed49127d599d9aed78ed002f0291fb2b2dc24b9c933fc7ad",
+        "width": 1000,
+        "height": 1000,
+        "camera": {
+          "azimuth": -0.55,
+          "distance": 3.2,
+          "elevation": 0.5,
+          "projection": "orthographic",
+          "target": {
+            "x": -0.03754613617796238,
+            "y": 0.9000000000000411,
+            "z": -0.012247023733289808
+          },
+          "viewportAspect": 1
+        }
+      },
+      {
+        "view": "front",
+        "lighting": "rim-v1",
+        "file": "render-front.png",
+        "sha256": "e205dcfa8543ef0d8107aed54fadb6df9d9c6d966b7fedee1d46cc7460399b03",
+        "width": 1000,
+        "height": 1000,
+        "camera": {
+          "azimuth": 0,
+          "distance": 3.2,
+          "elevation": 0.24,
+          "projection": "orthographic",
+          "target": {
+            "x": -0.03754613617796238,
+            "y": 0.9000000000000411,
+            "z": -0.012247023733289808
+          },
+          "viewportAspect": 1
+        }
+      },
+      {
+        "view": "top",
+        "lighting": "rim-v1",
+        "file": "render-top.png",
+        "sha256": "589f39642565f6295d4cfbbeaf5ca7b1275f7ffc83dfc576e03b30894eb292b4",
+        "width": 1000,
+        "height": 1000,
+        "camera": {
+          "azimuth": 0,
+          "distance": 3.2,
+          "elevation": 1.5707963267948966,
+          "projection": "orthographic",
+          "target": {
+            "x": -0.03754613617796238,
+            "y": 0.9000000000000411,
+            "z": -0.012247023733289808
+          },
+          "viewportAspect": 1
+        }
+      },
+      {
+        "view": "three-quarter",
+        "lighting": "rim-v1",
+        "file": "render-three-quarter.png",
+        "sha256": "5b82b4a61b1e20fa83ce3b60fce51566a484795e16db942d216621e43b18ab2c",
+        "width": 1000,
+        "height": 1000,
+        "camera": {
+          "azimuth": -0.55,
+          "distance": 3.2,
+          "elevation": 0.5,
+          "projection": "orthographic",
+          "target": {
+            "x": -0.03754613617796238,
+            "y": 0.9000000000000411,
+            "z": -0.012247023733289808
+          },
+          "viewportAspect": 1
+        }
+      }
+    ]
+  },
+  "source_continuity": {
+    "source_sha256": "df7937f1b5917027be9ecd678d6a5713aaf5c5504e67b47ab024459d1e9c3e12",
+    "model_id": "0c6fde30-700c-5094-bc75-15a17bc5ecdc",
+    "definition_revision": 11,
+    "profiles": 20,
+    "bezier_spans_per_profile": 192,
+    "joins": 3840,
+    "curve_scalar_coordinates": 30720,
+    "canonical_definition_bytes": 2690172,
+    "physical_flutes": 48,
+    "radial_flute_amplitude_mm": 0.25,
+    "source_continuity_at_nominal_values": {
+      "endpoint_mm": 0.0,
+      "first_derivative_mm": 5.403945945459738e-10,
+      "second_derivative_mm": 1.1414452917127829e-09,
+      "tangent_angle_rad": 2.3171803090076928e-10
+    },
+    "method": "Resolve authored Bezier controls with nominal parameters and full affine placement; compare adjoining endpoint and first/second derivatives, including periodic closing joins. This source arithmetic check is separate from native solid/parameter/visual acceptance."
+  },
+  "sampled_axial_fit": {
+    "source": "/Users/rustymeadows/Dev/form/.local/validation/organic-v8-session/refined-20-48-depth-maximum.json",
+    "mesh": "/Users/rustymeadows/Dev/form/.local/validation/organic-v8-session/Library/A7C3D8F9-4954-4680-8FA6-A94F7D898B57.form/Assets/cad-8c8a2ab129f0947c935f94b366bf587fb4263892e4e3c055c58990c83cb65115.mesh",
+    "sampled_side_vertices": 15791,
+    "face_id": 1,
+    "angular_model": "Exact authored periodic cubic B-spline evaluation, not ideal sine approximation.",
+    "point_deviation_mm": {
+      "median": 0.004456282360488227,
+      "p95": 0.06477352688529105,
+      "max": 0.13715060706326115
+    },
+    "normal_deviation_degrees": {
+      "median": 0.06846556107862607,
+      "p95": 0.6429138783615116,
+      "max": 1.9243726908909002
+    },
+    "per_height": [
+      {
+        "height_mm": [
+          0,
+          32
+        ],
+        "count": 2063,
+        "point_p95": 0.028419734459289882,
+        "normal_p95": 0.17354744277164427
+      },
+      {
+        "height_mm": [
+          32,
+          64
+        ],
+        "count": 3866,
+        "point_p95": 0.016888307231629887,
+        "normal_p95": 0.2225226167810604
+      },
+      {
+        "height_mm": [
+          64,
+          96
+        ],
+        "count": 4194,
+        "point_p95": 0.0978700900001905,
+        "normal_p95": 0.7659493582110236
+      },
+      {
+        "height_mm": [
+          96,
+          128
+        ],
+        "count": 3886,
+        "point_p95": 0.017545879551916332,
+        "normal_p95": 0.2365734016659367
+      },
+      {
+        "height_mm": [
+          128,
+          160
+        ],
+        "count": 1384,
+        "point_p95": 0.0889415669127088,
+        "normal_p95": 1.1580812181268305
+      },
+      {
+        "height_mm": [
+          160,
+          180
+        ],
+        "count": 398,
+        "point_p95": 0.10366792422653244,
+        "normal_p95": 1.76644737393442
+      }
+    ]
+  },
+  "shape_comparisons": [
+    {
+      "image": "/Users/rustymeadows/Dev/form/.local/validation/organic-v9-session/depth-maximum-paired/depth025-soft-side-v1-front.render/depth025-soft-side-v1-front.png",
+      "image_sha256": "ab2ab22369f60508a8f4a8d4a9c38645ade8990f203aab77412d90884e363ba8",
+      "reference_sha256": "0598ba5345aba541a50e93ad40f7c671bf32f7ad433e696a838b4254b5b38ae5",
+      "view": "front",
+      "registration": "Centroid translation and equal-area uniform scale; no rotation, stretch or local warp.",
+      "outer_silhouette_iou": 0.9463324851398514,
+      "reference_height_width": 1.2796610169491525,
+      "render_height_width": 1.294488188976378,
+      "reference_mask_pixels": 193498,
+      "render_mask_pixels": 361160,
+      "visual_acceptance": "Not determined by these metrics. Inspect all views, blends, relief and cavity; validate the physical model separately.",
+      "lighting": "soft-side-v1",
+      "camera": {
+        "azimuth": 0,
+        "distance": 3.2,
+        "elevation": 0.24,
+        "projection": "orthographic",
+        "target": {
+          "x": -0.03754613617796238,
+          "y": 0.9000000000000411,
+          "z": -0.012247023733289808
+        },
+        "viewportAspect": 1
+      }
+    },
+    {
+      "image": "/Users/rustymeadows/Dev/form/.local/validation/organic-v9-session/depth-maximum-paired/depth025-soft-side-v1-top.render/depth025-soft-side-v1-top.png",
+      "image_sha256": "4e7a8a7ccbb87b47fd206502bc4e58e97f9db9eac41592cb95fdcb18a0accadc",
+      "reference_sha256": "0598ba5345aba541a50e93ad40f7c671bf32f7ad433e696a838b4254b5b38ae5",
+      "view": "top",
+      "registration": "Centroid translation and equal-area uniform scale; no rotation, stretch or local warp.",
+      "outer_silhouette_iou": 0.9692728039233475,
+      "reference_height_width": 1.0778947368421052,
+      "render_height_width": 1.0692913385826772,
+      "reference_mask_pixels": 184510,
+      "render_mask_pixels": 322609,
+      "visual_acceptance": "Not determined by these metrics. Inspect all views, blends, relief and cavity; validate the physical model separately.",
+      "reference_normalized_radial_harmonics": {
+        "mean": 1.0,
+        "cos1": 0.002338377239940945,
+        "sin1": -0.002254956279838544,
+        "cos2": -0.018929948302903517,
+        "sin2": -0.023236307149401576,
+        "cos3": 0.11665167189798722,
+        "sin3": -0.020077682679673362,
+        "cos4": -0.009419523235462121,
+        "sin4": -0.004412600742214043,
+        "cos5": 3.3607118191983895e-05,
+        "sin5": 0.014700828165383603,
+        "cos6": -0.021312131231419874,
+        "sin6": 0.011013504897186688
+      },
+      "render_normalized_radial_harmonics": {
+        "mean": 1.0,
+        "cos1": 0.003209556721398885,
+        "sin1": -0.0011014776219675571,
+        "cos2": -0.01785225360941001,
+        "sin2": -0.002601354961343081,
+        "cos3": 0.11686266773598042,
+        "sin3": -0.019360609666120913,
+        "cos4": -0.009139867805542705,
+        "sin4": 0.005337749530020415,
+        "cos5": 0.0006872714947603586,
+        "sin5": -0.00013908783194492753,
+        "cos6": -0.01896264096284605,
+        "sin6": 0.006564798598756551
+      },
+      "lighting": "soft-side-v1",
+      "camera": {
+        "azimuth": 0,
+        "distance": 3.2,
+        "elevation": 1.5707963267948966,
+        "projection": "orthographic",
+        "target": {
+          "x": -0.03754613617796238,
+          "y": 0.9000000000000411,
+          "z": -0.012247023733289808
+        },
+        "viewportAspect": 1
+      }
+    },
+    {
+      "image": "/Users/rustymeadows/Dev/form/.local/validation/organic-v9-session/depth-maximum-paired/depth025-soft-side-v1-three-quarter.render/depth025-soft-side-v1-three-quarter.png",
+      "image_sha256": "bce6a00784acd593ed49127d599d9aed78ed002f0291fb2b2dc24b9c933fc7ad",
+      "reference_sha256": "0598ba5345aba541a50e93ad40f7c671bf32f7ad433e696a838b4254b5b38ae5",
+      "view": "three-quarter",
+      "registration": "Centroid translation and equal-area uniform scale; no rotation, stretch or local warp.",
+      "outer_silhouette_iou": 0.8668320423112026,
+      "reference_height_width": 1.2803347280334727,
+      "render_height_width": 1.2309985096870342,
+      "reference_mask_pixels": 199432,
+      "render_mask_pixels": 372112,
+      "visual_acceptance": "Not determined by these metrics. Inspect all views, blends, relief and cavity; validate the physical model separately.",
+      "lighting": "soft-side-v1",
+      "camera": {
+        "azimuth": -0.55,
+        "distance": 3.2,
+        "elevation": 0.5,
+        "projection": "orthographic",
+        "target": {
+          "x": -0.03754613617796238,
+          "y": 0.9000000000000411,
+          "z": -0.012247023733289808
+        },
+        "viewportAspect": 1
+      }
+    },
+    {
+      "image": "/Users/rustymeadows/Dev/form/.local/validation/organic-v9-session/depth-maximum-paired/depth025-rim-v1-front.render/depth025-rim-v1-front.png",
+      "image_sha256": "e205dcfa8543ef0d8107aed54fadb6df9d9c6d966b7fedee1d46cc7460399b03",
+      "reference_sha256": "0598ba5345aba541a50e93ad40f7c671bf32f7ad433e696a838b4254b5b38ae5",
+      "view": "front",
+      "registration": "Centroid translation and equal-area uniform scale; no rotation, stretch or local warp.",
+      "outer_silhouette_iou": 0.9464677247400076,
+      "reference_height_width": 1.2796610169491525,
+      "render_height_width": 1.294488188976378,
+      "reference_mask_pixels": 193498,
+      "render_mask_pixels": 361124,
+      "visual_acceptance": "Not determined by these metrics. Inspect all views, blends, relief and cavity; validate the physical model separately.",
+      "lighting": "rim-v1",
+      "camera": {
+        "azimuth": 0,
+        "distance": 3.2,
+        "elevation": 0.24,
+        "projection": "orthographic",
+        "target": {
+          "x": -0.03754613617796238,
+          "y": 0.9000000000000411,
+          "z": -0.012247023733289808
+        },
+        "viewportAspect": 1
+      }
+    },
+    {
+      "image": "/Users/rustymeadows/Dev/form/.local/validation/organic-v9-session/depth-maximum-paired/depth025-rim-v1-top.render/depth025-rim-v1-top.png",
+      "image_sha256": "589f39642565f6295d4cfbbeaf5ca7b1275f7ffc83dfc576e03b30894eb292b4",
+      "reference_sha256": "0598ba5345aba541a50e93ad40f7c671bf32f7ad433e696a838b4254b5b38ae5",
+      "view": "top",
+      "registration": "Centroid translation and equal-area uniform scale; no rotation, stretch or local warp.",
+      "outer_silhouette_iou": 0.9694799477012568,
+      "reference_height_width": 1.0778947368421052,
+      "render_height_width": 1.0692913385826772,
+      "reference_mask_pixels": 184510,
+      "render_mask_pixels": 322536,
+      "visual_acceptance": "Not determined by these metrics. Inspect all views, blends, relief and cavity; validate the physical model separately.",
+      "reference_normalized_radial_harmonics": {
+        "mean": 1.0,
+        "cos1": 0.002338377239940945,
+        "sin1": -0.002254956279838544,
+        "cos2": -0.018929948302903517,
+        "sin2": -0.023236307149401576,
+        "cos3": 0.11665167189798722,
+        "sin3": -0.020077682679673362,
+        "cos4": -0.009419523235462121,
+        "sin4": -0.004412600742214043,
+        "cos5": 3.3607118191983895e-05,
+        "sin5": 0.014700828165383603,
+        "cos6": -0.021312131231419874,
+        "sin6": 0.011013504897186688
+      },
+      "render_normalized_radial_harmonics": {
+        "mean": 1.0,
+        "cos1": 0.0031585903856058127,
+        "sin1": -0.0010959316241301298,
+        "cos2": -0.0179161150732248,
+        "sin2": -0.0028469496055491777,
+        "cos3": 0.11670903349387225,
+        "sin3": -0.0194121924078282,
+        "cos4": -0.009010139150786571,
+        "sin4": 0.005542560379016964,
+        "cos5": 0.0007495639892371089,
+        "sin5": -0.0001925003357108381,
+        "cos6": -0.019080507322578537,
+        "sin6": 0.006493239018489838
+      },
+      "lighting": "rim-v1",
+      "camera": {
+        "azimuth": 0,
+        "distance": 3.2,
+        "elevation": 1.5707963267948966,
+        "projection": "orthographic",
+        "target": {
+          "x": -0.03754613617796238,
+          "y": 0.9000000000000411,
+          "z": -0.012247023733289808
+        },
+        "viewportAspect": 1
+      }
+    },
+    {
+      "image": "/Users/rustymeadows/Dev/form/.local/validation/organic-v9-session/depth-maximum-paired/depth025-rim-v1-three-quarter.render/depth025-rim-v1-three-quarter.png",
+      "image_sha256": "5b82b4a61b1e20fa83ce3b60fce51566a484795e16db942d216621e43b18ab2c",
+      "reference_sha256": "0598ba5345aba541a50e93ad40f7c671bf32f7ad433e696a838b4254b5b38ae5",
+      "view": "three-quarter",
+      "registration": "Centroid translation and equal-area uniform scale; no rotation, stretch or local warp.",
+      "outer_silhouette_iou": 0.8667917887465014,
+      "reference_height_width": 1.2803347280334727,
+      "render_height_width": 1.2309985096870342,
+      "reference_mask_pixels": 199432,
+      "render_mask_pixels": 372086,
+      "visual_acceptance": "Not determined by these metrics. Inspect all views, blends, relief and cavity; validate the physical model separately.",
+      "lighting": "rim-v1",
+      "camera": {
+        "azimuth": -0.55,
+        "distance": 3.2,
+        "elevation": 0.5,
+        "projection": "orthographic",
+        "target": {
+          "x": -0.03754613617796238,
+          "y": 0.9000000000000411,
+          "z": -0.012247023733289808
+        },
+        "viewportAspect": 1
+      }
+    }
+  ],
+  "finite_parameter_campaign": {
+    "status": "complete",
+    "source_sha256": "df7937f1b5917027be9ecd678d6a5713aaf5c5504e67b47ab024459d1e9c3e12",
+    "source_model_id": "0c6fde30-700c-5094-bc75-15a17bc5ecdc",
+    "source_definition_revision": 11,
+    "declared_cases": 30,
+    "native_geometry_passes": 27,
+    "expected_authored_guard_rejections": 3,
+    "unexpected_final_failures": [],
+    "endpoint_aliases": [
+      {
+        "name": "neckOffset.minimum",
+        "represented_by": "nominal",
+        "value": 16
+      },
+      {
+        "name": "fluteDepth.maximum",
+        "represented_by": "nominal",
+        "value": 0.25
+      }
+    ],
+    "interpretation": "Finite explicit cases only, not a continuous range proof. Expected authored guards remain real failed case outcomes, not native geometry passes or proofs of physical impossibility.",
+    "state_invariants": {
+      "all_30_cases_retained": true,
+      "baseline_state_isolated": true,
+      "source_bytes_unchanged": true,
+      "nominal_one_commit_undo_redo_reopen": true,
+      "published_definition_revision_pinned": true
+    },
+    "nominal_ready_seconds": 43.935758334,
+    "nominal_request_to_front_640x480_png_seconds": 44.767531875,
+    "case_report": "parameter-validation.json",
+    "case_matrix": "parameter-cases.csv",
+    "original_shared_budget_attempt": "original-shared-budget-attempt.json",
+    "requested_budget_seconds": 300,
+    "original_shared_budget_return_seconds": 353.6238813749999,
+    "original_interrupted_outcome": "budget_exceeded",
+    "same_value_individual_retry": {
+      "case": "bellyOffset.minimum",
+      "requested_budget_seconds": 300,
+      "passed": true,
+      "elapsed_seconds": 23.146434125
+    },
+    "raw_report": "/Users/rustymeadows/Dev/form/.local/validation/organic-parameter-campaign-final/takeover-report.json"
+  },
+  "saved_source_reopen": {
+    "source_sha256": "df7937f1b5917027be9ecd678d6a5713aaf5c5504e67b47ab024459d1e9c3e12",
+    "app_sha256": "0ace2600c78751dad4b134ed29da0d9653ff4fa7d1a5008556530e2caa099e91",
+    "build_configuration": "DEBUG",
+    "reopen_kind": "Terminate only verified owned process, launch fresh process, load saved project and render existing saved shots.",
+    "saved_object_source_representation_placement_and_history_unchanged": true,
+    "exact_and_display_asset_hashes_verified": true,
+    "all_three_saved_views_pixel_identical_after_reopen": true,
+    "passed": true,
+    "numeric_metadata": {
+      "current_kernel_version": "8.0.1+form.gprop1",
+      "recomputed_on_load": false,
+      "recorded_kernel_version": "8.0.1+form.gprop1",
+      "reevaluate_to_refresh": false,
+      "refresh_action": "Preview/evaluate the source, inspect the result, then commit to replace saved numeric metadata in one Undo transaction.",
+      "source": "saved_representation",
+      "state": "current_kernel_build"
+    },
+    "views": [
+      {
+        "view": "front",
+        "sha256": "e205dcfa8543ef0d8107aed54fadb6df9d9c6d966b7fedee1d46cc7460399b03",
+        "pixels_equal_after_reopen": true,
+        "maximum_channel_difference": 0
+      },
+      {
+        "view": "top",
+        "sha256": "589f39642565f6295d4cfbbeaf5ca7b1275f7ffc83dfc576e03b30894eb292b4",
+        "pixels_equal_after_reopen": true,
+        "maximum_channel_difference": 0
+      },
+      {
+        "view": "three-quarter",
+        "sha256": "5b82b4a61b1e20fa83ce3b60fce51566a484795e16db942d216621e43b18ab2c",
+        "pixels_equal_after_reopen": true,
+        "maximum_channel_difference": 0
+      }
+    ],
+    "raw_report": "/Users/rustymeadows/Dev/form/.local/validation/organic-v9-session/saved-reopen/report.json"
+  },
+  "diagnostics": {
+    "broad_field": "Same-mesh shadows-off and finer tessellation did not remove the broad grazing response; analytic normal crosschecks and an independent Lambert oracle matched it. No unsupported renderer-corruption claim.",
+    "source_iteration_failure": "First20-station distribution rejected by unchanged height requirement at180.527601mm. Neck-transition source repair passed without relaxing checks.",
+    "earlier_source_and_history_preserved": true,
+    "raw_study_summary": "/Users/rustymeadows/Dev/form/.local/validation/organic-v9-session/source-study-summary.json",
+    "diagnostic_source_sha256": "1d0f4fc8bb25720fdfa178102079c5d4d1f5ed9b350f5fb07b385f658a32b868",
+    "diagnostic_brep_sha256": "86a37f2bae11adcaf394ebb325e28e58a20f60456f06ab006ca030859fdb0f26",
+    "scope": "Controlled renderer/normal diagnoses used the earlier15-station0.12mm relief source, separately identified here; they do not replace final-source images or parameter evidence."
+  },
+  "deadline_cancellation_followup": {
+    "file": "deadline-cancellation-followup.json",
+    "app_sha256": "a866054008c4ecc9dbc271c74ceeb629f95f05a6994e5aa5cd34904b6d23efd2",
+    "kernel_version": "8.0.1+form.gprop2",
+    "source_sha256": "df7937f1b5917027be9ecd678d6a5713aaf5c5504e67b47ab024459d1e9c3e12",
+    "mass_stage_scope_note": "Actual app sample proves cancellation while inside adaptive SURFACE AREA quadrature used by geometric face selection. Shell VOLUME publication was not sampled in this request; genuine volume+surface atomic cancellation are separately proven by tracked deterministic native controls.",
+    "genuine_gprop_quadrature_sample_observed": true,
+    "genuine_shell_gprop_sample_observed": false,
+    "sample_sha256": "7e7408e3070c3d1797eff4441a5cbeb7059428aeaf8719d128d9aa1a553f2970",
+    "requests": [
+      {
+        "budget_seconds": 2,
+        "elapsed_seconds": 2.1505548749999974,
+        "outcomes": [
+          {
+            "name": "neck-change-budget-2",
+            "outcome": "budget_exceeded",
+            "values": {
+              "baseRadius": 30,
+              "bellyHeight": 84.6,
+              "bellyOffset": -10,
+              "bellyRadius": 73,
+              "depthScale": 1.015,
+              "fluteDepth": 0.25,
+              "height": 180,
+              "lobeAmount": 0.12,
+              "neckDepthOffset": -17,
+              "neckOffset": 16,
+              "neckRadius": 12.5,
+              "wall": 3
+            }
+          },
+          {
+            "name": "not-run-after-deadline-2",
+            "outcome": "not_run",
+            "values": {
+              "baseRadius": 30,
+              "bellyHeight": 84.6,
+              "bellyOffset": -10,
+              "bellyRadius": 73,
+              "depthScale": 1.015,
+              "fluteDepth": 0.25,
+              "height": 210,
+              "lobeAmount": 0.12,
+              "neckDepthOffset": -17,
+              "neckOffset": 16,
+              "neckRadius": 14.5,
+              "wall": 3
+            }
+          }
+        ],
+        "project_source_history_unchanged": true,
+        "accepted_job_unchanged": true,
+        "canonical_saved_files_unchanged": true
+      },
+      {
+        "budget_seconds": 8,
+        "elapsed_seconds": 8.222543125000001,
+        "outcomes": [
+          {
+            "name": "neck-change-budget-8",
+            "outcome": "budget_exceeded",
+            "values": {
+              "baseRadius": 30,
+              "bellyHeight": 84.6,
+              "bellyOffset": -10,
+              "bellyRadius": 73,
+              "depthScale": 1.015,
+              "fluteDepth": 0.25,
+              "height": 180,
+              "lobeAmount": 0.12,
+              "neckDepthOffset": -17,
+              "neckOffset": 16,
+              "neckRadius": 12.5,
+              "wall": 3
+            }
+          },
+          {
+            "name": "not-run-after-deadline-8",
+            "outcome": "not_run",
+            "values": {
+              "baseRadius": 30,
+              "bellyHeight": 84.6,
+              "bellyOffset": -10,
+              "bellyRadius": 73,
+              "depthScale": 1.015,
+              "fluteDepth": 0.25,
+              "height": 210,
+              "lobeAmount": 0.12,
+              "neckDepthOffset": -17,
+              "neckOffset": 16,
+              "neckRadius": 14.5,
+              "wall": 3
+            }
+          }
+        ],
+        "project_source_history_unchanged": true,
+        "accepted_job_unchanged": true,
+        "canonical_saved_files_unchanged": true
+      }
+    ]
+  }
+}

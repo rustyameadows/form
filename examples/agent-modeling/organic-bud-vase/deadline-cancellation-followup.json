@@ -1,0 +1,101 @@
+{
+  "app_sha256": "a866054008c4ecc9dbc271c74ceeb629f95f05a6994e5aa5cd34904b6d23efd2",
+  "kernel_version": "8.0.1+form.gprop2",
+  "source_sha256": "df7937f1b5917027be9ecd678d6a5713aaf5c5504e67b47ab024459d1e9c3e12",
+  "mass_stage_scope_note": "Actual app sample proves cancellation while inside adaptive SURFACE AREA quadrature used by geometric face selection. Shell VOLUME publication was not sampled in this request; genuine volume+surface atomic cancellation are separately proven by tracked deterministic native controls.",
+  "genuine_gprop_quadrature_sample_observed": true,
+  "genuine_shell_gprop_sample_observed": false,
+  "sample_sha256": "7e7408e3070c3d1797eff4441a5cbeb7059428aeaf8719d128d9aa1a553f2970",
+  "requests": [
+    {
+      "budget_seconds": 2,
+      "elapsed_seconds": 2.1505548749999974,
+      "outcomes": [
+        {
+          "name": "neck-change-budget-2",
+          "outcome": "budget_exceeded",
+          "values": {
+            "baseRadius": 30,
+            "bellyHeight": 84.6,
+            "bellyOffset": -10,
+            "bellyRadius": 73,
+            "depthScale": 1.015,
+            "fluteDepth": 0.25,
+            "height": 180,
+            "lobeAmount": 0.12,
+            "neckDepthOffset": -17,
+            "neckOffset": 16,
+            "neckRadius": 12.5,
+            "wall": 3
+          }
+        },
+        {
+          "name": "not-run-after-deadline-2",
+          "outcome": "not_run",
+          "values": {
+            "baseRadius": 30,
+            "bellyHeight": 84.6,
+            "bellyOffset": -10,
+            "bellyRadius": 73,
+            "depthScale": 1.015,
+            "fluteDepth": 0.25,
+            "height": 210,
+            "lobeAmount": 0.12,
+            "neckDepthOffset": -17,
+            "neckOffset": 16,
+            "neckRadius": 14.5,
+            "wall": 3
+          }
+        }
+      ],
+      "project_source_history_unchanged": true,
+      "accepted_job_unchanged": true,
+      "canonical_saved_files_unchanged": true
+    },
+    {
+      "budget_seconds": 8,
+      "elapsed_seconds": 8.222543125000001,
+      "outcomes": [
+        {
+          "name": "neck-change-budget-8",
+          "outcome": "budget_exceeded",
+          "values": {
+            "baseRadius": 30,
+            "bellyHeight": 84.6,
+            "bellyOffset": -10,
+            "bellyRadius": 73,
+            "depthScale": 1.015,
+            "fluteDepth": 0.25,
+            "height": 180,
+            "lobeAmount": 0.12,
+            "neckDepthOffset": -17,
+            "neckOffset": 16,
+            "neckRadius": 12.5,
+            "wall": 3
+          }
+        },
+        {
+          "name": "not-run-after-deadline-8",
+          "outcome": "not_run",
+          "values": {
+            "baseRadius": 30,
+            "bellyHeight": 84.6,
+            "bellyOffset": -10,
+            "bellyRadius": 73,
+            "depthScale": 1.015,
+            "fluteDepth": 0.25,
+            "height": 210,
+            "lobeAmount": 0.12,
+            "neckDepthOffset": -17,
+            "neckOffset": 16,
+            "neckRadius": 14.5,
+            "wall": 3
+          }
+        }
+      ],
+      "project_source_history_unchanged": true,
+      "accepted_job_unchanged": true,
+      "canonical_saved_files_unchanged": true
+    }
+  ]
+}

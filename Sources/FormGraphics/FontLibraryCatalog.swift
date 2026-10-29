@@ -54,7 +54,7 @@ public struct InstalledFontFace:Equatable,Identifiable,Sendable {
       if let type=element.typography,type.fontName==face {types.append(type)}
       types += (element.textRuns ?? []).map(\.typography).filter{$0.fontName==face}
     }
-    for object in project.objects {for element in object.artwork?.elements ?? [] where element.kind=="text" && element.storyFrame==nil {collect(element)}}
+    for art in project.storedArtworks {for element in art.elements where element.kind=="text" && element.storyFrame==nil {collect(element)}}
     for story in project.textStories ?? [] {collect(story.sourceElement)}
     types += (project.textStyles ?? []).map(\.typography).filter{$0.fontName==face}
     let details=FontCatalog.details(face),axes=details["axes"] as? [[String:Any]] ?? [],features=details["features"] as? [[String:Any]] ?? []

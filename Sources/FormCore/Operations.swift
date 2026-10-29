@@ -73,6 +73,8 @@ public final class OperationEngine {
     selection = selection.intersection(Set(previous.objects.map(\.id)))
     lastCoalesce = nil
   }
+  /// Native command adapters may preserve a matching gesture without exposing its mutable state.
+  public func isInteracting(with key:String)->Bool {interaction==key}
   @discardableResult public func beginInteraction(_ key:String)->UUID {
     if interaction==key,let token=interactionGeneration {return token}
     endInteraction()
@@ -144,6 +146,8 @@ public final class OperationEngine {
     switch name {
     case "form_studio_scene":return try StudioSceneCommands.call(engine:self,arguments:a,source:source)
     case "form_paper":return try PaperCommands.call(engine:self,arguments:a,source:source)
+    case "form_construction":return try ConstructionCommands.call(engine:self,arguments:a,source:source)
+    case "form_surface":return try PhysicalSurfaceCommands.call(engine:self,arguments:a,source:source)
     case "form_status":
       return [
         "application": LabIdentity.name, "version": LabIdentity.version,
@@ -187,8 +191,11 @@ public final class OperationEngine {
       guard let object = project?.objects.first(where: { $0.id == id }) else {
         throw FormError.missing("Object not found.")
       }
-      let art = project!.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
-      return try jsonObject(a["resolved"] as? Bool == true ? project!.resolvingComponents(in: art) : art)
+      let context=try a["physical_frame"].map{try PhysicalArtworkFrameContext.resolve(in:project!,objectID:id,raw:$0)}
+      let owner=context.flatMap{value in project!.objects.first{$0.id==value.sourceObjectID}} ?? object
+      let art=project!.editableArtwork(owner) ?? Artwork(background:"#FFFFFF")
+      let resolved=a["resolved"] as? Bool == true ? try project!.resolvingComponents(in:art):art
+      return try jsonObject(context?.frame.display(resolved) ?? resolved)
     case "form_component":
       let command = try string("command")
       if command == "list" {
@@ -324,12 +331,20 @@ public final class OperationEngine {
       }
       return result
     case "form_edit_artwork":
+      if a["physical_frame"] != nil,ArtworkTransferCommands.recognizes(name,a) {
+        throw FormError.invalid("Portable transfers use their canonical source contract; physical_frame is not supported for file transfers.")
+      }
       if ArtworkTransferCommands.recognizes(name,a) {
         guard let onGraphics else{throw FormError.missing("Portable artwork transfer requires the running LAB app.")}
         var input=a;input["_source"]=source;return try onGraphics(name,input)
       }
-      let id = try objectID()
-      let command = try string("command")
+      let physicalID=try objectID()
+      let context=try a["physical_frame"].map{try PhysicalArtworkFrameContext.resolve(in:requireProject(),objectID:physicalID,raw:$0)}
+      let id=context?.sourceObjectID ?? physicalID
+      let command=try string("command")
+      if context != nil,["page_setup","transfer","garment_block","pattern_piece","seam_pair","pattern_template","cut_layout","pattern_tiles"].contains(command) {
+        throw FormError.invalid("This source/process command does not accept physical_frame; use its canonical source contract.")
+      }
       let ids = a["element_ids"] == nil ? Set<UUID>() : try idsArgument(a["element_ids"])
       var selected = Set<UUID>()
       if command == "page_setup" {
@@ -374,8 +389,13 @@ public final class OperationEngine {
           throw FormError.missing("Object not found.")
         }
         if ["font","optical","character_position","paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template","cut_layout","pattern_tiles"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
-        var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
+        if let context,(p.objects.first{$0.id==context.physicalObjectID}?.locked == true || p.artworkOwner(object).locked) {
+          throw FormError.invalid("Unlock the construction and its artwork source before editing a physical frame.")
+        }
+        let original=p.editableArtwork(object) ?? Artwork(background:"#FFFFFF")
+        var art=original
         if try PublicationCommands.editText(in:&p,objectID:id,ids:ids,command:command,arguments:a,prepareGlyph:onPrepareGlyph,prepareParagraphs:onPrepareParagraphs,prepareOptical:onPrepareOptical) {selected=ids;return}
+        if let context {art=context.frame.display(original)}
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
         if command=="optical" {try onPrepareOptical?(art,ids,a)}
         if ["font","optical","character_position"].contains(command) {try onPrepareParagraphs?(&art,art.swatchPaintTargets(for:ids))}
@@ -391,11 +411,14 @@ public final class OperationEngine {
           let targets=command=="language" ? Set(art.elements.map(\.id)):art.swatchPaintTargets(for:ids)
           try onPrepareParagraphs?(&art,targets)
         }
-        try p.setArtwork(art, for: id)
+        let canonical=try context.map{try $0.frame.source(from:art,original:original)} ?? art
+        try p.setArtwork(canonical,for:id)
       }
       return ["selected_elements": selected.map(\.uuidString)]
     case "form_edit_path":
-      let id = try objectID()
+      let physicalID=try objectID()
+      let context=try a["physical_frame"].map{try PhysicalArtworkFrameContext.resolve(in:requireProject(),objectID:physicalID,raw:$0)}
+      let id=context?.sourceObjectID ?? physicalID
       let elementIDs: Set<UUID>
       if let raw = a["element_ids"] {
         guard a["element_id"] == nil, let values = raw as? [String], !values.isEmpty else {
@@ -424,15 +447,20 @@ public final class OperationEngine {
         coalescing: source == "Studio" && interaction == "artwork-\(id)" ? "artwork-\(id)" : nil
       ) { p in
         guard let object = p.objects.first(where: { $0.id == id }),
-          var art = p.editableArtwork(object)
+          let original = p.editableArtwork(object)
         else {
           throw FormError.missing("Path element not found.")
         }
+        if let context,(p.objects.first{$0.id==context.physicalObjectID}?.locked == true || p.artworkOwner(object).locked) {
+          throw FormError.invalid("Unlock the construction and its artwork source before editing a physical frame.")
+        }
+        var art=context?.frame.display(original) ?? original
         let result = try PathCommands.edit(
           operation, artwork: &art, elements: elementIDs, nodes: nodes, arguments: a)
         selectedNodes = result.nodes
         selectedElements = result.elements
-        try p.setArtwork(art, for: id)
+        let canonical=try context.map{try $0.frame.source(from:art,original:original)} ?? art
+        try p.setArtwork(canonical,for:id)
       }
       return [
         "selected_nodes": selectedNodes.map(\.uuidString),
@@ -534,11 +562,15 @@ public final class OperationEngine {
           let recipe = p.recipe(p.objects[index].recipeID)
         else { throw FormError.missing("Object not found.") }
         if p.objects[index].patternAssembly != nil, !params.isEmpty || a["material_id"] != nil || a["color"] != nil || a["fabric_pattern"] != nil {throw FormError.invalid("Edit original pattern geometry and per-panel fabric snapshots through form_cloth configure. The assembly has no independent parametric solid or global finish.")}
+        if p.objects[index].locked,(!params.isEmpty && p.objects[index].artworkParameterBindings?.isEmpty == false || a["artwork_parameter_bindings"] != nil) {
+          throw FormError.invalid("Unlock the canonical artwork source before editing its parameters or bindings.")
+        }
         let merged = p.objects[index].parameters.merging(params) { _, new in new }
         try recipe.validate(merged)
         let oldCloth=p.objects[index].cloth
         if oldCloth != nil,!params.isEmpty,p.objects[index].locked {throw FormError.invalid("Unlock the cloth source before rebuilding its mesh.")}
         p.objects[index].parameters = merged
+        if let raw=a["artwork_parameter_bindings"] {p.objects[index].artworkParameterBindings=try ArtworkParameterBindings.decode(raw)}
         if !params.isEmpty,ClothDesign.recipeIDs.contains(p.objects[index].recipeID) {
           let rebuilt=try ClothDesign.definition(for:p.objects[index],settings:oldCloth?.settings)
           try p.setCloth(rebuilt,for:id)
@@ -608,6 +640,13 @@ public final class OperationEngine {
               try p.setCloth(definition,for:linkedID)
             }
           }
+        }
+        if !params.isEmpty || a["artwork_parameter_bindings"] != nil {
+          // Preserve the established shared-parameter family before resolving
+          // any member's own canonical artwork fields from those controls.
+          let design=p.objects[index].designID
+          let owners=p.objects.filter{$0.designID==design && $0.artworkParameterBindings?.isEmpty == false}.map(\.id)
+          for owner in owners {try p.applyArtworkParameterBindings(to:owner)}
         }
         let shared=p.objects[index].relationship=="variant" || p.objects.contains{$0.designID==p.objects[index].designID&&$0.relationship=="variant"}
         for i in p.objects.indices where PaperConstruction.isPaper(p.objects[i]) && (p.objects[i].id==id || shared&&p.objects[i].designID==p.objects[index].designID){
@@ -885,8 +924,8 @@ public func decodeRecipe(_ value: [String: Any]) throws -> Recipe {
     id.range(of: "^[a-zA-Z][a-zA-Z0-9_]{0,63}$", options: .regularExpression) != nil,
     let name = value["name"] as? String, !name.isEmpty,
     let params = value["parameters"] as? [[String: Any]], !params.isEmpty, params.count <= 24,
-    let parts = value["parts"] as? [[String: Any]], !parts.isEmpty, parts.count <= 100
-  else { throw FormError.invalid("A recipe needs an ID, name, 1–24 parameters, and 1–100 parts.") }
+    let parts = value["parts"] as? [[String: Any]], parts.count <= 100
+  else { throw FormError.invalid("A recipe needs an ID, name, 1–24 parameters, and 0–100 primitive parts. An independent canonical artwork source may use an empty parts array.") }
   let parameters: [Parameter] = try params.map { p in
     guard let key = p["id"] as? String, key != "pi",
       key.range(of: "^[a-zA-Z][a-zA-Z0-9_]{0,47}$", options: .regularExpression) != nil,

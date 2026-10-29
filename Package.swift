@@ -2,7 +2,7 @@
 import PackageDescription
 import Foundation
 
-let occtRoot = ProcessInfo.processInfo.environment["LAB_OCCT_ROOT"] ?? URL(fileURLWithPath: #filePath).deletingLastPathComponent().appendingPathComponent(".local/engines/occt-8.0.1").path
+let occtRoot = ProcessInfo.processInfo.environment["LAB_OCCT_ROOT"] ?? URL(fileURLWithPath: #filePath).deletingLastPathComponent().appendingPathComponent(".local/engines/occt-8.0.1-form-gprop2").path
 let occtLibraries = ["TKernel","TKMath","TKG2d","TKG3d","TKGeomBase","TKBRep","TKGeomAlgo","TKTopAlgo","TKPrim","TKBO","TKBool","TKFillet","TKOffset","TKMesh","TKShHealing","TKXSBase","TKDESTEP","TKLCAF","TKCAF","TKXCAF","TKCDF"]
 
 

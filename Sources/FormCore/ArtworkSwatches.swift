@@ -66,8 +66,8 @@ extension Project {
       else { throw FormError.invalid("Use a swatch name of 1–100 characters and sRGB color.") }
       try validateColor(value.color)
     }
-    for object in objects {
-      guard (object.artwork?.referencedSwatches ?? []).isSubset(of: ids) else {
+    for art in storedArtworks {
+      guard art.referencedSwatches.isSubset(of: ids) else {
         throw FormError.invalid("Artwork references a missing project swatch.")
       }
     }
@@ -157,8 +157,8 @@ public enum SwatchCommands {
     if project.productionInk(id) != nil,project.productionInkIsReferenced(id) {throw FormError.invalid("Convert this used production ink to RGB preview before deleting it.")}
     var candidate = project
     for i in candidate.objects.indices {
-      if let art = candidate.objects[i].artwork, art.referencedSwatches.contains(id) {
-        candidate.objects[i].artwork = project.resolvingSwatches(in: art, only: [id])
+      candidate.objects[i].updateStoredArtworks{art in
+        if art.referencedSwatches.contains(id){art=project.resolvingSwatches(in:art,only:[id])}
       }
     }
     candidate.swatches?.removeAll { $0.id == id }

@@ -110,6 +110,7 @@ struct AssemblyBuildBudget {
   var used=0
   var limit:Int
   mutating func charge(_ count:Int = 1)throws {
+    try Task.checkCancellation()
     guard count>=0,used<=limit-count else {throw FormError.invalid("Assembly source sampling/meshing exceeded its declared work budget. Simplify the source, increase spacing, or select fewer panels.")};used+=count
   }
   var remaining:Int {limit-used}

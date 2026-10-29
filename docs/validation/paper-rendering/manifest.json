@@ -1,0 +1,246 @@
+{
+  "baseline_executable_sha256": "0153ebb0e3b827da59e9d7dab544beb24e3a641cb466da08ca9726fef062b227",
+  "fixed_executable_sha256": "dff597455bb86ead46045541392c99e14f2208c710d29e0b60710821975fb259",
+  "capture_pipeline": "Public form_set_view Studio capture + form_export PNG; actual RealityKit native rendering.",
+  "images": {
+    "before-converted-front.png": {
+      "sha256": "ad1b21671996f963c4eeb4b1365acb3911bce9db387e80951bd52686f585ae8c",
+      "pixels": [
+        1000,
+        1000
+      ],
+      "retouched": false
+    },
+    "fixed-converted-back.png": {
+      "sha256": "0339b999057af7b460794efbe2a7e895880bd4936a0c4c477a625f54eea20fc3",
+      "pixels": [
+        1000,
+        1000
+      ],
+      "retouched": false
+    },
+    "pristine-front.png": {
+      "sha256": "fc58c1774514aebe2de1c2a4b23ae05c3b93bc673f4cee1a564e38c99683f70b",
+      "pixels": [
+        1000,
+        1000
+      ],
+      "retouched": false
+    },
+    "new-authored-four-panels.png": {
+      "sha256": "a78e11219e19769692e3c8db6f83cb43bc7af1ea5f0c8efd2609d3af9b1e935d",
+      "pixels": [
+        1000,
+        1000
+      ],
+      "retouched": false
+    },
+    "fixed-converted-front.png": {
+      "sha256": "c52fca9ee6419ed15e641490706892953a830373c08f9c5054af843aab5d6019",
+      "pixels": [
+        1000,
+        1000
+      ],
+      "retouched": false
+    },
+    "inside-readable-R.png": {
+      "sha256": "bbd9ec17e7239a3946d19e602c813281e4d655ae875528c814e447de6fbee2d8",
+      "pixels": [
+        640,
+        640
+      ],
+      "retouched": false
+    },
+    "outside-readable-R.png": {
+      "sha256": "1c6914b5a06419ea859b3cb98be2e55f6282250652418e531f5145aa82a726d7",
+      "pixels": [
+        640,
+        640
+      ],
+      "retouched": false
+    }
+  },
+  "blue_mask_predicate": "B > R +25 and B > G +12 and R <180 in decoded8bitRGB",
+  "pixel_results": [
+    {
+      "case": "pristine-front",
+      "blue_pixels": 27336
+    },
+    {
+      "case": "pristine-back",
+      "blue_pixels": 3381
+    },
+    {
+      "case": "converted-front",
+      "blue_pixels": 27336
+    },
+    {
+      "case": "converted-back",
+      "blue_pixels": 3381
+    },
+    {
+      "case": "retained-isolated-front",
+      "blue_pixels": 27336
+    },
+    {
+      "case": "retained-isolated-back",
+      "blue_pixels": 3381
+    }
+  ],
+  "conversion_blue_mask_iou": {
+    "front": {
+      "blue_mask_iou": 1.0,
+      "passed": true
+    },
+    "back": {
+      "blue_mask_iou": 1.0,
+      "passed": true
+    }
+  },
+  "source_artwork_preserved": true,
+  "source_placement_preserved": true,
+  "inside_outside_channel_checks": true,
+  "arbitrary_authored_color_pixels": {
+    "blue": 280302,
+    "red": 57556,
+    "green": 57808,
+    "purple": 73034
+  },
+  "retained_large_tote_removed_blue_pixels": [
+    348,
+    348
+  ],
+  "sample_registry": [
+    {
+      "template": "affinities",
+      "overview_review": "Four source/alternate/oak/graphite compositions visibly retain the wordmark and masked landscape.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "clothLab",
+      "overview_review": "NASA/grid drape, NASA seam panels and attached label visibly rendered in initial rest state.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "merchandise",
+      "overview_review": "Tee/cap/tote shapes and their NASA/ORBITAL decoration sources are visibly present.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "fieldGuide",
+      "overview_review": "Cover and both flowed-text pages rendered with illustration and body type.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "flightJacket",
+      "overview_review": "Both jacket colorways, chest/sleeve patches, tape and label sources rendered.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "clock",
+      "overview_review": "Both clocks retain numerals/signature and hands; independent flat source visible.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "cyanotype",
+      "overview_review": "Envelope now visibly carries Sun studies/leaf; paper stack and booklet remain distinct.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "cosmetics",
+      "overview_review": "STILL carton type, bottle and registered inside source frame rendered.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "lamps",
+      "overview_review": "Three complete colored lamps with hollow shades, stems and bases rendered.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "forms",
+      "overview_review": "Clay hollow vessel, wood block and metal cylinder rendered.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "giftShop",
+      "overview_review": "All seven intentionally unprinted merchandise blank shapes rendered.",
+      "overview_review_passed": true
+    },
+    {
+      "template": "pouchAssembly",
+      "overview_review": "Printed NASA pouch rest-state assembly and independent pattern source rendered.",
+      "overview_review_passed": true
+    }
+  ],
+  "inside_orientation": {
+    "status": "NATIVE_PHYSICAL_FRAME_PROOF_PASSED",
+    "earlier_package_observation": "Raw upright text in the front-registered inside source reads reflected from the physical inside.",
+    "contract": "Both sides currently use front-registered canonical coordinates and identicalUVs by design.",
+    "native_test_host_sha256": "6812d4756317155b83346e9db17f3271053b37733330ad357b63b3d4191673f1",
+    "native_test_methods": [
+      "PhysicalArtworkFrameRenderingTests.testUprightInsideArtworkUsesUnchangedGlobalUVAndActualReverseFacePixels",
+      "PhysicalArtworkFrameRenderingTests.testInsideWholeNetCanvasReflectsCutClipAndGuidesWithoutChangingRegisteredExport"
+    ],
+    "review": "Both actual physical faces show upright R, red upper-left, blue upper-right, green lower-right; global UVs and canonical export registration are preserved.",
+    "focused_run": {
+      "methods": 104,
+      "failures": 0,
+      "elapsed_seconds": 9.097
+    },
+    "packaged_repeat_pending": false,
+    "packaged_repeat": {
+      "executable_sha256": "3a056e34961e046e27b779f53a963fb3e273bbd7f1c587b0a8e3d39281f66bfc",
+      "complete_report": ".local/validation/sample-physical-frame-debug-r2/report.json",
+      "native_captures": 21,
+      "sample_overviews": 12,
+      "conversion_masks_iou": {
+        "front": 1.0,
+        "back": 1.0
+      },
+      "readable_frame_roundtrip": true,
+      "corrected_reverse_face_camera_report": ".local/validation/sample-physical-frame-debug-camera/report.json",
+      "corrected_reverse_face_camera_captures": 9,
+      "asymmetric_inside_marker_visually_upright": true
+    }
+  },
+  "reproducer": "scripts/verify_sample_visuals.py",
+  "reproducer_complete_run": {
+    "native_captures": 21,
+    "sample_overviews": 12,
+    "core_pixel_checks_passed": true,
+    "human_visual_review_still_required": false,
+    "review_scope": "All 12 actual overview images personally inspected; physical inside lettering separately inspected with reverse-face camera. This is not every backside or parameter combination."
+  },
+  "coverage_limit": "Every shipped template overview plus detailed paper paths; no claim about every backside, parameter envelope or manufacturing setting.",
+  "latest_packaged_repeat": {
+    "executable_sha256": "a866054008c4ecc9dbc271c74ceeb629f95f05a6994e5aa5cd34904b6d23efd2",
+    "runtime_version": "8.0.1+form.gprop2",
+    "report": ".local/validation/sample-gprop2-final/report.json",
+    "native_captures": 21,
+    "sample_overviews": 12,
+    "core_pixel_checks_passed": true,
+    "all21_pixel_identical_to_reviewed_prior_proofs": true,
+    "pixel_equivalence": ".local/validation/sample-gprop2-final/pixel-equivalence.json"
+  },
+  "prior_binding_source_repeat": {
+    "executable_sha256": "57661a707a36a905c332c5d61919731818fab920b3bfdfa9d54e1174062638f5",
+    "report": ".local/validation/sample-binding-source-final/report.json",
+    "native_captures": 21,
+    "sample_overviews": 12,
+    "core_pixel_checks_passed": true,
+    "all12_overviews_pixel_identical_to_personally_reviewed_prior": true,
+    "all9_core_views_pixel_identical_to_corrected_camera_proof": true,
+    "overview_equivalence": ".local/validation/sample-binding-source-final/overview-pixel-equivalence.json",
+    "core_equivalence": ".local/validation/sample-binding-source-final/core-pixel-equivalence.json"
+  },
+  "bounds_fixed_main_candidate": {
+    "app_sha256": "677276e2edc36cf0c559c137aa5fb0a544f9f58cfa848d574e610ac4fe11462a",
+    "report": ".local/validation/sample-main-merge-final/report.json",
+    "captures": 21,
+    "templates": 12,
+    "core_checks_passed": true,
+    "raw_byte_and_pixel_identical_pairs": 20,
+    "remaining_pair": "flightJacket: camera referenceAspect differed; matched-aspect render has identical decoded pixels and PNG image-data chunks, differing provenance text only.",
+    "matched_evidence": ".local/validation/sample-main-merge-final/matched-input-equivalence.json"
+  }
+}

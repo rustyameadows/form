@@ -1,0 +1,1144 @@
+{
+  "cad_state" : "live",
+  "events" : [
+    {
+      "global_point" : [
+        793.7265625,
+        550.14453125
+      ],
+      "held_buttons" : 1,
+      "kind" : 1,
+      "uptime" : 3703361.0179858753,
+      "window_point" : [
+        763.7265625,
+        391.85546875
+      ]
+    },
+    {
+      "global_point" : [
+        783.81640625,
+        594.45703125
+      ],
+      "held_buttons" : 1,
+      "kind" : 1,
+      "uptime" : 3703363.2869572504,
+      "window_point" : [
+        753.81640625,
+        347.54296875
+      ]
+    },
+    {
+      "global_point" : [
+        784.58984375,
+        594.45703125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.468999167,
+      "window_point" : [
+        754.58984375,
+        347.54296875
+      ]
+    },
+    {
+      "global_point" : [
+        788.91796875,
+        594.45703125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.476869917,
+      "window_point" : [
+        758.91796875,
+        347.54296875
+      ]
+    },
+    {
+      "global_point" : [
+        798.78125,
+        594.45703125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.4848190001,
+      "window_point" : [
+        768.78125,
+        347.54296875
+      ]
+    },
+    {
+      "global_point" : [
+        809.4375,
+        594.45703125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.4889184167,
+      "window_point" : [
+        779.4375,
+        347.54296875
+      ]
+    },
+    {
+      "global_point" : [
+        821.6328125,
+        594.45703125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.497139167,
+      "window_point" : [
+        791.6328125,
+        347.54296875
+      ]
+    },
+    {
+      "global_point" : [
+        834.5078125,
+        594.45703125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.5054627503,
+      "window_point" : [
+        804.5078125,
+        347.54296875
+      ]
+    },
+    {
+      "global_point" : [
+        847.015625,
+        594.45703125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.5137835834,
+      "window_point" : [
+        817.015625,
+        347.54296875
+      ]
+    },
+    {
+      "global_point" : [
+        861.83203125,
+        594.45703125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.522156042,
+      "window_point" : [
+        831.83203125,
+        347.54296875
+      ]
+    },
+    {
+      "global_point" : [
+        872.49609375,
+        594.73828125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.5306999586,
+      "window_point" : [
+        842.49609375,
+        347.26171875
+      ]
+    },
+    {
+      "global_point" : [
+        880.09375,
+        595.04296875
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.5388128334,
+      "window_point" : [
+        850.09375,
+        346.95703125
+      ]
+    },
+    {
+      "global_point" : [
+        887.62890625,
+        595.421875
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.5471610837,
+      "window_point" : [
+        857.62890625,
+        346.578125
+      ]
+    },
+    {
+      "global_point" : [
+        893.45703125,
+        596.109375
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.5554550001,
+      "window_point" : [
+        863.45703125,
+        345.890625
+      ]
+    },
+    {
+      "global_point" : [
+        898.36328125,
+        596.51171875
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.563894792,
+      "window_point" : [
+        868.36328125,
+        345.48828125
+      ]
+    },
+    {
+      "global_point" : [
+        901.86328125,
+        596.61328125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.5721579171,
+      "window_point" : [
+        871.86328125,
+        345.38671875
+      ]
+    },
+    {
+      "global_point" : [
+        904.01953125,
+        596.65625
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.5804867917,
+      "window_point" : [
+        874.01953125,
+        345.34375
+      ]
+    },
+    {
+      "global_point" : [
+        905.55078125,
+        596.671875
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.5886797085,
+      "window_point" : [
+        875.55078125,
+        345.328125
+      ]
+    },
+    {
+      "global_point" : [
+        906.5,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.5969739584,
+      "window_point" : [
+        876.5,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        907.328125,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.6055303751,
+      "window_point" : [
+        877.328125,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        907.94921875,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.6138019585,
+      "window_point" : [
+        877.94921875,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        908.32421875,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.6221221667,
+      "window_point" : [
+        878.32421875,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        908.65234375,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.6304436671,
+      "window_point" : [
+        878.65234375,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        908.96484375,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.6387693752,
+      "window_point" : [
+        878.96484375,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        909.265625,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.6470820834,
+      "window_point" : [
+        879.265625,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        909.55859375,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.6554297088,
+      "window_point" : [
+        879.55859375,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        909.8359375,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.6637216667,
+      "window_point" : [
+        879.8359375,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        910.125,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.6720941667,
+      "window_point" : [
+        880.125,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        910.42578125,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.6865009167,
+      "window_point" : [
+        880.42578125,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        910.703125,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.7115452918,
+      "window_point" : [
+        880.703125,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        910.73046875,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703363.9770627501,
+      "window_point" : [
+        880.73046875,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        910.53125,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703364.0184132918,
+      "window_point" : [
+        880.53125,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        910.3125,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703364.043268125,
+      "window_point" : [
+        880.3125,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        910.078125,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703364.076472417,
+      "window_point" : [
+        880.078125,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        909.84375,
+        596.67578125
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703364.1137160002,
+      "window_point" : [
+        879.84375,
+        345.32421875
+      ]
+    },
+    {
+      "global_point" : [
+        909.73046875,
+        596.7890625
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703364.121934792,
+      "window_point" : [
+        879.73046875,
+        345.2109375
+      ]
+    },
+    {
+      "global_point" : [
+        909.609375,
+        596.9296875
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703364.1484684586,
+      "window_point" : [
+        879.609375,
+        345.0703125
+      ]
+    },
+    {
+      "global_point" : [
+        909.48046875,
+        597.06640625
+      ],
+      "held_buttons" : 1,
+      "kind" : 6,
+      "uptime" : 3703364.2016105419,
+      "window_point" : [
+        879.48046875,
+        344.93359375
+      ]
+    },
+    {
+      "global_point" : [
+        909.48046875,
+        597.06640625
+      ],
+      "held_buttons" : 0,
+      "kind" : 2,
+      "uptime" : 3703364.3723313753,
+      "window_point" : [
+        879.48046875,
+        344.93359375
+      ]
+    },
+    {
+      "global_point" : [
+        783.890625,
+        602.640625
+      ],
+      "held_buttons" : 1,
+      "kind" : 1,
+      "uptime" : 3703365.1265637921,
+      "window_point" : [
+        753.890625,
+        339.359375
+      ]
+    },
+    {
+      "global_point" : [
+        749.49609375,
+        708.15625
+      ],
+      "held_buttons" : 1,
+      "kind" : 1,
+      "uptime" : 3703367.5138955005,
+      "window_point" : [
+        719.49609375,
+        233.84375
+      ]
+    },
+    {
+      "global_point" : [
+        760.015625,
+        658.90625
+      ],
+      "held_buttons" : 1,
+      "kind" : 1,
+      "uptime" : 3703369.4600592083,
+      "window_point" : [
+        730.015625,
+        283.09375
+      ]
+    },
+    {
+      "global_point" : [
+        719.93359375,
+        279.828125
+      ],
+      "held_buttons" : 0,
+      "kind" : 1,
+      "uptime" : 3703376.3348411252,
+      "window_point" : [
+        689.93359375,
+        662.171875
+      ]
+    },
+    {
+      "global_point" : [
+        719.93359375,
+        279.828125
+      ],
+      "held_buttons" : 0,
+      "kind" : 2,
+      "uptime" : 3703376.3400330837,
+      "window_point" : [
+        689.93359375,
+        662.171875
+      ]
+    },
+    {
+      "global_point" : [
+        779.87109375,
+        283
+      ],
+      "held_buttons" : 0,
+      "kind" : 1,
+      "uptime" : 3703378.1655839584,
+      "window_point" : [
+        749.87109375,
+        659
+      ]
+    },
+    {
+      "global_point" : [
+        779.87109375,
+        283
+      ],
+      "held_buttons" : 0,
+      "kind" : 2,
+      "uptime" : 3703378.1672887919,
+      "window_point" : [
+        749.87109375,
+        659
+      ]
+    },
+    {
+      "global_point" : [
+        832.7421875,
+        149.16015625
+      ],
+      "held_buttons" : 0,
+      "kind" : 1,
+      "uptime" : 3703379.3695892501,
+      "window_point" : [
+        802.7421875,
+        792.83984375
+      ]
+    },
+    {
+      "global_point" : [
+        850.51953125,
+        917.578125
+      ],
+      "held_buttons" : 0,
+      "kind" : 1,
+      "uptime" : 3703395.3136224584,
+      "window_point" : [
+        820.51953125,
+        24.421875
+      ]
+    },
+    {
+      "global_point" : [
+        850.51953125,
+        917.578125
+      ],
+      "held_buttons" : 0,
+      "kind" : 2,
+      "uptime" : 3703395.3183331252,
+      "window_point" : [
+        820.51953125,
+        24.421875
+      ]
+    }
+  ],
+  "final_value" : 282,
+  "frames" : [
+    {
+      "event_to_frame_ms" : 7.1893748827278614,
+      "frames" : 3,
+      "uptime" : 3703361.0251752501,
+      "value" : 320
+    },
+    {
+      "event_to_frame_ms" : 542.83145815134048,
+      "frames" : 4,
+      "uptime" : 3703361.5608173334,
+      "value" : 575
+    },
+    {
+      "event_to_frame_ms" : 544.45220809429884,
+      "frames" : 5,
+      "uptime" : 3703361.5624380833,
+      "value" : 575
+    },
+    {
+      "event_to_frame_ms" : 744.45583345368505,
+      "frames" : 6,
+      "uptime" : 3703361.7624417087,
+      "value" : 573
+    },
+    {
+      "event_to_frame_ms" : 1025.1662498340011,
+      "frames" : 7,
+      "uptime" : 3703362.0431521251,
+      "value" : 505
+    },
+    {
+      "event_to_frame_ms" : 1216.8917083181441,
+      "frames" : 8,
+      "uptime" : 3703362.2348775836,
+      "value" : 381
+    },
+    {
+      "event_to_frame_ms" : 1459.4501247629523,
+      "frames" : 9,
+      "uptime" : 3703362.477436,
+      "value" : 340
+    },
+    {
+      "event_to_frame_ms" : 1593.1981247849762,
+      "frames" : 10,
+      "uptime" : 3703362.611184,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1872.7293331176043,
+      "frames" : 11,
+      "uptime" : 3703362.8907152084,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 451.14866644144058,
+      "frames" : 12,
+      "uptime" : 3703365.5777124586,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 516.02033292874694,
+      "frames" : 13,
+      "uptime" : 3703365.642584125,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 811.99074955657125,
+      "frames" : 14,
+      "uptime" : 3703365.9385545417,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1011.9351665489376,
+      "frames" : 15,
+      "uptime" : 3703366.1384989587,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1198.8137499429286,
+      "frames" : 16,
+      "uptime" : 3703366.3253775421,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1204.0545414201915,
+      "frames" : 17,
+      "uptime" : 3703366.3306183335,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1468.1633748114109,
+      "frames" : 18,
+      "uptime" : 3703366.5947271669,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1796.6464166529477,
+      "frames" : 19,
+      "uptime" : 3703366.9232102088,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 450.76758367940784,
+      "frames" : 20,
+      "uptime" : 3703369.910826792,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 454.80495877563953,
+      "frames" : 21,
+      "uptime" : 3703369.9148641671,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 703.01100006327033,
+      "frames" : 22,
+      "uptime" : 3703370.1630702084,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 862.40029195323586,
+      "frames" : 23,
+      "uptime" : 3703370.3224595003,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1119.0834171138704,
+      "frames" : 24,
+      "uptime" : 3703370.5791426254,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1517.0539584942162,
+      "frames" : 25,
+      "uptime" : 3703370.9771131668,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1582.5286670587957,
+      "frames" : 26,
+      "uptime" : 3703371.0425878754,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1646.5834169648588,
+      "frames" : 27,
+      "uptime" : 3703371.1066426253,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1942.8152502514422,
+      "frames" : 28,
+      "uptime" : 3703371.4028744586,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 12.60874979197979,
+      "frames" : 40,
+      "uptime" : 3703376.3526418335,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 14.619166497141123,
+      "frames" : 41,
+      "uptime" : 3703376.3546522502,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 79.358458053320646,
+      "frames" : 42,
+      "uptime" : 3703376.4193915417,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 119.20808302238584,
+      "frames" : 43,
+      "uptime" : 3703376.4592411667,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 159.22125009819865,
+      "frames" : 44,
+      "uptime" : 3703376.4992543338,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 199.10404132679105,
+      "frames" : 45,
+      "uptime" : 3703376.539137125,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 238.85075002908707,
+      "frames" : 46,
+      "uptime" : 3703376.5788838337,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 278.76004157587886,
+      "frames" : 47,
+      "uptime" : 3703376.6187931253,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 318.59837472438812,
+      "frames" : 48,
+      "uptime" : 3703376.6586314584,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 358.48549986258149,
+      "frames" : 49,
+      "uptime" : 3703376.6985185836,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 406.69154142960906,
+      "frames" : 50,
+      "uptime" : 3703376.7467246251,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 447.22470827400684,
+      "frames" : 51,
+      "uptime" : 3703376.787257792,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 486.36149987578392,
+      "frames" : 52,
+      "uptime" : 3703376.8263945836,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 526.3974997214973,
+      "frames" : 53,
+      "uptime" : 3703376.8664305834,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 566.80354150012136,
+      "frames" : 54,
+      "uptime" : 3703376.9068366252,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 606.69254139065742,
+      "frames" : 55,
+      "uptime" : 3703376.9467256251,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 646.37791644781828,
+      "frames" : 56,
+      "uptime" : 3703376.9864110001,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 686.58308312296867,
+      "frames" : 57,
+      "uptime" : 3703377.0266161668,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 726.4999165199697,
+      "frames" : 58,
+      "uptime" : 3703377.0665330002,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 775.05033323541284,
+      "frames" : 59,
+      "uptime" : 3703377.1150834169,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 815.03395829349756,
+      "frames" : 60,
+      "uptime" : 3703377.155067042,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 854.82649970799685,
+      "frames" : 61,
+      "uptime" : 3703377.1948595834,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 894.60566639900208,
+      "frames" : 62,
+      "uptime" : 3703377.2346387501,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 934.96366636827588,
+      "frames" : 63,
+      "uptime" : 3703377.2749967501,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 983.09875000268221,
+      "frames" : 64,
+      "uptime" : 3703377.3231318337,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1022.9374165646732,
+      "frames" : 65,
+      "uptime" : 3703377.3629705003,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1062.8054579719901,
+      "frames" : 66,
+      "uptime" : 3703377.4028385417,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1110.8597917482257,
+      "frames" : 67,
+      "uptime" : 3703377.4508928754,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1150.9615830145776,
+      "frames" : 68,
+      "uptime" : 3703377.4909946667,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1191.0892082378268,
+      "frames" : 69,
+      "uptime" : 3703377.5311222919,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1230.9272498823702,
+      "frames" : 70,
+      "uptime" : 3703377.5709603336,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1270.7902914844453,
+      "frames" : 71,
+      "uptime" : 3703377.6108233752,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1310.6259163469076,
+      "frames" : 72,
+      "uptime" : 3703377.650659,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1350.5654581822455,
+      "frames" : 73,
+      "uptime" : 3703377.6905985419,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1399.3174163624644,
+      "frames" : 74,
+      "uptime" : 3703377.7393505001,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1438.9024167321622,
+      "frames" : 75,
+      "uptime" : 3703377.7789355004,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1478.9892500266433,
+      "frames" : 76,
+      "uptime" : 3703377.8190223337,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1518.6826246790588,
+      "frames" : 77,
+      "uptime" : 3703377.8587157084,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1558.4599166177213,
+      "frames" : 78,
+      "uptime" : 3703377.8984930003,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1606.6799163818359,
+      "frames" : 79,
+      "uptime" : 3703377.9467130001,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1647.0073331147432,
+      "frames" : 80,
+      "uptime" : 3703377.9870404168,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1686.7135413922369,
+      "frames" : 81,
+      "uptime" : 3703378.0267466251,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1726.4944580383599,
+      "frames" : 82,
+      "uptime" : 3703378.0665275417,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1775.2156248316169,
+      "frames" : 83,
+      "uptime" : 3703378.1152487085,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 1815.0027082301676,
+      "frames" : 84,
+      "uptime" : 3703378.1550357919,
+      "value" : 282
+    },
+    {
+      "event_to_frame_ms" : 11.36570842936635,
+      "frames" : 85,
+      "uptime" : 3703378.1786545003,
+      "value" : 282
+    }
+  ],
+  "held_button_observed" : true,
+  "initial_value" : 320,
+  "measurement_notes" : "Frame counters are paired to the latest input time, not per-event pixel validation. Before\/latest GPU images establish the visible final change. Idle frames after2seconds are excluded.",
+  "phase" : "fabric-width",
+  "source_changes" : [
+    {
+      "event_to_source_ms" : 261.50924991816282,
+      "frames" : 3,
+      "uptime" : 3703361.2794951252,
+      "value" : 318
+    },
+    {
+      "event_to_source_ms" : 455.50258317962289,
+      "frames" : 3,
+      "uptime" : 3703361.4734884584,
+      "value" : 574
+    },
+    {
+      "event_to_source_ms" : 521.17654168978333,
+      "frames" : 3,
+      "uptime" : 3703361.5391624169,
+      "value" : 575
+    },
+    {
+      "event_to_source_ms" : 737.67029168084264,
+      "frames" : 5,
+      "uptime" : 3703361.7556561669,
+      "value" : 573
+    },
+    {
+      "event_to_source_ms" : 1023.8319998607039,
+      "frames" : 6,
+      "uptime" : 3703362.0418178751,
+      "value" : 505
+    },
+    {
+      "event_to_source_ms" : 1088.0313748493791,
+      "frames" : 7,
+      "uptime" : 3703362.1060172501,
+      "value" : 433
+    },
+    {
+      "event_to_source_ms" : 1212.1453750878572,
+      "frames" : 7,
+      "uptime" : 3703362.2301312503,
+      "value" : 381
+    },
+    {
+      "event_to_source_ms" : 1394.9892497621477,
+      "frames" : 8,
+      "uptime" : 3703362.412975125,
+      "value" : 380
+    },
+    {
+      "event_to_source_ms" : 1459.4501247629523,
+      "frames" : 9,
+      "uptime" : 3703362.477436,
+      "value" : 340
+    },
+    {
+      "event_to_source_ms" : 1585.6139166280627,
+      "frames" : 9,
+      "uptime" : 3703362.6035997919,
+      "value" : 282
+    }
+  ],
+  "source_stable" : true
+}

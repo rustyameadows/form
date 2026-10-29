@@ -10,7 +10,7 @@ import pathlib
 import struct
 import time
 import xml.etree.ElementTree as ET
-from smoke_mcp import Client, OUTPUT, ROOT
+from smoke_mcp import Client, OUTPUT, ROOT, camera_pose, project_source
 
 
 def main():
@@ -30,7 +30,7 @@ def main():
         cap_ink = next(o for o in project['objects'] if o['name'] == 'Cap / conforming NASA front art')
         before = c.call('form_get_project')
         zones = {o['recipeID']: c.call('form_textile_zones', {'object_id': o['id']}) for o in [tee, cap, tote]}
-        assert c.call('form_get_project') == before, 'Reading zones mutated the project/history.'
+        assert project_source(c.call('form_get_project')) == project_source(before), 'Reading zones mutated the project/history.'
         assert all(z['units'] == 'mm' and z['concept_dimensions'] for z in zones.values())
         assert all(z['allowed_processes'] == ['directPrint'] for z in zones['curvedCap']['zones'])
         for zone in zones['crewTee']['zones']:
@@ -42,12 +42,12 @@ def main():
         bad['attachment']['offset'] = {'x': 160, 'y': 0}
         bad['attachment']['rotation'] = 45
         c.call('form_update_object', {'object_id': front['id'], 'textile': bad}, expect_error=True)
-        assert c.call('form_get_project') == before
+        assert project_source(c.call('form_get_project')) == project_source(before)
         c.call('form_update_object', {'object_id': tee['id'], 'parameters': {'width': 360}}, expect_error=True)
-        assert c.call('form_get_project') == before
+        assert project_source(c.call('form_get_project')) == project_source(before)
         c.call('form_add_object', {'recipe_id': 'textilePatch', 'parameters': {'width': 50, 'depth': 30},
                'textile': {'kind': 'patch', 'process': 'wovenPatch', 'attachment': {'garmentID': cap['id'], 'zone': 'front'}}}, expect_error=True)
-        assert c.call('form_get_project') == before
+        assert project_source(c.call('form_get_project')) == project_source(before)
 
         c.call('form_set_view', {'view': 'table', 'object_id': cap['id']})
         time.sleep(.3)
@@ -57,13 +57,13 @@ def main():
         time.sleep(.15)
         assert c.call('form_status')['renderer']['geometry_builds'] == builds
         c.call('form_undo')
-        assert c.call('form_get_project') == before
+        assert project_source(c.call('form_get_project')) == project_source(before)
         shown = copy.deepcopy(tee['textile']); shown['laidFaceDown'] = True
         c.call('form_update_object', {'object_id': tee['id'], 'textile': shown})
         time.sleep(.15)
         assert c.call('form_status')['renderer']['geometry_builds'] == builds
         assert c.call('form_textile_zones', {'object_id': tee['id']})['showing_back']
-        c.call('form_undo'); assert c.call('form_get_project') == before
+        c.call('form_undo'); assert project_source(c.call('form_get_project')) == project_source(before)
 
         # Shared source edits preserve the region/placement objects, then Undo restores source.
         source_id = cap_ink['artworkSourceID']
@@ -78,7 +78,7 @@ def main():
         c.call('form_update_object', {'object_id': tee['id'], 'parameters': {'width': 560}})
         current = c.call('form_get_project')
         assert next(o for o in current['objects'] if o['id'] == variant['id'])['parameters']['width'] == 560
-        c.call('form_undo'); c.call('form_undo'); assert c.call('form_get_project') == before
+        c.call('form_undo'); c.call('form_undo'); assert project_source(c.call('form_get_project')) == project_source(before)
 
         outputs = {}
         for fmt in ['svg', 'pdf', 'png']:
@@ -95,12 +95,14 @@ def main():
         invalid_path = folder / 'garment-must-not-be-blank.svg'; invalid_path.unlink(missing_ok=True)
         c.call('form_export_artwork', {'object_id': tee['id'], 'format': 'svg', 'path': str(invalid_path)}, expect_error=True)
         assert not invalid_path.exists()
-        assert c.call('form_get_project') == before
+        assert project_source(c.call('form_get_project')) == project_source(before)
         c.call('form_open_project', {'project_id': project['id']})
         reopened = c.call('form_get_project')
         assert reopened['objects'] == before['objects'] and reopened['materials'] == before['materials']
+        assert camera_pose(reopened['camera']) == camera_pose(before['camera']), (before['camera'], reopened['camera'])
         assert reopened['schemaVersion'] >= 34
         report = {'project_id': project['id'], 'zones': zones, 'outputs': outputs,
+                  'camera_reopen': {'before': before['camera'], 'after': reopened['camera'], 'saved_pose_unchanged': True},
                   'status': c.call('form_status'), 'checks': ['read-only physical zones', 'rotated bounds',
                   'atomic host shrink rejection', 'curved rigid-process rejection', 'mesh reuse on host move and back display',
                   'source and variant sharing', 'Undo', 'physical SVG/PDF/PNG', 'blank garment export rejection', 'saved reopen']}

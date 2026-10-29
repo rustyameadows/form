@@ -88,6 +88,7 @@ enum TableTool: String, CaseIterable {
   lazy var printing = PrintCoordinator(store: self)
   lazy var modelAssets=ModelAssetCoordinator(store:self)
   lazy var cad=CADModelCoordinator(store:self)
+  let constructionValidation=ConstructionValidationCoordinator()
   @Published var showingDocumentFonts=false
   var fontLibraryPreferences=FontLibraryPreferences.environment()
   lazy var cloth = ClothCoordinator(store:self)
@@ -227,6 +228,26 @@ enum TableTool: String, CaseIterable {
               completion(.success(try self.graphicsCall(name,args)))
               return
             }
+            if name == "form_construction",args["command"] as? String == "validate_cases" {
+              guard let project=self.engine.project else{throw FormError.missing("Open a project before validating a construction.")}
+              if let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),project.objects.first(where:{$0.id==id})?.artworkParameterBindings?.isEmpty == false {
+                let request=try ConstructionCommands.artworkValidationRequest(project:project,arguments:args)
+                Task { @MainActor [weak self] in
+                  guard let self else{completion(.failure(FormError.missing("LAB is closing.")));return}
+                  do{completion(.success(try await self.constructionValidationCallAsync(request)))}catch{completion(.failure(error))}
+                }
+                return
+              }
+              let request=try ConstructionCommands.validationRequest(project:project,arguments:args)
+              if request.requiresExactSolids {
+                Task { @MainActor [weak self] in
+                  guard let self else{completion(.failure(FormError.missing("LAB is closing.")));return}
+                  do{completion(.success(try await self.constructionValidationCallAsync(request)))}
+                  catch{completion(.failure(error))}
+                }
+                return
+              }
+            }
             if name == "form_export", (args["format"] as? String == "png" || args["shot_id"] != nil || args["scene_id"] != nil) {
               guard let format=args["format"] as? String,["png","mp4","pdf","svg","json"].contains(format),format != "mp4" || args["scene_id"] != nil else{throw FormError.invalid("Export requires a supported format; MP4 needs a saved scene_id.")}
               if args["shot_id"] == nil {self.finishArtworkEditing();try self.engine.flush()}
@@ -239,6 +260,8 @@ enum TableTool: String, CaseIterable {
             }
             let readOnly = (name=="form_studio_scene" && ["list","get"].contains(args["command"] as? String ?? "")) || (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
               (name == "form_paper" && ["inspect", "preflight", "layout", "view", "export"].contains(args["command"] as? String ?? "inspect")) ||
+              (name == "form_construction" && ConstructionCommands.isReadOnly(args)) ||
+              (name == "form_surface" && PhysicalSurfaceCommands.isReadOnly(args)) ||
               [
                 "form_status", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones",
                 "form_list_materials", "form_get_print_setup", "form_get_slice_status",
@@ -349,6 +372,7 @@ enum TableTool: String, CaseIterable {
     changed()
   }
   func changed(save: Bool = true) {
+    constructionValidation.projectDidChange(project)
     let ids = Set(project?.objects.map(\.id) ?? [])
     engine.selection.formIntersection(ids)
     let visible = isolated.intersection(ids)

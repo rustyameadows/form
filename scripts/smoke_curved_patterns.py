@@ -13,7 +13,7 @@ import struct
 import uuid
 import xml.etree.ElementTree as ET
 
-from smoke_mcp import Client, OUTPUT, ROOT
+from smoke_mcp import Client, OUTPUT, ROOT, project_source
 
 
 def uid():
@@ -49,8 +49,8 @@ def main():
         assert body['path']['contours'][0]['id'] and len(source['sewingSeams']) == 7
         assert all(n['edgeID'] and n['endID'] for n in body['sewingPiece']['notches'])
         saved = c.call('form_get_project')
-        c.call('form_undo'); assert c.call('form_get_project') == before
-        c.call('form_redo'); assert c.call('form_get_project') == saved
+        c.call('form_undo'); assert project_source(c.call('form_get_project')) == project_source(before)
+        c.call('form_redo'); assert project_source(c.call('form_get_project')) == project_source(saved)
 
         def export(fmt, target=owner, **extra):
             path = folder / (('rounded-pouch' if target == owner else 'holed-panel') + '.' + fmt)
@@ -87,21 +87,21 @@ def main():
         base = {'object_id': owner, 'element_id': body['id']}
         for edit in [{'operation': 'insert', 'node_ids': [source_nodes[2]['id']], 't': 0.5}, {'operation': 'reverse'}]:
             c.call('form_edit_path', {**base, **edit}, expect_error=True)
-            assert c.call('form_get_project') == saved
+            assert project_source(c.call('form_get_project')) == project_source(saved)
         # Normal curve/measurement edits stay editable, preserving original edge identity.
         c.call('form_edit_path', {**base, 'operation': 'transform', 'node_ids': [source_nodes[3]['id']],
                'matrix': {'a': 1, 'b': 0, 'c': 0, 'd': 1, 'tx': 0, 'ty': 4}})
         changed = c.call('form_get_artwork', {'object_id': owner})
         assert changed['elements'][0]['path']['contours'][0]['nodes'][3]['id'] == source_nodes[3]['id']
         assert changed['sewingSeams'] == source['sewingSeams']
-        c.call('form_undo'); assert c.call('form_get_project') == saved
+        c.call('form_undo'); assert project_source(c.call('form_get_project')) == project_source(saved)
         cloned = c.call('form_edit_artwork', {'object_id': owner, 'command': 'duplicate', 'element_ids': [body['id'], facing['id']]})
         duplicate = c.call('form_get_artwork', {'object_id': owner})
         assert len(duplicate['sewingSeams']) == 14
         clone_body = next(e for e in duplicate['elements'] if e['id'] in cloned['selected_elements'] and e['kind'] == 'path')
         clone_ids = {n['id'] for n in clone_body['path']['contours'][0]['nodes']}
         assert all(n['edgeID'] in clone_ids and n['endID'] in clone_ids for n in clone_body['sewingPiece']['notches'])
-        c.call('form_undo'); assert c.call('form_get_project') == saved
+        c.call('form_undo'); assert project_source(c.call('form_get_project')) == project_source(saved)
 
         destination = c.call('form_add_object', {'recipe_id': 'artboard', 'name': 'Source transfer check',
                                                 'parameters': {'width': 800, 'depth': 750}})
@@ -109,11 +109,11 @@ def main():
         transfer = {'object_id': owner, 'command': 'transfer', 'target_object_id': destination['id'],
                     'offset_x': 0, 'offset_y': 0}
         c.call('form_edit_artwork', {**transfer, 'element_ids': [body['id']]}, expect_error=True)
-        assert c.call('form_get_project') == before_transfer
+        assert project_source(c.call('form_get_project')) == project_source(before_transfer)
         c.call('form_edit_artwork', {**transfer, 'element_ids': [body['id'], facing['id']]})
         moved = c.call('form_get_artwork', {'object_id': destination['id']})
         assert len(moved['sewingSeams']) == 7 and not c.call('form_get_artwork', {'object_id': owner})['elements']
-        c.call('form_undo'); assert c.call('form_get_project') == before_transfer
+        c.call('form_undo'); assert project_source(c.call('form_get_project')) == project_source(before_transfer)
 
         # Hole-aware physical outputs and layout collision/consumption use material regions.
         hole_frame = c.call('form_add_object', {'recipe_id': 'artboard', 'name': 'Actual hole / material region',

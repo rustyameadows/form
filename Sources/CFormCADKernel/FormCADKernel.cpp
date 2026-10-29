@@ -9,6 +9,9 @@
 #include <BRepCheck_Analyzer.hxx>
 #include <BRepBndLib.hxx>
 #include <BRepGProp.hxx>
+#include <BRepGProp_Face.hxx>
+#include <BRepGProp_Domain.hxx>
+#include <BRepGProp_Gauss.hxx>
 #include <BRepBuilderAPI_Copy.hxx>
 #include <BRepBuilderAPI_MakePolygon.hxx>
 #include <BRepBuilderAPI_MakeFace.hxx>
@@ -37,6 +40,8 @@
 #include <BRepOffsetAPI_MakeOffset.hxx>
 #include <BRepOffsetAPI_MakePipe.hxx>
 #include <BRepOffsetAPI_ThruSections.hxx>
+#include <BRepFill_ThruSectionErrorStatus.hxx>
+#include <ShapeUpgrade_UnifySameDomain.hxx>
 #include <BRepExtrema_DistShapeShape.hxx>
 #include <BRepTools.hxx>
 #include <BRepMesh_IncrementalMesh.hxx>
@@ -87,7 +92,14 @@ using TopTools_IndexedMapOfShape = NCollection_IndexedMap<TopoDS_Shape,TopTools_
 using TopTools_ListOfShape = NCollection_List<TopoDS_Shape>;
 
 struct FCADContext { std::atomic<bool> cancelled{false}; };
-struct FCADShape { TopoDS_Shape value; explicit FCADShape(const TopoDS_Shape& v):value(v){} };
+// A published handle is immutable: every modeling/meshing operation below uses
+// a deep copy. Keep the exact report produced by its mandatory publication
+// validation; repeated inspection must not reintegrate unchanged geometry.
+struct FCADShape {
+ const TopoDS_Shape value;
+ const FCADShapeInfo report;
+ FCADShape(const TopoDS_Shape& v,const FCADShapeInfo& checked):value(v),report(checked){}
+};
 struct FCADSTEPNode {FCADSTEPNodeInfo info{};TopoDS_Shape shape;std::vector<FCADFaceColor> faceColors;};
 struct FCADSTEPDocument {occ::handle<TDocStd_Document> document;std::vector<FCADSTEPNode> nodes;};
 namespace {
@@ -104,14 +116,27 @@ gp_Vec vector(FCADPoint p) {auto a=point(p);return {a.X(),a.Y(),a.Z()};}
 gp_Dir direction(FCADPoint p) {auto v=vector(p);require(v.SquareMagnitude()>1e-18,"Use a non-zero axis direction.");return gp_Dir(v);}
 FCADPoint value(const gp_Pnt& p){return {p.X(),p.Y(),p.Z()};}
 const TopoDS_Shape& shape(const FCADShape* s){require(s && !s->value.IsNull(),"A source shape is unavailable.");return s->value;}
+const FCADShapeInfo& verifiedInfo(const FCADShape* s){shape(s);return s->report;}
 TopoDS_Shape copy(const FCADShape* s){return BRepBuilderAPI_Copy(shape(s),true,false).Shape();}
+const char* loftStatusName(BRepFill_ThruSectionErrorStatus status){
+ switch(status){
+  case BRepFill_ThruSectionErrorStatus_Done:return "Done";
+  case BRepFill_ThruSectionErrorStatus_NotDone:return "NotDone";
+  case BRepFill_ThruSectionErrorStatus_NotSameTopology:return "NotSameTopology";
+  case BRepFill_ThruSectionErrorStatus_ProfilesInconsistent:return "ProfilesInconsistent";
+  case BRepFill_ThruSectionErrorStatus_WrongUsage:return "WrongUsage";
+  case BRepFill_ThruSectionErrorStatus_Null3DCurve:return "Null3DCurve";
+  case BRepFill_ThruSectionErrorStatus_Failed:return "Failed";
+ }
+ return "Unknown";
+}
 class Progress:public Message_ProgressIndicator {
  FCADContext* c;
  public:explicit Progress(FCADContext* x):c(x){} bool UserBreak()override{return c && c->cancelled.load(std::memory_order_relaxed);} void Show(const Message_ProgressScope&,const bool)override{}
 };
 occ::handle<Progress> progress(FCADContext* c){return new Progress(c);}
 void bounds(const TopoDS_Shape& s,FCADPoint& lo,FCADPoint& hi){Bnd_Box box;box.SetGap(0);BRepBndLib::AddOptimal(s,box,false,false);if(box.IsVoid()||box.IsOpen())throw Failure(FCAD_INVALID_TOPOLOGY,"The shape has empty or unbounded geometry.");double x,y,z,X,Y,Z;box.Get(x,y,z,X,Y,Z);lo={x,y,z};hi={X,Y,Z};}
-FCADShapeInfo info(const TopoDS_Shape& s){
+FCADShapeInfo info(const TopoDS_Shape& s,const FCADShapeInfo* rigidMassProperties=nullptr){
  FCADShapeInfo o{};bounds(s,o.minimum,o.maximum);o.shape_type=static_cast<int32_t>(s.ShapeType());
  auto count=[&](TopAbs_ShapeEnum t){TopTools_IndexedMapOfShape m;TopExp::MapShapes(s,t,m);return static_cast<uint32_t>(m.Extent());};
  o.solids=count(TopAbs_SOLID);o.shells=count(TopAbs_SHELL);o.faces=count(TopAbs_FACE);o.edges=count(TopAbs_EDGE);o.vertices=count(TopAbs_VERTEX);
@@ -119,21 +144,36 @@ FCADShapeInfo info(const TopoDS_Shape& s){
  o.valid=BRepCheck_Analyzer(s,true).IsValid();o.closed=o.solids>0&&o.shells>0;
  for(TopExp_Explorer e(s,TopAbs_SHELL);e.More();e.Next())if(!BRep_Tool::IsClosed(e.Current()))o.closed=0;
  TopTools_IndexedMapOfShape solidFaces;for(TopExp_Explorer e(s,TopAbs_SOLID);e.More();e.Next())TopExp::MapShapes(e.Current(),TopAbs_FACE,solidFaces);if(static_cast<uint32_t>(solidFaces.Extent())!=o.faces)o.closed=0;
- GProp_GProps mass,area;BRepGProp::VolumeProperties(s,mass,1e-9);BRepGProp::SurfaceProperties(s,area,1e-9);o.volume=mass.Mass();o.area=area.Mass();
+ // Proper rigid motions preserve volume and area exactly. All geometry validity,
+ // bounds, closedness, topology and actual tolerances above/below are still
+ // checked on the newly constructed output. Other transforms integrate afresh.
+ if(rigidMassProperties){o.volume=rigidMassProperties->volume;o.area=rigidMassProperties->area;}
+ else{GProp_GProps mass,area;BRepGProp::VolumeProperties(s,mass,1e-9);BRepGProp::SurfaceProperties(s,area,1e-9);o.volume=mass.Mass();o.area=area.Mass();}
  for(TopExp_Explorer e(s,TopAbs_VERTEX);e.More();e.Next())o.maximum_tolerance=std::max(o.maximum_tolerance,BRep_Tool::Tolerance(TopoDS::Vertex(e.Current())));
  for(TopExp_Explorer e(s,TopAbs_EDGE);e.More();e.Next())o.maximum_tolerance=std::max(o.maximum_tolerance,BRep_Tool::Tolerance(TopoDS::Edge(e.Current())));
  for(TopExp_Explorer e(s,TopAbs_FACE);e.More();e.Next())o.maximum_tolerance=std::max(o.maximum_tolerance,BRep_Tool::Tolerance(TopoDS::Face(e.Current())));
  return o;
 }
-void publish(FCADContext* c,const TopoDS_Shape& s,FCADShape** out,bool solid=true){
- require(out,"An output shape slot is required.");cancelled(c);if(s.IsNull())throw Failure(FCAD_OPERATION_FAILED,"The kernel did not construct a shape.");auto report=info(s);
+void publish(FCADContext* c,const TopoDS_Shape& s,FCADShape** out,bool solid=true,const FCADShapeInfo* inspected=nullptr,const FCADShapeInfo* rigidMassProperties=nullptr){
+ require(out,"An output shape slot is required.");cancelled(c);if(s.IsNull())throw Failure(FCAD_OPERATION_FAILED,"The kernel did not construct a shape.");auto report=inspected ? *inspected:info(s,rigidMassProperties);
  if(!report.valid)throw Failure(FCAD_INVALID_TOPOLOGY,"The exact result failed BRepCheck validity. The previous revision is unchanged.");
  if(solid && (!report.closed||report.solids==0||report.volume<=1e-12))throw Failure(FCAD_INVALID_TOPOLOGY,"The exact result is empty, open, non-solid or inward oriented. The previous revision is unchanged.");
- cancelled(c);*out=new FCADShape(s);
+ cancelled(c);*out=new FCADShape(s,report);
 }
+// A current task owns its optional probe only on the executing native thread.
+// Restore any outer caller's probe on success, failure and cancellation.
+class GPropCancellationScope {
+ BRepGProp_Gauss::CancellationProbeState previous;
+ static void poll(void* data){cancelled(static_cast<FCADContext*>(data));}
+ public:
+ explicit GPropCancellationScope(FCADContext* context):previous(BRepGProp_Gauss::SetCancellationProbe(context ? &poll:nullptr,context)){}
+ ~GPropCancellationScope()noexcept{BRepGProp_Gauss::SetCancellationProbe(previous.Probe,previous.Data);}
+ GPropCancellationScope(const GPropCancellationScope&)=delete;
+ GPropCancellationScope& operator=(const GPropCancellationScope&)=delete;
+};
 template<class F>FCADStatus run(FCADContext* c,FCADFailure* err,F body){
  if(err){err->code=0;err->message[0]=0;}std::lock_guard<std::recursive_mutex> lock(gate);
- try{cancelled(c);body();return FCAD_OK;}
+ try{GPropCancellationScope gprop(c);cancelled(c);body();return FCAD_OK;}
  catch(const Failure& e){if(err){err->code=e.status;std::snprintf(err->message,sizeof(err->message),"%s",e.what());}return e.status;}
  catch(const Standard_Failure& e){if(err){err->code=FCAD_OPERATION_FAILED;std::snprintf(err->message,sizeof(err->message),"Exact CAD construction failed: %s. The previous revision is unchanged.",e.what());}return FCAD_OPERATION_FAILED;}
  catch(const std::exception& e){if(err){err->code=FCAD_OPERATION_FAILED;std::snprintf(err->message,sizeof(err->message),"CAD operation failed: %s",e.what());}return FCAD_OPERATION_FAILED;}
@@ -149,7 +189,7 @@ void path(const char* p,bool importing){require(p&&p[0]&&std::strlen(p)<=4096,"U
 TopoDS_Wire wire(const FCADPoint* points,size_t n){require(points&&n>=3&&n<=10000,"A closed profile ring needs 3–10,000 points.");BRepBuilderAPI_MakePolygon p;for(size_t i=0;i<n;++i){auto v=point(points[i]);if(i>0)require(v.Distance(point(points[i-1]))>1e-7,"Profile contains a zero-length edge.");p.Add(v);}p.Close();if(!p.IsDone())throw Failure(FCAD_INVALID_TOPOLOGY,"The profile wire could not be closed.");return p.Wire();}
 }
 extern "C" {
-const char* fcad_version(){return OCC_VERSION_COMPLETE;}
+const char* fcad_version(){return OCC_VERSION_COMPLETE "+form.gprop2";}
 FCADContext* fcad_context_create(){return new FCADContext();}
 void fcad_context_cancel(FCADContext* c){if(c)c->cancelled.store(true,std::memory_order_relaxed);}
 void fcad_context_release(FCADContext* c){delete c;}
@@ -171,20 +211,29 @@ FCADStatus fcad_circle_profile(FCADContext*c,FCADPoint origin,FCADPoint normal,F
 FCADStatus fcad_curve_profile(FCADContext*c,const FCADCurveSegment*segments,size_t count,FCADShape**out,FCADFailure*e){return run(c,e,[&]{require(segments&&count>0&&count<=10000,"A curve profile needs 1–10,000 connected segments.");BRepBuilderAPI_MakeWire wire;for(size_t i=0;i<count;++i){const auto&s=segments[i];require(s.kind>=0&&s.kind<=3,"Unknown profile segment type.");require(point(s.end).Distance(point(segments[(i+1)%count].start))<=1e-7,"Curve profile segments must meet and form a closed loop.");TopoDS_Edge edge;if(s.kind==0)edge=BRepBuilderAPI_MakeEdge(point(s.start),point(s.end)).Edge();else if(s.kind==3){GC_MakeArcOfCircle arc(point(s.start),point(s.control1),point(s.end));require(arc.IsDone(),"Circular arc points are collinear or invalid.");edge=BRepBuilderAPI_MakeEdge(arc.Value()).Edge();}else{NCollection_Array1<gp_Pnt> poles(1,s.kind==1?3:4);poles.SetValue(1,point(s.start));poles.SetValue(2,point(s.control1));if(s.kind==2)poles.SetValue(3,point(s.control2));poles.SetValue(poles.Upper(),point(s.end));occ::handle<Geom_BezierCurve> curve=new Geom_BezierCurve(poles);edge=BRepBuilderAPI_MakeEdge(curve).Edge();}wire.Add(edge);if(!wire.IsDone())throw Failure(FCAD_INVALID_TOPOLOGY,"Curve profile wire is disconnected or invalid.");}BRepBuilderAPI_MakeFace face(wire.Wire(),true);if(!face.IsDone())throw Failure(FCAD_INVALID_TOPOLOGY,"Curve profile must form a planar closed face.");publish(c,face.Face(),out,false);});}
 FCADStatus fcad_extrude(FCADContext*c,const FCADShape*p,FCADPoint v,FCADShape**out,FCADFailure*e){return run(c,e,[&]{require(shape(p).ShapeType()==TopAbs_FACE,"Extrude requires a bounded planar profile face.");auto d=vector(v);require(d.SquareMagnitude()>1e-12,"Extrusion needs a non-zero physical vector.");auto g=progress(c);BRepPrimAPI_MakePrism builder(copy(p),d,true,true);builder.Build(g->Start());if(!builder.IsDone())throw Failure(FCAD_OPERATION_FAILED,"Profile extrusion did not produce a solid.");publish(c,builder.Shape(),out);});}
 FCADStatus fcad_revolve(FCADContext*c,const FCADShape*p,FCADPoint origin,FCADPoint axis,double angle,FCADShape**out,FCADFailure*e){return run(c,e,[&]{require(shape(p).ShapeType()==TopAbs_FACE,"Revolve requires a closed planar profile face.");require(std::isfinite(angle)&&angle>1e-8&&angle<=2*M_PI+1e-9,"Revolve angle must be greater than zero and at most 2π radians.");auto g=progress(c);BRepPrimAPI_MakeRevol builder(copy(p),gp_Ax1(point(origin),direction(axis)),std::min(angle,2*M_PI),true);builder.Build(g->Start());if(!builder.IsDone())throw Failure(FCAD_OPERATION_FAILED,"Revolve failed; the profile may cross the axis or self-intersect.");publish(c,builder.Shape(),out);});}
-FCADStatus fcad_boolean(FCADContext*c,int32_t op,const FCADShape*a,const FCADShape*b,FCADShape**out,FCADFailure*e){return run(c,e,[&]{require(op>=0&&op<=2,"Unknown exact boolean operation.");require(info(shape(a)).closed&&info(shape(b)).closed,"Solid boolean inputs must be closed, valid solids.");auto left=copy(a),right=copy(b);auto g=progress(c);TopTools_ListOfShape args,tools;args.Append(left);tools.Append(right);std::unique_ptr<BRepAlgoAPI_BooleanOperation> builder;
+FCADStatus fcad_boolean(FCADContext*c,int32_t op,const FCADShape*a,const FCADShape*b,FCADShape**out,FCADFailure*e){return run(c,e,[&]{require(op>=0&&op<=2,"Unknown exact boolean operation.");require(verifiedInfo(a).closed&&verifiedInfo(b).closed,"Solid boolean inputs must be closed, valid solids.");auto left=copy(a),right=copy(b);auto g=progress(c);TopTools_ListOfShape args,tools;args.Append(left);tools.Append(right);std::unique_ptr<BRepAlgoAPI_BooleanOperation> builder;
  if(op==0)builder=std::make_unique<BRepAlgoAPI_Fuse>();else if(op==1)builder=std::make_unique<BRepAlgoAPI_Cut>();else builder=std::make_unique<BRepAlgoAPI_Common>();builder->SetArguments(args);builder->SetTools(tools);builder->SetNonDestructive(true);builder->SetRunParallel(false);builder->Build(g->Start());if(!builder->IsDone()||builder->HasErrors())throw Failure(FCAD_OPERATION_FAILED,"Exact boolean failed; inspect coincident edges, self-intersection and source validity.");publish(c,builder->Shape(),out);});}
 FCADStatus fcad_fillet(FCADContext*c,const FCADShape*s,const uint32_t*ids,size_t n,double r,FCADShape**out,FCADFailure*e){return run(c,e,[&]{positive(r);auto source=copy(s);auto edges=map(source,TopAbs_EDGE);auto indices=selected(ids,n,edges.Extent(),true);BRepFilletAPI_MakeFillet b(source);for(auto i:indices)b.Add(r,TopoDS::Edge(edges.FindKey(static_cast<int>(i))));auto g=progress(c);b.Build(g->Start());if(!b.IsDone())throw Failure(FCAD_OPERATION_FAILED,"Fillet could not be built. Reduce radius or choose a supported edge set in the current revision.");publish(c,b.Shape(),out);});}
 FCADStatus fcad_chamfer(FCADContext*c,const FCADShape*s,const uint32_t*ids,size_t n,double r,FCADShape**out,FCADFailure*e){return run(c,e,[&]{positive(r);auto source=copy(s);auto edges=map(source,TopAbs_EDGE);auto indices=selected(ids,n,edges.Extent(),true);BRepFilletAPI_MakeChamfer b(source);for(auto i:indices)b.Add(r,TopoDS::Edge(edges.FindKey(static_cast<int>(i))));auto g=progress(c);b.Build(g->Start());if(!b.IsDone())throw Failure(FCAD_OPERATION_FAILED,"Chamfer could not be built. Reduce distance or choose supported edges.");publish(c,b.Shape(),out);});}
 FCADStatus fcad_shell(FCADContext*c,const FCADShape*s,const uint32_t*ids,size_t n,double thickness,FCADShape**out,FCADFailure*e){return run(c,e,[&]{positive(thickness);auto source=copy(s);auto faces=map(source,TopAbs_FACE);auto indices=selected(ids,n,faces.Extent(),false);TopTools_ListOfShape remove;for(auto i:indices)remove.Append(faces.FindKey(static_cast<int>(i)));BRepOffsetAPI_MakeThickSolid b;auto g=progress(c);b.MakeThickSolidByJoin(source,remove,-thickness,1e-7,BRepOffset_Skin,false,false,GeomAbs_Arc,false,g->Start());if(!b.IsDone())throw Failure(FCAD_OPERATION_FAILED,"Shell failed at this thickness/face selection; no approximate hollow was substituted.");publish(c,b.Shape(),out);});}
+FCADStatus fcad_refine(FCADContext*c,const FCADShape*s,FCADShape**out,FCADFailure*e){return run(c,e,[&]{
+ shape(s);if(s->report.faces>10000||s->report.edges>10000)throw Failure(FCAD_LIMIT_EXCEEDED,"Refine supports at most 10,000 input faces and edges per feature.");
+ auto source=copy(s);ShapeUpgrade_UnifySameDomain refine(source,true,true,true);refine.SetSafeInputMode(true);
+ // This explicit feature consolidates tangent curve spans and same-domain
+ // topology. It retains the normal geometric tolerance; the angular threshold
+ // only classifies numerical C1 joins, including agent-authored cubic spans.
+ refine.SetLinearTolerance(1e-7);refine.SetAngularTolerance(1e-9);cancelled(c);refine.Build();cancelled(c);
+ publish(c,refine.Shape(),out,s->report.solids>0);
+ });}
 FCADStatus fcad_offset_profile(FCADContext*c,const FCADShape*s,double distance,FCADShape**out,FCADFailure*e){return run(c,e,[&]{finite(distance);require(std::abs(distance)>=1e-7,"Profile offset must exceed kernel tolerance.");auto source=copy(s);require(source.ShapeType()==TopAbs_FACE&&map(source,TopAbs_WIRE).Extent()==1,"Profile offset supports one closed planar loop; offset holes independently and subtract explicitly.");BRepAdaptor_Surface surface(TopoDS::Face(source));require(surface.GetType()==GeomAbs_Plane,"Offset profile requires a planar face.");BRepOffsetAPI_MakeOffset b(TopoDS::Face(source),GeomAbs_Arc,false);b.Perform(distance);if(!b.IsDone())throw Failure(FCAD_OPERATION_FAILED,"Profile offset failed; inspect distance, collapse and self-intersection.");auto wires=map(b.Shape(),TopAbs_WIRE);require(wires.Extent()==1,"Profile offset split or collapsed the loop; choose another distance.");BRepBuilderAPI_MakeFace face(TopoDS::Wire(wires.FindKey(1)),true);require(face.IsDone(),"Offset wire could not form a valid planar face.");publish(c,face.Face(),out,false);});}
 FCADStatus fcad_sweep(FCADContext*c,const FCADShape*p,const FCADPoint*pathPoints,size_t count,FCADShape**out,FCADFailure*e){return run(c,e,[&]{require(shape(p).ShapeType()==TopAbs_FACE,"Sweep requires a closed planar profile face.");require(pathPoints&&count>=2&&count<=10000,"Sweep path needs 2–10,000 points.");BRepBuilderAPI_MakePolygon poly;for(size_t i=0;i<count;++i)poly.Add(point(pathPoints[i]));require(poly.IsDone(),"Sweep path could not be built.");BRepOffsetAPI_MakePipe b(poly.Wire(),copy(p));auto g=progress(c);b.Build(g->Start());if(!b.IsDone())throw Failure(FCAD_OPERATION_FAILED,"Sweep failed; inspect path continuity, profile placement and self-intersection.");publish(c,b.Shape(),out);});}
-FCADStatus fcad_loft(FCADContext*c,const FCADShape*const*profiles,size_t n,int32_t ruled,FCADShape**out,FCADFailure*e){return run(c,e,[&]{require(profiles&&n>=2&&n<=64,"Loft needs 2–64 section profiles.");BRepOffsetAPI_ThruSections b(true,ruled!=0,1e-7);for(size_t i=0;i<n;++i){auto s=copy(profiles[i]);require(s.ShapeType()==TopAbs_FACE,"Loft sections must be planar profile faces.");require(map(s,TopAbs_WIRE).Extent()==1,"Loft supports single-loop sections; subtract hole lofts explicitly.");b.AddWire(BRepTools::OuterWire(TopoDS::Face(s)));}auto g=progress(c);b.Build(g->Start());if(!b.IsDone())throw Failure(FCAD_OPERATION_FAILED,"Loft failed; inspect section ordering, crossings and compatible profiles.");publish(c,b.Shape(),out);});}
-FCADStatus fcad_transform(FCADContext*c,const FCADShape*s,const double*m,FCADShape**out,FCADFailure*e){return run(c,e,[&]{require(m,"An affine 4×4 transform is required.");for(int i=0;i<16;++i)finite(m[i]);require(std::abs(m[12])+std::abs(m[13])+std::abs(m[14])+std::abs(m[15]-1)<1e-12,"Only affine row-major transforms are supported.");gp_GTrsf t;for(int r=1;r<=3;++r)for(int col=1;col<=4;++col)t.SetValue(r,col,m[(r-1)*4+col-1]);require(std::abs(t.VectorialPart().Determinant())>1e-12,"Transform must be invertible.");double a=m[0]*m[0]+m[4]*m[4]+m[8]*m[8],b=m[1]*m[1]+m[5]*m[5]+m[9]*m[9],d=m[2]*m[2]+m[6]*m[6]+m[10]*m[10];double ab=m[0]*m[1]+m[4]*m[5]+m[8]*m[9],ad=m[0]*m[2]+m[4]*m[6]+m[8]*m[10],bd=m[1]*m[2]+m[5]*m[6]+m[9]*m[10];TopoDS_Shape transformed;if(std::abs(a-b)+std::abs(a-d)+std::abs(ab)+std::abs(ad)+std::abs(bd)<1e-10*std::max(1.0,a)){gp_Trsf rigid;rigid.SetValues(m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9],m[10],m[11]);transformed=BRepBuilderAPI_Transform(copy(s),rigid,true).Shape();}else{transformed=BRepBuilderAPI_GTransform(copy(s),t,true).Shape();}publish(c,transformed,out,info(shape(s)).solids>0);});}
+FCADStatus fcad_loft(FCADContext*c,const FCADShape*const*profiles,size_t n,int32_t ruled,FCADShape**out,FCADFailure*e){return run(c,e,[&]{require(profiles&&n>=2&&n<=64,"Loft needs 2–64 section profiles.");BRepOffsetAPI_ThruSections b(true,ruled!=0,1e-7);for(size_t i=0;i<n;++i){auto s=copy(profiles[i]);require(s.ShapeType()==TopAbs_FACE,"Loft sections must be planar profile faces.");require(map(s,TopAbs_WIRE).Extent()==1,"Loft supports single-loop sections; subtract hole lofts explicitly.");b.AddWire(BRepTools::OuterWire(TopoDS::Face(s)));}auto g=progress(c);b.Build(g->Start());if(!b.IsDone()){const auto status=b.GetStatus();const auto message=std::string("Loft failed (OCCT ThruSections status ")+loftStatusName(status)+" ("+std::to_string(static_cast<int>(status))+")); inspect section ordering, crossings and compatible profiles.";throw Failure(FCAD_OPERATION_FAILED,message.c_str());}publish(c,b.Shape(),out);});}
+FCADStatus fcad_transform(FCADContext*c,const FCADShape*s,const double*m,FCADShape**out,FCADFailure*e){return run(c,e,[&]{require(m,"An affine 4×4 transform is required.");for(int i=0;i<16;++i)finite(m[i]);require(std::abs(m[12])+std::abs(m[13])+std::abs(m[14])+std::abs(m[15]-1)<1e-12,"Only affine row-major transforms are supported.");gp_GTrsf t;for(int r=1;r<=3;++r)for(int col=1;col<=4;++col)t.SetValue(r,col,m[(r-1)*4+col-1]);require(std::abs(t.VectorialPart().Determinant())>1e-12,"Transform must be invertible.");double a=m[0]*m[0]+m[4]*m[4]+m[8]*m[8],b=m[1]*m[1]+m[5]*m[5]+m[9]*m[9],d=m[2]*m[2]+m[6]*m[6]+m[10]*m[10];double ab=m[0]*m[1]+m[4]*m[5]+m[8]*m[9],ad=m[0]*m[2]+m[4]*m[6]+m[8]*m[10],bd=m[1]*m[2]+m[5]*m[6]+m[9]*m[10];TopoDS_Shape transformed;const FCADShapeInfo* rigidMassProperties=nullptr;if(std::abs(a-b)+std::abs(a-d)+std::abs(ab)+std::abs(ad)+std::abs(bd)<1e-10*std::max(1.0,a)){gp_Trsf rigid;rigid.SetValues(m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9],m[10],m[11]);if(rigid.ScaleFactor()==1.0&&!rigid.IsNegative()&&verifiedInfo(s).closed)rigidMassProperties=&verifiedInfo(s);transformed=BRepBuilderAPI_Transform(shape(s),rigid,true).Shape();}else{transformed=BRepBuilderAPI_GTransform(shape(s),t,true).Shape();}publish(c,transformed,out,verifiedInfo(s).solids>0,nullptr,rigidMassProperties);});}
 FCADStatus fcad_compound(FCADContext*c,const FCADShape*const*shapes,size_t n,FCADShape**out,FCADFailure*e){return run(c,e,[&]{require(shapes&&n>0&&n<=1024,"An assembly compound needs 1–1024 shapes.");TopoDS_Compound result;BRep_Builder b;b.MakeCompound(result);for(size_t i=0;i<n;++i)b.Add(result,copy(shapes[i]));publish(c,result,out);});}
-FCADStatus fcad_info(FCADContext*c,const FCADShape*s,FCADShapeInfo*out,FCADFailure*e){return run(c,e,[&]{require(out,"An output report is required.");*out=info(shape(s));});}
+FCADStatus fcad_info(FCADContext*c,const FCADShape*s,FCADShapeInfo*out,FCADFailure*e){return run(c,e,[&]{require(out,"An output report is required.");*out=verifiedInfo(s);});}
 FCADStatus fcad_face_info(FCADContext*c,const FCADShape*s,uint32_t index,FCADFaceInfo*out,FCADFailure*e){return run(c,e,[&]{require(out,"An output face report is required.");auto faces=map(shape(s),TopAbs_FACE);require(index>0&&index<=static_cast<uint32_t>(faces.Extent()),"Face is unavailable in this exact revision.");auto f=TopoDS::Face(faces.FindKey(static_cast<int>(index)));GProp_GProps props;BRepGProp::SurfaceProperties(f,props,1e-9);FCADFaceInfo r{};r.index=index;r.surface_type=static_cast<int32_t>(BRepAdaptor_Surface(f).GetType());r.area=props.Mass();r.center=value(props.CentreOfMass());bounds(f,r.minimum,r.maximum);*out=r;});}
 FCADStatus fcad_edge_info(FCADContext*c,const FCADShape*s,uint32_t index,FCADEdgeInfo*out,FCADFailure*e){return run(c,e,[&]{require(out,"An output edge report is required.");auto edges=map(shape(s),TopAbs_EDGE);require(index>0&&index<=static_cast<uint32_t>(edges.Extent()),"Edge is unavailable in this exact revision.");auto edge=TopoDS::Edge(edges.FindKey(static_cast<int>(index)));BRepAdaptor_Curve curve(edge);GProp_GProps props;BRepGProp::LinearProperties(edge,props);*out={index,static_cast<int32_t>(curve.GetType()),props.Mass(),value(curve.Value(curve.FirstParameter())),value(curve.Value(curve.LastParameter())),value(props.CentreOfMass())};});}
-FCADStatus fcad_clearance(FCADContext*c,const FCADShape*a,const FCADShape*b,double*distance,double*volume,FCADFailure*e){return run(c,e,[&]{require(distance&&volume,"Clearance output slots are required.");auto left=copy(a),right=copy(b);auto g=progress(c);BRepExtrema_DistShapeShape d(left,right);d.Perform(g->Start());if(!d.IsDone())throw Failure(FCAD_OPERATION_FAILED,"Exact closest-distance query failed.");*distance=d.Value();BRepAlgoAPI_Common common(left,right);common.SetNonDestructive(true);common.Build();if(!common.IsDone()||common.HasErrors())throw Failure(FCAD_OPERATION_FAILED,"Interference-volume query failed.");GProp_GProps mass;BRepGProp::VolumeProperties(common.Shape(),mass,1e-9);*volume=std::max(0.0,mass.Mass());});}
+FCADStatus fcad_clearance(FCADContext*c,const FCADShape*a,const FCADShape*b,double*distance,double*volume,FCADFailure*e){return run(c,e,[&]{require(distance&&volume,"Clearance output slots are required.");auto left=copy(a),right=copy(b);auto g=progress(c);BRepExtrema_DistShapeShape d;d.LoadS1(left);d.LoadS2(right);d.Perform(g->Start());cancelled(c);if(!d.IsDone())throw Failure(FCAD_OPERATION_FAILED,"Exact closest-distance query failed.");const auto closest=d.Value();TopTools_ListOfShape args,tools;args.Append(left);tools.Append(right);BRepAlgoAPI_Common common;common.SetArguments(args);common.SetTools(tools);common.SetNonDestructive(true);common.Build(g->Start());cancelled(c);if(!common.IsDone()||common.HasErrors())throw Failure(FCAD_OPERATION_FAILED,"Interference-volume query failed.");GProp_GProps mass;BRepGProp::VolumeProperties(common.Shape(),mass,1e-9);cancelled(c);*distance=closest;*volume=std::max(0.0,mass.Mass());});}
 FCADStatus fcad_tessellate(FCADContext*c,const FCADShape*s,double linear,double angular,FCADMesh*out,FCADFailure*e){return run(c,e,[&]{require(out,"An output mesh is required.");require(std::isfinite(linear)&&linear>=0.000001&&linear<=1000,"Display chord deflection must be between 0.000001 and 1000 mm.");require(std::isfinite(angular)&&angular>=0.001&&angular<=M_PI,"Display angular deflection must be between 0.001 and π radians.");auto source=copy(s);BRepTools::Clean(source);IMeshTools_Parameters params;params.Deflection=linear;params.Angle=angular;params.InParallel=false;params.Relative=false;auto g=progress(c);BRepMesh_IncrementalMesh mesher(source,params,g->Start());if(!mesher.IsDone())throw Failure(FCAD_OPERATION_FAILED,"Display tessellation failed; exact source remains valid and unchanged.");
  std::vector<double> positions,normals,uvs;std::vector<uint32_t> indices,faceIDs;auto faces=map(source,TopAbs_FACE);
  for(int fi=1;fi<=faces.Extent();++fi){cancelled(c);auto face=TopoDS::Face(faces.FindKey(fi));TopLoc_Location loc;auto t=BRep_Tool::Triangulation(face,loc);if(t.IsNull())throw Failure(FCAD_OPERATION_FAILED,"A face could not be tessellated.");if(positions.size()/3+static_cast<size_t>(t->NbNodes())>maxVertices||faceIDs.size()+static_cast<size_t>(t->NbTriangles())>maxTriangles)throw Failure(FCAD_LIMIT_EXCEEDED,"Display mesh exceeds two million triangles or six million face-local vertices. Use coarser display deflection.");BRepLib_ToolTriangulatedShape::ComputeNormals(face,t);double u0,u1,v0,v1;BRepTools::UVBounds(face,u0,u1,v0,v1);auto base=static_cast<uint32_t>(positions.size()/3);bool reverse=face.Orientation()==TopAbs_REVERSED;
@@ -194,8 +243,8 @@ FCADStatus fcad_tessellate(FCADContext*c,const FCADShape*s,double linear,double 
  FCADMesh result{};auto alloc=[](const auto& data){using Element=typename std::decay_t<decltype(data)>::value_type;auto p=static_cast<Element*>(std::malloc(data.size()*sizeof(Element)));if(!p&&!data.empty())throw std::bad_alloc();if(!data.empty())std::memcpy(p,data.data(),data.size()*sizeof(Element));return p;};try{result.positions=alloc(positions);result.normals=alloc(normals);result.uvs=alloc(uvs);result.indices=alloc(indices);result.face_indices=alloc(faceIDs);}catch(...){fcad_mesh_release(&result);throw;}result.vertex_count=positions.size()/3;result.index_count=indices.size();result.triangle_count=faceIDs.size();try{cancelled(c);}catch(...){fcad_mesh_release(&result);throw;}*out=result;
  });}
 FCADStatus fcad_write_brep(FCADContext*c,const FCADShape*s,const char*p,FCADFailure*e){return run(c,e,[&]{path(p,false);auto g=progress(c);if(!BRepTools::Write(shape(s),p,false,false,TopTools_FormatVersion_CURRENT,g->Start()))throw Failure(FCAD_IO_FAILED,"Could not write the exact B-rep source.");});}
-FCADStatus fcad_read_brep(FCADContext*c,const char*p,FCADShape**out,FCADFailure*e){return run(c,e,[&]{path(p,true);BRep_Builder b;TopoDS_Shape s;auto g=progress(c);if(!BRepTools::Read(s,p,b,g->Start()))throw Failure(FCAD_IO_FAILED,"The B-rep source could not be parsed.");publish(c,s,out,info(s).solids>0);});}
-FCADStatus fcad_write_step(FCADContext*c,const FCADShape*s,const char*p,FCADFailure*e){return run(c,e,[&]{path(p,false);Interface_Static::SetCVal("write.step.unit","MM");STEPControl_Writer w;auto g=progress(c);if(w.Transfer(shape(s),STEPControl_AsIs,true,g->Start())!=IFSelect_RetDone)throw Failure(FCAD_IO_FAILED,"STEP transfer failed; no approximate mesh export was substituted.");cancelled(c);if(w.Write(p)!=IFSelect_RetDone)throw Failure(FCAD_IO_FAILED,"STEP file could not be written.");});}
+FCADStatus fcad_read_brep(FCADContext*c,const char*p,FCADShape**out,FCADFailure*e){return run(c,e,[&]{path(p,true);BRep_Builder b;TopoDS_Shape s;auto g=progress(c);if(!BRepTools::Read(s,p,b,g->Start()))throw Failure(FCAD_IO_FAILED,"The B-rep source could not be parsed.");auto report=info(s);publish(c,s,out,report.solids>0,&report);});}
+FCADStatus fcad_write_step(FCADContext*c,const FCADShape*s,const char*p,FCADFailure*e){return run(c,e,[&]{path(p,false);Interface_Static::SetCVal("write.step.unit","MM");STEPControl_Writer w;auto g=progress(c);if(w.Transfer(copy(s),STEPControl_AsIs,true,g->Start())!=IFSelect_RetDone)throw Failure(FCAD_IO_FAILED,"STEP transfer failed; no approximate mesh export was substituted.");cancelled(c);if(w.Write(p)!=IFSelect_RetDone)throw Failure(FCAD_IO_FAILED,"STEP file could not be written.");});}
 void fcad_step_document_release(FCADSTEPDocument*d){std::lock_guard<std::recursive_mutex> lock(gate);delete d;}
 size_t fcad_step_node_count(const FCADSTEPDocument*d){std::lock_guard<std::recursive_mutex> lock(gate);return d?d->nodes.size():0;}
 FCADStatus fcad_step_node_info(FCADContext*c,const FCADSTEPDocument*d,size_t index,FCADSTEPNodeInfo*out,FCADFailure*e){return run(c,e,[&]{require(d&&out&&index<d->nodes.size(),"STEP occurrence is unavailable.");*out=d->nodes[index].info;});}

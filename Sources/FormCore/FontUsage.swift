@@ -27,7 +27,7 @@ public enum FontUsage {
   }
   public static func uses(in project:Project)->[FontUse] {
     var result:[FontUse]=[]
-    for object in project.objects {for element in object.artwork?.elements ?? [] {result += uses(in:element,owner:object.name+" / "+element.title,objectID:object.id)}}
+    for object in project.objects {for art in object.storedArtworks {for element in art.elements {result += uses(in:element,owner:object.name+" / "+element.title,objectID:object.id)}}}
     for story in project.textStories ?? [] {result += uses(in:story.sourceElement,owner:story.name,storyID:story.id)}
     for style in project.textStyles ?? [] {result.append(.init(fontName:style.typography.fontName,kind:"text_style",owner:style.name,styleID:style.id))}
     return result
@@ -47,15 +47,16 @@ public enum FontUsage {
       return result
     }
     for i in candidate.objects.indices {
-      guard var art=candidate.objects[i].artwork else{continue}
-      for j in art.elements.indices {
-        let value=changed(art.elements[j])
-        if value != art.elements[j] {
-          guard !candidate.objects[i].locked,!art.isLocked(art.elements[j]) else{throw FormError.invalid("Unlock affected text before replacing its font: \(candidate.objects[i].name) / \(art.elements[j].title).")}
-          art.elements[j]=value
+      let object=candidate.objects[i]
+      try candidate.objects[i].updateStoredArtworks{art in
+        for j in art.elements.indices {
+          let value=changed(art.elements[j])
+          if value != art.elements[j] {
+            guard !object.locked,!art.isLocked(art.elements[j]) else{throw FormError.invalid("Unlock affected text before replacing its font: \(object.name) / \(art.elements[j].title).")}
+            art.elements[j]=value
+          }
         }
       }
-      candidate.objects[i].artwork=art
     }
     for i in candidate.textStories?.indices ?? 0..<0 {
       let story=candidate.textStories![i],source=changed(story.sourceElement)

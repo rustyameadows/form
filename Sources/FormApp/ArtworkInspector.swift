@@ -126,6 +126,21 @@ struct ArtworkInspector: View {
     ScrollView {
       VStack(alignment: .leading, spacing: 17) {
         if let object = session.object {
+          if let review=session.activeCanvasFrame?.sourceReview {
+            Text(review).font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
+          }
+          if let projection = session.activeProjection {
+            SectionLabel(projection.isProof ? "DIELINE PROOF" : "LINKED SURFACE")
+            Text(projection.title).font(.system(size: 13, weight: .medium))
+            Text(projection.isProof
+              ? "Artwork edits update every linked view. Construction settings control the derived cut and fold geometry."
+              : "Artwork edits update every linked view and physical surface at their original physical scale.")
+              .font(.system(size: 10)).foregroundStyle(Palette.secondary)
+            if object.recipeID == "artboard" {
+              Button("Show artwork source") { session.activate(object.id); session.canvas?.fit(all: false) }
+                .font(.system(size: 10))
+            }
+          }
           if session.preview,store.surfaceLayout != .split,let preview = session.previewObject, let project = store.project {
             HStack {
               SectionLabel("LIVE OBJECT")
@@ -217,7 +232,7 @@ struct ArtworkInspector: View {
               Button("Delete") { session.execute("delete") }
             }.font(.system(size: 9))
             ProductionRoleControls(session:session)
-          } else {
+          } else if session.activeProjection == nil {
             frameControls(object)
           }
           SewingPatternActions(session: session)

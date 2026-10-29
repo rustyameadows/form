@@ -7,7 +7,7 @@ import json
 import math
 import pathlib
 import time
-from smoke_mcp import Client, OUTPUT, ROOT
+from smoke_mcp import Client, OUTPUT, ROOT, camera_pose
 
 
 def vector(point):
@@ -111,7 +111,10 @@ def main():
         cloth("step", frames=5)
         c.call("form_open_project", {"project_id": project["id"]})
         assert cloth("get")["diagnostics"]["completedFrames"] == 0
-        assert c.call("form_get_project")["camera"] == baseline_camera
+        reopened_camera = c.call("form_get_project")["camera"]
+        # A real native window may resize while reopening. Every saved pose
+        # field must remain exact; only its derived viewport aspect is live.
+        assert camera_pose(reopened_camera) == camera_pose(baseline_camera), (baseline_camera, reopened_camera)
         tote_definition = cloth("get", item=tote)["definition"]
         for _ in range(30):
             seam = cloth("step", item=tote, frames=1)
@@ -134,7 +137,8 @@ def main():
         c.call("form_export", {"format": "png", "path": str(OUTPUT/"cloth-native-studies.png")})
         report = {"passed": True, "project_id": project["id"], "drape": verified, "two_panel": tote_verified,
                   "drape_diagnostics": frame["diagnostics"], "seam_diagnostics": seam["diagnostics"], "snapshot": saved,
-                  "settings_digest": configured["definition_digest"], "runtime_saved": False, "hardware_calls": 0}
+                  "settings_digest": configured["definition_digest"], "runtime_saved": False, "hardware_calls": 0,
+                  "camera_reopen": {"before": baseline_camera, "after": reopened_camera, "saved_pose_unchanged": True}}
         path = OUTPUT/"cloth-report.json";path.write_text(json.dumps(report, indent=2))
         print(json.dumps({"passed": True, "report": str(path), "drape": verified, "two_panel": tote_verified}, indent=2))
     finally:

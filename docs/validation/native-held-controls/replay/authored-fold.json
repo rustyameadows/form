@@ -1,0 +1,1566 @@
+{
+  "before_model_bounds_mm" : [
+    -40.200000000000017,
+    0,
+    -15.20000000000001,
+    40.200000000000017,
+    100,
+    15.200000000000014
+  ],
+  "before_png_sha256" : "17b958cc5d5317a27fdfe14eab72823a598ee28e61251bf4dbb24f92c7b07891",
+  "cad_accepted_project_unchanged" : false,
+  "final_value" : 97.332829301075279,
+  "fixed_capture_camera" : {
+    "far_mm" : 150000,
+    "matrix" : [
+      0.8525245220595058,
+      0,
+      -0.522687228930659,
+      0,
+      -0.33672435777038673,
+      0.7648421872844885,
+      -0.54921137591459268,
+      0,
+      0.39977324344099335,
+      0.64421768723769102,
+      0.65204672016565546,
+      0,
+      103.03256079055856,
+      216.03261751925493,
+      168.05037464611686,
+      1
+    ],
+    "near_mm" : 1,
+    "projection" : "perspective:39.0"
+  },
+  "initial_value" : 100,
+  "input_count" : 74,
+  "input_sha256" : "727e478328d33c43cbb447faa40bead3efd92e23db42f46372bf9852b523b1ea",
+  "latest_model_bounds_mm" : [
+    -41.931615351987205,
+    0.0025041970228301125,
+    -20.604615693331777,
+    41.936623746032907,
+    101.46229618726034,
+    20.609632904200822
+  ],
+  "latest_png_sha256" : "a752c71c7e91022cd78d3e38c03a0f562f1fc952745662e6de623f9686d420aa",
+  "latest_stable_150ms" : true,
+  "measurement_notes" : "Every exact saved value dispatched through production NSSlider target\/action, serialized with capture backpressure for live modes. No hardware-event\/display-latency claim. Capture completion includes scene inspection and offscreen620x620 rendering overhead. CAD source edits remain draft until one explicit production Preview action.",
+  "native_slider_range" : [
+    0,
+    1
+  ],
+  "parameter_range" : [
+    0,
+    100
+  ],
+  "phase" : "authored-fold",
+  "rows" : [
+    {
+      "action_to_capture_ms" : 81.610625144094229,
+      "action_to_changed_payload_ms" : 70.247416850179434,
+      "action_to_source_ms" : 9.6236253157258034,
+      "action_uptime" : 3710898.5799412085,
+      "actual" : 99.586273521505376,
+      "expected" : 99.586273521505376,
+      "gpu_pixels_sha256" : "83d8a157aabff5c24869598773b20e85f0752b693143a93a2ce785469f569768",
+      "index" : 0,
+      "model_bounds_mm" : [
+        -40.487857956714279,
+        0.00038989233885899921,
+        -16.043000218191722,
+        40.488637741391969,
+        100.20181354140188,
+        16.043780035805472
+      ],
+      "native_value" : 1,
+      "payload_sha256" : "2e51515a53e377b495d1e7536216dec1367f3de972868f65660b6f8ef2c1440d"
+    },
+    {
+      "action_to_capture_ms" : 77.220125123858452,
+      "action_to_changed_payload_ms" : 66.65083346888423,
+      "action_to_source_ms" : 9.0945414267480373,
+      "action_uptime" : 3710898.6636667503,
+      "actual" : 68.134660618279568,
+      "expected" : 68.134660618279568,
+      "gpu_pixels_sha256" : "4f922b184ca7bdc0412529496708af6e57366cf2411f1defc1de355ca6123686",
+      "index" : 1,
+      "model_bounds_mm" : [
+        -47.286217303331568,
+        0.021681531201963367,
+        -65.242550861044265,
+        47.264767987801072,
+        132.86151167730065,
+        65.244353275430882
+      ],
+      "native_value" : 0.99586273521505375,
+      "payload_sha256" : "adeade025d6251b5ca5c88806b225cfdfa5c3f1f6898510884fd4ff2d9caaee9"
+    },
+    {
+      "action_to_capture_ms" : 77.187541872262955,
+      "action_to_changed_payload_ms" : 66.44099997356534,
+      "action_to_source_ms" : 9.4561250880360603,
+      "action_uptime" : 3710898.7431890834,
+      "actual" : 36.206317204301072,
+      "expected" : 36.206317204301072,
+      "gpu_pixels_sha256" : "b517ebda3744220539f12085e46351262c9956d386e5869f9a38ba7b2047ae35",
+      "index" : 2,
+      "model_bounds_mm" : [
+        -69.534114350668403,
+        0.02585525094644936,
+        -76.544041911042541,
+        69.526086245075945,
+        161.57440498606417,
+        76.539178217601744
+      ],
+      "native_value" : 0.68134660618279563,
+      "payload_sha256" : "125b1c43c07d72c826e21e83c77123af34310b1be936e8513f9ae5fbdf4f1c98"
+    },
+    {
+      "action_to_capture_ms" : 77.549541369080544,
+      "action_to_changed_payload_ms" : 65.958666615188122,
+      "action_to_source_ms" : 8.5928747430443764,
+      "action_uptime" : 3710898.8226596671,
+      "actual" : 9.826528897849462,
+      "expected" : 9.826528897849462,
+      "gpu_pixels_sha256" : "0bfa9c087b2cbec58f929527a73467a55745af0fdc9c9ae423f803ab49cbc837",
+      "index" : 3,
+      "model_bounds_mm" : [
+        -111.28980869319574,
+        0.026913493078382089,
+        -53.215583650270659,
+        111.26588633921727,
+        64.436665370454321,
+        53.21424791692678
+      ],
+      "native_value" : 0.36206317204301075,
+      "payload_sha256" : "f4e3f8a3dcfe3fc599c3410533ccd784dd87113d9a5b0ce0a37d98fdeef82697"
+    },
+    {
+      "action_to_capture_ms" : 78.078750055283308,
+      "action_to_changed_payload_ms" : 67.371000070124865,
+      "action_to_source_ms" : 8.9393332600593567,
+      "action_uptime" : 3710898.9020814169,
+      "actual" : 3.150201612903226,
+      "expected" : 3.150201612903226,
+      "gpu_pixels_sha256" : "6165ce5a4f8b22bcd0ce9371497c2146ef7af55abd3bc70e46ad41d64fd0e935",
+      "index" : 4,
+      "model_bounds_mm" : [
+        -115.52221127376913,
+        0.012935927582581996,
+        -50.346273326030236,
+        115.51146185306492,
+        21.516641576341222,
+        50.346215380448903
+      ],
+      "native_value" : 0.098265288978494625,
+      "payload_sha256" : "ba15d8e237914a16f8ecc3469e2ec368267667de5fbbf90927c8badc71d84629"
+    },
+    {
+      "action_to_capture_ms" : 77.187125105410814,
+      "action_to_changed_payload_ms" : 67.424125038087368,
+      "action_to_source_ms" : 8.981083519756794,
+      "action_uptime" : 3710898.98245,
+      "actual" : 0,
+      "expected" : 0,
+      "gpu_pixels_sha256" : "b2ff62f77082590f51e11df9869d3b31920f76d1b4e21a175e3bd01ae1fb1bed",
+      "index" : 5,
+      "model_bounds_mm" : [
+        -115.99999999999999,
+        -1.9956258867637189e-14,
+        -50,
+        115.99999999999999,
+        0.40000000000000002,
+        50
+      ],
+      "native_value" : 0.031502016129032258,
+      "payload_sha256" : "44ed6c1cdbab9030010113682570398f22d7620cf587a11b87a1feb7b5e4e2ba"
+    },
+    {
+      "action_to_capture_ms" : 76.485500205308199,
+      "action_to_changed_payload_ms" : 66.19216687977314,
+      "action_to_source_ms" : 8.768333587795496,
+      "action_uptime" : 3710899.0619937084,
+      "actual" : 0.669942876344086,
+      "expected" : 0.669942876344086,
+      "gpu_pixels_sha256" : "bda06de81b0dcd65b6e1241d850869dae1ff33c1f650bf780e5e88e4fa75889f",
+      "index" : 6,
+      "model_bounds_mm" : [
+        -115.98167271037502,
+        0.0031561341829355882,
+        -50.016877603940863,
+        115.97914783101905,
+        4.9052309254783477,
+        50.016877044644446
+      ],
+      "native_value" : 0,
+      "payload_sha256" : "cfca412d748062f95e1af37f77390cbce3103c58e60b9277b4b650e6d52a74b4"
+    },
+    {
+      "action_to_capture_ms" : 78.612541779875755,
+      "action_to_changed_payload_ms" : 67.176541779190302,
+      "action_to_source_ms" : 9.0120835229754448,
+      "action_uptime" : 3710899.1408370836,
+      "actual" : 10.567876344086022,
+      "expected" : 10.567876344086022,
+      "gpu_pixels_sha256" : "989160f1025c2ef1ecdc6e4796aa01117c1509a37ca23626b4c18aab1861fbab",
+      "index" : 7,
+      "model_bounds_mm" : [
+        -110.56140821252379,
+        0.02723461448516673,
+        -53.695921954068126,
+        110.53673831057193,
+        68.931896057349746,
+        53.694365164920768
+      ],
+      "native_value" : 0.0066994287634408603,
+      "payload_sha256" : "e207925e370e0f624bbb0e435ba484a8c826488b22d311bfa206ff92b8419071"
+    },
+    {
+      "action_to_capture_ms" : 77.674375381320715,
+      "action_to_changed_payload_ms" : 65.78958360478282,
+      "action_to_source_ms" : 9.268458466976881,
+      "action_uptime" : 3710899.2217616667,
+      "actual" : 22.271925403225808,
+      "expected" : 22.271925403225808,
+      "gpu_pixels_sha256" : "f51f57d89b97db7567a3b8a846296938af0ee6e4615aef5a83ea0e14a31ea9cf",
+      "index" : 8,
+      "model_bounds_mm" : [
+        -93.240599979642923,
+        0.0096143700462505421,
+        -64.086680789030567,
+        93.231000014302637,
+        128.09789429678133,
+        64.073025477709734
+      ],
+      "native_value" : 0.10567876344086022,
+      "payload_sha256" : "acb10cb82534d18a30fe6deeff686b867738e05e8e739829769eee0e2a5b731f"
+    },
+    {
+      "action_to_capture_ms" : 76.157916802912951,
+      "action_to_changed_payload_ms" : 66.487625241279602,
+      "action_to_source_ms" : 8.8936253450810909,
+      "action_uptime" : 3710899.3018120001,
+      "actual" : 29.595094086021508,
+      "expected" : 29.595094086021508,
+      "gpu_pixels_sha256" : "fc78caec5b72945ce1902b63077156874c5fcf61bcc0d8b4c1a6f2cb81663f78",
+      "index" : 9,
+      "model_bounds_mm" : [
+        -80.056492740419031,
+        0.013986579144471989,
+        -71.322665635621689,
+        80.046686382622539,
+        151.02979952014758,
+        71.309689550531274
+      ],
+      "native_value" : 0.22271925403225809,
+      "payload_sha256" : "27ae37467f881370ab5413caa8b2107a845ac9b26c84ebb252293dfa436af927"
+    },
+    {
+      "action_to_capture_ms" : 76.63058303296566,
+      "action_to_changed_payload_ms" : 66.050916444510221,
+      "action_to_source_ms" : 8.9665413834154606,
+      "action_uptime" : 3710899.3806585004,
+      "actual" : 38.818884408602152,
+      "expected" : 38.818884408602152,
+      "gpu_pixels_sha256" : "5e20f710ea6e4c532455f378f5e02f95d7757be997d6727c44e1bc24cd8ba915",
+      "index" : 10,
+      "model_bounds_mm" : [
+        -66.156849032853955,
+        0.027631415688887273,
+        -77.986834996257272,
+        66.143504373460928,
+        163.23053340171327,
+        77.984934397353243
+      ],
+      "native_value" : 0.29595094086021506,
+      "payload_sha256" : "1dc3459aaaa09acd38a432d670f123dffe21bab407a49ea53aa66ad1bd8028de"
+    },
+    {
+      "action_to_capture_ms" : 76.528000179678202,
+      "action_to_changed_payload_ms" : 66.388083156198263,
+      "action_to_source_ms" : 9.0078334324061871,
+      "action_uptime" : 3710899.4597327919,
+      "actual" : 47.746555779569896,
+      "expected" : 47.746555779569896,
+      "gpu_pixels_sha256" : "1b955544f3e2f429f849058be4b5160c805357cdebea619a143ab0c0168e76b7",
+      "index" : 11,
+      "model_bounds_mm" : [
+        -53.90446759488934,
+        0.026523091308675362,
+        -79.328577559314283,
+        53.900223499768074,
+        159.96103164778705,
+        79.330148090705421
+      ],
+      "native_value" : 0.3881888440860215,
+      "payload_sha256" : "203e5392004b2c00de83df8f4bf338d7dfbde1882b35b6e76f22a69ddbaed373"
+    },
+    {
+      "action_to_capture_ms" : 76.996791642159224,
+      "action_to_changed_payload_ms" : 66.035791765898466,
+      "action_to_source_ms" : 8.8590001687407494,
+      "action_uptime" : 3710899.5382841253,
+      "actual" : 52.396253360215049,
+      "expected" : 52.396253360215049,
+      "gpu_pixels_sha256" : "2046b7b9acf1b9948aa4c3875bd01273d56286fd14eebd836d5f405b626fe4ae",
+      "index" : 12,
+      "model_bounds_mm" : [
+        -50.29966474317186,
+        0.025257378907838302,
+        -78.264861653802825,
+        50.295152177056522,
+        155.44987604485095,
+        78.266371472302893
+      ],
+      "native_value" : 0.47746555779569894,
+      "payload_sha256" : "1acaf0a57c13452fb4d487636027a2b23f0b16c25a0bfe9d94754d74c5a2f058"
+    },
+    {
+      "action_to_capture_ms" : 76.73520827665925,
+      "action_to_changed_payload_ms" : 66.104458644986153,
+      "action_to_source_ms" : 9.1912918724119663,
+      "action_uptime" : 3710899.6178561668,
+      "actual" : 56.470514112903224,
+      "expected" : 56.470514112903224,
+      "gpu_pixels_sha256" : "76c748e9edb06856c7facea63ae7f5d1a4bbc7239a717a274de02c0cd41ebd0d",
+      "index" : 13,
+      "model_bounds_mm" : [
+        -49.573619656250003,
+        0.025384074261296519,
+        -76.461623356635002,
+        49.562639518191475,
+        150.6809908389931,
+        76.465479881443656
+      ],
+      "native_value" : 0.5239625336021505,
+      "payload_sha256" : "59eb0b3d12b8ac8ad97aa5c8579c7210fe6cebe51f12ea31771aa4f89467bf47"
+    },
+    {
+      "action_to_capture_ms" : 76.762416400015354,
+      "action_to_changed_payload_ms" : 66.350500099360943,
+      "action_to_source_ms" : 8.9767915196716785,
+      "action_uptime" : 3710899.697067542,
+      "actual" : 60.110047043010752,
+      "expected" : 60.110047043010752,
+      "gpu_pixels_sha256" : "79a286c48b713ae59ec147cca2a8eed8b2586ea7733d60651e4d6dc4dcb07073",
+      "index" : 14,
+      "model_bounds_mm" : [
+        -48.890786688705077,
+        0.02470330104159757,
+        -73.766914372580771,
+        48.874956107247279,
+        145.3715872450276,
+        73.771006004908514
+      ],
+      "native_value" : 0.56470514112903225,
+      "payload_sha256" : "98db02a763dc8c69dad60cde92ce16089b440f32c2214760cf721d2b2e32a403"
+    },
+    {
+      "action_to_capture_ms" : 76.92508352920413,
+      "action_to_changed_payload_ms" : 66.80420832708478,
+      "action_to_source_ms" : 9.0514165349304676,
+      "action_uptime" : 3710899.7761778752,
+      "actual" : 61.609543010752688,
+      "expected" : 61.609543010752688,
+      "gpu_pixels_sha256" : "16825ef5dfd9057886174b8eb06bff13f733297dbb82befedf156c4e16ca3d43",
+      "index" : 15,
+      "model_bounds_mm" : [
+        -48.600604617396598,
+        0.024230338281313379,
+        -72.361454309531027,
+        48.58283224873604,
+        142.978741865519,
+        72.365267700565738
+      ],
+      "native_value" : 0.6011004704301075,
+      "payload_sha256" : "dd8e216381b253f4cbd3f1bf04917c2c1180a3be810a34432b95d4e788926da2"
+    },
+    {
+      "action_to_capture_ms" : 76.979666482657194,
+      "action_to_changed_payload_ms" : 66.731583327054977,
+      "action_to_source_ms" : 8.5857496596872807,
+      "action_uptime" : 3710899.8554112087,
+      "actual" : 63.409358198924728,
+      "expected" : 63.409358198924728,
+      "gpu_pixels_sha256" : "cffe3e931a3421190a69f7b58848d124927df0a63f862b72682328bc241f4ea9",
+      "index" : 16,
+      "model_bounds_mm" : [
+        -48.245813791116902,
+        0.023532367646055263,
+        -70.4517370528133,
+        48.226210586418269,
+        139.99592541604517,
+        70.455066374592093
+      ],
+      "native_value" : 0.61609543010752688,
+      "payload_sha256" : "487cbc47e16ecb1d1cb81c4fc8fe5f6cd023f6b286076ae42428ffc1277103de"
+    },
+    {
+      "action_to_capture_ms" : 76.744583435356617,
+      "action_to_changed_payload_ms" : 67.263249773532152,
+      "action_to_source_ms" : 9.0666664764285088,
+      "action_uptime" : 3710899.934787042,
+      "actual" : 64.700940860215056,
+      "expected" : 64.700940860215056,
+      "gpu_pixels_sha256" : "f1116d6c52baff9762c066697c6358fcd3df7d8a480340f5803fd737b852ff0f",
+      "index" : 17,
+      "model_bounds_mm" : [
+        -47.986995584978501,
+        0.022952831192341705,
+        -68.935453757360364,
+        47.966431298879968,
+        137.80172884959276,
+        68.937783702097903
+      ],
+      "native_value" : 0.63409358198924726,
+      "payload_sha256" : "c3b90087479ee105a2a681573b52870ee25fa4e37168223995e5ef036986b4e1"
+    },
+    {
+      "action_to_capture_ms" : 77.589000109583139,
+      "action_to_changed_payload_ms" : 66.735833417624235,
+      "action_to_source_ms" : 9.0897083282470703,
+      "action_uptime" : 3710900.0136549585,
+      "actual" : 65.15456989247312,
+      "expected" : 65.15456989247312,
+      "gpu_pixels_sha256" : "f1f92e376b0914c8466f5a8a2fbff896194964dc32984cdd497a5a2e546620d0",
+      "index" : 18,
+      "model_bounds_mm" : [
+        -47.895281671069853,
+        0.022735132812314873,
+        -68.374661308970857,
+        47.874387787804991,
+        137.02356575481713,
+        68.376467721451689
+      ],
+      "native_value" : 0.6470094086021505,
+      "payload_sha256" : "a0f990c024f631b76f1f018e02b312cd6a5c60a3b7281cb8d5d59e24c9a0e7da"
+    },
+    {
+      "action_to_capture_ms" : 77.26695854216814,
+      "action_to_changed_payload_ms" : 66.92925002425909,
+      "action_to_source_ms" : 8.9507084339857101,
+      "action_uptime" : 3710900.0937985834,
+      "actual" : 66.303343413978496,
+      "expected" : 66.303343413978496,
+      "gpu_pixels_sha256" : "d6ec2c1ae3679264722d781d319e797e71e9d6e7dd0dbb65fac4014f7df67b49",
+      "index" : 19,
+      "model_bounds_mm" : [
+        -47.661182043539526,
+        0.0221537715564466,
+        -66.889843604870393,
+        47.639472616293048,
+        135.04125544538377,
+        66.890285915316241
+      ],
+      "native_value" : 0.65154569892473124,
+      "payload_sha256" : "f4f2e3eb196df63e68981f0315c650979f7663b95c4376e08c6e94c774eea32e"
+    },
+    {
+      "action_to_capture_ms" : 77.554499730467796,
+      "action_to_changed_payload_ms" : 65.740416757762432,
+      "action_to_source_ms" : 9.0542500838637352,
+      "action_uptime" : 3710900.1735349586,
+      "actual" : 69.959677419354833,
+      "expected" : 69.959677419354833,
+      "gpu_pixels_sha256" : "73b2fb37a95507c79155eeab9ae89c3e90ed5c6a04255f3d7499a364d9f33810",
+      "index" : 20,
+      "model_bounds_mm" : [
+        -46.907393269727919,
+        0.021197545302158005,
+        -63.631441673212095,
+        46.886596605497829,
+        130.82468123388927,
+        63.635485653006079
+      ],
+      "native_value" : 0.66303343413978499,
+      "payload_sha256" : "54908ef4224c59fa0b374c21a02089a0a5214e9cbcc10a74f66052e0a8b2ffde"
+    },
+    {
+      "action_to_capture_ms" : 80.166250001639128,
+      "action_to_changed_payload_ms" : 67.548041697591543,
+      "action_to_source_ms" : 9.4031663611531258,
+      "action_uptime" : 3710900.2532330421,
+      "actual" : 72.242523521505376,
+      "expected" : 72.242523521505376,
+      "gpu_pixels_sha256" : "42d22ba1244ad875828c4687d45b724f99e3ff9bfe8256d4dce90e2aebe6dda5",
+      "index" : 21,
+      "model_bounds_mm" : [
+        -46.425582639508264,
+        0.020214172305301759,
+        -61.352579672861374,
+        46.405626346570664,
+        128.14282254428738,
+        61.359392849910506
+      ],
+      "native_value" : 0.69959677419354838,
+      "payload_sha256" : "beed034125c6474a00beb354a9111ba4163b06d47983f61d8200ddcfe6b17432"
+    },
+    {
+      "action_to_capture_ms" : 77.525583561509848,
+      "action_to_changed_payload_ms" : 67.047750111669302,
+      "action_to_source_ms" : 9.3629583716392517,
+      "action_uptime" : 3710900.3355923751,
+      "actual" : 75.919858870967744,
+      "expected" : 75.919858870967744,
+      "gpu_pixels_sha256" : "ac248f2ef73db2bc71bc7e4333206e5d0f25555335d6fa04d8388554a9c77373",
+      "index" : 22,
+      "model_bounds_mm" : [
+        -45.632351935256807,
+        0.017104958973611417,
+        -57.082498737416358,
+        45.61402914976081,
+        123.62754965027177,
+        57.092366693167492
+      ],
+      "native_value" : 0.72242523521505375,
+      "payload_sha256" : "4c0e41bb7b60b6f36d8d7712f3ee6c30564fc18457d4e240e5a3b3fbd80de626"
+    },
+    {
+      "action_to_capture_ms" : 73.363333009183407,
+      "action_to_changed_payload_ms" : 63.50345816463232,
+      "action_to_source_ms" : 9.2862914316356182,
+      "action_uptime" : 3710900.4155990421,
+      "actual" : 79.725302419354833,
+      "expected" : 79.725302419354833,
+      "gpu_pixels_sha256" : "9220d8eaef3d21ebfd93f570da43cb88784ba1b62907f560538fd6845290e107",
+      "index" : 23,
+      "model_bounds_mm" : [
+        -44.791739271193961,
+        0.01368143769172292,
+        -51.922519275387458,
+        44.775873007938117,
+        118.8885180111785,
+        51.935418348544303
+      ],
+      "native_value" : 0.75919858870967749,
+      "payload_sha256" : "80152309e1b8e3ac17e2eec748d39eaf2939e73ec8c8dfdbc3e2f0b9c1a19ada"
+    },
+    {
+      "action_to_capture_ms" : 77.371041756123304,
+      "action_to_changed_payload_ms" : 66.993208602070808,
+      "action_to_source_ms" : 9.0523748658597469,
+      "action_uptime" : 3710900.4911993751,
+      "actual" : 80.937079973118273,
+      "expected" : 80.937079973118273,
+      "gpu_pixels_sha256" : "2c64e81bb17205798fe2b0a700ce5e9d9fad7f110fe3b9b2b5c37ce6dfc0476f",
+      "index" : 24,
+      "model_bounds_mm" : [
+        -44.906076634109439,
+        0.013128679509080143,
+        -50.13526709640405,
+        44.915699460919534,
+        117.40164685662502,
+        50.148714373712593
+      ],
+      "native_value" : 0.79725302419354838,
+      "payload_sha256" : "2ef9a24c78ec37031801bb1df9dd1766ca2d4fb0e0ac007845f9ceb858c96978"
+    },
+    {
+      "action_to_capture_ms" : 74.934166856110096,
+      "action_to_changed_payload_ms" : 64.542833250015974,
+      "action_to_source_ms" : 8.6690834723412991,
+      "action_uptime" : 3710900.5710345418,
+      "actual" : 81.199596774193552,
+      "expected" : 81.199596774193552,
+      "gpu_pixels_sha256" : "b0e0bda258c64bc4ed97dfbb53514bcc1990d936d228d9cce35d26808e203af9",
+      "index" : 25,
+      "model_bounds_mm" : [
+        -44.975479270235184,
+        0.01303753189485235,
+        -49.739366045070732,
+        44.985307711232892,
+        117.08216030076809,
+        49.752909248092237
+      ],
+      "native_value" : 0.80937079973118276,
+      "payload_sha256" : "575b9a2826ac21239aea444c424e7d61f7a93501983f9fce657e10c64ba79b09"
+    },
+    {
+      "action_to_capture_ms" : 74.912083335220814,
+      "action_to_changed_payload_ms" : 64.780833199620247,
+      "action_to_source_ms" : 8.999374695122242,
+      "action_uptime" : 3710900.6487220838,
+      "actual" : 79.695900537634415,
+      "expected" : 79.695900537634415,
+      "gpu_pixels_sha256" : "c1b7ada116d928cfdacc565cda306757725f021704b808490423988e5dd87f0e",
+      "index" : 26,
+      "model_bounds_mm" : [
+        -44.798303591795104,
+        0.013708002029837019,
+        -51.965129177748736,
+        44.782418120096352,
+        118.92485993551219,
+        51.978007650333396
+      ],
+      "native_value" : 0.8119959677419355,
+      "payload_sha256" : "69b389f238c97ac4d311c0f75584f2cf4c5ce70481e14aadc295b06ce49972df"
+    },
+    {
+      "action_to_capture_ms" : 76.244875323027372,
+      "action_to_changed_payload_ms" : 66.13245839253068,
+      "action_to_source_ms" : 8.6085000075399876,
+      "action_uptime" : 3710900.7263642917,
+      "actual" : 76.734711021505376,
+      "expected" : 76.734711021505376,
+      "gpu_pixels_sha256" : "75266a2f81c30e7939b5dca92359e68db62adadc89a3ffbf2f322eea12e47d5b",
+      "index" : 27,
+      "model_bounds_mm" : [
+        -45.453944771835481,
+        0.016380377431879367,
+        -56.039216516773195,
+        45.436142785166325,
+        122.61136134951327,
+        56.049793239256417
+      ],
+      "native_value" : 0.79695900537634412,
+      "payload_sha256" : "c8f806887a40b105b1438f50116dbd2a4a72a222234f9da7fe7879d99c52cea1"
+    },
+    {
+      "action_to_capture_ms" : 75.575416442006826,
+      "action_to_changed_payload_ms" : 65.362916328012943,
+      "action_to_source_ms" : 8.8406666181981564,
+      "action_uptime" : 3710900.8054298754,
+      "actual" : 72.65625,
+      "expected" : 72.65625,
+      "gpu_pixels_sha256" : "87b6104040a8e89f981ff97b609f3ea47a42da1c33d3f0d6f07db215b02612a8",
+      "index" : 28,
+      "model_bounds_mm" : [
+        -46.337360199773613,
+        0.01988206519976643,
+        -60.908603322912377,
+        46.317558988165068,
+        127.64433778702021,
+        60.915910771823334
+      ],
+      "native_value" : 0.76734711021505375,
+      "payload_sha256" : "f7c569c850ff2788a11d51b53c7065ae1ece1b3f21aec0be2ec543bdce55ad06"
+    },
+    {
+      "action_to_capture_ms" : 76.81724987924099,
+      "action_to_changed_payload_ms" : 67.149249836802483,
+      "action_to_source_ms" : 9.1721252538263798,
+      "action_uptime" : 3710900.8832712919,
+      "actual" : 70.600218413978496,
+      "expected" : 70.600218413978496,
+      "gpu_pixels_sha256" : "2be4a2ee8ed127c6ad144b4e640b092e84ece047b0f7ea3b575375ab9423667d",
+      "index" : 29,
+      "model_bounds_mm" : [
+        -46.773072481663007,
+        0.02099465309157722,
+        -63.021411430603621,
+        46.752508963391925,
+        130.08541455341361,
+        63.026238094229385
+      ],
+      "native_value" : 0.7265625,
+      "payload_sha256" : "4b4073d3e2d93d0decb69c76bb0e956ed0fc2521784c28f65287d465bbfaee96"
+    },
+    {
+      "action_to_capture_ms" : 77.155124861747026,
+      "action_to_changed_payload_ms" : 66.806749906390905,
+      "action_to_source_ms" : 9.2940833419561386,
+      "action_uptime" : 3710900.9623518754,
+      "actual" : 68.743699596774192,
+      "expected" : 68.743699596774192,
+      "gpu_pixels_sha256" : "70ac9bb3f35be5b82ffc2440c1e76326b3757fe891719fc1ff90508bf28b437b",
+      "index" : 30,
+      "model_bounds_mm" : [
+        -47.160447688458845,
+        0.02153611576233061,
+        -64.725867065676795,
+        47.139214240335953,
+        132.19418066828302,
+        64.728418484217883
+      ],
+      "native_value" : 0.70600218413978499,
+      "payload_sha256" : "b6a89093890764dd9840f97eb0d9a3fa3c1f8417d171de66b4ecc17eae932b2c"
+    },
+    {
+      "action_to_capture_ms" : 77.111208345741034,
+      "action_to_changed_payload_ms" : 66.744375042617321,
+      "action_to_source_ms" : 8.753583300858736,
+      "action_uptime" : 3710901.042212042,
+      "actual" : 65.320480510752688,
+      "expected" : 65.320480510752688,
+      "gpu_pixels_sha256" : "0bdefea6ae9525851f1e74b1e975462f70eee9ce9b0b20abecc7692514e4d578",
+      "index" : 31,
+      "model_bounds_mm" : [
+        -47.861634403757193,
+        0.022653778277856418,
+        -68.165918608489122,
+        47.840621029675098,
+        136.73819854174636,
+        68.167531354826593
+      ],
+      "native_value" : 0.68743699596774188,
+      "payload_sha256" : "1d4ddf8a172216001612dfda17808fc921663d058e1a91024cf571f7e40f1d79"
+    },
+    {
+      "action_to_capture_ms" : 76.304708607494831,
+      "action_to_changed_payload_ms" : 66.304166801273823,
+      "action_to_source_ms" : 9.1053750365972519,
+      "action_uptime" : 3710901.1221311251,
+      "actual" : 58.910870295698928,
+      "expected" : 58.910870295698928,
+      "gpu_pixels_sha256" : "d8aa73a83e209136dc87eb62b010c5341bac460250cec2e95d9b8cfdf4ce2966",
+      "index" : 32,
+      "model_bounds_mm" : [
+        -49.119195590798583,
+        0.025003926050374048,
+        -74.767427015669909,
+        49.104943381531506,
+        147.20806969680362,
+        74.771659265109378
+      ],
+      "native_value" : 0.65320480510752688,
+      "payload_sha256" : "92b182f58331b5c845bd191e237ba50c9feff47e4953eaf87f7397dfe1d77fd9"
+    },
+    {
+      "action_to_capture_ms" : 77.233916614204645,
+      "action_to_changed_payload_ms" : 67.184875253587961,
+      "action_to_source_ms" : 9.2554166913032532,
+      "action_uptime" : 3710901.2011744585,
+      "actual" : 53.7151377688172,
+      "expected" : 53.7151377688172,
+      "gpu_pixels_sha256" : "e9cb9dff8d5b93becbbd9629b1490b493c76c6fe4e86c5697524059dbf146d56",
+      "index" : 33,
+      "model_bounds_mm" : [
+        -50.069244931182197,
+        0.025408015964217157,
+        -77.820916839805577,
+        50.06225794981124,
+        154.06885304569741,
+        77.823259064689921
+      ],
+      "native_value" : 0.58910870295698925,
+      "payload_sha256" : "223c5315a45921002441188e6b014307e5b3ce192ecacc0a9b1759e7090d760d"
+    },
+    {
+      "action_to_capture_ms" : 76.896499842405319,
+      "action_to_changed_payload_ms" : 66.324291750788689,
+      "action_to_source_ms" : 8.8564581237733364,
+      "action_uptime" : 3710901.281100417,
+      "actual" : 50.331821236559136,
+      "expected" : 50.331821236559136,
+      "gpu_pixels_sha256" : "8f5f5122cda162b242124da4be765b6c368c87fd837872642f5cde1f5e368e41",
+      "index" : 34,
+      "model_bounds_mm" : [
+        -50.651168348966493,
+        0.024801943033594398,
+        -78.695890372068646,
+        50.650542891999201,
+        157.25065497060154,
+        78.695980616091902
+      ],
+      "native_value" : 0.537151377688172,
+      "payload_sha256" : "232089bc516ccadd27462bd394603c5f7d4404b0086a66c25cb4f9fb9adb85af"
+    },
+    {
+      "action_to_capture_ms" : 75.80683333799243,
+      "action_to_changed_payload_ms" : 65.587958320975304,
+      "action_to_source_ms" : 8.8912085629999638,
+      "action_uptime" : 3710901.3609239585,
+      "actual" : 47.906165994623656,
+      "expected" : 47.906165994623656,
+      "gpu_pixels_sha256" : "44aabdc2f8470aecf1afb188e02c0efb9a744c4db45f6634f2430d951934a36c",
+      "index" : 35,
+      "model_bounds_mm" : [
+        -53.678728296957587,
+        0.026411339468324968,
+        -79.29660178401727,
+        53.674784358496133,
+        159.79818100612201,
+        79.298073604833235
+      ],
+      "native_value" : 0.50331821236559138,
+      "payload_sha256" : "cb2dc1dfcf2dfe4ed14b0f082954cae9617522fe261f303cf630abe8ef324990"
+    },
+    {
+      "action_to_capture_ms" : 75.768666807562113,
+      "action_to_changed_payload_ms" : 64.910166896879673,
+      "action_to_source_ms" : 9.0290834195911884,
+      "action_uptime" : 3710901.4398026667,
+      "actual" : 45.730426747311824,
+      "expected" : 45.730426747311824,
+      "gpu_pixels_sha256" : "6cfd446c64331dd120c4af77a04ce57d1d2193f40ea32968fe592990dc3f80a0",
+      "index" : 36,
+      "model_bounds_mm" : [
+        -56.741901255986392,
+        0.027830749653915632,
+        -79.557096670689049,
+        56.733928048224328,
+        161.74367935141601,
+        79.558791885135548
+      ],
+      "native_value" : 0.47906165994623656,
+      "payload_sha256" : "7bc48611ca60055d5a65ef018bf24b084fdbf2e33794d5c8daafb748a65cf4c8"
+    },
+    {
+      "action_to_capture_ms" : 77.762874774634838,
+      "action_to_changed_payload_ms" : 67.226458340883255,
+      "action_to_source_ms" : 9.2676663771271706,
+      "action_uptime" : 3710901.518017292,
+      "actual" : 40.74260752688172,
+      "expected" : 40.74260752688172,
+      "gpu_pixels_sha256" : "aadaeecaf3701abfe7e942871a6780c39366a996b3d507d1e8f5440ef6ae0efc",
+      "index" : 37,
+      "model_bounds_mm" : [
+        -63.59726782567229,
+        0.028448911435845048,
+        -78.76958848729123,
+        63.582557342120801,
+        163.62245472152136,
+        78.769279740922798
+      ],
+      "native_value" : 0.45730426747311825,
+      "payload_sha256" : "86ba64212dd717715510459571a4c21ad1d7e0850673a35e1f4d9a37383f7077"
+    },
+    {
+      "action_to_capture_ms" : 76.177916489541531,
+      "action_to_changed_payload_ms" : 65.914041362702847,
+      "action_to_source_ms" : 9.1072916984558105,
+      "action_uptime" : 3710901.5984761254,
+      "actual" : 39.812247983870968,
+      "expected" : 39.812247983870968,
+      "gpu_pixels_sha256" : "9191b15268fc66f0eb2a10c040b6d9b61f417a940d01b72b97d1ce01f7d6cf62",
+      "index" : 38,
+      "model_bounds_mm" : [
+        -64.84143195271345,
+        0.028105550331531504,
+        -78.422055206663032,
+        64.826114536931726,
+        163.5170755545347,
+        78.421227751242213
+      ],
+      "native_value" : 0.40742607526881719,
+      "payload_sha256" : "acbdf36ac49a366147245f131609459d1c94ed154a6a19e381ccb522d66bfa6c"
+    },
+    {
+      "action_to_capture_ms" : 76.734416652470827,
+      "action_to_changed_payload_ms" : 66.789207980036736,
+      "action_to_source_ms" : 8.9854584075510502,
+      "action_uptime" : 3710901.6769399587,
+      "actual" : 36.428931451612904,
+      "expected" : 36.428931451612904,
+      "gpu_pixels_sha256" : "f1ffc239e5ee6f6070a3fe50bf93c540a40a0769d616591836afcaba7ea12dd5",
+      "index" : 39,
+      "model_bounds_mm" : [
+        -69.251344876697161,
+        0.02603624349421807,
+        -76.682884800138652,
+        69.242857865777495,
+        161.76822806816696,
+        76.678278532934854
+      ],
+      "native_value" : 0.39812247983870969,
+      "payload_sha256" : "13a9ff72cc79fc12a350f651d6bfaeb6cbd2fb9f32bfe1795d0ba9dfb9f5f46e"
+    },
+    {
+      "action_to_capture_ms" : 77.189916744828224,
+      "action_to_changed_payload_ms" : 65.909291617572308,
+      "action_to_source_ms" : 8.5466247983276844,
+      "action_uptime" : 3710901.7561606253,
+      "actual" : 31.258400537634408,
+      "expected" : 31.258400537634408,
+      "gpu_pixels_sha256" : "b6beca24c1f09adbfc8be68fd32fad5b0bf3437d6b9a2b5405c518a66c5ef389",
+      "index" : 40,
+      "model_bounds_mm" : [
+        -77.005786936944801,
+        0.017656127748352901,
+        -72.807804514023701,
+        76.999929546573696,
+        154.57952880965954,
+        72.797298203494478
+      ],
+      "native_value" : 0.36428931451612906,
+      "payload_sha256" : "d1c8aafb2f5ba72da5f06e1d3ee38e8cae5e78070f4aae8397c6c6434ffbf045"
+    },
+    {
+      "action_to_capture_ms" : 76.426166575402021,
+      "action_to_changed_payload_ms" : 65.536750014871359,
+      "action_to_source_ms" : 8.9187081903219223,
+      "action_uptime" : 3710901.8357802918,
+      "actual" : 27.268145161290324,
+      "expected" : 27.268145161290324,
+      "gpu_pixels_sha256" : "a0057d2e97887fa1e7e32f6bec86a8a64e701f16cf1d38f1a259078ea62bf98a",
+      "index" : 41,
+      "model_bounds_mm" : [
+        -84.168748293610804,
+        0.0077519490907320687,
+        -69.110272554015097,
+        84.15424868068618,
+        145.02300325275161,
+        69.09403929494357
+      ],
+      "native_value" : 0.31258400537634407,
+      "payload_sha256" : "ec3f9838d8672b8a69f5cca3779ab300653869885d0e8006f1ac226137db1bc9"
+    },
+    {
+      "action_to_capture_ms" : 75.83883311599493,
+      "action_to_changed_payload_ms" : 64.948000013828278,
+      "action_to_source_ms" : 9.1798747889697552,
+      "action_uptime" : 3710901.9146456253,
+      "actual" : 24.899193548387096,
+      "expected" : 24.899193548387096,
+      "gpu_pixels_sha256" : "86f55277d3a1f0cb524fdd4771e0a92afbed4ff6e5fff6a9f29d9c52735e2b3a",
+      "index" : 42,
+      "model_bounds_mm" : [
+        -88.139192047681505,
+        0.00035133070042547843,
+        -66.750655483477175,
+        88.130808752615494,
+        137.65986505840655,
+        66.731957114428212
+      ],
+      "native_value" : 0.27268145161290325,
+      "payload_sha256" : "1e75f4cb26bda052fd1925dd62843b67e82beae62bc2952af3d1c7e7cae5f2b7"
+    },
+    {
+      "action_to_capture_ms" : 76.502582989633083,
+      "action_to_changed_payload_ms" : 66.641208250075579,
+      "action_to_source_ms" : 9.0758749283850193,
+      "action_uptime" : 3710901.9934140421,
+      "actual" : 23.876428091397848,
+      "expected" : 23.876428091397848,
+      "gpu_pixels_sha256" : "07ea4e810c63405f012cd32229d60ce57b2dd1c3ba5dd396089980f3150b4583",
+      "index" : 43,
+      "model_bounds_mm" : [
+        -90.163121542825891,
+        0.0039380621726650133,
+        -65.715737831131207,
+        90.158889294020412,
+        134.11732423965776,
+        65.699095320844023
+      ],
+      "native_value" : 0.24899193548387097,
+      "payload_sha256" : "4bc9b786287346a5c12a95f967dbd2f752d8aff441039cdbd07eb226f4d90e45"
+    },
+    {
+      "action_to_capture_ms" : 76.984875369817019,
+      "action_to_changed_payload_ms" : 65.28183352202177,
+      "action_to_source_ms" : 8.775708731263876,
+      "action_uptime" : 3710902.0727120833,
+      "actual" : 22.614247311827956,
+      "expected" : 22.614247311827956,
+      "gpu_pixels_sha256" : "4d3d1dcfaeaf8150767e0439867a9707189d54f668fffaa2c7231f3bca5ef30d",
+      "index" : 44,
+      "model_bounds_mm" : [
+        -92.595286813261453,
+        0.0084010187440242134,
+        -64.434023227351446,
+        92.586623989467284,
+        129.42901768246111,
+        64.419755882062518
+      ],
+      "native_value" : 0.23876428091397847,
+      "payload_sha256" : "4409c37c580c13d8998ec416006c824fc5df8c9fd50f0c397732bdba6129412c"
+    },
+    {
+      "action_to_capture_ms" : 80.217499751597643,
+      "action_to_changed_payload_ms" : 68.223875015974045,
+      "action_to_source_ms" : 9.501416701823473,
+      "action_uptime" : 3710902.152276292,
+      "actual" : 18.69329637096774,
+      "expected" : 18.69329637096774,
+      "gpu_pixels_sha256" : "3a497951d09036188d8b7f59a38d85350a163a20e9538daf75274795dd4dd664",
+      "index" : 45,
+      "model_bounds_mm" : [
+        -99.576742695584286,
+        0.018826895976559399,
+        -60.519583366412128,
+        99.557747941619027,
+        112.70774312561213,
+        60.511457896823998
+      ],
+      "native_value" : 0.22614247311827956,
+      "payload_sha256" : "0a14fe6714f66276c4340977958580edb62ee917933e2e0f3e0bec16b0d7e78f"
+    },
+    {
+      "action_to_capture_ms" : 75.865208171308041,
+      "action_to_changed_payload_ms" : 65.721333026885986,
+      "action_to_source_ms" : 8.934458252042532,
+      "action_uptime" : 3710902.2349772505,
+      "actual" : 16.557459677419356,
+      "expected" : 16.557459677419356,
+      "gpu_pixels_sha256" : "cc32761c70d945c2d8f1a0e40b3bf22f4ceb0e364f09ce4270e10eb3ed502613",
+      "index" : 46,
+      "model_bounds_mm" : [
+        -102.95927683844171,
+        0.023435234935504923,
+        -58.502735914309213,
+        102.93716513950139,
+        102.30316491486681,
+        58.497130378751272
+      ],
+      "native_value" : 0.18693296370967741,
+      "payload_sha256" : "f3c5c8e9b9357b464ffc521f470ca081cecde208945bafff47a328f04d8488ee"
+    },
+    {
+      "action_to_capture_ms" : 76.895333360880613,
+      "action_to_changed_payload_ms" : 66.231833305209875,
+      "action_to_source_ms" : 9.080125018954277,
+      "action_uptime" : 3710902.3136956254,
+      "actual" : 16.23193884408602,
+      "expected" : 16.23193884408602,
+      "gpu_pixels_sha256" : "af7d09ada24beadca66194b66b14789c84362fcf60b91e404f202c285a08482f",
+      "index" : 47,
+      "model_bounds_mm" : [
+        -103.44597215302318,
+        0.023851444528133925,
+        -58.206282912948524,
+        103.42341902193199,
+        100.64235803526003,
+        58.201009869958746
+      ],
+      "native_value" : 0.16557459677419356,
+      "payload_sha256" : "d41d0520aeb90ac5c5533759b84ca565533eebd64732a856d7f4779a05894b29"
+    },
+    {
+      "action_to_capture_ms" : 77.268541790544987,
+      "action_to_changed_payload_ms" : 67.448333371430635,
+      "action_to_source_ms" : 9.1706248931586742,
+      "action_uptime" : 3710902.3936799169,
+      "actual" : 16.147933467741936,
+      "expected" : 16.147933467741936,
+      "gpu_pixels_sha256" : "34c30b719b0a71f7108e7f6490e48d922b37c767c4ab27024ec2365859761522",
+      "index" : 48,
+      "model_bounds_mm" : [
+        -103.57028799163044,
+        0.023957463003029034,
+        -58.130310363103007,
+        103.54762246671655,
+        100.21064430650446,
+        58.125120927008581
+      ],
+      "native_value" : 0.16231938844086019,
+      "payload_sha256" : "b79817d5c9b4a5acc8465e106249365bdf469666dc7ffd5811cb39abbd6e9867"
+    },
+    {
+      "action_to_capture_ms" : 77.931750100106001,
+      "action_to_changed_payload_ms" : 67.135333549231291,
+      "action_to_source_ms" : 8.9754583314061165,
+      "action_uptime" : 3710902.473916125,
+      "actual" : 17.191700268817204,
+      "expected" : 17.191700268817204,
+      "gpu_pixels_sha256" : "490243119a75e38c325d4979dce527572ad00a4f4df08253f6ec871989357f4a",
+      "index" : 49,
+      "model_bounds_mm" : [
+        -101.98862590626581,
+        0.022477049814312977,
+        -59.089300052353622,
+        101.96740068459653,
+        105.4831014182508,
+        59.083007647328358
+      ],
+      "native_value" : 0.16147933467741937,
+      "payload_sha256" : "dcea6cdccc7e5a3fbfe3f64bd1eb179d8007a413bb8f53684901b0cf1efe710f"
+    },
+    {
+      "action_to_capture_ms" : 77.782999724149704,
+      "action_to_changed_payload_ms" : 65.804250072687864,
+      "action_to_source_ms" : 9.1961664147675037,
+      "action_uptime" : 3710902.5548139587,
+      "actual" : 45.946740591397848,
+      "expected" : 45.946740591397848,
+      "gpu_pixels_sha256" : "fd3e95110a300b5f4f220d3b3a17f7d88912d26315f4322c4a553553f27eb358",
+      "index" : 50,
+      "model_bounds_mm" : [
+        -56.438873533219244,
+        0.027700384631174302,
+        -79.548065721332762,
+        56.431253949776121,
+        161.5778581634485,
+        79.549816652204925
+      ],
+      "native_value" : 0.17191700268817203,
+      "payload_sha256" : "fafa5f89ff0e3af7c382b9fbea0a2f13f1473dee4c9b769db2f5bb01336f0249"
+    },
+    {
+      "action_to_capture_ms" : 75.483833439648151,
+      "action_to_changed_payload_ms" : 65.314874984323978,
+      "action_to_source_ms" : 8.9294584468007088,
+      "action_uptime" : 3710902.6355392919,
+      "actual" : 57.430275537634415,
+      "expected" : 57.430275537634415,
+      "gpu_pixels_sha256" : "2eb0a994a7360e152c917d760792611078d8dadc9db7571206d7adceff110cb5",
+      "index" : 51,
+      "model_bounds_mm" : [
+        -49.396593092994124,
+        0.02527306516083172,
+        -75.850037443343837,
+        49.384317319684726,
+        149.36189573851132,
+        75.854341038260912
+      ],
+      "native_value" : 0.4594674059139785,
+      "payload_sha256" : "002ba9d639c8043796b647dad766604c73947fe22470851e6ecbf4119429d688"
+    },
+    {
+      "action_to_capture_ms" : 76.411750167608261,
+      "action_to_changed_payload_ms" : 65.550083294510841,
+      "action_to_source_ms" : 8.555583655834198,
+      "action_uptime" : 3710902.7135514584,
+      "actual" : 60.962701612903224,
+      "expected" : 60.962701612903224,
+      "gpu_pixels_sha256" : "03b3109235656b309931a7bea1ea1bc17e66db0d332edd725e0b761c9c685fca",
+      "index" : 52,
+      "model_bounds_mm" : [
+        -48.726395088431445,
+        0.024447092018320404,
+        -72.988634279860094,
+        48.709455767460319,
+        144.02278240132631,
+        72.992581669474077
+      ],
+      "native_value" : 0.57430275537634412,
+      "payload_sha256" : "5699ee6c63f803dbef78145003f79f7e73075acc9f5e442296a9336629d7d922"
+    },
+    {
+      "action_to_capture_ms" : 76.84958353638649,
+      "action_to_changed_payload_ms" : 66.635333467274904,
+      "action_to_source_ms" : 9.1928332112729549,
+      "action_uptime" : 3710902.7931252918,
+      "actual" : 79.208669354838719,
+      "expected" : 79.208669354838719,
+      "gpu_pixels_sha256" : "539ee291634d03634eb7cfa716762b0ee939722231ce151a11382f39ffc05580",
+      "index" : 53,
+      "model_bounds_mm" : [
+        -44.906933694661859,
+        0.014148639680080066,
+        -52.66518854142123,
+        44.890730408035829,
+        119.52823328294366,
+        52.677719010698702
+      ],
+      "native_value" : 0.60962701612903225,
+      "payload_sha256" : "752af2a280380bc58e7509e10a89d62fd0cc9cebb63a5fb4cc8b5675669d312c"
+    },
+    {
+      "action_to_capture_ms" : 76.42808323726058,
+      "action_to_changed_payload_ms" : 64.966416917741299,
+      "action_to_source_ms" : 8.7211667560040951,
+      "action_uptime" : 3710902.8729844168,
+      "actual" : 84.353998655913969,
+      "expected" : 84.353998655913969,
+      "gpu_pixels_sha256" : "2cbcf545a0541ea8328a899812c1cdad904a178054bc307f3135b8da6ca8fcf2",
+      "index" : 54,
+      "model_bounds_mm" : [
+        -45.494980669392419,
+        0.011756601533207345,
+        -44.74408428955352,
+        45.507001957639545,
+        113.34013440796591,
+        44.7586297914862
+      ],
+      "native_value" : 0.79208669354838723,
+      "payload_sha256" : "fa2324a58157ac25925d9f3e7a7e2e6aaa9fb23486e460a2db50f0f1d76d8da4"
+    },
+    {
+      "action_to_capture_ms" : 79.766124952584505,
+      "action_to_changed_payload_ms" : 68.466708064079285,
+      "action_to_source_ms" : 9.0841250494122505,
+      "action_uptime" : 3710902.9521292504,
+      "actual" : 89.625336021505376,
+      "expected" : 89.625336021505376,
+      "gpu_pixels_sha256" : "83e7f9120299131ffbf3961ff7a867521478c39dcd51b8f934a52cbe29f1fd2e",
+      "index" : 55,
+      "model_bounds_mm" : [
+        -45.104665501853042,
+        0.008958867947214344,
+        -35.525563231588954,
+        45.11661928351235,
+        107.68778130826018,
+        35.538190852348656
+      ],
+      "native_value" : 0.84353998655913964,
+      "payload_sha256" : "0d4a36edbe6038b3f753f91ae17f643eba71693388c820808633e1cce820e5a8"
+    },
+    {
+      "action_to_capture_ms" : 77.098291832953691,
+      "action_to_changed_payload_ms" : 66.616875119507313,
+      "action_to_source_ms" : 9.349458385258913,
+      "action_uptime" : 3710903.0349447918,
+      "actual" : 100,
+      "expected" : 100,
+      "gpu_pixels_sha256" : "bdc5bb7a37e1171157ebd0b0a708d35c3922dc522cbb82b91d12a2a96b15d88d",
+      "index" : 56,
+      "model_bounds_mm" : [
+        -40.200000000000017,
+        0,
+        -15.20000000000001,
+        40.200000000000017,
+        100,
+        15.200000000000014
+      ],
+      "native_value" : 0.89625336021505375,
+      "payload_sha256" : "9a3c08594381a69ac15e53fb53b53c39e603c356f7280f6a07fcbb6df16a3605"
+    },
+    {
+      "action_to_capture_ms" : 75.796916615217924,
+      "action_to_changed_payload_ms" : 65.442458260804415,
+      "action_to_source_ms" : 9.0056667104363441,
+      "action_uptime" : 3710903.1153160003,
+      "actual" : 99.857190860215056,
+      "expected" : 99.857190860215056,
+      "gpu_pixels_sha256" : "60897477d14c66ec17e2eb9b1c4bbdf5f3146dc5c9ba302cea1f621837d01ddd",
+      "index" : 57,
+      "model_bounds_mm" : [
+        -40.30013620455852,
+        0.00013459297584006435,
+        -15.491139373151483,
+        40.300405390510228,
+        100.06861322349961,
+        15.491408560457776
+      ],
+      "native_value" : 1,
+      "payload_sha256" : "bc2e1b4579e61ec4edd01b7775bc26d78bd3bfd5874ced7ddf87721d7c3778e0"
+    },
+    {
+      "action_to_capture_ms" : 78.231625258922577,
+      "action_to_changed_payload_ms" : 67.514624912291765,
+      "action_to_source_ms" : 9.1278748586773872,
+      "action_uptime" : 3710903.1942945835,
+      "actual" : 84.41490255376344,
+      "expected" : 84.41490255376344,
+      "gpu_pixels_sha256" : "6bde0f84b19af250e541f6d15f6b03a0e1dbc475b13be94503c5bdba5535c6d0",
+      "index" : 58,
+      "model_bounds_mm" : [
+        -45.499346828128679,
+        0.011728676245766678,
+        -44.643489513855364,
+        45.511405380525005,
+        113.27002061678709,
+        44.658051623563658
+      ],
+      "native_value" : 0.9985719086021505,
+      "payload_sha256" : "fb97eb6df9efd6040338cbc0e2a2343b463c6218905459035b76226fd541c3b5"
+    },
+    {
+      "action_to_capture_ms" : 77.955625019967556,
+      "action_to_changed_payload_ms" : 67.619000095874071,
+      "action_to_source_ms" : 9.006124921143055,
+      "action_uptime" : 3710903.2756627086,
+      "actual" : 62.556703629032263,
+      "expected" : 62.556703629032263,
+      "gpu_pixels_sha256" : "6363159aa5949ac7f053657659cb4aa67324a6869cae99bf76307232a0712f43",
+      "index" : 59,
+      "model_bounds_mm" : [
+        -48.414760995337772,
+        0.023879806033178852,
+        -71.386419629541834,
+        48.395810045180852,
+        141.42182464588382,
+        71.389998619057266
+      ],
+      "native_value" : 0.84414902553763438,
+      "payload_sha256" : "1952e2407139d550b0a9828e5f621734d7cfbbfc7e464ed768b15b5cfb0a970d"
+    },
+    {
+      "action_to_capture_ms" : 77.958333306014538,
+      "action_to_changed_payload_ms" : 67.850708030164242,
+      "action_to_source_ms" : 9.2595000751316547,
+      "action_uptime" : 3710903.356742667,
+      "actual" : 43.138860887096776,
+      "expected" : 43.138860887096776,
+      "gpu_pixels_sha256" : "15d2754ce00cfa7f49f18fa4ced9962436a4978e6171dd753394d3d2db3f3986",
+      "index" : 60,
+      "model_bounds_mm" : [
+        -60.339009196655368,
+        0.028890153472559632,
+        -79.381395570968238,
+        60.327500460798248,
+        163.20816019791837,
+        79.382142851887693
+      ],
+      "native_value" : 0.62556703629032262,
+      "payload_sha256" : "958e3e886ececd27d0e9167a38cbd4ac805c18fa68f69cede3f5f2f55c6ff499"
+    },
+    {
+      "action_to_capture_ms" : 76.147416606545448,
+      "action_to_changed_payload_ms" : 65.324250143021345,
+      "action_to_source_ms" : 8.9928330853581429,
+      "action_uptime" : 3710903.4381992086,
+      "actual" : 18.777301747311828,
+      "expected" : 18.777301747311828,
+      "gpu_pixels_sha256" : "5b9d97e5e6baee9922181311744d1d2fbbaa91da2081c6fd9ca95a8fe6e5142b",
+      "index" : 61,
+      "model_bounds_mm" : [
+        -99.437242488949522,
+        0.018618731537827671,
+        -60.601110242698603,
+        99.418404567650128,
+        113.09896790332631,
+        60.592873621110208
+      ],
+      "native_value" : 0.43138860887096775,
+      "payload_sha256" : "8a2dfac0921bb90fe84767fcbbc089a5250db48ae3ce149a9c40b6b593d5d1da"
+    },
+    {
+      "action_to_capture_ms" : 76.216666493564844,
+      "action_to_changed_payload_ms" : 65.972874872386456,
+      "action_to_source_ms" : 9.1237081214785576,
+      "action_uptime" : 3710903.5173524171,
+      "actual" : 11.634744623655914,
+      "expected" : 11.634744623655914,
+      "gpu_pixels_sha256" : "14ceb2e628a913a92ae816f03e5a90fbc07cd294a8dda7e33ecefe81cd8f7204",
+      "index" : 62,
+      "model_bounds_mm" : [
+        -109.42728504969821,
+        0.02759668005489857,
+        -54.436851695213733,
+        109.40246895462634,
+        75.275390419639947,
+        54.434877326426104
+      ],
+      "native_value" : 0.18777301747311828,
+      "payload_sha256" : "0863c6ac44260b50b738fb043d4208fd9d6af10e0c8a54fc6534386b98827794"
+    },
+    {
+      "action_to_capture_ms" : 77.586125116795301,
+      "action_to_changed_payload_ms" : 67.031916696578264,
+      "action_to_source_ms" : 8.9404582977294922,
+      "action_uptime" : 3710903.5966847502,
+      "actual" : 9.09148185483871,
+      "expected" : 9.09148185483871,
+      "gpu_pixels_sha256" : "a2eb417b3c763b4bd7e6a6bf9ef409fb28c7eb3c73eb366376a265157d107d68",
+      "index" : 63,
+      "model_bounds_mm" : [
+        -111.96277088153477,
+        0.026538960946652423,
+        -52.768640563406727,
+        111.93978850903753,
+        59.913899557856944,
+        52.767471321243164
+      ],
+      "native_value" : 0.11634744623655914,
+      "payload_sha256" : "407c93adf1a8c2de779ae957983cfb5d2afbeca3c3db760216d251020ee4e6a4"
+    },
+    {
+      "action_to_capture_ms" : 76.608208473771811,
+      "action_to_changed_payload_ms" : 66.77129166200757,
+      "action_to_source_ms" : 8.9898332953453064,
+      "action_uptime" : 3710903.6773624169,
+      "actual" : 8.677755376344086,
+      "expected" : 8.677755376344086,
+      "gpu_pixels_sha256" : "428d2499786d471a90935d238e5d64dc21e0a434139a5465eca0d94f07bb4bf4",
+      "index" : 64,
+      "model_bounds_mm" : [
+        -112.31970057656915,
+        0.026300179837562609,
+        -52.530330902674876,
+        112.29726896952104,
+        57.34107799140763,
+        52.529233441217563
+      ],
+      "native_value" : 0.090914818548387094,
+      "payload_sha256" : "f80fe693ec456eb34e32c35a8dc751cbce6ca9b24632f4441e231c0a702e3b38"
+    },
+    {
+      "action_to_capture_ms" : 75.477208476513624,
+      "action_to_changed_payload_ms" : 64.521708525717258,
+      "action_to_source_ms" : 8.7739168666303158,
+      "action_uptime" : 3710903.7571791252,
+      "actual" : 8.7218581989247319,
+      "expected" : 8.7218581989247319,
+      "gpu_pixels_sha256" : "0cfb8ff41554e6fc825d24bd52081ec3e8aca81bfc69a0bcb088ff509b42021f",
+      "index" : 65,
+      "model_bounds_mm" : [
+        -112.28240715177891,
+        0.026329591065461955,
+        -52.555271804499142,
+        112.25991610531189,
+        57.61623596501699,
+        52.554167419557615
+      ],
+      "native_value" : 0.086777553763440859,
+      "payload_sha256" : "840b4c35beec7725944acf1a3228134736e785049b0e7ff0ce5ef975a589e1e6"
+    },
+    {
+      "action_to_capture_ms" : 77.540250029414892,
+      "action_to_changed_payload_ms" : 66.750583238899708,
+      "action_to_source_ms" : 9.0605416335165501,
+      "action_uptime" : 3710903.8359777504,
+      "actual" : 8.8310651881720439,
+      "expected" : 8.8310651881720439,
+      "gpu_pixels_sha256" : "0e0864ff7027b7e18162c1ef4c5625d4e3fe0d508bd84bd41cfc9e523ea4348e",
+      "index" : 66,
+      "model_bounds_mm" : [
+        -112.18928490493667,
+        0.026392910944394998,
+        -52.617507307499679,
+        112.16664741940207,
+        58.296665582531183,
+        52.616385036633623
+      ],
+      "native_value" : 0.087218581989247312,
+      "payload_sha256" : "61a07d4c0772934b8a82e11fa2c38e3200b64497462e9be44be628d8749726a8"
+    },
+    {
+      "action_to_capture_ms" : 77.665291726589203,
+      "action_to_changed_payload_ms" : 67.436416633427143,
+      "action_to_source_ms" : 9.1660832986235619,
+      "action_uptime" : 3710903.9167886251,
+      "actual" : 8.9444724462365599,
+      "expected" : 8.9444724462365599,
+      "gpu_pixels_sha256" : "79ccd1e478061e10697166c48e58bdb3392f1d74613bea3c56299538c4074e10",
+      "index" : 67,
+      "model_bounds_mm" : [
+        -112.09141192915891,
+        0.026457370259265645,
+        -52.682852956807849,
+        112.06862350048421,
+        59.001874822331409,
+        52.681710983987145
+      ],
+      "native_value" : 0.088310651881720437,
+      "payload_sha256" : "ad9fe22b0bcdee12bb2f20b8fc328aceb959be6c33d2c4ae9ac8e3511af9e394"
+    },
+    {
+      "action_to_capture_ms" : 75.621791649609804,
+      "action_to_changed_payload_ms" : 64.889250323176384,
+      "action_to_source_ms" : 9.2597915790975094,
+      "action_uptime" : 3710903.9976744168,
+      "actual" : 16.357946908602152,
+      "expected" : 16.357946908602152,
+      "gpu_pixels_sha256" : "54d9e2ce4ea48c084aaf7cd8952c2fe6e9a982cfbf5402f808f3924125d98c05",
+      "index" : 68,
+      "model_bounds_mm" : [
+        -103.25850886950691,
+        0.023691340926575322,
+        -58.320654213785645,
+        103.23612550626353,
+        101.28753645437379,
+        58.315254071473618
+      ],
+      "native_value" : 0.089444724462365593,
+      "payload_sha256" : "41be22c103b73cbab0027a7fa0a7cdbf3f5be6e002175d2af00f6bdd645f3e50"
+    },
+    {
+      "action_to_capture_ms" : 77.657458372414112,
+      "action_to_changed_payload_ms" : 67.040583118796349,
+      "action_to_source_ms" : 8.9805000461637974,
+      "action_uptime" : 3710904.076450042,
+      "actual" : 87.453797043010752,
+      "expected" : 87.453797043010752,
+      "gpu_pixels_sha256" : "4bd0e1813f1d876c140bee1465b7faa8a7fe140a5d59d9ccebec5a82c1523a02",
+      "index" : 69,
+      "model_bounds_mm" : [
+        -45.451307046478462,
+        0.010198427855868886,
+        -39.442812813277229,
+        45.463990069510857,
+        109.90472651597173,
+        39.456550676012071
+      ],
+      "native_value" : 0.16357946908602153,
+      "payload_sha256" : "c06077b110bd70fea24d193dc84f5d869254b88d7c2b477e5a024eab7d794117"
+    },
+    {
+      "action_to_capture_ms" : 78.250916674733162,
+      "action_to_changed_payload_ms" : 67.539666313678026,
+      "action_to_source_ms" : 9.0853329747915268,
+      "action_uptime" : 3710904.1573447087,
+      "actual" : 96.406670026881727,
+      "expected" : 96.406670026881727,
+      "gpu_pixels_sha256" : "95d3bdfa4ee4934db5e49bde5b9bf911e4f7b042eb0448a14ed7fcd9d3005fa7",
+      "index" : 70,
+      "model_bounds_mm" : [
+        -42.462152859799744,
+        0.0033632910544127981,
+        -22.461217124609899,
+        42.468277624297698,
+        102.05797228020033,
+        22.467370849954946
+      ],
+      "native_value" : 0.8745379704301075,
+      "payload_sha256" : "7539c6b39931d87af83a2253379b4d6a5bbcade30284c2b9f70e2e175df3ed10"
+    },
+    {
+      "action_to_capture_ms" : 76.320291496813297,
+      "action_to_changed_payload_ms" : 65.786832943558693,
+      "action_to_source_ms" : 8.913625031709671,
+      "action_uptime" : 3710904.2389279171,
+      "actual" : 97.286626344086031,
+      "expected" : 97.286626344086031,
+      "gpu_pixels_sha256" : "347824c16bd607e6e5525357f2d2320ada5b8b651102db05664e10b958a5936b",
+      "index" : 71,
+      "model_bounds_mm" : [
+        -41.958950741693528,
+        0.0025472375117630008,
+        -20.697501524687318,
+        41.964045216717039,
+        101.49095508162956,
+        20.702605282429676
+      ],
+      "native_value" : 0.96406670026881724,
+      "payload_sha256" : "5c21c91c503b46400bfe1c540c6a9d13cc447bfc4d659b2cd2cf93106d6bed07"
+    },
+    {
+      "action_to_capture_ms" : 78.210708219558001,
+      "action_to_changed_payload_ms" : 67.863041535019875,
+      "action_to_source_ms" : 9.1772498562932014,
+      "action_uptime" : 3710904.3180948752,
+      "actual" : 97.42523521505376,
+      "expected" : 97.42523521505376,
+      "gpu_pixels_sha256" : "5e00432011b4ce012c709a7e12e88d80cfb5dd237ddcc891de938f8a0af64ed2",
+      "index" : 72,
+      "model_bounds_mm" : [
+        -41.87666457396486,
+        0.0024180648437379659,
+        -20.418755850800594,
+        41.881500703652335,
+        101.40531371988925,
+        20.423599912773703
+      ],
+      "native_value" : 0.97286626344086036,
+      "payload_sha256" : "41e614e4efa635777c96d5da6271f94b67db26f0298bf38f9f69a88f289641e8"
+    },
+    {
+      "action_to_capture_ms" : 74.924541637301445,
+      "action_to_changed_payload_ms" : 64.329124987125397,
+      "action_to_source_ms" : 9.0831248089671135,
+      "action_uptime" : 3710904.399669792,
+      "actual" : 97.332829301075279,
+      "expected" : 97.332829301075279,
+      "gpu_pixels_sha256" : "935096455b846f7a47cd8236ffe3c404d399a49d694c30a93aa88cea0b2ff28a",
+      "index" : 73,
+      "model_bounds_mm" : [
+        -41.931615351987205,
+        0.0025041970228301125,
+        -20.604615693331777,
+        41.936623746032907,
+        101.46229618726034,
+        20.609632904200822
+      ],
+      "native_value" : 0.97425235215053763,
+      "payload_sha256" : "00fd1b6b4c75b99157ba82c25bec19a27fa2c73965f58167c5234c0236603494"
+    }
+  ],
+  "runtime" : "8.0.1+form.gprop2",
+  "status" : "passed",
+  "viewport_camera_after" : {
+    "far_mm" : 150000,
+    "matrix" : [
+      0.8525245220595058,
+      0,
+      -0.522687228930659,
+      0,
+      -0.33672435777038673,
+      0.7648421872844885,
+      -0.54921137591459268,
+      0,
+      0.39977324344099335,
+      0.64421768723769102,
+      0.65204672016565546,
+      0,
+      103.03256079055856,
+      216.03261751925493,
+      168.05037464611686,
+      1
+    ],
+    "near_mm" : 1,
+    "projection" : "perspective:39.0"
+  }
+}

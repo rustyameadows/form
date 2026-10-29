@@ -22,7 +22,7 @@ The next governing document is the [2D Design, Typography & Vector Editing speci
 
 ## Build and open
 
-This CAD upgrade branch requires an Apple silicon Mac running macOS 15 or later and Xcode with the Swift 6 toolchain. No external Swift packages or API keys are required. Build the pinned native OCCT 8.0.1 dependency once; subsequent app builds reuse it. The app includes Clipper2 (Boost 1.0), Mapbox Earcut (ISC), and dynamically linked OCCT (LGPL 2.1 with its exception). See [CAD architecture and licensing](docs/cad-kernel.md) and [third-party geometry](docs/third-party-geometry.md).
+This CAD upgrade branch requires an Apple silicon Mac running macOS 15 or later and a Swift 6 toolchain from Xcode or Apple's Command Line Tools. Standard XCTest execution requires Xcode. No external Swift packages or API keys are required. Build the pinned native OCCT 8.0.1 dependency once; subsequent app builds reuse it. The build scripts locate the selected SDK's C++ headers. The app includes Clipper2 (Boost 1.0), Mapbox Earcut (ISC), and dynamically linked OCCT (LGPL 2.1 with its exception). See [CAD architecture and licensing](docs/cad-kernel.md) and [third-party geometry](docs/third-party-geometry.md).
 
 ```sh
 bash scripts/install-occt.sh

@@ -15,7 +15,9 @@ extension ArtworkSession {
   @discardableResult func copyArtwork()->Bool {
     guard let store,let objectID,!selection.isEmpty else{return false}
     do {
-      let bundle=try store.captureArtworkTransfer(objectID:objectID,ids:selection),data=try bundle.encoded()
+      var bundle=try store.captureArtworkTransfer(objectID:objectID,ids:selection)
+      if let projection=activeProjection {bundle.metadata.artwork=projection.display(bundle.metadata.artwork)}
+      let data=try bundle.encoded()
       // Everything is captured/validated before pasteboard ownership changes.
       let board=transferPasteboard ?? .general
       let success:Bool
@@ -33,11 +35,11 @@ extension ArtworkSession {
       lastTransferError="Choose an unlocked artwork source before cutting."
       store.toast(lastTransferError!,symbol:"exclamationmark.triangle");return
     }
-    let selected=selection
+    let selected=selection,projection=activeProjection
     guard copyArtwork() else{return}
     do {
       var compare=store.project;compare?.camera=before.camera
-      guard compare==before,self.objectID==objectID,selection==selected else{throw FormError.invalid("The source changed during clipboard publication. Nothing was cut.")}
+      guard compare==before,self.objectID==objectID,selection==selected,activeProjection==projection else{throw FormError.invalid("The source changed during clipboard publication. Nothing was cut.")}
       try store.engine.edit("Cut artwork",source:"Studio") {project in
         guard let object=project.objects.first(where:{$0.id==objectID}),var art=project.editableArtwork(object) else{throw FormError.missing("The cut source is unavailable.")}
         let all=art.descendants(of:selected)
@@ -54,15 +56,16 @@ extension ArtworkSession {
     // Tests inject a private board. Native user actions use the ordinary board.
     let board=transferPasteboard ?? .general
     guard let data=board.data(forType:ArtworkTransferPasteboard.type) else{return}
+    let projection=activeProjection
     let prepared:PreparedArtworkTransfer
-    do {prepared=try store.prepareArtworkTransfer(ArtworkTransferBundle.decode(data),objectID:objectID,scopeID:scopeID)}catch{lastTransferError=error.localizedDescription;store.toast(error.localizedDescription,symbol:"exclamationmark.triangle");return}
+    do {prepared=try store.prepareArtworkTransfer(ArtworkTransferBundle.decode(data),objectID:objectID,scopeID:scopeID,sourceTransform:projection?.sourceToLocal.inverse)}catch{lastTransferError=error.localizedDescription;store.toast(error.localizedDescription,symbol:"exclamationmark.triangle");return}
     cancelArtworkTransfer();let token=UUID();transferGeneration=token;transferInFlight=true;lastTransferError=nil;lastTransferResult=nil
     transferTask=Task { [weak self,weak store] in
       guard let self,let store else{return}
       defer{if self.transferGeneration==token {self.transferInFlight=false}}
       do {
         let result=try await store.importArtworkTransfer(prepared,source:"Studio",validateContext:{[weak self] in
-          guard let self,self.transferGeneration==token,self.objectID==prepared.objectID,self.scopeID==prepared.scopeID else{throw CancellationError()}
+          guard let self,self.transferGeneration==token,self.objectID==prepared.objectID,self.scopeID==prepared.scopeID,self.activeProjection==projection else{throw CancellationError()}
         })
         guard self.transferGeneration==token,self.objectID==prepared.objectID,self.scopeID==prepared.scopeID,store.project?.id==prepared.projectID,store.artworkTransferProjectEpoch==prepared.projectEpoch else{return}
         self.lastTransferResult=result

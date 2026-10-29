@@ -79,7 +79,7 @@ final class ArtworkRuler: NSRulerView {
     NSColor(hex: "#FFFFFF").setFill()
     bounds.fill()
     guard let canvas = scrollView?.documentView as? VectorCanvasView, let session = canvas.session,
-      let frame = session.frames.first(where: { $0.id == session.objectID })
+      let frame = session.activeCanvasFrame
     else { return }
     let horizontal = orientation == .horizontalRuler
     let unit = session.unit
@@ -121,7 +121,7 @@ final class ArtworkRuler: NSRulerView {
   }
   override func mouseDown(with event: NSEvent) {
     guard let canvas = scrollView?.documentView as? VectorCanvasView, let s = canvas.session,
-      let frame = s.frames.first(where: { $0.id == s.objectID })
+      let frame = s.activeCanvasFrame, frame.projection == nil
     else { return }
     let point = canvas.canvasPoint(canvas.convert(event.locationInWindow, from: nil))
     let horizontal = orientation == .horizontalRuler
@@ -134,7 +134,7 @@ final class ArtworkRuler: NSRulerView {
   }
   override func mouseDragged(with event: NSEvent) {
     guard let canvas = scrollView?.documentView as? VectorCanvasView, let s = canvas.session,
-      let frame = s.frames.first(where: { $0.id == s.objectID }), let id = guideID
+      let frame = s.activeCanvasFrame, let id = guideID
     else { return }
     let p = canvas.canvasPoint(canvas.convert(event.locationInWindow, from: nil))
     s.mutate { art in
@@ -347,6 +347,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var accessibilityUpdates = 0
   private var frameDragOrigin = CGPoint.zero
   private var drawCount = 0, lastDrawMS = 0.0
+  private var fitRequests = 0
+  private var lastFitDiagnostics: [String: Any]?
+  private let sewingGuides = CanvasSewingGuideCache()
+  private let physicalArtworkGuides = CanvasPhysicalArtworkGuideCache()
   var diagnostics: [String: Any] {
     var result = TypographyEngine.diagnostics
     result["image_drag_starts"] = session?.imageDragStarts ?? 0
@@ -354,17 +358,119 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     result["image_drop_attempts"] = imageDropAttempts
     result["draw_count"] = drawCount
     result["last_draw_ms"] = lastDrawMS
+    result["sewing_guide_builds"] = sewingGuides.builds
+    result["sewing_guide_entries"] = sewingGuides.count
+    result["physical_guide_builds"] = physicalArtworkGuides.builds
+    result["physical_guide_entries"] = physicalArtworkGuides.count
     result["frames"] = frames.count
     result["accessibility_updates"] = accessibilityUpdates
     result["live_preview"] = session?.preview ?? false
     result["renders_continuously"] = false
+    result["viewport"] = viewportDiagnostics
+    if let lastFitDiagnostics { result["last_fit"] = lastFitDiagnostics }
     return result
+  }
+  private func geometry(_ rect: CGRect) -> [String: Any] {
+    func number(_ value: CGFloat) -> Any { value.isFinite ? Double(value) as Any : NSNull() }
+    return ["x": number(rect.origin.x), "y": number(rect.origin.y),
+      "width": number(rect.width), "height": number(rect.height)]
+  }
+  private var viewportDiagnostics: [String: Any] {
+    var report: [String: Any] = ["version": 1, "view_identity": String(describing: ObjectIdentifier(self)),
+      "window_number": window?.windowNumber ?? 0, "is_session_canvas": session?.canvas === self,
+      "magnification": zoom, "canvas_frame_points": geometry(frame), "canvas_bounds_points": geometry(bounds),
+      "canvas_visible_points": geometry(visibleRect), "visible_canvas_mm": geometry(visibleCanvasRect),
+      "content_bounds_mm": geometry(contentBounds(all: true)),
+      "canvas_origin_mm": ["x": canvasOrigin.x, "y": canvasOrigin.y],
+      "frames": frames.filter { !$0.isWorkspace }.map { ["id": $0.id.uuidString, "rect_mm": geometry($0.rect)] }]
+    if let scroll = enclosingScrollView {
+      let clip = scroll.contentView
+      report["scroll_frame_points"] = geometry(scroll.frame)
+      report["scroll_bounds_points"] = geometry(scroll.bounds)
+      report["scroll_visible_points"] = geometry(scroll.visibleRect)
+      report["scroll_content_size_points"] = ["width": scroll.contentSize.width, "height": scroll.contentSize.height]
+      report["clip_frame_points"] = geometry(clip.frame)
+      report["clip_bounds_points"] = geometry(clip.bounds)
+      report["clip_visible_points"] = geometry(clip.visibleRect)
+      report["clip_document_visible_points"] = geometry(clip.documentVisibleRect)
+      report["unobscured_clip_points"] = geometry(fittingViewport(in: scroll))
+      report["content_insets_points"] = ["top": scroll.contentInsets.top, "left": scroll.contentInsets.left,
+        "bottom": scroll.contentInsets.bottom, "right": scroll.contentInsets.right]
+      report["rulers_visible"] = scroll.rulersVisible
+      func ruler(_ ruler: NSRulerView?) -> [String: Any] {
+        guard let ruler else { return [:] }
+        return ["frame_points": geometry(ruler.frame), "visible_points": geometry(ruler.visibleRect),
+          "in_clip_points": geometry(clip.convert(ruler.bounds, from: ruler)),
+          "hidden": ruler.isHidden, "thickness_points": ruler.ruleThickness]
+      }
+      report["horizontal_ruler"] = ruler(scroll.horizontalRulerView)
+      report["vertical_ruler"] = ruler(scroll.verticalRulerView)
+    }
+    var ancestors: [[String: Any]] = [], next = superview
+    while let view = next, ancestors.count < 20 {
+      ancestors.append(["type": String(describing: type(of: view)), "frame_points": geometry(view.frame),
+        "bounds_points": geometry(view.bounds), "visible_points": geometry(view.visibleRect),
+        "clips_to_bounds": view.clipsToBounds])
+      next = view.superview
+    }
+    report["ancestors"] = ancestors
+    return report
+  }
+  private func fittingViewport(in scroll: NSScrollView) -> CGRect {
+    let clip = scroll.contentView
+    var viewport = clip.visibleRect
+    guard scroll.rulersVisible else { return viewport }
+    // Native rulers may overlay the clip view rather than reducing its bounds.
+    // NSView.visibleRect excludes ancestor clips, but not these opaque siblings.
+    for ruler in [scroll.horizontalRulerView, scroll.verticalRulerView].compactMap({ $0 })
+    where !ruler.isHiddenOrHasHiddenAncestor {
+      let overlap = clip.convert(ruler.visibleRect, from: ruler).intersection(viewport)
+      guard !overlap.isNull, overlap.width > 0, overlap.height > 0 else { continue }
+      let epsilon: CGFloat = 0.001
+      if ruler.orientation == .horizontalRuler {
+        if overlap.minY <= viewport.minY + epsilon {
+          viewport = CGRect(x: viewport.minX, y: overlap.maxY, width: viewport.width,
+            height: max(0, viewport.maxY - overlap.maxY))
+        } else if overlap.maxY >= viewport.maxY - epsilon {
+          viewport.size.height = max(0, overlap.minY - viewport.minY)
+        }
+      } else {
+        if overlap.minX <= viewport.minX + epsilon {
+          viewport = CGRect(x: overlap.maxX, y: viewport.minY,
+            width: max(0, viewport.maxX - overlap.maxX), height: viewport.height)
+        } else if overlap.maxX >= viewport.maxX - epsilon {
+          viewport.size.width = max(0, overlap.minX - viewport.minX)
+        }
+      }
+    }
+    return viewport
+  }
+  private func magnifyToFit(_ rect: CGRect, mode: String) {
+    guard let scroll = enclosingScrollView else { return }
+    let clip = scroll.contentView, before = viewportDiagnostics
+    let target = clip.convert(documentRect(rect), from: self), viewport = fittingViewport(in: scroll)
+    guard target.width > 0, target.height > 0, viewport.width > 0, viewport.height > 0 else { return }
+    fitRequests += 1
+    let magnification = scroll.magnification * min(viewport.width / target.width, viewport.height / target.height)
+    scroll.setMagnification(magnification, centeredAt: target.center)
+    // Recompute after scaling; a fixed 38-point ruler covers different document
+    // coordinates at the new zoom. Center within the region it does not cover.
+    let fittedTarget = clip.convert(documentRect(rect), from: self), available = fittingViewport(in: scroll)
+    clip.scroll(to: CGPoint(x: clip.bounds.minX + fittedTarget.midX - available.midX,
+      y: clip.bounds.minY + fittedTarget.midY - available.midY))
+    scroll.reflectScrolledClipView(clip)
+    lastFitDiagnostics = ["request": fitRequests, "mode": mode,
+      "requested_canvas_rect_mm": geometry(rect), "target_clip_points": geometry(target),
+      "before": before, "after": viewportDiagnostics]
   }
   override var isFlipped: Bool { true }
   override var acceptsFirstResponder: Bool { true }
   override var isOpaque: Bool { true }
   var zoom: Double { Double(enclosingScrollView?.magnification ?? 1) }
-  var activeFrame: CanvasFrame? { frames.first { $0.id == session?.objectID } }
+  var activeFrame: CanvasFrame? {
+    frames.first { $0.id == session?.activeFrameID }
+      ?? frames.first { $0.projection?.sourceID == session?.objectID && $0.projection?.isProof == true }
+  }
   func canvasPoint(_ point:CGPoint) -> CGPoint {
     .init(x:point.x/ppm+canvasOrigin.x,y:point.y/ppm+canvasOrigin.y)
   }
@@ -378,16 +484,35 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     .init(origin:canvasPoint(visibleRect.origin),size:.init(width:visibleRect.width/ppm,height:visibleRect.height/ppm))
   }
   func frame(atCanvasPoint point:CGPoint) -> CanvasFrame? {
-    frames.last { !$0.isWorkspace && $0.rect.contains(point) } ?? frames.first { $0.isWorkspace }
+    frames.last { !$0.isWorkspace && $0.contains(point) } ?? frames.first { $0.isWorkspace }
+  }
+  private func physicalGuideReport(for frame:CanvasFrame,attempted:inout Set<UUID>,
+    reports:inout [UUID:PhysicalArtworkIntentReport]) -> PhysicalArtworkIntentReport? {
+    guard frame.artwork.showGuides != false,
+      !PaperConstruction.isPaper(frame.physicalGuideObject) || session?.store?.paperShowingGuides == true,
+      let project=session?.store?.project else{return nil}
+    let id=frame.physicalGuideObject.id
+    if attempted.insert(id).inserted {reports[id]=physicalArtworkGuides.report(for:frame.physicalGuideObject,in:project)}
+    return reports[id]
   }
   func contentBounds(all:Bool) -> CGRect {
     let chosen = all ? frames : activeFrame.map { [$0] } ?? []
     var result = CGRect.null
+    var reports:[UUID:PhysicalArtworkIntentReport]=[:],attempted=Set<UUID>()
     for frame in chosen {
-      if !frame.isWorkspace { result = result.union(frame.rect); continue }
+      let report=physicalGuideReport(for:frame,attempted:&attempted,reports:&reports)
+      if !frame.isWorkspace {
+        if let report {
+          result=result.union(frame.physicalGuideBounds(report:report,scale:max(0.001,ppm*zoom)))
+        } else {result=result.union(frame.rect)}
+        continue
+      }
       let masks = Set(frame.artwork.elements.compactMap(\.clipID))
       for element in frame.artwork.elements where element.parentID == nil && element.hidden != true && !masks.contains(element.id) {
         result = result.union(CGRect(frame.artwork.bounds(of:element)).offsetBy(dx:frame.rect.minX,dy:frame.rect.minY))
+      }
+      if let report {
+        result=result.union(frame.physicalGuideBounds(report:report,scale:max(0.001,ppm*zoom)))
       }
     }
     return result.isNull ? CGRect(x:0,y:0,width:400,height:260) : result
@@ -410,8 +535,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func synchronize() {
     guard let session else { return }
-    if projectID != session.store?.project?.id { canvasExtent = .null; canvasOrigin = .zero }
+    if projectID != session.store?.project?.id { canvasExtent = .null; canvasOrigin = .zero; sewingGuides.clear();physicalArtworkGuides.clear() }
     frames = session.frames
+    sewingGuides.retain(Set(frames.map(\.id)))
+    physicalArtworkGuides.retain(Set(frames.map{$0.physicalGuideObject.id}))
     expandCanvas(toInclude:contentBounds(all:true).union(CGRect(x:0,y:0,width:400,height:260)).insetBy(dx:-180,dy:-180))
     if projectID != session.store?.project?.id {
       projectID = session.store?.project?.id
@@ -469,8 +596,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard !rect.isNull, rect.width > 0 else { return }
     let horizontal = min(14, rect.width * 0.08 + 1)
     let vertical = min(18, rect.height * 0.08 + 1)
-    scroll.magnify(
-      toFit: documentRect(rect.insetBy(dx:-horizontal,dy:-vertical)))
+    // AppKit expects clip-view coordinates, which differ from the document's
+    // when its frame origin shifts during native layout or scrolling.
+    magnifyToFit(rect.insetBy(dx:-horizontal,dy:-vertical),mode:all ? "all" : "active")
     session?.zoom = Double(scroll.magnification)
     needsDisplay = true
   }
@@ -480,8 +608,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let frame=activeFrame,let scroll=enclosingScrollView,scroll.contentSize.width>100 else{return}
     session.paperFocusPanelID=nil
     let b=panel.bounds
-    let rect=CGRect(x:frame.rect.minX+b.x,y:frame.rect.minY+b.y,width:b.width,height:b.height)
-    scroll.magnify(toFit:documentRect(rect.insetBy(dx:-8,dy:-8)))
+    let rect = frame.projection?.panelID == id ? contentBounds(all:false)
+      : CGRect(x:frame.rect.minX+b.x,y:frame.rect.minY+b.y,width:b.width,height:b.height)
+    magnifyToFit(rect.insetBy(dx:-8,dy:-8),mode:"paper_panel")
     session.zoom=Double(scroll.magnification);needsDisplay=true
   }
   func setZoom(_ value: Double) {
@@ -514,9 +643,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     context.scaleBy(x: ppm, y: ppm)
     context.translateBy(x:-canvasOrigin.x,y:-canvasOrigin.y)
     let scale = ppm * zoom
-    for f in frames
-    where f.isWorkspace || dirtyRect.intersects(documentRect(f.rect.insetBy(dx:-12,dy:-12)))
-    {
+    var reports:[UUID:PhysicalArtworkIntentReport]=[:],attempted=Set<UUID>()
+    for f in frames {
+      let guideReport=physicalGuideReport(for:f,attempted:&attempted,reports:&reports)
+      let drawingBounds=guideReport.map{f.physicalGuideBounds(report:$0,scale:max(0.001,scale))} ?? f.rect
+      guard f.isWorkspace || dirtyRect.intersects(documentRect(drawingBounds.insetBy(dx:-12,dy:-12))) else{continue}
       if !f.isWorkspace {
       context.saveGState()
       context.setShadow(
@@ -525,17 +656,24 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       context.setFillColor(NSColor.white.cgColor)
       context.fill(f.rect)
       context.restoreGState()
-      let title = f.object.name.uppercased()
+      let title = f.title.uppercased()
+      let titleStyle = NSMutableParagraphStyle()
+      titleStyle.lineBreakMode = .byTruncatingMiddle
       let attributes: [NSAttributedString.Key: Any] = [
         .font: NSFont.systemFont(ofSize: 9 / scale, weight: .medium),
         .foregroundColor: NSColor(hex: "#666666"),
+        .paragraphStyle: titleStyle,
       ]
-      (title as NSString).draw(
-        at: .init(x: f.rect.minX, y: f.rect.minY - 15 / scale), withAttributes: attributes)
+      let titleRect = CGRect(x: f.rect.minX, y: f.rect.minY - 15 / scale,
+                             width: f.rect.width, height: 14 / scale)
+      context.saveGState()
+      context.clip(to: titleRect)
+      (title as NSString).draw(in: titleRect, withAttributes: attributes)
+      context.restoreGState()
       }
       context.saveGState()
       context.translateBy(x: f.rect.minX, y: f.rect.minY)
-      if session.dieline, f.surfaceObject.recipeID == "sleeve", f.id == session.objectID {
+      if session.dieline, f.surfaceObject.recipeID == "sleeve", f.id == activeFrame?.id {
         context.setFillColor(NSColor.white.cgColor)
         context.fill(.init(origin: .zero, size: f.rect.size))
         context.saveGState()
@@ -554,26 +692,58 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           context.strokePath()
         }
       } else {
-        let paperNet = PaperConstruction.isPaper(f.surfaceObject) ? try? PaperConstruction.definition(for:f.surfaceObject).net() : nil
+        let paperNet = PaperConstruction.isPaper(f.surfaceObject) && f.projection?.panelID == nil
+          ? try? PaperConstruction.definition(for:f.surfaceObject).net() : nil
+        let sewing = sewingGuides.overlay(frameID: f.id, source: f.artwork)
         context.saveGState()
+        if let projection = f.projection, !projection.isProof {
+          context.addPath(PaperOutput.path(projection.boundary)); context.clip()
+        }
         if let paperNet {
-          context.addPath(PaperOutput.clipPath(paperNet)); context.clip()
+          var transform = CGAffineTransform(a:f.projection?.sourceToLocal.a ?? 1,b:f.projection?.sourceToLocal.b ?? 0,
+            c:f.projection?.sourceToLocal.c ?? 0,d:f.projection?.sourceToLocal.d ?? 1,
+            tx:f.projection?.sourceToLocal.tx ?? 0,ty:f.projection?.sourceToLocal.ty ?? 0)
+          context.addPath(PaperOutput.clipPath(paperNet).copy(using:&transform)!); context.clip()
           let stock = f.surfaceObject.color ?? session.store?.project?.material(f.surfaceObject.materialID).color ?? "#F7F5EF"
           context.setFillColor(NSColor(hex:stock).cgColor);context.fill(CGRect(origin:.zero,size:f.rect.size))
         }
         ArtworkRenderer.draw(
           f.artwork, width: f.rect.width, height: f.rect.height, assets: session.assets,
           production: false,
-          excluding: (f.id == session.objectID ? Set([editingID].compactMap { $0 }).union(
+          excluding: (f.id == activeFrame?.id ? Set([editingID].compactMap { $0 }).union(
             dragMode == "move" && moveDropFrameID != nil ? session.art.descendants(of:startSelection) : []) : [])
             .union(ArtworkProduction.hiddenIDs(in:f.artwork,roles:session.hiddenProductionRoles))
+            .union(sewing?.sourceStrokeIDs ?? [])
             .union(publicationEditor?.excluded(in:f.id) ?? []),
           unbounded:f.isWorkspace)
         context.restoreGState()
-        if let paperNet, session.store?.paperShowingGuides == true {
-          PaperOutput.drawStructure(paperNet,context:context,lineWidth:1/scale,interface:true)
+        if let guideReport {
+          drawPhysicalArtworkGuides(f,report:guideReport,context:context,scale:scale,active:f.id==activeFrame?.id)
         }
-        if f.id == session.objectID {
+        if let paperNet, session.store?.paperShowingGuides == true {
+          context.saveGState()
+          if let transform=f.projection?.sourceToLocal {
+            context.concatenate(.init(a:transform.a,b:transform.b,c:transform.c,d:transform.d,tx:transform.tx,ty:transform.ty))
+          }
+          PaperOutput.drawStructure(paperNet,context:context,lineWidth:1/scale,interface:true)
+          context.restoreGState()
+        }
+        if let sewing {
+          context.saveGState()
+          if let projection = f.projection, !projection.isProof {
+            context.addPath(PaperOutput.path(projection.boundary)); context.clip()
+          }
+          ArtworkRenderer.draw(sewing.interfaceArtwork(scale: scale), width: f.rect.width, height: f.rect.height,
+            assets: session.assets, production: false,
+            excluding: ArtworkProduction.hiddenIDs(in: sewing.artwork, roles: session.hiddenProductionRoles), unbounded: true)
+          context.restoreGState()
+        }
+        if let projection = f.projection, !projection.isProof {
+          context.addPath(PaperOutput.path(projection.boundary))
+          context.setStrokeColor((f.id == activeFrame?.id ? Palette.accentNS : Palette.secondaryNS).cgColor)
+          context.setLineWidth(1 / scale); context.strokePath()
+        }
+        if f.id == activeFrame?.id && f.editable {
           drawOverlays(f, context: context, scale: scale)
           if editingID == nil && !(dragMode == "move" && moveDropFrameID != nil) { drawSelection(context: context, scale: scale) }
         }
@@ -585,7 +755,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         context.stroke(f.rect.insetBy(dx:-2/scale,dy:-2/scale))
       }
     }
-    if dragMode == "move",moveDropFrameID != nil,let active = activeFrame,
+    if dragMode == "move",moveDropFrameID != nil,let active = activeFrame, active.projection == nil,
       let exported = try? session.art.exporting(startSelection) {
       context.saveGState()
       context.translateBy(x:active.rect.minX+exported.bounds.x,y:active.rect.minY+exported.bounds.y)
@@ -793,8 +963,15 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   private func point(_ event: NSEvent) -> CGPoint {
     let p = canvasPoint(convert(event.locationInWindow, from: nil))
+    // Native view/ruler transforms can leave inverse-roundtrip noise such as
+    // -50.00000000000006 mm. Keep pointer-authored coordinates stable at a
+    // billionth of a millimeter; raw source/API geometry retains its precision.
+    func physical(_ value: CGFloat) -> CGFloat {
+      guard value.isFinite, abs(value) < 1_000_000 else { return value }
+      return (value * 1_000_000_000).rounded() / 1_000_000_000
+    }
     return .init(
-      x:p.x-(activeFrame?.rect.minX ?? 0),y:p.y-(activeFrame?.rect.minY ?? 0))
+      x:physical(p.x-(activeFrame?.rect.minX ?? 0)),y:physical(p.y-(activeFrame?.rect.minY ?? 0)))
   }
   private func gradientHandles(_ element: ArtworkElement, in art: Artwork)
     -> (a: CGPoint, b: CGPoint, stops: [(stop: GradientStop, point: CGPoint)])? {
@@ -864,7 +1041,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       NSCursor.closedHand.push()
       return
     }
-    if let frame = frame(atCanvasPoint:physical), frame.id != s.objectID {
+    if let frame = frame(atCanvasPoint:physical), frame.id != activeFrame?.id {
       finishText()
       s.activate(frame.id)
       frames = s.frames
@@ -885,7 +1062,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       s.beginGesture()
       return
     }
-    guard let f = activeFrame, !s.dieline else { return }
+    guard let f = activeFrame, !s.dieline, f.editable else { return }
     let p = point(event)
     finishText()
     window?.makeFirstResponder(self)
@@ -1084,10 +1261,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     if dragMode == "frame" {
       let p = canvasPoint(convert(event.locationInWindow, from: nil))
-      var art = snapshot
-      art.canvasPosition = .init(
-        frameDragOrigin.x+p.x-down.x,frameDragOrigin.y+p.y-down.y)
-      s.save(art)
+      s.moveCanvasFrame(to: .init(
+        frameDragOrigin.x+p.x-down.x,frameDragOrigin.y+p.y-down.y))
       return
     }
     if dragMode == "pen" {
@@ -1124,9 +1299,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         height: abs(p.y - down.y))
       marquee = rect
       let ids = Set(
-        value.elements.filter {
-          $0.parentID == s.scopeID && value.editable($0)
-            && rect.intersects(CGRect(value.bounds(of: $0)))
+        s.selectionCandidates(in: value).filter {
+          rect.intersects(CGRect(value.bounds(of: $0)))
         }.map(\.id))
       s.selection = event.modifierFlags.contains(.shift) ? startSelection.union(ids) : ids
       needsDisplay = true
@@ -1206,7 +1380,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     if dragMode == "move" {
       moveDropPoint = canvasPoint(convert(event.locationInWindow,from:nil))
       let destination = frame(atCanvasPoint:moveDropPoint)
-      moveDropFrameID = destination?.id == s.objectID ? nil : destination?.id
+      moveDropFrameID = activeFrame?.projection == nil && destination?.projection == nil
+        && destination?.id != activeFrame?.id ? destination?.id : nil
       var dx = p.x - down.x
       var dy = p.y - down.y
       if event.modifierFlags.contains(.shift) { if abs(dx) > abs(dy) { dy = 0 } else { dx = 0 } }
@@ -1261,7 +1436,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   override func mouseUp(with event: NSEvent) {
     if dragMode == "move",let s = session,let source = activeFrame,
       let destination = frame(atCanvasPoint:canvasPoint(convert(event.locationInWindow,from:nil))),
-      destination.id != source.id,point(event) != down {
+      destination.id != source.id, source.projection == nil, destination.projection == nil, point(event) != down {
       let offset = Point2(source.rect.minX-destination.rect.minX,source.rect.minY-destination.rect.minY)
       if !s.transferSelection(to:destination.id,offset:offset) { s.save(snapshot) }
       synchronize()
@@ -1322,7 +1497,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let p = convert(sender.draggingLocation,from:nil)
     let physical = canvasPoint(p)
     let old = dropFrameID
-    dropFrameID = frame(atCanvasPoint:physical)?.id
+    dropFrameID = frame(atCanvasPoint:physical).flatMap { $0.editable ? $0.id : nil }
     if old != dropFrameID { needsDisplay = true }
     let extensions = Set(["png","jpg","jpeg","tif","tiff","heic","heif","gif","bmp","webp","pdf","svg"])
     let supported = droppedURLs(sender).contains { extensions.contains($0.pathExtension.lowercased()) }
@@ -2105,9 +2280,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     session?.cutArtwork()
   }
   override func selectAll(_ sender: Any?) {
-    guard let s = session else { return }
-    s.choose(
-      Set(s.art.elements.filter { $0.parentID == s.scopeID && s.art.editable($0) }.map(\.id)))
+    session?.selectAllInActiveFrame()
   }
   override func keyDown(with event: NSEvent) {
     guard let s = session else { return }

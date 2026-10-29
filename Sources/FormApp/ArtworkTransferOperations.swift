@@ -6,6 +6,7 @@ import FormGraphics
 @MainActor struct PreparedArtworkTransfer {
   var bundle:ArtworkTransferBundle,projectID:UUID,projectEpoch:UUID,objectID:UUID,scopeID:UUID?,offset:Point2
   var report:ArtworkTransferPreflight.Report
+  var sourceTransform:Affine2?=nil
 }
 
 extension StudioStore {
@@ -21,12 +22,31 @@ extension StudioStore {
     })
     _ = try ArtworkTransferPreflight.validate(bundle);return bundle
   }
-  func prepareArtworkTransfer(_ bundle:ArtworkTransferBundle,objectID:UUID,scopeID:UUID?=nil,offset:Point2 = .init(10,10))throws->PreparedArtworkTransfer {
+  func prepareArtworkTransfer(_ bundle:ArtworkTransferBundle,objectID:UUID,scopeID:UUID?=nil,offset:Point2 = .init(10,10),sourceTransform:Affine2?=nil)throws->PreparedArtworkTransfer {
     guard let project else{throw FormError.missing("Open a paste destination.")}
     let report=try ArtworkTransferPreflight.validate(bundle)
     let folder=repository.url(for:project.id).appendingPathComponent("Assets")
-    _ = try ArtworkTransferGraph.plan(bundle,into:project,objectID:objectID,scopeID:scopeID,offset:offset,existingAsset:{name,limit in try ArtworkTransferIO.readAsset(directory:folder,name:name,limit:limit)})
-    return .init(bundle:bundle,projectID:project.id,projectEpoch:artworkTransferProjectEpoch,objectID:objectID,scopeID:scopeID,offset:offset,report:report)
+    var prepared=PreparedArtworkTransfer(bundle:bundle,projectID:project.id,projectEpoch:artworkTransferProjectEpoch,objectID:objectID,scopeID:scopeID,offset:offset,report:report)
+    prepared.sourceTransform=sourceTransform
+    _ = try artworkTransferPlan(prepared,into:project,folder:folder)
+    return prepared
+  }
+  private func artworkTransferPlan(_ prepared:PreparedArtworkTransfer,into original:Project,folder:URL)throws->ArtworkTransferPlan {
+    var plan=try ArtworkTransferGraph.plan(prepared.bundle,into:original,objectID:prepared.objectID,scopeID:prepared.scopeID,offset:prepared.offset,existingAsset:{name,limit in try ArtworkTransferIO.readAsset(directory:folder,name:name,limit:limit)})
+    guard let transform=prepared.sourceTransform,transform != Affine2(),
+      let object=original.objects.first(where:{$0.id==prepared.objectID}),
+      let changed=plan.project.objects.first(where:{$0.id==prepared.objectID}),
+      var art=plan.project.editableArtwork(changed) else{return plan}
+    let existing=Set((original.editableArtwork(object)?.elements ?? []).map(\.id))
+    let parent=prepared.scopeID.flatMap{id in art.elements.first{$0.id==id}}.map{art.worldTransform($0)} ?? .init()
+    guard let inverse=parent.inverse else{throw FormError.invalid("The paste scope has no invertible physical transform.")}
+    let local=inverse.followed(by:transform).followed(by:parent)
+    for i in art.elements.indices where !existing.contains(art.elements[i].id) && art.elements[i].parentID==prepared.scopeID {
+      art.elements[i].affine=local.followed(by:art.elements[i].affine ?? .init())
+    }
+    try plan.project.setArtwork(art,for:prepared.objectID,recordingStyleOverrides:false)
+    try plan.project.validateArtworkLinks()
+    return plan
   }
   func canonicalTransferBlobs(_ prepared:PreparedArtworkTransfer)throws->[String:Data] {
     var result=[String:Data]()
@@ -43,12 +63,12 @@ extension StudioStore {
       let folder=repository.url(for:beforeHandoff.id).appendingPathComponent("Assets")
       // Staging may have suspended while a target was deleted, locked or changed.
       // Reject its current invalid context without ending another live editor.
-      _ = try ArtworkTransferGraph.plan(prepared.bundle,into:beforeHandoff,objectID:prepared.objectID,scopeID:prepared.scopeID,offset:prepared.offset,existingAsset:{name,limit in try ArtworkTransferIO.readAsset(directory:folder,name:name,limit:limit)})
+      _ = try artworkTransferPlan(prepared,into:beforeHandoff,folder:folder)
       try validateContext?()
       finishArtworkEditing()
       try validateContext?()
       guard let current=project,current.id==prepared.projectID,artworkTransferProjectEpoch==prepared.projectEpoch else{throw FormError.invalid("The paste destination changed during editor handoff.")}
-      let plan=try ArtworkTransferGraph.plan(prepared.bundle,into:current,objectID:prepared.objectID,scopeID:prepared.scopeID,offset:prepared.offset,existingAsset:{name,limit in try ArtworkTransferIO.readAsset(directory:folder,name:name,limit:limit)})
+      let plan=try artworkTransferPlan(prepared,into:current,folder:folder)
       if !plan.assetWrites.isEmpty {guard let publication else{throw FormError.invalid("Portable asset staging is missing.")};try publication.publish(plan.assetWrites,beforeEach:beforePublish)}
       try afterPublish?()
       try engine.edit("Pasted portable artwork",source:source) {$0=try plan.applying(to:$0)}

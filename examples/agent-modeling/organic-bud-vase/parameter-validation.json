@@ -1,0 +1,3615 @@
+{
+  "source_sha256": "df7937f1b5917027be9ecd678d6a5713aaf5c5504e67b47ab024459d1e9c3e12",
+  "model_id": "0c6fde30-700c-5094-bc75-15a17bc5ecdc",
+  "source_definition_revision": 11,
+  "source_revision_hash": "3e039b61ac2a00e946f19f4a0c48464d373ed2bac9fcc69ca0179da0a78fe7d1",
+  "quality": "fabrication(.02mm/.1rad)",
+  "app_sha256": "0ace2600c78751dad4b134ed29da0d9653ff4fa7d1a5008556530e2caa099e91",
+  "kernel_version": "8.0.1+form.gprop1",
+  "summary": {
+    "source_sha256": "df7937f1b5917027be9ecd678d6a5713aaf5c5504e67b47ab024459d1e9c3e12",
+    "runtime_state": "complete",
+    "declared_cases": 30,
+    "evaluated_or_reported_cases": 30,
+    "native_geometry_passes": 27,
+    "expected_authored_guard_rejections": 3,
+    "unexpected_failures": [],
+    "endpoint_aliases": [
+      {
+        "name": "neckOffset.minimum",
+        "represented_by": "nominal",
+        "value": 16
+      },
+      {
+        "name": "fluteDepth.maximum",
+        "represented_by": "nominal",
+        "value": 0.25
+      }
+    ],
+    "baseline_state_isolated": true,
+    "interpretation": "Finite explicit cases only, not a continuous range proof. Expected authored guards remain real failed case outcomes, not native geometry passes or proofs of physical impossibility.",
+    "rows": [
+      {
+        "name": "nominal",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 21.722118124831468,
+        "volume_mm3": 215977.6982621778,
+        "area_mm2": 144251.2858740146,
+        "height_mm": 180.000000200001,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.00043913112224688026,
+        "issue": null
+      },
+      {
+        "name": "height.minimum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 22.193197541404516,
+        "volume_mm3": 198748.34300336475,
+        "area_mm2": 132764.95629386324,
+        "height_mm": 150.12192825853813,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.00039722507783281096,
+        "issue": null
+      },
+      {
+        "name": "height.maximum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 21.894977875053883,
+        "volume_mm3": 235214.1215548633,
+        "area_mm2": 157075.8018435515,
+        "height_mm": 210.0325421711347,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0007299017358173689,
+        "issue": null
+      },
+      {
+        "name": "bellyHeight.minimum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 26.275831583421677,
+        "volume_mm3": 209904.91307177546,
+        "area_mm2": 140202.98303038682,
+        "height_mm": 180.0000002,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0006532942609476706,
+        "issue": null
+      },
+      {
+        "name": "bellyHeight.maximum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 22.01485325023532,
+        "volume_mm3": 222184.56956908933,
+        "area_mm2": 148389.21911362323,
+        "height_mm": 180.00000020000004,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.00047343498188419017,
+        "issue": null
+      },
+      {
+        "name": "bellyRadius.minimum",
+        "category": "expected_authored_guard_rejection",
+        "actual_outcome": "failed",
+        "passed": false,
+        "requirement_id": "detail-curvature-margin",
+        "feature_id": null,
+        "duration_seconds": 0.04120704159140587,
+        "volume_mm3": null,
+        "area_mm2": null,
+        "height_mm": null,
+        "valid": null,
+        "closed": null,
+        "solid_count": null,
+        "maximum_tolerance_mm": null,
+        "issue": "Requirement 'detail-curvature-margin': Keep a conservative ridge-curvature margin for the declared normal wall; kernel validation is still required. (2108.16 < 1986.4815808512003)."
+      },
+      {
+        "name": "bellyRadius.maximum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 21.88513262476772,
+        "volume_mm3": 226514.4023137667,
+        "area_mm2": 151275.98066577024,
+        "height_mm": 180.0000002,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0009303356730081393,
+        "issue": null
+      },
+      {
+        "name": "baseRadius.minimum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 22.554300958290696,
+        "volume_mm3": 213388.6654153989,
+        "area_mm2": 142525.2621368696,
+        "height_mm": 180.0000002668872,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.00041139845498043657,
+        "issue": null
+      },
+      {
+        "name": "baseRadius.maximum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 69.51031049992889,
+        "volume_mm3": 218774.03170096574,
+        "area_mm2": 146115.62012932677,
+        "height_mm": 180.0000002,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.00045836357161167655,
+        "issue": null
+      },
+      {
+        "name": "neckRadius.minimum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 118.68992937495932,
+        "volume_mm3": 214650.1397821376,
+        "area_mm2": 143328.32772548814,
+        "height_mm": 180.00000020000033,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0009710797436391308,
+        "issue": null
+      },
+      {
+        "name": "neckRadius.maximum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 111.08734162524343,
+        "volume_mm3": 216953.16876920284,
+        "area_mm2": 144930.23231785005,
+        "height_mm": 180.0000002,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0015134550127592304,
+        "issue": null
+      },
+      {
+        "name": "bellyOffset.minimum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 23.08687362493947,
+        "volume_mm3": 216256.37216230418,
+        "area_mm2": 144437.19122380624,
+        "height_mm": 180.06148041620008,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0008350179730526859,
+        "issue": null
+      },
+      {
+        "name": "bellyOffset.maximum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 116.18799270829186,
+        "volume_mm3": 215175.10578182287,
+        "area_mm2": 143716.2569114872,
+        "height_mm": 180.0000002,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0005286675575090898,
+        "issue": null
+      },
+      {
+        "name": "neckOffset.maximum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 58.347483166493475,
+        "volume_mm3": 216994.26948660324,
+        "area_mm2": 144929.02678930352,
+        "height_mm": 180.0000002000001,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0005395546629015693,
+        "issue": null
+      },
+      {
+        "name": "neckDepthOffset.minimum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 20.786233416292816,
+        "volume_mm3": 216211.05550816952,
+        "area_mm2": 144406.91185500118,
+        "height_mm": 180.0000002,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0006140666979613606,
+        "issue": null
+      },
+      {
+        "name": "neckDepthOffset.maximum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 22.25642591668293,
+        "volume_mm3": 215804.58381408657,
+        "area_mm2": 144135.968905082,
+        "height_mm": 180.0000002,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0006995754996022945,
+        "issue": null
+      },
+      {
+        "name": "depthScale.minimum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 21.958597833290696,
+        "volume_mm3": 205454.9380621593,
+        "area_mm2": 137226.05303063593,
+        "height_mm": 180.0000002,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0005532444806505478,
+        "issue": null
+      },
+      {
+        "name": "depthScale.maximum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 24.68258975027129,
+        "volume_mm3": 219522.04402777556,
+        "area_mm2": 146617.72421128943,
+        "height_mm": 180.00000020000002,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0012720384400522957,
+        "issue": null
+      },
+      {
+        "name": "lobeAmount.minimum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 21.909500458277762,
+        "volume_mm3": 214785.5260685141,
+        "area_mm2": 143456.54988815013,
+        "height_mm": 180.0000002,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.00031288751683554775,
+        "issue": null
+      },
+      {
+        "name": "lobeAmount.maximum",
+        "category": "expected_authored_guard_rejection",
+        "actual_outcome": "failed",
+        "passed": false,
+        "requirement_id": "detail-curvature-margin",
+        "feature_id": null,
+        "duration_seconds": 0.04773937538266182,
+        "volume_mm3": null,
+        "area_mm2": null,
+        "height_mm": null,
+        "valid": null,
+        "closed": null,
+        "solid_count": null,
+        "maximum_tolerance_mm": null,
+        "issue": "Requirement 'detail-curvature-margin': Keep a conservative ridge-curvature margin for the declared normal wall; kernel validation is still required. (2108.16 < 1524.8743617072)."
+      },
+      {
+        "name": "fluteDepth.minimum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 119.59510345803574,
+        "volume_mm3": 215273.97623779485,
+        "area_mm2": 143782.64308125147,
+        "height_mm": 180.00000020000002,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0077264238225954514,
+        "issue": null
+      },
+      {
+        "name": "wall.minimum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 21.988024416845292,
+        "volume_mm3": 181187.23255669116,
+        "area_mm2": 145172.81414764174,
+        "height_mm": 180.04995774413092,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0003531106995307347,
+        "issue": null
+      },
+      {
+        "name": "wall.maximum",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 22.937336625065655,
+        "volume_mm3": 250289.48496815734,
+        "area_mm2": 143331.34867159164,
+        "height_mm": 180.0000002,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0014682387675831752,
+        "issue": null
+      },
+      {
+        "name": "coupled.short-wide",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 21.722393958363682,
+        "volume_mm3": 172754.88517762852,
+        "area_mm2": 138453.85190393456,
+        "height_mm": 150.03638676311377,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.00040283947721561414,
+        "issue": null
+      },
+      {
+        "name": "coupled.tall-slender-offset",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 25.798541416879743,
+        "volume_mm3": 174299.83864063682,
+        "area_mm2": 139624.0743223041,
+        "height_mm": 210.0000006648615,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.00037434673840166973,
+        "issue": null
+      },
+      {
+        "name": "coupled.deep-relief-margin",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 22.208165541291237,
+        "volume_mm3": 188948.32756231452,
+        "area_mm2": 151381.74578392308,
+        "height_mm": 180.04734572336184,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0005208023335168036,
+        "issue": null
+      },
+      {
+        "name": "guard.narrow-high-relief-reject",
+        "category": "expected_authored_guard_rejection",
+        "actual_outcome": "failed",
+        "passed": false,
+        "requirement_id": "detail-curvature-margin",
+        "feature_id": null,
+        "duration_seconds": 0.04133633337914944,
+        "volume_mm3": null,
+        "area_mm2": null,
+        "height_mm": null,
+        "valid": null,
+        "closed": null,
+        "solid_count": null,
+        "maximum_tolerance_mm": null,
+        "issue": "Requirement 'detail-curvature-margin': Keep a conservative ridge-curvature margin for the declared normal wall; kernel validation is still required. (2459.52 < 1099.9469030592)."
+      },
+      {
+        "name": "repair.narrow-reduced-relief",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 21.838367874734104,
+        "volume_mm3": 222153.1824870766,
+        "area_mm2": 127253.75832137444,
+        "height_mm": 180.08418443820463,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 6.871940373581192e-05,
+        "issue": null
+      },
+      {
+        "name": "coupled.no-flutes-high-lobe",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 73.73712725006044,
+        "volume_mm3": 222105.42916511893,
+        "area_mm2": 127226.49690422665,
+        "height_mm": 180.00000020000004,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 1.0101357203806393e-05,
+        "issue": null
+      },
+      {
+        "name": "coupled.thick-neck-offset",
+        "category": "native_geometry_pass",
+        "actual_outcome": "passed",
+        "passed": true,
+        "requirement_id": null,
+        "feature_id": null,
+        "duration_seconds": 26.399888541549444,
+        "volume_mm3": 234597.1693771216,
+        "area_mm2": 134323.21654124476,
+        "height_mm": 150.00000194752192,
+        "valid": true,
+        "closed": true,
+        "solid_count": 1,
+        "maximum_tolerance_mm": 0.0002467205237715772,
+        "issue": null
+      }
+    ]
+  },
+  "coverage": {
+    "source": "/Users/rustymeadows/Dev/form/.local/validation/organic-v8-session/refined-20-48-depth-maximum.json",
+    "source_sha256": "df7937f1b5917027be9ecd678d6a5713aaf5c5504e67b47ab024459d1e9c3e12",
+    "source_bytes": 3749802,
+    "source_model_id": "0c6fde30-700c-5094-bc75-15a17bc5ecdc",
+    "source_revision": 11,
+    "declared_parameters": [
+      {
+        "name": "height",
+        "value": 180,
+        "minimum": 150,
+        "maximum": 210,
+        "unit": "mm"
+      },
+      {
+        "name": "bellyHeight",
+        "value": 84.6,
+        "minimum": 72,
+        "maximum": 96,
+        "unit": "mm"
+      },
+      {
+        "name": "bellyRadius",
+        "value": 73.0,
+        "minimum": 62,
+        "maximum": 76,
+        "unit": "mm"
+      },
+      {
+        "name": "baseRadius",
+        "value": 30,
+        "minimum": 26,
+        "maximum": 34,
+        "unit": "mm"
+      },
+      {
+        "name": "neckRadius",
+        "value": 14.5,
+        "minimum": 12.5,
+        "maximum": 16,
+        "unit": "mm"
+      },
+      {
+        "name": "bellyOffset",
+        "value": -10.0,
+        "minimum": -12,
+        "maximum": 0,
+        "unit": "mm"
+      },
+      {
+        "name": "neckOffset",
+        "value": 16.0,
+        "minimum": 16,
+        "maximum": 30,
+        "unit": "mm"
+      },
+      {
+        "name": "neckDepthOffset",
+        "value": -17,
+        "minimum": -22,
+        "maximum": -12,
+        "unit": "mm"
+      },
+      {
+        "name": "depthScale",
+        "value": 1.015,
+        "minimum": 0.94,
+        "maximum": 1.04,
+        "unit": "ratio"
+      },
+      {
+        "name": "lobeAmount",
+        "value": 0.12,
+        "minimum": 0.1,
+        "maximum": 0.27,
+        "unit": "ratio"
+      },
+      {
+        "name": "fluteDepth",
+        "value": 0.25,
+        "minimum": 0,
+        "maximum": 0.25,
+        "unit": "mm"
+      },
+      {
+        "name": "wall",
+        "value": 3,
+        "minimum": 2.5,
+        "maximum": 3.5,
+        "unit": "mm"
+      }
+    ],
+    "endpoint_aliases": [
+      {
+        "name": "neckOffset.minimum",
+        "represented_by": "nominal",
+        "value": 16
+      },
+      {
+        "name": "fluteDepth.maximum",
+        "represented_by": "nominal",
+        "value": 0.25
+      }
+    ],
+    "finite_cases": 30,
+    "precondition_predictions": [
+      {
+        "name": "nominal",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "height.minimum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 150,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "height.maximum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 210,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "bellyHeight.minimum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 72,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "bellyHeight.maximum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 96,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "bellyRadius.minimum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 1986.4815808512003,
+        "precondition_prediction": "reject_detail-curvature-margin",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 62,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "bellyRadius.maximum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2984.8901173248005,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 76,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "baseRadius.minimum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 26,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "baseRadius.maximum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 34,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "neckRadius.minimum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 12.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "neckRadius.maximum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 16,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "bellyOffset.minimum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -12,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "bellyOffset.maximum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": 0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "neckOffset.maximum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 30,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "neckDepthOffset.minimum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -22,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "neckDepthOffset.maximum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -12,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "depthScale.minimum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 0.94,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "depthScale.maximum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.04,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "lobeAmount.minimum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 2945.0074756800004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.1,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "lobeAmount.maximum",
+        "declared_curvature_lhs": 2108.16,
+        "declared_curvature_rhs": 1524.8743617072,
+        "precondition_prediction": "reject_detail-curvature-margin",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.27,
+          "fluteDepth": 0.25,
+          "wall": 3
+        }
+      },
+      {
+        "name": "fluteDepth.minimum",
+        "declared_curvature_lhs": 0.0,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0,
+          "wall": 3
+        }
+      },
+      {
+        "name": "wall.minimum",
+        "declared_curvature_lhs": 1756.8,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 2.5
+        }
+      },
+      {
+        "name": "wall.maximum",
+        "declared_curvature_lhs": 2459.52,
+        "declared_curvature_rhs": 2753.8918689792004,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 73.0,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.12,
+          "fluteDepth": 0.25,
+          "wall": 3.5
+        }
+      },
+      {
+        "name": "coupled.short-wide",
+        "declared_curvature_lhs": 1756.8,
+        "declared_curvature_rhs": 3192.03662592,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 150,
+          "bellyHeight": 72,
+          "bellyRadius": 76,
+          "baseRadius": 34,
+          "neckRadius": 16,
+          "bellyOffset": 0,
+          "neckOffset": 16,
+          "neckDepthOffset": -12,
+          "depthScale": 1.04,
+          "lobeAmount": 0.1,
+          "fluteDepth": 0.25,
+          "wall": 2.5
+        }
+      },
+      {
+        "name": "coupled.tall-slender-offset",
+        "declared_curvature_lhs": 1264.896,
+        "declared_curvature_rhs": 2555.39774208,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 210,
+          "bellyHeight": 96,
+          "bellyRadius": 68,
+          "baseRadius": 26,
+          "neckRadius": 12.5,
+          "bellyOffset": -12,
+          "neckOffset": 30,
+          "neckDepthOffset": -22,
+          "depthScale": 0.94,
+          "lobeAmount": 0.1,
+          "fluteDepth": 0.18,
+          "wall": 2.5
+        }
+      },
+      {
+        "name": "coupled.deep-relief-margin",
+        "declared_curvature_lhs": 1756.8,
+        "declared_curvature_rhs": 3192.03662592,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 76,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.1,
+          "fluteDepth": 0.25,
+          "wall": 2.5
+        }
+      },
+      {
+        "name": "guard.narrow-high-relief-reject",
+        "declared_curvature_lhs": 2459.52,
+        "declared_curvature_rhs": 1099.9469030592,
+        "precondition_prediction": "reject_detail-curvature-margin",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 62,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.27,
+          "fluteDepth": 0.25,
+          "wall": 3.5
+        }
+      },
+      {
+        "name": "repair.narrow-reduced-relief",
+        "declared_curvature_lhs": 590.2847999999999,
+        "declared_curvature_rhs": 1099.9469030592,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 62,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.27,
+          "fluteDepth": 0.06,
+          "wall": 3.5
+        }
+      },
+      {
+        "name": "coupled.no-flutes-high-lobe",
+        "declared_curvature_lhs": 0.0,
+        "declared_curvature_rhs": 1099.9469030592,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 180,
+          "bellyHeight": 84.6,
+          "bellyRadius": 62,
+          "baseRadius": 30,
+          "neckRadius": 14.5,
+          "bellyOffset": -10.0,
+          "neckOffset": 16.0,
+          "neckDepthOffset": -17,
+          "depthScale": 1.015,
+          "lobeAmount": 0.27,
+          "fluteDepth": 0,
+          "wall": 3.5
+        }
+      },
+      {
+        "name": "coupled.thick-neck-offset",
+        "declared_curvature_lhs": 1180.5695999999998,
+        "declared_curvature_rhs": 3192.03662592,
+        "precondition_prediction": "evaluate_native",
+        "resolved_values": {
+          "height": 150,
+          "bellyHeight": 72,
+          "bellyRadius": 76,
+          "baseRadius": 30,
+          "neckRadius": 12.5,
+          "bellyOffset": 0,
+          "neckOffset": 30,
+          "neckDepthOffset": -22,
+          "depthScale": 1.04,
+          "lobeAmount": 0.1,
+          "fluteDepth": 0.12,
+          "wall": 3.5
+        }
+      }
+    ],
+    "interpretation": "Finite explicit cases only; conservative authored guard rejection is not proof of physical impossibility; actual native outcomes supersede predictions. Source/constraints/tolerances remain fixed."
+  },
+  "cases": [
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.000000200001,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 215977.6982621778,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 215977.6982621778,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 21722.118124831468,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 144251.2858740146,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48579941078214,
+              "y": 180.00000010000102,
+              "z": 77.07955387717361
+            },
+            "maximumToleranceMM": 0.00043913112224688026,
+            "minimum": {
+              "x": -76.94087297683257,
+              "y": -1e-07,
+              "z": -79.57964926689183
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 215977.6982621778
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "nominal",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 150,
+          "id": "height",
+          "measured": 150.12192825853813,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 262800,
+          "id": "material-not-filled",
+          "measured": 198748.34300336475,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 98550,
+          "id": "material-not-vanishing",
+          "measured": 198748.34300336475,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 22193.197541404516,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 132764.95629386324,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48709392817574,
+              "y": 150.12192815853814,
+              "z": 77.0826429525049
+            },
+            "maximumToleranceMM": 0.00039722507783281096,
+            "minimum": {
+              "x": -76.94390661148907,
+              "y": -1e-07,
+              "z": -79.58212376944371
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 198748.34300336475
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "height.minimum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 150,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 210,
+          "id": "height",
+          "measured": 210.0325421711347,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 367920,
+          "id": "material-not-filled",
+          "measured": 235214.1215548633,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 137970,
+          "id": "material-not-vanishing",
+          "measured": 235214.1215548633,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 21894.977875053883,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 157075.8018435515,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48507798443036,
+              "y": 210.0325420711347,
+              "z": 77.07669359108735
+            },
+            "maximumToleranceMM": 0.0007299017358173689,
+            "minimum": {
+              "x": -76.93742112725616,
+              "y": -1e-07,
+              "z": -79.5771551723768
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 235214.1215548633
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "height.maximum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 210,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.0000002,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 209904.91307177546,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 209904.91307177546,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 26275.831583421677,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 140202.98303038682,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48518060578175,
+              "y": 180.0000001,
+              "z": 77.0771680174974
+            },
+            "maximumToleranceMM": 0.0006532942609476706,
+            "minimum": {
+              "x": -76.9380101960828,
+              "y": -1e-07,
+              "z": -79.57757821342798
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 209904.91307177546
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "bellyHeight.minimum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 72,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.00000020000004,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 222184.56956908933,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 222184.56956908933,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 22014.85325023532,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 148389.21911362323,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48625485173913,
+              "y": 180.00000010000005,
+              "z": 77.08070673900406
+            },
+            "maximumToleranceMM": 0.00047343498188419017,
+            "minimum": {
+              "x": -76.94203934488992,
+              "y": -1e-07,
+              "z": -79.58064504201717
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 222184.56956908933
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "bellyHeight.maximum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 96,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [],
+      "durationMS": 41.20704159140587,
+      "issue": "Requirement 'detail-curvature-margin': Keep a conservative ridge-curvature margin for the declared normal wall; kernel validation is still required. (2108.16 < 1986.4815808512003).",
+      "measurements": [],
+      "name": "bellyRadius.minimum",
+      "outcome": "failed",
+      "passed": false,
+      "requirementID": "detail-curvature-margin",
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 62,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.0000002,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 328320,
+          "id": "material-not-filled",
+          "measured": 226514.4023137667,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 123120,
+          "id": "material-not-vanishing",
+          "measured": 226514.4023137667,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 21885.13262476772,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 151275.98066577024,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 72.74232202861668,
+              "y": 180.0000001,
+              "z": 80.23893505218447
+            },
+            "maximumToleranceMM": 0.0009303356730081393,
+            "minimum": {
+              "x": -79.68241494172271,
+              "y": -1e-07,
+              "z": -82.8405479460845
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 226514.4023137667
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "bellyRadius.maximum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 76,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.0000002668872,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 213388.6654153989,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 213388.6654153989,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 22554.300958290696,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 142525.2621368696,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.4857647763759,
+              "y": 180.00000016688722,
+              "z": 77.07928522256621
+            },
+            "maximumToleranceMM": 0.00041139845498043657,
+            "minimum": {
+              "x": -76.94056030320053,
+              "y": -1e-07,
+              "z": -79.57945694177248
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 213388.6654153989
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "baseRadius.minimum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 26,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.0000002,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 218774.03170096574,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 218774.03170096574,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 69510.31049992889,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 146115.62012932677,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48585180100359,
+              "y": 180.0000001,
+              "z": 77.07987804192585
+            },
+            "maximumToleranceMM": 0.00045836357161167655,
+            "minimum": {
+              "x": -76.94124220483505,
+              "y": -1e-07,
+              "z": -79.57988905491645
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 218774.03170096574
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "baseRadius.maximum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 34,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.00000020000033,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 214650.1397821376,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 214650.1397821376,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 118689.92937495932,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 143328.32772548814,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48595255205983,
+              "y": 180.00000010000034,
+              "z": 77.07986754382564
+            },
+            "maximumToleranceMM": 0.0009710797436391308,
+            "minimum": {
+              "x": -76.94117476498185,
+              "y": -1e-07,
+              "z": -79.57992159151068
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 214650.1397821376
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "neckRadius.minimum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 12.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.0000002,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 216953.16876920284,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 216953.16876920284,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 111087.34162524343,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 144930.23231785005,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48569235382897,
+              "y": 180.0000001,
+              "z": 77.0793274834235
+            },
+            "maximumToleranceMM": 0.0015134550127592304,
+            "minimum": {
+              "x": -76.94065448567558,
+              "y": -1e-07,
+              "z": -79.57945265901417
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 216953.16876920284
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "neckRadius.maximum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 16,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.06148041620008,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 216256.37216230418,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 216256.37216230418,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 23086.87362493947,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 144437.19122380624,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 67.4852028742398,
+              "y": 180.0614803162001,
+              "z": 77.07971311702138
+            },
+            "maximumToleranceMM": 0.0008350179730526859,
+            "minimum": {
+              "x": -78.942442808627,
+              "y": -1e-07,
+              "z": -79.57980509533176
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 216256.37216230418
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "bellyOffset.minimum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -12,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.0000002,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 215175.10578182287,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 215175.10578182287,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 116187.99270829186,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 143716.2569114872,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 79.49020322385975,
+              "y": 180.0000001,
+              "z": 77.07918637887585
+            },
+            "maximumToleranceMM": 0.0005286675575090898,
+            "minimum": {
+              "x": -66.9347081450199,
+              "y": -1e-07,
+              "z": -79.57929232523804
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 215175.10578182287
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "bellyOffset.maximum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": 0,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.0000002000001,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 216994.26948660324,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 216994.26948660324,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 58347.483166493475,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 144929.02678930352,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48541101071609,
+              "y": 180.0000001000001,
+              "z": 77.07963875057114
+            },
+            "maximumToleranceMM": 0.0005395546629015693,
+            "minimum": {
+              "x": -76.94199554569245,
+              "y": -1e-07,
+              "z": -79.57971585148799
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 216994.26948660324
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "neckOffset.maximum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 30,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.0000002,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 216211.05550816952,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 216211.05550816952,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 20786.233416292816,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 144406.91185500118,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48580677884657,
+              "y": 180.0000001,
+              "z": 77.07990110047935
+            },
+            "maximumToleranceMM": 0.0006140666979613606,
+            "minimum": {
+              "x": -76.94088987375605,
+              "y": -1.0000000088817842e-07,
+              "z": -79.57937448795602
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 216211.05550816952
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "neckDepthOffset.minimum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -22,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.0000002,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 215804.58381408657,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 215804.58381408657,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 22256.42591668293,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 144135.968905082,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48579410496308,
+              "y": 180.0000001,
+              "z": 77.07921882088544
+            },
+            "maximumToleranceMM": 0.0006995754996022945,
+            "minimum": {
+              "x": -76.94086096935548,
+              "y": -1.0000000088817842e-07,
+              "z": -79.5799331997456
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 215804.58381408657
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "neckDepthOffset.maximum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -12,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.0000002,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 205454.9380621593,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 205454.9380621593,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 21958.597833290696,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 137226.05303063593,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48576168412713,
+              "y": 180.0000001,
+              "z": 71.3839851315837
+            },
+            "maximumToleranceMM": 0.0005532444806505478,
+            "minimum": {
+              "x": -76.94073556158706,
+              "y": -1e-07,
+              "z": -73.69921697563147
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 205454.9380621593
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "depthScale.minimum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 0.94,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.00000020000002,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 219522.04402777556,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 219522.04402777556,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 24682.58975027129,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 146617.72421128943,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48581280952511,
+              "y": 180.00000010000002,
+              "z": 78.97808311019514
+            },
+            "maximumToleranceMM": 0.0012720384400522957,
+            "minimum": {
+              "x": -76.94092171812932,
+              "y": -1e-07,
+              "z": -81.53979926991238
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 219522.04402777556
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "depthScale.maximum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.04,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.0000002,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 214785.5260685141,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 214785.5260685141,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 21909.500458277762,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 143456.54988815013,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 68.44407346945968,
+              "y": 180.0000001,
+              "z": 76.38552717592249
+            },
+            "maximumToleranceMM": 0.00031288751683554775,
+            "minimum": {
+              "x": -77.06121214453866,
+              "y": -1e-07,
+              "z": -78.58992895758189
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 214785.5260685141
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "lobeAmount.minimum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.1,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [],
+      "durationMS": 47.73937538266182,
+      "issue": "Requirement 'detail-curvature-margin': Keep a conservative ridge-curvature margin for the declared normal wall; kernel validation is still required. (2108.16 < 1524.8743617072).",
+      "measurements": [],
+      "name": "lobeAmount.maximum",
+      "outcome": "failed",
+      "passed": false,
+      "requirementID": "detail-curvature-margin",
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.27,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.00000020000002,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 315360,
+          "id": "material-not-filled",
+          "measured": 215273.97623779485,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 118260,
+          "id": "material-not-vanishing",
+          "measured": 215273.97623779485,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 119595.10345803574,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 143782.64308125147,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.23690688084801,
+              "y": 180.00000010000002,
+              "z": 77.02216366385322
+            },
+            "maximumToleranceMM": 0.0077264238225954514,
+            "minimum": {
+              "x": -76.73562837820208,
+              "y": -1.0000000088817842e-07,
+              "z": -79.4058401346925
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 215273.97623779485
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "fluteDepth.minimum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.04995774413092,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 262800,
+          "id": "material-not-filled",
+          "measured": 181187.23255669116,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 98550,
+          "id": "material-not-vanishing",
+          "measured": 181187.23255669116,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 21988.024416845292,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 145172.81414764174,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48579941078214,
+              "y": 180.04995764413093,
+              "z": 77.07955387717361
+            },
+            "maximumToleranceMM": 0.0003531106995307347,
+            "minimum": {
+              "x": -76.94087297683257,
+              "y": -1e-07,
+              "z": -79.57964926689183
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 181187.23255669116
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "wall.minimum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 2.5
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.0000002,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 367920,
+          "id": "material-not-filled",
+          "measured": 250289.48496815734,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 137970,
+          "id": "material-not-vanishing",
+          "measured": 250289.48496815734,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 22937.336625065655,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 143331.34867159164,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 69.48579941078214,
+              "y": 180.0000001,
+              "z": 77.07955387717361
+            },
+            "maximumToleranceMM": 0.0014682387675831752,
+            "minimum": {
+              "x": -76.94087297683257,
+              "y": -1e-07,
+              "z": -79.57964926689183
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 250289.48496815734
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "wall.maximum",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 73,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.12,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3.5
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 150,
+          "id": "height",
+          "measured": 150.03638676311377,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 228000,
+          "id": "material-not-filled",
+          "measured": 172754.88517762852,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 85500,
+          "id": "material-not-vanishing",
+          "measured": 172754.88517762852,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 21722.393958363682,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 138453.85190393456,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 81.66287340614898,
+              "y": 150.03638666311377,
+              "z": 81.47464906702191
+            },
+            "maximumToleranceMM": 0.00040283947721561414,
+            "minimum": {
+              "x": -69.80219660708957,
+              "y": -1e-07,
+              "z": -83.82558942206187
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 172754.88517762852
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "coupled.short-wide",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 34,
+        "bellyHeight": 72,
+        "bellyOffset": 0,
+        "bellyRadius": 76,
+        "depthScale": 1.04,
+        "fluteDepth": 0.25,
+        "height": 150,
+        "lobeAmount": 0.1,
+        "neckDepthOffset": -12,
+        "neckOffset": 16,
+        "neckRadius": 16,
+        "wall": 2.5
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 210,
+          "id": "height",
+          "measured": 210.0000006648615,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 285600,
+          "id": "material-not-filled",
+          "measured": 174299.83864063682,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 107100,
+          "id": "material-not-vanishing",
+          "measured": 174299.83864063682,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 25798.541416879743,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 139624.0743223041,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 61.01761601246301,
+              "y": 210.0000005648615,
+              "z": 65.85405895735441
+            },
+            "maximumToleranceMM": 0.00037434673840166973,
+            "minimum": {
+              "x": -74.42157865064881,
+              "y": -1e-07,
+              "z": -67.74853548025527
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 174299.83864063682
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "coupled.tall-slender-offset",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 26,
+        "bellyHeight": 96,
+        "bellyOffset": -12,
+        "bellyRadius": 68,
+        "depthScale": 0.94,
+        "fluteDepth": 0.18,
+        "height": 210,
+        "lobeAmount": 0.1,
+        "neckDepthOffset": -22,
+        "neckOffset": 30,
+        "neckRadius": 12.5,
+        "wall": 2.5
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.04734572336184,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 273600,
+          "id": "material-not-filled",
+          "measured": 188948.32756231452,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 102600,
+          "id": "material-not-vanishing",
+          "measured": 188948.32756231452,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 22208.165541291237,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 151381.74578392308,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 71.65774455639794,
+              "y": 180.04734562336185,
+              "z": 79.51572774051931
+            },
+            "maximumToleranceMM": 0.0005208023335168036,
+            "minimum": {
+              "x": -79.80761048193212,
+              "y": -1e-07,
+              "z": -81.80965933511305
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 188948.32756231452
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "coupled.deep-relief-margin",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 76,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.1,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 2.5
+      }
+    },
+    {
+      "checks": [],
+      "durationMS": 41.33633337914944,
+      "issue": "Requirement 'detail-curvature-margin': Keep a conservative ridge-curvature margin for the declared normal wall; kernel validation is still required. (2459.52 < 1099.9469030592).",
+      "measurements": [],
+      "name": "guard.narrow-high-relief-reject",
+      "outcome": "failed",
+      "passed": false,
+      "requirementID": "detail-curvature-margin",
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 62,
+        "depthScale": 1.015,
+        "fluteDepth": 0.25,
+        "height": 180,
+        "lobeAmount": 0.27,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3.5
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.08418443820463,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 312480,
+          "id": "material-not-filled",
+          "measured": 222153.1824870766,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 117180,
+          "id": "material-not-vanishing",
+          "measured": 222153.1824870766,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 21838.367874734104,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 127253.75832137444,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 63.993161424575554,
+              "y": 180.08418433820464,
+              "z": 70.86803499620483
+            },
+            "maximumToleranceMM": 6.871940373581192e-05,
+            "minimum": {
+              "x": -68.81756082968539,
+              "y": -1e-07,
+              "z": -74.6223360940608
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 222153.1824870766
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "repair.narrow-reduced-relief",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 62,
+        "depthScale": 1.015,
+        "fluteDepth": 0.06,
+        "height": 180,
+        "lobeAmount": 0.27,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3.5
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 180,
+          "id": "height",
+          "measured": 180.00000020000004,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 312480,
+          "id": "material-not-filled",
+          "measured": 222105.42916511893,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 117180,
+          "id": "material-not-vanishing",
+          "measured": 222105.42916511893,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 73737.12725006044,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 127226.49690422665,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 63.93560379899207,
+              "y": 180.00000010000005,
+              "z": 70.83627661648912
+            },
+            "maximumToleranceMM": 1.0101357203806393e-05,
+            "minimum": {
+              "x": -68.79767145547338,
+              "y": -1.0000000088817842e-07,
+              "z": -74.59840229038447
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 222105.42916511893
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "coupled.no-flutes-high-lobe",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 84.6,
+        "bellyOffset": -10,
+        "bellyRadius": 62,
+        "depthScale": 1.015,
+        "fluteDepth": 0,
+        "height": 180,
+        "lobeAmount": 0.27,
+        "neckDepthOffset": -17,
+        "neckOffset": 16,
+        "neckRadius": 14.5,
+        "wall": 3.5
+      }
+    },
+    {
+      "checks": [
+        {
+          "expected": 1,
+          "id": "one-solid",
+          "measured": 1,
+          "metric": "solids",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "=="
+        },
+        {
+          "expected": 150,
+          "id": "height",
+          "measured": 150.00000194752192,
+          "metric": "height",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "==",
+          "tolerance": 0.2
+        },
+        {
+          "expected": 319200,
+          "id": "material-not-filled",
+          "measured": 234597.1693771216,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": "<"
+        },
+        {
+          "expected": 119700,
+          "id": "material-not-vanishing",
+          "measured": 234597.1693771216,
+          "metric": "volume",
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F",
+          "relation": ">"
+        }
+      ],
+      "durationMS": 26399.888541549444,
+      "measurements": [
+        {
+          "info": {
+            "areaMM2": 134323.21654124476,
+            "closed": true,
+            "edges": 6,
+            "faces": 5,
+            "maximum": {
+              "x": 81.53252218223913,
+              "y": 150.00000184752193,
+              "z": 81.37511626571383
+            },
+            "maximumToleranceMM": 0.0002467205237715772,
+            "minimum": {
+              "x": -69.68633405296694,
+              "y": -1e-07,
+              "z": -83.69581761640605
+            },
+            "shapeType": 2,
+            "shells": 1,
+            "solids": 1,
+            "valid": true,
+            "vertices": 4,
+            "volumeMM3": 234597.1693771216
+          },
+          "outputID": "2E0B7089-829D-551D-BEB8-5BD3146BAB9F"
+        }
+      ],
+      "name": "coupled.thick-neck-offset",
+      "outcome": "passed",
+      "passed": true,
+      "surfaceIssues": [],
+      "values": {
+        "baseRadius": 30,
+        "bellyHeight": 72,
+        "bellyOffset": 0,
+        "bellyRadius": 76,
+        "depthScale": 1.04,
+        "fluteDepth": 0.12,
+        "height": 150,
+        "lobeAmount": 0.1,
+        "neckDepthOffset": -22,
+        "neckOffset": 30,
+        "neckRadius": 12.5,
+        "wall": 3.5
+      }
+    }
+  ],
+  "state_invariants": {
+    "all_30_cases_retained": true,
+    "baseline_state_isolated": true,
+    "source_bytes_unchanged": true,
+    "nominal_one_commit_undo_redo_reopen": true,
+    "published_definition_revision_pinned": true
+  },
+  "publication": {
+    "object_id": "F10B4BB6-F204-469F-89EE-E831DF83F880",
+    "asset_sha256": {
+      "cad-081f6ce4a209f90aa8e98457701ce50581ee6360171e9769613e46bb71884bd1.brep": "081f6ce4a209f90aa8e98457701ce50581ee6360171e9769613e46bb71884bd1",
+      "cad-8c8a2ab129f0947c935f94b366bf587fb4263892e4e3c055c58990c83cb65115.mesh": "8c8a2ab129f0947c935f94b366bf587fb4263892e4e3c055c58990c83cb65115"
+    },
+    "nominal_one_commit_undo_redo_reopen": true
+  },
+  "interrupted_attempt_file": "original-shared-budget-attempt.json",
+  "retry_policy": "Only interrupted/not_run exact values were retried in individual requests at the same 300 second budget, unchanged source and geometry quality. Original outcomes remain in the separate attempt file."
+}

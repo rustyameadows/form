@@ -170,25 +170,25 @@ extension Project {
 
   public func validateComponentLinks() throws {
     guard objects.contains(where: { $0.componentDefinition == true ||
-      $0.artwork?.elements.contains(where: { $0.component != nil }) == true }) else { return }
+      $0.storedArtworks.contains(where:{$0.elements.contains(where:{$0.component != nil})}) }) else { return }
     guard Set(objects.map(\.id)).count == objects.count else {
       throw FormError.invalid("Project object identities must be unique.")
     }
     let byID = Dictionary(uniqueKeysWithValues: objects.map { ($0.id, $0) })
     typealias Cost = (elements: Int, nodes: Int, levels: Int)
     var costs: [UUID: Cost] = [:]
-    func cost(_ object: ProductObject, visiting: Set<UUID>, depth: Int) throws -> Cost {
+    func cost(_ object: ProductObject, artwork:Artwork?=nil,visiting: Set<UUID>, depth: Int) throws -> Cost {
       guard depth <= 8, !visiting.contains(object.id) else {
         throw FormError.invalid("Component references must be acyclic and at most eight levels deep.")
       }
-      if let cached = costs[object.id] {
+      if artwork==nil,let cached = costs[object.id] {
         guard depth + cached.levels <= 8 else { throw FormError.invalid("Component nesting exceeds eight levels.") }
         return cached
       }
       var count = 0
       var nodes = 0
       var levels = 0
-      for e in object.artwork?.elements ?? [] {
+      for e in (artwork ?? object.artwork)?.elements ?? [] {
         count += 1
         nodes += (e.path?.contours.reduce(0) { $0 + $1.nodes.count } ?? 0) + e.text.utf16.count
         if let ref = e.component {
@@ -210,7 +210,7 @@ extension Project {
           throw FormError.invalid("Expanded component artwork exceeds 10,000 elements or 300,000 nodes.")
         }
       }
-      costs[object.id] = (count, nodes, levels)
+      if artwork==nil {costs[object.id] = (count, nodes, levels)}
       return (count, nodes, levels)
     }
     for object in objects {
@@ -219,9 +219,9 @@ extension Project {
           throw FormError.invalid("Component sources must be independent artwork frames.")
         }
       }
-      if object.componentDefinition == true || object.artwork?.elements.contains(where: { $0.component != nil }) == true {
-        if let art = object.artwork { try validateArtwork(art) }
-        _ = try cost(object, visiting: [], depth: 0)
+      for art in object.storedArtworks where object.componentDefinition == true || art.elements.contains(where:{$0.component != nil}) {
+        try validateArtwork(art)
+        _ = try cost(object,artwork:art,visiting:[],depth:0)
       }
     }
   }

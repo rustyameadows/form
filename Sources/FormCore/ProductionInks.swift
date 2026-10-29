@@ -50,7 +50,7 @@ extension Project {
   }
   public func productionInk(_ id:UUID?)->ProductionInk? {id.flatMap{id in swatches?.first{$0.id==id}?.printInk}}
   public func productionInkIsReferenced(_ id:UUID)->Bool {
-    objects.contains{ $0.artwork?.referencedSwatches.contains(id)==true } || (textStories ?? []).contains{Artwork(elements:[$0.sourceElement]).referencedSwatches.contains(id)}
+    storedArtworks.contains{$0.referencedSwatches.contains(id)} || (textStories ?? []).contains{Artwork(elements:[$0.sourceElement]).referencedSwatches.contains(id)}
   }
 }
 

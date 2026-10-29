@@ -1,11 +1,44 @@
 {
   "project": "Open CASCADE Technology",
   "version": "8.0.1",
+  "runtime_version": "8.0.1+form.gprop2",
   "tag": "V8_0_1",
   "commit": "b8f597c677811d1f9f4d8a97f5ae2825c0353a42",
   "annotated_tag": "c5605924864829ce8c1e1477f976ffb3880538a8",
   "archive": "https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V8_0_1.tar.gz",
   "archive_sha256": "0d6913eae4bcc09a3653ceced6dda1aec11c35a1513d4c06762c9b002092c68a",
   "license": "LGPL-2.1-only WITH OCCT-exception-1.0",
-  "integration": "Unmodified shared OCCT libraries built locally; Form-owned narrow C ABI adapter. No OCCT source types enter Swift/document schemas."
+  "integration": "Shared OCCT libraries built locally with the recorded exact integration metadata and cooperative quadrature cancellation patches; Form-owned narrow C ABI adapter. No OCCT source types enter Swift/document schemas.",
+  "patches": [
+    {
+      "path": "scripts/patches/occt-8.0.1-offset-bspline-gprop.patch",
+      "sha256": "7a1b67cec0b82e513d99cfaee22f1c2afc252c279b165a13374f9bd0ecc499c4",
+      "source": "src/ModelingAlgorithms/TKTopAlgo/BRepGProp/BRepGProp_Face.cxx",
+      "source_before_sha256": "a03307922ac0e02446193e445163f5f66558a90c04da8a9d0eb72a7d0590036a",
+      "source_after_sha256": "a642ae8d5e823948dc679492c2b822a7e5eed216738e98d4760dd91a50a93895",
+      "purpose": "Use offset B-spline basis degrees and knot spans for exact mass/area quadrature; original surfaces, trims and topology are unchanged."
+    },
+    {
+      "path": "scripts/patches/occt-8.0.1-gprop-cancellation.patch",
+      "sha256": "d3cd9d48f5c4b97dbd15d10f993bbdbc669abacf82d09aaef69e38e600a9a66b",
+      "sources": [
+        {
+          "source": "src/ModelingAlgorithms/TKTopAlgo/BRepGProp/BRepGProp_Gauss.hxx",
+          "source_before_sha256": "a203e6f6825deda6e1d4f17c6caa516e2d4072c585ebcd15bfc12b3923812cff",
+          "source_after_sha256": "f8294f42b044e61206aa67d59015110f1488246c8a77f41c30b211aa2155f505"
+        },
+        {
+          "source": "src/ModelingAlgorithms/TKTopAlgo/BRepGProp/BRepGProp_Gauss.cxx",
+          "source_before_sha256": "9b0aac2a33c12aa7cb701c5249c175329956e3aebb1ff3d79fd4e3e1b7eeb1d5",
+          "source_after_sha256": "9eab466eeb97769a700d9116be3ca0432d6017f6f34548e2fbae5e2584e48dc3"
+        }
+      ],
+      "purpose": "Poll the current native task cancellation probe during mass/area quadrature. Uncancelled integration order, geometry and tolerances are unchanged."
+    }
+  ],
+  "required_exported_symbols": {
+    "libTKTopAlgo.8.0.1.dylib": [
+      "SetCancellationProbe"
+    ]
+  }
 }

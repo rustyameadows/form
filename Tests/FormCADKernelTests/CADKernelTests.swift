@@ -5,7 +5,7 @@ import FormCADKernel
 final class CADKernelTests:XCTestCase {
   private func folder()throws->URL{let url=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString);try FileManager.default.createDirectory(at:url,withIntermediateDirectories:true);addTeardownBlock{try? FileManager.default.removeItem(at:url)};return url}
   func testMillimeterAxesAnalyticPrimitivesAndRigidTransforms() async throws {
-    let k=CADKernel();XCTAssertEqual(CADKernel.version,"8.0.1")
+    let k=CADKernel();XCTAssertEqual(CADKernel.version,"8.0.1+form.gprop2")
     let box=try await k.box(width:80,height:50,depth:20);XCTAssertEqual(box.info.size,.init(80,50,20));XCTAssertEqual(box.info.volumeMM3,80000,accuracy:1e-6)
     let cylinder=try await k.cylinder(radius:10,height:40);XCTAssertEqual(cylinder.info.size.y,40,accuracy:1e-7);XCTAssertEqual(cylinder.info.volumeMM3,Double.pi*100*40,accuracy:1e-6)
     let turned=try await k.transform(cylinder,rowMajorMatrix:[1,0,0,40,0,0,-1,25,0,1,0,-10,0,0,0,1]);XCTAssertEqual(turned.info.volumeMM3,cylinder.info.volumeMM3,accuracy:1e-6)
@@ -56,6 +56,78 @@ final class CADKernelTests:XCTestCase {
     XCTAssertGreaterThan(fine.triangleCount,coarse.triangleCount)
     for (p,n) in zip(fine.positions,fine.normals){XCTAssertGreaterThan(p.x*n.x+p.y*n.y+p.z*n.z,39.9)}
     let after=try await k.inspect(sphere);XCTAssertEqual(after,sphere.info)
+  }
+  func testFailedLoftPreservesNativeStatusAndCanBeRepaired()async throws {
+    let kernel=CADKernel()
+    let lower=try await kernel.circleProfile(radius:10),duplicate=try await kernel.circleProfile(radius:10),coplanar=try await kernel.circleProfile(radius:20)
+    // Three coplanar sections deterministically fail the native smooth fitter
+    // without an expensive high-edge model or an invalid input profile.
+    do {
+      _ = try await kernel.loft([lower,duplicate,coplanar])
+      XCTFail("Coplanar smooth sections must not publish a solid.")
+    }catch let error as CADKernelError {
+      XCTAssertEqual(error.code,.operationFailed)
+      XCTAssertTrue(error.message.contains("OCCT ThruSections status Failed (6)"),error.message)
+    }
+    let upper=try await kernel.circleProfile(radius:20,plane:.init(origin:.init(0,50,0),u:.init(1,0,0),v:.init(0,0,-1)))
+    let repaired=try await kernel.loft([lower,upper])
+    XCTAssertTrue(repaired.info.valid && repaired.info.closed)
+    XCTAssertEqual(repaired.info.volumeMM3,Double.pi*50/3*(100+200+400),accuracy:1e-5)
+  }
+  func testPublishedExactReportStaysCorrectAcrossDerivedGeometryMeshingAndFreshRead()async throws {
+    let kernel=CADKernel(),root=try folder(),source=try await kernel.box(width:20,height:30,depth:40)
+    XCTAssertEqual(source.info.volumeMM3,24000,accuracy:1e-7)
+    XCTAssertEqual(source.info.areaMM2,5200,accuracy:1e-7)
+    let before=root.appendingPathComponent("source-before.brep")
+    try await kernel.writeBRep(source,to:before)
+    let bore=try await kernel.cylinder(radius:3,height:60),tool=try await kernel.translated(bore,by:.init(10,-5,20))
+    let drilled=try await kernel.boolean(.subtract,source,tool)
+    XCTAssertEqual(drilled.info.volumeMM3,24000-270*Double.pi,accuracy:1e-6)
+    let angle=0.63,c=cos(angle),s=sin(angle)
+    let rotated=try await kernel.transform(source,rowMajorMatrix:[c,0,s,17,0,1,0,23,-s,0,c,-11,0,0,0,1])
+    let translated=try await kernel.translated(rotated,by:.init(12,-8,21))
+    for rigid in [rotated,translated] {
+      XCTAssertEqual(rigid.info.volumeMM3,24000,accuracy:1e-6)
+      XCTAssertEqual(rigid.info.areaMM2,5200,accuracy:1e-6)
+      XCTAssertTrue(rigid.info.valid && rigid.info.closed)
+    }
+    let scaled=try await kernel.transform(source,rowMajorMatrix:[2,0,0,5,0,1,0,7,0,0,0.25,11,0,0,0,1])
+    // General-transform bounds include OCCT Precision::Confusion padding.
+    XCTAssertEqual(scaled.info.minimum.x,5,accuracy:1e-6);XCTAssertEqual(scaled.info.minimum.y,7,accuracy:1e-6);XCTAssertEqual(scaled.info.minimum.z,11,accuracy:1e-6)
+    XCTAssertEqual(scaled.info.size.x,40,accuracy:1e-6);XCTAssertEqual(scaled.info.size.y,30,accuracy:1e-6);XCTAssertEqual(scaled.info.size.z,10,accuracy:1e-6)
+    XCTAssertEqual(scaled.info.volumeMM3,12000,accuracy:1e-6)
+    XCTAssertEqual(scaled.info.areaMM2,3800,accuracy:1e-6)
+    let uniform=try await kernel.transform(source,rowMajorMatrix:[2,0,0,0,0,2,0,0,0,0,2,0,0,0,0,1])
+    XCTAssertEqual(uniform.info.volumeMM3,192000,accuracy:1e-5)
+    XCTAssertEqual(uniform.info.areaMM2,20800,accuracy:1e-5)
+    let sheared=try await kernel.transform(source,rowMajorMatrix:[1,0.5,0,0,0,1,0,0,0,0,1,0,0,0,0,1])
+    XCTAssertEqual(sheared.info.volumeMM3,24000,accuracy:1e-5)
+    XCTAssertEqual(sheared.info.areaMM2,2800+2400*sqrt(1.25),accuracy:1e-5)
+    _ = try await kernel.tessellate(source,quality:.fabrication)
+    _ = try await kernel.tessellate(drilled,quality:.preview)
+    let unchanged=try await kernel.inspect(source),changed=try await kernel.inspect(scaled)
+    XCTAssertEqual(unchanged,source.info);XCTAssertEqual(changed,scaled.info)
+    let after=root.appendingPathComponent("source-after.brep")
+    try await kernel.writeBRep(source,to:after)
+    XCTAssertEqual(try Data(contentsOf:before),try Data(contentsOf:after))
+    let reopened=try await kernel.readBRep(from:before)
+    XCTAssertTrue(reopened.info.valid && reopened.info.closed)
+    XCTAssertEqual(reopened.info.volumeMM3,24000,accuracy:1e-6);XCTAssertEqual(reopened.info.areaMM2,5200,accuracy:1e-6)
+    XCTAssertEqual(reopened.info.maximumToleranceMM,source.info.maximumToleranceMM,accuracy:1e-12)
+    // STEP's default DirectFaces preprocessing may modify an indirect surface;
+    // export must operate on its own copy just like other kernel operations.
+    let mirrored=try await kernel.transform(bore,rowMajorMatrix:[-1,0,0,6,0,1,0,4,0,0,1,8,0,0,0,1])
+    let mirroredBefore=root.appendingPathComponent("mirrored-before.brep"),mirroredAfter=root.appendingPathComponent("mirrored-after.brep")
+    try await kernel.writeBRep(mirrored,to:mirroredBefore)
+    try await kernel.writeSTEP(mirrored,to:root.appendingPathComponent("mirrored.step"))
+    try await kernel.writeBRep(mirrored,to:mirroredAfter)
+    XCTAssertEqual(try Data(contentsOf:mirroredBefore),try Data(contentsOf:mirroredAfter))
+    let stillMirrored=try await kernel.inspect(mirrored)
+    XCTAssertEqual(stillMirrored,mirrored.info)
+    XCTAssertEqual(stillMirrored.volumeMM3,540*Double.pi,accuracy:1e-6)
+    XCTAssertEqual(stillMirrored.areaMM2,378*Double.pi,accuracy:1e-6)
+    let face=try await kernel.profile(outer:[.init(0,0),.init(20,0),.init(20,30),.init(0,30)])
+    do{_ = try await kernel.boolean(.union,source,face);XCTFail("An inspected open face must still reject as a solid boolean input.")}catch{}
   }
   func testInvalidProfilesNonFiniteInputsAndCancelledRequestsNeverPublish() async throws {
     let k=CADKernel()

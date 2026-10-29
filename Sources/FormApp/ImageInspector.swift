@@ -27,8 +27,23 @@ extension ArtworkSession {
         else {
           if let scopeID { args["parent_id"] = scopeID.uuidString }
           if let point { args["x"] = point.x + Double(offset)*5; args["y"] = point.y + Double(offset)*5; args["anchor"] = "center" }
+          if let projection = activeProjection, !projection.isProof, scopeID == nil {
+            let info = try? ImageRenderer.info(url)
+            let aspect = info?.aspect ?? 1
+            args["width"] = min(projection.size.x * 0.7, projection.size.y * 0.7 * aspect)
+            if point == nil {
+              args["x"] = projection.size.x / 2; args["y"] = projection.size.y / 2
+              args["anchor"] = "center"
+            }
+          }
         }
-        let result = try store.importImage(args,source: "Studio")
+        let projection = activeProjection
+        let result = try store.importImage(args,source: "Studio", placement: { element in
+          if element.parentID == nil, let projection, !projection.isProof,
+            let inverse = projection.sourceToLocal.inverse {
+            element.affine = inverse.followed(by: element.affine ?? .init())
+          }
+        })
         selection = Set((result["selected_elements"] as? [String] ?? []).compactMap(UUID.init(uuidString:)))
       }
       store.changed()

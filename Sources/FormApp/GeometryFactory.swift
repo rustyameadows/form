@@ -113,6 +113,9 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     canonical.relationship = ""
     canonical.locked = false
     canonical.librarySelection = nil
+    canonical.canvasProjectionPositions = nil
+    canonical.physicalArtworkIntents = nil
+    canonical.artworkParameterBindings = nil
     canonical.textile = canonical.textile?.renderDefinition
     canonical.artwork = canonical.artwork.map {artworkDefinition($0,object:object)}
     let artworkData = canonical.artwork.flatMap { try? $0.renderCacheData() }
@@ -146,7 +149,7 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     let root = MeshNode()
     let mat = material(object, project: project)
     switch object.recipeID {
-    case "paperEnvelope","tuckCarton":
+    case _ where PaperConstruction.isPaper(object):
       do{root.addChildNode(try PaperGeometry.make(object,project:project,assets:assets,limit:textureLimit))}
       catch{root.name="paper.invalid: "+error.localizedDescription}
     case "crewTee":root.addChildNode(MerchandiseGeometry.tee(object,project:project,assets:assets,limit:textureLimit))

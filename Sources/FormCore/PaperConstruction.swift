@@ -23,11 +23,14 @@ public struct PaperBounds:Codable,Equatable,Sendable {
 public struct PaperPanel:Codable,Equatable,Identifiable,Sendable {
   public enum Role:String,Codable,Sendable{case body,side,glue,tuck,dust,bottomClosure}
   public var id:String,name:String,role:Role,polygon:[Point2],parentID:String?,foldID:String?
-  public init(id:String,name:String,role:Role,polygon:[Point2],parentID:String?=nil,foldID:String?=nil){self.id=id;self.name=name;self.role=role;self.polygon=polygon;self.parentID=parentID;self.foldID=foldID}
+  public var artworkRotationDegrees:Double?
+  public init(id:String,name:String,role:Role,polygon:[Point2],parentID:String?=nil,foldID:String?=nil,artworkRotationDegrees:Double?=nil){self.id=id;self.name=name;self.role=role;self.polygon=polygon;self.parentID=parentID;self.foldID=foldID;self.artworkRotationDegrees=artworkRotationDegrees}
   public var bounds:PaperBounds{let xs=polygon.map(\.x),ys=polygon.map(\.y),x=xs.min() ?? 0,y=ys.min() ?? 0;return .init(x:x,y:y,width:(xs.max() ?? x)-x,height:(ys.max() ?? y)-y)}
 }
 public struct PaperFold:Codable,Equatable,Identifiable,Sendable {
   public var id:String,parentPanelID:String,childPanelID:String,start:Point2,end:Point2,angleDegrees:Double
+  public var layerOffsetMM:Double?
+  public var opensWithTop:Bool?
   public init(id:String,parentPanelID:String,childPanelID:String,start:Point2,end:Point2,angleDegrees:Double){self.id=id;self.parentPanelID=parentPanelID;self.childPanelID=childPanelID;self.start=start;self.end=end;self.angleDegrees=angleDegrees}
 }
 public struct PaperEdge:Codable,Equatable,Identifiable,Sendable {
@@ -70,13 +73,33 @@ public struct PaperNet:Codable,Equatable,Sendable {
   public var bounds:PaperBounds{.init(x:0,y:0,width:size.x,height:size.y)}
 }
 public struct PaperConstruction:Codable,Equatable,Sendable {
-  public enum Kind:String,Codable,CaseIterable,Sendable{case envelope,straightTuckCarton}
+  public enum Kind:String,Codable,CaseIterable,Sendable{case envelope,straightTuckCarton,authored}
+  public var authored:PlanarConstructionDefinition?
   public var version:Int=1
   public var kind:Kind,dimensions:PaperDimensions,stock:PaperStock,clearanceMM:Double,glueTabMM:Double,topFlapMM:Double,bottomFlapMM:Double,cornerRadiusMM:Double,foldPercent:Double,openingPercent:Double
   public var insideArtworkSourceID:UUID?,insideArtwork:Artwork?,annotations:[PaperAnnotation],artworkReviewRequired:Bool,artworkReferenceSize:Point2?
   public init(kind:Kind,dimensions:PaperDimensions,stock:PaperStock = .init(),clearanceMM:Double=2,glueTabMM:Double=16,topFlapMM:Double=38,bottomFlapMM:Double=30,cornerRadiusMM:Double=4,foldPercent:Double=100,openingPercent:Double=0,insideArtworkSourceID:UUID?=nil,insideArtwork:Artwork?=nil,annotations:[PaperAnnotation]=[],artworkReviewRequired:Bool=false,artworkReferenceSize:Point2?=nil){self.kind=kind;self.dimensions=dimensions;self.stock=stock;self.clearanceMM=clearanceMM;self.glueTabMM=glueTabMM;self.topFlapMM=topFlapMM;self.bottomFlapMM=bottomFlapMM;self.cornerRadiusMM=cornerRadiusMM;self.foldPercent=foldPercent;self.openingPercent=openingPercent;self.insideArtworkSourceID=insideArtworkSourceID;self.insideArtwork=insideArtwork;self.annotations=annotations;self.artworkReviewRequired=artworkReviewRequired;self.artworkReferenceSize=artworkReferenceSize}
-  enum CodingKeys:String,CodingKey{case version,kind,dimensions,stock,clearanceMM,glueTabMM,topFlapMM,bottomFlapMM,cornerRadiusMM,foldPercent,openingPercent,insideArtworkSourceID,insideArtwork,annotations,artworkReviewRequired,artworkReferenceSize}
-  public init(from decoder:Decoder)throws{let c=try decoder.container(keyedBy:CodingKeys.self);version=try c.decodeIfPresent(Int.self,forKey:.version) ?? 1;kind=try c.decode(Kind.self,forKey:.kind);dimensions=try c.decode(PaperDimensions.self,forKey:.dimensions);stock=try c.decode(PaperStock.self,forKey:.stock);clearanceMM=try c.decode(Double.self,forKey:.clearanceMM);glueTabMM=try c.decode(Double.self,forKey:.glueTabMM);topFlapMM=try c.decode(Double.self,forKey:.topFlapMM);bottomFlapMM=try c.decode(Double.self,forKey:.bottomFlapMM);cornerRadiusMM=try c.decode(Double.self,forKey:.cornerRadiusMM);foldPercent=try c.decode(Double.self,forKey:.foldPercent);openingPercent=try c.decodeIfPresent(Double.self,forKey:.openingPercent) ?? 0;insideArtworkSourceID=try c.decodeIfPresent(UUID.self,forKey:.insideArtworkSourceID);insideArtwork=try c.decodeIfPresent(Artwork.self,forKey:.insideArtwork);annotations=try c.decodeIfPresent([PaperAnnotation].self,forKey:.annotations) ?? [];artworkReviewRequired=try c.decodeIfPresent(Bool.self,forKey:.artworkReviewRequired) ?? false;artworkReferenceSize=try c.decodeIfPresent(Point2.self,forKey:.artworkReferenceSize)}
+  enum CodingKeys:String,CodingKey{case version,kind,authored,dimensions,stock,clearanceMM,glueTabMM,topFlapMM,bottomFlapMM,cornerRadiusMM,foldPercent,openingPercent,insideArtworkSourceID,insideArtwork,annotations,artworkReviewRequired,artworkReferenceSize}
+  public init(from decoder:Decoder)throws {
+    let c=try decoder.container(keyedBy:CodingKeys.self)
+    version=try c.decodeIfPresent(Int.self,forKey:.version) ?? 1
+    kind=try c.decode(Kind.self,forKey:.kind)
+    authored=try c.decodeIfPresent(PlanarConstructionDefinition.self,forKey:.authored)
+    dimensions=try c.decode(PaperDimensions.self,forKey:.dimensions)
+    stock=try c.decode(PaperStock.self,forKey:.stock)
+    clearanceMM=try c.decode(Double.self,forKey:.clearanceMM)
+    glueTabMM=try c.decode(Double.self,forKey:.glueTabMM)
+    topFlapMM=try c.decode(Double.self,forKey:.topFlapMM)
+    bottomFlapMM=try c.decode(Double.self,forKey:.bottomFlapMM)
+    cornerRadiusMM=try c.decode(Double.self,forKey:.cornerRadiusMM)
+    foldPercent=try c.decode(Double.self,forKey:.foldPercent)
+    openingPercent=try c.decodeIfPresent(Double.self,forKey:.openingPercent) ?? 0
+    insideArtworkSourceID=try c.decodeIfPresent(UUID.self,forKey:.insideArtworkSourceID)
+    insideArtwork=try c.decodeIfPresent(Artwork.self,forKey:.insideArtwork)
+    annotations=try c.decodeIfPresent([PaperAnnotation].self,forKey:.annotations) ?? []
+    artworkReviewRequired=try c.decodeIfPresent(Bool.self,forKey:.artworkReviewRequired) ?? false
+    artworkReferenceSize=try c.decodeIfPresent(Point2.self,forKey:.artworkReferenceSize)
+  }
   public static let recipeIDs:Set<String>=["paperEnvelope","tuckCarton"]
   public static func isPaper(_ object:ProductObject)->Bool{object.paperConstruction != nil || recipeIDs.contains(object.recipeID)}
   public static func definition(for object:ProductObject)throws->PaperConstruction{try PaperConstructionEngine.definition(for:object)}

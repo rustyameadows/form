@@ -7,9 +7,7 @@ struct ArtworkWorkspace: View {
   @EnvironmentObject var store: StudioStore
   var body: some View {
     Group {
-      if let object = store.primary, PaperConstruction.isPaper(object) {
-        PaperWorkspaceView(object: object)
-      } else if store.environment != .form,let object=store.primary,let project=store.project,
+      if store.environment != .form,let object=store.primary,let project=store.project,
         FabricEnvironmentContext(object:object,project:project)?.sourceID != nil {
         FabricPatternWorkspace(object:object)
       } else { ArtworkStudio(session:store.artworkSession) }
@@ -70,6 +68,17 @@ struct ArtworkStudio: View {
           TextStylesPanel(session: session)
         }
         Spacer(minLength: 10)
+        if let construction = session.paperContext {
+          Picker("Artwork side", selection: Binding(get: { store.paperInside }, set: {
+            store.setPaperInside($0, object: construction)
+          })) {
+            Text("Outside").tag(false)
+            Text("Inside").tag(true)
+          }.labelsHidden().pickerStyle(.segmented).frame(width: 140)
+          if store.paperInside && construction.paperConstruction?.insideArtworkSourceID == nil {
+            Button("Create inside artwork") { store.createPaperInside(construction) }.font(.system(size: 11))
+          }
+        }
         if session.previewObject?.recipeID == "sleeve" {
           Picker("View", selection: $session.dieline) {
             Text("Artwork").tag(false)
@@ -141,7 +150,7 @@ struct ArtworkStudio: View {
       }
       Divider()
       HStack(spacing: 14) {
-        Text(session.maskEditing != nil ? "EDITING MASK" : session.scopeID == nil ? "CANVAS" : "EDITING GROUP").font(
+        Text(session.isConstructionProof ? "LINKED DIELINE PROOF" : session.activeProjection?.panelID != nil ? "LINKED SURFACE" : session.maskEditing != nil ? "EDITING MASK" : session.scopeID == nil ? "CANVAS" : "EDITING GROUP").font(
           .system(size: 8, weight: .medium, design: .monospaced)
         ).tracking(0.8)
         if session.maskEditing != nil {
@@ -158,7 +167,7 @@ struct ArtworkStudio: View {
           }.buttonStyle(.plain).foregroundStyle(Palette.accent)
         }
         Text(
-          session.editingText
+            session.isConstructionProof ? "Edit shared artwork · Construction settings control cut and fold geometry" : session.editingText
             ? "Native text editing · Esc to finish"
             : "Space-drag to pan · Pinch to zoom · Option bypasses snapping"
         ).foregroundStyle(Palette.secondary).lineLimit(1)
@@ -270,8 +279,11 @@ struct ArtworkLayers: View {
   var rows: [(element: ArtworkElement, depth: Int)] {
     var result: [(ArtworkElement, Int)] = []
     var seen = Set<UUID>()
+    let artwork = session.art
+    let projection = session.activeProjection
     func children(_ parent: UUID?, _ depth: Int) {
-      for e in session.art.elements.reversed() where e.parentID == parent && !seen.contains(e.id) {
+      for e in artwork.elements.reversed() where e.parentID == parent && !seen.contains(e.id)
+        && (projection?.intersects(artwork.bounds(of: e)) ?? true) {
         seen.insert(e.id)
         result.append((e, depth))
         if e.kind == "group", !collapsed.contains(e.id) { children(e.id, depth + 1) }
@@ -283,7 +295,7 @@ struct ArtworkLayers: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
       HStack {
-        SectionLabel("CANVAS & FRAMES")
+        SectionLabel("CANVAS & SURFACES")
         Spacer()
         Text("\(session.frames.filter { !$0.isWorkspace }.count)").foregroundStyle(Palette.secondary).font(.system(size: 9))
       }.padding(16)
@@ -293,11 +305,12 @@ struct ArtworkLayers: View {
           session.canvas?.fit(all: false)
         } label: {
           HStack(spacing: 8) {
-            Image(systemName: frame.isWorkspace ? "square.dashed" : frame.object.componentDefinition == true ? "diamond.fill" : frame.object.recipeID == "artboard" ? "rectangle" : "link")
-            Text(frame.isWorkspace ? "Canvas" : frame.object.name).lineLimit(1)
+            Image(systemName: frame.isWorkspace ? "square.dashed" : frame.projection?.isProof == true ? "shippingbox" : frame.projection != nil ? "link" : frame.object.componentDefinition == true ? "diamond.fill" : frame.object.recipeID == "artboard" ? "rectangle" : "link")
+            Text(frame.isWorkspace ? "Canvas" : frame.title).lineLimit(1)
+              .truncationMode(.middle).help(frame.isWorkspace ? "Canvas" : frame.title)
             Spacer()
           }.font(.system(size: 11)).padding(.horizontal, 14).padding(.vertical, 9).background(
-            session.objectID == frame.id ? Color.white : .clear)
+            session.activeCanvasFrame?.id == frame.id ? Color.white : .clear)
         }.buttonStyle(.plain)
       }
       Divider().padding(.top, 12)

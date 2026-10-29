@@ -1,0 +1,182 @@
+{
+  "before_png_sha256" : "c9591aea21265967577f32c34695efd92249f0d047a4e10002ed8a2ddf2f70c1",
+  "cad_accepted_project_unchanged" : true,
+  "final_value" : 148.94890873015873,
+  "initial_value" : 120,
+  "input_count" : 17,
+  "input_sha256" : "9ed65ef39f7fc9106cb14bef19a3235fe08c954e6b53494be6d89281dd40724e",
+  "latest_png_sha256" : "b6033626ca9057c2ab90c29f8d8016057baa96a2c909721411d1661b3da34297",
+  "latest_stable_150ms" : true,
+  "measurement_notes" : "Every exact saved value dispatched through production NSSlider target\/action, serialized with capture backpressure for live modes. No hardware-event\/display-latency claim. Capture completion includes scene inspection and offscreen620x620 rendering overhead. CAD source edits remain draft until one explicit production Preview action.",
+  "native_slider_range" : [
+    0,
+    1
+  ],
+  "parameter_range" : [
+    80,
+    200
+  ],
+  "phase" : "mechanical-preview",
+  "prepared_value" : 148.94890873015873,
+  "preview_action_to_capture_ms" : 204.61166650056839,
+  "preview_action_to_ready_ms" : 166.80970834568143,
+  "preview_dispatch" : "Direct existing production coordinator.preview(review), identical to the shipped Button closure; not a hardware or NSButton event",
+  "rows" : [
+    {
+      "action_to_source_ms" : 0.75499992817640305,
+      "action_uptime" : 3710907.0491592088,
+      "actual" : 119.76140873015873,
+      "expected" : 119.76140873015873,
+      "index" : 0,
+      "native_value" : 0.3313450727513228,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.41949981823563576,
+      "action_uptime" : 3710907.070353542,
+      "actual" : 123.30456349206349,
+      "expected" : 123.30456349206349,
+      "index" : 1,
+      "native_value" : 0.36087136243386247,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.36291684955358505,
+      "action_uptime" : 3710907.0832872083,
+      "actual" : 131.79861111111111,
+      "expected" : 131.79861111111111,
+      "index" : 2,
+      "native_value" : 0.4316550925925926,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.35729166120290756,
+      "action_uptime" : 3710907.095641417,
+      "actual" : 138.68105158730157,
+      "expected" : 138.68105158730157,
+      "index" : 3,
+      "native_value" : 0.48900876322751308,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.34420844167470932,
+      "action_uptime" : 3710907.1071887501,
+      "actual" : 142.01140873015873,
+      "expected" : 142.01140873015873,
+      "index" : 4,
+      "native_value" : 0.51676173941798942,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.50120847299695015,
+      "action_uptime" : 3710907.1180447917,
+      "actual" : 143.67658730158729,
+      "expected" : 143.67658730158729,
+      "index" : 5,
+      "native_value" : 0.53063822751322742,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.51387539133429527,
+      "action_uptime" : 3710907.1295821667,
+      "actual" : 145.05605158730157,
+      "expected" : 145.05605158730157,
+      "index" : 6,
+      "native_value" : 0.54213376322751305,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.50058308988809586,
+      "action_uptime" : 3710907.1415558336,
+      "actual" : 145.46676587301587,
+      "expected" : 145.46676587301587,
+      "index" : 7,
+      "native_value" : 0.54555638227513226,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.57766679674386978,
+      "action_uptime" : 3710907.1527554169,
+      "actual" : 146.65873015873015,
+      "expected" : 146.65873015873015,
+      "index" : 8,
+      "native_value" : 0.55548941798941798,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.44891657307744026,
+      "action_uptime" : 3710907.165504917,
+      "actual" : 147.50545634920636,
+      "expected" : 147.50545634920636,
+      "index" : 9,
+      "native_value" : 0.56254546957671958,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.5620000883936882,
+      "action_uptime" : 3710907.17693175,
+      "actual" : 147.73015873015873,
+      "expected" : 147.73015873015873,
+      "index" : 10,
+      "native_value" : 0.56441798941798949,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.40187500417232513,
+      "action_uptime" : 3710907.1878235419,
+      "actual" : 147.92509920634922,
+      "expected" : 147.92509920634922,
+      "index" : 11,
+      "native_value" : 0.56604249338624346,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.60329167172312737,
+      "action_uptime" : 3710907.1987247919,
+      "actual" : 148.24950396825398,
+      "expected" : 148.24950396825398,
+      "index" : 12,
+      "native_value" : 0.56874586640211644,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.59966649860143661,
+      "action_uptime" : 3710907.2101957086,
+      "actual" : 148.35962301587301,
+      "expected" : 148.35962301587301,
+      "index" : 13,
+      "native_value" : 0.56966352513227514,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.44466694816946983,
+      "action_uptime" : 3710907.2226946251,
+      "actual" : 148.68998015873018,
+      "expected" : 148.68998015873018,
+      "index" : 14,
+      "native_value" : 0.57241650132275146,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.48170844092965126,
+      "action_uptime" : 3710907.2349546668,
+      "actual" : 148.90277777777777,
+      "expected" : 148.90277777777777,
+      "index" : 15,
+      "native_value" : 0.57418981481481479,
+      "state" : "draft"
+    },
+    {
+      "action_to_source_ms" : 0.57504186406731606,
+      "action_uptime" : 3710907.246317625,
+      "actual" : 148.94890873015873,
+      "expected" : 148.94890873015873,
+      "index" : 16,
+      "native_value" : 0.57457423941798946,
+      "state" : "draft"
+    }
+  ],
+  "runtime" : "8.0.1+form.gprop2",
+  "state" : "ready",
+  "status" : "passed"
+}

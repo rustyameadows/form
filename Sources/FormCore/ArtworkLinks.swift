@@ -75,9 +75,20 @@ extension Project {
     var artwork = recordingStyleOverrides
       ? artwork.recordingTextStyleOverrides(from: owner.artwork) : artwork
     artwork.requiresInkOutput=false
+    if let bindings=owner.artworkParameterBindings,!bindings.isEmpty {
+      try ArtworkParameterBindings.validateCanonical(bindings,source:artwork,parameters:artworkBindingParameters(for:owner))
+    }
+    // A shared design retains its artwork IDs. Each member resolves the shared
+    // controls through its own saved bindings before artwork is propagated.
+    let updates=try objects.filter{$0.designID==owner.designID}.map{variant->(UUID,Artwork) in
+      if let bindings=variant.artworkParameterBindings,!bindings.isEmpty {
+        return (variant.id,try ArtworkParameterBindings.applying(bindings,to:artwork,parameters:artworkBindingParameters(for:variant)))
+      }
+      return (variant.id,artwork)
+    }
     try PublicationCommands.reconcileFrames(in:&self,objectID:owner.id,artwork:artwork)
-    for i in objects.indices where objects[i].designID == owner.designID {
-      objects[i].artwork = artwork
+    for (id,value) in updates {
+      if let i=objects.firstIndex(where:{$0.id==id}) {objects[i].artwork=value}
     }
   }
   public mutating func linkArtwork(_ objectID: UUID, sourceID: UUID?, fit: String = "actual") throws
@@ -94,7 +105,7 @@ extension Project {
     }
     if let sourceID {
       guard sourceID != objectID, let source = objects.first(where: { $0.id == sourceID }),
-        source.recipeID == "artboard", !source.isCanvasWorkspace, source.artworkSourceID == nil, source.artwork != nil
+        isIndependentFlatArtworkSource(source), !source.isCanvasWorkspace, source.artworkSourceID == nil, source.artwork != nil
       else {
         throw FormError.invalid("Choose an artwork sheet in this project as the source.")
       }
@@ -119,6 +130,16 @@ extension Project {
     self = candidate
   }
   public func validateArtworkLinks() throws {
+    try validateArtworkParameterBindings()
+    try validatePhysicalSurfaceBindings()
+    try validatePhysicalArtworkIntents()
+    for object in objects {
+      if let positions=object.canvasProjectionPositions {
+        guard positions.count<=256,positions.allSatisfy({!$0.key.isEmpty && $0.key.utf8.count<=512 && $0.value.x.isFinite && $0.value.y.isFinite && abs($0.value.x)<=100000 && abs($0.value.y)<=100000}) else {
+          throw FormError.invalid("Canvas projection positions must have bounded identities and finite physical coordinates.")
+        }
+      }
+    }
     try validatePaperConstructions()
     try validateModelRepresentations()
     try validateLibrarySelections()
@@ -146,7 +167,7 @@ extension Project {
         var visited = Set<UUID>()
         while let id = current.artworkSourceID {
           guard visited.insert(current.id).inserted,
-            let source = objects.first(where: { $0.id == id }), source.recipeID == "artboard",
+            let source = objects.first(where: { $0.id == id }), isIndependentFlatArtworkSource(source),
             source.artworkSourceID == nil
           else {
             throw FormError.invalid("Artwork links must reference existing sheets without cycles.")
@@ -160,6 +181,7 @@ extension Project {
     }
   }
   public mutating func detachArtworkConsumers(of ids: Set<UUID>) {
+    detachPhysicalSurfaceConsumers(of:ids)
     // Resolve instances before removing a source frame, preserving each override.
     let old = self
     for i in objects.indices where !ids.contains(objects[i].id) {

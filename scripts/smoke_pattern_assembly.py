@@ -7,7 +7,7 @@ import hashlib
 import json
 import math
 import pathlib
-from smoke_mcp import Client, OUTPUT, ROOT
+from smoke_mcp import Client, OUTPUT, ROOT, camera_pose, project_source
 from verify_assembly_mesh import verify
 
 
@@ -72,12 +72,19 @@ def main():
                 assert abs(actual["maximum"]-progressed["diagnostics"]["maximumStretchRatio"])<1e-8
                 samples.append(dict(frame=frame,**actual))
         after=cloth("snapshot")["mesh"]
+        # Preserve the completed physical proof before any later document/camera
+        # assertion, including when a person interacts with the native window.
+        (OUTPUT/"pattern-assembly-frame240.json").write_text(json.dumps({
+            "mesh":after,"definition":initial["definition"],"assembly":initial["assembly"],
+            "material_points_mm":initial["material_points_mm"],"diagnostics":progressed["diagnostics"],
+            "preparation":preparation,"structural_samples":samples,"worst_transient":worst,
+            "baseline_project":baseline},indent=2))
         final=strains(after)
         assert final["minimum"]>=0.90 and final["maximum"]<=1.05 and final["p95"]<=1.01 and worst<=1.15, {"final":final,"worst_transient":worst,"samples":samples}
         assert after["positionsMm"] != before["positionsMm"]
         assert after["uv"]==before["uv"] and after["triangles"]==before["triangles"]
         assert progressed["diagnostics"]["maximumSeamGapMm"]<3
-        assert client.call("form_get_project")==baseline, "Runtime mutated the saved source/history or camera."
+        assert project_source(client.call("form_get_project"))==project_source(baseline), "Runtime mutated the saved source/history or camera pose."
         for pin in initial["definition"]["mesh"]["pins"]:
             actual=after["positionsMm"][pin["vertex"]]
             assert max(abs(actual[k]-pin["targetMm"][k]) for k in ("x","y","z"))<1e-7
@@ -98,7 +105,7 @@ def main():
         preconfigure=client.call("form_get_project")
         cloth("configure",assembly=declaration)
         assert cloth("get",object_id=label["id"])["assembly_attachment"]["anchor"]==anchor
-        client.call("form_undo");assert client.call("form_get_project")==preconfigure
+        client.call("form_undo");assert project_source(client.call("form_get_project"))==project_source(preconfigure)
 
         # Change original cubic handles, retaining both actual counterpart lengths.
         revised=copy.deepcopy(source["artwork"])
@@ -108,7 +115,7 @@ def main():
         preshape=client.call("form_get_project")
         client.call("form_set_artwork",{"object_id":source["id"],"artwork":revised})
         assert cloth("get")["source_digest"]!=initial["source_digest"]
-        client.call("form_undo");assert client.call("form_get_project")==preshape
+        client.call("form_undo");assert project_source(client.call("form_get_project"))==project_source(preshape)
 
         # A broken original edge is explicit and cannot show or advance old cloth.
         broken=copy.deepcopy(source["artwork"])
@@ -117,15 +124,17 @@ def main():
         client.call("form_set_artwork",{"object_id":source["id"],"artwork":broken})
         assert cloth("get").get("issue")
         client.call("form_cloth",{"command":"step","object_id":assembly["id"]},expect_error=True)
-        client.call("form_undo");assert client.call("form_get_project")==preshape
+        client.call("form_undo");assert project_source(client.call("form_get_project"))==project_source(preshape)
         client.call("form_open_project",{"project_id":created["id"]})
         assert cloth("get")["diagnostics"]["completedFrames"]==0
-        assert client.call("form_get_project")["camera"]==preshape["camera"]
+        reopened_camera=client.call("form_get_project")["camera"]
+        assert camera_pose(reopened_camera)==camera_pose(preshape["camera"]),(preshape["camera"],reopened_camera)
         gate=client.call("form_open_print",{"object_id":assembly["id"]})
         assert "open flexible surface" in (gate.get("validation_error") or "")
         assert gate["print_commands_enabled"] is False
         report={"passed":True,"project_id":created["id"],"independent_geometry":independent,
                 "computed_diagnostics":progressed["diagnostics"],"preparation":preparation,"initial_join":progressed["diagnostics"].get("initialJoin"),"structural_strain":{"final":final,"worst_transient":worst,"samples":samples},"physical_anchor":anchor,
+                "camera_reopen":{"before":preshape["camera"],"after":reopened_camera,"saved_pose_unchanged":True},
                 "derived_mesh_saved":False,"runtime_saved":False,"hardware_calls":0}
         result=OUTPUT/"pattern-assembly-report.json";result.write_text(json.dumps(report,indent=2))
         print(json.dumps({"passed":True,"report":str(result),"independent_geometry":independent},indent=2))

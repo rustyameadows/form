@@ -20,6 +20,14 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / ".local" / "validation"
 OUTPUT.mkdir(parents=True, exist_ok=True)
 
+def camera_pose(camera):
+    """Saved pose excludes the live native viewport's derived aspect ratio."""
+    return {key: value for key, value in camera.items() if key != "viewportAspect"}
+
+def project_source(project):
+    """Compare every project field and exact saved pose across native resizes."""
+    return dict(project, camera=camera_pose(project["camera"]))
+
 
 class Client:
     def __init__(self):
