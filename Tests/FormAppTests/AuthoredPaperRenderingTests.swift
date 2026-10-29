@@ -31,6 +31,40 @@ import XCTest
     XCTAssertEqual(object.paperConstruction?.kind, .authored)
     return (result, object)
   }
+  func testSelectedLiveFoldReturnsToStablePhysicalBoundsFitAndRenderedPixels() async throws {
+    _ = NSApplication.shared
+    let engine=try engine(Project(name:"Selected live fold bounds"))
+    _ = try engine.call("form_construction",arguments:["command":"create","definition":try jsonObject(ConstructionCommands.foldAndGlueExample())])
+    var project=try XCTUnwrap(engine.project)
+    let id=try XCTUnwrap(project.objects.first?.id),controller=TableSceneController(),assets=FileManager.default.temporaryDirectory
+    defer{controller.renderer?.reset()}
+    func sync(_ fold:Double) {
+      project.objects[0].parameters["fold"]=fold;project.objects[0].paperConstruction?.foldPercent=fold
+      controller.sync(project,selection:[id],isolated:[],showGrid:false,studio:false,preset:"Daylight",assets:assets,textureLimit:128)
+    }
+    func coordinates(_ b:(min:MeshVector3,max:MeshVector3))->[Double] {[b.min.x,b.min.y,b.min.z,b.max.x,b.max.y,b.max.z]}
+    sync(100);controller.floorNode.isHidden=true;controller.renderScene();controller.fitAll()
+    let renderer=try XCTUnwrap(controller.renderer),root=try XCTUnwrap(controller.logicalNode(for:id))
+    let initialBounds=coordinates(try XCTUnwrap(controller.localBounds(for:id))),initialCamera=controller.camera
+    let panelGeometries=panels(root).compactMap(\.geometry),builds=controller.geometryBuilds,physicalBuilds=PaperGeometry.physicalMeshBuilds
+    let initial=try await renderer.capture(width:320,height:320)
+    for _ in 0..<8 {
+      for fold in [0.0,17.5,62.0,97.33282930107528,100.0] {sync(fold)}
+      let current=coordinates(try XCTUnwrap(controller.localBounds(for:id)))
+      for (expected,actual) in zip(initialBounds,current){XCTAssertEqual(actual,expected,accuracy:1e-9,"Selection padding must never feed back into the next physical bounds.")}
+      controller.fitAll();XCTAssertEqual(controller.camera,initialCamera,"Returning to the same physical pose must produce the same Fit.")
+    }
+    XCTAssertTrue(controller.logicalNode(for:id) === root)
+    XCTAssertEqual(controller.geometryBuilds,builds);XCTAssertEqual(PaperGeometry.physicalMeshBuilds,physicalBuilds)
+    let currentGeometries=panels(root).compactMap(\.geometry)
+    XCTAssertEqual(currentGeometries.count,panelGeometries.count)
+    for (a,b) in zip(panelGeometries,currentGeometries){XCTAssertTrue(a === b,"Live folding must retain the physical panel buffers.")}
+    let latest=try await renderer.capture(width:320,height:320)
+    let initialPNG=try XCTUnwrap(NSBitmapImageRep(cgImage:initial).representation(using:.png,properties:[:]))
+    let latestPNG=try XCTUnwrap(NSBitmapImageRep(cgImage:latest).representation(using:.png,properties:[:]))
+    XCTAssertGreaterThan(initialPNG.count,1000)
+    XCTAssertEqual(latestPNG,initialPNG,"Repeated selected folding must return to the same actual view, including its selection outline.")
+  }
   func testConvertedExamplesReachTheRealTableGeometryFactoryWithArtwork() throws {
     for sample in [try PaperSamples.sunStudies(), try PaperSamples.cosmetics()] {
       let (project, object) = try converted(sample)

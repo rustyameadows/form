@@ -25,6 +25,24 @@ import XCTest
   }
   private func node(_ scene:TableSceneController,_ id:UUID)throws -> MeshNode {try XCTUnwrap(scene.objectRoot.childNode(withName:"object:\(id.uuidString)",recursively:false))}
   private func face(_ node:MeshNode)throws -> MeshNode {try XCTUnwrap(node.childNode(withName:EmbroiderySceneSurface.faceName,recursively:true))}
+  func testSelectedInPlaceThreadAppearanceDoesNotGrowPhysicalBoundsOrFit() throws {
+    var (project,id,_)=try fixture()
+    project.objects.removeAll{$0.id != id && $0.artworkSourceID != nil}
+    let index=try XCTUnwrap(project.objects.firstIndex{$0.id==id}),controller=TableSceneController(),assets=FileManager.default.temporaryDirectory
+    defer{controller.renderer?.reset()}
+    func sync(){controller.sync(project,selection:[id],isolated:[],showGrid:false,studio:false,preset:"Daylight",assets:assets,textureLimit:128)}
+    func coordinates(_ b:(min:MeshVector3,max:MeshVector3))->[Double] {[b.min.x,b.min.y,b.min.z,b.max.x,b.max.y,b.max.z]}
+    sync();controller.fitAll()
+    let initialBounds=coordinates(try XCTUnwrap(controller.localBounds(for:id))),initialCamera=controller.camera,builds=controller.geometryBuilds
+    let original=try node(controller,id),base=try XCTUnwrap(original.childNode(withName:"Independent textile base",recursively:true)),geometry=try XCTUnwrap(base.geometry)
+    for diameter in [0.45,0.5,0.4,0.45,0.5,0.4] {
+      project.objects[index].textile?.embroidery?.process?.threadDiameter=diameter;sync()
+      for (expected,actual) in zip(initialBounds,coordinates(try XCTUnwrap(controller.localBounds(for:id)))) {XCTAssertEqual(actual,expected,accuracy:1e-9)}
+      controller.fitAll();XCTAssertEqual(controller.camera,initialCamera)
+      XCTAssertTrue(try node(controller,id) === original);XCTAssertTrue(base.geometry === geometry)
+    }
+    XCTAssertEqual(controller.geometryBuilds,builds,"Thread appearance must stay on the in-place update path.")
+  }
   func testSourceProcessAndFontEditsUpdateOnlyFaceMaterialAndShareActualProgram()throws {
     var (p,id,copyID)=try fixture()
     let scene=TableSceneController(),assets=FileManager.default.temporaryDirectory

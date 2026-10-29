@@ -296,7 +296,7 @@ private struct RenderSignature: Equatable {
       if let node=nodes[object.id],let prior=fingerprints[object.id],prior != fingerprint,
         canUpdateEmbroiderySurface(prior,fingerprint,object:object) {
         EmbroiderySceneSurface.update(node,object:object,project:project,assets:assets,textureLimit:textureLimit)
-        fingerprints[object.id]=fingerprint;geometryBounds[object.id]=node.boundingBox;geometryChanged=true
+        fingerprints[object.id]=fingerprint;geometryBounds[object.id]=physicalBounds(of:node);geometryChanged=true
         updateEmbroideryStatus(object,project:project,textureLimit:textureLimit)
       } else if nodes[object.id] == nil || fingerprints[object.id] != fingerprint {
         nodes[object.id]?.removeFromParentNode()
@@ -315,7 +315,7 @@ private struct RenderSignature: Equatable {
         geometryBuilds += 1
         node.name = "object:\(object.id.uuidString)"
         nodes[object.id] = node
-        geometryBounds[object.id] = clothSurfaces[object.id]?.geometricBounds ?? node.boundingBox
+        geometryBounds[object.id] = clothSurfaces[object.id]?.geometricBounds ?? physicalBounds(of:node)
         objectRoot.addChildNode(node)
         fingerprints[object.id] = fingerprint
         updateEmbroideryStatus(object,project:project,textureLimit:textureLimit)
@@ -336,7 +336,7 @@ private struct RenderSignature: Equatable {
         try? PaperGeometry.updatePose(node,object:object,selectedPanelID:highlighted)
         let pose=PaperPoseState(fold:paper.foldPercent,opening:paper.openingPercent)
         if paperPoseStates[object.id] != pose {
-          geometryBounds[object.id]=node.boundingBox;geometryChanged=true;paperPoseStates[object.id]=pose
+          geometryBounds[object.id]=physicalBounds(of:node);geometryChanged=true;paperPoseStates[object.id]=pose
         }
       }
       let placement = project.textilePlacement(object)
@@ -430,7 +430,7 @@ private struct RenderSignature: Equatable {
     guard !studio else { return }
     for id in selection {
       guard let node = nodes[id] else { continue }
-      let bounds = geometryBounds[id] ?? node.boundingBox
+      let bounds = geometryBounds[id] ?? physicalBounds(of:node)
       let min = bounds.min
       let max = bounds.max
       let p: Double = 0.035
@@ -555,7 +555,7 @@ private struct RenderSignature: Equatable {
     var points: [Vector3] = []
     for id in ids {
       guard let node = nodes[id] else { continue }
-      let b = geometryBounds[id] ?? node.boundingBox
+      let b = geometryBounds[id] ?? physicalBounds(of:node)
       for x in [b.min.x, b.max.x] {
         for y in [b.min.y, b.max.y] {
           for z in [b.min.z, b.max.z] {
@@ -590,7 +590,28 @@ private struct RenderSignature: Equatable {
     updateCamera(animated: animated)
   }
   func logicalNode(for id:UUID)->MeshNode? {nodes[id]}
-  func localBounds(for id:UUID)->(min:MeshVector3,max:MeshVector3)? {geometryBounds[id] ?? nodes[id]?.boundingBox}
+  /// Interface outlines are children of the visible object, but never part of
+  /// its physical size. Including the previous padded selection outline would
+  /// grow the next outline on every in-place pose or appearance update.
+  private func physicalBounds(of root:MeshNode)->(min:MeshVector3,max:MeshVector3) {
+    let adornments=Set(selectionNodes.map(ObjectIdentifier.init))
+    func measure(_ node:MeshNode)->(min:MeshVector3,max:MeshVector3)? {
+      guard !adornments.contains(ObjectIdentifier(node)),node.name != PaperGeometry.highlightName else{return nil}
+      var points=node.geometry?.sources(for:.vertex).flatMap(\.vectors) ?? []
+      for child in node.childNodes {
+        guard let b=measure(child) else{continue}
+        for x in [b.min.x,b.max.x] {for y in [b.min.y,b.max.y] {for z in [b.min.z,b.max.z] {
+          let p=child.transform.raw*SIMD4(x,y,z,1);points.append(.init(p.x,p.y,p.z))
+        }}}
+      }
+      guard let first=points.first else{return nil}
+      var low=first.simd,high=low
+      for point in points.dropFirst(){low=simd_min(low,point.simd);high=simd_max(high,point.simd)}
+      return(.init(low),.init(high))
+    }
+    return measure(root) ?? (.init(),.init())
+  }
+  func localBounds(for id:UUID)->(min:MeshVector3,max:MeshVector3)? {geometryBounds[id] ?? nodes[id].map{physicalBounds(of:$0)}}
   func paperPanelID(at point:NSPoint)->String? {
     guard let hit=view?.sceneHits(point).first else{return nil}
     return PaperGeometry.panelID(from:hit.node)
