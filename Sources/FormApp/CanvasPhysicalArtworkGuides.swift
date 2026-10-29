@@ -40,10 +40,13 @@ import FormCore
 }
 
 extension CanvasFrame {
+  // An ordinary sewing frame edits its canonical source even when selection
+  // previews an assembly. Projected paper/CAD frames own their surface intent.
+  var physicalGuideObject:ProductObject {projection == nil ? object:surfaceObject}
   var physicalGuideIntents:[PhysicalArtworkIntent] {
     let projection=self.projection
     let side:PhysicalArtworkSurfaceIdentity.Side=projection?.inside == true ? .inside:.outside
-    return (surfaceObject.physicalArtworkIntents ?? []).filter {intent in
+    return (physicalGuideObject.physicalArtworkIntents ?? []).filter {intent in
       guard intent.surface.side==side else{return false}
       if let projection {
         if PaperConstruction.isPaper(surfaceObject) {

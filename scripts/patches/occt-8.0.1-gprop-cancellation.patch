@@ -1,0 +1,139 @@
+--- a/src/ModelingAlgorithms/TKTopAlgo/BRepGProp/BRepGProp_Gauss.hxx
++++ b/src/ModelingAlgorithms/TKTopAlgo/BRepGProp/BRepGProp_Gauss.hxx
+@@ -69,6 +69,18 @@
+     Sinert
+   } BRepGProp_GaussType;
+ 
++  //! Optional cancellation probe for the current thread. A probe may throw to
++  //! abort an active quadrature operation. A null probe is the default.
++  //! Set/restore with a caller-owned scope; numeric integration is unchanged.
++  using CancellationProbe = void (*)(void*);
++  struct CancellationProbeState
++  {
++    CancellationProbe Probe;
++    void* Data;
++  };
++  Standard_EXPORT static CancellationProbeState SetCancellationProbe(
++    CancellationProbe theProbe, void* theData) noexcept;
++
+   //! Constructor
+   Standard_EXPORT explicit BRepGProp_Gauss(const BRepGProp_GaussType theType);
+ 
+--- a/src/ModelingAlgorithms/TKTopAlgo/BRepGProp/BRepGProp_Gauss.cxx
++++ b/src/ModelingAlgorithms/TKTopAlgo/BRepGProp/BRepGProp_Gauss.cxx
+@@ -22,6 +22,18 @@
+ 
+ namespace
+ {
++// Per-thread state avoids one independent operation cancelling another.
++thread_local BRepGProp_Gauss::CancellationProbeState THE_CANCELLATION_PROBE = {nullptr, nullptr};
++
++static inline void checkCancellation()
++{
++  const auto aProbe = THE_CANCELLATION_PROBE;
++  if (aProbe.Probe != nullptr)
++  {
++    aProbe.Probe(aProbe.Data);
++  }
++}
++
+ // Minimal value of interval's range for computation | minimal value of "dim" | ...
+ static const double EPS_PARAM          = 1.e-12;
+ static const double EPS_DIM            = 1.e-30;
+@@ -176,6 +188,16 @@
+ void BRepGProp_Gauss::Inertia::Reset()
+ {
+   memset(reinterpret_cast<void*>(this), 0, sizeof(BRepGProp_Gauss::Inertia));
++}
++
++//=================================================================================================
++
++BRepGProp_Gauss::CancellationProbeState BRepGProp_Gauss::SetCancellationProbe(
++  CancellationProbe theProbe, void* theData) noexcept
++{
++  const auto aPrevious = THE_CANCELLATION_PROBE;
++  THE_CANCELLATION_PROBE = {theProbe, theData};
++  return aPrevious;
+ }
+ 
+ //=================================================================================================
+@@ -540,6 +562,7 @@
+                                 gp_Pnt&           theOutGravityCenter,
+                                 gp_Mat&           theOutInertia)
+ {
++  checkCancellation();
+   const bool isErrorCalculation  = 0.0 > theEps || theEps < 0.001;
+   const bool isVerifyComputation = 0.0 < theEps && theEps < 0.001;
+ 
+@@ -620,6 +643,7 @@
+ 
+   while (isNaturalRestriction || theDomain.More())
+   {
++    checkCancellation();
+     if (isNaturalRestriction)
+     {
+       NbLGaussP[0] = std::min(2 * NbUGaussP[0], math::GaussPointsMax());
+@@ -675,6 +699,7 @@
+ 
+       do // while: L
+       {
++        checkCancellation();
+         if (++JL > iLSubEnd)
+         {
+           LRange[0] = IL = ErrL->Max();
+@@ -784,6 +809,7 @@
+ 
+                 do
+                 { // while: U
++                  checkCancellation();
+                   if (++JU > iUSubEnd)
+                   {
+                     URange[0] = IU = ErrU->Max();
+@@ -836,6 +862,7 @@
+                           double       w = UGaussW[iGU]->Value(iU);
+                           const double u = um + ur * UGaussP[iGU]->Value(iU);
+ 
++                          checkCancellation();
+                           theSurface.Normal(u, v, aPoint, aNormal);
+ 
+                           if (myType == Vinert)
+@@ -1151,6 +1178,7 @@
+   BRepGProp_Gauss::Inertia anInertia;
+   for (; theDomain.More(); theDomain.Next())
+   {
++    checkCancellation();
+     if (!theSurface.Load(theDomain.Value()))
+     {
+       return;
+@@ -1194,6 +1222,7 @@
+ 
+         gp_Pnt aPoint;
+         gp_Vec aNormal;
++        checkCancellation();
+         theSurface.Normal(u, v, aPoint, aNormal);
+ 
+         computeSInertiaOfElementaryPart(aPoint, aNormal, theLocation, aWeight, aLocalInertia);
+@@ -1232,6 +1261,7 @@
+   BRepGProp_Gauss::Inertia anInertia;
+   for (; theDomain.More(); theDomain.Next())
+   {
++    checkCancellation();
+     if (!theSurface.Load(theDomain.Value()))
+     {
+       return;
+@@ -1279,6 +1309,7 @@
+         gp_Pnt aPoint;
+         gp_Vec aNormal;
+ 
++        checkCancellation();
+         theSurface.Normal(u, v, aPoint, aNormal);
+ 
+         computeVInertiaOfElementaryPart(aPoint,
+@@ -1347,6 +1378,7 @@
+     {
+       const double aWeight = GaussWU(i);
+       const double u       = add(um, mult(ur, GaussPU(i)));
++      checkCancellation();
+       theSurface.Normal(u, v, aPoint, aNormal);
+ 
+       if (myType == Vinert)

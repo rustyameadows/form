@@ -489,10 +489,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private func physicalGuideReport(for frame:CanvasFrame,attempted:inout Set<UUID>,
     reports:inout [UUID:PhysicalArtworkIntentReport]) -> PhysicalArtworkIntentReport? {
     guard frame.artwork.showGuides != false,
-      !PaperConstruction.isPaper(frame.surfaceObject) || session?.store?.paperShowingGuides == true,
+      !PaperConstruction.isPaper(frame.physicalGuideObject) || session?.store?.paperShowingGuides == true,
       let project=session?.store?.project else{return nil}
-    let id=frame.surfaceObject.id
-    if attempted.insert(id).inserted {reports[id]=physicalArtworkGuides.report(for:frame.surfaceObject,in:project)}
+    let id=frame.physicalGuideObject.id
+    if attempted.insert(id).inserted {reports[id]=physicalArtworkGuides.report(for:frame.physicalGuideObject,in:project)}
     return reports[id]
   }
   func contentBounds(all:Bool) -> CGRect {
@@ -538,7 +538,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     if projectID != session.store?.project?.id { canvasExtent = .null; canvasOrigin = .zero; sewingGuides.clear();physicalArtworkGuides.clear() }
     frames = session.frames
     sewingGuides.retain(Set(frames.map(\.id)))
-    physicalArtworkGuides.retain(Set(frames.map{$0.surfaceObject.id}))
+    physicalArtworkGuides.retain(Set(frames.map{$0.physicalGuideObject.id}))
     expandCanvas(toInclude:contentBounds(all:true).union(CGRect(x:0,y:0,width:400,height:260)).insetBy(dx:-180,dy:-180))
     if projectID != session.store?.project?.id {
       projectID = session.store?.project?.id

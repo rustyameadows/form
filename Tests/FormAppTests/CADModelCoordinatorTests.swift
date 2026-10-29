@@ -429,7 +429,7 @@ import simd
     let provenance=try XCTUnwrap(inspected["numeric_metadata"] as? [String:Any])
     XCTAssertEqual(inspected["kernel_version"] as? String,CADKernel.version)
     XCTAssertEqual(provenance["recorded_kernel_version"] as? String,"8.0.1")
-    XCTAssertEqual(provenance["current_kernel_version"] as? String,"8.0.1+form.gprop1")
+    XCTAssertEqual(provenance["current_kernel_version"] as? String,CADKernel.version)
     XCTAssertEqual(provenance["state"] as? String,"other_kernel_build")
     XCTAssertEqual(provenance["recomputed_on_load"] as? Bool,false)
     XCTAssertEqual(provenance["reevaluate_to_refresh"] as? Bool,true)

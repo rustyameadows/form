@@ -140,4 +140,69 @@ import XCTest
     XCTAssertTrue(try XCTUnwrap(reviewed.guides.first).safe.isEmpty)
     XCTAssertTrue(reviewed.requiresReview);XCTAssertEqual(cache.builds,2)
   }
+  func testAssemblySelectedSourceUsesCanonicalSewingIntentForNativeGuidePixelsAndFit() throws {
+    let (store,_)=try fixture()
+    var project=Project(name:"Unregistered source preview relationship")
+    let recipe=Recipe("linkedGuideSource","Original curved source","scissors","Canonical source controls",[
+      .init("width","Source width",180,100...300),.init("depth","Source height",130,80...200),.init("span","Span",80,30...120)])
+    project.recipes=[recipe]
+    var source=try project.makeObject(recipeID:recipe.id)
+    var piece=ArtworkElement(kind:"path",x:20,y:20,width:80,height:60)
+    var contour=VectorContour([.init(.init(0,0)),.init(.init(80,0),outgoing:.init(83,25)),
+      .init(.init(72,60),incoming:.init(80,48)),.init(.init(0,55))]);contour.id=UUID()
+    piece.path = .init(width:80,height:60,contours:[contour])
+    var annotation=SewingPatternPiece(name:"Original curved panel");annotation.seamAllowance=5
+    piece.sewingPiece=try SewingPatterns.bindingStableEdges(annotation,to:piece);piece.fillEnabled=false
+    source.artwork = .init(background:"#FFFFFF",elements:[piece])
+    source.artworkParameterBindings=[.init(id:"panel-span",elementID:piece.id,property:.width,value:"span")]
+    project.objects=[source]
+    let material=project.material("flight-nylon")
+    let assembly=try project.addPatternAssembly(.init(sourceObjectID:source.id,panels:[
+      .init(panel:.init(elementID:piece.id,copy:1),pose:.init(originMm:.init(0,100,0)),material:material,densityGSM:180)
+    ],seamIDs:[]),name:"Selected assembled preview")
+    store.engine.project=project;store.select(assembly)
+    XCTAssertEqual(store.activateFabricPatternSource(for:assembly),source.id)
+    try set(store,source.id,.init(surface:.init(kind:.sewingPiece,surfaceID:piece.id.uuidString),bleedMM:3,safeInsetMM:4))
+    let before=try XCTUnwrap(store.project),undo=store.engine.undoStack.count,session=store.artworkSession
+    let frame=try XCTUnwrap(session.frames.first{$0.id==source.id})
+    XCTAssertEqual(session.linkedTargetID,assembly);XCTAssertEqual(store.primary?.id,assembly)
+    XCTAssertEqual(frame.surfaceObject.id,assembly,"The preview context must remain the actual assembled object")
+    XCTAssertEqual(frame.physicalGuideObject.id,source.id,"Ordinary source frames derive their guides from their canonical owner")
+    let window=NSWindow(contentRect:.init(x:-10000,y:-10000,width:900,height:680),styleMask:[.titled],backing:.buffered,defer:false)
+    window.isReleasedWhenClosed=false
+    let scroll=ArtworkScrollView(frame:.init(x:0,y:0,width:860,height:630)),canvas=VectorCanvasView()
+    scroll.allowsMagnification=true;scroll.minMagnification=0.08;scroll.maxMagnification=24
+    scroll.documentView=canvas;canvas.session=session;session.canvas=canvas
+    scroll.hasHorizontalRuler=true;scroll.hasVerticalRuler=true
+    scroll.horizontalRulerView=ArtworkRuler(scrollView:scroll,orientation:.horizontalRuler)
+    scroll.verticalRulerView=ArtworkRuler(scrollView:scroll,orientation:.verticalRuler);scroll.rulersVisible=true
+    window.contentView?.addSubview(scroll);window.contentView?.layoutSubtreeIfNeeded();canvas.synchronize();scroll.tile()
+    defer{canvas.finishText();window.contentView=nil;window.close()}
+    let region=frame.rect.insetBy(dx:-8,dy:-8),a=canvas.documentPoint(region.origin),b=canvas.documentPoint(.init(x:region.maxX,y:region.maxY))
+    let rect=CGRect(x:a.x,y:a.y,width:b.x-a.x,height:b.y-a.y),bitmap=try XCTUnwrap(canvas.bitmapImageRepForCachingDisplay(in:rect))
+    canvas.cacheDisplay(in:rect,to:bitmap)
+    var purple=0,teal=0
+    for y in 0..<bitmap.pixelsHigh {for x in 0..<bitmap.pixelsWide {
+      guard let c=bitmap.colorAt(x:x,y:y)?.usingColorSpace(.deviceRGB) else{continue}
+      if c.redComponent-c.greenComponent>0.25,c.blueComponent-c.greenComponent>0.25{purple+=1}
+      if c.greenComponent-c.redComponent>0.2,c.blueComponent-c.redComponent>0.2,abs(c.greenComponent-c.blueComponent)<0.15{teal+=1}
+    }}
+    XCTAssertGreaterThan(purple,20);XCTAssertGreaterThan(teal,20)
+    XCTAssertEqual(canvas.diagnostics["physical_guide_builds"] as? Int,1)
+    let guide=try XCTUnwrap(before.physicalArtworkIntentReport(for:frame.physicalGuideObject).guides.first)
+    let points=(guide.trim+guide.bleed+guide.safe).flatMap{$0},first=try XCTUnwrap(points.first)
+    let physical=points.dropFirst().reduce(CGRect(x:first.x,y:first.y,width:0,height:0)){$0.union(.init(x:$1.x,y:$1.y,width:0,height:0))}
+      .offsetBy(dx:frame.rect.minX,dy:frame.rect.minY)
+    for origin in [CGPoint.zero,CGPoint(x:-150,y:60)] {
+      canvas.setFrameOrigin(origin);canvas.fit(all:true)
+      XCTAssertTrue(canvas.visibleCanvasRect.insetBy(dx:-0.002,dy:-0.002).contains(physical))
+      let document=CGRect(origin:canvas.documentPoint(physical.origin),size:.init(width:physical.width*72/25.4,height:physical.height*72/25.4))
+      for ruler in [scroll.horizontalRulerView,scroll.verticalRulerView].compactMap({$0}) {
+        XCTAssertFalse(document.intersects(canvas.convert(ruler.visibleRect,from:ruler)),"Fit must leave the actual native ruler bands unobstructed")
+      }
+    }
+    XCTAssertEqual(store.project,before);XCTAssertEqual(store.engine.undoStack.count,undo)
+    XCTAssertEqual(store.project?.objects.first{$0.id==source.id}?.artwork,source.artwork)
+  }
+
 }

@@ -9,6 +9,9 @@
 #include <BRepCheck_Analyzer.hxx>
 #include <BRepBndLib.hxx>
 #include <BRepGProp.hxx>
+#include <BRepGProp_Face.hxx>
+#include <BRepGProp_Domain.hxx>
+#include <BRepGProp_Gauss.hxx>
 #include <BRepBuilderAPI_Copy.hxx>
 #include <BRepBuilderAPI_MakePolygon.hxx>
 #include <BRepBuilderAPI_MakeFace.hxx>
@@ -157,9 +160,20 @@ void publish(FCADContext* c,const TopoDS_Shape& s,FCADShape** out,bool solid=tru
  if(solid && (!report.closed||report.solids==0||report.volume<=1e-12))throw Failure(FCAD_INVALID_TOPOLOGY,"The exact result is empty, open, non-solid or inward oriented. The previous revision is unchanged.");
  cancelled(c);*out=new FCADShape(s,report);
 }
+// A current task owns its optional probe only on the executing native thread.
+// Restore any outer caller's probe on success, failure and cancellation.
+class GPropCancellationScope {
+ BRepGProp_Gauss::CancellationProbeState previous;
+ static void poll(void* data){cancelled(static_cast<FCADContext*>(data));}
+ public:
+ explicit GPropCancellationScope(FCADContext* context):previous(BRepGProp_Gauss::SetCancellationProbe(context ? &poll:nullptr,context)){}
+ ~GPropCancellationScope()noexcept{BRepGProp_Gauss::SetCancellationProbe(previous.Probe,previous.Data);}
+ GPropCancellationScope(const GPropCancellationScope&)=delete;
+ GPropCancellationScope& operator=(const GPropCancellationScope&)=delete;
+};
 template<class F>FCADStatus run(FCADContext* c,FCADFailure* err,F body){
  if(err){err->code=0;err->message[0]=0;}std::lock_guard<std::recursive_mutex> lock(gate);
- try{cancelled(c);body();return FCAD_OK;}
+ try{GPropCancellationScope gprop(c);cancelled(c);body();return FCAD_OK;}
  catch(const Failure& e){if(err){err->code=e.status;std::snprintf(err->message,sizeof(err->message),"%s",e.what());}return e.status;}
  catch(const Standard_Failure& e){if(err){err->code=FCAD_OPERATION_FAILED;std::snprintf(err->message,sizeof(err->message),"Exact CAD construction failed: %s. The previous revision is unchanged.",e.what());}return FCAD_OPERATION_FAILED;}
  catch(const std::exception& e){if(err){err->code=FCAD_OPERATION_FAILED;std::snprintf(err->message,sizeof(err->message),"CAD operation failed: %s",e.what());}return FCAD_OPERATION_FAILED;}
@@ -175,7 +189,7 @@ void path(const char* p,bool importing){require(p&&p[0]&&std::strlen(p)<=4096,"U
 TopoDS_Wire wire(const FCADPoint* points,size_t n){require(points&&n>=3&&n<=10000,"A closed profile ring needs 3–10,000 points.");BRepBuilderAPI_MakePolygon p;for(size_t i=0;i<n;++i){auto v=point(points[i]);if(i>0)require(v.Distance(point(points[i-1]))>1e-7,"Profile contains a zero-length edge.");p.Add(v);}p.Close();if(!p.IsDone())throw Failure(FCAD_INVALID_TOPOLOGY,"The profile wire could not be closed.");return p.Wire();}
 }
 extern "C" {
-const char* fcad_version(){return OCC_VERSION_COMPLETE "+form.gprop1";}
+const char* fcad_version(){return OCC_VERSION_COMPLETE "+form.gprop2";}
 FCADContext* fcad_context_create(){return new FCADContext();}
 void fcad_context_cancel(FCADContext* c){if(c)c->cancelled.store(true,std::memory_order_relaxed);}
 void fcad_context_release(FCADContext* c){delete c;}

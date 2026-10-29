@@ -101,6 +101,8 @@ packaged repeat is `.local/validation/sample-physical-frame-debug-r2/report.json
 
 The final binding/source debug package (`57661a707a36a905c332c5d61919731818fab920b3bfdfa9d54e1174062638f5`) repeats all 21 captures successfully. All 12 overview images are pixel-identical to the personally reviewed prior sweep; all nine detailed views are pixel-identical to the corrected-camera proof, including upright inside lettering. Raw reports and independent image comparisons are in `.local/validation/sample-binding-source-final`.
 
+The final gprop2 package (`a866054008c4ecc9dbc271c74ceeb629f95f05a6994e5aa5cd34904b6d23efd2`) also passes the complete sweep. All 21 native images are pixel-identical to those reviewed proofs, covering all 12 overviews and all nine detailed paper/inside views. Evidence is `.local/validation/sample-gprop2-final/report.json` and its independent `pixel-equivalence.json`.
+
 ## Reproduce
 
 Use Python with Pillow and a packaged Mac app in a logged-in graphical session:

@@ -10,7 +10,7 @@ if [ -f "$lab_sdk_cpp_headers/type_traits" ]; then
   export CPLUS_INCLUDE_PATH="$lab_sdk_cpp_headers${CPLUS_INCLUDE_PATH:+:$CPLUS_INCLUDE_PATH}"
 fi
 unset lab_sdk_cpp_headers
-python3 scripts/occt-patches.py verify "${LAB_OCCT_ROOT:-$PWD/.local/engines/occt-8.0.1}"
+python3 scripts/occt-patches.py verify "${LAB_OCCT_ROOT:-$PWD/.local/engines/occt-8.0.1-form-gprop2}"
 app_path="${LAB_BUILD_APP_PATH:-$PWD/build/LAB.app}"
 legacy_path="$PWD/build/FORM.app"
 # Never replace a live executable. Custom candidate builds leave the installed app alone.
@@ -37,7 +37,7 @@ cp Resources/Info.plist "$bundle/Contents/Info.plist"
 cp -R "$binary_path/FORM_FormCore.bundle" "$bundle/Contents/Resources/"
 cp Sources/CFormClipper/LICENSE "$bundle/Contents/Resources/ThirdPartyNotices/Clipper2-Boost-1.0.txt"
 cp Sources/CFormMesher/LICENSE "$bundle/Contents/Resources/ThirdPartyNotices/Earcut-ISC.txt"
-python3 scripts/package-occt.py "$bundle" "${LAB_OCCT_ROOT:-$PWD/.local/engines/occt-8.0.1}"
+python3 scripts/package-occt.py "$bundle" "${LAB_OCCT_ROOT:-$PWD/.local/engines/occt-8.0.1-form-gprop2}"
 swift Resources/Icon.swift "$stage/LAB.iconset"
 iconutil -c icns "$stage/LAB.iconset" -o "$bundle/Contents/Resources/LAB.icns"
 codesign --force --deep --sign - "$bundle"

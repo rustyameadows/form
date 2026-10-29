@@ -213,6 +213,16 @@
   },
   "coverage_limit": "Every shipped template overview plus detailed paper paths; no claim about every backside, parameter envelope or manufacturing setting.",
   "latest_packaged_repeat": {
+    "executable_sha256": "a866054008c4ecc9dbc271c74ceeb629f95f05a6994e5aa5cd34904b6d23efd2",
+    "runtime_version": "8.0.1+form.gprop2",
+    "report": ".local/validation/sample-gprop2-final/report.json",
+    "native_captures": 21,
+    "sample_overviews": 12,
+    "core_pixel_checks_passed": true,
+    "all21_pixel_identical_to_reviewed_prior_proofs": true,
+    "pixel_equivalence": ".local/validation/sample-gprop2-final/pixel-equivalence.json"
+  },
+  "prior_binding_source_repeat": {
     "executable_sha256": "57661a707a36a905c332c5d61919731818fab920b3bfdfa9d54e1174062638f5",
     "report": ".local/validation/sample-binding-source-final/report.json",
     "native_captures": 21,

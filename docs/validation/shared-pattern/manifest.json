@@ -1,0 +1,234 @@
+{
+  "after": {
+    "assembly_preview_intents": 0,
+    "bytes": 130068,
+    "file": "sewing-guides-after.png",
+    "matching_frame_intents": 1,
+    "native_stroke_pixels": {
+      "dark_cut_stitch": 6775,
+      "height": 883,
+      "purple_bleed": 1231,
+      "teal_safe": 948,
+      "width": 1815
+    },
+    "package_executable_sha256": "a866054008c4ecc9dbc271c74ceeb629f95f05a6994e5aa5cd34904b6d23efd2",
+    "physical_guide_builds": 1,
+    "pixels": {
+      "height": 883,
+      "width": 1815
+    },
+    "raw_core_report": ".local/validation/native-sewn-guide-window-proof/core-guide-report.json",
+    "raw_core_report_sha256": "e9325277ca4184b3d7cf3b979038396229abb5e7505647424608edefde6035e7",
+    "runtime": "8.0.1+form.gprop2",
+    "sha256": "d76e31f3f683eebd64e557fad8c91abc3f26e563411467ce082cebe5dfb8103e",
+    "source_intents": 1,
+    "unretouched_native_png": true
+  },
+  "before": {
+    "actual_failure": "Native outward bleed strokes are absent",
+    "assembly_preview_intents": 0,
+    "bytes": 107712,
+    "file": "sewing-guides-before.png",
+    "matching_frame_intents": 0,
+    "native_stroke_pixels": {
+      "dark": 6775,
+      "purple": 0,
+      "safe": 0
+    },
+    "package_executable_sha256": "57661a707a36a905c332c5d61919731818fab920b3bfdfa9d54e1174062638f5",
+    "physical_guide_builds": 0,
+    "pixels": {
+      "height": 883,
+      "width": 1815
+    },
+    "raw_proof_directory": ".local/validation/native-sewn-guide-window-before-owner-fix",
+    "runtime": "8.0.1+form.gprop1",
+    "sha256": "3c1dc3ff91e40d6dee3e2da4e0e837599a81f9a15da37f7ce76031cdda411f2e",
+    "source_intents": 1,
+    "unretouched_native_png": true
+  },
+  "capture": {
+    "application_activated": false,
+    "application_configuration": "debug production target objects, immutable module/object snapshots; no test-source object or app entry object linked",
+    "cua_used": false,
+    "source_recipe": "Unregistered curved wing source; authored using scripts/smoke_artwork_parameters.py through existing Recipe/artwork/cloth commands",
+    "surface": "Real NSWindow, production VectorCanvasView/ArtworkScrollView with actual native rulers and FabricEnvironmentControls; cacheDisplay bitmap PNG",
+    "window_made_key": false,
+    "window_offscreen": true
+  },
+  "control_evidence": {
+    "actual_nssliders": 6,
+    "labels_and_values": [
+      {
+        "label": "Source width",
+        "value": 350
+      },
+      {
+        "label": "Source height",
+        "value": 160
+      },
+      {
+        "label": "Panel span",
+        "value": 85
+      },
+      {
+        "label": "Panel rise",
+        "value": 65
+      },
+      {
+        "label": "Cut allowance",
+        "value": 8
+      },
+      {
+        "label": "Back span offset",
+        "value": 0
+      }
+    ],
+    "not_claimed": "No held-pointer interaction or accessibility-name success is inferred from these images.",
+    "offscreen_accessibility_names": "UNAVAILABLE: labels and titles are empty; both native and accessibility-tree metadata retained in controls-diagnostic.json.",
+    "preserved_optional_assertion_failure": "The assembly-selected native source slider is missing: Source width",
+    "raw_native_control_image": ".local/validation/native-sewn-guide-window-proof/assembly-selected-source-controls-and-canvas.png",
+    "raw_native_control_image_sha256": "ab30bb0c9fbe9928a018a07a7d71ef12002a801d06c454431b69d943273e186f",
+    "visual_review": "Root agent inspected the actual native controls-and-Canvas PNG; all six labels/values are visibly correct. This is separate from unavailable offscreen AX names.",
+    "whole_private_host_exit_code": 1
+  },
+  "provenance": {
+    "after_host_link_provenance": ".local/testing/NativeSewnGuideProof/link-provenance.json",
+    "after_host_link_provenance_sha256": "328004d869d6471b077351158dbd3f807b2c15e05e1e8adaa24a69af64937ae7",
+    "after_host_source_sha256": "c6c2608ee84977351a43e54c41bbd4c51b615a52b8e713b69be9ab3dc7715682",
+    "after_public_contract": ".local/validation/gprop2-final-package/native-host-contract.json",
+    "after_public_contract_sha256": "d9675a44eb83d4ec772d5d552b15c78e124092508efc7fb7c1465cd9d1c3de81",
+    "before_object_snapshot": ".local/validation/binding-source-debug-package/public-native-host-objects.json",
+    "current_xctest_registry": {
+      "current_methods": 1285,
+      "failures": 0,
+      "manifest": ".local/testing/FORMGProp2Provenance-all-source-discovery.json",
+      "passed": 1285,
+      "results": ".local/testing/current-test-results.json",
+      "skipped": 0,
+      "unexercised": 0
+    },
+    "native_regression": "PhysicalArtworkIntentRenderingTests.testAssemblySelectedSourceUsesCanonicalSewingIntentForNativeGuidePixelsAndFit",
+    "native_regression_status": "passed in /private/tmp/form-gprop2-final-tests.log",
+    "source_changes_for_verification": "Ignored host only adds a strict core checkpoint before the preserved optional AX-name assertion; production and repository test sources were frozen."
+  },
+  "purpose": "Native Canvas guide ownership for an unfamiliar saved parametric sewing source while its linked assembly remains selected. Cut/stitch/grain stay derived from the original source; bleed/safe intents must resolve that canonical source, not its assembly preview.",
+  "schema_version": 1,
+  "source": {
+    "bleed_bounds_mm": {
+      "height": 88.617,
+      "width": 108.063,
+      "x": 9.009,
+      "y": 9
+    },
+    "bleed_mm": 3,
+    "project_id": "6C15142A-2F06-416E-9B3A-8EC7F31FC24E",
+    "safe_bounds_mm": {
+      "height": 74.617,
+      "width": 94.063,
+      "x": 16.009,
+      "y": 16
+    },
+    "safe_inset_mm": 4,
+    "saved_fixture": ".local/validation/artwork-parameters-f8c61df7cc84",
+    "seam_allowance_mm": 8,
+    "selected_assembly_id": "765C5D39-6E7B-4369-BD7A-54ABCDC15699",
+    "sewing_piece_id": "3E16EF18-95DB-4CB6-88FB-D5CADF7277FB",
+    "source_object_id": "3E8D5047-E7BF-4288-A862-541041B03829",
+    "source_revision": "4768ddbaef31b4d8ae662a80691cc4fd01e23a65279b23ce85cc805fa1d4f7e4",
+    "trim_cut_bounds_mm": {
+      "height": 82.61699999999999,
+      "width": 102.063,
+      "x": 12.009,
+      "y": 12
+    }
+  },
+  "strict_core_gate": {
+    "allowance_unchanged": true,
+    "assembly_selection_unchanged": true,
+    "canonical_project_and_artwork_unchanged": true,
+    "canonical_source_resolved_for_assembly_controls": "3E8D5047-E7BF-4288-A862-541041B03829",
+    "checkpoint": "Executed before the unchanged optional AX-name assertion",
+    "fit_checks_require": "Full current Canvas content and bleed fit the unobscured viewport at all three document origins; native ruler rectangles do not overlap the guide region.",
+    "native_fit_checks": [
+      {
+        "content_bounds_canvas_mm": {
+          "height": 160,
+          "width": 350,
+          "x": 36,
+          "y": 40
+        },
+        "document_origin_points": {
+          "x": 0,
+          "y": 0
+        },
+        "guide_bounds_canvas_mm": {
+          "height": 88.617,
+          "width": 108.063,
+          "x": 45.009,
+          "y": 49
+        },
+        "magnification": 0.8651455026454725,
+        "unobscured_visible_canvas_mm": {
+          "height": 351.49514563106385,
+          "width": 377.99999999999204,
+          "x": 22.000000000004036,
+          "y": -55.74757281553184
+        }
+      },
+      {
+        "content_bounds_canvas_mm": {
+          "height": 160,
+          "width": 350,
+          "x": 36,
+          "y": 40
+        },
+        "document_origin_points": {
+          "x": -150,
+          "y": 60
+        },
+        "guide_bounds_canvas_mm": {
+          "height": 88.617,
+          "width": 108.063,
+          "x": 45.009,
+          "y": 49
+        },
+        "magnification": 0.8651455026454542,
+        "unobscured_visible_canvas_mm": {
+          "height": 351.4951456310761,
+          "width": 378.0000000000093,
+          "x": 21.999999999994373,
+          "y": -55.747572815537524
+        }
+      },
+      {
+        "content_bounds_canvas_mm": {
+          "height": 160,
+          "width": 350,
+          "x": 36,
+          "y": 40
+        },
+        "document_origin_points": {
+          "x": 130,
+          "y": -90
+        },
+        "guide_bounds_canvas_mm": {
+          "height": 88.617,
+          "width": 108.063,
+          "x": 45.009,
+          "y": 49
+        },
+        "magnification": 0.8651455026454755,
+        "unobscured_visible_canvas_mm": {
+          "height": 351.4951456310637,
+          "width": 377.99999999998704,
+          "x": 22,
+          "y": -55.747572815533545
+        }
+      }
+    ],
+    "saved_fixture_unchanged": true,
+    "status": "passed",
+    "undo_history_unchanged": true
+  }
+}

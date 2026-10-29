@@ -2,7 +2,7 @@
 
 Status: core implementation verified; final acceptance remains partially complete. October 28, 2026.
 
-Implementation and verification are on `codex/agent-modeling-engine`. The reconciled current registry accounts for 1,284 passing methods through the complete baseline and focused reruns, including the diagnosed and repaired shared-variant regression. The fixed-case warm benchmark meets its target at 2.027× faster aggregate median and 11.9% lower p95. All 17 fabric workflows pass, including the complete original 240-frame sewn-assembly run. The [sample audit](sample-visual-validation.md) checks all 12 shipped overviews and the corrected physical inside-frame roundtrip in a fresh package. See the [verification record](agent-modeling-engine-validation.md) for evidence and measurement limits. Unchecked conditions below remain open.
+Implementation and verification are on `codex/agent-modeling-engine`. The reconciled current registry accounts for 1,285 passing methods through the complete baseline and focused reruns, including the diagnosed and repaired shared-variant regression. The fixed-case warm benchmark meets its target at 2.071× faster aggregate median with no p95 regression. All 17 fabric workflows pass, including the complete original 240-frame sewn-assembly run. The [sample audit](sample-visual-validation.md) checks all 12 shipped overviews and the corrected physical inside-frame roundtrip in a fresh package. See the [verification record](agent-modeling-engine-validation.md) for evidence and measurement limits. Unchecked conditions below remain open.
 
 Make LAB's existing modeling engine fast and dependable enough for an agent to construct a model, evaluate it, inspect the result, measure it, repair it, and verify its parameters in a short repeatable loop. The user receives an editable model whose controls, construction relationships, artwork, and saved source continue to work after the agent finishes.
 
@@ -114,7 +114,7 @@ Acceptance:
 - [x] Dimension edits preserve uniquely resolvable feature targets and surface bindings. Removing a surface or creating an ambiguous match returns the affected identities and an actionable review state.
 - [x] Changing a parameter preserves the intended physical artwork scale and orientation; any required placement review is explicit.
 - [x] Surface edits, bindings, named resources, and source ownership survive publication, Undo/Redo, duplication, and save/reopen.
-- [ ] Trim, polygon safety and bleed intent map into flat/upright construction views, with explicit collapse and overlap review.
+- [x] Trim, polygon safety and bleed intent map into flat/upright construction views, with explicit collapse and overlap review.
 - [x] Inside physical-frame editing displays upright content while preserving the existing front-registered canonical source and print/export registration.
 
 ### 5 Make construction relationships authorable
@@ -165,7 +165,7 @@ Acceptance:
 - [x] Tool descriptions and focused examples match the shipped behavior, including diagnostics and parameter validation. The benchmark demonstrates the latency target from milestone 1.
 - [x] The organic example passes a documented multi-angle visual review of silhouette, proportions, blend quality and fine detail. A valid solid alone is insufficient.
 
-Verification status: the enclosure, curved-vessel, unfamiliar folded-construction and fabric workflows have recorded tool and regression evidence. The selected organic source passes visual geometry review in three angles under two shipped lighting presets; photographic finish and illumination remain unmatched. Its full finite campaign retains 30 named values: 27 native geometry passes and 3 expected authored curvature-guard rejections, with no unexpected final failures. One-Undo publication, Undo/Redo and reopen preserve source/assets. Original failures and a cooperative budget overrun are retained. The latter exposed a native mass-integration cancellation gap being addressed separately. Held-pointer measurements remain open under milestone 1.
+Verification status: the enclosure, curved-vessel, unfamiliar folded-construction and fabric workflows have recorded tool and regression evidence. The selected organic source passes visual geometry review in three angles under two shipped lighting presets; photographic finish and illumination remain unmatched. Its full finite campaign retains 30 named values: 27 native geometry passes and 3 expected authored curvature-guard rejections, with no unexpected final failures. One-Undo publication, Undo/Redo and reopen preserve source/assets. Original failures and a cooperative budget overrun are retained. The latter exposed a native mass-integration cancellation gap now fixed by gprop2 polling, with unchanged numerical results and actual packaged 2-second/8-second interruption proofs. Held-pointer measurements remain open under milestone 1.
 
 ## Execution order and completion
 
