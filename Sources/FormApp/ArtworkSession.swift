@@ -233,6 +233,11 @@ enum ArtworkTool: String, CaseIterable {
   }
   private func hasCanonicalSourceRole(_ object:ProductObject,in project:Project)->Bool {
     object.componentDefinition == true || hasSewingSourceRole(object,in:project)
+      || project.objects.contains { consumer in
+        consumer.id != object.id && !PaperConstruction.isPaper(consumer)
+          && (project.artworkOwner(consumer).id == object.id
+            || consumer.surfaceArtworkBindings?.contains { $0.sourceObjectID == object.id } == true)
+      }
   }
   private func paperUses(of sourceID:UUID,in project:Project)->[(object:ProductObject,inside:Bool)] {
     var uses:[(ProductObject,Bool)]=[]

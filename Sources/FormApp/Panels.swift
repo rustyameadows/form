@@ -61,17 +61,18 @@ struct ObjectInspector: View {
                 .background(.black.opacity(0.04), in: RoundedRectangle(cornerRadius: 6))
             }.menuStyle(.borderlessButton).fixedSize()
           }
-        }.padding(18)
-        Divider().overlay(Palette.line)
+        }.padding(InspectorStyle.panelPadding)
+        InspectorDivider().padding(.horizontal, InspectorStyle.panelPadding)
         ScrollView {
-          VStack(alignment: .leading, spacing: 20) {
-            if object.librarySelection != nil { ObjectLibraryInspector(object: object); Divider() }
-            if object.patternAssembly != nil {PatternAssemblyInspector(object:object);Divider()}
-            if object.isFlexibleSurface {ClothInspector(controller:store.cloth.preview,object:object);Divider()}
-            if object.meshAsset != nil {ModelAssetInspector(object:object);Divider()}
+          VStack(alignment: .leading, spacing: InspectorStyle.sectionSpacing) {
+            LinkedObjectInspectorModule(object: object, session: store.artworkSession)
+            if object.librarySelection != nil { ObjectLibraryInspector(object: object); InspectorDivider() }
+            if object.patternAssembly != nil {PatternAssemblyInspector(object:object);InspectorDivider()}
+            if object.isFlexibleSurface {ClothInspector(controller:store.cloth.preview,object:object);InspectorDivider()}
+            if object.meshAsset != nil {ModelAssetInspector(object:object);InspectorDivider()}
             if let model=object.cadModel {
               VStack(alignment:.leading,spacing:10){SectionLabel("EXACT CONSTRUCTION");Text("\(model.features.count) features · \(model.outputs.count) components").font(.system(size:11));Button("Edit dimensions & features…"){store.cad.openEditor(objectID:object.id)}.disabled(object.locked);if let representation=object.cadRepresentation{Text("OCCT \(representation.kernelVersion) · \(representation.editability == "importedCADBody" ? "Imported exact solids":"Editable feature model")").font(.system(size:10)).foregroundStyle(Palette.secondary)}}
-              Divider()
+              InspectorDivider()
             }
             if object.patternAssembly==nil && object.meshAsset==nil {
             if !recipe.parameters.isEmpty {
@@ -81,7 +82,7 @@ struct ObjectInspector: View {
                 ParameterControl(parameter: parameter, object: object)
               }
             }
-            Divider()
+            InspectorDivider()
             }
             VStack(alignment: .leading, spacing: 11) {
               HStack {
@@ -110,7 +111,7 @@ struct ObjectInspector: View {
                   }.buttonStyle(.plain).help(material.name)
                 }
               }
-              ColorPicker(
+              InspectorColorPicker(
                 "Custom finish",
                 selection: Binding(
                   get: {
@@ -118,15 +119,16 @@ struct ObjectInspector: View {
                       nsColor: NSColor(
                         hex: object.color ?? project.material(object.materialID).color))
                   }, set: { color in store.update(object, ["color": NSColor(color).hexString]) }),
-                supportsOpacity: false
+                supportsOpacity: false, targetID: "finish-\(project.id)-\(object.id)",
+                onEditingChanged: store.inspectorInteraction("finish-\(object.id)")
               ).font(.system(size: 11)).foregroundStyle(Palette.secondary)
             }
-            Divider()
+            InspectorDivider()
             }
             if !object.isFlexibleSurface && object.meshAsset==nil && object.cadModel==nil {ClothAttachmentInspector(object:object,project:project)}
             if object.textile != nil || TextileDesign.recipeIDs.contains(object.recipeID) {
               TextileInspector(object: object, project: project)
-              Divider()
+              InspectorDivider()
             }
             if object.textile?.attachment == nil && !object.isClothAttached {
             DisclosureGroup(isExpanded: $showPlacement) {
@@ -167,9 +169,9 @@ struct ObjectInspector: View {
                 horizontal: false, vertical: true)
             }
             if object.supportsArtworkFace { ArtworkSourcePanel(object: object, project: project) }
-          }.padding(18)
+          }.padding(InspectorStyle.panelPadding)
         }.scrollIndicators(.hidden)
-        Divider()
+        InspectorDivider().padding(.horizontal, InspectorStyle.panelPadding)
         HStack {
           if object.supportsArtworkFace {
             Button {
@@ -188,8 +190,8 @@ struct ObjectInspector: View {
           Spacer()
           Image(systemName: "arrow.up.right").font(.system(size: 10)).foregroundStyle(
             Palette.secondary)
-        }.padding(.horizontal, 18).padding(.vertical, 14)
-      }.frame(width: embedded ? nil:Self.width).frame(maxHeight:embedded ? .infinity:590,alignment:.top)
+        }.padding(.horizontal, InspectorStyle.panelPadding).padding(.vertical, 14)
+      }.inspectorSurface().frame(width: embedded ? nil:Self.width).frame(maxHeight:embedded ? .infinity:590,alignment:.top)
         .background {if embedded {Palette.paper}else{RoundedRectangle(cornerRadius:16).fill(Palette.paper)}}
         .overlay {if !embedded {RoundedRectangle(cornerRadius:16).strokeBorder(Palette.line)}}
         .shadow(color: .black.opacity(embedded ? 0:0.08), radius: 24, x: 0, y: 9)
@@ -201,8 +203,7 @@ struct SectionLabel: View {
   let title: String
   init(_ title: String) { self.title = title }
   var body: some View {
-    Text(title).font(.system(size: 9, weight: .semibold)).tracking(1.2).foregroundStyle(
-      Palette.secondary)
+    InspectorSectionHeader(title)
   }
 }
 struct SmallAction: View {
@@ -216,11 +217,8 @@ struct SmallAction: View {
   }
   var body: some View {
     Button(action: action) {
-      Label(title, systemImage: symbol).font(.system(size: 10, weight: .medium)).frame(
-        maxWidth: .infinity
-      ).padding(.vertical, 7).background(
-        .black.opacity(0.04), in: RoundedRectangle(cornerRadius: 6))
-    }.buttonStyle(.plain)
+      Label(title, systemImage: symbol).frame(maxWidth: .infinity)
+    }.buttonStyle(InspectorActionStyle())
   }
 }
 struct ParameterControl: View {
@@ -247,25 +245,33 @@ struct ParameterControl: View {
       set: { store.update(object, ["parameters": [parameter.id: $0]]) })
   }
   var body: some View {
-    VStack(spacing: 7) {
+    VStack(spacing: InspectorStyle.rowSpacing) {
       let projectID = store.project?.id
-      ScalarArtworkField(parameter.name, value: object[parameter.id] / factor, unit: displayedUnit) { value in
-        let physical = value * factor
-        guard physical.isFinite, range.contains(physical) else { throw FormError.invalid("Enter a value within this parameter's supported range.") }
-        guard store.project?.id == projectID else { throw FormError.invalid("The parameter's project changed.") }
-        try store.engine.call("form_update_object", arguments: ["object_id": object.id.uuidString, "parameters": [parameter.id: physical]], source: "Studio")
-        store.changed()
+      if parameter.unit == "mm" {
+        ArtworkUnitField(parameter.name, value: object[parameter.id], unit: displayedUnit == "in" ? .inches : .mm) { physical in
+          try commit(physical, projectID: projectID)
+        }
+      } else {
+        ScalarArtworkField(parameter.name, value: object[parameter.id], unit: displayedUnit) { physical in
+          try commit(physical, projectID: projectID)
+        }
       }
-      Slider(
+      InspectorSlider(
         value: Binding(
           get: { binding.wrappedValue },
           set: {
             binding.wrappedValue = min(
               range.upperBound,
               max(range.lowerBound, ($0 / parameter.step).rounded() * parameter.step))
-          }), in: range
-      ).controlSize(.small).tint(Palette.accent).accessibilityLabel(parameter.name)
+          }), in: range, label: parameter.name, onEditingChanged: store.inspectorInteraction("parameter-\(object.id)-\(parameter.id)")
+      )
     }
+  }
+  private func commit(_ physical: Double, projectID: UUID?) throws {
+    guard physical.isFinite, range.contains(physical) else { throw FormError.invalid("Enter a value within this parameter's supported range.") }
+    guard store.project?.id == projectID else { throw FormError.invalid("The parameter's project changed.") }
+    try store.engine.call("form_update_object", arguments: ["object_id": object.id.uuidString, "parameters": [parameter.id: physical]], source: "Studio")
+    store.changed()
   }
 }
 struct PlacementField: View {
@@ -278,14 +284,13 @@ struct PlacementField: View {
     self.onChange = onChange
   }
   var body: some View {
-    HStack(spacing: 4) {
-      Text(title).foregroundStyle(Palette.secondary)
+    InspectorValueBox {
+      Text(title).font(InspectorStyle.labelFont).foregroundStyle(Palette.secondary)
       TextField(
         title, value: Binding(get: { value }, set: onChange),
         format: .number.precision(.fractionLength(0...1))
       ).textFieldStyle(.plain).multilineTextAlignment(.trailing)
-    }.font(.system(size: 10, design: .monospaced)).padding(7).background(
-      .black.opacity(0.035), in: RoundedRectangle(cornerRadius: 5))
+    }
   }
 }
 
@@ -569,7 +574,7 @@ struct LibraryView: View {
           }
           HStack {
             TextField("Name a new material", text: $newName).textFieldStyle(.roundedBorder)
-            ColorPicker("Color", selection: $newColor, supportsOpacity: false).labelsHidden()
+            InspectorColorPicker("Color", selection: $newColor, supportsOpacity: false).labelsHidden()
             Button("Add material") {
               let id = "custom_" + UUID().uuidString
               store.library.materials.append(.init(id, newName, "Custom", NSColor(newColor).hexString))

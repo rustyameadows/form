@@ -31,7 +31,7 @@ struct ParagraphLanguageControls:View {
         if let current=type.language,!languages.contains(where:{$0.0==current}) {Text(current).tag(current)}
       }.help("Language controls localized font forms, case treatment, and the explicit hyphenation dictionary. Source words stay unchanged.")
       HStack {
-        TextField("Custom BCP 47 language",text:$customLanguage).textFieldStyle(.roundedBorder)
+        TextField("Custom BCP 47 language",text:$customLanguage).textFieldStyle(InspectorTextFieldStyle())
           .onSubmit {override(customLanguage.isEmpty ? nil:customLanguage)}
         Button("Set") {override(customLanguage.isEmpty ? nil:customLanguage)}.buttonStyle(.borderless)
       }
@@ -46,7 +46,7 @@ struct ParagraphLanguageControls:View {
       }
       Toggle("Limit hyphenation",isOn:Binding(get:{type.hyphenationLimits != nil},set:{enabled in
         session.typography{$0.hyphenationLimits=enabled ? .init():nil}
-      })).toggleStyle(.checkbox)
+      })).inspectorToggle()
       if let limits=type.hyphenationLimits {
         ScalarArtworkField("Minimum word",value:Double(limits.minimumWordLength),unit:"chars") {v in
           session.typography{$0.hyphenationLimits?.minimumWordLength=Int(min(100,max(2,v.rounded())))}

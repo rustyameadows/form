@@ -180,12 +180,12 @@ struct PublicationControls:View {
             }
             PublicationCommittedField(title:"Default language (BCP 47)",value:document.language ?? "",allowsEmpty:true) {value in settings{$0.language=value.isEmpty ? nil:value}}
               .help("Inherited by linked stories without their own language override.")
-            Toggle("Baseline grid",isOn:Binding(get:{document.baselineGrid != nil},set:{enabled in settings{$0.baselineGrid=enabled ? .init():nil}})).toggleStyle(.checkbox)
+            Toggle("Baseline grid",isOn:Binding(get:{document.baselineGrid != nil},set:{enabled in settings{$0.baselineGrid=enabled ? .init():nil}})).inspectorToggle()
             if let grid=document.baselineGrid {
               ScalarArtworkField("Grid spacing",value:grid.spacing,unit:"pt") {value in settings{$0.baselineGrid?.spacing=min(200,max(4,value))}}
               ScalarArtworkField("Grid origin",value:grid.origin,unit:"pt") {value in settings{$0.baselineGrid?.origin=value}}
               if story != nil {
-                Toggle("Align paragraphs to grid",isOn:Binding(get:{session.inspectedTypography.alignToBaselineGrid==true},set:{enabled in session.typography{$0.alignToBaselineGrid=enabled}})).toggleStyle(.checkbox)
+                Toggle("Align paragraphs to grid",isOn:Binding(get:{session.inspectedTypography.alignToBaselineGrid==true},set:{enabled in session.typography{$0.alignToBaselineGrid=enabled}})).inspectorToggle()
                   .help("Applies to selected paragraphs while editing, or the selected story otherwise.")
               }
             }

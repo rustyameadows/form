@@ -32,13 +32,21 @@ struct CADModelEditor:View {
         }.padding(20).frame(minWidth:420,minHeight:420)
         ScrollView{
           VStack(alignment:.leading,spacing:18){
-            TextField("Model name",text:Binding(get:{review.definition.name},set:{review.definition.name=$0;review.definition.revision+=1;review.state="draft"})).textFieldStyle(.roundedBorder)
+            TextField("Model name",text:Binding(get:{review.definition.name},set:{review.definition.name=$0;review.definition.revision+=1;review.state="draft"})).textFieldStyle(InspectorTextFieldStyle())
             if review.targetObjectID==nil{HStack{Picker("Construction",selection:$template){ForEach(CADModelExamples.names,id:\.self){Text($0=="clockEnclosure" ? "Clock enclosure":$0.capitalized).tag($0)}};Button("Use"){do{review.definition=try CADModelExamples.make(template);review.state="draft"}catch{review.issue=error.localizedDescription}}}}
             Picker("Display mesh",selection:Binding(get:{review.quality},set:{review.quality=$0;review.state="draft"})){Text("Fast preview").tag("preview");Text("Inspection").tag("inspection");Text("Fine fabrication").tag("fabrication")}
             if !review.definition.parameters.isEmpty {
               Text("DIMENSIONS").font(.system(size:10,weight:.semibold)).tracking(1)
               ForEach(review.definition.parameters,id:\.name){parameter in
-                VStack(alignment:.leading,spacing:5){HStack{Text(CADDisplayLabels.name(parameter.name)).font(.system(size:12));Spacer();TextField(parameter.name,value:Binding(get:{review.definition.parameters.first{$0.name==parameter.name}?.value ?? parameter.value},set:{update(parameter.name,$0)}),format:.number.precision(.fractionLength(0...3))).font(Palette.numericFont).frame(width:75).multilineTextAlignment(.trailing);Text(parameter.unit).font(.system(size:10)).foregroundStyle(.secondary)};Slider(value:Binding(get:{review.definition.parameters.first{$0.name==parameter.name}?.value ?? parameter.value},set:{update(parameter.name,$0)}),in:parameter.minimum...parameter.maximum)}
+                let value = review.definition.parameters.first { $0.name == parameter.name }?.value ?? parameter.value
+                VStack(alignment: .leading, spacing: InspectorStyle.rowSpacing) {
+                  if parameter.unit == "mm" {
+                    ArtworkUnitField(CADDisplayLabels.name(parameter.name), value: value, unit: .mm) { update(parameter.name, $0) }
+                  } else {
+                    ScalarArtworkField(CADDisplayLabels.name(parameter.name), value: value, unit: parameter.unit) { update(parameter.name, $0) }
+                  }
+                  InspectorSlider(value: Binding(get: { value }, set: { update(parameter.name, $0) }), in: parameter.minimum...parameter.maximum, label: CADDisplayLabels.name(parameter.name))
+                }
               }
             }
             if let assemblies=review.definition.importedAssemblies{ForEach(Array(assemblies.enumerated()),id:\.offset){_,assembly in
@@ -49,7 +57,7 @@ struct CADModelEditor:View {
             Divider();Text("CONSTRUCTION").font(.system(size:10,weight:.semibold)).tracking(1)
             ForEach(Array(review.definition.features.enumerated()),id:\.element.id){index,feature in
               DisclosureGroup{VStack(alignment:.leading,spacing:8){
-                  ForEach(feature.operation.values.keys.sorted(),id:\.self){key in HStack{Text(CADDisplayLabels.name(key)).font(.system(size:10));TextField("Expression",text:Binding(get:{review.definition.features.first{$0.id==feature.id}?.operation.values[key]?.expression ?? ""},set:{value in mutate(feature.id){$0.operation.values[key]=CADScalar(value)}})).font(.system(size:11,design:.monospaced)).textFieldStyle(.roundedBorder)}}
+                  ForEach(feature.operation.values.keys.sorted(),id:\.self){key in HStack{Text(CADDisplayLabels.name(key)).font(.system(size:10));TextField("Expression",text:Binding(get:{review.definition.features.first{$0.id==feature.id}?.operation.values[key]?.expression ?? ""},set:{value in mutate(feature.id){$0.operation.values[key]=CADScalar(value)}})).font(.system(size:11,design:.monospaced)).textFieldStyle(InspectorTextFieldStyle())}}
                   if feature.operation.kind.canSuppressToFirstInput{Toggle("Suppress feature",isOn:Binding(get:{review.definition.features.first{$0.id==feature.id}?.suppressed ?? false},set:{value in mutate(feature.id){$0.suppressed=value}})).font(.system(size:10))}
                   if feature.operation.kind == .profile || feature.operation.kind == .curveProfile || feature.operation.kind == .circleProfile{CADSketchPreview(operation:feature.operation,parameters:review.definition.parameterValues).frame(height:150).background(Color.black.opacity(0.025),in:RoundedRectangle(cornerRadius:6))}
                   Text("Inputs: "+feature.operation.inputs.map{id in review.definition.features.first{$0.id==id}?.name ?? "Missing feature"}.joined(separator:", ")).font(.system(size:9,design:.monospaced)).foregroundStyle(.secondary)

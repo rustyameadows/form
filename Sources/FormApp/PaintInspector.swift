@@ -72,17 +72,18 @@ struct StrokeInspector: View {
           get: { element.visibleStroke != nil },
           set: { patch(["enabled": $0, "width": $0 && stroke.width == 0 ? 0.5 : stroke.width]) })
       )
-      .toggleStyle(.checkbox)
+      .inspectorToggle()
       if element.stroke != nil || element.kind == "line" {
         HStack {
           ArtworkUnitField("Stroke width", value: stroke.width, unit: session.unit) {
             patch(["width": $0])
           }
-          ColorPicker(
+          InspectorColorPicker(
             "Stroke color",
             selection: Binding(
               get: { Color(nsColor: NSColor(hex: stroke.color)) },
-              set: { patch(["color": NSColor($0).hexString]) }), supportsOpacity: false
+              set: { patch(["color": NSColor($0).hexString]) }), supportsOpacity: false,
+            targetID: session.inspectorColorTarget("stroke"), onEditingChanged: session.inspectorEditing
           ).labelsHidden()
         }
         SwatchPicker(session: session, target: "stroke", swatchID: stroke.swatchID)
@@ -165,7 +166,7 @@ private struct StrokePatternField: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 4) {
       TextField("Dash / gap lengths (\(session.unit.rawValue))", text: $draft)
-        .textFieldStyle(.roundedBorder).focused($focused)
+        .textFieldStyle(InspectorTextFieldStyle()).focused($focused)
         .onSubmit { commit() }.onChange(of: focused) { _, value in if !value { commit() } }
         .onAppear {
           draft = formatted
@@ -204,7 +205,7 @@ struct GradientInspector: View {
             set: {
               session.paint("update", ["gradient": $0 ? [String: Any]() : NSNull()])
             })
-        ).toggleStyle(.checkbox)
+        ).inspectorToggle()
         if let gradient = element.gradient {
           Picker("Type", selection: Binding(get: { gradient.kind }, set: { patch(["kind": $0]) })) {
             Text("Linear").tag("linear")
@@ -239,7 +240,7 @@ struct GradientInspector: View {
                   }.foregroundStyle(
                     session.selectedGradientStopID == stop.id ? Palette.accent : Palette.ink)
                   Spacer()
-                  ColorPicker(
+                  InspectorColorPicker(
                     "Stop \(index+1) color",
                     selection: Binding(
                       get: { Color(nsColor: NSColor(hex: stop.color)) },
@@ -247,7 +248,8 @@ struct GradientInspector: View {
                         session.paint(
                           "update_stop",
                           ["stop_id": stop.id.uuidString, "color": NSColor($0).hexString])
-                      }), supportsOpacity: false
+                      }), supportsOpacity: false,
+                    targetID: session.inspectorColorTarget("gradient-\(stop.id)"), onEditingChanged: session.inspectorEditing
                   ).labelsHidden()
                   Button {
                     session.paint("delete_stop", ["stop_id": stop.id.uuidString])

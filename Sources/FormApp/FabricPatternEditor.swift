@@ -105,12 +105,14 @@ struct FabricPatternEditor: View {
                 ForEach(draft.colorways) { Text($0.name).tag(Optional($0.id)) }
               }
               if let i = colorwayIndex {
-                TextField("Colorway name", text: $draft.colorways[i].name).textFieldStyle(.roundedBorder)
-                ColorPicker("Fabric base", selection: Binding(get: { Color(nsColor: NSColor(hex: draft.colorways[i].baseColor ?? material.color)) },
-                  set: { draft.colorways[i].baseColor = NSColor($0).hexString }), supportsOpacity: false)
+                TextField("Colorway name", text: $draft.colorways[i].name).textFieldStyle(InspectorTextFieldStyle())
+                InspectorColorPicker("Fabric base", selection: Binding(get: { Color(nsColor: NSColor(hex: draft.colorways[i].baseColor ?? material.color)) },
+                  set: { draft.colorways[i].baseColor = NSColor($0).hexString }), supportsOpacity: false,
+                  targetID: "colorway-\(draft.colorways[i].id)-base")
                 ForEach(sourceColors, id: \.self) { color in
-                  ColorPicker(color, selection: Binding(get: { Color(nsColor: NSColor(hex: draft.colorways[i].replacements[color] ?? color)) },
-                    set: { draft.colorways[i].replacements[color] = NSColor($0).hexString }), supportsOpacity: false)
+                  InspectorColorPicker(color, selection: Binding(get: { Color(nsColor: NSColor(hex: draft.colorways[i].replacements[color] ?? color)) },
+                    set: { draft.colorways[i].replacements[color] = NSColor($0).hexString }), supportsOpacity: false,
+                    targetID: "colorway-\(draft.colorways[i].id)-\(color)")
                     .font(.system(size: 10, design: .monospaced))
                 }
                 HStack {
@@ -146,14 +148,14 @@ struct FabricPatternEditor: View {
   }
   private func number(_ label: String, value: Binding<Double>, suffix: String) -> some View {
     HStack { Text(label).font(.system(size: 11)); Spacer(); TextField(label, value: value, format: .number.precision(.fractionLength(0...3)))
-      .labelsHidden().multilineTextAlignment(.trailing).textFieldStyle(.roundedBorder).frame(width: 92)
+      .labelsHidden().multilineTextAlignment(.trailing).textFieldStyle(InspectorTextFieldStyle()).frame(width: 92)
       Text(suffix).font(.system(size: 10)).foregroundStyle(Palette.secondary).frame(width: 25, alignment: .leading) }
   }
   private func pair(_ label: String, x: Binding<Double>, y: Binding<Double>) -> some View {
     VStack(alignment: .leading, spacing: 5) {
       Text(label + " (mm)").font(.system(size: 11))
       HStack { Text("X"); TextField("X", value: x, format: .number); Text("Y"); TextField("Y", value: y, format: .number) }
-        .font(.system(size: 10)).textFieldStyle(.roundedBorder)
+        .font(.system(size: 10)).textFieldStyle(InspectorTextFieldStyle())
     }
   }
   private func addColorway() {

@@ -26,7 +26,7 @@ struct TextileProductionLibraryView:View {
   var body:some View {
     VStack(alignment:.leading,spacing:18) {
       HStack {VStack(alignment:.leading,spacing:5) {Text("Textile stock & equipment").font(.system(size: 24, weight: .semibold));Text("Studio records · portable snapshots on assignment · no automatic stock deduction").font(.system(size:10)).foregroundStyle(Palette.secondary)};Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)}
-      Picker("Library",selection:$section) {Text("Thread stock").tag(0);Text("Equipment declarations").tag(1);Text("Blanks, trims & supplies").tag(2)}.pickerStyle(.segmented)
+      Picker("Library",selection:$section) {Text("Thread stock").tag(0);Text("Equipment declarations").tag(1);Text("Blanks, trims & supplies").tag(2)}.inspectorSegmented()
       ScrollView {
         LazyVStack(spacing:9) {
           if section==0 {
@@ -76,12 +76,12 @@ private struct StudioThreadEditor:View {
       Text("Thread stock").font(.system(size: 24, weight: .semibold))
       Form {
         TextField("Name",text:$item.name)
-        ColorPicker("Color",selection:Binding(get:{Color(nsColor:NSColor(hex:item.color))},set:{item.color=NSColor($0).hexString}),supportsOpacity:false)
+        InspectorColorPicker("Color",selection:Binding(get:{Color(nsColor:NSColor(hex:item.color))},set:{item.color=NSColor($0).hexString}),supportsOpacity:false)
         TextField("Brand",text:text(\.brand));TextField("SKU / catalog",text:text(\.sku));TextField("Supplier",text:text(\.supplier));TextField("Fiber / specification",text:text(\.fiber));TextField("Studio location",text:text(\.location))
         TextField("Available meters · unknown if blank",text:$available)
         TextField("Spool length (m)",text:$spool);TextField("Price per spool",text:$price);TextField("Currency · three-letter code",text:$currency)
         TextField("Notes",text:text(\.notes),axis:.vertical).lineLimit(2...4)
-      }.textFieldStyle(.roundedBorder)
+      }.textFieldStyle(InspectorTextFieldStyle())
       Text("Unit cost needs both a known spool price and length. Assignments capture this record; editing library stock does not rewrite projects or jobs.").font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(Palette.ink)}
       HStack {Button("Cancel") {dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save thread") {commit()}.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)}
@@ -112,9 +112,9 @@ private struct EmbroideryEquipmentEditor:View {
         TextField("Formats · comma separated, e.g. dst",text:$formats)
         TextField("Needle count · unknown if blank",text:$needles)
         Toggle("Declarations checked against the equipment specification",isOn:$item.declarationsVerified)
-      }.textFieldStyle(.roundedBorder)
+      }.textFieldStyle(InspectorTextFieldStyle())
       HStack {Text("SUPPORTED HOOPS · MM").font(.system(size:9,weight:.semibold));Spacer();Button("Add hoop") {hoops.append(.init(name:"Hoop \(hoops.count+1)",width:"",height:""))}}
-      ScrollView {VStack {ForEach($hoops) {$hoop in HStack {TextField("Name",text:$hoop.name);TextField("Width",text:$hoop.width).frame(width:85);Text("×");TextField("Height",text:$hoop.height).frame(width:85);Button {hoops.removeAll {$0.id==hoop.id}} label:{Image(systemName:"minus.circle")}}.textFieldStyle(.roundedBorder)}}}.frame(height:150)
+      ScrollView {VStack {ForEach($hoops) {$hoop in HStack {TextField("Name",text:$hoop.name);TextField("Width",text:$hoop.width).frame(width:85);Text("×");TextField("Height",text:$hoop.height).frame(width:85);Button {hoops.removeAll {$0.id==hoop.id}} label:{Image(systemName:"minus.circle")}}.textFieldStyle(InspectorTextFieldStyle())}}}.frame(height:150)
       Text("Checks compare declared hoop axes and DST support only. No automatic rotation, device connection, scheduling, or physical sewing capability is implied.").font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(Palette.ink)}
       HStack {Button("Cancel") {dismiss()}.keyboardShortcut(.cancelAction);Spacer();Button("Save declaration") {commit()}.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)}

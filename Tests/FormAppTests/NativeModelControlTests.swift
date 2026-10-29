@@ -80,16 +80,31 @@ import XCTest
     var measurements: [[String: Any]] = []
     XCTAssertTrue(window.makeFirstResponder(native))
     for fraction in fractions {
-      for _ in 0..<12 {
-        let delta = fraction - native.doubleValue
-        if abs(delta) < 0.008 { break }
+      let span = native.maxValue - native.minValue
+      let target = native.minValue + fraction * span
+      let tolerance = abs(span) * 0.008
+      var lastCode: UInt16?
+      for attempt in 0..<128 {
+        let delta = target - native.doubleValue
+        if abs(delta) <= tolerance { break }
         let stamp = ProcessInfo.processInfo.systemUptime, right = delta > 0
-        let event = try XCTUnwrap(NSEvent.keyEvent(with: .keyDown, location: .zero, modifierFlags: [.function, .numericPad], timestamp: stamp, windowNumber: window.windowNumber, context: nil, characters: right ? "\u{F703}" : "\u{F702}", charactersIgnoringModifiers: right ? "\u{F703}" : "\u{F702}", isARepeat: false, keyCode: right ? 124 : 123))
-        let old = native.doubleValue; window.sendEvent(event)
+        let code: UInt16 = right ? 124 : 123
+        let character = right ? "\u{F703}" : "\u{F702}"
+        let event = try XCTUnwrap(NSEvent.keyEvent(with: .keyDown, location: .zero, modifierFlags: [.function, .numericPad], timestamp: stamp, windowNumber: window.windowNumber, context: nil, characters: character, charactersIgnoringModifiers: character, isARepeat: attempt > 0, keyCode: code))
+        let old = native.doubleValue; window.sendEvent(event); lastCode = code
         try await Task.sleep(nanoseconds: 2_000_000)
         guard native.doubleValue != old else { XCTFail("The native slider did not handle its keyboard event."); throw FormError.invalid("Native slider input did not arrive.") }
-        var row = sample(); row["event_to_source_ms"] = (ProcessInfo.processInfo.systemUptime - stamp) * 1000; row["native_value"] = native.doubleValue; row["event_uptime"] = stamp; measurements.append(row)
+        var row = sample(); row["event_to_source_ms"] = (ProcessInfo.processInfo.systemUptime - stamp) * 1000; row["native_value"] = native.doubleValue; row["event_uptime"] = stamp
+        row["requested_native_value"] = target; row["native_minimum"] = native.minValue; row["native_maximum"] = native.maxValue
+        measurements.append(row)
       }
+      if let code = lastCode {
+        let character = code == 124 ? "\u{F703}" : "\u{F702}"
+        let release = try XCTUnwrap(NSEvent.keyEvent(with: .keyUp, location: .zero, modifierFlags: [.function, .numericPad], timestamp: ProcessInfo.processInfo.systemUptime, windowNumber: window.windowNumber, context: nil, characters: character, charactersIgnoringModifiers: character, isARepeat: false, keyCode: code))
+        window.sendEvent(release)
+        try await Task.sleep(nanoseconds: 2_000_000)
+      }
+      guard abs(native.doubleValue - target) <= tolerance else { throw FormError.invalid("The bounded native keyboard sequence did not reach its requested slider value.") }
     }
 
     try await Task.sleep(nanoseconds: 20_000_000)

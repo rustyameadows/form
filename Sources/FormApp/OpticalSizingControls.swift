@@ -48,7 +48,7 @@ struct OpticalSizingControls:View {
       }.font(.system(size:10))
       if !isMixed,["explicit","stored"].contains(choice(first)),let range=commonRange {
         ScalarArtworkField("Optical size",value:value,unit:"pt",increment:session.numericIncrement(step:1,range:range)) {points in try apply(.init(.explicit,points:points))}
-        if range.lowerBound<range.upperBound {Slider(value:Binding(get:{min(range.upperBound,max(range.lowerBound,value))},set:{points in do{try apply(.init(.explicit,points:points))}catch{}}),in:range,onEditingChanged:{editing in if editing{session.beginGesture()}else{session.endGesture()}}).controlSize(.mini)}
+        if range.lowerBound<range.upperBound {InspectorSlider(value:Binding(get:{min(range.upperBound,max(range.lowerBound,value))},set:{points in do{try apply(.init(.explicit,points:points))}catch{}}),in:range,onEditingChanged:{editing in if editing{session.beginGesture()}else{session.endGesture()}}).controlSize(.mini)}
       }
       if let range=commonRange {Text("Supported \(range.lowerBound.formatted())–\(range.upperBound.formatted()) pt · automatic follows rendered text size, independent of zoom.").font(.system(size:9)).foregroundStyle(Palette.secondary)}
       if !allSupported {Text("Some selected fonts do not offer an optical-size axis. Existing assignments stay recorded; choose a supported face or reset to Font default.").font(.system(size:9)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)}

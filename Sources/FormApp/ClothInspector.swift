@@ -57,7 +57,7 @@ private struct ClothSettingsEditor:View {
       HStack {Text("Apply resets the preview and is undoable.").font(.caption).foregroundStyle(.secondary);Spacer();Button("Cancel") {dismiss()};Button("Apply") {save()}.buttonStyle(.borderedProminent)}
     }.padding(24).frame(width:560,height:700)
   }
-  private func value(_ label:String,value:Binding<Double>)->some View {TextField(label,value:value,format:.number.precision(.fractionLength(0...12))).textFieldStyle(.roundedBorder)}
+  private func value(_ label:String,value:Binding<Double>)->some View {TextField(label,value:value,format:.number.precision(.fractionLength(0...12))).textFieldStyle(InspectorTextFieldStyle())}
   private func save() {
     do {try settings.validate();store.finishArtworkEditing();_ = try store.clothCall(["command":"configure","object_id":objectID.uuidString,"settings":try jsonObject(settings)],source:"Studio");store.changed();dismiss()}catch {self.error=error.localizedDescription}
   }
@@ -112,7 +112,7 @@ struct ClothAttachmentInspector:View {
       }.font(.system(size:11))
     }
   }
-  private func coordinate(_ label:String,value:Double,change:@escaping(Double)->Void)->some View {HStack {Text(label);Spacer();TextField(label,value:Binding(get:{value},set:change),format:.number.precision(.fractionLength(0...2))).textFieldStyle(.roundedBorder).frame(width:72)}.disabled(object.locked)}
+  private func coordinate(_ label:String,value:Double,change:@escaping(Double)->Void)->some View {HStack {Text(label);Spacer();TextField(label,value:Binding(get:{value},set:change),format:.number.precision(.fractionLength(0...2))).textFieldStyle(InspectorTextFieldStyle()).frame(width:72)}.disabled(object.locked)}
   private func attach(to id:UUID,u:Double? = nil,v:Double? = nil,panel:Int? = nil,offset:Double? = nil,rotation:Double? = nil) {
     let currentPanel=assemblyPanel?.panelIndex ?? surface?.cloth?.mesh.panelID(forTriangle:attachment?.anchor.triangle ?? 0) ?? 0
     change(["command":"attach","surface_object_id":id.uuidString,"u":u ?? point.x,"v":v ?? point.y,"panel":panel ?? currentPanel,"offset_mm":offset ?? assemblyAttachment?.anchor.normalOffsetMm ?? attachment?.anchor.normalOffsetMm ?? 1,"rotation":rotation ?? assemblyAttachment?.rotationDegrees ?? attachment?.rotationDegrees ?? 0])

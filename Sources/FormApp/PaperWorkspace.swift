@@ -178,14 +178,15 @@ struct PaperEnvironmentControls: View {
   private var definition: PaperConstruction? { try? .definition(for:object) }
   var body: some View {
     ScrollView {
-      VStack(alignment:.leading,spacing:18) {
+      VStack(alignment:.leading,spacing:InspectorStyle.sectionSpacing) {
+        LinkedObjectInspectorModule(object: object, session: store.artworkSession)
         if let definition {
           if store.environment == .form { appearance(definition) }
           else if store.environment == .function { construction(definition) }
           else { fabrication(definition) }
         }
       }.padding(16)
-    }.onAppear { reloadDraft() }
+    }.inspectorSurface().onAppear { reloadDraft() }
       .onChange(of:object.paperConstruction) { _,_ in reconcileDraft() }
       .onChange(of:object.id) { _,_ in reloadDraft(); note = "" }
       .accessibilityElement(children:.contain).accessibilityLabel("Paper " + store.environment.title + " controls")
@@ -200,13 +201,15 @@ struct PaperEnvironmentControls: View {
         Button("Natural") { store.update(object,["color":"#D9C6A2"]) }
         Button("Blue") { store.update(object,["color":"#254F91"]) }
       }.font(.system(size:11))
-      Divider()
-      SectionLabel("CONNECTED ARTWORK")
-      Button("Compose on the dieline") { store.showPaper(.dieline,object:object,split:true) }
-      Button("Review panels") { store.showPaper(.panels,object:object,split:true) }
+      InspectorColorPicker("Paper color", selection: Binding(
+        get: { Color(nsColor: NSColor(hex: object.color ?? "#F7F5EF")) },
+        set: { store.update(object, ["color": NSColor($0).hexString]) }), supportsOpacity: false,
+        targetID: "paper-\(store.project?.id.uuidString ?? "")-\(object.id)",
+        onEditingChanged: store.inspectorInteraction("paper-color-\(object.id)"))
+      InspectorDivider()
+      SectionLabel("ARTWORK")
       if d.insideArtworkSourceID == nil { Button("Create inside artwork…") { store.createPaperInside(object); store.showPaper(.dieline,object:object,split:true) } }
-      Text("Graphics remain at their original physical size when the construction changes. Panel views are linked crops of the same source.").font(.system(size:11)).foregroundStyle(Palette.secondary)
-      Divider()
+      InspectorDivider()
       Button("Develop construction in Function") { store.showEnvironment(.function) }
     }
   }
@@ -219,18 +222,12 @@ struct PaperEnvironmentControls: View {
       if draft != nil {
         if let authored = d.authored {
           ForEach(authored.parameters, id: \.name) { parameter in
-            HStack {
-              Text(parameter.name); Spacer()
-              TextField(parameter.name, value: Binding(get: {
-                draft?.authored?.parameters.first(where: { $0.name == parameter.name })?.value ?? parameter.value
-              }, set: { value in
-                if let i = draft?.authored?.parameters.firstIndex(where: { $0.name == parameter.name }) {
-                  draft?.authored?.parameters[i].value = value
-                }
-              }), format: .number.precision(.fractionLength(0...3)))
-                .font(Palette.numericFont).labelsHidden().frame(width: 70).textFieldStyle(.roundedBorder)
-              Text(parameter.unit).foregroundStyle(Palette.secondary)
-            }.font(.system(size: 11))
+            let value = draft?.authored?.parameters.first(where: { $0.name == parameter.name })?.value ?? parameter.value
+            if parameter.unit == "mm" {
+              ArtworkUnitField(parameter.name, value: value, unit: store.project?.unit == "in" ? .inches : .mm) { updateDraft(parameter.name, $0) }
+            } else {
+              ScalarArtworkField(parameter.name, value: value, unit: parameter.unit) { updateDraft(parameter.name, $0) }
+            }
           }
         } else {
         field("Internal width",get:{draft!.dimensions.width},set:{draft!.dimensions.width=$0})
@@ -245,11 +242,11 @@ struct PaperEnvironmentControls: View {
         Button("Apply construction") { applyDraft() }.buttonStyle(.borderedProminent).disabled(draftIssue != nil)
         if let draftIssue { Text(draftIssue).font(.system(size:10)).foregroundStyle(Palette.accent); Button("Reload current construction") {reloadDraft()} }
       }
-      Divider()
+      InspectorDivider()
       SectionLabel("FOLD REVIEW")
-      HStack {Text("Flat");Slider(value:Binding(get:{object["fold"]},set:{store.update(object,["parameters":["fold":$0]])}),in:0...100);Text("Folded")}.font(.system(size:10))
+      HStack {Text("Flat");InspectorSlider(value:Binding(get:{object["fold"]},set:{store.update(object,["parameters":["fold":$0]])}),in:0...100);Text("Folded")}.font(.system(size:10))
       HStack {ForEach([0.0,45.0,100.0],id:\.self) {v in Button(v == 0 ? "Flat" : v == 100 ? "Assembled" : "Part folded") {store.update(object,["parameters":["fold":v]])}}}.font(.system(size:10))
-      HStack {Text("Closed");Slider(value:Binding(get:{object["opening"]},set:{store.update(object,["parameters":["opening":$0]])}),in:0...100);Text("Top open")}.font(.system(size:10))
+      HStack {Text("Closed");InspectorSlider(value:Binding(get:{object["opening"]},set:{store.update(object,["parameters":["opening":$0]])}),in:0...100);Text("Top open")}.font(.system(size:10))
       Text("Opening leaves the glued body and bottom assembled.").font(.system(size:10)).foregroundStyle(Palette.secondary)
       if let net = try? d.net() {
         Picker("Selected panel",selection:Binding(get:{store.paperSelectedPanelID ?? net.rootPanelID},set:{store.selectPaperPanel(objectID:object.id,panelID:$0)})) {
@@ -287,7 +284,7 @@ struct PaperEnvironmentControls: View {
         ForEach(layout.issues) {issue in Text(issue.message).font(.system(size:11)).foregroundStyle(issue.severity == .error ? Palette.ink : Palette.secondary)}
       }
       Button("Review sheet layout") { store.showPaper(.sheet,object:object) }
-      Divider()
+      InspectorDivider()
       SectionLabel("CUT, CREASE & PRINT")
       Text("Print artwork, cut the outline, crease the folds, then glue and assemble. Grain is retained; automatic rotation is off.").font(.system(size:11)).foregroundStyle(Palette.secondary)
       Button("Export cut & crease SVG…") { store.exportPaperDialog(object:object,format:"svg") }
@@ -297,8 +294,13 @@ struct PaperEnvironmentControls: View {
       preflight(d)
     }.font(.system(size:11))
   }
+  private func updateDraft(_ name: String, _ value: Double) {
+    if let index = draft?.authored?.parameters.firstIndex(where: { $0.name == name }) {
+      draft?.authored?.parameters[index].value = value
+    }
+  }
   private func field(_ title:String,get:@escaping()->Double,set:@escaping(Double)->Void)->some View {
-    HStack {Text(title);Spacer();TextField(title,value:Binding(get:get,set:set),format:.number.precision(.fractionLength(0...2))).font(Palette.numericFont).labelsHidden().frame(width:70).textFieldStyle(.roundedBorder);Text("mm").foregroundStyle(Palette.secondary)}.font(.system(size:11))
+    ArtworkUnitField(title, value: get(), unit: store.project?.unit == "in" ? .inches : .mm) { set($0) }
   }
   private func addNote(_ d:PaperConstruction) {
     var value=d;value.annotations.append(.init(text:note,panelID:store.paperSelectedPanelID,edgeID:store.paperSelectedFoldID,view:store.mode == .table ? "assembled":store.paperRepresentation == .panels ? "panels":"dieline"));if store.configurePaper(object,definition:value) {note=""}
@@ -318,7 +320,7 @@ struct PaperEnvironmentControls: View {
   }
   private func preflight(_ d:PaperConstruction)->some View {
     VStack(alignment:.leading,spacing:7) {
-      Divider();SectionLabel("CONSTRUCTION REVIEW")
+      InspectorDivider();SectionLabel("CONSTRUCTION REVIEW")
       if let report=try? d.preflight() {
         ForEach(report.issues) {issue in Text(issue.message).font(.system(size:10)).foregroundStyle(issue.severity == .error ? Palette.ink : Palette.secondary)}
       }

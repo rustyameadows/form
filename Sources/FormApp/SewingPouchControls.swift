@@ -104,7 +104,7 @@ struct RoundedPouchControls: View {
     HStack {
       Text(label).font(.system(size: 11))
       Spacer()
-      TextField(label, value: value, format: .number).textFieldStyle(.roundedBorder).frame(
+      TextField(label, value: value, format: .number).textFieldStyle(InspectorTextFieldStyle()).frame(
         width: 85)
       Text("mm").font(.system(size: 10)).foregroundStyle(Palette.secondary)
     }

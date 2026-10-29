@@ -7,8 +7,7 @@ struct ArtworkSourcePanel: View {
   let project: Project
   var sources: [ProductObject] {
     project.objects.filter {
-      $0.recipeID == "artboard" && $0.id != object.id && $0.artworkSourceID == nil
-        && $0.artwork != nil
+      $0.id != object.id && project.isIndependentFlatArtworkSource($0)
     }
   }
   func link(_ value: String, fit: String? = nil) {
@@ -20,15 +19,15 @@ struct ArtworkSourcePanel: View {
   }
   var body: some View {
     VStack(alignment: .leading, spacing: 9) {
-      Divider().padding(.vertical, 5)
-      SectionLabel("SURFACE ARTWORK")
+      InspectorDivider().padding(.vertical, 5)
+      SectionLabel("ARTWORK SOURCE")
       Picker(
         "Artwork source",
         selection: Binding(get: { object.artworkSourceID?.uuidString ?? "" }, set: { link($0) })
       ) {
         Text("Owned by this object").tag("")
         ForEach(sources) { Text($0.name).tag($0.id.uuidString) }
-      }.labelsHidden().font(.system(size: 10))
+      }.labelsHidden().inspectorPicker()
       if let id = object.artworkSourceID, let source = project.objects.first(where: { $0.id == id })
       {
         Picker(
@@ -38,7 +37,7 @@ struct ArtworkSourcePanel: View {
         ) {
           Text("Actual size · centered").tag("actual")
           Text("Fit proportionally").tag("fit")
-        }.labelsHidden().font(.system(size: 10))
+        }.labelsHidden().inspectorPicker()
         let size = source.artworkSize
         let face = object.artworkSize
         let scale = object.artworkFit == "fit" ? min(face.x / size.x, face.y / size.y) : 1

@@ -31,14 +31,14 @@ struct AppearanceInspector: View {
       if element.kind == "group" {
         Toggle("Isolate blending", isOn: Binding(get: { element.isolatedBlending == true },
           set: { session.appearance(["isolate": $0]) }))
-          .toggleStyle(.checkbox).font(.system(size: 10))
+          .inspectorToggle().font(.system(size: 10))
           .help("Blend children with each other before compositing this group. Opacity and effects also isolate a group.")
       }
       DisclosureGroup("Effects") {
         VStack(alignment: .leading, spacing: 12) {
           Toggle("Blur", isOn: Binding(get: { element.blur?.enabled == true },
             set: { session.appearance(["blur": ["enabled": $0]]) }))
-            .toggleStyle(.checkbox)
+            .inspectorToggle()
           if let blur = element.blur {
             ArtworkUnitField("Blur radius", value: blur.radius, unit: session.unit) {
               session.appearance(["blur": ["radius": $0]])
@@ -47,7 +47,7 @@ struct AppearanceInspector: View {
           Divider()
           Toggle("Drop shadow", isOn: Binding(get: { element.shadow?.enabled == true },
             set: { session.appearance(["shadow": ["enabled": $0]]) }))
-            .toggleStyle(.checkbox)
+            .inspectorToggle()
           if let shadow = element.shadow {
             VStack(alignment: .leading, spacing: 10) {
               HStack {
@@ -61,10 +61,10 @@ struct AppearanceInspector: View {
               ArtworkUnitField("Shadow blur", value: shadow.blur, unit: session.unit) {
                 session.appearance(["shadow": ["blur": $0]])
               }
-              ColorPicker("Shadow color", selection: Binding(
+              InspectorColorPicker("Shadow color", selection: Binding(
                 get: { Color(nsColor: NSColor(hex: shadow.color)) },
                 set: { session.appearance(["shadow": ["color": NSColor($0).hexString]]) }),
-                supportsOpacity: false)
+                supportsOpacity: false, targetID: session.inspectorColorTarget("shadow"), onEditingChanged: session.inspectorEditing)
               SwatchPicker(session: session, target: "shadow", swatchID: shadow.swatchID)
               ScalarArtworkField("Shadow opacity", value: shadow.opacity * 100, unit: "%") {
                 session.appearance(["shadow": ["opacity": $0 / 100]])

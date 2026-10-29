@@ -84,7 +84,11 @@ struct TextStylePicker: View {
       }
       Divider()
       Button("Manage text styles…") { session.showingTextStyles = true }
-    } label: { Label(label, systemImage: "textformat.size").font(.system(size: 10)) }
+    } label: {
+      HStack { Label(label, systemImage: "textformat.size"); Spacer(); Image(systemName: "chevron.down").font(.system(size: 9)) }
+        .font(InspectorStyle.labelFont).padding(.horizontal, 9).frame(height: InspectorStyle.controlHeight)
+        .background(Palette.surface, in: RoundedRectangle(cornerRadius: InspectorStyle.controlRadius))
+    }
       .menuStyle(.borderlessButton)
     if let ref = session.canvas?.textInspection()?.paragraphStyle ?? session.sourceTextElement?.paragraphStyle,
       let style = store.project?.textStyles?.first(where: { $0.id == ref.styleID }) {
@@ -149,7 +153,7 @@ struct TextStylesPanel: View {
       }.frame(maxHeight: 410)
       Divider()
       HStack {
-        TextField("New text style name", text: $name).textFieldStyle(.roundedBorder)
+        TextField("New text style name", text: $name).textFieldStyle(InspectorTextFieldStyle())
         Button("Create from selection") {
           if session.captureTextStyle(name: name) { name = "" }
         }.disabled(!canCapture || name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
@@ -171,7 +175,7 @@ private struct TextStyleNameField: View {
     committed = draft; commit(draft)
   }
   var body: some View {
-    TextField("Text style name", text: $draft).textFieldStyle(.roundedBorder).focused($focused)
+    TextField("Text style name", text: $draft).textFieldStyle(InspectorTextFieldStyle()).focused($focused)
       .onAppear { draft = value; committed = value }
       .onSubmit { save() }
       .onChange(of: focused) { _, active in if !active { save() } }
