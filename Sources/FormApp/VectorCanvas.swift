@@ -872,8 +872,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     var reports:[UUID:PhysicalArtworkIntentReport]=[:],attempted=Set<UUID>()
     for f in frames {
       let guideReport=physicalGuideReport(for:f,attempted:&attempted,reports:&reports)
-      let drawingBounds=guideReport.map{f.physicalGuideBounds(report:$0,scale:max(0.001,scale))} ?? f.rect
+      var drawingBounds=guideReport.map{f.physicalGuideBounds(report:$0,scale:max(0.001,scale))} ?? f.rect
+      if !f.isWorkspace { drawingBounds = drawingBounds.union(CanvasFrameChrome.headerRect(for: f, scale: scale)) }
       guard f.isWorkspace || dirtyRect.intersects(documentRect(drawingBounds.insetBy(dx:-12,dy:-12))) else{continue}
+      let frameColor = InterfaceAppearance.shared.frameColor(for: f.role)
       if !f.isWorkspace {
       context.saveGState()
       context.setShadow(
@@ -882,20 +884,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       context.setFillColor(NSColor.white.cgColor)
       context.fill(f.rect)
       context.restoreGState()
-      let title = f.title.uppercased()
-      let titleStyle = NSMutableParagraphStyle()
-      titleStyle.lineBreakMode = .byTruncatingMiddle
-      let attributes: [NSAttributedString.Key: Any] = [
-        .font: NSFont.systemFont(ofSize: 9 / scale, weight: .medium),
-        .foregroundColor: Palette.canvasLabelNS,
-        .paragraphStyle: titleStyle,
-      ]
-      let titleRect = CGRect(x: f.rect.minX, y: f.rect.minY - 15 / scale,
-                             width: f.rect.width, height: 14 / scale)
-      context.saveGState()
-      context.clip(to: titleRect)
-      (title as NSString).draw(in: titleRect, withAttributes: attributes)
-      context.restoreGState()
+      CanvasFrameChrome.drawHeader(f, context: context, scale: scale)
       }
       context.saveGState()
       context.translateBy(x: f.rect.minX, y: f.rect.minY)
@@ -907,7 +896,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         ArtworkRenderer.draw(
           f.artwork, width: f.surfaceObject["width"], height: f.rect.height, assets: session.assets)
         context.restoreGState()
-        context.setStrokeColor(Palette.accentNS.cgColor)
+        context.setStrokeColor(frameColor.cgColor)
         context.setLineWidth(1 / scale)
         context.stroke(.init(origin: .zero, size: f.rect.size))
         context.setStrokeColor(NSColor(hex: "#666666").cgColor)
@@ -955,7 +944,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           if let transform=f.projection?.sourceToLocal {
             context.concatenate(.init(a:transform.a,b:transform.b,c:transform.c,d:transform.d,tx:transform.tx,ty:transform.ty))
           }
-          PaperOutput.drawStructure(paperNet,context:context,lineWidth:1/scale,interface:true)
+          PaperOutput.drawStructure(paperNet,context:context,lineWidth:1/scale,interface:true,
+            interfaceCutColor:f.role == .construction ? frameColor:nil)
           context.restoreGState()
         }
         if let sewing {
@@ -968,10 +958,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
             excluding: ArtworkProduction.hiddenIDs(in: sewing.artwork, roles: session.hiddenProductionRoles), unbounded: true)
           context.restoreGState()
         }
-        if let projection = f.projection, !projection.isProof {
-          context.addPath(projection.clipPath)
-          context.setStrokeColor((f.id == activeFrame?.id ? Palette.accentNS : Palette.secondaryNS).cgColor)
-          context.setLineWidth(1 / scale); context.strokePath()
+        if !f.isWorkspace {
+          context.saveGState()
+          if let projection = f.projection, !projection.isProof { context.addPath(projection.clipPath) }
+          else { context.addRect(.init(origin: .zero, size: f.rect.size)) }
+          context.setStrokeColor(frameColor.cgColor)
+          context.setLineWidth((f.id == activeFrame?.id ? 1.5 : 1) / scale)
+          context.strokePath()
+          context.restoreGState()
         }
         if f.id == activeFrame?.id && f.editable {
           drawOverlays(f, context: context, scale: scale)
@@ -1371,10 +1365,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     if !preserveSource, [.select, .direct].contains(s.tool),
       let f = frames.last(where: { !$0.isWorkspace && $0.editable &&
-      CGRect(
-        x: $0.rect.minX, y: $0.rect.minY - 16 / (ppm * zoom), width: $0.rect.width,
-        height: 16 / (ppm * zoom)
-      ).contains(physical)
+      CanvasFrameChrome.headerRect(for: $0, scale: ppm * zoom).contains(physical)
     }) {
       finishText()
       window?.makeFirstResponder(self)
@@ -2049,8 +2040,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       hoveredControlPoint = control.mode == "rotate"
         ? CGPoint(x: bounds.center.x, y: bounds.y - 18 / (ppm * zoom)) : handles(bounds)[control.index]
     } else if frames.contains(where: { !$0.isWorkspace && $0.editable &&
-      CGRect(x: $0.rect.minX, y: $0.rect.minY - 16/(ppm*zoom), width: $0.rect.width,
-        height: 16/(ppm*zoom)).contains(world) }) { pointerFeedback = .frame }
+      CanvasFrameChrome.headerRect(for: $0, scale: ppm*zoom).contains(world) }) { pointerFeedback = .frame }
     else if !s.dieline, let frame = frame(atCanvasPoint: world), frame.editable {
       let active = frame.id == activeFrame?.id
       let art = active ? s.art : frame.artwork

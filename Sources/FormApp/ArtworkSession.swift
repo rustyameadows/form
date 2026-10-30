@@ -10,6 +10,7 @@ struct CanvasFrame: Identifiable {
   var artwork: Artwork
   var sourceReview:String? = nil
   var projection: CanvasSourceProjection? = nil
+  var legacyDieline = false
   var id: UUID { projection?.id ?? object.id }
   var title: String { projection?.title ?? (object.name + (sourceReview == nil ? "":" · Registered source")) }
   var isWorkspace: Bool { object.isCanvasWorkspace }
@@ -346,7 +347,8 @@ enum ArtworkTool: String, CaseIterable {
             : !paperUses(of:object.id,in:project).isEmpty && hasSewingSourceRole(object,in:project)
             ? "This source also owns sewing geometry. Its original contours stay in canonical source coordinates; select a construction for its readable paper face."
             : paperUses(of:object.id,in:project).count>1
-              ? "This registered artwork has multiple physical owners. Select a construction to edit its readable face; this fallback preserves canonical source coordinates.":nil))
+              ? "This registered artwork has multiple physical owners. Select a construction to edit its readable face; this fallback preserves canonical source coordinates.":nil,
+          legacyDieline: unfolding))
       if !object.isCanvasWorkspace {
         x += size.0 + 36
         rowHeight = max(rowHeight, size.1)

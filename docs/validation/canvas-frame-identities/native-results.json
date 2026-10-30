@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "native_capture_method": "Actual VectorCanvas and AppearanceSettingsView pixels in isolated native windows; native view caching, not full workspace screenshots",
+  "roles": {
+    "artboard": {
+      "default_color": "#3D4148",
+      "symbol": "rectangle"
+    },
+    "construction": {
+      "default_color": "#376BB0",
+      "symbol": "scissors",
+      "includes": "Dielines and sewing patterns"
+    },
+    "surface": {
+      "default_color": "#AD5145",
+      "symbol": "link"
+    }
+  },
+  "backgrounds": [
+    "Light gray",
+    "Charcoal"
+  ],
+  "distinct_tests_passed": 85,
+  "test_groups": {
+    "existing_regressions": 77,
+    "new_frame_identity_and_preferences": 8
+  },
+  "checks": [
+    "Active/inactive role colors and actual frame/hole outlines",
+    "Constant screen size headers, icons and native title dragging",
+    "Readable contrast on light/dark/custom backgrounds",
+    "Atomic persisted preferences and legacy compatibility",
+    "Project, Undo, canonical artwork and SVG preservation"
+  ],
+  "captures": [
+    "gray-overview.png",
+    "charcoal-overview.png",
+    "appearance-settings-frame-colors.png"
+  ]
+}

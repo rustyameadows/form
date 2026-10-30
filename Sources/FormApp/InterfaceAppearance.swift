@@ -14,21 +14,56 @@ extension Notification.Name {
   static let shared = InterfaceAppearance.environment()
   @Published private(set) var accentHex: String
   @Published private(set) var canvasBackgroundHex: String
+  @Published private(set) var frameColors: [String:String]
   private let defaults: UserDefaults?
   private let file: URL?
   private var cachedCanvasControl: (accent: String, background: String, color: NSColor)?
-  private struct Saved: Codable { var accentHex: String; var canvasBackgroundHex: String? }
+  private var cachedFrames: (background:[Double], colors:[String:NSColor])?
+  private struct Saved: Codable {
+    var accentHex: String?
+    var canvasBackgroundHex: String?
+    var frameColors: [String:String]?
+    enum CodingKeys:String,CodingKey {case accentHex,canvasBackgroundHex,frameColors}
+    init(accentHex:String,canvasBackgroundHex:String?,frameColors:[String:String]?) {
+      self.accentHex=accentHex;self.canvasBackgroundHex=canvasBackgroundHex;self.frameColors=frameColors
+    }
+    init(from decoder:Decoder)throws {
+      let c=try decoder.container(keyedBy:CodingKeys.self)
+      accentHex=try? c.decode(String.self,forKey:.accentHex)
+      canvasBackgroundHex=try? c.decode(String.self,forKey:.canvasBackgroundHex)
+      // One malformed optional field must not discard valid legacy preferences.
+      if let values=try? c.nestedContainer(keyedBy:FrameKey.self,forKey:.frameColors) {
+        var colors=[String:String]()
+        for role in CanvasFrameRole.allCases {
+          if let key=FrameKey(stringValue:role.rawValue),let value=try? values.decode(String.self,forKey:key) {colors[role.rawValue]=value}
+        }
+        frameColors=colors
+      } else {frameColors=nil}
+    }
+    private struct FrameKey:CodingKey {
+      var stringValue:String
+      init?(stringValue:String){self.stringValue=stringValue}
+      var intValue:Int?{nil}
+      init?(intValue:Int){return nil}
+    }
+  }
   init(defaults: UserDefaults? = nil, file: URL? = nil) {
     self.defaults = defaults; self.file = file
-    let stored: String?, background: String?
+    let stored: String?, background: String?, frames:[String:Any]?
     if let file, let data = try? Data(contentsOf: file), let value = try? JSONDecoder().decode(Saved.self, from: data) {
-      stored = value.accentHex; background = value.canvasBackgroundHex
+      stored = value.accentHex; background = value.canvasBackgroundHex;frames=value.frameColors
     } else {
       stored = defaults?.string(forKey: "LAB.interfaceAccent")
       background = defaults?.string(forKey: "LAB.canvasBackground")
+      frames=defaults?.dictionary(forKey:"LAB.canvasFrameColors")
     }
     accentHex = (try? Self.normalized(stored ?? Self.defaultAccent)) ?? Self.defaultAccent
     canvasBackgroundHex = (try? Self.normalized(background ?? Self.defaultCanvasBackground)) ?? Self.defaultCanvasBackground
+    var colors=[String:String]()
+    for role in CanvasFrameRole.allCases {
+      if let raw=frames?[role.rawValue] as? String,let color=try? Self.normalized(raw),color != role.defaultHex {colors[role.rawValue]=color}
+    }
+    frameColors=colors
   }
   private static func environment() -> InterfaceAppearance {
     if let path = LabIdentity.libraryOverride() { return .init(file: URL(fileURLWithPath: path).appendingPathComponent("Appearance.json")) }
@@ -45,11 +80,7 @@ extension Notification.Name {
   func setAccent(_ raw: String) throws {
     let value = try Self.normalized(raw)
     guard value != accentHex else { return }
-    if let file {
-      try FileManager.default.createDirectory(at: file.deletingLastPathComponent(), withIntermediateDirectories: true)
-      try JSONEncoder().encode(Saved(accentHex: value, canvasBackgroundHex: canvasBackgroundHex)).write(to: file, options: .atomic)
-    }
-    defaults?.set(value, forKey: "LAB.interfaceAccent")
+    try persist(accent:value,background:canvasBackgroundHex,frames:frameColors)
     accentHex = value
     NotificationCenter.default.post(name: .labAppearanceChanged, object: self)
   }
@@ -60,17 +91,74 @@ extension Notification.Name {
   func setCanvasBackground(_ raw: String) throws {
     let value = try Self.normalized(raw)
     guard value != canvasBackgroundHex else { return }
-    if let file {
-      try FileManager.default.createDirectory(at: file.deletingLastPathComponent(), withIntermediateDirectories: true)
-      try JSONEncoder().encode(Saved(accentHex: accentHex, canvasBackgroundHex: value)).write(to: file, options: .atomic)
-    }
-    defaults?.set(value, forKey: "LAB.canvasBackground")
+    try persist(accent:accentHex,background:value,frames:frameColors)
     canvasBackgroundHex = value
+    cachedFrames=nil
     NotificationCenter.default.post(name: .labAppearanceChanged, object: self)
   }
   func setCanvasBackground(_ color: NSColor) throws {
     guard let c = color.usingColorSpace(.sRGB) else { throw FormError.invalid("Choose an RGB Canvas background color.") }
     try setCanvasBackground(String(format: "#%02X%02X%02X", Int((c.redComponent * 255).rounded()), Int((c.greenComponent * 255).rounded()), Int((c.blueComponent * 255).rounded())))
+  }
+  private func persist(accent:String,background:String,frames:[String:String])throws {
+    if let file {
+      try FileManager.default.createDirectory(at:file.deletingLastPathComponent(),withIntermediateDirectories:true)
+      try JSONEncoder().encode(Saved(accentHex:accent,canvasBackgroundHex:background,frameColors:frames.isEmpty ? nil:frames)).write(to:file,options:.atomic)
+    }
+    defaults?.set(accent,forKey:"LAB.interfaceAccent")
+    defaults?.set(background,forKey:"LAB.canvasBackground")
+    if frames.isEmpty {defaults?.removeObject(forKey:"LAB.canvasFrameColors")}
+    else {defaults?.set(frames,forKey:"LAB.canvasFrameColors")}
+  }
+  func frameHex(for role:CanvasFrameRole)->String {frameColors[role.rawValue] ?? role.defaultHex}
+  func setFrameColor(_ raw:String,for role:CanvasFrameRole)throws {
+    let value=try Self.normalized(raw)
+    var next=frameColors
+    if value==role.defaultHex {next.removeValue(forKey:role.rawValue)} else {next[role.rawValue]=value}
+    guard next != frameColors else{return}
+    try persist(accent:accentHex,background:canvasBackgroundHex,frames:next)
+    frameColors=next;cachedFrames=nil
+    NotificationCenter.default.post(name:.labAppearanceChanged,object:self)
+  }
+  func setFrameColor(_ color:NSColor,for role:CanvasFrameRole)throws {
+    guard let c=color.usingColorSpace(.sRGB),[c.redComponent,c.greenComponent,c.blueComponent].allSatisfy({$0.isFinite && (0...1).contains($0)}) else {
+      throw FormError.invalid("Choose a finite RGB frame color.")
+    }
+    try setFrameColor(String(format:"#%02X%02X%02X",Int((c.redComponent*255).rounded()),Int((c.greenComponent*255).rounded()),Int((c.blueComponent*255).rounded())),for:role)
+  }
+  func resetFrameColors()throws {
+    guard !frameColors.isEmpty else{return}
+    try persist(accent:accentHex,background:canvasBackgroundHex,frames:[:])
+    frameColors=[:];cachedFrames=nil
+    NotificationCenter.default.post(name:.labAppearanceChanged,object:self)
+  }
+  func frameColor(for role:CanvasFrameRole,against background:NSColor?=nil)->NSColor {
+    let base=(background ?? canvasBackgroundColor).usingColorSpace(.sRGB) ?? canvasBackgroundColor
+    let key=[Double(base.redComponent),Double(base.greenComponent),Double(base.blueComponent)]
+    if cachedFrames?.background != key {cachedFrames=(key,[:])}
+    if let value=cachedFrames?.colors[role.rawValue] {return value}
+    let source=NSColor(hex:frameHex(for:role)).usingColorSpace(.sRGB)!
+    func contrast(_ color:NSColor)->Double {
+      let ratio=Self.whiteContrast(color)/Self.whiteContrast(base)
+      return max(ratio,1/ratio)
+    }
+    let result:NSColor
+    if contrast(source)>=4.5 {result=source}
+    else {
+      // Uniform RGB mixing retains hue. Search only when a role/background
+      // changes, then cache at most the three resolved roles for that backdrop.
+      let endpoint=contrast(.white)>=contrast(.black) ? 1.0:0.0
+      func mixed(_ amount:Double)->NSColor {
+        NSColor(srgbRed:source.redComponent+(endpoint-source.redComponent)*amount,
+          green:source.greenComponent+(endpoint-source.greenComponent)*amount,
+          blue:source.blueComponent+(endpoint-source.blueComponent)*amount,alpha:1)
+      }
+      var low=0.0,high=1.0
+      for _ in 0..<26 {let mid=(low+high)/2;if contrast(mixed(mid))>=4.5+1e-9 {high=mid}else{low=mid}}
+      result=mixed(high)
+    }
+    cachedFrames?.colors[role.rawValue]=result
+    return result
   }
   var canvasBackgroundColor: NSColor { NSColor(hex: canvasBackgroundHex) }
   var canvasLabelColor: NSColor {
@@ -180,6 +268,23 @@ struct AppearanceSettingsView: View {
         Text("Applies throughout LAB. Pale colors use a darker tone for readable controls on white.").font(.system(size: 11)).foregroundStyle(Palette.secondary)
         Divider()
         CanvasBackgroundControls(appearance: appearance)
+        Divider()
+        VStack(alignment:.leading,spacing:14) {
+          Text("Canvas frame colors").font(.system(size:13,weight:.semibold))
+          ForEach(CanvasFrameRole.allCases,id:\.rawValue) { role in
+            HStack(spacing:10) {
+              Image(systemName:role.symbolName).frame(width:18).foregroundStyle(Palette.secondary)
+              InspectorColorPicker(role.title,selection:Binding(
+                get:{Color(nsColor:NSColor(hex:appearance.frameHex(for:role)))},
+                set:{color in apply {try appearance.setFrameColor(NSColor(color),for:role)}}),supportsOpacity:false,
+                targetID:"canvas-frame-color-\(role.rawValue)")
+                .accessibilityLabel(role.title+" frame color")
+            }
+          }
+          Button("Reset frame colors") {apply {try appearance.resetFrameColors()}}
+          Text("Outlines retain the chosen hue with a readable tone against the Canvas. Artwork colors stay unchanged.")
+            .font(.system(size:11)).foregroundStyle(Palette.secondary)
+        }
         Divider()
         VStack(alignment: .leading, spacing: 14) {
           Text("Units").font(.system(size: 13, weight: .semibold))
