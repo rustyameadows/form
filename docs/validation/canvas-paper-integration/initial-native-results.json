@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "tests": 287,
+  "failures": 0,
+  "elapsed_seconds": 274.089,
+  "source": "Initial clean PR14 + main integration, before follow-up physical picking, simultaneous faces and Studio fixes",
+  "base_main": "133e94ebfbd55ba024989c538e07439907a7249c",
+  "pr14_original_head": "7e16907fed68211d140222030ede642aa9662fd4"
+}

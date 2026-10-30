@@ -1,0 +1,1816 @@
+{
+  "status": "passed",
+  "unique_methods": 354,
+  "passed_unique_methods": 354,
+  "runs": [
+    {
+      "name": "expanded",
+      "methods": 346,
+      "passed": 343,
+      "failed": [
+        "CanvasFitBoundsTests.testFitContainsWholeAuthoredNetAndEveryUprightFrameAfterNativeDocumentOffsetsAndPanOnly",
+        "CanvasPaperSidesTests.testNativeFirstBottomDrawContinuesItsHeldGestureAndUndoesSourceCreationExactlyOnce",
+        "CanvasViewportTests.testNativeHandPanKeepsExpectedWorldPositionAcrossShiftedOriginAndExtentGrowth"
+      ]
+    },
+    {
+      "name": "corrected",
+      "methods": 28,
+      "passed": 28,
+      "failed": []
+    },
+    {
+      "name": "final-framing",
+      "methods": 49,
+      "passed": 49,
+      "failed": []
+    },
+    {
+      "name": "appearance",
+      "methods": 61,
+      "passed": 60,
+      "failed": [
+        "CanvasPaperFaceAppearanceTests.testBothCanvasFacesAndProofsMatchPhysicalPlyProfileAndTintWithoutMutatingArtwork"
+      ]
+    },
+    {
+      "name": "sRGB-color-proof",
+      "methods": 1,
+      "passed": 1,
+      "failed": []
+    }
+  ],
+  "interpretation": "Expanded346 plus5 import methods and2 final framing methods. Corrected geometry-derived pan and persisted-codec assertions were recompiled; final49-method recheck passes. This is the union of actual latest per-method results, not a claim that one full346-method run was green. One additional strict native pixel proof normalizes tagged captures to sRGB; all60 other affected appearance/fabric methods passed. Final per-method union354.",
+  "methods": {
+    "ArtworkPageSetupEditingTests.testNativePhysicalPageReviewUsesSharedVectorPDFCanvasWithoutChangingSource": {
+      "status": "passed",
+      "seconds": 0.584,
+      "run": "expanded"
+    },
+    "AuthoredPaperRenderingTests.testConvertedCyanotypeArtworkAppearsInAnActualFoldedNativeCapture": {
+      "status": "passed",
+      "seconds": 3.982,
+      "run": "expanded"
+    },
+    "AuthoredPaperRenderingTests.testConvertedExamplesReachTheRealTableGeometryFactoryWithArtwork": {
+      "status": "passed",
+      "seconds": 3.05,
+      "run": "expanded"
+    },
+    "AuthoredPaperRenderingTests.testSelectedLiveFoldReturnsToStablePhysicalBoundsFitAndRenderedPixels": {
+      "status": "passed",
+      "seconds": 0.726,
+      "run": "expanded"
+    },
+    "AuthoredPaperRenderingTests.testUnregisteredConstructionRendersPanelsAndReusesThemAcrossFoldPoses": {
+      "status": "passed",
+      "seconds": 0.085,
+      "run": "expanded"
+    },
+    "CanvasBackgroundTests.testActualPresetControlPersistsWithoutEditingArtworkOrUndoHistory": {
+      "status": "passed",
+      "seconds": 0.511,
+      "run": "expanded"
+    },
+    "CanvasBackgroundTests.testBackgroundDefaultsRecoverAndFailedSaveDoesNotChangePreference": {
+      "status": "passed",
+      "seconds": 0.008,
+      "run": "expanded"
+    },
+    "CanvasBackgroundTests.testCustomPickerOpenedFromToolbarPopoverKeepsItsLivePreferenceBinding": {
+      "status": "passed",
+      "seconds": 0.501,
+      "run": "expanded"
+    },
+    "CanvasBackgroundTests.testOlderAccentPreferenceMigratesAndBothColorsSurviveIndependentEdits": {
+      "status": "passed",
+      "seconds": 0.002,
+      "run": "expanded"
+    },
+    "CanvasBackgroundTests.testWorkspaceLabelsAndSelectionRemainReadableAcrossCustomColors": {
+      "status": "passed",
+      "seconds": 0.016,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testCADNamedSurfaceUsesTheSameCanvasFrameAndOriginalArtboardSource": {
+      "status": "passed",
+      "seconds": 0.014,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testClipboardAcrossRotatedSurfacesKeepsUprightArtworkAndOneUndo": {
+      "status": "passed",
+      "seconds": 0.029,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testDielineArtworkEditsKeepDerivedGeometryAndMovingProjectionHasIndependentSavedUndo": {
+      "status": "passed",
+      "seconds": 0.022,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testImagePlacementIntoRotatedSurfaceIsUprightAndOneUndo": {
+      "status": "passed",
+      "seconds": 0.018,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testInsideProjectionUsesIndependentSharedSourceAndPreservesOutsideArtwork": {
+      "status": "passed",
+      "seconds": 0.018,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testMovingProjectionReusesActualPhysicalGeometryAndTextures": {
+      "status": "passed",
+      "seconds": 0.053,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testOneCanvasContainsProofAndUprightSurfacesWithoutCreatingArtworkCopies": {
+      "status": "passed",
+      "seconds": 0.004,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testProjectionHitTestingUsesPolygonAndSourceRoundTripPreservesUnchangedLayers": {
+      "status": "passed",
+      "seconds": 0.004,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testSVGImportCentersUprightOnRotatedSurfaceInOneUndoAndRetainsOriginalSource": {
+      "status": "passed",
+      "seconds": 0.023,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testSVGImportRetainsInsideSourceAndConstructionSelectionAfterReconcile": {
+      "status": "passed",
+      "seconds": 0.021,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testSewingArtworkUsesTheSameOrdinarySourceSessionWithoutPaperProjection": {
+      "status": "passed",
+      "seconds": 0.01,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testUprightSelectAllAndNativeMarqueeOnlySelectArtworkIntersectingThatSurface": {
+      "status": "passed",
+      "seconds": 0.013,
+      "run": "expanded"
+    },
+    "CanvasConstructionProjectionTests.testUprightTextEditMapsToOneSourceAndUndoReopenRetainOrientation": {
+      "status": "passed",
+      "seconds": 0.014,
+      "run": "expanded"
+    },
+    "CanvasContextMenuTests.testAlignAndDistributeMenusUseTheirActualCommandsWithIndependentUndo": {
+      "status": "passed",
+      "seconds": 0.012,
+      "run": "expanded"
+    },
+    "CanvasContextMenuTests.testArrangeForwardSkipsInterleavedChildrenAndHasOneUndo": {
+      "status": "passed",
+      "seconds": 0.012,
+      "run": "expanded"
+    },
+    "CanvasContextMenuTests.testDeepProbeSelectsTransformedDescendantAndOffersImmediateScopeExit": {
+      "status": "passed",
+      "seconds": 0.012,
+      "run": "expanded"
+    },
+    "CanvasContextMenuTests.testLockedAndClippedLayersAreProbedSafelyAndStaleMenusCannotEditAnotherSource": {
+      "status": "passed",
+      "seconds": 0.012,
+      "run": "expanded"
+    },
+    "CanvasContextMenuTests.testMountedAlignmentButtonsHaveFullTargetsTrackSelectionAndProduceOneUndo": {
+      "status": "passed",
+      "seconds": 0.271,
+      "run": "expanded"
+    },
+    "CanvasContextMenuTests.testOpeningContextMenuPreservesActiveMaskEditingUntilExplicitCanvasExit": {
+      "status": "passed",
+      "seconds": 0.011,
+      "run": "expanded"
+    },
+    "CanvasContextMenuTests.testRightClickCancelsHeldDragBeforeSelectingAnotherLayerAndLateEventsStayInert": {
+      "status": "passed",
+      "seconds": 0.025,
+      "run": "expanded"
+    },
+    "CanvasContextMenuTests.testRightClickFromDeepIsolationSelectsNearestParentSiblingBeforeDestructiveAction": {
+      "status": "passed",
+      "seconds": 0.016,
+      "run": "expanded"
+    },
+    "CanvasContextMenuTests.testRightClickPreservesMultiselectionAndGroupUngroupAreSeparateUndoSteps": {
+      "status": "passed",
+      "seconds": 0.011,
+      "run": "expanded"
+    },
+    "CanvasContextMenuTests.testRightClickTargetsTheObjectAndInspectorActionIsScopedWithoutDocumentMutation": {
+      "status": "passed",
+      "seconds": 0.011,
+      "run": "expanded"
+    },
+    "CanvasCutoutProjectionTests.testExactFoldedSlabsSubtractCutoutsAndInvalidateCachedHoleGeometry": {
+      "status": "passed",
+      "seconds": 0.078,
+      "run": "expanded"
+    },
+    "CanvasCutoutProjectionTests.testOutsideInsideAndWholeNetHitsExcludePhysicalHolesAndKeepCrossingArtwork": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "CanvasCutoutProjectionTests.testSharedPhysicalFrameRoundtripKeepsCanonicalArtAndResourceIdentity": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "CanvasDenseInteractionTests.testDenseMarqueeAndShiftSelectionMoveOnlyChosenRootsWithExactUndoRedo": {
+      "status": "passed",
+      "seconds": 2.449,
+      "run": "expanded"
+    },
+    "CanvasDenseInteractionTests.testDenseNativeGroupingMovingAndProportionalScalingPreserveDescendantsAndUndoEachStep": {
+      "status": "passed",
+      "seconds": 5.881,
+      "run": "expanded"
+    },
+    "CanvasDenseInteractionTests.testDensePaintOrderClippingAndNestedSelectionAtThreeZoomLevels": {
+      "status": "passed",
+      "seconds": 5.434,
+      "run": "expanded"
+    },
+    "CanvasDenseInteractionTests.testImmediateGroupUndoRedoRefreshPickingAndHoverWithoutAViewUpdate": {
+      "status": "passed",
+      "seconds": 1.736,
+      "run": "expanded"
+    },
+    "CanvasDrawingBoundaryTests.testCanvasRenderingRestoresGraphicsTransformAndClipForNextSibling": {
+      "status": "passed",
+      "seconds": 0.019,
+      "run": "expanded"
+    },
+    "CanvasDrawingBoundaryTests.testOversizedCanvasDamageCannotEraseNeighboringHeaderOrFooterPixels": {
+      "status": "passed",
+      "seconds": 0.018,
+      "run": "expanded"
+    },
+    "CanvasEdgeScrollingTests.testApproachingEdgeAcceleratesSmoothlyToBoundedSpeed": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "CanvasEdgeScrollingTests.testElapsedTimeKeepsSpeedStableButAStallCannotJumpTheDocument": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "CanvasEdgeScrollingTests.testInteriorAndMarginBoundaryStayStill": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "CanvasEdgeScrollingTests.testInvalidGeometryAndTimingDoNotMoveTheViewport": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "CanvasEdgeScrollingTests.testNarrowViewportRetainsANeutralCenterAndCorrectDirections": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "CanvasEdgeScrollingTests.testNegativeCoordinatesAndTranslatedViewportsHaveIdenticalBehavior": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "CanvasFitBoundsTests.testFitContainsWholeAuthoredNetAndEveryUprightFrameAfterNativeDocumentOffsetsAndPanOnly": {
+      "status": "passed",
+      "seconds": 0.481,
+      "run": "appearance"
+    },
+    "CanvasFitBoundsTests.testNativeRulerOverlaysLeaveTheWholeTallArtboardMarginVisible": {
+      "status": "passed",
+      "seconds": 0.484,
+      "run": "appearance"
+    },
+    "CanvasFitBoundsTests.testPendingPaperPanelFocusFitsThePhysicalPanelInShiftedNativeDocument": {
+      "status": "passed",
+      "seconds": 1.784,
+      "run": "appearance"
+    },
+    "CanvasFloatingWorkspaceTests.testFullWidthFloatingCardsLeaveNativeCanvasWhitespaceInteractive": {
+      "status": "passed",
+      "seconds": 0.2,
+      "run": "expanded"
+    },
+    "CanvasFloatingWorkspaceTests.testNarrowCanvasesRetainTheSamePanelsAndInteractiveWhitespace": {
+      "status": "passed",
+      "seconds": 0.244,
+      "run": "expanded"
+    },
+    "CanvasFrameCachingTests.testDirectSourceAndGeometryAssignmentsAndUndoNeverReturnStaleFrames": {
+      "status": "passed",
+      "seconds": 0.014,
+      "run": "final-framing"
+    },
+    "CanvasFrameCachingTests.testGlobalStorySwatchAndStyleChangesInvalidateEvenWhenFrameObjectsDoNotChange": {
+      "status": "passed",
+      "seconds": 0.014,
+      "run": "final-framing"
+    },
+    "CanvasFrameCachingTests.testInsideNavigationActivePanelAndComponentContextUseCurrentInputs": {
+      "status": "passed",
+      "seconds": 0.011,
+      "run": "final-framing"
+    },
+    "CanvasFrameCachingTests.testLegacyDielineAndLinkedTargetContextCannotReuseWrongDimensions": {
+      "status": "passed",
+      "seconds": 0.002,
+      "run": "final-framing"
+    },
+    "CanvasFrameCachingTests.testTableCameraOnlyUpdatesReuseCanonicalFrames": {
+      "status": "passed",
+      "seconds": 0.009,
+      "run": "final-framing"
+    },
+    "CanvasFrameCachingTests.testTwelveCaseLayerTraversalAndRepeatedInspectorReadsBuildFramesOnlyOnce": {
+      "status": "passed",
+      "seconds": 1.591,
+      "run": "final-framing"
+    },
+    "CanvasGroupNavigationTests.testActualLeaveGroupButtonActsImmediatelyAndReturnsKeyboardFocusToCanvas": {
+      "status": "passed",
+      "seconds": 12.245,
+      "run": "expanded"
+    },
+    "CanvasGroupNavigationTests.testBlankDoubleClickLeavesTheCurrentGroupEvenInsideItsEmptyBounds": {
+      "status": "passed",
+      "seconds": 2.813,
+      "run": "expanded"
+    },
+    "CanvasGroupNavigationTests.testEscapeCancelsTheHeldNestedDragBeforeAscendingOnTheNextPress": {
+      "status": "passed",
+      "seconds": 3.071,
+      "run": "expanded"
+    },
+    "CanvasGroupNavigationTests.testExternalSiblingClickWalksToTheNearestReachableScopeAndSelectsItImmediately": {
+      "status": "passed",
+      "seconds": 4.005,
+      "run": "expanded"
+    },
+    "CanvasGroupNavigationTests.testExternalSiblingHoverPreviewsTheSameNearestTargetAsClickWithoutNavigating": {
+      "status": "passed",
+      "seconds": 3.674,
+      "run": "expanded"
+    },
+    "CanvasGroupNavigationTests.testFreshAndCumulativeDoubleClicksEnterExactlyOneLevelPerPairWithoutRefitting": {
+      "status": "passed",
+      "seconds": 13.199,
+      "run": "expanded"
+    },
+    "CanvasGroupNavigationTests.testNestedDragLeaveUndoRedoAndRapidReentryKeepNavigationIndependentOfHistory": {
+      "status": "passed",
+      "seconds": 9.636,
+      "run": "expanded"
+    },
+    "CanvasGroupNavigationTests.testOutsideBlankAscendsOneLevelWithoutStartingAMarqueeUntilTheNextGesture": {
+      "status": "passed",
+      "seconds": 2.891,
+      "run": "expanded"
+    },
+    "CanvasGroupNavigationTests.testSharedNavigationCancelsHeldDragAndIgnoresLateDragAndMouseUp": {
+      "status": "passed",
+      "seconds": 3.103,
+      "run": "expanded"
+    },
+    "CanvasGroupNavigationTests.testShiftClickOutsideTheIsolatedGroupPreservesScopeAndExistingSelection": {
+      "status": "passed",
+      "seconds": 2.528,
+      "run": "expanded"
+    },
+    "CanvasHoverTests.testFloatingControlOcclusionSuppressesUnderlyingCanvasHover": {
+      "status": "passed",
+      "seconds": 0.01,
+      "run": "expanded"
+    },
+    "CanvasHoverTests.testHoverPreviewsThePickedLayerWithoutChangingSelectionOrHistoryAndClearsOnExit": {
+      "status": "passed",
+      "seconds": 0.009,
+      "run": "expanded"
+    },
+    "CanvasHoverTests.testResizeAndRotationFeedbackUseTheExactVisibleSelectionHandles": {
+      "status": "passed",
+      "seconds": 0.02,
+      "run": "expanded"
+    },
+    "CanvasHoverTests.testToolFeedbackAndWindowDeactivationDoNotLeaveHoverTargetsBehind": {
+      "status": "passed",
+      "seconds": 0.008,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testAnchoredZoomKeepsThePointerWorldPointStationaryAcrossExtentGrowth": {
+      "status": "passed",
+      "seconds": 0.01,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testClickJitterIsMeasuredInVisualPointsAndPreservesTheRedoBranch": {
+      "status": "passed",
+      "seconds": 0.015,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testCrossingDragThresholdKeepsTheGrabPointAndMakesOneUndo": {
+      "status": "passed",
+      "seconds": 0.01,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testEscapeCancelsAFrameTitleDrag": {
+      "status": "passed",
+      "seconds": 0.01,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testEscapeCancelsAnActiveMoveAndIgnoresTheRemainderOfThePointerGesture": {
+      "status": "passed",
+      "seconds": 0.009,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testEscapeCancelsShapeCreationIncludingTheInitialMouseDownMutation": {
+      "status": "passed",
+      "seconds": 0.012,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testEscapeStopsHeldEdgeScrollingAndRestoresTheOriginalArtwork": {
+      "status": "passed",
+      "seconds": 0.174,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testHandPanTakesKeyboardFocusWithoutCreatingAnArtworkEdit": {
+      "status": "passed",
+      "seconds": 0.016,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testHeldPointerAtTheEdgeScrollsArtworkWithTheViewportAsOneUndo": {
+      "status": "passed",
+      "seconds": 0.197,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testLateEscapeCannotRestoreAnOldGestureOverAnIndependentRedoBranch": {
+      "status": "passed",
+      "seconds": 0.013,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testShiftDeselectingOneItemCannotDragTheRemainingSelection": {
+      "status": "passed",
+      "seconds": 0.012,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testShiftHorizontalDragDoesNotSnapOntoNearbyVerticalOffset": {
+      "status": "passed",
+      "seconds": 0.011,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testStalePointerGestureCannotOverwriteAnUnrelatedCommand": {
+      "status": "passed",
+      "seconds": 0.011,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testSwitchingArtworkSourceDuringDragPreservesBothSourcesAndIgnoresLateEvents": {
+      "status": "passed",
+      "seconds": 0.011,
+      "run": "expanded"
+    },
+    "CanvasInteractionNavigationTests.testTinySelectedObjectCanBeGrabbedAtItsCenterWhenHandlesOverlap": {
+      "status": "passed",
+      "seconds": 0.011,
+      "run": "expanded"
+    },
+    "CanvasOnlySourcePresentationTests.testInsideSourceStaysEditableOnCanvasWithoutTableNodeOrFindTarget": {
+      "status": "passed",
+      "seconds": 10.088,
+      "run": "expanded"
+    },
+    "CanvasPaperArrangementIntegrationTests.testInsideReflectedQuarterTurnNativeMenuArrangementPreservesIndependentSourceAndTableState": {
+      "status": "passed",
+      "seconds": 0.201,
+      "run": "appearance"
+    },
+    "CanvasPaperArrangementIntegrationTests.testOutsideQuarterTurnSharedArrangementAndGroupCommandsPreserveCanonicalTargetsAndExactHistory": {
+      "status": "passed",
+      "seconds": 0.082,
+      "run": "appearance"
+    },
+    "CanvasPaperPickingIntegrationTests.testCrossingArtworkRemainsEditableFromInsideAndOutsideMaterialWithOneCanonicalUndo": {
+      "status": "passed",
+      "seconds": 0.107,
+      "run": "appearance"
+    },
+    "CanvasPaperPickingIntegrationTests.testHiddenHoleAndOffPanelArtworkCannotBePickedByClickHoverOrContextProbe": {
+      "status": "passed",
+      "seconds": 0.154,
+      "run": "appearance"
+    },
+    "CanvasPaperPickingIntegrationTests.testOutsideGroupRecoveryUsesOnlyVisibleMaterialIncludingReflectedRotatedFrames": {
+      "status": "passed",
+      "seconds": 0.05,
+      "run": "appearance"
+    },
+    "CanvasPaperSidesTests.testBlankTopAndBottomAndBothDielinesAreStableReadOnlyFramesWithIndependentNavigation": {
+      "status": "passed",
+      "seconds": 0.057,
+      "run": "appearance"
+    },
+    "CanvasPaperSidesTests.testEachFacePositionPersistsIndependentlyAndFoldedGoodsKeepOutsideInsideLabels": {
+      "status": "passed",
+      "seconds": 0.028,
+      "run": "appearance"
+    },
+    "CanvasPaperSidesTests.testEscapeDuringFirstBottomDrawRemovesTheProvisionalSourceAndLateEventsCannotRecreateIt": {
+      "status": "passed",
+      "seconds": 0.027,
+      "run": "appearance"
+    },
+    "CanvasPaperSidesTests.testExistingInspectorInteractionSurvivesFirstBottomSaveAndNonlocalCommandCannotWriteOutside": {
+      "status": "passed",
+      "seconds": 0.036,
+      "run": "appearance"
+    },
+    "CanvasPaperSidesTests.testLegacyInlineBottomMigratesOnFirstEditKeepingMasksAndMetadataInOneUndo": {
+      "status": "passed",
+      "seconds": 0.02,
+      "run": "appearance"
+    },
+    "CanvasPaperSidesTests.testLockedPhysicalOwnerRejectsBlankAndExistingBottomWritesWithoutPartialSourceOrHistory": {
+      "status": "passed",
+      "seconds": 0.025,
+      "run": "appearance"
+    },
+    "CanvasPaperSidesTests.testNativeFirstBottomDrawContinuesItsHeldGestureAndUndoesSourceCreationExactlyOnce": {
+      "status": "passed",
+      "seconds": 0.034,
+      "run": "appearance"
+    },
+    "CanvasPointerRoutingTests.testFrameTitleDragTakesFocusFromInspectorSoEscapeReachesCanvas": {
+      "status": "passed",
+      "seconds": 0.011,
+      "run": "expanded"
+    },
+    "CanvasPointerRoutingTests.testSelectedBezierTangentOutsideFrameRemainsEditable": {
+      "status": "passed",
+      "seconds": 0.01,
+      "run": "expanded"
+    },
+    "CanvasPointerRoutingTests.testSelectedGradientEndpointOutsideFrameRemainsEditable": {
+      "status": "passed",
+      "seconds": 0.013,
+      "run": "expanded"
+    },
+    "CanvasPointerRoutingTests.testSelectedGradientStopOutsideFrameRemainsEditable": {
+      "status": "passed",
+      "seconds": 0.009,
+      "run": "expanded"
+    },
+    "CanvasPointerRoutingTests.testSelectedResizeHandleOutsideFrameKeepsTheActiveSource": {
+      "status": "passed",
+      "seconds": 0.016,
+      "run": "expanded"
+    },
+    "CanvasPointerRoutingTests.testThinSelectedStrokeCanBeGrabbedWithinToleranceWithoutResizing": {
+      "status": "passed",
+      "seconds": 0.023,
+      "run": "expanded"
+    },
+    "CanvasPointerRoutingTests.testWindowDeactivationCancelsAnActiveDragAndLatePointerEventsStayInert": {
+      "status": "passed",
+      "seconds": 0.014,
+      "run": "expanded"
+    },
+    "CanvasPointerRoutingTests.testWindowDeactivationClearsSpaceEvenWhenCanvasRemainsFirstResponder": {
+      "status": "passed",
+      "seconds": 0.012,
+      "run": "expanded"
+    },
+    "CanvasSewingGuideTests.testCurvedGuideCacheReusesUnchangedSourceAndClearsInvalidResults": {
+      "status": "passed",
+      "seconds": 0.699,
+      "run": "appearance"
+    },
+    "CanvasSewingGuideTests.testOrdinaryCanvasDrawsReadOnlySewingGuidesWithSharedSourceAndCache": {
+      "status": "passed",
+      "seconds": 75.966,
+      "run": "appearance"
+    },
+    "CanvasSewingGuideTests.testSourceCoordinatesPreserveOriginalGeometryAndExactDefaultSheetBytes": {
+      "status": "passed",
+      "seconds": 0.01,
+      "run": "appearance"
+    },
+    "CanvasSourceAuthoringTests.testBindingProgramMetadataWithoutChangedResolvedArtworkReusesActualGeometryHandle": {
+      "status": "passed",
+      "seconds": 0.026,
+      "run": "final-framing"
+    },
+    "CanvasSourceAuthoringTests.testComponentDefinitionSharedWithPaperKeepsItsCanonicalEditorAndReturnContext": {
+      "status": "passed",
+      "seconds": 0.024,
+      "run": "final-framing"
+    },
+    "CanvasSourceAuthoringTests.testFreshInsideSourceOpensItsReadableNetOnceAndNativeEditsRetainSourceUndo": {
+      "status": "passed",
+      "seconds": 0.027,
+      "run": "final-framing"
+    },
+    "CanvasSourceAuthoringTests.testMultiplePhysicalOwnersRequireExplicitConstructionInsteadOfChoosingAnInsideFrame": {
+      "status": "passed",
+      "seconds": 0.039,
+      "run": "final-framing"
+    },
+    "CanvasSourceAuthoringTests.testNewSourceCasesSupersedeObsoleteArtworkReportsOnTheSharedCoordinator": {
+      "status": "passed",
+      "seconds": 0.014,
+      "run": "final-framing"
+    },
+    "CanvasSourceAuthoringTests.testPaperLinkedSewingSourceRetainsItsCanonicalContoursAndStandardEditingPath": {
+      "status": "passed",
+      "seconds": 0.019,
+      "run": "final-framing"
+    },
+    "CanvasSourceAuthoringTests.testUnregisteredSewnRecipeHasRealNativeControlsThatChangeCanonicalBoundaryWithOneUndo": {
+      "status": "passed",
+      "seconds": 0.166,
+      "run": "final-framing"
+    },
+    "CanvasViewportTests.testActualCanvasHasNoNativeRulerOrBorderGuttersAndRetainsPhysicalFit": {
+      "status": "passed",
+      "seconds": 1.513,
+      "run": "appearance"
+    },
+    "CanvasViewportTests.testFitAvoidsTransientFloatingPanelsWithoutChangingDocumentOrNativeContentInsets": {
+      "status": "passed",
+      "seconds": 1.515,
+      "run": "appearance"
+    },
+    "CanvasViewportTests.testNativeHandPanKeepsExpectedWorldPositionAcrossShiftedOriginAndExtentGrowth": {
+      "status": "passed",
+      "seconds": 0.789,
+      "run": "appearance"
+    },
+    "CanvasViewportTests.testPaperFloatingFitCoversWholeNativeViewportAndRoutesWhitespaceAfterZoomAndResize": {
+      "status": "passed",
+      "seconds": 1.502,
+      "run": "appearance"
+    },
+    "CanvasViewportTests.testViewportExpansionKeepsNativeTextHostAndMarkedInputAnchoredWithoutSourceChanges": {
+      "status": "passed",
+      "seconds": 1.928,
+      "run": "appearance"
+    },
+    "CanvasViewportTests.testZoomAndDropCoordinateRoundTripsKeepTheVisibleAnchorAfterNativeOriginShiftAndPan": {
+      "status": "passed",
+      "seconds": 1.509,
+      "run": "appearance"
+    },
+    "ClothIntegrationTests.testPrintedPanelMaterialCornersMatchCanvasOrientationOnRealMetal": {
+      "status": "passed",
+      "seconds": 0.131,
+      "run": "expanded"
+    },
+    "DesignSurfaceTests.testCanvasOnlyProjectReopensOnCanvasWithoutCreatingASecondWorkspaceOrEdit": {
+      "status": "passed",
+      "seconds": 0.018,
+      "run": "expanded"
+    },
+    "DesignSurfaceTests.testEnsureCanvasIsOneUndoableCreationAndLaterVisitsDoNotMutateTheProject": {
+      "status": "passed",
+      "seconds": 0.007,
+      "run": "expanded"
+    },
+    "DesignSurfaceTests.testHostedSingleSplitDetachedAndDockedLayoutsHaveExactlyOneNativeCanvasOwner": {
+      "status": "passed",
+      "seconds": 0.815,
+      "run": "expanded"
+    },
+    "DesignSurfaceTests.testProjectChangeClosesDetachedCanvasAndRetainsBothSavedProjects": {
+      "status": "passed",
+      "seconds": 0.018,
+      "run": "expanded"
+    },
+    "DesignSurfaceTests.testStandaloneCanvasAndTableVisitsPreserveDocumentAndUseTheSharedCanvas": {
+      "status": "passed",
+      "seconds": 0.006,
+      "run": "expanded"
+    },
+    "DesignSurfaceTests.testTableNeverBuildsOrFramesTheUnframedCanvasAndIgnoresItsArtworkChanges": {
+      "status": "passed",
+      "seconds": 0.269,
+      "run": "expanded"
+    },
+    "EnvironmentUIWorkflowTests.testLampAndFabricRoutesRemainSpecificWithoutClaimingPaperOrPrintForFabric": {
+      "status": "passed",
+      "seconds": 0.367,
+      "run": "expanded"
+    },
+    "FabricEnvironmentTests.testEditFabricSourceReturnsToFormWithoutCreatingCanvasOrChangingAssemblyLayout": {
+      "status": "passed",
+      "seconds": 0.355,
+      "run": "expanded"
+    },
+    "FabricPatternRenderingTests.testRasterAndCachedPreviewAgreeOnAsymmetricPhysicalMotifsForEveryRepeatMode": {
+      "status": "passed",
+      "seconds": 0.029,
+      "run": "expanded"
+    },
+    "FabricPatternRenderingTests.testRotatedFabricBaseHasNoTransparentHairlinesAtRepeatBoundaries": {
+      "status": "passed",
+      "seconds": 0.051,
+      "run": "expanded"
+    },
+    "FabricPatternRenderingTests.testRotatedOffsetAndScaledPreviewKeepsTheSamePhysicalPhaseAsVectorOutput": {
+      "status": "passed",
+      "seconds": 0.007,
+      "run": "expanded"
+    },
+    "FabricPatternRenderingTests.testSourcePaintAndFrameEditsInvalidateGarmentTextureAndGeometryCache": {
+      "status": "passed",
+      "seconds": 11.491,
+      "run": "expanded"
+    },
+    "FabricPatternRenderingTests.testYardageMCPExportsPhysicalSVGAndVectorPDFAndKeepsOriginalArtwork": {
+      "status": "passed",
+      "seconds": 0.016,
+      "run": "expanded"
+    },
+    "FloatingPanelTests.testSharedInspectorHeaderCloseKeepsDocumentAndCanvasTableSelections": {
+      "status": "passed",
+      "seconds": 0.405,
+      "run": "expanded"
+    },
+    "FreeformCanvasTests.testContentFitIgnoresTheWorkspaceExtentAndViewportSurvivesNegativeGrowth": {
+      "status": "passed",
+      "seconds": 0.013,
+      "run": "expanded"
+    },
+    "FreeformCanvasTests.testImagePlacementAcceptsLooseCanvasAndPreservesItsOriginalAsset": {
+      "status": "passed",
+      "seconds": 0.015,
+      "run": "expanded"
+    },
+    "FreeformCanvasTests.testLooseSelectionExportUsesItsPhysicalCropAndRejectsAnUnboundedExport": {
+      "status": "passed",
+      "seconds": 0.008,
+      "run": "expanded"
+    },
+    "FreeformCanvasTests.testNativeDragTransfersLooseArtworkOntoAFrameInOneUndoAndBack": {
+      "status": "passed",
+      "seconds": 0.012,
+      "run": "expanded"
+    },
+    "FreeformCanvasTests.testNativeShapeToolDrawsAtNegativeCoordinatesWithoutCreatingAFrame": {
+      "status": "passed",
+      "seconds": 0.008,
+      "run": "expanded"
+    },
+    "FreeformCanvasTests.testNegativeCoordinateNativeTextInputIsPositionedAndUndoable": {
+      "status": "passed",
+      "seconds": 0.023,
+      "run": "expanded"
+    },
+    "FreeformCanvasTests.testRejectedInheritedAppearanceTransferRestoresTheOriginalDrag": {
+      "status": "passed",
+      "seconds": 0.016,
+      "run": "expanded"
+    },
+    "FreeformCanvasTests.testUnboundedRendererDrawsNegativeArtworkWithoutDrawingPaper": {
+      "status": "passed",
+      "seconds": 0.014,
+      "run": "expanded"
+    },
+    "FreeformCanvasTests.testWorkspaceIsUnframedFallbackAndDoesNotFollowOrReplacePhysicalSelection": {
+      "status": "passed",
+      "seconds": 0.008,
+      "run": "expanded"
+    },
+    "IndependentSurfaceSelectionTests.testCanvasSourceEditsAndSVGImportKeepTableSelectionCameraAndOneUndo": {
+      "status": "passed",
+      "seconds": 0.025,
+      "run": "appearance"
+    },
+    "IndependentSurfaceSelectionTests.testContextMenuFindExplicitlySelectsAndCentersTableWithoutChangingCanvasOrOpeningInspector": {
+      "status": "passed",
+      "seconds": 7.654,
+      "run": "appearance"
+    },
+    "IndependentSurfaceSelectionTests.testNativeCanvasFrameClicksKeepUnrelatedTableSelectionCameraAndPanelContext": {
+      "status": "passed",
+      "seconds": 0.025,
+      "run": "appearance"
+    },
+    "IndependentSurfaceSelectionTests.testNewCanvasFrameKeepsTableSelectionCameraAndClosedInspector": {
+      "status": "passed",
+      "seconds": 0.015,
+      "run": "appearance"
+    },
+    "IndependentSurfaceSelectionTests.testTablePanelPickingDoesNotNavigateOrRefitCanvas": {
+      "status": "passed",
+      "seconds": 0.02,
+      "run": "appearance"
+    },
+    "IndependentSurfaceSelectionTests.testTablePicksAndReconcileKeepCanvasSourceFrameElementsAndViewport": {
+      "status": "passed",
+      "seconds": 0.018,
+      "run": "appearance"
+    },
+    "InspectorColorPickerTests.testActualRepresentableEndsTheOriginalCallbackAfterSameTargetBindingRerenders": {
+      "status": "passed",
+      "seconds": 0.11,
+      "run": "expanded"
+    },
+    "InspectorColorPickerTests.testExplicitAppleFallbackUsesExclusiveNativeWellLeaseAndDoesNotWriteAfterAnotherControlTakesOver": {
+      "status": "passed",
+      "seconds": 0.311,
+      "run": "expanded"
+    },
+    "InspectorColorPickerTests.testNativePanelUsesLightChromeAndRetargetResizeKeepsTheWholePanelOnItsVisibleScreen": {
+      "status": "passed",
+      "seconds": 0.122,
+      "run": "expanded"
+    },
+    "InspectorColorPickerTests.testNativeRoundedHueSaturationAndRGBFieldsDoNotWriteWhenFocusedAndSubmittedUntouched": {
+      "status": "passed",
+      "seconds": 0.208,
+      "run": "expanded"
+    },
+    "InspectorColorPickerTests.testOldNativeDragCannotContinueIntoANewPinnedTargetAndResigningKeyEndsTheGesture": {
+      "status": "passed",
+      "seconds": 0.051,
+      "run": "expanded"
+    },
+    "InspectorColorPickerTests.testOpeningNativePanelReadsExactColorWithoutWritingOrBeginningAnUndoGesture": {
+      "status": "passed",
+      "seconds": 0.074,
+      "run": "expanded"
+    },
+    "InspectorColorPickerTests.testPinnedRetargetEndsOldGestureBeforeReplacingTheBindingEvenForEqualColors": {
+      "status": "passed",
+      "seconds": 0.058,
+      "run": "expanded"
+    },
+    "InspectorColorPickerTests.testRGBAndHexPreserveUneditedChannelsAndOpacityWithoutEightBitRoundTrips": {
+      "status": "passed",
+      "seconds": 0.049,
+      "run": "expanded"
+    },
+    "InspectorColorPickerTests.testRealWheelMouseDragGroupsChangesAndNativeKeyboardAndAccessibilityActionsRemainDiscrete": {
+      "status": "passed",
+      "seconds": 0.059,
+      "run": "expanded"
+    },
+    "InspectorControlsTests.testPhysicalParameterUsesExplicitCanvasUnitParsingAndKeepsRejectedDraftLocal": {
+      "status": "passed",
+      "seconds": 0.216,
+      "run": "expanded"
+    },
+    "LinkedObjectInspectorModuleTests.testPaperInsideThumbnailAndNavigationUseTheRegisteredCanonicalSource": {
+      "status": "passed",
+      "seconds": 0.028,
+      "run": "expanded"
+    },
+    "LinkedObjectInspectorModuleTests.testSourceSharedByPaperAndAnotherObjectKeepsItsCanonicalEditorForThatObject": {
+      "status": "passed",
+      "seconds": 0.016,
+      "run": "expanded"
+    },
+    "PaperAppearanceControlsTests.testNativeFinishDepthParsesPhysicalUnitsAndLeavesRejectedDraftLocal": {
+      "status": "passed",
+      "seconds": 0.51,
+      "run": "appearance"
+    },
+    "PaperAppearanceControlsTests.testNativeStockSliderUsesSharedCommandGestureAndOneUndo": {
+      "status": "passed",
+      "seconds": 0.359,
+      "run": "appearance"
+    },
+    "PaperAppearanceRenderingTests.testBondedPlyEdgesHaveActualIndependentCalipersAndStableAppearanceOnlyGeometry": {
+      "status": "passed",
+      "seconds": 0.072,
+      "run": "appearance"
+    },
+    "PaperAppearanceRenderingTests.testCanonicalFinishMasksMoveWithEditableArtworkAndBlindWorkDoesNotPrintItsFill": {
+      "status": "passed",
+      "seconds": 0.625,
+      "run": "appearance"
+    },
+    "PaperAppearanceRenderingTests.testOrdinaryPrintUsesTheSameInkColorOpacityAndExcludesFoilAndBlindMasks": {
+      "status": "passed",
+      "seconds": 0.281,
+      "run": "appearance"
+    },
+    "PaperAppearanceRenderingTests.testPanelWindowIsMissingPhysicalMaterialAndChangesTheMeshIdentity": {
+      "status": "passed",
+      "seconds": 0.004,
+      "run": "appearance"
+    },
+    "PaperAppearanceRenderingTests.testPaperTextureUsesPhysicalCoordinatesAndPreservesFineSourceAtHigherBoundedQuality": {
+      "status": "passed",
+      "seconds": 0.713,
+      "run": "appearance"
+    },
+    "PaperAppearanceRenderingTests.testProceduralFinishTexturesKeepTheirMetallicScaleAndOpaqueStockInTheNativeBridge": {
+      "status": "passed",
+      "seconds": 0.114,
+      "run": "appearance"
+    },
+    "PaperAppearanceRenderingTests.testRegisteredMaskRetainsAncestorTransformsAndClipDependenciesWithoutOtherPaint": {
+      "status": "passed",
+      "seconds": 0.008,
+      "run": "appearance"
+    },
+    "PaperGeometryTests.testArtworkInsideAndStockEditsReusePhysicalUploadsWithoutRecoloringAnotherObject": {
+      "status": "passed",
+      "seconds": 3.745,
+      "run": "appearance"
+    },
+    "PaperGeometryTests.testCanonicalOutsideAndInsideUVsUsePhysicalNetCoordinatesWithoutPanelStretching": {
+      "status": "passed",
+      "seconds": 0.058,
+      "run": "appearance"
+    },
+    "PaperGeometryTests.testEnvelopeAndCartonAreSoftEdgedHollowPanelShellsWithRealCaliper": {
+      "status": "passed",
+      "seconds": 0.123,
+      "run": "appearance"
+    },
+    "PaperGeometryTests.testFoldAndPanelSelectionUpdateTransformsWithoutMeshOrTextureRebuilds": {
+      "status": "passed",
+      "seconds": 0.139,
+      "run": "appearance"
+    },
+    "PaperGeometryTests.testLinkedOutsideInsideSourceAndPanelPickSurviveNativeGPUProjection": {
+      "status": "passed",
+      "seconds": 0.905,
+      "run": "appearance"
+    },
+    "PaperGeometryTests.testNativeDielineTextDragKeepsClosedPanelGeometryAndRenderedSilhouette": {
+      "status": "passed",
+      "seconds": 31.231,
+      "run": "appearance"
+    },
+    "PaperGeometryTests.testPhysicalMeshIdentityIncludesCaliperNetUVAndChannelGroups": {
+      "status": "passed",
+      "seconds": 0.01,
+      "run": "appearance"
+    },
+    "PaperGeometryTests.testReleasedProceduralGeometryCannotAliasOlderGPUMeshBuffers": {
+      "status": "passed",
+      "seconds": 0.451,
+      "run": "appearance"
+    },
+    "PaperNativeFitTests.testActualWrongOrientationCanFailOpeningWhileStillFittingCavity": {
+      "status": "passed",
+      "seconds": 0.783,
+      "run": "expanded"
+    },
+    "PaperNativeFitTests.testPaperContentsBoundsExcludeHiddenHighlightsAndRejectCanvasOnlyTargets": {
+      "status": "passed",
+      "seconds": 0.857,
+      "run": "expanded"
+    },
+    "PaperNativeFitTests.testTranslatedRotatedModeledWatchUsesMillimetersAndMovingOutFailsWithoutMutation": {
+      "status": "passed",
+      "seconds": 0.697,
+      "run": "expanded"
+    },
+    "PaperProductionOutputTests.testPacketSeparatesBlindAndFoilFromOrdinaryInkAndRejectsMissingEnabledTargets": {
+      "status": "passed",
+      "seconds": 0.039,
+      "run": "expanded"
+    },
+    "PaperProductionOutputTests.testRetainedSupplierSVGIsByteExactAndRegistrationDoesNotChangeItsTechnicalPaths": {
+      "status": "passed",
+      "seconds": 0.033,
+      "run": "expanded"
+    },
+    "PaperProductionOutputTests.testSafetyReviewIncludesInteriorCutsWithoutEditingArtwork": {
+      "status": "passed",
+      "seconds": 0.01,
+      "run": "expanded"
+    },
+    "PaperWorkspaceTests.testInsideSourceEditsThroughNativeSessionAndSurvivesReconciliation": {
+      "status": "passed",
+      "seconds": 0.026,
+      "run": "expanded"
+    },
+    "PaperWorkspaceTests.testInvalidLayoutAndSourceFolderExportsAreRejectedWithoutMutation": {
+      "status": "passed",
+      "seconds": 0.013,
+      "run": "expanded"
+    },
+    "PaperWorkspaceTests.testPhysicalPacketHasExactSheetPagesSeparateOperationsAndVerifiedArtifacts": {
+      "status": "passed",
+      "seconds": 0.095,
+      "run": "expanded"
+    },
+    "PaperWorkspaceTests.testPrintActionUsesPaperPreparationAndRetainsCamera": {
+      "status": "passed",
+      "seconds": 0.018,
+      "run": "expanded"
+    },
+    "PaperWorkspaceTests.testPurposeRepresentationAndPanelSelectionDoNotChangeSourceOrUndo": {
+      "status": "passed",
+      "seconds": 0.032,
+      "run": "expanded"
+    },
+    "PaperWorkspaceTests.testVisibleArtworkRecoversAfterInvalidPreviewAndUndo": {
+      "status": "passed",
+      "seconds": 0.133,
+      "run": "expanded"
+    },
+    "ParagraphListEditingTests.testNativeCanvasEnterFinishFormattingAndReturnPreserveDocumentListIdentity": {
+      "status": "passed",
+      "seconds": 0.055,
+      "run": "expanded"
+    },
+    "PhysicalArtworkFrameRenderingTests.testInsideWholeNetCanvasReflectsCutClipAndGuidesWithoutChangingRegisteredExport": {
+      "status": "passed",
+      "seconds": 0.046,
+      "run": "expanded"
+    },
+    "ProjectPreviewTests.testEmptyCanvasHasABoundedOpaquePreviewAtTheRequestedAspect": {
+      "status": "passed",
+      "seconds": 0.005,
+      "run": "expanded"
+    },
+    "ProjectPreviewTests.testNegativeCoordinateCanvasThumbnailContainsArtworkAndPreservesTheProject": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "PublicationEditingTests.testEscapeFinishesLinkedTextAndReturnsDocumentUndoToCanvas": {
+      "status": "passed",
+      "seconds": 0.104,
+      "run": "expanded"
+    },
+    "SewingPatternEditingTests.testDerivedCutGeometryIncludesNotchesFoldOmissionAndNoPersistedCopies": {
+      "status": "passed",
+      "seconds": 0.005,
+      "run": "appearance"
+    },
+    "SewingPatternEditingTests.testMCPPatternTemplateAndMetadataHaveAtomicUndoAndSchemaRoundTrip": {
+      "status": "passed",
+      "seconds": 0.005,
+      "run": "appearance"
+    },
+    "SewingPatternEditingTests.testNativeMouseMovePreservesPhysicalAllowancesAndPairingWithUndo": {
+      "status": "passed",
+      "seconds": 0.011,
+      "run": "appearance"
+    },
+    "SewingPatternEditingTests.testNativeToteAndSeamChangesAutosaveWithoutFlushOrMCP": {
+      "status": "passed",
+      "seconds": 0.631,
+      "run": "appearance"
+    },
+    "SewingPatternEditingTests.testNativeToteCreationIsOneUndoAndKeepsEditableSourceAndCopySeams": {
+      "status": "passed",
+      "seconds": 0.003,
+      "run": "appearance"
+    },
+    "SewingPatternEditingTests.testRealMCPExportHasActualSizeLayeredSVGCombinedPDFAndCalibratedPixels": {
+      "status": "passed",
+      "seconds": 0.16,
+      "run": "appearance"
+    },
+    "StudioSceneSelectionTests.testNativeViewportRoundingDoesNotDirtyRecallAndCurrentSourcesUpdateItsPreview": {
+      "status": "passed",
+      "seconds": 0.206,
+      "run": "expanded"
+    },
+    "StudioSceneSelectionTests.testSceneSwitchRequestsPreserveDraftsAndLatestRequestUntilExplicitSaveOrDiscard": {
+      "status": "passed",
+      "seconds": 0.098,
+      "run": "expanded"
+    },
+    "StudioSceneSelectionTests.testTwelveStudyRecallBeforeFirstAppearanceSurvivesReconcileAndChangesLiveStage": {
+      "status": "passed",
+      "seconds": 359.923,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testActualMerchandiseLightingProofAndDependencyHashAreSourcePreserving": {
+      "status": "passed",
+      "seconds": 1.118,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testActualMouseCaptureAndExportCommitActivePixelDraftWithoutExtraUndo": {
+      "status": "passed",
+      "seconds": 0.6,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testCaptureAndMetadataUndoNeverRecallOrRetargetAnExistingReferenceFrame": {
+      "status": "passed",
+      "seconds": 0.056,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testConcurrentStudioCapturesKeepTheirOwnFramingWarnings": {
+      "status": "passed",
+      "seconds": 0.125,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testExclusiveAtomicFolderRejectsAllFailuresAndDestinationRaces": {
+      "status": "passed",
+      "seconds": 0.053,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testHistoryReconciliationPreservesActualFocusedEditorBeforeItsBindingUpdates": {
+      "status": "passed",
+      "seconds": 0.165,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testLargePreviewCompositionAndLegacyDefaultPixelsAgreeOnActualRenderedProduct": {
+      "status": "passed",
+      "seconds": 4.156,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testMissingSubjectsRemainEditableDeletableAndRepairableWithoutCameraFallback": {
+      "status": "passed",
+      "seconds": 0.053,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testMissingVisibleSourceAndRuntimeClothRejectWithoutResetOrMutation": {
+      "status": "passed",
+      "seconds": 0.241,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testMouseUpdateUsesActiveFieldAsOneUndoAutosavesAndInvalidDraftRollsBack": {
+      "status": "passed",
+      "seconds": 0.787,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testNativeCaptureSelectsNewDefinitionAndUndoSynchronizesOnlyCleanOptions": {
+      "status": "passed",
+      "seconds": 0.055,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testPartialStagedFileAndForeignStageNeverDamageExistingContent": {
+      "status": "passed",
+      "seconds": 0.052,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testPerspectiveAndOrthographicPreviewMatchOutputWithoutLiveFramingMutation": {
+      "status": "passed",
+      "seconds": 0.219,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testPreviewCacheIsBoundedDependencyAwareAndPurgedOnDelete": {
+      "status": "passed",
+      "seconds": 0.262,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testQueuedCADCapturesKeepTheirOwnVisibilityLightingSurfacePixelsAndRecords": {
+      "status": "passed",
+      "seconds": 0.761,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testReadOnlyShotInspectionPreservesNativeDraftCaretAndDoesNotOpenStudio": {
+      "status": "passed",
+      "seconds": 0.177,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testRecallDoesNotAddHistoryAndResizedReferenceViewportKeepsPose": {
+      "status": "passed",
+      "seconds": 0.269,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testRecallRejectsUnknownArgumentsBeforeChangingCameraOrWorkingDraft": {
+      "status": "passed",
+      "seconds": 0.058,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testSavedExportIsPhysicalPixelsPortableRecordAndLeavesSourceAndCameraExact": {
+      "status": "passed",
+      "seconds": 0.123,
+      "run": "expanded"
+    },
+    "StudioShotEditingTests.testStalePreviewJobsAreDiscardedAcrossSourceAndProjectChanges": {
+      "status": "passed",
+      "seconds": 0.157,
+      "run": "expanded"
+    },
+    "TableInspectorInteractionTests.testNativeTablePickDoesNotNavigateCanvasAndCloseDoesNotDeselect": {
+      "status": "passed",
+      "seconds": 0.126,
+      "run": "expanded"
+    },
+    "TextileGeometryTests.testAttachedDecorationFollowsScenePlacementWithoutRebuildingGeometry": {
+      "status": "passed",
+      "seconds": 8.545,
+      "run": "expanded"
+    },
+    "TextileGeometryTests.testBomberUsesShapedMeshesAndPhysicalParametersChangeItsBounds": {
+      "status": "passed",
+      "seconds": 1.611,
+      "run": "expanded"
+    },
+    "TextileGeometryTests.testFlightStudyProducesANativeRenderedPreview": {
+      "status": "passed",
+      "seconds": 9.616,
+      "run": "expanded"
+    },
+    "UnifiedDesignSurfaceHostTests.testParkedFormCanvasDoesNotStealVisibleEnvironmentOwnerAndReclaimsOnReturn": {
+      "status": "passed",
+      "seconds": 2.171,
+      "run": "expanded"
+    },
+    "UnifiedDesignSurfaceHostTests.testVisibleCanvasEditorAndMarkedSelectionSurviveSplitAndAxisChanges": {
+      "status": "passed",
+      "seconds": 0.997,
+      "run": "expanded"
+    },
+    "WorkspaceToolbarTests.testActualCanvasAndTableDocksUseIdenticalButtonTargetsAndSelectionSemanticsWithoutChangingSource": {
+      "status": "passed",
+      "seconds": 0.622,
+      "run": "expanded"
+    },
+    "ArtworkArrangementTests.testAllSixAlignmentsUseCanvasAxesAcrossNestedReflectedAndShearedParents": {
+      "status": "passed",
+      "seconds": 0.007,
+      "run": "expanded"
+    },
+    "ArtworkArrangementTests.testDistributionTiesUseDocumentOrderForDifferentWidthsAndHeights": {
+      "status": "passed",
+      "seconds": 0.004,
+      "run": "expanded"
+    },
+    "ArtworkArrangementTests.testGapAndCenterDistributionPreserveWorldGeometryAcrossDifferentParents": {
+      "status": "passed",
+      "seconds": 0.003,
+      "run": "expanded"
+    },
+    "ArtworkArrangementTests.testLockedAncestorsTooFewRootsAndInvalidModesRejectAtomically": {
+      "status": "passed",
+      "seconds": 0.006,
+      "run": "expanded"
+    },
+    "ArtworkArrangementTests.testSelectingAGroupAndItsDescendantMovesTheGroupOnlyOnce": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testActualDashGapsAndOutsideStrokeAreRespected": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testBooleanSubtractionHoleAllowsUnderlyingSelection": {
+      "status": "passed",
+      "seconds": 0.002,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testDeepLayerProbeRespectsBooleanHolesAndDoesNotExposeDerivedComponentIDs": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testDenseLayeredArtworkRetainsExactTargetingAcrossGroupsMasksAndTransforms": {
+      "status": "passed",
+      "seconds": 0.363,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testEvenOddCompoundHolesAndEllipseCornersAreNotFilledTargets": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testExactPaintedHitWinsOverNearbyFrontOutline": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testGroupsPickVisibleDescendantsInsteadOfEmptyBounds": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testHiddenLockedTransparentAndExcludedTargetsAreSkipped": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testMasksClipRootAndScopedDescendantTargets": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testProximityDoesNotResurrectCancelledCompoundContours": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testProximityDoesNotResurrectGeometryHiddenBeyondItsMask": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testResolvedComponentPicksItsContentAndReturnsEditableInstance": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testReusablePickerKeepsItsSnapshotAndAcceptsChangingZoomTolerance": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testScreenToleranceSurvivesNestedNonuniformScaleRotationAndShear": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testTextAndImagesKeepTheirEditableFrameTargets": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "ArtworkHitTestingTests.testUnpaintedAndDisabledStrokeLayersDoNotStealClicks": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "ArtworkLayerOrderTests.testSiblingStepOrderPreservesSelectedBlocksAcrossInterleavedHierarchies": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "ArtworkParameterBindingTests.testCustomCanonicalSourceUsesExistingPaperAndExactSurfaceLinksWithoutARecipeNameSpecialCase": {
+      "status": "passed",
+      "seconds": 0.129,
+      "run": "expanded"
+    },
+    "ArtworkTests.testCanvasMetadataDoesNotInvalidatePhysicalArtwork": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "CanvasWorkspaceTests.testFrameToWorkspaceAndBackPreservesGlobalPlacementAndOrigin": {
+      "status": "passed",
+      "seconds": 0.002,
+      "run": "expanded"
+    },
+    "CanvasWorkspaceTests.testIdentityCollisionsRemapMovedLayersAndKeepExistingDestinationArtwork": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "CanvasWorkspaceTests.testLockedOrInvalidTransfersAreAtomicAndNativeDragCanShareOneUndo": {
+      "status": "passed",
+      "seconds": 0.002,
+      "run": "expanded"
+    },
+    "CanvasWorkspaceTests.testMCPCreatingTheInternalWorkspacePreservesThePhysicalSelectionAndUndo": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "CanvasWorkspaceTests.testMCPWorkspaceCreationTransferUndoBatchRollbackAndReopen": {
+      "status": "passed",
+      "seconds": 0.012,
+      "run": "expanded"
+    },
+    "CanvasWorkspaceTests.testNestedGroupsAndDescendantsKeepTheirExactWorldTransforms": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "CanvasWorkspaceTests.testOneWorkspaceIsIdempotentNonphysicalAndUsesSchemaNineteen": {
+      "status": "passed",
+      "seconds": 0.003,
+      "run": "expanded"
+    },
+    "CanvasWorkspaceTests.testPaletteTextStyleAssetsAndComponentsStayProjectLinkedAcrossTransfer": {
+      "status": "passed",
+      "seconds": 0.003,
+      "run": "expanded"
+    },
+    "CanvasWorkspaceTests.testSharedExternalClippingMaskIsCopiedWithoutChangingRemainingConsumers": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "CanvasWorkspaceTests.testTransformedChildCanLeaveANeutralGroupButInheritedAppearanceRequiresTheGroup": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "CanvasWorkspaceTests.testWorkspaceCannotBecomeAPhysicalSourceComponentOrSecondWorkspace": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "ClothDocumentTests.testInvalidOpenSurfaceSourcesCannotReplaceGarmentsOrCanvasWorkspaces": {
+      "status": "passed",
+      "seconds": 0.023,
+      "run": "expanded"
+    },
+    "ConstructionCapabilitiesTests.testDiscoveredVersionThreeExampleCreatesWithAccurateFieldsAndReadOnlyCapabilities": {
+      "status": "passed",
+      "seconds": 0.139,
+      "run": "expanded"
+    },
+    "FabricPatternTests.testBrokenLinksAndWorkspaceSourcesAreRejectedWithoutDeletingAnyResources": {
+      "status": "passed",
+      "seconds": 0.006,
+      "run": "expanded"
+    },
+    "FabricPatternTests.testColorwaysResolveSharedPaintsWithoutMutatingSourceOrOtherGarmentResources": {
+      "status": "passed",
+      "seconds": 0.002,
+      "run": "expanded"
+    },
+    "FabricPatternTests.testInvalidNumbersAmbiguousColorwaysAndExcessiveRepeatWorkFailBeforeRendering": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "FabricPatternTests.testLatticeAndBomberUVShareScaleRotationAndPhaseAtPhysicalPoints": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "FabricPatternTests.testLibraryInventoryMergeRetainsProjectPatternAndNeverAddsItToGlobalInput": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "FabricPatternTests.testMCPPatternMutationIsAtomicUndoableAndPersistsSchemaTwentyOne": {
+      "status": "passed",
+      "seconds": 0.017,
+      "run": "expanded"
+    },
+    "FabricPatternTests.testModesHaveTruePhysicalPeriodsAndOffsetRowsOrColumns": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "InteractionCancellationTests.testCancelRestoresExactProjectAndExistingUndoRedoHistory": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "InteractionCancellationTests.testCancellationDoesNotReplaceAnotherProject": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "InteractionCancellationTests.testStaleGenerationCannotCancelNewGestureEvenWithTheSameKey": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "InteractionCancellationTests.testUnrelatedCommandCommitsGestureAndCannotBeRolledBackByLateCancellation": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "LocalBridgeDeadlineTests.testOnlyNativePNGExportsReceiveTheCaptureResponseWindow": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "LocalBridgeDeadlineTests.testSavedSceneVideoRetainsItsExistingBoundedWindow": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "ObjectPresentationTests.testExistingInsideAssociationRetainsItsOriginalVisibleSource": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "ObjectPresentationTests.testNewInsideSourceIsCanvasOnlyAndPersistsWithoutChangingLegacyArtboards": {
+      "status": "passed",
+      "seconds": 0.01,
+      "run": "expanded"
+    },
+    "ObjectPresentationTests.testTemplateOnlyAdditionRaisesSchemaAndSurvivesRepositoryReopen": {
+      "status": "passed",
+      "seconds": 0.004,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testAuthoredCaliperMustAgreeAtomicallyWithoutRewritingItsExpression": {
+      "status": "passed",
+      "seconds": 0.009,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testBitmapInkOverridesRejectAtomicallyWhileImageAlphaFoilAndOriginalInkRemainSupported": {
+      "status": "passed",
+      "seconds": 0.007,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testBondedPliesUseSummedCaliperAndPersistExactAppearanceAfterReopen": {
+      "status": "passed",
+      "seconds": 0.01,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testFinishAssignmentsStayLocalWhenSharedConstructionChanges": {
+      "status": "passed",
+      "seconds": 0.012,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testFinishTracksCanonicalTextAndMaskEditsRetainsMissingTargetsAndIsOneUndo": {
+      "status": "passed",
+      "seconds": 0.006,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testInsideFinishResolvesIndependentBackSourceAndPartialEditsKeepIdentity": {
+      "status": "passed",
+      "seconds": 0.008,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testLegacyStockAndProjectRemainUnchangedWithoutAppearanceDeclarations": {
+      "status": "passed",
+      "seconds": 0.004,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testModeledContentsPreflightUsesReadOnlyNativePathAndRejectsAmbiguousUnits": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testReusablePaperStockUsesExistingMaterialsAndNormalPickerWithOneUndo": {
+      "status": "passed",
+      "seconds": 0.059,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testSavingLegacyStockRetainsItsExistingMaterialColorWithoutAProfile": {
+      "status": "passed",
+      "seconds": 0.006,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testStockChangesPreserveExplicitTintUntilOneUndoableClear": {
+      "status": "passed",
+      "seconds": 0.008,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testStrictNestedAppearanceAndFinishFailuresAreAtomic": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "PaperAppearanceTests.testTemplateAndBleedDispatchRejectBadMetadataBeforeTouchingNativeHost": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "PaperConstructionTests.testAnnotationsAndInvalidInputsAreAtomicAndReadOnlyCommandsDoNotAddHistory": {
+      "status": "passed",
+      "seconds": 0.016,
+      "run": "expanded"
+    },
+    "PaperConstructionTests.testDeterministicNetsHaveStableSemanticIDsAndNoCutThroughAnyCreaseInterior": {
+      "status": "passed",
+      "seconds": 0.04,
+      "run": "expanded"
+    },
+    "PaperConstructionTests.testExistingStudioLibraryGainsPaperPresetWithoutOverwritingCustomMaterials": {
+      "status": "passed",
+      "seconds": 0.002,
+      "run": "expanded"
+    },
+    "PaperConstructionTests.testExplicitLegacyConversionTranslatesFrontArtWithoutTouchingLinkedSourceAndUndoRestores": {
+      "status": "passed",
+      "seconds": 0.005,
+      "run": "expanded"
+    },
+    "PaperConstructionTests.testFoldTransformsAreRigidGroundedUprightAndOutsideOrientationIsConsistent": {
+      "status": "passed",
+      "seconds": 0.037,
+      "run": "expanded"
+    },
+    "PaperConstructionTests.testInsideArtworkCreationIsOneUndoIdempotentLinkedAndResolvesSharedSwatches": {
+      "status": "passed",
+      "seconds": 0.003,
+      "run": "expanded"
+    },
+    "PaperConstructionTests.testLayoutNeverScalesBlanksAndReportsStockFitContentsAndPrototypeAssumptions": {
+      "status": "passed",
+      "seconds": 0.004,
+      "run": "expanded"
+    },
+    "PaperConstructionTests.testLoadedPaperSourceRejectsMixedRepresentationsAndMismatchedRecipeOrKind": {
+      "status": "passed",
+      "seconds": 0.028,
+      "run": "expanded"
+    },
+    "PaperConstructionTests.testParameterChangesPreserveArtworkCoordinatesAndInsideSourceWhileFlaggingReviewAndUndo": {
+      "status": "passed",
+      "seconds": 0.012,
+      "run": "expanded"
+    },
+    "PaperConstructionTests.testSourcePersistenceSchema53AndHistoricalSleeveRemainIndependent": {
+      "status": "passed",
+      "seconds": 0.02,
+      "run": "expanded"
+    },
+    "PaperConstructionTests.testTopOpeningKeepsBodyAndBottomFixedAndUsesDistinctClosureLayers": {
+      "status": "passed",
+      "seconds": 0.027,
+      "run": "expanded"
+    },
+    "PaperFinishVisibilityTests.testLaterVisibilityOrSourceRemovalRemainsRepairableAndReportsNoMask": {
+      "status": "passed",
+      "seconds": 0.013,
+      "run": "expanded"
+    },
+    "PaperFinishVisibilityTests.testMixedGroupRequiresVisiblePrintContentForEachExplicitTarget": {
+      "status": "passed",
+      "seconds": 0.003,
+      "run": "expanded"
+    },
+    "PaperFinishVisibilityTests.testNewAssignmentsAndWholeConfigurationRejectInvisibleAndTechnicalMasksAtomically": {
+      "status": "passed",
+      "seconds": 0.003,
+      "run": "expanded"
+    },
+    "PaperPrintGeometryTests.testBleedExpandsActualOuterCutAndContractsWindowWithCommonPhysicalCoordinates": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "PaperPrintGeometryTests.testRegisteredViewportContainsTheWholeTransformedBleedOrRefusesIt": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "PaperPrintGeometryTests.testTemplateReviewTracksPhysicalRegistrationRatherThanInkOrOpenPose": {
+      "status": "passed",
+      "seconds": 0.005,
+      "run": "expanded"
+    },
+    "PhysicalArtworkIntentTests.testFiniteSewingGuideOnSharedCanvasTransfersWithRemappedPieceAndOneUndo": {
+      "status": "passed",
+      "seconds": 0.007,
+      "run": "expanded"
+    },
+    "PlanarConstructionTests.testAuthoredSourceAndCanvasPositionsPersistAndStaleEditsReject": {
+      "status": "passed",
+      "seconds": 0.022,
+      "run": "expanded"
+    },
+    "PlanarPackagingTests.testAuthoredStockMetadataAndSourceCaliperCannotBeSilentlyRepaired": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "PlanarPackagingTests.testFitUsesActualOrientedCornersAndSeparatelyReportsOpening": {
+      "status": "passed",
+      "seconds": 0.014,
+      "run": "expanded"
+    },
+    "PlanarPackagingTests.testIndependentRootsRetainFlatCoordinatesAndOnlyOpeningComponentMoves": {
+      "status": "passed",
+      "seconds": 0.006,
+      "run": "expanded"
+    },
+    "PlanarPackagingTests.testMalformedRootsHolesAndOldSourceVersionReject": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "PlanarPackagingTests.testPhysicalCutoutsHaveStableTechnicalEdgesAndInsideFrameMapping": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "PlanarPackagingTests.testTwelvePackagingSourcesAndSeparateLinerCreateEditUndoAndReopen": {
+      "status": "passed",
+      "seconds": 7.728,
+      "run": "expanded"
+    },
+    "PlanarParameterDiagnosticsTests.testNativeDefinitionDraftReportsTheActualDepthRangeInsteadOfMalformedStructure": {
+      "status": "passed",
+      "seconds": 0.006,
+      "run": "final-framing"
+    },
+    "PlanarParameterDiagnosticsTests.testParameterUpdateRetainsTheAcceptedDefinitionOnOutOfRangeInput": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "final-framing"
+    },
+    "ProjectContentTests.testWorkspaceIsNotAPhysicalObjectAndManifestKeepsCanvasSummaryWithoutOpeningObjects": {
+      "status": "passed",
+      "seconds": 0.003,
+      "run": "expanded"
+    },
+    "SewingPatternTests.testGroupingDuplicationDeletionAndSelectionExportKeepSeamReferencesConsistent": {
+      "status": "passed",
+      "seconds": 0.002,
+      "run": "expanded"
+    },
+    "SewingPatternTests.testMirroredRotatedAndNonuniformTransformsDoNotScaleTheSeamAllowance": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "SewingPatternTests.testPairedPiecesTransferTogetherAcrossCanvasOwnersWithCollisionRemapping": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "SewingPatternTests.testPerEdgeAllowancesAreExactPhysicalOffsets": {
+      "status": "passed",
+      "seconds": 0.101,
+      "run": "expanded"
+    },
+    "SewingPatternTests.testSeamMatchingUsesActualEdgesAndNumberedCutCopies": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "SewingPatternTests.testToteTemplateHasRealCutQuantitiesGrainNotchesAndMatchedCopySeams": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "SewingPatternTests.testUnsupportedContoursAndUnsafeNotchesFailExplicitly": {
+      "status": "passed",
+      "seconds": 0.002,
+      "run": "expanded"
+    },
+    "SewingTileTests.testSheetMarginsFooterAndAllTileTrimRegionsStayInsidePhysicalPaper": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "StudioCompositionTests.testCameraMotionHasExactEndpointsFixedOrbitElevationAndBoundedWork": {
+      "status": "passed",
+      "seconds": 0.0,
+      "run": "expanded"
+    },
+    "StudioCompositionTests.testDeletingLastLegacyShotRetainsScenesAndDuplicatingSceneGetsIndependentIDs": {
+      "status": "passed",
+      "seconds": 0.002,
+      "run": "expanded"
+    },
+    "StudioCompositionTests.testInvalidSaveAndOptimisticConflictAreAtomicAndInspectionHasNoUndo": {
+      "status": "passed",
+      "seconds": 0.002,
+      "run": "expanded"
+    },
+    "StudioCompositionTests.testLegacyPresentationDecodesWithoutScenesAndDoesNotRequireSchema54": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "StudioCompositionTests.testMissingSourcesStayRepairableAndCannotRender": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "StudioCompositionTests.testRenderResolutionIsDeterministicPhysicalAndUsesVariantSourcesWithoutMutatingProject": {
+      "status": "passed",
+      "seconds": 0.001,
+      "run": "expanded"
+    },
+    "StudioCompositionTests.testSavedCompositionInstancesDoNotDuplicateDesignAndSurviveUndoReopen": {
+      "status": "passed",
+      "seconds": 0.006,
+      "run": "expanded"
+    },
+    "ImageLazyInsideImportTests.testBlankInsideWholeNetDropCreatesOneSourceAndInverseMapsWithoutChangingTop": {
+      "status": "passed",
+      "seconds": 0.036,
+      "run": "appearance"
+    },
+    "ImageLazyInsideImportTests.testExistingInsideWholeNetDropRejectsPhysicalLockAndRetainsSourceOnSuccess": {
+      "status": "passed",
+      "seconds": 0.051,
+      "run": "appearance"
+    },
+    "SVGLazyInsideImportTests.testBlankReverseImportCreatesOnlyInsideSourceInOneUndoAndKeepsReadableFrame": {
+      "status": "passed",
+      "seconds": 0.04,
+      "run": "appearance"
+    },
+    "SVGLazyInsideImportTests.testInlineReverseImportPreservesCanonicalIDsMetadataAndFinishAssignments": {
+      "status": "passed",
+      "seconds": 0.025,
+      "run": "appearance"
+    },
+    "SVGLazyInsideImportTests.testLockedPhysicalOwnerAndStaleBlankReviewRejectBeforeAssetsOrSourceMutation": {
+      "status": "passed",
+      "seconds": 0.029,
+      "run": "appearance"
+    },
+    "CanvasPaperSidesTests.testFlatSheetFocusRequestedBeforeNativeAttachmentStillFitsBothDielines": {
+      "status": "passed",
+      "seconds": 0.05,
+      "run": "appearance"
+    },
+    "CanvasPaperSidesTests.testNativeFlatSheetEntryFitsBothMatchingFacesWhileKeepingChosenSideSourceAndTableState": {
+      "status": "passed",
+      "seconds": 0.024,
+      "run": "appearance"
+    },
+    "CanvasPaperFaceAppearanceTests.testBothCanvasFacesAndProofsMatchPhysicalPlyProfileAndTintWithoutMutatingArtwork": {
+      "status": "passed",
+      "seconds": 0.402,
+      "run": "sRGB-color-proof"
+    }
+  }
+}
