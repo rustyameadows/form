@@ -594,6 +594,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   func contentBounds(all:Bool) -> CGRect {
     let chosen = all ? frames : activeFrame.map { [$0] } ?? []
+    return contentBounds(in:chosen)
+  }
+  private func contentBounds(in chosen:[CanvasFrame])->CGRect {
     var result = CGRect.null
     var reports:[UUID:PhysicalArtworkIntentReport]=[:],attempted=Set<UUID>()
     for frame in chosen {
@@ -775,23 +778,38 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     fit(all: true)
   }
   func fit(all: Bool) {
-    guard let scroll = enclosingScrollView else { return }
-    guard scroll.contentSize.width > 100, scroll.contentSize.height > 100 else { return }
+    _ = fit(rect:contentBounds(all:all),mode:all ? "all":"active")
+  }
+  /// Fit existing representations together without changing the active source.
+  @discardableResult func fit(frameIDs:Set<UUID>)->Bool {
+    refreshFrameSnapshots()
+    let selected=frames.filter{frameIDs.contains($0.id)}
+    guard !selected.isEmpty else{return false}
+    return fit(rect:contentBounds(in:selected),mode:"frames")
+  }
+  @discardableResult private func fit(rect:CGRect,mode:String)->Bool {
+    guard let scroll = enclosingScrollView else { return false }
+    guard scroll.contentSize.width > 100, scroll.contentSize.height > 100 else { return false }
     fitted = true
-    let rect = contentBounds(all:all)
-    guard !rect.isNull, rect.width > 0 else { return }
+    guard !rect.isNull, rect.width > 0 else { return false }
     let horizontal = min(14, rect.width * 0.08 + 1)
     let vertical = min(18, rect.height * 0.08 + 1)
     // AppKit expects clip-view coordinates, which differ from the document's
     // when its frame origin shifts during native layout or scrolling.
-    magnifyToFit(rect.insetBy(dx:-horizontal,dy:-vertical),mode:all ? "all" : "active")
+    magnifyToFit(rect.insetBy(dx:-horizontal,dy:-vertical),mode:mode)
     session?.zoom = Double(scroll.magnification)
     needsDisplay = true
+    return true
   }
   private func fitPaperPanelWhenRequested() {
     guard let session,let id=session.paperFocusPanelID,let paper=session.paperContext,
-      let panel=try? PaperConstruction.definition(for:paper).net().panels.first(where:{$0.id==id}),
+      let net=try? PaperConstruction.definition(for:paper).net(),let panel=net.panels.first(where:{$0.id==id}),
       let frame=activeFrame,let scroll=enclosingScrollView,scroll.contentSize.width>100 else{return}
+    if PaperSideLabels.isFlatSheet(net),let projection=frame.projection {
+      let ids=Set(frames.filter{$0.projection?.constructionID==paper.id && $0.projection?.panelID==projection.panelID}.map(\.id))
+      if fit(frameIDs:ids) {session.paperFocusPanelID=nil}
+      return
+    }
     session.paperFocusPanelID=nil
     let b=panel.bounds
     let rect = frame.projection?.panelID == id ? contentBounds(all:false)

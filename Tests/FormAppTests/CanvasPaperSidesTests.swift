@@ -76,6 +76,51 @@ import XCTest
     XCTAssertEqual(links.map(\.title),["Top dieline","Bottom dieline"])
   }
 
+  func testNativeFlatSheetEntryFitsBothMatchingFacesWhileKeepingChosenSideSourceAndTableState()throws {
+    let f=try Fixture(independent:true);defer{f.close()}
+    f.mount()
+    let canvas=try XCTUnwrap(f.canvas),before=try XCTUnwrap(f.store.project),camera=f.store.scene?.camera
+    canvas.fittingInsets = .init(top:120,left:266,bottom:60,right:318)
+    canvas.setFrameOrigin(.init(x:-130,y:75))
+    for representation in [PaperRepresentation.panels,.dieline] {
+      f.store.paperInside=false;f.store.showPaper(representation,object:before.objects[0])
+      let isProof=representation == .dieline
+      for inside in [false,true] {
+        f.store.setPaperInside(inside,object:before.objects[0])
+        let selected=try f.frame(inside:inside,proof:isProof)
+        XCTAssertEqual(f.session.activeFrameID,selected.id);XCTAssertEqual(f.session.objectID,selected.projection?.sourceID)
+        XCTAssertEqual(f.session.activeProjection?.inside,inside)
+        for side in [false,true] {
+          let face=try f.frame(inside:side,proof:isProof)
+          XCTAssertTrue(canvas.visibleCanvasRect.insetBy(dx:-1e-7,dy:-1e-7).contains(face.rect),"Both matching faces must be visible on entry and side navigation.")
+        }
+        XCTAssertEqual(f.store.project,before);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
+        XCTAssertEqual(f.store.engine.selection,[f.tableID]);XCTAssertEqual(f.store.scene?.camera,camera);XCTAssertFalse(f.store.tableInspectorVisible)
+      }
+    }
+  }
+
+  func testFlatSheetFocusRequestedBeforeNativeAttachmentStillFitsBothDielines()async throws {
+    let f=try Fixture(independent:true);defer{f.close()}
+    let before=try XCTUnwrap(f.store.project),camera=f.store.scene?.camera
+    f.store.paperInside=true;f.store.showPaper(.dieline,object:before.objects[0])
+    XCTAssertNotNil(f.session.paperFocusPanelID)
+    let active=try XCTUnwrap(f.session.activeProjection)
+    f.mount()
+    for _ in 0..<100 {
+      if f.session.paperFocusPanelID==nil {break}
+      try await Task.sleep(nanoseconds:10_000_000)
+    }
+    XCTAssertNil(f.session.paperFocusPanelID)
+    let canvas=try XCTUnwrap(f.canvas)
+    for side in [false,true] {
+      XCTAssertTrue(canvas.visibleCanvasRect.insetBy(dx:-1e-7,dy:-1e-7).contains(try f.frame(inside:side,proof:true).rect))
+    }
+    XCTAssertEqual(f.session.activeFrameID,active.id);XCTAssertEqual(f.session.objectID,active.sourceID)
+    XCTAssertEqual(f.store.project,before);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
+    XCTAssertEqual(f.store.engine.selection,[f.tableID]);XCTAssertEqual(f.store.scene?.camera,camera)
+  }
+
   func testNativeFirstBottomDrawContinuesItsHeldGestureAndUndoesSourceCreationExactlyOnce()throws {
     let f=try Fixture();defer{f.close()}
     let bottom=try f.frame(inside:true),before=try XCTUnwrap(f.store.project),camera=f.store.scene?.camera

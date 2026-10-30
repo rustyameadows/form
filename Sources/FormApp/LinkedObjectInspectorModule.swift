@@ -134,7 +134,7 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
       store.canvasWindowController?.window?.makeKeyAndOrderFront(nil)
     }
     store.artworkSession.canvas?.synchronize()
-    store.artworkSession.canvas?.fit(all: false)
+    if case .paper=link.kind {} else {store.artworkSession.canvas?.fit(all:false)}
     return true
   }
 

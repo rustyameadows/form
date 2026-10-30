@@ -25,7 +25,12 @@ extension StudioStore {
     }) else { return }
     artworkSession.activate(frame.id)
     artworkSession.canvas?.synchronize()
-    artworkSession.canvas?.fit(all: false)
+    if let net=try? PaperConstruction.definition(for:frame.surfaceObject).net(),PaperSideLabels.isFlatSheet(net) {
+      let ids=Set(artworkSession.frames.filter{$0.projection?.constructionID==objectID && $0.projection?.panelID==panelID}.map(\.id))
+      // Retain this intent if the Canvas has not attached to a native window yet.
+      artworkSession.paperFocusPanelID=net.rootPanelID
+      if artworkSession.canvas?.fit(frameIDs:ids)==true {artworkSession.paperFocusPanelID=nil}
+    } else {artworkSession.canvas?.fit(all:false)}
   }
   func showPaper(_ representation: PaperRepresentation, object: ProductObject, split: Bool = false) {
     finishArtworkEditing()

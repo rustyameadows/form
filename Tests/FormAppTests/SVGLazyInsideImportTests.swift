@@ -67,7 +67,11 @@ import XCTest
     XCTAssertFalse(try projection(store,id).requiresInsideSource)
     XCTAssertEqual(store.engine.undoStack.count,undo+1)
     try store.engine.flush()
-    XCTAssertEqual(try store.repository.load(after.id).objects,after.objects)
+    // The project codec stores dates as whole-second ISO8601, while the live
+    // import timestamp retains Date() fractions. Compare every persisted field
+    // exactly against that codec's state; live Undo/Redo remain exact below.
+    let persisted = try JSONDecoder.form.decode([ProductObject].self,from:JSONEncoder.form.encode(after.objects))
+    XCTAssertEqual(try store.repository.load(after.id).objects,persisted)
     store.engine.undo();XCTAssertEqual(store.project,before)
     store.engine.redo();XCTAssertEqual(store.project,after)
   }

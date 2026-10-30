@@ -207,7 +207,9 @@ struct ArtworkInspector: View {
           } else if session.activeProjection == nil {
             frameControls(object)
           }
-          SewingPatternActions(session: session)
+          if session.paperContext == nil || session.art.elements.contains(where: { $0.sewingPiece != nil }) {
+            SewingPatternActions(session: session)
+          }
           PublicationControls(session: session)
         } else {
           Text("Create an artwork frame to begin.").font(.system(size: 12)).foregroundStyle(
