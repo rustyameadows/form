@@ -99,13 +99,17 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
         guard value.isFinite,(0...100).contains(value) else{throw FormError.invalid("Construction pose controls must be 0–100%.")}
         continue
       }
-      guard let i=next.firstIndex(where:{$0.name==name}),value.isFinite,
-        value>=next[i].minimum,value<=next[i].maximum else {
-        throw FormError.invalid("Unknown or out-of-range construction parameter '\(name)'.")
-      }
+      guard let i=next.firstIndex(where:{$0.name==name}) else {throw FormError.invalid("Unknown construction parameter '\(name)'.")}
+      try validateValue(value,for:next[i])
       next[i].value=value
     }
     parameters=next
+  }
+  private func validateValue(_ value:Double,for parameter:CADModelParameter)throws {
+    guard value.isFinite,value>=parameter.minimum,value<=parameter.maximum else {
+      let minimum=String(format:"%.6g",parameter.minimum),maximum=String(format:"%.6g",parameter.maximum)
+      throw FormError.invalid("Construction parameter '\(parameter.name)' must be between \(minimum) and \(maximum) \(parameter.unit).")
+    }
   }
   public func net() throws -> PaperNet {
     let hasV3=components?.isEmpty == false || interiors?.isEmpty == false || panels.contains(where:{$0.cutouts?.isEmpty == false})
@@ -113,12 +117,13 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
     guard (1...3).contains(version),(version>=2 || solidChecks?.isEmpty != false),(version>=3 || !hasV3),!name.isEmpty,name.utf8.count<=160,parameters.count<=64,
       Set(parameters.map(\.name)).count==parameters.count,
       parameters.allSatisfy({CADExpression.validName($0.name) && !["fold","opening"].contains($0.name)
-        && [$0.value,$0.minimum,$0.maximum].allSatisfy(\.isFinite)
-        && $0.minimum <= $0.value && $0.value <= $0.maximum && abs($0.minimum)<=100000 && abs($0.maximum)<=100000}),
+        && [$0.minimum,$0.maximum].allSatisfy(\.isFinite)
+        && $0.minimum <= $0.maximum && abs($0.minimum)<=100000 && abs($0.maximum)<=100000}),
       (1...64).contains(panels.count),!roots.isEmpty,roots.count<=32,Set(roots).count==roots.count,
       hinges.count==panels.count-roots.count,joins.count<=128 else {
       throw FormError.invalid("Construction requires a named bounded definition, up to 64 parameters/panels, and one hinge per non-root panel.")
     }
+    for parameter in parameters {try validateValue(parameter.value,for:parameter)}
     guard (requirements?.count ?? 0)<=128,Set((requirements ?? []).map(\.id)).count==(requirements?.count ?? 0),
       panels.reduce(0,{$0+$1.polygon.count+($1.cutouts ?? []).reduce(0){$0+$1.polygon.count}})<=2048 else {throw FormError.invalid("Keep construction requirements and polygon complexity bounded.")}
     let variables=try resolvedValues()

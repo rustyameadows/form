@@ -20,6 +20,7 @@ extension StudioStore {
       let edition = project.objects.first(where: { $0.name == "AFFINITIES / Oak edition" })
     else { return [] }
     showSplit()
+    activateDesignSurface(.artwork)
     artworkSession.activate(source.id)
     engine.selection = [edition.id]
     artworkSession.linkedTargetID = edition.id

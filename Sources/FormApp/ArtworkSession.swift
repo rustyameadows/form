@@ -13,7 +13,7 @@ struct CanvasFrame: Identifiable {
   var id: UUID { projection?.id ?? object.id }
   var title: String { projection?.title ?? (object.name + (sourceReview == nil ? "":" · Registered source")) }
   var isWorkspace: Bool { object.isCanvasWorkspace }
-  var editable: Bool { !object.locked }
+  var editable: Bool { !object.locked && (projection==nil || !surfaceObject.locked) }
   @MainActor func contains(_ point: CGPoint) -> Bool {
     rect.contains(point) && (projection?.contains(.init(x: point.x-rect.minX, y: point.y-rect.minY)) ?? true)
   }
@@ -69,7 +69,6 @@ enum ArtworkTool: String, CaseIterable {
     let objectID:UUID?
     let linkedTargetID:UUID?
     let dieline:Bool
-    let paperInside:Bool
     let editingComponent:Bool
   }
   private struct FrameMemo {
@@ -80,6 +79,7 @@ enum ArtworkTool: String, CaseIterable {
   // key misses direct project assignments and shared story/style dependencies.
   private var frameMemo:FrameMemo?
   private(set) var frameBuildCount=0
+  private var artworkGesture:(key:String,token:UUID)?
 
   @Published var croppingImageID: UUID?
   @Published var objectID: UUID? {didSet{if objectID != oldValue {cancelArtworkTransfer();projectionFrameID=nil}}}
@@ -134,7 +134,16 @@ enum ArtworkTool: String, CaseIterable {
     let source = sourceArtwork
     return activeProjection?.display(source) ?? source
   }
-  var sourceArtwork: Artwork { object.flatMap { store?.project?.editableArtwork($0) } ?? .init(background: "#FFFFFF") }
+  private static var blankInsideArtwork:Artwork {var value=Artwork(background:"#F7F5EF");value.backgroundOpacity=0;return value}
+  var sourceArtwork: Artwork {
+    if let projection=activeProjection,let project=store?.project {
+      if projection.requiresInsideSource {
+        return project.objects.first{$0.id==projection.constructionID}?.paperConstruction?.insideArtwork ?? Self.blankInsideArtwork
+      }
+      if let source=project.objects.first(where:{$0.id==projection.sourceID}) {return project.editableArtwork(source) ?? .init(background:"#FFFFFF")}
+    }
+    return object.flatMap { store?.project?.editableArtwork($0) } ?? .init(background:"#FFFFFF")
+  }
   var activeFrameID: UUID? { projectionFrameID ?? objectID }
   var activeCanvasFrame: CanvasFrame? {
     activeCanvasFrame(in:frames)
@@ -167,6 +176,9 @@ enum ArtworkTool: String, CaseIterable {
   func editPath(_ operation: String, _ arguments: [String: Any] = [:]) {
     canvas?.finishText()
     guard let store, let object, !selection.isEmpty else { return }
+    guard activeProjection.flatMap({p in store.project?.objects.first{$0.id==p.constructionID}})?.locked != true else {
+      store.error="Unlock the physical construction before editing this face.";return
+    }
     var args = arguments
     args["object_id"] = object.id.uuidString
     args["element_ids"] = selection.map(\.uuidString)
@@ -272,8 +284,16 @@ enum ArtworkTool: String, CaseIterable {
     // Table camera motion cannot alter canonical frame content or placement.
     // Keep every other document input exact, including shared resources.
     var frameProject=project;frameProject.camera = .init()
-    let inputs=FrameInputs(project:frameProject,objectID:objectID,linkedTargetID:linkedTargetID,
-      dieline:dieline,paperInside:store?.paperInside == true,editingComponent:componentReturn != nil)
+    var frameObjectID=objectID,frameTargetID=linkedTargetID
+    if componentReturn==nil,let object=project.objects.first(where:{$0.id==objectID}),
+      let target=project.objects.first(where:{$0.id==linkedTargetID}),PaperConstruction.isPaper(target),
+      (object.id==target.id || project.artworkOwner(target).id==object.id || target.paperConstruction?.insideArtworkSourceID==object.id),
+      !hasCanonicalSourceRole(object,in:project),PaperConstruction.isPaper(object) || paperUses(of:object.id,in:project).count==1 {
+      // Choosing another readable face does not change the complete frame graph.
+      frameObjectID=nil;frameTargetID=nil
+    }
+    let inputs=FrameInputs(project:frameProject,objectID:frameObjectID,linkedTargetID:frameTargetID,
+      dieline:dieline,editingComponent:componentReturn != nil)
     if let memo=frameMemo,memo.inputs==inputs {return memo.frames}
     let values=buildFrames(project:project)
     frameBuildCount+=1;frameMemo = .init(inputs:inputs,frames:values)
@@ -343,16 +363,15 @@ enum ArtworkTool: String, CaseIterable {
     }
     var constructionY = max(40, bottom + 70)
     for construction in objects where PaperConstruction.isPaper(construction) {
-      guard let project = store?.project,
-        let net = try? PaperConstruction.definition(for: construction).net() else { continue }
-      let inside = store?.paperInside == true && paperContext?.id == construction.id
-      let sourceID = inside ? construction.paperConstruction?.insideArtworkSourceID
-        : project.artworkOwner(construction).id
-      guard let sourceID, let source = objects.first(where: { $0.id == sourceID }) else { continue }
-      let raw = project.editableArtwork(source) ?? Artwork(background: "#FFFFFF")
+      guard let definition=try? PaperConstruction.definition(for:construction),let net=try? definition.net() else{continue}
+      for inside in [false,true] {
+      let requiresSource=inside && definition.insideArtworkSourceID==nil
+      let sourceID=inside ? definition.insideArtworkSourceID ?? construction.id:project.artworkOwner(construction).id
+      guard let source=objects.first(where:{$0.id==sourceID}) else{continue}
+      let raw=requiresSource ? definition.insideArtwork ?? Self.blankInsideArtwork:project.editableArtwork(source) ?? Artwork(background:"#FFFFFF")
       let resolved = project.resolvingTextStories(in: raw, objectID: sourceID)
       let artwork = (try? project.resolvingComponents(in: resolved)) ?? resolved
-      let projections = CanvasSourceProjection.views(of: construction, sourceID: sourceID, inside: inside, net: net)
+      let projections = CanvasSourceProjection.views(of: construction, sourceID: sourceID, inside: inside, net: net,requiresInsideSource:requiresSource)
       var panelX = 36 + net.size.x + 65
       var panelY = constructionY
       var panelRowHeight = 0.0
@@ -372,6 +391,7 @@ enum ArtworkTool: String, CaseIterable {
         }
       }
       constructionY = max(constructionY + net.size.y, panelY + panelRowHeight) + 90
+      }
     }
     // Exact-model surfaces use the same source-frame view as flat constructions.
     // Their bound artboard already has upright physical coordinates.
@@ -408,6 +428,8 @@ enum ArtworkTool: String, CaseIterable {
     if let linkedTargetID, store?.project?.objects.contains(where: { $0.id == linkedTargetID }) != true {
       self.linkedTargetID = nil
     }
+    if let projectionFrameID,let projection=frames.first(where:{$0.id==projectionFrameID})?.projection,
+      objectID != projection.sourceID {adoptProjectionSource(projection)}
     if object == nil {
       componentReturn = nil; linkedTargetID = nil; projectionFrameID = nil
       objectID = store?.project?.canvasWorkspace?.id ?? store?.project?.objects.first {
@@ -503,12 +525,42 @@ enum ArtworkTool: String, CaseIterable {
     choose(Set(selectionCandidates(in: art).map(\.id)))
   }
   func save(_ artwork: Artwork) {
-    guard let object else { return }
-    guard !object.locked, store?.project?.artworkOwner(object).locked != true else {
-      store?.error = "Unlock the artwork source before editing it."; return
+    if object==nil {reconcile()}
+    guard let store,let object else { return }
+    let projection=activeProjection
+    let destination=projection.flatMap{p in store.project?.objects.first{$0.id==p.sourceID}} ?? object
+    guard projection.flatMap({p in store.project?.objects.first{$0.id==p.constructionID}})?.locked != true,
+      !destination.locked,projection?.requiresInsideSource == true || store.project?.artworkOwner(destination).locked != true else {
+      store.error = "Unlock the physical construction and artwork source before editing this face."; return
     }
-    let value = activeProjection?.source(from: artwork, original: sourceArtwork) ?? artwork
-    store?.saveArtwork(value, for: object)
+    let original=sourceArtwork,value=projection?.source(from:artwork,original:original) ?? artwork
+    if projection?.requiresInsideSource==true,artworkGesture.map({store.engine.isInteracting(withGeneration:$0.token)}) != true {
+      let key="artwork-\(object.id)"
+      if store.engine.isInteracting(with:key) {artworkGesture=(key,store.engine.beginInteraction(key))}
+    }
+    let gestureKey=artworkGesture.flatMap{store.engine.isInteracting(withGeneration:$0.token) ? $0.key:nil}
+    if let projection,projection.requiresInsideSource {
+      guard value != original else{return}
+      do {
+        try validateArtwork(value)
+        try store.engine.edit("Edited artwork",coalescing:gestureKey ?? "artwork-\(object.id)") {project in
+          let sourceID=try PaperCommands.ensureInside(in:&project,objectID:projection.constructionID)
+          try project.setArtwork(value,for:sourceID)
+        }
+        if let current=frames.first(where:{$0.id==projection.id})?.projection {adoptProjectionSource(current)}
+        store.changed()
+      } catch {store.error=error.localizedDescription}
+    } else if let gestureKey,gestureKey != "artwork-\(destination.id)" {
+      // A blank face can acquire its canonical sheet during a held native gesture.
+      // Keep its original generation/coalescing key through pointer-up or text end.
+      do {try validateArtwork(value);try store.engine.edit("Edited artwork",coalescing:gestureKey){try $0.setArtwork(value,for:destination.id)};store.changed()}
+      catch {store.error=error.localizedDescription}
+    } else {store.saveArtwork(value,for:destination)}
+  }
+  private func adoptProjectionSource(_ projection:CanvasSourceProjection) {
+    guard objectID != projection.sourceID else{return}
+    let frameID=projection.id
+    objectID=projection.sourceID;projectionFrameID=frameID;linkedTargetID=projection.constructionID
   }
   func moveCanvasFrame(to point: Point2) {
     guard let store, let frame = activeCanvasFrame else { return }
@@ -539,15 +591,19 @@ enum ArtworkTool: String, CaseIterable {
     }
   }
   func execute(_ command: String, _ args: [String: Any] = [:]) {
+    if object==nil {reconcile()}
     canvas?.finishText()
     guard let store, let object else { return }
+    guard activeProjection.flatMap({p in store.project?.objects.first{$0.id==p.constructionID}})?.locked != true else {
+      store.error="Unlock the physical construction before editing this face.";return
+    }
     var input = args
     input["object_id"] = object.id.uuidString
     input["command"] = command
     if !selection.isEmpty { input["element_ids"] = selection.map(\.uuidString) }
     do {
-      if let projection=activeProjection,(projection.panelID != nil || projection.sourceToLocal != Affine2()),
-        ["add", "replace", "delete", "duplicate", "group", "ungroup", "align", "distribute", "reorder", "flip", "clip", "release_clip", "origin", "transform"].contains(command) {
+      if let projection=activeProjection,projection.requiresInsideSource || ((projection.panelID != nil || projection.sourceToLocal != Affine2()) &&
+        ["add", "replace", "delete", "duplicate", "group", "ungroup", "align", "distribute", "reorder", "flip", "clip", "release_clip", "origin", "transform"].contains(command)) {
         var value = art
         let selected = try ArtworkCommands.apply(command, to: &value, ids: selection, arguments: input)
         // saveArtwork also serves continuous typing. A command without an
@@ -571,10 +627,13 @@ enum ArtworkTool: String, CaseIterable {
     }
   }
   @discardableResult func beginGesture()->UUID? {
+    reconcile()
     guard let id=objectID else{return nil}
-    return store?.engine.beginInteraction("artwork-\(id)")
+    let key="artwork-\(id)"
+    guard let token=store?.engine.beginInteraction(key) else{return nil}
+    artworkGesture=(key,token);return token
   }
-  func endGesture() { store?.engine.endInteraction() }
+  func endGesture() {store?.engine.endInteraction();artworkGesture=nil}
   func translate(dx: Double, dy: Double) {
     canvas?.finishText()
     guard !elements.contains(where: { art.isLocked($0) }) else { return }
@@ -696,6 +755,9 @@ enum ArtworkTool: String, CaseIterable {
   func convert(_ mode: String = "text") {
     canvas?.finishText()
     guard let store, let object else { return }
+    guard activeProjection.flatMap({p in store.project?.objects.first{$0.id==p.constructionID}})?.locked != true else {
+      store.error="Unlock the physical construction before editing this face.";return
+    }
     do {
       let result =
         try store.graphicsCall(
@@ -712,6 +774,9 @@ enum ArtworkTool: String, CaseIterable {
   func boolean(_ operation: String, mode: String = "live") {
     canvas?.finishText()
     guard let store, let object else { return }
+    guard activeProjection.flatMap({p in store.project?.objects.first{$0.id==p.constructionID}})?.locked != true else {
+      store.error="Unlock the physical construction before editing this face.";return
+    }
     do {
       let result =
         try store.graphicsCall(

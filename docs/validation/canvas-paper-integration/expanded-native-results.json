@@ -1,0 +1,15 @@
+{
+  "status": "initial_fixture_failures_corrected",
+  "tests": 346,
+  "passed": 343,
+  "failed_methods": [
+    "CanvasFitBoundsTests.testFitContainsWholeAuthoredNetAndEveryUprightFrameAfterNativeDocumentOffsetsAndPanOnly",
+    "CanvasPaperSidesTests.testNativeFirstBottomDrawContinuesItsHeldGestureAndUndoesSourceCreationExactlyOnce",
+    "CanvasViewportTests.testNativeHandPanKeepsExpectedWorldPositionAcrossShiftedOriginAndExtentGrowth"
+  ],
+  "assertion_failures": 5,
+  "elapsed_seconds": 651.002,
+  "production_code": "a91a264",
+  "details": "Three fixture assumptions failed after simultaneous-face layout: two fixed pan distances did not force clipping/extent growth, and one reopen expected unsaved fractional dates. Their assertions remain, with geometry-derived pan and exact persisted-codec comparison. Runtime recheck follows after the optimized build releases the shared build database.",
+  "recheck": "native-results.json"
+}

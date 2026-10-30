@@ -75,6 +75,7 @@ public final class OperationEngine {
   }
   /// Native command adapters may preserve a matching gesture without exposing its mutable state.
   public func isInteracting(with key:String)->Bool {interaction==key}
+  public func isInteracting(withGeneration token: UUID) -> Bool { interactionGeneration == token }
   @discardableResult public func beginInteraction(_ key:String)->UUID {
     if interaction==key,let token=interactionGeneration {return token}
     endInteraction()
@@ -88,6 +89,17 @@ public final class OperationEngine {
   }
   public func endInteraction(ifGeneration token:UUID) {
     guard interactionGeneration==token else{return};endInteraction()
+  }
+  /// Cancel only the gesture the caller began. A delayed Escape or pointer-up
+  /// must not roll back a newer gesture, an unrelated command, or another project.
+  @discardableResult public func cancelInteraction(ifGeneration token: UUID) -> Bool {
+    guard interactionGeneration == token, let snapshot = interactionSnapshot,
+      project?.id == snapshot.project.id else { return false }
+    project = snapshot.project
+    undoStack = snapshot.undo
+    redoStack = snapshot.redo
+    endInteraction()
+    return true
   }
   public func endInteraction() {
     if let snapshot = interactionSnapshot, var value = project {

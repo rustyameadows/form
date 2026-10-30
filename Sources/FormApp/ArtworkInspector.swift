@@ -207,7 +207,9 @@ struct ArtworkInspector: View {
           } else if session.activeProjection == nil {
             frameControls(object)
           }
-          SewingPatternActions(session: session)
+          if session.paperContext == nil || session.art.elements.contains(where: { $0.sewingPiece != nil }) {
+            SewingPatternActions(session: session)
+          }
           PublicationControls(session: session)
         } else {
           Text("Create an artwork frame to begin.").font(.system(size: 12)).foregroundStyle(
@@ -252,22 +254,8 @@ struct ArtworkInspector: View {
         ) { session.execute("flip", ["axis": "y"]) }
       }
       if session.elements.count > 1 {
-        HStack(spacing: 0) {
-          ForEach(
-            [
-              ("left", "align.horizontal.left"), ("center_x", "align.horizontal.center"),
-              ("right", "align.horizontal.right"), ("top", "align.vertical.top"),
-              ("center_y", "align.vertical.center"), ("bottom", "align.vertical.bottom"),
-            ], id: \.0
-          ) { item in
-            IconButton("Align \(item.0)", symbol: item.1) {
-              session.execute("align", ["mode": item.0])
-            }
-          }
-        }
+        CanvasArrangementControls(session: session)
         HStack {
-          Button("Space ↔") { session.execute("distribute", ["mode": "horizontal"]) }
-          Button("Space ↕") { session.execute("distribute", ["mode": "vertical"]) }
           Spacer()
           Button("Group") { session.execute("group") }
         }.font(.system(size: 9))
@@ -290,8 +278,7 @@ struct ArtworkInspector: View {
       if e?.kind == "group", e?.booleanOperation == nil, e?.component == nil {
         HStack {
           Button("Edit group") {
-            session.scopeID = e?.id
-            session.choose([])
+            if let id = e?.id { session.enterGroup(id) }
           }
           Button("Ungroup") { session.execute("ungroup") }
         }.font(.system(size: 10))
@@ -311,8 +298,7 @@ struct ArtworkInspector: View {
       }.font(.system(size: 10))
       HStack {
         Button("Edit operands") {
-          session.scopeID = group.id
-          session.choose([])
+          session.enterGroup(group.id)
         }
         Button("Release operands") { session.boolean("union", mode: "release") }
       }.font(.system(size: 10))

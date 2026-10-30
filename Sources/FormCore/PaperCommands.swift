@@ -2,6 +2,28 @@ import Foundation
 import CoreFoundation
 
 public enum PaperCommands {
+  /// Shared inside-source creation, composed into the caller's existing transaction.
+  /// Merely discovering a physical face never calls this mutating helper.
+  @discardableResult public static func ensureInside(in project:inout Project,objectID:UUID)throws->UUID {
+    guard let object=project.objects.first(where:{$0.id==objectID}),PaperConstruction.isPaper(object) else{throw FormError.missing("Choose a paper construction.")}
+    guard !object.locked else{throw FormError.invalid("Unlock the construction before creating its inside source.")}
+    let current=try PaperConstruction.definition(for:object)
+    if let existing=current.insideArtworkSourceID {return existing}
+    let siblings=project.objects.indices.filter{project.objects[$0].designID==object.designID}
+    guard siblings.allSatisfy({!project.objects[$0].locked}) else{throw FormError.invalid("Unlock linked paper variants before creating their shared inside source.")}
+    let net=try current.net()
+    var art=try project.makeObject(recipeID:"artboard",name:object.name+" · Inside registered",parameters:["width":net.size.x,"depth":net.size.y],materialID:"paper-superfine",position:.init(object.position.x+net.size.x+70,0,object.position.z))
+    var blank=Artwork(background:"#F7F5EF");blank.backgroundOpacity=0
+    art.artwork=current.insideArtwork ?? blank;art.canvasSourceOnly=true
+    // Resolve every sibling before publishing any mutation, including helper-only callers.
+    let definitions=try siblings.map{index -> (Int,PaperConstruction) in
+      var definition=try PaperConstruction.definition(for:project.objects[index]);definition.insideArtworkSourceID=art.id;definition.insideArtwork=nil
+      return(index,definition)
+    }
+    project.objects.append(art)
+    for (index,definition) in definitions {project.objects[index].paperConstruction=definition}
+    return art.id
+  }
   public static func isReadOnly(_ args:[String:Any])->Bool{["inspect","preflight","layout","view","export","template_inspect"].contains(args["command"] as? String ?? "inspect") || PaperAppearanceCommands.readOnlyNames.contains(args["command"] as? String ?? "")}
   public static func preservesDocumentDrafts(_ args:[String:Any])->Bool{isReadOnly(args) || args["command"] as? String == "save_stock"}
   public static func call(engine:OperationEngine,arguments args:[String:Any],source:String)throws->Any {
@@ -71,10 +93,7 @@ public enum PaperCommands {
       guard !object.locked else{throw FormError.invalid("Unlock the construction before creating its inside source.")}
       if let existing=current.insideArtworkSourceID{return ["object_id":id.uuidString,"inside_source_id":existing.uuidString]}
       var created:UUID?
-      try engine.edit("Created registered inside artwork",source:source){p in
-        let net=try current.net();var art=try p.makeObject(recipeID:"artboard",name:object.name+" · Inside registered",parameters:["width":net.size.x,"depth":net.size.y],materialID:"paper-superfine",position:.init(object.position.x+net.size.x+70,0,object.position.z));var blank=Artwork(background:"#F7F5EF");blank.backgroundOpacity=0;art.artwork=current.insideArtwork ?? blank;art.canvasSourceOnly=true;created=art.id;p.objects.append(art)
-        for i in p.objects.indices where p.objects[i].designID==object.designID{guard !p.objects[i].locked else{throw FormError.invalid("Unlock linked paper variants before creating their shared inside source.")};var s=try PaperConstruction.definition(for:p.objects[i]);s.insideArtworkSourceID=art.id;s.insideArtwork=nil;p.objects[i].paperConstruction=s}
-      }
+      try engine.edit("Created registered inside artwork",source:source){p in created=try ensureInside(in:&p,objectID:id)}
       return ["object_id":id.uuidString,"inside_source_id":created!.uuidString]
     case "configure","annotations":
       guard !object.locked else{throw FormError.invalid("Unlock this paper construction before editing it.")}

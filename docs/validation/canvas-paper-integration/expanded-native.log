@@ -1,0 +1,967 @@
+[0/1] Planning build
+Building for debugging...
+[0/9] Write sources
+[2/9] Write swift-version--1AB21518FC5DEDBE.txt
+[4/9] Compiling FormApp ArtworkSession.swift
+[5/9] Emitting module FormApp
+[5/10] Write Objects.LinkFileList
+[6/10] Linking Form
+[7/10] Applying Form
+[9/28] Compiling FormAppTests ClothIntegrationTests.swift
+[10/28] Compiling FormAppTests ClothMoveTests.swift
+[11/28] Compiling FormAppTests ClothPreviewControllerTests.swift
+[12/28] Compiling FormAppTests CollectionDetachedArtworkTests.swift
+[13/28] Compiling FormAppTests CollectionProductionEditingTests.swift
+[14/28] Compiling FormAppTests CanvasGroupNavigationTests.swift
+[15/28] Compiling FormAppTests CanvasHoverTests.swift
+[16/28] Compiling FormAppTests CanvasInteractionNavigationTests.swift
+[17/28] Compiling FormAppTests CanvasOnlySourcePresentationTests.swift
+[18/28] Compiling FormAppTests CanvasPaperArrangementIntegrationTests.swift
+[19/28] Compiling FormAppTests CanvasPaperPickingIntegrationTests.swift
+[20/28] Emitting module FormAppTests
+[21/28] Compiling FormAppTests CanvasPaperSidesTests.swift
+[22/28] Compiling FormAppTests CanvasPointerRoutingTests.swift
+[23/28] Compiling FormAppTests CanvasSewingGuideTests.swift
+[24/28] Compiling FormAppTests CanvasSourceAuthoringTests.swift
+[25/28] Compiling FormAppTests CanvasViewportTests.swift
+[26/28] Compiling FormAppTests CharacterPositionEditingTests.swift
+[27/33] Compiling FormAppTests ColorProfileEditingTests.swift
+[28/33] Compiling FormAppTests DecorationPreparationEditingTests.swift
+[29/33] Compiling FormAppTests DesignSurfaceTests.swift
+[30/33] Compiling FormAppTests DeskClockGeometryTests.swift
+[31/33] Compiling FormAppTests EmbroideryEditingTests.swift
+[31/33] Write Objects.LinkFileList
+[32/33] Linking FORMPackageTests
+Build complete! (15.68s)
+ld: warning: duplicate -rpath '/Users/rustymeadows/Dev/form/.local/testing/xctest/.build/arm64-apple-macosx/debug' ignored
+Registered 346 unchanged test methods in 75 XCTestCase classes.
+Test Suite 'All tests' started at 2026-10-30 14:36:15.749
+Test Suite 'testing.xctest' started at 2026-10-30 14:36:15.750
+Test Suite 'ArtworkPageSetupEditingTests' started at 2026-10-30 14:36:15.750
+Test Case 'ArtworkPageSetupEditingTests.testNativePhysicalPageReviewUsesSharedVectorPDFCanvasWithoutChangingSource' started at 2026-10-30 14:36:15.750
+Test Case 'ArtworkPageSetupEditingTests.testNativePhysicalPageReviewUsesSharedVectorPDFCanvasWithoutChangingSource' passed (0.584 seconds)
+Test Suite 'ArtworkPageSetupEditingTests' passed at 2026-10-30 14:36:16.335
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.584 (0.584) seconds
+Test Suite 'AuthoredPaperRenderingTests' started at 2026-10-30 14:36:16.335
+Test Case 'AuthoredPaperRenderingTests.testConvertedCyanotypeArtworkAppearsInAnActualFoldedNativeCapture' started at 2026-10-30 14:36:16.335
+Test Case 'AuthoredPaperRenderingTests.testConvertedCyanotypeArtworkAppearsInAnActualFoldedNativeCapture' passed (3.982 seconds)
+Test Case 'AuthoredPaperRenderingTests.testConvertedExamplesReachTheRealTableGeometryFactoryWithArtwork' started at 2026-10-30 14:36:20.318
+Test Case 'AuthoredPaperRenderingTests.testConvertedExamplesReachTheRealTableGeometryFactoryWithArtwork' passed (3.05 seconds)
+Test Case 'AuthoredPaperRenderingTests.testSelectedLiveFoldReturnsToStablePhysicalBoundsFitAndRenderedPixels' started at 2026-10-30 14:36:23.368
+Test Case 'AuthoredPaperRenderingTests.testSelectedLiveFoldReturnsToStablePhysicalBoundsFitAndRenderedPixels' passed (0.726 seconds)
+Test Case 'AuthoredPaperRenderingTests.testUnregisteredConstructionRendersPanelsAndReusesThemAcrossFoldPoses' started at 2026-10-30 14:36:24.094
+Test Case 'AuthoredPaperRenderingTests.testUnregisteredConstructionRendersPanelsAndReusesThemAcrossFoldPoses' passed (0.085 seconds)
+Test Suite 'AuthoredPaperRenderingTests' passed at 2026-10-30 14:36:24.179
+	 Executed 4 tests, with 0 failures (0 unexpected) in 7.843 (7.843) seconds
+Test Suite 'CanvasBackgroundTests' started at 2026-10-30 14:36:24.179
+Test Case 'CanvasBackgroundTests.testActualPresetControlPersistsWithoutEditingArtworkOrUndoHistory' started at 2026-10-30 14:36:24.179
+Test Case 'CanvasBackgroundTests.testActualPresetControlPersistsWithoutEditingArtworkOrUndoHistory' passed (0.511 seconds)
+Test Case 'CanvasBackgroundTests.testBackgroundDefaultsRecoverAndFailedSaveDoesNotChangePreference' started at 2026-10-30 14:36:24.690
+Test Case 'CanvasBackgroundTests.testBackgroundDefaultsRecoverAndFailedSaveDoesNotChangePreference' passed (0.008 seconds)
+Test Case 'CanvasBackgroundTests.testCustomPickerOpenedFromToolbarPopoverKeepsItsLivePreferenceBinding' started at 2026-10-30 14:36:24.699
+Test Case 'CanvasBackgroundTests.testCustomPickerOpenedFromToolbarPopoverKeepsItsLivePreferenceBinding' passed (0.501 seconds)
+Test Case 'CanvasBackgroundTests.testOlderAccentPreferenceMigratesAndBothColorsSurviveIndependentEdits' started at 2026-10-30 14:36:25.199
+Test Case 'CanvasBackgroundTests.testOlderAccentPreferenceMigratesAndBothColorsSurviveIndependentEdits' passed (0.002 seconds)
+Test Case 'CanvasBackgroundTests.testWorkspaceLabelsAndSelectionRemainReadableAcrossCustomColors' started at 2026-10-30 14:36:25.202
+Test Case 'CanvasBackgroundTests.testWorkspaceLabelsAndSelectionRemainReadableAcrossCustomColors' passed (0.016 seconds)
+Test Suite 'CanvasBackgroundTests' passed at 2026-10-30 14:36:25.218
+	 Executed 5 tests, with 0 failures (0 unexpected) in 1.039 (1.039) seconds
+Test Suite 'CanvasConstructionProjectionTests' started at 2026-10-30 14:36:25.218
+Test Case 'CanvasConstructionProjectionTests.testCADNamedSurfaceUsesTheSameCanvasFrameAndOriginalArtboardSource' started at 2026-10-30 14:36:25.218
+Test Case 'CanvasConstructionProjectionTests.testCADNamedSurfaceUsesTheSameCanvasFrameAndOriginalArtboardSource' passed (0.014 seconds)
+Test Case 'CanvasConstructionProjectionTests.testClipboardAcrossRotatedSurfacesKeepsUprightArtworkAndOneUndo' started at 2026-10-30 14:36:25.232
+Test Case 'CanvasConstructionProjectionTests.testClipboardAcrossRotatedSurfacesKeepsUprightArtworkAndOneUndo' passed (0.029 seconds)
+Test Case 'CanvasConstructionProjectionTests.testDielineArtworkEditsKeepDerivedGeometryAndMovingProjectionHasIndependentSavedUndo' started at 2026-10-30 14:36:25.262
+Test Case 'CanvasConstructionProjectionTests.testDielineArtworkEditsKeepDerivedGeometryAndMovingProjectionHasIndependentSavedUndo' passed (0.022 seconds)
+Test Case 'CanvasConstructionProjectionTests.testImagePlacementIntoRotatedSurfaceIsUprightAndOneUndo' started at 2026-10-30 14:36:25.284
+Test Case 'CanvasConstructionProjectionTests.testImagePlacementIntoRotatedSurfaceIsUprightAndOneUndo' passed (0.018 seconds)
+Test Case 'CanvasConstructionProjectionTests.testInsideProjectionUsesIndependentSharedSourceAndPreservesOutsideArtwork' started at 2026-10-30 14:36:25.302
+Test Case 'CanvasConstructionProjectionTests.testInsideProjectionUsesIndependentSharedSourceAndPreservesOutsideArtwork' passed (0.018 seconds)
+Test Case 'CanvasConstructionProjectionTests.testMovingProjectionReusesActualPhysicalGeometryAndTextures' started at 2026-10-30 14:36:25.321
+Test Case 'CanvasConstructionProjectionTests.testMovingProjectionReusesActualPhysicalGeometryAndTextures' passed (0.053 seconds)
+Test Case 'CanvasConstructionProjectionTests.testOneCanvasContainsProofAndUprightSurfacesWithoutCreatingArtworkCopies' started at 2026-10-30 14:36:25.374
+Test Case 'CanvasConstructionProjectionTests.testOneCanvasContainsProofAndUprightSurfacesWithoutCreatingArtworkCopies' passed (0.004 seconds)
+Test Case 'CanvasConstructionProjectionTests.testProjectionHitTestingUsesPolygonAndSourceRoundTripPreservesUnchangedLayers' started at 2026-10-30 14:36:25.378
+Test Case 'CanvasConstructionProjectionTests.testProjectionHitTestingUsesPolygonAndSourceRoundTripPreservesUnchangedLayers' passed (0.004 seconds)
+Test Case 'CanvasConstructionProjectionTests.testSVGImportCentersUprightOnRotatedSurfaceInOneUndoAndRetainsOriginalSource' started at 2026-10-30 14:36:25.382
+Test Case 'CanvasConstructionProjectionTests.testSVGImportCentersUprightOnRotatedSurfaceInOneUndoAndRetainsOriginalSource' passed (0.023 seconds)
+Test Case 'CanvasConstructionProjectionTests.testSVGImportRetainsInsideSourceAndConstructionSelectionAfterReconcile' started at 2026-10-30 14:36:25.406
+Test Case 'CanvasConstructionProjectionTests.testSVGImportRetainsInsideSourceAndConstructionSelectionAfterReconcile' passed (0.021 seconds)
+Test Case 'CanvasConstructionProjectionTests.testSewingArtworkUsesTheSameOrdinarySourceSessionWithoutPaperProjection' started at 2026-10-30 14:36:25.426
+Test Case 'CanvasConstructionProjectionTests.testSewingArtworkUsesTheSameOrdinarySourceSessionWithoutPaperProjection' passed (0.01 seconds)
+Test Case 'CanvasConstructionProjectionTests.testUprightSelectAllAndNativeMarqueeOnlySelectArtworkIntersectingThatSurface' started at 2026-10-30 14:36:25.436
+Test Case 'CanvasConstructionProjectionTests.testUprightSelectAllAndNativeMarqueeOnlySelectArtworkIntersectingThatSurface' passed (0.013 seconds)
+Test Case 'CanvasConstructionProjectionTests.testUprightTextEditMapsToOneSourceAndUndoReopenRetainOrientation' started at 2026-10-30 14:36:25.449
+Test Case 'CanvasConstructionProjectionTests.testUprightTextEditMapsToOneSourceAndUndoReopenRetainOrientation' passed (0.014 seconds)
+Test Suite 'CanvasConstructionProjectionTests' passed at 2026-10-30 14:36:25.463
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.245 (0.245) seconds
+Test Suite 'CanvasContextMenuTests' started at 2026-10-30 14:36:25.463
+Test Case 'CanvasContextMenuTests.testAlignAndDistributeMenusUseTheirActualCommandsWithIndependentUndo' started at 2026-10-30 14:36:25.463
+Test Case 'CanvasContextMenuTests.testAlignAndDistributeMenusUseTheirActualCommandsWithIndependentUndo' passed (0.012 seconds)
+Test Case 'CanvasContextMenuTests.testArrangeForwardSkipsInterleavedChildrenAndHasOneUndo' started at 2026-10-30 14:36:25.475
+Test Case 'CanvasContextMenuTests.testArrangeForwardSkipsInterleavedChildrenAndHasOneUndo' passed (0.012 seconds)
+Test Case 'CanvasContextMenuTests.testDeepProbeSelectsTransformedDescendantAndOffersImmediateScopeExit' started at 2026-10-30 14:36:25.487
+Test Case 'CanvasContextMenuTests.testDeepProbeSelectsTransformedDescendantAndOffersImmediateScopeExit' passed (0.012 seconds)
+Test Case 'CanvasContextMenuTests.testLockedAndClippedLayersAreProbedSafelyAndStaleMenusCannotEditAnotherSource' started at 2026-10-30 14:36:25.499
+Test Case 'CanvasContextMenuTests.testLockedAndClippedLayersAreProbedSafelyAndStaleMenusCannotEditAnotherSource' passed (0.012 seconds)
+Test Case 'CanvasContextMenuTests.testMountedAlignmentButtonsHaveFullTargetsTrackSelectionAndProduceOneUndo' started at 2026-10-30 14:36:25.510
+Test Case 'CanvasContextMenuTests.testMountedAlignmentButtonsHaveFullTargetsTrackSelectionAndProduceOneUndo' passed (0.271 seconds)
+Test Case 'CanvasContextMenuTests.testOpeningContextMenuPreservesActiveMaskEditingUntilExplicitCanvasExit' started at 2026-10-30 14:36:25.782
+Test Case 'CanvasContextMenuTests.testOpeningContextMenuPreservesActiveMaskEditingUntilExplicitCanvasExit' passed (0.011 seconds)
+Test Case 'CanvasContextMenuTests.testRightClickCancelsHeldDragBeforeSelectingAnotherLayerAndLateEventsStayInert' started at 2026-10-30 14:36:25.792
+Test Case 'CanvasContextMenuTests.testRightClickCancelsHeldDragBeforeSelectingAnotherLayerAndLateEventsStayInert' passed (0.025 seconds)
+Test Case 'CanvasContextMenuTests.testRightClickFromDeepIsolationSelectsNearestParentSiblingBeforeDestructiveAction' started at 2026-10-30 14:36:25.818
+Test Case 'CanvasContextMenuTests.testRightClickFromDeepIsolationSelectsNearestParentSiblingBeforeDestructiveAction' passed (0.016 seconds)
+Test Case 'CanvasContextMenuTests.testRightClickPreservesMultiselectionAndGroupUngroupAreSeparateUndoSteps' started at 2026-10-30 14:36:25.833
+Test Case 'CanvasContextMenuTests.testRightClickPreservesMultiselectionAndGroupUngroupAreSeparateUndoSteps' passed (0.011 seconds)
+Test Case 'CanvasContextMenuTests.testRightClickTargetsTheObjectAndInspectorActionIsScopedWithoutDocumentMutation' started at 2026-10-30 14:36:25.844
+Test Case 'CanvasContextMenuTests.testRightClickTargetsTheObjectAndInspectorActionIsScopedWithoutDocumentMutation' passed (0.011 seconds)
+Test Suite 'CanvasContextMenuTests' passed at 2026-10-30 14:36:25.855
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.391 (0.391) seconds
+Test Suite 'CanvasCutoutProjectionTests' started at 2026-10-30 14:36:25.855
+Test Case 'CanvasCutoutProjectionTests.testExactFoldedSlabsSubtractCutoutsAndInvalidateCachedHoleGeometry' started at 2026-10-30 14:36:25.855
+Test Case 'CanvasCutoutProjectionTests.testExactFoldedSlabsSubtractCutoutsAndInvalidateCachedHoleGeometry' passed (0.078 seconds)
+Test Case 'CanvasCutoutProjectionTests.testOutsideInsideAndWholeNetHitsExcludePhysicalHolesAndKeepCrossingArtwork' started at 2026-10-30 14:36:25.933
+Test Case 'CanvasCutoutProjectionTests.testOutsideInsideAndWholeNetHitsExcludePhysicalHolesAndKeepCrossingArtwork' passed (0.001 seconds)
+Test Case 'CanvasCutoutProjectionTests.testSharedPhysicalFrameRoundtripKeepsCanonicalArtAndResourceIdentity' started at 2026-10-30 14:36:25.934
+Test Case 'CanvasCutoutProjectionTests.testSharedPhysicalFrameRoundtripKeepsCanonicalArtAndResourceIdentity' passed (0.0 seconds)
+Test Suite 'CanvasCutoutProjectionTests' passed at 2026-10-30 14:36:25.934
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.079 (0.079) seconds
+Test Suite 'CanvasDenseInteractionTests' started at 2026-10-30 14:36:25.934
+Test Case 'CanvasDenseInteractionTests.testDenseMarqueeAndShiftSelectionMoveOnlyChosenRootsWithExactUndoRedo' started at 2026-10-30 14:36:25.934
+Test Case 'CanvasDenseInteractionTests.testDenseMarqueeAndShiftSelectionMoveOnlyChosenRootsWithExactUndoRedo' passed (2.449 seconds)
+Test Case 'CanvasDenseInteractionTests.testDenseNativeGroupingMovingAndProportionalScalingPreserveDescendantsAndUndoEachStep' started at 2026-10-30 14:36:28.383
+Test Case 'CanvasDenseInteractionTests.testDenseNativeGroupingMovingAndProportionalScalingPreserveDescendantsAndUndoEachStep' passed (5.881 seconds)
+Test Case 'CanvasDenseInteractionTests.testDensePaintOrderClippingAndNestedSelectionAtThreeZoomLevels' started at 2026-10-30 14:36:34.263
+Test Case 'CanvasDenseInteractionTests.testDensePaintOrderClippingAndNestedSelectionAtThreeZoomLevels' passed (5.434 seconds)
+Test Case 'CanvasDenseInteractionTests.testImmediateGroupUndoRedoRefreshPickingAndHoverWithoutAViewUpdate' started at 2026-10-30 14:36:39.697
+Test Case 'CanvasDenseInteractionTests.testImmediateGroupUndoRedoRefreshPickingAndHoverWithoutAViewUpdate' passed (1.736 seconds)
+Test Suite 'CanvasDenseInteractionTests' passed at 2026-10-30 14:36:41.434
+	 Executed 4 tests, with 0 failures (0 unexpected) in 15.499 (15.499) seconds
+Test Suite 'CanvasDrawingBoundaryTests' started at 2026-10-30 14:36:41.434
+Test Case 'CanvasDrawingBoundaryTests.testCanvasRenderingRestoresGraphicsTransformAndClipForNextSibling' started at 2026-10-30 14:36:41.434
+Test Case 'CanvasDrawingBoundaryTests.testCanvasRenderingRestoresGraphicsTransformAndClipForNextSibling' passed (0.019 seconds)
+Test Case 'CanvasDrawingBoundaryTests.testOversizedCanvasDamageCannotEraseNeighboringHeaderOrFooterPixels' started at 2026-10-30 14:36:41.453
+Test Case 'CanvasDrawingBoundaryTests.testOversizedCanvasDamageCannotEraseNeighboringHeaderOrFooterPixels' passed (0.018 seconds)
+Test Suite 'CanvasDrawingBoundaryTests' passed at 2026-10-30 14:36:41.471
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.037 (0.037) seconds
+Test Suite 'CanvasEdgeScrollingTests' started at 2026-10-30 14:36:41.471
+Test Case 'CanvasEdgeScrollingTests.testApproachingEdgeAcceleratesSmoothlyToBoundedSpeed' started at 2026-10-30 14:36:41.471
+Test Case 'CanvasEdgeScrollingTests.testApproachingEdgeAcceleratesSmoothlyToBoundedSpeed' passed (0.001 seconds)
+Test Case 'CanvasEdgeScrollingTests.testElapsedTimeKeepsSpeedStableButAStallCannotJumpTheDocument' started at 2026-10-30 14:36:41.471
+Test Case 'CanvasEdgeScrollingTests.testElapsedTimeKeepsSpeedStableButAStallCannotJumpTheDocument' passed (0.0 seconds)
+Test Case 'CanvasEdgeScrollingTests.testInteriorAndMarginBoundaryStayStill' started at 2026-10-30 14:36:41.471
+Test Case 'CanvasEdgeScrollingTests.testInteriorAndMarginBoundaryStayStill' passed (0.0 seconds)
+Test Case 'CanvasEdgeScrollingTests.testInvalidGeometryAndTimingDoNotMoveTheViewport' started at 2026-10-30 14:36:41.472
+Test Case 'CanvasEdgeScrollingTests.testInvalidGeometryAndTimingDoNotMoveTheViewport' passed (0.0 seconds)
+Test Case 'CanvasEdgeScrollingTests.testNarrowViewportRetainsANeutralCenterAndCorrectDirections' started at 2026-10-30 14:36:41.472
+Test Case 'CanvasEdgeScrollingTests.testNarrowViewportRetainsANeutralCenterAndCorrectDirections' passed (0.0 seconds)
+Test Case 'CanvasEdgeScrollingTests.testNegativeCoordinatesAndTranslatedViewportsHaveIdenticalBehavior' started at 2026-10-30 14:36:41.472
+Test Case 'CanvasEdgeScrollingTests.testNegativeCoordinatesAndTranslatedViewportsHaveIdenticalBehavior' passed (0.0 seconds)
+Test Suite 'CanvasEdgeScrollingTests' passed at 2026-10-30 14:36:41.472
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'CanvasFitBoundsTests' started at 2026-10-30 14:36:41.472
+Test Case 'CanvasFitBoundsTests.testFitContainsWholeAuthoredNetAndEveryUprightFrameAfterNativeDocumentOffsetsAndPanOnly' started at 2026-10-30 14:36:41.472
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/CanvasFitBoundsTests.swift:71: error: CanvasFitBoundsTests.testFitContainsWholeAuthoredNetAndEveryUprightFrameAfterNativeDocumentOffsetsAndPanOnly : XCTAssertFalse failed - 
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/CanvasFitBoundsTests.swift:71: error: CanvasFitBoundsTests.testFitContainsWholeAuthoredNetAndEveryUprightFrameAfterNativeDocumentOffsetsAndPanOnly : XCTAssertFalse failed - 
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/CanvasFitBoundsTests.swift:71: error: CanvasFitBoundsTests.testFitContainsWholeAuthoredNetAndEveryUprightFrameAfterNativeDocumentOffsetsAndPanOnly : XCTAssertFalse failed - 
+Test Case 'CanvasFitBoundsTests.testFitContainsWholeAuthoredNetAndEveryUprightFrameAfterNativeDocumentOffsetsAndPanOnly' failed (0.412 seconds)
+Test Case 'CanvasFitBoundsTests.testNativeRulerOverlaysLeaveTheWholeTallArtboardMarginVisible' started at 2026-10-30 14:36:41.884
+Test Case 'CanvasFitBoundsTests.testNativeRulerOverlaysLeaveTheWholeTallArtboardMarginVisible' passed (0.486 seconds)
+Test Case 'CanvasFitBoundsTests.testPendingPaperPanelFocusFitsThePhysicalPanelInShiftedNativeDocument' started at 2026-10-30 14:36:42.371
+Test Case 'CanvasFitBoundsTests.testPendingPaperPanelFocusFitsThePhysicalPanelInShiftedNativeDocument' passed (0.847 seconds)
+Test Suite 'CanvasFitBoundsTests' failed at 2026-10-30 14:36:43.218
+	 Executed 3 tests, with 3 failures (0 unexpected) in 1.745 (1.745) seconds
+Test Suite 'CanvasFloatingWorkspaceTests' started at 2026-10-30 14:36:43.218
+Test Case 'CanvasFloatingWorkspaceTests.testFullWidthFloatingCardsLeaveNativeCanvasWhitespaceInteractive' started at 2026-10-30 14:36:43.218
+Test Case 'CanvasFloatingWorkspaceTests.testFullWidthFloatingCardsLeaveNativeCanvasWhitespaceInteractive' passed (0.2 seconds)
+Test Case 'CanvasFloatingWorkspaceTests.testNarrowCanvasesRetainTheSamePanelsAndInteractiveWhitespace' started at 2026-10-30 14:36:43.417
+Test Case 'CanvasFloatingWorkspaceTests.testNarrowCanvasesRetainTheSamePanelsAndInteractiveWhitespace' passed (0.244 seconds)
+Test Suite 'CanvasFloatingWorkspaceTests' passed at 2026-10-30 14:36:43.661
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.443 (0.443) seconds
+Test Suite 'CanvasFrameCachingTests' started at 2026-10-30 14:36:43.661
+Test Case 'CanvasFrameCachingTests.testDirectSourceAndGeometryAssignmentsAndUndoNeverReturnStaleFrames' started at 2026-10-30 14:36:43.661
+Test Case 'CanvasFrameCachingTests.testDirectSourceAndGeometryAssignmentsAndUndoNeverReturnStaleFrames' passed (0.014 seconds)
+Test Case 'CanvasFrameCachingTests.testGlobalStorySwatchAndStyleChangesInvalidateEvenWhenFrameObjectsDoNotChange' started at 2026-10-30 14:36:43.676
+Test Case 'CanvasFrameCachingTests.testGlobalStorySwatchAndStyleChangesInvalidateEvenWhenFrameObjectsDoNotChange' passed (0.014 seconds)
+Test Case 'CanvasFrameCachingTests.testInsideNavigationActivePanelAndComponentContextUseCurrentInputs' started at 2026-10-30 14:36:43.689
+Test Case 'CanvasFrameCachingTests.testInsideNavigationActivePanelAndComponentContextUseCurrentInputs' passed (0.012 seconds)
+Test Case 'CanvasFrameCachingTests.testLegacyDielineAndLinkedTargetContextCannotReuseWrongDimensions' started at 2026-10-30 14:36:43.701
+Test Case 'CanvasFrameCachingTests.testLegacyDielineAndLinkedTargetContextCannotReuseWrongDimensions' passed (0.002 seconds)
+Test Case 'CanvasFrameCachingTests.testTableCameraOnlyUpdatesReuseCanonicalFrames' started at 2026-10-30 14:36:43.703
+Test Case 'CanvasFrameCachingTests.testTableCameraOnlyUpdatesReuseCanonicalFrames' passed (0.009 seconds)
+Test Case 'CanvasFrameCachingTests.testTwelveCaseLayerTraversalAndRepeatedInspectorReadsBuildFramesOnlyOnce' started at 2026-10-30 14:36:43.713
+Test Case 'CanvasFrameCachingTests.testTwelveCaseLayerTraversalAndRepeatedInspectorReadsBuildFramesOnlyOnce' passed (1.586 seconds)
+Test Suite 'CanvasFrameCachingTests' passed at 2026-10-30 14:36:45.298
+	 Executed 6 tests, with 0 failures (0 unexpected) in 1.637 (1.637) seconds
+Test Suite 'CanvasGroupNavigationTests' started at 2026-10-30 14:36:45.298
+Test Case 'CanvasGroupNavigationTests.testActualLeaveGroupButtonActsImmediatelyAndReturnsKeyboardFocusToCanvas' started at 2026-10-30 14:36:45.298
+Test Case 'CanvasGroupNavigationTests.testActualLeaveGroupButtonActsImmediatelyAndReturnsKeyboardFocusToCanvas' passed (12.245 seconds)
+Test Case 'CanvasGroupNavigationTests.testBlankDoubleClickLeavesTheCurrentGroupEvenInsideItsEmptyBounds' started at 2026-10-30 14:36:57.544
+Test Case 'CanvasGroupNavigationTests.testBlankDoubleClickLeavesTheCurrentGroupEvenInsideItsEmptyBounds' passed (2.813 seconds)
+Test Case 'CanvasGroupNavigationTests.testEscapeCancelsTheHeldNestedDragBeforeAscendingOnTheNextPress' started at 2026-10-30 14:37:00.357
+Test Case 'CanvasGroupNavigationTests.testEscapeCancelsTheHeldNestedDragBeforeAscendingOnTheNextPress' passed (3.071 seconds)
+Test Case 'CanvasGroupNavigationTests.testExternalSiblingClickWalksToTheNearestReachableScopeAndSelectsItImmediately' started at 2026-10-30 14:37:03.429
+Test Case 'CanvasGroupNavigationTests.testExternalSiblingClickWalksToTheNearestReachableScopeAndSelectsItImmediately' passed (4.005 seconds)
+Test Case 'CanvasGroupNavigationTests.testExternalSiblingHoverPreviewsTheSameNearestTargetAsClickWithoutNavigating' started at 2026-10-30 14:37:07.434
+Test Case 'CanvasGroupNavigationTests.testExternalSiblingHoverPreviewsTheSameNearestTargetAsClickWithoutNavigating' passed (3.674 seconds)
+Test Case 'CanvasGroupNavigationTests.testFreshAndCumulativeDoubleClicksEnterExactlyOneLevelPerPairWithoutRefitting' started at 2026-10-30 14:37:11.108
+Test Case 'CanvasGroupNavigationTests.testFreshAndCumulativeDoubleClicksEnterExactlyOneLevelPerPairWithoutRefitting' passed (13.199 seconds)
+Test Case 'CanvasGroupNavigationTests.testNestedDragLeaveUndoRedoAndRapidReentryKeepNavigationIndependentOfHistory' started at 2026-10-30 14:37:24.307
+Test Case 'CanvasGroupNavigationTests.testNestedDragLeaveUndoRedoAndRapidReentryKeepNavigationIndependentOfHistory' passed (9.636 seconds)
+Test Case 'CanvasGroupNavigationTests.testOutsideBlankAscendsOneLevelWithoutStartingAMarqueeUntilTheNextGesture' started at 2026-10-30 14:37:33.944
+Test Case 'CanvasGroupNavigationTests.testOutsideBlankAscendsOneLevelWithoutStartingAMarqueeUntilTheNextGesture' passed (2.891 seconds)
+Test Case 'CanvasGroupNavigationTests.testSharedNavigationCancelsHeldDragAndIgnoresLateDragAndMouseUp' started at 2026-10-30 14:37:36.835
+Test Case 'CanvasGroupNavigationTests.testSharedNavigationCancelsHeldDragAndIgnoresLateDragAndMouseUp' passed (3.103 seconds)
+Test Case 'CanvasGroupNavigationTests.testShiftClickOutsideTheIsolatedGroupPreservesScopeAndExistingSelection' started at 2026-10-30 14:37:39.938
+Test Case 'CanvasGroupNavigationTests.testShiftClickOutsideTheIsolatedGroupPreservesScopeAndExistingSelection' passed (2.528 seconds)
+Test Suite 'CanvasGroupNavigationTests' passed at 2026-10-30 14:37:42.466
+	 Executed 10 tests, with 0 failures (0 unexpected) in 57.166 (57.166) seconds
+Test Suite 'CanvasHoverTests' started at 2026-10-30 14:37:42.466
+Test Case 'CanvasHoverTests.testFloatingControlOcclusionSuppressesUnderlyingCanvasHover' started at 2026-10-30 14:37:42.466
+Test Case 'CanvasHoverTests.testFloatingControlOcclusionSuppressesUnderlyingCanvasHover' passed (0.01 seconds)
+Test Case 'CanvasHoverTests.testHoverPreviewsThePickedLayerWithoutChangingSelectionOrHistoryAndClearsOnExit' started at 2026-10-30 14:37:42.477
+Test Case 'CanvasHoverTests.testHoverPreviewsThePickedLayerWithoutChangingSelectionOrHistoryAndClearsOnExit' passed (0.009 seconds)
+Test Case 'CanvasHoverTests.testResizeAndRotationFeedbackUseTheExactVisibleSelectionHandles' started at 2026-10-30 14:37:42.486
+Test Case 'CanvasHoverTests.testResizeAndRotationFeedbackUseTheExactVisibleSelectionHandles' passed (0.02 seconds)
+Test Case 'CanvasHoverTests.testToolFeedbackAndWindowDeactivationDoNotLeaveHoverTargetsBehind' started at 2026-10-30 14:37:42.506
+Test Case 'CanvasHoverTests.testToolFeedbackAndWindowDeactivationDoNotLeaveHoverTargetsBehind' passed (0.008 seconds)
+Test Suite 'CanvasHoverTests' passed at 2026-10-30 14:37:42.514
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.047 (0.047) seconds
+Test Suite 'CanvasInteractionNavigationTests' started at 2026-10-30 14:37:42.514
+Test Case 'CanvasInteractionNavigationTests.testAnchoredZoomKeepsThePointerWorldPointStationaryAcrossExtentGrowth' started at 2026-10-30 14:37:42.514
+Test Case 'CanvasInteractionNavigationTests.testAnchoredZoomKeepsThePointerWorldPointStationaryAcrossExtentGrowth' passed (0.01 seconds)
+Test Case 'CanvasInteractionNavigationTests.testClickJitterIsMeasuredInVisualPointsAndPreservesTheRedoBranch' started at 2026-10-30 14:37:42.523
+Test Case 'CanvasInteractionNavigationTests.testClickJitterIsMeasuredInVisualPointsAndPreservesTheRedoBranch' passed (0.015 seconds)
+Test Case 'CanvasInteractionNavigationTests.testCrossingDragThresholdKeepsTheGrabPointAndMakesOneUndo' started at 2026-10-30 14:37:42.538
+Test Case 'CanvasInteractionNavigationTests.testCrossingDragThresholdKeepsTheGrabPointAndMakesOneUndo' passed (0.01 seconds)
+Test Case 'CanvasInteractionNavigationTests.testEscapeCancelsAFrameTitleDrag' started at 2026-10-30 14:37:42.548
+Test Case 'CanvasInteractionNavigationTests.testEscapeCancelsAFrameTitleDrag' passed (0.01 seconds)
+Test Case 'CanvasInteractionNavigationTests.testEscapeCancelsAnActiveMoveAndIgnoresTheRemainderOfThePointerGesture' started at 2026-10-30 14:37:42.559
+Test Case 'CanvasInteractionNavigationTests.testEscapeCancelsAnActiveMoveAndIgnoresTheRemainderOfThePointerGesture' passed (0.009 seconds)
+Test Case 'CanvasInteractionNavigationTests.testEscapeCancelsShapeCreationIncludingTheInitialMouseDownMutation' started at 2026-10-30 14:37:42.568
+Test Case 'CanvasInteractionNavigationTests.testEscapeCancelsShapeCreationIncludingTheInitialMouseDownMutation' passed (0.012 seconds)
+Test Case 'CanvasInteractionNavigationTests.testEscapeStopsHeldEdgeScrollingAndRestoresTheOriginalArtwork' started at 2026-10-30 14:37:42.579
+Test Case 'CanvasInteractionNavigationTests.testEscapeStopsHeldEdgeScrollingAndRestoresTheOriginalArtwork' passed (0.174 seconds)
+Test Case 'CanvasInteractionNavigationTests.testHandPanTakesKeyboardFocusWithoutCreatingAnArtworkEdit' started at 2026-10-30 14:37:42.753
+Test Case 'CanvasInteractionNavigationTests.testHandPanTakesKeyboardFocusWithoutCreatingAnArtworkEdit' passed (0.016 seconds)
+Test Case 'CanvasInteractionNavigationTests.testHeldPointerAtTheEdgeScrollsArtworkWithTheViewportAsOneUndo' started at 2026-10-30 14:37:42.769
+Test Case 'CanvasInteractionNavigationTests.testHeldPointerAtTheEdgeScrollsArtworkWithTheViewportAsOneUndo' passed (0.197 seconds)
+Test Case 'CanvasInteractionNavigationTests.testLateEscapeCannotRestoreAnOldGestureOverAnIndependentRedoBranch' started at 2026-10-30 14:37:42.966
+Test Case 'CanvasInteractionNavigationTests.testLateEscapeCannotRestoreAnOldGestureOverAnIndependentRedoBranch' passed (0.013 seconds)
+Test Case 'CanvasInteractionNavigationTests.testShiftDeselectingOneItemCannotDragTheRemainingSelection' started at 2026-10-30 14:37:42.979
+Test Case 'CanvasInteractionNavigationTests.testShiftDeselectingOneItemCannotDragTheRemainingSelection' passed (0.012 seconds)
+Test Case 'CanvasInteractionNavigationTests.testShiftHorizontalDragDoesNotSnapOntoNearbyVerticalOffset' started at 2026-10-30 14:37:42.991
+Test Case 'CanvasInteractionNavigationTests.testShiftHorizontalDragDoesNotSnapOntoNearbyVerticalOffset' passed (0.011 seconds)
+Test Case 'CanvasInteractionNavigationTests.testStalePointerGestureCannotOverwriteAnUnrelatedCommand' started at 2026-10-30 14:37:43.001
+Test Case 'CanvasInteractionNavigationTests.testStalePointerGestureCannotOverwriteAnUnrelatedCommand' passed (0.011 seconds)
+Test Case 'CanvasInteractionNavigationTests.testSwitchingArtworkSourceDuringDragPreservesBothSourcesAndIgnoresLateEvents' started at 2026-10-30 14:37:43.012
+Test Case 'CanvasInteractionNavigationTests.testSwitchingArtworkSourceDuringDragPreservesBothSourcesAndIgnoresLateEvents' passed (0.011 seconds)
+Test Case 'CanvasInteractionNavigationTests.testTinySelectedObjectCanBeGrabbedAtItsCenterWhenHandlesOverlap' started at 2026-10-30 14:37:43.023
+Test Case 'CanvasInteractionNavigationTests.testTinySelectedObjectCanBeGrabbedAtItsCenterWhenHandlesOverlap' passed (0.011 seconds)
+Test Suite 'CanvasInteractionNavigationTests' passed at 2026-10-30 14:37:43.034
+	 Executed 15 tests, with 0 failures (0 unexpected) in 0.52 (0.52) seconds
+Test Suite 'CanvasOnlySourcePresentationTests' started at 2026-10-30 14:37:43.034
+Test Case 'CanvasOnlySourcePresentationTests.testInsideSourceStaysEditableOnCanvasWithoutTableNodeOrFindTarget' started at 2026-10-30 14:37:43.034
+Test Case 'CanvasOnlySourcePresentationTests.testInsideSourceStaysEditableOnCanvasWithoutTableNodeOrFindTarget' passed (10.088 seconds)
+Test Suite 'CanvasOnlySourcePresentationTests' passed at 2026-10-30 14:37:53.122
+	 Executed 1 test, with 0 failures (0 unexpected) in 10.088 (10.088) seconds
+Test Suite 'CanvasPaperArrangementIntegrationTests' started at 2026-10-30 14:37:53.123
+Test Case 'CanvasPaperArrangementIntegrationTests.testInsideReflectedQuarterTurnNativeMenuArrangementPreservesIndependentSourceAndTableState' started at 2026-10-30 14:37:53.123
+Test Case 'CanvasPaperArrangementIntegrationTests.testInsideReflectedQuarterTurnNativeMenuArrangementPreservesIndependentSourceAndTableState' passed (0.081 seconds)
+Test Case 'CanvasPaperArrangementIntegrationTests.testOutsideQuarterTurnSharedArrangementAndGroupCommandsPreserveCanonicalTargetsAndExactHistory' started at 2026-10-30 14:37:53.204
+Test Case 'CanvasPaperArrangementIntegrationTests.testOutsideQuarterTurnSharedArrangementAndGroupCommandsPreserveCanonicalTargetsAndExactHistory' passed (0.076 seconds)
+Test Suite 'CanvasPaperArrangementIntegrationTests' passed at 2026-10-30 14:37:53.280
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.157 (0.157) seconds
+Test Suite 'CanvasPaperPickingIntegrationTests' started at 2026-10-30 14:37:53.280
+Test Case 'CanvasPaperPickingIntegrationTests.testCrossingArtworkRemainsEditableFromInsideAndOutsideMaterialWithOneCanonicalUndo' started at 2026-10-30 14:37:53.280
+Test Case 'CanvasPaperPickingIntegrationTests.testCrossingArtworkRemainsEditableFromInsideAndOutsideMaterialWithOneCanonicalUndo' passed (0.137 seconds)
+Test Case 'CanvasPaperPickingIntegrationTests.testHiddenHoleAndOffPanelArtworkCannotBePickedByClickHoverOrContextProbe' started at 2026-10-30 14:37:53.417
+Test Case 'CanvasPaperPickingIntegrationTests.testHiddenHoleAndOffPanelArtworkCannotBePickedByClickHoverOrContextProbe' passed (0.163 seconds)
+Test Case 'CanvasPaperPickingIntegrationTests.testOutsideGroupRecoveryUsesOnlyVisibleMaterialIncludingReflectedRotatedFrames' started at 2026-10-30 14:37:53.579
+Test Case 'CanvasPaperPickingIntegrationTests.testOutsideGroupRecoveryUsesOnlyVisibleMaterialIncludingReflectedRotatedFrames' passed (0.05 seconds)
+Test Suite 'CanvasPaperPickingIntegrationTests' passed at 2026-10-30 14:37:53.629
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.349 (0.349) seconds
+Test Suite 'CanvasPaperSidesTests' started at 2026-10-30 14:37:53.629
+Test Case 'CanvasPaperSidesTests.testBlankTopAndBottomAndBothDielinesAreStableReadOnlyFramesWithIndependentNavigation' started at 2026-10-30 14:37:53.629
+Test Case 'CanvasPaperSidesTests.testBlankTopAndBottomAndBothDielinesAreStableReadOnlyFramesWithIndependentNavigation' passed (0.026 seconds)
+Test Case 'CanvasPaperSidesTests.testEachFacePositionPersistsIndependentlyAndFoldedGoodsKeepOutsideInsideLabels' started at 2026-10-30 14:37:53.656
+Test Case 'CanvasPaperSidesTests.testEachFacePositionPersistsIndependentlyAndFoldedGoodsKeepOutsideInsideLabels' passed (0.027 seconds)
+Test Case 'CanvasPaperSidesTests.testEscapeDuringFirstBottomDrawRemovesTheProvisionalSourceAndLateEventsCannotRecreateIt' started at 2026-10-30 14:37:53.683
+Test Case 'CanvasPaperSidesTests.testEscapeDuringFirstBottomDrawRemovesTheProvisionalSourceAndLateEventsCannotRecreateIt' passed (0.024 seconds)
+Test Case 'CanvasPaperSidesTests.testExistingInspectorInteractionSurvivesFirstBottomSaveAndNonlocalCommandCannotWriteOutside' started at 2026-10-30 14:37:53.707
+Test Case 'CanvasPaperSidesTests.testExistingInspectorInteractionSurvivesFirstBottomSaveAndNonlocalCommandCannotWriteOutside' passed (0.039 seconds)
+Test Case 'CanvasPaperSidesTests.testLegacyInlineBottomMigratesOnFirstEditKeepingMasksAndMetadataInOneUndo' started at 2026-10-30 14:37:53.746
+Test Case 'CanvasPaperSidesTests.testLegacyInlineBottomMigratesOnFirstEditKeepingMasksAndMetadataInOneUndo' passed (0.03 seconds)
+Test Case 'CanvasPaperSidesTests.testLockedPhysicalOwnerRejectsBlankAndExistingBottomWritesWithoutPartialSourceOrHistory' started at 2026-10-30 14:37:53.775
+Test Case 'CanvasPaperSidesTests.testLockedPhysicalOwnerRejectsBlankAndExistingBottomWritesWithoutPartialSourceOrHistory' passed (0.018 seconds)
+Test Case 'CanvasPaperSidesTests.testNativeFirstBottomDrawContinuesItsHeldGestureAndUndoesSourceCreationExactlyOnce' started at 2026-10-30 14:37:53.793
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/CanvasPaperSidesTests.swift:102: error: CanvasPaperSidesTests.testNativeFirstBottomDrawContinuesItsHeldGestureAndUndoesSourceCreationExactlyOnce : XCTAssertEqual failed: ("Project(schemaVersion: 57, id: C62EDB3A-7932-4125-A5E1-4445CBF7CA3D, name: "Two editable physical faces", subtitle: "A new place to make things.", createdAt: 2026-10-30 21:37:53 +0000, updatedAt: 2026-10-30 21:37:53 +0000, objects: [FormCore.ProductObject(id: 170E706E-6F1E-4153-95A2-0BE735FD2C94, name: "Unregistered window card", recipeID: "duplex-canvas-fixture", parameters: ["opening": 0.0, "fold": 100.0], materialID: "chalk", color: nil, position: FormCore.Vector3(x: 0.0, y: 0.0, z: 0.0), rotation: 0.0, groupID: nil, designID: 6BC839F9-D551-4CA3-A27C-C144B3FAB1E1, parentIterationID: nil, relationship: "original", artwork: Optional(FormCore.Artwork(background: "#224B9B", outputColorProfile: nil, requiresInkOutput: false, sewingSeams: nil, sewingTiles: nil, sewingLayout: nil, language: nil, elements: [FormCore.ArtworkElement(id: E3201A7D-8FC1-4C30-9B18-BCD870580D03, kind: "rectangle", x: 2.0, y: 3.0, width: 4.0, height: 3.0, text: "", color: "#225588", fontSize: 14.0, fillSwatchID: nil, asset: nil, imageCrop: nil, imageAdjustments: nil, name: nil, rotation: nil, transformOrigin: nil, opacity: nil, blendMode: nil, isolatedBlending: nil, blur: nil, shadow: nil, hidden: nil, locked: nil, parentID: nil, contentSize: nil, affine: nil, flipX: nil, flipY: nil, fillEnabled: nil, fillOpacity: nil, booleanOperation: nil, component: nil, stroke: nil, gradient: nil, cornerRadius: nil, sides: nil, starInset: nil, path: nil, typography: nil, textStyle: nil, paragraphStyle: nil, textRuns: nil, glyphOverrides: nil, listItems: nil, storyFrame: nil, productionRole: nil, sewingPiece: nil, clipID: nil)], bleed: 3.0, safeInset: nil, unit: nil, guides: nil, gridSpacing: nil, showGrid: nil, snapEnabled: nil, nudge: nil, showGuides: nil, canvasPosition: nil, boundary: nil, backgroundOpacity: nil, backgroundSwatchID: nil, imports: nil)), artworkParameterBindings: nil, artworkSourceID: nil, artworkFit: nil, componentDefinition: nil, canvasWorkspace: nil, asset: nil, locked: false, textile: nil, cloth: nil, clothAttachment: nil, patternAssembly: nil, patternAssemblyAttachment: nil, librarySelection: nil, meshAsset: nil, cadModel: nil, cadRepresentation: nil, paperConstruction: Optional(FormCore.PaperConstruction(authored: Optional(FormCore.PlanarConstructionDefinition(version: 3, name: "Unregistered window card", parameters: [], size: FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "30"), y: FormCADModel.CADScalar(expression: "20")), stockThickness: FormCADModel.CADScalar(expression: "1"), panels: [FormCore.PlanarPanelDefinition(id: "sheet", name: "Sheet", role: FormCore.PaperPanel.Role.body, polygon: [FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "0"), y: FormCADModel.CADScalar(expression: "0")), FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "30"), y: FormCADModel.CADScalar(expression: "0")), FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "30"), y: FormCADModel.CADScalar(expression: "20")), FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "0"), y: FormCADModel.CADScalar(expression: "20"))], artworkRotationDegrees: Optional(FormCADModel.CADScalar(expression: "90")), cutouts: Optional([FormCore.PlanarCutoutDefinition(id: "window", polygon: [FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "20"), y: FormCADModel.CADScalar(expression: "4")), FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "24"), y: FormCADModel.CADScalar(expression: "4")), FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "24"), y: FormCADModel.CADScalar(expression: "8")), FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "20"), y: FormCADModel.CADScalar(expression: "8"))], kind: FormCore.PaperCutoutKind.window)]))], hinges: [], joins: [], rootPanelID: "sheet", requirements: nil, derived: nil, connections: nil, solidChecks: nil, components: nil, interiors: nil)), version: 1, kind: FormCore.PaperConstruction.Kind.authored, dimensions: FormCore.PaperDimensions(width: 30.0, height: 20.0, depth: 1.0), stock: FormCore.PaperStock(name: "Uncoated paperboard", vendor: nil, gsm: Optional(300.0), thicknessMM: 1.0, grain: FormCore.PaperStock.Grain.unknown, sheetSizeMM: nil, verified: false, notes: "Prototype assumptions; verify the chosen stock and crease tooling.", profile: nil, plies: nil), clearanceMM: 2.0, glueTabMM: 16.0, topFlapMM: 38.0, bottomFlapMM: 30.0, cornerRadiusMM: 4.0, foldPercent: 100.0, openingPercent: 0.0, insideArtworkSourceID: Optional(5C30C498-6A2B-4245-A759-3CFFDF9D9028), insideArtwork: nil, annotations: [], artworkReviewRequired: false, artworkReferenceSize: nil, finishes: nil)), paperTemplateReference: nil, canvasSourceOnly: nil, canvasProjectionPositions: nil, surfaceArtworkBindings: nil, physicalArtworkIntents: nil), FormCore.ProductObject(id: 4FD5B318-C6AF-46EE-8715-6E836609BC13, name: "Box", recipeID: "box", parameters: ["width": 140.0, "height": 100.0, "corner": 3.0, "depth": 140.0], materialID: "chalk", color: nil, position: FormCore.Vector3(x: 500.0, y: 0.0, z: 400.0), rotation: 0.0, groupID: nil, designID: 5731DB9D-08BF-4784-9F7C-FA671C998FBB, parentIterationID: nil, relationship: "original", artwork: nil, artworkParameterBindings: nil, artworkSourceID: nil, artworkFit: nil, componentDefinition: nil, canvasWorkspace: nil, asset: nil, locked: false, textile: nil, cloth: nil, clothAttachment: nil, patternAssembly: nil, patternAssemblyAttachment: nil, librarySelection: nil, meshAsset: nil, cadModel: nil, cadRepresentation: nil, paperConstruction: nil, paperTemplateReference: nil, canvasSourceOnly: nil, canvasProjectionPositions: nil, surfaceArtworkBindings: nil, physicalArtworkIntents: nil), FormCore.ProductObject(id: 5C30C498-6A2B-4245-A759-3CFFDF9D9028, name: "Unregistered window card · Inside registered", recipeID: "artboard", parameters: ["width": 30.0, "depth": 20.0], materialID: "paper-superfine", color: nil, position: FormCore.Vector3(x: 100.0, y: 0.0, z: 0.0), rotation: 0.0, groupID: nil, designID: 1ABB0CD9-B1FD-484B-8F9F-F8A2420AC3C0, parentIterationID: nil, relationship: "original", artwork: Optional(FormCore.Artwork(background: "#F7F5EF", outputColorProfile: nil, requiresInkOutput: false, sewingSeams: nil, sewingTiles: nil, sewingLayout: nil, language: nil, elements: [FormCore.ArtworkElement(id: F52DAD0A-5600-4E19-B423-8FBAB9896792, kind: "rectangle", x: 2.0, y: 3.0, width: 11.0, height: 14.0, text: "", color: "#292D2C", fontSize: 24.0, fillSwatchID: nil, asset: nil, imageCrop: nil, imageAdjustments: nil, name: nil, rotation: nil, transformOrigin: nil, opacity: nil, blendMode: nil, isolatedBlending: nil, blur: nil, shadow: nil, hidden: nil, locked: nil, parentID: nil, contentSize: nil, affine: Optional(FormCore.Affine2(a: -6.123233995736766e-17, b: 1.0, c: 1.0, d: 6.123233995736766e-17, tx: 2.1754097175150257e-31, ty: -3.552713678800501e-15)), flipX: nil, flipY: nil, fillEnabled: nil, fillOpacity: nil, booleanOperation: nil, component: nil, stroke: nil, gradient: nil, cornerRadius: nil, sides: nil, starInset: nil, path: nil, typography: nil, textStyle: nil, paragraphStyle: nil, textRuns: nil, glyphOverrides: nil, listItems: nil, storyFrame: nil, productionRole: nil, sewingPiece: nil, clipID: nil)], bleed: 3.0, safeInset: nil, unit: nil, guides: nil, gridSpacing: nil, showGrid: nil, snapEnabled: nil, nudge: nil, showGuides: nil, canvasPosition: nil, boundary: nil, backgroundOpacity: Optional(0.0), backgroundSwatchID: nil, imports: nil)), artworkParameterBindings: nil, artworkSourceID: nil, artworkFit: nil, componentDefinition: nil, canvasWorkspace: nil, asset: nil, locked: false, textile: nil, cloth: nil, clothAttachment: nil, patternAssembly: nil, patternAssemblyAttachment: nil, librarySelection: nil, meshAsset: nil, cadModel: nil, cadRepresentation: nil, paperConstruction: nil, paperTemplateReference: nil, canvasSourceOnly: Optional(true), canvasProjectionPositions: nil, surfaceArtworkBindings: nil, physicalArtworkIntents: nil)], recipes: [FormCore.Recipe(id: "duplex-canvas-fixture", name: "Unregistered window card", symbol: "square", summary: "Generic authored paper", parameters: [FormCore.Parameter(id: "fold", name: "Fold", unit: "mm", minimum: 0.0, maximum: 100.0, step: 1.0, value: 100.0), FormCore.Parameter(id: "opening", name: "Opening", unit: "mm", minimum: 0.0, maximum: 100.0, step: 1.0, value: 0.0)], parts: [], requirements: nil)], materials: [], notes: [], history: [FormCore.ProjectEvent(id: 0CE4360B-CD8E-4A8B-A82C-6E902F188BDF, date: 2026-10-30 21:37:53 +0000, source: "Studio", text: "Edited artwork")], camera: FormCore.CameraState(azimuth: 0.55, elevation: 0.7, orientation: nil, distance: 12.0, target: FormCore.Vector3(x: 0.0, y: 0.6, z: 0.0), projection: "perspective", viewportAspect: nil), unit: "mm", conversationReference: nil, printSetups: nil, swatches: nil, textStyles: nil, textStories: nil, publications: nil, productionJobs: nil, studioPresentation: nil, decorationPreparations: nil, garmentBlocks: nil, collectionProduction: nil)") is not equal to ("Project(schemaVersion: 57, id: C62EDB3A-7932-4125-A5E1-4445CBF7CA3D, name: "Two editable physical faces", subtitle: "A new place to make things.", createdAt: 2026-10-30 21:37:53 +0000, updatedAt: 2026-10-30 21:37:53 +0000, objects: [FormCore.ProductObject(id: 170E706E-6F1E-4153-95A2-0BE735FD2C94, name: "Unregistered window card", recipeID: "duplex-canvas-fixture", parameters: ["fold": 100.0, "opening": 0.0], materialID: "chalk", color: nil, position: FormCore.Vector3(x: 0.0, y: 0.0, z: 0.0), rotation: 0.0, groupID: nil, designID: 6BC839F9-D551-4CA3-A27C-C144B3FAB1E1, parentIterationID: nil, relationship: "original", artwork: Optional(FormCore.Artwork(background: "#224B9B", outputColorProfile: nil, requiresInkOutput: false, sewingSeams: nil, sewingTiles: nil, sewingLayout: nil, language: nil, elements: [FormCore.ArtworkElement(id: E3201A7D-8FC1-4C30-9B18-BCD870580D03, kind: "rectangle", x: 2.0, y: 3.0, width: 4.0, height: 3.0, text: "", color: "#225588", fontSize: 14.0, fillSwatchID: nil, asset: nil, imageCrop: nil, imageAdjustments: nil, name: nil, rotation: nil, transformOrigin: nil, opacity: nil, blendMode: nil, isolatedBlending: nil, blur: nil, shadow: nil, hidden: nil, locked: nil, parentID: nil, contentSize: nil, affine: nil, flipX: nil, flipY: nil, fillEnabled: nil, fillOpacity: nil, booleanOperation: nil, component: nil, stroke: nil, gradient: nil, cornerRadius: nil, sides: nil, starInset: nil, path: nil, typography: nil, textStyle: nil, paragraphStyle: nil, textRuns: nil, glyphOverrides: nil, listItems: nil, storyFrame: nil, productionRole: nil, sewingPiece: nil, clipID: nil)], bleed: 3.0, safeInset: nil, unit: nil, guides: nil, gridSpacing: nil, showGrid: nil, snapEnabled: nil, nudge: nil, showGuides: nil, canvasPosition: nil, boundary: nil, backgroundOpacity: nil, backgroundSwatchID: nil, imports: nil)), artworkParameterBindings: nil, artworkSourceID: nil, artworkFit: nil, componentDefinition: nil, canvasWorkspace: nil, asset: nil, locked: false, textile: nil, cloth: nil, clothAttachment: nil, patternAssembly: nil, patternAssemblyAttachment: nil, librarySelection: nil, meshAsset: nil, cadModel: nil, cadRepresentation: nil, paperConstruction: Optional(FormCore.PaperConstruction(authored: Optional(FormCore.PlanarConstructionDefinition(version: 3, name: "Unregistered window card", parameters: [], size: FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "30"), y: FormCADModel.CADScalar(expression: "20")), stockThickness: FormCADModel.CADScalar(expression: "1"), panels: [FormCore.PlanarPanelDefinition(id: "sheet", name: "Sheet", role: FormCore.PaperPanel.Role.body, polygon: [FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "0"), y: FormCADModel.CADScalar(expression: "0")), FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "30"), y: FormCADModel.CADScalar(expression: "0")), FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "30"), y: FormCADModel.CADScalar(expression: "20")), FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "0"), y: FormCADModel.CADScalar(expression: "20"))], artworkRotationDegrees: Optional(FormCADModel.CADScalar(expression: "90")), cutouts: Optional([FormCore.PlanarCutoutDefinition(id: "window", polygon: [FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "20"), y: FormCADModel.CADScalar(expression: "4")), FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "24"), y: FormCADModel.CADScalar(expression: "4")), FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "24"), y: FormCADModel.CADScalar(expression: "8")), FormCADModel.CADExpressionPoint2(x: FormCADModel.CADScalar(expression: "20"), y: FormCADModel.CADScalar(expression: "8"))], kind: FormCore.PaperCutoutKind.window)]))], hinges: [], joins: [], rootPanelID: "sheet", requirements: nil, derived: nil, connections: nil, solidChecks: nil, components: nil, interiors: nil)), version: 1, kind: FormCore.PaperConstruction.Kind.authored, dimensions: FormCore.PaperDimensions(width: 30.0, height: 20.0, depth: 1.0), stock: FormCore.PaperStock(name: "Uncoated paperboard", vendor: nil, gsm: Optional(300.0), thicknessMM: 1.0, grain: FormCore.PaperStock.Grain.unknown, sheetSizeMM: nil, verified: false, notes: "Prototype assumptions; verify the chosen stock and crease tooling.", profile: nil, plies: nil), clearanceMM: 2.0, glueTabMM: 16.0, topFlapMM: 38.0, bottomFlapMM: 30.0, cornerRadiusMM: 4.0, foldPercent: 100.0, openingPercent: 0.0, insideArtworkSourceID: Optional(5C30C498-6A2B-4245-A759-3CFFDF9D9028), insideArtwork: nil, annotations: [], artworkReviewRequired: false, artworkReferenceSize: nil, finishes: nil)), paperTemplateReference: nil, canvasSourceOnly: nil, canvasProjectionPositions: nil, surfaceArtworkBindings: nil, physicalArtworkIntents: nil), FormCore.ProductObject(id: 4FD5B318-C6AF-46EE-8715-6E836609BC13, name: "Box", recipeID: "box", parameters: ["depth": 140.0, "height": 100.0, "width": 140.0, "corner": 3.0], materialID: "chalk", color: nil, position: FormCore.Vector3(x: 500.0, y: 0.0, z: 400.0), rotation: 0.0, groupID: nil, designID: 5731DB9D-08BF-4784-9F7C-FA671C998FBB, parentIterationID: nil, relationship: "original", artwork: nil, artworkParameterBindings: nil, artworkSourceID: nil, artworkFit: nil, componentDefinition: nil, canvasWorkspace: nil, asset: nil, locked: false, textile: nil, cloth: nil, clothAttachment: nil, patternAssembly: nil, patternAssemblyAttachment: nil, librarySelection: nil, meshAsset: nil, cadModel: nil, cadRepresentation: nil, paperConstruction: nil, paperTemplateReference: nil, canvasSourceOnly: nil, canvasProjectionPositions: nil, surfaceArtworkBindings: nil, physicalArtworkIntents: nil), FormCore.ProductObject(id: 5C30C498-6A2B-4245-A759-3CFFDF9D9028, name: "Unregistered window card · Inside registered", recipeID: "artboard", parameters: ["width": 30.0, "depth": 20.0], materialID: "paper-superfine", color: nil, position: FormCore.Vector3(x: 100.0, y: 0.0, z: 0.0), rotation: 0.0, groupID: nil, designID: 1ABB0CD9-B1FD-484B-8F9F-F8A2420AC3C0, parentIterationID: nil, relationship: "original", artwork: Optional(FormCore.Artwork(background: "#F7F5EF", outputColorProfile: nil, requiresInkOutput: false, sewingSeams: nil, sewingTiles: nil, sewingLayout: nil, language: nil, elements: [FormCore.ArtworkElement(id: F52DAD0A-5600-4E19-B423-8FBAB9896792, kind: "rectangle", x: 2.0, y: 3.0, width: 11.0, height: 14.0, text: "", color: "#292D2C", fontSize: 24.0, fillSwatchID: nil, asset: nil, imageCrop: nil, imageAdjustments: nil, name: nil, rotation: nil, transformOrigin: nil, opacity: nil, blendMode: nil, isolatedBlending: nil, blur: nil, shadow: nil, hidden: nil, locked: nil, parentID: nil, contentSize: nil, affine: Optional(FormCore.Affine2(a: -6.123233995736766e-17, b: 1.0, c: 1.0, d: 6.123233995736766e-17, tx: 2.1754097175150257e-31, ty: -3.552713678800501e-15)), flipX: nil, flipY: nil, fillEnabled: nil, fillOpacity: nil, booleanOperation: nil, component: nil, stroke: nil, gradient: nil, cornerRadius: nil, sides: nil, starInset: nil, path: nil, typography: nil, textStyle: nil, paragraphStyle: nil, textRuns: nil, glyphOverrides: nil, listItems: nil, storyFrame: nil, productionRole: nil, sewingPiece: nil, clipID: nil)], bleed: 3.0, safeInset: nil, unit: nil, guides: nil, gridSpacing: nil, showGrid: nil, snapEnabled: nil, nudge: nil, showGuides: nil, canvasPosition: nil, boundary: nil, backgroundOpacity: Optional(0.0), backgroundSwatchID: nil, imports: nil)), artworkParameterBindings: nil, artworkSourceID: nil, artworkFit: nil, componentDefinition: nil, canvasWorkspace: nil, asset: nil, locked: false, textile: nil, cloth: nil, clothAttachment: nil, patternAssembly: nil, patternAssemblyAttachment: nil, librarySelection: nil, meshAsset: nil, cadModel: nil, cadRepresentation: nil, paperConstruction: nil, paperTemplateReference: nil, canvasSourceOnly: Optional(true), canvasProjectionPositions: nil, surfaceArtworkBindings: nil, physicalArtworkIntents: nil)], recipes: [FormCore.Recipe(id: "duplex-canvas-fixture", name: "Unregistered window card", symbol: "square", summary: "Generic authored paper", parameters: [FormCore.Parameter(id: "fold", name: "Fold", unit: "mm", minimum: 0.0, maximum: 100.0, step: 1.0, value: 100.0), FormCore.Parameter(id: "opening", name: "Opening", unit: "mm", minimum: 0.0, maximum: 100.0, step: 1.0, value: 0.0)], parts: [], requirements: nil)], materials: [], notes: [], history: [FormCore.ProjectEvent(id: 0CE4360B-CD8E-4A8B-A82C-6E902F188BDF, date: 2026-10-30 21:37:53 +0000, source: "Studio", text: "Edited artwork")], camera: FormCore.CameraState(azimuth: 0.55, elevation: 0.7, orientation: nil, distance: 12.0, target: FormCore.Vector3(x: 0.0, y: 0.6, z: 0.0), projection: "perspective", viewportAspect: nil), unit: "mm", conversationReference: nil, printSetups: nil, swatches: nil, textStyles: nil, textStories: nil, publications: nil, productionJobs: nil, studioPresentation: nil, decorationPreparations: nil, garmentBlocks: nil, collectionProduction: nil)") - 
+Test Case 'CanvasPaperSidesTests.testNativeFirstBottomDrawContinuesItsHeldGestureAndUndoesSourceCreationExactlyOnce' failed (0.038 seconds)
+Test Suite 'CanvasPaperSidesTests' failed at 2026-10-30 14:37:53.831
+	 Executed 7 tests, with 1 failure (0 unexpected) in 0.202 (0.202) seconds
+Test Suite 'CanvasPointerRoutingTests' started at 2026-10-30 14:37:53.831
+Test Case 'CanvasPointerRoutingTests.testFrameTitleDragTakesFocusFromInspectorSoEscapeReachesCanvas' started at 2026-10-30 14:37:53.831
+Test Case 'CanvasPointerRoutingTests.testFrameTitleDragTakesFocusFromInspectorSoEscapeReachesCanvas' passed (0.011 seconds)
+Test Case 'CanvasPointerRoutingTests.testSelectedBezierTangentOutsideFrameRemainsEditable' started at 2026-10-30 14:37:53.843
+Test Case 'CanvasPointerRoutingTests.testSelectedBezierTangentOutsideFrameRemainsEditable' passed (0.01 seconds)
+Test Case 'CanvasPointerRoutingTests.testSelectedGradientEndpointOutsideFrameRemainsEditable' started at 2026-10-30 14:37:53.853
+Test Case 'CanvasPointerRoutingTests.testSelectedGradientEndpointOutsideFrameRemainsEditable' passed (0.013 seconds)
+Test Case 'CanvasPointerRoutingTests.testSelectedGradientStopOutsideFrameRemainsEditable' started at 2026-10-30 14:37:53.865
+Test Case 'CanvasPointerRoutingTests.testSelectedGradientStopOutsideFrameRemainsEditable' passed (0.009 seconds)
+Test Case 'CanvasPointerRoutingTests.testSelectedResizeHandleOutsideFrameKeepsTheActiveSource' started at 2026-10-30 14:37:53.875
+Test Case 'CanvasPointerRoutingTests.testSelectedResizeHandleOutsideFrameKeepsTheActiveSource' passed (0.016 seconds)
+Test Case 'CanvasPointerRoutingTests.testThinSelectedStrokeCanBeGrabbedWithinToleranceWithoutResizing' started at 2026-10-30 14:37:53.891
+Test Case 'CanvasPointerRoutingTests.testThinSelectedStrokeCanBeGrabbedWithinToleranceWithoutResizing' passed (0.023 seconds)
+Test Case 'CanvasPointerRoutingTests.testWindowDeactivationCancelsAnActiveDragAndLatePointerEventsStayInert' started at 2026-10-30 14:37:53.914
+Test Case 'CanvasPointerRoutingTests.testWindowDeactivationCancelsAnActiveDragAndLatePointerEventsStayInert' passed (0.014 seconds)
+Test Case 'CanvasPointerRoutingTests.testWindowDeactivationClearsSpaceEvenWhenCanvasRemainsFirstResponder' started at 2026-10-30 14:37:53.928
+Test Case 'CanvasPointerRoutingTests.testWindowDeactivationClearsSpaceEvenWhenCanvasRemainsFirstResponder' passed (0.012 seconds)
+Test Suite 'CanvasPointerRoutingTests' passed at 2026-10-30 14:37:53.940
+	 Executed 8 tests, with 0 failures (0 unexpected) in 0.108 (0.108) seconds
+Test Suite 'CanvasSewingGuideTests' started at 2026-10-30 14:37:53.940
+Test Case 'CanvasSewingGuideTests.testCurvedGuideCacheReusesUnchangedSourceAndClearsInvalidResults' started at 2026-10-30 14:37:53.940
+Test Case 'CanvasSewingGuideTests.testCurvedGuideCacheReusesUnchangedSourceAndClearsInvalidResults' passed (0.722 seconds)
+Test Case 'CanvasSewingGuideTests.testOrdinaryCanvasDrawsReadOnlySewingGuidesWithSharedSourceAndCache' started at 2026-10-30 14:37:54.662
+Test Case 'CanvasSewingGuideTests.testOrdinaryCanvasDrawsReadOnlySewingGuidesWithSharedSourceAndCache' passed (79.942 seconds)
+Test Case 'CanvasSewingGuideTests.testSourceCoordinatesPreserveOriginalGeometryAndExactDefaultSheetBytes' started at 2026-10-30 14:39:14.604
+Test Case 'CanvasSewingGuideTests.testSourceCoordinatesPreserveOriginalGeometryAndExactDefaultSheetBytes' passed (0.009 seconds)
+Test Suite 'CanvasSewingGuideTests' passed at 2026-10-30 14:39:14.613
+	 Executed 3 tests, with 0 failures (0 unexpected) in 80.673 (80.673) seconds
+Test Suite 'CanvasSourceAuthoringTests' started at 2026-10-30 14:39:14.613
+Test Case 'CanvasSourceAuthoringTests.testBindingProgramMetadataWithoutChangedResolvedArtworkReusesActualGeometryHandle' started at 2026-10-30 14:39:14.613
+Test Case 'CanvasSourceAuthoringTests.testBindingProgramMetadataWithoutChangedResolvedArtworkReusesActualGeometryHandle' passed (0.014 seconds)
+Test Case 'CanvasSourceAuthoringTests.testComponentDefinitionSharedWithPaperKeepsItsCanonicalEditorAndReturnContext' started at 2026-10-30 14:39:14.627
+Test Case 'CanvasSourceAuthoringTests.testComponentDefinitionSharedWithPaperKeepsItsCanonicalEditorAndReturnContext' passed (0.026 seconds)
+Test Case 'CanvasSourceAuthoringTests.testFreshInsideSourceOpensItsReadableNetOnceAndNativeEditsRetainSourceUndo' started at 2026-10-30 14:39:14.653
+Test Case 'CanvasSourceAuthoringTests.testFreshInsideSourceOpensItsReadableNetOnceAndNativeEditsRetainSourceUndo' passed (0.03 seconds)
+Test Case 'CanvasSourceAuthoringTests.testMultiplePhysicalOwnersRequireExplicitConstructionInsteadOfChoosingAnInsideFrame' started at 2026-10-30 14:39:14.683
+Test Case 'CanvasSourceAuthoringTests.testMultiplePhysicalOwnersRequireExplicitConstructionInsteadOfChoosingAnInsideFrame' passed (0.038 seconds)
+Test Case 'CanvasSourceAuthoringTests.testNewSourceCasesSupersedeObsoleteArtworkReportsOnTheSharedCoordinator' started at 2026-10-30 14:39:14.721
+Test Case 'CanvasSourceAuthoringTests.testNewSourceCasesSupersedeObsoleteArtworkReportsOnTheSharedCoordinator' passed (0.015 seconds)
+Test Case 'CanvasSourceAuthoringTests.testPaperLinkedSewingSourceRetainsItsCanonicalContoursAndStandardEditingPath' started at 2026-10-30 14:39:14.736
+Test Case 'CanvasSourceAuthoringTests.testPaperLinkedSewingSourceRetainsItsCanonicalContoursAndStandardEditingPath' passed (0.019 seconds)
+Test Case 'CanvasSourceAuthoringTests.testUnregisteredSewnRecipeHasRealNativeControlsThatChangeCanonicalBoundaryWithOneUndo' started at 2026-10-30 14:39:14.755
+Test Case 'CanvasSourceAuthoringTests.testUnregisteredSewnRecipeHasRealNativeControlsThatChangeCanonicalBoundaryWithOneUndo' passed (0.147 seconds)
+Test Suite 'CanvasSourceAuthoringTests' passed at 2026-10-30 14:39:14.902
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.289 (0.289) seconds
+Test Suite 'CanvasViewportTests' started at 2026-10-30 14:39:14.902
+Test Case 'CanvasViewportTests.testActualCanvasHasNoNativeRulerOrBorderGuttersAndRetainsPhysicalFit' started at 2026-10-30 14:39:14.902
+Test Case 'CanvasViewportTests.testActualCanvasHasNoNativeRulerOrBorderGuttersAndRetainsPhysicalFit' passed (0.62 seconds)
+Test Case 'CanvasViewportTests.testFitAvoidsTransientFloatingPanelsWithoutChangingDocumentOrNativeContentInsets' started at 2026-10-30 14:39:15.522
+Test Case 'CanvasViewportTests.testFitAvoidsTransientFloatingPanelsWithoutChangingDocumentOrNativeContentInsets' passed (0.591 seconds)
+Test Case 'CanvasViewportTests.testNativeHandPanKeepsExpectedWorldPositionAcrossShiftedOriginAndExtentGrowth' started at 2026-10-30 14:39:16.113
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/CanvasViewportTests.swift:256: error: CanvasViewportTests.testNativeHandPanKeepsExpectedWorldPositionAcrossShiftedOriginAndExtentGrowth : XCTAssertNotEqual failed: ("(-320.0, -320.0)") is equal to ("(-320.0, -320.0)") - 
+Test Case 'CanvasViewportTests.testNativeHandPanKeepsExpectedWorldPositionAcrossShiftedOriginAndExtentGrowth' failed (0.587 seconds)
+Test Case 'CanvasViewportTests.testPaperFloatingFitCoversWholeNativeViewportAndRoutesWhitespaceAfterZoomAndResize' started at 2026-10-30 14:39:16.700
+Test Case 'CanvasViewportTests.testPaperFloatingFitCoversWholeNativeViewportAndRoutesWhitespaceAfterZoomAndResize' passed (0.59 seconds)
+Test Case 'CanvasViewportTests.testViewportExpansionKeepsNativeTextHostAndMarkedInputAnchoredWithoutSourceChanges' started at 2026-10-30 14:39:17.290
+Test Case 'CanvasViewportTests.testViewportExpansionKeepsNativeTextHostAndMarkedInputAnchoredWithoutSourceChanges' passed (1.08 seconds)
+Test Case 'CanvasViewportTests.testZoomAndDropCoordinateRoundTripsKeepTheVisibleAnchorAfterNativeOriginShiftAndPan' started at 2026-10-30 14:39:18.370
+Test Case 'CanvasViewportTests.testZoomAndDropCoordinateRoundTripsKeepTheVisibleAnchorAfterNativeOriginShiftAndPan' passed (0.651 seconds)
+Test Suite 'CanvasViewportTests' failed at 2026-10-30 14:39:19.021
+	 Executed 6 tests, with 1 failure (0 unexpected) in 4.118 (4.118) seconds
+Test Suite 'ClothIntegrationTests' started at 2026-10-30 14:39:19.021
+Test Case 'ClothIntegrationTests.testPrintedPanelMaterialCornersMatchCanvasOrientationOnRealMetal' started at 2026-10-30 14:39:19.021
+Test Case 'ClothIntegrationTests.testPrintedPanelMaterialCornersMatchCanvasOrientationOnRealMetal' passed (0.131 seconds)
+Test Suite 'ClothIntegrationTests' passed at 2026-10-30 14:39:19.152
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.131 (0.131) seconds
+Test Suite 'DesignSurfaceTests' started at 2026-10-30 14:39:19.152
+Test Case 'DesignSurfaceTests.testCanvasOnlyProjectReopensOnCanvasWithoutCreatingASecondWorkspaceOrEdit' started at 2026-10-30 14:39:19.152
+Test Case 'DesignSurfaceTests.testCanvasOnlyProjectReopensOnCanvasWithoutCreatingASecondWorkspaceOrEdit' passed (0.018 seconds)
+Test Case 'DesignSurfaceTests.testEnsureCanvasIsOneUndoableCreationAndLaterVisitsDoNotMutateTheProject' started at 2026-10-30 14:39:19.169
+Test Case 'DesignSurfaceTests.testEnsureCanvasIsOneUndoableCreationAndLaterVisitsDoNotMutateTheProject' passed (0.007 seconds)
+Test Case 'DesignSurfaceTests.testHostedSingleSplitDetachedAndDockedLayoutsHaveExactlyOneNativeCanvasOwner' started at 2026-10-30 14:39:19.176
+Test Case 'DesignSurfaceTests.testHostedSingleSplitDetachedAndDockedLayoutsHaveExactlyOneNativeCanvasOwner' passed (0.815 seconds)
+Test Case 'DesignSurfaceTests.testProjectChangeClosesDetachedCanvasAndRetainsBothSavedProjects' started at 2026-10-30 14:39:19.992
+Test Case 'DesignSurfaceTests.testProjectChangeClosesDetachedCanvasAndRetainsBothSavedProjects' passed (0.018 seconds)
+Test Case 'DesignSurfaceTests.testStandaloneCanvasAndTableVisitsPreserveDocumentAndUseTheSharedCanvas' started at 2026-10-30 14:39:20.010
+Test Case 'DesignSurfaceTests.testStandaloneCanvasAndTableVisitsPreserveDocumentAndUseTheSharedCanvas' passed (0.006 seconds)
+Test Case 'DesignSurfaceTests.testTableNeverBuildsOrFramesTheUnframedCanvasAndIgnoresItsArtworkChanges' started at 2026-10-30 14:39:20.015
+Test Case 'DesignSurfaceTests.testTableNeverBuildsOrFramesTheUnframedCanvasAndIgnoresItsArtworkChanges' passed (0.269 seconds)
+Test Suite 'DesignSurfaceTests' passed at 2026-10-30 14:39:20.285
+	 Executed 6 tests, with 0 failures (0 unexpected) in 1.133 (1.133) seconds
+Test Suite 'EnvironmentUIWorkflowTests' started at 2026-10-30 14:39:20.285
+Test Case 'EnvironmentUIWorkflowTests.testLampAndFabricRoutesRemainSpecificWithoutClaimingPaperOrPrintForFabric' started at 2026-10-30 14:39:20.285
+Test Case 'EnvironmentUIWorkflowTests.testLampAndFabricRoutesRemainSpecificWithoutClaimingPaperOrPrintForFabric' passed (0.367 seconds)
+Test Suite 'EnvironmentUIWorkflowTests' passed at 2026-10-30 14:39:20.652
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.367 (0.367) seconds
+Test Suite 'FabricEnvironmentTests' started at 2026-10-30 14:39:20.652
+Test Case 'FabricEnvironmentTests.testEditFabricSourceReturnsToFormWithoutCreatingCanvasOrChangingAssemblyLayout' started at 2026-10-30 14:39:20.652
+Test Case 'FabricEnvironmentTests.testEditFabricSourceReturnsToFormWithoutCreatingCanvasOrChangingAssemblyLayout' passed (0.355 seconds)
+Test Suite 'FabricEnvironmentTests' passed at 2026-10-30 14:39:21.007
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.355 (0.355) seconds
+Test Suite 'FabricPatternRenderingTests' started at 2026-10-30 14:39:21.007
+Test Case 'FabricPatternRenderingTests.testRasterAndCachedPreviewAgreeOnAsymmetricPhysicalMotifsForEveryRepeatMode' started at 2026-10-30 14:39:21.007
+Test Case 'FabricPatternRenderingTests.testRasterAndCachedPreviewAgreeOnAsymmetricPhysicalMotifsForEveryRepeatMode' passed (0.029 seconds)
+Test Case 'FabricPatternRenderingTests.testRotatedFabricBaseHasNoTransparentHairlinesAtRepeatBoundaries' started at 2026-10-30 14:39:21.035
+Test Case 'FabricPatternRenderingTests.testRotatedFabricBaseHasNoTransparentHairlinesAtRepeatBoundaries' passed (0.051 seconds)
+Test Case 'FabricPatternRenderingTests.testRotatedOffsetAndScaledPreviewKeepsTheSamePhysicalPhaseAsVectorOutput' started at 2026-10-30 14:39:21.086
+Test Case 'FabricPatternRenderingTests.testRotatedOffsetAndScaledPreviewKeepsTheSamePhysicalPhaseAsVectorOutput' passed (0.007 seconds)
+Test Case 'FabricPatternRenderingTests.testSourcePaintAndFrameEditsInvalidateGarmentTextureAndGeometryCache' started at 2026-10-30 14:39:21.093
+Test Case 'FabricPatternRenderingTests.testSourcePaintAndFrameEditsInvalidateGarmentTextureAndGeometryCache' passed (11.491 seconds)
+Test Case 'FabricPatternRenderingTests.testYardageMCPExportsPhysicalSVGAndVectorPDFAndKeepsOriginalArtwork' started at 2026-10-30 14:39:32.584
+Test Case 'FabricPatternRenderingTests.testYardageMCPExportsPhysicalSVGAndVectorPDFAndKeepsOriginalArtwork' passed (0.016 seconds)
+Test Suite 'FabricPatternRenderingTests' passed at 2026-10-30 14:39:32.600
+	 Executed 5 tests, with 0 failures (0 unexpected) in 11.593 (11.593) seconds
+Test Suite 'FloatingPanelTests' started at 2026-10-30 14:39:32.600
+Test Case 'FloatingPanelTests.testSharedInspectorHeaderCloseKeepsDocumentAndCanvasTableSelections' started at 2026-10-30 14:39:32.600
+Test Case 'FloatingPanelTests.testSharedInspectorHeaderCloseKeepsDocumentAndCanvasTableSelections' passed (0.405 seconds)
+Test Suite 'FloatingPanelTests' passed at 2026-10-30 14:39:33.005
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.405 (0.405) seconds
+Test Suite 'FreeformCanvasTests' started at 2026-10-30 14:39:33.005
+Test Case 'FreeformCanvasTests.testContentFitIgnoresTheWorkspaceExtentAndViewportSurvivesNegativeGrowth' started at 2026-10-30 14:39:33.005
+Test Case 'FreeformCanvasTests.testContentFitIgnoresTheWorkspaceExtentAndViewportSurvivesNegativeGrowth' passed (0.013 seconds)
+Test Case 'FreeformCanvasTests.testImagePlacementAcceptsLooseCanvasAndPreservesItsOriginalAsset' started at 2026-10-30 14:39:33.018
+Test Case 'FreeformCanvasTests.testImagePlacementAcceptsLooseCanvasAndPreservesItsOriginalAsset' passed (0.015 seconds)
+Test Case 'FreeformCanvasTests.testLooseSelectionExportUsesItsPhysicalCropAndRejectsAnUnboundedExport' started at 2026-10-30 14:39:33.034
+Test Case 'FreeformCanvasTests.testLooseSelectionExportUsesItsPhysicalCropAndRejectsAnUnboundedExport' passed (0.008 seconds)
+Test Case 'FreeformCanvasTests.testNativeDragTransfersLooseArtworkOntoAFrameInOneUndoAndBack' started at 2026-10-30 14:39:33.042
+Test Case 'FreeformCanvasTests.testNativeDragTransfersLooseArtworkOntoAFrameInOneUndoAndBack' passed (0.012 seconds)
+Test Case 'FreeformCanvasTests.testNativeShapeToolDrawsAtNegativeCoordinatesWithoutCreatingAFrame' started at 2026-10-30 14:39:33.054
+Test Case 'FreeformCanvasTests.testNativeShapeToolDrawsAtNegativeCoordinatesWithoutCreatingAFrame' passed (0.008 seconds)
+Test Case 'FreeformCanvasTests.testNegativeCoordinateNativeTextInputIsPositionedAndUndoable' started at 2026-10-30 14:39:33.062
+Test Case 'FreeformCanvasTests.testNegativeCoordinateNativeTextInputIsPositionedAndUndoable' passed (0.023 seconds)
+Test Case 'FreeformCanvasTests.testRejectedInheritedAppearanceTransferRestoresTheOriginalDrag' started at 2026-10-30 14:39:33.085
+Test Case 'FreeformCanvasTests.testRejectedInheritedAppearanceTransferRestoresTheOriginalDrag' passed (0.016 seconds)
+Test Case 'FreeformCanvasTests.testUnboundedRendererDrawsNegativeArtworkWithoutDrawingPaper' started at 2026-10-30 14:39:33.101
+Test Case 'FreeformCanvasTests.testUnboundedRendererDrawsNegativeArtworkWithoutDrawingPaper' passed (0.014 seconds)
+Test Case 'FreeformCanvasTests.testWorkspaceIsUnframedFallbackAndDoesNotFollowOrReplacePhysicalSelection' started at 2026-10-30 14:39:33.115
+Test Case 'FreeformCanvasTests.testWorkspaceIsUnframedFallbackAndDoesNotFollowOrReplacePhysicalSelection' passed (0.008 seconds)
+Test Suite 'FreeformCanvasTests' passed at 2026-10-30 14:39:33.123
+	 Executed 9 tests, with 0 failures (0 unexpected) in 0.118 (0.118) seconds
+Test Suite 'IndependentSurfaceSelectionTests' started at 2026-10-30 14:39:33.123
+Test Case 'IndependentSurfaceSelectionTests.testCanvasSourceEditsAndSVGImportKeepTableSelectionCameraAndOneUndo' started at 2026-10-30 14:39:33.123
+Test Case 'IndependentSurfaceSelectionTests.testCanvasSourceEditsAndSVGImportKeepTableSelectionCameraAndOneUndo' passed (0.024 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testContextMenuFindExplicitlySelectsAndCentersTableWithoutChangingCanvasOrOpeningInspector' started at 2026-10-30 14:39:33.147
+Test Case 'IndependentSurfaceSelectionTests.testContextMenuFindExplicitlySelectsAndCentersTableWithoutChangingCanvasOrOpeningInspector' passed (4.982 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testNativeCanvasFrameClicksKeepUnrelatedTableSelectionCameraAndPanelContext' started at 2026-10-30 14:39:38.129
+Test Case 'IndependentSurfaceSelectionTests.testNativeCanvasFrameClicksKeepUnrelatedTableSelectionCameraAndPanelContext' passed (0.018 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testNewCanvasFrameKeepsTableSelectionCameraAndClosedInspector' started at 2026-10-30 14:39:38.147
+Test Case 'IndependentSurfaceSelectionTests.testNewCanvasFrameKeepsTableSelectionCameraAndClosedInspector' passed (0.013 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testTablePanelPickingDoesNotNavigateOrRefitCanvas' started at 2026-10-30 14:39:38.160
+Test Case 'IndependentSurfaceSelectionTests.testTablePanelPickingDoesNotNavigateOrRefitCanvas' passed (0.021 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testTablePicksAndReconcileKeepCanvasSourceFrameElementsAndViewport' started at 2026-10-30 14:39:38.181
+Test Case 'IndependentSurfaceSelectionTests.testTablePicksAndReconcileKeepCanvasSourceFrameElementsAndViewport' passed (0.018 seconds)
+Test Suite 'IndependentSurfaceSelectionTests' passed at 2026-10-30 14:39:38.200
+	 Executed 6 tests, with 0 failures (0 unexpected) in 5.076 (5.076) seconds
+Test Suite 'InspectorColorPickerTests' started at 2026-10-30 14:39:38.200
+Test Case 'InspectorColorPickerTests.testActualRepresentableEndsTheOriginalCallbackAfterSameTargetBindingRerenders' started at 2026-10-30 14:39:38.200
+Test Case 'InspectorColorPickerTests.testActualRepresentableEndsTheOriginalCallbackAfterSameTargetBindingRerenders' passed (0.11 seconds)
+Test Case 'InspectorColorPickerTests.testExplicitAppleFallbackUsesExclusiveNativeWellLeaseAndDoesNotWriteAfterAnotherControlTakesOver' started at 2026-10-30 14:39:38.310
+Test Case 'InspectorColorPickerTests.testExplicitAppleFallbackUsesExclusiveNativeWellLeaseAndDoesNotWriteAfterAnotherControlTakesOver' passed (0.311 seconds)
+Test Case 'InspectorColorPickerTests.testNativePanelUsesLightChromeAndRetargetResizeKeepsTheWholePanelOnItsVisibleScreen' started at 2026-10-30 14:39:38.621
+Test Case 'InspectorColorPickerTests.testNativePanelUsesLightChromeAndRetargetResizeKeepsTheWholePanelOnItsVisibleScreen' passed (0.122 seconds)
+Test Case 'InspectorColorPickerTests.testNativeRoundedHueSaturationAndRGBFieldsDoNotWriteWhenFocusedAndSubmittedUntouched' started at 2026-10-30 14:39:38.743
+Test Case 'InspectorColorPickerTests.testNativeRoundedHueSaturationAndRGBFieldsDoNotWriteWhenFocusedAndSubmittedUntouched' passed (0.208 seconds)
+Test Case 'InspectorColorPickerTests.testOldNativeDragCannotContinueIntoANewPinnedTargetAndResigningKeyEndsTheGesture' started at 2026-10-30 14:39:38.951
+Test Case 'InspectorColorPickerTests.testOldNativeDragCannotContinueIntoANewPinnedTargetAndResigningKeyEndsTheGesture' passed (0.051 seconds)
+Test Case 'InspectorColorPickerTests.testOpeningNativePanelReadsExactColorWithoutWritingOrBeginningAnUndoGesture' started at 2026-10-30 14:39:39.002
+Test Case 'InspectorColorPickerTests.testOpeningNativePanelReadsExactColorWithoutWritingOrBeginningAnUndoGesture' passed (0.074 seconds)
+Test Case 'InspectorColorPickerTests.testPinnedRetargetEndsOldGestureBeforeReplacingTheBindingEvenForEqualColors' started at 2026-10-30 14:39:39.076
+Test Case 'InspectorColorPickerTests.testPinnedRetargetEndsOldGestureBeforeReplacingTheBindingEvenForEqualColors' passed (0.058 seconds)
+Test Case 'InspectorColorPickerTests.testRGBAndHexPreserveUneditedChannelsAndOpacityWithoutEightBitRoundTrips' started at 2026-10-30 14:39:39.134
+Test Case 'InspectorColorPickerTests.testRGBAndHexPreserveUneditedChannelsAndOpacityWithoutEightBitRoundTrips' passed (0.049 seconds)
+Test Case 'InspectorColorPickerTests.testRealWheelMouseDragGroupsChangesAndNativeKeyboardAndAccessibilityActionsRemainDiscrete' started at 2026-10-30 14:39:39.184
+Test Case 'InspectorColorPickerTests.testRealWheelMouseDragGroupsChangesAndNativeKeyboardAndAccessibilityActionsRemainDiscrete' passed (0.059 seconds)
+Test Suite 'InspectorColorPickerTests' passed at 2026-10-30 14:39:39.243
+	 Executed 9 tests, with 0 failures (0 unexpected) in 1.043 (1.043) seconds
+Test Suite 'InspectorControlsTests' started at 2026-10-30 14:39:39.243
+Test Case 'InspectorControlsTests.testPhysicalParameterUsesExplicitCanvasUnitParsingAndKeepsRejectedDraftLocal' started at 2026-10-30 14:39:39.243
+Test Case 'InspectorControlsTests.testPhysicalParameterUsesExplicitCanvasUnitParsingAndKeepsRejectedDraftLocal' passed (0.216 seconds)
+Test Suite 'InspectorControlsTests' passed at 2026-10-30 14:39:39.459
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.216 (0.216) seconds
+Test Suite 'LinkedObjectInspectorModuleTests' started at 2026-10-30 14:39:39.459
+Test Case 'LinkedObjectInspectorModuleTests.testPaperInsideThumbnailAndNavigationUseTheRegisteredCanonicalSource' started at 2026-10-30 14:39:39.459
+Test Case 'LinkedObjectInspectorModuleTests.testPaperInsideThumbnailAndNavigationUseTheRegisteredCanonicalSource' passed (0.028 seconds)
+Test Case 'LinkedObjectInspectorModuleTests.testSourceSharedByPaperAndAnotherObjectKeepsItsCanonicalEditorForThatObject' started at 2026-10-30 14:39:39.487
+Test Case 'LinkedObjectInspectorModuleTests.testSourceSharedByPaperAndAnotherObjectKeepsItsCanonicalEditorForThatObject' passed (0.016 seconds)
+Test Suite 'LinkedObjectInspectorModuleTests' passed at 2026-10-30 14:39:39.503
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.044 (0.044) seconds
+Test Suite 'PaperAppearanceControlsTests' started at 2026-10-30 14:39:39.503
+Test Case 'PaperAppearanceControlsTests.testNativeFinishDepthParsesPhysicalUnitsAndLeavesRejectedDraftLocal' started at 2026-10-30 14:39:39.503
+Test Case 'PaperAppearanceControlsTests.testNativeFinishDepthParsesPhysicalUnitsAndLeavesRejectedDraftLocal' passed (0.432 seconds)
+Test Case 'PaperAppearanceControlsTests.testNativeStockSliderUsesSharedCommandGestureAndOneUndo' started at 2026-10-30 14:39:39.935
+Test Case 'PaperAppearanceControlsTests.testNativeStockSliderUsesSharedCommandGestureAndOneUndo' passed (0.361 seconds)
+Test Suite 'PaperAppearanceControlsTests' passed at 2026-10-30 14:39:40.296
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.793 (0.793) seconds
+Test Suite 'PaperAppearanceRenderingTests' started at 2026-10-30 14:39:40.296
+Test Case 'PaperAppearanceRenderingTests.testBondedPlyEdgesHaveActualIndependentCalipersAndStableAppearanceOnlyGeometry' started at 2026-10-30 14:39:40.296
+Test Case 'PaperAppearanceRenderingTests.testBondedPlyEdgesHaveActualIndependentCalipersAndStableAppearanceOnlyGeometry' passed (0.082 seconds)
+Test Case 'PaperAppearanceRenderingTests.testCanonicalFinishMasksMoveWithEditableArtworkAndBlindWorkDoesNotPrintItsFill' started at 2026-10-30 14:39:40.379
+Test Case 'PaperAppearanceRenderingTests.testCanonicalFinishMasksMoveWithEditableArtworkAndBlindWorkDoesNotPrintItsFill' passed (0.653 seconds)
+Test Case 'PaperAppearanceRenderingTests.testOrdinaryPrintUsesTheSameInkColorOpacityAndExcludesFoilAndBlindMasks' started at 2026-10-30 14:39:41.032
+Test Case 'PaperAppearanceRenderingTests.testOrdinaryPrintUsesTheSameInkColorOpacityAndExcludesFoilAndBlindMasks' passed (0.29 seconds)
+Test Case 'PaperAppearanceRenderingTests.testPanelWindowIsMissingPhysicalMaterialAndChangesTheMeshIdentity' started at 2026-10-30 14:39:41.322
+Test Case 'PaperAppearanceRenderingTests.testPanelWindowIsMissingPhysicalMaterialAndChangesTheMeshIdentity' passed (0.004 seconds)
+Test Case 'PaperAppearanceRenderingTests.testPaperTextureUsesPhysicalCoordinatesAndPreservesFineSourceAtHigherBoundedQuality' started at 2026-10-30 14:39:41.326
+Test Case 'PaperAppearanceRenderingTests.testPaperTextureUsesPhysicalCoordinatesAndPreservesFineSourceAtHigherBoundedQuality' passed (0.736 seconds)
+Test Case 'PaperAppearanceRenderingTests.testProceduralFinishTexturesKeepTheirMetallicScaleAndOpaqueStockInTheNativeBridge' started at 2026-10-30 14:39:42.061
+Test Case 'PaperAppearanceRenderingTests.testProceduralFinishTexturesKeepTheirMetallicScaleAndOpaqueStockInTheNativeBridge' passed (0.114 seconds)
+Test Case 'PaperAppearanceRenderingTests.testRegisteredMaskRetainsAncestorTransformsAndClipDependenciesWithoutOtherPaint' started at 2026-10-30 14:39:42.176
+Test Case 'PaperAppearanceRenderingTests.testRegisteredMaskRetainsAncestorTransformsAndClipDependenciesWithoutOtherPaint' passed (0.009 seconds)
+Test Suite 'PaperAppearanceRenderingTests' passed at 2026-10-30 14:39:42.185
+	 Executed 7 tests, with 0 failures (0 unexpected) in 1.888 (1.888) seconds
+Test Suite 'PaperGeometryTests' started at 2026-10-30 14:39:42.185
+Test Case 'PaperGeometryTests.testArtworkInsideAndStockEditsReusePhysicalUploadsWithoutRecoloringAnotherObject' started at 2026-10-30 14:39:42.185
+Test Case 'PaperGeometryTests.testArtworkInsideAndStockEditsReusePhysicalUploadsWithoutRecoloringAnotherObject' passed (3.813 seconds)
+Test Case 'PaperGeometryTests.testCanonicalOutsideAndInsideUVsUsePhysicalNetCoordinatesWithoutPanelStretching' started at 2026-10-30 14:39:45.998
+Test Case 'PaperGeometryTests.testCanonicalOutsideAndInsideUVsUsePhysicalNetCoordinatesWithoutPanelStretching' passed (0.021 seconds)
+Test Case 'PaperGeometryTests.testEnvelopeAndCartonAreSoftEdgedHollowPanelShellsWithRealCaliper' started at 2026-10-30 14:39:46.019
+Test Case 'PaperGeometryTests.testEnvelopeAndCartonAreSoftEdgedHollowPanelShellsWithRealCaliper' passed (0.114 seconds)
+Test Case 'PaperGeometryTests.testFoldAndPanelSelectionUpdateTransformsWithoutMeshOrTextureRebuilds' started at 2026-10-30 14:39:46.133
+Test Case 'PaperGeometryTests.testFoldAndPanelSelectionUpdateTransformsWithoutMeshOrTextureRebuilds' passed (0.136 seconds)
+Test Case 'PaperGeometryTests.testLinkedOutsideInsideSourceAndPanelPickSurviveNativeGPUProjection' started at 2026-10-30 14:39:46.269
+Test Case 'PaperGeometryTests.testLinkedOutsideInsideSourceAndPanelPickSurviveNativeGPUProjection' passed (0.931 seconds)
+Test Case 'PaperGeometryTests.testNativeDielineTextDragKeepsClosedPanelGeometryAndRenderedSilhouette' started at 2026-10-30 14:39:47.200
+Test Case 'PaperGeometryTests.testNativeDielineTextDragKeepsClosedPanelGeometryAndRenderedSilhouette' passed (32.931 seconds)
+Test Case 'PaperGeometryTests.testPhysicalMeshIdentityIncludesCaliperNetUVAndChannelGroups' started at 2026-10-30 14:40:20.131
+Test Case 'PaperGeometryTests.testPhysicalMeshIdentityIncludesCaliperNetUVAndChannelGroups' passed (0.01 seconds)
+Test Case 'PaperGeometryTests.testReleasedProceduralGeometryCannotAliasOlderGPUMeshBuffers' started at 2026-10-30 14:40:20.141
+Test Case 'PaperGeometryTests.testReleasedProceduralGeometryCannotAliasOlderGPUMeshBuffers' passed (0.418 seconds)
+Test Suite 'PaperGeometryTests' passed at 2026-10-30 14:40:20.559
+	 Executed 8 tests, with 0 failures (0 unexpected) in 38.374 (38.374) seconds
+Test Suite 'PaperNativeFitTests' started at 2026-10-30 14:40:20.559
+Test Case 'PaperNativeFitTests.testActualWrongOrientationCanFailOpeningWhileStillFittingCavity' started at 2026-10-30 14:40:20.559
+Test Case 'PaperNativeFitTests.testActualWrongOrientationCanFailOpeningWhileStillFittingCavity' passed (0.783 seconds)
+Test Case 'PaperNativeFitTests.testPaperContentsBoundsExcludeHiddenHighlightsAndRejectCanvasOnlyTargets' started at 2026-10-30 14:40:21.342
+Test Case 'PaperNativeFitTests.testPaperContentsBoundsExcludeHiddenHighlightsAndRejectCanvasOnlyTargets' passed (0.857 seconds)
+Test Case 'PaperNativeFitTests.testTranslatedRotatedModeledWatchUsesMillimetersAndMovingOutFailsWithoutMutation' started at 2026-10-30 14:40:22.200
+Test Case 'PaperNativeFitTests.testTranslatedRotatedModeledWatchUsesMillimetersAndMovingOutFailsWithoutMutation' passed (0.697 seconds)
+Test Suite 'PaperNativeFitTests' passed at 2026-10-30 14:40:22.897
+	 Executed 3 tests, with 0 failures (0 unexpected) in 2.338 (2.338) seconds
+Test Suite 'PaperProductionOutputTests' started at 2026-10-30 14:40:22.897
+Test Case 'PaperProductionOutputTests.testPacketSeparatesBlindAndFoilFromOrdinaryInkAndRejectsMissingEnabledTargets' started at 2026-10-30 14:40:22.897
+Test Case 'PaperProductionOutputTests.testPacketSeparatesBlindAndFoilFromOrdinaryInkAndRejectsMissingEnabledTargets' passed (0.039 seconds)
+Test Case 'PaperProductionOutputTests.testRetainedSupplierSVGIsByteExactAndRegistrationDoesNotChangeItsTechnicalPaths' started at 2026-10-30 14:40:22.937
+Test Case 'PaperProductionOutputTests.testRetainedSupplierSVGIsByteExactAndRegistrationDoesNotChangeItsTechnicalPaths' passed (0.033 seconds)
+Test Case 'PaperProductionOutputTests.testSafetyReviewIncludesInteriorCutsWithoutEditingArtwork' started at 2026-10-30 14:40:22.969
+Test Case 'PaperProductionOutputTests.testSafetyReviewIncludesInteriorCutsWithoutEditingArtwork' passed (0.01 seconds)
+Test Suite 'PaperProductionOutputTests' passed at 2026-10-30 14:40:22.980
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.082 (0.082) seconds
+Test Suite 'PaperWorkspaceTests' started at 2026-10-30 14:40:22.980
+Test Case 'PaperWorkspaceTests.testInsideSourceEditsThroughNativeSessionAndSurvivesReconciliation' started at 2026-10-30 14:40:22.980
+Test Case 'PaperWorkspaceTests.testInsideSourceEditsThroughNativeSessionAndSurvivesReconciliation' passed (0.026 seconds)
+Test Case 'PaperWorkspaceTests.testInvalidLayoutAndSourceFolderExportsAreRejectedWithoutMutation' started at 2026-10-30 14:40:23.006
+Test Case 'PaperWorkspaceTests.testInvalidLayoutAndSourceFolderExportsAreRejectedWithoutMutation' passed (0.013 seconds)
+Test Case 'PaperWorkspaceTests.testPhysicalPacketHasExactSheetPagesSeparateOperationsAndVerifiedArtifacts' started at 2026-10-30 14:40:23.020
+Test Case 'PaperWorkspaceTests.testPhysicalPacketHasExactSheetPagesSeparateOperationsAndVerifiedArtifacts' passed (0.095 seconds)
+Test Case 'PaperWorkspaceTests.testPrintActionUsesPaperPreparationAndRetainsCamera' started at 2026-10-30 14:40:23.114
+Test Case 'PaperWorkspaceTests.testPrintActionUsesPaperPreparationAndRetainsCamera' passed (0.018 seconds)
+Test Case 'PaperWorkspaceTests.testPurposeRepresentationAndPanelSelectionDoNotChangeSourceOrUndo' started at 2026-10-30 14:40:23.132
+Test Case 'PaperWorkspaceTests.testPurposeRepresentationAndPanelSelectionDoNotChangeSourceOrUndo' passed (0.032 seconds)
+Test Case 'PaperWorkspaceTests.testVisibleArtworkRecoversAfterInvalidPreviewAndUndo' started at 2026-10-30 14:40:23.164
+Test Case 'PaperWorkspaceTests.testVisibleArtworkRecoversAfterInvalidPreviewAndUndo' passed (0.133 seconds)
+Test Suite 'PaperWorkspaceTests' passed at 2026-10-30 14:40:23.297
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.317 (0.317) seconds
+Test Suite 'ParagraphListEditingTests' started at 2026-10-30 14:40:23.297
+Test Case 'ParagraphListEditingTests.testNativeCanvasEnterFinishFormattingAndReturnPreserveDocumentListIdentity' started at 2026-10-30 14:40:23.297
+Test Case 'ParagraphListEditingTests.testNativeCanvasEnterFinishFormattingAndReturnPreserveDocumentListIdentity' passed (0.055 seconds)
+Test Suite 'ParagraphListEditingTests' passed at 2026-10-30 14:40:23.352
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.055 (0.055) seconds
+Test Suite 'PhysicalArtworkFrameRenderingTests' started at 2026-10-30 14:40:23.352
+Test Case 'PhysicalArtworkFrameRenderingTests.testInsideWholeNetCanvasReflectsCutClipAndGuidesWithoutChangingRegisteredExport' started at 2026-10-30 14:40:23.352
+Test Case 'PhysicalArtworkFrameRenderingTests.testInsideWholeNetCanvasReflectsCutClipAndGuidesWithoutChangingRegisteredExport' passed (0.046 seconds)
+Test Suite 'PhysicalArtworkFrameRenderingTests' passed at 2026-10-30 14:40:23.398
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.046 (0.046) seconds
+Test Suite 'ProjectPreviewTests' started at 2026-10-30 14:40:23.398
+Test Case 'ProjectPreviewTests.testEmptyCanvasHasABoundedOpaquePreviewAtTheRequestedAspect' started at 2026-10-30 14:40:23.398
+Test Case 'ProjectPreviewTests.testEmptyCanvasHasABoundedOpaquePreviewAtTheRequestedAspect' passed (0.005 seconds)
+Test Case 'ProjectPreviewTests.testNegativeCoordinateCanvasThumbnailContainsArtworkAndPreservesTheProject' started at 2026-10-30 14:40:23.403
+Test Case 'ProjectPreviewTests.testNegativeCoordinateCanvasThumbnailContainsArtworkAndPreservesTheProject' passed (0.001 seconds)
+Test Suite 'ProjectPreviewTests' passed at 2026-10-30 14:40:23.405
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.006 (0.006) seconds
+Test Suite 'PublicationEditingTests' started at 2026-10-30 14:40:23.405
+Test Case 'PublicationEditingTests.testEscapeFinishesLinkedTextAndReturnsDocumentUndoToCanvas' started at 2026-10-30 14:40:23.405
+Test Case 'PublicationEditingTests.testEscapeFinishesLinkedTextAndReturnsDocumentUndoToCanvas' passed (0.104 seconds)
+Test Suite 'PublicationEditingTests' passed at 2026-10-30 14:40:23.509
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.104 (0.104) seconds
+Test Suite 'SewingPatternEditingTests' started at 2026-10-30 14:40:23.509
+Test Case 'SewingPatternEditingTests.testDerivedCutGeometryIncludesNotchesFoldOmissionAndNoPersistedCopies' started at 2026-10-30 14:40:23.509
+Test Case 'SewingPatternEditingTests.testDerivedCutGeometryIncludesNotchesFoldOmissionAndNoPersistedCopies' passed (0.007 seconds)
+Test Case 'SewingPatternEditingTests.testMCPPatternTemplateAndMetadataHaveAtomicUndoAndSchemaRoundTrip' started at 2026-10-30 14:40:23.516
+Test Case 'SewingPatternEditingTests.testMCPPatternTemplateAndMetadataHaveAtomicUndoAndSchemaRoundTrip' passed (0.005 seconds)
+Test Case 'SewingPatternEditingTests.testNativeMouseMovePreservesPhysicalAllowancesAndPairingWithUndo' started at 2026-10-30 14:40:23.521
+Test Case 'SewingPatternEditingTests.testNativeMouseMovePreservesPhysicalAllowancesAndPairingWithUndo' passed (0.011 seconds)
+Test Case 'SewingPatternEditingTests.testNativeToteAndSeamChangesAutosaveWithoutFlushOrMCP' started at 2026-10-30 14:40:23.533
+Test Case 'SewingPatternEditingTests.testNativeToteAndSeamChangesAutosaveWithoutFlushOrMCP' passed (0.649 seconds)
+Test Case 'SewingPatternEditingTests.testNativeToteCreationIsOneUndoAndKeepsEditableSourceAndCopySeams' started at 2026-10-30 14:40:24.182
+Test Case 'SewingPatternEditingTests.testNativeToteCreationIsOneUndoAndKeepsEditableSourceAndCopySeams' passed (0.003 seconds)
+Test Case 'SewingPatternEditingTests.testRealMCPExportHasActualSizeLayeredSVGCombinedPDFAndCalibratedPixels' started at 2026-10-30 14:40:24.185
+Test Case 'SewingPatternEditingTests.testRealMCPExportHasActualSizeLayeredSVGCombinedPDFAndCalibratedPixels' passed (0.163 seconds)
+Test Suite 'SewingPatternEditingTests' passed at 2026-10-30 14:40:24.348
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.839 (0.839) seconds
+Test Suite 'StudioSceneSelectionTests' started at 2026-10-30 14:40:24.348
+Test Case 'StudioSceneSelectionTests.testNativeViewportRoundingDoesNotDirtyRecallAndCurrentSourcesUpdateItsPreview' started at 2026-10-30 14:40:24.348
+Test Case 'StudioSceneSelectionTests.testNativeViewportRoundingDoesNotDirtyRecallAndCurrentSourcesUpdateItsPreview' passed (0.206 seconds)
+Test Case 'StudioSceneSelectionTests.testSceneSwitchRequestsPreserveDraftsAndLatestRequestUntilExplicitSaveOrDiscard' started at 2026-10-30 14:40:24.554
+Test Case 'StudioSceneSelectionTests.testSceneSwitchRequestsPreserveDraftsAndLatestRequestUntilExplicitSaveOrDiscard' passed (0.098 seconds)
+Test Case 'StudioSceneSelectionTests.testTwelveStudyRecallBeforeFirstAppearanceSurvivesReconcileAndChangesLiveStage' started at 2026-10-30 14:40:24.652
+Test Case 'StudioSceneSelectionTests.testTwelveStudyRecallBeforeFirstAppearanceSurvivesReconcileAndChangesLiveStage' passed (359.923 seconds)
+Test Suite 'StudioSceneSelectionTests' passed at 2026-10-30 14:46:24.575
+	 Executed 3 tests, with 0 failures (0 unexpected) in 360.226 (360.226) seconds
+Test Suite 'StudioShotEditingTests' started at 2026-10-30 14:46:24.575
+Test Case 'StudioShotEditingTests.testActualMerchandiseLightingProofAndDependencyHashAreSourcePreserving' started at 2026-10-30 14:46:24.575
+STUDIO43_MERCHANDISE_COST ["last_render_pixel_bytes": 3840000, "preview_cache_bytes": 0, "preview_cache_limit_bytes": 33554432, "preview_cache_count": 0, "pixel_cap_is_total_memory_cap": false, "render_count": 3, "stale_results": 0, "maximum_render_ms": 809.0560436248779, "geometry_builds": 17, "process_peak_rss_bytes": 971849728]
+Test Case 'StudioShotEditingTests.testActualMerchandiseLightingProofAndDependencyHashAreSourcePreserving' passed (1.118 seconds)
+Test Case 'StudioShotEditingTests.testActualMouseCaptureAndExportCommitActivePixelDraftWithoutExtraUndo' started at 2026-10-30 14:46:25.693
+Test Case 'StudioShotEditingTests.testActualMouseCaptureAndExportCommitActivePixelDraftWithoutExtraUndo' passed (0.6 seconds)
+Test Case 'StudioShotEditingTests.testCaptureAndMetadataUndoNeverRecallOrRetargetAnExistingReferenceFrame' started at 2026-10-30 14:46:26.293
+Test Case 'StudioShotEditingTests.testCaptureAndMetadataUndoNeverRecallOrRetargetAnExistingReferenceFrame' passed (0.056 seconds)
+Test Case 'StudioShotEditingTests.testConcurrentStudioCapturesKeepTheirOwnFramingWarnings' started at 2026-10-30 14:46:26.348
+Test Case 'StudioShotEditingTests.testConcurrentStudioCapturesKeepTheirOwnFramingWarnings' passed (0.125 seconds)
+Test Case 'StudioShotEditingTests.testExclusiveAtomicFolderRejectsAllFailuresAndDestinationRaces' started at 2026-10-30 14:46:26.473
+Test Case 'StudioShotEditingTests.testExclusiveAtomicFolderRejectsAllFailuresAndDestinationRaces' passed (0.053 seconds)
+Test Case 'StudioShotEditingTests.testHistoryReconciliationPreservesActualFocusedEditorBeforeItsBindingUpdates' started at 2026-10-30 14:46:26.526
+Test Case 'StudioShotEditingTests.testHistoryReconciliationPreservesActualFocusedEditorBeforeItsBindingUpdates' passed (0.165 seconds)
+Test Case 'StudioShotEditingTests.testLargePreviewCompositionAndLegacyDefaultPixelsAgreeOnActualRenderedProduct' started at 2026-10-30 14:46:26.691
+STUDIO43_MEASURED_COST ["pixel_cap_is_total_memory_cap": false, "preview_cache_limit_bytes": 33554432, "render_count": 6, "geometry_builds": 1, "last_render_pixel_bytes": 18000000, "preview_cache_bytes": 0, "maximum_render_ms": 121.9550371170044, "process_peak_rss_bytes": 1105674240, "preview_cache_count": 0, "stale_results": 0]
+Test Case 'StudioShotEditingTests.testLargePreviewCompositionAndLegacyDefaultPixelsAgreeOnActualRenderedProduct' passed (4.156 seconds)
+Test Case 'StudioShotEditingTests.testMissingSubjectsRemainEditableDeletableAndRepairableWithoutCameraFallback' started at 2026-10-30 14:46:30.847
+Test Case 'StudioShotEditingTests.testMissingSubjectsRemainEditableDeletableAndRepairableWithoutCameraFallback' passed (0.053 seconds)
+Test Case 'StudioShotEditingTests.testMissingVisibleSourceAndRuntimeClothRejectWithoutResetOrMutation' started at 2026-10-30 14:46:30.900
+Test Case 'StudioShotEditingTests.testMissingVisibleSourceAndRuntimeClothRejectWithoutResetOrMutation' passed (0.241 seconds)
+Test Case 'StudioShotEditingTests.testMouseUpdateUsesActiveFieldAsOneUndoAutosavesAndInvalidDraftRollsBack' started at 2026-10-30 14:46:31.141
+Test Case 'StudioShotEditingTests.testMouseUpdateUsesActiveFieldAsOneUndoAutosavesAndInvalidDraftRollsBack' passed (0.787 seconds)
+Test Case 'StudioShotEditingTests.testNativeCaptureSelectsNewDefinitionAndUndoSynchronizesOnlyCleanOptions' started at 2026-10-30 14:46:31.929
+Test Case 'StudioShotEditingTests.testNativeCaptureSelectsNewDefinitionAndUndoSynchronizesOnlyCleanOptions' passed (0.055 seconds)
+Test Case 'StudioShotEditingTests.testPartialStagedFileAndForeignStageNeverDamageExistingContent' started at 2026-10-30 14:46:31.984
+Test Case 'StudioShotEditingTests.testPartialStagedFileAndForeignStageNeverDamageExistingContent' passed (0.052 seconds)
+Test Case 'StudioShotEditingTests.testPerspectiveAndOrthographicPreviewMatchOutputWithoutLiveFramingMutation' started at 2026-10-30 14:46:32.036
+Test Case 'StudioShotEditingTests.testPerspectiveAndOrthographicPreviewMatchOutputWithoutLiveFramingMutation' passed (0.219 seconds)
+Test Case 'StudioShotEditingTests.testPreviewCacheIsBoundedDependencyAwareAndPurgedOnDelete' started at 2026-10-30 14:46:32.255
+Test Case 'StudioShotEditingTests.testPreviewCacheIsBoundedDependencyAwareAndPurgedOnDelete' passed (0.262 seconds)
+Test Case 'StudioShotEditingTests.testQueuedCADCapturesKeepTheirOwnVisibilityLightingSurfacePixelsAndRecords' started at 2026-10-30 14:46:32.517
+Test Case 'StudioShotEditingTests.testQueuedCADCapturesKeepTheirOwnVisibilityLightingSurfacePixelsAndRecords' passed (0.761 seconds)
+Test Case 'StudioShotEditingTests.testReadOnlyShotInspectionPreservesNativeDraftCaretAndDoesNotOpenStudio' started at 2026-10-30 14:46:33.278
+Test Case 'StudioShotEditingTests.testReadOnlyShotInspectionPreservesNativeDraftCaretAndDoesNotOpenStudio' passed (0.177 seconds)
+Test Case 'StudioShotEditingTests.testRecallDoesNotAddHistoryAndResizedReferenceViewportKeepsPose' started at 2026-10-30 14:46:33.455
+Test Case 'StudioShotEditingTests.testRecallDoesNotAddHistoryAndResizedReferenceViewportKeepsPose' passed (0.269 seconds)
+Test Case 'StudioShotEditingTests.testRecallRejectsUnknownArgumentsBeforeChangingCameraOrWorkingDraft' started at 2026-10-30 14:46:33.725
+Test Case 'StudioShotEditingTests.testRecallRejectsUnknownArgumentsBeforeChangingCameraOrWorkingDraft' passed (0.058 seconds)
+Test Case 'StudioShotEditingTests.testSavedExportIsPhysicalPixelsPortableRecordAndLeavesSourceAndCameraExact' started at 2026-10-30 14:46:33.783
+Test Case 'StudioShotEditingTests.testSavedExportIsPhysicalPixelsPortableRecordAndLeavesSourceAndCameraExact' passed (0.123 seconds)
+Test Case 'StudioShotEditingTests.testStalePreviewJobsAreDiscardedAcrossSourceAndProjectChanges' started at 2026-10-30 14:46:33.906
+Test Case 'StudioShotEditingTests.testStalePreviewJobsAreDiscardedAcrossSourceAndProjectChanges' passed (0.157 seconds)
+Test Suite 'StudioShotEditingTests' passed at 2026-10-30 14:46:34.064
+	 Executed 20 tests, with 0 failures (0 unexpected) in 9.488 (9.488) seconds
+Test Suite 'TableInspectorInteractionTests' started at 2026-10-30 14:46:34.064
+Test Case 'TableInspectorInteractionTests.testNativeTablePickDoesNotNavigateCanvasAndCloseDoesNotDeselect' started at 2026-10-30 14:46:34.064
+Test Case 'TableInspectorInteractionTests.testNativeTablePickDoesNotNavigateCanvasAndCloseDoesNotDeselect' passed (0.126 seconds)
+Test Suite 'TableInspectorInteractionTests' passed at 2026-10-30 14:46:34.190
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.126 (0.126) seconds
+Test Suite 'TextileGeometryTests' started at 2026-10-30 14:46:34.190
+Test Case 'TextileGeometryTests.testAttachedDecorationFollowsScenePlacementWithoutRebuildingGeometry' started at 2026-10-30 14:46:34.190
+Test Case 'TextileGeometryTests.testAttachedDecorationFollowsScenePlacementWithoutRebuildingGeometry' passed (8.545 seconds)
+Test Case 'TextileGeometryTests.testBomberUsesShapedMeshesAndPhysicalParametersChangeItsBounds' started at 2026-10-30 14:46:42.735
+Test Case 'TextileGeometryTests.testBomberUsesShapedMeshesAndPhysicalParametersChangeItsBounds' passed (1.611 seconds)
+Test Case 'TextileGeometryTests.testFlightStudyProducesANativeRenderedPreview' started at 2026-10-30 14:46:44.346
+Test Case 'TextileGeometryTests.testFlightStudyProducesANativeRenderedPreview' passed (9.616 seconds)
+Test Suite 'TextileGeometryTests' passed at 2026-10-30 14:46:53.962
+	 Executed 3 tests, with 0 failures (0 unexpected) in 19.772 (19.772) seconds
+Test Suite 'UnifiedDesignSurfaceHostTests' started at 2026-10-30 14:46:53.962
+Test Case 'UnifiedDesignSurfaceHostTests.testParkedFormCanvasDoesNotStealVisibleEnvironmentOwnerAndReclaimsOnReturn' started at 2026-10-30 14:46:53.962
+Test Case 'UnifiedDesignSurfaceHostTests.testParkedFormCanvasDoesNotStealVisibleEnvironmentOwnerAndReclaimsOnReturn' passed (2.171 seconds)
+Test Case 'UnifiedDesignSurfaceHostTests.testVisibleCanvasEditorAndMarkedSelectionSurviveSplitAndAxisChanges' started at 2026-10-30 14:46:56.134
+Test Case 'UnifiedDesignSurfaceHostTests.testVisibleCanvasEditorAndMarkedSelectionSurviveSplitAndAxisChanges' passed (0.997 seconds)
+Test Suite 'UnifiedDesignSurfaceHostTests' passed at 2026-10-30 14:46:57.131
+	 Executed 2 tests, with 0 failures (0 unexpected) in 3.169 (3.169) seconds
+Test Suite 'WorkspaceToolbarTests' started at 2026-10-30 14:46:57.131
+Test Case 'WorkspaceToolbarTests.testActualCanvasAndTableDocksUseIdenticalButtonTargetsAndSelectionSemanticsWithoutChangingSource' started at 2026-10-30 14:46:57.131
+Test Case 'WorkspaceToolbarTests.testActualCanvasAndTableDocksUseIdenticalButtonTargetsAndSelectionSemanticsWithoutChangingSource' passed (0.622 seconds)
+Test Suite 'WorkspaceToolbarTests' passed at 2026-10-30 14:46:57.753
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.622 (0.622) seconds
+Test Suite 'ArtworkArrangementTests' started at 2026-10-30 14:46:57.753
+Test Case 'ArtworkArrangementTests.testAllSixAlignmentsUseCanvasAxesAcrossNestedReflectedAndShearedParents' started at 2026-10-30 14:46:57.753
+Test Case 'ArtworkArrangementTests.testAllSixAlignmentsUseCanvasAxesAcrossNestedReflectedAndShearedParents' passed (0.007 seconds)
+Test Case 'ArtworkArrangementTests.testDistributionTiesUseDocumentOrderForDifferentWidthsAndHeights' started at 2026-10-30 14:46:57.760
+Test Case 'ArtworkArrangementTests.testDistributionTiesUseDocumentOrderForDifferentWidthsAndHeights' passed (0.004 seconds)
+Test Case 'ArtworkArrangementTests.testGapAndCenterDistributionPreserveWorldGeometryAcrossDifferentParents' started at 2026-10-30 14:46:57.764
+Test Case 'ArtworkArrangementTests.testGapAndCenterDistributionPreserveWorldGeometryAcrossDifferentParents' passed (0.003 seconds)
+Test Case 'ArtworkArrangementTests.testLockedAncestorsTooFewRootsAndInvalidModesRejectAtomically' started at 2026-10-30 14:46:57.767
+Test Case 'ArtworkArrangementTests.testLockedAncestorsTooFewRootsAndInvalidModesRejectAtomically' passed (0.006 seconds)
+Test Case 'ArtworkArrangementTests.testSelectingAGroupAndItsDescendantMovesTheGroupOnlyOnce' started at 2026-10-30 14:46:57.772
+Test Case 'ArtworkArrangementTests.testSelectingAGroupAndItsDescendantMovesTheGroupOnlyOnce' passed (0.001 seconds)
+Test Suite 'ArtworkArrangementTests' passed at 2026-10-30 14:46:57.773
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.02 (0.02) seconds
+Test Suite 'ArtworkHitTestingTests' started at 2026-10-30 14:46:57.773
+Test Case 'ArtworkHitTestingTests.testActualDashGapsAndOutsideStrokeAreRespected' started at 2026-10-30 14:46:57.773
+Test Case 'ArtworkHitTestingTests.testActualDashGapsAndOutsideStrokeAreRespected' passed (0.001 seconds)
+Test Case 'ArtworkHitTestingTests.testBooleanSubtractionHoleAllowsUnderlyingSelection' started at 2026-10-30 14:46:57.775
+Test Case 'ArtworkHitTestingTests.testBooleanSubtractionHoleAllowsUnderlyingSelection' passed (0.002 seconds)
+Test Case 'ArtworkHitTestingTests.testDeepLayerProbeRespectsBooleanHolesAndDoesNotExposeDerivedComponentIDs' started at 2026-10-30 14:46:57.776
+Test Case 'ArtworkHitTestingTests.testDeepLayerProbeRespectsBooleanHolesAndDoesNotExposeDerivedComponentIDs' passed (0.001 seconds)
+Test Case 'ArtworkHitTestingTests.testDenseLayeredArtworkRetainsExactTargetingAcrossGroupsMasksAndTransforms' started at 2026-10-30 14:46:57.777
+Test Case 'ArtworkHitTestingTests.testDenseLayeredArtworkRetainsExactTargetingAcrossGroupsMasksAndTransforms' passed (0.363 seconds)
+Test Case 'ArtworkHitTestingTests.testEvenOddCompoundHolesAndEllipseCornersAreNotFilledTargets' started at 2026-10-30 14:46:58.140
+Test Case 'ArtworkHitTestingTests.testEvenOddCompoundHolesAndEllipseCornersAreNotFilledTargets' passed (0.001 seconds)
+Test Case 'ArtworkHitTestingTests.testExactPaintedHitWinsOverNearbyFrontOutline' started at 2026-10-30 14:46:58.141
+Test Case 'ArtworkHitTestingTests.testExactPaintedHitWinsOverNearbyFrontOutline' passed (0.001 seconds)
+Test Case 'ArtworkHitTestingTests.testGroupsPickVisibleDescendantsInsteadOfEmptyBounds' started at 2026-10-30 14:46:58.141
+Test Case 'ArtworkHitTestingTests.testGroupsPickVisibleDescendantsInsteadOfEmptyBounds' passed (0.0 seconds)
+Test Case 'ArtworkHitTestingTests.testHiddenLockedTransparentAndExcludedTargetsAreSkipped' started at 2026-10-30 14:46:58.142
+Test Case 'ArtworkHitTestingTests.testHiddenLockedTransparentAndExcludedTargetsAreSkipped' passed (0.0 seconds)
+Test Case 'ArtworkHitTestingTests.testMasksClipRootAndScopedDescendantTargets' started at 2026-10-30 14:46:58.142
+Test Case 'ArtworkHitTestingTests.testMasksClipRootAndScopedDescendantTargets' passed (0.0 seconds)
+Test Case 'ArtworkHitTestingTests.testProximityDoesNotResurrectCancelledCompoundContours' started at 2026-10-30 14:46:58.142
+Test Case 'ArtworkHitTestingTests.testProximityDoesNotResurrectCancelledCompoundContours' passed (0.0 seconds)
+Test Case 'ArtworkHitTestingTests.testProximityDoesNotResurrectGeometryHiddenBeyondItsMask' started at 2026-10-30 14:46:58.143
+Test Case 'ArtworkHitTestingTests.testProximityDoesNotResurrectGeometryHiddenBeyondItsMask' passed (0.001 seconds)
+Test Case 'ArtworkHitTestingTests.testResolvedComponentPicksItsContentAndReturnsEditableInstance' started at 2026-10-30 14:46:58.143
+Test Case 'ArtworkHitTestingTests.testResolvedComponentPicksItsContentAndReturnsEditableInstance' passed (0.001 seconds)
+Test Case 'ArtworkHitTestingTests.testReusablePickerKeepsItsSnapshotAndAcceptsChangingZoomTolerance' started at 2026-10-30 14:46:58.144
+Test Case 'ArtworkHitTestingTests.testReusablePickerKeepsItsSnapshotAndAcceptsChangingZoomTolerance' passed (0.0 seconds)
+Test Case 'ArtworkHitTestingTests.testScreenToleranceSurvivesNestedNonuniformScaleRotationAndShear' started at 2026-10-30 14:46:58.144
+Test Case 'ArtworkHitTestingTests.testScreenToleranceSurvivesNestedNonuniformScaleRotationAndShear' passed (0.001 seconds)
+Test Case 'ArtworkHitTestingTests.testTextAndImagesKeepTheirEditableFrameTargets' started at 2026-10-30 14:46:58.145
+Test Case 'ArtworkHitTestingTests.testTextAndImagesKeepTheirEditableFrameTargets' passed (0.001 seconds)
+Test Case 'ArtworkHitTestingTests.testUnpaintedAndDisabledStrokeLayersDoNotStealClicks' started at 2026-10-30 14:46:58.146
+Test Case 'ArtworkHitTestingTests.testUnpaintedAndDisabledStrokeLayersDoNotStealClicks' passed (0.0 seconds)
+Test Suite 'ArtworkHitTestingTests' passed at 2026-10-30 14:46:58.146
+	 Executed 16 tests, with 0 failures (0 unexpected) in 0.373 (0.373) seconds
+Test Suite 'ArtworkLayerOrderTests' started at 2026-10-30 14:46:58.146
+Test Case 'ArtworkLayerOrderTests.testSiblingStepOrderPreservesSelectedBlocksAcrossInterleavedHierarchies' started at 2026-10-30 14:46:58.146
+Test Case 'ArtworkLayerOrderTests.testSiblingStepOrderPreservesSelectedBlocksAcrossInterleavedHierarchies' passed (0.001 seconds)
+Test Suite 'ArtworkLayerOrderTests' passed at 2026-10-30 14:46:58.148
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'ArtworkParameterBindingTests' started at 2026-10-30 14:46:58.148
+Test Case 'ArtworkParameterBindingTests.testCustomCanonicalSourceUsesExistingPaperAndExactSurfaceLinksWithoutARecipeNameSpecialCase' started at 2026-10-30 14:46:58.148
+Test Case 'ArtworkParameterBindingTests.testCustomCanonicalSourceUsesExistingPaperAndExactSurfaceLinksWithoutARecipeNameSpecialCase' passed (0.129 seconds)
+Test Suite 'ArtworkParameterBindingTests' passed at 2026-10-30 14:46:58.277
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.129 (0.129) seconds
+Test Suite 'ArtworkTests' started at 2026-10-30 14:46:58.277
+Test Case 'ArtworkTests.testCanvasMetadataDoesNotInvalidatePhysicalArtwork' started at 2026-10-30 14:46:58.277
+Test Case 'ArtworkTests.testCanvasMetadataDoesNotInvalidatePhysicalArtwork' passed (0.001 seconds)
+Test Suite 'ArtworkTests' passed at 2026-10-30 14:46:58.277
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'CanvasWorkspaceTests' started at 2026-10-30 14:46:58.277
+Test Case 'CanvasWorkspaceTests.testFrameToWorkspaceAndBackPreservesGlobalPlacementAndOrigin' started at 2026-10-30 14:46:58.277
+Test Case 'CanvasWorkspaceTests.testFrameToWorkspaceAndBackPreservesGlobalPlacementAndOrigin' passed (0.002 seconds)
+Test Case 'CanvasWorkspaceTests.testIdentityCollisionsRemapMovedLayersAndKeepExistingDestinationArtwork' started at 2026-10-30 14:46:58.279
+Test Case 'CanvasWorkspaceTests.testIdentityCollisionsRemapMovedLayersAndKeepExistingDestinationArtwork' passed (0.001 seconds)
+Test Case 'CanvasWorkspaceTests.testLockedOrInvalidTransfersAreAtomicAndNativeDragCanShareOneUndo' started at 2026-10-30 14:46:58.280
+Test Case 'CanvasWorkspaceTests.testLockedOrInvalidTransfersAreAtomicAndNativeDragCanShareOneUndo' passed (0.002 seconds)
+Test Case 'CanvasWorkspaceTests.testMCPCreatingTheInternalWorkspacePreservesThePhysicalSelectionAndUndo' started at 2026-10-30 14:46:58.281
+Test Case 'CanvasWorkspaceTests.testMCPCreatingTheInternalWorkspacePreservesThePhysicalSelectionAndUndo' passed (0.001 seconds)
+Test Case 'CanvasWorkspaceTests.testMCPWorkspaceCreationTransferUndoBatchRollbackAndReopen' started at 2026-10-30 14:46:58.283
+Test Case 'CanvasWorkspaceTests.testMCPWorkspaceCreationTransferUndoBatchRollbackAndReopen' passed (0.012 seconds)
+Test Case 'CanvasWorkspaceTests.testNestedGroupsAndDescendantsKeepTheirExactWorldTransforms' started at 2026-10-30 14:46:58.295
+Test Case 'CanvasWorkspaceTests.testNestedGroupsAndDescendantsKeepTheirExactWorldTransforms' passed (0.001 seconds)
+Test Case 'CanvasWorkspaceTests.testOneWorkspaceIsIdempotentNonphysicalAndUsesSchemaNineteen' started at 2026-10-30 14:46:58.295
+Test Case 'CanvasWorkspaceTests.testOneWorkspaceIsIdempotentNonphysicalAndUsesSchemaNineteen' passed (0.003 seconds)
+Test Case 'CanvasWorkspaceTests.testPaletteTextStyleAssetsAndComponentsStayProjectLinkedAcrossTransfer' started at 2026-10-30 14:46:58.298
+Test Case 'CanvasWorkspaceTests.testPaletteTextStyleAssetsAndComponentsStayProjectLinkedAcrossTransfer' passed (0.003 seconds)
+Test Case 'CanvasWorkspaceTests.testSharedExternalClippingMaskIsCopiedWithoutChangingRemainingConsumers' started at 2026-10-30 14:46:58.301
+Test Case 'CanvasWorkspaceTests.testSharedExternalClippingMaskIsCopiedWithoutChangingRemainingConsumers' passed (0.001 seconds)
+Test Case 'CanvasWorkspaceTests.testTransformedChildCanLeaveANeutralGroupButInheritedAppearanceRequiresTheGroup' started at 2026-10-30 14:46:58.302
+Test Case 'CanvasWorkspaceTests.testTransformedChildCanLeaveANeutralGroupButInheritedAppearanceRequiresTheGroup' passed (0.001 seconds)
+Test Case 'CanvasWorkspaceTests.testWorkspaceCannotBecomeAPhysicalSourceComponentOrSecondWorkspace' started at 2026-10-30 14:46:58.303
+Test Case 'CanvasWorkspaceTests.testWorkspaceCannotBecomeAPhysicalSourceComponentOrSecondWorkspace' passed (0.0 seconds)
+Test Suite 'CanvasWorkspaceTests' passed at 2026-10-30 14:46:58.303
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.026 (0.026) seconds
+Test Suite 'ClothDocumentTests' started at 2026-10-30 14:46:58.303
+Test Case 'ClothDocumentTests.testInvalidOpenSurfaceSourcesCannotReplaceGarmentsOrCanvasWorkspaces' started at 2026-10-30 14:46:58.303
+Test Case 'ClothDocumentTests.testInvalidOpenSurfaceSourcesCannotReplaceGarmentsOrCanvasWorkspaces' passed (0.023 seconds)
+Test Suite 'ClothDocumentTests' passed at 2026-10-30 14:46:58.326
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.023 (0.023) seconds
+Test Suite 'ConstructionCapabilitiesTests' started at 2026-10-30 14:46:58.326
+Test Case 'ConstructionCapabilitiesTests.testDiscoveredVersionThreeExampleCreatesWithAccurateFieldsAndReadOnlyCapabilities' started at 2026-10-30 14:46:58.326
+Test Case 'ConstructionCapabilitiesTests.testDiscoveredVersionThreeExampleCreatesWithAccurateFieldsAndReadOnlyCapabilities' passed (0.139 seconds)
+Test Suite 'ConstructionCapabilitiesTests' passed at 2026-10-30 14:46:58.465
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.139 (0.139) seconds
+Test Suite 'FabricPatternTests' started at 2026-10-30 14:46:58.465
+Test Case 'FabricPatternTests.testBrokenLinksAndWorkspaceSourcesAreRejectedWithoutDeletingAnyResources' started at 2026-10-30 14:46:58.465
+Test Case 'FabricPatternTests.testBrokenLinksAndWorkspaceSourcesAreRejectedWithoutDeletingAnyResources' passed (0.006 seconds)
+Test Case 'FabricPatternTests.testColorwaysResolveSharedPaintsWithoutMutatingSourceOrOtherGarmentResources' started at 2026-10-30 14:46:58.470
+Test Case 'FabricPatternTests.testColorwaysResolveSharedPaintsWithoutMutatingSourceOrOtherGarmentResources' passed (0.002 seconds)
+Test Case 'FabricPatternTests.testInvalidNumbersAmbiguousColorwaysAndExcessiveRepeatWorkFailBeforeRendering' started at 2026-10-30 14:46:58.472
+Test Case 'FabricPatternTests.testInvalidNumbersAmbiguousColorwaysAndExcessiveRepeatWorkFailBeforeRendering' passed (0.0 seconds)
+Test Case 'FabricPatternTests.testLatticeAndBomberUVShareScaleRotationAndPhaseAtPhysicalPoints' started at 2026-10-30 14:46:58.472
+Test Case 'FabricPatternTests.testLatticeAndBomberUVShareScaleRotationAndPhaseAtPhysicalPoints' passed (0.0 seconds)
+Test Case 'FabricPatternTests.testLibraryInventoryMergeRetainsProjectPatternAndNeverAddsItToGlobalInput' started at 2026-10-30 14:46:58.472
+Test Case 'FabricPatternTests.testLibraryInventoryMergeRetainsProjectPatternAndNeverAddsItToGlobalInput' passed (0.001 seconds)
+Test Case 'FabricPatternTests.testMCPPatternMutationIsAtomicUndoableAndPersistsSchemaTwentyOne' started at 2026-10-30 14:46:58.474
+Test Case 'FabricPatternTests.testMCPPatternMutationIsAtomicUndoableAndPersistsSchemaTwentyOne' passed (0.017 seconds)
+Test Case 'FabricPatternTests.testModesHaveTruePhysicalPeriodsAndOffsetRowsOrColumns' started at 2026-10-30 14:46:58.491
+Test Case 'FabricPatternTests.testModesHaveTruePhysicalPeriodsAndOffsetRowsOrColumns' passed (0.0 seconds)
+Test Suite 'FabricPatternTests' passed at 2026-10-30 14:46:58.491
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.026 (0.026) seconds
+Test Suite 'InteractionCancellationTests' started at 2026-10-30 14:46:58.491
+Test Case 'InteractionCancellationTests.testCancelRestoresExactProjectAndExistingUndoRedoHistory' started at 2026-10-30 14:46:58.491
+Test Case 'InteractionCancellationTests.testCancelRestoresExactProjectAndExistingUndoRedoHistory' passed (0.001 seconds)
+Test Case 'InteractionCancellationTests.testCancellationDoesNotReplaceAnotherProject' started at 2026-10-30 14:46:58.492
+Test Case 'InteractionCancellationTests.testCancellationDoesNotReplaceAnotherProject' passed (0.001 seconds)
+Test Case 'InteractionCancellationTests.testStaleGenerationCannotCancelNewGestureEvenWithTheSameKey' started at 2026-10-30 14:46:58.493
+Test Case 'InteractionCancellationTests.testStaleGenerationCannotCancelNewGestureEvenWithTheSameKey' passed (0.0 seconds)
+Test Case 'InteractionCancellationTests.testUnrelatedCommandCommitsGestureAndCannotBeRolledBackByLateCancellation' started at 2026-10-30 14:46:58.493
+Test Case 'InteractionCancellationTests.testUnrelatedCommandCommitsGestureAndCannotBeRolledBackByLateCancellation' passed (0.0 seconds)
+Test Suite 'InteractionCancellationTests' passed at 2026-10-30 14:46:58.494
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'LocalBridgeDeadlineTests' started at 2026-10-30 14:46:58.494
+Test Case 'LocalBridgeDeadlineTests.testOnlyNativePNGExportsReceiveTheCaptureResponseWindow' started at 2026-10-30 14:46:58.494
+Test Case 'LocalBridgeDeadlineTests.testOnlyNativePNGExportsReceiveTheCaptureResponseWindow' passed (0.0 seconds)
+Test Case 'LocalBridgeDeadlineTests.testSavedSceneVideoRetainsItsExistingBoundedWindow' started at 2026-10-30 14:46:58.494
+Test Case 'LocalBridgeDeadlineTests.testSavedSceneVideoRetainsItsExistingBoundedWindow' passed (0.0 seconds)
+Test Suite 'LocalBridgeDeadlineTests' passed at 2026-10-30 14:46:58.494
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+Test Suite 'ObjectPresentationTests' started at 2026-10-30 14:46:58.494
+Test Case 'ObjectPresentationTests.testExistingInsideAssociationRetainsItsOriginalVisibleSource' started at 2026-10-30 14:46:58.494
+Test Case 'ObjectPresentationTests.testExistingInsideAssociationRetainsItsOriginalVisibleSource' passed (0.001 seconds)
+Test Case 'ObjectPresentationTests.testNewInsideSourceIsCanvasOnlyAndPersistsWithoutChangingLegacyArtboards' started at 2026-10-30 14:46:58.495
+Test Case 'ObjectPresentationTests.testNewInsideSourceIsCanvasOnlyAndPersistsWithoutChangingLegacyArtboards' passed (0.01 seconds)
+Test Case 'ObjectPresentationTests.testTemplateOnlyAdditionRaisesSchemaAndSurvivesRepositoryReopen' started at 2026-10-30 14:46:58.505
+Test Case 'ObjectPresentationTests.testTemplateOnlyAdditionRaisesSchemaAndSurvivesRepositoryReopen' passed (0.004 seconds)
+Test Suite 'ObjectPresentationTests' passed at 2026-10-30 14:46:58.509
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.015 (0.015) seconds
+Test Suite 'PaperAppearanceTests' started at 2026-10-30 14:46:58.509
+Test Case 'PaperAppearanceTests.testAuthoredCaliperMustAgreeAtomicallyWithoutRewritingItsExpression' started at 2026-10-30 14:46:58.509
+Test Case 'PaperAppearanceTests.testAuthoredCaliperMustAgreeAtomicallyWithoutRewritingItsExpression' passed (0.009 seconds)
+Test Case 'PaperAppearanceTests.testBitmapInkOverridesRejectAtomicallyWhileImageAlphaFoilAndOriginalInkRemainSupported' started at 2026-10-30 14:46:58.518
+Test Case 'PaperAppearanceTests.testBitmapInkOverridesRejectAtomicallyWhileImageAlphaFoilAndOriginalInkRemainSupported' passed (0.007 seconds)
+Test Case 'PaperAppearanceTests.testBondedPliesUseSummedCaliperAndPersistExactAppearanceAfterReopen' started at 2026-10-30 14:46:58.525
+Test Case 'PaperAppearanceTests.testBondedPliesUseSummedCaliperAndPersistExactAppearanceAfterReopen' passed (0.01 seconds)
+Test Case 'PaperAppearanceTests.testFinishAssignmentsStayLocalWhenSharedConstructionChanges' started at 2026-10-30 14:46:58.535
+Test Case 'PaperAppearanceTests.testFinishAssignmentsStayLocalWhenSharedConstructionChanges' passed (0.012 seconds)
+Test Case 'PaperAppearanceTests.testFinishTracksCanonicalTextAndMaskEditsRetainsMissingTargetsAndIsOneUndo' started at 2026-10-30 14:46:58.547
+Test Case 'PaperAppearanceTests.testFinishTracksCanonicalTextAndMaskEditsRetainsMissingTargetsAndIsOneUndo' passed (0.006 seconds)
+Test Case 'PaperAppearanceTests.testInsideFinishResolvesIndependentBackSourceAndPartialEditsKeepIdentity' started at 2026-10-30 14:46:58.553
+Test Case 'PaperAppearanceTests.testInsideFinishResolvesIndependentBackSourceAndPartialEditsKeepIdentity' passed (0.008 seconds)
+Test Case 'PaperAppearanceTests.testLegacyStockAndProjectRemainUnchangedWithoutAppearanceDeclarations' started at 2026-10-30 14:46:58.561
+Test Case 'PaperAppearanceTests.testLegacyStockAndProjectRemainUnchangedWithoutAppearanceDeclarations' passed (0.004 seconds)
+Test Case 'PaperAppearanceTests.testModeledContentsPreflightUsesReadOnlyNativePathAndRejectsAmbiguousUnits' started at 2026-10-30 14:46:58.565
+Test Case 'PaperAppearanceTests.testModeledContentsPreflightUsesReadOnlyNativePathAndRejectsAmbiguousUnits' passed (0.001 seconds)
+Test Case 'PaperAppearanceTests.testReusablePaperStockUsesExistingMaterialsAndNormalPickerWithOneUndo' started at 2026-10-30 14:46:58.566
+Test Case 'PaperAppearanceTests.testReusablePaperStockUsesExistingMaterialsAndNormalPickerWithOneUndo' passed (0.059 seconds)
+Test Case 'PaperAppearanceTests.testSavingLegacyStockRetainsItsExistingMaterialColorWithoutAProfile' started at 2026-10-30 14:46:58.624
+Test Case 'PaperAppearanceTests.testSavingLegacyStockRetainsItsExistingMaterialColorWithoutAProfile' passed (0.006 seconds)
+Test Case 'PaperAppearanceTests.testStockChangesPreserveExplicitTintUntilOneUndoableClear' started at 2026-10-30 14:46:58.630
+Test Case 'PaperAppearanceTests.testStockChangesPreserveExplicitTintUntilOneUndoableClear' passed (0.008 seconds)
+Test Case 'PaperAppearanceTests.testStrictNestedAppearanceAndFinishFailuresAreAtomic' started at 2026-10-30 14:46:58.638
+Test Case 'PaperAppearanceTests.testStrictNestedAppearanceAndFinishFailuresAreAtomic' passed (0.001 seconds)
+Test Case 'PaperAppearanceTests.testTemplateAndBleedDispatchRejectBadMetadataBeforeTouchingNativeHost' started at 2026-10-30 14:46:58.639
+Test Case 'PaperAppearanceTests.testTemplateAndBleedDispatchRejectBadMetadataBeforeTouchingNativeHost' passed (0.001 seconds)
+Test Suite 'PaperAppearanceTests' passed at 2026-10-30 14:46:58.640
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.13 (0.13) seconds
+Test Suite 'PaperConstructionTests' started at 2026-10-30 14:46:58.640
+Test Case 'PaperConstructionTests.testAnnotationsAndInvalidInputsAreAtomicAndReadOnlyCommandsDoNotAddHistory' started at 2026-10-30 14:46:58.640
+Test Case 'PaperConstructionTests.testAnnotationsAndInvalidInputsAreAtomicAndReadOnlyCommandsDoNotAddHistory' passed (0.016 seconds)
+Test Case 'PaperConstructionTests.testDeterministicNetsHaveStableSemanticIDsAndNoCutThroughAnyCreaseInterior' started at 2026-10-30 14:46:58.657
+Test Case 'PaperConstructionTests.testDeterministicNetsHaveStableSemanticIDsAndNoCutThroughAnyCreaseInterior' passed (0.04 seconds)
+Test Case 'PaperConstructionTests.testExistingStudioLibraryGainsPaperPresetWithoutOverwritingCustomMaterials' started at 2026-10-30 14:46:58.696
+Test Case 'PaperConstructionTests.testExistingStudioLibraryGainsPaperPresetWithoutOverwritingCustomMaterials' passed (0.002 seconds)
+Test Case 'PaperConstructionTests.testExplicitLegacyConversionTranslatesFrontArtWithoutTouchingLinkedSourceAndUndoRestores' started at 2026-10-30 14:46:58.698
+Test Case 'PaperConstructionTests.testExplicitLegacyConversionTranslatesFrontArtWithoutTouchingLinkedSourceAndUndoRestores' passed (0.005 seconds)
+Test Case 'PaperConstructionTests.testFoldTransformsAreRigidGroundedUprightAndOutsideOrientationIsConsistent' started at 2026-10-30 14:46:58.703
+Test Case 'PaperConstructionTests.testFoldTransformsAreRigidGroundedUprightAndOutsideOrientationIsConsistent' passed (0.037 seconds)
+Test Case 'PaperConstructionTests.testInsideArtworkCreationIsOneUndoIdempotentLinkedAndResolvesSharedSwatches' started at 2026-10-30 14:46:58.740
+Test Case 'PaperConstructionTests.testInsideArtworkCreationIsOneUndoIdempotentLinkedAndResolvesSharedSwatches' passed (0.003 seconds)
+Test Case 'PaperConstructionTests.testLayoutNeverScalesBlanksAndReportsStockFitContentsAndPrototypeAssumptions' started at 2026-10-30 14:46:58.744
+Test Case 'PaperConstructionTests.testLayoutNeverScalesBlanksAndReportsStockFitContentsAndPrototypeAssumptions' passed (0.004 seconds)
+Test Case 'PaperConstructionTests.testLoadedPaperSourceRejectsMixedRepresentationsAndMismatchedRecipeOrKind' started at 2026-10-30 14:46:58.748
+Test Case 'PaperConstructionTests.testLoadedPaperSourceRejectsMixedRepresentationsAndMismatchedRecipeOrKind' passed (0.028 seconds)
+Test Case 'PaperConstructionTests.testParameterChangesPreserveArtworkCoordinatesAndInsideSourceWhileFlaggingReviewAndUndo' started at 2026-10-30 14:46:58.776
+Test Case 'PaperConstructionTests.testParameterChangesPreserveArtworkCoordinatesAndInsideSourceWhileFlaggingReviewAndUndo' passed (0.012 seconds)
+Test Case 'PaperConstructionTests.testSourcePersistenceSchema53AndHistoricalSleeveRemainIndependent' started at 2026-10-30 14:46:58.788
+Test Case 'PaperConstructionTests.testSourcePersistenceSchema53AndHistoricalSleeveRemainIndependent' passed (0.02 seconds)
+Test Case 'PaperConstructionTests.testTopOpeningKeepsBodyAndBottomFixedAndUsesDistinctClosureLayers' started at 2026-10-30 14:46:58.808
+Test Case 'PaperConstructionTests.testTopOpeningKeepsBodyAndBottomFixedAndUsesDistinctClosureLayers' passed (0.027 seconds)
+Test Suite 'PaperConstructionTests' passed at 2026-10-30 14:46:58.835
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.195 (0.195) seconds
+Test Suite 'PaperFinishVisibilityTests' started at 2026-10-30 14:46:58.835
+Test Case 'PaperFinishVisibilityTests.testLaterVisibilityOrSourceRemovalRemainsRepairableAndReportsNoMask' started at 2026-10-30 14:46:58.835
+Test Case 'PaperFinishVisibilityTests.testLaterVisibilityOrSourceRemovalRemainsRepairableAndReportsNoMask' passed (0.013 seconds)
+Test Case 'PaperFinishVisibilityTests.testMixedGroupRequiresVisiblePrintContentForEachExplicitTarget' started at 2026-10-30 14:46:58.848
+Test Case 'PaperFinishVisibilityTests.testMixedGroupRequiresVisiblePrintContentForEachExplicitTarget' passed (0.003 seconds)
+Test Case 'PaperFinishVisibilityTests.testNewAssignmentsAndWholeConfigurationRejectInvisibleAndTechnicalMasksAtomically' started at 2026-10-30 14:46:58.852
+Test Case 'PaperFinishVisibilityTests.testNewAssignmentsAndWholeConfigurationRejectInvisibleAndTechnicalMasksAtomically' passed (0.003 seconds)
+Test Suite 'PaperFinishVisibilityTests' passed at 2026-10-30 14:46:58.855
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.02 (0.02) seconds
+Test Suite 'PaperPrintGeometryTests' started at 2026-10-30 14:46:58.855
+Test Case 'PaperPrintGeometryTests.testBleedExpandsActualOuterCutAndContractsWindowWithCommonPhysicalCoordinates' started at 2026-10-30 14:46:58.855
+Test Case 'PaperPrintGeometryTests.testBleedExpandsActualOuterCutAndContractsWindowWithCommonPhysicalCoordinates' passed (0.001 seconds)
+Test Case 'PaperPrintGeometryTests.testRegisteredViewportContainsTheWholeTransformedBleedOrRefusesIt' started at 2026-10-30 14:46:58.855
+Test Case 'PaperPrintGeometryTests.testRegisteredViewportContainsTheWholeTransformedBleedOrRefusesIt' passed (0.0 seconds)
+Test Case 'PaperPrintGeometryTests.testTemplateReviewTracksPhysicalRegistrationRatherThanInkOrOpenPose' started at 2026-10-30 14:46:58.856
+Test Case 'PaperPrintGeometryTests.testTemplateReviewTracksPhysicalRegistrationRatherThanInkOrOpenPose' passed (0.005 seconds)
+Test Suite 'PaperPrintGeometryTests' passed at 2026-10-30 14:46:58.860
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.006 (0.006) seconds
+Test Suite 'PhysicalArtworkIntentTests' started at 2026-10-30 14:46:58.861
+Test Case 'PhysicalArtworkIntentTests.testFiniteSewingGuideOnSharedCanvasTransfersWithRemappedPieceAndOneUndo' started at 2026-10-30 14:46:58.861
+Test Case 'PhysicalArtworkIntentTests.testFiniteSewingGuideOnSharedCanvasTransfersWithRemappedPieceAndOneUndo' passed (0.007 seconds)
+Test Suite 'PhysicalArtworkIntentTests' passed at 2026-10-30 14:46:58.867
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.007 (0.007) seconds
+Test Suite 'PlanarConstructionTests' started at 2026-10-30 14:46:58.867
+Test Case 'PlanarConstructionTests.testAuthoredSourceAndCanvasPositionsPersistAndStaleEditsReject' started at 2026-10-30 14:46:58.867
+Test Case 'PlanarConstructionTests.testAuthoredSourceAndCanvasPositionsPersistAndStaleEditsReject' passed (0.022 seconds)
+Test Suite 'PlanarConstructionTests' passed at 2026-10-30 14:46:58.889
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.022 (0.022) seconds
+Test Suite 'PlanarPackagingTests' started at 2026-10-30 14:46:58.889
+Test Case 'PlanarPackagingTests.testAuthoredStockMetadataAndSourceCaliperCannotBeSilentlyRepaired' started at 2026-10-30 14:46:58.889
+Test Case 'PlanarPackagingTests.testAuthoredStockMetadataAndSourceCaliperCannotBeSilentlyRepaired' passed (0.001 seconds)
+Test Case 'PlanarPackagingTests.testFitUsesActualOrientedCornersAndSeparatelyReportsOpening' started at 2026-10-30 14:46:58.890
+Test Case 'PlanarPackagingTests.testFitUsesActualOrientedCornersAndSeparatelyReportsOpening' passed (0.014 seconds)
+Test Case 'PlanarPackagingTests.testIndependentRootsRetainFlatCoordinatesAndOnlyOpeningComponentMoves' started at 2026-10-30 14:46:58.904
+Test Case 'PlanarPackagingTests.testIndependentRootsRetainFlatCoordinatesAndOnlyOpeningComponentMoves' passed (0.006 seconds)
+Test Case 'PlanarPackagingTests.testMalformedRootsHolesAndOldSourceVersionReject' started at 2026-10-30 14:46:58.910
+Test Case 'PlanarPackagingTests.testMalformedRootsHolesAndOldSourceVersionReject' passed (0.001 seconds)
+Test Case 'PlanarPackagingTests.testPhysicalCutoutsHaveStableTechnicalEdgesAndInsideFrameMapping' started at 2026-10-30 14:46:58.911
+Test Case 'PlanarPackagingTests.testPhysicalCutoutsHaveStableTechnicalEdgesAndInsideFrameMapping' passed (0.001 seconds)
+Test Case 'PlanarPackagingTests.testTwelvePackagingSourcesAndSeparateLinerCreateEditUndoAndReopen' started at 2026-10-30 14:46:58.912
+Test Case 'PlanarPackagingTests.testTwelvePackagingSourcesAndSeparateLinerCreateEditUndoAndReopen' passed (7.728 seconds)
+Test Suite 'PlanarPackagingTests' passed at 2026-10-30 14:47:06.640
+	 Executed 6 tests, with 0 failures (0 unexpected) in 7.75 (7.75) seconds
+Test Suite 'PlanarParameterDiagnosticsTests' started at 2026-10-30 14:47:06.640
+Test Case 'PlanarParameterDiagnosticsTests.testNativeDefinitionDraftReportsTheActualDepthRangeInsteadOfMalformedStructure' started at 2026-10-30 14:47:06.640
+Test Case 'PlanarParameterDiagnosticsTests.testNativeDefinitionDraftReportsTheActualDepthRangeInsteadOfMalformedStructure' passed (0.007 seconds)
+Test Case 'PlanarParameterDiagnosticsTests.testParameterUpdateRetainsTheAcceptedDefinitionOnOutOfRangeInput' started at 2026-10-30 14:47:06.647
+Test Case 'PlanarParameterDiagnosticsTests.testParameterUpdateRetainsTheAcceptedDefinitionOnOutOfRangeInput' passed (0.001 seconds)
+Test Suite 'PlanarParameterDiagnosticsTests' passed at 2026-10-30 14:47:06.648
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.008 (0.008) seconds
+Test Suite 'ProjectContentTests' started at 2026-10-30 14:47:06.648
+Test Case 'ProjectContentTests.testWorkspaceIsNotAPhysicalObjectAndManifestKeepsCanvasSummaryWithoutOpeningObjects' started at 2026-10-30 14:47:06.648
+Test Case 'ProjectContentTests.testWorkspaceIsNotAPhysicalObjectAndManifestKeepsCanvasSummaryWithoutOpeningObjects' passed (0.003 seconds)
+Test Suite 'ProjectContentTests' passed at 2026-10-30 14:47:06.651
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'SewingPatternTests' started at 2026-10-30 14:47:06.651
+Test Case 'SewingPatternTests.testGroupingDuplicationDeletionAndSelectionExportKeepSeamReferencesConsistent' started at 2026-10-30 14:47:06.651
+Test Case 'SewingPatternTests.testGroupingDuplicationDeletionAndSelectionExportKeepSeamReferencesConsistent' passed (0.002 seconds)
+Test Case 'SewingPatternTests.testMirroredRotatedAndNonuniformTransformsDoNotScaleTheSeamAllowance' started at 2026-10-30 14:47:06.653
+Test Case 'SewingPatternTests.testMirroredRotatedAndNonuniformTransformsDoNotScaleTheSeamAllowance' passed (0.0 seconds)
+Test Case 'SewingPatternTests.testPairedPiecesTransferTogetherAcrossCanvasOwnersWithCollisionRemapping' started at 2026-10-30 14:47:06.653
+Test Case 'SewingPatternTests.testPairedPiecesTransferTogetherAcrossCanvasOwnersWithCollisionRemapping' passed (0.001 seconds)
+Test Case 'SewingPatternTests.testPerEdgeAllowancesAreExactPhysicalOffsets' started at 2026-10-30 14:47:06.655
+Test Case 'SewingPatternTests.testPerEdgeAllowancesAreExactPhysicalOffsets' passed (0.101 seconds)
+Test Case 'SewingPatternTests.testSeamMatchingUsesActualEdgesAndNumberedCutCopies' started at 2026-10-30 14:47:06.755
+Test Case 'SewingPatternTests.testSeamMatchingUsesActualEdgesAndNumberedCutCopies' passed (0.001 seconds)
+Test Case 'SewingPatternTests.testToteTemplateHasRealCutQuantitiesGrainNotchesAndMatchedCopySeams' started at 2026-10-30 14:47:06.756
+Test Case 'SewingPatternTests.testToteTemplateHasRealCutQuantitiesGrainNotchesAndMatchedCopySeams' passed (0.001 seconds)
+Test Case 'SewingPatternTests.testUnsupportedContoursAndUnsafeNotchesFailExplicitly' started at 2026-10-30 14:47:06.758
+Test Case 'SewingPatternTests.testUnsupportedContoursAndUnsafeNotchesFailExplicitly' passed (0.002 seconds)
+Test Suite 'SewingPatternTests' passed at 2026-10-30 14:47:06.760
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.109 (0.109) seconds
+Test Suite 'SewingTileTests' started at 2026-10-30 14:47:06.760
+Test Case 'SewingTileTests.testSheetMarginsFooterAndAllTileTrimRegionsStayInsidePhysicalPaper' started at 2026-10-30 14:47:06.760
+Test Case 'SewingTileTests.testSheetMarginsFooterAndAllTileTrimRegionsStayInsidePhysicalPaper' passed (0.001 seconds)
+Test Suite 'SewingTileTests' passed at 2026-10-30 14:47:06.761
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'StudioCompositionTests' started at 2026-10-30 14:47:06.761
+Test Case 'StudioCompositionTests.testCameraMotionHasExactEndpointsFixedOrbitElevationAndBoundedWork' started at 2026-10-30 14:47:06.761
+Test Case 'StudioCompositionTests.testCameraMotionHasExactEndpointsFixedOrbitElevationAndBoundedWork' passed (0.0 seconds)
+Test Case 'StudioCompositionTests.testDeletingLastLegacyShotRetainsScenesAndDuplicatingSceneGetsIndependentIDs' started at 2026-10-30 14:47:06.762
+Test Case 'StudioCompositionTests.testDeletingLastLegacyShotRetainsScenesAndDuplicatingSceneGetsIndependentIDs' passed (0.002 seconds)
+Test Case 'StudioCompositionTests.testInvalidSaveAndOptimisticConflictAreAtomicAndInspectionHasNoUndo' started at 2026-10-30 14:47:06.764
+Test Case 'StudioCompositionTests.testInvalidSaveAndOptimisticConflictAreAtomicAndInspectionHasNoUndo' passed (0.002 seconds)
+Test Case 'StudioCompositionTests.testLegacyPresentationDecodesWithoutScenesAndDoesNotRequireSchema54' started at 2026-10-30 14:47:06.766
+Test Case 'StudioCompositionTests.testLegacyPresentationDecodesWithoutScenesAndDoesNotRequireSchema54' passed (0.001 seconds)
+Test Case 'StudioCompositionTests.testMissingSourcesStayRepairableAndCannotRender' started at 2026-10-30 14:47:06.767
+Test Case 'StudioCompositionTests.testMissingSourcesStayRepairableAndCannotRender' passed (0.001 seconds)
+Test Case 'StudioCompositionTests.testRenderResolutionIsDeterministicPhysicalAndUsesVariantSourcesWithoutMutatingProject' started at 2026-10-30 14:47:06.768
+Test Case 'StudioCompositionTests.testRenderResolutionIsDeterministicPhysicalAndUsesVariantSourcesWithoutMutatingProject' passed (0.001 seconds)
+Test Case 'StudioCompositionTests.testSavedCompositionInstancesDoNotDuplicateDesignAndSurviveUndoReopen' started at 2026-10-30 14:47:06.768
+Test Case 'StudioCompositionTests.testSavedCompositionInstancesDoNotDuplicateDesignAndSurviveUndoReopen' passed (0.006 seconds)
+Test Suite 'StudioCompositionTests' passed at 2026-10-30 14:47:06.774
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.013 (0.013) seconds
+Test Suite 'testing.xctest' failed at 2026-10-30 14:47:06.774
+	 Executed 346 tests, with 5 failures (0 unexpected) in 651.002 (651.002) seconds
+Test Suite 'All tests' failed at 2026-10-30 14:47:06.775
+	 Executed 346 tests, with 5 failures (0 unexpected) in 651.002 (651.002) seconds

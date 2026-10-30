@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "installed_app": "/Users/rustymeadows/Dev/form/build/LAB.app",
+  "executable_sha256": "e1f6196be1660b0f95404499123f4924ab51635a43eb8ad8990ebcd50385de18",
+  "production_source_commit": "9d12783",
+  "project_id": "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+  "normal_library": true,
+  "existing_projects_preserved": 4,
+  "object_bytes_preserved": true,
+  "native_view": "Business card Top and Bottom together",
+  "signature_verified": true
+}

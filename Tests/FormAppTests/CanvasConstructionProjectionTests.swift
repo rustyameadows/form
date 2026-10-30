@@ -45,7 +45,7 @@ import XCTest
   func testOneCanvasContainsProofAndUprightSurfacesWithoutCreatingArtworkCopies() throws {
     let (store, id) = try fixture(), before = store.project!
     let session = store.artworkSession, frames = session.frames
-    XCTAssertEqual(frames.filter { $0.projection != nil }.count, 4)
+    XCTAssertEqual(frames.filter { $0.projection != nil }.count, 8)
     XCTAssertEqual(Set(frames.map(\.id)).count, frames.count)
     let proof = try XCTUnwrap(frames.first { $0.projection?.isProof == true })
     let back = try XCTUnwrap(frames.first { $0.projection?.panelID == "back" })
@@ -55,6 +55,7 @@ import XCTest
     XCTAssertEqual(store.project, before)
     XCTAssertTrue(store.engine.undoStack.isEmpty)
     XCTAssertEqual(Set(back.artwork.elements.map(\.id)), Set(proof.artwork.elements.map(\.id)))
+    XCTAssertEqual(frames.filter{$0.projection?.inside==true}.count,4,"Blank second faces are discoverable without source creation.")
     XCTAssertEqual(back.rect.width, 100, accuracy: 1e-8)
     XCTAssertEqual(back.rect.height, 40, accuracy: 1e-8)
     XCTAssertEqual(store.engine.selection, [id])

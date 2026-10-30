@@ -14,6 +14,7 @@ struct CanvasSourceProjection: Equatable {
   let boundary: [Point2]
   var cutouts:[[Point2]]?=nil
   var surfaceKind:PhysicalArtworkSurfaceIdentity.Kind = .panel
+  var requiresInsideSource=false
 
   var physicalIdentity:PhysicalArtworkSurfaceIdentity {
     .init(kind:isProof ? .net:surfaceKind,surfaceID:panelID,side:inside ? .inside:.outside)
@@ -31,16 +32,17 @@ struct CanvasSourceProjection: Equatable {
   var isProof: Bool { panelID == nil }
 
   static func views(of object: ProductObject, sourceID: UUID, inside: Bool,
-                    net: PaperNet) -> [Self] {
+                    net: PaperNet,requiresInsideSource:Bool=false) -> [Self] {
     guard let proof = try? PhysicalArtworkFrame.paper(net:net,inside:inside) else{return []}
+    let side=PaperSideLabels.title(inside:inside,net:net)
     var result = [Self(constructionID: object.id, sourceID: sourceID, panelID: nil,
-      inside: inside, title: object.name + (inside ? " · Inside dieline" : " · Dieline"),
-      size:proof.size,sourceToLocal:proof.sourceToLocal,boundary:proof.boundary,cutouts:proof.cutouts)]
+      inside: inside, title: object.name + " · " + side + " dieline",
+      size:proof.size,sourceToLocal:proof.sourceToLocal,boundary:proof.boundary,cutouts:proof.cutouts,requiresInsideSource:requiresInsideSource)]
     for panel in net.panels {
       guard let frame=try? PhysicalArtworkFrame.paper(net:net,panelID:panel.id,inside:inside) else{continue}
       result.append(Self(constructionID:object.id,sourceID:sourceID,panelID:panel.id,inside:inside,
-        title:object.name + " · " + panel.name + (inside ? " · Inside":""),
-        size:frame.size,sourceToLocal:frame.sourceToLocal,boundary:frame.boundary,cutouts:frame.cutouts))
+        title:object.name + " · " + (PaperSideLabels.isFlatSheet(net) ? side:panel.name+" · "+side),
+        size:frame.size,sourceToLocal:frame.sourceToLocal,boundary:frame.boundary,cutouts:frame.cutouts,requiresInsideSource:requiresInsideSource))
     }
     return result
   }

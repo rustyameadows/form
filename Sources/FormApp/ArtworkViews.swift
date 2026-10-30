@@ -218,13 +218,12 @@ struct ArtworkLayers: View {
                     session.selection.insert(row.element.id)
                   }
                 } else {
-                  session.choose([row.element.id])
+                  session.navigateGroup(to: row.element.parentID, selection: [row.element.id])
                 }
               }.contextMenu {
                 Button("Rename") { renaming = row.element.id }
                 Button("Edit inside group") {
-                  session.scopeID = row.element.id
-                  session.choose([])
+                  session.enterGroup(row.element.id)
                 }.disabled(row.element.kind != "group" || row.element.component != nil)
                 if row.element.component != nil {
                   Button("Edit component source") { session.editComponentSource(row.element) }

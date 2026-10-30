@@ -1,0 +1,830 @@
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--1AB21518FC5DEDBE.txt
+[4/10] Emitting module FormApp
+[5/10] Compiling FormApp PaperWorkspace.swift
+[6/11] Compiling FormApp LinkedObjectInspectorModule.swift
+[7/11] Compiling FormApp ArtworkInspector.swift
+[8/11] Compiling FormApp VectorCanvas.swift
+[9/64] Compiling FormApp GarmentBlockController.swift
+[10/64] Compiling FormApp GlyphPalette.swift
+[11/64] Compiling FormApp ImageInspector.swift
+[12/64] Compiling FormApp InspectorColorTarget.swift
+[13/64] Compiling FormApp InterfaceAppearance.swift
+[14/64] Compiling FormApp OpticalOperations.swift
+[15/64] Compiling FormApp OpticalSizingControls.swift
+[16/64] Compiling FormApp PaintInspector.swift
+[17/64] Compiling FormApp ParagraphLanguageControls.swift
+[18/64] Compiling FormApp ParagraphListControls.swift
+[19/64] Compiling FormApp ParagraphTabsPanel.swift
+[20/64] Compiling FormApp ProductionInkControls.swift
+[21/64] Compiling FormApp ProductionInkOperations.swift
+[22/64] Compiling FormApp PublicationControls.swift
+[23/64] Compiling FormApp PublicationEditing.swift
+[24/64] Compiling FormApp PublicationOperations.swift
+[25/64] Compiling FormApp SewingDocumentReviews.swift
+[26/64] Compiling FormApp SewingLayoutController.swift
+[27/64] Compiling FormApp SewingPatternControls.swift
+[28/64] Compiling FormApp SewingPatternOperations.swift
+[29/64] Compiling FormApp SewingPouchControls.swift
+[30/64] Compiling FormApp SewingTileControls.swift
+[31/64] Compiling FormApp StudioStore.swift
+[32/64] Compiling FormApp SwatchPalette.swift
+[33/64] Compiling FormApp TextStylesPanel.swift
+[34/64] Compiling FormApp TextileFabricLibrary.swift
+[35/64] Compiling FormApp AppearanceInspector.swift
+[36/64] Compiling FormApp ArtworkOriginPicker.swift
+[37/64] Compiling FormApp ArtworkPageOperations.swift
+[38/64] Compiling FormApp ArtworkPageSetupDraft.swift
+[39/64] Compiling FormApp ArtworkProductionControls.swift
+[40/64] Compiling FormApp ArtworkSession.swift
+[41/64] Compiling FormApp ArtworkStudio.swift
+[42/64] Compiling FormApp ArtworkTransferSession.swift
+[43/64] Compiling FormApp ArtworkViews.swift
+[44/64] Compiling FormApp CanvasArrangementControls.swift
+[45/64] Compiling FormApp CanvasContextMenu.swift
+[46/64] Compiling FormApp CanvasGroupNavigation.swift
+[47/64] Compiling FormApp CanvasPhysicalArtworkGuides.swift
+[48/64] Compiling FormApp CharacterPositionControls.swift
+[49/64] Compiling FormApp CharacterPositionOperations.swift
+[50/64] Compiling FormApp CollectionProductionOperations.swift
+[51/64] Compiling FormApp ColorProfileControls.swift
+[52/64] Compiling FormApp ComponentInspector.swift
+[53/64] Compiling FormApp DecorationPreparationOperations.swift
+[54/64] Compiling FormApp DecorationPreparationView.swift
+[55/64] Compiling FormApp DocumentFontsPanel.swift
+[56/64] Compiling FormApp FabricEnvironmentControls.swift
+[57/64] Compiling FormApp FabricPatternEditor.swift
+[58/64] Compiling FormApp FocusedNumericArtworkField.swift
+[59/64] Compiling FormApp FontBrowser.swift
+[60/64] Compiling FormApp FontLibraryOperations.swift
+[61/64] Compiling FormApp FormApp.swift
+[61/66] Write Objects.LinkFileList
+[62/66] Linking Form
+[63/66] Applying Form
+[65/97] Compiling FormAppTests CanvasGroupNavigationTests.swift
+[66/97] Compiling FormAppTests CanvasHoverTests.swift
+[67/97] Compiling FormAppTests CanvasInteractionNavigationTests.swift
+[68/97] Compiling FormAppTests CanvasOnlySourcePresentationTests.swift
+[69/97] Compiling FormAppTests CanvasPaperArrangementIntegrationTests.swift
+[70/97] Compiling FormAppTests CanvasPaperPickingIntegrationTests.swift
+[71/97] Compiling FormAppTests CanvasPaperSidesTests.swift
+[72/97] Compiling FormAppTests CanvasPointerRoutingTests.swift
+[73/97] Compiling FormAppTests CanvasSewingGuideTests.swift
+[74/97] Compiling FormAppTests CanvasViewportTests.swift
+[75/107] Compiling FormAppTests CharacterPositionEditingTests.swift
+[76/107] Compiling FormAppTests CollectionProductionEditingTests.swift
+[77/107] Compiling FormAppTests DecorationPreparationEditingTests.swift
+[78/107] Compiling FormAppTests DesignSurfaceTests.swift
+[79/107] Compiling FormAppTests FontLibraryEditingTests.swift
+[80/107] Compiling FormAppTests FreeformCanvasTests.swift
+[81/107] Compiling FormAppTests IndependentSurfaceSelectionTests.swift
+[82/107] Compiling FormAppTests OpticalTypographyEditingTests.swift
+[83/107] Compiling FormAppTests PaperGeometryTests.swift
+[84/107] Compiling FormAppTests ParagraphLanguageEditingTests.swift
+[85/107] Emitting module FormAppTests
+[86/107] Compiling FormAppTests ArtworkPageSetupEditingTests.swift
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/ArtworkPageSetupEditingTests.swift:128:20: warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+126 | 
+127 |   func testPageOutputPreservesICCBoxesAndRequiresExplicitUsedInkPreview()throws {
+128 |     let(store,root,id)=try fixture(),profile=try ICCOutputProfile(url:URL(fileURLWithPath:"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc")),assets=store.repository.url(for:store.project!.id).appendingPathComponent("Assets");try profile.store(in:assets)
+    |                    `- warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+129 |     var p=store.project!;p.objects[0].artwork!.outputColorProfile=profile.reference;store.engine.project=p;let path=root.appendingPathComponent("profile.pdf"),args:[String:Any]=["format":"pdf","path":path.path,"page_output":["area":"bleed","crop_marks":true]]
+130 |     let result=try store.exportArtwork(object:p.objects[0],arguments:args) as! [String:Any],data=try Data(contentsOf:path),pdf=try XCTUnwrap(CGPDFDocument(CGDataProvider(data:data as CFData)!)),page=try XCTUnwrap(pdf.page(at:1)),raw=String(decoding:data,as:UTF8.self)
+[87/107] Compiling FormAppTests ArtworkProductionEditingTests.swift
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/ArtworkPageSetupEditingTests.swift:128:20: warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+126 | 
+127 |   func testPageOutputPreservesICCBoxesAndRequiresExplicitUsedInkPreview()throws {
+128 |     let(store,root,id)=try fixture(),profile=try ICCOutputProfile(url:URL(fileURLWithPath:"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc")),assets=store.repository.url(for:store.project!.id).appendingPathComponent("Assets");try profile.store(in:assets)
+    |                    `- warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+129 |     var p=store.project!;p.objects[0].artwork!.outputColorProfile=profile.reference;store.engine.project=p;let path=root.appendingPathComponent("profile.pdf"),args:[String:Any]=["format":"pdf","path":path.path,"page_output":["area":"bleed","crop_marks":true]]
+130 |     let result=try store.exportArtwork(object:p.objects[0],arguments:args) as! [String:Any],data=try Data(contentsOf:path),pdf=try XCTUnwrap(CGPDFDocument(CGDataProvider(data:data as CFData)!)),page=try XCTUnwrap(pdf.page(at:1)),raw=String(decoding:data,as:UTF8.self)
+[88/107] Compiling FormAppTests ArtworkTransferEditingTests.swift
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/ArtworkPageSetupEditingTests.swift:128:20: warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+126 | 
+127 |   func testPageOutputPreservesICCBoxesAndRequiresExplicitUsedInkPreview()throws {
+128 |     let(store,root,id)=try fixture(),profile=try ICCOutputProfile(url:URL(fileURLWithPath:"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc")),assets=store.repository.url(for:store.project!.id).appendingPathComponent("Assets");try profile.store(in:assets)
+    |                    `- warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+129 |     var p=store.project!;p.objects[0].artwork!.outputColorProfile=profile.reference;store.engine.project=p;let path=root.appendingPathComponent("profile.pdf"),args:[String:Any]=["format":"pdf","path":path.path,"page_output":["area":"bleed","crop_marks":true]]
+130 |     let result=try store.exportArtwork(object:p.objects[0],arguments:args) as! [String:Any],data=try Data(contentsOf:path),pdf=try XCTUnwrap(CGPDFDocument(CGDataProvider(data:data as CFData)!)),page=try XCTUnwrap(pdf.page(at:1)),raw=String(decoding:data,as:UTF8.self)
+[89/107] Compiling FormAppTests ArtworkTransferLifecycleTests.swift
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/ArtworkPageSetupEditingTests.swift:128:20: warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+126 | 
+127 |   func testPageOutputPreservesICCBoxesAndRequiresExplicitUsedInkPreview()throws {
+128 |     let(store,root,id)=try fixture(),profile=try ICCOutputProfile(url:URL(fileURLWithPath:"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc")),assets=store.repository.url(for:store.project!.id).appendingPathComponent("Assets");try profile.store(in:assets)
+    |                    `- warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+129 |     var p=store.project!;p.objects[0].artwork!.outputColorProfile=profile.reference;store.engine.project=p;let path=root.appendingPathComponent("profile.pdf"),args:[String:Any]=["format":"pdf","path":path.path,"page_output":["area":"bleed","crop_marks":true]]
+130 |     let result=try store.exportArtwork(object:p.objects[0],arguments:args) as! [String:Any],data=try Data(contentsOf:path),pdf=try XCTUnwrap(CGPDFDocument(CGDataProvider(data:data as CFData)!)),page=try XCTUnwrap(pdf.page(at:1)),raw=String(decoding:data,as:UTF8.self)
+[90/107] Compiling FormAppTests CanvasConstructionProjectionTests.swift
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/ArtworkPageSetupEditingTests.swift:128:20: warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+126 | 
+127 |   func testPageOutputPreservesICCBoxesAndRequiresExplicitUsedInkPreview()throws {
+128 |     let(store,root,id)=try fixture(),profile=try ICCOutputProfile(url:URL(fileURLWithPath:"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc")),assets=store.repository.url(for:store.project!.id).appendingPathComponent("Assets");try profile.store(in:assets)
+    |                    `- warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+129 |     var p=store.project!;p.objects[0].artwork!.outputColorProfile=profile.reference;store.engine.project=p;let path=root.appendingPathComponent("profile.pdf"),args:[String:Any]=["format":"pdf","path":path.path,"page_output":["area":"bleed","crop_marks":true]]
+130 |     let result=try store.exportArtwork(object:p.objects[0],arguments:args) as! [String:Any],data=try Data(contentsOf:path),pdf=try XCTUnwrap(CGPDFDocument(CGDataProvider(data:data as CFData)!)),page=try XCTUnwrap(pdf.page(at:1)),raw=String(decoding:data,as:UTF8.self)
+[91/107] Compiling FormAppTests CanvasContextMenuTests.swift
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/ArtworkPageSetupEditingTests.swift:128:20: warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+126 | 
+127 |   func testPageOutputPreservesICCBoxesAndRequiresExplicitUsedInkPreview()throws {
+128 |     let(store,root,id)=try fixture(),profile=try ICCOutputProfile(url:URL(fileURLWithPath:"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc")),assets=store.repository.url(for:store.project!.id).appendingPathComponent("Assets");try profile.store(in:assets)
+    |                    `- warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+129 |     var p=store.project!;p.objects[0].artwork!.outputColorProfile=profile.reference;store.engine.project=p;let path=root.appendingPathComponent("profile.pdf"),args:[String:Any]=["format":"pdf","path":path.path,"page_output":["area":"bleed","crop_marks":true]]
+130 |     let result=try store.exportArtwork(object:p.objects[0],arguments:args) as! [String:Any],data=try Data(contentsOf:path),pdf=try XCTUnwrap(CGPDFDocument(CGDataProvider(data:data as CFData)!)),page=try XCTUnwrap(pdf.page(at:1)),raw=String(decoding:data,as:UTF8.self)
+[92/107] Compiling FormAppTests CanvasDenseInteractionTests.swift
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/ArtworkPageSetupEditingTests.swift:128:20: warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+126 | 
+127 |   func testPageOutputPreservesICCBoxesAndRequiresExplicitUsedInkPreview()throws {
+128 |     let(store,root,id)=try fixture(),profile=try ICCOutputProfile(url:URL(fileURLWithPath:"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc")),assets=store.repository.url(for:store.project!.id).appendingPathComponent("Assets");try profile.store(in:assets)
+    |                    `- warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+129 |     var p=store.project!;p.objects[0].artwork!.outputColorProfile=profile.reference;store.engine.project=p;let path=root.appendingPathComponent("profile.pdf"),args:[String:Any]=["format":"pdf","path":path.path,"page_output":["area":"bleed","crop_marks":true]]
+130 |     let result=try store.exportArtwork(object:p.objects[0],arguments:args) as! [String:Any],data=try Data(contentsOf:path),pdf=try XCTUnwrap(CGPDFDocument(CGDataProvider(data:data as CFData)!)),page=try XCTUnwrap(pdf.page(at:1)),raw=String(decoding:data,as:UTF8.self)
+[93/107] Compiling FormAppTests CanvasDrawingBoundaryTests.swift
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/ArtworkPageSetupEditingTests.swift:128:20: warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+126 | 
+127 |   func testPageOutputPreservesICCBoxesAndRequiresExplicitUsedInkPreview()throws {
+128 |     let(store,root,id)=try fixture(),profile=try ICCOutputProfile(url:URL(fileURLWithPath:"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc")),assets=store.repository.url(for:store.project!.id).appendingPathComponent("Assets");try profile.store(in:assets)
+    |                    `- warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+129 |     var p=store.project!;p.objects[0].artwork!.outputColorProfile=profile.reference;store.engine.project=p;let path=root.appendingPathComponent("profile.pdf"),args:[String:Any]=["format":"pdf","path":path.path,"page_output":["area":"bleed","crop_marks":true]]
+130 |     let result=try store.exportArtwork(object:p.objects[0],arguments:args) as! [String:Any],data=try Data(contentsOf:path),pdf=try XCTUnwrap(CGPDFDocument(CGDataProvider(data:data as CFData)!)),page=try XCTUnwrap(pdf.page(at:1)),raw=String(decoding:data,as:UTF8.self)
+[94/107] Compiling FormAppTests CanvasFitBoundsTests.swift
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/ArtworkPageSetupEditingTests.swift:128:20: warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+126 | 
+127 |   func testPageOutputPreservesICCBoxesAndRequiresExplicitUsedInkPreview()throws {
+128 |     let(store,root,id)=try fixture(),profile=try ICCOutputProfile(url:URL(fileURLWithPath:"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc")),assets=store.repository.url(for:store.project!.id).appendingPathComponent("Assets");try profile.store(in:assets)
+    |                    `- warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+129 |     var p=store.project!;p.objects[0].artwork!.outputColorProfile=profile.reference;store.engine.project=p;let path=root.appendingPathComponent("profile.pdf"),args:[String:Any]=["format":"pdf","path":path.path,"page_output":["area":"bleed","crop_marks":true]]
+130 |     let result=try store.exportArtwork(object:p.objects[0],arguments:args) as! [String:Any],data=try Data(contentsOf:path),pdf=try XCTUnwrap(CGPDFDocument(CGDataProvider(data:data as CFData)!)),page=try XCTUnwrap(pdf.page(at:1)),raw=String(decoding:data,as:UTF8.self)
+[95/107] Compiling FormAppTests CanvasFloatingWorkspaceTests.swift
+/Users/rustymeadows/Dev/form/Tests/FormAppTests/ArtworkPageSetupEditingTests.swift:128:20: warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+126 | 
+127 |   func testPageOutputPreservesICCBoxesAndRequiresExplicitUsedInkPreview()throws {
+128 |     let(store,root,id)=try fixture(),profile=try ICCOutputProfile(url:URL(fileURLWithPath:"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc")),assets=store.repository.url(for:store.project!.id).appendingPathComponent("Assets");try profile.store(in:assets)
+    |                    `- warning: immutable value 'id' was never used; consider replacing with '_' or removing it [#no-usage]
+129 |     var p=store.project!;p.objects[0].artwork!.outputColorProfile=profile.reference;store.engine.project=p;let path=root.appendingPathComponent("profile.pdf"),args:[String:Any]=["format":"pdf","path":path.path,"page_output":["area":"bleed","crop_marks":true]]
+130 |     let result=try store.exportArtwork(object:p.objects[0],arguments:args) as! [String:Any],data=try Data(contentsOf:path),pdf=try XCTUnwrap(CGPDFDocument(CGDataProvider(data:data as CFData)!)),page=try XCTUnwrap(pdf.page(at:1)),raw=String(decoding:data,as:UTF8.self)
+[96/107] Compiling FormAppTests ParagraphListEditingTests.swift
+[97/107] Compiling FormAppTests PhysicalArtworkFrameRenderingTests.swift
+[98/107] Compiling FormAppTests PhysicalArtworkIntentRenderingTests.swift
+[99/107] Compiling FormAppTests ProductionInkEditingTests.swift
+[100/107] Compiling FormAppTests PublicationEditingTests.swift
+[101/107] Compiling FormAppTests SewingPatternEditingTests.swift
+[102/107] Compiling FormAppTests TableInspectorInteractionTests.swift
+[103/107] Compiling FormAppTests TextCaseEditingTests.swift
+[104/107] Compiling FormAppTests UnifiedDesignSurfaceHostTests.swift
+[105/107] Compiling FormAppTests WorkspaceToolbarTests.swift
+[105/107] Write Objects.LinkFileList
+[106/107] Linking FORMPackageTests
+Build complete! (28.45s)
+ld: warning: duplicate -rpath '/Users/rustymeadows/Dev/form/.local/testing/xctest/.build/arm64-apple-macosx/debug' ignored
+Registered 49 unchanged test methods in 11 XCTestCase classes.
+Test Suite 'All tests' started at 2026-10-30 15:06:29.165
+Test Suite 'testing.xctest' started at 2026-10-30 15:06:29.166
+Test Suite 'CanvasFitBoundsTests' started at 2026-10-30 15:06:29.166
+Test Case 'CanvasFitBoundsTests.testFitContainsWholeAuthoredNetAndEveryUprightFrameAfterNativeDocumentOffsetsAndPanOnly' started at 2026-10-30 15:06:29.166
+Test Case 'CanvasFitBoundsTests.testFitContainsWholeAuthoredNetAndEveryUprightFrameAfterNativeDocumentOffsetsAndPanOnly' passed (0.486 seconds)
+Test Case 'CanvasFitBoundsTests.testNativeRulerOverlaysLeaveTheWholeTallArtboardMarginVisible' started at 2026-10-30 15:06:29.652
+Test Case 'CanvasFitBoundsTests.testNativeRulerOverlaysLeaveTheWholeTallArtboardMarginVisible' passed (0.497 seconds)
+Test Case 'CanvasFitBoundsTests.testPendingPaperPanelFocusFitsThePhysicalPanelInShiftedNativeDocument' started at 2026-10-30 15:06:30.148
+Test Case 'CanvasFitBoundsTests.testPendingPaperPanelFocusFitsThePhysicalPanelInShiftedNativeDocument' passed (0.829 seconds)
+Test Suite 'CanvasFitBoundsTests' passed at 2026-10-30 15:06:30.977
+	 Executed 3 tests, with 0 failures (0 unexpected) in 1.811 (1.811) seconds
+Test Suite 'CanvasFrameCachingTests' started at 2026-10-30 15:06:30.977
+Test Case 'CanvasFrameCachingTests.testDirectSourceAndGeometryAssignmentsAndUndoNeverReturnStaleFrames' started at 2026-10-30 15:06:30.977
+Test Case 'CanvasFrameCachingTests.testDirectSourceAndGeometryAssignmentsAndUndoNeverReturnStaleFrames' passed (0.014 seconds)
+Test Case 'CanvasFrameCachingTests.testGlobalStorySwatchAndStyleChangesInvalidateEvenWhenFrameObjectsDoNotChange' started at 2026-10-30 15:06:30.991
+Test Case 'CanvasFrameCachingTests.testGlobalStorySwatchAndStyleChangesInvalidateEvenWhenFrameObjectsDoNotChange' passed (0.014 seconds)
+Test Case 'CanvasFrameCachingTests.testInsideNavigationActivePanelAndComponentContextUseCurrentInputs' started at 2026-10-30 15:06:31.005
+Test Case 'CanvasFrameCachingTests.testInsideNavigationActivePanelAndComponentContextUseCurrentInputs' passed (0.011 seconds)
+Test Case 'CanvasFrameCachingTests.testLegacyDielineAndLinkedTargetContextCannotReuseWrongDimensions' started at 2026-10-30 15:06:31.016
+Test Case 'CanvasFrameCachingTests.testLegacyDielineAndLinkedTargetContextCannotReuseWrongDimensions' passed (0.002 seconds)
+Test Case 'CanvasFrameCachingTests.testTableCameraOnlyUpdatesReuseCanonicalFrames' started at 2026-10-30 15:06:31.018
+Test Case 'CanvasFrameCachingTests.testTableCameraOnlyUpdatesReuseCanonicalFrames' passed (0.009 seconds)
+Test Case 'CanvasFrameCachingTests.testTwelveCaseLayerTraversalAndRepeatedInspectorReadsBuildFramesOnlyOnce' started at 2026-10-30 15:06:31.027
+Test Case 'CanvasFrameCachingTests.testTwelveCaseLayerTraversalAndRepeatedInspectorReadsBuildFramesOnlyOnce' passed (1.591 seconds)
+Test Suite 'CanvasFrameCachingTests' passed at 2026-10-30 15:06:32.618
+	 Executed 6 tests, with 0 failures (0 unexpected) in 1.641 (1.641) seconds
+Test Suite 'CanvasPaperArrangementIntegrationTests' started at 2026-10-30 15:06:32.618
+Test Case 'CanvasPaperArrangementIntegrationTests.testInsideReflectedQuarterTurnNativeMenuArrangementPreservesIndependentSourceAndTableState' started at 2026-10-30 15:06:32.618
+Test Case 'CanvasPaperArrangementIntegrationTests.testInsideReflectedQuarterTurnNativeMenuArrangementPreservesIndependentSourceAndTableState' passed (0.183 seconds)
+Test Case 'CanvasPaperArrangementIntegrationTests.testOutsideQuarterTurnSharedArrangementAndGroupCommandsPreserveCanonicalTargetsAndExactHistory' started at 2026-10-30 15:06:32.801
+Test Case 'CanvasPaperArrangementIntegrationTests.testOutsideQuarterTurnSharedArrangementAndGroupCommandsPreserveCanonicalTargetsAndExactHistory' passed (0.083 seconds)
+Test Suite 'CanvasPaperArrangementIntegrationTests' passed at 2026-10-30 15:06:32.884
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.266 (0.266) seconds
+Test Suite 'CanvasPaperPickingIntegrationTests' started at 2026-10-30 15:06:32.884
+Test Case 'CanvasPaperPickingIntegrationTests.testCrossingArtworkRemainsEditableFromInsideAndOutsideMaterialWithOneCanonicalUndo' started at 2026-10-30 15:06:32.884
+Test Case 'CanvasPaperPickingIntegrationTests.testCrossingArtworkRemainsEditableFromInsideAndOutsideMaterialWithOneCanonicalUndo' passed (0.112 seconds)
+Test Case 'CanvasPaperPickingIntegrationTests.testHiddenHoleAndOffPanelArtworkCannotBePickedByClickHoverOrContextProbe' started at 2026-10-30 15:06:32.996
+Test Case 'CanvasPaperPickingIntegrationTests.testHiddenHoleAndOffPanelArtworkCannotBePickedByClickHoverOrContextProbe' passed (0.149 seconds)
+Test Case 'CanvasPaperPickingIntegrationTests.testOutsideGroupRecoveryUsesOnlyVisibleMaterialIncludingReflectedRotatedFrames' started at 2026-10-30 15:06:33.145
+Test Case 'CanvasPaperPickingIntegrationTests.testOutsideGroupRecoveryUsesOnlyVisibleMaterialIncludingReflectedRotatedFrames' passed (0.055 seconds)
+Test Suite 'CanvasPaperPickingIntegrationTests' passed at 2026-10-30 15:06:33.200
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.316 (0.316) seconds
+Test Suite 'CanvasPaperSidesTests' started at 2026-10-30 15:06:33.200
+Test Case 'CanvasPaperSidesTests.testBlankTopAndBottomAndBothDielinesAreStableReadOnlyFramesWithIndependentNavigation' started at 2026-10-30 15:06:33.200
+Test Case 'CanvasPaperSidesTests.testBlankTopAndBottomAndBothDielinesAreStableReadOnlyFramesWithIndependentNavigation' passed (0.063 seconds)
+Test Case 'CanvasPaperSidesTests.testEachFacePositionPersistsIndependentlyAndFoldedGoodsKeepOutsideInsideLabels' started at 2026-10-30 15:06:33.263
+Test Case 'CanvasPaperSidesTests.testEachFacePositionPersistsIndependentlyAndFoldedGoodsKeepOutsideInsideLabels' passed (0.026 seconds)
+Test Case 'CanvasPaperSidesTests.testEscapeDuringFirstBottomDrawRemovesTheProvisionalSourceAndLateEventsCannotRecreateIt' started at 2026-10-30 15:06:33.289
+Test Case 'CanvasPaperSidesTests.testEscapeDuringFirstBottomDrawRemovesTheProvisionalSourceAndLateEventsCannotRecreateIt' passed (0.024 seconds)
+Test Case 'CanvasPaperSidesTests.testExistingInspectorInteractionSurvivesFirstBottomSaveAndNonlocalCommandCannotWriteOutside' started at 2026-10-30 15:06:33.313
+Test Case 'CanvasPaperSidesTests.testExistingInspectorInteractionSurvivesFirstBottomSaveAndNonlocalCommandCannotWriteOutside' passed (0.036 seconds)
+Test Case 'CanvasPaperSidesTests.testFlatSheetFocusRequestedBeforeNativeAttachmentStillFitsBothDielines' started at 2026-10-30 15:06:33.349
+Test Case 'CanvasPaperSidesTests.testFlatSheetFocusRequestedBeforeNativeAttachmentStillFitsBothDielines' passed (0.051 seconds)
+Test Case 'CanvasPaperSidesTests.testLegacyInlineBottomMigratesOnFirstEditKeepingMasksAndMetadataInOneUndo' started at 2026-10-30 15:06:33.400
+Test Case 'CanvasPaperSidesTests.testLegacyInlineBottomMigratesOnFirstEditKeepingMasksAndMetadataInOneUndo' passed (0.018 seconds)
+Test Case 'CanvasPaperSidesTests.testLockedPhysicalOwnerRejectsBlankAndExistingBottomWritesWithoutPartialSourceOrHistory' started at 2026-10-30 15:06:33.417
+Test Case 'CanvasPaperSidesTests.testLockedPhysicalOwnerRejectsBlankAndExistingBottomWritesWithoutPartialSourceOrHistory' passed (0.022 seconds)
+Test Case 'CanvasPaperSidesTests.testNativeFirstBottomDrawContinuesItsHeldGestureAndUndoesSourceCreationExactlyOnce' started at 2026-10-30 15:06:33.439
+Test Case 'CanvasPaperSidesTests.testNativeFirstBottomDrawContinuesItsHeldGestureAndUndoesSourceCreationExactlyOnce' passed (0.046 seconds)
+Test Case 'CanvasPaperSidesTests.testNativeFlatSheetEntryFitsBothMatchingFacesWhileKeepingChosenSideSourceAndTableState' started at 2026-10-30 15:06:33.485
+Test Case 'CanvasPaperSidesTests.testNativeFlatSheetEntryFitsBothMatchingFacesWhileKeepingChosenSideSourceAndTableState' passed (0.027 seconds)
+Test Suite 'CanvasPaperSidesTests' passed at 2026-10-30 15:06:33.512
+	 Executed 9 tests, with 0 failures (0 unexpected) in 0.312 (0.312) seconds
+Test Suite 'CanvasSourceAuthoringTests' started at 2026-10-30 15:06:33.512
+Test Case 'CanvasSourceAuthoringTests.testBindingProgramMetadataWithoutChangedResolvedArtworkReusesActualGeometryHandle' started at 2026-10-30 15:06:33.512
+Test Case 'CanvasSourceAuthoringTests.testBindingProgramMetadataWithoutChangedResolvedArtworkReusesActualGeometryHandle' passed (0.026 seconds)
+Test Case 'CanvasSourceAuthoringTests.testComponentDefinitionSharedWithPaperKeepsItsCanonicalEditorAndReturnContext' started at 2026-10-30 15:06:33.539
+Test Case 'CanvasSourceAuthoringTests.testComponentDefinitionSharedWithPaperKeepsItsCanonicalEditorAndReturnContext' passed (0.024 seconds)
+Test Case 'CanvasSourceAuthoringTests.testFreshInsideSourceOpensItsReadableNetOnceAndNativeEditsRetainSourceUndo' started at 2026-10-30 15:06:33.563
+Test Case 'CanvasSourceAuthoringTests.testFreshInsideSourceOpensItsReadableNetOnceAndNativeEditsRetainSourceUndo' passed (0.027 seconds)
+Test Case 'CanvasSourceAuthoringTests.testMultiplePhysicalOwnersRequireExplicitConstructionInsteadOfChoosingAnInsideFrame' started at 2026-10-30 15:06:33.589
+Test Case 'CanvasSourceAuthoringTests.testMultiplePhysicalOwnersRequireExplicitConstructionInsteadOfChoosingAnInsideFrame' passed (0.039 seconds)
+Test Case 'CanvasSourceAuthoringTests.testNewSourceCasesSupersedeObsoleteArtworkReportsOnTheSharedCoordinator' started at 2026-10-30 15:06:33.629
+Test Case 'CanvasSourceAuthoringTests.testNewSourceCasesSupersedeObsoleteArtworkReportsOnTheSharedCoordinator' passed (0.014 seconds)
+Test Case 'CanvasSourceAuthoringTests.testPaperLinkedSewingSourceRetainsItsCanonicalContoursAndStandardEditingPath' started at 2026-10-30 15:06:33.643
+Test Case 'CanvasSourceAuthoringTests.testPaperLinkedSewingSourceRetainsItsCanonicalContoursAndStandardEditingPath' passed (0.019 seconds)
+Test Case 'CanvasSourceAuthoringTests.testUnregisteredSewnRecipeHasRealNativeControlsThatChangeCanonicalBoundaryWithOneUndo' started at 2026-10-30 15:06:33.662
+Test Case 'CanvasSourceAuthoringTests.testUnregisteredSewnRecipeHasRealNativeControlsThatChangeCanonicalBoundaryWithOneUndo' passed (0.166 seconds)
+Test Suite 'CanvasSourceAuthoringTests' passed at 2026-10-30 15:06:33.828
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.315 (0.315) seconds
+Test Suite 'CanvasViewportTests' started at 2026-10-30 15:06:33.828
+Test Case 'CanvasViewportTests.testActualCanvasHasNoNativeRulerOrBorderGuttersAndRetainsPhysicalFit' started at 2026-10-30 15:06:33.828
+Test Case 'CanvasViewportTests.testActualCanvasHasNoNativeRulerOrBorderGuttersAndRetainsPhysicalFit' passed (0.619 seconds)
+Test Case 'CanvasViewportTests.testFitAvoidsTransientFloatingPanelsWithoutChangingDocumentOrNativeContentInsets' started at 2026-10-30 15:06:34.446
+Test Case 'CanvasViewportTests.testFitAvoidsTransientFloatingPanelsWithoutChangingDocumentOrNativeContentInsets' passed (0.587 seconds)
+Test Case 'CanvasViewportTests.testNativeHandPanKeepsExpectedWorldPositionAcrossShiftedOriginAndExtentGrowth' started at 2026-10-30 15:06:35.034
+Test Case 'CanvasViewportTests.testNativeHandPanKeepsExpectedWorldPositionAcrossShiftedOriginAndExtentGrowth' passed (0.5 seconds)
+Test Case 'CanvasViewportTests.testPaperFloatingFitCoversWholeNativeViewportAndRoutesWhitespaceAfterZoomAndResize' started at 2026-10-30 15:06:35.534
+Test Case 'CanvasViewportTests.testPaperFloatingFitCoversWholeNativeViewportAndRoutesWhitespaceAfterZoomAndResize' passed (0.584 seconds)
+Test Case 'CanvasViewportTests.testViewportExpansionKeepsNativeTextHostAndMarkedInputAnchoredWithoutSourceChanges' started at 2026-10-30 15:06:36.118
+Test Case 'CanvasViewportTests.testViewportExpansionKeepsNativeTextHostAndMarkedInputAnchoredWithoutSourceChanges' passed (0.946 seconds)
+Test Case 'CanvasViewportTests.testZoomAndDropCoordinateRoundTripsKeepTheVisibleAnchorAfterNativeOriginShiftAndPan' started at 2026-10-30 15:06:37.064
+Test Case 'CanvasViewportTests.testZoomAndDropCoordinateRoundTripsKeepTheVisibleAnchorAfterNativeOriginShiftAndPan' passed (0.596 seconds)
+Test Suite 'CanvasViewportTests' passed at 2026-10-30 15:06:37.660
+	 Executed 6 tests, with 0 failures (0 unexpected) in 3.832 (3.832) seconds
+Test Suite 'ImageLazyInsideImportTests' started at 2026-10-30 15:06:37.660
+Test Case 'ImageLazyInsideImportTests.testBlankInsideWholeNetDropCreatesOneSourceAndInverseMapsWithoutChangingTop' started at 2026-10-30 15:06:37.660
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.671 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.672 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.673 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+Test Case 'ImageLazyInsideImportTests.testBlankInsideWholeNetDropCreatesOneSourceAndInverseMapsWithoutChangingTop' passed (0.034 seconds)
+Test Case 'ImageLazyInsideImportTests.testExistingInsideWholeNetDropRejectsPhysicalLockAndRetainsSourceOnSuccess' started at 2026-10-30 15:06:37.695
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.705 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.706 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unrecognized colorspace number -1
+2026-10-30 15:06:37.707 FORMCanvasPaperFraming[18743:54084642] Unknown number of components for colorspace model -1
+Test Case 'ImageLazyInsideImportTests.testExistingInsideWholeNetDropRejectsPhysicalLockAndRetainsSourceOnSuccess' passed (0.048 seconds)
+Test Suite 'ImageLazyInsideImportTests' passed at 2026-10-30 15:06:37.743
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.083 (0.083) seconds
+Test Suite 'IndependentSurfaceSelectionTests' started at 2026-10-30 15:06:37.743
+Test Case 'IndependentSurfaceSelectionTests.testCanvasSourceEditsAndSVGImportKeepTableSelectionCameraAndOneUndo' started at 2026-10-30 15:06:37.743
+Test Case 'IndependentSurfaceSelectionTests.testCanvasSourceEditsAndSVGImportKeepTableSelectionCameraAndOneUndo' passed (0.027 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testContextMenuFindExplicitlySelectsAndCentersTableWithoutChangingCanvasOrOpeningInspector' started at 2026-10-30 15:06:37.770
+Test Case 'IndependentSurfaceSelectionTests.testContextMenuFindExplicitlySelectsAndCentersTableWithoutChangingCanvasOrOpeningInspector' passed (7.642 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testNativeCanvasFrameClicksKeepUnrelatedTableSelectionCameraAndPanelContext' started at 2026-10-30 15:06:45.412
+Test Case 'IndependentSurfaceSelectionTests.testNativeCanvasFrameClicksKeepUnrelatedTableSelectionCameraAndPanelContext' passed (0.025 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testNewCanvasFrameKeepsTableSelectionCameraAndClosedInspector' started at 2026-10-30 15:06:45.438
+Test Case 'IndependentSurfaceSelectionTests.testNewCanvasFrameKeepsTableSelectionCameraAndClosedInspector' passed (0.016 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testTablePanelPickingDoesNotNavigateOrRefitCanvas' started at 2026-10-30 15:06:45.453
+Test Case 'IndependentSurfaceSelectionTests.testTablePanelPickingDoesNotNavigateOrRefitCanvas' passed (0.019 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testTablePicksAndReconcileKeepCanvasSourceFrameElementsAndViewport' started at 2026-10-30 15:06:45.472
+Test Case 'IndependentSurfaceSelectionTests.testTablePicksAndReconcileKeepCanvasSourceFrameElementsAndViewport' passed (0.018 seconds)
+Test Suite 'IndependentSurfaceSelectionTests' passed at 2026-10-30 15:06:45.490
+	 Executed 6 tests, with 0 failures (0 unexpected) in 7.747 (7.747) seconds
+Test Suite 'SVGLazyInsideImportTests' started at 2026-10-30 15:06:45.490
+Test Case 'SVGLazyInsideImportTests.testBlankReverseImportCreatesOnlyInsideSourceInOneUndoAndKeepsReadableFrame' started at 2026-10-30 15:06:45.490
+Test Case 'SVGLazyInsideImportTests.testBlankReverseImportCreatesOnlyInsideSourceInOneUndoAndKeepsReadableFrame' passed (0.04 seconds)
+Test Case 'SVGLazyInsideImportTests.testInlineReverseImportPreservesCanonicalIDsMetadataAndFinishAssignments' started at 2026-10-30 15:06:45.531
+Test Case 'SVGLazyInsideImportTests.testInlineReverseImportPreservesCanonicalIDsMetadataAndFinishAssignments' passed (0.024 seconds)
+Test Case 'SVGLazyInsideImportTests.testLockedPhysicalOwnerAndStaleBlankReviewRejectBeforeAssetsOrSourceMutation' started at 2026-10-30 15:06:45.555
+Test Case 'SVGLazyInsideImportTests.testLockedPhysicalOwnerAndStaleBlankReviewRejectBeforeAssetsOrSourceMutation' passed (0.03 seconds)
+Test Suite 'SVGLazyInsideImportTests' passed at 2026-10-30 15:06:45.584
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.094 (0.094) seconds
+Test Suite 'PlanarParameterDiagnosticsTests' started at 2026-10-30 15:06:45.584
+Test Case 'PlanarParameterDiagnosticsTests.testNativeDefinitionDraftReportsTheActualDepthRangeInsteadOfMalformedStructure' started at 2026-10-30 15:06:45.584
+Test Case 'PlanarParameterDiagnosticsTests.testNativeDefinitionDraftReportsTheActualDepthRangeInsteadOfMalformedStructure' passed (0.006 seconds)
+Test Case 'PlanarParameterDiagnosticsTests.testParameterUpdateRetainsTheAcceptedDefinitionOnOutOfRangeInput' started at 2026-10-30 15:06:45.590
+Test Case 'PlanarParameterDiagnosticsTests.testParameterUpdateRetainsTheAcceptedDefinitionOnOutOfRangeInput' passed (0.001 seconds)
+Test Suite 'PlanarParameterDiagnosticsTests' passed at 2026-10-30 15:06:45.591
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.007 (0.007) seconds
+Test Suite 'testing.xctest' passed at 2026-10-30 15:06:45.591
+	 Executed 49 tests, with 0 failures (0 unexpected) in 16.423 (16.423) seconds
+Test Suite 'All tests' passed at 2026-10-30 15:06:45.591
+	 Executed 49 tests, with 0 failures (0 unexpected) in 16.423 (16.423) seconds

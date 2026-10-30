@@ -1,0 +1,22 @@
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--1AB21518FC5DEDBE.txt
+[3/5] Emitting module FormAppTests
+[4/5] Compiling FormAppTests CanvasPaperFaceAppearanceTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking FORMPackageTests
+Build complete! (6.15s)
+ld: warning: duplicate -rpath '/Users/rustymeadows/Dev/form/.local/testing/xctest/.build/arm64-apple-macosx/debug' ignored
+Registered 1 unchanged test methods in 1 XCTestCase classes.
+Test Suite 'All tests' started at 2026-10-30 15:25:47.534
+Test Suite 'testing.xctest' started at 2026-10-30 15:25:47.534
+Test Suite 'CanvasPaperFaceAppearanceTests' started at 2026-10-30 15:25:47.534
+Test Case 'CanvasPaperFaceAppearanceTests.testBothCanvasFacesAndProofsMatchPhysicalPlyProfileAndTintWithoutMutatingArtwork' started at 2026-10-30 15:25:47.534
+Test Case 'CanvasPaperFaceAppearanceTests.testBothCanvasFacesAndProofsMatchPhysicalPlyProfileAndTintWithoutMutatingArtwork' passed (0.402 seconds)
+Test Suite 'CanvasPaperFaceAppearanceTests' passed at 2026-10-30 15:25:47.936
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.402 (0.402) seconds
+Test Suite 'testing.xctest' passed at 2026-10-30 15:25:47.936
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.402 (0.402) seconds
+Test Suite 'All tests' passed at 2026-10-30 15:25:47.936
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.402 (0.402) seconds

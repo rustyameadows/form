@@ -180,18 +180,30 @@ public enum ArtworkCommands {
       }
       selection = ungrouped
     case "align", "distribute":
-      guard roots.count >= 2, Set(roots.map(\.parentID)).count == 1 else {
-        throw FormError.invalid("Select two or more objects in the same group.")
+      guard roots.count >= 2 else {
+        throw FormError.invalid("Select two or more objects to align.")
       }
       let mode = arguments["mode"] as? String ?? "left"
-      let bounds = roots.map(localBounds).dropFirst().reduce(localBounds(roots[0])) { $0.union($1) }
+      // Canvas alignment uses the visible axes, including inside rotated,
+      // scaled, reflected, or sheared parents. Convert each world translation
+      // back into its own parent's coordinates without changing that hierarchy.
+      let boxes = Dictionary(uniqueKeysWithValues: roots.map { ($0.id, art.bounds(of: $0)) })
+      let bounds = roots.dropFirst().reduce(boxes[roots[0].id]!) { $0.union(boxes[$1.id]!) }
+      let byID = Dictionary(uniqueKeysWithValues: art.elements.map { ($0.id, $0) })
+      func move(_ root: ArtworkElement, dx: Double, dy: Double) throws {
+        guard dx != 0 || dy != 0 else { return }
+        let parent = root.parentID.flatMap { byID[$0] }.map { art.worldTransform($0) } ?? .init()
+        guard let inverse = parent.inverse else { throw FormError.invalid("The selected parent transform cannot be inverted.") }
+        let i = result.elements.firstIndex { $0.id == root.id }!
+        translate(&result.elements[i], dx: inverse.a * dx + inverse.c * dy, dy: inverse.b * dx + inverse.d * dy)
+      }
       if command == "align" {
         guard
           ["left", "right", "top", "bottom", "center_x", "center_y", "width", "height"].contains(
             mode)
         else { throw FormError.invalid("Unknown alignment mode.") }
         for root in roots {
-          let b = localBounds(root)
+          let b = boxes[root.id]!
           let i = result.elements.firstIndex { $0.id == root.id }!
           var dx = 0.0
           var dy = 0.0
@@ -206,27 +218,40 @@ public enum ArtworkCommands {
           case "height": result.elements[i].height = roots[0].height
           default: break
           }
-          translate(&result.elements[i], dx: dx, dy: dy)
+          try move(root, dx: dx, dy: dy)
         }
       } else {
-        guard roots.count >= 3, ["horizontal", "vertical"].contains(mode) else {
+        guard roots.count >= 3, ["horizontal", "vertical", "horizontal_centers", "vertical_centers"].contains(mode) else {
           throw FormError.invalid("Distribute three or more objects horizontally or vertically.")
         }
-        let horizontal = mode == "horizontal"
-        let sorted = roots.sorted {
-          horizontal ? localBounds($0).x < localBounds($1).x : localBounds($0).y < localBounds($1).y
-        }
-        let total = sorted.reduce(0.0) {
-          $0 + (horizontal ? localBounds($1).width : localBounds($1).height)
-        }
-        let gap = ((horizontal ? bounds.width : bounds.height) - total) / Double(sorted.count - 1)
-        var next = horizontal ? bounds.x : bounds.y
-        for root in sorted {
-          let b = localBounds(root)
-          let i = result.elements.firstIndex { $0.id == root.id }!
-          translate(
-            &result.elements[i], dx: horizontal ? next - b.x : 0, dy: horizontal ? 0 : next - b.y)
-          next += (horizontal ? b.width : b.height) + gap
+        let horizontal = mode.hasPrefix("horizontal"), centers = mode.hasSuffix("_centers")
+        let sorted = roots.enumerated().sorted {
+          let a = boxes[$0.element.id]!, b = boxes[$1.element.id]!
+          let first = horizontal ? (centers ? a.center.x : a.x) : (centers ? a.center.y : a.y)
+          let second = horizontal ? (centers ? b.center.x : b.x) : (centers ? b.center.y : b.y)
+          return first == second ? $0.offset < $1.offset : first < second
+        }.map(\.element)
+        if centers {
+          let first = boxes[sorted[0].id]!, last = boxes[sorted[sorted.count - 1].id]!
+          let start = horizontal ? first.center.x : first.center.y
+          let end = horizontal ? last.center.x : last.center.y
+          let step = (end - start) / Double(sorted.count - 1)
+          for (index, root) in sorted.enumerated() {
+            let b = boxes[root.id]!, target = start + Double(index) * step
+            try move(root, dx: horizontal ? target - b.center.x : 0,
+              dy: horizontal ? 0 : target - b.center.y)
+          }
+        } else {
+          let total = sorted.reduce(0.0) {
+            $0 + (horizontal ? boxes[$1.id]!.width : boxes[$1.id]!.height)
+          }
+          let gap = ((horizontal ? bounds.width : bounds.height) - total) / Double(sorted.count - 1)
+          var next = horizontal ? bounds.x : bounds.y
+          for root in sorted {
+            let b = boxes[root.id]!
+            try move(root, dx: horizontal ? next - b.x : 0, dy: horizontal ? 0 : next - b.y)
+            next += (horizontal ? b.width : b.height) + gap
+          }
         }
       }
     case "reorder":
@@ -244,14 +269,16 @@ public enum ArtworkCommands {
         }
       } else {
         let forward = mode == "forward"
-        let indices =
-          forward ? Array(result.elements.indices.reversed()) : Array(result.elements.indices)
-        for i in indices where ids.contains(result.elements[i].id) {
-          let j = i + (forward ? 1 : -1)
-          if result.elements.indices.contains(j), !ids.contains(result.elements[j].id),
-            result.elements[i].parentID == result.elements[j].parentID
-          {
-            result.elements.swapAt(i, j)
+        // Element storage interleaves entire hierarchies. Layer order is the
+        // order among siblings, not adjacency in that flat storage array.
+        let siblings = Dictionary(grouping: result.elements.indices, by: { result.elements[$0].parentID })
+        for positions in siblings.values {
+          let traversal = forward ? Array(positions.indices.reversed()) : Array(positions.indices)
+          for position in traversal where ids.contains(result.elements[positions[position]].id) {
+            let next = position + (forward ? 1 : -1)
+            if positions.indices.contains(next), !ids.contains(result.elements[positions[next]].id) {
+              result.elements.swapAt(positions[position], positions[next])
+            }
           }
         }
       }

@@ -64,10 +64,21 @@ import XCTest
       canvas.fit(all: true)
       for frame in projections { assertContains(frame.rect, canvas: canvas) }
       let fittedZoom = scroll.magnification
-      // Preserve exactly the fitted magnification; refit must restore position.
-      scroll.contentView.scroll(to: .init(x: scroll.contentView.bounds.minX + 220,
-        y: scroll.contentView.bounds.minY + 80))
-      scroll.reflectScrolledClipView(scroll.contentView)
+      // A fixed document-point scroll may remain within the fitted headroom
+      // when both paper faces change the content aspect. Pan a visual viewport
+      // through the real hand tool, including its transient extent growth.
+      let session=store.artworkSession,previousTool=session.tool
+      let visible=canvas.visibleCanvasRect,center=CGPoint(x:visible.midX,y:visible.midY)
+      let down=canvas.convert(canvas.documentPoint(center),to:nil)
+      let moved=CGPoint(x:down.x+scroll.contentView.bounds.width*scroll.magnification*0.9,
+        y:down.y+scroll.contentView.bounds.height*scroll.magnification*0.9)
+      func event(_ type:NSEvent.EventType,_ point:CGPoint)throws->NSEvent {
+        try XCTUnwrap(NSEvent.mouseEvent(with:type,location:point,modifierFlags:[],timestamp:0,
+          windowNumber:canvas.window?.windowNumber ?? 0,context:nil,eventNumber:1,clickCount:1,pressure:type == .leftMouseUp ? 0:1))
+      }
+      session.tool = .hand
+      canvas.mouseDown(with:try event(.leftMouseDown,down));canvas.mouseDragged(with:try event(.leftMouseDragged,moved))
+      canvas.mouseUp(with:try event(.leftMouseUp,moved));session.tool=previousTool
       XCTAssertFalse(canvas.visibleCanvasRect.contains(canvas.contentBounds(all: true)))
       store.artworkSession.fit()
       XCTAssertEqual(scroll.magnification, fittedZoom, accuracy: 0.000001)

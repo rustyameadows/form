@@ -18,10 +18,11 @@ extension ArtworkSession {
     editImage(crop: ["x":crop.x,"y":crop.y,"width":crop.width,"height":crop.height])
   }
   @discardableResult func placeImages(_ urls: [URL], point: Point2? = nil, replacing: Bool = false) -> Bool {
-    guard let store, let objectID else { return false }
+    guard let store, objectID != nil else { return false }
     canvas?.finishText()
     do {
       for (offset,url) in urls.enumerated() {
+        guard let objectID else { return false }
         var args: [String: Any] = ["path":url.path,"object_id":objectID.uuidString]
         if replacing { guard let e = primary, e.kind == "image" else { return false }; args["element_id"] = e.id.uuidString }
         else {
@@ -39,11 +40,17 @@ extension ArtworkSession {
         }
         let projection = activeProjection
         let result = try store.importImage(args,source: "Studio", placement: { element in
-          if element.parentID == nil, let projection, !projection.isProof,
+          if element.parentID == nil, let projection, projection.sourceToLocal != Affine2(),
             let inverse = projection.sourceToLocal.inverse {
             element.affine = inverse.followed(by: element.affine ?? .init())
           }
-        })
+        }, projection: projection)
+        if let projection,let raw=result["object_id"] as? String,let sourceID=UUID(uuidString:raw) {
+          self.objectID=sourceID;projectionFrameID=projection.id;linkedTargetID=projection.constructionID
+          if let physical=store.project?.objects.first(where:{$0.id==projection.constructionID}),PaperConstruction.isPaper(physical) {
+            store.paperInside=projection.inside
+          }
+        }
         selection = Set((result["selected_elements"] as? [String] ?? []).compactMap(UUID.init(uuidString:)))
       }
       store.changed()

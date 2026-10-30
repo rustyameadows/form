@@ -98,16 +98,29 @@ extension StudioStore {
       issues: result.issues.map(\.summary))
     // Validate the complete candidate before creating any project assets.
     var candidate = project
-    let objectID = try candidate.importArtwork(result.artwork, source: source, targetID: targetID)
+    var destinationID = targetID
     if let projection {
-      guard targetID == projection.sourceID, objectID == projection.sourceID,
+      guard targetID == projection.sourceID,
         artworkSession.frames.first(where: { $0.id == projection.id })?.projection == projection,
-        let target = project.objects.first(where: { $0.id == objectID }),
+        let physical = project.objects.first(where: { $0.id == projection.constructionID })
+      else { throw FormError.invalid("The import surface changed. Review the SVG destination again.") }
+      guard !physical.locked else {
+        throw FormError.invalid("Unlock the physical surface before importing artwork.")
+      }
+      if projection.requiresInsideSource {
+        guard projection.inside else { throw FormError.invalid("The blank import surface must be the inside face.") }
+        destinationID = try PaperCommands.ensureInside(in: &candidate, objectID: projection.constructionID)
+      }
+    }
+    let objectID = try candidate.importArtwork(result.artwork, source: source, targetID: destinationID)
+    if let projection {
+      guard destinationID == objectID,
+        let target = candidate.objects.first(where: { $0.id == objectID }),
         let imported = candidate.objects.first(where: { $0.id == objectID }),
         let inverse = projection.sourceToLocal.inverse,
         var art = candidate.editableArtwork(imported)
       else { throw FormError.invalid("The import surface changed. Review the SVG destination again.") }
-      let size = project.artworkOwner(target).artworkSize
+      let size = candidate.artworkOwner(target).artworkSize
       let canonicalCenter = Point2((size.x-result.width)/2, (size.y-result.height)/2)
       let localCenter = Point2((projection.size.x-result.width)/2, (projection.size.y-result.height)/2)
       let placement = inverse.followed(by: .translation(localCenter.x, localCenter.y))
@@ -146,6 +159,10 @@ extension StudioStore {
     artworkSession.objectID = objectID
     artworkSession.projectionFrameID = projection?.id
     artworkSession.linkedTargetID = projection?.constructionID ?? (targetID != objectID ? targetID : nil)
+    if let projection, let physical = project.objects.first(where: { $0.id == projection.constructionID }),
+      PaperConstruction.isPaper(physical) {
+      paperInside = projection.inside
+    }
     artworkSession.scopeID = nil
     let roots = result.artwork.elements.filter { $0.parentID == nil && $0.hidden != true }.map(\.id)
     artworkSession.selection = Set(roots)
@@ -177,13 +194,14 @@ extension StudioStore {
           let data = try self.readSVG(url.path)
           let name = url.deletingPathExtension().lastPathComponent
           let result = try SVGImporter.read(data, name: name)
+          let projection = self.mode == .artwork ? self.artworkSession.activeProjection : nil
           let current = self.mode == .artwork ? self.artworkSession.object : self.primary
-          let target = current.flatMap {
+          let target = projection.flatMap { view in self.project?.objects.first { $0.id == view.sourceID } } ?? current.flatMap {
             $0.supportsArtworkFace || $0.isCanvasWorkspace ? self.project?.artworkOwner($0) : nil
           }
           self.svgImport = try .init(
             data: data, name: name, result: result, projectID: self.project?.id, target: target,
-            projection: self.mode == .artwork ? self.artworkSession.activeProjection : nil)
+            projection: projection)
         } catch { self.error = error.localizedDescription }
       }
     }

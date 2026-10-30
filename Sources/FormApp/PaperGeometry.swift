@@ -47,6 +47,22 @@ import simd
     let expanded=(try? project.resolvingComponents(in:artwork)) ?? artwork
     return project.resolvingSwatches(in:expanded)
   }
+  struct FaceAppearance {
+    let profile:PaperSurfaceProfile
+    let color:String
+    var resolvedColor:String {profile.color ?? color}
+  }
+  /// One physical face's substrate, before authored print is composited over it.
+  /// Bonded stock is back-to-front; its face ply colors take precedence over an
+  /// inherited stock backdrop. Explicit face profile color and object tint win.
+  static func faceAppearance(for object:ProductObject,stock:PaperStock,project:Project,inside:Bool)->FaceAppearance {
+    let plies=stock.plies ?? [],ply=inside ? plies.first:plies.last
+    let inherited=stock.profile ?? PaperSurfaceProfile(texture:.cotton,roughness:0.95,textureScaleMM:0.8,textureDepthMM:0.008)
+    var profile=ply?.profile ?? inherited
+    if !plies.isEmpty {profile.color=ply?.profile?.color}
+    if let color=object.color {profile.color=color}
+    return .init(profile:profile,color:object.color ?? ply?.color ?? project.material(object.materialID).color)
+  }
   static func make(_ object:ProductObject,project:Project,assets:URL,limit:Int,foldPercent:Double?=nil,selectedPanelID:String?=nil)throws->MeshNode {
     let definition=try PaperConstruction.definition(for:object),net=try definition.net()
     let outside=resolvedArtwork(object,project:project,inside:false),inside=resolvedArtwork(object,project:project,inside:true)
@@ -54,12 +70,10 @@ import simd
     let stock=definition.stock,plies=stock.plies ?? []
     let legacyColor=object.color ?? project.material(object.materialID).color
     let defaultProfile=stock.profile ?? PaperSurfaceProfile(texture:.cotton,roughness:0.95,textureScaleMM:0.8,textureDepthMM:0.008)
-    var frontProfile=plies.last?.profile ?? defaultProfile,backProfile=plies.first?.profile ?? defaultProfile
-    // Bonded sheets have their own declared face colors. An inherited stock
-    // backdrop must not erase the contrast between their physical layers.
-    if !plies.isEmpty {frontProfile.color=plies.last?.profile?.color;backProfile.color=plies.first?.profile?.color}
-    if let color=object.color {frontProfile.color=color;backProfile.color=color}
-    let frontColor=object.color ?? plies.last?.color ?? legacyColor,backColor=object.color ?? plies.first?.color ?? legacyColor
+    let frontAppearance=faceAppearance(for:object,stock:stock,project:project,inside:false)
+    let backAppearance=faceAppearance(for:object,stock:stock,project:project,inside:true)
+    let frontProfile=frontAppearance.profile,backProfile=backAppearance.profile
+    let frontColor=frontAppearance.color,backColor=backAppearance.color
     let edge=max(128,min(4096,limit)),pool=min(12_000_000,edge*edge)
     let area=net.panels.reduce(0){$0+$1.bounds.width*$1.bounds.height}
     let minimum=min(16_384,pool/max(1,net.panels.count*2)),remaining=max(0,pool-minimum*net.panels.count*2)
