@@ -1,6 +1,8 @@
 # Paper and packaging: twelve-case implementation and validation
 
-Active execution plan · October 30, 2026
+Software validation completed · October 30, 2026
+
+Results and editable deliverable: [twelve-case native validation report](paper-packaging-validation-report.md). The finite coverage, inspected output and remaining manufacturing assumptions are recorded there.
 
 This push implements and validates the [enhanced paper and print finishing brief](enhanced-paper-print-finishing-brief.md) using one editable project containing twelve use cases together on the Table. It also incorporates the supplied discussions about product fit, structural dielines, assembly review, prepress, manufacturer templates and prototype revisions. The brief remains the product direction; this document tracks the concrete implementation and evidence.
 
@@ -14,7 +16,7 @@ MCP must be able to create, inspect, edit, validate, save, reopen and render the
 
 | # | Use case | Construction and artwork | Material/finish challenge | Additional acceptance |
 |---|---|---|---|---|
-| 01 | Shipping carton | RSC-style body, bottom/top flaps, glue seam; upright shipping graphics | Brown corrugated-board representation and finite edges | Declared contents/clearance; inspect assembled and opening poses |
+| 01 | Shipping carton | RSC-style body, bottom/top flaps, glue seam; upright shipping graphics | Brown corrugated-board representation and finite edges | Inspect assembled and opening poses; contents-fit capability is exercised with actual referenced objects in 04/05 |
 | 02 | Retail tuck carton | Body, glue tab, tuck/dust closures; upright linked panels | Smooth coated board, flat ink and reflective foil detail | Dimensions and panel labels remain aligned after parameter change |
 | 03 | Locking mailer | Die-cut lid/base/flaps, structural slots/tabs and cutout | Recycled board and screen/spot ink appearance | Cuts visible in flat, assembled and technical output; supplier-template fixture retained |
 | 04 | Two-piece presentation box | Coordinated lid/base plus actual product and insert | Rigid board, wrap, metallic mark | Lid/base clearance and product orientation; components independently inspectable |

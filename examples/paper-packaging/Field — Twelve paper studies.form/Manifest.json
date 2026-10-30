@@ -138,20 +138,14 @@
   ],
   "project" : {
     "camera" : {
-      "azimuth" : -1.1568284577003185,
-      "distance" : 22.633580862488216,
-      "elevation" : 0.3010973443983383,
-      "orientation" : {
-        "w" : 0.8278595384155191,
-        "x" : -0.12558336925693042,
-        "y" : -0.5405130876606996,
-        "z" : -0.08199392714108851
-      },
+      "azimuth" : 0.10673567264913564,
+      "distance" : 19.377628084826576,
+      "elevation" : 0.7260203312040364,
       "projection" : "perspective",
       "target" : {
-        "x" : 0.5150000000000006,
-        "y" : 1.2312500000000002,
-        "z" : -0.31300000000000017
+        "x" : 0.515,
+        "y" : 1.23125,
+        "z" : -0.3130000000000001
       },
       "viewportAspect" : 1.587651598676957
     },
@@ -1362,6 +1356,12 @@
         "id" : "97388786-26E6-4548-BE8B-50C0C1445B4B",
         "source" : "Codex",
         "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T20:35:57Z",
+        "id" : "C8D8E8A1-36B6-48EC-B5A5-AF6A1C8AB1E5",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
       }
     ],
     "id" : "6677D01F-4B00-40AE-B81C-436ABABB00AE",
@@ -3236,11 +3236,40 @@
         }
       ],
       "shots" : [
+        {
+          "camera" : {
+            "azimuth" : 0.10673567264913564,
+            "distance" : 19.377628084826576,
+            "elevation" : 0.7260203312040364,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 0.515,
+              "y" : 1.23125,
+              "z" : -0.3130000000000001
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "81D1C831-1792-4592-AE50-4476DFFF58A8",
+          "lighting" : "soft-side-v1",
+          "name" : "Twelve studies / Overview",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "referenceAspect" : 1.5,
+          "revision" : 1,
+          "surface" : "Daylight",
+          "visibility" : {
+            "mode" : "project",
+            "objectIDs" : [
 
+            ]
+          }
+        }
       ]
     },
     "subtitle" : "A new place to make things.",
     "unit" : "mm",
-    "updatedAt" : "2026-10-30T20:16:35Z"
+    "updatedAt" : "2026-10-30T20:35:57Z"
   }
 }

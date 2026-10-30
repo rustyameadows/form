@@ -2,7 +2,7 @@
 
 Product brief | October 29, 2026
 
-Current implementation and validation: [twelve-case paper and packaging plan](paper-packaging-validation-plan.md).
+Current implementation and validation: [twelve-case paper and packaging plan](paper-packaging-validation-plan.md) and [native validation results](paper-packaging-validation-report.md).
 
 ## Vision
 

@@ -2,11 +2,7 @@
 
 The twelve primary JSON files are complete `PlanarConstructionDefinition` sources for `form_construction create`; `07-liner-component.json` supplies the separate loose liner. They use the same parameter expressions, panels, physical cutouts, hinge trees, independent component roots and declared interiors available to any agent-authored model. They add no product registrations or application generators.
 
-Open the included [Field — Twelve paper studies.form](<Field — Twelve paper studies.form>) using LAB's **File → Open Project…**, or from the repository root:
-
-```sh
-open -a "$PWD/build/LAB.app" "$PWD/examples/paper-packaging/Field — Twelve paper studies.form"
-```
+Open the included [Field — Twelve paper studies.form](<Field — Twelve paper studies.form>) using LAB’s **File → Open Project…**. The menu uses the app’s project importer. System-level file-open event delivery was unreliable in this native session; the delivered project was copied byte-for-byte into the persistent library and opened with public `form_open_project` instead.
 
 The project contains all twelve studies on one Table, plus two modeled contents objects and one separate patterned liner. Inside artwork sources are editable on Canvas without appearing as extra loose objects on the Table. See the [validation report](../../docs/paper-packaging-validation-report.md) for measured coverage, native images and manufacturing limits.
 

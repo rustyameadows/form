@@ -75,7 +75,9 @@ class Session:
                 f.write(json.dumps(record) + '\n')
             if expected_failure:
                 return record
-            self.save()
+            # A helper Session may not own the seeder checkpoint. Request
+            # diagnostics are already appended above; never replace a valid
+            # saved seed with this Session's empty constructor report.
             raise RuntimeError(f'{name}: {result.stderr}')
         if expected_failure:
             raise AssertionError(f'{name} incorrectly accepted the invalid request')
