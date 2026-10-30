@@ -1,0 +1,248 @@
+{
+  "status": "passed",
+  "cases_passed": 12,
+  "finite_parameter_cases": 74,
+  "classification_counts": {
+    "geometry_only_passed": 60,
+    "geometry_and_declared_checks_passed": 14
+  },
+  "declared_solid_checks_passed": 56,
+  "parameter_case_names": {
+    "01": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "02": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "03": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "04": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "05": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "06": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "07": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "08": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum"
+    ],
+    "09": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum"
+    ],
+    "10": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum"
+    ],
+    "11": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum"
+    ],
+    "12": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum"
+    ]
+  },
+  "packet_counts": {
+    "packets": 12,
+    "svg_process_files": 46,
+    "pdfs": 20,
+    "finish_plates": 14
+  },
+  "modeled_contents": {
+    "04": {
+      "clearanceMM": 0,
+      "containmentPassed": true,
+      "contentsObjectID": "F9E4C4C5-F289-4AC4-98EF-C084A997EF93",
+      "contentsRevision": "7d0fd636ca664b16532bfe00aedcbc56fa7fc812a7c16837ce619a3c9fbc63e8",
+      "coverage": "Actual oriented object bounds against the author-declared interior and, when present, its opening cross-section at the current lateral position. No continuous insertion path, panel-to-product exact contact, elastic retention, adhesive strength or unlisted volume is inferred.",
+      "interior": {
+        "componentID": "base-floor",
+        "id": "base-interior",
+        "name": "Base Interior",
+        "opening": {
+          "axis": "y",
+          "heightMM": 100,
+          "originMM": {
+            "x": 0,
+            "y": 0
+          },
+          "widthMM": 140
+        },
+        "origin": {
+          "x": -70.00000000000001,
+          "y": 1.8000000000000063,
+          "z": -50.00000000000002
+        },
+        "sizeMM": {
+          "x": 140,
+          "y": 45,
+          "z": 100
+        },
+        "uAxis": {
+          "x": 1,
+          "y": 0,
+          "z": 0
+        },
+        "vAxis": {
+          "x": 0,
+          "y": 1,
+          "z": 0
+        },
+        "wAxis": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        }
+      },
+      "maximum": {
+        "x": 98.00000000000001,
+        "y": 19.999999999999993,
+        "z": 72.00000000000003
+      },
+      "minimum": {
+        "x": 42.000000000000014,
+        "y": -6.217248937900877e-15,
+        "z": 28.00000000000002
+      },
+      "openingPassed": true,
+      "passed": true,
+      "sourceObjectID": "FE9BD168-E884-46C9-8633-8E4DD6B50E78",
+      "sourceRevision": "457e27723407132e9b06c5edb80d927e32f6b318c1b901b8585bb553b1a5ff28"
+    },
+    "05": {
+      "clearanceMM": 1,
+      "containmentPassed": true,
+      "contentsObjectID": "64C852B2-DE2C-437B-AA91-FDC74A0EECFA",
+      "contentsRevision": "a2d572068ded351246531a75a5ded77813c7490e5fc4c1e4f69e95fdc7e7a0da",
+      "coverage": "Actual oriented object bounds against the author-declared interior and, when present, its opening cross-section at the current lateral position. No continuous insertion path, panel-to-product exact contact, elastic retention, adhesive strength or unlisted volume is inferred.",
+      "interior": {
+        "componentID": "base-floor",
+        "id": "tray-interior",
+        "name": "Tray Interior",
+        "opening": {
+          "axis": "y",
+          "heightMM": 175,
+          "originMM": {
+            "x": 0,
+            "y": 0
+          },
+          "widthMM": 240
+        },
+        "origin": {
+          "x": -120,
+          "y": 3.7500000000000115,
+          "z": -88.25
+        },
+        "sizeMM": {
+          "x": 240,
+          "y": 55,
+          "z": 175
+        },
+        "uAxis": {
+          "x": 1,
+          "y": 0,
+          "z": 0
+        },
+        "vAxis": {
+          "x": 0,
+          "y": 1,
+          "z": 0
+        },
+        "wAxis": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        }
+      },
+      "maximum": {
+        "x": 230.00000000000003,
+        "y": 34,
+        "z": 166.5
+      },
+      "minimum": {
+        "x": 9.999999999999972,
+        "y": 4,
+        "z": 11.499999999999986
+      },
+      "openingPassed": true,
+      "passed": true,
+      "sourceObjectID": "2BD7AD57-44F9-4091-BA17-8DDB57789D06",
+      "sourceRevision": "95d2a6c3aa947f9dbd65320df40763f26ad22495e86c1e674189900b3a8a98f6"
+    }
+  },
+  "reopened_exact": 12,
+  "width_undo_redo_restore_passed": 12,
+  "invalid_stock_finish_rejections": 24,
+  "missing_finish_target_export_rejections": 10,
+  "common_restored_source_sha256": "acdc2944d9ea9db20c66821b63389c50712123677226cc0b262ee28ab359466c",
+  "runtime_executable_sha256": "5fa38e850a03f980bacb327d7d43636f3a430875de672627f690c1875be5a5ad",
+  "scope": "Finite declared parameter cases and declared checks only; no manufacturing approval or continuous-range proof.",
+  "started_at": 1793393262.855392,
+  "ended_at": 1793393321.124897,
+  "elapsed_seconds": 58.2695050239563
+}

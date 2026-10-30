@@ -1,0 +1,327 @@
+{
+  "version": 3,
+  "name": "Die cut hang tag",
+  "parameters": [
+    {
+      "name": "width",
+      "value": 55,
+      "minimum": 33.0,
+      "maximum": 88.0,
+      "unit": "mm"
+    },
+    {
+      "name": "height",
+      "value": 100,
+      "minimum": 60.0,
+      "maximum": 160.0,
+      "unit": "mm"
+    },
+    {
+      "name": "stock",
+      "value": 0.6,
+      "minimum": 0.24,
+      "maximum": 1.2,
+      "unit": "mm"
+    },
+    {
+      "name": "radius",
+      "value": 4,
+      "minimum": 1,
+      "maximum": 8,
+      "unit": "mm"
+    },
+    {
+      "name": "turn",
+      "value": 0,
+      "minimum": 0,
+      "maximum": 180,
+      "unit": "\u00b0"
+    }
+  ],
+  "size": {
+    "x": "width",
+    "y": "height"
+  },
+  "stockThickness": "stock",
+  "panels": [
+    {
+      "id": "front",
+      "name": "Front / back sheet",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "(width-radius)+radius*(0.0)",
+          "y": "(radius)+radius*(-1.0)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.195090322)",
+          "y": "(radius)+radius*(-0.9807852804)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.3826834324)",
+          "y": "(radius)+radius*(-0.9238795325)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.555570233)",
+          "y": "(radius)+radius*(-0.8314696123)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.7071067812)",
+          "y": "(radius)+radius*(-0.7071067812)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.8314696123)",
+          "y": "(radius)+radius*(-0.555570233)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.9238795325)",
+          "y": "(radius)+radius*(-0.3826834324)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.9807852804)",
+          "y": "(radius)+radius*(-0.195090322)"
+        },
+        {
+          "x": "(width-radius)+radius*(1.0)",
+          "y": "(radius)+radius*(0.0)"
+        },
+        {
+          "x": "(width-radius)+radius*(1.0)",
+          "y": "(height-radius)+radius*(0.0)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.9807852804)",
+          "y": "(height-radius)+radius*(0.195090322)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.9238795325)",
+          "y": "(height-radius)+radius*(0.3826834324)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.8314696123)",
+          "y": "(height-radius)+radius*(0.555570233)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.7071067812)",
+          "y": "(height-radius)+radius*(0.7071067812)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.555570233)",
+          "y": "(height-radius)+radius*(0.8314696123)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.3826834324)",
+          "y": "(height-radius)+radius*(0.9238795325)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.195090322)",
+          "y": "(height-radius)+radius*(0.9807852804)"
+        },
+        {
+          "x": "(width-radius)+radius*(0.0)",
+          "y": "(height-radius)+radius*(1.0)"
+        },
+        {
+          "x": "(radius)+radius*(0.0)",
+          "y": "(height-radius)+radius*(1.0)"
+        },
+        {
+          "x": "(radius)+radius*(-0.195090322)",
+          "y": "(height-radius)+radius*(0.9807852804)"
+        },
+        {
+          "x": "(radius)+radius*(-0.3826834324)",
+          "y": "(height-radius)+radius*(0.9238795325)"
+        },
+        {
+          "x": "(radius)+radius*(-0.555570233)",
+          "y": "(height-radius)+radius*(0.8314696123)"
+        },
+        {
+          "x": "(radius)+radius*(-0.7071067812)",
+          "y": "(height-radius)+radius*(0.7071067812)"
+        },
+        {
+          "x": "(radius)+radius*(-0.8314696123)",
+          "y": "(height-radius)+radius*(0.555570233)"
+        },
+        {
+          "x": "(radius)+radius*(-0.9238795325)",
+          "y": "(height-radius)+radius*(0.3826834324)"
+        },
+        {
+          "x": "(radius)+radius*(-0.9807852804)",
+          "y": "(height-radius)+radius*(0.195090322)"
+        },
+        {
+          "x": "(radius)+radius*(-1.0)",
+          "y": "(height-radius)+radius*(0.0)"
+        },
+        {
+          "x": "(radius)+radius*(-1.0)",
+          "y": "(radius)+radius*(0.0)"
+        },
+        {
+          "x": "(radius)+radius*(-0.9807852804)",
+          "y": "(radius)+radius*(-0.195090322)"
+        },
+        {
+          "x": "(radius)+radius*(-0.9238795325)",
+          "y": "(radius)+radius*(-0.3826834324)"
+        },
+        {
+          "x": "(radius)+radius*(-0.8314696123)",
+          "y": "(radius)+radius*(-0.555570233)"
+        },
+        {
+          "x": "(radius)+radius*(-0.7071067812)",
+          "y": "(radius)+radius*(-0.7071067812)"
+        },
+        {
+          "x": "(radius)+radius*(-0.555570233)",
+          "y": "(radius)+radius*(-0.8314696123)"
+        },
+        {
+          "x": "(radius)+radius*(-0.3826834324)",
+          "y": "(radius)+radius*(-0.9238795325)"
+        },
+        {
+          "x": "(radius)+radius*(-0.195090322)",
+          "y": "(radius)+radius*(-0.9807852804)"
+        },
+        {
+          "x": "(radius)+radius*(-0.0)",
+          "y": "(radius)+radius*(-1.0)"
+        }
+      ],
+      "cutouts": [
+        {
+          "id": "cord-hole",
+          "kind": "cutout",
+          "polygon": [
+            {
+              "x": "width/2+2.4*cos(0.0)",
+              "y": "12+2.4*sin(0.0)"
+            },
+            {
+              "x": "width/2+2.4*cos(0.2617993877991494)",
+              "y": "12+2.4*sin(0.2617993877991494)"
+            },
+            {
+              "x": "width/2+2.4*cos(0.5235987755982988)",
+              "y": "12+2.4*sin(0.5235987755982988)"
+            },
+            {
+              "x": "width/2+2.4*cos(0.7853981633974483)",
+              "y": "12+2.4*sin(0.7853981633974483)"
+            },
+            {
+              "x": "width/2+2.4*cos(1.0471975511965976)",
+              "y": "12+2.4*sin(1.0471975511965976)"
+            },
+            {
+              "x": "width/2+2.4*cos(1.3089969389957472)",
+              "y": "12+2.4*sin(1.3089969389957472)"
+            },
+            {
+              "x": "width/2+2.4*cos(1.5707963267948966)",
+              "y": "12+2.4*sin(1.5707963267948966)"
+            },
+            {
+              "x": "width/2+2.4*cos(1.832595714594046)",
+              "y": "12+2.4*sin(1.832595714594046)"
+            },
+            {
+              "x": "width/2+2.4*cos(2.0943951023931953)",
+              "y": "12+2.4*sin(2.0943951023931953)"
+            },
+            {
+              "x": "width/2+2.4*cos(2.356194490192345)",
+              "y": "12+2.4*sin(2.356194490192345)"
+            },
+            {
+              "x": "width/2+2.4*cos(2.6179938779914944)",
+              "y": "12+2.4*sin(2.6179938779914944)"
+            },
+            {
+              "x": "width/2+2.4*cos(2.8797932657906435)",
+              "y": "12+2.4*sin(2.8797932657906435)"
+            },
+            {
+              "x": "width/2+2.4*cos(3.141592653589793)",
+              "y": "12+2.4*sin(3.141592653589793)"
+            },
+            {
+              "x": "width/2+2.4*cos(3.4033920413889427)",
+              "y": "12+2.4*sin(3.4033920413889427)"
+            },
+            {
+              "x": "width/2+2.4*cos(3.665191429188092)",
+              "y": "12+2.4*sin(3.665191429188092)"
+            },
+            {
+              "x": "width/2+2.4*cos(3.926990816987241)",
+              "y": "12+2.4*sin(3.926990816987241)"
+            },
+            {
+              "x": "width/2+2.4*cos(4.1887902047863905)",
+              "y": "12+2.4*sin(4.1887902047863905)"
+            },
+            {
+              "x": "width/2+2.4*cos(4.4505895925855405)",
+              "y": "12+2.4*sin(4.4505895925855405)"
+            },
+            {
+              "x": "width/2+2.4*cos(4.71238898038469)",
+              "y": "12+2.4*sin(4.71238898038469)"
+            },
+            {
+              "x": "width/2+2.4*cos(4.974188368183839)",
+              "y": "12+2.4*sin(4.974188368183839)"
+            },
+            {
+              "x": "width/2+2.4*cos(5.235987755982989)",
+              "y": "12+2.4*sin(5.235987755982989)"
+            },
+            {
+              "x": "width/2+2.4*cos(5.497787143782138)",
+              "y": "12+2.4*sin(5.497787143782138)"
+            },
+            {
+              "x": "width/2+2.4*cos(5.759586531581287)",
+              "y": "12+2.4*sin(5.759586531581287)"
+            },
+            {
+              "x": "width/2+2.4*cos(6.021385919380436)",
+              "y": "12+2.4*sin(6.021385919380436)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "hinges": [],
+  "joins": [],
+  "rootPanelID": "front",
+  "components": [
+    {
+      "id": "sheet",
+      "name": "Paper sheet",
+      "rootPanelID": "front",
+      "anchor": {
+        "x": "width/2",
+        "y": "height/2"
+      },
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationDegrees": {
+        "x": "-90+turn",
+        "y": 0,
+        "z": 0
+      }
+    }
+  ]
+}

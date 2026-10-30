@@ -32,8 +32,8 @@ import XCTest
         XCTAssertEqual((vertices.map(\.z).max()!-vertices.map(\.z).min()!)*100,definition.stock.thicknessMM,accuracy:1e-8)
         let normals=try XCTUnwrap(geometry.sources(for:.normal).first).vectors
         XCTAssertTrue(normals.contains{abs($0.z)>0.1 && abs($0.z)<0.99},"Soft edge arcs need real intermediate normals.")
-        XCTAssertEqual(geometry.materials[0].roughness.contents as? Double,0.95)
-        XCTAssertEqual(geometry.materials[0].metalness.contents as? Double,0)
+        XCTAssertTrue(geometry.materials[0].roughness.contents is NSImage,"Paper roughness includes the physical stock field.")
+        XCTAssertTrue(geometry.materials[0].metalness.contents is NSImage,"Localized finishes use an independent metallic coverage map.")
         var edges:[String:Int]=[:],volume=0.0
         func key(_ p:MeshVector3)->String {"\(Int((p.x*1e8).rounded())),\(Int((p.y*1e8).rounded())),\(Int((p.z*1e8).rounded()))"}
         for element in geometry.elements {

@@ -1,0 +1,8 @@
+{
+  "tests": 134,
+  "failures": 0,
+  "seconds": 157.45,
+  "runner": "Official corelibs XCTest runtime under native AppKit host; Swift6.3.3/macOS26.6.2",
+  "log": "native-regressions.log",
+  "configuration": "debug"
+}

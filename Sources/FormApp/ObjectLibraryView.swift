@@ -9,7 +9,7 @@ extension StudioStore {
       } else {
         guard let project else { throw FormError.missing("Open a project first.") }
         let preview = try project.makeObject(recipeID:entry.recipeID, parameters:entry.parameters, materialID:entry.materialID)
-        let edge = project.objects.filter { !$0.isCanvasWorkspace }.map { $0.position.x + $0.footprintWidth/2 }.max()
+        let edge = project.objects.filter { $0.hasTablePresentation }.map { $0.position.x + $0.footprintWidth/2 }.max()
         let x = edge.map { $0 + preview.footprintWidth/2 + 70 } ?? 0
         _ = try engine.call("form_object_library", arguments:["command":"add", "entry_id":entry.id, "position":[x,0.0,0.0]], source:"Studio")
       }

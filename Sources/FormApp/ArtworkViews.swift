@@ -74,11 +74,14 @@ struct ArtworkLayers: View {
   var onClose: (() -> Void)? = nil
   @State private var renaming: UUID?
   @State private var collapsed = Set<UUID>()
-  var rows: [(element: ArtworkElement, depth: Int)] {
+  var rows:[(element:ArtworkElement,depth:Int)] {
+    let projection=session.activeCanvasFrame(in:session.frames)?.projection
+    let source=session.sourceArtwork
+    return makeRows(in:projection?.display(source) ?? source,projection:projection)
+  }
+  private func makeRows(in artwork:Artwork,projection:CanvasSourceProjection?)->[(element:ArtworkElement,depth:Int)] {
     var result: [(ArtworkElement, Int)] = []
     var seen = Set<UUID>()
-    let artwork = session.art
-    let projection = session.activeProjection
     func children(_ parent: UUID?, _ depth: Int) {
       for e in artwork.elements.reversed() where e.parentID == parent && !seen.contains(e.id)
         && (projection?.intersects(artwork.bounds(of: e)) ?? true) {
@@ -91,13 +94,18 @@ struct ArtworkLayers: View {
     return result
   }
   var body: some View {
+    let frames=session.frames
+    let activeFrame=session.activeCanvasFrame(in:frames)
+    let source=session.sourceArtwork
+    let artwork=activeFrame?.projection?.display(source) ?? source
+    let layerRows=makeRows(in:artwork,projection:activeFrame?.projection)
     VStack(alignment: .leading, spacing: 0) {
       FloatingPanelHeader("CANVAS & SURFACES", closeLabel: "Close Canvas layers", onClose: onClose) {
-        Text("\(session.frames.filter { !$0.isWorkspace }.count)").foregroundStyle(Palette.secondary).font(.system(size: 9))
+        Text("\(frames.filter { !$0.isWorkspace }.count)").foregroundStyle(Palette.secondary).font(.system(size: 9))
       }
       ScrollView {
         VStack(alignment: .leading, spacing: 0) {
-          ForEach(session.frames) { frame in
+          ForEach(frames) { frame in
             Button {
               session.activate(frame.id)
               session.canvas?.fit(all: false)
@@ -108,7 +116,7 @@ struct ArtworkLayers: View {
                   .truncationMode(.middle).help(frame.isWorkspace ? "Canvas" : frame.title)
                 Spacer()
               }.font(.system(size: 11)).padding(.horizontal, 14).padding(.vertical, 9).background(
-                session.activeCanvasFrame?.id == frame.id ? Color.white : .clear)
+                activeFrame?.id == frame.id ? Color.white : .clear)
             }.buttonStyle(.plain)
           }
           InspectorDivider().padding(.top, 12).padding(.horizontal, InspectorStyle.panelPadding)
@@ -129,7 +137,7 @@ struct ArtworkLayers: View {
             }
           }.padding(16)
           LazyVStack(spacing: 2) {
-            ForEach(rows, id: \.element.id) { row in
+            ForEach(layerRows, id: \.element.id) { row in
               HStack(spacing: 6) {
                 if row.element.component != nil {
                   Image(systemName: "diamond").font(.system(size: 10)).frame(width: 10)

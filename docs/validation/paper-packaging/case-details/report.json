@@ -1,0 +1,72 @@
+[
+  {
+    "name": "03-retaining-feet-underside",
+    "case": "03",
+    "result": {
+      "folder": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/03-retaining-feet-underside.render",
+      "format": "png",
+      "path": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/03-retaining-feet-underside.render/03-retaining-feet-underside.png",
+      "record": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/03-retaining-feet-underside.render/render.json",
+      "scene_id": "80F8DADB-9943-4FE3-BF07-F6167EC354D3"
+    },
+    "opening": null,
+    "instance_lift_mm": 1000,
+    "intentional_detail_crop": false
+  },
+  {
+    "name": "06-envelope-back",
+    "case": "06",
+    "result": {
+      "folder": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/06-envelope-back.render",
+      "format": "png",
+      "path": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/06-envelope-back.render/06-envelope-back.png",
+      "record": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/06-envelope-back.render/render.json",
+      "scene_id": "B2DEB979-E210-4CA6-8FAF-B30B6D5C2FDD"
+    },
+    "opening": null,
+    "instance_lift_mm": 0,
+    "intentional_detail_crop": false
+  },
+  {
+    "name": "09-duplex-edge",
+    "case": "09",
+    "result": {
+      "folder": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/09-duplex-edge.render",
+      "format": "png",
+      "path": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/09-duplex-edge.render/09-duplex-edge.png",
+      "record": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/09-duplex-edge.render/render.json",
+      "scene_id": "CFBC9805-34D2-4036-87CF-D872ED5D6471"
+    },
+    "opening": null,
+    "instance_lift_mm": 0,
+    "intentional_detail_crop": true
+  },
+  {
+    "name": "11-closed-cover",
+    "case": "11",
+    "result": {
+      "folder": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/11-closed-cover.render",
+      "format": "png",
+      "path": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/11-closed-cover.render/11-closed-cover.png",
+      "record": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/11-closed-cover.render/render.json",
+      "scene_id": "4AEF16F8-4AF1-4E6B-8FE0-2FB35EE06670"
+    },
+    "opening": 0,
+    "instance_lift_mm": 0,
+    "intentional_detail_crop": false
+  },
+  {
+    "name": "11-open-inside",
+    "case": "11",
+    "result": {
+      "folder": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/11-open-inside.render",
+      "format": "png",
+      "path": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/11-open-inside.render/11-open-inside.png",
+      "record": "/Users/rustymeadows/Dev/form/.local/validation/paper-packaging/twelve-round-two/case-details/11-open-inside.render/render.json",
+      "scene_id": "84C29449-0917-4C58-B4BB-C07CD31259E6"
+    },
+    "opening": 100,
+    "instance_lift_mm": 0,
+    "intentional_detail_crop": false
+  }
+]

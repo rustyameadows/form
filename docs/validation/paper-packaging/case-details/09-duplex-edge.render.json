@@ -1,0 +1,71 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+    {
+      "bounds_extend_outside_frame_or_clip_range" : true,
+      "object_id" : "FF146BA5-E1E4-40AC-B8D0-BC36704B87F0"
+    }
+  ],
+  "height" : 1200,
+  "png_sha256" : "9ab0cc9f0a7ccfd0dc15fc8d2dc64fbe95773f03d1f65e4cffab069a955a6576",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:paper-template-17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764.svg",
+      "sha256" : "17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 0,
+      "distance" : 0.059999999999999998,
+      "elevation" : 0.02,
+      "projection" : "orthographic",
+      "target" : {
+        "x" : -4.2999999999999998,
+        "y" : 0.0044999999999999997,
+        "z" : 3.9750000000000001
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "CFBC9805-34D2-4036-87CF-D872ED5D6471",
+    "instances" : [
+      {
+        "id" : "FF146BA5-E1E4-40AC-B8D0-BC36704B87F0",
+        "name" : "09 · Studio Field \/ Duplex card",
+        "positionMM" : {
+          "x" : -430,
+          "y" : 0,
+          "z" : 370
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "F5BE8DA6-1460-4CAD-BCDC-84D61B9BB968",
+        "visible" : true
+      }
+    ],
+    "lighting" : "rim-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "09-duplex-edge",
+    "pixels" : {
+      "height" : 1200,
+      "width" : 1800
+    },
+    "revision" : 2,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "2edb07c1172dbba7df88b6cd19c0b586f701e29b47b9ceb27111c7aeac81e517",
+  "source_project_id" : "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+  "width" : 1800
+}

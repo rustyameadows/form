@@ -1,0 +1,361 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "color" : "#203B35",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "CF1A6D07-46AD-5484-821E-3F5F7AB026A6",
+        "kind" : "text",
+        "name" : "09-outside-front-brand",
+        "text" : "FIELD  /  09",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 69.7,
+        "x" : 7.6499999999999995,
+        "y" : 6
+      },
+      {
+        "color" : "#203B35",
+        "fontSize" : 28.38718436057562,
+        "height" : 17.05,
+        "id" : "EBCE9D60-B939-58D4-8D82-3C674DEFA4EC",
+        "kind" : "text",
+        "name" : "09-outside-front-title",
+        "text" : "Studio Field",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 69.7,
+        "x" : 7.6499999999999995,
+        "y" : 15
+      },
+      {
+        "color" : "#203B35",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "E23F42F1-90B1-59C6-B958-480184508EDA",
+        "kind" : "rectangle",
+        "name" : "09-outside-front-rule",
+        "text" : "",
+        "width" : 46.75000000000001,
+        "x" : 7.6499999999999995,
+        "y" : 35.75
+      },
+      {
+        "color" : "#203B35",
+        "fontSize" : 7.5,
+        "height" : 9.350000000000001,
+        "id" : "5A8082A9-9C9D-551F-83A2-84B541AF9A87",
+        "kind" : "text",
+        "name" : "09-outside-front-copy",
+        "text" : "PAPER LABORATORY\nEDITABLE STUDY  /  09",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 69.7,
+        "x" : 7.6499999999999995,
+        "y" : 42.9
+      }
+    ]
+  },
+  "designID" : "92BF91F6-D40D-4F0B-A827-F75B343CADFF",
+  "id" : "F5BE8DA6-1460-4CAD-BCDC-84D61B9BB968",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "09 · Studio Field / Duplex card",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "components" : [
+        {
+          "anchor" : {
+            "x" : "width/2",
+            "y" : "height/2"
+          },
+          "id" : "sheet",
+          "name" : "Paper sheet",
+          "position" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "rootPanelID" : "front",
+          "rotationDegrees" : {
+            "x" : "-90+turn",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        }
+      ],
+      "hinges" : [
+
+      ],
+      "joins" : [
+
+      ],
+      "name" : "Duplex business card",
+      "panels" : [
+        {
+          "id" : "front",
+          "name" : "Front / back sheet",
+          "polygon" : [
+            {
+              "x" : "0.0",
+              "y" : "0.0"
+            },
+            {
+              "x" : "(0)+(width)",
+              "y" : "0.0"
+            },
+            {
+              "x" : "(0)+(width)",
+              "y" : "(0)+(height)"
+            },
+            {
+              "x" : "0.0",
+              "y" : "(0)+(height)"
+            }
+          ],
+          "role" : "body"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 136,
+          "minimum" : 51,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 85
+        },
+        {
+          "maximum" : 88,
+          "minimum" : 33,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 55
+        },
+        {
+          "maximum" : 1.8,
+          "minimum" : 0.36000000000000004,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 0.9
+        },
+        {
+          "maximum" : 180,
+          "minimum" : 0,
+          "name" : "turn",
+          "unit" : "°",
+          "value" : 0
+        }
+      ],
+      "rootPanelID" : "front",
+      "size" : {
+        "x" : "width",
+        "y" : "height"
+      },
+      "stockThickness" : "stock",
+      "version" : 3
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 2,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 1,
+      "height" : 55,
+      "width" : 85
+    },
+    "finishes" : [
+      {
+        "color" : "#C49B48",
+        "depthMM" : 0,
+        "elementIDs" : [
+          "CF1A6D07-46AD-5484-821E-3F5F7AB026A6"
+        ],
+        "enabled" : true,
+        "heightMM" : 0,
+        "id" : "D980AA0E-1EAF-5EA1-9FF5-E9228E267376",
+        "kind" : "foil",
+        "metallic" : 1,
+        "name" : "Warm metallic mark",
+        "opacity" : 1,
+        "roughness" : 0.18,
+        "side" : "outside"
+      },
+      {
+        "depthMM" : 0.08,
+        "elementIDs" : [
+          "EBCE9D60-B939-58D4-8D82-3C674DEFA4EC"
+        ],
+        "enabled" : true,
+        "heightMM" : 0,
+        "id" : "722EE51B-D9D2-57B3-98E5-BA492CEF77C6",
+        "kind" : "deboss",
+        "name" : "Blind studio name",
+        "opacity" : 1,
+        "side" : "outside"
+      }
+    ],
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "insideArtworkSourceID" : "ECF88B13-B637-48FA-A66B-09534EE5FE52",
+    "kind" : "authored",
+    "openingPercent" : 0,
+    "stock" : {
+      "grain" : "parallelHeight",
+      "gsm" : 300,
+      "name" : "FIELD cotton / prototype",
+      "notes" : "Visual prototype stock; verify caliper, grain, creases and print with a physical sample.",
+      "plies" : [
+        {
+          "color" : "#223D35",
+          "id" : "AE7EC8A5-EE2E-54A3-96CC-36B9439EB6EA",
+          "name" : "Forest back",
+          "profile" : {
+            "color" : "#223D35",
+            "opacity" : 1,
+            "roughness" : 0.94,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.025,
+            "textureScaleMM" : 1.4
+          },
+          "thicknessMM" : 0.45
+        },
+        {
+          "color" : "#EAE2CF",
+          "id" : "8EDF7D61-785C-516F-9EE7-C85545B73531",
+          "name" : "Cotton front",
+          "profile" : {
+            "color" : "#EAE2CF",
+            "opacity" : 1,
+            "roughness" : 0.94,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.025,
+            "textureScaleMM" : 1.4
+          },
+          "thicknessMM" : 0.45
+        }
+      ],
+      "profile" : {
+        "color" : "#EAE2CF",
+        "opacity" : 1,
+        "roughness" : 0.94,
+        "texture" : "cotton",
+        "textureDepthMM" : 0.025,
+        "textureScaleMM" : 1.4
+      },
+      "thicknessMM" : 0.9,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "parameters" : {
+    "fold" : 100,
+    "height" : 55,
+    "opening" : 0,
+    "stock" : 0.9,
+    "turn" : 0,
+    "width" : 85
+  },
+  "position" : {
+    "x" : -430,
+    "y" : 0,
+    "z" : 370
+  },
+  "recipeID" : "construction-F5BE8DA6-1460-4CAD-BCDC-84D61B9BB968",
+  "relationship" : "original",
+  "rotation" : 0
+}

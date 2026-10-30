@@ -1,0 +1,68 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1200,
+  "png_sha256" : "9e31cd80486f450b45fc7f0324bf2ec44c2d9a0808bb61de6b08e2f0dfac1651",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:paper-template-17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764.svg",
+      "sha256" : "17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 2.8966139904629289,
+      "distance" : 2.9610603833091034,
+      "elevation" : 0.37016847997191826,
+      "projection" : "perspective",
+      "target" : {
+        "x" : -1.8999999999999999,
+        "y" : 0.55000000000000004,
+        "z" : 0
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "B2DEB979-E210-4CA6-8FAF-B30B6D5C2FDD",
+    "instances" : [
+      {
+        "id" : "F9639E38-8425-4BE9-B0D1-6ABE0BEA3D53",
+        "name" : "06 · Correspondence \/ Envelope",
+        "positionMM" : {
+          "x" : -190,
+          "y" : 0,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "C2CE9630-5DC9-42E4-A220-E6D7C0BA2439",
+        "visible" : true
+      }
+    ],
+    "lighting" : "rim-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "06-envelope-back",
+    "pixels" : {
+      "height" : 1200,
+      "width" : 1800
+    },
+    "revision" : 2,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "2edb07c1172dbba7df88b6cd19c0b586f701e29b47b9ceb27111c7aeac81e517",
+  "source_project_id" : "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+  "width" : 1800
+}

@@ -5,7 +5,7 @@ import SwiftUI
 struct FabricationWorkspace:View {
   @EnvironmentObject var store:StudioStore
   @ObservedObject var guide:FabricationGuide
-  private var objects:[ProductObject]{store.project?.objects.filter{!$0.isCanvasWorkspace} ?? []}
+  private var objects:[ProductObject]{store.project?.objects.filter{$0.hasTablePresentation} ?? []}
   var body:some View {
     GeometryReader {g in
       HStack(spacing:0) {

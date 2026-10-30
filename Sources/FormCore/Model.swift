@@ -44,6 +44,7 @@ public struct Material: Codable, Equatable, Identifiable, Sendable {
   public var metallic: Double
   public var thickness: Double
   public var fabric: FabricProfile?
+  public var paperStock: PaperStock?
   public init(
     _ id: String, _ name: String, _ category: String, _ color: String, roughness: Double = 0.65,
     metallic: Double = 0, thickness: Double = 0.3
@@ -220,6 +221,8 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var cadModel: CADModelDefinition?
   public var cadRepresentation: CADRepresentation?
   public var paperConstruction:PaperConstruction?
+  public var paperTemplateReference:PaperTemplateReference?
+  public var canvasSourceOnly:Bool?
   public var canvasProjectionPositions:[String:Point2]?
   public var surfaceArtworkBindings:[PhysicalSurfaceArtworkBinding]?
   public var physicalArtworkIntents:[PhysicalArtworkIntent]?
@@ -407,7 +410,7 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
-  public static let maximumSchemaVersion=56
+  public static let maximumSchemaVersion=57
   public var schemaVersion = 1
   public var id: UUID = UUID()
   public var name: String
@@ -433,6 +436,11 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if objects.contains(where:{$0.paperTemplateReference != nil}) {return max(schemaVersion,57)}
+    if objects.contains(where:{$0.canvasSourceOnly != nil}) {return max(schemaVersion,57)}
+    if materials.contains(where:{$0.paperStock != nil}) {return max(schemaVersion,57)}
+    if objects.contains(where:{($0.paperConstruction?.authored?.version ?? 1)>=3 || $0.paperConstruction?.authored?.components != nil || $0.paperConstruction?.authored?.interiors != nil || $0.paperConstruction?.authored?.panels.contains(where:{$0.cutouts != nil}) == true}) {return max(schemaVersion,57)}
+    if objects.contains(where:{$0.paperConstruction?.stock.profile != nil || $0.paperConstruction?.stock.plies != nil || $0.paperConstruction?.finishes != nil}) {return max(schemaVersion,57)}
     if objects.contains(where:{$0.artworkParameterBindings != nil}) {return max(schemaVersion,56)}
     if objects.contains(where:{$0.physicalArtworkIntents != nil}) {return max(schemaVersion,56)}
     if recipes.contains(where:{$0.requirements?.isEmpty == false}) || objects.contains(where:{$0.cadModel?.version ?? 1 > 1}) {return max(schemaVersion,55)}

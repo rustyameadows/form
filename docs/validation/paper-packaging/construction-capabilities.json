@@ -1,0 +1,3148 @@
+{
+  "artwork" : "All projections share registered full-net millimeter coordinates; artworkRotationDegrees defines readable panel orientation.",
+  "artwork_binding_fields" : [
+    "id",
+    "elementID",
+    "property",
+    "value"
+  ],
+  "artwork_binding_properties" : [
+    "x",
+    "y",
+    "width",
+    "height",
+    "rotation",
+    "seamAllowance"
+  ],
+  "artwork_case_evidence_budget" : 32768,
+  "artwork_parameter_source" : "Existing independent canonical artwork plus Recipe controls. Set artwork_parameter_bindings through form_update_object; no additional sewing document or generator. inspect\/parameter\/validate_cases accept that source object_id.",
+  "case_outcomes" : [
+    "passed",
+    "failed",
+    "cancelled",
+    "budget_exceeded",
+    "not_run"
+  ],
+  "commands" : [
+    "capabilities",
+    "configure",
+    "convert",
+    "create",
+    "inspect",
+    "parameter",
+    "validate_cases"
+  ],
+  "component_coordinates" : "Version 3 anchor is a full-net {x,y} point. Position\/rotationDegrees are {x,y,z}; assembly axes are X right, Y up, Z toward the nominal front. Fold 0 retains the flat layout; Fold 100 applies the declared upright root pose, rotations X then Y then Z (Rz*Ry*Rx). A common closed-bounds X\/Z centering and Y grounding follows. Only root-pose expressions additionally receive fold\/opening percentages.",
+  "component_fields" : [
+    "id",
+    "name",
+    "rootPanelID",
+    "anchor",
+    "position",
+    "rotationDegrees"
+  ],
+  "component_optional_fields" : [
+
+  ],
+  "component_required_fields" : [
+    "id",
+    "name",
+    "rootPanelID",
+    "anchor",
+    "position",
+    "rotationDegrees"
+  ],
+  "components" : "Explicit independent hinge-tree roots share parameters and canonical flat sheet coordinates; authored assembled anchor\/XYZ Euler poses use millimeters and may reference fold\/opening percentages.",
+  "connection_checks" : "Neutral-plane panel anchors are measured after the requested fold\/opening. Measurements report actual gap and maximumGapMM; they do not solve the assembly.",
+  "connection_fields" : [
+    "id",
+    "firstPanelID",
+    "secondPanelID",
+    "firstPoint",
+    "secondPoint",
+    "maximumGapMM"
+  ],
+  "cutout_coordinates" : "Version 3 finite removed polygons in the same full flat-net {x,y} coordinates as the panel, strictly inside remaining panel material. Holes cannot touch or overlap. Perforations retain explicit material bridges; tearing is not simulated.",
+  "cutout_fields" : [
+    "id",
+    "polygon",
+    "kind"
+  ],
+  "cutout_kinds" : [
+    "cutout",
+    "window",
+    "slot",
+    "perforation"
+  ],
+  "cutout_optional_fields" : [
+
+  ],
+  "cutout_required_fields" : [
+    "id",
+    "polygon",
+    "kind"
+  ],
+  "cutouts" : "Stable panel cutouts remove finite material; window, slot and perforation kinds preserve technical identity. All rings share the 2048-vertex bound.",
+  "definition_fields" : [
+    "version",
+    "name",
+    "parameters",
+    "derived",
+    "size",
+    "stockThickness",
+    "panels",
+    "hinges",
+    "joins",
+    "rootPanelID",
+    "requirements",
+    "connections",
+    "solidChecks",
+    "components",
+    "interiors"
+  ],
+  "definition_optional_fields" : [
+    "requirements",
+    "derived",
+    "connections",
+    "solidChecks",
+    "components",
+    "interiors"
+  ],
+  "definition_required_fields" : [
+    "version",
+    "name",
+    "parameters",
+    "size",
+    "stockThickness",
+    "panels",
+    "hinges",
+    "joins",
+    "rootPanelID"
+  ],
+  "example" : {
+    "hinges" : [
+      {
+        "angleDegrees" : "90",
+        "childPanelID" : "left",
+        "end" : {
+          "x" : "depth",
+          "y" : "depth+height"
+        },
+        "id" : "base-left",
+        "opensWithTop" : false,
+        "parentPanelID" : "base",
+        "start" : {
+          "x" : "depth",
+          "y" : "depth"
+        }
+      },
+      {
+        "angleDegrees" : "-90",
+        "childPanelID" : "right",
+        "end" : {
+          "x" : "depth+width",
+          "y" : "depth+height"
+        },
+        "id" : "base-right",
+        "opensWithTop" : false,
+        "parentPanelID" : "base",
+        "start" : {
+          "x" : "depth+width",
+          "y" : "depth"
+        }
+      },
+      {
+        "angleDegrees" : "-90",
+        "childPanelID" : "top",
+        "end" : {
+          "x" : "depth+width",
+          "y" : "depth"
+        },
+        "id" : "base-top",
+        "opensWithTop" : true,
+        "parentPanelID" : "base",
+        "start" : {
+          "x" : "depth",
+          "y" : "depth"
+        }
+      }
+    ],
+    "joins" : [
+
+    ],
+    "name" : "Folded display",
+    "panels" : [
+      {
+        "id" : "base",
+        "name" : "Base",
+        "polygon" : [
+          {
+            "x" : "depth",
+            "y" : "depth"
+          },
+          {
+            "x" : "depth+width",
+            "y" : "depth"
+          },
+          {
+            "x" : "depth+width",
+            "y" : "depth+height"
+          },
+          {
+            "x" : "depth",
+            "y" : "depth+height"
+          }
+        ],
+        "role" : "body"
+      },
+      {
+        "artworkRotationDegrees" : "90",
+        "id" : "left",
+        "name" : "Left",
+        "polygon" : [
+          {
+            "x" : "0",
+            "y" : "depth"
+          },
+          {
+            "x" : "depth",
+            "y" : "depth"
+          },
+          {
+            "x" : "depth",
+            "y" : "depth+height"
+          },
+          {
+            "x" : "0",
+            "y" : "depth+height"
+          }
+        ],
+        "role" : "body"
+      },
+      {
+        "artworkRotationDegrees" : "270",
+        "id" : "right",
+        "name" : "Right",
+        "polygon" : [
+          {
+            "x" : "depth+width",
+            "y" : "depth"
+          },
+          {
+            "x" : "width+2*depth",
+            "y" : "depth"
+          },
+          {
+            "x" : "width+2*depth",
+            "y" : "depth+height"
+          },
+          {
+            "x" : "depth+width",
+            "y" : "depth+height"
+          }
+        ],
+        "role" : "body"
+      },
+      {
+        "artworkRotationDegrees" : "180",
+        "id" : "top",
+        "name" : "Top",
+        "polygon" : [
+          {
+            "x" : "depth",
+            "y" : "0"
+          },
+          {
+            "x" : "depth+width",
+            "y" : "0"
+          },
+          {
+            "x" : "depth+width",
+            "y" : "depth"
+          },
+          {
+            "x" : "depth",
+            "y" : "depth"
+          }
+        ],
+        "role" : "body"
+      }
+    ],
+    "parameters" : [
+      {
+        "maximum" : 240,
+        "minimum" : 40,
+        "name" : "width",
+        "unit" : "mm",
+        "value" : 100
+      },
+      {
+        "maximum" : 60,
+        "minimum" : 10,
+        "name" : "depth",
+        "unit" : "mm",
+        "value" : 30
+      },
+      {
+        "maximum" : 200,
+        "minimum" : 40,
+        "name" : "height",
+        "unit" : "mm",
+        "value" : 80
+      }
+    ],
+    "rootPanelID" : "base",
+    "size" : {
+      "x" : "width+2*depth",
+      "y" : "height+depth"
+    },
+    "stockThickness" : "0.35",
+    "version" : 1
+  },
+  "expressions" : "Numbers or arithmetic\/math expressions referencing named parameters. Polygon\/anchor\/size points use {x,y}; component position\/rotation and interior origin\/size use {x,y,z}. Size is the full flat source extent; translations are mm and rotationDegrees are degrees.",
+  "fold_and_glue_example" : {
+    "connections" : [
+      {
+        "firstPanelID" : "glue",
+        "firstPoint" : {
+          "x" : "seamX+glueTab\/2",
+          "y" : "height\/2"
+        },
+        "id" : "side-contact",
+        "maximumGapMM" : "stock*2",
+        "secondPanelID" : "front",
+        "secondPoint" : {
+          "x" : "glueTab\/2",
+          "y" : "height\/2"
+        }
+      }
+    ],
+    "derived" : {
+      "seamX" : "2*(width+depth)"
+    },
+    "hinges" : [
+      {
+        "angleDegrees" : "-90",
+        "childPanelID" : "right",
+        "end" : {
+          "x" : "width",
+          "y" : "height"
+        },
+        "id" : "fold.front.right",
+        "layerOffsetMM" : "0",
+        "opensWithTop" : false,
+        "parentPanelID" : "front",
+        "start" : {
+          "x" : "width",
+          "y" : "0"
+        }
+      },
+      {
+        "angleDegrees" : "-90",
+        "childPanelID" : "back",
+        "end" : {
+          "x" : "width+depth",
+          "y" : "height"
+        },
+        "id" : "fold.right.back",
+        "layerOffsetMM" : "0",
+        "opensWithTop" : false,
+        "parentPanelID" : "right",
+        "start" : {
+          "x" : "width+depth",
+          "y" : "0"
+        }
+      },
+      {
+        "angleDegrees" : "-90",
+        "childPanelID" : "left",
+        "end" : {
+          "x" : "2*width+depth",
+          "y" : "height"
+        },
+        "id" : "fold.back.left",
+        "layerOffsetMM" : "0",
+        "opensWithTop" : false,
+        "parentPanelID" : "back",
+        "start" : {
+          "x" : "2*width+depth",
+          "y" : "0"
+        }
+      },
+      {
+        "angleDegrees" : "seamAngle",
+        "childPanelID" : "glue",
+        "end" : {
+          "x" : "seamX",
+          "y" : "height"
+        },
+        "id" : "fold.left.glue",
+        "layerOffsetMM" : "stock",
+        "opensWithTop" : false,
+        "parentPanelID" : "left",
+        "start" : {
+          "x" : "seamX",
+          "y" : "0"
+        }
+      }
+    ],
+    "joins" : [
+      {
+        "firstPanelID" : "glue",
+        "id" : "side-seam",
+        "kind" : "glue",
+        "name" : "Glue seam",
+        "notes" : "",
+        "overlapMM" : "glueTab",
+        "secondPanelID" : "front"
+      }
+    ],
+    "name" : "Fold and glue sleeve",
+    "panels" : [
+      {
+        "id" : "front",
+        "name" : "Front",
+        "polygon" : [
+          {
+            "x" : "0",
+            "y" : "0"
+          },
+          {
+            "x" : "width",
+            "y" : "0"
+          },
+          {
+            "x" : "width",
+            "y" : "height"
+          },
+          {
+            "x" : "0",
+            "y" : "height"
+          }
+        ],
+        "role" : "body"
+      },
+      {
+        "id" : "right",
+        "name" : "Right",
+        "polygon" : [
+          {
+            "x" : "width",
+            "y" : "0"
+          },
+          {
+            "x" : "width+depth",
+            "y" : "0"
+          },
+          {
+            "x" : "width+depth",
+            "y" : "height"
+          },
+          {
+            "x" : "width",
+            "y" : "height"
+          }
+        ],
+        "role" : "side"
+      },
+      {
+        "id" : "back",
+        "name" : "Back",
+        "polygon" : [
+          {
+            "x" : "width+depth",
+            "y" : "0"
+          },
+          {
+            "x" : "2*width+depth",
+            "y" : "0"
+          },
+          {
+            "x" : "2*width+depth",
+            "y" : "height"
+          },
+          {
+            "x" : "width+depth",
+            "y" : "height"
+          }
+        ],
+        "role" : "body"
+      },
+      {
+        "id" : "left",
+        "name" : "Left",
+        "polygon" : [
+          {
+            "x" : "2*width+depth",
+            "y" : "0"
+          },
+          {
+            "x" : "seamX",
+            "y" : "0"
+          },
+          {
+            "x" : "seamX",
+            "y" : "height"
+          },
+          {
+            "x" : "2*width+depth",
+            "y" : "height"
+          }
+        ],
+        "role" : "side"
+      },
+      {
+        "id" : "glue",
+        "name" : "Glue tab",
+        "polygon" : [
+          {
+            "x" : "seamX",
+            "y" : "0"
+          },
+          {
+            "x" : "seamX+glueTab",
+            "y" : "0"
+          },
+          {
+            "x" : "seamX+glueTab",
+            "y" : "height"
+          },
+          {
+            "x" : "seamX",
+            "y" : "height"
+          }
+        ],
+        "role" : "glue"
+      }
+    ],
+    "parameters" : [
+      {
+        "maximum" : 160,
+        "minimum" : 40,
+        "name" : "width",
+        "unit" : "mm",
+        "value" : 80
+      },
+      {
+        "maximum" : 60,
+        "minimum" : 10,
+        "name" : "depth",
+        "unit" : "mm",
+        "value" : 30
+      },
+      {
+        "maximum" : 200,
+        "minimum" : 40,
+        "name" : "height",
+        "unit" : "mm",
+        "value" : 100
+      },
+      {
+        "maximum" : 20,
+        "minimum" : 6,
+        "name" : "glueTab",
+        "unit" : "mm",
+        "value" : 12
+      },
+      {
+        "maximum" : 1,
+        "minimum" : 0.10000000000000001,
+        "name" : "stock",
+        "unit" : "mm",
+        "value" : 0.40000000000000002
+      },
+      {
+        "maximum" : -70,
+        "minimum" : -110,
+        "name" : "seamAngle",
+        "unit" : "mm",
+        "value" : -90
+      }
+    ],
+    "rootPanelID" : "front",
+    "size" : {
+      "x" : "seamX+glueTab",
+      "y" : "height"
+    },
+    "stockThickness" : "stock",
+    "version" : 1
+  },
+  "hinge_fields" : [
+    "id",
+    "parentPanelID",
+    "childPanelID",
+    "start",
+    "end",
+    "angleDegrees",
+    "layerOffsetMM",
+    "opensWithTop"
+  ],
+  "interior_coordinates" : "Version 3 origin\/size\/optional rotationDegrees are {x,y,z} in the named component's anchor frame; omitted rotation is zero. The review volume follows that component's current pose. An author-declared volume does not infer physical enclosing walls.",
+  "interior_fields" : [
+    "id",
+    "name",
+    "componentID",
+    "origin",
+    "size",
+    "rotationDegrees",
+    "opening"
+  ],
+  "interior_optional_fields" : [
+    "rotationDegrees",
+    "opening"
+  ],
+  "interior_required_fields" : [
+    "id",
+    "name",
+    "componentID",
+    "origin",
+    "size"
+  ],
+  "interiors" : "Named declared component-local volumes and optional rectangular opening cross-sections; actual referenced contents are checked through form_paper preflight, not inferred from flat net bounds.",
+  "legacy_examples" : {
+    "carton" : {
+      "derived" : {
+        "_backX" : "_w+_d",
+        "_bottom" : "_top+_h",
+        "_clearance" : "min(0.6,_d*0.03)",
+        "_d" : "depth+stock",
+        "_dust" : "min(_w*0.42,_d*1.15)",
+        "_g" : "glueTab",
+        "_h" : "height+stock",
+        "_inset" : "min(4,_d*0.12)",
+        "_netH" : "_top+_h+_d+bottomFlap",
+        "_netW" : "2*(_w+_d)+_g",
+        "_top" : "_d+topFlap",
+        "_v0" : "_backX",
+        "_v1" : "_top-_d",
+        "_v2" : "_w",
+        "_v3" : "topFlap",
+        "_v4" : "cornerRadius",
+        "_v5" : "min(_w*0.1,12)",
+        "_v6" : "hypot(_v5,_v3)",
+        "_v7" : "acos(clamp(-_v5\/_v6,-1,1))",
+        "_v8" : "min(_v4\/tan(_v7\/2),min(_v6*0.28,(_v2-2*_v5)*0.28))",
+        "_v9" : "_v8*tan(_v7\/2)",
+        "_v10" : "hypot(_v5\/_v6-1,_v3\/_v6)",
+        "_v11" : "_v9\/(_v10*sin(_v7\/2))",
+        "_v12" : "_v1+-1*_v3",
+        "_v13" : "_v12--1*_v3\/_v6*_v11",
+        "_v14" : "_v0+_v5",
+        "_v15" : "_v14+(1-_v5\/_v6)*_v11",
+        "_v16" : "atan2(_v12--1*_v3\/_v6*_v8-_v13,_v14+(-_v5\/_v6)*_v8-_v15)",
+        "_v17" : "atan2(_v12-_v13,_v14+(1)*_v8-_v15)",
+        "_v18" : "atan2(sin(_v17-_v16),cos(_v17-_v16))",
+        "_v19" : "_v0+_v2-_v5",
+        "_v20" : "_v19+(_v5\/_v6-1)*_v11",
+        "_v21" : "atan2(_v12-_v13,_v19+(-1)*_v8-_v20)",
+        "_v22" : "atan2(_v12--1*_v3\/_v6*_v8-_v13,_v19+(_v5\/_v6)*_v8-_v20)",
+        "_v23" : "atan2(sin(_v22-_v21),cos(_v22-_v21))",
+        "_v24" : "_backX",
+        "_v25" : "_bottom+_d",
+        "_v26" : "_w",
+        "_v27" : "bottomFlap",
+        "_v28" : "cornerRadius",
+        "_v29" : "min(_w*0.1,12)",
+        "_v30" : "hypot(_v29,_v27)",
+        "_v31" : "acos(clamp(-_v29\/_v30,-1,1))",
+        "_v32" : "min(_v28\/tan(_v31\/2),min(_v30*0.28,(_v26-2*_v29)*0.28))",
+        "_v33" : "_v32*tan(_v31\/2)",
+        "_v34" : "hypot(_v29\/_v30-1,_v27\/_v30)",
+        "_v35" : "_v33\/(_v34*sin(_v31\/2))",
+        "_v36" : "_v25+1*_v27",
+        "_v37" : "_v36-1*_v27\/_v30*_v35",
+        "_v38" : "_v24+_v26-_v29",
+        "_v39" : "_v38+(_v29\/_v30-1)*_v35",
+        "_v40" : "atan2(_v36-1*_v27\/_v30*_v32-_v37,_v38+(_v29\/_v30)*_v32-_v39)",
+        "_v41" : "atan2(_v36-_v37,_v38+(-1)*_v32-_v39)",
+        "_v42" : "atan2(sin(_v41-_v40),cos(_v41-_v40))",
+        "_v43" : "_v24+_v29",
+        "_v44" : "_v43+(1-_v29\/_v30)*_v35",
+        "_v45" : "atan2(_v36-_v37,_v43+(1)*_v32-_v44)",
+        "_v46" : "atan2(_v36-1*_v27\/_v30*_v32-_v37,_v43+(-_v29\/_v30)*_v32-_v44)",
+        "_v47" : "atan2(sin(_v46-_v45),cos(_v46-_v45))",
+        "_v48" : "_w+_clearance",
+        "_v49" : "_top",
+        "_v50" : "_d-2*_clearance",
+        "_v51" : "_dust",
+        "_v52" : "min(cornerRadius,2)",
+        "_v53" : "_inset",
+        "_v54" : "hypot(_v53,_v51)",
+        "_v55" : "acos(clamp(-_v53\/_v54,-1,1))",
+        "_v56" : "min(_v52\/tan(_v55\/2),min(_v54*0.28,(_v50-2*_v53)*0.28))",
+        "_v57" : "_v56*tan(_v55\/2)",
+        "_v58" : "hypot(_v53\/_v54-1,_v51\/_v54)",
+        "_v59" : "_v57\/(_v58*sin(_v55\/2))",
+        "_v60" : "_v49+-1*_v51",
+        "_v61" : "_v60--1*_v51\/_v54*_v59",
+        "_v62" : "_v48+_v53",
+        "_v63" : "_v62+(1-_v53\/_v54)*_v59",
+        "_v64" : "atan2(_v60--1*_v51\/_v54*_v56-_v61,_v62+(-_v53\/_v54)*_v56-_v63)",
+        "_v65" : "atan2(_v60-_v61,_v62+(1)*_v56-_v63)",
+        "_v66" : "atan2(sin(_v65-_v64),cos(_v65-_v64))",
+        "_v67" : "_v48+_v50-_v53",
+        "_v68" : "_v67+(_v53\/_v54-1)*_v59",
+        "_v69" : "atan2(_v60-_v61,_v67+(-1)*_v56-_v68)",
+        "_v70" : "atan2(_v60--1*_v51\/_v54*_v56-_v61,_v67+(_v53\/_v54)*_v56-_v68)",
+        "_v71" : "atan2(sin(_v70-_v69),cos(_v70-_v69))",
+        "_v72" : "_w+_clearance",
+        "_v73" : "_bottom",
+        "_v74" : "_d-2*_clearance",
+        "_v75" : "_dust",
+        "_v76" : "min(cornerRadius,2)",
+        "_v77" : "_inset",
+        "_v78" : "hypot(_v77,_v75)",
+        "_v79" : "acos(clamp(-_v77\/_v78,-1,1))",
+        "_v80" : "min(_v76\/tan(_v79\/2),min(_v78*0.28,(_v74-2*_v77)*0.28))",
+        "_v81" : "_v80*tan(_v79\/2)",
+        "_v82" : "hypot(_v77\/_v78-1,_v75\/_v78)",
+        "_v83" : "_v81\/(_v82*sin(_v79\/2))",
+        "_v84" : "_v73+1*_v75",
+        "_v85" : "_v84-1*_v75\/_v78*_v83",
+        "_v86" : "_v72+_v74-_v77",
+        "_v87" : "_v86+(_v77\/_v78-1)*_v83",
+        "_v88" : "atan2(_v84-1*_v75\/_v78*_v80-_v85,_v86+(_v77\/_v78)*_v80-_v87)",
+        "_v89" : "atan2(_v84-_v85,_v86+(-1)*_v80-_v87)",
+        "_v90" : "atan2(sin(_v89-_v88),cos(_v89-_v88))",
+        "_v91" : "_v72+_v77",
+        "_v92" : "_v91+(1-_v77\/_v78)*_v83",
+        "_v93" : "atan2(_v84-_v85,_v91+(1)*_v80-_v92)",
+        "_v94" : "atan2(_v84-1*_v75\/_v78*_v80-_v85,_v91+(-_v77\/_v78)*_v80-_v92)",
+        "_v95" : "atan2(sin(_v94-_v93),cos(_v94-_v93))",
+        "_v96" : "2*_w+_d+_clearance",
+        "_v97" : "_top",
+        "_v98" : "_d-2*_clearance",
+        "_v99" : "_dust",
+        "_v100" : "min(cornerRadius,2)",
+        "_v101" : "_inset",
+        "_v102" : "hypot(_v101,_v99)",
+        "_v103" : "acos(clamp(-_v101\/_v102,-1,1))",
+        "_v104" : "min(_v100\/tan(_v103\/2),min(_v102*0.28,(_v98-2*_v101)*0.28))",
+        "_v105" : "_v104*tan(_v103\/2)",
+        "_v106" : "hypot(_v101\/_v102-1,_v99\/_v102)",
+        "_v107" : "_v105\/(_v106*sin(_v103\/2))",
+        "_v108" : "_v97+-1*_v99",
+        "_v109" : "_v108--1*_v99\/_v102*_v107",
+        "_v110" : "_v96+_v101",
+        "_v111" : "_v110+(1-_v101\/_v102)*_v107",
+        "_v112" : "atan2(_v108--1*_v99\/_v102*_v104-_v109,_v110+(-_v101\/_v102)*_v104-_v111)",
+        "_v113" : "atan2(_v108-_v109,_v110+(1)*_v104-_v111)",
+        "_v114" : "atan2(sin(_v113-_v112),cos(_v113-_v112))",
+        "_v115" : "_v96+_v98-_v101",
+        "_v116" : "_v115+(_v101\/_v102-1)*_v107",
+        "_v117" : "atan2(_v108-_v109,_v115+(-1)*_v104-_v116)",
+        "_v118" : "atan2(_v108--1*_v99\/_v102*_v104-_v109,_v115+(_v101\/_v102)*_v104-_v116)",
+        "_v119" : "atan2(sin(_v118-_v117),cos(_v118-_v117))",
+        "_v120" : "2*_w+_d+_clearance",
+        "_v121" : "_bottom",
+        "_v122" : "_d-2*_clearance",
+        "_v123" : "_dust",
+        "_v124" : "min(cornerRadius,2)",
+        "_v125" : "_inset",
+        "_v126" : "hypot(_v125,_v123)",
+        "_v127" : "acos(clamp(-_v125\/_v126,-1,1))",
+        "_v128" : "min(_v124\/tan(_v127\/2),min(_v126*0.28,(_v122-2*_v125)*0.28))",
+        "_v129" : "_v128*tan(_v127\/2)",
+        "_v130" : "hypot(_v125\/_v126-1,_v123\/_v126)",
+        "_v131" : "_v129\/(_v130*sin(_v127\/2))",
+        "_v132" : "_v121+1*_v123",
+        "_v133" : "_v132-1*_v123\/_v126*_v131",
+        "_v134" : "_v120+_v122-_v125",
+        "_v135" : "_v134+(_v125\/_v126-1)*_v131",
+        "_v136" : "atan2(_v132-1*_v123\/_v126*_v128-_v133,_v134+(_v125\/_v126)*_v128-_v135)",
+        "_v137" : "atan2(_v132-_v133,_v134+(-1)*_v128-_v135)",
+        "_v138" : "atan2(sin(_v137-_v136),cos(_v137-_v136))",
+        "_v139" : "_v120+_v125",
+        "_v140" : "_v139+(1-_v125\/_v126)*_v131",
+        "_v141" : "atan2(_v132-_v133,_v139+(1)*_v128-_v140)",
+        "_v142" : "atan2(_v132-1*_v123\/_v126*_v128-_v133,_v139+(-_v125\/_v126)*_v128-_v140)",
+        "_v143" : "atan2(sin(_v142-_v141),cos(_v142-_v141))",
+        "_w" : "width+stock"
+      },
+      "hinges" : [
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "side-right",
+          "end" : {
+            "x" : "_w",
+            "y" : "_bottom"
+          },
+          "id" : "fold.front.side-right",
+          "layerOffsetMM" : "stock*0",
+          "opensWithTop" : false,
+          "parentPanelID" : "front",
+          "start" : {
+            "x" : "_w",
+            "y" : "_top"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "back",
+          "end" : {
+            "x" : "_backX",
+            "y" : "_bottom"
+          },
+          "id" : "fold.side-right.back",
+          "layerOffsetMM" : "stock*0",
+          "opensWithTop" : false,
+          "parentPanelID" : "side-right",
+          "start" : {
+            "x" : "_backX",
+            "y" : "_top"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "side-left",
+          "end" : {
+            "x" : "2*_w+_d",
+            "y" : "_bottom"
+          },
+          "id" : "fold.back.side-left",
+          "layerOffsetMM" : "stock*0",
+          "opensWithTop" : false,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "2*_w+_d",
+            "y" : "_top"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "glue",
+          "end" : {
+            "x" : "2*(_w+_d)",
+            "y" : "_bottom"
+          },
+          "id" : "fold.side-left.glue",
+          "layerOffsetMM" : "stock*1",
+          "opensWithTop" : false,
+          "parentPanelID" : "side-left",
+          "start" : {
+            "x" : "2*(_w+_d)",
+            "y" : "_top"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "top-bridge",
+          "end" : {
+            "x" : "_backX+_w",
+            "y" : "_top"
+          },
+          "id" : "fold.back.top-bridge",
+          "layerOffsetMM" : "stock*0",
+          "opensWithTop" : true,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "_backX",
+            "y" : "_top"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "top-tuck",
+          "end" : {
+            "x" : "_backX+_w",
+            "y" : "_top-_d"
+          },
+          "id" : "fold.top-bridge.top-tuck",
+          "layerOffsetMM" : "stock*2",
+          "opensWithTop" : true,
+          "parentPanelID" : "top-bridge",
+          "start" : {
+            "x" : "_backX",
+            "y" : "_top-_d"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "bottom-bridge",
+          "end" : {
+            "x" : "_backX+_w",
+            "y" : "_bottom"
+          },
+          "id" : "fold.back.bottom-bridge",
+          "layerOffsetMM" : "stock*0",
+          "opensWithTop" : false,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "_backX",
+            "y" : "_bottom"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "bottom-tuck",
+          "end" : {
+            "x" : "_backX+_w",
+            "y" : "_bottom+_d"
+          },
+          "id" : "fold.bottom-bridge.bottom-tuck",
+          "layerOffsetMM" : "stock*2",
+          "opensWithTop" : false,
+          "parentPanelID" : "bottom-bridge",
+          "start" : {
+            "x" : "_backX",
+            "y" : "_bottom+_d"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "dust-top-right",
+          "end" : {
+            "x" : "_w+_d-_clearance",
+            "y" : "_top"
+          },
+          "id" : "fold.side-right.dust-top-right",
+          "layerOffsetMM" : "stock*1",
+          "opensWithTop" : true,
+          "parentPanelID" : "side-right",
+          "start" : {
+            "x" : "_w+_clearance",
+            "y" : "_top"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "dust-bottom-right",
+          "end" : {
+            "x" : "_w+_d-_clearance",
+            "y" : "_bottom"
+          },
+          "id" : "fold.side-right.dust-bottom-right",
+          "layerOffsetMM" : "stock*1",
+          "opensWithTop" : false,
+          "parentPanelID" : "side-right",
+          "start" : {
+            "x" : "_w+_clearance",
+            "y" : "_bottom"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "dust-top-left",
+          "end" : {
+            "x" : "2*_w+_d+_d-_clearance",
+            "y" : "_top"
+          },
+          "id" : "fold.side-left.dust-top-left",
+          "layerOffsetMM" : "stock*1",
+          "opensWithTop" : true,
+          "parentPanelID" : "side-left",
+          "start" : {
+            "x" : "2*_w+_d+_clearance",
+            "y" : "_top"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "dust-bottom-left",
+          "end" : {
+            "x" : "2*_w+_d+_d-_clearance",
+            "y" : "_bottom"
+          },
+          "id" : "fold.side-left.dust-bottom-left",
+          "layerOffsetMM" : "stock*1",
+          "opensWithTop" : false,
+          "parentPanelID" : "side-left",
+          "start" : {
+            "x" : "2*_w+_d+_clearance",
+            "y" : "_bottom"
+          }
+        }
+      ],
+      "joins" : [
+        {
+          "firstPanelID" : "glue",
+          "id" : "join.side-glue",
+          "kind" : "glue",
+          "name" : "Side seam",
+          "notes" : "Bond to the inside of the front panel; keep adhesive off the printed exterior.",
+          "overlapMM" : "glueTab-2",
+          "secondPanelID" : "front"
+        },
+        {
+          "firstPanelID" : "bottom-tuck",
+          "id" : "join.bottom",
+          "kind" : "tuck",
+          "name" : "Bottom tuck",
+          "notes" : "Prototype the fold allowance and closure retention on actual stock.",
+          "overlapMM" : "bottomFlap",
+          "secondPanelID" : "front"
+        },
+        {
+          "firstPanelID" : "top-tuck",
+          "id" : "join.top-tuck",
+          "kind" : "tuck",
+          "name" : "Opening flap",
+          "notes" : "",
+          "overlapMM" : "topFlap",
+          "secondPanelID" : "front"
+        }
+      ],
+      "name" : "Straight tuck carton",
+      "panels" : [
+        {
+          "id" : "front",
+          "name" : "Front",
+          "polygon" : [
+            {
+              "x" : "0",
+              "y" : "_top"
+            },
+            {
+              "x" : "0+_w",
+              "y" : "_top"
+            },
+            {
+              "x" : "0+_w",
+              "y" : "_top+_h"
+            },
+            {
+              "x" : "0",
+              "y" : "_top+_h"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "side-right",
+          "name" : "Right side",
+          "polygon" : [
+            {
+              "x" : "_w",
+              "y" : "_top"
+            },
+            {
+              "x" : "_w+_d",
+              "y" : "_top"
+            },
+            {
+              "x" : "_w+_d",
+              "y" : "_top+_h"
+            },
+            {
+              "x" : "_w",
+              "y" : "_top+_h"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "back",
+          "name" : "Back",
+          "polygon" : [
+            {
+              "x" : "_backX",
+              "y" : "_top"
+            },
+            {
+              "x" : "_backX+_w",
+              "y" : "_top"
+            },
+            {
+              "x" : "_backX+_w",
+              "y" : "_top+_h"
+            },
+            {
+              "x" : "_backX",
+              "y" : "_top+_h"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "side-left",
+          "name" : "Left side",
+          "polygon" : [
+            {
+              "x" : "2*_w+_d",
+              "y" : "_top"
+            },
+            {
+              "x" : "2*_w+_d+_d",
+              "y" : "_top"
+            },
+            {
+              "x" : "2*_w+_d+_d",
+              "y" : "_top+_h"
+            },
+            {
+              "x" : "2*_w+_d",
+              "y" : "_top+_h"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "glue",
+          "name" : "Side glue seam",
+          "polygon" : [
+            {
+              "x" : "2*(_w+_d)",
+              "y" : "_top"
+            },
+            {
+              "x" : "_netW-2",
+              "y" : "_top+min(8,_h\/8)"
+            },
+            {
+              "x" : "_netW-2",
+              "y" : "_bottom-min(8,_h\/8)"
+            },
+            {
+              "x" : "2*(_w+_d)",
+              "y" : "_bottom"
+            }
+          ],
+          "role" : "glue"
+        },
+        {
+          "id" : "top-bridge",
+          "name" : "Top closure",
+          "polygon" : [
+            {
+              "x" : "_backX",
+              "y" : "_top-_d"
+            },
+            {
+              "x" : "_backX+_w",
+              "y" : "_top-_d"
+            },
+            {
+              "x" : "_backX+_w",
+              "y" : "_top-_d+_d"
+            },
+            {
+              "x" : "_backX",
+              "y" : "_top-_d+_d"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "top-tuck",
+          "name" : "Top tuck tab",
+          "polygon" : [
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.0)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.0)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.08333333333333333)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.08333333333333333)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.16666666666666666)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.16666666666666666)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.25)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.25)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.3333333333333333)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.3333333333333333)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.4166666666666667)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.4166666666666667)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.5)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.5)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.5833333333333334)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.5833333333333334)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.6666666666666666)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.6666666666666666)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.75)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.75)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.8333333333333334)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.8333333333333334)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.9166666666666666)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.9166666666666666)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*1.0)",
+              "y" : "_v13+_v9*sin(_v16+_v18*1.0)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.0)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.0)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.08333333333333333)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.08333333333333333)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.16666666666666666)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.16666666666666666)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.25)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.25)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.3333333333333333)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.3333333333333333)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.4166666666666667)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.4166666666666667)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.5)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.5)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.5833333333333334)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.5833333333333334)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.6666666666666666)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.6666666666666666)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.75)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.75)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.8333333333333334)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.8333333333333334)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.9166666666666666)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.9166666666666666)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*1.0)",
+              "y" : "_v13+_v9*sin(_v21+_v23*1.0)"
+            },
+            {
+              "x" : "_v0+_v2",
+              "y" : "_v1"
+            },
+            {
+              "x" : "_v0",
+              "y" : "_v1"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "bottom-bridge",
+          "name" : "Bottom closure",
+          "polygon" : [
+            {
+              "x" : "_backX",
+              "y" : "_bottom"
+            },
+            {
+              "x" : "_backX+_w",
+              "y" : "_bottom"
+            },
+            {
+              "x" : "_backX+_w",
+              "y" : "_bottom+_d"
+            },
+            {
+              "x" : "_backX",
+              "y" : "_bottom+_d"
+            }
+          ],
+          "role" : "bottomClosure"
+        },
+        {
+          "id" : "bottom-tuck",
+          "name" : "Bottom tuck tab",
+          "polygon" : [
+            {
+              "x" : "_v24",
+              "y" : "_v25"
+            },
+            {
+              "x" : "_v24+_v26",
+              "y" : "_v25"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.0)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.0)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.08333333333333333)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.08333333333333333)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.16666666666666666)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.16666666666666666)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.25)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.25)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.3333333333333333)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.3333333333333333)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.4166666666666667)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.4166666666666667)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.5)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.5)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.5833333333333334)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.5833333333333334)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.6666666666666666)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.6666666666666666)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.75)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.75)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.8333333333333334)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.8333333333333334)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.9166666666666666)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.9166666666666666)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*1.0)",
+              "y" : "_v37+_v33*sin(_v40+_v42*1.0)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.0)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.0)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.08333333333333333)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.08333333333333333)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.16666666666666666)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.16666666666666666)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.25)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.25)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.3333333333333333)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.3333333333333333)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.4166666666666667)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.4166666666666667)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.5)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.5)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.5833333333333334)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.5833333333333334)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.6666666666666666)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.6666666666666666)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.75)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.75)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.8333333333333334)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.8333333333333334)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.9166666666666666)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.9166666666666666)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*1.0)",
+              "y" : "_v37+_v33*sin(_v45+_v47*1.0)"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "dust-top-right",
+          "name" : "Top right dust flap",
+          "polygon" : [
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*0.0)",
+              "y" : "_v61+_v57*sin(_v64+_v66*0.0)"
+            },
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*0.08333333333333333)",
+              "y" : "_v61+_v57*sin(_v64+_v66*0.08333333333333333)"
+            },
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*0.16666666666666666)",
+              "y" : "_v61+_v57*sin(_v64+_v66*0.16666666666666666)"
+            },
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*0.25)",
+              "y" : "_v61+_v57*sin(_v64+_v66*0.25)"
+            },
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*0.3333333333333333)",
+              "y" : "_v61+_v57*sin(_v64+_v66*0.3333333333333333)"
+            },
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*0.4166666666666667)",
+              "y" : "_v61+_v57*sin(_v64+_v66*0.4166666666666667)"
+            },
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*0.5)",
+              "y" : "_v61+_v57*sin(_v64+_v66*0.5)"
+            },
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*0.5833333333333334)",
+              "y" : "_v61+_v57*sin(_v64+_v66*0.5833333333333334)"
+            },
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*0.6666666666666666)",
+              "y" : "_v61+_v57*sin(_v64+_v66*0.6666666666666666)"
+            },
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*0.75)",
+              "y" : "_v61+_v57*sin(_v64+_v66*0.75)"
+            },
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*0.8333333333333334)",
+              "y" : "_v61+_v57*sin(_v64+_v66*0.8333333333333334)"
+            },
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*0.9166666666666666)",
+              "y" : "_v61+_v57*sin(_v64+_v66*0.9166666666666666)"
+            },
+            {
+              "x" : "_v63+_v57*cos(_v64+_v66*1.0)",
+              "y" : "_v61+_v57*sin(_v64+_v66*1.0)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*0.0)",
+              "y" : "_v61+_v57*sin(_v69+_v71*0.0)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*0.08333333333333333)",
+              "y" : "_v61+_v57*sin(_v69+_v71*0.08333333333333333)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*0.16666666666666666)",
+              "y" : "_v61+_v57*sin(_v69+_v71*0.16666666666666666)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*0.25)",
+              "y" : "_v61+_v57*sin(_v69+_v71*0.25)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*0.3333333333333333)",
+              "y" : "_v61+_v57*sin(_v69+_v71*0.3333333333333333)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*0.4166666666666667)",
+              "y" : "_v61+_v57*sin(_v69+_v71*0.4166666666666667)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*0.5)",
+              "y" : "_v61+_v57*sin(_v69+_v71*0.5)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*0.5833333333333334)",
+              "y" : "_v61+_v57*sin(_v69+_v71*0.5833333333333334)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*0.6666666666666666)",
+              "y" : "_v61+_v57*sin(_v69+_v71*0.6666666666666666)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*0.75)",
+              "y" : "_v61+_v57*sin(_v69+_v71*0.75)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*0.8333333333333334)",
+              "y" : "_v61+_v57*sin(_v69+_v71*0.8333333333333334)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*0.9166666666666666)",
+              "y" : "_v61+_v57*sin(_v69+_v71*0.9166666666666666)"
+            },
+            {
+              "x" : "_v68+_v57*cos(_v69+_v71*1.0)",
+              "y" : "_v61+_v57*sin(_v69+_v71*1.0)"
+            },
+            {
+              "x" : "_v48+_v50",
+              "y" : "_v49"
+            },
+            {
+              "x" : "_v48",
+              "y" : "_v49"
+            }
+          ],
+          "role" : "dust"
+        },
+        {
+          "id" : "dust-bottom-right",
+          "name" : "Bottom right dust flap",
+          "polygon" : [
+            {
+              "x" : "_v72",
+              "y" : "_v73"
+            },
+            {
+              "x" : "_v72+_v74",
+              "y" : "_v73"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*0.0)",
+              "y" : "_v85+_v81*sin(_v88+_v90*0.0)"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*0.08333333333333333)",
+              "y" : "_v85+_v81*sin(_v88+_v90*0.08333333333333333)"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*0.16666666666666666)",
+              "y" : "_v85+_v81*sin(_v88+_v90*0.16666666666666666)"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*0.25)",
+              "y" : "_v85+_v81*sin(_v88+_v90*0.25)"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*0.3333333333333333)",
+              "y" : "_v85+_v81*sin(_v88+_v90*0.3333333333333333)"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*0.4166666666666667)",
+              "y" : "_v85+_v81*sin(_v88+_v90*0.4166666666666667)"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*0.5)",
+              "y" : "_v85+_v81*sin(_v88+_v90*0.5)"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*0.5833333333333334)",
+              "y" : "_v85+_v81*sin(_v88+_v90*0.5833333333333334)"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*0.6666666666666666)",
+              "y" : "_v85+_v81*sin(_v88+_v90*0.6666666666666666)"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*0.75)",
+              "y" : "_v85+_v81*sin(_v88+_v90*0.75)"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*0.8333333333333334)",
+              "y" : "_v85+_v81*sin(_v88+_v90*0.8333333333333334)"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*0.9166666666666666)",
+              "y" : "_v85+_v81*sin(_v88+_v90*0.9166666666666666)"
+            },
+            {
+              "x" : "_v87+_v81*cos(_v88+_v90*1.0)",
+              "y" : "_v85+_v81*sin(_v88+_v90*1.0)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*0.0)",
+              "y" : "_v85+_v81*sin(_v93+_v95*0.0)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*0.08333333333333333)",
+              "y" : "_v85+_v81*sin(_v93+_v95*0.08333333333333333)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*0.16666666666666666)",
+              "y" : "_v85+_v81*sin(_v93+_v95*0.16666666666666666)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*0.25)",
+              "y" : "_v85+_v81*sin(_v93+_v95*0.25)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*0.3333333333333333)",
+              "y" : "_v85+_v81*sin(_v93+_v95*0.3333333333333333)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*0.4166666666666667)",
+              "y" : "_v85+_v81*sin(_v93+_v95*0.4166666666666667)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*0.5)",
+              "y" : "_v85+_v81*sin(_v93+_v95*0.5)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*0.5833333333333334)",
+              "y" : "_v85+_v81*sin(_v93+_v95*0.5833333333333334)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*0.6666666666666666)",
+              "y" : "_v85+_v81*sin(_v93+_v95*0.6666666666666666)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*0.75)",
+              "y" : "_v85+_v81*sin(_v93+_v95*0.75)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*0.8333333333333334)",
+              "y" : "_v85+_v81*sin(_v93+_v95*0.8333333333333334)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*0.9166666666666666)",
+              "y" : "_v85+_v81*sin(_v93+_v95*0.9166666666666666)"
+            },
+            {
+              "x" : "_v92+_v81*cos(_v93+_v95*1.0)",
+              "y" : "_v85+_v81*sin(_v93+_v95*1.0)"
+            }
+          ],
+          "role" : "dust"
+        },
+        {
+          "id" : "dust-top-left",
+          "name" : "Top left dust flap",
+          "polygon" : [
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*0.0)",
+              "y" : "_v109+_v105*sin(_v112+_v114*0.0)"
+            },
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*0.08333333333333333)",
+              "y" : "_v109+_v105*sin(_v112+_v114*0.08333333333333333)"
+            },
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*0.16666666666666666)",
+              "y" : "_v109+_v105*sin(_v112+_v114*0.16666666666666666)"
+            },
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*0.25)",
+              "y" : "_v109+_v105*sin(_v112+_v114*0.25)"
+            },
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*0.3333333333333333)",
+              "y" : "_v109+_v105*sin(_v112+_v114*0.3333333333333333)"
+            },
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*0.4166666666666667)",
+              "y" : "_v109+_v105*sin(_v112+_v114*0.4166666666666667)"
+            },
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*0.5)",
+              "y" : "_v109+_v105*sin(_v112+_v114*0.5)"
+            },
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*0.5833333333333334)",
+              "y" : "_v109+_v105*sin(_v112+_v114*0.5833333333333334)"
+            },
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*0.6666666666666666)",
+              "y" : "_v109+_v105*sin(_v112+_v114*0.6666666666666666)"
+            },
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*0.75)",
+              "y" : "_v109+_v105*sin(_v112+_v114*0.75)"
+            },
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*0.8333333333333334)",
+              "y" : "_v109+_v105*sin(_v112+_v114*0.8333333333333334)"
+            },
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*0.9166666666666666)",
+              "y" : "_v109+_v105*sin(_v112+_v114*0.9166666666666666)"
+            },
+            {
+              "x" : "_v111+_v105*cos(_v112+_v114*1.0)",
+              "y" : "_v109+_v105*sin(_v112+_v114*1.0)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*0.0)",
+              "y" : "_v109+_v105*sin(_v117+_v119*0.0)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*0.08333333333333333)",
+              "y" : "_v109+_v105*sin(_v117+_v119*0.08333333333333333)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*0.16666666666666666)",
+              "y" : "_v109+_v105*sin(_v117+_v119*0.16666666666666666)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*0.25)",
+              "y" : "_v109+_v105*sin(_v117+_v119*0.25)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*0.3333333333333333)",
+              "y" : "_v109+_v105*sin(_v117+_v119*0.3333333333333333)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*0.4166666666666667)",
+              "y" : "_v109+_v105*sin(_v117+_v119*0.4166666666666667)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*0.5)",
+              "y" : "_v109+_v105*sin(_v117+_v119*0.5)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*0.5833333333333334)",
+              "y" : "_v109+_v105*sin(_v117+_v119*0.5833333333333334)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*0.6666666666666666)",
+              "y" : "_v109+_v105*sin(_v117+_v119*0.6666666666666666)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*0.75)",
+              "y" : "_v109+_v105*sin(_v117+_v119*0.75)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*0.8333333333333334)",
+              "y" : "_v109+_v105*sin(_v117+_v119*0.8333333333333334)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*0.9166666666666666)",
+              "y" : "_v109+_v105*sin(_v117+_v119*0.9166666666666666)"
+            },
+            {
+              "x" : "_v116+_v105*cos(_v117+_v119*1.0)",
+              "y" : "_v109+_v105*sin(_v117+_v119*1.0)"
+            },
+            {
+              "x" : "_v96+_v98",
+              "y" : "_v97"
+            },
+            {
+              "x" : "_v96",
+              "y" : "_v97"
+            }
+          ],
+          "role" : "dust"
+        },
+        {
+          "id" : "dust-bottom-left",
+          "name" : "Bottom left dust flap",
+          "polygon" : [
+            {
+              "x" : "_v120",
+              "y" : "_v121"
+            },
+            {
+              "x" : "_v120+_v122",
+              "y" : "_v121"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*0.0)",
+              "y" : "_v133+_v129*sin(_v136+_v138*0.0)"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*0.08333333333333333)",
+              "y" : "_v133+_v129*sin(_v136+_v138*0.08333333333333333)"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*0.16666666666666666)",
+              "y" : "_v133+_v129*sin(_v136+_v138*0.16666666666666666)"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*0.25)",
+              "y" : "_v133+_v129*sin(_v136+_v138*0.25)"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*0.3333333333333333)",
+              "y" : "_v133+_v129*sin(_v136+_v138*0.3333333333333333)"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*0.4166666666666667)",
+              "y" : "_v133+_v129*sin(_v136+_v138*0.4166666666666667)"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*0.5)",
+              "y" : "_v133+_v129*sin(_v136+_v138*0.5)"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*0.5833333333333334)",
+              "y" : "_v133+_v129*sin(_v136+_v138*0.5833333333333334)"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*0.6666666666666666)",
+              "y" : "_v133+_v129*sin(_v136+_v138*0.6666666666666666)"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*0.75)",
+              "y" : "_v133+_v129*sin(_v136+_v138*0.75)"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*0.8333333333333334)",
+              "y" : "_v133+_v129*sin(_v136+_v138*0.8333333333333334)"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*0.9166666666666666)",
+              "y" : "_v133+_v129*sin(_v136+_v138*0.9166666666666666)"
+            },
+            {
+              "x" : "_v135+_v129*cos(_v136+_v138*1.0)",
+              "y" : "_v133+_v129*sin(_v136+_v138*1.0)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*0.0)",
+              "y" : "_v133+_v129*sin(_v141+_v143*0.0)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*0.08333333333333333)",
+              "y" : "_v133+_v129*sin(_v141+_v143*0.08333333333333333)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*0.16666666666666666)",
+              "y" : "_v133+_v129*sin(_v141+_v143*0.16666666666666666)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*0.25)",
+              "y" : "_v133+_v129*sin(_v141+_v143*0.25)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*0.3333333333333333)",
+              "y" : "_v133+_v129*sin(_v141+_v143*0.3333333333333333)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*0.4166666666666667)",
+              "y" : "_v133+_v129*sin(_v141+_v143*0.4166666666666667)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*0.5)",
+              "y" : "_v133+_v129*sin(_v141+_v143*0.5)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*0.5833333333333334)",
+              "y" : "_v133+_v129*sin(_v141+_v143*0.5833333333333334)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*0.6666666666666666)",
+              "y" : "_v133+_v129*sin(_v141+_v143*0.6666666666666666)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*0.75)",
+              "y" : "_v133+_v129*sin(_v141+_v143*0.75)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*0.8333333333333334)",
+              "y" : "_v133+_v129*sin(_v141+_v143*0.8333333333333334)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*0.9166666666666666)",
+              "y" : "_v133+_v129*sin(_v141+_v143*0.9166666666666666)"
+            },
+            {
+              "x" : "_v140+_v129*cos(_v141+_v143*1.0)",
+              "y" : "_v133+_v129*sin(_v141+_v143*1.0)"
+            }
+          ],
+          "role" : "dust"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 1200,
+          "minimum" : 30,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 64
+        },
+        {
+          "maximum" : 1600,
+          "minimum" : 40,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 138
+        },
+        {
+          "maximum" : 600,
+          "minimum" : 1,
+          "name" : "depth",
+          "unit" : "mm",
+          "value" : 38
+        },
+        {
+          "maximum" : 2,
+          "minimum" : 0.080000000000000002,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 0.45000000000000001
+        },
+        {
+          "maximum" : 20,
+          "minimum" : 0,
+          "name" : "clearance",
+          "unit" : "mm",
+          "value" : 1
+        },
+        {
+          "maximum" : 60,
+          "minimum" : 6,
+          "name" : "glueTab",
+          "unit" : "mm",
+          "value" : 14
+        },
+        {
+          "maximum" : 150,
+          "minimum" : 8,
+          "name" : "topFlap",
+          "unit" : "mm",
+          "value" : 23
+        },
+        {
+          "maximum" : 150,
+          "minimum" : 8,
+          "name" : "bottomFlap",
+          "unit" : "mm",
+          "value" : 23
+        },
+        {
+          "maximum" : 20,
+          "minimum" : 0,
+          "name" : "cornerRadius",
+          "unit" : "mm",
+          "value" : 3
+        }
+      ],
+      "requirements" : [
+        {
+          "id" : "depth-width",
+          "lhs" : "depth",
+          "message" : "Depth cannot exceed width.",
+          "relation" : "<=",
+          "rhs" : "width"
+        },
+        {
+          "id" : "depth-height",
+          "lhs" : "depth",
+          "message" : "Depth cannot exceed 80% of height.",
+          "relation" : "<=",
+          "rhs" : "height*0.8"
+        },
+        {
+          "id" : "glue-fit",
+          "lhs" : "glueTab",
+          "message" : "Glue tab must fit the body width.",
+          "relation" : "<",
+          "rhs" : "width\/2"
+        },
+        {
+          "id" : "top-fit",
+          "lhs" : "topFlap",
+          "message" : "Top flap must fit the body height.",
+          "relation" : "<",
+          "rhs" : "height\/2"
+        },
+        {
+          "id" : "bottom-fit",
+          "lhs" : "bottomFlap",
+          "message" : "Bottom flap must fit the body height.",
+          "relation" : "<",
+          "rhs" : "height\/2"
+        }
+      ],
+      "rootPanelID" : "front",
+      "size" : {
+        "x" : "_netW",
+        "y" : "_netH"
+      },
+      "stockThickness" : "stock",
+      "version" : 1
+    },
+    "envelope" : {
+      "derived" : {
+        "_backX" : "_w+_d",
+        "_bottom" : "_top+_h",
+        "_d" : "depth+stock",
+        "_g" : "glueTab",
+        "_h" : "height+stock",
+        "_netH" : "_top+_h+_d+bottomFlap",
+        "_netW" : "2*(_w+_d)+_g",
+        "_top" : "_d+topFlap",
+        "_v0" : "_backX",
+        "_v1" : "_top-_d",
+        "_v2" : "_w",
+        "_v3" : "topFlap",
+        "_v4" : "cornerRadius",
+        "_v5" : "min(_w*0.1,12)",
+        "_v6" : "hypot(_v5,_v3)",
+        "_v7" : "acos(clamp(-_v5\/_v6,-1,1))",
+        "_v8" : "min(_v4\/tan(_v7\/2),min(_v6*0.28,(_v2-2*_v5)*0.28))",
+        "_v9" : "_v8*tan(_v7\/2)",
+        "_v10" : "hypot(_v5\/_v6-1,_v3\/_v6)",
+        "_v11" : "_v9\/(_v10*sin(_v7\/2))",
+        "_v12" : "_v1+-1*_v3",
+        "_v13" : "_v12--1*_v3\/_v6*_v11",
+        "_v14" : "_v0+_v5",
+        "_v15" : "_v14+(1-_v5\/_v6)*_v11",
+        "_v16" : "atan2(_v12--1*_v3\/_v6*_v8-_v13,_v14+(-_v5\/_v6)*_v8-_v15)",
+        "_v17" : "atan2(_v12-_v13,_v14+(1)*_v8-_v15)",
+        "_v18" : "atan2(sin(_v17-_v16),cos(_v17-_v16))",
+        "_v19" : "_v0+_v2-_v5",
+        "_v20" : "_v19+(_v5\/_v6-1)*_v11",
+        "_v21" : "atan2(_v12-_v13,_v19+(-1)*_v8-_v20)",
+        "_v22" : "atan2(_v12--1*_v3\/_v6*_v8-_v13,_v19+(_v5\/_v6)*_v8-_v20)",
+        "_v23" : "atan2(sin(_v22-_v21),cos(_v22-_v21))",
+        "_v24" : "_backX",
+        "_v25" : "_bottom+_d",
+        "_v26" : "_w",
+        "_v27" : "bottomFlap",
+        "_v28" : "cornerRadius",
+        "_v29" : "min(_w*0.1,12)",
+        "_v30" : "hypot(_v29,_v27)",
+        "_v31" : "acos(clamp(-_v29\/_v30,-1,1))",
+        "_v32" : "min(_v28\/tan(_v31\/2),min(_v30*0.28,(_v26-2*_v29)*0.28))",
+        "_v33" : "_v32*tan(_v31\/2)",
+        "_v34" : "hypot(_v29\/_v30-1,_v27\/_v30)",
+        "_v35" : "_v33\/(_v34*sin(_v31\/2))",
+        "_v36" : "_v25+1*_v27",
+        "_v37" : "_v36-1*_v27\/_v30*_v35",
+        "_v38" : "_v24+_v26-_v29",
+        "_v39" : "_v38+(_v29\/_v30-1)*_v35",
+        "_v40" : "atan2(_v36-1*_v27\/_v30*_v32-_v37,_v38+(_v29\/_v30)*_v32-_v39)",
+        "_v41" : "atan2(_v36-_v37,_v38+(-1)*_v32-_v39)",
+        "_v42" : "atan2(sin(_v41-_v40),cos(_v41-_v40))",
+        "_v43" : "_v24+_v29",
+        "_v44" : "_v43+(1-_v29\/_v30)*_v35",
+        "_v45" : "atan2(_v36-_v37,_v43+(1)*_v32-_v44)",
+        "_v46" : "atan2(_v36-1*_v27\/_v30*_v32-_v37,_v43+(-_v29\/_v30)*_v32-_v44)",
+        "_v47" : "atan2(sin(_v46-_v45),cos(_v46-_v45))",
+        "_w" : "width+stock"
+      },
+      "hinges" : [
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "side-right",
+          "end" : {
+            "x" : "_w",
+            "y" : "_bottom"
+          },
+          "id" : "fold.front.side-right",
+          "layerOffsetMM" : "stock*0",
+          "opensWithTop" : false,
+          "parentPanelID" : "front",
+          "start" : {
+            "x" : "_w",
+            "y" : "_top"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "back",
+          "end" : {
+            "x" : "_backX",
+            "y" : "_bottom"
+          },
+          "id" : "fold.side-right.back",
+          "layerOffsetMM" : "stock*0",
+          "opensWithTop" : false,
+          "parentPanelID" : "side-right",
+          "start" : {
+            "x" : "_backX",
+            "y" : "_top"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "side-left",
+          "end" : {
+            "x" : "2*_w+_d",
+            "y" : "_bottom"
+          },
+          "id" : "fold.back.side-left",
+          "layerOffsetMM" : "stock*0",
+          "opensWithTop" : false,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "2*_w+_d",
+            "y" : "_top"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "glue",
+          "end" : {
+            "x" : "2*(_w+_d)",
+            "y" : "_bottom"
+          },
+          "id" : "fold.side-left.glue",
+          "layerOffsetMM" : "stock*1",
+          "opensWithTop" : false,
+          "parentPanelID" : "side-left",
+          "start" : {
+            "x" : "2*(_w+_d)",
+            "y" : "_top"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "top-bridge",
+          "end" : {
+            "x" : "_backX+_w",
+            "y" : "_top"
+          },
+          "id" : "fold.back.top-bridge",
+          "layerOffsetMM" : "stock*0",
+          "opensWithTop" : true,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "_backX",
+            "y" : "_top"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "top-tuck",
+          "end" : {
+            "x" : "_backX+_w",
+            "y" : "_top-_d"
+          },
+          "id" : "fold.top-bridge.top-tuck",
+          "layerOffsetMM" : "stock*2",
+          "opensWithTop" : true,
+          "parentPanelID" : "top-bridge",
+          "start" : {
+            "x" : "_backX",
+            "y" : "_top-_d"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "bottom-bridge",
+          "end" : {
+            "x" : "_backX+_w",
+            "y" : "_bottom"
+          },
+          "id" : "fold.back.bottom-bridge",
+          "layerOffsetMM" : "stock*0",
+          "opensWithTop" : false,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "_backX",
+            "y" : "_bottom"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "bottom-tuck",
+          "end" : {
+            "x" : "_backX+_w",
+            "y" : "_bottom+_d"
+          },
+          "id" : "fold.bottom-bridge.bottom-tuck",
+          "layerOffsetMM" : "stock*2",
+          "opensWithTop" : false,
+          "parentPanelID" : "bottom-bridge",
+          "start" : {
+            "x" : "_backX",
+            "y" : "_bottom+_d"
+          }
+        }
+      ],
+      "joins" : [
+        {
+          "firstPanelID" : "glue",
+          "id" : "join.side-glue",
+          "kind" : "glue",
+          "name" : "Side seam",
+          "notes" : "Bond to the inside of the front panel; keep adhesive off the printed exterior.",
+          "overlapMM" : "glueTab-2",
+          "secondPanelID" : "front"
+        },
+        {
+          "firstPanelID" : "bottom-tuck",
+          "id" : "join.bottom",
+          "kind" : "glue",
+          "name" : "Bonded bottom closure",
+          "notes" : "Prototype the fold allowance and closure retention on actual stock.",
+          "overlapMM" : "bottomFlap",
+          "secondPanelID" : "front"
+        },
+        {
+          "firstPanelID" : "top-tuck",
+          "id" : "join.top-tuck",
+          "kind" : "tuck",
+          "name" : "Opening flap",
+          "notes" : "",
+          "overlapMM" : "topFlap",
+          "secondPanelID" : "front"
+        }
+      ],
+      "name" : "Constructed envelope",
+      "panels" : [
+        {
+          "id" : "front",
+          "name" : "Front",
+          "polygon" : [
+            {
+              "x" : "0",
+              "y" : "_top"
+            },
+            {
+              "x" : "0+_w",
+              "y" : "_top"
+            },
+            {
+              "x" : "0+_w",
+              "y" : "_top+_h"
+            },
+            {
+              "x" : "0",
+              "y" : "_top+_h"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "side-right",
+          "name" : "Right side",
+          "polygon" : [
+            {
+              "x" : "_w",
+              "y" : "_top"
+            },
+            {
+              "x" : "_w+_d",
+              "y" : "_top"
+            },
+            {
+              "x" : "_w+_d",
+              "y" : "_top+_h"
+            },
+            {
+              "x" : "_w",
+              "y" : "_top+_h"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "back",
+          "name" : "Back",
+          "polygon" : [
+            {
+              "x" : "_backX",
+              "y" : "_top"
+            },
+            {
+              "x" : "_backX+_w",
+              "y" : "_top"
+            },
+            {
+              "x" : "_backX+_w",
+              "y" : "_top+_h"
+            },
+            {
+              "x" : "_backX",
+              "y" : "_top+_h"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "side-left",
+          "name" : "Left side",
+          "polygon" : [
+            {
+              "x" : "2*_w+_d",
+              "y" : "_top"
+            },
+            {
+              "x" : "2*_w+_d+_d",
+              "y" : "_top"
+            },
+            {
+              "x" : "2*_w+_d+_d",
+              "y" : "_top+_h"
+            },
+            {
+              "x" : "2*_w+_d",
+              "y" : "_top+_h"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "glue",
+          "name" : "Side glue seam",
+          "polygon" : [
+            {
+              "x" : "2*(_w+_d)",
+              "y" : "_top"
+            },
+            {
+              "x" : "_netW-2",
+              "y" : "_top+min(8,_h\/8)"
+            },
+            {
+              "x" : "_netW-2",
+              "y" : "_bottom-min(8,_h\/8)"
+            },
+            {
+              "x" : "2*(_w+_d)",
+              "y" : "_bottom"
+            }
+          ],
+          "role" : "glue"
+        },
+        {
+          "id" : "top-bridge",
+          "name" : "Top closure",
+          "polygon" : [
+            {
+              "x" : "_backX",
+              "y" : "_top-_d"
+            },
+            {
+              "x" : "_backX+_w",
+              "y" : "_top-_d"
+            },
+            {
+              "x" : "_backX+_w",
+              "y" : "_top-_d+_d"
+            },
+            {
+              "x" : "_backX",
+              "y" : "_top-_d+_d"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "top-tuck",
+          "name" : "Envelope closing flap",
+          "polygon" : [
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.0)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.0)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.08333333333333333)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.08333333333333333)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.16666666666666666)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.16666666666666666)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.25)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.25)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.3333333333333333)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.3333333333333333)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.4166666666666667)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.4166666666666667)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.5)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.5)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.5833333333333334)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.5833333333333334)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.6666666666666666)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.6666666666666666)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.75)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.75)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.8333333333333334)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.8333333333333334)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*0.9166666666666666)",
+              "y" : "_v13+_v9*sin(_v16+_v18*0.9166666666666666)"
+            },
+            {
+              "x" : "_v15+_v9*cos(_v16+_v18*1.0)",
+              "y" : "_v13+_v9*sin(_v16+_v18*1.0)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.0)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.0)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.08333333333333333)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.08333333333333333)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.16666666666666666)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.16666666666666666)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.25)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.25)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.3333333333333333)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.3333333333333333)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.4166666666666667)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.4166666666666667)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.5)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.5)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.5833333333333334)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.5833333333333334)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.6666666666666666)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.6666666666666666)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.75)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.75)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.8333333333333334)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.8333333333333334)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*0.9166666666666666)",
+              "y" : "_v13+_v9*sin(_v21+_v23*0.9166666666666666)"
+            },
+            {
+              "x" : "_v20+_v9*cos(_v21+_v23*1.0)",
+              "y" : "_v13+_v9*sin(_v21+_v23*1.0)"
+            },
+            {
+              "x" : "_v0+_v2",
+              "y" : "_v1"
+            },
+            {
+              "x" : "_v0",
+              "y" : "_v1"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "bottom-bridge",
+          "name" : "Bottom closure",
+          "polygon" : [
+            {
+              "x" : "_backX",
+              "y" : "_bottom"
+            },
+            {
+              "x" : "_backX+_w",
+              "y" : "_bottom"
+            },
+            {
+              "x" : "_backX+_w",
+              "y" : "_bottom+_d"
+            },
+            {
+              "x" : "_backX",
+              "y" : "_bottom+_d"
+            }
+          ],
+          "role" : "bottomClosure"
+        },
+        {
+          "id" : "bottom-tuck",
+          "name" : "Bottom glue flap",
+          "polygon" : [
+            {
+              "x" : "_v24",
+              "y" : "_v25"
+            },
+            {
+              "x" : "_v24+_v26",
+              "y" : "_v25"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.0)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.0)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.08333333333333333)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.08333333333333333)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.16666666666666666)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.16666666666666666)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.25)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.25)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.3333333333333333)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.3333333333333333)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.4166666666666667)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.4166666666666667)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.5)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.5)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.5833333333333334)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.5833333333333334)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.6666666666666666)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.6666666666666666)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.75)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.75)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.8333333333333334)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.8333333333333334)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*0.9166666666666666)",
+              "y" : "_v37+_v33*sin(_v40+_v42*0.9166666666666666)"
+            },
+            {
+              "x" : "_v39+_v33*cos(_v40+_v42*1.0)",
+              "y" : "_v37+_v33*sin(_v40+_v42*1.0)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.0)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.0)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.08333333333333333)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.08333333333333333)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.16666666666666666)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.16666666666666666)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.25)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.25)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.3333333333333333)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.3333333333333333)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.4166666666666667)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.4166666666666667)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.5)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.5)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.5833333333333334)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.5833333333333334)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.6666666666666666)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.6666666666666666)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.75)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.75)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.8333333333333334)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.8333333333333334)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*0.9166666666666666)",
+              "y" : "_v37+_v33*sin(_v45+_v47*0.9166666666666666)"
+            },
+            {
+              "x" : "_v44+_v33*cos(_v45+_v47*1.0)",
+              "y" : "_v37+_v33*sin(_v45+_v47*1.0)"
+            }
+          ],
+          "role" : "glue"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 1200,
+          "minimum" : 30,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 216
+        },
+        {
+          "maximum" : 1600,
+          "minimum" : 40,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 275
+        },
+        {
+          "maximum" : 600,
+          "minimum" : 1,
+          "name" : "depth",
+          "unit" : "mm",
+          "value" : 12
+        },
+        {
+          "maximum" : 2,
+          "minimum" : 0.080000000000000002,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 0.34999999999999998
+        },
+        {
+          "maximum" : 20,
+          "minimum" : 0,
+          "name" : "clearance",
+          "unit" : "mm",
+          "value" : 2
+        },
+        {
+          "maximum" : 60,
+          "minimum" : 6,
+          "name" : "glueTab",
+          "unit" : "mm",
+          "value" : 16
+        },
+        {
+          "maximum" : 150,
+          "minimum" : 8,
+          "name" : "topFlap",
+          "unit" : "mm",
+          "value" : 38
+        },
+        {
+          "maximum" : 150,
+          "minimum" : 8,
+          "name" : "bottomFlap",
+          "unit" : "mm",
+          "value" : 30
+        },
+        {
+          "maximum" : 20,
+          "minimum" : 0,
+          "name" : "cornerRadius",
+          "unit" : "mm",
+          "value" : 4
+        }
+      ],
+      "requirements" : [
+        {
+          "id" : "depth-width",
+          "lhs" : "depth",
+          "message" : "Depth cannot exceed width.",
+          "relation" : "<=",
+          "rhs" : "width"
+        },
+        {
+          "id" : "depth-height",
+          "lhs" : "depth",
+          "message" : "Depth cannot exceed 80% of height.",
+          "relation" : "<=",
+          "rhs" : "height*0.8"
+        },
+        {
+          "id" : "glue-fit",
+          "lhs" : "glueTab",
+          "message" : "Glue tab must fit the body width.",
+          "relation" : "<",
+          "rhs" : "width\/2"
+        },
+        {
+          "id" : "top-fit",
+          "lhs" : "topFlap",
+          "message" : "Top flap must fit the body height.",
+          "relation" : "<",
+          "rhs" : "height\/2"
+        },
+        {
+          "id" : "bottom-fit",
+          "lhs" : "bottomFlap",
+          "message" : "Bottom flap must fit the body height.",
+          "relation" : "<",
+          "rhs" : "height\/2"
+        }
+      ],
+      "rootPanelID" : "front",
+      "size" : {
+        "x" : "_netW",
+        "y" : "_netH"
+      },
+      "stockThickness" : "stock",
+      "version" : 1
+    }
+  },
+  "limits" : {
+    "cases" : 64,
+    "components" : 32,
+    "cutouts_per_panel" : 64,
+    "definition_bytes" : 1048576,
+    "derived" : 256,
+    "exact_pair_queries" : 1024,
+    "exact_seconds" : 10,
+    "interiors" : 64,
+    "net_extent_max_mm" : 10000,
+    "panels" : 64,
+    "parameters" : 64,
+    "polygon_precision_mm" : 0.001,
+    "polygon_vertices" : 2048,
+    "solid_checks" : 128,
+    "stock_max_mm" : 20,
+    "stock_min_mm" : 0.01,
+    "vertices_per_contour" : 128
+  },
+  "multi_component_example" : {
+    "components" : [
+      {
+        "anchor" : {
+          "x" : "0",
+          "y" : "height"
+        },
+        "id" : "first",
+        "name" : "First independent root",
+        "position" : {
+          "x" : "-width\/2",
+          "y" : "0",
+          "z" : "-depth\/2"
+        },
+        "rootPanelID" : "first",
+        "rotationDegrees" : {
+          "x" : "0",
+          "y" : "0",
+          "z" : "0"
+        }
+      },
+      {
+        "anchor" : {
+          "x" : "width+20",
+          "y" : "height"
+        },
+        "id" : "second",
+        "name" : "Second independent root",
+        "position" : {
+          "x" : "-width\/2",
+          "y" : "0",
+          "z" : "depth\/2+opening\/100*20"
+        },
+        "rootPanelID" : "second",
+        "rotationDegrees" : {
+          "x" : "0",
+          "y" : "0",
+          "z" : "0"
+        }
+      }
+    ],
+    "hinges" : [
+
+    ],
+    "interiors" : [
+      {
+        "componentID" : "first",
+        "id" : "review-volume",
+        "name" : "Declared open review volume",
+        "opening" : {
+          "axis" : "z",
+          "height" : "height",
+          "width" : "width"
+        },
+        "origin" : {
+          "x" : "0",
+          "y" : "0",
+          "z" : "stock\/2"
+        },
+        "size" : {
+          "x" : "width",
+          "y" : "height",
+          "z" : "depth-stock"
+        }
+      }
+    ],
+    "joins" : [
+
+    ],
+    "name" : "Windowed two-sheet review",
+    "panels" : [
+      {
+        "cutouts" : [
+          {
+            "id" : "window",
+            "kind" : "window",
+            "polygon" : [
+              {
+                "x" : "width\/3",
+                "y" : "height\/3"
+              },
+              {
+                "x" : "2*width\/3",
+                "y" : "height\/3"
+              },
+              {
+                "x" : "2*width\/3",
+                "y" : "2*height\/3"
+              },
+              {
+                "x" : "width\/3",
+                "y" : "2*height\/3"
+              }
+            ]
+          }
+        ],
+        "id" : "first",
+        "name" : "First sheet",
+        "polygon" : [
+          {
+            "x" : "0",
+            "y" : "0"
+          },
+          {
+            "x" : "width",
+            "y" : "0"
+          },
+          {
+            "x" : "width",
+            "y" : "height"
+          },
+          {
+            "x" : "0",
+            "y" : "height"
+          }
+        ],
+        "role" : "body"
+      },
+      {
+        "id" : "second",
+        "name" : "Second sheet",
+        "polygon" : [
+          {
+            "x" : "width+20",
+            "y" : "0"
+          },
+          {
+            "x" : "2*width+20",
+            "y" : "0"
+          },
+          {
+            "x" : "2*width+20",
+            "y" : "height"
+          },
+          {
+            "x" : "width+20",
+            "y" : "height"
+          }
+        ],
+        "role" : "body"
+      }
+    ],
+    "parameters" : [
+      {
+        "maximum" : 100,
+        "minimum" : 40,
+        "name" : "width",
+        "unit" : "mm",
+        "value" : 60
+      },
+      {
+        "maximum" : 80,
+        "minimum" : 20,
+        "name" : "height",
+        "unit" : "mm",
+        "value" : 40
+      },
+      {
+        "maximum" : 30,
+        "minimum" : 2,
+        "name" : "depth",
+        "unit" : "mm",
+        "value" : 10
+      },
+      {
+        "maximum" : 1,
+        "minimum" : 0.10000000000000001,
+        "name" : "stock",
+        "unit" : "mm",
+        "value" : 0.5
+      }
+    ],
+    "rootPanelID" : "first",
+    "size" : {
+      "x" : "2*width+20",
+      "y" : "height"
+    },
+    "stockThickness" : "stock",
+    "version" : 3
+  },
+  "opening_axes" : [
+    "x",
+    "y",
+    "z"
+  ],
+  "opening_coordinates" : "Origin is optional {x,y}, default zero in the two transverse interior coordinates. Width\/height and origin must fit the declared interior cross-section. This is a bounds review, not an insertion solver.",
+  "opening_fields" : [
+    "axis",
+    "width",
+    "height",
+    "origin"
+  ],
+  "opening_optional_fields" : [
+    "origin"
+  ],
+  "opening_required_fields" : [
+    "axis",
+    "width",
+    "height"
+  ],
+  "opening_transverse_axes" : {
+    "x" : [
+      "y",
+      "z"
+    ],
+    "y" : [
+      "x",
+      "z"
+    ],
+    "z" : [
+      "x",
+      "y"
+    ]
+  },
+  "panel_fields" : [
+    "id",
+    "name",
+    "role",
+    "polygon",
+    "artworkRotationDegrees",
+    "cutouts"
+  ],
+  "panel_optional_fields" : [
+    "artworkRotationDegrees",
+    "cutouts"
+  ],
+  "panel_required_fields" : [
+    "id",
+    "name",
+    "role",
+    "polygon"
+  ],
+  "panel_roles" : [
+    "body",
+    "side",
+    "glue",
+    "tuck",
+    "dust",
+    "bottomClosure"
+  ],
+  "parameter_fields" : [
+    "name",
+    "value",
+    "minimum",
+    "maximum",
+    "unit"
+  ],
+  "point2_fields" : [
+    "x",
+    "y"
+  ],
+  "point3_fields" : [
+    "x",
+    "y",
+    "z"
+  ],
+  "solid_check_example" : {
+    "hinges" : [
+      {
+        "angleDegrees" : "angle",
+        "childPanelID" : "second",
+        "end" : {
+          "x" : "width",
+          "y" : "height"
+        },
+        "id" : "crease",
+        "layerOffsetMM" : "layer",
+        "opensWithTop" : false,
+        "parentPanelID" : "first",
+        "start" : {
+          "x" : "width",
+          "y" : "0"
+        }
+      }
+    ],
+    "joins" : [
+
+    ],
+    "name" : "Declared stock contact",
+    "panels" : [
+      {
+        "id" : "first",
+        "name" : "First",
+        "polygon" : [
+          {
+            "x" : "0",
+            "y" : "0"
+          },
+          {
+            "x" : "width",
+            "y" : "0"
+          },
+          {
+            "x" : "width",
+            "y" : "height"
+          },
+          {
+            "x" : "0",
+            "y" : "height"
+          }
+        ],
+        "role" : "body"
+      },
+      {
+        "id" : "second",
+        "name" : "Second",
+        "polygon" : [
+          {
+            "x" : "width",
+            "y" : "0"
+          },
+          {
+            "x" : "2*width",
+            "y" : "0"
+          },
+          {
+            "x" : "2*width",
+            "y" : "height"
+          },
+          {
+            "x" : "width",
+            "y" : "height"
+          }
+        ],
+        "role" : "body"
+      }
+    ],
+    "parameters" : [
+      {
+        "maximum" : 100,
+        "minimum" : 10,
+        "name" : "width",
+        "unit" : "mm",
+        "value" : 40
+      },
+      {
+        "maximum" : 100,
+        "minimum" : 10,
+        "name" : "height",
+        "unit" : "mm",
+        "value" : 50
+      },
+      {
+        "maximum" : 1,
+        "minimum" : 0.10000000000000001,
+        "name" : "stock",
+        "unit" : "mm",
+        "value" : 0.40000000000000002
+      },
+      {
+        "maximum" : 2,
+        "minimum" : 0,
+        "name" : "layer",
+        "unit" : "mm",
+        "value" : 0.40000000000000002
+      },
+      {
+        "maximum" : 180,
+        "minimum" : 0,
+        "name" : "angle",
+        "unit" : "mm",
+        "value" : 180
+      }
+    ],
+    "rootPanelID" : "first",
+    "size" : {
+      "x" : "2*width",
+      "y" : "height"
+    },
+    "solidChecks" : [
+      {
+        "firstPanelID" : "first",
+        "id" : "material-separation",
+        "message" : "These panels may touch but must not occupy the same stock volume",
+        "metric" : "interference",
+        "relation" : "<=",
+        "secondPanelID" : "second",
+        "value" : "0"
+      },
+      {
+        "firstPanelID" : "first",
+        "id" : "mating-gap",
+        "message" : "Preserve the declared stock gap",
+        "metric" : "clearance",
+        "relation" : "==",
+        "secondPanelID" : "second",
+        "tolerance" : 9.9999999999999995e-07,
+        "value" : "max(layer-stock,0)"
+      }
+    ],
+    "stockThickness" : "stock",
+    "version" : 2
+  },
+  "solid_check_fields" : [
+    "id",
+    "firstPanelID",
+    "secondPanelID",
+    "metric",
+    "relation",
+    "value",
+    "message",
+    "tolerance"
+  ],
+  "solid_check_metrics" : [
+    "clearance",
+    "interference"
+  ],
+  "solid_check_relations" : [
+    "<",
+    "<=",
+    "==",
+    ">=",
+    ">",
+    "!="
+  ],
+  "solid_check_tolerance" : "Existing comparison semantics: tolerance applies to == and !=; inequalities use the authored threshold exactly.",
+  "solid_checks" : "Version 2 or 3 explicit panel-pair clearance (mm) or interference (mm3) comparisons. Exact sharp centered stock slabs derive from existing outer\/inner polygons and resolved poses. Only declared pairs\/conditions are covered; declare hinge\/glue allowances explicitly. Run through the installed app; no source, artwork or Undo mutation.",
+  "source" : "PlanarConstructionDefinition",
+  "source_versions" : [
+    1,
+    2,
+    3
+  ],
+  "units" : "mm"
+}

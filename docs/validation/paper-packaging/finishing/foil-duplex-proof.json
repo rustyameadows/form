@@ -1,0 +1,668 @@
+{
+  "captures" : [
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 115.0)",
+      "camera_world_from_camera_mm" : [
+        0.97690001739626164,
+        -0.21369687880543223,
+        -2.3725119514032359e-17,
+        0,
+        -0.083983777272226487,
+        -0.38392583895874954,
+        -0.91953666339896933,
+        0,
+        0.19650211491552111,
+        0.89829538247095364,
+        -0.39300422983104222,
+        0,
+        35,
+        160.40000000000001,
+        -70,
+        1
+      ],
+      "fill_intensity" : 550,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-round-two\/outside-light-a.png",
+      "key_direction" : [
+        0.19650211930274963,
+        -0.89829540252685547,
+        -0.39300423860549927
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "outside-light-a",
+      "sha256" : "00a0f5629fa488127e639f063595d9f7d15df709272e19fec2ef92fd09109e06",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "34D6A901-3BAB-4B3C-A7A4-85D2B53C57EA:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "C9C044C1-05C1-43A6-9FC5-3C015BF71959:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "A63F1560-1E83-4D52-8A4D-35767958E3F4:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "A0F9CDE8-244D-413E-B5FF-194D3CAA9846:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "B8D29D49-4C68-4CAE-B1E0-69C235795666:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "41128D23-871D-4960-B90C-65000A8E6171:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "382E8E8B-A591-4695-8C01-249E8B70C906:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "6CD54A8D-BD64-46CA-80BD-8B882E183590:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "0e5983d3be6510564222baa1b4d7dc5f58ff299726695d49e6c06e33f98c3bbf",
+      "texture_cache_bytes" : 58679212,
+      "texture_uploads" : 8
+    },
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 115.0)",
+      "camera_world_from_camera_mm" : [
+        0.97690001739626164,
+        -0.21369687880543223,
+        -2.3725119514032359e-17,
+        0,
+        -0.083983777272226487,
+        -0.38392583895874954,
+        -0.91953666339896933,
+        0,
+        0.19650211491552111,
+        0.89829538247095364,
+        -0.39300422983104222,
+        0,
+        35,
+        160.40000000000001,
+        -70,
+        1
+      ],
+      "fill_intensity" : 550,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-round-two\/outside-light-b.png",
+      "key_direction" : [
+        0.87287157773971558,
+        -0.43643578886985779,
+        -0.21821789443492889
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "outside-light-b",
+      "sha256" : "78090468ac1107964f168175f62dcc4de4b3c14c5a5db540e12b562f5191de2f",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "34D6A901-3BAB-4B3C-A7A4-85D2B53C57EA:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "C9C044C1-05C1-43A6-9FC5-3C015BF71959:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "A63F1560-1E83-4D52-8A4D-35767958E3F4:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "A0F9CDE8-244D-413E-B5FF-194D3CAA9846:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "B8D29D49-4C68-4CAE-B1E0-69C235795666:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "41128D23-871D-4960-B90C-65000A8E6171:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "382E8E8B-A591-4695-8C01-249E8B70C906:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "6CD54A8D-BD64-46CA-80BD-8B882E183590:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "0e5983d3be6510564222baa1b4d7dc5f58ff299726695d49e6c06e33f98c3bbf",
+      "texture_cache_bytes" : 58679212,
+      "texture_uploads" : 8
+    },
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 93.0)",
+      "camera_world_from_camera_mm" : [
+        1,
+        -0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        300.39999999999998,
+        0,
+        1
+      ],
+      "fill_intensity" : 550,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-round-two\/outside-registered.png",
+      "key_direction" : [
+        0.19650211930274963,
+        -0.89829540252685547,
+        -0.39300423860549927
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "outside-registered",
+      "sha256" : "997ff4c7adb6808af91256e6df6e5bd10618ee41cff8f76ad156c6c79ae2379b",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "34D6A901-3BAB-4B3C-A7A4-85D2B53C57EA:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "C9C044C1-05C1-43A6-9FC5-3C015BF71959:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "A63F1560-1E83-4D52-8A4D-35767958E3F4:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "A0F9CDE8-244D-413E-B5FF-194D3CAA9846:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "B8D29D49-4C68-4CAE-B1E0-69C235795666:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "41128D23-871D-4960-B90C-65000A8E6171:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "382E8E8B-A591-4695-8C01-249E8B70C906:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "6CD54A8D-BD64-46CA-80BD-8B882E183590:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "0e5983d3be6510564222baa1b4d7dc5f58ff299726695d49e6c06e33f98c3bbf",
+      "texture_cache_bytes" : 58679212,
+      "texture_uploads" : 8
+    },
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 93.0)",
+      "camera_world_from_camera_mm" : [
+        -1,
+        -0,
+        -0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        -299.60000000000002,
+        0,
+        1
+      ],
+      "fill_intensity" : 550,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-round-two\/inside-registered.png",
+      "key_direction" : [
+        0.19650211930274963,
+        -0.89829540252685547,
+        -0.39300423860549927
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "inside-registered",
+      "sha256" : "10db7fd99347f7b6713bc73d0bcdf424fe7c33a852c4cb9090c75ccdf7ff8584",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "34D6A901-3BAB-4B3C-A7A4-85D2B53C57EA:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "C9C044C1-05C1-43A6-9FC5-3C015BF71959:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "A63F1560-1E83-4D52-8A4D-35767958E3F4:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "A0F9CDE8-244D-413E-B5FF-194D3CAA9846:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "B8D29D49-4C68-4CAE-B1E0-69C235795666:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "41128D23-871D-4960-B90C-65000A8E6171:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "382E8E8B-A591-4695-8C01-249E8B70C906:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "6CD54A8D-BD64-46CA-80BD-8B882E183590:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "0e5983d3be6510564222baa1b4d7dc5f58ff299726695d49e6c06e33f98c3bbf",
+      "texture_cache_bytes" : 58679212,
+      "texture_uploads" : 8
+    },
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 3.3)",
+      "camera_world_from_camera_mm" : [
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0.99884998684162973,
+        0.047944799368398336,
+        0,
+        0,
+        0.047944799368398336,
+        -0.99884998684162973,
+        0,
+        0,
+        1.6000000000000076,
+        -65,
+        1
+      ],
+      "fill_intensity" : 550,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-round-two\/duplex-edge.png",
+      "key_direction" : [
+        0.19650211930274963,
+        -0.89829540252685547,
+        -0.39300423860549927
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "duplex-edge",
+      "sha256" : "097da03240b1e03aede7db1df9feb6cad90d357109c1f9e5569ab526e3ddf8f9",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "34D6A901-3BAB-4B3C-A7A4-85D2B53C57EA:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "C9C044C1-05C1-43A6-9FC5-3C015BF71959:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "A63F1560-1E83-4D52-8A4D-35767958E3F4:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051a40)",
+          "revision" : "A0F9CDE8-244D-413E-B5FF-194D3CAA9846:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "B8D29D49-4C68-4CAE-B1E0-69C235795666:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "41128D23-871D-4960-B90C-65000A8E6171:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "382E8E8B-A591-4695-8C01-249E8B70C906:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747051b00)",
+          "revision" : "6CD54A8D-BD64-46CA-80BD-8B882E183590:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "0e5983d3be6510564222baa1b4d7dc5f58ff299726695d49e6c06e33f98c3bbf",
+      "texture_cache_bytes" : 58679212,
+      "texture_uploads" : 8
+    },
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 115.0)",
+      "camera_world_from_camera_mm" : [
+        0.97690001739626164,
+        -0.21369687880543223,
+        -2.3725119514032359e-17,
+        0,
+        -0.083983777272226487,
+        -0.38392583895874954,
+        -0.91953666339896933,
+        0,
+        0.19650211491552111,
+        0.89829538247095364,
+        -0.39300422983104222,
+        0,
+        35,
+        160.40000000000001,
+        -70,
+        1
+      ],
+      "fill_intensity" : 550,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-round-two\/foil-disabled-ordinary-ink.png",
+      "key_direction" : [
+        0.19650211930274963,
+        -0.89829540252685547,
+        -0.39300423860549927
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "foil-disabled-ordinary-ink",
+      "sha256" : "d9edbe9d9f799230572f6fd0939e2381f80c19efeb7a0165844dea20317e94a3",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000007479a80c0)",
+          "revision" : "616E5EC1-2884-4950-8DF6-33F3F8EC9A82:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000007479a80c0)",
+          "revision" : "83EDA738-6FBB-42E0-9EDC-41DCDB4D7782:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000007479a80c0)",
+          "revision" : "7C1BD08A-B390-412C-9C0B-DDB120A18971:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000007479a80c0)",
+          "revision" : "2B5A8109-8B0A-45CA-9CD5-6A94B776FE09:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000007479a8120)",
+          "revision" : "B8D29D49-4C68-4CAE-B1E0-69C235795666:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000007479a8120)",
+          "revision" : "41128D23-871D-4960-B90C-65000A8E6171:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000007479a8120)",
+          "revision" : "382E8E8B-A591-4695-8C01-249E8B70C906:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x00000007479a8120)",
+          "revision" : "6CD54A8D-BD64-46CA-80BD-8B882E183590:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "efcd355e929f96443ff0515936a349e1f21502a0f7d51a6057323ab06ae1c312",
+      "texture_cache_bytes" : 92210188,
+      "texture_uploads" : 12
+    },
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 115.0)",
+      "camera_world_from_camera_mm" : [
+        0.97690001739626164,
+        -0.21369687880543223,
+        -2.3725119514032359e-17,
+        0,
+        -0.083983777272226487,
+        -0.38392583895874954,
+        -0.91953666339896933,
+        0,
+        0.19650211491552111,
+        0.89829538247095364,
+        -0.39300422983104222,
+        0,
+        35,
+        160.40000000000001,
+        -70,
+        1
+      ],
+      "fill_intensity" : 550,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-round-two\/wording-edit-same-mask.png",
+      "key_direction" : [
+        0.19650211930274963,
+        -0.89829540252685547,
+        -0.39300423860549927
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "wording-edit-same-mask",
+      "sha256" : "a9b1601e06fb580596342413a888fa04c9f69416377ea075e3f545c1ae202a3a",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747053840)",
+          "revision" : "1F401208-8EC9-4FB4-8EE8-CFF658D497D6:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747053840)",
+          "revision" : "01B7BC0D-C312-4E15-8D6C-0BA7687BBAAD:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747053840)",
+          "revision" : "98F47A6A-E255-426D-A919-913B57FFF6A1:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000747053840)",
+          "revision" : "26ED680D-0D7D-4DBE-BD09-4B666DBB9D25:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000007470538a0)",
+          "revision" : "B8D29D49-4C68-4CAE-B1E0-69C235795666:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000007470538a0)",
+          "revision" : "41128D23-871D-4960-B90C-65000A8E6171:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000007470538a0)",
+          "revision" : "382E8E8B-A591-4695-8C01-249E8B70C906:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x00000007470538a0)",
+          "revision" : "6CD54A8D-BD64-46CA-80BD-8B882E183590:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "fb242ea979122185dcb9fc2236a09829354b453c464a4f5f24816196917b5c10",
+      "texture_cache_bytes" : 125741164,
+      "texture_uploads" : 16
+    }
+  ],
+  "cua_used" : false,
+  "paper_id" : "AF3035E7-4EA5-4063-8E26-7E64B0814DD4",
+  "project_id" : "1833A424-0B1C-4D65-8399-5273992A3BA4",
+  "relief_representation" : "surface shading; no displaced material\/tooling or manufacturing certification",
+  "renderer" : "Production TableSceneController → GeometryPayloadAdapter → RealityKitSceneRenderer",
+  "source" : "Authored one-panel parametric construction +canonical editable artwork, created through existing command families"
+}

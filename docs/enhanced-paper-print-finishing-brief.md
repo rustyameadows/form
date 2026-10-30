@@ -2,6 +2,8 @@
 
 Product brief | October 29, 2026
 
+Current implementation and validation: [twelve-case paper and packaging plan](paper-packaging-validation-plan.md) and [native validation results](paper-packaging-validation-report.md).
+
 ## Vision
 
 Make LAB a place to design, construct, and convincingly present printed paper goods. A designer or agent should be able to create a wedding invitation suite, a business card, a printed envelope, or a screen-printed poster with editable artwork, recognizable paper stocks, physical construction, and finishes that look and behave like the intended print process.

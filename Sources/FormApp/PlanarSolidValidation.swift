@@ -12,6 +12,7 @@ enum PlanarSolidValidation {
   }
   private struct Slab {
     let polygon:[Point2]
+    let cutouts:[PaperPanelCutout]?
     let stock:Double
     let shape:CADShape
   }
@@ -70,17 +71,18 @@ enum PlanarSolidValidation {
         for panel in net.panels where needed.contains(panel.id) {
           try checkBudget()
           let base:CADShape
-          if let cached=flat[panel.id],cached.polygon==panel.polygon,cached.stock==stock {
+          if let cached=flat[panel.id],cached.polygon==panel.polygon,cached.cutouts==panel.cutouts,cached.stock==stock {
             base=cached.shape
           } else {
             let profile=try await kernel.profile(outer:panel.polygon.map{.init($0.x,-$0.y)},
+              holes:(panel.cutouts ?? []).map{$0.polygon.map{.init($0.x,-$0.y)}},
               plane:.init(origin:.init(0,0,-stock/2),u:.init(1,0,0),v:.init(0,1,0)))
             try checkBudget()
             base=try await kernel.extrude(profile,vector:.init(0,0,stock))
             guard base.info.valid,base.info.closed,base.info.solids==1,base.info.volumeMM3>0 else {
               throw FormError.invalid("Panel '\(panel.id)' did not produce a valid positive-volume nominal-stock slab.")
             }
-            flat[panel.id] = .init(polygon:panel.polygon,stock:stock,shape:base)
+            flat[panel.id] = .init(polygon:panel.polygon,cutouts:panel.cutouts,stock:stock,shape:base)
           }
           try checkBudget()
           guard let matrix=matrices[panel.id],matrix.count==16,matrix.allSatisfy(\.isFinite) else {

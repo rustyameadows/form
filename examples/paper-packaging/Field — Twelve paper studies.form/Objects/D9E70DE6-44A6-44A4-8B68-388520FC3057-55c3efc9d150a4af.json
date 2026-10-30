@@ -1,0 +1,389 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 148,
+          "ty" : 0
+        },
+        "color" : "#2C5650",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "CD6BEDD2-7A0D-5EEF-8A83-1D0AC8BE8382",
+        "kind" : "text",
+        "name" : "Postcard / heading",
+        "text" : "POST / CARD",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 57,
+        "x" : 10,
+        "y" : 10
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 148,
+          "ty" : 0
+        },
+        "color" : "#2C5650",
+        "fontSize" : 12,
+        "height" : 22,
+        "id" : "DD2124D6-8107-50F4-A918-DA589C4A5768",
+        "kind" : "text",
+        "name" : "Postcard / message",
+        "text" : "A note from\nthe open country.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 55,
+        "x" : 10,
+        "y" : 27
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 148,
+          "ty" : 0
+        },
+        "color" : "#2C5650",
+        "fontSize" : 14,
+        "height" : 85,
+        "id" : "DF2DEDFD-39D9-559E-BC22-5B41FAF1563A",
+        "kind" : "rectangle",
+        "name" : "Postcard / divider",
+        "text" : "",
+        "width" : 0.32,
+        "x" : 74,
+        "y" : 10
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 148,
+          "ty" : 0
+        },
+        "color" : "#2C5650",
+        "fontSize" : 6,
+        "height" : 5,
+        "id" : "BDA669CA-92FC-59DB-9E46-0EF303941F1A",
+        "kind" : "text",
+        "name" : "Postcard / imprint",
+        "text" : "FIELD  /  POSTAL STUDY",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 58,
+        "x" : 10,
+        "y" : 90
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 148,
+          "ty" : 0
+        },
+        "color" : "#2C5650",
+        "fillEnabled" : false,
+        "fontSize" : 14,
+        "height" : 25,
+        "id" : "ABB25627-64AE-5497-9129-FB541D307D56",
+        "kind" : "rectangle",
+        "name" : "Postcard / stamp zone",
+        "sides" : 12,
+        "starInset" : 0.8,
+        "stroke" : {
+          "color" : "#2C5650",
+          "width" : 0.35
+        },
+        "text" : "",
+        "width" : 20,
+        "x" : 118,
+        "y" : 10
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 148,
+          "ty" : 0
+        },
+        "color" : "#2C5650",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "4E56B334-E664-53F6-BE5D-154DCA6A68A5",
+        "kind" : "text",
+        "name" : "10-inside-front-recipient",
+        "text" : "Recipient",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 53,
+        "x" : 84,
+        "y" : 44
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 148,
+          "ty" : 0
+        },
+        "color" : "#2C5650",
+        "fontSize" : 5.5,
+        "height" : 5,
+        "id" : "E2124D78-0EFE-53E1-BF66-6EC727D91ED3",
+        "kind" : "text",
+        "name" : "10-inside-front-postage",
+        "text" : "POSTAGE",
+        "typography" : {
+          "alignment" : "center",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 18,
+        "x" : 119,
+        "y" : 20
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 148,
+          "ty" : 0
+        },
+        "color" : "#2C5650",
+        "fontSize" : 14,
+        "height" : 0.25,
+        "id" : "73C4BD4B-D27E-57D9-8FE2-ED29820B40C5",
+        "kind" : "rectangle",
+        "name" : "10-inside-front-address-rule-1",
+        "text" : "",
+        "width" : 53,
+        "x" : 84,
+        "y" : 56
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 148,
+          "ty" : 0
+        },
+        "color" : "#2C5650",
+        "fontSize" : 14,
+        "height" : 0.25,
+        "id" : "A0B71568-F1B1-5912-B079-B262389E6191",
+        "kind" : "rectangle",
+        "name" : "10-inside-front-address-rule-2",
+        "text" : "",
+        "width" : 53,
+        "x" : 84,
+        "y" : 67
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 148,
+          "ty" : 0
+        },
+        "color" : "#2C5650",
+        "fontSize" : 14,
+        "height" : 0.25,
+        "id" : "09217F5E-0B2F-538D-8F6C-7BFD6E0D02B9",
+        "kind" : "rectangle",
+        "name" : "10-inside-front-address-rule-3",
+        "text" : "",
+        "width" : 53,
+        "x" : 84,
+        "y" : 78
+      }
+    ]
+  },
+  "canvasSourceOnly" : true,
+  "designID" : "2259D38E-28C0-42DA-8EFC-A6B9FAA8B65B",
+  "id" : "D9E70DE6-44A6-44A4-8B68-388520FC3057",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "10 · Open country / Postcard · Inside registered",
+  "parameters" : {
+    "depth" : 105,
+    "width" : 148
+  },
+  "position" : {
+    "x" : 73,
+    "y" : 0,
+    "z" : 370
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

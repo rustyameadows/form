@@ -1,0 +1,68 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1200,
+  "png_sha256" : "8ed4a7ccbed376c492b94a50c0970a6615bbd18e62c5e0f3ac7447f1b9eba9a0",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:paper-template-17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764.svg",
+      "sha256" : "17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 0.72165485086476111,
+      "distance" : 3.9879597596876528,
+      "elevation" : 1.3340070928016223,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 4.9000000000000004,
+        "y" : 0.005000000000000055,
+        "z" : 3.7000000000000002
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "A81ADBE2-3C19-4153-8558-52C7E7D80799",
+    "instances" : [
+      {
+        "id" : "20889B74-A9B7-46C0-B981-EC20DBA0C3CD",
+        "name" : "12 · Gather \/ Invitation",
+        "positionMM" : {
+          "x" : 490,
+          "y" : 0,
+          "z" : 370
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "2E915773-046E-4FC0-85CD-C279AE36829F",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "12-study",
+    "pixels" : {
+      "height" : 1200,
+      "width" : 1800
+    },
+    "revision" : 2,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "2edb07c1172dbba7df88b6cd19c0b586f701e29b47b9ceb27111c7aeac81e517",
+  "source_project_id" : "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+  "width" : 1800
+}

@@ -1,0 +1,68 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1200,
+  "png_sha256" : "b01f0f7c403c931f5f3c8204daabe4fdd04e6bec858b27ba31c5745e3bd40428",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:paper-template-17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764.svg",
+      "sha256" : "17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 0.17421578644294414,
+      "distance" : 4.7138242094675293,
+      "elevation" : 0.29090466943812271,
+      "projection" : "perspective",
+      "target" : {
+        "x" : -6.7000000000000002,
+        "y" : 0.81599999999999995,
+        "z" : -4.2999999999999998
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "61D3F3F5-9B2C-4F91-BF58-EEE5ED41C9BA",
+    "instances" : [
+      {
+        "id" : "27E4F5DE-9362-44CF-BAFB-9E35D9606448",
+        "name" : "01 · Dispatch \/ Shipping carton",
+        "positionMM" : {
+          "x" : -670,
+          "y" : 0,
+          "z" : -430
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "76DEB560-2741-487E-BBEF-CDCC31BD3AFF",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "01-study",
+    "pixels" : {
+      "height" : 1200,
+      "width" : 1800
+    },
+    "revision" : 2,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "2edb07c1172dbba7df88b6cd19c0b586f701e29b47b9ceb27111c7aeac81e517",
+  "source_project_id" : "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+  "width" : 1800
+}

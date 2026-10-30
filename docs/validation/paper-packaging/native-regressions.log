@@ -1,0 +1,951 @@
+[0/1] Planning build
+Building for debugging...
+[0/11] Write sources
+[2/11] Write swift-version--1AB21518FC5DEDBE.txt
+[4/32] Compiling FormCADModel CADModelSourceMemo.swift
+[5/32] Compiling FormCADModel CADOutputRequirement.swift
+[6/34] Emitting module FormCADModel
+[7/34] Compiling FormMeshAssets GLTFImporter.swift
+[8/34] Compiling FormMeshAssets MeshAssetGeometry.swift
+[9/34] Compiling FormCADModel CADImportedAssembly.swift
+[10/34] Compiling LabRendering SceneProjection.swift
+[11/35] Compiling LabRendering SceneContracts.swift
+[12/35] Compiling FormMeshAssets MeshAssetReference.swift
+[13/36] Compiling FormMeshAssets MeshAssetModel.swift
+[14/36] Compiling FormCADModel CADPlanarSurface.swift
+[15/36] Compiling FormCADModel ParameterValidationOutcome.swift
+[16/36] Compiling LabRendering SceneTextureProcessing.swift
+[17/36] Compiling FormCADModel CADModel.swift
+[18/36] Compiling FormCADModel CADModelExamples.swift
+[19/36] Compiling FormCADModel CADModelRequirement.swift
+[20/36] Compiling FormMeshAssets STLImporter.swift
+[21/39] Compiling FormGeometry GeometryGraph.swift
+[22/39] Emitting module FormGeometry
+[23/39] Compiling FormGeometry PrimitiveMeshes.swift
+[24/39] Compiling LabRendering RealityKitSceneRenderer.swift
+[25/39] Emitting module LabRendering
+[28/39] Emitting module FormMeshAssets
+[29/39] Compiling FormCADKernel CADKernel.swift
+[30/39] Compiling FormCADKernel CADSTEPAssembly.swift
+[31/39] Emitting module FormCADKernel
+[32/111] Compiling FormCore ArtworkTransferPlan.swift
+[33/111] Compiling FormCore ArtworkTransferPublication.swift
+[34/111] Compiling FormCADModeling CADParameterValidation.swift
+[35/111] Compiling FormCADModeling CADModelEvaluator.swift
+[36/111] Emitting module FormCADModeling
+[37/112] Compiling FormCADModeling CADPlanarSurfaceResolver.swift
+[38/112] Emitting module FormCore
+[41/134] Compiling FormCore ArtworkTransforms.swift
+[42/134] Compiling FormCore ArtworkValidation.swift
+[43/134] Compiling FormCore AssemblyBoundarySampling.swift
+[44/134] Compiling FormCore AssemblyMesher.swift
+[45/134] Compiling FormCore BooleanCommands.swift
+[46/134] Compiling FormCore CADRepresentation.swift
+[47/134] Compiling FormCore CameraFraming.swift
+[48/134] Compiling FormCore CameraNavigation.swift
+[49/134] Compiling FormCore CameraOrientation.swift
+[50/134] Compiling FormCore CameraPreferences.swift
+[51/134] Compiling FormCore CanvasWorkspace.swift
+[52/134] Compiling FormCore CharacterPosition.swift
+[53/134] Compiling FormCore ClockDesign.swift
+[54/134] Compiling FormCore ClothAssemblyPreparation.swift
+[55/134] Compiling FormCore ClothContacts.swift
+[56/134] Compiling FormCore ClothDesign.swift
+[57/134] Compiling FormCore ClothModel.swift
+[58/134] Compiling FormCore ClothSample.swift
+[59/134] Compiling FormCore ClothSession.swift
+[60/134] Compiling FormCore ClothSolver.swift
+[61/156] Compiling FormCore ClothSurfaceMapping.swift
+[62/156] Compiling FormCore CollectionDecimal.swift
+[63/156] Compiling FormCore CollectionEstimate.swift
+[64/156] Compiling FormCore CollectionProduction.swift
+[65/156] Compiling FormCore CollectionQuantities.swift
+[66/156] Compiling FormCore CollectionSource.swift
+[67/156] Compiling FormCore ColorProfiles.swift
+[68/156] Compiling FormCore ConstructionCommands.swift
+[69/156] Compiling FormCore ConstructionExamples.swift
+[70/156] Compiling FormCore DecorationJobs.swift
+[71/156] Compiling FormCore DecorationPreparation.swift
+[72/156] Compiling FormCore DeskClockDesign.swift
+[73/156] Compiling FormCore Embroidery.swift
+[74/156] Compiling FormCore EmbroideryDST.swift
+[75/156] Compiling FormCore EmbroideryTies.swift
+[76/156] Compiling FormCore Expression.swift
+[77/156] Compiling FormCore FabricPatterns.swift
+[78/156] Compiling FormCore FontCommands.swift
+[79/156] Compiling FormCore FontFeatureSelections.swift
+[80/156] Compiling FormCore FontUsage.swift
+[81/156] Compiling FormCore GarmentBlockCommands.swift
+[82/156] Compiling FormCore GarmentBlockSources.swift
+[83/178] Compiling FormCore AffinitiesStudy.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[84/178] Compiling FormCore AffinitiesStudyData.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[85/178] Compiling FormCore ArtworkAppearance.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[86/178] Compiling FormCore ArtworkCommands.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[87/178] Compiling FormCore ArtworkComponents.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[88/178] Compiling FormCore ArtworkConstructionValidation.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[89/178] Compiling FormCore ArtworkImage.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[90/178] Compiling FormCore ArtworkImport.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[91/178] Compiling FormCore ArtworkLinks.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[92/178] Compiling FormCore ArtworkModel.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[93/178] Compiling FormCore ArtworkPageGeometry.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[94/178] Compiling FormCore ArtworkPageSetup.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[95/178] Compiling FormCore ArtworkPaint.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[96/178] Compiling FormCore ArtworkParameterBindings.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[97/178] Compiling FormCore ArtworkProduction.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[98/178] Compiling FormCore ArtworkSwatches.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[99/178] Compiling FormCore ArtworkTextStyles.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[100/178] Compiling FormCore ArtworkTransferBundle.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[101/178] Compiling FormCore ArtworkTransferCommands.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[102/178] Compiling FormCore ArtworkTransferFile.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[103/178] Compiling FormCore ArtworkTransferGraph.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[104/178] Compiling FormCore ArtworkTransferIO.swift
+/Users/rustymeadows/Dev/form/Sources/FormCore/ArtworkConstructionValidation.swift:109:29: warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+107 |     }
+108 |     guard (owner.artwork?.elements.filter{$0.sewingPiece != nil}.count ?? 0)<=64,
+109 |       project.objects.filter{$0.patternAssembly?.sourceObjectID==objectID}.count<=8 else {
+    |                             `- warning: trailing closure in this context is confusable with the body of the statement; pass as a parenthesized argument to silence this warning
+110 |       throw FormError.invalid("A validation snapshot supports up to 64 source pieces and 8 related rest assemblies.")
+111 |     }
+[105/199] Compiling FormCore GarmentBlockTransfer.swift
+[106/199] Compiling FormCore GarmentBlocks.swift
+[107/199] Compiling FormCore GlyphOverrides.swift
+[108/199] Compiling FormCore LabIdentity.swift
+[109/199] Compiling FormCore LocalBridge.swift
+[110/199] Compiling FormCore MCP.swift
+[111/199] Compiling FormCore MerchandiseBlanks.swift
+[112/199] Compiling FormCore MerchandisePlacement.swift
+[113/199] Compiling FormCore MerchandiseStudy.swift
+[114/199] Compiling FormCore Model.swift
+[115/199] Compiling FormCore ObjectLibrary.swift
+[116/199] Compiling FormCore ObjectLibraryCommands.swift
+[117/199] Compiling FormCore ObjectLibraryStudy.swift
+[118/199] Compiling FormCore ObjectPresentation.swift
+[119/199] Compiling FormCore Operations.swift
+[120/199] Compiling FormCore OpticalSizing.swift
+[121/199] Compiling FormCore PaperAppearance.swift
+[122/199] Compiling FormCore PaperAppearanceCommands.swift
+[123/199] Compiling FormCore PaperAppearanceMaterials.swift
+[124/199] Compiling FormCore PaperAppearanceToolSchema.swift
+[125/199] Compiling FormCore PaperCommands.swift
+[126/199] Compiling FormCore PaperConstruction.swift
+[127/199] Compiling FormCore PaperConstructionEngine.swift
+[128/199] Compiling FormCore PaperPrintGeometry.swift
+[129/199] Compiling FormCore PaperRecipes.swift
+[130/199] Compiling FormCore PaperSamples.swift
+[131/199] Compiling FormCore PaperTemplate.swift
+[132/199] Compiling FormCore ParagraphCommands.swift
+[133/199] Compiling FormCore ParagraphLanguage.swift
+[134/199] Compiling FormCore ParagraphLists.swift
+[135/199] Compiling FormCore PathArtworkCommands.swift
+[136/199] Compiling FormCore PathCommands.swift
+[137/199] Compiling FormCore PatternAssembly.swift
+[138/199] Compiling FormCore PatternAssemblyAnchor.swift
+[139/199] Compiling FormCore PatternAssemblyCache.swift
+[140/199] Compiling FormCore PatternAssemblyDocument.swift
+[141/199] Compiling FormCore PatternAssemblyGenerator.swift
+[142/199] Compiling FormCore PatternAssemblyPlanning.swift
+[143/199] Compiling FormCore PatternAssemblySample.swift
+[144/199] Compiling FormCore PatternAssemblySource.swift
+[145/199] Compiling FormCore PatternPanelRotation.swift
+[146/199] Compiling FormCore PhysicalArtworkFrame.swift
+[147/199] Compiling FormCore PhysicalArtworkIntent.swift
+[148/199] Compiling FormCore PhysicalSurfaceArtwork.swift
+[149/199] Compiling FormCore PlanarConnections.swift
+[150/199] Compiling FormCore PlanarConstruction.swift
+[151/199] Compiling FormCore PlanarConstructionValidation.swift
+[152/199] Compiling FormCore PlanarInteriors.swift
+[153/199] Compiling FormCore PlanarSolidRequirements.swift
+[154/199] Compiling FormCore PlanarStructuralFeatures.swift
+[155/199] Compiling FormCore Printing.swift
+[156/199] Compiling FormCore ProductionInks.swift
+[157/199] Compiling FormCore ProjectContent.swift
+[158/199] Compiling FormCore PublicationArtworkOperations.swift
+[159/199] Compiling FormCore PublicationCommands.swift
+[160/199] Compiling FormCore PublicationOperations.swift
+[161/199] Compiling FormCore PublicationStudy.swift
+[162/199] Compiling FormCore Publications.swift
+[163/199] Compiling FormCore Recipes.swift
+[164/199] Compiling FormCore Repository.swift
+[165/199] Compiling FormCore SewingConstructionGuides.swift
+[166/199] Compiling FormCore SewingCurveNotches.swift
+[167/199] Compiling FormCore SewingCurves.swift
+[168/199] Compiling FormCore SewingGeneralDrawing.swift
+[169/199] Compiling FormCore SewingGeneralGeometry.swift
+[170/199] Compiling FormCore SewingLayout.swift
+[171/199] Compiling FormCore SewingLayoutCommands.swift
+[172/199] Compiling FormCore SewingLayoutDrawing.swift
+[173/199] Compiling FormCore SewingLayoutGeometry.swift
+[174/199] Compiling FormCore SewingLayoutPlanner.swift
+[175/199] Compiling FormCore SewingLayoutPreflight.swift
+[176/199] Compiling FormCore SewingPatternCommands.swift
+[177/199] Compiling FormCore SewingPatternDrawing.swift
+[178/199] Compiling FormCore SewingPatterns.swift
+[179/199] Compiling FormCore SewingPouchTemplate.swift
+[180/199] Compiling FormCore SewingTiles.swift
+[181/199] Compiling FormCore StarterTextiles.swift
+[182/199] Compiling FormCore StoredArtworks.swift
+[183/199] Compiling FormCore StudioPresentation.swift
+[184/199] Compiling FormCore StudioScenes.swift
+[185/199] Compiling FormCore StudyTemplates.swift
+[186/199] Compiling FormCore TextStyleOperations.swift
+[187/199] Compiling FormCore TextileProductionJobs.swift
+[188/199] Compiling FormCore TextileProductionStock.swift
+[189/199] Compiling FormCore TextileStudy.swift
+[190/199] Compiling FormCore Textiles.swift
+[191/199] Compiling FormCore resource_bundle_accessor.swift
+[192/244] Compiling FormMCP main.swift
+[193/244] Emitting module FormMCP
+[193/244] Write Objects.LinkFileList
+[195/244] Emitting module FormGraphics
+[195/258] Linking form-mcp
+[196/258] Applying form-mcp
+[198/258] Compiling FormGraphics AppearanceRenderer.swift
+[199/258] Compiling FormGraphics ArtworkOutlines.swift
+[200/258] Compiling FormGraphics ArtworkPagePDF.swift
+[201/258] Compiling FormGraphics ArtworkProductionOutput.swift
+[202/258] Compiling FormGraphics ArtworkRenderer.swift
+[203/258] Compiling FormGraphics ArtworkTransferPreflight.swift
+[204/258] Compiling FormGraphics AssemblyMaterialRenderer.swift
+[205/258] Compiling FormGraphics AssemblyProducts.swift
+[206/258] Compiling FormGraphics BooleanGeometry.swift
+[207/258] Compiling FormGraphics CharacterCoverage.swift
+[208/258] Compiling FormGraphics CharacterTypography.swift
+[209/258] Compiling FormGraphics ClothSurface.swift
+[210/258] Compiling FormGraphics CollectionReviewPDF.swift
+[211/258] Compiling FormGraphics DecorationGeometry.swift
+[212/258] Compiling FormGraphics DecorationOutput.swift
+[213/258] Compiling FormGraphics DecorationReviewPDF.swift
+[214/258] Compiling FormGraphics EmbroideryDigitizer.swift
+[215/258] Compiling FormGraphics EmbroideryRenderer.swift
+[216/258] Compiling FormGraphics EmbroiderySurface.swift
+[217/258] Compiling FormGraphics FabricPatternRenderer.swift
+[218/258] Compiling FormGraphics FontLibraryCatalog.swift
+[219/258] Compiling FormGraphics GlyphCatalog.swift
+[220/258] Compiling FormGraphics GlyphEngine.swift
+[221/258] Compiling FormGraphics ICCOutputProfile.swift
+[222/258] Compiling FormGraphics ImageRenderer.swift
+[223/258] Compiling FormGraphics LanguageHyphenation.swift
+[224/258] Compiling FormGraphics NativeAffineView.swift
+[225/258] Compiling FormGraphics OpticalTypography.swift
+[226/258] Compiling FormGraphics ParagraphLayout.swift
+[227/258] Compiling FormGraphics PhysicalVectorPlan.swift
+[228/258] Compiling FormGraphics ProductionInkColor.swift
+[229/258] Compiling FormGraphics ProductionInkPDF.swift
+[230/258] Compiling FormGraphics ProductionInkPlan.swift
+[231/258] Compiling FormGraphics ProductionPacketPDF.swift
+[232/258] Compiling FormGraphics ProfiledPDF.swift
+[233/258] Compiling FormGraphics PublicationLists.swift
+[234/258] Compiling FormGraphics PublicationOutput.swift
+[235/258] Compiling FormGraphics PublicationStoryLayout.swift
+[236/258] Compiling FormGraphics SVGAppearance.swift
+[237/258] Compiling FormGraphics SVGDocument.swift
+[238/258] Compiling FormGraphics SVGGeometry.swift
+[239/258] Compiling FormGraphics SVGImporter.swift
+[240/258] Compiling FormGraphics SVGNamedColors.swift
+[241/258] Compiling FormGraphics SVGPaint.swift
+[242/258] Compiling FormGraphics SVGRenderer.swift
+[243/258] Compiling FormGraphics SVGShapes.swift
+[244/258] Compiling FormGraphics SVGText.swift
+[245/258] Compiling FormGraphics SceneCamera.swift
+[246/258] Compiling FormGraphics SewingLayoutOutput.swift
+[247/258] Compiling FormGraphics SewingPatternOutput.swift
+[248/258] Compiling FormGraphics SewingTileOutput.swift
+[249/258] Compiling FormGraphics SmallCapsTypography.swift
+[250/258] Compiling FormGraphics StrokeGeometry.swift
+[251/258] Compiling FormGraphics TextCase.swift
+[252/258] Compiling FormGraphics TypographyEngine.swift
+[253/258] Compiling FormGraphics VectorGeometry.swift
+[254/333] Compiling FormCoreTests PlanarSolidRequirementTests.swift
+[255/333] Compiling FormCoreTests PlanarConstructionTests.swift
+[256/334] Emitting module FormCoreTests
+[257/334] Compiling FormApp AffinitiesStudyPresentation.swift
+[258/334] Compiling FormApp AppearanceInspector.swift
+[259/334] Compiling FormCoreTests PlanarValidationOutcomeTests.swift
+[260/334] Compiling FormApp DecorationPreparationDraft.swift
+[261/334] Compiling FormApp DecorationPreparationOperations.swift
+[262/334] Compiling FormApp DecorationPreparationPreview.swift
+[263/334] Compiling FormApp DecorationPreparationView.swift
+[264/334] Compiling FormApp DesignSurfaces.swift
+[265/334] Compiling FormApp DeskClockGeometry.swift
+[266/334] Compiling FormApp DocumentFontsPanel.swift
+[267/334] Compiling FormApp EmbroideryEditor.swift
+[268/334] Compiling FormApp EmbroideryExport.swift
+[269/334] Compiling FormApp EmbroiderySceneSurface.swift
+[270/334] Compiling FormApp Export.swift
+[271/334] Compiling FormApp FabricEnvironmentControls.swift
+[272/334] Compiling FormApp FabricPatternEditor.swift
+[273/334] Compiling FormApp FabricationGuide.swift
+[274/334] Compiling FormApp FabricationWorkspace.swift
+[275/334] Compiling FormApp FloatingPanels.swift
+[276/334] Compiling FormApp FocusedNumericArtworkField.swift
+[277/334] Compiling FormApp FontBrowser.swift
+[278/334] Compiling FormApp FontLibraryOperations.swift
+[279/334] Compiling FormApp FontLibraryPreferences.swift
+[280/334] Compiling FormApp FormApp.swift
+[281/334] Compiling FormApp FunctionWorkspace.swift
+[282/334] Compiling FormApp GarmentBlockController.swift
+[283/334] Compiling FormApp CADSurfaceAppearance.swift
+[284/334] Compiling FormApp CanvasPhysicalArtworkGuides.swift
+[285/334] Compiling FormApp CanvasSewingGuides.swift
+[286/334] Compiling FormApp CanvasSourceProjection.swift
+[287/334] Compiling FormApp CanvasTableNavigation.swift
+[288/334] Compiling FormApp CharacterPositionControls.swift
+[289/334] Compiling FormApp CharacterPositionOperations.swift
+[290/334] Compiling FormApp ClothCoordinator.swift
+[291/334] Compiling FormApp ClothInspector.swift
+[292/334] Compiling FormApp ClothOperations.swift
+[293/334] Compiling FormApp ClothPreviewController.swift
+[294/334] Compiling FormApp ClothSceneSurface.swift
+[295/334] Compiling FormApp CollectionPacketAssets.swift
+[296/334] Compiling FormApp CollectionPacketExport.swift
+[297/334] Compiling FormApp CollectionProductionOperations.swift
+[298/334] Compiling FormApp CollectionProductionView.swift
+[299/334] Compiling FormApp CollectionSupplyLibrary.swift
+[300/334] Compiling FormApp ColorProfileControls.swift
+[301/334] Compiling FormApp ColorProfileOperations.swift
+[302/334] Compiling FormApp ComponentInspector.swift
+[303/334] Compiling FormApp DecorationArchiveBrowser.swift
+[304/334] Compiling FormApp DecorationPacketAssets.swift
+[305/334] Compiling FormApp DecorationPacketExport.swift
+[306/334] Emitting module FormApp
+[309/334] Compiling FormApp ArtworkDrawing.swift
+[310/334] Compiling FormApp ArtworkInspector.swift
+[311/334] Compiling FormApp ArtworkOperations.swift
+[312/334] Compiling FormApp ArtworkOriginPicker.swift
+[313/334] Compiling FormApp ArtworkPageOperations.swift
+[314/334] Compiling FormApp ArtworkPageSetupControls.swift
+[315/334] Compiling FormApp ArtworkPageSetupDraft.swift
+[316/334] Compiling FormApp ArtworkProductionControls.swift
+[317/334] Compiling FormApp ArtworkSession.swift
+[318/334] Compiling FormApp ArtworkSourcePanel.swift
+[319/334] Compiling FormApp ArtworkStudio.swift
+[320/334] Compiling FormApp ArtworkTransferOperations.swift
+[321/334] Compiling FormApp ArtworkTransferSession.swift
+[322/334] Compiling FormApp ArtworkViews.swift
+[323/334] Compiling FormApp BambuMonitor.swift
+[324/334] Compiling FormApp BooleanOperations.swift
+[325/334] Compiling FormApp CADModelCoordinator.swift
+[326/334] Compiling FormApp CADModelEditor.swift
+[327/334] Compiling FormApp CADModelLoop.swift
+[328/334] Compiling FormApp CADReviewRenderer.swift
+[329/334] Compiling FormApp CADSceneAdapter.swift
+[330/423] Compiling FormApp GarmentBlockEditor.swift
+[331/423] Compiling FormApp GeometryFactory.swift
+[332/423] Compiling FormApp GeometryPayloadAdapter.swift
+[333/423] Compiling FormApp GlyphPalette.swift
+[334/423] Compiling FormApp HomeTechnicalPreview.swift
+[335/423] Compiling FormApp ImageInspector.swift
+[336/423] Compiling FormApp ImageOperations.swift
+[337/423] Compiling FormApp InspectorColorPanelContent.swift
+[338/423] Compiling FormApp InspectorColorPicker.swift
+[339/423] Compiling FormApp InspectorColorState.swift
+[340/423] Compiling FormApp InspectorColorTarget.swift
+[341/423] Compiling FormApp InspectorControls.swift
+[342/423] Compiling FormApp InspectorSymbolControls.swift
+[343/423] Compiling FormApp InterfaceAppearance.swift
+[344/423] Compiling FormApp LinkedObjectInspectorModule.swift
+[345/423] Compiling FormApp MerchandiseGeometry.swift
+[346/423] Compiling FormApp MeshAssetSceneAdapter.swift
+[347/423] Compiling FormApp ModelAssetCoordinator.swift
+[348/423] Compiling FormApp ModelImportView.swift
+[349/423] Compiling FormApp ObjectLibraryView.swift
+[350/423] Compiling FormApp OpticalOperations.swift
+[351/423] Compiling FormApp OpticalSizingControls.swift
+[352/423] Compiling FormApp OrcaEngine.swift
+[353/423] Compiling FormApp PaintInspector.swift
+[354/423] Compiling FormApp Panels.swift
+[355/423] Compiling FormApp PaperAppearanceControls.swift
+[356/423] Compiling FormApp PaperConstructionPreview.swift
+[357/423] Compiling FormApp PaperGeometry.swift
+[358/423] Compiling FormApp PaperNativeFit.swift
+[359/423] Compiling FormApp PaperOutput.swift
+[360/423] Compiling FormApp PaperProductionReview.swift
+[361/423] Compiling FormApp PaperSurfaceRasterizer.swift
+[362/423] Compiling FormApp PaperTemplateOperations.swift
+[363/423] Compiling FormApp PaperWorkspace.swift
+[364/423] Compiling FormApp ParagraphLanguageControls.swift
+[365/423] Compiling FormApp ParagraphListControls.swift
+[366/423] Compiling FormApp ParagraphListEditing.swift
+[367/423] Compiling FormApp ParagraphTabsPanel.swift
+[368/423] Compiling FormApp PatternAssemblyInspector.swift
+[369/423] Compiling FormApp PhysicalDocumentReview.swift
+[370/423] Compiling FormApp PlanarSolidValidation.swift
+[371/423] Compiling FormApp PrintCoordinator.swift
+[372/423] Compiling FormApp PrintMeshBuilder.swift
+[373/423] Compiling FormApp PrintViews.swift
+[374/423] Compiling FormApp PrintingSettings.swift
+[375/423] Compiling FormApp ProductionInkControls.swift
+[376/423] Compiling FormApp ProductionInkOperations.swift
+[377/423] Compiling FormApp ProductionJobsView.swift
+[378/423] Compiling FormApp ProductionPacketExport.swift
+[379/423] Compiling FormApp ProjectEnvironments.swift
+[380/423] Compiling FormApp ProjectPreview.swift
+[381/423] Compiling FormApp PublicationControls.swift
+[382/423] Compiling FormApp PublicationEditing.swift
+[383/423] Compiling FormApp PublicationOperations.swift
+[384/423] Compiling FormApp SVGImport.swift
+[385/423] Compiling FormApp SewingDocumentReviews.swift
+[386/423] Compiling FormApp SewingLayoutCanvas.swift
+[387/423] Compiling FormApp SewingLayoutController.swift
+[388/423] Compiling FormApp SewingLayoutEditor.swift
+[389/423] Compiling FormApp SewingLayoutOperations.swift
+[390/423] Compiling FormApp SewingPatternControls.swift
+[391/423] Compiling FormApp SewingPatternOperations.swift
+[392/423] Compiling FormApp SewingPouchControls.swift
+[393/423] Compiling FormApp SewingTileControls.swift
+[394/423] Compiling FormApp StarterTextileGeometry.swift
+[395/423] Compiling FormApp StudioCompositionController.swift
+[396/423] Compiling FormApp StudioCompositionExport.swift
+[397/423] Compiling FormApp StudioCompositionWorkspace.swift
+[398/423] Compiling FormApp StudioPNG.swift
+[399/423] Compiling FormApp StudioRenderFolder.swift
+[400/423] Compiling FormApp StudioSceneMedia.swift
+[401/423] Compiling FormApp StudioShotController.swift
+[402/423] Compiling FormApp StudioShotExport.swift
+[403/423] Compiling FormApp StudioShotRenderer.swift
+[404/423] Compiling FormApp StudioShotsPanel.swift
+[405/423] Compiling FormApp StudioStore.swift
+[406/423] Compiling FormApp StudioUtilityWindows.swift
+[407/423] Compiling FormApp StudioViews.swift
+[408/423] Compiling FormApp StudyCard.swift
+[409/423] Compiling FormApp SwatchPalette.swift
+[410/423] Compiling FormApp TableScene.swift
+[411/423] Compiling FormApp TextStylesPanel.swift
+[412/423] Compiling FormApp TextileFabricLibrary.swift
+[413/423] Compiling FormApp TextileGeometry.swift
+[414/423] Compiling FormApp TextileInspector.swift
+[415/423] Compiling FormApp TextileProductionLibrary.swift
+[416/423] Compiling FormApp TextileProductionOperations.swift
+[417/423] Compiling FormApp VectorCanvas.swift
+[418/423] Compiling FormApp WorkspaceToolbar.swift
+[418/423] Write Objects.LinkFileList
+[419/423] Linking Form
+[420/423] Applying Form
+[422/427] Compiling FormAppTests CanvasSourceAuthoringTests.swift
+[423/427] Compiling FormAppTests NativeModelControlTests.swift
+[424/427] Compiling FormAppTests AuthoredPaperRenderingTests.swift
+[425/427] Emitting module FormAppTests
+[426/428] Compiling FormAppTests PlanarSolidValidationTests.swift
+[426/428] Write Objects.LinkFileList
+[427/428] Linking FORMPackageTests
+Build complete! (51.84s)
+ld: warning: duplicate -rpath '/Users/rustymeadows/Dev/form/.local/testing/xctest/.build/arm64-apple-macosx/debug' ignored
+Registered 134 unchanged test methods in 26 XCTestCase classes.
+Test Suite 'All tests' started at 2026-10-30 13:08:44.967
+Test Suite 'testing.xctest' started at 2026-10-30 13:08:44.968
+Test Suite 'AuthoredPaperRenderingTests' started at 2026-10-30 13:08:44.968
+Test Case 'AuthoredPaperRenderingTests.testConvertedCyanotypeArtworkAppearsInAnActualFoldedNativeCapture' started at 2026-10-30 13:08:44.968
+Test Case 'AuthoredPaperRenderingTests.testConvertedCyanotypeArtworkAppearsInAnActualFoldedNativeCapture' passed (3.873 seconds)
+Test Case 'AuthoredPaperRenderingTests.testConvertedExamplesReachTheRealTableGeometryFactoryWithArtwork' started at 2026-10-30 13:08:48.841
+Test Case 'AuthoredPaperRenderingTests.testConvertedExamplesReachTheRealTableGeometryFactoryWithArtwork' passed (2.981 seconds)
+Test Case 'AuthoredPaperRenderingTests.testSelectedLiveFoldReturnsToStablePhysicalBoundsFitAndRenderedPixels' started at 2026-10-30 13:08:51.823
+Test Case 'AuthoredPaperRenderingTests.testSelectedLiveFoldReturnsToStablePhysicalBoundsFitAndRenderedPixels' passed (0.701 seconds)
+Test Case 'AuthoredPaperRenderingTests.testUnregisteredConstructionRendersPanelsAndReusesThemAcrossFoldPoses' started at 2026-10-30 13:08:52.524
+Test Case 'AuthoredPaperRenderingTests.testUnregisteredConstructionRendersPanelsAndReusesThemAcrossFoldPoses' passed (0.08 seconds)
+Test Suite 'AuthoredPaperRenderingTests' passed at 2026-10-30 13:08:52.604
+	 Executed 4 tests, with 0 failures (0 unexpected) in 7.635 (7.635) seconds
+Test Suite 'CanvasConstructionProjectionTests' started at 2026-10-30 13:08:52.604
+Test Case 'CanvasConstructionProjectionTests.testCADNamedSurfaceUsesTheSameCanvasFrameAndOriginalArtboardSource' started at 2026-10-30 13:08:52.604
+Test Case 'CanvasConstructionProjectionTests.testCADNamedSurfaceUsesTheSameCanvasFrameAndOriginalArtboardSource' passed (0.013 seconds)
+Test Case 'CanvasConstructionProjectionTests.testClipboardAcrossRotatedSurfacesKeepsUprightArtworkAndOneUndo' started at 2026-10-30 13:08:52.617
+Test Case 'CanvasConstructionProjectionTests.testClipboardAcrossRotatedSurfacesKeepsUprightArtworkAndOneUndo' passed (0.029 seconds)
+Test Case 'CanvasConstructionProjectionTests.testDielineArtworkEditsKeepDerivedGeometryAndMovingProjectionHasIndependentSavedUndo' started at 2026-10-30 13:08:52.646
+Test Case 'CanvasConstructionProjectionTests.testDielineArtworkEditsKeepDerivedGeometryAndMovingProjectionHasIndependentSavedUndo' passed (0.021 seconds)
+Test Case 'CanvasConstructionProjectionTests.testImagePlacementIntoRotatedSurfaceIsUprightAndOneUndo' started at 2026-10-30 13:08:52.667
+Test Case 'CanvasConstructionProjectionTests.testImagePlacementIntoRotatedSurfaceIsUprightAndOneUndo' passed (0.017 seconds)
+Test Case 'CanvasConstructionProjectionTests.testInsideProjectionUsesIndependentSharedSourceAndPreservesOutsideArtwork' started at 2026-10-30 13:08:52.684
+Test Case 'CanvasConstructionProjectionTests.testInsideProjectionUsesIndependentSharedSourceAndPreservesOutsideArtwork' passed (0.017 seconds)
+Test Case 'CanvasConstructionProjectionTests.testMovingProjectionReusesActualPhysicalGeometryAndTextures' started at 2026-10-30 13:08:52.702
+Test Case 'CanvasConstructionProjectionTests.testMovingProjectionReusesActualPhysicalGeometryAndTextures' passed (0.048 seconds)
+Test Case 'CanvasConstructionProjectionTests.testOneCanvasContainsProofAndUprightSurfacesWithoutCreatingArtworkCopies' started at 2026-10-30 13:08:52.749
+Test Case 'CanvasConstructionProjectionTests.testOneCanvasContainsProofAndUprightSurfacesWithoutCreatingArtworkCopies' passed (0.004 seconds)
+Test Case 'CanvasConstructionProjectionTests.testProjectionHitTestingUsesPolygonAndSourceRoundTripPreservesUnchangedLayers' started at 2026-10-30 13:08:52.753
+Test Case 'CanvasConstructionProjectionTests.testProjectionHitTestingUsesPolygonAndSourceRoundTripPreservesUnchangedLayers' passed (0.003 seconds)
+Test Case 'CanvasConstructionProjectionTests.testSVGImportCentersUprightOnRotatedSurfaceInOneUndoAndRetainsOriginalSource' started at 2026-10-30 13:08:52.756
+Test Case 'CanvasConstructionProjectionTests.testSVGImportCentersUprightOnRotatedSurfaceInOneUndoAndRetainsOriginalSource' passed (0.022 seconds)
+Test Case 'CanvasConstructionProjectionTests.testSVGImportRetainsInsideSourceAndConstructionSelectionAfterReconcile' started at 2026-10-30 13:08:52.778
+Test Case 'CanvasConstructionProjectionTests.testSVGImportRetainsInsideSourceAndConstructionSelectionAfterReconcile' passed (0.02 seconds)
+Test Case 'CanvasConstructionProjectionTests.testSewingArtworkUsesTheSameOrdinarySourceSessionWithoutPaperProjection' started at 2026-10-30 13:08:52.797
+Test Case 'CanvasConstructionProjectionTests.testSewingArtworkUsesTheSameOrdinarySourceSessionWithoutPaperProjection' passed (0.008 seconds)
+Test Case 'CanvasConstructionProjectionTests.testUprightSelectAllAndNativeMarqueeOnlySelectArtworkIntersectingThatSurface' started at 2026-10-30 13:08:52.806
+Test Case 'CanvasConstructionProjectionTests.testUprightSelectAllAndNativeMarqueeOnlySelectArtworkIntersectingThatSurface' passed (0.062 seconds)
+Test Case 'CanvasConstructionProjectionTests.testUprightTextEditMapsToOneSourceAndUndoReopenRetainOrientation' started at 2026-10-30 13:08:52.868
+Test Case 'CanvasConstructionProjectionTests.testUprightTextEditMapsToOneSourceAndUndoReopenRetainOrientation' passed (0.012 seconds)
+Test Suite 'CanvasConstructionProjectionTests' passed at 2026-10-30 13:08:52.880
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.276 (0.276) seconds
+Test Suite 'CanvasCutoutProjectionTests' started at 2026-10-30 13:08:52.880
+Test Case 'CanvasCutoutProjectionTests.testExactFoldedSlabsSubtractCutoutsAndInvalidateCachedHoleGeometry' started at 2026-10-30 13:08:52.880
+Test Case 'CanvasCutoutProjectionTests.testExactFoldedSlabsSubtractCutoutsAndInvalidateCachedHoleGeometry' passed (0.07 seconds)
+Test Case 'CanvasCutoutProjectionTests.testOutsideInsideAndWholeNetHitsExcludePhysicalHolesAndKeepCrossingArtwork' started at 2026-10-30 13:08:52.951
+Test Case 'CanvasCutoutProjectionTests.testOutsideInsideAndWholeNetHitsExcludePhysicalHolesAndKeepCrossingArtwork' passed (0.0 seconds)
+Test Case 'CanvasCutoutProjectionTests.testSharedPhysicalFrameRoundtripKeepsCanonicalArtAndResourceIdentity' started at 2026-10-30 13:08:52.951
+Test Case 'CanvasCutoutProjectionTests.testSharedPhysicalFrameRoundtripKeepsCanonicalArtAndResourceIdentity' passed (0.0 seconds)
+Test Suite 'CanvasCutoutProjectionTests' passed at 2026-10-30 13:08:52.952
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.071 (0.071) seconds
+Test Suite 'CanvasFrameCachingTests' started at 2026-10-30 13:08:52.952
+Test Case 'CanvasFrameCachingTests.testDirectSourceAndGeometryAssignmentsAndUndoNeverReturnStaleFrames' started at 2026-10-30 13:08:52.952
+Test Case 'CanvasFrameCachingTests.testDirectSourceAndGeometryAssignmentsAndUndoNeverReturnStaleFrames' passed (0.013 seconds)
+Test Case 'CanvasFrameCachingTests.testGlobalStorySwatchAndStyleChangesInvalidateEvenWhenFrameObjectsDoNotChange' started at 2026-10-30 13:08:52.964
+Test Case 'CanvasFrameCachingTests.testGlobalStorySwatchAndStyleChangesInvalidateEvenWhenFrameObjectsDoNotChange' passed (0.012 seconds)
+Test Case 'CanvasFrameCachingTests.testInsideNavigationActivePanelAndComponentContextUseCurrentInputs' started at 2026-10-30 13:08:52.976
+Test Case 'CanvasFrameCachingTests.testInsideNavigationActivePanelAndComponentContextUseCurrentInputs' passed (0.014 seconds)
+Test Case 'CanvasFrameCachingTests.testLegacyDielineAndLinkedTargetContextCannotReuseWrongDimensions' started at 2026-10-30 13:08:52.990
+Test Case 'CanvasFrameCachingTests.testLegacyDielineAndLinkedTargetContextCannotReuseWrongDimensions' passed (0.002 seconds)
+Test Case 'CanvasFrameCachingTests.testTableCameraOnlyUpdatesReuseCanonicalFrames' started at 2026-10-30 13:08:52.992
+Test Case 'CanvasFrameCachingTests.testTableCameraOnlyUpdatesReuseCanonicalFrames' passed (0.006 seconds)
+Test Case 'CanvasFrameCachingTests.testTwelveCaseLayerTraversalAndRepeatedInspectorReadsBuildFramesOnlyOnce' started at 2026-10-30 13:08:52.997
+Test Case 'CanvasFrameCachingTests.testTwelveCaseLayerTraversalAndRepeatedInspectorReadsBuildFramesOnlyOnce' passed (0.912 seconds)
+Test Suite 'CanvasFrameCachingTests' passed at 2026-10-30 13:08:53.909
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.958 (0.958) seconds
+Test Suite 'CanvasOnlySourcePresentationTests' started at 2026-10-30 13:08:53.909
+Test Case 'CanvasOnlySourcePresentationTests.testInsideSourceStaysEditableOnCanvasWithoutTableNodeOrFindTarget' started at 2026-10-30 13:08:53.909
+Test Case 'CanvasOnlySourcePresentationTests.testInsideSourceStaysEditableOnCanvasWithoutTableNodeOrFindTarget' passed (9.592 seconds)
+Test Suite 'CanvasOnlySourcePresentationTests' passed at 2026-10-30 13:09:03.502
+	 Executed 1 test, with 0 failures (0 unexpected) in 9.592 (9.592) seconds
+Test Suite 'FabricPatternRenderingTests' started at 2026-10-30 13:09:03.502
+Test Case 'FabricPatternRenderingTests.testRasterAndCachedPreviewAgreeOnAsymmetricPhysicalMotifsForEveryRepeatMode' started at 2026-10-30 13:09:03.502
+Test Case 'FabricPatternRenderingTests.testRasterAndCachedPreviewAgreeOnAsymmetricPhysicalMotifsForEveryRepeatMode' passed (0.024 seconds)
+Test Case 'FabricPatternRenderingTests.testRotatedFabricBaseHasNoTransparentHairlinesAtRepeatBoundaries' started at 2026-10-30 13:09:03.526
+Test Case 'FabricPatternRenderingTests.testRotatedFabricBaseHasNoTransparentHairlinesAtRepeatBoundaries' passed (0.038 seconds)
+Test Case 'FabricPatternRenderingTests.testRotatedOffsetAndScaledPreviewKeepsTheSamePhysicalPhaseAsVectorOutput' started at 2026-10-30 13:09:03.565
+Test Case 'FabricPatternRenderingTests.testRotatedOffsetAndScaledPreviewKeepsTheSamePhysicalPhaseAsVectorOutput' passed (0.006 seconds)
+Test Case 'FabricPatternRenderingTests.testSourcePaintAndFrameEditsInvalidateGarmentTextureAndGeometryCache' started at 2026-10-30 13:09:03.571
+Test Case 'FabricPatternRenderingTests.testSourcePaintAndFrameEditsInvalidateGarmentTextureAndGeometryCache' passed (10.983 seconds)
+Test Case 'FabricPatternRenderingTests.testYardageMCPExportsPhysicalSVGAndVectorPDFAndKeepsOriginalArtwork' started at 2026-10-30 13:09:14.554
+Test Case 'FabricPatternRenderingTests.testYardageMCPExportsPhysicalSVGAndVectorPDFAndKeepsOriginalArtwork' passed (0.008 seconds)
+Test Suite 'FabricPatternRenderingTests' passed at 2026-10-30 13:09:14.562
+	 Executed 5 tests, with 0 failures (0 unexpected) in 11.06 (11.06) seconds
+Test Suite 'IndependentSurfaceSelectionTests' started at 2026-10-30 13:09:14.562
+Test Case 'IndependentSurfaceSelectionTests.testCanvasSourceEditsAndSVGImportKeepTableSelectionCameraAndOneUndo' started at 2026-10-30 13:09:14.562
+Test Case 'IndependentSurfaceSelectionTests.testCanvasSourceEditsAndSVGImportKeepTableSelectionCameraAndOneUndo' passed (0.026 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testContextMenuFindExplicitlySelectsAndCentersTableWithoutChangingCanvasOrOpeningInspector' started at 2026-10-30 13:09:14.588
+Test Case 'IndependentSurfaceSelectionTests.testContextMenuFindExplicitlySelectsAndCentersTableWithoutChangingCanvasOrOpeningInspector' passed (4.724 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testNativeCanvasFrameClicksKeepUnrelatedTableSelectionCameraAndPanelContext' started at 2026-10-30 13:09:19.312
+Test Case 'IndependentSurfaceSelectionTests.testNativeCanvasFrameClicksKeepUnrelatedTableSelectionCameraAndPanelContext' passed (0.021 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testNewCanvasFrameKeepsTableSelectionCameraAndClosedInspector' started at 2026-10-30 13:09:19.333
+Test Case 'IndependentSurfaceSelectionTests.testNewCanvasFrameKeepsTableSelectionCameraAndClosedInspector' passed (0.013 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testTablePanelPickingDoesNotNavigateOrRefitCanvas' started at 2026-10-30 13:09:19.346
+Test Case 'IndependentSurfaceSelectionTests.testTablePanelPickingDoesNotNavigateOrRefitCanvas' passed (0.031 seconds)
+Test Case 'IndependentSurfaceSelectionTests.testTablePicksAndReconcileKeepCanvasSourceFrameElementsAndViewport' started at 2026-10-30 13:09:19.377
+Test Case 'IndependentSurfaceSelectionTests.testTablePicksAndReconcileKeepCanvasSourceFrameElementsAndViewport' passed (0.018 seconds)
+Test Suite 'IndependentSurfaceSelectionTests' passed at 2026-10-30 13:09:19.395
+	 Executed 6 tests, with 0 failures (0 unexpected) in 4.832 (4.832) seconds
+Test Suite 'NativeModelControlTests' started at 2026-10-30 13:09:19.395
+Test Case 'NativeModelControlTests.testAuthoredNativeControlsUpdateVisibleTableAndKeepLatestPose' started at 2026-10-30 13:09:19.395
+Test Case 'NativeModelControlTests.testAuthoredNativeControlsUpdateVisibleTableAndKeepLatestPose' passed (32.981 seconds)
+Test Case 'NativeModelControlTests.testFabricNativeControlsKeepSourceAndLatestRestSurface' started at 2026-10-30 13:09:52.376
+Test Case 'NativeModelControlTests.testFabricNativeControlsKeepSourceAndLatestRestSurface' passed (13.984 seconds)
+Test Case 'NativeModelControlTests.testMechanicalNativeDraftControlsAndPreviewShowLatestValues' started at 2026-10-30 13:10:06.361
+=== AttributeGraph: cycle detected through attribute 1728200 ===
+=== AttributeGraph: cycle detected through attribute 1662872 ===
+=== AttributeGraph: cycle detected through attribute 1730840 ===
+=== AttributeGraph: cycle detected through attribute 1730840 ===
+=== AttributeGraph: cycle detected through attribute 1735128 ===
+=== AttributeGraph: cycle detected through attribute 1733244 ===
+=== AttributeGraph: cycle detected through attribute 1733976 ===
+=== AttributeGraph: cycle detected through attribute 1734168 ===
+=== AttributeGraph: cycle detected through attribute 1734168 ===
+=== AttributeGraph: cycle detected through attribute 1735128 ===
+=== AttributeGraph: cycle detected through attribute 1739144 ===
+=== AttributeGraph: cycle detected through attribute 1739144 ===
+=== AttributeGraph: cycle detected through attribute 1765744 ===
+=== AttributeGraph: cycle detected through attribute 1843488 ===
+=== AttributeGraph: cycle detected through attribute 1765744 ===
+=== AttributeGraph: cycle detected through attribute 1842952 ===
+=== AttributeGraph: cycle detected through attribute 1842952 ===
+=== AttributeGraph: cycle detected through attribute 1842952 ===
+=== AttributeGraph: cycle detected through attribute 1733184 ===
+Test Case 'NativeModelControlTests.testMechanicalNativeDraftControlsAndPreviewShowLatestValues' passed (3.893 seconds)
+Test Suite 'NativeModelControlTests' passed at 2026-10-30 13:10:10.254
+	 Executed 3 tests, with 0 failures (0 unexpected) in 50.858 (50.858) seconds
+Test Suite 'PaperAppearanceControlsTests' started at 2026-10-30 13:10:10.254
+Test Case 'PaperAppearanceControlsTests.testNativeFinishDepthParsesPhysicalUnitsAndLeavesRejectedDraftLocal' started at 2026-10-30 13:10:10.254
+Test Case 'PaperAppearanceControlsTests.testNativeFinishDepthParsesPhysicalUnitsAndLeavesRejectedDraftLocal' passed (0.605 seconds)
+Test Case 'PaperAppearanceControlsTests.testNativeStockSliderUsesSharedCommandGestureAndOneUndo' started at 2026-10-30 13:10:10.859
+Test Case 'PaperAppearanceControlsTests.testNativeStockSliderUsesSharedCommandGestureAndOneUndo' passed (0.35 seconds)
+Test Suite 'PaperAppearanceControlsTests' passed at 2026-10-30 13:10:11.209
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.954 (0.954) seconds
+Test Suite 'PaperAppearanceRenderingTests' started at 2026-10-30 13:10:11.209
+Test Case 'PaperAppearanceRenderingTests.testBondedPlyEdgesHaveActualIndependentCalipersAndStableAppearanceOnlyGeometry' started at 2026-10-30 13:10:11.209
+Test Case 'PaperAppearanceRenderingTests.testBondedPlyEdgesHaveActualIndependentCalipersAndStableAppearanceOnlyGeometry' passed (0.074 seconds)
+Test Case 'PaperAppearanceRenderingTests.testCanonicalFinishMasksMoveWithEditableArtworkAndBlindWorkDoesNotPrintItsFill' started at 2026-10-30 13:10:11.283
+Test Case 'PaperAppearanceRenderingTests.testCanonicalFinishMasksMoveWithEditableArtworkAndBlindWorkDoesNotPrintItsFill' passed (0.621 seconds)
+Test Case 'PaperAppearanceRenderingTests.testOrdinaryPrintUsesTheSameInkColorOpacityAndExcludesFoilAndBlindMasks' started at 2026-10-30 13:10:11.904
+Test Case 'PaperAppearanceRenderingTests.testOrdinaryPrintUsesTheSameInkColorOpacityAndExcludesFoilAndBlindMasks' passed (0.281 seconds)
+Test Case 'PaperAppearanceRenderingTests.testPanelWindowIsMissingPhysicalMaterialAndChangesTheMeshIdentity' started at 2026-10-30 13:10:12.185
+Test Case 'PaperAppearanceRenderingTests.testPanelWindowIsMissingPhysicalMaterialAndChangesTheMeshIdentity' passed (0.004 seconds)
+Test Case 'PaperAppearanceRenderingTests.testPaperTextureUsesPhysicalCoordinatesAndPreservesFineSourceAtHigherBoundedQuality' started at 2026-10-30 13:10:12.189
+Test Case 'PaperAppearanceRenderingTests.testPaperTextureUsesPhysicalCoordinatesAndPreservesFineSourceAtHigherBoundedQuality' passed (0.714 seconds)
+Test Case 'PaperAppearanceRenderingTests.testProceduralFinishTexturesKeepTheirMetallicScaleAndOpaqueStockInTheNativeBridge' started at 2026-10-30 13:10:12.903
+Test Case 'PaperAppearanceRenderingTests.testProceduralFinishTexturesKeepTheirMetallicScaleAndOpaqueStockInTheNativeBridge' passed (0.11 seconds)
+Test Case 'PaperAppearanceRenderingTests.testRegisteredMaskRetainsAncestorTransformsAndClipDependenciesWithoutOtherPaint' started at 2026-10-30 13:10:13.013
+Test Case 'PaperAppearanceRenderingTests.testRegisteredMaskRetainsAncestorTransformsAndClipDependenciesWithoutOtherPaint' passed (0.008 seconds)
+Test Suite 'PaperAppearanceRenderingTests' passed at 2026-10-30 13:10:13.021
+	 Executed 7 tests, with 0 failures (0 unexpected) in 1.812 (1.812) seconds
+Test Suite 'PaperGeometryTests' started at 2026-10-30 13:10:13.021
+Test Case 'PaperGeometryTests.testArtworkInsideAndStockEditsReusePhysicalUploadsWithoutRecoloringAnotherObject' started at 2026-10-30 13:10:13.021
+Test Case 'PaperGeometryTests.testArtworkInsideAndStockEditsReusePhysicalUploadsWithoutRecoloringAnotherObject' passed (3.672 seconds)
+Test Case 'PaperGeometryTests.testCanonicalOutsideAndInsideUVsUsePhysicalNetCoordinatesWithoutPanelStretching' started at 2026-10-30 13:10:16.693
+Test Case 'PaperGeometryTests.testCanonicalOutsideAndInsideUVsUsePhysicalNetCoordinatesWithoutPanelStretching' passed (0.02 seconds)
+Test Case 'PaperGeometryTests.testEnvelopeAndCartonAreSoftEdgedHollowPanelShellsWithRealCaliper' started at 2026-10-30 13:10:16.714
+Test Case 'PaperGeometryTests.testEnvelopeAndCartonAreSoftEdgedHollowPanelShellsWithRealCaliper' passed (0.11 seconds)
+Test Case 'PaperGeometryTests.testFoldAndPanelSelectionUpdateTransformsWithoutMeshOrTextureRebuilds' started at 2026-10-30 13:10:16.824
+Test Case 'PaperGeometryTests.testFoldAndPanelSelectionUpdateTransformsWithoutMeshOrTextureRebuilds' passed (0.133 seconds)
+Test Case 'PaperGeometryTests.testLinkedOutsideInsideSourceAndPanelPickSurviveNativeGPUProjection' started at 2026-10-30 13:10:16.957
+Test Case 'PaperGeometryTests.testLinkedOutsideInsideSourceAndPanelPickSurviveNativeGPUProjection' passed (0.885 seconds)
+Test Case 'PaperGeometryTests.testNativeDielineTextDragKeepsClosedPanelGeometryAndRenderedSilhouette' started at 2026-10-30 13:10:17.842
+Test Case 'PaperGeometryTests.testNativeDielineTextDragKeepsClosedPanelGeometryAndRenderedSilhouette' passed (33.416 seconds)
+Test Case 'PaperGeometryTests.testPhysicalMeshIdentityIncludesCaliperNetUVAndChannelGroups' started at 2026-10-30 13:10:51.258
+Test Case 'PaperGeometryTests.testPhysicalMeshIdentityIncludesCaliperNetUVAndChannelGroups' passed (0.012 seconds)
+Test Case 'PaperGeometryTests.testReleasedProceduralGeometryCannotAliasOlderGPUMeshBuffers' started at 2026-10-30 13:10:51.270
+Test Case 'PaperGeometryTests.testReleasedProceduralGeometryCannotAliasOlderGPUMeshBuffers' passed (0.357 seconds)
+Test Suite 'PaperGeometryTests' passed at 2026-10-30 13:10:51.628
+	 Executed 8 tests, with 0 failures (0 unexpected) in 38.605 (38.605) seconds
+Test Suite 'PaperNativeFitTests' started at 2026-10-30 13:10:51.629
+Test Case 'PaperNativeFitTests.testActualWrongOrientationCanFailOpeningWhileStillFittingCavity' started at 2026-10-30 13:10:51.629
+Test Case 'PaperNativeFitTests.testActualWrongOrientationCanFailOpeningWhileStillFittingCavity' passed (0.757 seconds)
+Test Case 'PaperNativeFitTests.testPaperContentsBoundsExcludeHiddenHighlightsAndRejectCanvasOnlyTargets' started at 2026-10-30 13:10:52.385
+Test Case 'PaperNativeFitTests.testPaperContentsBoundsExcludeHiddenHighlightsAndRejectCanvasOnlyTargets' passed (0.83 seconds)
+Test Case 'PaperNativeFitTests.testTranslatedRotatedModeledWatchUsesMillimetersAndMovingOutFailsWithoutMutation' started at 2026-10-30 13:10:53.215
+Test Case 'PaperNativeFitTests.testTranslatedRotatedModeledWatchUsesMillimetersAndMovingOutFailsWithoutMutation' passed (0.668 seconds)
+Test Suite 'PaperNativeFitTests' passed at 2026-10-30 13:10:53.883
+	 Executed 3 tests, with 0 failures (0 unexpected) in 2.254 (2.254) seconds
+Test Suite 'PaperProductionOutputTests' started at 2026-10-30 13:10:53.883
+Test Case 'PaperProductionOutputTests.testPacketSeparatesBlindAndFoilFromOrdinaryInkAndRejectsMissingEnabledTargets' started at 2026-10-30 13:10:53.883
+Test Case 'PaperProductionOutputTests.testPacketSeparatesBlindAndFoilFromOrdinaryInkAndRejectsMissingEnabledTargets' passed (0.029 seconds)
+Test Case 'PaperProductionOutputTests.testRetainedSupplierSVGIsByteExactAndRegistrationDoesNotChangeItsTechnicalPaths' started at 2026-10-30 13:10:53.912
+Test Case 'PaperProductionOutputTests.testRetainedSupplierSVGIsByteExactAndRegistrationDoesNotChangeItsTechnicalPaths' passed (0.022 seconds)
+Test Case 'PaperProductionOutputTests.testSafetyReviewIncludesInteriorCutsWithoutEditingArtwork' started at 2026-10-30 13:10:53.934
+Test Case 'PaperProductionOutputTests.testSafetyReviewIncludesInteriorCutsWithoutEditingArtwork' passed (0.009 seconds)
+Test Suite 'PaperProductionOutputTests' passed at 2026-10-30 13:10:53.943
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.06 (0.06) seconds
+Test Suite 'PaperWorkspaceTests' started at 2026-10-30 13:10:53.943
+Test Case 'PaperWorkspaceTests.testInsideSourceEditsThroughNativeSessionAndSurvivesReconciliation' started at 2026-10-30 13:10:53.943
+Test Case 'PaperWorkspaceTests.testInsideSourceEditsThroughNativeSessionAndSurvivesReconciliation' passed (0.021 seconds)
+Test Case 'PaperWorkspaceTests.testInvalidLayoutAndSourceFolderExportsAreRejectedWithoutMutation' started at 2026-10-30 13:10:53.964
+Test Case 'PaperWorkspaceTests.testInvalidLayoutAndSourceFolderExportsAreRejectedWithoutMutation' passed (0.011 seconds)
+Test Case 'PaperWorkspaceTests.testPhysicalPacketHasExactSheetPagesSeparateOperationsAndVerifiedArtifacts' started at 2026-10-30 13:10:53.975
+Test Case 'PaperWorkspaceTests.testPhysicalPacketHasExactSheetPagesSeparateOperationsAndVerifiedArtifacts' passed (0.071 seconds)
+Test Case 'PaperWorkspaceTests.testPrintActionUsesPaperPreparationAndRetainsCamera' started at 2026-10-30 13:10:54.046
+Test Case 'PaperWorkspaceTests.testPrintActionUsesPaperPreparationAndRetainsCamera' passed (0.01 seconds)
+Test Case 'PaperWorkspaceTests.testPurposeRepresentationAndPanelSelectionDoNotChangeSourceOrUndo' started at 2026-10-30 13:10:54.056
+Test Case 'PaperWorkspaceTests.testPurposeRepresentationAndPanelSelectionDoNotChangeSourceOrUndo' passed (0.021 seconds)
+Test Case 'PaperWorkspaceTests.testVisibleArtworkRecoversAfterInvalidPreviewAndUndo' started at 2026-10-30 13:10:54.077
+Test Case 'PaperWorkspaceTests.testVisibleArtworkRecoversAfterInvalidPreviewAndUndo' passed (0.118 seconds)
+Test Suite 'PaperWorkspaceTests' passed at 2026-10-30 13:10:54.195
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.252 (0.252) seconds
+Test Suite 'TextileGeometryTests' started at 2026-10-30 13:10:54.195
+Test Case 'TextileGeometryTests.testAttachedDecorationFollowsScenePlacementWithoutRebuildingGeometry' started at 2026-10-30 13:10:54.195
+Test Case 'TextileGeometryTests.testAttachedDecorationFollowsScenePlacementWithoutRebuildingGeometry' passed (8.581 seconds)
+Test Case 'TextileGeometryTests.testBomberUsesShapedMeshesAndPhysicalParametersChangeItsBounds' started at 2026-10-30 13:11:02.776
+Test Case 'TextileGeometryTests.testBomberUsesShapedMeshesAndPhysicalParametersChangeItsBounds' passed (1.521 seconds)
+Test Case 'TextileGeometryTests.testFlightStudyProducesANativeRenderedPreview' started at 2026-10-30 13:11:04.297
+Test Case 'TextileGeometryTests.testFlightStudyProducesANativeRenderedPreview' passed (10.083 seconds)
+Test Suite 'TextileGeometryTests' passed at 2026-10-30 13:11:14.381
+	 Executed 3 tests, with 0 failures (0 unexpected) in 20.185 (20.185) seconds
+Test Suite 'ConstructionCapabilitiesTests' started at 2026-10-30 13:11:14.381
+Test Case 'ConstructionCapabilitiesTests.testDiscoveredVersionThreeExampleCreatesWithAccurateFieldsAndReadOnlyCapabilities' started at 2026-10-30 13:11:14.381
+Test Case 'ConstructionCapabilitiesTests.testDiscoveredVersionThreeExampleCreatesWithAccurateFieldsAndReadOnlyCapabilities' passed (0.131 seconds)
+Test Suite 'ConstructionCapabilitiesTests' passed at 2026-10-30 13:11:14.512
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.131 (0.131) seconds
+Test Suite 'FabricPatternTests' started at 2026-10-30 13:11:14.512
+Test Case 'FabricPatternTests.testBrokenLinksAndWorkspaceSourcesAreRejectedWithoutDeletingAnyResources' started at 2026-10-30 13:11:14.512
+Test Case 'FabricPatternTests.testBrokenLinksAndWorkspaceSourcesAreRejectedWithoutDeletingAnyResources' passed (0.004 seconds)
+Test Case 'FabricPatternTests.testColorwaysResolveSharedPaintsWithoutMutatingSourceOrOtherGarmentResources' started at 2026-10-30 13:11:14.516
+Test Case 'FabricPatternTests.testColorwaysResolveSharedPaintsWithoutMutatingSourceOrOtherGarmentResources' passed (0.001 seconds)
+Test Case 'FabricPatternTests.testInvalidNumbersAmbiguousColorwaysAndExcessiveRepeatWorkFailBeforeRendering' started at 2026-10-30 13:11:14.517
+Test Case 'FabricPatternTests.testInvalidNumbersAmbiguousColorwaysAndExcessiveRepeatWorkFailBeforeRendering' passed (0.0 seconds)
+Test Case 'FabricPatternTests.testLatticeAndBomberUVShareScaleRotationAndPhaseAtPhysicalPoints' started at 2026-10-30 13:11:14.517
+Test Case 'FabricPatternTests.testLatticeAndBomberUVShareScaleRotationAndPhaseAtPhysicalPoints' passed (0.0 seconds)
+Test Case 'FabricPatternTests.testLibraryInventoryMergeRetainsProjectPatternAndNeverAddsItToGlobalInput' started at 2026-10-30 13:11:14.517
+Test Case 'FabricPatternTests.testLibraryInventoryMergeRetainsProjectPatternAndNeverAddsItToGlobalInput' passed (0.001 seconds)
+Test Case 'FabricPatternTests.testMCPPatternMutationIsAtomicUndoableAndPersistsSchemaTwentyOne' started at 2026-10-30 13:11:14.518
+Test Case 'FabricPatternTests.testMCPPatternMutationIsAtomicUndoableAndPersistsSchemaTwentyOne' passed (0.016 seconds)
+Test Case 'FabricPatternTests.testModesHaveTruePhysicalPeriodsAndOffsetRowsOrColumns' started at 2026-10-30 13:11:14.534
+Test Case 'FabricPatternTests.testModesHaveTruePhysicalPeriodsAndOffsetRowsOrColumns' passed (0.0 seconds)
+Test Suite 'FabricPatternTests' passed at 2026-10-30 13:11:14.534
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.022 (0.022) seconds
+Test Suite 'LocalBridgeDeadlineTests' started at 2026-10-30 13:11:14.535
+Test Case 'LocalBridgeDeadlineTests.testOnlyNativePNGExportsReceiveTheCaptureResponseWindow' started at 2026-10-30 13:11:14.535
+Test Case 'LocalBridgeDeadlineTests.testOnlyNativePNGExportsReceiveTheCaptureResponseWindow' passed (0.0 seconds)
+Test Case 'LocalBridgeDeadlineTests.testSavedSceneVideoRetainsItsExistingBoundedWindow' started at 2026-10-30 13:11:14.535
+Test Case 'LocalBridgeDeadlineTests.testSavedSceneVideoRetainsItsExistingBoundedWindow' passed (0.0 seconds)
+Test Suite 'LocalBridgeDeadlineTests' passed at 2026-10-30 13:11:14.535
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+Test Suite 'ObjectPresentationTests' started at 2026-10-30 13:11:14.535
+Test Case 'ObjectPresentationTests.testExistingInsideAssociationRetainsItsOriginalVisibleSource' started at 2026-10-30 13:11:14.535
+Test Case 'ObjectPresentationTests.testExistingInsideAssociationRetainsItsOriginalVisibleSource' passed (0.001 seconds)
+Test Case 'ObjectPresentationTests.testNewInsideSourceIsCanvasOnlyAndPersistsWithoutChangingLegacyArtboards' started at 2026-10-30 13:11:14.535
+Test Case 'ObjectPresentationTests.testNewInsideSourceIsCanvasOnlyAndPersistsWithoutChangingLegacyArtboards' passed (0.01 seconds)
+Test Suite 'ObjectPresentationTests' passed at 2026-10-30 13:11:14.545
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.01 (0.01) seconds
+Test Suite 'PaperAppearanceTests' started at 2026-10-30 13:11:14.545
+Test Case 'PaperAppearanceTests.testAuthoredCaliperMustAgreeAtomicallyWithoutRewritingItsExpression' started at 2026-10-30 13:11:14.545
+Test Case 'PaperAppearanceTests.testAuthoredCaliperMustAgreeAtomicallyWithoutRewritingItsExpression' passed (0.008 seconds)
+Test Case 'PaperAppearanceTests.testBitmapInkOverridesRejectAtomicallyWhileImageAlphaFoilAndOriginalInkRemainSupported' started at 2026-10-30 13:11:14.554
+Test Case 'PaperAppearanceTests.testBitmapInkOverridesRejectAtomicallyWhileImageAlphaFoilAndOriginalInkRemainSupported' passed (0.006 seconds)
+Test Case 'PaperAppearanceTests.testBondedPliesUseSummedCaliperAndPersistExactAppearanceAfterReopen' started at 2026-10-30 13:11:14.560
+Test Case 'PaperAppearanceTests.testBondedPliesUseSummedCaliperAndPersistExactAppearanceAfterReopen' passed (0.01 seconds)
+Test Case 'PaperAppearanceTests.testFinishAssignmentsStayLocalWhenSharedConstructionChanges' started at 2026-10-30 13:11:14.569
+Test Case 'PaperAppearanceTests.testFinishAssignmentsStayLocalWhenSharedConstructionChanges' passed (0.013 seconds)
+Test Case 'PaperAppearanceTests.testFinishTracksCanonicalTextAndMaskEditsRetainsMissingTargetsAndIsOneUndo' started at 2026-10-30 13:11:14.582
+Test Case 'PaperAppearanceTests.testFinishTracksCanonicalTextAndMaskEditsRetainsMissingTargetsAndIsOneUndo' passed (0.006 seconds)
+Test Case 'PaperAppearanceTests.testInsideFinishResolvesIndependentBackSourceAndPartialEditsKeepIdentity' started at 2026-10-30 13:11:14.588
+Test Case 'PaperAppearanceTests.testInsideFinishResolvesIndependentBackSourceAndPartialEditsKeepIdentity' passed (0.008 seconds)
+Test Case 'PaperAppearanceTests.testLegacyStockAndProjectRemainUnchangedWithoutAppearanceDeclarations' started at 2026-10-30 13:11:14.596
+Test Case 'PaperAppearanceTests.testLegacyStockAndProjectRemainUnchangedWithoutAppearanceDeclarations' passed (0.004 seconds)
+Test Case 'PaperAppearanceTests.testModeledContentsPreflightUsesReadOnlyNativePathAndRejectsAmbiguousUnits' started at 2026-10-30 13:11:14.600
+Test Case 'PaperAppearanceTests.testModeledContentsPreflightUsesReadOnlyNativePathAndRejectsAmbiguousUnits' passed (0.001 seconds)
+Test Case 'PaperAppearanceTests.testReusablePaperStockUsesExistingMaterialsAndNormalPickerWithOneUndo' started at 2026-10-30 13:11:14.601
+Test Case 'PaperAppearanceTests.testReusablePaperStockUsesExistingMaterialsAndNormalPickerWithOneUndo' passed (0.055 seconds)
+Test Case 'PaperAppearanceTests.testSavingLegacyStockRetainsItsExistingMaterialColorWithoutAProfile' started at 2026-10-30 13:11:14.656
+Test Case 'PaperAppearanceTests.testSavingLegacyStockRetainsItsExistingMaterialColorWithoutAProfile' passed (0.005 seconds)
+Test Case 'PaperAppearanceTests.testStockChangesPreserveExplicitTintUntilOneUndoableClear' started at 2026-10-30 13:11:14.661
+Test Case 'PaperAppearanceTests.testStockChangesPreserveExplicitTintUntilOneUndoableClear' passed (0.007 seconds)
+Test Case 'PaperAppearanceTests.testStrictNestedAppearanceAndFinishFailuresAreAtomic' started at 2026-10-30 13:11:14.668
+Test Case 'PaperAppearanceTests.testStrictNestedAppearanceAndFinishFailuresAreAtomic' passed (0.001 seconds)
+Test Case 'PaperAppearanceTests.testTemplateAndBleedDispatchRejectBadMetadataBeforeTouchingNativeHost' started at 2026-10-30 13:11:14.669
+Test Case 'PaperAppearanceTests.testTemplateAndBleedDispatchRejectBadMetadataBeforeTouchingNativeHost' passed (0.001 seconds)
+Test Suite 'PaperAppearanceTests' passed at 2026-10-30 13:11:14.670
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.125 (0.125) seconds
+Test Suite 'PaperConstructionTests' started at 2026-10-30 13:11:14.670
+Test Case 'PaperConstructionTests.testAnnotationsAndInvalidInputsAreAtomicAndReadOnlyCommandsDoNotAddHistory' started at 2026-10-30 13:11:14.670
+Test Case 'PaperConstructionTests.testAnnotationsAndInvalidInputsAreAtomicAndReadOnlyCommandsDoNotAddHistory' passed (0.015 seconds)
+Test Case 'PaperConstructionTests.testDeterministicNetsHaveStableSemanticIDsAndNoCutThroughAnyCreaseInterior' started at 2026-10-30 13:11:14.685
+Test Case 'PaperConstructionTests.testDeterministicNetsHaveStableSemanticIDsAndNoCutThroughAnyCreaseInterior' passed (0.038 seconds)
+Test Case 'PaperConstructionTests.testExistingStudioLibraryGainsPaperPresetWithoutOverwritingCustomMaterials' started at 2026-10-30 13:11:14.723
+Test Case 'PaperConstructionTests.testExistingStudioLibraryGainsPaperPresetWithoutOverwritingCustomMaterials' passed (0.001 seconds)
+Test Case 'PaperConstructionTests.testExplicitLegacyConversionTranslatesFrontArtWithoutTouchingLinkedSourceAndUndoRestores' started at 2026-10-30 13:11:14.724
+Test Case 'PaperConstructionTests.testExplicitLegacyConversionTranslatesFrontArtWithoutTouchingLinkedSourceAndUndoRestores' passed (0.005 seconds)
+Test Case 'PaperConstructionTests.testFoldTransformsAreRigidGroundedUprightAndOutsideOrientationIsConsistent' started at 2026-10-30 13:11:14.729
+Test Case 'PaperConstructionTests.testFoldTransformsAreRigidGroundedUprightAndOutsideOrientationIsConsistent' passed (0.036 seconds)
+Test Case 'PaperConstructionTests.testInsideArtworkCreationIsOneUndoIdempotentLinkedAndResolvesSharedSwatches' started at 2026-10-30 13:11:14.765
+Test Case 'PaperConstructionTests.testInsideArtworkCreationIsOneUndoIdempotentLinkedAndResolvesSharedSwatches' passed (0.003 seconds)
+Test Case 'PaperConstructionTests.testLayoutNeverScalesBlanksAndReportsStockFitContentsAndPrototypeAssumptions' started at 2026-10-30 13:11:14.768
+Test Case 'PaperConstructionTests.testLayoutNeverScalesBlanksAndReportsStockFitContentsAndPrototypeAssumptions' passed (0.004 seconds)
+Test Case 'PaperConstructionTests.testLoadedPaperSourceRejectsMixedRepresentationsAndMismatchedRecipeOrKind' started at 2026-10-30 13:11:14.773
+Test Case 'PaperConstructionTests.testLoadedPaperSourceRejectsMixedRepresentationsAndMismatchedRecipeOrKind' passed (0.027 seconds)
+Test Case 'PaperConstructionTests.testParameterChangesPreserveArtworkCoordinatesAndInsideSourceWhileFlaggingReviewAndUndo' started at 2026-10-30 13:11:14.800
+Test Case 'PaperConstructionTests.testParameterChangesPreserveArtworkCoordinatesAndInsideSourceWhileFlaggingReviewAndUndo' passed (0.012 seconds)
+Test Case 'PaperConstructionTests.testSourcePersistenceSchema53AndHistoricalSleeveRemainIndependent' started at 2026-10-30 13:11:14.812
+Test Case 'PaperConstructionTests.testSourcePersistenceSchema53AndHistoricalSleeveRemainIndependent' passed (0.018 seconds)
+Test Case 'PaperConstructionTests.testTopOpeningKeepsBodyAndBottomFixedAndUsesDistinctClosureLayers' started at 2026-10-30 13:11:14.830
+Test Case 'PaperConstructionTests.testTopOpeningKeepsBodyAndBottomFixedAndUsesDistinctClosureLayers' passed (0.026 seconds)
+Test Suite 'PaperConstructionTests' passed at 2026-10-30 13:11:14.856
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.185 (0.185) seconds
+Test Suite 'PaperFinishVisibilityTests' started at 2026-10-30 13:11:14.856
+Test Case 'PaperFinishVisibilityTests.testLaterVisibilityOrSourceRemovalRemainsRepairableAndReportsNoMask' started at 2026-10-30 13:11:14.856
+Test Case 'PaperFinishVisibilityTests.testLaterVisibilityOrSourceRemovalRemainsRepairableAndReportsNoMask' passed (0.013 seconds)
+Test Case 'PaperFinishVisibilityTests.testMixedGroupRequiresVisiblePrintContentForEachExplicitTarget' started at 2026-10-30 13:11:14.869
+Test Case 'PaperFinishVisibilityTests.testMixedGroupRequiresVisiblePrintContentForEachExplicitTarget' passed (0.003 seconds)
+Test Case 'PaperFinishVisibilityTests.testNewAssignmentsAndWholeConfigurationRejectInvisibleAndTechnicalMasksAtomically' started at 2026-10-30 13:11:14.871
+Test Case 'PaperFinishVisibilityTests.testNewAssignmentsAndWholeConfigurationRejectInvisibleAndTechnicalMasksAtomically' passed (0.003 seconds)
+Test Suite 'PaperFinishVisibilityTests' passed at 2026-10-30 13:11:14.874
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.018 (0.018) seconds
+Test Suite 'PaperPrintGeometryTests' started at 2026-10-30 13:11:14.874
+Test Case 'PaperPrintGeometryTests.testBleedExpandsActualOuterCutAndContractsWindowWithCommonPhysicalCoordinates' started at 2026-10-30 13:11:14.874
+Test Case 'PaperPrintGeometryTests.testBleedExpandsActualOuterCutAndContractsWindowWithCommonPhysicalCoordinates' passed (0.0 seconds)
+Test Case 'PaperPrintGeometryTests.testRegisteredViewportContainsTheWholeTransformedBleedOrRefusesIt' started at 2026-10-30 13:11:14.875
+Test Case 'PaperPrintGeometryTests.testRegisteredViewportContainsTheWholeTransformedBleedOrRefusesIt' passed (0.0 seconds)
+Test Case 'PaperPrintGeometryTests.testTemplateReviewTracksPhysicalRegistrationRatherThanInkOrOpenPose' started at 2026-10-30 13:11:14.875
+Test Case 'PaperPrintGeometryTests.testTemplateReviewTracksPhysicalRegistrationRatherThanInkOrOpenPose' passed (0.005 seconds)
+Test Suite 'PaperPrintGeometryTests' passed at 2026-10-30 13:11:14.880
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.005 (0.005) seconds
+Test Suite 'PlanarPackagingTests' started at 2026-10-30 13:11:14.880
+Test Case 'PlanarPackagingTests.testAuthoredStockMetadataAndSourceCaliperCannotBeSilentlyRepaired' started at 2026-10-30 13:11:14.880
+Test Case 'PlanarPackagingTests.testAuthoredStockMetadataAndSourceCaliperCannotBeSilentlyRepaired' passed (0.001 seconds)
+Test Case 'PlanarPackagingTests.testFitUsesActualOrientedCornersAndSeparatelyReportsOpening' started at 2026-10-30 13:11:14.880
+Test Case 'PlanarPackagingTests.testFitUsesActualOrientedCornersAndSeparatelyReportsOpening' passed (0.013 seconds)
+Test Case 'PlanarPackagingTests.testIndependentRootsRetainFlatCoordinatesAndOnlyOpeningComponentMoves' started at 2026-10-30 13:11:14.893
+Test Case 'PlanarPackagingTests.testIndependentRootsRetainFlatCoordinatesAndOnlyOpeningComponentMoves' passed (0.006 seconds)
+Test Case 'PlanarPackagingTests.testMalformedRootsHolesAndOldSourceVersionReject' started at 2026-10-30 13:11:14.900
+Test Case 'PlanarPackagingTests.testMalformedRootsHolesAndOldSourceVersionReject' passed (0.001 seconds)
+Test Case 'PlanarPackagingTests.testPhysicalCutoutsHaveStableTechnicalEdgesAndInsideFrameMapping' started at 2026-10-30 13:11:14.900
+Test Case 'PlanarPackagingTests.testPhysicalCutoutsHaveStableTechnicalEdgesAndInsideFrameMapping' passed (0.001 seconds)
+Test Case 'PlanarPackagingTests.testTwelvePackagingSourcesAndSeparateLinerCreateEditUndoAndReopen' started at 2026-10-30 13:11:14.901
+Test Case 'PlanarPackagingTests.testTwelvePackagingSourcesAndSeparateLinerCreateEditUndoAndReopen' passed (7.484 seconds)
+Test Suite 'PlanarPackagingTests' passed at 2026-10-30 13:11:22.386
+	 Executed 6 tests, with 0 failures (0 unexpected) in 7.505 (7.505) seconds
+Test Suite 'SewingPatternTests' started at 2026-10-30 13:11:22.386
+Test Case 'SewingPatternTests.testGroupingDuplicationDeletionAndSelectionExportKeepSeamReferencesConsistent' started at 2026-10-30 13:11:22.386
+Test Case 'SewingPatternTests.testGroupingDuplicationDeletionAndSelectionExportKeepSeamReferencesConsistent' passed (0.002 seconds)
+Test Case 'SewingPatternTests.testMirroredRotatedAndNonuniformTransformsDoNotScaleTheSeamAllowance' started at 2026-10-30 13:11:22.387
+Test Case 'SewingPatternTests.testMirroredRotatedAndNonuniformTransformsDoNotScaleTheSeamAllowance' passed (0.0 seconds)
+Test Case 'SewingPatternTests.testPairedPiecesTransferTogetherAcrossCanvasOwnersWithCollisionRemapping' started at 2026-10-30 13:11:22.388
+Test Case 'SewingPatternTests.testPairedPiecesTransferTogetherAcrossCanvasOwnersWithCollisionRemapping' passed (0.002 seconds)
+Test Case 'SewingPatternTests.testPerEdgeAllowancesAreExactPhysicalOffsets' started at 2026-10-30 13:11:22.389
+Test Case 'SewingPatternTests.testPerEdgeAllowancesAreExactPhysicalOffsets' passed (0.0 seconds)
+Test Case 'SewingPatternTests.testSeamMatchingUsesActualEdgesAndNumberedCutCopies' started at 2026-10-30 13:11:22.389
+Test Case 'SewingPatternTests.testSeamMatchingUsesActualEdgesAndNumberedCutCopies' passed (0.0 seconds)
+Test Case 'SewingPatternTests.testToteTemplateHasRealCutQuantitiesGrainNotchesAndMatchedCopySeams' started at 2026-10-30 13:11:22.390
+Test Case 'SewingPatternTests.testToteTemplateHasRealCutQuantitiesGrainNotchesAndMatchedCopySeams' passed (0.001 seconds)
+Test Case 'SewingPatternTests.testUnsupportedContoursAndUnsafeNotchesFailExplicitly' started at 2026-10-30 13:11:22.390
+Test Case 'SewingPatternTests.testUnsupportedContoursAndUnsafeNotchesFailExplicitly' passed (0.003 seconds)
+Test Suite 'SewingPatternTests' passed at 2026-10-30 13:11:22.393
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.007 (0.007) seconds
+Test Suite 'TextileTests' started at 2026-10-30 13:11:22.393
+Test Case 'TextileTests.testArtworkEditsLeaveGarmentAndIndependentComponentResourcesUntouched' started at 2026-10-30 13:11:22.393
+Test Case 'TextileTests.testArtworkEditsLeaveGarmentAndIndependentComponentResourcesUntouched' passed (0.001 seconds)
+Test Case 'TextileTests.testAttachmentTracksParentDimensionsRotationAndMovementWithoutChangingSourceObjects' started at 2026-10-30 13:11:22.394
+Test Case 'TextileTests.testAttachmentTracksParentDimensionsRotationAndMovementWithoutChangingSourceObjects' passed (0.0 seconds)
+Test Case 'TextileTests.testFlightStudyHasIndependentLinkedDecorationsAndEstimatedMaterials' started at 2026-10-30 13:11:22.394
+Test Case 'TextileTests.testFlightStudyHasIndependentLinkedDecorationsAndEstimatedMaterials' passed (0.002 seconds)
+Test Case 'TextileTests.testGarmentDeletionDetachesDecorationsAndUndoRestoresRelationships' started at 2026-10-30 13:11:22.397
+Test Case 'TextileTests.testGarmentDeletionDetachesDecorationsAndUndoRestoresRelationships' passed (0.003 seconds)
+Test Case 'TextileTests.testRepositorySchemaAndFabricLibraryRoundTripWithoutPromotingLegacyProjects' started at 2026-10-30 13:11:22.400
+Test Case 'TextileTests.testRepositorySchemaAndFabricLibraryRoundTripWithoutPromotingLegacyProjects' passed (0.018 seconds)
+Test Case 'TextileTests.testTextileMetadataMutationAndInvalidAttachmentAreAtomic' started at 2026-10-30 13:11:22.418
+Test Case 'TextileTests.testTextileMetadataMutationAndInvalidAttachmentAreAtomic' passed (0.009 seconds)
+Test Suite 'TextileTests' passed at 2026-10-30 13:11:22.427
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.034 (0.034) seconds
+Test Suite 'testing.xctest' passed at 2026-10-30 13:11:22.427
+	 Executed 134 tests, with 0 failures (0 unexpected) in 157.45 (157.45) seconds
+Test Suite 'All tests' passed at 2026-10-30 13:11:22.428
+	 Executed 134 tests, with 0 failures (0 unexpected) in 157.45 (157.45) seconds

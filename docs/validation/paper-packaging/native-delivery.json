@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "installed_app": "/Users/rustymeadows/Dev/form/build/LAB.app",
+  "executable_sha256": "5fa38e850a03f980bacb327d7d43636f3a430875de672627f690c1875be5a5ad",
+  "project_id": "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+  "project_name": "FIELD / Twelve paper studies",
+  "source_count": 25,
+  "physical_count": 15,
+  "inside_source_count": 9,
+  "canvas_workspaces": 1,
+  "import_method": "Byte-identical verified package copy into standard persistent library, opened with public form_open_project",
+  "external_file_open_note": "System File Open event did not import in this session; use File > Open Project or the delivered persistent project.",
+  "existing_projects_preserved": 3,
+  "saved_overview_shots": 1,
+  "saved_case_scenes": 13,
+  "strict_signature_verified": true,
+  "test_runtime_dependencies": false
+}

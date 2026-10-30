@@ -1,0 +1,92 @@
+{
+  "version": 3,
+  "name": "Loose patterned invitation liner",
+  "parameters": [
+    {
+      "name": "width",
+      "value": 181,
+      "minimum": 108.6,
+      "maximum": 289.6,
+      "unit": "mm"
+    },
+    {
+      "name": "height",
+      "value": 130,
+      "minimum": 78.0,
+      "maximum": 208.0,
+      "unit": "mm"
+    },
+    {
+      "name": "stock",
+      "value": 0.12,
+      "minimum": 0.048,
+      "maximum": 0.24,
+      "unit": "mm"
+    },
+    {
+      "name": "turn",
+      "value": 0,
+      "minimum": 0,
+      "maximum": 180,
+      "unit": "\u00b0"
+    }
+  ],
+  "size": {
+    "x": "width",
+    "y": "height"
+  },
+  "stockThickness": "stock",
+  "panels": [
+    {
+      "id": "front",
+      "name": "Front / back sheet",
+      "role": "body",
+      "polygon": [
+        {
+          "x": 0,
+          "y": "height"
+        },
+        {
+          "x": "width",
+          "y": "height"
+        },
+        {
+          "x": "width",
+          "y": 44
+        },
+        {
+          "x": "width/2",
+          "y": 0
+        },
+        {
+          "x": 0,
+          "y": 44
+        }
+      ]
+    }
+  ],
+  "hinges": [],
+  "joins": [],
+  "rootPanelID": "front",
+  "components": [
+    {
+      "id": "sheet",
+      "name": "Paper sheet",
+      "rootPanelID": "front",
+      "anchor": {
+        "x": "width/2",
+        "y": "height/2"
+      },
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationDegrees": {
+        "x": "turn",
+        "y": 0,
+        "z": 0
+      }
+    }
+  ]
+}

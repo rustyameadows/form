@@ -67,7 +67,7 @@ public struct StudioComposition:Codable,Equatable,Identifiable,Sendable {
   }
   public static func fromProject(_ project:Project,name:String="Still life 01")->Self {
     var scene=Self(name:name,camera:project.camera)
-    scene.instances=project.objects.filter{!$0.isCanvasWorkspace && $0.recipeID != "artboard" && $0.recipeID != "reference" && $0.textile?.attachment==nil && $0.clothAttachment==nil && $0.patternAssemblyAttachment==nil}.prefix(128).map{.init(name:$0.name,sourceObjectID:$0.id,positionMM:$0.position,rotationDegrees:$0.rotation)}
+    scene.instances=project.objects.filter{$0.hasTablePresentation && $0.recipeID != "artboard" && $0.recipeID != "reference" && $0.textile?.attachment==nil && $0.clothAttachment==nil && $0.patternAssemblyAttachment==nil}.prefix(128).map{.init(name:$0.name,sourceObjectID:$0.id,positionMM:$0.position,rotationDegrees:$0.rotation)}
     return scene
   }
   /// Resolve linked sources into ephemeral render objects, with deterministic IDs.
@@ -80,7 +80,7 @@ public struct StudioComposition:Codable,Equatable,Identifiable,Sendable {
         var object=ProductObject(name:instance.name,recipeID:"box",parameters:["width":prop.widthMM,"height":prop.heightMM,"depth":prop.depthMM,"corner":2],position:instance.positionMM,rotation:instance.rotationDegrees)
         object.id=instance.id;object.color=prop.color;created.append(object);visible.insert(object.id);continue
       }
-      guard let sourceID=instance.sourceObjectID,let source=originals[sourceID],!source.isCanvasWorkspace else{throw FormError.missing("A scene product is missing. Replace its source or remove the instance before rendering.")}
+      guard let sourceID=instance.sourceObjectID,let source=originals[sourceID],source.hasTablePresentation else{throw FormError.missing("A scene product is missing. Replace its source or remove the instance before rendering.")}
       guard source.meshAsset==nil || instance.materialID==nil else{throw FormError.invalid("Imported meshes retain their authored material slots. Choose an authored source colorway for this instance.")}
       var family=[source],familyIDs:Set<UUID>=[source.id]
       for _ in 0..<8 {

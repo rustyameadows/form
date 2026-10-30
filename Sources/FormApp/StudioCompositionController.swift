@@ -27,7 +27,7 @@ import SwiftUI
   var canUndoDraft:Bool{!undoDrafts.isEmpty && !busy}
   var canRedoDraft:Bool{!redoDrafts.isEmpty && !busy}
   var selected:StudioInstance?{draft?.instances.first{$0.id==selectedInstanceID}}
-  var products:[ProductObject]{store?.project?.objects.filter{!$0.isCanvasWorkspace && $0.recipeID != "reference"} ?? []}
+  var products:[ProductObject]{store?.project?.objects.filter{$0.hasTablePresentation && $0.recipeID != "reference"} ?? []}
   func reconcile() {
     guard let project=store?.project else{reset();return}
     if owner != project.id {reset();owner=project.id;draft=scenes.first ?? .fromProject(project);baseline=draft;baselineWasSaved=scenes.contains{$0.id==draft?.id};sync();return}
@@ -107,7 +107,7 @@ import SwiftUI
       stage.sync(resolved.project,selection:Set(selectedInstanceID.map{[$0]} ?? []),isolated:resolved.visible,showGrid:false,studio:true,preset:draft.surface,assets:assets,renderObjectIDs:resolved.visible)
       stage.camera=time>0 ? ((try? draft.motion.camera(start:draft.camera,fraction:time)) ?? draft.camera):draft.camera;stage.updateCamera();stage.applyShotLighting(draft.lighting,studio:true)
       prepareTask?.cancel();generation+=1;let token=generation
-      if resolved.project.objects.contains(where:{!$0.isCanvasWorkspace && ($0.meshAsset != nil || $0.cadRepresentation != nil)}) {
+      if resolved.project.objects.contains(where:{$0.hasTablePresentation && ($0.meshAsset != nil || $0.cadRepresentation != nil)}) {
         prepareTask=Task{[weak self] in
           do {guard let self else{return};try await self.stage.prepareExternalForCapture(project:resolved.project,assets:assets);guard !Task.isCancelled,self.generation==token else{return};self.stage.renderScene()}catch{if !Task.isCancelled,self?.generation==token{self?.error=error.localizedDescription}}
         }

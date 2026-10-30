@@ -14,7 +14,7 @@ public enum ProjectContent {
 }
 
 extension Project {
-  public var physicalObjectCount:Int { objects.filter { !$0.isCanvasWorkspace }.count }
+  public var physicalObjectCount:Int { objects.filter(\.hasTablePresentation).count }
   public var looseCanvasItemCount:Int { ProjectContent.looseItems(in:canvasWorkspace?.artwork) }
   public var contentDescription:String {
     ProjectContent.description(objects:physicalObjectCount,canvasItems:looseCanvasItemCount)

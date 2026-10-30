@@ -1,0 +1,88 @@
+{
+  "version": 3,
+  "name": "Cotton letterpress invitation",
+  "parameters": [
+    {
+      "name": "width",
+      "value": 127,
+      "minimum": 76.2,
+      "maximum": 203.20000000000002,
+      "unit": "mm"
+    },
+    {
+      "name": "height",
+      "value": 178,
+      "minimum": 106.8,
+      "maximum": 284.8,
+      "unit": "mm"
+    },
+    {
+      "name": "stock",
+      "value": 1.0,
+      "minimum": 0.4,
+      "maximum": 2.0,
+      "unit": "mm"
+    },
+    {
+      "name": "turn",
+      "value": 0,
+      "minimum": 0,
+      "maximum": 180,
+      "unit": "\u00b0"
+    }
+  ],
+  "size": {
+    "x": "width",
+    "y": "height"
+  },
+  "stockThickness": "stock",
+  "panels": [
+    {
+      "id": "front",
+      "name": "Front / back sheet",
+      "role": "body",
+      "polygon": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": "(0)+(width)",
+          "y": 0
+        },
+        {
+          "x": "(0)+(width)",
+          "y": "(0)+(height)"
+        },
+        {
+          "x": 0,
+          "y": "(0)+(height)"
+        }
+      ]
+    }
+  ],
+  "hinges": [],
+  "joins": [],
+  "rootPanelID": "front",
+  "components": [
+    {
+      "id": "sheet",
+      "name": "Paper sheet",
+      "rootPanelID": "front",
+      "anchor": {
+        "x": "width/2",
+        "y": "height/2"
+      },
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationDegrees": {
+        "x": "-90+turn",
+        "y": 0,
+        "z": 0
+      }
+    }
+  ]
+}
