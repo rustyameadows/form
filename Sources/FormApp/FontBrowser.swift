@@ -49,6 +49,8 @@ struct FontBrowser: View {
   }
   var body:some View {
     VStack(spacing:12) {
+      HStack { SectionLabel("FONTS"); Spacer(); AppCloseButton("Close fonts", keyEquivalent: "\u{1b}") { dismiss() } }
+      InspectorDivider()
       HStack {
         TextField("Search family, style or face",text:$query).textFieldStyle(InspectorTextFieldStyle())
         Button {favoriteOnly.toggle()} label:{Image(systemName:favoriteOnly ? "star.fill":"star")}

@@ -50,7 +50,7 @@ struct ProductionJobsView:View {
   private var equipment:[EmbroideryEquipment] {store.library.textileProduction?.equipment ?? []}
   var body:some View {
     VStack(alignment:.leading,spacing:16) {
-      HStack {VStack(alignment:.leading,spacing:4) {Text("Production jobs").font(.system(size: 25, weight: .semibold));Text(store.project?.name ?? "Open a project").font(.system(size:11)).foregroundStyle(Palette.secondary)};Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)}
+      HStack {VStack(alignment:.leading,spacing:4) {Text("Production jobs").font(.system(size: 25, weight: .semibold));Text(store.project?.name ?? "Open a project").font(.system(size:11)).foregroundStyle(Palette.secondary)};Spacer();AppCloseButton("Close", keyEquivalent: "\u{1b}") {dismiss()}.keyboardShortcut(.cancelAction)}
       Picker("Production kind",selection:$productionKind) {Text("Embroidery").tag(0);Text("HTV / DTF preparations").tag(1);Text("Collection BOM").tag(2)}.pickerStyle(.segmented).frame(width:520)
       if productionKind==2 {CollectionProductionView(store:store)} else if productionKind==1 {DecorationArchiveBrowser(store:store)} else {
       HSplitView {

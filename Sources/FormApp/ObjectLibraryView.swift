@@ -47,7 +47,7 @@ struct ObjectLibraryView: View {
           Text("\(ObjectLibrary.starters.count) editable starters · 211 form references").font(.system(size:12)).foregroundStyle(.secondary)
         }
         Spacer()
-        Button("Done") { dismiss() }.keyboardShortcut(.cancelAction)
+        AppCloseButton("Close", keyEquivalent: "\u{1b}") { dismiss() }.keyboardShortcut(.cancelAction)
       }.padding(22)
       HStack {
         Picker("Browse", selection:$mode) { Text("Starters").tag("Starters"); Text("Reference catalog").tag("Reference catalog"); Text("Work examples").tag("Work examples") }.pickerStyle(.segmented).frame(width:420)

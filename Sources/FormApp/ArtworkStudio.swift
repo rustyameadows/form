@@ -12,7 +12,6 @@ struct ArtworkStudio: View {
   @State private var productionOutput = "print"
   @State private var showingLayers = true
   @State private var showingInspector = true
-  @State private var toolsWidth: CGFloat = 700
   private var hasContextNavigation: Bool {
     session.maskEditing != nil || session.componentReturn != nil || session.scopeID != nil
   }
@@ -41,40 +40,25 @@ struct ArtworkStudio: View {
         if layers {
           ArtworkLayers(session: session, onClose: { showingLayers.toggle() })
             .frame(width: 234, height: min(panelHeight, 480))
-            .modifier(CanvasFloatingPanel()).padding(16)
+            .floatingPanelSurface().padding(FloatingPanelStyle.outerPadding)
         }
       }
       .overlay(alignment: .topTrailing) {
         if inspector {
-          VStack(spacing: 0) {
-            HStack {
-              SectionLabel("INSPECTOR")
-              Spacer()
-              IconButton("Hide Canvas inspector", symbol: "xmark", size: 24) {
-                showingInspector.toggle()
-              }
-            }.padding(.leading, 18).padding(.trailing, 8).frame(height: 40)
-            InspectorDivider().padding(.horizontal, InspectorStyle.panelPadding)
+          FloatingPanel(closeLabel: "Hide Canvas inspector", onClose: { showingInspector = false }) {
             ArtworkInspector(session: session)
-          }.frame(width: 286, height: panelHeight)
-            .modifier(CanvasFloatingPanel()).padding(16)
+          }.frame(width: FloatingPanelStyle.inspectorWidth, height: panelHeight)
+            .padding(FloatingPanelStyle.outerPadding)
         }
       }
       .overlay(alignment: .bottomLeading) {
         VStack(alignment: .leading, spacing: 8) {
           if hasContextNavigation {
-            contextNavigation.padding(8).modifier(CanvasFloatingPanel())
+            contextNavigation.padding(8).floatingPanelSurface()
           }
-          ScrollView(.horizontal, showsIndicators: true) {
+          WorkspaceToolbarSurface(maxWidth: max(1, geometry.size.width - 32)) {
             tools(layers: layers, inspector: inspector)
-              .background {
-                GeometryReader { toolbar in
-                  Color.clear.onAppear { toolsWidth = toolbar.size.width }
-                    .onChange(of: toolbar.size.width) { _, width in toolsWidth = width }
-                }
-              }
-          }.frame(width: min(toolsWidth, max(1, geometry.size.width - 32)), height: 44)
-            .modifier(CanvasFloatingPanel())
+          }
         }.padding(16)
       }
     }
@@ -115,26 +99,24 @@ struct ArtworkStudio: View {
   }
 
   private func tools(layers: Bool, inspector: Bool) -> some View {
-    HStack(spacing: 3) {
-      IconButton("Canvas & Surfaces", symbol: "sidebar.left", size: 32) { showingLayers.toggle() }
-        .background(layers ? Palette.surface : .clear, in: RoundedRectangle(cornerRadius: 7))
-        .accessibilityValue(layers ? "Shown" : "Hidden")
-      IconButton("Canvas inspector", symbol: "sidebar.right", size: 32) { showingInspector.toggle() }
-        .background(inspector ? Palette.surface : .clear, in: RoundedRectangle(cornerRadius: 7))
-        .accessibilityValue(inspector ? "Shown" : "Hidden")
-      Divider().frame(height: 20).padding(.horizontal, 4)
-        ForEach(ArtworkTool.allCases, id: \.self) { tool in
-          Button { chooseTool(tool) } label: {
-            Image(systemName: tool.symbol).font(.system(size: 13)).frame(width: 30, height: 32)
-              .background(session.tool == tool ? Palette.surface : .clear, in: RoundedRectangle(cornerRadius: 6))
-          }.buttonStyle(.plain).help("\(tool.rawValue.capitalized) · \(tool.shortcut)")
-            .accessibilityLabel(tool.rawValue.capitalized + " tool")
-            .accessibilityValue(session.tool == tool ? "Selected" : "")
-        }
-      Divider().frame(height: 20).padding(.horizontal, 4)
+    HStack(spacing: WorkspaceToolbarMetrics.spacing) {
+      WorkspaceToolbarButton("Canvas & Surfaces", symbol: "sidebar.left", isSelected: layers,
+        value: layers ? "Shown" : "Hidden") { showingLayers.toggle() }
+      WorkspaceToolbarButton("Canvas inspector", symbol: "sidebar.right", isSelected: inspector,
+        value: inspector ? "Shown" : "Hidden") { showingInspector.toggle() }
+      WorkspaceToolbarDivider()
+      ForEach(ArtworkTool.allCases, id: \.self) { tool in
+        WorkspaceToolbarButton(tool.rawValue.capitalized + " tool", symbol: tool.symbol,
+          isSelected: session.tool == tool, help: "\(tool.rawValue.capitalized) · \(tool.shortcut)") { chooseTool(tool) }
+      }
+      WorkspaceToolbarDivider()
       actions
-      zoomMenu.padding(.horizontal, 6)
-    }.padding(6).fixedSize(horizontal: true, vertical: false)
+      WorkspaceToolbarDivider()
+      WorkspaceToolbarButton("Zoom out", symbol: "minus") { session.setZoom(session.zoom / 1.2) }
+      WorkspaceToolbarButton("Zoom in", symbol: "plus") { session.setZoom(session.zoom * 1.2) }
+      WorkspaceToolbarButton("Fit Canvas contents · ⌘0", symbol: "arrow.up.left.and.arrow.down.right") { session.fit() }
+      zoomMenu
+    }.fixedSize(horizontal: true, vertical: false)
   }
 
   private var actions: some View {
@@ -172,7 +154,7 @@ struct ArtworkStudio: View {
       Button("Export artwork…", systemImage: "square.and.arrow.up") { exportOptions = true }
         .disabled(session.object == nil || session.object?.isCanvasWorkspace == true && session.selection.isEmpty)
     } label: {
-      Image(systemName: "ellipsis").font(.system(size: 14)).frame(width: 32, height: 32)
+      WorkspaceToolbarMenuLabel(symbol: "ellipsis")
     }.menuStyle(.borderlessButton).fixedSize().help("Canvas actions").accessibilityLabel("Canvas actions")
       .popover(isPresented: $newFrame, arrowEdge: .bottom) { NewArtworkFrame(session: session) }
       .popover(isPresented: $session.showingPalette, arrowEdge: .bottom) { SwatchPalette(session: session) }
@@ -191,10 +173,7 @@ struct ArtworkStudio: View {
       Divider()
       Button("Fit Canvas contents · ⌘0") { session.fit() }
     } label: {
-      HStack(spacing: 5) {
-        Image(systemName: "magnifyingglass")
-        Text("\(Int((session.zoom * 100).rounded()))%").monospacedDigit()
-      }.font(.system(size: 10))
+      WorkspaceToolbarMenuLabel(symbol: "magnifyingglass", value: "\(Int((session.zoom * 100).rounded()))%")
     }.menuStyle(.borderlessButton).fixedSize().help("Canvas zoom and fit")
       .accessibilityLabel("Canvas zoom").accessibilityValue("\(Int((session.zoom * 100).rounded())) percent")
   }
@@ -224,14 +203,5 @@ struct ArtworkStudio: View {
         session.exportProduction(format, output: productionOutput)
       }
     }.padding(22).frame(width: 300)
-  }
-}
-
-private struct CanvasFloatingPanel: ViewModifier {
-  func body(content: Content) -> some View {
-    content.background(Palette.paper)
-      .clipShape(RoundedRectangle(cornerRadius: 13))
-      .overlay(RoundedRectangle(cornerRadius: 13).strokeBorder(Palette.line).allowsHitTesting(false))
-      .shadow(color: .black.opacity(0.06), radius: 14, y: 5)
   }
 }

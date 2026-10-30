@@ -17,9 +17,6 @@ extension StudioStore {
     paperSelectedPanelID = panelID
     if let foldID=paperSelectedFoldID,net.folds.first(where:{$0.id==foldID})?.childPanelID != panelID {paperSelectedFoldID=nil}
     changed(save: false)
-    if environment == .form, mode == .artwork {
-      focusConstructionCanvas(objectID: objectID, panelID: panelID)
-    }
   }
   func focusConstructionCanvas(objectID: UUID, panelID: String?) {
     guard let frame = artworkSession.frames.first(where: {
@@ -36,7 +33,6 @@ extension StudioStore {
     if split {
       closeDetachedCanvas(); surfaceLayout = .split; showingHome = false; mode = .artwork
     } else if surfaceLayout == .single { mode = .artwork }
-    select(object.id)
     activatePaperArtwork(object)
     if environment == .form {
       focusConstructionCanvas(objectID: object.id,
@@ -45,11 +41,14 @@ extension StudioStore {
     changed(save: false)
   }
   func activatePaperArtwork(_ object: ProductObject) {
-    let source = paperInside ? object.paperConstruction?.insideArtworkSourceID : object.id
+    let source = paperInside ? object.paperConstruction?.insideArtworkSourceID : project?.artworkOwner(object).id
     guard let source, project?.objects.contains(where: { $0.id == source }) == true else { return }
     artworkSession.activate(source)
-    // The construction stays selected; its inside sheet is an independent editable source.
-    if primary?.id != object.id { select(object.id) }
+    // Only the Canvas context changes; Table keeps its own physical selection.
+    artworkSession.linkedTargetID = object.id
+    if let proof=artworkSession.frames.first(where: {
+      $0.projection?.constructionID == object.id && $0.projection?.sourceID == source && $0.projection?.isProof == true
+    }) { artworkSession.activate(proof.id) }
     artworkSession.dieline = false
   }
   func setPaperInside(_ inside: Bool, object: ProductObject) {

@@ -56,7 +56,7 @@ struct FabricPatternEditor: View {
           Text("Fabric repeat").font(.system(size: 25, weight: .semibold))
           Text("\(material.name) · design saved in this project").font(.system(size: 11)).foregroundStyle(Palette.secondary)
         }
-        Spacer(); Button("Done") { dismiss() }.keyboardShortcut(.cancelAction)
+        Spacer(); AppCloseButton("Close", keyEquivalent: "\u{1b}") { dismiss() }.keyboardShortcut(.cancelAction)
       }
       HStack(alignment: .top, spacing: 22) {
         VStack(alignment: .leading, spacing: 12) {

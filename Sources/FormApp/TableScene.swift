@@ -583,7 +583,7 @@ private struct RenderSignature: Equatable {
       // subject-centered orbit pivot or the camera's actual viewport aspect.
       insets = .init(
         top: 80 / max(1, viewport.height),
-        right: (store.mode == .studio ? 264 + 48 : store.primary == nil || store.environment != .form ? 0 : ObjectInspector.width + 48) / max(1, viewport.width),
+        right: (store.mode == .studio ? 264 + 48 : !store.tableInspectorVisible || store.environment != .form ? 0 : FloatingPanelStyle.inspectorWidth + FloatingPanelStyle.outerPadding * 2) / max(1, viewport.width),
         bottom: 80 / max(1, viewport.height))
     }
     let fitted = CameraFraming.fitted(
@@ -815,7 +815,7 @@ private struct RenderSignature: Equatable {
       let id = controller.objectID(at: previous)
     {
       if !store.engine.selection.contains(id) || event.modifierFlags.contains(.shift) {
-        store.select(id, extending: event.modifierFlags.contains(.shift))
+        store.selectOnTable(id, extending: event.modifierFlags.contains(.shift))
       }
       action = .move
       objectPositions = Dictionary(
@@ -896,8 +896,8 @@ private struct RenderSignature: Equatable {
       let point = convert(event.locationInWindow, from: nil)
       let objectID=controller.objectID(at:point)
       if action != .move {
-        store.select(objectID, extending:event.modifierFlags.contains(.shift))
-      }
+        store.selectOnTable(objectID, extending:event.modifierFlags.contains(.shift))
+      } else if objectID != nil { store.tableInspectorVisible = true }
       if !event.modifierFlags.contains(.shift),let objectID,let panelID=controller.paperPanelID(at:point) {
         store.selectPaperPanel(objectID:objectID,panelID:panelID)
       }
@@ -931,7 +931,7 @@ private struct RenderSignature: Equatable {
         store.isolated = []
         controller?.fitAll()
       } else {
-        controller?.store?.select(nil)
+        controller?.store?.selectOnTable(nil)
       }
     } else if !event.modifierFlags.contains(.command), !event.modifierFlags.contains(.control) {
       switch event.charactersIgnoringModifiers?.lowercased() {

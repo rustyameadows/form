@@ -50,7 +50,7 @@ import FormGeometry
     store.select(id)
     XCTAssertFalse(store.artworkSession.frames.contains{$0.id==inside && $0.projection==nil})
     XCTAssertEqual(store.project?.objects,before.objects,"Enumerating physical frames cannot rewrite canonical sources")
-    store.select(inside);store.artworkSession.reconcile()
+    store.artworkSession.activate(inside);store.artworkSession.reconcile()
     let session=store.artworkSession,proof=try XCTUnwrap(session.activeCanvasFrame)
     XCTAssertEqual(proof.projection?.constructionID,id);XCTAssertEqual(proof.projection?.sourceID,inside)
     XCTAssertEqual(proof.projection?.inside,true);XCTAssertEqual(proof.projection?.isProof,true)

@@ -52,12 +52,11 @@ extension StudioStore {
   /// Opening an existing source editor/review does not replace the selected assembled object.
   @discardableResult func activateFabricPatternSource(for id:UUID)->UUID? {
     guard let project,let object=project.objects.first(where:{$0.id==id}),let context=FabricEnvironmentContext(object:object,project:project),let source=context.sourceID else{return nil}
-    let owner=project.id,selection=engine.selection
+    let owner=project.id
     finishArtworkEditing()
     guard self.project?.id==owner,let current=self.project?.objects.first(where:{$0.id==id}),FabricEnvironmentContext(object:current,project:self.project!)?.sourceID==source else{return nil}
     artworkSession.activate(source)
     artworkSession.linkedTargetID=source==id ? nil:id
-    engine.selection=selection
     changed(save:false)
     return source
   }
@@ -226,7 +225,7 @@ private struct FabricPatternConstructionSheet:View {
   private var pieces:[ArtworkElement] {session.art.elements.filter{$0.sewingPiece != nil}}
   var body:some View {
     VStack(alignment:.leading,spacing:16) {
-      HStack {Text("Original fabric construction").font(.system(size: 23, weight: .semibold));Spacer();Button("Done") {store.finishArtworkEditing();dismiss()}.keyboardShortcut(.cancelAction)}
+      HStack {Text("Original fabric construction").font(.system(size: 23, weight: .semibold));Spacer();AppCloseButton("Close", keyEquivalent: "\u{1b}") {store.finishArtworkEditing();dismiss()}.keyboardShortcut(.cancelAction)}
       Text("Edit stitch boundaries, physical allowances, cut copies, grain, notches and notes. Source dimensions remain in millimeters.").font(.system(size:11)).foregroundStyle(Palette.secondary)
       HStack(alignment:.top,spacing:22) {
         ScrollView {VStack(alignment:.leading,spacing:8){ForEach(pieces) {piece in Button {session.choose([piece.id])} label:{Text(piece.sewingPiece!.name).frame(maxWidth:.infinity,alignment:.leading).padding(8).background(session.primary?.id==piece.id ? Palette.accent.opacity(0.1):.clear,in:RoundedRectangle(cornerRadius:5))}.buttonStyle(.plain)}}}.frame(width:185)

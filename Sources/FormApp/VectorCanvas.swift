@@ -2501,6 +2501,26 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   override func menu(for event: NSEvent) -> NSMenu? {
     let menu = NSMenu()
+    if let session, let store = session.store, let project = store.project {
+      var seen = Set<UUID>()
+      let links = LinkedInspectorRelationships.canvas(session, in: project).filter { seen.insert($0.objectID).inserted }
+      if !links.isEmpty {
+        let item = NSMenuItem(title: "Find on Table", action: nil, keyEquivalent: "")
+        if links.count == 1 {
+          item.action = #selector(findOnTableAction(_:)); item.target = self
+          item.representedObject = links[0].objectID
+        } else {
+          let submenu = NSMenu()
+          for link in links {
+            let title = project.objects.first { $0.id == link.objectID }?.name ?? link.title
+            let child = NSMenuItem(title: title, action: #selector(findOnTableAction(_:)), keyEquivalent: "")
+            child.target = self; child.representedObject = link.objectID; submenu.addItem(child)
+          }
+          item.submenu = submenu
+        }
+        menu.addItem(item); menu.addItem(.separator())
+      }
+    }
     for (title, action) in [
       ("Duplicate", #selector(duplicateAction)), ("Group", #selector(groupAction)),
       ("Ungroup", #selector(ungroupAction)), ("Convert text to outlines", #selector(outlineAction)),
@@ -2511,6 +2531,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       menu.addItem(item)
     }
     return menu
+  }
+  @objc private func findOnTableAction(_ item: NSMenuItem) {
+    guard let id = item.representedObject as? UUID else { return }
+    _ = session?.store?.findOnTable(id)
   }
   @objc private func duplicateAction() { session?.execute("duplicate") }
   @objc private func groupAction() { session?.execute("group") }

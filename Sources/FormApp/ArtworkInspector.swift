@@ -714,7 +714,7 @@ struct ArtworkInspector: View {
           Button {
             session.mutate { $0.guides?.removeAll { $0.id == guide.id } }
           } label: {
-            Image(systemName: "xmark").font(.system(size: 8))
+            Image(systemName: "trash").font(.system(size: 11))
           }.buttonStyle(.plain)
         }
       }

@@ -111,7 +111,7 @@ import XCTest
     let width = f.view.bounds.width,height = f.view.bounds.height
     let rightEdge: CGFloat
     if f.controller.store?.mode == .studio { rightEdge = width-264-48 }
-    else { rightEdge = f.controller.store?.primary == nil ? width : width-ObjectInspector.width-48 }
+    else { rightEdge = f.controller.store?.tableInspectorVisible == true ? width-FloatingPanelStyle.inspectorWidth-FloatingPanelStyle.outerPadding*2 : width }
     for node in f.controller.objectRoot.childNodes {
       XCTAssertFalse(node.isHidden,file:file,line:line)
       let b = node.boundingBox

@@ -351,10 +351,12 @@ import XCTest
     project.objects += [source, model]; store.engine.project = project
     let session = store.artworkSession
     let frame = try XCTUnwrap(session.frames.first { $0.projection?.constructionID == model.id })
+    let tableSelection = store.engine.selection
     session.activate(frame.id); session.reconcile()
     XCTAssertEqual(session.objectID, source.id)
     XCTAssertEqual(session.activeFrameID, frame.id)
-    XCTAssertEqual(store.primary?.id, model.id)
+    XCTAssertEqual(store.engine.selection, tableSelection)
+    XCTAssertEqual(session.physicalObject?.id, model.id)
     XCTAssertEqual(session.art, source.artwork)
     session.choose([text.id]); session.update { $0.text = "Edited from surface" }
     XCTAssertEqual(store.project?.objects.first { $0.id == source.id }?.artwork?.elements.first?.text, "Edited from surface")

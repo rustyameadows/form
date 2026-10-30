@@ -113,7 +113,7 @@ struct TextStylesPanel: View {
       HStack {
         SectionLabel("PROJECT TEXT STYLES")
         Spacer()
-        Button("Done") {
+        AppCloseButton("Close", keyEquivalent: "\u{1b}") {
           NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
           dismiss()
         }.keyboardShortcut(.cancelAction)

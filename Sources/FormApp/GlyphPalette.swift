@@ -76,7 +76,7 @@ struct GlyphPalette: View {
     VStack(alignment:.leading,spacing:15) {
       HStack {
         SectionLabel("GLYPHS");Spacer()
-        Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)
+        AppCloseButton("Close", keyEquivalent: "\u{1b}") {dismiss()}.keyboardShortcut(.cancelAction)
       }
       Text(NSFont(name:fontName,size:12)?.displayName ?? fontName)
         .font(.system(size:20,weight:.medium)).lineLimit(1)

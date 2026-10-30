@@ -14,7 +14,7 @@ struct TextileFabricLibrary: View {
           Text("Fabrics & textile materials").font(.system(size: 25, weight: .semibold))
           Text("Physical specifications and studio inventory, shared across projects.").font(.system(size:11)).foregroundStyle(Palette.secondary)
         }
-        Spacer();Button("Done"){dismiss()}.keyboardShortcut(.cancelAction)
+        Spacer();AppCloseButton("Close", keyEquivalent: "\u{1b}"){dismiss()}.keyboardShortcut(.cancelAction)
       }
       ScrollView {
         LazyVStack(spacing:10) {

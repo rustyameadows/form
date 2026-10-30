@@ -34,7 +34,7 @@ struct ArtworkPageReview:View {
   init(store:StudioStore,objectID:UUID,model:ArtworkPageReviewModel?=nil){self.store=store;_model=StateObject(wrappedValue:model ?? ArtworkPageReviewModel(store:store,objectID:objectID))}
   var body:some View {
     VStack(alignment:.leading,spacing:14) {
-      HStack {Text("Physical page").font(.system(size: 25, weight: .semibold));Spacer();Button("Done"){dismiss()}.keyboardShortcut(.cancelAction)}
+      HStack {Text("Physical page").font(.system(size: 25, weight: .semibold));Spacer();AppCloseButton("Close", keyEquivalent: "\u{1b}"){dismiss()}.keyboardShortcut(.cancelAction)}
       HStack {
         Picker("Output area",selection:$model.area){Text("Trim only").tag(ArtworkPageArea.trim);Text("Include bleed").tag(ArtworkPageArea.bleed)}.frame(width:240)
         Toggle("Crop marks",isOn:$model.cropMarks).inspectorToggle()

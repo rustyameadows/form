@@ -77,6 +77,7 @@ enum TableTool: String, CaseIterable {
   @Published var showingPrint = false
   @Published var svgImport: SVGImportReview?
   @Published var showGrid = false
+  @Published var tableInspectorVisible = false
   @Published var tableTool: TableTool = .orbit
   @Published var isolated: Set<UUID> = []
   lazy var studioShots = StudioShotController(store:self)
@@ -313,6 +314,7 @@ enum TableTool: String, CaseIterable {
               status["design_surfaces"] = [
                 "layout": self.surfaceLayout.rawValue,
                 "focused_surface": self.mode.rawValue.lowercased(),
+                "table_inspector_visible": self.tableInspectorVisible,
                 "canvas_window_open": self.canvasWindowController?.window?.isVisible == true,
                 "canvas_workspace_id": self.project?.canvasWorkspace.map { $0.id.uuidString as Any } ?? NSNull(),
                 "artwork_object_id": self.artworkSession.objectID.map { $0.uuidString as Any } ?? NSNull(),
@@ -428,6 +430,7 @@ enum TableTool: String, CaseIterable {
       "form_create_project",
       ["name": count == 0 ? base : "\(base) \(count+1)", "template": template])
     mode = .table
+    tableInspectorVisible = false
     showingHome = false
     isolated = []
     scene?.resetCamera()
@@ -444,6 +447,7 @@ enum TableTool: String, CaseIterable {
     } catch { self.error = error.localizedDescription }
   }
   private func restoreProjectWorkspace() {
+    tableInspectorVisible = false
     studioShots.reset()
     isolated = []
     mode = .table
@@ -457,6 +461,7 @@ enum TableTool: String, CaseIterable {
     scene?.resetCamera()
   }
   func home() {
+    tableInspectorVisible = false
     utilityWindows?.closeProjectWindows()
     environment = .form
     mode = .table
@@ -475,6 +480,14 @@ enum TableTool: String, CaseIterable {
     engine.selection = []
     isolated = []
     generateMissingPreviews()
+  }
+  func closeTableInspector() { tableInspectorVisible = false }
+  func toggleTableInspector() { tableInspectorVisible.toggle() }
+  /// Only a pick in this viewport opens its inspector. Selection itself is independent.
+  func selectOnTable(_ id: UUID?, extending: Bool = false) {
+    select(id, extending: extending)
+    if id != nil, primary != nil { tableInspectorVisible = true }
+    else if !extending { tableInspectorVisible = false }
   }
   func select(_ id: UUID?, extending: Bool = false) {
     guard let id else {
@@ -595,7 +608,7 @@ enum TableTool: String, CaseIterable {
       guard let id = UUID(uuidString: raw),
         project?.objects.contains(where: { $0.id == id }) == true
       else { throw FormError.missing("Object not found.") }
-      select(id)
+      if !["artwork", "canvas", "split", "canvas_window"].contains(view) { select(id) }
     }
     switch view {
     case "home": home()

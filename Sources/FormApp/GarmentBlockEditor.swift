@@ -18,7 +18,7 @@ struct GarmentBlockEditor:View {
           Text("New original block").tag(Optional<UUID>.none)
           ForEach(controller.blocks){Text($0.name).tag(Optional($0.id))}
         }.frame(width:320).accessibilityLabel("Managed garment block")
-        Button("Done"){dismiss()}.keyboardShortcut(.cancelAction)
+        AppCloseButton("Close", keyEquivalent: "\u{1b}"){dismiss()}.keyboardShortcut(.cancelAction)
       }
       Text("Field gathered skirt · declared body measurements, nominal finished dimensions and full raw sewing extents. Construction guidance; fit, elastic behavior and sew-out are unverified.")
         .font(.system(size:10)).foregroundStyle(Palette.secondary)

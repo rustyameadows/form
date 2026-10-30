@@ -33,7 +33,7 @@ struct DecorationPreparationView:View {
       HStack {
         VStack(alignment:.leading,spacing:4) {Text("Decoration preparation").font(.system(size: 25, weight: .semibold));Text(store.project?.objects.first{$0.id==draft.objectID}?.name ?? "Source unavailable").font(.system(size:11)).foregroundStyle(Palette.secondary)}
         Spacer();Picker("View",selection:$saved) {Text("Prepare").tag(false);Text("Saved preparations").tag(true)}.pickerStyle(.segmented).labelsHidden().frame(width:290)
-        Button("Done"){dismiss()}.keyboardShortcut(.cancelAction)
+        AppCloseButton("Close", keyEquivalent: "\u{1b}"){dismiss()}.keyboardShortcut(.cancelAction)
       }.fixedSize(horizontal:false,vertical:true).layoutPriority(1)
       if saved {DecorationArchiveBrowser(store:store,objectID:draft.objectID,initialSelection:draft.capturedID)}
       else {
