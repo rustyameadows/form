@@ -1,0 +1,68 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1200,
+  "png_sha256" : "8e433a0860f0fc7b328dcf574309c1bed354b3497ae89eb5d91fd45ed8bef901",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:paper-template-17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764.svg",
+      "sha256" : "17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 0.17421578644294414,
+      "distance" : 2.6203577499318116,
+      "elevation" : 0.29090466943812271,
+      "projection" : "perspective",
+      "target" : {
+        "x" : -2.2999999999999998,
+        "y" : 0.69225000000000003,
+        "z" : -4.2999999999999998
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "937255AB-793C-4ABF-9002-590CD7382EF5",
+    "instances" : [
+      {
+        "id" : "70B93699-DC63-46A0-A80E-6C1E6EE876AD",
+        "name" : "02 · Botanical \/ Tuck carton",
+        "positionMM" : {
+          "x" : -230,
+          "y" : 0,
+          "z" : -430
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "B48663EE-C98C-4171-A266-E353730EAAAE",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "02-study",
+    "pixels" : {
+      "height" : 1200,
+      "width" : 1800
+    },
+    "revision" : 2,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "2edb07c1172dbba7df88b6cd19c0b586f701e29b47b9ceb27111c7aeac81e517",
+  "source_project_id" : "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+  "width" : 1800
+}

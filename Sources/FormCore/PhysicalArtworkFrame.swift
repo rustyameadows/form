@@ -5,15 +5,18 @@ import Foundation
 public struct PhysicalArtworkFrame: Codable, Equatable, Sendable {
   public let size: Point2
   public let boundary: [Point2]
+  public let cutouts:[[Point2]]?
   public let sourceToLocal: Affine2
-  public init(size:Point2,boundary:[Point2]=[],sourceToLocal:Affine2 = .init()) {
-    self.size=size;self.boundary=boundary;self.sourceToLocal=sourceToLocal
+  public init(size:Point2,boundary:[Point2]=[],sourceToLocal:Affine2 = .init(),cutouts:[[Point2]]?=nil) {
+    self.size=size;self.boundary=boundary;self.sourceToLocal=sourceToLocal;self.cutouts=cutouts
   }
   /// Both faces retain the same registered physical net. Viewing its reverse
   /// face changes handedness once; the stored source and mesh UVs do not change.
   public static func paper(net:PaperNet,panelID:String?=nil,inside:Bool=false) throws -> Self {
     guard let panelID else {
-      return .init(size:net.size,sourceToLocal:inside ? .init(a:-1,b:0,c:0,d:1,tx:net.size.x,ty:0):.init())
+      let transform=inside ? Affine2(a:-1,b:0,c:0,d:1,tx:net.size.x,ty:0):.init()
+      let holes=net.panels.flatMap{$0.cutouts ?? []}.map{$0.polygon.map(transform.apply)}
+      return .init(size:net.size,sourceToLocal:transform,cutouts:holes.isEmpty ? nil:holes)
     }
     guard let panel=net.panels.first(where:{$0.id==panelID}),let first=panel.polygon.first else {
       throw FormError.missing("Physical artwork surface '\(panelID)' was not found.")
@@ -28,7 +31,8 @@ public struct PhysicalArtworkFrame: Codable, Equatable, Sendable {
     if inside {
       transform=Affine2(a:-1,b:0,c:0,d:1,tx:bounds.width,ty:0).followed(by:transform)
     }
-    return .init(size:.init(bounds.width,bounds.height),boundary:panel.polygon.map(transform.apply),sourceToLocal:transform)
+    let holes=(panel.cutouts ?? []).map{$0.polygon.map(transform.apply)}
+    return .init(size:.init(bounds.width,bounds.height),boundary:panel.polygon.map(transform.apply),sourceToLocal:transform,cutouts:holes.isEmpty ? nil:holes)
   }
   public func display(_ source:Artwork) -> Artwork {
     guard sourceToLocal != Affine2() else{return source}

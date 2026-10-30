@@ -902,7 +902,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         let sewing = sewingGuides.overlay(frameID: f.id, source: f.artwork)
         context.saveGState()
         if let projection = f.projection, !projection.isProof {
-          context.addPath(PaperOutput.path(projection.boundary)); context.clip()
+          context.addPath(projection.clipPath); context.clip(using:.evenOdd)
         }
         if let paperNet {
           var transform = CGAffineTransform(a:f.projection?.sourceToLocal.a ?? 1,b:f.projection?.sourceToLocal.b ?? 0,
@@ -936,7 +936,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         if let sewing {
           context.saveGState()
           if let projection = f.projection, !projection.isProof {
-            context.addPath(PaperOutput.path(projection.boundary)); context.clip()
+            context.addPath(projection.clipPath); context.clip(using:.evenOdd)
           }
           ArtworkRenderer.draw(sewing.interfaceArtwork(scale: scale), width: f.rect.width, height: f.rect.height,
             assets: session.assets, production: false,
@@ -944,7 +944,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           context.restoreGState()
         }
         if let projection = f.projection, !projection.isProof {
-          context.addPath(PaperOutput.path(projection.boundary))
+          context.addPath(projection.clipPath)
           context.setStrokeColor((f.id == activeFrame?.id ? Palette.accentNS : Palette.secondaryNS).cgColor)
           context.setLineWidth(1 / scale); context.strokePath()
         }

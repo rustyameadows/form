@@ -69,7 +69,7 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
 
   static func canvas(_ session: ArtworkSession, in project: Project) -> [LinkedInspectorAssociation] {
     guard let sourceID = session.objectID else { return [] }
-    let all = project.objects.filter { !$0.isCanvasWorkspace && hasPhysicalView($0, in: project) }
+    let all = project.objects.filter { $0.hasTablePresentation && hasPhysicalView($0, in: project) }
       .flatMap { table($0, in: project) }.filter { $0.sourceID == sourceID }
     if let target = session.activeProjection?.constructionID ?? session.linkedTargetID {
       let focused = all.filter { $0.objectID == target }

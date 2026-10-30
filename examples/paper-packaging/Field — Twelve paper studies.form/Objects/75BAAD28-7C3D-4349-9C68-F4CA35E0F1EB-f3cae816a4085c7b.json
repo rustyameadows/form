@@ -1,0 +1,33 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 0,
+      "y" : 0
+    },
+    "elements" : [
+
+    ],
+    "unit" : "mm"
+  },
+  "canvasWorkspace" : true,
+  "designID" : "9D843667-4451-4AA5-9553-E7DAF73FD43F",
+  "id" : "75BAAD28-7C3D-4349-9C68-F4CA35E0F1EB",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "Canvas",
+  "parameters" : {
+    "depth" : 2000,
+    "width" : 2000
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

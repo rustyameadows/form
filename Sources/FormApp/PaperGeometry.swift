@@ -9,14 +9,7 @@ import simd
 /// stay in millimeters; only this legacy construction-graph boundary uses /100.
 @MainActor enum PaperGeometry {
   static let constructionName="paper.construction",panelPrefix="paper.panel:",highlightName="paper.highlight"
-  private final class Atlas:NSObject {
-    let outside:NSImage,inside:NSImage,stock:NSImage,normal:NSImage,cost:Int
-    init(outside:NSImage,inside:NSImage,stock:NSImage,normal:NSImage,cost:Int){self.outside=outside;self.inside=inside;self.stock=stock;self.normal=normal;self.cost=cost}
-  }
-  private static let atlasCache:NSCache<NSString,Atlas>={let cache=NSCache<NSString,Atlas>();cache.countLimit=8;cache.totalCostLimit=64*1024*1024;return cache}()
   private(set) static var textureBuilds=0
-  private struct ToothTile {let color:CGImage;let normal:CGImage}
-  private static var toothTiles:[String:ToothTile]=[:]
   /// Templates own only immutable buffers. Each appearance gets a new wrapper
   /// and material array, so sharing a physical shape cannot recolor a neighbor.
   private final class PhysicalTemplate:NSObject {
@@ -25,12 +18,14 @@ import simd
     func instance()->MeshGeometry {let geometry=MeshGeometry(sources:sources,elements:elements);geometry.name=name;return geometry}
   }
   private struct PhysicalKey:Encodable {
-    let version:Int,kind:String,polygon:[Point2],thicknessMM:Double,netSize:Point2,channels:[String]
+    let version:Int,kind:String,polygon:[Point2],cutouts:[PaperPanelCutout],thicknessMM:Double,netSize:Point2,channels:[String]
   }
   private static let physicalCache:NSCache<NSString,PhysicalTemplate>={let cache=NSCache<NSString,PhysicalTemplate>();cache.countLimit=512;cache.totalCostLimit=32*1024*1024;return cache}()
   private(set) static var physicalMeshBuilds=0
+  private final class TextureProperty:NSObject {let value:MeshMaterialProperty;init(_ value:MeshMaterialProperty){self.value=value}}
+  private static let textureProperties:NSCache<NSString,TextureProperty>={let value=NSCache<NSString,TextureProperty>();value.countLimit=1024;value.totalCostLimit=256*1024*1024;return value}()
   private static func physicalMesh(_ panel:PaperPanel,netSize:Point2,thicknessMM:Double,kind:String,channels:[String],build:()throws->MeshGeometry)throws->MeshGeometry {
-    let bytes=try JSONEncoder.form.encode(PhysicalKey(version:1,kind:kind,polygon:panel.polygon,thicknessMM:thicknessMM,netSize:netSize,channels:channels))
+    let bytes=try JSONEncoder.form.encode(PhysicalKey(version:2,kind:kind,polygon:panel.polygon,cutouts:panel.cutouts ?? [],thicknessMM:thicknessMM,netSize:netSize,channels:channels))
     let name="paper.mesh:"+SHA256.hash(data:bytes).map{String(format:"%02x",$0)}.joined(),key=name as NSString
     if let cached=physicalCache.object(forKey:key){return cached.instance()}
     let template=try PhysicalTemplate(build(),name:name);physicalMeshBuilds+=1;physicalCache.setObject(template,forKey:key,cost:template.cost);return template.instance()
@@ -55,29 +50,78 @@ import simd
   static func make(_ object:ProductObject,project:Project,assets:URL,limit:Int,foldPercent:Double?=nil,selectedPanelID:String?=nil)throws->MeshNode {
     let definition=try PaperConstruction.definition(for:object),net=try definition.net()
     let outside=resolvedArtwork(object,project:project,inside:false),inside=resolvedArtwork(object,project:project,inside:true)
-    let atlas=try textures(net:net,stock:definition.stock,color:object.color ?? project.material(object.materialID).color,outside:outside,inside:inside,assets:assets,limit:limit)
     let root=MeshNode();root.name=constructionName
-    let normal=MeshMaterialProperty();normal.contents=atlas.normal;normal.wrapS = .clamp;normal.wrapT = .clamp
-    let stockProperty=MeshMaterialProperty();stockProperty.contents=atlas.stock;stockProperty.wrapS = .clamp;stockProperty.wrapT = .clamp
-    func colorProperty(_ image:NSImage)->MeshMaterialProperty {
-      if image === atlas.stock{return stockProperty}
-      let property=MeshMaterialProperty();property.contents=image;property.wrapS = .clamp;property.wrapT = .clamp;return property
-    }
-    func material(_ name:String,_ image:NSImage,edge:Bool=false)->MeshMaterial {
-      let value=MeshMaterial();value.name=name;value.lightingModel = .physicallyBased
-      value.diffuse=colorProperty(image);value.roughness.contents=edge ? 0.99:0.95;value.metalness.contents=0.0
-      if !edge{value.normal=normal}
-      return value
-    }
-    let materials=[material("Paper / outside",atlas.outside),material("Paper / inside",atlas.inside),material("Paper / cut fiber edge",atlas.stock,edge:true)]
+    let stock=definition.stock,plies=stock.plies ?? []
+    let legacyColor=object.color ?? project.material(object.materialID).color
+    let defaultProfile=stock.profile ?? PaperSurfaceProfile(texture:.cotton,roughness:0.95,textureScaleMM:0.8,textureDepthMM:0.008)
+    var frontProfile=plies.last?.profile ?? defaultProfile,backProfile=plies.first?.profile ?? defaultProfile
+    // Bonded sheets have their own declared face colors. An inherited stock
+    // backdrop must not erase the contrast between their physical layers.
+    if !plies.isEmpty {frontProfile.color=plies.last?.profile?.color;backProfile.color=plies.first?.profile?.color}
+    if let color=object.color {frontProfile.color=color;backProfile.color=color}
+    let frontColor=object.color ?? plies.last?.color ?? legacyColor,backColor=object.color ?? plies.first?.color ?? legacyColor
+    let edge=max(128,min(4096,limit)),pool=min(12_000_000,edge*edge)
+    let area=net.panels.reduce(0){$0+$1.bounds.width*$1.bounds.height}
+    let minimum=min(16_384,pool/max(1,net.panels.count*2)),remaining=max(0,pool-minimum*net.panels.count*2)
     for panel in net.panels {
-      let mesh=try panelMesh(panel,netSize:net.size,thicknessMM:definition.stock.thicknessMM)
+      let rect=panel.bounds,share=max(1,minimum+Int(Double(remaining)*rect.width*rect.height/max(area,1)/2))
+      let before=PaperSurfaceRasterizer.builds
+      let front=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:frontProfile,color:frontColor,grain:stock.grain,artwork:outside,finishes:(definition.finishes ?? []).filter{$0.side == .outside},assets:assets,maximumEdge:edge,pixelBudget:share)
+      let back=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:backProfile,color:backColor,grain:stock.grain,artwork:inside,finishes:(definition.finishes ?? []).filter{$0.side == .inside},assets:assets,maximumEdge:edge,pixelBudget:share)
+      textureBuilds+=PaperSurfaceRasterizer.builds-before
+      var materials=[surfaceMaterial("Paper / outside",maps:front,netSize:net.size,opacity:frontProfile.opacity),surfaceMaterial("Paper / inside",maps:back,netSize:net.size,opacity:backProfile.opacity)]
+      let mesh:MeshGeometry
+      if plies.isEmpty {
+        materials.append(edgeMaterial("Paper / cut fiber edge",color:object.color ?? defaultProfile.color ?? legacyColor,roughness:defaultProfile.roughness))
+        mesh=try panelMesh(panel,netSize:net.size,thicknessMM:stock.resolvedThicknessMM)
+      } else {
+        materials+=plies.map{edgeMaterial("Paper / ply / "+$0.name,color:$0.color,roughness:$0.profile?.roughness ?? defaultProfile.roughness)}
+        mesh=try bondedPanelMesh(panel,netSize:net.size,plies:plies)
+      }
       mesh.materials=materials
       let node=MeshNode(geometry:mesh);node.name=panelPrefix+panel.id;node.categoryBitMask=2
-      node.addChildNode(try highlight(panel,netSize:net.size,thicknessMM:definition.stock.thicknessMM));root.addChildNode(node)
+      node.addChildNode(try highlight(panel,netSize:net.size,thicknessMM:stock.resolvedThicknessMM));root.addChildNode(node)
     }
     try updatePose(root,object:object,foldPercent:foldPercent,selectedPanelID:selectedPanelID)
     return root
+  }
+  private static func surfaceMaterial(_ name:String,maps:PaperSurfaceRasterizer.Maps,netSize:Point2,opacity:Double)->MeshMaterial {
+    let material=MeshMaterial();material.name=name;material.lightingModel = .physicallyBased;material.transparency=opacity
+    var uv=matrix_identity_double4x4
+    uv.columns.0.x=netSize.x/maps.rectMM.width;uv.columns.1.y=netSize.y/maps.rectMM.height
+    uv.columns.3.x = -maps.rectMM.x/maps.rectMM.width;uv.columns.3.y = -maps.rectMM.y/maps.rectMM.height
+    func property(_ image:NSImage)->MeshMaterialProperty {
+      // Keep immutable image+UV resources stable across derived color edits.
+      // The cached property owns its image, so an address cannot alias a later
+      // image while the key is live. Front/back can share the same grain map.
+      let key="\(ObjectIdentifier(image)):\(uv.columns.0.x),\(uv.columns.1.y),\(uv.columns.3.x),\(uv.columns.3.y)" as NSString
+      if let cached=textureProperties.object(forKey:key){return cached.value}
+      let property=MeshMaterialProperty();property.contents=image;property.contentsTransform=MeshMatrix4(uv);property.wrapS = .clamp;property.wrapT = .clamp
+      textureProperties.setObject(TextureProperty(property),forKey:key,cost:max(1,Int(image.size.width*image.size.height*4)));return property
+    }
+    material.diffuse=property(maps.color);material.normal=property(maps.normal);material.roughness=property(maps.roughness);material.metalness=property(maps.metallic)
+    material.writesToDepthBuffer=opacity>=0.999;return material
+  }
+  private static func edgeMaterial(_ name:String,color:String,roughness:Double)->MeshMaterial {
+    let material=MeshMaterial();material.name=name;material.lightingModel = .physicallyBased;material.diffuse.contents=FormColor.color(color);material.roughness.contents=max(0.9,roughness);material.metalness.contents=0.0;return material
+  }
+  private static func bondedPanelMesh(_ panel:PaperPanel,netSize:Point2,plies:[PaperPly])throws->MeshGeometry {
+    let thickness=plies.reduce(0){$0+$1.thicknessMM}
+    return try physicalMesh(panel,netSize:netSize,thicknessMM:thickness,kind:"bonded-ply-panel",channels:["outside:+z","inside:-z"]+plies.map{"ply:\($0.thicknessMM)"}){
+      var vertices=[MeshVector3](),normals=[MeshVector3](),uv=[CGPoint](),slots=[[UInt32]](repeating:[],count:2+plies.count),z = -thickness/2
+      for (index,ply) in plies.enumerated() {
+        // Internal bonds have no facing caps and no chamfered air groove.
+        // Consecutive edge bands meet at the same physical cross section.
+        let source=try physicalMesh(panel,netSize:netSize,thicknessMM:ply.thicknessMM,kind:"bonded-ply-slab",channels:["outside:+z","inside:-z","cut-edge"]){try buildPanelMesh(panel,netSize:netSize,thicknessMM:ply.thicknessMM,beveled:false)}
+        let offset=UInt32(vertices.count),center=(z+ply.thicknessMM/2)/100
+        vertices+=(source.sources(for:.vertex).first?.vectors ?? []).map{.init($0.x,$0.y,$0.z+center)}
+        normals+=source.sources(for:.normal).first?.vectors ?? [];uv+=source.sources(for:.texcoord).first?.points ?? []
+        if index==plies.count-1 {slots[0]+=source.elements[0].indices.map{$0+offset}}
+        if index==0 {slots[1]+=source.elements[1].indices.map{$0+offset}}
+        slots[2+index]+=source.elements[2].indices.map{$0+offset};z+=ply.thicknessMM
+      }
+      return MeshGeometry(sources:[.init(vertices:vertices),.init(normals:normals),.init(textureCoordinates:uv)],elements:slots.map{.init(indices:$0,primitiveType:.triangles)})
+    }
   }
   static func updatePose(_ root:MeshNode,object:ProductObject,foldPercent:Double?=nil,selectedPanelID:String?=nil)throws {
     let definition=try PaperConstruction.definition(for:object)
@@ -101,10 +145,13 @@ import simd
     guard (3...128).contains(panel.polygon.count),panel.polygon.allSatisfy({$0.x.isFinite && $0.y.isFinite}),netSize.x.isFinite,netSize.y.isFinite,netSize.x>0,netSize.y>0,thicknessMM.isFinite,thicknessMM>0 else{throw FormError.invalid("Paper panels require a polygon, physical net and positive caliper.")}
     return try physicalMesh(panel,netSize:netSize,thicknessMM:thicknessMM,kind:"beveled-panel",channels:["outside:+z","inside:-z","bevel-and-cut-edge"]){try buildPanelMesh(panel,netSize:netSize,thicknessMM:thicknessMM)}
   }
-  private static func buildPanelMesh(_ panel:PaperPanel,netSize:Point2,thicknessMM:Double)throws->MeshGeometry {
-    let path=NSBezierPath();path.move(to:.init(x:panel.polygon[0].x/100,y:-panel.polygon[0].y/100))
-    for p in panel.polygon.dropFirst(){path.line(to:.init(x:p.x/100,y:-p.y/100))};path.close()
-    let shape=MeshShape(path:path,extrusionDepth:thicknessMM/100);shape.chamferRadius=min(thicknessMM*0.22,0.06)/100;shape.prepare()
+  private static func buildPanelMesh(_ panel:PaperPanel,netSize:Point2,thicknessMM:Double,beveled:Bool=true)throws->MeshGeometry {
+    let path=NSBezierPath();path.windingRule = .evenOdd
+    for ring in [panel.polygon]+(panel.cutouts ?? []).map(\.polygon) {
+      guard ring.count>=3 else{continue};path.move(to:.init(x:ring[0].x/100,y:-ring[0].y/100))
+      for p in ring.dropFirst(){path.line(to:.init(x:p.x/100,y:-p.y/100))};path.close()
+    }
+    let shape=MeshShape(path:path,extrusionDepth:thicknessMM/100);shape.chamferRadius=beveled ? min(thicknessMM*0.22,0.06)/100:0;shape.prepare()
     let vertices=shape.sources(for:.vertex).first?.vectors ?? [],normals=shape.sources(for:.normal).first?.vectors ?? []
     guard !vertices.isEmpty,vertices.count==normals.count,shape.diagnostic==nil else{throw FormError.invalid(shape.diagnostic ?? "Paper panel geometry could not be prepared.")}
     var slots=[[UInt32]](repeating:[],count:3)
@@ -121,72 +168,15 @@ import simd
   }
   private static func highlight(_ panel:PaperPanel,netSize:Point2,thicknessMM:Double)throws->MeshNode {
     let geometry=try physicalMesh(panel,netSize:netSize,thicknessMM:thicknessMM,kind:"panel-highlight-tube-0.16mm",channels:["highlight"]){
-      let points=panel.polygon.map{MeshVector3($0.x/100,-$0.y/100,(thicknessMM/2+0.035)/100)}
-      let indices=panel.polygon.indices.flatMap{[Int32($0),Int32(($0+1)%panel.polygon.count)]}
+      var points=[MeshVector3](),indices=[Int32]()
+      for ring in [panel.polygon]+(panel.cutouts ?? []).map(\.polygon) {
+        let offset=points.count;points+=ring.map{MeshVector3($0.x/100,-$0.y/100,(thicknessMM/2+0.035)/100)}
+        indices+=ring.indices.flatMap{[Int32(offset+$0),Int32(offset+($0+1)%ring.count)]}
+      }
       return MeshGeometry(sources:[.init(vertices:points)],elements:[.init(indices:indices,primitiveType:.line)])
     }
     let material=MeshMaterial();material.lightingModel = .constant;material.diffuse.contents=NSColor(hex:"#CC6C43");material.readsFromDepthBuffer=false;material.writesToDepthBuffer=false
     geometry.materials=[material]
     let node=MeshNode(geometry:geometry);node.name=highlightName;node.categoryBitMask=4;node.renderingOrder=110;node.isHidden=true;return node
-  }
-  private static func textures(net:PaperNet,stock:PaperStock,color:String,outside:Artwork?,inside:Artwork?,assets:URL,limit:Int)throws->Atlas {
-    let edge=max(128,min(2048,limit)),density=Double(edge)/max(net.size.x,net.size.y)
-    let width=max(1,Int(ceil(net.size.x*density))),height=max(1,Int(ceil(net.size.y*density)))
-    guard width<=2048,height<=2048,width*height<=4_194_304 else{throw FormError.invalid("Paper material raster exceeds its bounded atlas budget.")}
-    var signature=Data("paper-tooth-v1:\(net.size.x),\(net.size.y):\(color):\(stock.grain.rawValue):\(width),\(height):\(GeometryFactory.fontRevision):\(assets.path)".utf8)
-    if let outside{signature.append(try outside.renderCacheData())};signature.append(0)
-    if let inside{signature.append(try inside.renderCacheData())}
-    let key=SHA256.hash(data:signature).map{String(format:"%02x",$0)}.joined() as NSString
-    if let atlas=atlasCache.object(forKey:key){return atlas}
-    let base=try image(width:width,height:height,base:color,artwork:nil,netSize:net.size,assets:assets,grain:stock.grain)
-    let front=try outside.map{try image(width:width,height:height,base:color,artwork:$0,netSize:net.size,assets:assets,grain:stock.grain)} ?? base
-    let back=try inside.map{try image(width:width,height:height,base:color,artwork:$0,netSize:net.size,assets:assets,grain:stock.grain)} ?? base
-    let normal=try normalImage(width:width,height:height,netSize:net.size,grain:stock.grain)
-    let cost=width*height*4*(2+(outside==nil ? 0:1)+(inside==nil ? 0:1))
-    let atlas=Atlas(outside:front,inside:back,stock:base,normal:normal,cost:cost);textureBuilds+=1;atlasCache.setObject(atlas,forKey:key,cost:cost);return atlas
-  }
-  private static func noise(_ x:Int,_ y:Int,grain:PaperStock.Grain)->Double {
-    func hash(_ a:Int,_ b:Int)->Double {var value=UInt64(bitPattern:Int64(a)) &* 0x9E3779B185EBCA87;value ^= UInt64(bitPattern:Int64(b)) &* 0xC2B2AE3D27D4EB4F;value ^= value>>29;value &*= 0x165667B19E3779F9;return Double(value&65535)/65535-0.5}
-    let coarse=grain == .parallelHeight ? hash(x/2,y/5):grain == .parallelWidth ? hash(x/5,y/2):hash(x/3,y/3)
-    return coarse*0.45+hash(x,y)*0.55
-  }
-  private static func image(width:Int,height:Int,base:String,artwork:Artwork?,netSize:Point2,assets:URL,grain:PaperStock.Grain)throws->NSImage {
-    guard let context=CGContext(data:nil,width:width,height:height,bitsPerComponent:8,bytesPerRow:width*4,space:CGColorSpace(name:CGColorSpace.sRGB)!,bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue) else{throw FormError.invalid("Paper material pixels could not be allocated.")}
-    context.setFillColor(NSColor(hex:base).cgColor);context.fill(.init(x:0,y:0,width:width,height:height))
-    if let artwork {
-      let art=try ArtworkProduction.filtered(artwork,roles:[.print]).artwork
-      context.saveGState();NSGraphicsContext.saveGraphicsState();NSGraphicsContext.current=NSGraphicsContext(cgContext:context,flipped:true)
-      context.translateBy(x:0,y:Double(height));context.scaleBy(x:Double(width)/netSize.x,y:-Double(height)/netSize.y)
-      ArtworkRenderer.draw(art,width:netSize.x,height:netSize.y,assets:assets)
-      NSGraphicsContext.restoreGraphicsState();context.restoreGState()
-    }
-    // Original deterministic, low-contrast fiber cue. It is a viewing material,
-    // not a scan, measured stock property, ink separation or fabrication texture.
-    context.saveGState();context.setBlendMode(.multiply);context.interpolationQuality = .high
-    context.draw(try toothTile(grain).color,in:.init(x:0,y:0,width:8*Double(width)/netSize.x,height:8*Double(height)/netSize.y),byTiling:true)
-    context.restoreGState()
-    guard let cg=context.makeImage() else{throw FormError.invalid("Paper material image could not be read.")}
-    return NSImage(cgImage:cg,size:.init(width:width,height:height))
-  }
-  private static func toothTile(_ grain:PaperStock.Grain)throws->ToothTile {
-    if let cached=toothTiles[grain.rawValue]{return cached}
-    let width=128,height=128;var normal=[UInt8](repeating:255,count:width*height*4),color=normal
-    for y in 0..<height {for x in 0..<width {
-      let nx=(noise(x+1,y,grain:grain)-noise(x-1,y,grain:grain))*0.035,ny = -(noise(x,y+1,grain:grain)-noise(x,y-1,grain:grain))*0.035,n=simd_normalize(SIMD3(nx,ny,1)),i=(y*width+x)*4
-      normal[i]=UInt8(((n.x*0.5+0.5)*255).rounded());normal[i+1]=UInt8(((n.y*0.5+0.5)*255).rounded());normal[i+2]=UInt8(((n.z*0.5+0.5)*255).rounded())
-      let value=UInt8(((0.993+noise(x,y,grain:grain)*0.012)*255).rounded());color[i]=value;color[i+1]=value;color[i+2]=value
-    }}
-    func image(_ bytes:[UInt8],linear:Bool)throws->CGImage {
-      guard let provider=CGDataProvider(data:Data(bytes) as CFData),let image=CGImage(width:width,height:height,bitsPerComponent:8,bitsPerPixel:32,bytesPerRow:width*4,space:CGColorSpace(name:linear ? CGColorSpace.linearSRGB:CGColorSpace.sRGB)!,bitmapInfo:CGBitmapInfo(rawValue:CGImageAlphaInfo.premultipliedLast.rawValue),provider:provider,decode:nil,shouldInterpolate:true,intent:.defaultIntent) else{throw FormError.invalid("Paper tooth pixels could not be created.")}
-      return image
-    }
-    let tile=try ToothTile(color:image(color,linear:false),normal:image(normal,linear:true));toothTiles[grain.rawValue]=tile;return tile
-  }
-  private static func normalImage(width:Int,height:Int,netSize:Point2,grain:PaperStock.Grain)throws->NSImage {
-    guard let context=CGContext(data:nil,width:width,height:height,bitsPerComponent:8,bytesPerRow:width*4,space:CGColorSpace(name:CGColorSpace.linearSRGB)!,bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue) else{throw FormError.invalid("Paper normal pixels could not be allocated.")}
-    context.interpolationQuality = .high
-    context.draw(try toothTile(grain).normal,in:.init(x:0,y:0,width:8*Double(width)/netSize.x,height:8*Double(height)/netSize.y),byTiling:true)
-    guard let cg=context.makeImage() else{throw FormError.invalid("Paper normal image could not be read.")}
-    return NSImage(cgImage:cg,size:.init(width:width,height:height))
   }
 }

@@ -1,0 +1,148 @@
+{
+  "status": "passed",
+  "cases_passed": 12,
+  "classification_counts": {
+    "geometry_only_passed": 60,
+    "geometry_and_declared_checks_passed": 14
+  },
+  "parameter_case_names": {
+    "01": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "02": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "03": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "04": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "05": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "06": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "07": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum",
+      "depth.minimum",
+      "depth.maximum"
+    ],
+    "08": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum"
+    ],
+    "09": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum"
+    ],
+    "10": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum"
+    ],
+    "11": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum"
+    ],
+    "12": [
+      "default",
+      "width.minimum",
+      "width.maximum",
+      "height.minimum",
+      "height.maximum"
+    ]
+  },
+  "packet_counts": {
+    "packets": 12,
+    "svg_process_files": 46,
+    "pdfs": 20,
+    "finish_plates": 14
+  },
+  "modeled_contents": {
+    "04": {
+      "passed": true,
+      "containmentPassed": true,
+      "clearanceMM": 0,
+      "sourceRevision": "457e27723407132e9b06c5edb80d927e32f6b318c1b901b8585bb553b1a5ff28",
+      "contentsRevision": "7d0fd636ca664b16532bfe00aedcbc56fa7fc812a7c16837ce619a3c9fbc63e8",
+      "interior_id": "base-interior",
+      "openingPassed": true,
+      "coverage": "Actual oriented object bounds against the author-declared interior and, when present, its opening cross-section at the current lateral position. No continuous insertion path, panel-to-product exact contact, elastic retention, adhesive strength or unlisted volume is inferred."
+    },
+    "05": {
+      "passed": true,
+      "containmentPassed": true,
+      "clearanceMM": 1,
+      "sourceRevision": "c16e68898166b20225a58faf7a81e36645c82be22325423736e6067b4f0f174c",
+      "contentsRevision": "a2d572068ded351246531a75a5ded77813c7490e5fc4c1e4f69e95fdc7e7a0da",
+      "interior_id": "tray-interior",
+      "openingPassed": true,
+      "coverage": "Actual oriented object bounds against the author-declared interior and, when present, its opening cross-section at the current lateral position. No continuous insertion path, panel-to-product exact contact, elastic retention, adhesive strength or unlisted volume is inferred."
+    }
+  },
+  "reopened_exact": 12,
+  "width_undo_redo_restore_passed": 12,
+  "invalid_stock_finish_rejections": 24,
+  "missing_finish_target_export_rejections": 10,
+  "common_restored_source_sha256": "b497ded75d7abe6f957769b38a7e0851e743fcdc2f26265ffda51c228e6bf7a3",
+  "runtime_executable_sha256": "35c30c583da913aa915c475e8b7ea1c227715ed5dfad31d47b3be6e38f605352",
+  "scope": "Finite declared parameter cases and declared checks only; no manufacturing approval or continuous-range proof.",
+  "started_at": 1793389827.8202,
+  "ended_at": 1793389885.368205,
+  "individual_declared_solid_checks_passed": 56,
+  "finite_parameter_cases_passed": 74,
+  "checker_wall_seconds": 57.54800510406494
+}

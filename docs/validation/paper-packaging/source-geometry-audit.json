@@ -1,0 +1,1147 @@
+{
+  "box04_open_pose_change": {
+    "after_sha256": "8b7d638b53cef7170cfeea6ef12bbe6508a0b9eaeae96cc5c5ed3479b057cf5b",
+    "before_sha256": "15e9019db7d7e96015c3dcbdf729fa986760d5645e5efad2a5583b6f0e01a430",
+    "closed_offsets_mm": [
+      0,
+      0,
+      0
+    ],
+    "component_ids": [
+      "lid-floor",
+      "lid-front",
+      "lid-back",
+      "lid-left",
+      "lid-right"
+    ],
+    "default_open_lid_center_x_mm": 180,
+    "default_open_rim_y_mm": 0,
+    "measured_core_lid_front_centers_mm": [
+      {
+        "center": [
+          0,
+          35.30000000000001,
+          53.69999999999999
+        ],
+        "opening": 0
+      },
+      {
+        "center": [
+          89.99999999999997,
+          88.90000000000003,
+          53.69999999999999
+        ],
+        "opening": 50
+      },
+      {
+        "center": [
+          179.99999999999997,
+          12.5,
+          53.69999999999999
+        ],
+        "opening": 100
+      }
+    ]
+  },
+  "card11_parity_correction": {
+    "after": "-stock",
+    "after_closed_centers_and_normals": {
+      "back": {
+        "center_mm": [
+          0,
+          77.5,
+          -0.18999999999999329
+        ],
+        "id": "back",
+        "outside_normal": [
+          1.2246467991473532e-16,
+          0,
+          -1
+        ]
+      },
+      "front": {
+        "center_mm": [
+          0,
+          77.5,
+          0.19
+        ],
+        "id": "front",
+        "outside_normal": [
+          0,
+          0,
+          1
+        ]
+      }
+    },
+    "after_separation_dot_front_outside_normal_mm": 0.3799999999999933,
+    "after_sha256": "df4f81983b5577465659e3f494bf0f31cd4f33b916bd68da3adea702e1a3d9ef",
+    "before": "stock",
+    "before_closed_centers_and_normals": {
+      "back": {
+        "center_mm": [
+          0,
+          77.5,
+          0.19
+        ],
+        "id": "back",
+        "outside_normal": [
+          1.2246467991473532e-16,
+          0,
+          -1
+        ]
+      },
+      "front": {
+        "center_mm": [
+          0,
+          77.5,
+          -0.19000000000000672
+        ],
+        "id": "front",
+        "outside_normal": [
+          0,
+          0,
+          1
+        ]
+      }
+    },
+    "before_separation_dot_front_outside_normal_mm": -0.3800000000000067,
+    "before_sha256": "49cf52f2a442aad772258f9e33ce78ad1be6f4dba5e4c8d29775c0f815284877",
+    "changed_field": "hinges[0].layerOffsetMM"
+  },
+  "exact_check_scope": "Default source values; Fold100/Opening0; original outer/inner polygons extruded into sharp centered stock, transformed by production Core poses and measured through the installed exact native kernel. No insertion sequence, retention strength, undeclared pair or native render claim.",
+  "exact_closed_pose_checks": {
+    "box-lid-exact": {
+      "bounds": {
+        "base-front": {
+          "areaMM2": 13602.96,
+          "closed": true,
+          "edges": 12,
+          "faces": 6,
+          "maximum": {
+            "x": 71.80000000000001,
+            "y": 46.800000000000004,
+            "z": 51.79999999999997
+          },
+          "maximumToleranceMM": 1.0000000000000002e-07,
+          "minimum": {
+            "x": -71.79999999999998,
+            "y": 1.8000000000000043,
+            "z": 49.99999999999997
+          },
+          "shapeType": 2,
+          "shells": 1,
+          "solids": 1,
+          "valid": true,
+          "vertices": 8,
+          "volumeMM3": 11631.6
+        },
+        "lid-front": {
+          "areaMM2": 8087.119999999999,
+          "closed": true,
+          "edges": 12,
+          "faces": 6,
+          "maximum": {
+            "x": 74.6,
+            "y": 47.80000000000001,
+            "z": 54.59999999999999
+          },
+          "maximumToleranceMM": 1.0000000000000002e-07,
+          "minimum": {
+            "x": -74.6,
+            "y": 22.80000000000001,
+            "z": 52.79999999999999
+          },
+          "shapeType": 2,
+          "shells": 1,
+          "solids": 1,
+          "valid": true,
+          "vertices": 8,
+          "volumeMM3": 6714
+        }
+      },
+      "checks": [
+        {
+          "firstPanelID": "base-front",
+          "id": "lid-clears-base",
+          "measured": 0,
+          "message": "Nested front boards must not occupy the same solid volume.",
+          "metric": "interference",
+          "passed": true,
+          "relation": "<=",
+          "required": 0,
+          "secondPanelID": "lid-front",
+          "stockThicknessMM": 1.8,
+          "units": "mm3"
+        },
+        {
+          "firstPanelID": "base-front",
+          "id": "lid-front-clearance",
+          "measured": 1.0000000000000213,
+          "message": "The nested lid retains the declared physical board-to-board clearance.",
+          "metric": "clearance",
+          "passed": true,
+          "relation": ">=",
+          "required": 1,
+          "secondPanelID": "lid-front",
+          "stockThicknessMM": 1.8,
+          "units": "mm"
+        }
+      ],
+      "passed": true,
+      "source": "examples/paper-packaging/04-two-piece-board-box.json",
+      "stock_mm": 1.8
+    },
+    "mailer-retention-exact": {
+      "bounds": {
+        "floor": {
+          "areaMM2": 71520.68,
+          "closed": true,
+          "edges": 36,
+          "faces": 14,
+          "maximum": {
+            "x": 110,
+            "y": 3.000000000000009,
+            "z": 80
+          },
+          "maximumToleranceMM": 1.0000000000000002e-07,
+          "minimum": {
+            "x": -110,
+            "y": 1.4999999999999991,
+            "z": -80
+          },
+          "shapeType": 2,
+          "shells": 1,
+          "solids": 1,
+          "valid": true,
+          "vertices": 24,
+          "volumeMM3": 52690.560000000005
+        },
+        "left-inner-wall": {
+          "areaMM2": 17882.299999999996,
+          "closed": true,
+          "edges": 24,
+          "faces": 10,
+          "maximum": {
+            "x": -107.75,
+            "y": 57.250000000000014,
+            "z": 80
+          },
+          "maximumToleranceMM": 1.0000000000000002e-07,
+          "minimum": {
+            "x": -109.25000000000001,
+            "y": 0.7500000000000047,
+            "z": -80
+          },
+          "shapeType": 2,
+          "shells": 1,
+          "solids": 1,
+          "valid": true,
+          "vertices": 16,
+          "volumeMM3": 12924.599999999999
+        },
+        "left-retention-foot": {
+          "areaMM2": 198.49999999999997,
+          "closed": true,
+          "edges": 12,
+          "faces": 6,
+          "maximum": {
+            "x": -105,
+            "y": 1.5000000000000062,
+            "z": 28.599999999999994
+          },
+          "maximumToleranceMM": 1.0000000000000002e-07,
+          "minimum": {
+            "x": -108.5,
+            "y": 4.773959005888173e-15,
+            "z": 9.799999999999997
+          },
+          "shapeType": 2,
+          "shells": 1,
+          "solids": 1,
+          "valid": true,
+          "vertices": 8,
+          "volumeMM3": 98.69999999999996
+        },
+        "right-inner-wall": {
+          "areaMM2": 17882.299999999996,
+          "closed": true,
+          "edges": 24,
+          "faces": 10,
+          "maximum": {
+            "x": 109.25000000000001,
+            "y": 57.25,
+            "z": 80.00000000000003
+          },
+          "maximumToleranceMM": 1.0000000000000002e-07,
+          "minimum": {
+            "x": 107.75,
+            "y": 0.75,
+            "z": -79.99999999999997
+          },
+          "shapeType": 2,
+          "shells": 1,
+          "solids": 1,
+          "valid": true,
+          "vertices": 16,
+          "volumeMM3": 12924.599999999999
+        },
+        "right-retention-foot": {
+          "areaMM2": 198.5000000000001,
+          "closed": true,
+          "edges": 12,
+          "faces": 6,
+          "maximum": {
+            "x": 108.5,
+            "y": 1.5000000000000018,
+            "z": -9.800000000000011
+          },
+          "maximumToleranceMM": 1.0000000000000002e-07,
+          "minimum": {
+            "x": 105,
+            "y": 2.220446049250313e-16,
+            "z": -28.600000000000023
+          },
+          "shapeType": 2,
+          "shells": 1,
+          "solids": 1,
+          "valid": true,
+          "vertices": 8,
+          "volumeMM3": 98.70000000000005
+        }
+      },
+      "checks": [
+        {
+          "firstPanelID": "left-inner-wall",
+          "id": "left-tongue-slot-clearance",
+          "measured": 0,
+          "message": "Only the integral tongue passes through the floor slot; main inner wall retains nominal clearance.",
+          "metric": "interference",
+          "passed": true,
+          "relation": "<=",
+          "required": 0,
+          "secondPanelID": "floor",
+          "stockThicknessMM": 1.5,
+          "units": "mm3"
+        },
+        {
+          "firstPanelID": "right-inner-wall",
+          "id": "right-tongue-slot-clearance",
+          "measured": 0,
+          "message": "Only the integral tongue passes through the floor slot; main inner wall retains nominal clearance.",
+          "metric": "interference",
+          "passed": true,
+          "relation": "<=",
+          "required": 0,
+          "secondPanelID": "floor",
+          "stockThicknessMM": 1.5,
+          "units": "mm3"
+        },
+        {
+          "firstPanelID": "left-retention-foot",
+          "id": "left-foot-floor-interference",
+          "measured": 0,
+          "message": "Folded retaining stock must not penetrate the floor.",
+          "metric": "interference",
+          "passed": true,
+          "relation": "<=",
+          "required": 0,
+          "secondPanelID": "floor",
+          "stockThicknessMM": 1.5,
+          "units": "mm3"
+        },
+        {
+          "firstPanelID": "left-retention-foot",
+          "id": "left-foot-floor-contact",
+          "measured": 2.220446049250313e-16,
+          "message": "The retaining foot must lie against the floor underside within1micrometer nominal geometry.",
+          "metric": "clearance",
+          "passed": true,
+          "relation": "<=",
+          "required": 0.001,
+          "secondPanelID": "floor",
+          "stockThicknessMM": 1.5,
+          "units": "mm"
+        },
+        {
+          "firstPanelID": "right-retention-foot",
+          "id": "right-foot-floor-interference",
+          "measured": 0,
+          "message": "Folded retaining stock must not penetrate the floor.",
+          "metric": "interference",
+          "passed": true,
+          "relation": "<=",
+          "required": 0,
+          "secondPanelID": "floor",
+          "stockThicknessMM": 1.5,
+          "units": "mm3"
+        },
+        {
+          "firstPanelID": "right-retention-foot",
+          "id": "right-foot-floor-contact",
+          "measured": 1.7763568394002505e-15,
+          "message": "The retaining foot must lie against the floor underside within1micrometer nominal geometry.",
+          "metric": "clearance",
+          "passed": true,
+          "relation": "<=",
+          "required": 0.001,
+          "secondPanelID": "floor",
+          "stockThicknessMM": 1.5,
+          "units": "mm"
+        }
+      ],
+      "passed": true,
+      "source": "examples/paper-packaging/03-locking-mailer.json",
+      "stock_mm": 1.5
+    }
+  },
+  "exact_helper_source_sha256": "7081a44e13d8cde791d0750f299a31b92a3f520302f95a6eafb26bc376ff9efe",
+  "helper": "ignored .local/testing/PaperSourceAudit; Foundation/Core command-line process, no AppKit/window or shared build writes",
+  "helper_source_sha256": "b49f3111f2617409883736e3309efacabe61de36f2a035d581b3fcc258dc8294",
+  "immutable_public_snapshot": "paper-packaging-round-one-public-snapshot",
+  "mailer_retention_correction": {
+    "after_sha256": "1c5708e65d9344361c4952d000592175cb4d78e25d08fcf42a0e742b59ea0bdf",
+    "before_sha256": "b6331ccb80b971ae379c4b4856950b46b7a8f7f0b8d9c24b1ebd84e9197c63b6",
+    "new_hinges": [
+      "left-retention-crease",
+      "right-retention-crease"
+    ],
+    "new_panels": [
+      "left-retention-foot",
+      "right-retention-foot"
+    ]
+  },
+  "scope": "Core source/net/pose validation; no renderer, exact solids or MCP bridge claimed",
+  "snapshot_module_manifest_sha256": "cd6e07386145fe3fdf9f8450ccd38e8a020dd1c9ad85e47445557019bd86f4e6",
+  "snapshot_object_manifest_sha256": "b3d16de873b2aea03980e9e2240751dc5ab67917805edcbc2367dac0685f2a8e",
+  "source_count": 13,
+  "sources": [
+    {
+      "caliper_mm": 3.2,
+      "components": 1,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 0,
+      "cutouts": [],
+      "declared_interiors": [
+        {
+          "componentID": "body",
+          "id": "body-interior",
+          "name": "Body Interior",
+          "opening": {
+            "axis": "y",
+            "heightMM": 176.8,
+            "originMM": {
+              "x": 0,
+              "y": 0
+            },
+            "widthMM": 256.8
+          },
+          "origin": {
+            "x": -128.4,
+            "y": 7.999999999999993,
+            "z": -88.39999999999996
+          },
+          "sizeMM": {
+            "x": 256.8,
+            "y": 147.2,
+            "z": 176.8
+          },
+          "uAxis": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "vAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "wAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          }
+        }
+      ],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 12,
+      "joins": 2,
+      "material_area_mm2": 302732,
+      "net_size_mm": [
+        908,
+        340
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 52,
+      "panels": 13,
+      "sha256": "62f8be7bc2beac159408e8cf2dd59b0334685b7b513e77cfb8d99c82b6c3fcf8",
+      "solid_requirement_ids": [],
+      "source": "examples/paper-packaging/01-rsc-shipping.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    },
+    {
+      "caliper_mm": 0.45,
+      "components": 1,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 0,
+      "cutouts": [],
+      "declared_interiors": [
+        {
+          "componentID": "body",
+          "id": "body-interior",
+          "name": "Body Interior",
+          "opening": {
+            "axis": "y",
+            "heightMM": 37.55,
+            "originMM": {
+              "x": 0,
+              "y": 0
+            },
+            "widthMM": 63.55
+          },
+          "origin": {
+            "x": -31.774999999999995,
+            "y": 1.1250000000000147,
+            "z": -18.77499999999999
+          },
+          "sizeMM": {
+            "x": 63.55,
+            "y": 136.2,
+            "z": 37.55
+          },
+          "uAxis": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "vAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "wAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          }
+        }
+      ],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 12,
+      "joins": 3,
+      "material_area_mm2": 41284.816000000006,
+      "net_size_mm": [
+        218,
+        260
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 52,
+      "panels": 13,
+      "sha256": "d77240f9338abd5b76509c1252ec7b3c1f2cf3fa6ea8ad0b000eb19cf0964d7b",
+      "solid_requirement_ids": [],
+      "source": "examples/paper-packaging/02-straight-tuck-carton.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    },
+    {
+      "caliper_mm": 1.5,
+      "components": 1,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 44,
+      "cutouts": [
+        {
+          "id": "left-lock-slot",
+          "kind": "slot"
+        },
+        {
+          "id": "right-lock-slot",
+          "kind": "slot"
+        },
+        {
+          "id": "inspection-window",
+          "kind": "window"
+        },
+        {
+          "id": "tear-bridge-cut-0",
+          "kind": "perforation"
+        },
+        {
+          "id": "tear-bridge-cut-1",
+          "kind": "perforation"
+        },
+        {
+          "id": "tear-bridge-cut-2",
+          "kind": "perforation"
+        },
+        {
+          "id": "tear-bridge-cut-3",
+          "kind": "perforation"
+        },
+        {
+          "id": "tear-bridge-cut-4",
+          "kind": "perforation"
+        },
+        {
+          "id": "tear-bridge-cut-5",
+          "kind": "perforation"
+        },
+        {
+          "id": "tear-bridge-cut-6",
+          "kind": "perforation"
+        },
+        {
+          "id": "tear-bridge-cut-7",
+          "kind": "perforation"
+        }
+      ],
+      "declared_interiors": [
+        {
+          "componentID": "mailer",
+          "id": "mailer-interior",
+          "name": "Mailer Interior",
+          "opening": {
+            "axis": "y",
+            "heightMM": 158.5,
+            "originMM": {
+              "x": 0,
+              "y": 0
+            },
+            "widthMM": 214
+          },
+          "origin": {
+            "x": -107.00000000000001,
+            "y": 3.0000000000000124,
+            "z": -79.24999999999999
+          },
+          "sizeMM": {
+            "x": 214,
+            "y": 52,
+            "z": 158.5
+          },
+          "uAxis": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "vAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "wAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          }
+        }
+      ],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 10,
+      "joins": 2,
+      "material_area_mm2": 138395.94,
+      "net_size_mm": [
+        450,
+        485
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 52,
+      "panels": 11,
+      "sha256": "1c5708e65d9344361c4952d000592175cb4d78e25d08fcf42a0e742b59ea0bdf",
+      "solid_requirement_ids": [
+        "left-tongue-slot-clearance",
+        "right-tongue-slot-clearance",
+        "left-foot-floor-interference",
+        "left-foot-floor-contact",
+        "right-foot-floor-interference",
+        "right-foot-floor-contact"
+      ],
+      "source": "examples/paper-packaging/03-locking-mailer.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    },
+    {
+      "caliper_mm": 1.8,
+      "components": 11,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 4,
+      "cutouts": [
+        {
+          "id": "product-aperture",
+          "kind": "window"
+        }
+      ],
+      "declared_interiors": [
+        {
+          "componentID": "base-floor",
+          "id": "base-interior",
+          "name": "Base Interior",
+          "opening": {
+            "axis": "y",
+            "heightMM": 100,
+            "originMM": {
+              "x": 0,
+              "y": 0
+            },
+            "widthMM": 140
+          },
+          "origin": {
+            "x": -70.00000000000001,
+            "y": 1.8000000000000063,
+            "z": -50.00000000000002
+          },
+          "sizeMM": {
+            "x": 140,
+            "y": 45,
+            "z": 100
+          },
+          "uAxis": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "vAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "wAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          }
+        }
+      ],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 0,
+      "joins": 8,
+      "material_area_mm2": 75300.39999999997,
+      "net_size_mm": [
+        535.2,
+        713.6
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 44,
+      "panels": 11,
+      "sha256": "8b7d638b53cef7170cfeea6ef12bbe6508a0b9eaeae96cc5c5ed3479b057cf5b",
+      "solid_requirement_ids": [
+        "lid-clears-base",
+        "lid-front-clearance"
+      ],
+      "source": "examples/paper-packaging/04-two-piece-board-box.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    },
+    {
+      "caliper_mm": 1.5,
+      "components": 8,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 0,
+      "cutouts": [],
+      "declared_interiors": [
+        {
+          "componentID": "base-floor",
+          "id": "tray-interior",
+          "name": "Tray Interior",
+          "opening": {
+            "axis": "y",
+            "heightMM": 175,
+            "originMM": {
+              "x": 0,
+              "y": 0
+            },
+            "widthMM": 240
+          },
+          "origin": {
+            "x": -120,
+            "y": 3.7500000000000115,
+            "z": -88.25
+          },
+          "sizeMM": {
+            "x": 240,
+            "y": 55,
+            "z": 175
+          },
+          "uAxis": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "vAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "wAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          }
+        }
+      ],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 0,
+      "joins": 6,
+      "material_area_mm2": 197540.5,
+      "net_size_mm": [
+        828,
+        828
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 32,
+      "panels": 8,
+      "sha256": "5646ea12591497e6f798920c689e912b973e4ec25e4f6cbd160cfccbf527d997",
+      "solid_requirement_ids": [],
+      "source": "examples/paper-packaging/05-archival-clamshell.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    },
+    {
+      "caliper_mm": 0.16,
+      "components": 1,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 0,
+      "cutouts": [],
+      "declared_interiors": [
+        {
+          "componentID": "envelope",
+          "id": "envelope-interior",
+          "name": "Envelope Interior",
+          "opening": {
+            "axis": "y",
+            "heightMM": 0.6,
+            "originMM": {
+              "x": 0,
+              "y": 0
+            },
+            "widthMM": 219.84
+          },
+          "origin": {
+            "x": -109.92,
+            "y": 0.08,
+            "z": -0.1399999999999999
+          },
+          "sizeMM": {
+            "x": 219.84,
+            "y": 109.84,
+            "z": 0.6
+          },
+          "uAxis": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "vAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "wAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          }
+        }
+      ],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 4,
+      "joins": 2,
+      "material_area_mm2": 56560,
+      "net_size_mm": [
+        310,
+        225
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 21,
+      "panels": 5,
+      "sha256": "81f727b64a4f247643f8d8717cb80b871bcd58b8557637abf239d5128d693a39",
+      "solid_requirement_ids": [],
+      "source": "examples/paper-packaging/06-commercial-envelope.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    },
+    {
+      "caliper_mm": 0.2,
+      "components": 1,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 0,
+      "cutouts": [],
+      "declared_interiors": [
+        {
+          "componentID": "envelope",
+          "id": "envelope-interior",
+          "name": "Envelope Interior",
+          "opening": {
+            "axis": "y",
+            "heightMM": 1.2,
+            "originMM": {
+              "x": 0,
+              "y": 0
+            },
+            "widthMM": 189.8
+          },
+          "origin": {
+            "x": -94.9,
+            "y": 0.1,
+            "z": -0.4
+          },
+          "sizeMM": {
+            "x": 189.8,
+            "y": 139.8,
+            "z": 1.2
+          },
+          "uAxis": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "vAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "wAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          }
+        }
+      ],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 4,
+      "joins": 2,
+      "material_area_mm2": 56970,
+      "net_size_mm": [
+        280,
+        272
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 19,
+      "panels": 5,
+      "sha256": "9ab3ce3e59205fe551344d5969e2bfb05090bcdd2385510e6fee836ce84a7d7c",
+      "solid_requirement_ids": [],
+      "source": "examples/paper-packaging/07-invitation-envelope.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    },
+    {
+      "caliper_mm": 0.12,
+      "components": 1,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 0,
+      "cutouts": [],
+      "declared_interiors": [],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 0,
+      "joins": 0,
+      "material_area_mm2": 19548,
+      "net_size_mm": [
+        181,
+        130
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 5,
+      "panels": 1,
+      "sha256": "645f3789377872d180a704e09afd16460d0a0c9febb0f750736720ae3e25ef9d",
+      "solid_requirement_ids": [],
+      "source": "examples/paper-packaging/07-liner-component.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    },
+    {
+      "caliper_mm": 0.6,
+      "components": 1,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 24,
+      "cutouts": [
+        {
+          "id": "cord-hole",
+          "kind": "cutout"
+        }
+      ],
+      "declared_interiors": [],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 0,
+      "joins": 0,
+      "material_area_mm2": 5468.053550038474,
+      "net_size_mm": [
+        55,
+        100
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 36,
+      "panels": 1,
+      "rounded_outline": {
+        "outer_vertices": 36,
+        "punch_id": "cord-hole",
+        "punch_vertices": 24,
+        "radius_parameter_mm": 4
+      },
+      "sha256": "e189ada0f2c1802c52bd4e1e91b4ea88c3e9405facab30964d130ecdd48bda14",
+      "solid_requirement_ids": [],
+      "source": "examples/paper-packaging/08-hang-tag.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    },
+    {
+      "caliper_mm": 0.9,
+      "components": 1,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 0,
+      "cutouts": [],
+      "declared_interiors": [],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 0,
+      "joins": 0,
+      "material_area_mm2": 4675,
+      "net_size_mm": [
+        85,
+        55
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 4,
+      "panels": 1,
+      "sha256": "18becb7ba67cf0a04f25c3d330e9fd798dfc9a9365c0a880443ca173b79b5ea6",
+      "solid_requirement_ids": [],
+      "source": "examples/paper-packaging/09-duplex-business-card.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    },
+    {
+      "caliper_mm": 0.45,
+      "components": 1,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 0,
+      "cutouts": [],
+      "declared_interiors": [],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 0,
+      "joins": 0,
+      "material_area_mm2": 15540,
+      "net_size_mm": [
+        148,
+        105
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 4,
+      "panels": 1,
+      "sha256": "be180673dad8d0237053bbd48e202b45a0bf97e361e637c938ab33f0f45c0322",
+      "solid_requirement_ids": [],
+      "source": "examples/paper-packaging/10-postcard.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    },
+    {
+      "caliper_mm": 0.38,
+      "components": 1,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 0,
+      "cutouts": [],
+      "declared_interiors": [],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 1,
+      "joins": 0,
+      "material_area_mm2": 34100,
+      "net_size_mm": [
+        220,
+        155
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 8,
+      "panels": 2,
+      "sha256": "df4f81983b5577465659e3f494bf0f31cd4f33b916bd68da3adea702e1a3d9ef",
+      "solid_requirement_ids": [],
+      "source": "examples/paper-packaging/11-folded-greeting-card.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    },
+    {
+      "caliper_mm": 1,
+      "components": 1,
+      "connection_checks": 0,
+      "cutout_polygon_source_vertices": 0,
+      "cutouts": [],
+      "declared_interiors": [],
+      "default_and_opening_geometry_pass": true,
+      "hinges": 0,
+      "joins": 0,
+      "material_area_mm2": 22606,
+      "net_size_mm": [
+        127,
+        178
+      ],
+      "opening_samples": [
+        0,
+        50,
+        100
+      ],
+      "outer_polygon_source_vertices": 4,
+      "panels": 1,
+      "sha256": "837816e19a976d06bd67cf86fb4e024fe4bb073f20457b8c89afba71b6b1c97b",
+      "solid_requirement_ids": [],
+      "source": "examples/paper-packaging/12-finished-invitation.json",
+      "width_edit_factor": 1.05,
+      "width_edit_geometry_pass": true,
+      "width_edit_keeps_panel_ids": true
+    }
+  ]
+}

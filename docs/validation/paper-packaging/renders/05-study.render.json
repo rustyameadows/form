@@ -1,0 +1,80 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1200,
+  "png_sha256" : "4ea2091658d2e4b4b0e9a3bf8fd16a6b13898f713dffc36dfa4fc00c5072b870",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:paper-template-17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764.svg",
+      "sha256" : "17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 0.32175055439664219,
+      "distance" : 6.4215825239498807,
+      "elevation" : 0.71577840305304596,
+      "projection" : "perspective",
+      "target" : {
+        "x" : -6.5,
+        "y" : 1.23125,
+        "z" : 0
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "A92283AF-4B21-4909-A029-A1AA356806F8",
+    "instances" : [
+      {
+        "id" : "A9ADCB6A-1F84-48B7-A0FF-78299FFC3EF8",
+        "name" : "05 · Archive \/ Clamshell case",
+        "positionMM" : {
+          "x" : -650,
+          "y" : 0,
+          "z" : 0
+        },
+        "rotationDegrees" : 180,
+        "sourceObjectID" : "2BD7AD57-44F9-4091-BA17-8DDB57789D06",
+        "visible" : true
+      },
+      {
+        "id" : "5A27B25F-A0AB-4B1D-B818-12904688DD84",
+        "name" : "05 · Modeled archival contents",
+        "positionMM" : {
+          "x" : -650,
+          "y" : 7.7500000000000115,
+          "z" : -0.75
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "64C852B2-DE2C-437B-AA91-FDC74A0EECFA",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "05-study",
+    "pixels" : {
+      "height" : 1200,
+      "width" : 1800
+    },
+    "revision" : 3,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "2edb07c1172dbba7df88b6cd19c0b586f701e29b47b9ceb27111c7aeac81e517",
+  "source_project_id" : "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+  "width" : 1800
+}

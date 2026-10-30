@@ -23,7 +23,7 @@ extension StudioStore {
   /// visual arrangement belongs to a Form selection group.
   func selectWorkingObject(_ id:UUID?) {
     finishArtworkEditing()
-    guard let id,project?.objects.contains(where:{$0.id==id && !$0.isCanvasWorkspace})==true else{engine.selection=[];changed(save:false);return}
+    guard let id,project?.objects.contains(where:{$0.id==id && $0.hasTablePresentation})==true else{engine.selection=[];changed(save:false);return}
     engine.selection=[id];changed(save:false)
   }
   func showEnvironment(_ next: ProjectEnvironment) {
@@ -147,7 +147,7 @@ struct FabricationReviewView: View {
 
 struct EnvironmentContextPanel: View {
   @EnvironmentObject var store: StudioStore
-  private var objects: [ProductObject] { store.project?.objects.filter { !$0.isCanvasWorkspace } ?? [] }
+  private var objects: [ProductObject] { store.project?.objects.filter { $0.hasTablePresentation } ?? [] }
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
       VStack(alignment: .leading, spacing: 10) {

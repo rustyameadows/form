@@ -15,6 +15,7 @@ private struct ObjectReference: Codable {
   var id: UUID
   var file: String
   var canvasWorkspace: Bool?
+  var canvasSourceOnly: Bool?
   var canvasItemCount: Int?
 }
 private struct Manifest: Codable {
@@ -41,6 +42,7 @@ public final class ProjectRepository {
         else { return nil }
         var physicalCount = 0,canvasCount = 0
         for ref in manifest.objects {
+          if ref.canvasSourceOnly == true {continue}
           if let workspace = ref.canvasWorkspace {
             if workspace { canvasCount += max(0,ref.canvasItemCount ?? 0) }
             else { physicalCount += 1 }
@@ -100,6 +102,7 @@ public final class ProjectRepository {
         try data.write(to: target, options: .atomic)
       }
       references.append(.init(id:object.id,file:filename,canvasWorkspace:object.isCanvasWorkspace,
+        canvasSourceOnly:object.canvasSourceOnly,
         canvasItemCount:object.isCanvasWorkspace ? ProjectContent.looseItems(in:object.artwork) : nil))
     }
     var metadata = project
@@ -154,6 +157,7 @@ public struct StudioLibrary: Codable, Equatable {
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
     materials = try values.decodeIfPresent([Material].self, forKey: .materials) ?? Material.presets
+    for material in materials {try material.paperStock?.validate()}
     for material in TextileDesign.materials where !materials.contains(where: { $0.id == material.id }) {
       materials.append(material)
     }
@@ -173,6 +177,7 @@ public struct StudioLibrary: Codable, Equatable {
   }
   public func save(to root: URL) throws {
     try textileProduction?.validate()
+    for material in materials {try material.paperStock?.validate()}
     guard materials.allSatisfy({ $0.fabric?.pattern == nil }) else {
       throw FormError.invalid("Fabric patterns reference project artwork. Save repeat designs in the project rather than the shared Studio Library.")
     }

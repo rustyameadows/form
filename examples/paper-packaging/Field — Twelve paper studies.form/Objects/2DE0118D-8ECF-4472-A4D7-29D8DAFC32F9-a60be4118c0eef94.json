@@ -1,0 +1,709 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 45,
+          "ty" : 62
+        },
+        "color" : "#45402E",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "8D60D37B-4FCB-5063-8986-892A2EF56209",
+        "kind" : "text",
+        "name" : "07-outside-front-brand",
+        "text" : "FIELD  /  07",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 166,
+        "x" : 12,
+        "y" : 6
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 45,
+          "ty" : 62
+        },
+        "color" : "#45402E",
+        "fontSize" : 75.1748031496063,
+        "height" : 34,
+        "id" : "6C95F9A7-7115-5220-B43D-3B09B31F7BBA",
+        "kind" : "text",
+        "name" : "07-outside-front-title",
+        "text" : "Gather",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 166,
+        "x" : 12,
+        "y" : 35
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 45,
+          "ty" : 62
+        },
+        "color" : "#45402E",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "07546366-038E-5F99-B875-439DD2AE70CD",
+        "kind" : "rectangle",
+        "name" : "07-outside-front-rule",
+        "text" : "",
+        "width" : 104.50000000000001,
+        "x" : 12,
+        "y" : 91
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 45,
+          "ty" : 62
+        },
+        "color" : "#45402E",
+        "fontSize" : 7.5,
+        "height" : 16,
+        "id" : "41A2BB13-B2E9-5D52-82D8-BFA99611D636",
+        "kind" : "text",
+        "name" : "07-outside-front-copy",
+        "text" : "PAPER LABORATORY\nEDITABLE STUDY  /  07",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 166,
+        "x" : 12,
+        "y" : 109.2
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 45,
+          "ty" : 62
+        },
+        "color" : "#45402E",
+        "fontSize" : 14,
+        "height" : 23.8,
+        "id" : "C4996ADD-338D-5661-87FD-06A3769C2958",
+        "kind" : "ellipse",
+        "name" : "07-outside-front-seal",
+        "sides" : 12,
+        "starInset" : 0.8,
+        "text" : "",
+        "width" : 23.8,
+        "x" : 154.2,
+        "y" : 79.8
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : -1.2246467991473532e-16,
+          "c" : 1.2246467991473532e-16,
+          "d" : -1,
+          "tx" : 235,
+          "ty" : 272.00000000000006
+        },
+        "color" : "#45402E",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "83D70722-5576-5C06-AA56-56E930011C2D",
+        "kind" : "text",
+        "name" : "07-outside-bottom-bond-brand",
+        "text" : "FIELD / GATHER",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 150,
+        "x" : 20,
+        "y" : 22
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : -1.2246467991473532e-16,
+          "c" : 1.2246467991473532e-16,
+          "d" : -1,
+          "tx" : 235,
+          "ty" : 272.00000000000006
+        },
+        "color" : "#45402E",
+        "fontSize" : 6.5,
+        "height" : 5,
+        "id" : "66D58745-4C07-5AD5-88C1-E974A9915A8D",
+        "kind" : "text",
+        "name" : "07-outside-bottom-bond-imprint",
+        "text" : "PAPER GOODS / EDITABLE EDITION",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 150,
+        "x" : 20,
+        "y" : 33
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : -1.2246467991473532e-16,
+          "c" : 1.2246467991473532e-16,
+          "d" : -1,
+          "tx" : 235,
+          "ty" : 272.00000000000006
+        },
+        "color" : "#45402E",
+        "fontSize" : 14,
+        "height" : 0.25,
+        "id" : "F4ECB913-6D08-51C2-928B-0FF90596FF1E",
+        "kind" : "rectangle",
+        "name" : "07-outside-bottom-bond-rule",
+        "text" : "",
+        "width" : 36,
+        "x" : 20,
+        "y" : 43
+      }
+    ]
+  },
+  "designID" : "DDFB22D9-1EAB-444A-9B38-4A90F677B101",
+  "id" : "2DE0118D-8ECF-4472-A4D7-29D8DAFC32F9",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "07 · Gather / Lined envelope",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "components" : [
+        {
+          "anchor" : {
+            "x" : "sideFlap",
+            "y" : "topFlap+height"
+          },
+          "id" : "envelope",
+          "name" : "Envelope",
+          "position" : {
+            "x" : "-width/2",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "rootPanelID" : "front",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        }
+      ],
+      "hinges" : [
+        {
+          "angleDegrees" : "180.0",
+          "childPanelID" : "left-bond",
+          "end" : {
+            "x" : "sideFlap",
+            "y" : "topFlap+height"
+          },
+          "id" : "left-bond-crease",
+          "layerOffsetMM" : "-depth-stock",
+          "opensWithTop" : false,
+          "parentPanelID" : "front",
+          "start" : {
+            "x" : "sideFlap",
+            "y" : "topFlap"
+          }
+        },
+        {
+          "angleDegrees" : "-180.0",
+          "childPanelID" : "right-bond",
+          "end" : {
+            "x" : "sideFlap+width",
+            "y" : "topFlap+height"
+          },
+          "id" : "right-bond-crease",
+          "layerOffsetMM" : "-depth-stock",
+          "opensWithTop" : false,
+          "parentPanelID" : "front",
+          "start" : {
+            "x" : "sideFlap+width",
+            "y" : "topFlap"
+          }
+        },
+        {
+          "angleDegrees" : "180.0",
+          "childPanelID" : "bottom-bond",
+          "end" : {
+            "x" : "sideFlap+width",
+            "y" : "topFlap+height"
+          },
+          "id" : "bottom-bond-crease",
+          "layerOffsetMM" : "-depth-2*stock",
+          "opensWithTop" : false,
+          "parentPanelID" : "front",
+          "start" : {
+            "x" : "sideFlap",
+            "y" : "topFlap+height"
+          }
+        },
+        {
+          "angleDegrees" : "180.0",
+          "childPanelID" : "closing-flap",
+          "end" : {
+            "x" : "sideFlap+width",
+            "y" : "topFlap"
+          },
+          "id" : "closing-flap-crease",
+          "layerOffsetMM" : "-depth-3*stock",
+          "opensWithTop" : true,
+          "parentPanelID" : "front",
+          "start" : {
+            "x" : "sideFlap",
+            "y" : "topFlap"
+          }
+        }
+      ],
+      "interiors" : [
+        {
+          "componentID" : "envelope",
+          "id" : "envelope-interior",
+          "name" : "Envelope Interior",
+          "opening" : {
+            "axis" : "y",
+            "height" : "depth",
+            "width" : "width-stock"
+          },
+          "origin" : {
+            "x" : "stock/2",
+            "y" : "stock/2",
+            "z" : "-depth-stock/2"
+          },
+          "size" : {
+            "x" : "width-stock",
+            "y" : "height-stock",
+            "z" : "depth"
+          }
+        }
+      ],
+      "joins" : [
+        {
+          "firstPanelID" : "left-bond",
+          "id" : "left-bottom-bond",
+          "kind" : "glue",
+          "name" : "Left Bottom Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "sideFlap-10",
+          "secondPanelID" : "bottom-bond"
+        },
+        {
+          "firstPanelID" : "right-bond",
+          "id" : "right-bottom-bond",
+          "kind" : "glue",
+          "name" : "Right Bottom Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "sideFlap-10",
+          "secondPanelID" : "bottom-bond"
+        }
+      ],
+      "name" : "Pointed invitation envelope",
+      "panels" : [
+        {
+          "id" : "front",
+          "name" : "Front",
+          "polygon" : [
+            {
+              "x" : "sideFlap",
+              "y" : "topFlap"
+            },
+            {
+              "x" : "(sideFlap)+(width)",
+              "y" : "topFlap"
+            },
+            {
+              "x" : "(sideFlap)+(width)",
+              "y" : "(topFlap)+(height)"
+            },
+            {
+              "x" : "sideFlap",
+              "y" : "(topFlap)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "left-bond",
+          "name" : "Left Bond",
+          "polygon" : [
+            {
+              "x" : "sideFlap",
+              "y" : "topFlap"
+            },
+            {
+              "x" : "sideFlap",
+              "y" : "topFlap+height"
+            },
+            {
+              "x" : "0.0",
+              "y" : "topFlap+height-8"
+            },
+            {
+              "x" : "0.0",
+              "y" : "topFlap+8"
+            }
+          ],
+          "role" : "glue"
+        },
+        {
+          "id" : "right-bond",
+          "name" : "Right Bond",
+          "polygon" : [
+            {
+              "x" : "sideFlap+width",
+              "y" : "topFlap"
+            },
+            {
+              "x" : "width+2*sideFlap",
+              "y" : "topFlap+8"
+            },
+            {
+              "x" : "width+2*sideFlap",
+              "y" : "topFlap+height-8"
+            },
+            {
+              "x" : "sideFlap+width",
+              "y" : "topFlap+height"
+            }
+          ],
+          "role" : "glue"
+        },
+        {
+          "artworkRotationDegrees" : "180.0",
+          "id" : "bottom-bond",
+          "name" : "Bottom Bond",
+          "polygon" : [
+            {
+              "x" : "sideFlap",
+              "y" : "topFlap+height"
+            },
+            {
+              "x" : "sideFlap+width",
+              "y" : "topFlap+height"
+            },
+            {
+              "x" : "sideFlap+width-10",
+              "y" : "topFlap+height+bottomFlap"
+            },
+            {
+              "x" : "sideFlap+10",
+              "y" : "topFlap+height+bottomFlap"
+            }
+          ],
+          "role" : "glue"
+        },
+        {
+          "artworkRotationDegrees" : "180.0",
+          "id" : "closing-flap",
+          "name" : "Closing Flap",
+          "polygon" : [
+            {
+              "x" : "sideFlap",
+              "y" : "topFlap"
+            },
+            {
+              "x" : "sideFlap+width",
+              "y" : "topFlap"
+            },
+            {
+              "x" : "sideFlap+width/2",
+              "y" : "0.0"
+            }
+          ],
+          "role" : "tuck"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 300,
+          "minimum" : 160,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 190
+        },
+        {
+          "maximum" : 150,
+          "minimum" : 80,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 140
+        },
+        {
+          "maximum" : 2,
+          "minimum" : 0.3,
+          "name" : "depth",
+          "unit" : "mm",
+          "value" : 1.2
+        },
+        {
+          "maximum" : 0.3,
+          "minimum" : 0.1,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 0.2
+        },
+        {
+          "maximum" : 65,
+          "minimum" : 28,
+          "name" : "sideFlap",
+          "unit" : "mm",
+          "value" : 45
+        },
+        {
+          "maximum" : 65,
+          "minimum" : 30,
+          "name" : "topFlap",
+          "unit" : "mm",
+          "value" : 62
+        },
+        {
+          "maximum" : 85,
+          "minimum" : 45,
+          "name" : "bottomFlap",
+          "unit" : "mm",
+          "value" : 70
+        },
+        {
+          "maximum" : 0.5,
+          "minimum" : 0,
+          "name" : "clearance",
+          "unit" : "mm",
+          "value" : 0.2
+        }
+      ],
+      "requirements" : [
+        {
+          "id" : "bottom-bond-within-height",
+          "lhs" : "bottomFlap",
+          "message" : "Bottom bond must remain shorter than the envelope body.",
+          "relation" : "<",
+          "rhs" : "height"
+        }
+      ],
+      "rootPanelID" : "front",
+      "size" : {
+        "x" : "width+2*sideFlap",
+        "y" : "height+topFlap+bottomFlap"
+      },
+      "stockThickness" : "stock",
+      "version" : 3
+    },
+    "bottomFlapMM" : 70,
+    "clearanceMM" : 0.2,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 1.2,
+      "height" : 140,
+      "width" : 190
+    },
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "insideArtworkSourceID" : "6EAFFFAB-479E-43D4-9048-C9D6607F5DAE",
+    "kind" : "authored",
+    "openingPercent" : 65,
+    "stock" : {
+      "grain" : "parallelHeight",
+      "gsm" : 300,
+      "name" : "FIELD laid / prototype",
+      "notes" : "Visual prototype stock; verify caliper, grain, creases and print with a physical sample.",
+      "profile" : {
+        "color" : "#E8E3D6",
+        "opacity" : 1,
+        "roughness" : 0.94,
+        "texture" : "laid",
+        "textureDepthMM" : 0.008,
+        "textureScaleMM" : 1.1
+      },
+      "thicknessMM" : 0.2,
+      "verified" : false
+    },
+    "topFlapMM" : 62,
+    "version" : 1
+  },
+  "parameters" : {
+    "bottomFlap" : 70,
+    "clearance" : 0.2,
+    "depth" : 1.2,
+    "fold" : 100,
+    "height" : 140,
+    "opening" : 65,
+    "sideFlap" : 45,
+    "stock" : 0.2,
+    "topFlap" : 62,
+    "width" : 190
+  },
+  "position" : {
+    "x" : 230,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "construction-2DE0118D-8ECF-4472-A4D7-29D8DAFC32F9",
+  "relationship" : "original",
+  "rotation" : 180
+}

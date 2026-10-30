@@ -64,6 +64,7 @@ enum TableTool: String, CaseIterable {
   @Published var paperQuantity = 3
   @Published var paperSheetMargin = 10.0
   @Published var paperSheetGap = 6.0
+  @Published var paperBleedMM = 3.0
   var canvasWindowController: CanvasWindowController?
   weak var utilityWindows: StudioUtilityWindows?
   @Published var projects: [ProjectSummary] = []
@@ -107,7 +108,7 @@ enum TableTool: String, CaseIterable {
   var artworkTransferStageCheckpoint:(() async -> Void)?
   var project: Project? { engine.project }
   var selected: [ProductObject] {
-    project?.objects.filter { !$0.isCanvasWorkspace && engine.selection.contains($0.id) } ?? []
+    project?.objects.filter { $0.hasTablePresentation && engine.selection.contains($0.id) } ?? []
   }
   var primary: ProductObject? { selected.first }
   var materials: [FormCore.Material] {
@@ -267,7 +268,7 @@ enum TableTool: String, CaseIterable {
               return
             }
             let readOnly = (name=="form_studio_scene" && ["list","get"].contains(args["command"] as? String ?? "")) || (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
-              (name == "form_paper" && ["inspect", "preflight", "layout", "view", "export"].contains(args["command"] as? String ?? "inspect")) ||
+              (name == "form_paper" && PaperCommands.preservesDocumentDrafts(args)) ||
               (name == "form_construction" && ConstructionCommands.isReadOnly(args)) ||
               (name == "form_surface" && PhysicalSurfaceCommands.isReadOnly(args)) ||
               [
@@ -301,6 +302,13 @@ enum TableTool: String, CaseIterable {
             }
             let beforeHistory = self.project
             var result = try self.engine.call(name, arguments: args)
+            if name == "form_paper",args["command"] as? String == "save_stock" { self.library = StudioLibrary.load(from:self.repository.root) }
+            if name == "form_paper",["inspect","preflight"].contains(args["command"] as? String ?? "inspect"),
+              var report=result as? [String:Any],let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),
+              let project=self.project,let object=project.objects.first(where:{$0.id==id}) {
+              report["artwork_safety"]=try PaperProductionReview.inspect(object:object,project:project)
+              result=report
+            }
             if !readOnly { self.artworkSession.showingTabs = false;self.artworkSession.showingGlyphs=false }
             if name == "form_status", var status = result as? [String: Any] {
               status["renderer"] = self.scene?.diagnostics ?? [:]
@@ -308,7 +316,7 @@ enum TableTool: String, CaseIterable {
               status["environment"] = self.environment.rawValue
               status["paper_workspace"] = ["representation": self.paperRepresentation.rawValue,
                 "inside": self.paperInside,"selected_panel_id":self.paperSelectedPanelID as Any? ?? NSNull(),"selected_fold_id":self.paperSelectedFoldID as Any? ?? NSNull(),
-                "sheet_size_mm":[self.paperSheetWidth,self.paperSheetHeight],"quantity":self.paperQuantity]
+                "sheet_size_mm":[self.paperSheetWidth,self.paperSheetHeight],"quantity":self.paperQuantity,"bleed_mm":self.paperBleedMM]
               status["primary_environments"] = ProjectEnvironment.primary.map(\.rawValue)
               status["studio_access"] = "secondary_icon_and_menu"
               status["design_surfaces"] = [
@@ -495,9 +503,10 @@ enum TableTool: String, CaseIterable {
       changed(save: false)
       return
     }
+    guard project?.objects.contains(where:{$0.id==id && $0.hasTablePresentation}) == true else{return}
     let group = project?.objects.first { $0.id == id }?.groupID
     let ids = Set(
-      project?.objects.filter { group != nil ? $0.groupID == group : $0.id == id }.map(\.id) ?? [id]
+      project?.objects.filter { $0.hasTablePresentation && (group != nil ? $0.groupID == group : $0.id == id) }.map(\.id) ?? [id]
     )
     if extending {
       if engine.selection.isSuperset(of: ids) {
@@ -514,7 +523,7 @@ enum TableTool: String, CaseIterable {
     let width = max(
       recipe.defaults["width"] ?? 0, recipe.defaults["shadeDiameter"] ?? 0,
       recipe.defaults["diameter"] ?? 0, 150)
-    let edge = project?.objects.filter { !$0.isCanvasWorkspace }.map { $0.position.x + $0.footprintWidth / 2 }.max()
+    let edge = project?.objects.filter { $0.hasTablePresentation }.map { $0.position.x + $0.footprintWidth / 2 }.max()
     let x = edge.map { $0 + width / 2 + 70 } ?? 0
     perform(
       "form_add_object",

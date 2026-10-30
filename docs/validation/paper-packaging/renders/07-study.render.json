@@ -1,0 +1,80 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1200,
+  "png_sha256" : "59aaf9a05cad10e9ededac4c49696c5e717b5beb9f1f29a8969d286ccec48210",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:paper-template-17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764.svg",
+      "sha256" : "17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 0.2914567944778671,
+      "distance" : 3.585164232904964,
+      "elevation" : 0.52160561368914027,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 2.2999999999999998,
+        "y" : 0.83837588763016047,
+        "z" : -0.2783690878224433
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "B40A345B-C024-4B0C-AEC4-75A581D28DAB",
+    "instances" : [
+      {
+        "id" : "73BB10C8-F620-468B-A50C-C53EC42DCF61",
+        "name" : "07 · Gather \/ Lined envelope",
+        "positionMM" : {
+          "x" : 230,
+          "y" : 0,
+          "z" : 0
+        },
+        "rotationDegrees" : 180,
+        "sourceObjectID" : "2DE0118D-8ECF-4472-A4D7-29D8DAFC32F9",
+        "visible" : true
+      },
+      {
+        "id" : "959CD599-F702-43A3-B027-761A9CFA4DEC",
+        "name" : "07 · Separate patterned envelope liner",
+        "positionMM" : {
+          "x" : 230,
+          "y" : 3,
+          "z" : 0.5
+        },
+        "rotationDegrees" : 180,
+        "sourceObjectID" : "E128F506-ECBF-4D79-9315-D6BB418E8816",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "07-study",
+    "pixels" : {
+      "height" : 1200,
+      "width" : 1800
+    },
+    "revision" : 2,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "2edb07c1172dbba7df88b6cd19c0b586f701e29b47b9ceb27111c7aeac81e517",
+  "source_project_id" : "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+  "width" : 1800
+}

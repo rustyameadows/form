@@ -9,10 +9,12 @@ public struct PlanarPanelDefinition: Codable, Equatable, Sendable {
   public var role: PaperPanel.Role
   public var polygon: [CADExpressionPoint2]
   public var artworkRotationDegrees: CADScalar?
+  public var cutouts:[PlanarCutoutDefinition]?
   public init(id: String, name: String, role: PaperPanel.Role = .body,
-    polygon: [CADExpressionPoint2], artworkRotationDegrees: CADScalar? = nil) {
+    polygon: [CADExpressionPoint2], artworkRotationDegrees: CADScalar? = nil,cutouts:[PlanarCutoutDefinition]?=nil) {
     self.id=id; self.name=name; self.role=role; self.polygon=polygon
     self.artworkRotationDegrees=artworkRotationDegrees
+    self.cutouts=cutouts
   }
 }
 
@@ -70,15 +72,20 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
   public var derived: [String:CADScalar]?
   public var connections: [PlanarConnectionRequirement]?
   public var solidChecks: [PlanarSolidRequirement]?
+  public var components:[PlanarComponentDefinition]?
+  public var interiors:[PlanarInteriorDefinition]?
   public init(name: String, parameters: [CADModelParameter] = [], size: CADExpressionPoint2,
     stockThickness: CADScalar = 0.35, panels: [PlanarPanelDefinition],
     hinges: [PlanarHingeDefinition] = [], joins: [PlanarJoinDefinition] = [], rootPanelID: String,
     requirements: [CADModelRequirement]? = nil,derived:[String:CADScalar]? = nil,
-    connections:[PlanarConnectionRequirement]? = nil, solidChecks:[PlanarSolidRequirement]? = nil) {
+    connections:[PlanarConnectionRequirement]? = nil, solidChecks:[PlanarSolidRequirement]? = nil,
+    components:[PlanarComponentDefinition]?=nil,interiors:[PlanarInteriorDefinition]?=nil) {
     self.name=name; self.parameters=parameters; self.size=size; self.stockThickness=stockThickness
     self.panels=panels; self.hinges=hinges; self.joins=joins; self.rootPanelID=rootPanelID
     self.requirements=requirements;self.derived=derived;self.connections=connections
     self.solidChecks=solidChecks;self.version=solidChecks?.isEmpty == false ? 2:1
+    self.components=components;self.interiors=interiors
+    if components?.isEmpty == false || interiors?.isEmpty == false || panels.contains(where:{$0.cutouts?.isEmpty == false}) {version=3}
   }
   public var values: [String: Double] { Dictionary(parameters.map { ($0.name,$0.value) }, uniquingKeysWith: { a,_ in a }) }
   public func number(_ scalar: CADScalar) throws -> Double {
@@ -101,16 +108,19 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
     parameters=next
   }
   public func net() throws -> PaperNet {
-    guard (version==1 || version==2),(version>=2 || solidChecks?.isEmpty != false),!name.isEmpty,name.utf8.count<=160,parameters.count<=64,
+    let hasV3=components?.isEmpty == false || interiors?.isEmpty == false || panels.contains(where:{$0.cutouts?.isEmpty == false})
+    let roots=components?.map(\.rootPanelID) ?? [rootPanelID]
+    guard (1...3).contains(version),(version>=2 || solidChecks?.isEmpty != false),(version>=3 || !hasV3),!name.isEmpty,name.utf8.count<=160,parameters.count<=64,
       Set(parameters.map(\.name)).count==parameters.count,
       parameters.allSatisfy({CADExpression.validName($0.name) && !["fold","opening"].contains($0.name)
         && [$0.value,$0.minimum,$0.maximum].allSatisfy(\.isFinite)
         && $0.minimum <= $0.value && $0.value <= $0.maximum && abs($0.minimum)<=100000 && abs($0.maximum)<=100000}),
-      (1...64).contains(panels.count),hinges.count==panels.count-1,joins.count<=128 else {
+      (1...64).contains(panels.count),!roots.isEmpty,roots.count<=32,Set(roots).count==roots.count,
+      hinges.count==panels.count-roots.count,joins.count<=128 else {
       throw FormError.invalid("Construction requires a named bounded definition, up to 64 parameters/panels, and one hinge per non-root panel.")
     }
     guard (requirements?.count ?? 0)<=128,Set((requirements ?? []).map(\.id)).count==(requirements?.count ?? 0),
-      panels.reduce(0,{$0+$1.polygon.count})<=2048 else {throw FormError.invalid("Keep construction requirements and polygon complexity bounded.")}
+      panels.reduce(0,{$0+$1.polygon.count+($1.cutouts ?? []).reduce(0){$0+$1.polygon.count}})<=2048 else {throw FormError.invalid("Keep construction requirements and polygon complexity bounded.")}
     let variables=try resolvedValues()
     func number(_ scalar:CADScalar)throws->Double {try CADExpression.evaluate(scalar.expression,variables:variables)}
     for requirement in requirements ?? [] {try requirement.validate(using:variables)}
@@ -120,7 +130,7 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
       thickness>=0.01,thickness<=20 else {throw FormError.invalid("Construction size must be 0–10000 mm and stock thickness 0.01–20 mm.")}
     func validID(_ id: String) -> Bool { !id.isEmpty && id.utf8.count<=128 }
     let ids=Set(panels.map(\.id))
-    guard ids.count==panels.count,ids.contains(rootPanelID),panels.allSatisfy({validID($0.id) && !$0.name.isEmpty && $0.name.utf8.count<=160}),
+    guard ids.count==panels.count,ids.contains(rootPanelID),roots.contains(rootPanelID),Set(roots).isSubset(of:ids),panels.allSatisfy({validID($0.id) && !$0.name.isEmpty && $0.name.utf8.count<=160}),
       Set(hinges.map(\.id)).count==hinges.count,Set(hinges.map(\.childPanelID)).count==hinges.count else {
       throw FormError.invalid("Construction panel/hinge identities must be unique and include an existing root panel.")
     }
@@ -139,11 +149,23 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
         throw FormError.invalid("Panel '\(panel.id)' has an invalid, self-crossing, or out-of-bounds polygon.")
       }
       let rotation=try panel.artworkRotationDegrees.map(number)
-      return .init(id:panel.id,name:panel.name,role:panel.role,polygon:polygon,artworkRotationDegrees:rotation)
+      let cutouts=try (panel.cutouts ?? []).map {cutout->PaperPanelCutout in
+        let points=try cutout.polygon.map(point)
+        guard validID(cutout.id),(3...128).contains(points.count),abs(Self.signedArea(points))>0.001,
+          !Self.selfIntersects(points),points.allSatisfy({Self.strictlyInside($0,polygon)}),
+          !Self.boundariesTouch(points,polygon) else {throw FormError.invalid("Cutout '\(cutout.id)' must be a simple hole strictly inside panel '\(panel.id)'.")}
+        return .init(id:cutout.id,polygon:points,kind:cutout.kind)
+      }
+      guard cutouts.count<=64,Set(cutouts.map(\.id)).count==cutouts.count else {throw FormError.invalid("Panel '\(panel.id)' needs at most 64 uniquely identified cutouts.")}
+      for i in cutouts.indices {for j in cutouts.indices where j>i {
+        guard !Self.boundariesTouch(cutouts[i].polygon,cutouts[j].polygon),
+          !(try Self.overlaps(cutouts[i].polygon,cutouts[j].polygon)) else {throw FormError.invalid("Cutouts '\(cutouts[i].id)' and '\(cutouts[j].id)' touch or overlap.")}
+      }}
+      return .init(id:panel.id,name:panel.name,role:panel.role,polygon:polygon,artworkRotationDegrees:rotation,cutouts:cutouts.isEmpty ? nil:cutouts)
     }
     var folds: [PaperFold] = []
     for hinge in hinges {
-      guard validID(hinge.id),hinge.childPanelID != rootPanelID,hinge.childPanelID != hinge.parentPanelID,
+      guard validID(hinge.id),!roots.contains(hinge.childPanelID),hinge.childPanelID != hinge.parentPanelID,
         let child=resolved.firstIndex(where:{$0.id==hinge.childPanelID}),
         let parent=resolved.first(where:{$0.id==hinge.parentPanelID}) else {
         throw FormError.invalid("Hinge '\(hinge.id)' must connect existing distinct parent and child panels.")
@@ -160,9 +182,10 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
       fold.layerOffsetMM=offset;fold.opensWithTop=hinge.opensWithTop
       folds.append(fold)
     }
-    var connected:Set<String>=[rootPanelID]
+    var connected=Set(roots)
     for _ in panels.indices { for fold in folds where connected.contains(fold.parentPanelID) {connected.insert(fold.childPanelID)} }
     guard connected==ids else {throw FormError.invalid("Construction hinge graph is disconnected or cyclic.")}
+    try validateComponentsAndInteriors(resolvedPanels:resolved)
     for i in resolved.indices {for j in resolved.indices where j>i {
       if try Self.overlaps(resolved[i].polygon,resolved[j].polygon) {throw FormError.invalid("Flat construction panels '\(resolved[i].id)' and '\(resolved[j].id)' overlap.")}
     }}
@@ -186,8 +209,8 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
       guard validID(connection.id),connection.firstPanelID != connection.secondPanelID,
         let first=resolved.first(where:{$0.id==connection.firstPanelID}),
         let second=resolved.first(where:{$0.id==connection.secondPanelID}),
-        Self.contains(try point(connection.firstPoint),first.polygon),
-        Self.contains(try point(connection.secondPoint),second.polygon),
+        first.containsMaterial(try point(connection.firstPoint)),
+        second.containsMaterial(try point(connection.secondPoint)),
         (0...10000).contains(try number(connection.maximumGapMM)) else {
         throw FormError.invalid("Connection '\(connection.id)' requires distinct existing panels, anchors in their polygons and a maximum gap within 0–10000 mm.")
       }
@@ -287,6 +310,24 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
         let key=[String(format:"%.6f,%.6f",p.x,p.y),String(format:"%.6f,%.6f",q.x,q.y)].sorted().joined(separator:"|")
         if seen.insert(key).inserted{result.append(.init(id:"\(panel.id).cut.\(i).\(n)",panelID:panel.id,start:p,end:q))}
       }
-    }};return result
+    }}
+    for panel in panels {for cutout in panel.cutouts ?? [] {for i in cutout.polygon.indices {
+      result.append(.init(id:"\(panel.id).cutout.\(cutout.id).\(i)",panelID:panel.id,start:cutout.polygon[i],
+        end:cutout.polygon[(i+1)%cutout.polygon.count],cutoutID:cutout.id,cutoutKind:cutout.kind))
+    }}}
+    return result
+  }
+
+  private static func strictlyInside(_ p:Point2,_ polygon:[Point2])->Bool {
+    guard !polygon.indices.contains(where:{onSegment(p,polygon[$0],polygon[($0+1)%polygon.count])}) else{return false}
+    var inside=false,j=polygon.count-1
+    for i in polygon.indices {let a=polygon[i],b=polygon[j]
+      if (a.y>p.y) != (b.y>p.y),p.x<(b.x-a.x)*(p.y-a.y)/(b.y-a.y)+a.x {inside.toggle()};j=i
+    };return inside
+  }
+  private static func boundariesTouch(_ a:[Point2],_ b:[Point2])->Bool {
+    for i in a.indices {for j in b.indices {let p=a[i],q=a[(i+1)%a.count],r=b[j],s=b[(j+1)%b.count]
+      if crosses(p,q,r,s) || onSegment(p,r,s) || onSegment(q,r,s) || onSegment(r,p,q) || onSegment(s,p,q) {return true}
+    }};return false
   }
 }

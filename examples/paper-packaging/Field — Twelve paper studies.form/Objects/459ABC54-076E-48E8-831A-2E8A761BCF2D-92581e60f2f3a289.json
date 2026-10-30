@@ -1,0 +1,222 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 220,
+          "ty" : 0
+        },
+        "color" : "#7E493B",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "C7DA6D2B-F65C-557D-AE44-6B16758C4604",
+        "kind" : "text",
+        "name" : "Greeting / heading",
+        "text" : "A SMALL JOY",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 86,
+        "x" : 12,
+        "y" : 30
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 220,
+          "ty" : 0
+        },
+        "color" : "#7E493B",
+        "fontSize" : 24,
+        "height" : 33,
+        "id" : "62D9B02C-E361-50B7-A1A2-4FCF642EEC08",
+        "kind" : "text",
+        "name" : "Greeting / message",
+        "text" : "For you,\nwith love.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 86,
+        "x" : 12,
+        "y" : 55
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 220,
+          "ty" : 0
+        },
+        "color" : "#7E493B",
+        "fontSize" : 14,
+        "height" : 0.3,
+        "id" : "A472AF67-F16F-5458-AB9E-0AE9FBEB9B7C",
+        "kind" : "rectangle",
+        "name" : "Greeting / rule",
+        "text" : "",
+        "width" : 30,
+        "x" : 40,
+        "y" : 98
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 220,
+          "ty" : 0
+        },
+        "color" : "#7E493B",
+        "fontSize" : 9,
+        "height" : 18,
+        "id" : "4DE14C1F-758D-5A18-B3FF-C66C55C73823",
+        "kind" : "text",
+        "name" : "Greeting / wish",
+        "text" : "Wishing you a day filled with\nlittle things worth keeping.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 86,
+        "x" : 12,
+        "y" : 115
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 220,
+          "ty" : 0
+        },
+        "color" : "#7E493B",
+        "fontSize" : 14,
+        "height" : 3,
+        "id" : "AE3F3515-05E5-547A-B8ED-5AE249F663C9",
+        "kind" : "ellipse",
+        "name" : "Greeting / small mark",
+        "sides" : 12,
+        "starInset" : 0.8,
+        "text" : "",
+        "width" : 3,
+        "x" : 53.5,
+        "y" : 140
+      }
+    ]
+  },
+  "canvasSourceOnly" : true,
+  "designID" : "390B3DC9-1C34-44F6-BFFD-84E8BB2082C2",
+  "id" : "459ABC54-076E-48E8-831A-2E8A761BCF2D",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "11 · A small joy / Greeting card · Inside registered",
+  "parameters" : {
+    "depth" : 155,
+    "width" : 220
+  },
+  "position" : {
+    "x" : 460,
+    "y" : 0,
+    "z" : 370
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

@@ -1,0 +1,586 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "color" : "#3F482D",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "7BE6633C-C2AB-5134-8570-C0D266350BD8",
+        "kind" : "text",
+        "name" : "08-outside-front-brand",
+        "text" : "FIELD  /  08",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 45.1,
+        "x" : 4.95,
+        "y" : 20
+      },
+      {
+        "color" : "#3F482D",
+        "fontSize" : 24.490904154222108,
+        "height" : 31,
+        "id" : "22F33DC1-3483-5415-9159-D7084D29B2FC",
+        "kind" : "text",
+        "name" : "08-outside-front-title",
+        "text" : "Collected",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 45.1,
+        "x" : 4.95,
+        "y" : 29
+      },
+      {
+        "color" : "#3F482D",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "1AE4CC1A-D04B-5824-B3C2-0B40A65898F2",
+        "kind" : "rectangle",
+        "name" : "08-outside-front-rule",
+        "text" : "",
+        "width" : 30.250000000000004,
+        "x" : 4.95,
+        "y" : 65
+      },
+      {
+        "color" : "#3F482D",
+        "fontSize" : 7.5,
+        "height" : 16,
+        "id" : "8D5C9BD5-BD25-530E-AD5F-2130AB43F53E",
+        "kind" : "text",
+        "name" : "08-outside-front-copy",
+        "text" : "PAPER LABORATORY\nEDITABLE STUDY  /  08",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 45.1,
+        "x" : 4.95,
+        "y" : 78
+      },
+      {
+        "color" : "#3F482D",
+        "fontSize" : 14,
+        "height" : 11.549999999999999,
+        "id" : "93E768CF-9C3E-5A0B-9556-81EED06147DB",
+        "kind" : "ellipse",
+        "name" : "08-outside-front-seal",
+        "sides" : 12,
+        "starInset" : 0.8,
+        "text" : "",
+        "width" : 11.549999999999999,
+        "x" : 38.5,
+        "y" : 56.99999999999999
+      }
+    ]
+  },
+  "designID" : "ECF9B083-B360-4BB3-8D50-57CC4148094E",
+  "id" : "F5ECE341-5CC6-45DF-A573-708CA9D3AD5D",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "08 · Collected / Hang tag",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "components" : [
+        {
+          "anchor" : {
+            "x" : "width/2",
+            "y" : "height/2"
+          },
+          "id" : "sheet",
+          "name" : "Paper sheet",
+          "position" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "rootPanelID" : "front",
+          "rotationDegrees" : {
+            "x" : "-90+turn",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        }
+      ],
+      "hinges" : [
+
+      ],
+      "joins" : [
+
+      ],
+      "name" : "Die cut hang tag",
+      "panels" : [
+        {
+          "cutouts" : [
+            {
+              "id" : "cord-hole",
+              "kind" : "cutout",
+              "polygon" : [
+                {
+                  "x" : "width/2+2.4*cos(0.0)",
+                  "y" : "12+2.4*sin(0.0)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(0.2617993877991494)",
+                  "y" : "12+2.4*sin(0.2617993877991494)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(0.5235987755982988)",
+                  "y" : "12+2.4*sin(0.5235987755982988)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(0.7853981633974483)",
+                  "y" : "12+2.4*sin(0.7853981633974483)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(1.0471975511965976)",
+                  "y" : "12+2.4*sin(1.0471975511965976)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(1.3089969389957472)",
+                  "y" : "12+2.4*sin(1.3089969389957472)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(1.5707963267948966)",
+                  "y" : "12+2.4*sin(1.5707963267948966)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(1.832595714594046)",
+                  "y" : "12+2.4*sin(1.832595714594046)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(2.0943951023931953)",
+                  "y" : "12+2.4*sin(2.0943951023931953)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(2.356194490192345)",
+                  "y" : "12+2.4*sin(2.356194490192345)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(2.6179938779914944)",
+                  "y" : "12+2.4*sin(2.6179938779914944)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(2.8797932657906435)",
+                  "y" : "12+2.4*sin(2.8797932657906435)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(3.141592653589793)",
+                  "y" : "12+2.4*sin(3.141592653589793)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(3.4033920413889427)",
+                  "y" : "12+2.4*sin(3.4033920413889427)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(3.665191429188092)",
+                  "y" : "12+2.4*sin(3.665191429188092)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(3.926990816987241)",
+                  "y" : "12+2.4*sin(3.926990816987241)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(4.1887902047863905)",
+                  "y" : "12+2.4*sin(4.1887902047863905)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(4.4505895925855405)",
+                  "y" : "12+2.4*sin(4.4505895925855405)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(4.71238898038469)",
+                  "y" : "12+2.4*sin(4.71238898038469)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(4.974188368183839)",
+                  "y" : "12+2.4*sin(4.974188368183839)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(5.235987755982989)",
+                  "y" : "12+2.4*sin(5.235987755982989)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(5.497787143782138)",
+                  "y" : "12+2.4*sin(5.497787143782138)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(5.759586531581287)",
+                  "y" : "12+2.4*sin(5.759586531581287)"
+                },
+                {
+                  "x" : "width/2+2.4*cos(6.021385919380436)",
+                  "y" : "12+2.4*sin(6.021385919380436)"
+                }
+              ]
+            }
+          ],
+          "id" : "front",
+          "name" : "Front / back sheet",
+          "polygon" : [
+            {
+              "x" : "(width-radius)+radius*(0.0)",
+              "y" : "(radius)+radius*(-1.0)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.195090322)",
+              "y" : "(radius)+radius*(-0.9807852804)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.3826834324)",
+              "y" : "(radius)+radius*(-0.9238795325)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.555570233)",
+              "y" : "(radius)+radius*(-0.8314696123)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.7071067812)",
+              "y" : "(radius)+radius*(-0.7071067812)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.8314696123)",
+              "y" : "(radius)+radius*(-0.555570233)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.9238795325)",
+              "y" : "(radius)+radius*(-0.3826834324)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.9807852804)",
+              "y" : "(radius)+radius*(-0.195090322)"
+            },
+            {
+              "x" : "(width-radius)+radius*(1.0)",
+              "y" : "(radius)+radius*(0.0)"
+            },
+            {
+              "x" : "(width-radius)+radius*(1.0)",
+              "y" : "(height-radius)+radius*(0.0)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.9807852804)",
+              "y" : "(height-radius)+radius*(0.195090322)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.9238795325)",
+              "y" : "(height-radius)+radius*(0.3826834324)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.8314696123)",
+              "y" : "(height-radius)+radius*(0.555570233)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.7071067812)",
+              "y" : "(height-radius)+radius*(0.7071067812)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.555570233)",
+              "y" : "(height-radius)+radius*(0.8314696123)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.3826834324)",
+              "y" : "(height-radius)+radius*(0.9238795325)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.195090322)",
+              "y" : "(height-radius)+radius*(0.9807852804)"
+            },
+            {
+              "x" : "(width-radius)+radius*(0.0)",
+              "y" : "(height-radius)+radius*(1.0)"
+            },
+            {
+              "x" : "(radius)+radius*(0.0)",
+              "y" : "(height-radius)+radius*(1.0)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.195090322)",
+              "y" : "(height-radius)+radius*(0.9807852804)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.3826834324)",
+              "y" : "(height-radius)+radius*(0.9238795325)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.555570233)",
+              "y" : "(height-radius)+radius*(0.8314696123)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.7071067812)",
+              "y" : "(height-radius)+radius*(0.7071067812)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.8314696123)",
+              "y" : "(height-radius)+radius*(0.555570233)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.9238795325)",
+              "y" : "(height-radius)+radius*(0.3826834324)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.9807852804)",
+              "y" : "(height-radius)+radius*(0.195090322)"
+            },
+            {
+              "x" : "(radius)+radius*(-1.0)",
+              "y" : "(height-radius)+radius*(0.0)"
+            },
+            {
+              "x" : "(radius)+radius*(-1.0)",
+              "y" : "(radius)+radius*(0.0)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.9807852804)",
+              "y" : "(radius)+radius*(-0.195090322)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.9238795325)",
+              "y" : "(radius)+radius*(-0.3826834324)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.8314696123)",
+              "y" : "(radius)+radius*(-0.555570233)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.7071067812)",
+              "y" : "(radius)+radius*(-0.7071067812)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.555570233)",
+              "y" : "(radius)+radius*(-0.8314696123)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.3826834324)",
+              "y" : "(radius)+radius*(-0.9238795325)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.195090322)",
+              "y" : "(radius)+radius*(-0.9807852804)"
+            },
+            {
+              "x" : "(radius)+radius*(-0.0)",
+              "y" : "(radius)+radius*(-1.0)"
+            }
+          ],
+          "role" : "body"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 88,
+          "minimum" : 33,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 55
+        },
+        {
+          "maximum" : 160,
+          "minimum" : 60,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 100
+        },
+        {
+          "maximum" : 1.2,
+          "minimum" : 0.24,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 0.6
+        },
+        {
+          "maximum" : 8,
+          "minimum" : 1,
+          "name" : "radius",
+          "unit" : "mm",
+          "value" : 4
+        },
+        {
+          "maximum" : 180,
+          "minimum" : 0,
+          "name" : "turn",
+          "unit" : "°",
+          "value" : 0
+        }
+      ],
+      "rootPanelID" : "front",
+      "size" : {
+        "x" : "width",
+        "y" : "height"
+      },
+      "stockThickness" : "stock",
+      "version" : 3
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 2,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 1,
+      "height" : 100,
+      "width" : 55
+    },
+    "finishes" : [
+      {
+        "color" : "#C49B48",
+        "depthMM" : 0,
+        "elementIDs" : [
+          "7BE6633C-C2AB-5134-8570-C0D266350BD8"
+        ],
+        "enabled" : true,
+        "heightMM" : 0,
+        "id" : "766E84CC-DA28-522C-A473-27B698C3D8A6",
+        "kind" : "foil",
+        "metallic" : 1,
+        "name" : "Warm metallic mark",
+        "opacity" : 1,
+        "roughness" : 0.18,
+        "side" : "outside"
+      },
+      {
+        "depthMM" : 0,
+        "elementIDs" : [
+          "93E768CF-9C3E-5A0B-9556-81EED06147DB"
+        ],
+        "enabled" : true,
+        "heightMM" : 0.09,
+        "id" : "EF9E79FA-8D56-5A46-B4EA-A20A32A8ADDA",
+        "kind" : "emboss",
+        "name" : "Blind raised seal",
+        "opacity" : 1,
+        "roughness" : 0.92,
+        "side" : "outside"
+      }
+    ],
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "insideArtworkSourceID" : "2CA69053-39E9-4D73-943B-F0198E305A22",
+    "kind" : "authored",
+    "openingPercent" : 0,
+    "stock" : {
+      "grain" : "parallelHeight",
+      "gsm" : 300,
+      "name" : "FIELD cotton / prototype",
+      "notes" : "Visual prototype stock; verify caliper, grain, creases and print with a physical sample.",
+      "profile" : {
+        "color" : "#E5DBC8",
+        "opacity" : 1,
+        "roughness" : 0.94,
+        "texture" : "cotton",
+        "textureDepthMM" : 0.025,
+        "textureScaleMM" : 1.4
+      },
+      "thicknessMM" : 0.6,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "parameters" : {
+    "fold" : 100,
+    "height" : 100,
+    "opening" : 0,
+    "radius" : 4,
+    "stock" : 0.6,
+    "turn" : 0,
+    "width" : 55
+  },
+  "position" : {
+    "x" : 650,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "construction-F5ECE341-5CC6-45DF-A573-708CA9D3AD5D",
+  "relationship" : "original",
+  "rotation" : 0
+}

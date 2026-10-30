@@ -184,7 +184,7 @@ import UniformTypeIdentifiers
   }
   private nonisolated static func removePublished(_ files:PublishedFiles) {for url in files.urls {try? FileManager.default.removeItem(at:url)}}
   private nonisolated static func newPosition(for imported:ProductObject,in project:Project)throws->Vector3 {
-    let physical=project.objects.filter{!$0.isCanvasWorkspace};guard !physical.isEmpty else{return .init()}
+    let physical=project.objects.filter{$0.hasTablePresentation};guard !physical.isEmpty else{return .init()}
     let right=physical.map {object->Double in
       let angle=object.rotation*Double.pi/180,c=cos(angle),s=sin(angle)
       if let cad=object.cadRepresentation {return object.position.x+[cad.minimum.x,cad.maximum.x].flatMap{x in [cad.minimum.z,cad.maximum.z].map{c*x+s*$0}}.max()!}

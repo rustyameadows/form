@@ -19,8 +19,13 @@ public enum ConstructionCommands {
     guard let allowed=fields[command],Set(args.keys).isSubset(of:allowed.union(["command"])) else{throw FormError.invalid("Unknown construction command or argument.")}
     if command=="capabilities" {
       return ["units":"mm","commands":fields.keys.sorted(),"source":"PlanarConstructionDefinition",
-        "definition_fields":["version","name","parameters","derived","size","stockThickness","panels","hinges","joins","rootPanelID","requirements","connections","solidChecks"],
-        "source_versions":[1,2],
+        "definition_fields":["version","name","parameters","derived","size","stockThickness","panels","hinges","joins","rootPanelID","requirements","connections","solidChecks","components","interiors"],
+        "definition_required_fields":["version","name","parameters","size","stockThickness","panels","hinges","joins","rootPanelID"],
+        "definition_optional_fields":["requirements","derived","connections","solidChecks","components","interiors"],
+        "source_versions":[1,2,3],
+        "components":"Explicit independent hinge-tree roots share parameters and canonical flat sheet coordinates; authored assembled anchor/XYZ Euler poses use millimeters and may reference fold/opening percentages.",
+        "cutouts":"Stable panel cutouts remove finite material; window, slot and perforation kinds preserve technical identity. All rings share the 2048-vertex bound.",
+        "interiors":"Named declared component-local volumes and optional rectangular opening cross-sections; actual referenced contents are checked through form_paper preflight, not inferred from flat net bounds.",
         "artwork_parameter_source":"Existing independent canonical artwork plus Recipe controls. Set artwork_parameter_bindings through form_update_object; no additional sewing document or generator. inspect/parameter/validate_cases accept that source object_id.",
         "artwork_binding_fields":["id","elementID","property","value"],
         "artwork_case_evidence_budget":ArtworkConstructionValidationRequest.maximumEvidenceUnits,
@@ -30,17 +35,41 @@ public enum ConstructionCommands {
         "solid_check_relations":CADModelRequirement.Relation.allCases.map(\.rawValue),
         "solid_check_tolerance":"Existing comparison semantics: tolerance applies to == and !=; inequalities use the authored threshold exactly.",
         "solid_check_fields":["id","firstPanelID","secondPanelID","metric","relation","value","message","tolerance"],
-        "solid_checks":"Version 2 explicit panel-pair clearance (mm) or interference (mm3) comparisons. Exact sharp centered stock slabs derive from existing polygons and resolved poses. Only declared pairs/conditions are covered; declare hinge/glue allowances explicitly. Run through the installed app; no source, artwork or Undo mutation.",
+        "solid_checks":"Version 2 or 3 explicit panel-pair clearance (mm) or interference (mm3) comparisons. Exact sharp centered stock slabs derive from existing outer/inner polygons and resolved poses. Only declared pairs/conditions are covered; declare hinge/glue allowances explicitly. Run through the installed app; no source, artwork or Undo mutation.",
         "parameter_fields":["name","value","minimum","maximum","unit"],
-        "panel_fields":["id","name","role","polygon","artworkRotationDegrees"],
+        "panel_fields":["id","name","role","polygon","artworkRotationDegrees","cutouts"],
+        "panel_required_fields":["id","name","role","polygon"],
+        "panel_optional_fields":["artworkRotationDegrees","cutouts"],
+        "panel_roles":["body","side","glue","tuck","dust","bottomClosure"],
+        "component_fields":["id","name","rootPanelID","anchor","position","rotationDegrees"],
+        "component_required_fields":["id","name","rootPanelID","anchor","position","rotationDegrees"],
+        "component_optional_fields":[String](),
+        "cutout_fields":["id","polygon","kind"],
+        "cutout_required_fields":["id","polygon","kind"],
+        "cutout_optional_fields":[String](),
+        "cutout_kinds":["cutout","window","slot","perforation"],
+        "cutout_coordinates":"Version 3 finite removed polygons in the same full flat-net {x,y} coordinates as the panel, strictly inside remaining panel material. Holes cannot touch or overlap. Perforations retain explicit material bridges; tearing is not simulated.",
+        "interior_fields":["id","name","componentID","origin","size","rotationDegrees","opening"],
+        "interior_required_fields":["id","name","componentID","origin","size"],
+        "interior_optional_fields":["rotationDegrees","opening"],
+        "opening_fields":["axis","width","height","origin"],
+        "opening_required_fields":["axis","width","height"],
+        "opening_optional_fields":["origin"],
+        "opening_axes":["x","y","z"],
+        "opening_transverse_axes":["x":["y","z"],"y":["x","z"],"z":["x","y"]],
+        "opening_coordinates":"Origin is optional {x,y}, default zero in the two transverse interior coordinates. Width/height and origin must fit the declared interior cross-section. This is a bounds review, not an insertion solver.",
+        "point2_fields":["x","y"],"point3_fields":["x","y","z"],
+        "component_coordinates":"Version 3 anchor is a full-net {x,y} point. Position/rotationDegrees are {x,y,z}; assembly axes are X right, Y up, Z toward the nominal front. Fold 0 retains the flat layout; Fold 100 applies the declared upright root pose, rotations X then Y then Z (Rz*Ry*Rx). A common closed-bounds X/Z centering and Y grounding follows. Only root-pose expressions additionally receive fold/opening percentages.",
+        "interior_coordinates":"Version 3 origin/size/optional rotationDegrees are {x,y,z} in the named component's anchor frame; omitted rotation is zero. The review volume follows that component's current pose. An author-declared volume does not infer physical enclosing walls.",
         "hinge_fields":["id","parentPanelID","childPanelID","start","end","angleDegrees","layerOffsetMM","opensWithTop"],
         "connection_fields":["id","firstPanelID","secondPanelID","firstPoint","secondPoint","maximumGapMM"],
-        "expressions":"Numbers or arithmetic/math expressions referencing named parameters. Points use {x,y}; size is the full flat source extent.",
+        "expressions":"Numbers or arithmetic/math expressions referencing named parameters. Polygon/anchor/size points use {x,y}; component position/rotation and interior origin/size use {x,y,z}. Size is the full flat source extent; translations are mm and rotationDegrees are degrees.",
         "artwork":"All projections share registered full-net millimeter coordinates; artworkRotationDegrees defines readable panel orientation.",
         "connection_checks":"Neutral-plane panel anchors are measured after the requested fold/opening. Measurements report actual gap and maximumGapMM; they do not solve the assembly.",
-        "limits":["panels":64,"parameters":64,"derived":256,"polygon_vertices":2048,"cases":64,"solid_checks":128,"exact_pair_queries":1024,"exact_seconds":10,"polygon_precision_mm":0.001],
+        "limits":["panels":64,"components":32,"interiors":64,"cutouts_per_panel":64,"vertices_per_contour":128,"parameters":64,"derived":256,"polygon_vertices":2048,"cases":64,"solid_checks":128,"exact_pair_queries":1024,"exact_seconds":10,"polygon_precision_mm":0.001,"stock_min_mm":0.01,"stock_max_mm":20,"net_extent_max_mm":10000,"definition_bytes":1048576],
         "example":try jsonObject(example()),"fold_and_glue_example":try jsonObject(foldAndGlueExample()),
         "solid_check_example":try jsonObject(solidCheckExample()),
+        "multi_component_example":try jsonObject(multiComponentExample()),
         "legacy_examples":["envelope":try jsonObject(ConstructionExamples.legacyDefinition(PaperConstructionEngine.defaults(recipeID:"paperEnvelope"))),
           "carton":try jsonObject(ConstructionExamples.legacyDefinition(PaperConstructionEngine.defaults(recipeID:"tuckCarton")))]] as [String:Any]
     }
@@ -57,6 +86,7 @@ public enum ConstructionCommands {
       let definition=try decodeDefinition(),id=UUID(),recipe=recipe(definition,id:"construction-"+id.uuidString)
       var object=ProductObject(name:args["name"] as? String ?? definition.name,recipeID:recipe.id,
         parameters:recipe.defaults,materialID:args["material_id"] as? String ?? "paper-superfine",artwork:.init(background:"#FFFFFF"))
+      object.artwork?.backgroundOpacity=0
       object.id=id
       if let raw=args["position"] {
         guard let values=raw as? [Double],values.count==3,values.allSatisfy({$0.isFinite && abs($0)<=100000}) else{throw FormError.invalid("Construction position must be three finite millimeter values.")}
@@ -154,6 +184,22 @@ public enum ConstructionCommands {
     }
     return try inspection(engine.project!.objects.first{$0.id==id}!)
   }
+  /// Executable general source data, independent of any product category.
+  public static func multiComponentExample()->PlanarConstructionDefinition {
+    .init(name:"Windowed two-sheet review",parameters:[.init("width",60,40...100),
+      .init("height",40,20...80),.init("depth",10,2...30),.init("stock",0.5,0.1...1)],
+      size:.init("2*width+20","height"),stockThickness:"stock",panels:[
+        .init(id:"first",name:"First sheet",polygon:[.init(0,0),.init("width",0),.init("width","height"),.init(0,"height")],
+          cutouts:[.init(id:"window",polygon:[.init("width/3","height/3"),.init("2*width/3","height/3"),
+            .init("2*width/3","2*height/3"),.init("width/3","2*height/3")],kind:.window)]),
+        .init(id:"second",name:"Second sheet",polygon:[.init("width+20",0),.init("2*width+20",0),
+          .init("2*width+20","height"),.init("width+20","height")])],rootPanelID:"first",components:[
+        .init(id:"first",name:"First independent root",rootPanelID:"first",anchor:.init(0,"height"),position:.init("-width/2",0,"-depth/2")),
+        .init(id:"second",name:"Second independent root",rootPanelID:"second",anchor:.init("width+20","height"),
+          position:.init("-width/2",0,"depth/2+opening/100*20"))],interiors:[
+        .init(id:"review-volume",name:"Declared open review volume",componentID:"first",origin:.init(0,0,"stock/2"),
+          size:.init("width","height","depth-stock"),opening:.init(axis:.z,width:"width",height:"height"))])
+  }
   private static func numeric(_ value:Any?,allowEmpty:Bool=false)throws->[String:Double] {
     guard let map=value as? [String:Any],allowEmpty || !map.isEmpty else{throw FormError.invalid("Provide a numeric parameter map; edits require at least one parameter.")}
     var result:[String:Double]=[:]
@@ -174,14 +220,33 @@ public enum ConstructionCommands {
     _ = try object(raw,allowed:["x","y"],label:label)
   }
   private static func validateDefinitionJSON(_ raw:[String:Any])throws {
-    let definition=try object(raw,allowed:["version","name","parameters","derived","size","stockThickness","panels","hinges","joins","rootPanelID","requirements","connections","solidChecks"],label:"construction definition")
+    let definition=try object(raw,allowed:["version","name","parameters","derived","size","stockThickness","panels","hinges","joins","rootPanelID","requirements","connections","solidChecks","components","interiors"],label:"construction definition")
     if let raw=definition["size"]{try point(raw,label:"construction size")}
     if let raw=definition["parameters"] {for value in try objects(raw,label:"construction parameters") {
       _ = try object(value,allowed:["name","value","minimum","maximum","unit"],label:"construction parameter")
     }}
     if let raw=definition["panels"] {for value in try objects(raw,label:"construction panels") {
-      let panel=try object(value,allowed:["id","name","role","polygon","artworkRotationDegrees"],label:"construction panel")
+      let panel=try object(value,allowed:["id","name","role","polygon","artworkRotationDegrees","cutouts"],label:"construction panel")
       if let raw=panel["polygon"] {for value in try objects(raw,label:"panel polygon") {try point(value,label:"panel polygon point")}}
+      if let raw=panel["cutouts"],!(raw is NSNull) {for value in try objects(raw,label:"panel cutouts") {
+        let cutout=try object(value,allowed:["id","polygon","kind"],label:"panel cutout")
+        if let raw=cutout["polygon"] {for p in try objects(raw,label:"cutout polygon") {try point(p,label:"cutout point")}}
+      }}
+    }}
+    func point3(_ value:Any,_ label:String)throws {_ = try object(value,allowed:["x","y","z"],label:label)}
+    if let raw=definition["components"],!(raw is NSNull) {for value in try objects(raw,label:"construction components") {
+      let component=try object(value,allowed:["id","name","rootPanelID","anchor","position","rotationDegrees"],label:"construction component")
+      if let p=component["anchor"] {try point(p,label:"component anchor")}
+      if let p=component["position"] {try point3(p,"component position")}
+      if let p=component["rotationDegrees"] {try point3(p,"component rotation")}
+    }}
+    if let raw=definition["interiors"],!(raw is NSNull) {for value in try objects(raw,label:"construction interiors") {
+      let interior=try object(value,allowed:["id","name","componentID","origin","size","rotationDegrees","opening"],label:"construction interior")
+      for key in ["origin","size","rotationDegrees"] {if let p=interior[key],!(p is NSNull) {try point3(p,"interior \(key)")}}
+      if let raw=interior["opening"],!(raw is NSNull) {
+        let opening=try object(raw,allowed:["axis","width","height","origin"],label:"interior opening")
+        if let p=opening["origin"],!(p is NSNull) {try point(p,label:"opening origin")}
+      }
     }}
     if let raw=definition["hinges"] {for value in try objects(raw,label:"construction hinges") {
       let hinge=try object(value,allowed:["id","parentPanelID","childPanelID","start","end","angleDegrees","layerOffsetMM","opensWithTop"],label:"construction hinge")
@@ -298,6 +363,8 @@ public enum ConstructionCommands {
     return ["object_id":object.id.uuidString,"revision":try revision(d),"definition":try jsonObject(d),
       "net":try jsonObject(source.net()),"poses":try jsonObject(poses),"parameters":object.parameters,
       "connection_checks":try jsonObject(connections),"connections_passed":connections.allSatisfy(\.passed),
+      "components":try jsonObject(PaperConstructionEngine.resolvedComponents(source)),
+      "interiors":try jsonObject(PaperConstructionEngine.resolvedInteriors(source)),
       "solid_checks_status":d.solidChecks?.isEmpty == false ? "not_evaluated":"not_declared"]
   }
   public static func solidCheckExample()->PlanarConstructionDefinition {

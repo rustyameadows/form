@@ -2,12 +2,44 @@ import Foundation
 import CoreFoundation
 
 public enum PaperCommands {
-  public static func isReadOnly(_ args:[String:Any])->Bool{["inspect","preflight","layout","view","export"].contains(args["command"] as? String ?? "inspect")}
+  public static func isReadOnly(_ args:[String:Any])->Bool{["inspect","preflight","layout","view","export","template_inspect"].contains(args["command"] as? String ?? "inspect") || PaperAppearanceCommands.readOnlyNames.contains(args["command"] as? String ?? "")}
+  public static func preservesDocumentDrafts(_ args:[String:Any])->Bool{isReadOnly(args) || args["command"] as? String == "save_stock"}
   public static func call(engine:OperationEngine,arguments args:[String:Any],source:String)throws->Any {
     if let raw=args["command"],!(raw is String){throw FormError.invalid("Paper command must be a string.")}
     let command=args["command"] as? String ?? "inspect"
-    let common:Set<String>=["command","object_id"],fields:[String:Set<String>]=["inspect":[],"preflight":["contents"],"layout":["sheet_width","sheet_height","margin","gap","count","allow_rotation"],"configure":["definition","parameters","stock","annotations","annotation","annotation_id","acknowledge_artwork"],"annotations":["annotations","annotation","annotation_id"],"ensure_inside":[],"convert":[],"view":["representation","inside","panel_id","split"],"export":["path","format","inside","sheet_width","sheet_height","margin","gap","count"]]
+    if PaperAppearanceCommands.names.contains(command) {return try PaperAppearanceCommands.call(engine:engine,arguments:args,source:source)}
+    if command=="template_attach" || command=="template_inspect" {
+      let fields:Set<String>=command=="template_inspect" ? ["command","object_id"]:["command","object_id","path","instructions","vendor","revision","technical_mapping","canonical_to_template"]
+      guard Set(args.keys).isSubset(of:fields),let raw=args["object_id"] as? String,UUID(uuidString:raw) != nil else{throw FormError.invalid("Use an object UUID and known template arguments.")}
+      if command=="template_attach" {
+        guard let path=args["path"] as? String,path.hasPrefix("/"),let instructions=args["instructions"] as? String,!instructions.isEmpty,instructions.utf8.count<=16000,
+          let mapping=args["technical_mapping"] as? [[String:Any]],!mapping.isEmpty,mapping.count<=4096 else{throw FormError.invalid("Template attachment needs an absolute SVG path, instructions and explicit technical_mapping.")}
+        for key in ["vendor","revision"] {if let raw=args[key] {guard let value=raw as? String,value.utf8.count<=512 else{throw FormError.invalid("\(key) must be a bounded string.")}}}
+        for entry in mapping {guard Set(entry.keys).isSubset(of:["elementID","kind"]),let id=entry["elementID"] as? String,!id.isEmpty,id.utf8.count<=512,let kind=entry["kind"] as? String,PaperTemplateChannel.Kind(rawValue:kind) != nil else{throw FormError.invalid("Each template mapping needs an elementID and supported technical kind.")}}
+        if let raw=args["canonical_to_template"] {guard let map=raw as? [String:Any],Set(map.keys).isSubset(of:["a","b","c","d","tx","ty"]),map.values.allSatisfy({value in guard let n=value as? NSNumber else{return false};return CFGetTypeID(n) != CFBooleanGetTypeID() && n.doubleValue.isFinite}) else{throw FormError.invalid("Template registration needs finite affine a,b,c,d,tx,ty values.")}}
+      }
+      guard let graphics=engine.onGraphics else{throw FormError.invalid("Template attachment/inspection requires the native graphics host.")}
+      return try graphics("form_paper",args)
+    }
+    let common:Set<String>=["command","object_id"],fields:[String:Set<String>]=["inspect":[],"preflight":["contents","contents_object_id","interior_id","clearance_mm"],"layout":["sheet_width","sheet_height","margin","gap","count","allow_rotation"],"configure":["definition","parameters","stock","annotations","annotation","annotation_id","acknowledge_artwork"],"annotations":["annotations","annotation","annotation_id"],"ensure_inside":[],"convert":[],"view":["representation","inside","panel_id","split"],"export":["path","format","inside","sheet_width","sheet_height","margin","gap","count","bleed_mm","handoff"]]
     guard let allowed=fields[command],Set(args.keys).isSubset(of:common.union(allowed)) else{throw FormError.invalid("Unknown paper command or argument fields.")}
+    if command=="preflight" {
+      if let raw=args["contents_object_id"] {
+        guard let id=raw as? String,UUID(uuidString:id) != nil,args["contents"]==nil else{throw FormError.invalid("Use one modeled contents_object_id or numeric contents dimensions, not both.")}
+        if let raw=args["interior_id"] {guard let id=raw as? String,!id.isEmpty,id.utf8.count<=256 else{throw FormError.invalid("interior_id must be a bounded source identifier.")}}
+        if let raw=args["clearance_mm"] {guard let value=raw as? NSNumber,CFGetTypeID(value) != CFBooleanGetTypeID(),value.doubleValue.isFinite,value.doubleValue>=0 else{throw FormError.invalid("clearance_mm must be a finite nonnegative millimeter value.")}}
+        guard let graphics=engine.onGraphics else{throw FormError.invalid("Modeled contents preflight requires the native graphics host.")}
+        return try graphics("form_paper",args)
+      }
+      guard args["interior_id"]==nil,args["clearance_mm"]==nil else{throw FormError.invalid("interior_id and clearance_mm require a modeled contents_object_id.")}
+      if let contents=args["contents"] {
+        guard let fields=contents as? [String:Any],Set(fields.keys).isSubset(of:["width","height","depth"]) else{throw FormError.invalid("Numeric contents needs width, height and depth in millimeters.")}
+      }
+    }
+    if command=="export" {
+      if let raw=args["bleed_mm"] {guard let n=raw as? NSNumber,CFGetTypeID(n) != CFBooleanGetTypeID(),n.doubleValue.isFinite,(0...25).contains(n.doubleValue) else{throw FormError.invalid("bleed_mm must be0–25 physical millimeters.")}}
+      if let raw=args["handoff"] {guard let handoff=raw as? String,["artwork_only","separate","registered_original"].contains(handoff) else{throw FormError.invalid("Choose artwork_only, separate or registered_original handoff.")}}
+    }
     if command=="view" || command=="export"{guard let graphics=engine.onGraphics else{throw FormError.invalid("Paper view/export requires the native graphics host.")};return try graphics("form_paper",args)}
     guard let project=engine.project,let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),let object=project.objects.first(where:{$0.id==id}) else{throw FormError.missing("Choose a paper object in the current project.")}
     func number(_ key:String,_ fallback:Double)throws->Double{guard let raw=args[key] else{return fallback};guard let n=raw as? NSNumber,CFGetTypeID(n) != CFBooleanGetTypeID(),n.doubleValue.isFinite else{throw FormError.invalid("\(key) must be a finite number.")};return n.doubleValue}
@@ -32,7 +64,7 @@ public enum PaperCommands {
     }
     let current=try PaperConstruction.definition(for:object)
     switch command {
-    case "inspect":return ["object_id":id.uuidString,"definition":try jsonObject(current),"net":try jsonObject(current.net()),"preflight":try jsonObject(current.preflight()),"inside_source_id":current.insideArtworkSourceID?.uuidString as Any? ?? NSNull(),"artwork_coordinates":"Registered full-net millimeters; both sides share physical coordinates. No automatic fitting or duplex feed is inferred."]
+    case "inspect":return ["object_id":id.uuidString,"definition":try jsonObject(current),"net":try jsonObject(current.net()),"preflight":try jsonObject(current.preflight()),"appearance":try jsonObject(PaperAppearance.inspect(project:project,object:object)),"inside_source_id":current.insideArtworkSourceID?.uuidString as Any? ?? NSNull(),"artwork_coordinates":"Registered full-net millimeters; both sides share physical coordinates. No automatic fitting or duplex feed is inferred."]
     case "preflight":let contents=try args["contents"].map{try decode($0,PaperDimensions.self)};return try jsonObject(current.preflight(contents:contents))
     case "layout":let count=try number("count",1);guard count.rounded()==count,(1...500).contains(count) else{throw FormError.invalid("Use 1–500 whole copies.")};return try jsonObject(current.net().layout(sheetSize:.init(try number("sheet_width",700),try number("sheet_height",1000)),marginMM:number("margin",10),gapMM:number("gap",6),count:Int(count),allowRotation:boolean("allow_rotation",false)))
     case "ensure_inside":
@@ -40,31 +72,50 @@ public enum PaperCommands {
       if let existing=current.insideArtworkSourceID{return ["object_id":id.uuidString,"inside_source_id":existing.uuidString]}
       var created:UUID?
       try engine.edit("Created registered inside artwork",source:source){p in
-        let net=try current.net();var art=try p.makeObject(recipeID:"artboard",name:object.name+" · Inside registered",parameters:["width":net.size.x,"depth":net.size.y],materialID:"paper-superfine",position:.init(object.position.x+net.size.x+70,0,object.position.z));art.artwork=current.insideArtwork ?? Artwork(background:"#F7F5EF");created=art.id;p.objects.append(art)
+        let net=try current.net();var art=try p.makeObject(recipeID:"artboard",name:object.name+" · Inside registered",parameters:["width":net.size.x,"depth":net.size.y],materialID:"paper-superfine",position:.init(object.position.x+net.size.x+70,0,object.position.z));var blank=Artwork(background:"#F7F5EF");blank.backgroundOpacity=0;art.artwork=current.insideArtwork ?? blank;art.canvasSourceOnly=true;created=art.id;p.objects.append(art)
         for i in p.objects.indices where p.objects[i].designID==object.designID{guard !p.objects[i].locked else{throw FormError.invalid("Unlock linked paper variants before creating their shared inside source.")};var s=try PaperConstruction.definition(for:p.objects[i]);s.insideArtworkSourceID=art.id;s.insideArtwork=nil;p.objects[i].paperConstruction=s}
       }
       return ["object_id":id.uuidString,"inside_source_id":created!.uuidString]
     case "configure","annotations":
       guard !object.locked else{throw FormError.invalid("Unlock this paper construction before editing it.")}
       var next=current
-      if let raw=args["definition"]{guard args["parameters"]==nil,args["stock"]==nil else{throw FormError.invalid("Use a complete paper definition or partial parameters/stock, not both.")};next=try decode(raw,PaperConstruction.self)}
+      if let raw=args["definition"]{guard args["parameters"]==nil,args["stock"]==nil else{throw FormError.invalid("Use a complete paper definition or partial parameters/stock, not both.")};try PaperAppearanceCommands.validateDefinitionFields(raw);next=try decode(raw,PaperConstruction.self)}
       if let raw=args["parameters"]{guard let values=raw as? [String:Any] else{throw FormError.invalid("parameters must be a numeric map.")};var numbers:[String:Double]=[:];for (key,value) in values{guard let n=value as? NSNumber,CFGetTypeID(n) != CFBooleanGetTypeID(),n.doubleValue.isFinite,PaperConstructionEngine.parameters(current)[key] != nil else{throw FormError.invalid("Unknown or nonnumeric paper parameter.")};numbers[key]=n.doubleValue};next=PaperConstructionEngine.applying(numbers,to:next)}
-      if let raw=args["stock"]{guard let fields=raw as? [String:Any],Set(fields.keys).isSubset(of:["name","vendor","gsm","thicknessMM","grain","sheetSizeMM","verified","notes"]),var merged=try jsonObject(next.stock) as? [String:Any] else{throw FormError.invalid("Invalid stock declaration fields.")};for (key,value) in fields{merged[key]=value};next.stock=try decode(merged,PaperStock.self)}
+      if let raw=args["stock"]{next.stock=try PaperAppearanceCommands.stock(raw,previous:next.stock)}
       if let raw=args["annotations"]{next.annotations=try decode(raw,[PaperAnnotation].self)}
       if let raw=args["annotation"]{next.annotations.append(try decode(raw,PaperAnnotation.self))}
       if let raw=args["annotation_id"]{guard let value=raw as? String,let uuid=UUID(uuidString:value),next.annotations.contains(where:{$0.id==uuid}) else{throw FormError.invalid("Choose an existing paper annotation.")};next.annotations.removeAll{$0.id==uuid}}
       guard next.kind==current.kind else{throw FormError.invalid("Changing construction families requires an explicit new object.")}
       try PaperConstructionEngine.validate(next)
-      let acknowledge=try boolean("acknowledge_artwork")
-      try engine.edit(command=="annotations" ? "Changed construction annotations":"Changed paper construction",source:source){p in
-        for i in p.objects.indices where p.objects[i].designID==object.designID{
-          guard !p.objects[i].locked else{throw FormError.invalid("Unlock linked paper variants before changing their shared construction.")}
-          let previous=p.objects[i];p.objects[i].parameters=PaperConstructionEngine.parameters(next);p.objects[i].paperConstruction=next;p.objects[i]=try PaperConstructionEngine.synchronized(p.objects[i],previous:previous)
-          if acknowledge{p.objects[i].paperConstruction?.artworkReviewRequired=false;p.objects[i].paperConstruction?.artworkReferenceSize=try next.net().size}
+      var appearanceObject=object;appearanceObject.paperConstruction=next;appearanceObject.parameters=PaperConstructionEngine.parameters(next)
+      for finish in next.finishes ?? [] {
+        let previous=current.finishes?.first{$0.id==finish.id}
+        let disablingRetained=previous != nil && !finish.enabled && previous?.elementIDs==finish.elementIDs && previous?.side==finish.side
+        if previous != finish,!disablingRetained {
+          guard let artwork=PaperAppearance.source(project:project,object:appearanceObject,side:finish.side).artwork else{throw FormError.invalid("New or changed finishes require their canonical artwork side before assignment.")}
+          try PaperAppearance.validateVisibleTargets(finish,artwork:artwork,project:project)
+          try PaperAppearance.validateColorOverride(finish,artwork:artwork,project:project)
         }
+      }
+      let acknowledge=try boolean("acknowledge_artwork")
+      try engine.edit(command=="annotations" ? "Changed construction annotations":"Changed paper construction",source:source,coalescing:source=="Studio" && args["stock"] != nil ? "paper-stock-\(id)":nil){p in
+        try applyConfiguration(next,objectID:id,in:&p,acknowledgeArtwork:acknowledge)
       }
       return try jsonObject(engine.project!.objects.first{$0.id==id}!)
     default:throw FormError.invalid("Unknown paper command.")
+    }
+  }
+  public static func applyConfiguration(_ next:PaperConstruction,objectID:UUID,in project:inout Project,acknowledgeArtwork:Bool=false)throws {
+    guard let object=project.objects.first(where:{$0.id==objectID}) else{throw FormError.missing("Physical paper object missing.")}
+    try PaperConstructionEngine.validate(next)
+    for i in project.objects.indices where project.objects[i].designID==object.designID {
+      guard !project.objects[i].locked else{throw FormError.invalid("Unlock linked paper variants before changing their shared construction.")}
+      let previous=project.objects[i];var applied=next
+      if previous.id != objectID {applied.finishes=previous.paperConstruction?.finishes}
+      project.objects[i].parameters=PaperConstructionEngine.parameters(applied)
+      project.objects[i].paperConstruction=applied
+      project.objects[i]=try PaperConstructionEngine.synchronized(project.objects[i],previous:previous)
+      if acknowledgeArtwork {project.objects[i].paperConstruction?.artworkReviewRequired=false;project.objects[i].paperConstruction?.artworkReferenceSize=try next.net().size}
     }
   }
 }

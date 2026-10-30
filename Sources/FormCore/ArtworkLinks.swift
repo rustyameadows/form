@@ -130,6 +130,7 @@ extension Project {
     self = candidate
   }
   public func validateArtworkLinks() throws {
+    try validatePaperMaterialSnapshots()
     try validateArtworkParameterBindings()
     try validatePhysicalSurfaceBindings()
     try validatePhysicalArtworkIntents()

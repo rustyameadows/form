@@ -1,0 +1,200 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 85,
+          "ty" : 0
+        },
+        "color" : "#DBD9C6",
+        "fontSize" : 11,
+        "height" : 6,
+        "id" : "39215B12-AE34-539B-9D4B-0AA31A5C32B0",
+        "kind" : "text",
+        "name" : "Contact / name",
+        "text" : "MARA FIELD",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 69,
+        "x" : 8,
+        "y" : 10
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 85,
+          "ty" : 0
+        },
+        "color" : "#DBD9C6",
+        "fontSize" : 7,
+        "height" : 5,
+        "id" : "147F068B-6078-5D42-A173-BA1BF57992D5",
+        "kind" : "text",
+        "name" : "Contact / role",
+        "text" : "DESIGNER / PAPER & OBJECTS",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 69,
+        "x" : 8,
+        "y" : 20
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 85,
+          "ty" : 0
+        },
+        "color" : "#DBD9C6",
+        "fontSize" : 14,
+        "height" : 0.3,
+        "id" : "B152471F-DF21-5D65-A2CB-3CD08D90DEEA",
+        "kind" : "rectangle",
+        "name" : "Contact / rule",
+        "text" : "",
+        "width" : 22,
+        "x" : 8,
+        "y" : 29
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 85,
+          "ty" : 0
+        },
+        "color" : "#DBD9C6",
+        "fontSize" : 7.5,
+        "height" : 10,
+        "id" : "D51C64FB-3459-5747-8720-61681CFB03D8",
+        "kind" : "text",
+        "name" : "Contact / details",
+        "text" : "hello@studiofield.example\nstudiofield.example",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 69,
+        "x" : 8,
+        "y" : 37
+      }
+    ]
+  },
+  "canvasSourceOnly" : true,
+  "designID" : "C41DBE85-47D3-4339-BFBD-F2566C711E98",
+  "id" : "ECF88B13-B637-48FA-A66B-09534EE5FE52",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "09 · Studio Field / Duplex card · Inside registered",
+  "parameters" : {
+    "depth" : 55,
+    "width" : 85
+  },
+  "position" : {
+    "x" : -275,
+    "y" : 0,
+    "z" : 370
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

@@ -1,0 +1,80 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1200,
+  "png_sha256" : "48d2887bf07a947043e67faa5ee6b501f7d49c1fb632e55ef87f49e25a2408ef",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:paper-template-17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764.svg",
+      "sha256" : "17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 0.24497866312686414,
+      "distance" : 4.2685415604105321,
+      "elevation" : 0.86111176186360594,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 7.4140000000000006,
+        "y" : 0.23400000000000007,
+        "z" : -4.2999999999999998
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "807F98EC-B186-47B2-897E-90FB1ADDDC35",
+    "instances" : [
+      {
+        "id" : "7E83230D-47CD-4B93-9632-CE1C60CDE84F",
+        "name" : "04 · Meridian \/ Presentation box",
+        "positionMM" : {
+          "x" : 650,
+          "y" : 0,
+          "z" : -430
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "FE9BD168-E884-46C9-8633-8E4DD6B50E78",
+        "visible" : true
+      },
+      {
+        "id" : "E37F1A48-B7C6-4DA4-8239-D97A3F705A68",
+        "name" : "04 · Modeled contents \/ 56 × 20 × 44 mm",
+        "positionMM" : {
+          "x" : 650,
+          "y" : 1.8,
+          "z" : -430
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "F9E4C4C5-F289-4AC4-98EF-C084A997EF93",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "04-study",
+    "pixels" : {
+      "height" : 1200,
+      "width" : 1800
+    },
+    "revision" : 3,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "2edb07c1172dbba7df88b6cd19c0b586f701e29b47b9ceb27111c7aeac81e517",
+  "source_project_id" : "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+  "width" : 1800
+}

@@ -602,9 +602,9 @@ public final class OperationEngine {
           } else { throw FormError.invalid("Provide a fabric pattern definition or null.") }
           try p.setFabricPattern(pattern, materialID: p.objects[index].materialID)
         }
-        if let color = a["color"] as? String {
-          try validateColor(color)
-          p.objects[index].color = color
+        if let raw = a["color"] {
+          if raw is NSNull {p.objects[index].color=nil}
+          else {guard let color=raw as? String else{throw FormError.invalid("Color must be a HEX string or null to clear its instance override.")};try validateColor(color);p.objects[index].color=color}
         }
         if a["position"] != nil {
           guard !p.objects[index].isClothAttached else {throw FormError.invalid("Use form_cloth attach material coordinates to move this decoration on its surface, or detach it first.")}
@@ -664,6 +664,10 @@ public final class OperationEngine {
         for i in p.objects.indices where PaperConstruction.isPaper(p.objects[i]) && (p.objects[i].id==id || shared&&p.objects[i].designID==p.objects[index].designID){
           if !params.isEmpty,p.objects[i].locked{throw FormError.invalid("Unlock linked paper constructions before changing their dimensions.")}
           p.objects[i]=try PaperConstructionEngine.synchronized(p.objects[i],previous:previousPaperObjects.first{$0.id==p.objects[i].id})
+        }
+        if let materialID=a["material_id"] as? String,PaperConstruction.isPaper(p.objects[index]),
+          let material=p.materials.first(where:{$0.id==materialID}) ?? StudioLibrary.load(from:repository.root).materials.first(where:{$0.id==materialID}),material.paperStock != nil {
+          try p.applyPaperStockMaterial(material,to:id)
         }
       }
       return try jsonObject(requireProject().objects.first { $0.id == id }!)

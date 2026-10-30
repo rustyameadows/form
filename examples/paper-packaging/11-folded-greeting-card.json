@@ -1,0 +1,130 @@
+{
+  "version": 3,
+  "name": "Scored folded greeting card",
+  "parameters": [
+    {
+      "name": "width",
+      "value": 110,
+      "minimum": 66.0,
+      "maximum": 176.0,
+      "unit": "mm"
+    },
+    {
+      "name": "height",
+      "value": 155,
+      "minimum": 93.0,
+      "maximum": 248.0,
+      "unit": "mm"
+    },
+    {
+      "name": "stock",
+      "value": 0.38,
+      "minimum": 0.15200000000000002,
+      "maximum": 0.76,
+      "unit": "mm"
+    },
+    {
+      "name": "turn",
+      "value": 0,
+      "minimum": 0,
+      "maximum": 180,
+      "unit": "\u00b0"
+    }
+  ],
+  "size": {
+    "x": "2*width",
+    "y": "height"
+  },
+  "stockThickness": "stock",
+  "panels": [
+    {
+      "id": "back",
+      "name": "Back cover",
+      "role": "body",
+      "polygon": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": "(0)+(width)",
+          "y": 0
+        },
+        {
+          "x": "(0)+(width)",
+          "y": "(0)+(height)"
+        },
+        {
+          "x": 0,
+          "y": "(0)+(height)"
+        }
+      ],
+      "artworkRotationDegrees": 0
+    },
+    {
+      "id": "front",
+      "name": "Front cover",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "width",
+          "y": 0
+        },
+        {
+          "x": "(width)+(width)",
+          "y": 0
+        },
+        {
+          "x": "(width)+(width)",
+          "y": "(0)+(height)"
+        },
+        {
+          "x": "width",
+          "y": "(0)+(height)"
+        }
+      ],
+      "artworkRotationDegrees": 0
+    }
+  ],
+  "hinges": [
+    {
+      "id": "spine-score",
+      "parentPanelID": "back",
+      "childPanelID": "front",
+      "start": {
+        "x": "width",
+        "y": 0
+      },
+      "end": {
+        "x": "width",
+        "y": "height"
+      },
+      "angleDegrees": 180,
+      "layerOffsetMM": "-stock",
+      "opensWithTop": true
+    }
+  ],
+  "joins": [],
+  "rootPanelID": "back",
+  "components": [
+    {
+      "id": "card",
+      "name": "Folded greeting card",
+      "rootPanelID": "back",
+      "anchor": {
+        "x": "width/2",
+        "y": "height/2"
+      },
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 180,
+        "z": 0
+      }
+    }
+  ]
+}

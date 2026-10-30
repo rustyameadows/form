@@ -1,0 +1,1362 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 115,
+          "ty" : 0
+        },
+        "color" : "#1C4644",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "3C9A5CE1-C8F8-5069-B178-C9BE8A5F0B6F",
+        "kind" : "text",
+        "name" : "03-outside-front-brand",
+        "text" : "FIELD  /  03",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 196,
+        "x" : 12,
+        "y" : 6
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 115,
+          "ty" : 0
+        },
+        "color" : "#1C4644",
+        "fontSize" : 37.69795275590552,
+        "height" : 17.05,
+        "id" : "2D573B3F-BEF4-5575-A80D-80227D122C23",
+        "kind" : "text",
+        "name" : "03-outside-front-title",
+        "text" : "Field kit",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 196,
+        "x" : 12,
+        "y" : 15
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 115,
+          "ty" : 0
+        },
+        "color" : "#1C4644",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "83B1D7BC-01B6-527A-9187-D9444986EC7E",
+        "kind" : "rectangle",
+        "name" : "03-outside-front-rule",
+        "text" : "",
+        "width" : 121.00000000000001,
+        "x" : 12,
+        "y" : 35.75
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 115,
+          "ty" : 0
+        },
+        "color" : "#1C4644",
+        "fontSize" : 7.5,
+        "height" : 9.350000000000001,
+        "id" : "CC8BB923-AA0F-5490-AEFF-CB562E9FE140",
+        "kind" : "text",
+        "name" : "03-outside-front-copy",
+        "text" : "PAPER LABORATORY\nEDITABLE STUDY  /  03",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 196,
+        "x" : 12,
+        "y" : 42.9
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 115,
+          "ty" : 215
+        },
+        "color" : "#1C4644",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "0F1E8FD4-C0EA-56F7-AFC2-2EB70CC5BD36",
+        "kind" : "text",
+        "name" : "03-outside-back-brand",
+        "text" : "FIELD  /  03",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 196,
+        "x" : 12,
+        "y" : 6
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 115,
+          "ty" : 215
+        },
+        "color" : "#1C4644",
+        "fontSize" : 37.69795275590552,
+        "height" : 17.05,
+        "id" : "51CE50F7-E299-52D2-A4CD-7FC1ECB698E1",
+        "kind" : "text",
+        "name" : "03-outside-back-title",
+        "text" : "Field kit",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 196,
+        "x" : 12,
+        "y" : 15
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 115,
+          "ty" : 215
+        },
+        "color" : "#1C4644",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "0F24513B-BBBA-5E8F-97BA-A31128F4F688",
+        "kind" : "rectangle",
+        "name" : "03-outside-back-rule",
+        "text" : "",
+        "width" : 121.00000000000001,
+        "x" : 12,
+        "y" : 35.75
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 115,
+          "ty" : 215
+        },
+        "color" : "#1C4644",
+        "fontSize" : 7.5,
+        "height" : 9.350000000000001,
+        "id" : "3C0987AF-A2C4-5061-9FD0-3C551EFF025F",
+        "kind" : "text",
+        "name" : "03-outside-back-copy",
+        "text" : "PAPER LABORATORY\nEDITABLE STUDY  /  03",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 196,
+        "x" : 12,
+        "y" : 42.9
+      }
+    ]
+  },
+  "designID" : "416089E7-C0FE-4234-BF3D-EA095F1A00B4",
+  "id" : "EA2DAD84-DC9F-4BD0-B406-A268CB8B04B8",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "03 · Field kit / Locking mailer",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "components" : [
+        {
+          "anchor" : {
+            "x" : "2*height+tabDepth",
+            "y" : "height"
+          },
+          "id" : "mailer",
+          "name" : "Mailer",
+          "position" : {
+            "x" : "-width/2",
+            "y" : "0.0",
+            "z" : "depth/2"
+          },
+          "rootPanelID" : "front",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        }
+      ],
+      "hinges" : [
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "floor",
+          "end" : {
+            "x" : "(2*height+tabDepth)+(width)",
+            "y" : "height"
+          },
+          "id" : "floor-crease",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "front",
+          "start" : {
+            "x" : "2*height+tabDepth",
+            "y" : "height"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "back",
+          "end" : {
+            "x" : "(2*height+tabDepth)+(width)",
+            "y" : "height+depth"
+          },
+          "id" : "back-crease",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "floor",
+          "start" : {
+            "x" : "2*height+tabDepth",
+            "y" : "height+depth"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "left-wall",
+          "end" : {
+            "x" : "2*height+tabDepth",
+            "y" : "height+depth"
+          },
+          "id" : "left-wall-crease",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "floor",
+          "start" : {
+            "x" : "2*height+tabDepth",
+            "y" : "height"
+          }
+        },
+        {
+          "angleDegrees" : "180.0",
+          "childPanelID" : "left-inner-wall",
+          "end" : {
+            "x" : "height+tabDepth",
+            "y" : "height+depth"
+          },
+          "id" : "left-double-wall-crease",
+          "layerOffsetMM" : "-stock",
+          "opensWithTop" : false,
+          "parentPanelID" : "left-wall",
+          "start" : {
+            "x" : "height+tabDepth",
+            "y" : "height"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "right-wall",
+          "end" : {
+            "x" : "(2*height+tabDepth)+(width)",
+            "y" : "height+depth"
+          },
+          "id" : "right-wall-crease",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "floor",
+          "start" : {
+            "x" : "(2*height+tabDepth)+(width)",
+            "y" : "height"
+          }
+        },
+        {
+          "angleDegrees" : "-180.0",
+          "childPanelID" : "right-inner-wall",
+          "end" : {
+            "x" : "((2*height+tabDepth)+(width))+(height)",
+            "y" : "height+depth"
+          },
+          "id" : "right-double-wall-crease",
+          "layerOffsetMM" : "-stock",
+          "opensWithTop" : false,
+          "parentPanelID" : "right-wall",
+          "start" : {
+            "x" : "((2*height+tabDepth)+(width))+(height)",
+            "y" : "height"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "lid",
+          "end" : {
+            "x" : "(2*height+tabDepth)+(width)",
+            "y" : "2*height+depth"
+          },
+          "id" : "lid-crease",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : true,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "2*height+tabDepth",
+            "y" : "2*height+depth"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "closing-lip",
+          "end" : {
+            "x" : "(2*height+tabDepth)+(width)",
+            "y" : "2*height+2*depth"
+          },
+          "id" : "closing-lip-crease",
+          "layerOffsetMM" : "stock",
+          "opensWithTop" : true,
+          "parentPanelID" : "lid",
+          "start" : {
+            "x" : "2*height+tabDepth",
+            "y" : "2*height+2*depth"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "left-retention-foot",
+          "end" : {
+            "x" : "tabDepth-stock",
+            "y" : "height+depth*.44-.2"
+          },
+          "id" : "left-retention-crease",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "left-inner-wall",
+          "start" : {
+            "x" : "tabDepth-stock",
+            "y" : "height+depth*.32+.2"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "right-retention-foot",
+          "end" : {
+            "x" : "4*height+tabDepth+width+stock",
+            "y" : "height+depth*.68-.2"
+          },
+          "id" : "right-retention-crease",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "right-inner-wall",
+          "start" : {
+            "x" : "4*height+tabDepth+width+stock",
+            "y" : "height+depth*.56+.2"
+          }
+        }
+      ],
+      "interiors" : [
+        {
+          "componentID" : "mailer",
+          "id" : "mailer-interior",
+          "name" : "Mailer Interior",
+          "opening" : {
+            "axis" : "y",
+            "height" : "depth-stock",
+            "width" : "width-4*stock"
+          },
+          "origin" : {
+            "x" : "2*stock",
+            "y" : "stock/2",
+            "z" : "-depth+stock/2"
+          },
+          "size" : {
+            "x" : "width-4*stock",
+            "y" : "height-2*stock",
+            "z" : "depth-stock"
+          }
+        }
+      ],
+      "joins" : [
+        {
+          "firstPanelID" : "left-retention-foot",
+          "id" : "left-lock",
+          "kind" : "tabSlot",
+          "name" : "Left Lock",
+          "notes" : "Neck passes through the floor slot; the ninety-degree child foot retains against the underside. Prototype insertion order and retention on actual stock.",
+          "overlapMM" : "tabDepth-1.5*stock-.2",
+          "secondPanelID" : "floor"
+        },
+        {
+          "firstPanelID" : "right-retention-foot",
+          "id" : "right-lock",
+          "kind" : "tabSlot",
+          "name" : "Right Lock",
+          "notes" : "Neck passes through the floor slot; the ninety-degree child foot retains against the underside. Prototype insertion order and retention on actual stock.",
+          "overlapMM" : "tabDepth-1.5*stock-.2",
+          "secondPanelID" : "floor"
+        }
+      ],
+      "name" : "Locking mailer study",
+      "panels" : [
+        {
+          "id" : "front",
+          "name" : "Front",
+          "polygon" : [
+            {
+              "x" : "2*height+tabDepth",
+              "y" : "0.0"
+            },
+            {
+              "x" : "(2*height+tabDepth)+(width)",
+              "y" : "0.0"
+            },
+            {
+              "x" : "(2*height+tabDepth)+(width)",
+              "y" : "(0)+(height)"
+            },
+            {
+              "x" : "2*height+tabDepth",
+              "y" : "(0)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "cutouts" : [
+            {
+              "id" : "left-lock-slot",
+              "kind" : "slot",
+              "polygon" : [
+                {
+                  "x" : "2*height+tabDepth+stock/2-.2",
+                  "y" : "height+depth*.32"
+                },
+                {
+                  "x" : "(2*height+tabDepth+stock/2-.2)+(stock+.4)",
+                  "y" : "height+depth*.32"
+                },
+                {
+                  "x" : "(2*height+tabDepth+stock/2-.2)+(stock+.4)",
+                  "y" : "(height+depth*.32)+(depth*.12)"
+                },
+                {
+                  "x" : "2*height+tabDepth+stock/2-.2",
+                  "y" : "(height+depth*.32)+(depth*.12)"
+                }
+              ]
+            },
+            {
+              "id" : "right-lock-slot",
+              "kind" : "slot",
+              "polygon" : [
+                {
+                  "x" : "2*height+tabDepth+width-1.5*stock-.2",
+                  "y" : "height+depth*.56"
+                },
+                {
+                  "x" : "(2*height+tabDepth+width-1.5*stock-.2)+(stock+.4)",
+                  "y" : "height+depth*.56"
+                },
+                {
+                  "x" : "(2*height+tabDepth+width-1.5*stock-.2)+(stock+.4)",
+                  "y" : "(height+depth*.56)+(depth*.12)"
+                },
+                {
+                  "x" : "2*height+tabDepth+width-1.5*stock-.2",
+                  "y" : "(height+depth*.56)+(depth*.12)"
+                }
+              ]
+            }
+          ],
+          "id" : "floor",
+          "name" : "Floor",
+          "polygon" : [
+            {
+              "x" : "2*height+tabDepth",
+              "y" : "height"
+            },
+            {
+              "x" : "(2*height+tabDepth)+(width)",
+              "y" : "height"
+            },
+            {
+              "x" : "(2*height+tabDepth)+(width)",
+              "y" : "(height)+(depth)"
+            },
+            {
+              "x" : "2*height+tabDepth",
+              "y" : "(height)+(depth)"
+            }
+          ],
+          "role" : "bottomClosure"
+        },
+        {
+          "id" : "back",
+          "name" : "Back",
+          "polygon" : [
+            {
+              "x" : "2*height+tabDepth",
+              "y" : "height+depth"
+            },
+            {
+              "x" : "(2*height+tabDepth)+(width)",
+              "y" : "height+depth"
+            },
+            {
+              "x" : "(2*height+tabDepth)+(width)",
+              "y" : "(height+depth)+(height)"
+            },
+            {
+              "x" : "2*height+tabDepth",
+              "y" : "(height+depth)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "left-wall",
+          "name" : "Left Wall",
+          "polygon" : [
+            {
+              "x" : "height+tabDepth",
+              "y" : "height"
+            },
+            {
+              "x" : "(height+tabDepth)+(height)",
+              "y" : "height"
+            },
+            {
+              "x" : "(height+tabDepth)+(height)",
+              "y" : "(height)+(depth)"
+            },
+            {
+              "x" : "height+tabDepth",
+              "y" : "(height)+(depth)"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "left-inner-wall",
+          "name" : "Left Inner Wall",
+          "polygon" : [
+            {
+              "x" : "tabDepth+stock",
+              "y" : "height"
+            },
+            {
+              "x" : "height+tabDepth",
+              "y" : "height"
+            },
+            {
+              "x" : "height+tabDepth",
+              "y" : "height+depth"
+            },
+            {
+              "x" : "tabDepth+stock",
+              "y" : "height+depth"
+            },
+            {
+              "x" : "tabDepth+stock",
+              "y" : "height+depth*.44-.2"
+            },
+            {
+              "x" : "tabDepth-stock",
+              "y" : "height+depth*.44-.2"
+            },
+            {
+              "x" : "tabDepth-stock",
+              "y" : "height+depth*.32+.2"
+            },
+            {
+              "x" : "tabDepth+stock",
+              "y" : "height+depth*.32+.2"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "right-wall",
+          "name" : "Right Wall",
+          "polygon" : [
+            {
+              "x" : "(2*height+tabDepth)+(width)",
+              "y" : "height"
+            },
+            {
+              "x" : "((2*height+tabDepth)+(width))+(height)",
+              "y" : "height"
+            },
+            {
+              "x" : "((2*height+tabDepth)+(width))+(height)",
+              "y" : "(height)+(depth)"
+            },
+            {
+              "x" : "(2*height+tabDepth)+(width)",
+              "y" : "(height)+(depth)"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "right-inner-wall",
+          "name" : "Right Inner Wall",
+          "polygon" : [
+            {
+              "x" : "3*height+tabDepth+width",
+              "y" : "height"
+            },
+            {
+              "x" : "4*height+tabDepth+width-stock",
+              "y" : "height"
+            },
+            {
+              "x" : "4*height+tabDepth+width-stock",
+              "y" : "height+depth*.56+.2"
+            },
+            {
+              "x" : "4*height+tabDepth+width+stock",
+              "y" : "height+depth*.56+.2"
+            },
+            {
+              "x" : "4*height+tabDepth+width+stock",
+              "y" : "height+depth*.68-.2"
+            },
+            {
+              "x" : "4*height+tabDepth+width-stock",
+              "y" : "height+depth*.68-.2"
+            },
+            {
+              "x" : "4*height+tabDepth+width-stock",
+              "y" : "height+depth"
+            },
+            {
+              "x" : "3*height+tabDepth+width",
+              "y" : "height+depth"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "cutouts" : [
+            {
+              "id" : "inspection-window",
+              "kind" : "window",
+              "polygon" : [
+                {
+                  "x" : "(2*height+tabDepth)+(width*.35)",
+                  "y" : "(2*height+depth)+(depth*.35)"
+                },
+                {
+                  "x" : "((2*height+tabDepth)+(width*.35))+(width*.3)",
+                  "y" : "(2*height+depth)+(depth*.35)"
+                },
+                {
+                  "x" : "((2*height+tabDepth)+(width*.35))+(width*.3)",
+                  "y" : "((2*height+depth)+(depth*.35))+(depth*.3)"
+                },
+                {
+                  "x" : "(2*height+tabDepth)+(width*.35)",
+                  "y" : "((2*height+depth)+(depth*.35))+(depth*.3)"
+                }
+              ]
+            }
+          ],
+          "id" : "lid",
+          "name" : "Lid",
+          "polygon" : [
+            {
+              "x" : "2*height+tabDepth",
+              "y" : "2*height+depth"
+            },
+            {
+              "x" : "(2*height+tabDepth)+(width)",
+              "y" : "2*height+depth"
+            },
+            {
+              "x" : "(2*height+tabDepth)+(width)",
+              "y" : "(2*height+depth)+(depth)"
+            },
+            {
+              "x" : "2*height+tabDepth",
+              "y" : "(2*height+depth)+(depth)"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "cutouts" : [
+            {
+              "id" : "tear-bridge-cut-0",
+              "kind" : "perforation",
+              "polygon" : [
+                {
+                  "x" : "2*height+tabDepth+width*(0+.15)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(0+.65)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(0+.65)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(0+.15)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                }
+              ]
+            },
+            {
+              "id" : "tear-bridge-cut-1",
+              "kind" : "perforation",
+              "polygon" : [
+                {
+                  "x" : "2*height+tabDepth+width*(1+.15)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(1+.65)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(1+.65)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(1+.15)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                }
+              ]
+            },
+            {
+              "id" : "tear-bridge-cut-2",
+              "kind" : "perforation",
+              "polygon" : [
+                {
+                  "x" : "2*height+tabDepth+width*(2+.15)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(2+.65)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(2+.65)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(2+.15)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                }
+              ]
+            },
+            {
+              "id" : "tear-bridge-cut-3",
+              "kind" : "perforation",
+              "polygon" : [
+                {
+                  "x" : "2*height+tabDepth+width*(3+.15)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(3+.65)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(3+.65)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(3+.15)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                }
+              ]
+            },
+            {
+              "id" : "tear-bridge-cut-4",
+              "kind" : "perforation",
+              "polygon" : [
+                {
+                  "x" : "2*height+tabDepth+width*(4+.15)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(4+.65)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(4+.65)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(4+.15)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                }
+              ]
+            },
+            {
+              "id" : "tear-bridge-cut-5",
+              "kind" : "perforation",
+              "polygon" : [
+                {
+                  "x" : "2*height+tabDepth+width*(5+.15)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(5+.65)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(5+.65)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(5+.15)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                }
+              ]
+            },
+            {
+              "id" : "tear-bridge-cut-6",
+              "kind" : "perforation",
+              "polygon" : [
+                {
+                  "x" : "2*height+tabDepth+width*(6+.15)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(6+.65)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(6+.65)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(6+.15)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                }
+              ]
+            },
+            {
+              "id" : "tear-bridge-cut-7",
+              "kind" : "perforation",
+              "polygon" : [
+                {
+                  "x" : "2*height+tabDepth+width*(7+.15)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(7+.65)/8",
+                  "y" : "2*height+2*depth+height*.45"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(7+.65)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                },
+                {
+                  "x" : "2*height+tabDepth+width*(7+.15)/8",
+                  "y" : "2*height+2*depth+height*.45+.25"
+                }
+              ]
+            }
+          ],
+          "id" : "closing-lip",
+          "name" : "Closing Lip",
+          "polygon" : [
+            {
+              "x" : "2*height+tabDepth",
+              "y" : "2*height+2*depth"
+            },
+            {
+              "x" : "(2*height+tabDepth)+(width)",
+              "y" : "2*height+2*depth"
+            },
+            {
+              "x" : "(2*height+tabDepth)+(width)",
+              "y" : "(2*height+2*depth)+(height)"
+            },
+            {
+              "x" : "2*height+tabDepth",
+              "y" : "(2*height+2*depth)+(height)"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "left-retention-foot",
+          "name" : "Left folded retention foot",
+          "polygon" : [
+            {
+              "x" : "0",
+              "y" : "height+depth*.32+.2"
+            },
+            {
+              "x" : "(0)+(tabDepth-stock)",
+              "y" : "height+depth*.32+.2"
+            },
+            {
+              "x" : "(0)+(tabDepth-stock)",
+              "y" : "(height+depth*.32+.2)+(depth*.12-.4)"
+            },
+            {
+              "x" : "0",
+              "y" : "(height+depth*.32+.2)+(depth*.12-.4)"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "right-retention-foot",
+          "name" : "Right folded retention foot",
+          "polygon" : [
+            {
+              "x" : "4*height+tabDepth+width+stock",
+              "y" : "height+depth*.56+.2"
+            },
+            {
+              "x" : "(4*height+tabDepth+width+stock)+(tabDepth-stock)",
+              "y" : "height+depth*.56+.2"
+            },
+            {
+              "x" : "(4*height+tabDepth+width+stock)+(tabDepth-stock)",
+              "y" : "(height+depth*.56+.2)+(depth*.12-.4)"
+            },
+            {
+              "x" : "4*height+tabDepth+width+stock",
+              "y" : "(height+depth*.56+.2)+(depth*.12-.4)"
+            }
+          ],
+          "role" : "tuck"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 352,
+          "minimum" : 132,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 220
+        },
+        {
+          "maximum" : 88,
+          "minimum" : 33,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 55
+        },
+        {
+          "maximum" : 256,
+          "minimum" : 96,
+          "name" : "depth",
+          "unit" : "mm",
+          "value" : 160
+        },
+        {
+          "maximum" : 2.7,
+          "minimum" : 0.75,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 1.5
+        },
+        {
+          "maximum" : 5,
+          "minimum" : 0,
+          "name" : "clearance",
+          "unit" : "mm",
+          "value" : 1
+        },
+        {
+          "maximum" : 8,
+          "minimum" : 3,
+          "name" : "tabDepth",
+          "unit" : "mm",
+          "value" : 5
+        }
+      ],
+      "requirements" : [
+        {
+          "id" : "tabs-fit-wall",
+          "lhs" : "height",
+          "message" : "The wall must retain stock around its locking tongues.",
+          "relation" : ">",
+          "rhs" : "tabDepth+4*stock"
+        },
+        {
+          "id" : "retention-overlap",
+          "lhs" : "tabDepth",
+          "message" : "The folded retaining foot must extend beyond the slot with positive material overlap.",
+          "relation" : ">",
+          "rhs" : "1.5*stock+.4"
+        }
+      ],
+      "rootPanelID" : "front",
+      "size" : {
+        "x" : "width+4*height+2*tabDepth",
+        "y" : "3*height+2*depth"
+      },
+      "solidChecks" : [
+        {
+          "firstPanelID" : "left-inner-wall",
+          "id" : "left-tongue-slot-clearance",
+          "message" : "Only the integral tongue passes through the floor slot; main inner wall retains nominal clearance.",
+          "metric" : "interference",
+          "relation" : "<=",
+          "secondPanelID" : "floor",
+          "value" : "0"
+        },
+        {
+          "firstPanelID" : "right-inner-wall",
+          "id" : "right-tongue-slot-clearance",
+          "message" : "Only the integral tongue passes through the floor slot; main inner wall retains nominal clearance.",
+          "metric" : "interference",
+          "relation" : "<=",
+          "secondPanelID" : "floor",
+          "value" : "0"
+        },
+        {
+          "firstPanelID" : "left-retention-foot",
+          "id" : "left-foot-floor-interference",
+          "message" : "Folded retaining stock must not penetrate the floor.",
+          "metric" : "interference",
+          "relation" : "<=",
+          "secondPanelID" : "floor",
+          "value" : "0"
+        },
+        {
+          "firstPanelID" : "left-retention-foot",
+          "id" : "left-foot-floor-contact",
+          "message" : "The retaining foot must lie against the floor underside within1micrometer nominal geometry.",
+          "metric" : "clearance",
+          "relation" : "<=",
+          "secondPanelID" : "floor",
+          "value" : ".001"
+        },
+        {
+          "firstPanelID" : "right-retention-foot",
+          "id" : "right-foot-floor-interference",
+          "message" : "Folded retaining stock must not penetrate the floor.",
+          "metric" : "interference",
+          "relation" : "<=",
+          "secondPanelID" : "floor",
+          "value" : "0"
+        },
+        {
+          "firstPanelID" : "right-retention-foot",
+          "id" : "right-foot-floor-contact",
+          "message" : "The retaining foot must lie against the floor underside within1micrometer nominal geometry.",
+          "metric" : "clearance",
+          "relation" : "<=",
+          "secondPanelID" : "floor",
+          "value" : ".001"
+        }
+      ],
+      "stockThickness" : "stock",
+      "version" : 3
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 1,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 160,
+      "height" : 55,
+      "width" : 220
+    },
+    "finishes" : [
+      {
+        "color" : "#1C4644",
+        "depthMM" : 0,
+        "elementIDs" : [
+          "2D573B3F-BEF4-5575-A80D-80227D122C23"
+        ],
+        "enabled" : true,
+        "heightMM" : 0.012,
+        "id" : "7C68BAAC-F147-54F4-966D-2D225941DF1D",
+        "kind" : "screenPrint",
+        "name" : "Single color print",
+        "opacity" : 1,
+        "roughness" : 0.82,
+        "side" : "outside"
+      }
+    ],
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "insideArtworkSourceID" : "C3E7880F-7C6E-4B73-B699-9DFCAAA5EB56",
+    "kind" : "authored",
+    "openingPercent" : 45,
+    "stock" : {
+      "grain" : "parallelHeight",
+      "gsm" : 300,
+      "name" : "FIELD recycled / prototype",
+      "notes" : "Visual prototype stock; verify caliper, grain, creases and print with a physical sample.",
+      "profile" : {
+        "color" : "#C0A17B",
+        "opacity" : 1,
+        "roughness" : 0.94,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.025,
+        "textureScaleMM" : 1.1
+      },
+      "thicknessMM" : 1.5,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "paperTemplateReference" : {
+    "canonicalToTemplate" : {
+      "a" : 1,
+      "b" : 0,
+      "c" : 0,
+      "d" : 1,
+      "tx" : 0,
+      "ty" : 0
+    },
+    "channels" : [
+      {
+        "elementID" : "supplier-cut",
+        "kind" : "cut"
+      },
+      {
+        "elementID" : "supplier-crease",
+        "kind" : "crease"
+      },
+      {
+        "elementID" : "supplier-notes",
+        "kind" : "instructions"
+      }
+    ],
+    "importIssues" : [
+
+    ],
+    "instructions" : "Return artwork separately, registered to the retained source in actual millimeters. Retain original cut and crease IDs. Do not print instruction text.",
+    "interpretedGeometrySHA256" : "1c9910a3fd294acfececacb34def63c17beeb0105cc99d126fc22c6f3455fac6",
+    "originalAsset" : "paper-template-17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764.svg",
+    "originalSHA256" : "17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764",
+    "revision" : "A",
+    "sizeMM" : {
+      "x" : 470,
+      "y" : 505
+    },
+    "sourceName" : "supplier-fixture.svg",
+    "vendor" : "LAB validation fixture (not a commercial supplier)",
+    "viewBox" : {
+      "height" : 505,
+      "width" : 470,
+      "x" : -10,
+      "y" : -10
+    }
+  },
+  "parameters" : {
+    "clearance" : 1,
+    "depth" : 160,
+    "fold" : 100,
+    "height" : 55,
+    "opening" : 45,
+    "stock" : 1.5,
+    "tabDepth" : 5,
+    "width" : 220
+  },
+  "position" : {
+    "x" : 180,
+    "y" : 0,
+    "z" : -430
+  },
+  "recipeID" : "construction-EA2DAD84-DC9F-4BD0-B406-A268CB8B04B8",
+  "relationship" : "original",
+  "rotation" : 0
+}

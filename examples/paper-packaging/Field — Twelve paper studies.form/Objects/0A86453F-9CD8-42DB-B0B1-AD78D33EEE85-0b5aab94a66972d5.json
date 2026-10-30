@@ -1,0 +1,331 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "color" : "#2C5650",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "17BFDDA8-3F66-5871-82F5-0106229FEEE6",
+        "kind" : "text",
+        "name" : "10-outside-front-brand",
+        "text" : "FIELD  /  10",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 124,
+        "x" : 12,
+        "y" : 6
+      },
+      {
+        "color" : "#2C5650",
+        "fontSize" : 50.50230790116753,
+        "height" : 32.55,
+        "id" : "B525E619-525E-5064-A64F-73BB634EB539",
+        "kind" : "text",
+        "name" : "10-outside-front-title",
+        "text" : "Open country",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 124,
+        "x" : 12,
+        "y" : 26.25
+      },
+      {
+        "color" : "#2C5650",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "2F3B6340-F288-5100-8814-03B8FDCF4888",
+        "kind" : "rectangle",
+        "name" : "10-outside-front-rule",
+        "text" : "",
+        "width" : 81.4,
+        "x" : 12,
+        "y" : 68.25
+      },
+      {
+        "color" : "#2C5650",
+        "fontSize" : 7.5,
+        "height" : 16,
+        "id" : "562D9912-8B76-52FB-A944-CE83BF014C00",
+        "kind" : "text",
+        "name" : "10-outside-front-copy",
+        "text" : "PAPER LABORATORY\nEDITABLE STUDY  /  10",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 124,
+        "x" : 12,
+        "y" : 81.9
+      },
+      {
+        "color" : "#2C5650",
+        "fontSize" : 14,
+        "height" : 17.85,
+        "id" : "4942D3E6-8DE1-5A0A-A403-9B5A3FD4F8AA",
+        "kind" : "ellipse",
+        "name" : "10-outside-front-seal",
+        "sides" : 12,
+        "starInset" : 0.8,
+        "text" : "",
+        "width" : 17.85,
+        "x" : 118.15,
+        "y" : 59.849999999999994
+      }
+    ]
+  },
+  "designID" : "9EFF3153-1AE7-4C5D-8CAD-3A2A0EFB570B",
+  "id" : "0A86453F-9CD8-42DB-B0B1-AD78D33EEE85",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "10 · Open country / Postcard",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "components" : [
+        {
+          "anchor" : {
+            "x" : "width/2",
+            "y" : "height/2"
+          },
+          "id" : "sheet",
+          "name" : "Paper sheet",
+          "position" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "rootPanelID" : "front",
+          "rotationDegrees" : {
+            "x" : "-90+turn",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        }
+      ],
+      "hinges" : [
+
+      ],
+      "joins" : [
+
+      ],
+      "name" : "Double sided postcard",
+      "panels" : [
+        {
+          "id" : "front",
+          "name" : "Front / back sheet",
+          "polygon" : [
+            {
+              "x" : "0.0",
+              "y" : "0.0"
+            },
+            {
+              "x" : "(0)+(width)",
+              "y" : "0.0"
+            },
+            {
+              "x" : "(0)+(width)",
+              "y" : "(0)+(height)"
+            },
+            {
+              "x" : "0.0",
+              "y" : "(0)+(height)"
+            }
+          ],
+          "role" : "body"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 236.8,
+          "minimum" : 88.8,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 148
+        },
+        {
+          "maximum" : 168,
+          "minimum" : 63,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 105
+        },
+        {
+          "maximum" : 0.9,
+          "minimum" : 0.18000000000000002,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 0.45
+        },
+        {
+          "maximum" : 180,
+          "minimum" : 0,
+          "name" : "turn",
+          "unit" : "°",
+          "value" : 0
+        }
+      ],
+      "rootPanelID" : "front",
+      "size" : {
+        "x" : "width",
+        "y" : "height"
+      },
+      "stockThickness" : "stock",
+      "version" : 3
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 2,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 1,
+      "height" : 105,
+      "width" : 148
+    },
+    "finishes" : [
+      {
+        "color" : "#2C5650",
+        "depthMM" : 0,
+        "elementIDs" : [
+          "B525E619-525E-5064-A64F-73BB634EB539"
+        ],
+        "enabled" : true,
+        "heightMM" : 0.012,
+        "id" : "7551A495-09B7-5CEA-A61A-F5159C581596",
+        "kind" : "screenPrint",
+        "name" : "Single color print",
+        "opacity" : 1,
+        "roughness" : 0.82,
+        "side" : "outside"
+      }
+    ],
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "insideArtworkSourceID" : "D9E70DE6-44A6-44A4-8B68-388520FC3057",
+    "kind" : "authored",
+    "openingPercent" : 0,
+    "stock" : {
+      "grain" : "parallelHeight",
+      "gsm" : 300,
+      "name" : "FIELD recycled / prototype",
+      "notes" : "Visual prototype stock; verify caliper, grain, creases and print with a physical sample.",
+      "profile" : {
+        "color" : "#E0D7C3",
+        "opacity" : 1,
+        "roughness" : 0.94,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.025,
+        "textureScaleMM" : 1.1
+      },
+      "thicknessMM" : 0.45,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "parameters" : {
+    "fold" : 100,
+    "height" : 105,
+    "opening" : 0,
+    "stock" : 0.45,
+    "turn" : 0,
+    "width" : 148
+  },
+  "position" : {
+    "x" : -145,
+    "y" : 0,
+    "z" : 370
+  },
+  "recipeID" : "construction-0A86453F-9CD8-42DB-B0B1-AD78D33EEE85",
+  "relationship" : "original",
+  "rotation" : 0
+}

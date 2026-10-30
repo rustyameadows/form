@@ -1,0 +1,21 @@
+{
+  "designID" : "6B5F9F14-7210-4405-A84E-9D58E9A53869",
+  "id" : "F9E4C4C5-F289-4AC4-98EF-C084A997EF93",
+  "locked" : false,
+  "materialID" : "graphite",
+  "name" : "04 · Modeled contents / 56 × 20 × 44 mm",
+  "parameters" : {
+    "corner" : 4,
+    "depth" : 44,
+    "height" : 20,
+    "width" : 56
+  },
+  "position" : {
+    "x" : 650,
+    "y" : 1.8,
+    "z" : -430
+  },
+  "recipeID" : "box",
+  "relationship" : "original",
+  "rotation" : 0
+}

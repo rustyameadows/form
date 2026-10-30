@@ -1,0 +1,292 @@
+{
+  "captures" : [
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 93.0)",
+      "camera_world_from_camera_mm" : [
+        -1,
+        -0,
+        -0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        -299.60000000000002,
+        0,
+        1
+      ],
+      "fill_intensity" : 550,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-details-2k\/inside-registered-reverse-lit.png",
+      "key_direction" : [
+        0.30000001192092896,
+        1,
+        0.40000000596046448
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "inside-registered-reverse-lit",
+      "sha256" : "ac898e6adcb6468006ede46754ac5cbc80565a1915c96aa2ad9d795fae72902d",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031740)",
+          "revision" : "DFEC1673-A494-4C7A-9730-C97BB078B705:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031740)",
+          "revision" : "1D9C505E-2F19-4BE0-89F2-8C04BBBF00A6:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031740)",
+          "revision" : "47320826-2FF2-4DAC-B9FB-F0DE99047F57:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031740)",
+          "revision" : "5D7E8566-BE64-4408-8C74-D52B7A4D6493:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031800)",
+          "revision" : "214FADAE-595C-44B7-9D1E-3A91E497314D:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031800)",
+          "revision" : "E7D83CC5-E2D8-415B-9B78-F5703C100C23:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031800)",
+          "revision" : "C29298F5-12B1-493F-9FB1-4C72E5D1A79E:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031800)",
+          "revision" : "27D52232-4A40-4E13-9F65-68E212C3946E:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "fb242ea979122185dcb9fc2236a09829354b453c464a4f5f24816196917b5c10",
+      "texture_cache_bytes" : 58679212,
+      "texture_uploads" : 8
+    },
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 12.0)",
+      "camera_world_from_camera_mm" : [
+        1,
+        0,
+        0,
+        0,
+        0,
+        -0.94088741186872682,
+        -0.3387194682727418,
+        0,
+        0,
+        0.3387194682727418,
+        -0.94088741186872682,
+        0,
+        -40,
+        18.400000000000009,
+        -33.500000000000007,
+        1
+      ],
+      "fill_intensity" : 700,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-details-2k\/letterpress-grazing-detail.png",
+      "key_direction" : [
+        0.80000001192092896,
+        -0.30000001192092896,
+        0.40000000596046448
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "letterpress-grazing-detail",
+      "sha256" : "6b5c7169f0045ce0e50cb75b85635f2c2760b2dbf20283217cc8c88e5dc373f3",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031740)",
+          "revision" : "DFEC1673-A494-4C7A-9730-C97BB078B705:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031740)",
+          "revision" : "1D9C505E-2F19-4BE0-89F2-8C04BBBF00A6:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031740)",
+          "revision" : "47320826-2FF2-4DAC-B9FB-F0DE99047F57:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031740)",
+          "revision" : "5D7E8566-BE64-4408-8C74-D52B7A4D6493:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031800)",
+          "revision" : "214FADAE-595C-44B7-9D1E-3A91E497314D:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031800)",
+          "revision" : "E7D83CC5-E2D8-415B-9B78-F5703C100C23:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031800)",
+          "revision" : "C29298F5-12B1-493F-9FB1-4C72E5D1A79E:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031800)",
+          "revision" : "27D52232-4A40-4E13-9F65-68E212C3946E:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "fb242ea979122185dcb9fc2236a09829354b453c464a4f5f24816196917b5c10",
+      "texture_cache_bytes" : 58679212,
+      "texture_uploads" : 8
+    },
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 18.0)",
+      "camera_world_from_camera_mm" : [
+        1,
+        0,
+        0,
+        0,
+        0,
+        -0.94088741186872682,
+        -0.3387194682727418,
+        0,
+        0,
+        0.3387194682727418,
+        -0.94088741186872682,
+        0,
+        40.499999999999993,
+        18.400000000000009,
+        -28.500000000000004,
+        1
+      ],
+      "fill_intensity" : 700,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-details-2k\/blind-emboss-grazing-detail.png",
+      "key_direction" : [
+        0.80000001192092896,
+        -0.30000001192092896,
+        0.40000000596046448
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "blind-emboss-grazing-detail",
+      "sha256" : "22b2ddeca89313376f821bdf0b2f4bfcd1a34d26373e83a6c85a9e05818e4eeb",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031740)",
+          "revision" : "DFEC1673-A494-4C7A-9730-C97BB078B705:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031740)",
+          "revision" : "1D9C505E-2F19-4BE0-89F2-8C04BBBF00A6:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031740)",
+          "revision" : "47320826-2FF2-4DAC-B9FB-F0DE99047F57:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031740)",
+          "revision" : "5D7E8566-BE64-4408-8C74-D52B7A4D6493:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "color",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031800)",
+          "revision" : "214FADAE-595C-44B7-9D1E-3A91E497314D:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "normal",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031800)",
+          "revision" : "E7D83CC5-E2D8-415B-9B78-F5703C100C23:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "roughness",
+          "height" : 1182,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031800)",
+          "revision" : "C29298F5-12B1-493F-9FB1-4C72E5D1A79E:2",
+          "width" : 1773
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x00000009a5031800)",
+          "revision" : "27D52232-4A40-4E13-9F65-68E212C3946E:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "fb242ea979122185dcb9fc2236a09829354b453c464a4f5f24816196917b5c10",
+      "texture_cache_bytes" : 58679212,
+      "texture_uploads" : 8
+    }
+  ],
+  "cua_used" : false,
+  "paper_id" : "AF3035E7-4EA5-4063-8E26-7E64B0814DD4",
+  "project_id" : "1833A424-0B1C-4D65-8399-5273992A3BA4",
+  "relief_representation" : "surface shading; no displaced material\/tooling or manufacturing certification",
+  "renderer" : "Production TableSceneController → GeometryPayloadAdapter → RealityKitSceneRenderer",
+  "source" : "Authored one-panel parametric construction +canonical editable artwork, created through existing command families"
+}

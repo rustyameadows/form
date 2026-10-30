@@ -114,6 +114,7 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     canonical.locked = false
     canonical.librarySelection = nil
     canonical.canvasProjectionPositions = nil
+    canonical.canvasSourceOnly = nil
     canonical.physicalArtworkIntents = nil
     canonical.artworkParameterBindings = nil
     canonical.textile = canonical.textile?.renderDefinition
@@ -410,7 +411,7 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     var counted = Set<ObjectIdentifier>()
     func countImages(_ node: MeshNode) {
       for material in node.geometry?.materials ?? [] {
-        for property in [material.diffuse,material.normal] {
+        for property in [material.diffuse,material.normal,material.roughness,material.metalness,material.emission] {
         if let image = property.contents as? NSImage,
           counted.insert(ObjectIdentifier(image)).inserted
         {

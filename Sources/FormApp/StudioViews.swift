@@ -476,7 +476,7 @@ struct TableWorkspace: View {
             Spacer()
           }.padding(.horizontal,16).padding(.bottom,16)
         }
-        if store.project?.objects.filter({ !$0.isCanvasWorkspace }).isEmpty == true { EmptyTableView() }
+        if store.project?.objects.filter({ $0.hasTablePresentation }).isEmpty == true { EmptyTableView() }
       }
     }.focusedValue(\.designSurface,store.mode == .studio ? .studio : .table)
   }

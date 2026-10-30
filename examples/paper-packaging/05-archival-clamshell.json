@@ -1,0 +1,484 @@
+{
+  "version": 3,
+  "name": "Archival clamshell board study",
+  "parameters": [
+    {
+      "name": "width",
+      "value": 240,
+      "minimum": 144.0,
+      "maximum": 384.0,
+      "unit": "mm"
+    },
+    {
+      "name": "height",
+      "value": 55,
+      "minimum": 33.0,
+      "maximum": 88.0,
+      "unit": "mm"
+    },
+    {
+      "name": "depth",
+      "value": 175,
+      "minimum": 105.0,
+      "maximum": 280.0,
+      "unit": "mm"
+    },
+    {
+      "name": "stock",
+      "value": 1.5,
+      "minimum": 0.75,
+      "maximum": 2.7,
+      "unit": "mm"
+    },
+    {
+      "name": "clearance",
+      "value": 1,
+      "minimum": 0,
+      "maximum": 5,
+      "unit": "mm"
+    },
+    {
+      "name": "coverOverhang",
+      "value": 4,
+      "minimum": 2,
+      "maximum": 8,
+      "unit": "mm"
+    }
+  ],
+  "size": {
+    "x": "3*cell",
+    "y": "3*cell"
+  },
+  "stockThickness": "stock",
+  "panels": [
+    {
+      "id": "base-floor",
+      "name": "Base Floor",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+0*cell",
+          "y": "5+0*cell"
+        },
+        {
+          "x": "(5+0*cell)+((width)+2*stock)",
+          "y": "5+0*cell"
+        },
+        {
+          "x": "(5+0*cell)+((width)+2*stock)",
+          "y": "(5+0*cell)+((depth)+2*stock)"
+        },
+        {
+          "x": "5+0*cell",
+          "y": "(5+0*cell)+((depth)+2*stock)"
+        }
+      ]
+    },
+    {
+      "id": "base-front",
+      "name": "Base Front",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+1*cell",
+          "y": "5+0*cell"
+        },
+        {
+          "x": "(5+1*cell)+((width)+2*stock)",
+          "y": "5+0*cell"
+        },
+        {
+          "x": "(5+1*cell)+((width)+2*stock)",
+          "y": "(5+0*cell)+(height)"
+        },
+        {
+          "x": "5+1*cell",
+          "y": "(5+0*cell)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "base-back",
+      "name": "Base Back",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+2*cell",
+          "y": "5+0*cell"
+        },
+        {
+          "x": "(5+2*cell)+((width)+2*stock)",
+          "y": "5+0*cell"
+        },
+        {
+          "x": "(5+2*cell)+((width)+2*stock)",
+          "y": "(5+0*cell)+(height)"
+        },
+        {
+          "x": "5+2*cell",
+          "y": "(5+0*cell)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "base-left",
+      "name": "Base Left",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+0*cell",
+          "y": "5+1*cell"
+        },
+        {
+          "x": "(5+0*cell)+(depth)",
+          "y": "5+1*cell"
+        },
+        {
+          "x": "(5+0*cell)+(depth)",
+          "y": "(5+1*cell)+(height)"
+        },
+        {
+          "x": "5+0*cell",
+          "y": "(5+1*cell)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "base-right",
+      "name": "Base Right",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+1*cell",
+          "y": "5+1*cell"
+        },
+        {
+          "x": "(5+1*cell)+(depth)",
+          "y": "5+1*cell"
+        },
+        {
+          "x": "(5+1*cell)+(depth)",
+          "y": "(5+1*cell)+(height)"
+        },
+        {
+          "x": "5+1*cell",
+          "y": "(5+1*cell)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "back-cover",
+      "name": "Back Cover",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+2*cell",
+          "y": "5+1*cell"
+        },
+        {
+          "x": "(5+2*cell)+(coverWidth)",
+          "y": "5+1*cell"
+        },
+        {
+          "x": "(5+2*cell)+(coverWidth)",
+          "y": "(5+1*cell)+(coverDepth)"
+        },
+        {
+          "x": "5+2*cell",
+          "y": "(5+1*cell)+(coverDepth)"
+        }
+      ]
+    },
+    {
+      "id": "spine",
+      "name": "Spine",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+0*cell",
+          "y": "5+2*cell"
+        },
+        {
+          "x": "(5+0*cell)+(coverWidth)",
+          "y": "5+2*cell"
+        },
+        {
+          "x": "(5+0*cell)+(coverWidth)",
+          "y": "(5+2*cell)+(spineHeight)"
+        },
+        {
+          "x": "5+0*cell",
+          "y": "(5+2*cell)+(spineHeight)"
+        }
+      ]
+    },
+    {
+      "id": "front-cover",
+      "name": "Front Cover",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+1*cell",
+          "y": "5+2*cell"
+        },
+        {
+          "x": "(5+1*cell)+(coverWidth)",
+          "y": "5+2*cell"
+        },
+        {
+          "x": "(5+1*cell)+(coverWidth)",
+          "y": "(5+2*cell)+(coverDepth)"
+        },
+        {
+          "x": "5+1*cell",
+          "y": "(5+2*cell)+(coverDepth)"
+        }
+      ]
+    }
+  ],
+  "hinges": [],
+  "joins": [
+    {
+      "id": "base-front-bond",
+      "name": "Base Front Bond",
+      "firstPanelID": "base-floor",
+      "secondPanelID": "base-front",
+      "kind": "glue",
+      "overlapMM": "stock",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "base-back-bond",
+      "name": "Base Back Bond",
+      "firstPanelID": "base-floor",
+      "secondPanelID": "base-back",
+      "kind": "glue",
+      "overlapMM": "stock",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "base-left-bond",
+      "name": "Base Left Bond",
+      "firstPanelID": "base-floor",
+      "secondPanelID": "base-left",
+      "kind": "glue",
+      "overlapMM": "stock",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "base-right-bond",
+      "name": "Base Right Bond",
+      "firstPanelID": "base-floor",
+      "secondPanelID": "base-right",
+      "kind": "glue",
+      "overlapMM": "stock",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "spine-back",
+      "name": "Spine Back",
+      "firstPanelID": "back-cover",
+      "secondPanelID": "spine",
+      "kind": "hinge",
+      "overlapMM": "stock",
+      "notes": "Board-to-board hinge datum; covering/hinge cloth and adhesive need prototype specification."
+    },
+    {
+      "id": "spine-front",
+      "name": "Spine Front",
+      "firstPanelID": "spine",
+      "secondPanelID": "front-cover",
+      "kind": "hinge",
+      "overlapMM": "stock",
+      "notes": "Explicit rigid cover articulation about the shared spine edge."
+    }
+  ],
+  "rootPanelID": "base-floor",
+  "components": [
+    {
+      "id": "base-floor",
+      "name": "Base Floor",
+      "rootPanelID": "base-floor",
+      "anchor": {
+        "x": "5+0*cell",
+        "y": "5+0*cell"
+      },
+      "position": {
+        "x": "-(width)/2-stock",
+        "y": "(2*stock)+(0)",
+        "z": "-(depth)/2-stock"
+      },
+      "rotationDegrees": {
+        "x": -90,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "id": "base-front",
+      "name": "Base Front",
+      "rootPanelID": "base-front",
+      "anchor": {
+        "x": "5+1*cell",
+        "y": "(5+0*cell)+(height)"
+      },
+      "position": {
+        "x": "-(width)/2-stock",
+        "y": "(2.5*stock)+(0)",
+        "z": "(depth)/2+stock/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "id": "base-back",
+      "name": "Base Back",
+      "rootPanelID": "base-back",
+      "anchor": {
+        "x": "5+2*cell",
+        "y": "(5+0*cell)+(height)"
+      },
+      "position": {
+        "x": "(width)/2+stock",
+        "y": "(2.5*stock)+(0)",
+        "z": "-(depth)/2-stock/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 180,
+        "z": 0
+      }
+    },
+    {
+      "id": "base-left",
+      "name": "Base Left",
+      "rootPanelID": "base-left",
+      "anchor": {
+        "x": "5+0*cell",
+        "y": "(5+1*cell)+(height)"
+      },
+      "position": {
+        "x": "-(width)/2-stock/2",
+        "y": "(2.5*stock)+(0)",
+        "z": "-(depth)/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": -90,
+        "z": 0
+      }
+    },
+    {
+      "id": "base-right",
+      "name": "Base Right",
+      "rootPanelID": "base-right",
+      "anchor": {
+        "x": "5+1*cell",
+        "y": "(5+1*cell)+(height)"
+      },
+      "position": {
+        "x": "(width)/2+stock/2",
+        "y": "(2.5*stock)+(0)",
+        "z": "(depth)/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 90,
+        "z": 0
+      }
+    },
+    {
+      "id": "back-cover",
+      "name": "Back Cover",
+      "rootPanelID": "back-cover",
+      "anchor": {
+        "x": "5+2*cell",
+        "y": "5+1*cell"
+      },
+      "position": {
+        "x": "-coverWidth/2",
+        "y": "stock/2",
+        "z": "-coverDepth/2"
+      },
+      "rotationDegrees": {
+        "x": -90,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "id": "spine",
+      "name": "Spine",
+      "rootPanelID": "spine",
+      "anchor": {
+        "x": "5+0*cell",
+        "y": "(5+2*cell)+(spineHeight)"
+      },
+      "position": {
+        "x": "-coverWidth/2",
+        "y": "stock/2",
+        "z": "coverDepth/2+stock/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "id": "front-cover",
+      "name": "Front Cover",
+      "rootPanelID": "front-cover",
+      "anchor": {
+        "x": "5+1*cell",
+        "y": "(5+2*cell)+(coverDepth)"
+      },
+      "position": {
+        "x": "-coverWidth/2",
+        "y": "stock/2+spineHeight",
+        "z": "coverDepth/2"
+      },
+      "rotationDegrees": {
+        "x": "-90+opening*.9",
+        "y": 0,
+        "z": 0
+      }
+    }
+  ],
+  "interiors": [
+    {
+      "id": "tray-interior",
+      "name": "Tray Interior",
+      "componentID": "base-floor",
+      "origin": {
+        "x": "stock",
+        "y": "-stock",
+        "z": "stock/2"
+      },
+      "size": {
+        "x": "width",
+        "y": "height",
+        "z": "depth"
+      },
+      "rotationDegrees": {
+        "x": 90,
+        "y": 0,
+        "z": 0
+      },
+      "opening": {
+        "axis": "y",
+        "width": "width",
+        "height": "depth"
+      }
+    }
+  ],
+  "derived": {
+    "cell": "max(width,max(depth,height))+8*stock+4*clearance+20",
+    "coverWidth": "width+2*stock+2*coverOverhang",
+    "coverDepth": "depth+2*stock+2*coverOverhang",
+    "spineHeight": "height+3*stock"
+  }
+}
