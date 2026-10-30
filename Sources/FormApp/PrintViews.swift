@@ -34,7 +34,7 @@ struct PrintWorkspace: View {
         } label: {
           Image(systemName: "slider.horizontal.3")
         }.buttonStyle(.plain).help("Filaments, printers & slicing engine")
-        Button("Done") { close() }.keyboardShortcut(.cancelAction)
+        AppCloseButton("Close", keyEquivalent: "\u{1b}") { close() }.keyboardShortcut(.cancelAction)
       }.padding(.horizontal, 25).frame(height: 76)
       Divider()
       HStack(spacing: 0) {

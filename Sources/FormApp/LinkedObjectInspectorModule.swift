@@ -111,7 +111,6 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
     } else { surfaceFrameID = nil }
     store.finishArtworkEditing()
     store.showEnvironment(.form)
-    store.select(object.id)
     switch link.kind {
     case .paper(let inside):
       store.paperInside = inside
@@ -124,9 +123,6 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
       store.artworkSession.activate(surfaceFrameID)
     case .artwork:
       store.artworkSession.activate(sourceID)
-      // A raw frame normally selects itself. This relationship keeps the
-      // physical consumer selected while its canonical artwork is edited.
-      if store.primary?.id != object.id { store.select(object.id) }
       store.artworkSession.linkedTargetID = sourceID == object.id ? nil : object.id
     case .unassigned: return false
     }
@@ -142,10 +138,7 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
   }
 
   @discardableResult static func openTable(_ link: LinkedInspectorAssociation, store: StudioStore) -> Bool {
-    guard store.project?.objects.contains(where: { $0.id == link.objectID }) == true else { return false }
-    store.finishArtworkEditing(); store.showEnvironment(.form); store.select(link.objectID)
-    store.showingHome = false; store.activateDesignSurface(.table)
-    return true
+    store.findOnTable(link.objectID)
   }
 
   static func previewProject(object: ProductObject, in project: Project) -> Project {
@@ -318,15 +311,17 @@ struct LinkedObjectInspectorModule: View {
             if isCanvas { _ = LinkedInspectorRelationships.openTable(link, store: store) }
             else { _ = LinkedInspectorRelationships.openCanvas(link, store: store) }
           } label: {
-            InspectorRow(isCanvas ? "On Table" : "On Canvas") {
+            InspectorRow(isCanvas ? "Find on Table" : "Find on Canvas") {
               Text(isCanvas ? target?.name ?? link.title : link.title).lineLimit(1)
               Image(systemName: "arrow.up.forward").foregroundStyle(Palette.secondary)
             }
           }.buttonStyle(.plain).disabled(!isCanvas && !LinkedInspectorRelationships.canOpenCanvas(link, in: project))
           InspectorPreviewTile(height: 140) {
             if isCanvas, let target {
-              LinkedInspectorObjectPreview(object: target, project: project,
-                assets: session.assets, revision: store.revision)
+              Button { _ = LinkedInspectorRelationships.openTable(link, store: store) } label: {
+                LinkedInspectorObjectPreview(object: target, project: project,
+                  assets: session.assets, revision: store.revision).allowsHitTesting(false)
+              }.buttonStyle(.plain).accessibilityLabel("Find " + target.name + " on Table")
             } else if let content {
               Button { _ = LinkedInspectorRelationships.openCanvas(link, store: store) } label: {
                 LinkedInspectorArtworkThumbnail(content: content, assets: session.assets)

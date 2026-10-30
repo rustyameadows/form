@@ -3,7 +3,7 @@ import FormCore
 import SwiftUI
 
 struct ObjectInspector: View {
-  static let width: CGFloat = 286
+  static let width: CGFloat = FloatingPanelStyle.inspectorWidth
   var embedded=false
   @EnvironmentObject var store: StudioStore
   @State private var showPlacement = false
@@ -19,12 +19,6 @@ struct ObjectInspector: View {
               systemImage: recipe.symbol
             ).font(.system(size: 9, weight: .semibold)).tracking(1).foregroundStyle(
               Palette.secondary)
-            Spacer()
-            Button {
-              store.select(nil)
-            } label: {
-              Image(systemName: "xmark").font(.system(size: 10))
-            }.buttonStyle(.plain).help("Deselect")
           }
           TextField(
             "Object name",
@@ -192,9 +186,7 @@ struct ObjectInspector: View {
             Palette.secondary)
         }.padding(.horizontal, InspectorStyle.panelPadding).padding(.vertical, 14)
       }.inspectorSurface().frame(width: embedded ? nil:Self.width).frame(maxHeight:embedded ? .infinity:590,alignment:.top)
-        .background {if embedded {Palette.paper}else{RoundedRectangle(cornerRadius:16).fill(Palette.paper)}}
-        .overlay {if !embedded {RoundedRectangle(cornerRadius:16).strokeBorder(Palette.line)}}
-        .shadow(color: .black.opacity(embedded ? 0:0.08), radius: 24, x: 0, y: 9)
+        .modifier(FloatingPanelSurface(enabled: !embedded))
     }
   }
 }
@@ -366,7 +358,7 @@ struct BridgeView: View {
           .system(size: 29, weight: .light)
         ).foregroundStyle(Palette.accent)
         Spacer()
-        Button("Done") { dismiss() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
+        AppCloseButton("Close", keyEquivalent: "\r") { dismiss() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
       }
       VStack(alignment: .leading, spacing: 9) {
         Text("A conversation here.\nAn object on the Table.").font(
@@ -421,7 +413,7 @@ struct ProjectInfoView: View {
       HStack {
         Text("Project notebook").font(.system(size: 26, weight: .regular, design: .default))
         Spacer()
-        Button("Done") { close() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
+        AppCloseButton("Close", keyEquivalent: "\r") { close() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
       }
       if let project = store.project {
         TextField(
@@ -530,7 +522,7 @@ struct LibraryView: View {
           ).foregroundStyle(Palette.secondary)
         }
         Spacer()
-        Button("Done") { close() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
+        AppCloseButton("Close", keyEquivalent: "\r") { close() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
       }
       ScrollView {
         VStack(alignment: .leading, spacing: 22) {

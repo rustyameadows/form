@@ -92,6 +92,7 @@ struct SwatchPicker: View {
 }
 
 struct SwatchPalette: View {
+  @Environment(\.dismiss) private var dismiss
   @EnvironmentObject var store: StudioStore
   @ObservedObject var session: ArtworkSession
   @State private var name = ""
@@ -102,7 +103,9 @@ struct SwatchPalette: View {
         SectionLabel("PROJECT PALETTE")
         Spacer()
         Text("sRGB preview / print inks").font(.system(size: 9, design: .monospaced)).foregroundStyle(Palette.secondary)
+        AppCloseButton("Close project palette", keyEquivalent: "\u{1b}") { dismiss() }
       }
+      InspectorDivider()
       if store.project?.swatches?.isEmpty != false {
         Text("Keep a collection's colors linked across artwork and products.")
           .font(.system(size: 12)).foregroundStyle(Palette.secondary)

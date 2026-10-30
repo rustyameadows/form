@@ -141,7 +141,6 @@ extension StudioStore {
       for url in written { try? FileManager.default.removeItem(at: url) }
       throw error
     }
-    engine.selection = [projection?.constructionID ?? objectID]
     showingHome = false
     mode = .artwork
     artworkSession.objectID = objectID

@@ -23,7 +23,7 @@ struct SewingPatternPreview: View {
           Text("Large format").tag(false)
           Text("Tiled sheets").tag(true)
         }.pickerStyle(.segmented).labelsHidden().frame(width: 275).accessibilityLabel("Pattern output")
-        Button("Done") { dismiss() }.keyboardShortcut(.cancelAction)
+        AppCloseButton("Close", keyEquivalent: "\u{1b}") { dismiss() }.keyboardShortcut(.cancelAction)
       }
       HStack(alignment: .top, spacing: 22) {
         if model.tiled {
@@ -108,7 +108,7 @@ struct SewingLayoutPDFReview: View {
         Spacer()
         Toggle("Fabric reference", isOn: $includeFabric).toggleStyle(.checkbox).font(
           .system(size: 11))
-        Button("Done") { dismiss() }.keyboardShortcut(.cancelAction)
+        AppCloseButton("Close", keyEquivalent: "\u{1b}") { dismiss() }.keyboardShortcut(.cancelAction)
       }
       if let proof {
         PhysicalDocumentNavigation(controller: review)

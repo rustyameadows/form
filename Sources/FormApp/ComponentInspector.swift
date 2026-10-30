@@ -37,7 +37,6 @@ extension ArtworkSession {
     guard let context = componentReturn else { return }
     activate(context.objectID)
     linkedTargetID = context.linkedTargetID
-    store?.select(context.linkedTargetID ?? context.objectID)
     choose([context.instanceID])
     componentReturn = nil
     canvas?.fit(all: false)

@@ -146,7 +146,12 @@ struct CollectionProductionView:View {
       .onReceive(NotificationCenter.default.publisher(for:NSControl.textDidEndEditingNotification)){_ in
         DispatchQueue.main.async {reconcileRecords()}
       }
-      .sheet(isPresented:$showingProof) {VStack {PhysicalDocumentNavigation(controller:document);PhysicalDocumentCanvas(controller:document,data:proof ?? Data(),identifier:PhysicalDocumentController.key(project:source.id,object:selectedCapture,kind:"collection-immutable-review"));Button("Done"){showingProof=false}}.padding(20).frame(width:900,height:760)}
+      .sheet(isPresented:$showingProof) {
+        VStack(spacing:0) {
+          FloatingPanelHeader("PRODUCTION PROOF", closeLabel:"Close production proof", onClose:{showingProof=false})
+          VStack {PhysicalDocumentNavigation(controller:document);PhysicalDocumentCanvas(controller:document,data:proof ?? Data(),identifier:PhysicalDocumentController.key(project:source.id,object:selectedCapture,kind:"collection-immutable-review"))}.padding(InspectorStyle.panelPadding)
+        }.frame(width:900,height:760)
+      }
   }
   private var runs:some View {
     VStack(alignment:.leading,spacing:8) {

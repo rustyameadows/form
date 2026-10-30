@@ -92,19 +92,9 @@ struct ArtworkLayers: View {
   }
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
-      HStack {
-        SectionLabel("CANVAS & SURFACES")
-        Spacer()
+      FloatingPanelHeader("CANVAS & SURFACES", closeLabel: "Close Canvas layers", onClose: onClose) {
         Text("\(session.frames.filter { !$0.isWorkspace }.count)").foregroundStyle(Palette.secondary).font(.system(size: 9))
-        if let onClose {
-          Button(action: onClose) {
-            Image(systemName: "xmark").font(.system(size: 10, weight: .medium))
-              .frame(width: 18, height: 18)
-          }.buttonStyle(.plain).foregroundStyle(Palette.secondary)
-            .help("Close Canvas layers").accessibilityLabel("Close Canvas layers")
-        }
-      }.padding(.horizontal, 14).padding(.vertical, 12)
-      InspectorDivider().padding(.horizontal, InspectorStyle.panelPadding)
+      }
       ScrollView {
         VStack(alignment: .leading, spacing: 0) {
           ForEach(session.frames) { frame in

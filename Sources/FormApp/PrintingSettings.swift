@@ -17,7 +17,7 @@ struct PrintingSettingsView: View {
             .foregroundStyle(Palette.secondary)
         }
         Spacer()
-        Button("Done") { dismiss() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
+        AppCloseButton("Close", keyEquivalent: "\r") { dismiss() }.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
       }
       Picker("Printing settings", selection: $tab) {
         Text("Filament library").tag("Filaments")

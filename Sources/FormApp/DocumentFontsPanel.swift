@@ -29,7 +29,7 @@ struct DocumentFontsPanel:View {
   }
   var body:some View {
     VStack(alignment:.leading,spacing:15) {
-      HStack {Text("Document fonts").font(.system(size: 22, weight: .semibold));Spacer();Button("Done"){dismiss()}}
+      HStack {Text("Document fonts").font(.system(size: 22, weight: .semibold));Spacer();AppCloseButton("Close", keyEquivalent: "\u{1b}"){dismiss()}}
       ScrollView {
       VStack(alignment:.leading,spacing:15) {
       Text("\(usage.count) assigned faces · \(missing) missing").font(.system(size:11)).foregroundStyle(missing>0 ? Palette.accent:Palette.secondary)

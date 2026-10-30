@@ -103,11 +103,16 @@ enum ArtworkTool: String, CaseIterable {
   @Published var showingGlyphs = false
   init(store: StudioStore) { self.store = store }
   var object: ProductObject? { store?.project?.objects.first { $0.id == objectID } }
+  /// The Canvas owns its physical editing context independently of Table selection.
+  var physicalObject: ProductObject? {
+    if let target = linkedTargetID, let object = store?.project?.objects.first(where: { $0.id == target }) { return object }
+    return object?.isCanvasWorkspace == true ? nil : object
+  }
   var paperContext: ProductObject? {
-    guard let primary = store?.primary, PaperConstruction.isPaper(primary),
-      objectID == primary.id || objectID == primary.paperConstruction?.insideArtworkSourceID
-        || objectID == store?.project?.artworkOwner(primary).id else { return nil }
-    return primary
+    guard let physical = physicalObject, PaperConstruction.isPaper(physical),
+      objectID == physical.id || objectID == physical.paperConstruction?.insideArtworkSourceID
+        || objectID == store?.project?.artworkOwner(physical).id else { return nil }
+    return physical
   }
   var art: Artwork {
     let source = sourceArtwork
@@ -122,10 +127,7 @@ enum ArtworkTool: String, CaseIterable {
   }
   var activeProjection: CanvasSourceProjection? { activeCanvasFrame?.projection }
   var isConstructionProof: Bool { activeProjection?.isProof == true }
-  var previewObject: ProductObject? {
-    guard object?.isCanvasWorkspace != true else { return nil }
-    return store?.project?.objects.first { $0.id == linkedTargetID } ?? object
-  }
+  var previewObject: ProductObject? { physicalObject }
   var elements: [ArtworkElement] { art.elements.filter { selection.contains($0.id) } }
   var primary: ArtworkElement? { elements.first }
   var unit: PhysicalUnit { art.unit ?? .mm }
@@ -255,7 +257,7 @@ enum ArtworkTool: String, CaseIterable {
         object.recipeID=="artboard" || project.isIndependentFlatArtworkSource(object) || project.isIndependentSewingSource(object) || object.artworkParameterBindings?.isEmpty == false || object.id==objectID else{return false}
       if hasCanonicalSourceRole(object,in:project) || componentReturn != nil && object.id==objectID {return true}
       let uses=paperUses(of:object.id,in:project)
-      let selected=uses.first{$0.object.id==store?.primary?.id}
+      let selected=uses.first{$0.object.id==linkedTargetID}
       if let owner=selected ?? (uses.count==1 ? uses.first:nil),
         (try? PaperConstruction.definition(for:owner.object).net()) != nil {return false}
       return true
@@ -374,19 +376,11 @@ enum ArtworkTool: String, CaseIterable {
   func reconcile() {
     if let maskEditing, !art.elements.contains(where: { $0.id == maskEditing.maskID }) { self.maskEditing = nil }
     if componentReturn != nil && object?.componentDefinition != true { componentReturn = nil }
-    let editingPaperInside = store?.paperInside == true && store?.primary?.paperConstruction?.insideArtworkSourceID == objectID
-    let editingProjection = activeProjection.map { $0.sourceID == objectID && $0.constructionID == store?.primary?.id } ?? false
-    if componentReturn == nil, !editingPaperInside, !editingProjection, object?.isCanvasWorkspace != true, let primary = store?.primary, primary.supportsArtworkFace {
-      let owner = store?.project?.artworkOwner(primary) ?? primary
-      linkedTargetID = owner.id == primary.id ? nil : primary.id
-      if objectID != owner.id {
-        objectID = owner.id
-        selection = []
-        scopeID = nil
-      }
+    if let linkedTargetID, store?.project?.objects.contains(where: { $0.id == linkedTargetID }) != true {
+      self.linkedTargetID = nil
     }
     if object == nil {
-      componentReturn = nil
+      componentReturn = nil; linkedTargetID = nil; projectionFrameID = nil
       objectID = store?.project?.canvasWorkspace?.id ?? store?.project?.objects.first {
           store?.project?.editableArtwork($0) != nil && ($0["width"] > 0 || $0.recipeID == "clock")
         }?.id
@@ -394,9 +388,9 @@ enum ArtworkTool: String, CaseIterable {
     if let projectionFrameID, !frames.contains(where: { $0.id == projectionFrameID }) {
       self.projectionFrameID = nil
     }
-    if componentReturn==nil,projectionFrameID==nil,let primary=store?.primary,primary.id==objectID,let project=store?.project,
-      paperUses(of:primary.id,in:project).count==1,!hasCanonicalSourceRole(primary,in:project) {
-      activate(primary.id)
+    if componentReturn==nil,projectionFrameID==nil,let object,let project=store?.project,
+      paperUses(of:object.id,in:project).count==1,!hasCanonicalSourceRole(object,in:project) {
+      activate(object.id)
     }
     if previewObject?.recipeID != "sleeve" { dieline = false }
     selection.formIntersection(Set(art.elements.map(\.id)))
@@ -405,12 +399,18 @@ enum ArtworkTool: String, CaseIterable {
   }
   func activate(_ id: UUID) {
     if let project=store?.project {
+      if let paper=project.objects.first(where:{$0.id==id}),PaperConstruction.isPaper(paper) {
+        let source=project.artworkOwner(paper).id
+        canvas?.finishText();cancelArtworkTransfer()
+        store?.paperInside=false;objectID=source;projectionFrameID=nil;linkedTargetID=paper.id
+        if let proof=frames.first(where:{$0.projection?.constructionID==paper.id && $0.projection?.sourceID==source && $0.projection?.isProof==true}) {activate(proof.id)}
+        return
+      }
       let uses=paperUses(of:id,in:project)
       if uses.count==1,let owner=uses.first,let source=project.objects.first(where:{$0.id==id}),!hasCanonicalSourceRole(source,in:project),
         (try? PaperConstruction.definition(for:owner.object).net()) != nil {
         canvas?.finishText();cancelArtworkTransfer()
         store?.paperInside=owner.inside
-        if store?.primary?.id != owner.object.id {store?.select(owner.object.id)}
         objectID=id;projectionFrameID=nil;linkedTargetID=owner.object.id
         if let proof=frames.first(where:{$0.projection?.constructionID==owner.object.id && $0.projection?.sourceID==id && $0.projection?.isProof == true}) {
           activate(proof.id);return
@@ -421,11 +421,10 @@ enum ArtworkTool: String, CaseIterable {
       guard projectionFrameID != id else { return }
       canvas?.finishText(); cancelArtworkTransfer()
       componentReturn = nil; maskEditing = nil; selectedGradientStopID = nil
-      if store?.primary?.id != projection.constructionID { store?.select(projection.constructionID) }
       objectID = projection.sourceID; projectionFrameID = id; linkedTargetID = projection.constructionID
       if PaperConstruction.isPaper(frame.surfaceObject) {
+        store?.paperInside = projection.inside
         paperFocusPanelID = projection.panelID
-        store?.paperSelectedPanelID = projection.panelID
       }
       dieline = false; selection = []; scopeID = nil; nodes = []
       return
@@ -441,7 +440,6 @@ enum ArtworkTool: String, CaseIterable {
     dieline = false
     selection = []
     scopeID = nil
-    if object?.isCanvasWorkspace != true { store?.select(id) }
   }
   @discardableResult func transferSelection(to target:UUID,offset:Point2) -> Bool {
     guard let store,let source = objectID,!selection.isEmpty else { return false }
@@ -717,15 +715,18 @@ enum ArtworkTool: String, CaseIterable {
     canvas?.finishText()
     guard let store else { return }
     if store.project == nil { store.createProject() }
+    let tableSelection = store.engine.selection
+    let previousIDs = Set(store.project?.objects.map(\.id) ?? [])
     store.perform(
       "form_add_object",
       [
         "recipe_id": "artboard", "name": name, "parameters": ["width": width, "depth": height],
         "material_id": "chalk",
       ])
-    if let object = store.primary {
+    store.engine.selection = tableSelection
+    if let object = store.project?.objects.first(where: { !previousIDs.contains($0.id) }) {
       store.saveArtwork(.init(background: "#FFFFFF"), for: object)
-      objectID = object.id
+      objectID = object.id; linkedTargetID = nil; projectionFrameID = nil
       selection = []
       scopeID = nil
     }

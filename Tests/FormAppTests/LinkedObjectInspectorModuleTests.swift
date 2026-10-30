@@ -46,10 +46,11 @@ import XCTest
     let before = project.objects
     for layout in [DesignSurfaceLayout.single, .split] {
       store.surfaceLayout = layout; store.splitDirection = .stacked; store.mode = .table
+      let tableSelection = store.engine.selection
       XCTAssertTrue(LinkedInspectorRelationships.openCanvas(link, store: store))
       XCTAssertEqual(store.surfaceLayout, layout); XCTAssertEqual(store.splitDirection, .stacked)
       XCTAssertEqual(store.artworkSession.objectID, source); XCTAssertEqual(store.artworkSession.linkedTargetID, first)
-      XCTAssertEqual(store.primary?.id, first)
+      XCTAssertEqual(store.engine.selection, tableSelection)
       XCTAssertTrue(LinkedInspectorRelationships.openTable(link, store: store))
       XCTAssertEqual(store.surfaceLayout, layout); XCTAssertEqual(store.mode, .table)
       XCTAssertEqual(store.project?.objects, before); XCTAssertNil(store.project?.canvasWorkspace)
@@ -90,7 +91,8 @@ import XCTest
     XCTAssertEqual(store.artworkSession.activeProjection?.constructionID, paper.id)
     XCTAssertEqual(store.artworkSession.activeProjection?.inside, true)
     XCTAssertEqual(store.artworkSession.activeProjection?.isProof, true)
-    XCTAssertEqual(store.primary?.id, paper.id); XCTAssertEqual(store.surfaceLayout, .split)
+    XCTAssertEqual(store.artworkSession.physicalObject?.id, paper.id)
+    XCTAssertTrue(store.engine.selection.isEmpty); XCTAssertEqual(store.surfaceLayout, .split)
     XCTAssertEqual(store.project?.objects, before); XCTAssertTrue(store.engine.undoStack.isEmpty)
   }
 
@@ -106,7 +108,8 @@ import XCTest
     XCTAssertEqual(preview.objects.first { $0.id == assembly.id }?.patternAssembly, assembly.patternAssembly)
     XCTAssertEqual(preview.objects.first { $0.id == assembly.id }?.position, .init())
     XCTAssertTrue(LinkedInspectorRelationships.openCanvas(link, store: store))
-    XCTAssertEqual(store.artworkSession.objectID, sourceID); XCTAssertEqual(store.primary?.id, assembly.id)
+    XCTAssertEqual(store.artworkSession.objectID, sourceID); XCTAssertEqual(store.artworkSession.physicalObject?.id, assembly.id)
+    XCTAssertTrue(store.engine.selection.isEmpty)
     XCTAssertEqual(store.artworkSession.linkedTargetID, assembly.id)
     let canvasLinks = LinkedInspectorRelationships.canvas(store.artworkSession, in: project)
     XCTAssertEqual(canvasLinks.map(\.objectID), [assembly.id])

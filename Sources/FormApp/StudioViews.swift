@@ -456,20 +456,25 @@ struct TableWorkspace: View {
             Spacer()
             if store.mode == .studio {
               StudioPanel()
-            } else if store.primary != nil && store.environment == .form {
-              Group {
-                if let object = store.primary, PaperConstruction.isPaper(object) {
-                  PaperEnvironmentControls(object:object).frame(width:300)
-                    .background(Palette.paper,in:RoundedRectangle(cornerRadius:10))
-                } else { ObjectInspector().id(store.primary?.id) }
-              }.frame(maxHeight: min(650, max(160, viewport.size.height - 120)))
+            } else if store.tableInspectorVisible && store.environment == .form {
+              FloatingPanel("INSPECTOR", closeLabel: "Hide Table inspector", onClose: store.closeTableInspector) {
+                if let object = store.primary {
+                  if PaperConstruction.isPaper(object) { PaperEnvironmentControls(object: object) }
+                  else { ObjectInspector(embedded: true) }
+                } else {
+                  Text("Select an object on the Table to inspect it.")
+                    .font(InspectorStyle.labelFont).foregroundStyle(Palette.secondary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .padding(InspectorStyle.panelPadding)
+                }
+              }.frame(width: FloatingPanelStyle.inspectorWidth, height: max(180, viewport.size.height - 116))
             }
-          }.padding(24)
+          }.padding(FloatingPanelStyle.outerPadding)
           Spacer(minLength: 0)
           HStack(alignment: .bottom) {
-            CameraControls(maxWidth: max(1, viewport.size.width - 48))
+            CameraControls(maxWidth: max(1, viewport.size.width - 32))
             Spacer()
-          }.padding(.horizontal,24).padding(.bottom,18)
+          }.padding(.horizontal,16).padding(.bottom,16)
         }
         if store.project?.objects.filter({ !$0.isCanvasWorkspace }).isEmpty == true { EmptyTableView() }
       }
@@ -513,53 +518,33 @@ struct EmptyTableView: View {
 struct CameraControls: View {
   @EnvironmentObject var store: StudioStore
   var maxWidth: CGFloat = .infinity
-  @State private var contentWidth: CGFloat = 600
   var body: some View {
-    ScrollView(.horizontal, showsIndicators: true) {
-    HStack(spacing: 3) {
+    WorkspaceToolbarSurface(maxWidth: maxWidth) {
+      WorkspaceToolbarButton("Table inspector", symbol: "sidebar.right", isSelected: store.tableInspectorVisible,
+        value: store.tableInspectorVisible ? "Shown" : "Hidden") { store.toggleTableInspector() }
+      WorkspaceToolbarDivider()
       ForEach(TableTool.allCases, id: \.self) { tool in
-        Button {
-          store.setTableTool(tool)
-        } label: {
-          Label(tool.rawValue, systemImage: tool.symbol)
-            .font(.system(size: 11, weight: .medium)).padding(.horizontal, 9).frame(height: 32)
-            .foregroundStyle(store.tableTool == tool ? Palette.ink : Palette.secondary)
-            .background(
-              store.tableTool == tool ? Color.white.opacity(0.9) : .clear,
-              in: RoundedRectangle(cornerRadius: 8))
-        }.buttonStyle(.plain).help("\(tool.rawValue) · \(tool.shortcut)")
-          .accessibilityLabel("\(tool.rawValue) tool · \(tool.shortcut)")
-          .accessibilityValue(store.tableTool == tool ? "Selected" : "")
+        WorkspaceToolbarButton("\(tool.rawValue) tool · \(tool.shortcut)", symbol: tool.symbol,
+          isSelected: store.tableTool == tool, help: "\(tool.rawValue) · \(tool.shortcut)") { store.setTableTool(tool) }
       }
-      Rectangle().fill(Palette.line).frame(width: 1, height: 20).padding(.horizontal, 5)
-      ForEach([("Perspective", "perspective", "1"), ("Top", "overhead", "2"), ("Front", "front", "3")], id: \.0) { title, view, shortcut in
-        Button(title) { store.scene?.preset(view) }
-          .font(.system(size: 11, weight: .medium)).buttonStyle(.plain)
-          .padding(.horizontal, 7).frame(height: 32)
-          .help("\(title) · \(shortcut) · Frame the whole project")
-          .accessibilityLabel("\(title) view · \(shortcut)")
+      WorkspaceToolbarDivider()
+      ForEach([("Perspective", "perspective", "1", "cube"),
+        ("Top", "overhead", "2", "square.3.layers.3d.top.filled"),
+        ("Front", "front", "3", "rectangle")], id: \.0) { title, view, shortcut, symbol in
+        WorkspaceToolbarButton("\(title) view · \(shortcut)", symbol: symbol,
+          help: "\(title) · \(shortcut) · Frame the whole project") { store.scene?.preset(view) }
       }
-      Rectangle().fill(Palette.line).frame(width: 1, height: 20).padding(.horizontal, 5)
-      IconButton("Zoom out", symbol: "minus") { store.scene?.zoom(18) }
-      IconButton("Zoom in", symbol: "plus") { store.scene?.zoom(-18) }
-      IconButton("Fit all · ⌘0", symbol: "arrow.up.left.and.arrow.down.right") {
+      WorkspaceToolbarDivider()
+      WorkspaceToolbarButton("Zoom out", symbol: "minus") { store.scene?.zoom(18) }
+      WorkspaceToolbarButton("Zoom in", symbol: "plus") { store.scene?.zoom(-18) }
+      WorkspaceToolbarButton("Fit all · ⌘0", symbol: "arrow.up.left.and.arrow.down.right") {
         store.scene?.fitAll()
       }
-      IconButton("Focus selection · F", symbol: "viewfinder") {
+      WorkspaceToolbarButton("Focus selection · F", symbol: "viewfinder") {
         store.scene?.focusSelection()
       }.disabled(store.selected.isEmpty)
-      IconButton("Toggle 100 mm grid", symbol: "grid") { store.showGrid.toggle() }
-
-    }.padding(6).fixedSize(horizontal: true, vertical: false)
-      .background {
-        GeometryReader { toolbar in
-          Color.clear.onAppear { contentWidth = toolbar.size.width }
-            .onChange(of: toolbar.size.width) { _, width in contentWidth = width }
-        }
-      }
-    }.frame(width: min(contentWidth, maxWidth), height: 44)
-      .background(Palette.paper, in: RoundedRectangle(cornerRadius: 13)).overlay(
-      RoundedRectangle(cornerRadius: 13).strokeBorder(Palette.line).allowsHitTesting(false)
-    ).shadow(color: .black.opacity(0.06), radius: 14, y: 5)
+      WorkspaceToolbarButton("Toggle 100 mm grid", symbol: "grid", isSelected: store.showGrid,
+        value: store.showGrid ? "Shown" : "Hidden") { store.showGrid.toggle() }
+    }
   }
 }

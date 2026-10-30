@@ -25,7 +25,7 @@ struct TextileProductionLibraryView:View {
   private var stock:TextileProductionLibrary {store.library.textileProduction ?? .init()}
   var body:some View {
     VStack(alignment:.leading,spacing:18) {
-      HStack {VStack(alignment:.leading,spacing:5) {Text("Textile stock & equipment").font(.system(size: 24, weight: .semibold));Text("Studio records · portable snapshots on assignment · no automatic stock deduction").font(.system(size:10)).foregroundStyle(Palette.secondary)};Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)}
+      HStack {VStack(alignment:.leading,spacing:5) {Text("Textile stock & equipment").font(.system(size: 24, weight: .semibold));Text("Studio records · portable snapshots on assignment · no automatic stock deduction").font(.system(size:10)).foregroundStyle(Palette.secondary)};Spacer();AppCloseButton("Close", keyEquivalent: "\u{1b}") {dismiss()}.keyboardShortcut(.cancelAction)}
       Picker("Library",selection:$section) {Text("Thread stock").tag(0);Text("Equipment declarations").tag(1);Text("Blanks, trims & supplies").tag(2)}.inspectorSegmented()
       ScrollView {
         LazyVStack(spacing:9) {

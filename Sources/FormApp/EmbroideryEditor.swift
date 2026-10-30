@@ -31,7 +31,7 @@ struct EmbroideryEditor:View {
           Text("Embroidery").font(.system(size: 25, weight: .semibold))
           Text(object?.name ?? "Decoration").font(.system(size:11)).foregroundStyle(Palette.secondary)
         }
-        Spacer();Button("Done") {dismiss()}.keyboardShortcut(.cancelAction)
+        Spacer();AppCloseButton("Close", keyEquivalent: "\u{1b}") {dismiss()}.keyboardShortcut(.cancelAction)
       }
       HStack(alignment:.top,spacing:22) {
         VStack(alignment:.leading,spacing:10) {

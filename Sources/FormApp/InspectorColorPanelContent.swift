@@ -18,7 +18,7 @@ struct InspectorColorPanelContent: View {
         }.help(state.isPinned ? "Unpin color panel" : "Keep color panel open")
           .accessibilityLabel("Keep color panel open")
           .accessibilityValue(state.isPinned ? "On" : "Off")
-        Button(action: close) { Image(systemName: "xmark").frame(width: 24, height: 24) }
+        AppCloseButton("Close color panel", action: close)
           .help("Close color panel · Escape").accessibilityLabel("Close color panel")
       }.buttonStyle(.plain)
       InspectorHueSaturationWheel(state: state).frame(width: 190, height: 190).disabled(!state.canEditRGB)

@@ -22,7 +22,7 @@ struct SewingLayoutEditor: View {
         Spacer()
         Button("Undo") { store.undo(); _ = model.refreshContext() }.disabled(store.engine.undoStack.isEmpty)
         Button("Redo") { store.redo(); _ = model.refreshContext() }.disabled(store.engine.redoStack.isEmpty)
-        Button("Done") { if !model.sourceAvailable || model.commitFields() { model.finish(); dismiss() } }.keyboardShortcut(.cancelAction)
+        AppCloseButton("Close", keyEquivalent: "\u{1b}") { if !model.sourceAvailable || model.commitFields() { model.finish(); dismiss() } }.keyboardShortcut(.cancelAction)
       }
       HStack(alignment: .top, spacing: 16) {
         VStack(alignment: .leading, spacing: 10) {
