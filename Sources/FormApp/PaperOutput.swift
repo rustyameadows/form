@@ -35,9 +35,9 @@ import UniformTypeIdentifiers
     guard guides else{return}
     drawStructure(net,context:context,lineWidth:lineWidth)
   }
-  static func drawStructure(_ net:PaperNet,context:CGContext,lineWidth:Double=0.18,interface:Bool=false) {
+  static func drawStructure(_ net:PaperNet,context:CGContext,lineWidth:Double=0.18,interface:Bool=false,interfaceCutColor:NSColor?=nil) {
     context.saveGState();context.setLineWidth(lineWidth)
-    context.setStrokeColor((interface ? NSColor.black:NSColor(hex:"#CA6543")).cgColor)
+    context.setStrokeColor((interface ? interfaceCutColor ?? NSColor.black:NSColor(hex:"#CA6543")).cgColor)
     for edge in net.cutEdges {context.move(to:.init(x:edge.start.x,y:edge.start.y));context.addLine(to:.init(x:edge.end.x,y:edge.end.y))};context.strokePath()
     context.setStrokeColor((interface ? Palette.secondaryNS:NSColor(hex:"#397D9A")).cgColor);context.setLineDash(phase:0,lengths:[2,1.3])
     for fold in net.folds {context.move(to:.init(x:fold.start.x,y:fold.start.y));context.addLine(to:.init(x:fold.end.x,y:fold.end.y))};context.strokePath();context.setLineDash(phase:0,lengths:[])

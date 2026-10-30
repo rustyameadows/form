@@ -64,6 +64,8 @@ Create an artwork sheet from **Object**, or use **Artwork → New Artwork Frame*
 | Convert text to outlines | `⇧⌘O` |
 | Toggle guides / grid | `⌘;` / `⌘'` |
 
+Canvas outlines, labels, and icons distinguish each view: charcoal rectangles for artboards, blue scissors for dielines and sewing patterns, and rust links for projected surfaces. Customize these colors in **Settings → Canvas frame colors**. These interface marks are omitted from exports. [Native previews and validation](validation/canvas-frame-identities/native-results.json) cover light and dark backgrounds, stable icon sizing, title dragging, preferences, and unchanged artwork.
+
 The Canvas background is a saved local display preference, with neutral presets and a custom color picker. It does not change frame backgrounds or exported artwork. Thin selection marks and guides adapt to the chosen background. See the [interaction audit and native verification](canvas-interaction-audit.md) for selection, dragging, and viewport behavior.
 
 Hover artwork to preview the target. Selected artwork shows a grab cursor; resize handles show directional arrows and rotation shows a curved arrow, with the active handle highlighted. Double-click a group to select its children.

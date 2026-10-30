@@ -111,7 +111,9 @@ struct ArtworkLayers: View {
               session.canvas?.fit(all: false)
             } label: {
               HStack(spacing: 8) {
-                Image(systemName: frame.isWorkspace ? "square.dashed" : frame.projection?.isProof == true ? "shippingbox" : frame.projection != nil ? "link" : frame.object.componentDefinition == true ? "diamond.fill" : frame.object.recipeID == "artboard" ? "rectangle" : "link")
+                Image(systemName: frame.isWorkspace ? "square.dashed" : frame.role.symbolName)
+                  .foregroundStyle(frame.isWorkspace ? Color(nsColor: Palette.secondaryNS)
+                    : Color(nsColor: InterfaceAppearance.shared.frameColor(for: frame.role, against: .white)))
                 Text(frame.isWorkspace ? "Canvas" : frame.title).lineLimit(1)
                   .truncationMode(.middle).help(frame.isWorkspace ? "Canvas" : frame.title)
                 Spacer()
