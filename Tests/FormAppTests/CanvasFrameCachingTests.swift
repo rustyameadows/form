@@ -54,11 +54,11 @@ import FormCADModel
     let store=try makeStore(p),session=store.artworkSession;session.objectID=p.objects[0].id;session.linkedTargetID=p.objects[0].id
     let frames=session.frames,builds=session.frameBuildCount,before=store.project!,history=store.engine.undoStack.count
     let proofs=frames.compactMap{frame->UUID? in frame.projection?.isProof == true ? frame.projection?.constructionID:nil}
-    XCTAssertEqual(Set(proofs),Set(p.objects.map(\.id)));XCTAssertEqual(proofs.count,12)
+    XCTAssertEqual(Set(proofs),Set(p.objects.map(\.id)));XCTAssertEqual(proofs.count,24)
     var expectedCount=0
     for object in p.objects {
       let net=try PaperConstruction.definition(for:object).net()
-      expectedCount+=net.panels.count+1
+      expectedCount+=2*(net.panels.count+1)
       let panelIDs=frames.filter{$0.projection?.constructionID==object.id}.compactMap{$0.projection?.panelID}
       XCTAssertEqual(Set(panelIDs),Set(net.panels.map(\.id)),object.name)
     }
@@ -132,11 +132,13 @@ import FormCADModel
     s.activate(id)
     let outside=try XCTUnwrap(s.activeCanvasFrame);XCTAssertEqual(outside.projection?.inside,false)
     let outsideIDs=s.frames.map(\.id),count=s.frameBuildCount,history=store.engine.undoStack.count,before=store.project!
-    let panels=s.frames.filter{$0.projection?.constructionID==id && $0.projection?.panelID != nil}
+    let panels=s.frames.filter{$0.projection?.constructionID==id && $0.projection?.panelID != nil && $0.projection?.inside==false}
     XCTAssertEqual(panels.count,2)
     for panel in panels {s.projectionFrameID=panel.id;XCTAssertEqual(s.activeCanvasFrame?.id,panel.id)}
     XCTAssertEqual(s.frameBuildCount,count,"Choosing another existing frame only changes the active resolver")
     s.activate(inside);XCTAssertEqual(s.activeProjection?.inside,true);XCTAssertEqual(s.objectID,inside)
+    XCTAssertEqual(s.frames.map(\.id),outsideIDs,"Side navigation retains the complete graph.")
+    XCTAssertEqual(s.frameBuildCount,count,"Side navigation reuses both canonical face graphs.")
     s.activate(id);XCTAssertEqual(s.frames.map(\.id),outsideIDs);XCTAssertEqual(s.activeProjection?.inside,false)
     let afterNavigation=s.frameBuildCount
     s.componentReturn = .init(objectID:loose,linkedTargetID:id,instanceID:UUID());_ = s.frames

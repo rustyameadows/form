@@ -3,7 +3,7 @@ import Foundation
 extension ArtworkSession {
   func inspectorColorTarget(_ channel: String) -> String {
     let selected = selection.map(\.uuidString).sorted().joined(separator: ",")
-    return "\(store?.project?.id.uuidString ?? "")/\(objectID?.uuidString ?? "")/\(selected)/\(editingText)/\(characterRange.location):\(characterRange.length)/\(channel)"
+    return "\(store?.project?.id.uuidString ?? "")/\((activeFrameID ?? objectID)?.uuidString ?? "")/\(selected)/\(editingText)/\(characterRange.location):\(characterRange.length)/\(channel)"
   }
   var inspectorEditing: (Bool) -> Void {
     store?.inspectorInteraction("artwork-\(objectID?.uuidString ?? "")") ?? { _ in }

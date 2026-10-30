@@ -8,19 +8,21 @@ import Foundation
 @MainActor public enum ArtworkHitTesting {
   public static func hit(
     at point: CGPoint, in artwork: Artwork, scope: UUID? = nil, tolerance: Double = 0,
-    excluding: Set<UUID> = [], editingMask: UUID? = nil, renderedArtwork: Artwork? = nil
+    excluding: Set<UUID> = [], editingMask: UUID? = nil, renderedArtwork: Artwork? = nil,
+    outerClip: CGPath? = nil
   ) -> ArtworkElement? {
     Picker(in: artwork, scope: scope, excluding: excluding, editingMask: editingMask,
-      renderedArtwork: renderedArtwork).hit(at: point, tolerance: tolerance)
+      renderedArtwork: renderedArtwork, outerClip: outerClip).hit(at: point, tolerance: tolerance)
   }
 
   /// Front-to-back painted layers for a context-menu probe, including editable
   /// descendants beneath ordinary groups. Locked layers remain inspectable;
   /// masks, hidden content and derived component children are never returned.
   public static func layers(at point: CGPoint, in artwork: Artwork, tolerance: Double = 0,
-    excluding: Set<UUID> = [], renderedArtwork: Artwork? = nil) -> [ArtworkElement] {
+    excluding: Set<UUID> = [], renderedArtwork: Artwork? = nil, outerClip: CGPath? = nil) -> [ArtworkElement] {
     guard point.x.isFinite, point.y.isFinite else { return [] }
-    let context = Context(renderedArtwork ?? artwork, excluding: excluding)
+    let context = Context(renderedArtwork ?? artwork, excluding: excluding, outerClip: outerClip)
+    guard context.allows(point) else { return [] }
     let children = Dictionary(grouping: artwork.elements, by: \.parentID)
     var candidates: [ArtworkElement] = [], visited = Set<UUID>()
     func visit(_ element: ArtworkElement) {
@@ -53,8 +55,8 @@ import Foundation
     private let editingMask: UUID?
 
     public init(in artwork: Artwork, scope: UUID? = nil, excluding: Set<UUID> = [],
-      editingMask: UUID? = nil, renderedArtwork: Artwork? = nil) {
-      let context = Context(renderedArtwork ?? artwork, excluding: excluding)
+      editingMask: UUID? = nil, renderedArtwork: Artwork? = nil, outerClip: CGPath? = nil) {
+      let context = Context(renderedArtwork ?? artwork, excluding: excluding, outerClip: outerClip)
       self.context = context
       self.editingMask = editingMask
       candidates = artwork.elements.reversed().filter { element in
@@ -65,7 +67,7 @@ import Foundation
     }
 
     public func hit(at point: CGPoint, tolerance: Double = 0) -> ArtworkElement? {
-      guard point.x.isFinite, point.y.isFinite else { return nil }
+      guard point.x.isFinite, point.y.isFinite, context.allows(point) else { return nil }
       // A direct click on painted content takes precedence over another object's
       // nearby edge. Only use the generous pointer allowance after exact hits.
       for allowance in tolerance.isFinite && tolerance > 0 ? [0, tolerance] : [0] {
@@ -89,6 +91,7 @@ import Foundation
     let children: [UUID?: [ArtworkElement]]
     let masks: Set<UUID>
     let excluding: Set<UUID>
+    let outerClip: CGPath?
     private var transforms: [UUID: Affine2] = [:]
     private var fillPaths: [UUID: CGPath] = [:]
     private var strokePaths: [UUID: CGPath] = [:]
@@ -98,13 +101,16 @@ import Foundation
     private struct PaintKey: Hashable { var id: UUID; var stroke: Bool; var mask: Bool }
     private var proximityPaths: [PaintKey: CGPath] = [:]
 
-    init(_ artwork: Artwork, excluding: Set<UUID>) {
+    init(_ artwork: Artwork, excluding: Set<UUID>, outerClip: CGPath?) {
       self.artwork = artwork
       self.excluding = excluding
+      self.outerClip = outerClip?.normalized(using: .winding)
       byID = Dictionary(uniqueKeysWithValues: artwork.elements.map { ($0.id, $0) })
       children = Dictionary(grouping: artwork.elements, by: \.parentID)
       masks = Set(artwork.elements.compactMap(\.clipID))
     }
+
+    func allows(_ point: CGPoint) -> Bool { outerClip?.contains(point) ?? true }
 
     private func visible(_ element: ArtworkElement) -> Bool {
       element.hidden != true && (element.opacity ?? 1) > 0
@@ -205,6 +211,10 @@ import Foundation
       // Normalize to the painted area before growing its boundary. Raw compound
       // contours can cancel one another; their invisible edges are not targets.
       var painted = path.normalized(using: rule)
+      // The physical surface is an outer display clip, rather than a source
+      // mask. Intersect before growing so removed stock or another panel's
+      // hidden artwork cannot become a nearby pointer target.
+      if let outerClip { painted = painted.intersection(outerClip) }
       // Growing unclipped geometry can resurrect a fully hidden shape just
       // beyond a mask edge. Grow only the area actually painted through every
       // ancestor clip; exact hits above already passed those clips at the point.

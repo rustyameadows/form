@@ -158,11 +158,11 @@ struct ArtworkStudio: View {
           Picker("Artwork side", selection: Binding(get: { store.paperInside }, set: {
             store.setPaperInside($0, object: construction)
           })) {
-            Text("Outside").tag(false)
-            Text("Inside").tag(true)
+            Text(PaperSideLabels.title(inside:false,object:construction)).tag(false)
+            Text(PaperSideLabels.title(inside:true,object:construction)).tag(true)
           }
           if store.paperInside && construction.paperConstruction?.insideArtworkSourceID == nil {
-            Button("Create inside artwork") { store.createPaperInside(construction) }
+            Button("Create "+PaperSideLabels.title(inside:true,object:construction).lowercased()+" artwork") { store.createPaperInside(construction) }
           }
         }
       }

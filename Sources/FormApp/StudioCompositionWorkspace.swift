@@ -31,13 +31,23 @@ struct StudioCompositionWorkspace:View {
         if controller.busy {HStack{ProgressView(value:controller.progress);Text("\(Int(controller.progress*100))%").font(.system(size:10,design:.monospaced));Button("Cancel export"){controller.cancelExport()}}.padding(12)}
       }
     }.onAppear{controller.reconcile()}.onChange(of:store.project?.id){_,_ in controller.reconcile()}.onChange(of:store.revision){_,_ in controller.reconcile()}.onChange(of:store.environment){_,value in if value != .studio {controller.stop()}}
+      .confirmationDialog("Save changes to \(controller.draft?.name ?? "this scene")?",isPresented:Binding(
+        get:{controller.pendingSceneID != nil},set:{if !$0 {controller.cancelSceneSelection()}})) {
+          if let id=controller.pendingSceneID {
+            Button("Save and switch"){controller.saveAndLoadScene(id)}
+            Button("Discard and switch",role:.destructive){controller.discardAndLoadScene(id)}
+          }
+          Button("Cancel",role:.cancel){controller.cancelSceneSelection()}
+        } message:{Text("Choosing another saved scene replaces the current scene draft, including its camera and instance placement.")}
       .focusedValue(\.designSurface,.studio)
   }
   private var sceneList:some View {
     VStack(alignment:.leading,spacing:14) {
       HStack{SectionLabel("SCENES");Spacer();Button{controller.newScene()}label:{Image(systemName:"plus")}.buttonStyle(.plain).accessibilityLabel("New Studio scene")}
       Menu(controller.draft?.name ?? "Choose a scene") {
-        ForEach(controller.scenes){scene in Button(scene.name){controller.load(scene.id)}}
+        ForEach(controller.scenes){scene in Button{controller.requestScene(scene.id)}label:{
+          Label(scene.name,systemImage:controller.draft?.id==scene.id ? "checkmark":"camera")
+        }}
       }.accessibilityLabel("Saved Studio scenes")
       HStack {Button("Save scene"){controller.save()}.buttonStyle(.borderedProminent).tint(Palette.ink);Menu{Button("Duplicate saved scene"){controller.duplicateScene()};Button("Delete saved scene",role:.destructive){controller.deleteScene()};Button("Discard draft"){controller.discard()}}label:{Image(systemName:"ellipsis")}.menuStyle(.borderlessButton).fixedSize()}
       if controller.dirty {Text("Unsaved scene draft").font(.system(size:10)).foregroundStyle(Palette.accent)}

@@ -13,11 +13,13 @@ import SwiftUI
   @Published private(set) var busy=false
   @Published private(set) var progress=0.0
   @Published private(set) var lastOutput:URL?
+  @Published private(set) var pendingSceneID:UUID?
   let stage=TableSceneController()
   let renderer=StudioShotRenderer()
   private var owner:UUID?,baseline:StudioComposition?
   private var playback:Task<Void,Never>?,exportTask:Task<Void,Never>?,prepareTask:Task<Void,Never>?
   private var generation=0
+  private var sceneSelectionGeneration=0
   private var mediaExportActive=false
   private var undoDrafts:[StudioComposition]=[],redoDrafts:[StudioComposition]=[]
   private var baselineWasSaved=false
@@ -36,17 +38,50 @@ import SwiftUI
     if let id=selectedInstanceID,draft?.instances.contains(where:{$0.id==id}) != true {selectedInstanceID=nil}
     sync()
   }
-  func reset(){stop();exportTask?.cancel();prepareTask?.cancel();owner=nil;draft=nil;baseline=nil;selectedInstanceID=nil;lastOutput=nil;error=nil;generation+=1;renderer.clear();undoDrafts=[];redoDrafts=[];baselineWasSaved=false}
+  func reset(){stop();exportTask?.cancel();prepareTask?.cancel();owner=nil;draft=nil;baseline=nil;selectedInstanceID=nil;pendingSceneID=nil;lastOutput=nil;error=nil;generation+=1;sceneSelectionGeneration+=1;renderer.clear();undoDrafts=[];redoDrafts=[];baselineWasSaved=false}
+  /// Selection may arrive before the workspace's onAppear reconciliation. The
+  /// recalled scene must already belong to this project when that happens.
+  private func adoptProject() -> Bool {
+    guard let project=store?.project else{reset();return false}
+    if owner != project.id {reset();owner=project.id}
+    return true
+  }
+  func requestScene(_ id:UUID) {
+    guard !busy,adoptProject(),scenes.contains(where:{$0.id==id}) else{return}
+    sceneSelectionGeneration+=1
+    let token=sceneSelectionGeneration,projectID=owner,currentID=draft?.id
+    NSApp.keyWindow?.makeFirstResponder(nil)
+    // SwiftUI's focused numeric fields commit on the next focus update. Check
+    // the draft after that commit, while rejecting a superseded scene request.
+    Task { [weak self] in
+      await Task.yield()
+      guard let self,!self.busy,self.sceneSelectionGeneration==token,
+        self.store?.project?.id==projectID,currentID==nil || self.draft?.id==currentID else{return}
+      guard id != self.draft?.id else{return}
+      if self.dirty {self.pendingSceneID=id;return}
+      self.load(id)
+    }
+  }
+  func cancelSceneSelection(){pendingSceneID=nil}
+  func discardAndLoadScene(_ id:UUID){load(id,discard:true)}
+  func saveAndLoadScene(_ id:UUID) {
+    guard scenes.contains(where:{$0.id==id}) else{pendingSceneID=nil;error="That saved scene is no longer available. Your current draft was kept.";return}
+    save()
+    guard error==nil,!dirty else{return}
+    load(id)
+  }
   func load(_ id:UUID,discard:Bool=false) {
-    guard !busy else{return}
+    guard !busy,adoptProject() else{return}
     guard !dirty || discard else{error="Save this scene or discard its draft before choosing another scene.";return}
-    guard let scene=scenes.first(where:{$0.id==id}) else{return}
-    stop();draft=scene;baseline=scene;baselineWasSaved=true;undoDrafts=[];redoDrafts=[];selectedInstanceID=nil;time=0;error=nil;sync()
+    guard let scene=scenes.first(where:{$0.id==id}) else{error="That saved scene is no longer available. Your current draft was kept.";return}
+    sceneSelectionGeneration+=1
+    stop();draft=scene;baseline=scene;baselineWasSaved=true;undoDrafts=[];redoDrafts=[];selectedInstanceID=nil;pendingSceneID=nil;time=0;error=nil;sync()
   }
   func newScene(discard:Bool=false) {
-    guard !busy,let project=store?.project else{return}
+    guard !busy,adoptProject(),let project=store?.project else{return}
     guard !dirty || discard else{error="Save this scene or discard its draft before creating another.";return}
-    stop();draft = .fromProject(project,name:"Still life \(scenes.count+1)");baseline=draft;baselineWasSaved=false;undoDrafts=[];redoDrafts=[];time=0;selectedInstanceID=nil;sync()
+    sceneSelectionGeneration+=1
+    stop();draft = .fromProject(project,name:"Still life \(scenes.count+1)");baseline=draft;baselineWasSaved=false;undoDrafts=[];redoDrafts=[];time=0;selectedInstanceID=nil;pendingSceneID=nil;sync()
   }
   func discard(){if let id=draft?.id,scenes.contains(where:{$0.id==id}){load(id,discard:true)}else{newScene(discard:true)};error=nil}
   func change(_ body:(inout StudioComposition)->Void) {
@@ -79,7 +114,11 @@ import SwiftUI
   func deleteScene(){guard let store,let id=draft?.id,scenes.contains(where:{$0.id==id}) else{return};do{_ = try store.engine.call("form_studio_scene",arguments:["command":"delete","scene_id":id.uuidString],source:"Studio");draft=nil;baseline=nil;owner=nil;store.metadataRecordsChanged();reconcile()}catch{self.error=error.localizedDescription}}
   func cameraEdited() {
     guard !playing,!busy,var value=draft else{return}
-    value.camera=stage.camera;if value != draft {rememberDraft();draft=value};time=0;objectWillChange.send()
+    var camera=stage.camera
+    // Native layout owns viewportAspect; output framing belongs to pixels.
+    // A zero-delta scroll or a rounded viewport must not dirty a saved scene.
+    camera.viewportAspect=value.camera.viewportAspect
+    value.camera=camera;if value != draft {rememberDraft();draft=value};time=0;objectWillChange.send()
   }
   func frameScene(){stop();stage.fitAll();cameraEdited()}
   func captureEnd(){change{$0.motion.endCamera=stage.camera;$0.motion.mode = .between}}
@@ -100,13 +139,15 @@ import SwiftUI
   }
   func stop(){playback?.cancel();playback=nil;playing=false}
   func sync() {
+    // Invalidate before resolution as well: a failed or empty new scene must
+    // never retain an older asynchronous preparation/error as its live preview.
+    prepareTask?.cancel();prepareTask=nil;generation+=1;let token=generation
     guard let store,let project=store.project,let draft else{return}
     do {
       let resolved=try draft.resolved(in:project)
       let assets=store.repository.url(for:project.id).appendingPathComponent("Assets")
       stage.sync(resolved.project,selection:Set(selectedInstanceID.map{[$0]} ?? []),isolated:resolved.visible,showGrid:false,studio:true,preset:draft.surface,assets:assets,renderObjectIDs:resolved.visible)
       stage.camera=time>0 ? ((try? draft.motion.camera(start:draft.camera,fraction:time)) ?? draft.camera):draft.camera;stage.updateCamera();stage.applyShotLighting(draft.lighting,studio:true)
-      prepareTask?.cancel();generation+=1;let token=generation
       if resolved.project.objects.contains(where:{$0.hasTablePresentation && ($0.meshAsset != nil || $0.cadRepresentation != nil)}) {
         prepareTask=Task{[weak self] in
           do {guard let self else{return};try await self.stage.prepareExternalForCapture(project:resolved.project,assets:assets);guard !Task.isCancelled,self.generation==token else{return};self.stage.renderScene()}catch{if !Task.isCancelled,self?.generation==token{self?.error=error.localizedDescription}}

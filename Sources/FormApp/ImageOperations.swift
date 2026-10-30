@@ -28,13 +28,31 @@ extension StudioStore {
   }
 
   func importImage(_ args: [String: Any], source: String = "Codex",
-    placement: ((inout ArtworkElement) -> Void)? = nil) throws -> [String: Any] {
-    guard let p = project, let raw = args["object_id"] as? String, let id = UUID(uuidString: raw),
-      let object = p.objects.first(where: { $0.id == id }), object.supportsArtworkFace || object.isCanvasWorkspace,
+    placement: ((inout ArtworkElement) -> Void)? = nil,
+    projection: CanvasSourceProjection? = nil) throws -> [String: Any] {
+    guard let p = project, let raw = args["object_id"] as? String, let requestedID = UUID(uuidString: raw),
       let path = args["path"] as? String, path.hasPrefix("/") else {
       throw FormError.invalid("Choose an artwork target and an absolute local image path.")
     }
-    let owner = p.artworkOwner(object)
+    var candidate = p
+    var id = requestedID
+    if let projection {
+      guard requestedID == projection.sourceID,
+        artworkSession.frames.first(where: { $0.id == projection.id })?.projection == projection,
+        let physical = p.objects.first(where: { $0.id == projection.constructionID }) else {
+        throw FormError.invalid("The image surface changed. Choose its destination again.")
+      }
+      guard !physical.locked else { throw FormError.invalid("Unlock the physical surface before importing an image.") }
+      if projection.requiresInsideSource {
+        guard projection.inside else { throw FormError.invalid("The blank image surface must be the inside face.") }
+        id = try PaperCommands.ensureInside(in: &candidate, objectID: projection.constructionID)
+      }
+    }
+    guard let object = candidate.objects.first(where: { $0.id == id }),
+      object.supportsArtworkFace || object.isCanvasWorkspace else {
+      throw FormError.invalid("Choose an artwork target or supported physical face.")
+    }
+    let owner = candidate.artworkOwner(object)
     guard !owner.locked else { throw FormError.invalid("Unlock the artwork source first.") }
     let url = URL(fileURLWithPath: path).resolvingSymlinksInPath()
     let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
@@ -57,8 +75,8 @@ extension StudioStore {
       }
       return n.doubleValue
     }
-    var art = p.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
-    if p.editableArtwork(object) == nil { art.backgroundOpacity = 0; art.bleed = 0 }
+    var art = candidate.editableArtwork(object) ?? Artwork(background: "#FFFFFF")
+    if candidate.editableArtwork(object) == nil { art.backgroundOpacity = 0; art.bleed = 0 }
     let placeholder = UUID().uuidString + "." + url.pathExtension.lowercased()
     let elementID: UUID
     if let raw = args["element_id"] {
@@ -107,15 +125,15 @@ extension StudioStore {
       placement?(&e)
       elementID = e.id; art.elements.append(e)
     }
-    var candidate = p
     try candidate.setArtwork(art, for: id)
     try candidate.validateArtworkLinks()
     let asset = existingAsset ? url.lastPathComponent : try repository.importAsset(url, into: p.id)
     guard let index = art.elements.firstIndex(where: { $0.id == elementID }) else { throw FormError.missing("Image not found.") }
     art.elements[index].asset = asset
-    do { try engine.edit(args["element_id"] == nil ? "Place image" : "Replace image", source: source) { project in
-      try project.setArtwork(art, for: id)
-    } } catch {
+    do {
+      try candidate.setArtwork(art, for: id)
+      try engine.edit(args["element_id"] == nil ? "Place image" : "Replace image", source: source) { $0 = candidate }
+    } catch {
       if !existingAsset { try? FileManager.default.removeItem(at: repository.url(for: p.id).appendingPathComponent("Assets").appendingPathComponent(asset)) }
       throw error
     }

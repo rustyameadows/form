@@ -235,9 +235,13 @@ import XCTest
     let viewport = canvas.visibleCanvasRect, originalOrigin = canvas.canvasOrigin
     let clip = scroll.contentView
     let down = clip.convert(CGPoint(x: clip.bounds.midX, y: clip.bounds.midY), to: nil)
-    let delta = CGPoint(x: 200, y: -150)
-    let end = CGPoint(x: down.x + delta.x, y: down.y + delta.y)
     let scale = CGFloat(canvas.zoom) * 72 / 25.4
+    let documentMinimum=canvas.canvasPoint(.init(x:canvas.bounds.minX,y:canvas.bounds.minY))
+    // Both-face layouts may already allocate more view extent. Place the desired
+    // viewport beyond its current physical minimum to guarantee real growth.
+    let destination=CGPoint(x:documentMinimum.x-160,y:documentMinimum.y-160)
+    let delta=CGPoint(x:(viewport.minX-destination.x)*scale,y:(destination.y-viewport.minY)*scale)
+    let end = CGPoint(x: down.x + delta.x, y: down.y + delta.y)
     let expected = CGPoint(x: viewport.minX - delta.x / scale,
       y: viewport.minY + delta.y / scale)
     let host = try XCTUnwrap(window.contentView)

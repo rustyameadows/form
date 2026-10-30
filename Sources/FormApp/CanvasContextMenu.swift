@@ -37,7 +37,7 @@ extension VectorCanvasView {
     let point = CGPoint(x: physical.x - frame.rect.minX, y: physical.y - frame.rect.minY)
     let hidden = ArtworkProduction.hiddenIDs(in: frame.artwork, roles: session.hiddenProductionRoles)
     let targets = ArtworkHitTesting.layers(at: point, in: art, tolerance: 3.5 / (TypographyEngine.pointsPerMM * zoom),
-      excluding: hidden, renderedArtwork: frame.artwork)
+      excluding: hidden, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame))
     // Merely opening a menu must not leave mask editing. A deep layer choice is
     // explicit navigation; otherwise retain the mask and its inspector context.
     if session.maskEditing == nil {

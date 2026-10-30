@@ -29,9 +29,10 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
     if PaperConstruction.isPaper(object) {
       guard (try? PaperConstruction.definition(for: object).net()) != nil else { return [] }
       var result = [LinkedInspectorAssociation(objectID: object.id, sourceID: project.artworkOwner(object).id,
-        kind: .paper(inside: false), title: "Outside dieline")]
-      if let id = object.paperConstruction?.insideArtworkSourceID, project.objects.contains(where: { $0.id == id }) {
-        result.append(.init(objectID: object.id, sourceID: id, kind: .paper(inside: true), title: "Inside dieline"))
+        kind: .paper(inside: false), title: PaperSideLabels.title(inside:false,object:object)+" dieline")]
+      let insideID=object.paperConstruction?.insideArtworkSourceID ?? object.id
+      if project.objects.contains(where:{$0.id==insideID}) {
+        result.append(.init(objectID:object.id,sourceID:insideID,kind:.paper(inside:true),title:PaperSideLabels.title(inside:true,object:object)+" dieline"))
       }
       return result
     }
@@ -169,8 +170,8 @@ struct LinkedInspectorArtworkContent: Equatable {
     if case .paper(let inside) = link.kind {
       guard let net = try? PaperConstruction.definition(for: object).net(),
         let frame = try? PhysicalArtworkFrame.paper(net: net, inside: inside) else { return nil }
-      let source = link.sourceID.flatMap { id in project.objects.first { $0.id == id } }
-      let art = source.flatMap { project.surfaceArtwork($0) } ?? Artwork(background: "#FFFFFF")
+      var blank=Artwork(background:"#F7F5EF");blank.backgroundOpacity=0
+      let art=project.paperArtwork(for:object,inside:inside) ?? blank
       return .init(artwork: art, size: frame.size, net: net, frame: frame,
         stockColor: object.color ?? project.material(object.materialID).color, guides: guides && art.showGuides != false, hiddenRoles: hiddenRoles)
     }

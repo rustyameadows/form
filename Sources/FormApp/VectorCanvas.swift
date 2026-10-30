@@ -388,6 +388,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     var frameID: UUID, scope: UUID?, mask: UUID?, excluded: Set<UUID>
   }
   private var hoverPickers: [HoverPickKey: ArtworkHitTesting.Picker] = [:]
+  private var physicalPickingClips: [UUID: CGPath] = [:]
   private var overlayAccent: NSColor { activeFrame?.isWorkspace == true ? Palette.canvasAccentNS : Palette.accentNS }
   private var accessibilityItems: [ArtworkAccessibilityElement] = []
   private var accessibilityUpdates = 0
@@ -684,6 +685,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     frameSnapshotKey = key
     clearHoverFeedback()
     hoverPickers.removeAll(keepingCapacity: true)
+    physicalPickingClips.removeAll(keepingCapacity: true)
     needsDisplay = true
   }
   func synchronize() {
@@ -1262,11 +1264,29 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard square > 1e-18 else { return nil }
     return ((p.x-a.x)*dx+(p.y-a.y)*dy)/square
   }
+  /// The renderer clips projected artwork to actual stock. Picking uses that
+  /// same material region in frame-local coordinates, including reverse faces.
+  func physicalPickingClip(for frame: CanvasFrame) -> CGPath? {
+    guard let projection = frame.projection else { return nil }
+    if let clip = physicalPickingClips[frame.id] { return clip }
+    let clip: CGPath
+    if projection.isProof {
+      if let net = try? PaperConstruction.definition(for: frame.surfaceObject).net() {
+        var transform = CGAffineTransform(a: projection.sourceToLocal.a, b: projection.sourceToLocal.b,
+          c: projection.sourceToLocal.c, d: projection.sourceToLocal.d,
+          tx: projection.sourceToLocal.tx, ty: projection.sourceToLocal.ty)
+        clip = PaperOutput.clipPath(net).normalized(using: .evenOdd).copy(using: &transform) ?? CGMutablePath()
+      } else { clip = CGMutablePath() }
+    } else { clip = projection.clipPath.normalized(using: .evenOdd) }
+    physicalPickingClips[frame.id] = clip
+    return clip
+  }
   private func hit(_ point: CGPoint, art: Artwork, scope: UUID?) -> ArtworkElement? {
     let hiddenRoles = ArtworkProduction.hiddenIDs(in:activeFrame?.artwork ?? art,roles:session?.hiddenProductionRoles ?? [])
     return ArtworkHitTesting.hit(at: point, in: art, scope: scope,
       tolerance: 3.5 / (ppm * zoom), excluding: hiddenRoles,
-      editingMask: session?.maskEditing?.maskID, renderedArtwork: activeFrame?.artwork)
+      editingMask: session?.maskEditing?.maskID, renderedArtwork: activeFrame?.artwork,
+      outerClip: activeFrame.flatMap { physicalPickingClip(for: $0) })
   }
   /// Resolve a painted sibling in the nearest enclosing scope, skipping the
   /// branch we are already editing. The same resolver drives hover and clicks.
@@ -1283,7 +1303,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if cached, let existing = hoverPickers[key] { picker = existing }
       else {
         picker = ArtworkHitTesting.Picker(in: art, scope: group.parentID,
-          excluding: excluded, renderedArtwork: frame.artwork)
+          excluding: excluded, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame))
         if cached { hoverPickers[key] = picker }
       }
       if let target = picker.hit(at: point, tolerance: 3.5 / (ppm * zoom)) { return target }
@@ -1991,7 +2011,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if let cached = hoverPickers[key] { picker = cached }
       else {
         picker = ArtworkHitTesting.Picker(in: art, scope: key.scope, excluding: excluded,
-          editingMask: key.mask, renderedArtwork: frame.artwork)
+          editingMask: key.mask, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame))
         hoverPickers[key] = picker
       }
       let p = CGPoint(x: world.x-frame.rect.minX, y: world.y-frame.rect.minY)
@@ -2021,6 +2041,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard dragMode.isEmpty, frame.id == hoveredFrameID, let id = hoveredElementID,
       let path = hoverOutline, let element = frame.artwork.elements.first(where: { $0.id == id }) else { return }
     context.saveGState(); defer { context.restoreGState() }
+    if let clip = physicalPickingClip(for: frame) { context.addPath(clip); context.clip() }
     // Respect visible clipping while outlining a nested target.
     var current: ArtworkElement? = element, seen = Set<UUID>()
     while let item = current, seen.insert(item.id).inserted {

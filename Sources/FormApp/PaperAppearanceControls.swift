@@ -98,12 +98,12 @@ struct PaperAppearanceControls: View {
       SectionLabel("ARTWORK FINISHES")
       ForEach(paper.finishes ?? []) { finish in finishEditor(finish) }
       Picker("New finish", selection: $kind) { ForEach(PaperFinishAssignment.Kind.allCases, id: \.self) { Text($0.rawValue).tag($0) } }.inspectorPicker()
-      Picker("Artwork side", selection: $side) { Text("Outside / front").tag(PaperFinishAssignment.Side.outside); Text("Inside / back").tag(PaperFinishAssignment.Side.inside) }
+      Picker("Artwork side", selection: $side) { Text(PaperSideLabels.title(inside:false,object:current)).tag(PaperFinishAssignment.Side.outside); Text(PaperSideLabels.title(inside:true,object:current)).tag(PaperFinishAssignment.Side.inside) }
         .inspectorPicker().onChange(of: side) { _, _ in targets = [] }
       targetMenu(side: side, selected: targets) { targets = $0 }
       Button("Use selected Canvas artwork") { targets = selectedTargets(side) }.disabled(selectedTargets(side).isEmpty)
       if side == .inside, let project = store.project, PaperAppearance.source(project: project, object: current, side: .inside).artwork == nil {
-        Button("Create inside artwork") { attempt { try command("ensure_inside") } }
+        Button("Create "+PaperSideLabels.title(inside:true,object:current).lowercased()+" artwork") { attempt { try command("ensure_inside") } }
       }
       Button("Add artwork finish") { attempt { try addFinish() } }.disabled(targets.isEmpty)
         .accessibilityLabel("Add paper artwork finish")

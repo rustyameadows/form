@@ -18,9 +18,10 @@ extension StudioStore {
     if let foldID=paperSelectedFoldID,net.folds.first(where:{$0.id==foldID})?.childPanelID != panelID {paperSelectedFoldID=nil}
     changed(save: false)
   }
-  func focusConstructionCanvas(objectID: UUID, panelID: String?) {
+  func focusConstructionCanvas(objectID: UUID, panelID: String?,inside:Bool?=nil) {
+    let side=inside ?? paperInside
     guard let frame = artworkSession.frames.first(where: {
-      $0.projection?.constructionID == objectID && $0.projection?.panelID == panelID
+      $0.projection?.constructionID == objectID && $0.projection?.panelID == panelID && $0.projection?.inside==side
     }) else { return }
     artworkSession.activate(frame.id)
     artworkSession.canvas?.synchronize()
@@ -41,23 +42,17 @@ extension StudioStore {
     changed(save: false)
   }
   func activatePaperArtwork(_ object: ProductObject) {
-    let source = paperInside ? object.paperConstruction?.insideArtworkSourceID : project?.artworkOwner(object).id
-    guard let source, project?.objects.contains(where: { $0.id == source }) == true else { return }
-    artworkSession.activate(source)
-    // Only the Canvas context changes; Table keeps its own physical selection.
-    artworkSession.linkedTargetID = object.id
     if let proof=artworkSession.frames.first(where: {
-      $0.projection?.constructionID == object.id && $0.projection?.sourceID == source && $0.projection?.isProof == true
+      $0.projection?.constructionID == object.id && $0.projection?.inside==paperInside && $0.projection?.isProof == true
     }) { artworkSession.activate(proof.id) }
     artworkSession.dieline = false
   }
   func setPaperInside(_ inside: Bool, object: ProductObject) {
-    guard inside != paperInside else { return }
-    let panel = artworkSession.activeProjection?.panelID
+    let panel=artworkSession.activeProjection.flatMap{$0.constructionID==object.id ? $0.panelID:nil}
     finishArtworkEditing()
     paperInside = inside
     activatePaperArtwork(object)
-    focusConstructionCanvas(objectID: object.id, panelID: panel)
+    focusConstructionCanvas(objectID: object.id, panelID: panel,inside:inside)
     changed(save: false)
   }
   func createPaperInside(_ object: ProductObject) {
@@ -109,28 +104,19 @@ struct PaperWorkspaceView: View {
       }.padding(18).frame(width:proxy.size.width,alignment:.leading).background(Palette.paper)
       Divider()
       if store.environment == .form && store.paperRepresentation == .dieline && store.paperShowingArtwork {
-        if store.paperInside && definition?.insideArtworkSourceID == nil {
-          VStack(spacing:14) {
-            Image(systemName:"square.on.square").font(.system(size:32)).foregroundStyle(Palette.secondary)
-            Text("An independent inside artwork source").font(.system(size: 18, weight: .semibold))
-            Text("Registered to the same flat construction. Creating it leaves the outside artwork intact.").font(.system(size:12)).foregroundStyle(Palette.secondary)
-            Button("Create inside artwork") { store.createPaperInside(object) }
-          }.frame(maxWidth:.infinity,maxHeight:.infinity)
-        } else {
           ArtworkStudio(session:store.artworkSession)
             .onAppear { store.activatePaperArtwork(object) }
-        }
       } else {
         PaperConstructionPreview(object:object, representation:store.paperRepresentation)
       }
       HStack(spacing:12) {
-        Label(store.paperInside ? "Inside · registered layout" : "Outside artwork",systemImage:"square.on.square")
+        Label(PaperSideLabels.title(inside:store.paperInside,object:object)+" artwork",systemImage:"square.on.square")
         Spacer()
         if store.paperRepresentation == .panels {
           Button("Edit panel") { store.showPaper(.dieline,object:object); store.environment = .form }
             .help("Edit selected panel in dieline").accessibilityLabel("Edit selected panel in dieline")
         }
-        Text(store.environment == .form ? "One artwork source · physical scale" : store.environment == .function ? "Select a panel · review its folds & joins" : "Actual-size output · local files only")
+        Text(store.environment == .form ? "Editable sides · shared physical layout" : store.environment == .function ? "Select a panel · review its folds & joins" : "Actual-size output · local files only")
       }.font(.system(size:10)).lineLimit(1).foregroundStyle(Palette.secondary).padding(.horizontal,18).frame(height:36).background(Palette.paper)
     }.frame(width:proxy.size.width,height:proxy.size.height)
     }
@@ -152,7 +138,7 @@ struct PaperWorkspaceView: View {
     HStack(spacing:2) {
       ForEach([false,true],id:\.self) { inside in
         Button {store.setPaperInside(inside,object:object)} label: {
-          Text(inside ? "Inside":"Outside").frame(maxWidth:.infinity).padding(.vertical,4)
+          Text(PaperSideLabels.title(inside:inside,object:object)).frame(maxWidth:.infinity).padding(.vertical,4)
             .background(store.paperInside == inside ? Color.white:.clear,in:RoundedRectangle(cornerRadius:4))
         }.buttonStyle(.plain).accessibilityValue(store.paperInside == inside ? "Selected":"")
       }
@@ -209,7 +195,7 @@ struct PaperEnvironmentControls: View {
       PaperAppearanceControls(object:object)
       InspectorDivider()
       SectionLabel("ARTWORK")
-      if d.insideArtworkSourceID == nil { Button("Create inside artwork…") { store.createPaperInside(object); store.showPaper(.dieline,object:object,split:true) } }
+      if d.insideArtworkSourceID == nil { Button("Create "+PaperSideLabels.title(inside:true,object:object).lowercased()+" artwork…") { store.createPaperInside(object); store.showPaper(.dieline,object:object,split:true) } }
       InspectorDivider()
       Button("Develop construction in Function") { store.showEnvironment(.function) }
     }
