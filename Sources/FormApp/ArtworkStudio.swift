@@ -12,6 +12,8 @@ struct ArtworkStudio: View {
   @State private var productionOutput = "print"
   @State private var showingLayers = true
   @State private var showingInspector = true
+  @State private var showingBackground = false
+  @ObservedObject private var appearance = InterfaceAppearance.shared
   private var hasContextNavigation: Bool {
     session.maskEditing != nil || session.componentReturn != nil || session.scopeID != nil
   }
@@ -35,7 +37,7 @@ struct ArtworkStudio: View {
           }.frame(maxWidth: .infinity, maxHeight: .infinity)
         }
       }
-      .background(Palette.surface)
+      .background(Color(nsColor: appearance.canvasBackgroundColor))
       .overlay(alignment: .topLeading) {
         if layers {
           ArtworkLayers(session: session, onClose: { showingLayers.toggle() })
@@ -111,6 +113,11 @@ struct ArtworkStudio: View {
       }
       WorkspaceToolbarDivider()
       actions
+      WorkspaceToolbarButton("Canvas background", symbol: "circle.lefthalf.filled",
+        isSelected: showingBackground, help: "Canvas background color") { showingBackground.toggle() }
+        .popover(isPresented: $showingBackground, arrowEdge: .bottom) {
+          CanvasBackgroundControls(appearance: appearance).padding(18).frame(width: 264).labInterface()
+        }
       WorkspaceToolbarDivider()
       WorkspaceToolbarButton("Zoom out", symbol: "minus") { session.setZoom(session.zoom / 1.2) }
       WorkspaceToolbarButton("Zoom in", symbol: "plus") { session.setZoom(session.zoom * 1.2) }

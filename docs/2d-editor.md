@@ -48,17 +48,24 @@ Create an artwork sheet from **Object**, or use **Artwork → New Artwork Frame*
 | Temporary pan | Space-drag |
 | Edit text / enter group | Double-click |
 | Finish text / leave group | Escape |
+| Cancel an active drag | Escape (restores artwork and Undo/Redo) |
 | Extend selection | Shift-click |
 | Constrain movement/rotation/shape | Shift-drag |
 | Bypass snapping | Option-drag |
 | Nudge / larger nudge | Arrow / Shift-arrow |
 | Fit frames | `⌘0` |
-| Zoom | Pinch, zoom menu, `⌘+` / `⌘−` |
+| Zoom | Pinch or `⌘`-scroll at the pointer; zoom menu, `⌘+` / `⌘−` |
+| Continue dragging beyond the view | Hold the pointer near a Canvas edge |
+| Canvas background | Half-filled-circle button in the Canvas toolbar, or Appearance settings |
 | Group / ungroup | `⌘G` / `⇧⌘G` |
 | Import SVG artwork | `⇧⌘I` |
 | Join endpoints / make compound / release compound | `⌘J` / `⌘8` / `⌥⌘8` |
 | Convert text to outlines | `⇧⌘O` |
 | Toggle guides / grid | `⌘;` / `⌘'` |
+
+The Canvas background is a saved local display preference, with neutral presets and a custom color picker. It does not change frame backgrounds or exported artwork. Thin selection marks and guides adapt to the chosen background. See the [interaction audit and native verification](canvas-interaction-audit.md) for selection, dragging, and viewport behavior.
+
+Hover artwork to preview the target. Selected artwork shows a grab cursor; resize handles show directional arrows and rotation shows a curved arrow, with the active handle highlighted. Double-click a group to select its children.
 
 Drag from a ruler to add a guide. Clear the selection to inspect frame dimensions, guides, grid, and nudge settings. Physical fields accept explicit suffixes such as `8 in`, `25.4 mm`, and `72 pt`.
 

@@ -10,17 +10,25 @@ extension Notification.Name {
 /// App preferences only: never stored in a product, artwork, or material library.
 @MainActor final class InterfaceAppearance: ObservableObject {
   static let defaultAccent = "#245BFF"
+  static let defaultCanvasBackground = "#F2F2F2"
   static let shared = InterfaceAppearance.environment()
   @Published private(set) var accentHex: String
+  @Published private(set) var canvasBackgroundHex: String
   private let defaults: UserDefaults?
   private let file: URL?
-  private struct Saved: Codable { var accentHex: String }
+  private var cachedCanvasControl: (accent: String, background: String, color: NSColor)?
+  private struct Saved: Codable { var accentHex: String; var canvasBackgroundHex: String? }
   init(defaults: UserDefaults? = nil, file: URL? = nil) {
     self.defaults = defaults; self.file = file
-    let stored: String?
-    if let file, let data = try? Data(contentsOf: file), let value = try? JSONDecoder().decode(Saved.self, from: data) { stored = value.accentHex }
-    else { stored = defaults?.string(forKey: "LAB.interfaceAccent") }
+    let stored: String?, background: String?
+    if let file, let data = try? Data(contentsOf: file), let value = try? JSONDecoder().decode(Saved.self, from: data) {
+      stored = value.accentHex; background = value.canvasBackgroundHex
+    } else {
+      stored = defaults?.string(forKey: "LAB.interfaceAccent")
+      background = defaults?.string(forKey: "LAB.canvasBackground")
+    }
     accentHex = (try? Self.normalized(stored ?? Self.defaultAccent)) ?? Self.defaultAccent
+    canvasBackgroundHex = (try? Self.normalized(background ?? Self.defaultCanvasBackground)) ?? Self.defaultCanvasBackground
   }
   private static func environment() -> InterfaceAppearance {
     if let path = LabIdentity.libraryOverride() { return .init(file: URL(fileURLWithPath: path).appendingPathComponent("Appearance.json")) }
@@ -39,7 +47,7 @@ extension Notification.Name {
     guard value != accentHex else { return }
     if let file {
       try FileManager.default.createDirectory(at: file.deletingLastPathComponent(), withIntermediateDirectories: true)
-      try JSONEncoder().encode(Saved(accentHex: value)).write(to: file, options: .atomic)
+      try JSONEncoder().encode(Saved(accentHex: value, canvasBackgroundHex: canvasBackgroundHex)).write(to: file, options: .atomic)
     }
     defaults?.set(value, forKey: "LAB.interfaceAccent")
     accentHex = value
@@ -48,6 +56,53 @@ extension Notification.Name {
   func setAccent(_ color: NSColor) throws {
     guard let c = color.usingColorSpace(.sRGB) else { throw FormError.invalid("Choose an RGB accent color.") }
     try setAccent(String(format: "#%02X%02X%02X", Int((c.redComponent * 255).rounded()), Int((c.greenComponent * 255).rounded()), Int((c.blueComponent * 255).rounded())))
+  }
+  func setCanvasBackground(_ raw: String) throws {
+    let value = try Self.normalized(raw)
+    guard value != canvasBackgroundHex else { return }
+    if let file {
+      try FileManager.default.createDirectory(at: file.deletingLastPathComponent(), withIntermediateDirectories: true)
+      try JSONEncoder().encode(Saved(accentHex: accentHex, canvasBackgroundHex: value)).write(to: file, options: .atomic)
+    }
+    defaults?.set(value, forKey: "LAB.canvasBackground")
+    canvasBackgroundHex = value
+    NotificationCenter.default.post(name: .labAppearanceChanged, object: self)
+  }
+  func setCanvasBackground(_ color: NSColor) throws {
+    guard let c = color.usingColorSpace(.sRGB) else { throw FormError.invalid("Choose an RGB Canvas background color.") }
+    try setCanvasBackground(String(format: "#%02X%02X%02X", Int((c.redComponent * 255).rounded()), Int((c.greenComponent * 255).rounded()), Int((c.blueComponent * 255).rounded())))
+  }
+  var canvasBackgroundColor: NSColor { NSColor(hex: canvasBackgroundHex) }
+  var canvasLabelColor: NSColor {
+    Self.whiteContrast(canvasBackgroundColor) >= 4.5 ? NSColor.white : NSColor.black
+  }
+  /// Lift or darken the same accent hue until thin interface marks can be read
+  /// on the chosen workspace. Physical artwork colors never use this tone.
+  var canvasControlColor: NSColor {
+    if let cached = cachedCanvasControl, cached.accent == accentHex, cached.background == canvasBackgroundHex {
+      return cached.color
+    }
+    let color = readableCanvasControlColor()
+    cachedCanvasControl = (accentHex, canvasBackgroundHex, color)
+    return color
+  }
+  private func readableCanvasControlColor() -> NSColor {
+    let source = selectedColor.usingColorSpace(.sRGB)!
+    let backgroundContrast = Self.whiteContrast(canvasBackgroundColor)
+    func contrast(_ color: NSColor) -> Double {
+      let ratio = Self.whiteContrast(color) / backgroundContrast
+      return max(ratio, 1 / ratio)
+    }
+    if contrast(source) >= 3 { return source }
+    let endpoint = backgroundContrast >= 4.5 ? 1.0 : 0.0
+    for step in 1...100 {
+      let amount = Double(step) / 100
+      let color = NSColor(srgbRed: source.redComponent + (endpoint - source.redComponent) * amount,
+        green: source.greenComponent + (endpoint - source.greenComponent) * amount,
+        blue: source.blueComponent + (endpoint - source.blueComponent) * amount, alpha: 1)
+      if contrast(color) >= 3 { return color }
+    }
+    return canvasLabelColor
   }
   static func whiteContrast(_ color: NSColor) -> Double {
     let c = color.usingColorSpace(.sRGB)!
@@ -78,6 +133,11 @@ enum Palette {
   static let surfaceNS = NSColor(hex: "#F2F2F2")
   @MainActor static var accentNS: NSColor { InterfaceAppearance.shared.controlColor }
   @MainActor static var accent: Color { Color(nsColor: accentNS) }
+  @MainActor static var canvasBackgroundNS: NSColor { InterfaceAppearance.shared.canvasBackgroundColor }
+  @MainActor static var canvasLabelNS: NSColor { InterfaceAppearance.shared.canvasLabelColor }
+  @MainActor static var canvasAccentNS: NSColor { InterfaceAppearance.shared.canvasControlColor }
+  @MainActor static var canvasGridNS: NSColor { canvasLabelNS.withAlphaComponent(0.16) }
+  @MainActor static var canvasGuideNS: NSColor { canvasLabelNS.withAlphaComponent(0.65) }
   static let numericFont = Font.system(size: 11, design: .monospaced)
 }
 
@@ -97,60 +157,64 @@ struct AppearanceSettingsView: View {
   @State private var hex = ""
   @State private var issue: String?
   var body: some View {
-    VStack(alignment: .leading, spacing: 24) {
-      Text("Settings").font(.system(size: 24, weight: .semibold))
-      Text("SF for the interface. SF Mono for values and technical details.").foregroundStyle(Palette.secondary)
-      Divider()
-      InspectorColorPicker("Accent color", selection: Binding(get: { Color(nsColor: appearance.selectedColor) }, set: { color in apply { try appearance.setAccent(NSColor(color)) } }), supportsOpacity: false)
-        .accessibilityLabel("App accent color")
-      HStack {
-        TextField("#RRGGBB", text: $hex).font(Palette.numericFont).textFieldStyle(InspectorTextFieldStyle()).frame(width: 120).accessibilityLabel("Accent hex color").onSubmit(applyHex)
-        Button("Apply", action: applyHex).accessibilityLabel("Apply app accent")
-        Spacer()
-        Button("Reset to blue") { apply { try appearance.setAccent(InterfaceAppearance.defaultAccent) } }
-      }
-      HStack(spacing: 12) {
-        Image(systemName: "checkmark.circle.fill").foregroundStyle(Palette.accent)
-        Text("Selected control").font(.system(size: 12, weight: .medium))
-        Spacer()
-        Text("125.00 mm").font(Palette.numericFont).foregroundStyle(Palette.secondary)
-      }.padding(16).background(Palette.surface, in: RoundedRectangle(cornerRadius: 8))
-      if let issue { Label(issue, systemImage: "exclamationmark.circle").font(.system(size: 11)).fixedSize(horizontal: false, vertical: true) }
-      Text("Applies throughout LAB. Pale colors use a darker tone for readable controls on white.").font(.system(size: 11)).foregroundStyle(Palette.secondary)
-      Divider()
-      VStack(alignment: .leading, spacing: 14) {
-        Text("Units").font(.system(size: 13, weight: .semibold))
+    ScrollView {
+      VStack(alignment: .leading, spacing: 24) {
+        Text("Settings").font(.system(size: 24, weight: .semibold))
+        Text("SF for the interface. SF Mono for values and technical details.").foregroundStyle(Palette.secondary)
+        Divider()
+        InspectorColorPicker("Accent color", selection: Binding(get: { Color(nsColor: appearance.selectedColor) }, set: { color in apply { try appearance.setAccent(NSColor(color)) } }), supportsOpacity: false)
+          .accessibilityLabel("App accent color")
         HStack {
-          Text("Project dimensions")
+          TextField("#RRGGBB", text: $hex).font(Palette.numericFont).textFieldStyle(InspectorTextFieldStyle()).frame(width: 120).accessibilityLabel("Accent hex color").onSubmit(applyHex)
+          Button("Apply", action: applyHex).accessibilityLabel("Apply app accent")
           Spacer()
-          Picker("Project dimensions", selection: Binding(
-          get: { store.project?.unit ?? "mm" },
-          set: { unit in store.edit("Changed units") { $0.unit = unit } }
-        )) {
-          Text("Millimeters").tag("mm")
-          Text("Inches").tag("in")
-          }.labelsHidden().pickerStyle(.menu).frame(width: 150)
-            .disabled(store.showingHome || store.project == nil)
+          Button("Reset to blue") { apply { try appearance.setAccent(InterfaceAppearance.defaultAccent) } }
         }
-        HStack {
-          Text("Canvas units")
+        HStack(spacing: 12) {
+          Image(systemName: "checkmark.circle.fill").foregroundStyle(Palette.accent)
+          Text("Selected control").font(.system(size: 12, weight: .medium))
           Spacer()
-          Picker("Canvas units", selection: Binding(
-          get: { store.artworkSession.unit },
-          set: { unit in
-            NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
-            store.artworkSession.mutate { $0.unit = unit }
+          Text("125.00 mm").font(Palette.numericFont).foregroundStyle(Palette.secondary)
+        }.padding(16).background(Palette.surface, in: RoundedRectangle(cornerRadius: 8))
+        if let issue { Label(issue, systemImage: "exclamationmark.circle").font(.system(size: 11)).fixedSize(horizontal: false, vertical: true) }
+        Text("Applies throughout LAB. Pale colors use a darker tone for readable controls on white.").font(.system(size: 11)).foregroundStyle(Palette.secondary)
+        Divider()
+        CanvasBackgroundControls(appearance: appearance)
+        Divider()
+        VStack(alignment: .leading, spacing: 14) {
+          Text("Units").font(.system(size: 13, weight: .semibold))
+          HStack {
+            Text("Project dimensions")
+            Spacer()
+            Picker("Project dimensions", selection: Binding(
+            get: { store.project?.unit ?? "mm" },
+            set: { unit in store.edit("Changed units") { $0.unit = unit } }
+          )) {
+            Text("Millimeters").tag("mm")
+            Text("Inches").tag("in")
+            }.labelsHidden().pickerStyle(.menu).frame(width: 150)
+              .disabled(store.showingHome || store.project == nil)
           }
-        )) {
-          Text("Millimeters").tag(PhysicalUnit.mm)
-          Text("Centimeters").tag(PhysicalUnit.cm)
-          Text("Inches").tag(PhysicalUnit.inches)
-          Text("Points").tag(PhysicalUnit.points)
-          }.labelsHidden().pickerStyle(.menu).frame(width: 150)
-            .disabled(store.showingHome || store.artworkSession.object == nil)
+          HStack {
+            Text("Canvas units")
+            Spacer()
+            Picker("Canvas units", selection: Binding(
+            get: { store.artworkSession.unit },
+            set: { unit in
+              NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
+              store.artworkSession.mutate { $0.unit = unit }
+            }
+          )) {
+            Text("Millimeters").tag(PhysicalUnit.mm)
+            Text("Centimeters").tag(PhysicalUnit.cm)
+            Text("Inches").tag(PhysicalUnit.inches)
+            Text("Points").tag(PhysicalUnit.points)
+            }.labelsHidden().pickerStyle(.menu).frame(width: 150)
+              .disabled(store.showingHome || store.artworkSession.object == nil)
+          }
         }
-      }
-    }.padding(28).frame(width: 460).background(Palette.paper).labInterface()
+      }.padding(28)
+    }.frame(width: 460, height: 680).background(Palette.paper).labInterface()
       .onAppear { hex = appearance.accentHex }
       .onChange(of: appearance.accentHex) { _, value in hex = value; issue = nil }
   }
@@ -166,6 +230,7 @@ extension StudioStore {
     scene?.refreshInterfaceAccent(color)
     studioComposition.stage.refreshInterfaceAccent(color)
     artworkSession.canvas?.refreshInterfaceAccent(color)
+    artworkSession.canvas?.enclosingScrollView?.backgroundColor = Palette.canvasBackgroundNS
     func redraw(_ view: NSView) { view.needsDisplay = true; for child in view.subviews { redraw(child) } }
     for window in NSApp.windows { if let view = window.contentView { redraw(view) } }
   }
