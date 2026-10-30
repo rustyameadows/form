@@ -343,6 +343,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var gestureFrameID: UUID?
   private var gestureSelection = Set<UUID>(), gestureNodes = Set<UUID>()
   private var dragDidMove = false
+  private var dragDuplicated = false
   private var cursorTool: ArtworkTool?
   private var windowFocusObservation: NSObjectProtocol?
   private var edgeScrollTimer: Timer?
@@ -1593,6 +1594,24 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       guard distance >= 3 else { return }
       dragDidMove = true
     }
+    var duplicatedNow = false
+    if dragMode == "move", s.maskEditing == nil, !dragDuplicated, event.modifierFlags.contains(.option) {
+      do {
+        // Clone the gesture's untouched starting artwork, even if Option was
+        // pressed after movement began. The original stays at its start point.
+        var copied = snapshot
+        let copies = try ArtworkCommands.apply("duplicate", to: &copied, ids: startSelection,
+          duplicateOffset: .init())
+        guard !copies.isEmpty else { return }
+        snapshot = copied; startSelection = copies
+        s.choose(copies)
+        dragDuplicated = true; duplicatedNow = true
+      } catch {
+        s.store?.error = error.localizedDescription
+        cancelPointerGesture()
+        return
+      }
+    }
     updateEdgeScrolling(with: event)
     let p = point(event)
     var value = snapshot
@@ -1786,6 +1805,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       }
     }
     s.save(value)
+    if duplicatedNow, !startSelection.isSubset(of: Set(s.art.elements.map(\.id))) {
+      // A rejected write must not leave a phantom copy selected or an active
+      // drag that could subsequently overwrite a different accepted edit.
+      cancelPointerGesture()
+    }
   }
   override func mouseUp(with event: NSEvent) {
     if let token = gestureToken,
@@ -1798,7 +1822,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let destination = frame(atCanvasPoint:canvasPoint(convert(event.locationInWindow,from:nil))),
       destination.id != source.id, source.projection == nil, destination.projection == nil, point(event) != down {
       let offset = Point2(source.rect.minX-destination.rect.minX,source.rect.minY-destination.rect.minY)
-      if !s.transferSelection(to:destination.id,offset:offset) { s.save(snapshot) }
+      if !s.transferSelection(to:destination.id,offset:offset) {
+        if dragDuplicated { cancelPointerGesture(); return }
+        s.save(snapshot)
+      }
       synchronize()
     }
     if ["node", "incoming", "outgoing"].contains(dragMode), dragDidMove, let s = session {
@@ -1838,6 +1865,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     gestureToken = nil
     gestureFrameID = nil
     dragDidMove = false
+    dragDuplicated = false
     clearHoverFeedback()
     window?.invalidateCursorRects(for: self)
     needsDisplay = true

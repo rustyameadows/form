@@ -9,7 +9,8 @@ public enum ArtworkCommands {
     "pattern_piece", "seam_pair", "pattern_template", "cut_layout",
   ]
   @discardableResult public static func apply(
-    _ command: String, to art: inout Artwork, ids: Set<UUID> = [], arguments: [String: Any] = [:],maxTextCharacters:Int=10000
+    _ command: String, to art: inout Artwork, ids: Set<UUID> = [], arguments: [String: Any] = [:],maxTextCharacters:Int=10000,
+    duplicateOffset:Point2 = .init(10,10)
   ) throws -> Set<UUID> {
     var result = art
     var selection = ids
@@ -88,6 +89,9 @@ public enum ArtworkCommands {
         result.elements[i].clipID = nil
       }
     case "duplicate":
+      guard [duplicateOffset.x,duplicateOffset.y].allSatisfy({$0.isFinite && abs($0)<=100000}) else {
+        throw FormError.invalid("Duplicate offsets must be finite root-coordinate values within ±100000 mm.")
+      }
       let all = art.descendants(of: ids)
       let mapping = Dictionary(uniqueKeysWithValues: all.map { ($0, UUID()) })
       let listIDs=Set(art.elements.filter{all.contains($0.id)}.flatMap{($0.listItems ?? []).map(\.listID)})
@@ -103,8 +107,8 @@ public enum ArtworkCommands {
         if let parent = element.parentID, let id = mapping[parent] { element.parentID = id }
         if let clip = element.clipID, let id = mapping[clip] { element.clipID = id }
         if roots.contains(where: { $0.id == original }) {
-          element.x += 10
-          element.y += 10
+          element.x += duplicateOffset.x
+          element.y += duplicateOffset.y
         }
         result.elements.append(element)
       }

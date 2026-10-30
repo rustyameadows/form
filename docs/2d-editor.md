@@ -51,7 +51,8 @@ Create an artwork sheet from **Object**, or use **Artwork → New Artwork Frame*
 | Cancel an active drag | Escape (restores artwork and Undo/Redo) |
 | Extend selection | Shift-click |
 | Constrain movement/rotation/shape | Shift-drag |
-| Bypass snapping | Option-drag |
+| Duplicate and move artwork | Option-drag (hold Option before clicking or during the drag) |
+| Bypass snapping | Hold Option while transforming; artwork moves also duplicate |
 | Nudge / larger nudge | Arrow / Shift-arrow |
 | Fit frames | `⌘0` |
 | Zoom | Pinch or `⌘`-scroll at the pointer; zoom menu, `⌘+` / `⌘−` |
