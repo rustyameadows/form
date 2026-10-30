@@ -929,8 +929,12 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
             c:f.projection?.sourceToLocal.c ?? 0,d:f.projection?.sourceToLocal.d ?? 1,
             tx:f.projection?.sourceToLocal.tx ?? 0,ty:f.projection?.sourceToLocal.ty ?? 0)
           context.addPath(PaperOutput.clipPath(paperNet).copy(using:&transform)!); context.clip()
-          let stock = f.surfaceObject.color ?? session.store?.project?.material(f.surfaceObject.materialID).color ?? "#F7F5EF"
-          context.setFillColor(NSColor(hex:stock).cgColor);context.fill(CGRect(origin:.zero,size:f.rect.size))
+        }
+        if PaperConstruction.isPaper(f.surfaceObject),let project=session.store?.project,
+          let paper=try? PaperConstruction.definition(for:f.surfaceObject) {
+          let face=PaperGeometry.faceAppearance(for:f.surfaceObject,stock:paper.stock,project:project,inside:f.projection?.inside == true)
+          context.setFillColor(FormColor.color(face.resolvedColor).withAlphaComponent(face.profile.opacity).cgColor)
+          context.fill(CGRect(origin:.zero,size:f.rect.size))
         }
         ArtworkRenderer.draw(
           f.artwork, width: f.rect.width, height: f.rect.height, assets: session.assets,
