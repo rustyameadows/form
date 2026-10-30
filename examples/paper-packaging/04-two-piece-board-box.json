@@ -1,0 +1,678 @@
+{
+  "version": 3,
+  "name": "Two piece board box and insert",
+  "parameters": [
+    {
+      "name": "width",
+      "value": 140,
+      "minimum": 84.0,
+      "maximum": 224.0,
+      "unit": "mm"
+    },
+    {
+      "name": "height",
+      "value": 45,
+      "minimum": 27.0,
+      "maximum": 72.0,
+      "unit": "mm"
+    },
+    {
+      "name": "depth",
+      "value": 100,
+      "minimum": 60.0,
+      "maximum": 160.0,
+      "unit": "mm"
+    },
+    {
+      "name": "stock",
+      "value": 1.8,
+      "minimum": 0.9,
+      "maximum": 3.24,
+      "unit": "mm"
+    },
+    {
+      "name": "clearance",
+      "value": 1,
+      "minimum": 0,
+      "maximum": 5,
+      "unit": "mm"
+    },
+    {
+      "name": "lidHeight",
+      "value": 25,
+      "minimum": 15,
+      "maximum": 38,
+      "unit": "mm"
+    },
+    {
+      "name": "insertHeight",
+      "value": 12,
+      "minimum": 5,
+      "maximum": 20,
+      "unit": "mm"
+    }
+  ],
+  "size": {
+    "x": "3*cell",
+    "y": "4*cell"
+  },
+  "stockThickness": "stock",
+  "panels": [
+    {
+      "id": "base-floor",
+      "name": "Base Floor",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+0*cell",
+          "y": "5+0*cell"
+        },
+        {
+          "x": "(5+0*cell)+((width)+2*stock)",
+          "y": "5+0*cell"
+        },
+        {
+          "x": "(5+0*cell)+((width)+2*stock)",
+          "y": "(5+0*cell)+((depth)+2*stock)"
+        },
+        {
+          "x": "5+0*cell",
+          "y": "(5+0*cell)+((depth)+2*stock)"
+        }
+      ]
+    },
+    {
+      "id": "base-front",
+      "name": "Base Front",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+1*cell",
+          "y": "5+0*cell"
+        },
+        {
+          "x": "(5+1*cell)+((width)+2*stock)",
+          "y": "5+0*cell"
+        },
+        {
+          "x": "(5+1*cell)+((width)+2*stock)",
+          "y": "(5+0*cell)+(height)"
+        },
+        {
+          "x": "5+1*cell",
+          "y": "(5+0*cell)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "base-back",
+      "name": "Base Back",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+2*cell",
+          "y": "5+0*cell"
+        },
+        {
+          "x": "(5+2*cell)+((width)+2*stock)",
+          "y": "5+0*cell"
+        },
+        {
+          "x": "(5+2*cell)+((width)+2*stock)",
+          "y": "(5+0*cell)+(height)"
+        },
+        {
+          "x": "5+2*cell",
+          "y": "(5+0*cell)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "base-left",
+      "name": "Base Left",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+0*cell",
+          "y": "5+1*cell"
+        },
+        {
+          "x": "(5+0*cell)+(depth)",
+          "y": "5+1*cell"
+        },
+        {
+          "x": "(5+0*cell)+(depth)",
+          "y": "(5+1*cell)+(height)"
+        },
+        {
+          "x": "5+0*cell",
+          "y": "(5+1*cell)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "base-right",
+      "name": "Base Right",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+1*cell",
+          "y": "5+1*cell"
+        },
+        {
+          "x": "(5+1*cell)+(depth)",
+          "y": "5+1*cell"
+        },
+        {
+          "x": "(5+1*cell)+(depth)",
+          "y": "(5+1*cell)+(height)"
+        },
+        {
+          "x": "5+1*cell",
+          "y": "(5+1*cell)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "lid-floor",
+      "name": "Lid Floor",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+2*cell",
+          "y": "5+1*cell"
+        },
+        {
+          "x": "(5+2*cell)+((lidWidth)+2*stock)",
+          "y": "5+1*cell"
+        },
+        {
+          "x": "(5+2*cell)+((lidWidth)+2*stock)",
+          "y": "(5+1*cell)+((lidDepth)+2*stock)"
+        },
+        {
+          "x": "5+2*cell",
+          "y": "(5+1*cell)+((lidDepth)+2*stock)"
+        }
+      ]
+    },
+    {
+      "id": "lid-front",
+      "name": "Lid Front",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+0*cell",
+          "y": "5+2*cell"
+        },
+        {
+          "x": "(5+0*cell)+((lidWidth)+2*stock)",
+          "y": "5+2*cell"
+        },
+        {
+          "x": "(5+0*cell)+((lidWidth)+2*stock)",
+          "y": "(5+2*cell)+(lidHeight)"
+        },
+        {
+          "x": "5+0*cell",
+          "y": "(5+2*cell)+(lidHeight)"
+        }
+      ]
+    },
+    {
+      "id": "lid-back",
+      "name": "Lid Back",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+1*cell",
+          "y": "5+2*cell"
+        },
+        {
+          "x": "(5+1*cell)+((lidWidth)+2*stock)",
+          "y": "5+2*cell"
+        },
+        {
+          "x": "(5+1*cell)+((lidWidth)+2*stock)",
+          "y": "(5+2*cell)+(lidHeight)"
+        },
+        {
+          "x": "5+1*cell",
+          "y": "(5+2*cell)+(lidHeight)"
+        }
+      ]
+    },
+    {
+      "id": "lid-left",
+      "name": "Lid Left",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+2*cell",
+          "y": "5+2*cell"
+        },
+        {
+          "x": "(5+2*cell)+(lidDepth)",
+          "y": "5+2*cell"
+        },
+        {
+          "x": "(5+2*cell)+(lidDepth)",
+          "y": "(5+2*cell)+(lidHeight)"
+        },
+        {
+          "x": "5+2*cell",
+          "y": "(5+2*cell)+(lidHeight)"
+        }
+      ]
+    },
+    {
+      "id": "lid-right",
+      "name": "Lid Right",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+0*cell",
+          "y": "5+3*cell"
+        },
+        {
+          "x": "(5+0*cell)+(lidDepth)",
+          "y": "5+3*cell"
+        },
+        {
+          "x": "(5+0*cell)+(lidDepth)",
+          "y": "(5+3*cell)+(lidHeight)"
+        },
+        {
+          "x": "5+0*cell",
+          "y": "(5+3*cell)+(lidHeight)"
+        }
+      ]
+    },
+    {
+      "id": "insert",
+      "name": "Insert",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "5+1*cell",
+          "y": "5+3*cell"
+        },
+        {
+          "x": "(5+1*cell)+(width-2*clearance)",
+          "y": "5+3*cell"
+        },
+        {
+          "x": "(5+1*cell)+(width-2*clearance)",
+          "y": "(5+3*cell)+(depth-2*clearance)"
+        },
+        {
+          "x": "5+1*cell",
+          "y": "(5+3*cell)+(depth-2*clearance)"
+        }
+      ],
+      "cutouts": [
+        {
+          "id": "product-aperture",
+          "kind": "window",
+          "polygon": [
+            {
+              "x": "(5+1*cell)+((width-2*clearance)*.25)",
+              "y": "(5+3*cell)+((depth-2*clearance)*.2)"
+            },
+            {
+              "x": "((5+1*cell)+((width-2*clearance)*.25))+((width-2*clearance)*.5)",
+              "y": "(5+3*cell)+((depth-2*clearance)*.2)"
+            },
+            {
+              "x": "((5+1*cell)+((width-2*clearance)*.25))+((width-2*clearance)*.5)",
+              "y": "((5+3*cell)+((depth-2*clearance)*.2))+((depth-2*clearance)*.6)"
+            },
+            {
+              "x": "(5+1*cell)+((width-2*clearance)*.25)",
+              "y": "((5+3*cell)+((depth-2*clearance)*.2))+((depth-2*clearance)*.6)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "hinges": [],
+  "joins": [
+    {
+      "id": "base-front-bond",
+      "name": "Base Front Bond",
+      "firstPanelID": "base-floor",
+      "secondPanelID": "base-front",
+      "kind": "glue",
+      "overlapMM": "stock",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "base-back-bond",
+      "name": "Base Back Bond",
+      "firstPanelID": "base-floor",
+      "secondPanelID": "base-back",
+      "kind": "glue",
+      "overlapMM": "stock",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "base-left-bond",
+      "name": "Base Left Bond",
+      "firstPanelID": "base-floor",
+      "secondPanelID": "base-left",
+      "kind": "glue",
+      "overlapMM": "stock",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "base-right-bond",
+      "name": "Base Right Bond",
+      "firstPanelID": "base-floor",
+      "secondPanelID": "base-right",
+      "kind": "glue",
+      "overlapMM": "stock",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "lid-front-bond",
+      "name": "Lid Front Bond",
+      "firstPanelID": "lid-floor",
+      "secondPanelID": "lid-front",
+      "kind": "glue",
+      "overlapMM": "stock",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "lid-back-bond",
+      "name": "Lid Back Bond",
+      "firstPanelID": "lid-floor",
+      "secondPanelID": "lid-back",
+      "kind": "glue",
+      "overlapMM": "stock",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "lid-left-bond",
+      "name": "Lid Left Bond",
+      "firstPanelID": "lid-floor",
+      "secondPanelID": "lid-left",
+      "kind": "glue",
+      "overlapMM": "stock",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "lid-right-bond",
+      "name": "Lid Right Bond",
+      "firstPanelID": "lid-floor",
+      "secondPanelID": "lid-right",
+      "kind": "glue",
+      "overlapMM": "stock",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    }
+  ],
+  "rootPanelID": "base-floor",
+  "components": [
+    {
+      "id": "base-floor",
+      "name": "Base Floor",
+      "rootPanelID": "base-floor",
+      "anchor": {
+        "x": "5+0*cell",
+        "y": "5+0*cell"
+      },
+      "position": {
+        "x": "-(width)/2-stock",
+        "y": "(stock/2)+(0)",
+        "z": "-(depth)/2-stock"
+      },
+      "rotationDegrees": {
+        "x": -90,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "id": "base-front",
+      "name": "Base Front",
+      "rootPanelID": "base-front",
+      "anchor": {
+        "x": "5+1*cell",
+        "y": "(5+0*cell)+(height)"
+      },
+      "position": {
+        "x": "-(width)/2-stock",
+        "y": "(stock)+(0)",
+        "z": "(depth)/2+stock/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "id": "base-back",
+      "name": "Base Back",
+      "rootPanelID": "base-back",
+      "anchor": {
+        "x": "5+2*cell",
+        "y": "(5+0*cell)+(height)"
+      },
+      "position": {
+        "x": "(width)/2+stock",
+        "y": "(stock)+(0)",
+        "z": "-(depth)/2-stock/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 180,
+        "z": 0
+      }
+    },
+    {
+      "id": "base-left",
+      "name": "Base Left",
+      "rootPanelID": "base-left",
+      "anchor": {
+        "x": "5+0*cell",
+        "y": "(5+1*cell)+(height)"
+      },
+      "position": {
+        "x": "-(width)/2-stock/2",
+        "y": "(stock)+(0)",
+        "z": "-(depth)/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": -90,
+        "z": 0
+      }
+    },
+    {
+      "id": "base-right",
+      "name": "Base Right",
+      "rootPanelID": "base-right",
+      "anchor": {
+        "x": "5+1*cell",
+        "y": "(5+1*cell)+(height)"
+      },
+      "position": {
+        "x": "(width)/2+stock/2",
+        "y": "(stock)+(0)",
+        "z": "(depth)/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 90,
+        "z": 0
+      }
+    },
+    {
+      "id": "lid-floor",
+      "name": "Lid Floor",
+      "rootPanelID": "lid-floor",
+      "anchor": {
+        "x": "5+2*cell",
+        "y": "5+1*cell"
+      },
+      "position": {
+        "x": "(-(lidWidth)/2-stock)+opening/100*(width+40)",
+        "y": "(stock+height+clearance+stock/2)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+        "z": "-(lidDepth)/2-stock"
+      },
+      "rotationDegrees": {
+        "x": -90,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "id": "lid-front",
+      "name": "Lid Front",
+      "rootPanelID": "lid-front",
+      "anchor": {
+        "x": "5+0*cell",
+        "y": "(5+2*cell)+(lidHeight)"
+      },
+      "position": {
+        "x": "(-(lidWidth)/2-stock)+opening/100*(width+40)",
+        "y": "(stock+height+clearance-lidHeight)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+        "z": "(lidDepth)/2+stock/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "id": "lid-back",
+      "name": "Lid Back",
+      "rootPanelID": "lid-back",
+      "anchor": {
+        "x": "5+1*cell",
+        "y": "(5+2*cell)+(lidHeight)"
+      },
+      "position": {
+        "x": "((lidWidth)/2+stock)+opening/100*(width+40)",
+        "y": "(stock+height+clearance-lidHeight)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+        "z": "-(lidDepth)/2-stock/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 180,
+        "z": 0
+      }
+    },
+    {
+      "id": "lid-left",
+      "name": "Lid Left",
+      "rootPanelID": "lid-left",
+      "anchor": {
+        "x": "5+2*cell",
+        "y": "(5+2*cell)+(lidHeight)"
+      },
+      "position": {
+        "x": "(-(lidWidth)/2-stock/2)+opening/100*(width+40)",
+        "y": "(stock+height+clearance-lidHeight)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+        "z": "-(lidDepth)/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": -90,
+        "z": 0
+      }
+    },
+    {
+      "id": "lid-right",
+      "name": "Lid Right",
+      "rootPanelID": "lid-right",
+      "anchor": {
+        "x": "5+0*cell",
+        "y": "(5+3*cell)+(lidHeight)"
+      },
+      "position": {
+        "x": "((lidWidth)/2+stock/2)+opening/100*(width+40)",
+        "y": "(stock+height+clearance-lidHeight)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+        "z": "(lidDepth)/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 90,
+        "z": 0
+      }
+    },
+    {
+      "id": "insert",
+      "name": "Insert",
+      "rootPanelID": "insert",
+      "anchor": {
+        "x": "5+1*cell",
+        "y": "5+3*cell"
+      },
+      "position": {
+        "x": "-(width-2*clearance)/2",
+        "y": "stock+insertHeight",
+        "z": "-(depth-2*clearance)/2"
+      },
+      "rotationDegrees": {
+        "x": -90,
+        "y": 0,
+        "z": 0
+      }
+    }
+  ],
+  "interiors": [
+    {
+      "id": "base-interior",
+      "name": "Base Interior",
+      "componentID": "base-floor",
+      "origin": {
+        "x": "stock",
+        "y": "-stock",
+        "z": "stock/2"
+      },
+      "size": {
+        "x": "width",
+        "y": "height",
+        "z": "depth"
+      },
+      "rotationDegrees": {
+        "x": 90,
+        "y": 0,
+        "z": 0
+      },
+      "opening": {
+        "axis": "y",
+        "width": "width",
+        "height": "depth"
+      }
+    }
+  ],
+  "derived": {
+    "cell": "max(width,max(depth,height))+8*stock+4*clearance+20",
+    "lidWidth": "width+2*stock+2*clearance",
+    "lidDepth": "depth+2*stock+2*clearance"
+  },
+  "solidChecks": [
+    {
+      "id": "lid-clears-base",
+      "firstPanelID": "base-front",
+      "secondPanelID": "lid-front",
+      "metric": "interference",
+      "relation": "<=",
+      "value": "0",
+      "message": "Nested front boards must not occupy the same solid volume."
+    },
+    {
+      "id": "lid-front-clearance",
+      "firstPanelID": "base-front",
+      "secondPanelID": "lid-front",
+      "metric": "clearance",
+      "relation": ">=",
+      "value": "clearance",
+      "message": "The nested lid retains the declared physical board-to-board clearance."
+    }
+  ]
+}

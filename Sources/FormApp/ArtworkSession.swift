@@ -64,6 +64,22 @@ enum ArtworkTool: String, CaseIterable {
   var transferInFlight=false
   var lastTransferError:String?
   var lastTransferResult:[String:Any]?
+  private struct FrameInputs:Equatable {
+    let project:Project
+    let objectID:UUID?
+    let linkedTargetID:UUID?
+    let dieline:Bool
+    let paperInside:Bool
+    let editingComponent:Bool
+  }
+  private struct FrameMemo {
+    let inputs:FrameInputs
+    let frames:[CanvasFrame]
+  }
+  // One COW document snapshot, not a history of frame graphs. A revision-only
+  // key misses direct project assignments and shared story/style dependencies.
+  private var frameMemo:FrameMemo?
+  private(set) var frameBuildCount=0
 
   @Published var croppingImageID: UUID?
   @Published var objectID: UUID? {didSet{if objectID != oldValue {cancelArtworkTransfer();projectionFrameID=nil}}}
@@ -121,7 +137,9 @@ enum ArtworkTool: String, CaseIterable {
   var sourceArtwork: Artwork { object.flatMap { store?.project?.editableArtwork($0) } ?? .init(background: "#FFFFFF") }
   var activeFrameID: UUID? { projectionFrameID ?? objectID }
   var activeCanvasFrame: CanvasFrame? {
-    let values = frames
+    activeCanvasFrame(in:frames)
+  }
+  func activeCanvasFrame(in values:[CanvasFrame])->CanvasFrame? {
     return values.first { $0.id == activeFrameID }
       ?? values.first { $0.projection?.sourceID == objectID && $0.projection?.isProof == true }
   }
@@ -250,7 +268,18 @@ enum ArtworkTool: String, CaseIterable {
     return uses
   }
   var frames: [CanvasFrame] {
-    guard let project=store?.project else{return []}
+    guard let project=store?.project else{frameMemo=nil;return []}
+    // Table camera motion cannot alter canonical frame content or placement.
+    // Keep every other document input exact, including shared resources.
+    var frameProject=project;frameProject.camera = .init()
+    let inputs=FrameInputs(project:frameProject,objectID:objectID,linkedTargetID:linkedTargetID,
+      dieline:dieline,paperInside:store?.paperInside == true,editingComponent:componentReturn != nil)
+    if let memo=frameMemo,memo.inputs==inputs {return memo.frames}
+    let values=buildFrames(project:project)
+    frameBuildCount+=1;frameMemo = .init(inputs:inputs,frames:values)
+    return values
+  }
+  private func buildFrames(project:Project)->[CanvasFrame] {
     let objects=project.objects
     let related = objects.filter { $0.isCanvasWorkspace } + objects.filter {object in
       guard !object.isCanvasWorkspace,!PaperConstruction.isPaper(object),

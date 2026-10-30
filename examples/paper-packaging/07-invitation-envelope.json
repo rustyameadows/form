@@ -1,0 +1,321 @@
+{
+  "version": 3,
+  "name": "Pointed invitation envelope",
+  "parameters": [
+    {
+      "name": "width",
+      "value": 190,
+      "minimum": 160,
+      "maximum": 300,
+      "unit": "mm"
+    },
+    {
+      "name": "height",
+      "value": 140,
+      "minimum": 80,
+      "maximum": 150,
+      "unit": "mm"
+    },
+    {
+      "name": "depth",
+      "value": 1.2,
+      "minimum": 0.3,
+      "maximum": 2,
+      "unit": "mm"
+    },
+    {
+      "name": "stock",
+      "value": 0.2,
+      "minimum": 0.1,
+      "maximum": 0.3,
+      "unit": "mm"
+    },
+    {
+      "name": "sideFlap",
+      "value": 45,
+      "minimum": 28,
+      "maximum": 65,
+      "unit": "mm"
+    },
+    {
+      "name": "topFlap",
+      "value": 62,
+      "minimum": 30,
+      "maximum": 65,
+      "unit": "mm"
+    },
+    {
+      "name": "bottomFlap",
+      "value": 70,
+      "minimum": 45,
+      "maximum": 85,
+      "unit": "mm"
+    },
+    {
+      "name": "clearance",
+      "value": 0.2,
+      "minimum": 0,
+      "maximum": 0.5,
+      "unit": "mm"
+    }
+  ],
+  "size": {
+    "x": "width+2*sideFlap",
+    "y": "height+topFlap+bottomFlap"
+  },
+  "stockThickness": "stock",
+  "panels": [
+    {
+      "id": "front",
+      "name": "Front",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "sideFlap",
+          "y": "topFlap"
+        },
+        {
+          "x": "(sideFlap)+(width)",
+          "y": "topFlap"
+        },
+        {
+          "x": "(sideFlap)+(width)",
+          "y": "(topFlap)+(height)"
+        },
+        {
+          "x": "sideFlap",
+          "y": "(topFlap)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "left-bond",
+      "name": "Left Bond",
+      "role": "glue",
+      "polygon": [
+        {
+          "x": "sideFlap",
+          "y": "topFlap"
+        },
+        {
+          "x": "sideFlap",
+          "y": "topFlap+height"
+        },
+        {
+          "x": 0,
+          "y": "topFlap+height-8"
+        },
+        {
+          "x": 0,
+          "y": "topFlap+8"
+        }
+      ]
+    },
+    {
+      "id": "right-bond",
+      "name": "Right Bond",
+      "role": "glue",
+      "polygon": [
+        {
+          "x": "sideFlap+width",
+          "y": "topFlap"
+        },
+        {
+          "x": "width+2*sideFlap",
+          "y": "topFlap+8"
+        },
+        {
+          "x": "width+2*sideFlap",
+          "y": "topFlap+height-8"
+        },
+        {
+          "x": "sideFlap+width",
+          "y": "topFlap+height"
+        }
+      ]
+    },
+    {
+      "id": "bottom-bond",
+      "name": "Bottom Bond",
+      "role": "glue",
+      "polygon": [
+        {
+          "x": "sideFlap",
+          "y": "topFlap+height"
+        },
+        {
+          "x": "sideFlap+width",
+          "y": "topFlap+height"
+        },
+        {
+          "x": "sideFlap+width-10",
+          "y": "topFlap+height+bottomFlap"
+        },
+        {
+          "x": "sideFlap+10",
+          "y": "topFlap+height+bottomFlap"
+        }
+      ],
+      "artworkRotationDegrees": 180
+    },
+    {
+      "id": "closing-flap",
+      "name": "Closing Flap",
+      "role": "tuck",
+      "polygon": [
+        {
+          "x": "sideFlap",
+          "y": "topFlap"
+        },
+        {
+          "x": "sideFlap+width",
+          "y": "topFlap"
+        },
+        {
+          "x": "sideFlap+width/2",
+          "y": 0
+        }
+      ],
+      "artworkRotationDegrees": 180
+    }
+  ],
+  "hinges": [
+    {
+      "id": "left-bond-crease",
+      "parentPanelID": "front",
+      "childPanelID": "left-bond",
+      "start": {
+        "x": "sideFlap",
+        "y": "topFlap"
+      },
+      "end": {
+        "x": "sideFlap",
+        "y": "topFlap+height"
+      },
+      "angleDegrees": 180,
+      "layerOffsetMM": "-depth-stock",
+      "opensWithTop": false
+    },
+    {
+      "id": "right-bond-crease",
+      "parentPanelID": "front",
+      "childPanelID": "right-bond",
+      "start": {
+        "x": "sideFlap+width",
+        "y": "topFlap"
+      },
+      "end": {
+        "x": "sideFlap+width",
+        "y": "topFlap+height"
+      },
+      "angleDegrees": -180,
+      "layerOffsetMM": "-depth-stock",
+      "opensWithTop": false
+    },
+    {
+      "id": "bottom-bond-crease",
+      "parentPanelID": "front",
+      "childPanelID": "bottom-bond",
+      "start": {
+        "x": "sideFlap",
+        "y": "topFlap+height"
+      },
+      "end": {
+        "x": "sideFlap+width",
+        "y": "topFlap+height"
+      },
+      "angleDegrees": 180,
+      "layerOffsetMM": "-depth-2*stock",
+      "opensWithTop": false
+    },
+    {
+      "id": "closing-flap-crease",
+      "parentPanelID": "front",
+      "childPanelID": "closing-flap",
+      "start": {
+        "x": "sideFlap",
+        "y": "topFlap"
+      },
+      "end": {
+        "x": "sideFlap+width",
+        "y": "topFlap"
+      },
+      "angleDegrees": 180,
+      "layerOffsetMM": "-depth-3*stock",
+      "opensWithTop": true
+    }
+  ],
+  "joins": [
+    {
+      "id": "left-bottom-bond",
+      "name": "Left Bottom Bond",
+      "firstPanelID": "left-bond",
+      "secondPanelID": "bottom-bond",
+      "kind": "glue",
+      "overlapMM": "sideFlap-10",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "right-bottom-bond",
+      "name": "Right Bottom Bond",
+      "firstPanelID": "right-bond",
+      "secondPanelID": "bottom-bond",
+      "kind": "glue",
+      "overlapMM": "sideFlap-10",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    }
+  ],
+  "rootPanelID": "front",
+  "components": [
+    {
+      "id": "envelope",
+      "name": "Envelope",
+      "rootPanelID": "front",
+      "anchor": {
+        "x": "sideFlap",
+        "y": "topFlap+height"
+      },
+      "position": {
+        "x": "-width/2",
+        "y": 0,
+        "z": 0
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    }
+  ],
+  "interiors": [
+    {
+      "id": "envelope-interior",
+      "name": "Envelope Interior",
+      "componentID": "envelope",
+      "origin": {
+        "x": "stock/2",
+        "y": "stock/2",
+        "z": "-depth-stock/2"
+      },
+      "size": {
+        "x": "width-stock",
+        "y": "height-stock",
+        "z": "depth"
+      },
+      "opening": {
+        "axis": "y",
+        "width": "width-stock",
+        "height": "depth"
+      }
+    }
+  ],
+  "requirements": [
+    {
+      "id": "bottom-bond-within-height",
+      "lhs": "bottomFlap",
+      "relation": "<",
+      "rhs": "height",
+      "message": "Bottom bond must remain shorter than the envelope body."
+    }
+  ]
+}

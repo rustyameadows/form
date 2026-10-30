@@ -1,0 +1,21 @@
+{
+  "designID" : "EEA0ECFB-9DBF-4234-8283-E801C63EAF94",
+  "id" : "64C852B2-DE2C-437B-AA91-FDC74A0EECFA",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "05 · Modeled archival contents",
+  "parameters" : {
+    "corner" : 0.5,
+    "depth" : 155,
+    "height" : 30,
+    "width" : 220
+  },
+  "position" : {
+    "x" : -650,
+    "y" : 7.7500000000000115,
+    "z" : -0.75
+  },
+  "recipeID" : "box",
+  "relationship" : "original",
+  "rotation" : 0
+}

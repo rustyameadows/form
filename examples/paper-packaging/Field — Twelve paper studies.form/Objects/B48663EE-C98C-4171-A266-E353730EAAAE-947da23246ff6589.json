@@ -1,0 +1,1114 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 61
+        },
+        "color" : "#173C36",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "31D36550-5555-5E65-AF64-CEF67AD9FE29",
+        "kind" : "text",
+        "name" : "02-outside-front-brand",
+        "text" : "FIELD  /  02",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 52.480000000000004,
+        "x" : 5.76,
+        "y" : 6
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 61
+        },
+        "color" : "#173C36",
+        "fontSize" : 28.49850665218572,
+        "height" : 34,
+        "id" : "3270FA0A-1B81-5186-8523-B330E715A9E9",
+        "kind" : "text",
+        "name" : "02-outside-front-title",
+        "text" : "Botanical",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 52.480000000000004,
+        "x" : 5.76,
+        "y" : 34.5
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 61
+        },
+        "color" : "#173C36",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "5837AB40-86CB-5D77-A83A-FB44A276A996",
+        "kind" : "rectangle",
+        "name" : "02-outside-front-rule",
+        "text" : "",
+        "width" : 35.2,
+        "x" : 5.76,
+        "y" : 89.7
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 61
+        },
+        "color" : "#173C36",
+        "fontSize" : 7.5,
+        "height" : 16,
+        "id" : "AA24CA4D-6697-5D8B-ADD5-CA5C803530D8",
+        "kind" : "text",
+        "name" : "02-outside-front-copy",
+        "text" : "PAPER LABORATORY\nEDITABLE STUDY  /  02",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 52.480000000000004,
+        "x" : 5.76,
+        "y" : 107.64
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 61
+        },
+        "color" : "#173C36",
+        "fontSize" : 14,
+        "height" : 13.44,
+        "id" : "11E219A5-AEA0-5462-9AE3-A799D6D423EF",
+        "kind" : "ellipse",
+        "name" : "02-outside-front-seal",
+        "sides" : 12,
+        "starInset" : 0.8,
+        "text" : "",
+        "width" : 13.44,
+        "x" : 44.800000000000004,
+        "y" : 78.66
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 102,
+          "ty" : 61
+        },
+        "color" : "#173C36",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "360AF128-2288-5B6D-92C7-5281721FF86A",
+        "kind" : "text",
+        "name" : "02-outside-back-brand",
+        "text" : "FIELD  /  02",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 52.480000000000004,
+        "x" : 5.76,
+        "y" : 6
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 102,
+          "ty" : 61
+        },
+        "color" : "#173C36",
+        "fontSize" : 28.49850665218572,
+        "height" : 34,
+        "id" : "FFC8FD6C-3B10-5FC6-A1DC-164DDB43D449",
+        "kind" : "text",
+        "name" : "02-outside-back-title",
+        "text" : "Botanical",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 52.480000000000004,
+        "x" : 5.76,
+        "y" : 34.5
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 102,
+          "ty" : 61
+        },
+        "color" : "#173C36",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "4E5DCA92-3734-5500-99B5-F36976E81347",
+        "kind" : "rectangle",
+        "name" : "02-outside-back-rule",
+        "text" : "",
+        "width" : 35.2,
+        "x" : 5.76,
+        "y" : 89.7
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 102,
+          "ty" : 61
+        },
+        "color" : "#173C36",
+        "fontSize" : 7.5,
+        "height" : 16,
+        "id" : "21E07445-FA73-5513-B52F-A88DE25BA755",
+        "kind" : "text",
+        "name" : "02-outside-back-copy",
+        "text" : "PAPER LABORATORY\nEDITABLE STUDY  /  02",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 52.480000000000004,
+        "x" : 5.76,
+        "y" : 107.64
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 102,
+          "ty" : 61
+        },
+        "color" : "#173C36",
+        "fontSize" : 14,
+        "height" : 13.44,
+        "id" : "178E1C31-6100-5C4B-AD00-D501F7A6F67B",
+        "kind" : "ellipse",
+        "name" : "02-outside-back-seal",
+        "sides" : 12,
+        "starInset" : 0.8,
+        "text" : "",
+        "width" : 13.44,
+        "x" : 44.800000000000004,
+        "y" : 78.66
+      }
+    ]
+  },
+  "designID" : "0C0460C6-33E5-4432-987A-296A9E5672CA",
+  "id" : "B48663EE-C98C-4171-A266-E353730EAAAE",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "02 · Botanical / Tuck carton",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "components" : [
+        {
+          "anchor" : {
+            "x" : "0",
+            "y" : "(depth+tuck)+(height)"
+          },
+          "id" : "body",
+          "name" : "Body",
+          "position" : {
+            "x" : "-width/2",
+            "y" : "0",
+            "z" : "depth/2"
+          },
+          "rootPanelID" : "front",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        }
+      ],
+      "hinges" : [
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "right",
+          "end" : {
+            "x" : "width",
+            "y" : "(depth+tuck)+(height)"
+          },
+          "id" : "crease-right",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "front",
+          "start" : {
+            "x" : "width",
+            "y" : "depth+tuck"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "back",
+          "end" : {
+            "x" : "width+depth",
+            "y" : "(depth+tuck)+(height)"
+          },
+          "id" : "crease-back",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "right",
+          "start" : {
+            "x" : "width+depth",
+            "y" : "depth+tuck"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "left",
+          "end" : {
+            "x" : "2*width+depth",
+            "y" : "(depth+tuck)+(height)"
+          },
+          "id" : "crease-left",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "2*width+depth",
+            "y" : "depth+tuck"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "glue",
+          "end" : {
+            "x" : "2*(width+depth)",
+            "y" : "(depth+tuck)+(height)"
+          },
+          "id" : "crease-glue",
+          "layerOffsetMM" : "stock",
+          "opensWithTop" : false,
+          "parentPanelID" : "left",
+          "start" : {
+            "x" : "2*(width+depth)",
+            "y" : "depth+tuck"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "top-bridge",
+          "end" : {
+            "x" : "2*width+depth",
+            "y" : "depth+tuck"
+          },
+          "id" : "crease-top-bridge",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : true,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "width+depth",
+            "y" : "depth+tuck"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "top-tuck",
+          "end" : {
+            "x" : "2*width+depth",
+            "y" : "(depth+tuck)+(-depth)"
+          },
+          "id" : "crease-top-tuck",
+          "layerOffsetMM" : "2*stock",
+          "opensWithTop" : true,
+          "parentPanelID" : "top-bridge",
+          "start" : {
+            "x" : "width+depth",
+            "y" : "(depth+tuck)+(-depth)"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "top-dust-right",
+          "end" : {
+            "x" : "(width)+(depth-.4)",
+            "y" : "depth+tuck"
+          },
+          "id" : "crease-top-dust-right",
+          "layerOffsetMM" : "stock",
+          "opensWithTop" : true,
+          "parentPanelID" : "right",
+          "start" : {
+            "x" : "(width)+(.4)",
+            "y" : "depth+tuck"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "top-dust-left",
+          "end" : {
+            "x" : "(2*width+depth)+(depth-.4)",
+            "y" : "depth+tuck"
+          },
+          "id" : "crease-top-dust-left",
+          "layerOffsetMM" : "stock",
+          "opensWithTop" : true,
+          "parentPanelID" : "left",
+          "start" : {
+            "x" : "(2*width+depth)+(.4)",
+            "y" : "depth+tuck"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "bottom-bridge",
+          "end" : {
+            "x" : "2*width+depth",
+            "y" : "height+depth+tuck"
+          },
+          "id" : "crease-bottom-bridge",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "width+depth",
+            "y" : "height+depth+tuck"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "bottom-tuck",
+          "end" : {
+            "x" : "2*width+depth",
+            "y" : "(height+depth+tuck)+(depth)"
+          },
+          "id" : "crease-bottom-tuck",
+          "layerOffsetMM" : "2*stock",
+          "opensWithTop" : false,
+          "parentPanelID" : "bottom-bridge",
+          "start" : {
+            "x" : "width+depth",
+            "y" : "(height+depth+tuck)+(depth)"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "bottom-dust-right",
+          "end" : {
+            "x" : "(width)+(depth-.4)",
+            "y" : "height+depth+tuck"
+          },
+          "id" : "crease-bottom-dust-right",
+          "layerOffsetMM" : "stock",
+          "opensWithTop" : false,
+          "parentPanelID" : "right",
+          "start" : {
+            "x" : "(width)+(.4)",
+            "y" : "height+depth+tuck"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "bottom-dust-left",
+          "end" : {
+            "x" : "(2*width+depth)+(depth-.4)",
+            "y" : "height+depth+tuck"
+          },
+          "id" : "crease-bottom-dust-left",
+          "layerOffsetMM" : "stock",
+          "opensWithTop" : false,
+          "parentPanelID" : "left",
+          "start" : {
+            "x" : "(2*width+depth)+(.4)",
+            "y" : "height+depth+tuck"
+          }
+        }
+      ],
+      "interiors" : [
+        {
+          "componentID" : "body",
+          "id" : "body-interior",
+          "name" : "Body Interior",
+          "opening" : {
+            "axis" : "y",
+            "height" : "depth-stock",
+            "width" : "width-stock"
+          },
+          "origin" : {
+            "x" : "stock/2",
+            "y" : "2*stock",
+            "z" : "-depth+stock/2"
+          },
+          "size" : {
+            "x" : "width-stock",
+            "y" : "height-4*stock",
+            "z" : "depth-stock"
+          }
+        }
+      ],
+      "joins" : [
+        {
+          "firstPanelID" : "glue",
+          "id" : "body-glue",
+          "kind" : "glue",
+          "name" : "Body Glue",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "glueTab",
+          "secondPanelID" : "front"
+        },
+        {
+          "firstPanelID" : "top-tuck",
+          "id" : "top-retention",
+          "kind" : "tuck",
+          "name" : "Top Retention",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "tuck",
+          "secondPanelID" : "front"
+        },
+        {
+          "firstPanelID" : "bottom-tuck",
+          "id" : "bottom-retention",
+          "kind" : "tuck",
+          "name" : "Bottom Retention",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "tuck",
+          "secondPanelID" : "front"
+        }
+      ],
+      "name" : "Straight tuck retail study",
+      "panels" : [
+        {
+          "id" : "front",
+          "name" : "Front",
+          "polygon" : [
+            {
+              "x" : "0",
+              "y" : "depth+tuck"
+            },
+            {
+              "x" : "(0)+(width)",
+              "y" : "depth+tuck"
+            },
+            {
+              "x" : "(0)+(width)",
+              "y" : "(depth+tuck)+(height)"
+            },
+            {
+              "x" : "0",
+              "y" : "(depth+tuck)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "right",
+          "name" : "Right",
+          "polygon" : [
+            {
+              "x" : "width",
+              "y" : "depth+tuck"
+            },
+            {
+              "x" : "(width)+(depth)",
+              "y" : "depth+tuck"
+            },
+            {
+              "x" : "(width)+(depth)",
+              "y" : "(depth+tuck)+(height)"
+            },
+            {
+              "x" : "width",
+              "y" : "(depth+tuck)+(height)"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "back",
+          "name" : "Back",
+          "polygon" : [
+            {
+              "x" : "width+depth",
+              "y" : "depth+tuck"
+            },
+            {
+              "x" : "(width+depth)+(width)",
+              "y" : "depth+tuck"
+            },
+            {
+              "x" : "(width+depth)+(width)",
+              "y" : "(depth+tuck)+(height)"
+            },
+            {
+              "x" : "width+depth",
+              "y" : "(depth+tuck)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "left",
+          "name" : "Left",
+          "polygon" : [
+            {
+              "x" : "2*width+depth",
+              "y" : "depth+tuck"
+            },
+            {
+              "x" : "(2*width+depth)+(depth)",
+              "y" : "depth+tuck"
+            },
+            {
+              "x" : "(2*width+depth)+(depth)",
+              "y" : "(depth+tuck)+(height)"
+            },
+            {
+              "x" : "2*width+depth",
+              "y" : "(depth+tuck)+(height)"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "glue",
+          "name" : "Glue",
+          "polygon" : [
+            {
+              "x" : "2*(width+depth)",
+              "y" : "depth+tuck"
+            },
+            {
+              "x" : "(2*(width+depth))+(glueTab)",
+              "y" : "(depth+tuck)+(3)"
+            },
+            {
+              "x" : "(2*(width+depth))+(glueTab)",
+              "y" : "((depth+tuck)+(height))+(-3)"
+            },
+            {
+              "x" : "2*(width+depth)",
+              "y" : "(depth+tuck)+(height)"
+            }
+          ],
+          "role" : "glue"
+        },
+        {
+          "id" : "top-bridge",
+          "name" : "Top Bridge",
+          "polygon" : [
+            {
+              "x" : "width+depth",
+              "y" : "(depth+tuck)+(-depth)"
+            },
+            {
+              "x" : "(width+depth)+(width)",
+              "y" : "(depth+tuck)+(-depth)"
+            },
+            {
+              "x" : "(width+depth)+(width)",
+              "y" : "((depth+tuck)+(-depth))+(depth)"
+            },
+            {
+              "x" : "width+depth",
+              "y" : "((depth+tuck)+(-depth))+(depth)"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "top-tuck",
+          "name" : "Top Tuck",
+          "polygon" : [
+            {
+              "x" : "width+depth",
+              "y" : "((depth+tuck)+(-depth))+(0)"
+            },
+            {
+              "x" : "2*width+depth",
+              "y" : "((depth+tuck)+(-depth))+(0)"
+            },
+            {
+              "x" : "2*width+depth-4",
+              "y" : "((depth+tuck)+(-depth))+(-tuck)"
+            },
+            {
+              "x" : "width+depth+4",
+              "y" : "((depth+tuck)+(-depth))+(-tuck)"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "top-dust-right",
+          "name" : "Top Dust Right",
+          "polygon" : [
+            {
+              "x" : "(width)+(.4)",
+              "y" : "(depth+tuck)+(-min(width*.38,depth*.9))"
+            },
+            {
+              "x" : "((width)+(.4))+(depth-.8)",
+              "y" : "(depth+tuck)+(-min(width*.38,depth*.9))"
+            },
+            {
+              "x" : "((width)+(.4))+(depth-.8)",
+              "y" : "((depth+tuck)+(-min(width*.38,depth*.9)))+(min(width*.38,depth*.9))"
+            },
+            {
+              "x" : "(width)+(.4)",
+              "y" : "((depth+tuck)+(-min(width*.38,depth*.9)))+(min(width*.38,depth*.9))"
+            }
+          ],
+          "role" : "dust"
+        },
+        {
+          "id" : "top-dust-left",
+          "name" : "Top Dust Left",
+          "polygon" : [
+            {
+              "x" : "(2*width+depth)+(.4)",
+              "y" : "(depth+tuck)+(-min(width*.38,depth*.9))"
+            },
+            {
+              "x" : "((2*width+depth)+(.4))+(depth-.8)",
+              "y" : "(depth+tuck)+(-min(width*.38,depth*.9))"
+            },
+            {
+              "x" : "((2*width+depth)+(.4))+(depth-.8)",
+              "y" : "((depth+tuck)+(-min(width*.38,depth*.9)))+(min(width*.38,depth*.9))"
+            },
+            {
+              "x" : "(2*width+depth)+(.4)",
+              "y" : "((depth+tuck)+(-min(width*.38,depth*.9)))+(min(width*.38,depth*.9))"
+            }
+          ],
+          "role" : "dust"
+        },
+        {
+          "id" : "bottom-bridge",
+          "name" : "Bottom Bridge",
+          "polygon" : [
+            {
+              "x" : "width+depth",
+              "y" : "height+depth+tuck"
+            },
+            {
+              "x" : "(width+depth)+(width)",
+              "y" : "height+depth+tuck"
+            },
+            {
+              "x" : "(width+depth)+(width)",
+              "y" : "(height+depth+tuck)+(depth)"
+            },
+            {
+              "x" : "width+depth",
+              "y" : "(height+depth+tuck)+(depth)"
+            }
+          ],
+          "role" : "bottomClosure"
+        },
+        {
+          "id" : "bottom-tuck",
+          "name" : "Bottom Tuck",
+          "polygon" : [
+            {
+              "x" : "width+depth",
+              "y" : "(height+depth+tuck)+(depth)"
+            },
+            {
+              "x" : "2*width+depth",
+              "y" : "(height+depth+tuck)+(depth)"
+            },
+            {
+              "x" : "2*width+depth-4",
+              "y" : "((height+depth+tuck)+(depth))+(tuck)"
+            },
+            {
+              "x" : "width+depth+4",
+              "y" : "((height+depth+tuck)+(depth))+(tuck)"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "bottom-dust-right",
+          "name" : "Bottom Dust Right",
+          "polygon" : [
+            {
+              "x" : "(width)+(.4)",
+              "y" : "height+depth+tuck"
+            },
+            {
+              "x" : "((width)+(.4))+(depth-.8)",
+              "y" : "height+depth+tuck"
+            },
+            {
+              "x" : "((width)+(.4))+(depth-.8)",
+              "y" : "(height+depth+tuck)+(min(width*.38,depth*.9))"
+            },
+            {
+              "x" : "(width)+(.4)",
+              "y" : "(height+depth+tuck)+(min(width*.38,depth*.9))"
+            }
+          ],
+          "role" : "dust"
+        },
+        {
+          "id" : "bottom-dust-left",
+          "name" : "Bottom Dust Left",
+          "polygon" : [
+            {
+              "x" : "(2*width+depth)+(.4)",
+              "y" : "height+depth+tuck"
+            },
+            {
+              "x" : "((2*width+depth)+(.4))+(depth-.8)",
+              "y" : "height+depth+tuck"
+            },
+            {
+              "x" : "((2*width+depth)+(.4))+(depth-.8)",
+              "y" : "(height+depth+tuck)+(min(width*.38,depth*.9))"
+            },
+            {
+              "x" : "(2*width+depth)+(.4)",
+              "y" : "(height+depth+tuck)+(min(width*.38,depth*.9))"
+            }
+          ],
+          "role" : "dust"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 102.4,
+          "minimum" : 38.4,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 64
+        },
+        {
+          "maximum" : 220.8,
+          "minimum" : 82.8,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 138
+        },
+        {
+          "maximum" : 60.800000000000004,
+          "minimum" : 22.8,
+          "name" : "depth",
+          "unit" : "mm",
+          "value" : 38
+        },
+        {
+          "maximum" : 0.81,
+          "minimum" : 0.225,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 0.45
+        },
+        {
+          "maximum" : 5,
+          "minimum" : 0,
+          "name" : "clearance",
+          "unit" : "mm",
+          "value" : 1
+        },
+        {
+          "maximum" : 22,
+          "minimum" : 8,
+          "name" : "glueTab",
+          "unit" : "mm",
+          "value" : 14
+        },
+        {
+          "maximum" : 35,
+          "minimum" : 10,
+          "name" : "tuck",
+          "unit" : "mm",
+          "value" : 23
+        }
+      ],
+      "requirements" : [
+        {
+          "id" : "usable-stock",
+          "lhs" : "height",
+          "message" : "Height must leave a positive usable cavity after stock layers.",
+          "relation" : ">",
+          "rhs" : "6*stock"
+        }
+      ],
+      "rootPanelID" : "front",
+      "size" : {
+        "x" : "2*(width+depth)+glueTab",
+        "y" : "height+2*(depth+tuck)"
+      },
+      "stockThickness" : "stock",
+      "version" : 3
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 1,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 38,
+      "height" : 138,
+      "width" : 64
+    },
+    "finishes" : [
+      {
+        "color" : "#C49B48",
+        "depthMM" : 0,
+        "elementIDs" : [
+          "31D36550-5555-5E65-AF64-CEF67AD9FE29"
+        ],
+        "enabled" : true,
+        "heightMM" : 0,
+        "id" : "A7C1B9CB-FC7B-5A68-8845-9BFF32DB9517",
+        "kind" : "foil",
+        "metallic" : 1,
+        "name" : "Warm metallic mark",
+        "opacity" : 1,
+        "roughness" : 0.18,
+        "side" : "outside"
+      }
+    ],
+    "foldPercent" : 100,
+    "glueTabMM" : 14,
+    "kind" : "authored",
+    "openingPercent" : 0,
+    "stock" : {
+      "grain" : "parallelHeight",
+      "gsm" : 300,
+      "name" : "FIELD coated / prototype",
+      "notes" : "Visual prototype stock; verify caliper, grain, creases and print with a physical sample.",
+      "profile" : {
+        "color" : "#EDE6D6",
+        "opacity" : 1,
+        "roughness" : 0.34,
+        "texture" : "coated",
+        "textureDepthMM" : 0.008,
+        "textureScaleMM" : 1.1
+      },
+      "thicknessMM" : 0.45,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "parameters" : {
+    "clearance" : 1,
+    "depth" : 38,
+    "fold" : 100,
+    "glueTab" : 14,
+    "height" : 138,
+    "opening" : 0,
+    "stock" : 0.45,
+    "tuck" : 23,
+    "width" : 64
+  },
+  "position" : {
+    "x" : -230,
+    "y" : 0,
+    "z" : -430
+  },
+  "recipeID" : "construction-B48663EE-C98C-4171-A266-E353730EAAAE",
+  "relationship" : "original",
+  "rotation" : 0
+}

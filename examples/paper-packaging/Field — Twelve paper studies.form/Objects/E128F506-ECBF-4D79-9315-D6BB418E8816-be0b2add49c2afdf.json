@@ -1,0 +1,164 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+
+    ]
+  },
+  "designID" : "A39EA187-2352-4DE8-BF99-E101E485D415",
+  "id" : "E128F506-ECBF-4D79-9315-D6BB418E8816",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "07 · Separate patterned envelope liner",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "components" : [
+        {
+          "anchor" : {
+            "x" : "width/2",
+            "y" : "height/2"
+          },
+          "id" : "sheet",
+          "name" : "Paper sheet",
+          "position" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "rootPanelID" : "front",
+          "rotationDegrees" : {
+            "x" : "turn",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        }
+      ],
+      "hinges" : [
+
+      ],
+      "joins" : [
+
+      ],
+      "name" : "Loose patterned invitation liner",
+      "panels" : [
+        {
+          "id" : "front",
+          "name" : "Front / back sheet",
+          "polygon" : [
+            {
+              "x" : "0.0",
+              "y" : "height"
+            },
+            {
+              "x" : "width",
+              "y" : "height"
+            },
+            {
+              "x" : "width",
+              "y" : "44.0"
+            },
+            {
+              "x" : "width/2",
+              "y" : "0.0"
+            },
+            {
+              "x" : "0.0",
+              "y" : "44.0"
+            }
+          ],
+          "role" : "body"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 289.6,
+          "minimum" : 108.6,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 181
+        },
+        {
+          "maximum" : 208,
+          "minimum" : 78,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 130
+        },
+        {
+          "maximum" : 0.24,
+          "minimum" : 0.048,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 0.12
+        },
+        {
+          "maximum" : 180,
+          "minimum" : 0,
+          "name" : "turn",
+          "unit" : "°",
+          "value" : 0
+        }
+      ],
+      "rootPanelID" : "front",
+      "size" : {
+        "x" : "width",
+        "y" : "height"
+      },
+      "stockThickness" : "stock",
+      "version" : 3
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 2,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 1,
+      "height" : 130,
+      "width" : 181
+    },
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "insideArtworkSourceID" : "7372B6DA-0BA7-45C2-B725-7D8C2AC672F9",
+    "kind" : "authored",
+    "openingPercent" : 0,
+    "stock" : {
+      "grain" : "unknown",
+      "gsm" : 300,
+      "name" : "Loose vellum liner / prototype",
+      "notes" : "Prototype assumptions; verify the chosen stock and crease tooling.",
+      "profile" : {
+        "color" : "#E3DFC9",
+        "opacity" : 0.72,
+        "roughness" : 0.7,
+        "texture" : "vellum",
+        "textureDepthMM" : 0.006,
+        "textureScaleMM" : 0.7
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "parameters" : {
+    "fold" : 100,
+    "height" : 130,
+    "opening" : 0,
+    "stock" : 0.12,
+    "turn" : 0,
+    "width" : 181
+  },
+  "position" : {
+    "x" : 230,
+    "y" : 3,
+    "z" : 0.5
+  },
+  "recipeID" : "construction-E128F506-ECBF-4D79-9315-D6BB418E8816",
+  "relationship" : "original",
+  "rotation" : 180
+}

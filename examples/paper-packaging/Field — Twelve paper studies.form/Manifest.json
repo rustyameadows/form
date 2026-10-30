@@ -1,0 +1,3246 @@
+{
+  "objects" : [
+    {
+      "canvasItemCount" : 0,
+      "canvasWorkspace" : true,
+      "file" : "75BAAD28-7C3D-4349-9C68-F4CA35E0F1EB-f3cae816a4085c7b.json",
+      "id" : "75BAAD28-7C3D-4349-9C68-F4CA35E0F1EB"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "76DEB560-2741-487E-BBEF-CDCC31BD3AFF-91670fa47d9587d8.json",
+      "id" : "76DEB560-2741-487E-BBEF-CDCC31BD3AFF"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "B48663EE-C98C-4171-A266-E353730EAAAE-947da23246ff6589.json",
+      "id" : "B48663EE-C98C-4171-A266-E353730EAAAE"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "EA2DAD84-DC9F-4BD0-B406-A268CB8B04B8-1526ed1e819071b7.json",
+      "id" : "EA2DAD84-DC9F-4BD0-B406-A268CB8B04B8"
+    },
+    {
+      "canvasSourceOnly" : true,
+      "canvasWorkspace" : false,
+      "file" : "C3E7880F-7C6E-4B73-B699-9DFCAAA5EB56-abea51d04d114b24.json",
+      "id" : "C3E7880F-7C6E-4B73-B699-9DFCAAA5EB56"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "FE9BD168-E884-46C9-8633-8E4DD6B50E78-f2fa9e33cbf04930.json",
+      "id" : "FE9BD168-E884-46C9-8633-8E4DD6B50E78"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "2BD7AD57-44F9-4091-BA17-8DDB57789D06-e2342bdac824a536.json",
+      "id" : "2BD7AD57-44F9-4091-BA17-8DDB57789D06"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "C2CE9630-5DC9-42E4-A220-E6D7C0BA2439-dc18a69aa02cdd19.json",
+      "id" : "C2CE9630-5DC9-42E4-A220-E6D7C0BA2439"
+    },
+    {
+      "canvasSourceOnly" : true,
+      "canvasWorkspace" : false,
+      "file" : "BC4B7825-B845-4E18-AA9C-8D4DD26B1F04-0c79e250d685e212.json",
+      "id" : "BC4B7825-B845-4E18-AA9C-8D4DD26B1F04"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "2DE0118D-8ECF-4472-A4D7-29D8DAFC32F9-a60be4118c0eef94.json",
+      "id" : "2DE0118D-8ECF-4472-A4D7-29D8DAFC32F9"
+    },
+    {
+      "canvasSourceOnly" : true,
+      "canvasWorkspace" : false,
+      "file" : "6EAFFFAB-479E-43D4-9048-C9D6607F5DAE-298490d11f3f9f55.json",
+      "id" : "6EAFFFAB-479E-43D4-9048-C9D6607F5DAE"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "F5ECE341-5CC6-45DF-A573-708CA9D3AD5D-44b0f68c8ed91cda.json",
+      "id" : "F5ECE341-5CC6-45DF-A573-708CA9D3AD5D"
+    },
+    {
+      "canvasSourceOnly" : true,
+      "canvasWorkspace" : false,
+      "file" : "2CA69053-39E9-4D73-943B-F0198E305A22-b884fa4ae6c97898.json",
+      "id" : "2CA69053-39E9-4D73-943B-F0198E305A22"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "F5BE8DA6-1460-4CAD-BCDC-84D61B9BB968-3e4ef0ba8ee31d48.json",
+      "id" : "F5BE8DA6-1460-4CAD-BCDC-84D61B9BB968"
+    },
+    {
+      "canvasSourceOnly" : true,
+      "canvasWorkspace" : false,
+      "file" : "ECF88B13-B637-48FA-A66B-09534EE5FE52-c828e8b614713869.json",
+      "id" : "ECF88B13-B637-48FA-A66B-09534EE5FE52"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "0A86453F-9CD8-42DB-B0B1-AD78D33EEE85-0b5aab94a66972d5.json",
+      "id" : "0A86453F-9CD8-42DB-B0B1-AD78D33EEE85"
+    },
+    {
+      "canvasSourceOnly" : true,
+      "canvasWorkspace" : false,
+      "file" : "D9E70DE6-44A6-44A4-8B68-388520FC3057-55c3efc9d150a4af.json",
+      "id" : "D9E70DE6-44A6-44A4-8B68-388520FC3057"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "87EE5C62-0CD3-4752-BAEA-5E3994040341-bbd9109f100a4782.json",
+      "id" : "87EE5C62-0CD3-4752-BAEA-5E3994040341"
+    },
+    {
+      "canvasSourceOnly" : true,
+      "canvasWorkspace" : false,
+      "file" : "459ABC54-076E-48E8-831A-2E8A761BCF2D-92581e60f2f3a289.json",
+      "id" : "459ABC54-076E-48E8-831A-2E8A761BCF2D"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "2E915773-046E-4FC0-85CD-C279AE36829F-1f444c681237ede9.json",
+      "id" : "2E915773-046E-4FC0-85CD-C279AE36829F"
+    },
+    {
+      "canvasSourceOnly" : true,
+      "canvasWorkspace" : false,
+      "file" : "34E17805-C5E8-40C9-B577-A2FA8F2ABEBA-de7e9b9fec405bd5.json",
+      "id" : "34E17805-C5E8-40C9-B577-A2FA8F2ABEBA"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "F9E4C4C5-F289-4AC4-98EF-C084A997EF93-7d0fd636ca664b16.json",
+      "id" : "F9E4C4C5-F289-4AC4-98EF-C084A997EF93"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "64C852B2-DE2C-437B-AA91-FDC74A0EECFA-a2d572068ded3512.json",
+      "id" : "64C852B2-DE2C-437B-AA91-FDC74A0EECFA"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "E128F506-ECBF-4D79-9315-D6BB418E8816-be0b2add49c2afdf.json",
+      "id" : "E128F506-ECBF-4D79-9315-D6BB418E8816"
+    },
+    {
+      "canvasSourceOnly" : true,
+      "canvasWorkspace" : false,
+      "file" : "7372B6DA-0BA7-45C2-B725-7D8C2AC672F9-3d74a8a18e58398e.json",
+      "id" : "7372B6DA-0BA7-45C2-B725-7D8C2AC672F9"
+    }
+  ],
+  "project" : {
+    "camera" : {
+      "azimuth" : -1.1568284577003185,
+      "distance" : 22.633580862488216,
+      "elevation" : 0.3010973443983383,
+      "orientation" : {
+        "w" : 0.8278595384155191,
+        "x" : -0.12558336925693042,
+        "y" : -0.5405130876606996,
+        "z" : -0.08199392714108851
+      },
+      "projection" : "perspective",
+      "target" : {
+        "x" : 0.5150000000000006,
+        "y" : 1.2312500000000002,
+        "z" : -0.31300000000000017
+      },
+      "viewportAspect" : 1.587651598676957
+    },
+    "createdAt" : "2026-10-30T19:24:08Z",
+    "history" : [
+      {
+        "date" : "2026-10-30T19:24:08Z",
+        "id" : "1CBD3436-16E8-4C2E-8686-A1B120DAAD9E",
+        "source" : "Studio",
+        "text" : "Created freeform Canvas"
+      },
+      {
+        "date" : "2026-10-30T19:24:08Z",
+        "id" : "FBB09971-CC20-4634-A2D2-C77E58C5B4B4",
+        "source" : "Codex",
+        "text" : "Created 01 · Dispatch / Shipping carton"
+      },
+      {
+        "date" : "2026-10-30T19:24:09Z",
+        "id" : "CFB599F6-D76A-49CD-886A-1073B559AE11",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:24:09Z",
+        "id" : "037517D7-0988-40B4-8EB5-7D88B2F7D06C",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:09Z",
+        "id" : "C03E1A7C-4AC4-4229-A60C-6D8078771C69",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:09Z",
+        "id" : "BBCB811A-B1A1-40B2-9823-630068FD150C",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:24:10Z",
+        "id" : "EA4F0DC9-FA74-4A51-A68B-91E8A1DD2847",
+        "source" : "Codex",
+        "text" : "Created 02 · Botanical / Tuck carton"
+      },
+      {
+        "date" : "2026-10-30T19:24:10Z",
+        "id" : "D3ED03BA-77FB-4408-9410-B5C04510335B",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:24:11Z",
+        "id" : "D3763DA7-2CB0-47DB-8E72-2A50DC209162",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:11Z",
+        "id" : "3C5F4346-8989-4524-A14C-6DFA9F291F2E",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:11Z",
+        "id" : "A1A21070-3E81-4386-B48A-742E42C733F6",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:24:12Z",
+        "id" : "B66C5BB6-C434-4667-A240-AD6880EB786C",
+        "source" : "Codex",
+        "text" : "Created 03 · Field kit / Locking mailer"
+      },
+      {
+        "date" : "2026-10-30T19:24:13Z",
+        "id" : "86C33140-301C-4F5B-852C-B3A0C48F6764",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:24:13Z",
+        "id" : "CC74CCDD-15B5-48B9-8058-94F3266CE5F9",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:14Z",
+        "id" : "A6719BC0-3C78-4223-A6DC-6BBDE1A2579F",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:15Z",
+        "id" : "FB3F1595-245B-43CF-A0E5-7C6CA1132DB3",
+        "source" : "Codex",
+        "text" : "Created registered inside artwork"
+      },
+      {
+        "date" : "2026-10-30T19:24:15Z",
+        "id" : "6CD40C10-BFAA-434A-8730-F45143C54B69",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-10-30T19:24:16Z",
+        "id" : "85383B83-DEB2-4FCE-9F71-90B8C04CF14D",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:16Z",
+        "id" : "F21A0CC9-36E3-449A-BB20-778803695DD6",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:24:17Z",
+        "id" : "B9AFD618-76EC-49B2-BC98-AC3E6BBD59AE",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-10-30T19:24:18Z",
+        "id" : "2F44E652-F36B-41DD-B22F-8E4960619318",
+        "source" : "Codex",
+        "text" : "Created 04 · Meridian / Presentation box"
+      },
+      {
+        "date" : "2026-10-30T19:24:19Z",
+        "id" : "1155E0A0-CFAA-4E4E-AA7F-E9E6B114FEE7",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:24:20Z",
+        "id" : "6F444B1C-EB26-482C-87C2-64DD2CEE89D5",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:21Z",
+        "id" : "48F167DA-E4F3-438B-A14D-EE16180DE9B4",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:22Z",
+        "id" : "1D41D053-1B63-403B-B8DE-5E8F9044E0ED",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:24:23Z",
+        "id" : "DCBC74F4-9D7C-472A-885E-3F1D7BAEDC83",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-10-30T19:24:24Z",
+        "id" : "6F3E3B8F-1F1C-43BA-B45B-B129B92A6136",
+        "source" : "Codex",
+        "text" : "Created 05 · Archive / Clamshell case"
+      },
+      {
+        "date" : "2026-10-30T19:24:26Z",
+        "id" : "FB4D0613-B33E-4BD0-BF83-E67451CCD12A",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:24:27Z",
+        "id" : "FD2BC2FE-3D5B-48A6-BD69-CB4F730BE59B",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:29Z",
+        "id" : "29DB2C48-B4C6-4F76-9C8A-A8F50D3A5F55",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:30Z",
+        "id" : "CA10E4C9-A3E1-4A80-9E59-21E3CFE5DB60",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:24:31Z",
+        "id" : "30AFB916-DA77-48C1-8297-74CBE6A2D003",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-10-30T19:24:32Z",
+        "id" : "BE994268-749A-4F88-B593-FADE836491DD",
+        "source" : "Codex",
+        "text" : "Created 06 · Correspondence / Envelope"
+      },
+      {
+        "date" : "2026-10-30T19:24:33Z",
+        "id" : "7024D219-D2F2-483F-B891-657FB4DD2500",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:24:35Z",
+        "id" : "652991B5-EF12-4C74-BC5E-1441418503D8",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:36Z",
+        "id" : "EFCD73A3-2088-4DB1-816B-ED09BCE8A40D",
+        "source" : "Codex",
+        "text" : "Created registered inside artwork"
+      },
+      {
+        "date" : "2026-10-30T19:24:37Z",
+        "id" : "BE564A97-2BB0-49C5-A963-84B7759B02E6",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-10-30T19:24:38Z",
+        "id" : "3A146429-9105-480B-8CCD-E1FA73C0F3C7",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:40Z",
+        "id" : "827A641C-3487-4928-9760-BAA785AB4F68",
+        "source" : "Codex",
+        "text" : "Created 07 · Gather / Lined envelope"
+      },
+      {
+        "date" : "2026-10-30T19:24:41Z",
+        "id" : "CD546C74-DD39-4FB6-AE93-341E6D173590",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:24:43Z",
+        "id" : "10DEE53F-9F4E-4744-8B09-F2BAC1201EC0",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:44Z",
+        "id" : "A5456B55-CD33-4B81-9466-571F296D2E8D",
+        "source" : "Codex",
+        "text" : "Created registered inside artwork"
+      },
+      {
+        "date" : "2026-10-30T19:24:45Z",
+        "id" : "8D4E0EA4-797D-4D2B-A0B1-344284813850",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-10-30T19:24:46Z",
+        "id" : "A7286C70-0414-47FA-9FAB-02B3E230F18E",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:47Z",
+        "id" : "EE903C8A-1EF0-4BDB-9B95-1FDDC1741233",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-10-30T19:24:48Z",
+        "id" : "F451D86C-BE7A-4B77-B01F-8E6509DCACC5",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-10-30T19:24:50Z",
+        "id" : "366F52B0-9F8E-47FF-93FD-1FE19664CA7A",
+        "source" : "Codex",
+        "text" : "Created 08 · Collected / Hang tag"
+      },
+      {
+        "date" : "2026-10-30T19:24:51Z",
+        "id" : "6AD66212-4CB7-473D-BD8D-7304392BA271",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:24:53Z",
+        "id" : "1B4FF6B6-6041-4358-9E75-1C525EB10005",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:54Z",
+        "id" : "F143C861-7C6A-40CD-870F-B71DA65A3EC2",
+        "source" : "Codex",
+        "text" : "Created registered inside artwork"
+      },
+      {
+        "date" : "2026-10-30T19:24:56Z",
+        "id" : "BF8D9D65-ECBB-45DC-A263-07AD84FE2A17",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-10-30T19:24:57Z",
+        "id" : "2DD878A3-151A-4E52-951B-E273CE48ADB0",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:24:58Z",
+        "id" : "DB0234B6-9020-402A-831E-CC7D2C590766",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:24:59Z",
+        "id" : "CD5C3331-614F-44BB-896B-1DEB7D6CB4E1",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:25:01Z",
+        "id" : "BEE77B3B-677E-495E-A694-65641B62DD7F",
+        "source" : "Codex",
+        "text" : "Created 09 · Studio Field / Duplex card"
+      },
+      {
+        "date" : "2026-10-30T19:25:02Z",
+        "id" : "027CF43E-44F9-4AD4-88C9-E0853614712B",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:25:04Z",
+        "id" : "14C08872-8991-4522-B77A-CBB9EBA633A5",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:25:06Z",
+        "id" : "BDA345A5-E7D9-4EEB-8CF1-6D681A97FF9A",
+        "source" : "Codex",
+        "text" : "Created registered inside artwork"
+      },
+      {
+        "date" : "2026-10-30T19:25:07Z",
+        "id" : "8CFF7B62-ED23-4B28-BBF5-5F41C85F5A34",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-10-30T19:25:08Z",
+        "id" : "F205EAD4-26B3-4F4D-8FFF-C66C128045C5",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:25:09Z",
+        "id" : "FFE61500-3AD7-4027-BD4A-65AE165EC6BF",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:25:10Z",
+        "id" : "E37354BF-B3E4-4579-A5C1-7B47EBFD9A0A",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:25:11Z",
+        "id" : "9140B0D1-B34E-45FB-B9DF-DD39377355F5",
+        "source" : "Codex",
+        "text" : "Created 10 · Open country / Postcard"
+      },
+      {
+        "date" : "2026-10-30T19:25:13Z",
+        "id" : "316CE859-A7CB-4B4C-BC0E-D2AE2711A3BD",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:25:15Z",
+        "id" : "420D7F90-2702-48A7-904F-4AA7BDA1F7D3",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:25:16Z",
+        "id" : "7EFC442B-8B84-45D4-AAF2-3FDA998F9C15",
+        "source" : "Codex",
+        "text" : "Created registered inside artwork"
+      },
+      {
+        "date" : "2026-10-30T19:25:17Z",
+        "id" : "71A9927C-485A-4DFD-B98A-9D266CB6DF91",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-10-30T19:25:18Z",
+        "id" : "92EE98C0-9986-4C7D-9966-A6FF5AEFF63D",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:25:20Z",
+        "id" : "944BA1EB-3EDA-40CF-A3D7-DA0D34722D57",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:25:21Z",
+        "id" : "58EC510F-A676-46FA-BBC9-D6603D8FA196",
+        "source" : "Codex",
+        "text" : "Created 11 · A small joy / Greeting card"
+      },
+      {
+        "date" : "2026-10-30T19:25:23Z",
+        "id" : "9A29EB18-C057-40FA-A6CE-83CA5B523F1F",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:25:25Z",
+        "id" : "4315FACA-806A-4DE9-BBE1-F6253877B2C4",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:25:26Z",
+        "id" : "00C06430-ABB5-45ED-81D8-4C4D316BC852",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:25:27Z",
+        "id" : "BD87B224-7019-4148-83BC-16B1B778D1E2",
+        "source" : "Codex",
+        "text" : "Created registered inside artwork"
+      },
+      {
+        "date" : "2026-10-30T19:25:28Z",
+        "id" : "3BEEAEC8-D44F-462B-BAA2-53587AA486EF",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-10-30T19:25:30Z",
+        "id" : "1C64057A-BF9E-4986-AE70-028DD6595AC1",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:25:31Z",
+        "id" : "6F51E490-3834-4D14-AC92-96B877A10FA4",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:25:32Z",
+        "id" : "D2B1255D-6DF3-4426-AD63-086BEAE363C6",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-10-30T19:25:34Z",
+        "id" : "A9E9F9EC-88C2-46CC-90BD-5319A300165A",
+        "source" : "Codex",
+        "text" : "Created 12 · Gather / Invitation"
+      },
+      {
+        "date" : "2026-10-30T19:25:35Z",
+        "id" : "DCAFCA83-CA22-4C2E-A4B8-3DC27E0A9689",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:25:37Z",
+        "id" : "73110A93-47FE-4BDC-B139-BCB6FA755074",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:25:38Z",
+        "id" : "5C7636D5-A757-48F0-B7C2-5F9D9BB2D47C",
+        "source" : "Codex",
+        "text" : "Created registered inside artwork"
+      },
+      {
+        "date" : "2026-10-30T19:25:39Z",
+        "id" : "480EEE84-FB75-471D-9DEB-29D100E0C926",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-10-30T19:25:40Z",
+        "id" : "6EE13A9C-AD27-4D3D-B2A9-FDB80940AFEA",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:25:42Z",
+        "id" : "E3EAA2BD-D8D3-49A6-82B5-C84F97A7CF80",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:25:43Z",
+        "id" : "C7D88DAA-13C2-468F-90CC-2C58E01D73CD",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:25:44Z",
+        "id" : "DD9CDF7B-D8B6-4677-A04C-48C0592FCC73",
+        "source" : "Codex",
+        "text" : "Changed paper finish"
+      },
+      {
+        "date" : "2026-10-30T19:25:46Z",
+        "id" : "F7AC2D0C-3EFC-4C88-9083-4B64889DCEC4",
+        "source" : "Codex",
+        "text" : "Added 04 · Modeled contents / 56 × 20 × 44 mm"
+      },
+      {
+        "date" : "2026-10-30T19:25:48Z",
+        "id" : "084BCF7D-E677-4312-A8AC-B4A975F1DE6E",
+        "source" : "Codex",
+        "text" : "Added 05 · Modeled archival contents"
+      },
+      {
+        "date" : "2026-10-30T19:25:50Z",
+        "id" : "E862BC37-2D54-4931-9E8A-6CE29397AB55",
+        "source" : "Codex",
+        "text" : "Created 07 · Separate patterned envelope liner"
+      },
+      {
+        "date" : "2026-10-30T19:25:51Z",
+        "id" : "026FB08E-48AC-461B-8C5A-70D41EE556C4",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-30T19:25:52Z",
+        "id" : "582CAF17-5810-4D00-9AAA-3A450C610917",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-10-30T19:25:54Z",
+        "id" : "FDA9EE23-F90E-4215-8C93-C8361D97D087",
+        "source" : "Codex",
+        "text" : "Created registered inside artwork"
+      },
+      {
+        "date" : "2026-10-30T19:25:55Z",
+        "id" : "FF78F1F4-3DBF-4B14-93A8-FF8BC05E5D1E",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-10-30T19:25:57Z",
+        "id" : "1DD6CC5F-A7B2-451B-A01C-510DD1929F95",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:25:58Z",
+        "id" : "BD25D24B-2CF0-4DDB-8A10-C107189343E9",
+        "source" : "Studio",
+        "text" : "Attached manufacturer template"
+      },
+      {
+        "date" : "2026-10-30T19:25:59Z",
+        "id" : "D4988D2F-6A62-4B32-98F5-DB9286C6E978",
+        "source" : "Codex",
+        "text" : "Added decision"
+      },
+      {
+        "date" : "2026-10-30T19:31:34Z",
+        "id" : "9502A32D-7BA4-4263-80E8-D3A71DEB0095",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:31:36Z",
+        "id" : "CDAA03C3-9C57-4476-BD2E-860881D4CB8D",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:31:52Z",
+        "id" : "0E725925-6EED-4F2C-97C6-88C98F3A3DDC",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:31:54Z",
+        "id" : "D5D39AC3-F226-4DFC-9787-863F448218B4",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:32:05Z",
+        "id" : "0D786F0C-40FF-4DC7-B19D-02DB099B12C9",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:32:07Z",
+        "id" : "409EA797-EC33-4901-AC64-6BFD490AFA50",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:32:24Z",
+        "id" : "BA586943-1F0D-4470-BAA1-0426C0C757A6",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:32:26Z",
+        "id" : "B1CB47B8-6E97-4470-A448-3CF759D9029E",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:32:40Z",
+        "id" : "47F900B2-9858-4CAF-A5FB-1F58637DCF5F",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:32:42Z",
+        "id" : "527D6CD3-A406-435B-A64E-1796F254AB8D",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:33:00Z",
+        "id" : "EC57CE2E-F651-4461-B08D-7F424EC0F76D",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:33:02Z",
+        "id" : "4B93A3B5-0DC4-4DF0-88BE-1BD7A03A3DFD",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:33:14Z",
+        "id" : "9C7FBEA4-021B-430F-AD8C-945A2FB891B8",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:33:16Z",
+        "id" : "7998359B-993F-42AF-AD91-43963BDD64E7",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:33:35Z",
+        "id" : "624F3422-A815-49A1-93CB-67449AFD3A0B",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:33:37Z",
+        "id" : "4378990A-692F-4673-BEA5-307C9BE39543",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:33:55Z",
+        "id" : "641A2DBE-3C07-47BA-B9FC-DE205C94A165",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:33:57Z",
+        "id" : "D794B164-89F3-41D5-B9F0-C68D330A075A",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:34:17Z",
+        "id" : "FDDFFC33-0A31-4F3A-958C-055878A120EB",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:34:19Z",
+        "id" : "16F42CE8-6C05-435B-AF45-5A1FB6B28AF8",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:34:36Z",
+        "id" : "20F193DD-45FE-4F37-985A-C46E7FAB9E4A",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:34:38Z",
+        "id" : "F75A659A-4C0C-4FF2-A30A-41DFB3CA9191",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:34:50Z",
+        "id" : "527F4810-ED04-42AF-BE44-A88E31F91B42",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:34:52Z",
+        "id" : "2128FD51-148F-47C2-957E-03E02AD12312",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:35:14Z",
+        "id" : "1074F475-FA61-4405-BE20-35B65BEB1A08",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:35:16Z",
+        "id" : "C56C8A49-C60A-4180-91B7-42FBEEC71ABF",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:37:58Z",
+        "id" : "B2C5A8A4-6541-475B-89A6-900750B21941",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:38:15Z",
+        "id" : "2C838247-B680-4527-83DD-85782581D2C1",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:38:17Z",
+        "id" : "A9D9C1D0-BCDE-4294-A506-05817C90241A",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:38:20Z",
+        "id" : "DE05D7CC-41B5-484C-A41A-19B7C00F2A02",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:38:21Z",
+        "id" : "21553AE7-7EE9-4176-B146-AEC05684DCDF",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:38:22Z",
+        "id" : "BC2CD466-442E-4B24-975D-40B2A14E3806",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:38:42Z",
+        "id" : "8DE51A1C-7028-4AD1-AB14-622CCB252BBF",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:38:44Z",
+        "id" : "3F8E3F17-34C8-4F32-BBA6-46D63AD19DBD",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:38:46Z",
+        "id" : "74560796-1150-4792-B9C2-584F3EB905AB",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:38:47Z",
+        "id" : "B4FD4234-AA1C-4200-B2CE-8156798C7FCA",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:38:48Z",
+        "id" : "66E64472-98E7-4CD6-9DD8-70BB66FA8560",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:39:05Z",
+        "id" : "54FBE193-CDAC-4261-92A2-339FFF67C7FE",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:39:07Z",
+        "id" : "805BC212-7CA7-4DE8-A053-4B2B35DEB658",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:39:10Z",
+        "id" : "BC8B4B46-9435-4932-A6A5-89830531E734",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:39:11Z",
+        "id" : "02FB3ECE-D2C4-4236-9155-13A7219A7F6E",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:39:12Z",
+        "id" : "FC10D55B-BAB2-4B87-B2C8-269E37130207",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:39:31Z",
+        "id" : "16AA9507-CC21-4C9D-9BFA-B2DA2C572790",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:39:33Z",
+        "id" : "CFF5C40B-C665-4A8E-ABFC-561496CACEFA",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:39:36Z",
+        "id" : "6FEF33F9-C719-42D2-8BEB-9FC712E74633",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:39:37Z",
+        "id" : "0D52F007-3CBE-4580-B70B-2BA2C63EDCAF",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:41:34Z",
+        "id" : "3711099A-05D7-4190-BBBC-90D623A01E01",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-10-30T19:41:35Z",
+        "id" : "6E58A494-6E0E-4AB2-9BAF-545DDDDA373A",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:41:35Z",
+        "id" : "2F72C002-25E8-4EC2-A7A0-7C710145E023",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-10-30T19:41:35Z",
+        "id" : "6E419113-873D-41EC-838F-0B89DEB68871",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-10-30T19:41:35Z",
+        "id" : "DC32009C-948C-4FE3-95C5-90E8AFC136AE",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-10-30T19:41:35Z",
+        "id" : "A18D31AD-03C9-4837-B6BE-54CE4B94D422",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:41:36Z",
+        "id" : "14551EF8-B121-4A42-BA3B-BFA03305C115",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-10-30T19:41:36Z",
+        "id" : "E2AD9A2C-B4E0-42C2-AE44-932A5E4F3935",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-10-30T19:41:36Z",
+        "id" : "D47151B9-7BD8-40C7-8EE5-9A6CF7D00107",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-10-30T19:41:36Z",
+        "id" : "585C214C-EA27-4CA7-8F16-0469BEFFDF23",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-10-30T19:48:26Z",
+        "id" : "62C60DA3-4BBC-4EE4-AFF6-50C603F44D8F",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:48:27Z",
+        "id" : "0808542F-5B77-4A17-A00E-911997BB7DC3",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:48:27Z",
+        "id" : "DE158769-F84C-4D29-AE85-5F8B5D613DAB",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-10-30T19:54:29Z",
+        "id" : "9BEDF63F-B396-49C2-A40F-238A5C5124FC",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-10-30T19:54:29Z",
+        "id" : "F26BB6EB-68DB-4462-AC92-CF27810F8CE6",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-10-30T19:55:58Z",
+        "id" : "114CFEE2-5193-40D9-B9FF-3C16BFFF38B5",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:55:59Z",
+        "id" : "8DC8090A-3BC7-4812-9079-CBB676CE280F",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:06Z",
+        "id" : "2A640BBC-B620-4C60-A42B-2055D0FD3F20",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:07Z",
+        "id" : "F1228684-FAD6-40CC-8FAE-562CECCB5121",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:16Z",
+        "id" : "E284D166-FE4F-4BBA-8D1C-823EEF4F2D87",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:56:17Z",
+        "id" : "182FEB7F-B48D-411B-B769-B0EB34E7176C",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:17Z",
+        "id" : "DCECEAE7-9D3B-45AF-B9E2-63E8E5861B68",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:17Z",
+        "id" : "4AA49A0E-FBD4-408D-B7FC-1CEBF84F6387",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:18Z",
+        "id" : "BD00DEE5-15C3-45C0-AFC1-A435167929E6",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:56:18Z",
+        "id" : "8B5227DA-DF21-4104-A51E-42CBA5243C7A",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:56:19Z",
+        "id" : "C42F7AA5-0122-46DB-9B64-1069DEA0E3DB",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:19Z",
+        "id" : "16FD1401-E1FB-4F46-AEBE-A709707995D0",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:19Z",
+        "id" : "0C9A05C5-F6B3-49D4-8FBE-0B61FDD69540",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:19Z",
+        "id" : "78E3A9AC-1ABD-47E7-A0BD-6F6F205B77A8",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:56:20Z",
+        "id" : "AAEC794D-8EA2-45C7-8FF2-37241CC642C3",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:56:21Z",
+        "id" : "72E14020-6DAD-4A46-B9B6-13ADC3F8D48E",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:21Z",
+        "id" : "179E0BC0-CA85-47CC-857F-EB13AB4099F6",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:21Z",
+        "id" : "0E369539-9874-4317-9D8F-876E45DB376B",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:21Z",
+        "id" : "BC72461A-C00B-48B5-B069-1B89630D5AA5",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:56:21Z",
+        "id" : "1C7EAA31-C7FE-4F42-A816-3E9B8CCF35E0",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T19:56:22Z",
+        "id" : "88A1CD1D-97AA-4B61-BC4B-A27A89D71107",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:22Z",
+        "id" : "6A95E69E-D007-4F6F-9A56-A8CCD5137D60",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:22Z",
+        "id" : "28A3CB98-83BA-4296-B7F3-5756640ED2BA",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T19:56:22Z",
+        "id" : "26784089-8048-4E29-A991-DF7CCDE1E5A7",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T20:16:28Z",
+        "id" : "9E0217A0-DAE9-4C7E-B77E-AE2A311E925F",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:28Z",
+        "id" : "70C6EE51-6229-4B63-BB9C-56427DB67F13",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:30Z",
+        "id" : "224B3562-94DB-4070-9CF0-E40C0A3D2DFD",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:30Z",
+        "id" : "0229294E-4633-441C-99AA-7FDEE2613816",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:30Z",
+        "id" : "71B55319-E91D-4DA6-B66E-262D1D51FE35",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:31Z",
+        "id" : "81DBB108-7801-4D26-8C11-8A1140BA65C0",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:31Z",
+        "id" : "0B1D0940-7A12-4D1A-A30A-1B0AA01BBB10",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:31Z",
+        "id" : "DDFA0524-8ACD-4C34-98BA-9D1A78F61F90",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:32Z",
+        "id" : "89EBE6C9-D2A7-4750-8ADF-A252CC69F89C",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:33Z",
+        "id" : "96F9C789-95B9-4C1D-9359-41CBCF2B2246",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T20:16:33Z",
+        "id" : "1BAE2AAF-DBAE-4208-B432-56A3358CBA34",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:33Z",
+        "id" : "0AAAE728-0694-4593-8D1F-1F971B1A41EF",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:34Z",
+        "id" : "1E4BFF92-15F9-4EF0-99FE-532456A72EEA",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:34Z",
+        "id" : "650B9BB1-860E-4C3F-813F-8E2DE8B1E215",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T20:16:34Z",
+        "id" : "2DE705BF-36C3-457F-96F7-5F38CF9CB95B",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      },
+      {
+        "date" : "2026-10-30T20:16:34Z",
+        "id" : "FE308BA9-52ED-46DB-8188-BC937752D476",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:34Z",
+        "id" : "C584FCD8-E102-40AB-90A0-4172DD2DAEE4",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:35Z",
+        "id" : "D01DADDD-0424-46D3-BA63-C0628E5785A8",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-10-30T20:16:35Z",
+        "id" : "97388786-26E6-4548-BE8B-50C0C1445B4B",
+        "source" : "Codex",
+        "text" : "Updated construction"
+      }
+    ],
+    "id" : "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+    "materials" : [
+
+    ],
+    "name" : "FIELD / Twelve paper studies",
+    "notes" : [
+      {
+        "id" : "A41869AD-D828-47CB-8C4D-EC7ADAE49291",
+        "kind" : "decision",
+        "resolved" : false,
+        "text" : "Twelve-case paper and packaging laboratory. All stocks and finish depths are prototype assumptions; verify fit, press tooling, adhesive and registration physically. See docs/paper-packaging-validation-plan.md."
+      }
+    ],
+    "objects" : [
+
+    ],
+    "recipes" : [
+      {
+        "id" : "construction-76DEB560-2741-487E-BBEF-CDCC31BD3AFF",
+        "name" : "RSC shipping study",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 416,
+            "minimum" : 156,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 260
+          },
+          {
+            "id" : "height",
+            "maximum" : 256,
+            "minimum" : 96,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 160
+          },
+          {
+            "id" : "depth",
+            "maximum" : 288,
+            "minimum" : 108,
+            "name" : "depth",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 180
+          },
+          {
+            "id" : "stock",
+            "maximum" : 5.760000000000001,
+            "minimum" : 1.6,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 3.2
+          },
+          {
+            "id" : "clearance",
+            "maximum" : 5,
+            "minimum" : 0,
+            "name" : "clearance",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 1
+          },
+          {
+            "id" : "glueTab",
+            "maximum" : 45,
+            "minimum" : 16,
+            "name" : "glueTab",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 28
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "requirements" : [
+          {
+            "id" : "usable-stock",
+            "lhs" : "height",
+            "message" : "Height must leave a positive usable cavity after stock layers.",
+            "relation" : ">",
+            "rhs" : "6*stock"
+          }
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-B48663EE-C98C-4171-A266-E353730EAAAE",
+        "name" : "Straight tuck retail study",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 102.4,
+            "minimum" : 38.4,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 64
+          },
+          {
+            "id" : "height",
+            "maximum" : 220.8,
+            "minimum" : 82.8,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 138
+          },
+          {
+            "id" : "depth",
+            "maximum" : 60.800000000000004,
+            "minimum" : 22.8,
+            "name" : "depth",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 38
+          },
+          {
+            "id" : "stock",
+            "maximum" : 0.81,
+            "minimum" : 0.225,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 0.45
+          },
+          {
+            "id" : "clearance",
+            "maximum" : 5,
+            "minimum" : 0,
+            "name" : "clearance",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 1
+          },
+          {
+            "id" : "glueTab",
+            "maximum" : 22,
+            "minimum" : 8,
+            "name" : "glueTab",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 14
+          },
+          {
+            "id" : "tuck",
+            "maximum" : 35,
+            "minimum" : 10,
+            "name" : "tuck",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 23
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "requirements" : [
+          {
+            "id" : "usable-stock",
+            "lhs" : "height",
+            "message" : "Height must leave a positive usable cavity after stock layers.",
+            "relation" : ">",
+            "rhs" : "6*stock"
+          }
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-EA2DAD84-DC9F-4BD0-B406-A268CB8B04B8",
+        "name" : "Locking mailer study",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 352,
+            "minimum" : 132,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 220
+          },
+          {
+            "id" : "height",
+            "maximum" : 88,
+            "minimum" : 33,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 55
+          },
+          {
+            "id" : "depth",
+            "maximum" : 256,
+            "minimum" : 96,
+            "name" : "depth",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 160
+          },
+          {
+            "id" : "stock",
+            "maximum" : 2.7,
+            "minimum" : 0.75,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 1.5
+          },
+          {
+            "id" : "clearance",
+            "maximum" : 5,
+            "minimum" : 0,
+            "name" : "clearance",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 1
+          },
+          {
+            "id" : "tabDepth",
+            "maximum" : 8,
+            "minimum" : 3,
+            "name" : "tabDepth",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 5
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "requirements" : [
+          {
+            "id" : "tabs-fit-wall",
+            "lhs" : "height",
+            "message" : "The wall must retain stock around its locking tongues.",
+            "relation" : ">",
+            "rhs" : "tabDepth+4*stock"
+          },
+          {
+            "id" : "retention-overlap",
+            "lhs" : "tabDepth",
+            "message" : "The folded retaining foot must extend beyond the slot with positive material overlap.",
+            "relation" : ">",
+            "rhs" : "1.5*stock+.4"
+          }
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-FE9BD168-E884-46C9-8633-8E4DD6B50E78",
+        "name" : "Two piece board box and insert",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 224,
+            "minimum" : 84,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 140
+          },
+          {
+            "id" : "height",
+            "maximum" : 72,
+            "minimum" : 27,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 45
+          },
+          {
+            "id" : "depth",
+            "maximum" : 160,
+            "minimum" : 60,
+            "name" : "depth",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 100
+          },
+          {
+            "id" : "stock",
+            "maximum" : 3.24,
+            "minimum" : 0.9,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 1.8
+          },
+          {
+            "id" : "clearance",
+            "maximum" : 5,
+            "minimum" : 0,
+            "name" : "clearance",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 1
+          },
+          {
+            "id" : "lidHeight",
+            "maximum" : 38,
+            "minimum" : 15,
+            "name" : "lidHeight",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 25
+          },
+          {
+            "id" : "insertHeight",
+            "maximum" : 20,
+            "minimum" : 5,
+            "name" : "insertHeight",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 12
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-2BD7AD57-44F9-4091-BA17-8DDB57789D06",
+        "name" : "Archival clamshell board study",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 384,
+            "minimum" : 144,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 240
+          },
+          {
+            "id" : "height",
+            "maximum" : 88,
+            "minimum" : 33,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 55
+          },
+          {
+            "id" : "depth",
+            "maximum" : 280,
+            "minimum" : 105,
+            "name" : "depth",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 175
+          },
+          {
+            "id" : "stock",
+            "maximum" : 2.7,
+            "minimum" : 0.75,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 1.5
+          },
+          {
+            "id" : "clearance",
+            "maximum" : 5,
+            "minimum" : 0,
+            "name" : "clearance",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 1
+          },
+          {
+            "id" : "coverOverhang",
+            "maximum" : 8,
+            "minimum" : 2,
+            "name" : "coverOverhang",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 4
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-C2CE9630-5DC9-42E4-A220-E6D7C0BA2439",
+        "name" : "Commercial envelope study",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 300,
+            "minimum" : 160,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 220
+          },
+          {
+            "id" : "height",
+            "maximum" : 150,
+            "minimum" : 80,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 110
+          },
+          {
+            "id" : "depth",
+            "maximum" : 2,
+            "minimum" : 0.3,
+            "name" : "depth",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 0.6
+          },
+          {
+            "id" : "stock",
+            "maximum" : 0.3,
+            "minimum" : 0.1,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 0.16
+          },
+          {
+            "id" : "sideFlap",
+            "maximum" : 65,
+            "minimum" : 28,
+            "name" : "sideFlap",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 45
+          },
+          {
+            "id" : "topFlap",
+            "maximum" : 65,
+            "minimum" : 30,
+            "name" : "topFlap",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 45
+          },
+          {
+            "id" : "bottomFlap",
+            "maximum" : 85,
+            "minimum" : 45,
+            "name" : "bottomFlap",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 70
+          },
+          {
+            "id" : "clearance",
+            "maximum" : 0.5,
+            "minimum" : 0,
+            "name" : "clearance",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 0.2
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "requirements" : [
+          {
+            "id" : "bottom-bond-within-height",
+            "lhs" : "bottomFlap",
+            "message" : "Bottom bond must remain shorter than the envelope body.",
+            "relation" : "<",
+            "rhs" : "height"
+          }
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-2DE0118D-8ECF-4472-A4D7-29D8DAFC32F9",
+        "name" : "Pointed invitation envelope",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 300,
+            "minimum" : 160,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 190
+          },
+          {
+            "id" : "height",
+            "maximum" : 150,
+            "minimum" : 80,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 140
+          },
+          {
+            "id" : "depth",
+            "maximum" : 2,
+            "minimum" : 0.3,
+            "name" : "depth",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 1.2
+          },
+          {
+            "id" : "stock",
+            "maximum" : 0.3,
+            "minimum" : 0.1,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 0.2
+          },
+          {
+            "id" : "sideFlap",
+            "maximum" : 65,
+            "minimum" : 28,
+            "name" : "sideFlap",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 45
+          },
+          {
+            "id" : "topFlap",
+            "maximum" : 65,
+            "minimum" : 30,
+            "name" : "topFlap",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 62
+          },
+          {
+            "id" : "bottomFlap",
+            "maximum" : 85,
+            "minimum" : 45,
+            "name" : "bottomFlap",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 70
+          },
+          {
+            "id" : "clearance",
+            "maximum" : 0.5,
+            "minimum" : 0,
+            "name" : "clearance",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 0.2
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "requirements" : [
+          {
+            "id" : "bottom-bond-within-height",
+            "lhs" : "bottomFlap",
+            "message" : "Bottom bond must remain shorter than the envelope body.",
+            "relation" : "<",
+            "rhs" : "height"
+          }
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-F5ECE341-5CC6-45DF-A573-708CA9D3AD5D",
+        "name" : "Die cut hang tag",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 88,
+            "minimum" : 33,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 55
+          },
+          {
+            "id" : "height",
+            "maximum" : 160,
+            "minimum" : 60,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 100
+          },
+          {
+            "id" : "stock",
+            "maximum" : 1.2,
+            "minimum" : 0.24,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 0.6
+          },
+          {
+            "id" : "radius",
+            "maximum" : 8,
+            "minimum" : 1,
+            "name" : "radius",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 4
+          },
+          {
+            "id" : "turn",
+            "maximum" : 180,
+            "minimum" : 0,
+            "name" : "turn",
+            "step" : 0.1,
+            "unit" : "°",
+            "value" : 0
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-F5BE8DA6-1460-4CAD-BCDC-84D61B9BB968",
+        "name" : "Duplex business card",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 136,
+            "minimum" : 51,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 85
+          },
+          {
+            "id" : "height",
+            "maximum" : 88,
+            "minimum" : 33,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 55
+          },
+          {
+            "id" : "stock",
+            "maximum" : 1.8,
+            "minimum" : 0.36000000000000004,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 0.9
+          },
+          {
+            "id" : "turn",
+            "maximum" : 180,
+            "minimum" : 0,
+            "name" : "turn",
+            "step" : 0.1,
+            "unit" : "°",
+            "value" : 0
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-0A86453F-9CD8-42DB-B0B1-AD78D33EEE85",
+        "name" : "Double sided postcard",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 236.8,
+            "minimum" : 88.8,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 148
+          },
+          {
+            "id" : "height",
+            "maximum" : 168,
+            "minimum" : 63,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 105
+          },
+          {
+            "id" : "stock",
+            "maximum" : 0.9,
+            "minimum" : 0.18000000000000002,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 0.45
+          },
+          {
+            "id" : "turn",
+            "maximum" : 180,
+            "minimum" : 0,
+            "name" : "turn",
+            "step" : 0.1,
+            "unit" : "°",
+            "value" : 0
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-87EE5C62-0CD3-4752-BAEA-5E3994040341",
+        "name" : "Scored folded greeting card",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 176,
+            "minimum" : 66,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 110
+          },
+          {
+            "id" : "height",
+            "maximum" : 248,
+            "minimum" : 93,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 155
+          },
+          {
+            "id" : "stock",
+            "maximum" : 0.76,
+            "minimum" : 0.15200000000000002,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 0.38
+          },
+          {
+            "id" : "turn",
+            "maximum" : 180,
+            "minimum" : 0,
+            "name" : "turn",
+            "step" : 0.1,
+            "unit" : "°",
+            "value" : 0
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-2E915773-046E-4FC0-85CD-C279AE36829F",
+        "name" : "Cotton letterpress invitation",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 203.20000000000002,
+            "minimum" : 76.2,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 127
+          },
+          {
+            "id" : "height",
+            "maximum" : 284.8,
+            "minimum" : 106.8,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 178
+          },
+          {
+            "id" : "stock",
+            "maximum" : 2,
+            "minimum" : 0.4,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 1
+          },
+          {
+            "id" : "turn",
+            "maximum" : 180,
+            "minimum" : 0,
+            "name" : "turn",
+            "step" : 0.1,
+            "unit" : "°",
+            "value" : 0
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-E128F506-ECBF-4D79-9315-D6BB418E8816",
+        "name" : "Loose patterned invitation liner",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 289.6,
+            "minimum" : 108.6,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 181
+          },
+          {
+            "id" : "height",
+            "maximum" : 208,
+            "minimum" : 78,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 130
+          },
+          {
+            "id" : "stock",
+            "maximum" : 0.24,
+            "minimum" : 0.048,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 0.12
+          },
+          {
+            "id" : "turn",
+            "maximum" : 180,
+            "minimum" : 0,
+            "name" : "turn",
+            "step" : 0.1,
+            "unit" : "°",
+            "value" : 0
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      }
+    ],
+    "schemaVersion" : 57,
+    "studioPresentation" : {
+      "scenes" : [
+        {
+          "camera" : {
+            "azimuth" : 0.17421578644294414,
+            "distance" : 4.713824209467529,
+            "elevation" : 0.2909046694381227,
+            "projection" : "perspective",
+            "target" : {
+              "x" : -6.7,
+              "y" : 0.816,
+              "z" : -4.3
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "61D3F3F5-9B2C-4F91-BF58-EEE5ED41C9BA",
+          "instances" : [
+            {
+              "id" : "27E4F5DE-9362-44CF-BAFB-9E35D9606448",
+              "name" : "01 · Dispatch / Shipping carton",
+              "positionMM" : {
+                "x" : -670,
+                "y" : 0,
+                "z" : -430
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "76DEB560-2741-487E-BBEF-CDCC31BD3AFF",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "01-study",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.17421578644294414,
+            "distance" : 2.6203577499318116,
+            "elevation" : 0.2909046694381227,
+            "projection" : "perspective",
+            "target" : {
+              "x" : -2.3,
+              "y" : 0.69225,
+              "z" : -4.3
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "937255AB-793C-4ABF-9002-590CD7382EF5",
+          "instances" : [
+            {
+              "id" : "70B93699-DC63-46A0-A80E-6C1E6EE876AD",
+              "name" : "02 · Botanical / Tuck carton",
+              "positionMM" : {
+                "x" : -230,
+                "y" : 0,
+                "z" : -430
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "B48663EE-C98C-4171-A266-E353730EAAAE",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "02-study",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.17421578644294414,
+            "distance" : 4.236629024093614,
+            "elevation" : 0.2909046694381227,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 1.8,
+              "y" : 0.8086599610351474,
+              "z" : -4.223869596780703
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "34F9998E-B52B-4DBA-9189-121211BF1BEA",
+          "instances" : [
+            {
+              "id" : "F7FE7EA2-4BF2-4642-8F5B-BEA0870A488F",
+              "name" : "03 · Field kit / Locking mailer",
+              "positionMM" : {
+                "x" : 180,
+                "y" : 0,
+                "z" : -430
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "EA2DAD84-DC9F-4BD0-B406-A268CB8B04B8",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "03-study",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.24497866312686414,
+            "distance" : 4.268541560410532,
+            "elevation" : 0.8611117618636059,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 7.414000000000001,
+              "y" : 0.23400000000000007,
+              "z" : -4.3
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "807F98EC-B186-47B2-897E-90FB1ADDDC35",
+          "instances" : [
+            {
+              "id" : "7E83230D-47CD-4B93-9632-CE1C60CDE84F",
+              "name" : "04 · Meridian / Presentation box",
+              "positionMM" : {
+                "x" : 650,
+                "y" : 0,
+                "z" : -430
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "FE9BD168-E884-46C9-8633-8E4DD6B50E78",
+              "visible" : true
+            },
+            {
+              "id" : "E37F1A48-B7C6-4DA4-8239-D97A3F705A68",
+              "name" : "04 · Modeled contents / 56 × 20 × 44 mm",
+              "positionMM" : {
+                "x" : 650,
+                "y" : 1.8,
+                "z" : -430
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "F9E4C4C5-F289-4AC4-98EF-C084A997EF93",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "04-study",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 3,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.3217505543966422,
+            "distance" : 6.421582523949881,
+            "elevation" : 0.715778403053046,
+            "projection" : "perspective",
+            "target" : {
+              "x" : -6.5,
+              "y" : 1.23125,
+              "z" : 0
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "A92283AF-4B21-4909-A029-A1AA356806F8",
+          "instances" : [
+            {
+              "id" : "A9ADCB6A-1F84-48B7-A0FF-78299FFC3EF8",
+              "name" : "05 · Archive / Clamshell case",
+              "positionMM" : {
+                "x" : -650,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 180,
+              "sourceObjectID" : "2BD7AD57-44F9-4091-BA17-8DDB57789D06",
+              "visible" : true
+            },
+            {
+              "id" : "5A27B25F-A0AB-4B1D-B818-12904688DD84",
+              "name" : "05 · Modeled archival contents",
+              "positionMM" : {
+                "x" : -650,
+                "y" : 7.7500000000000115,
+                "z" : -0.75
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "64C852B2-DE2C-437B-AA91-FDC74A0EECFA",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "05-study",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 3,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.17421578644294414,
+            "distance" : 2.893132246916565,
+            "elevation" : 0.2909046694381227,
+            "projection" : "perspective",
+            "target" : {
+              "x" : -1.9,
+              "y" : 0.55,
+              "z" : 0
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "A5E65DB7-960E-4883-89B4-CC11B53B9BA7",
+          "instances" : [
+            {
+              "id" : "63D33736-D6DD-4EF0-9BF9-63469E3CF73A",
+              "name" : "06 · Correspondence / Envelope",
+              "positionMM" : {
+                "x" : -190,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "C2CE9630-5DC9-42E4-A220-E6D7C0BA2439",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "06-study",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.2914567944778671,
+            "distance" : 3.585164232904964,
+            "elevation" : 0.5216056136891403,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 2.3,
+              "y" : 0.8383758876301605,
+              "z" : -0.2783690878224433
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "B40A345B-C024-4B0C-AEC4-75A581D28DAB",
+          "instances" : [
+            {
+              "id" : "73BB10C8-F620-468B-A50C-C53EC42DCF61",
+              "name" : "07 · Gather / Lined envelope",
+              "positionMM" : {
+                "x" : 230,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 180,
+              "sourceObjectID" : "2DE0118D-8ECF-4472-A4D7-29D8DAFC32F9",
+              "visible" : true
+            },
+            {
+              "id" : "959CD599-F702-43A3-B027-761A9CFA4DEC",
+              "name" : "07 · Separate patterned envelope liner",
+              "positionMM" : {
+                "x" : 230,
+                "y" : 3,
+                "z" : 0.5
+              },
+              "rotationDegrees" : 180,
+              "sourceObjectID" : "E128F506-ECBF-4D79-9315-D6BB418E8816",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "07-study",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.7216548508647611,
+            "distance" : 1.9818722999453042,
+            "elevation" : 1.3340070928016223,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 6.5,
+              "y" : 0.0030000000000000304,
+              "z" : 0
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "16A88ADC-DFF9-4B6C-B337-8A3D964C5C34",
+          "instances" : [
+            {
+              "id" : "EFE6569B-B668-44A1-BEFE-5CC141C857F4",
+              "name" : "08 · Collected / Hang tag",
+              "positionMM" : {
+                "x" : 650,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "F5ECE341-5CC6-45DF-A573-708CA9D3AD5D",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "08-study",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.7216548508647611,
+            "distance" : 1.7867597829056134,
+            "elevation" : 1.3340070928016223,
+            "projection" : "perspective",
+            "target" : {
+              "x" : -4.3,
+              "y" : 0.004500000000000017,
+              "z" : 3.7
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "41495B0D-A9A0-4A57-9A1C-C214F11BF8C5",
+          "instances" : [
+            {
+              "id" : "D2003F29-85B2-4840-B867-E490452607F2",
+              "name" : "09 · Studio Field / Duplex card",
+              "positionMM" : {
+                "x" : -430,
+                "y" : 0,
+                "z" : 370
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "F5BE8DA6-1460-4CAD-BCDC-84D61B9BB968",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "09-study",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.7216548508647611,
+            "distance" : 3.237341730292154,
+            "elevation" : 1.3340070928016223,
+            "projection" : "perspective",
+            "target" : {
+              "x" : -1.45,
+              "y" : 0.0022500000000000324,
+              "z" : 3.7
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "B538C5D1-3107-460C-B70C-46AE2B7EE246",
+          "instances" : [
+            {
+              "id" : "9348EFCD-E3EB-449E-8DC2-2D9EE3832FDD",
+              "name" : "10 · Open country / Postcard",
+              "positionMM" : {
+                "x" : -145,
+                "y" : 0,
+                "z" : 370
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "0A86453F-9CD8-42DB-B0B1-AD78D33EEE85",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "10-study",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.07399499369674856,
+            "distance" : 3.4829638699833585,
+            "elevation" : 0.7036010766608719,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 2.244163726053147,
+              "y" : 0.775,
+              "z" : 3.7
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "AECF8BA5-976D-4220-82FA-1CF8AB623DED",
+          "instances" : [
+            {
+              "id" : "E4619843-E383-4163-92D3-B8C7D0D0A2BB",
+              "name" : "11 · A small joy / Greeting card",
+              "positionMM" : {
+                "x" : 170,
+                "y" : 0,
+                "z" : 370
+              },
+              "rotationDegrees" : -90,
+              "sourceObjectID" : "87EE5C62-0CD3-4752-BAEA-5E3994040341",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "11-study",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 3,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.7216548508647611,
+            "distance" : 3.987959759687653,
+            "elevation" : 1.3340070928016223,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 4.9,
+              "y" : 0.005000000000000055,
+              "z" : 3.7
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "A81ADBE2-3C19-4153-8558-52C7E7D80799",
+          "instances" : [
+            {
+              "id" : "20889B74-A9B7-46C0-B981-EC20DBA0C3CD",
+              "name" : "12 · Gather / Invitation",
+              "positionMM" : {
+                "x" : 490,
+                "y" : 0,
+                "z" : 370
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2E915773-046E-4FC0-85CD-C279AE36829F",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "12-study",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.10673567264913564,
+            "distance" : 19.377628084826576,
+            "elevation" : 0.7260203312040364,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 0.515,
+              "y" : 1.23125,
+              "z" : -0.3130000000000001
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "5951BD86-133D-4CA9-8E94-8ED98DDB8ACA",
+          "instances" : [
+            {
+              "id" : "36A02186-F811-4EC4-AA5C-17CCEFFF0CCA",
+              "name" : "01 · Dispatch / Shipping carton",
+              "positionMM" : {
+                "x" : -670,
+                "y" : 0,
+                "z" : -430
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "76DEB560-2741-487E-BBEF-CDCC31BD3AFF",
+              "visible" : true
+            },
+            {
+              "id" : "ACA6A042-7FEF-40BD-84A3-F2763887F3F5",
+              "name" : "02 · Botanical / Tuck carton",
+              "positionMM" : {
+                "x" : -230,
+                "y" : 0,
+                "z" : -430
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "B48663EE-C98C-4171-A266-E353730EAAAE",
+              "visible" : true
+            },
+            {
+              "id" : "B19E8F7B-44C1-4A22-8840-CBF8E75C4D14",
+              "name" : "03 · Field kit / Locking mailer",
+              "positionMM" : {
+                "x" : 180,
+                "y" : 0,
+                "z" : -430
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "EA2DAD84-DC9F-4BD0-B406-A268CB8B04B8",
+              "visible" : true
+            },
+            {
+              "id" : "0D993F4A-6297-4944-8B2C-AA325FEBF8EA",
+              "name" : "04 · Meridian / Presentation box",
+              "positionMM" : {
+                "x" : 650,
+                "y" : 0,
+                "z" : -430
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "FE9BD168-E884-46C9-8633-8E4DD6B50E78",
+              "visible" : true
+            },
+            {
+              "id" : "67551221-9B5C-481F-B9DF-56D83437DFE5",
+              "name" : "04 · Modeled contents / 56 × 20 × 44 mm",
+              "positionMM" : {
+                "x" : 650,
+                "y" : 1.8,
+                "z" : -430
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "F9E4C4C5-F289-4AC4-98EF-C084A997EF93",
+              "visible" : true
+            },
+            {
+              "id" : "A99438A5-F1DE-4A6E-9C3F-FC279FD63881",
+              "name" : "05 · Archive / Clamshell case",
+              "positionMM" : {
+                "x" : -650,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 180,
+              "sourceObjectID" : "2BD7AD57-44F9-4091-BA17-8DDB57789D06",
+              "visible" : true
+            },
+            {
+              "id" : "61DD433A-B9D1-4880-ABBB-AD7D58D66F59",
+              "name" : "05 · Modeled archival contents",
+              "positionMM" : {
+                "x" : -650,
+                "y" : 7.7500000000000115,
+                "z" : -0.75
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "64C852B2-DE2C-437B-AA91-FDC74A0EECFA",
+              "visible" : true
+            },
+            {
+              "id" : "9823BC6A-8075-40B0-A329-52459CB94FAE",
+              "name" : "06 · Correspondence / Envelope",
+              "positionMM" : {
+                "x" : -190,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "C2CE9630-5DC9-42E4-A220-E6D7C0BA2439",
+              "visible" : true
+            },
+            {
+              "id" : "9D41A0D7-8D97-4F02-8ACB-C043542371E3",
+              "name" : "07 · Gather / Lined envelope",
+              "positionMM" : {
+                "x" : 230,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 180,
+              "sourceObjectID" : "2DE0118D-8ECF-4472-A4D7-29D8DAFC32F9",
+              "visible" : true
+            },
+            {
+              "id" : "D0F16F15-7B88-4689-B272-53F1E731C33C",
+              "name" : "07 · Separate patterned envelope liner",
+              "positionMM" : {
+                "x" : 230,
+                "y" : 3,
+                "z" : 0.5
+              },
+              "rotationDegrees" : 180,
+              "sourceObjectID" : "E128F506-ECBF-4D79-9315-D6BB418E8816",
+              "visible" : true
+            },
+            {
+              "id" : "8756A617-078D-488E-A883-EFD90205FED6",
+              "name" : "08 · Collected / Hang tag",
+              "positionMM" : {
+                "x" : 650,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "F5ECE341-5CC6-45DF-A573-708CA9D3AD5D",
+              "visible" : true
+            },
+            {
+              "id" : "50D8D165-DD86-43D1-8AB3-B394CB9CA4A6",
+              "name" : "09 · Studio Field / Duplex card",
+              "positionMM" : {
+                "x" : -430,
+                "y" : 0,
+                "z" : 370
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "F5BE8DA6-1460-4CAD-BCDC-84D61B9BB968",
+              "visible" : true
+            },
+            {
+              "id" : "CE30E96B-637D-4DF0-8811-01A258C92CB9",
+              "name" : "10 · Open country / Postcard",
+              "positionMM" : {
+                "x" : -145,
+                "y" : 0,
+                "z" : 370
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "0A86453F-9CD8-42DB-B0B1-AD78D33EEE85",
+              "visible" : true
+            },
+            {
+              "id" : "17A72302-3C84-454D-BFA3-7A95B2346DC6",
+              "name" : "11 · A small joy / Greeting card",
+              "positionMM" : {
+                "x" : 170,
+                "y" : 0,
+                "z" : 370
+              },
+              "rotationDegrees" : -90,
+              "sourceObjectID" : "87EE5C62-0CD3-4752-BAEA-5E3994040341",
+              "visible" : true
+            },
+            {
+              "id" : "D8ADA672-CA66-4DD4-A1A8-70643C1A67C3",
+              "name" : "12 · Gather / Invitation",
+              "positionMM" : {
+                "x" : 490,
+                "y" : 0,
+                "z" : 370
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2E915773-046E-4FC0-85CD-C279AE36829F",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "00-twelve-studies",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 3,
+          "surface" : "Daylight"
+        }
+      ],
+      "shots" : [
+
+      ]
+    },
+    "subtitle" : "A new place to make things.",
+    "unit" : "mm",
+    "updatedAt" : "2026-10-30T20:16:35Z"
+  }
+}

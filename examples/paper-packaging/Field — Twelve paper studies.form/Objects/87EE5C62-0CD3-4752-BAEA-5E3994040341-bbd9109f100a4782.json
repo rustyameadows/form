@@ -1,0 +1,567 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "color" : "#7E493B",
+        "fontSize" : 8,
+        "height" : 5,
+        "id" : "00FD5AA1-554A-551C-A74B-1A18F2C87D48",
+        "kind" : "text",
+        "name" : "Publisher / FIELD",
+        "text" : "FIELD",
+        "typography" : {
+          "alignment" : "center",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 40,
+        "x" : 35,
+        "y" : 127
+      },
+      {
+        "color" : "#7E493B",
+        "fontSize" : 5.8,
+        "height" : 4,
+        "id" : "DE229D7F-D4A9-5D32-B48C-82B2F1A42E34",
+        "kind" : "text",
+        "name" : "Publisher / paper goods",
+        "text" : "PAPER GOODS",
+        "typography" : {
+          "alignment" : "center",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 40,
+        "x" : 35,
+        "y" : 135
+      },
+      {
+        "color" : "#7E493B",
+        "fontSize" : 14,
+        "height" : 0.25,
+        "id" : "BF6E220A-8184-52B3-B028-AFA45D596C59",
+        "kind" : "rectangle",
+        "name" : "Publisher / rule",
+        "text" : "",
+        "width" : 16,
+        "x" : 47,
+        "y" : 142
+      },
+      {
+        "color" : "#7E493B",
+        "fontSize" : 5.3,
+        "height" : 3,
+        "id" : "A5FA01F1-671A-5056-AEBE-DCDE1F992231",
+        "kind" : "text",
+        "name" : "Publisher / note",
+        "text" : "Printed for small occasions.",
+        "typography" : {
+          "alignment" : "center",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 66,
+        "x" : 22,
+        "y" : 147
+      },
+      {
+        "color" : "#7E493B",
+        "fontSize" : 14,
+        "height" : 6,
+        "id" : "1F549A14-E879-5E52-99F0-47125A049258",
+        "kind" : "ellipse",
+        "name" : "Publisher / mark",
+        "sides" : 12,
+        "starInset" : 0.8,
+        "text" : "",
+        "width" : 6,
+        "x" : 52,
+        "y" : 115
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 110,
+          "ty" : 0
+        },
+        "color" : "#7E493B",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "ED70EC26-C06C-551D-9FFC-28B6401C39EC",
+        "kind" : "text",
+        "name" : "11-outside-front-brand",
+        "text" : "FIELD  /  11",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 90.2,
+        "x" : 9.9,
+        "y" : 6
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 110,
+          "ty" : 0
+        },
+        "color" : "#7E493B",
+        "fontSize" : 40.07602497963617,
+        "height" : 34,
+        "id" : "A73FEF41-E2A5-5ACD-A1C5-78C690CEECA0",
+        "kind" : "text",
+        "name" : "11-outside-front-title",
+        "text" : "A small joy",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 90.2,
+        "x" : 9.9,
+        "y" : 38.75
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 110,
+          "ty" : 0
+        },
+        "color" : "#7E493B",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "729D45E8-08CB-5966-AB50-CBFF7FFB756E",
+        "kind" : "rectangle",
+        "name" : "11-outside-front-rule",
+        "text" : "",
+        "width" : 60.50000000000001,
+        "x" : 9.9,
+        "y" : 100.75
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 110,
+          "ty" : 0
+        },
+        "color" : "#7E493B",
+        "fontSize" : 7.5,
+        "height" : 16,
+        "id" : "365199E1-BC60-5E96-A228-D3439FE83639",
+        "kind" : "text",
+        "name" : "11-outside-front-copy",
+        "text" : "PAPER LABORATORY\nEDITABLE STUDY  /  11",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 90.2,
+        "x" : 9.9,
+        "y" : 120.9
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 110,
+          "ty" : 0
+        },
+        "color" : "#7E493B",
+        "fontSize" : 14,
+        "height" : 23.099999999999998,
+        "id" : "43C38DF6-20A4-5546-8C65-9572CF0F1483",
+        "kind" : "ellipse",
+        "name" : "11-outside-front-seal",
+        "sides" : 12,
+        "starInset" : 0.8,
+        "text" : "",
+        "width" : 23.099999999999998,
+        "x" : 77,
+        "y" : 88.35
+      }
+    ]
+  },
+  "designID" : "98B77171-CE9A-4243-A024-143110631BB4",
+  "id" : "87EE5C62-0CD3-4752-BAEA-5E3994040341",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "11 · A small joy / Greeting card",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "components" : [
+        {
+          "anchor" : {
+            "x" : "width/2",
+            "y" : "height/2"
+          },
+          "id" : "card",
+          "name" : "Folded greeting card",
+          "position" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "rootPanelID" : "back",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "180.0",
+            "z" : "0.0"
+          }
+        }
+      ],
+      "hinges" : [
+        {
+          "angleDegrees" : "180.0",
+          "childPanelID" : "front",
+          "end" : {
+            "x" : "width",
+            "y" : "height"
+          },
+          "id" : "spine-score",
+          "layerOffsetMM" : "-stock",
+          "opensWithTop" : true,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "width",
+            "y" : "0.0"
+          }
+        }
+      ],
+      "joins" : [
+
+      ],
+      "name" : "Scored folded greeting card",
+      "panels" : [
+        {
+          "artworkRotationDegrees" : "0.0",
+          "id" : "back",
+          "name" : "Back cover",
+          "polygon" : [
+            {
+              "x" : "0.0",
+              "y" : "0.0"
+            },
+            {
+              "x" : "(0)+(width)",
+              "y" : "0.0"
+            },
+            {
+              "x" : "(0)+(width)",
+              "y" : "(0)+(height)"
+            },
+            {
+              "x" : "0.0",
+              "y" : "(0)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "artworkRotationDegrees" : "0.0",
+          "id" : "front",
+          "name" : "Front cover",
+          "polygon" : [
+            {
+              "x" : "width",
+              "y" : "0.0"
+            },
+            {
+              "x" : "(width)+(width)",
+              "y" : "0.0"
+            },
+            {
+              "x" : "(width)+(width)",
+              "y" : "(0)+(height)"
+            },
+            {
+              "x" : "width",
+              "y" : "(0)+(height)"
+            }
+          ],
+          "role" : "body"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 176,
+          "minimum" : 66,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 110
+        },
+        {
+          "maximum" : 248,
+          "minimum" : 93,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 155
+        },
+        {
+          "maximum" : 0.76,
+          "minimum" : 0.15200000000000002,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 0.38
+        },
+        {
+          "maximum" : 180,
+          "minimum" : 0,
+          "name" : "turn",
+          "unit" : "°",
+          "value" : 0
+        }
+      ],
+      "rootPanelID" : "back",
+      "size" : {
+        "x" : "2*width",
+        "y" : "height"
+      },
+      "stockThickness" : "stock",
+      "version" : 3
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 2,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 1,
+      "height" : 155,
+      "width" : 110
+    },
+    "finishes" : [
+      {
+        "color" : "#C49B48",
+        "depthMM" : 0,
+        "elementIDs" : [
+          "ED70EC26-C06C-551D-9FFC-28B6401C39EC"
+        ],
+        "enabled" : true,
+        "heightMM" : 0,
+        "id" : "86090515-8657-565A-8762-044B9B9300E7",
+        "kind" : "foil",
+        "metallic" : 1,
+        "name" : "Warm metallic mark",
+        "opacity" : 1,
+        "roughness" : 0.18,
+        "side" : "outside"
+      }
+    ],
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "insideArtworkSourceID" : "459ABC54-076E-48E8-831A-2E8A761BCF2D",
+    "kind" : "authored",
+    "openingPercent" : 45,
+    "stock" : {
+      "grain" : "parallelHeight",
+      "gsm" : 300,
+      "name" : "FIELD smooth / prototype",
+      "notes" : "Visual prototype stock; verify caliper, grain, creases and print with a physical sample.",
+      "profile" : {
+        "color" : "#E9DFCE",
+        "opacity" : 1,
+        "roughness" : 0.94,
+        "texture" : "smooth",
+        "textureDepthMM" : 0.008,
+        "textureScaleMM" : 1.1
+      },
+      "thicknessMM" : 0.38,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "parameters" : {
+    "fold" : 100,
+    "height" : 155,
+    "opening" : 45,
+    "stock" : 0.38,
+    "turn" : 0,
+    "width" : 110
+  },
+  "position" : {
+    "x" : 170,
+    "y" : 0,
+    "z" : 370
+  },
+  "recipeID" : "construction-87EE5C62-0CD3-4752-BAEA-5E3994040341",
+  "relationship" : "original",
+  "rotation" : -90
+}

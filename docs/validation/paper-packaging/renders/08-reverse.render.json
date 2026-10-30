@@ -1,0 +1,68 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1200,
+  "png_sha256" : "deff8153a7082f7cbc02f339397fe311ba363c343d8c38bdbd63e4d8e037c9cf",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:paper-template-17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764.svg",
+      "sha256" : "17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : -2.5088438185876099,
+      "distance" : 2.0118103306167243,
+      "elevation" : 1.2146394936312479,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 6.5,
+        "y" : 0.0030000000000000304,
+        "z" : 0
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "EB10071B-D264-4F80-AC20-4726ABED6B54",
+    "instances" : [
+      {
+        "id" : "D9C724A0-2631-43C9-B91B-A24384D5B2B6",
+        "name" : "08 · Collected \/ Hang tag",
+        "positionMM" : {
+          "x" : 650,
+          "y" : 0,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "F5ECE341-5CC6-45DF-A573-708CA9D3AD5D",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "08-reverse",
+    "pixels" : {
+      "height" : 1200,
+      "width" : 1800
+    },
+    "revision" : 2,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "5e26e8fa1d07237dbe8fa6ab226ce1ba12c34c08da075b4486548b4b346a5e50",
+  "source_project_id" : "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+  "width" : 1800
+}

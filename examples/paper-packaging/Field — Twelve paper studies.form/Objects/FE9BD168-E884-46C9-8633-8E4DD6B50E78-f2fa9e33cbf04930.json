@@ -1,0 +1,1157 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 183.4,
+          "ty" : 5
+        },
+        "color" : "#193938",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "9FEC1197-CD58-5077-BB64-9A98A8AF1D2F",
+        "kind" : "text",
+        "name" : "04-outside-base-front-brand",
+        "text" : "FIELD  /  04",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 119.6,
+        "x" : 12,
+        "y" : 6
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 183.4,
+          "ty" : 5
+        },
+        "color" : "#193938",
+        "fontSize" : 30.843779527559057,
+        "height" : 13.95,
+        "id" : "F5A4B41C-648C-531B-9894-EB568AE6C49D",
+        "kind" : "text",
+        "name" : "04-outside-base-front-title",
+        "text" : "Meridian",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 119.6,
+        "x" : 12,
+        "y" : 15
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 183.4,
+          "ty" : 5
+        },
+        "color" : "#193938",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "4CF9281D-FA24-525D-A989-8AC0CD3CDEEE",
+        "kind" : "rectangle",
+        "name" : "04-outside-base-front-rule",
+        "text" : "",
+        "width" : 78.98,
+        "x" : 12,
+        "y" : 29.25
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 183.4,
+          "ty" : 5
+        },
+        "color" : "#193938",
+        "fontSize" : 7.5,
+        "height" : 7.65,
+        "id" : "032CDE6F-D64D-57CF-AF86-971F27C0B903",
+        "kind" : "text",
+        "name" : "04-outside-base-front-copy",
+        "text" : "PAPER LABORATORY\nEDITABLE STUDY  /  04",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 119.6,
+        "x" : 12,
+        "y" : 35.1
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 361.8,
+          "ty" : 183.4
+        },
+        "color" : "#193938",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "FCC4260C-DDA0-5369-B5AE-76DA5653C3E5",
+        "kind" : "text",
+        "name" : "04-outside-lid-floor-brand",
+        "text" : "FIELD  /  04",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 125.19999999999999,
+        "x" : 12,
+        "y" : 6
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 361.8,
+          "ty" : 183.4
+        },
+        "color" : "#193938",
+        "fontSize" : 74.84757165354333,
+        "height" : 33.852000000000004,
+        "id" : "F9372CAE-E2D7-5C79-BCC8-B5EEA36BF3A0",
+        "kind" : "text",
+        "name" : "04-outside-lid-floor-title",
+        "text" : "Meridian",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 125.19999999999999,
+        "x" : 12,
+        "y" : 27.300000000000004
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 361.8,
+          "ty" : 183.4
+        },
+        "color" : "#193938",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "E91A0846-B965-58A9-A567-CD6BE31D1F3B",
+        "kind" : "rectangle",
+        "name" : "04-outside-lid-floor-rule",
+        "text" : "",
+        "width" : 82.06,
+        "x" : 12,
+        "y" : 70.98000000000002
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 361.8,
+          "ty" : 183.4
+        },
+        "color" : "#193938",
+        "fontSize" : 7.5,
+        "height" : 16,
+        "id" : "8D649A4F-3919-58AC-969F-A58EF169FE8C",
+        "kind" : "text",
+        "name" : "04-outside-lid-floor-copy",
+        "text" : "PAPER LABORATORY\nEDITABLE STUDY  /  04",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 125.19999999999999,
+        "x" : 12,
+        "y" : 85.17600000000002
+      },
+      {
+        "affine" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 361.8,
+          "ty" : 183.4
+        },
+        "color" : "#193938",
+        "fontSize" : 14,
+        "height" : 18.564000000000004,
+        "id" : "374E445D-F93B-5A3F-BF23-4C24C1F8D59A",
+        "kind" : "ellipse",
+        "name" : "04-outside-lid-floor-seal",
+        "sides" : 12,
+        "starInset" : 0.8,
+        "text" : "",
+        "width" : 18.564000000000004,
+        "x" : 118.63599999999998,
+        "y" : 62.24400000000001
+      }
+    ]
+  },
+  "designID" : "333C5ABD-3E92-465B-9663-0DACE55690E3",
+  "id" : "FE9BD168-E884-46C9-8633-8E4DD6B50E78",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "04 · Meridian / Presentation box",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "components" : [
+        {
+          "anchor" : {
+            "x" : "5+0*cell",
+            "y" : "5+0*cell"
+          },
+          "id" : "base-floor",
+          "name" : "Base Floor",
+          "position" : {
+            "x" : "-(width)/2-stock",
+            "y" : "(stock/2)+(0)",
+            "z" : "-(depth)/2-stock"
+          },
+          "rootPanelID" : "base-floor",
+          "rotationDegrees" : {
+            "x" : "-90.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        },
+        {
+          "anchor" : {
+            "x" : "5+1*cell",
+            "y" : "(5+0*cell)+(height)"
+          },
+          "id" : "base-front",
+          "name" : "Base Front",
+          "position" : {
+            "x" : "-(width)/2-stock",
+            "y" : "(stock)+(0)",
+            "z" : "(depth)/2+stock/2"
+          },
+          "rootPanelID" : "base-front",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        },
+        {
+          "anchor" : {
+            "x" : "5+2*cell",
+            "y" : "(5+0*cell)+(height)"
+          },
+          "id" : "base-back",
+          "name" : "Base Back",
+          "position" : {
+            "x" : "(width)/2+stock",
+            "y" : "(stock)+(0)",
+            "z" : "-(depth)/2-stock/2"
+          },
+          "rootPanelID" : "base-back",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "180.0",
+            "z" : "0.0"
+          }
+        },
+        {
+          "anchor" : {
+            "x" : "5+0*cell",
+            "y" : "(5+1*cell)+(height)"
+          },
+          "id" : "base-left",
+          "name" : "Base Left",
+          "position" : {
+            "x" : "-(width)/2-stock/2",
+            "y" : "(stock)+(0)",
+            "z" : "-(depth)/2"
+          },
+          "rootPanelID" : "base-left",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "-90.0",
+            "z" : "0.0"
+          }
+        },
+        {
+          "anchor" : {
+            "x" : "5+1*cell",
+            "y" : "(5+1*cell)+(height)"
+          },
+          "id" : "base-right",
+          "name" : "Base Right",
+          "position" : {
+            "x" : "(width)/2+stock/2",
+            "y" : "(stock)+(0)",
+            "z" : "(depth)/2"
+          },
+          "rootPanelID" : "base-right",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "90.0",
+            "z" : "0.0"
+          }
+        },
+        {
+          "anchor" : {
+            "x" : "5+2*cell",
+            "y" : "5+1*cell"
+          },
+          "id" : "lid-floor",
+          "name" : "Lid Floor",
+          "position" : {
+            "x" : "(-(lidWidth)/2-stock)+opening/100*(width+40)",
+            "y" : "(stock+height+clearance+stock/2)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+            "z" : "-(lidDepth)/2-stock"
+          },
+          "rootPanelID" : "lid-floor",
+          "rotationDegrees" : {
+            "x" : "-90.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        },
+        {
+          "anchor" : {
+            "x" : "5+0*cell",
+            "y" : "(5+2*cell)+(lidHeight)"
+          },
+          "id" : "lid-front",
+          "name" : "Lid Front",
+          "position" : {
+            "x" : "(-(lidWidth)/2-stock)+opening/100*(width+40)",
+            "y" : "(stock+height+clearance-lidHeight)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+            "z" : "(lidDepth)/2+stock/2"
+          },
+          "rootPanelID" : "lid-front",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        },
+        {
+          "anchor" : {
+            "x" : "5+1*cell",
+            "y" : "(5+2*cell)+(lidHeight)"
+          },
+          "id" : "lid-back",
+          "name" : "Lid Back",
+          "position" : {
+            "x" : "((lidWidth)/2+stock)+opening/100*(width+40)",
+            "y" : "(stock+height+clearance-lidHeight)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+            "z" : "-(lidDepth)/2-stock/2"
+          },
+          "rootPanelID" : "lid-back",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "180.0",
+            "z" : "0.0"
+          }
+        },
+        {
+          "anchor" : {
+            "x" : "5+2*cell",
+            "y" : "(5+2*cell)+(lidHeight)"
+          },
+          "id" : "lid-left",
+          "name" : "Lid Left",
+          "position" : {
+            "x" : "(-(lidWidth)/2-stock/2)+opening/100*(width+40)",
+            "y" : "(stock+height+clearance-lidHeight)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+            "z" : "-(lidDepth)/2"
+          },
+          "rootPanelID" : "lid-left",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "-90.0",
+            "z" : "0.0"
+          }
+        },
+        {
+          "anchor" : {
+            "x" : "5+0*cell",
+            "y" : "(5+3*cell)+(lidHeight)"
+          },
+          "id" : "lid-right",
+          "name" : "Lid Right",
+          "position" : {
+            "x" : "((lidWidth)/2+stock/2)+opening/100*(width+40)",
+            "y" : "(stock+height+clearance-lidHeight)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+            "z" : "(lidDepth)/2"
+          },
+          "rootPanelID" : "lid-right",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "90.0",
+            "z" : "0.0"
+          }
+        },
+        {
+          "anchor" : {
+            "x" : "5+1*cell",
+            "y" : "5+3*cell"
+          },
+          "id" : "insert",
+          "name" : "Insert",
+          "position" : {
+            "x" : "-(width-2*clearance)/2",
+            "y" : "stock+insertHeight",
+            "z" : "-(depth-2*clearance)/2"
+          },
+          "rootPanelID" : "insert",
+          "rotationDegrees" : {
+            "x" : "-90.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        }
+      ],
+      "derived" : {
+        "cell" : "max(width,max(depth,height))+8*stock+4*clearance+20",
+        "lidDepth" : "depth+2*stock+2*clearance",
+        "lidWidth" : "width+2*stock+2*clearance"
+      },
+      "hinges" : [
+
+      ],
+      "interiors" : [
+        {
+          "componentID" : "base-floor",
+          "id" : "base-interior",
+          "name" : "Base Interior",
+          "opening" : {
+            "axis" : "y",
+            "height" : "depth",
+            "width" : "width"
+          },
+          "origin" : {
+            "x" : "stock",
+            "y" : "-stock",
+            "z" : "stock/2"
+          },
+          "rotationDegrees" : {
+            "x" : "90.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "size" : {
+            "x" : "width",
+            "y" : "height",
+            "z" : "depth"
+          }
+        }
+      ],
+      "joins" : [
+        {
+          "firstPanelID" : "base-floor",
+          "id" : "base-front-bond",
+          "kind" : "glue",
+          "name" : "Base Front Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "base-front"
+        },
+        {
+          "firstPanelID" : "base-floor",
+          "id" : "base-back-bond",
+          "kind" : "glue",
+          "name" : "Base Back Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "base-back"
+        },
+        {
+          "firstPanelID" : "base-floor",
+          "id" : "base-left-bond",
+          "kind" : "glue",
+          "name" : "Base Left Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "base-left"
+        },
+        {
+          "firstPanelID" : "base-floor",
+          "id" : "base-right-bond",
+          "kind" : "glue",
+          "name" : "Base Right Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "base-right"
+        },
+        {
+          "firstPanelID" : "lid-floor",
+          "id" : "lid-front-bond",
+          "kind" : "glue",
+          "name" : "Lid Front Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "lid-front"
+        },
+        {
+          "firstPanelID" : "lid-floor",
+          "id" : "lid-back-bond",
+          "kind" : "glue",
+          "name" : "Lid Back Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "lid-back"
+        },
+        {
+          "firstPanelID" : "lid-floor",
+          "id" : "lid-left-bond",
+          "kind" : "glue",
+          "name" : "Lid Left Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "lid-left"
+        },
+        {
+          "firstPanelID" : "lid-floor",
+          "id" : "lid-right-bond",
+          "kind" : "glue",
+          "name" : "Lid Right Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "lid-right"
+        }
+      ],
+      "name" : "Two piece board box and insert",
+      "panels" : [
+        {
+          "id" : "base-floor",
+          "name" : "Base Floor",
+          "polygon" : [
+            {
+              "x" : "5+0*cell",
+              "y" : "5+0*cell"
+            },
+            {
+              "x" : "(5+0*cell)+((width)+2*stock)",
+              "y" : "5+0*cell"
+            },
+            {
+              "x" : "(5+0*cell)+((width)+2*stock)",
+              "y" : "(5+0*cell)+((depth)+2*stock)"
+            },
+            {
+              "x" : "5+0*cell",
+              "y" : "(5+0*cell)+((depth)+2*stock)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "base-front",
+          "name" : "Base Front",
+          "polygon" : [
+            {
+              "x" : "5+1*cell",
+              "y" : "5+0*cell"
+            },
+            {
+              "x" : "(5+1*cell)+((width)+2*stock)",
+              "y" : "5+0*cell"
+            },
+            {
+              "x" : "(5+1*cell)+((width)+2*stock)",
+              "y" : "(5+0*cell)+(height)"
+            },
+            {
+              "x" : "5+1*cell",
+              "y" : "(5+0*cell)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "base-back",
+          "name" : "Base Back",
+          "polygon" : [
+            {
+              "x" : "5+2*cell",
+              "y" : "5+0*cell"
+            },
+            {
+              "x" : "(5+2*cell)+((width)+2*stock)",
+              "y" : "5+0*cell"
+            },
+            {
+              "x" : "(5+2*cell)+((width)+2*stock)",
+              "y" : "(5+0*cell)+(height)"
+            },
+            {
+              "x" : "5+2*cell",
+              "y" : "(5+0*cell)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "base-left",
+          "name" : "Base Left",
+          "polygon" : [
+            {
+              "x" : "5+0*cell",
+              "y" : "5+1*cell"
+            },
+            {
+              "x" : "(5+0*cell)+(depth)",
+              "y" : "5+1*cell"
+            },
+            {
+              "x" : "(5+0*cell)+(depth)",
+              "y" : "(5+1*cell)+(height)"
+            },
+            {
+              "x" : "5+0*cell",
+              "y" : "(5+1*cell)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "base-right",
+          "name" : "Base Right",
+          "polygon" : [
+            {
+              "x" : "5+1*cell",
+              "y" : "5+1*cell"
+            },
+            {
+              "x" : "(5+1*cell)+(depth)",
+              "y" : "5+1*cell"
+            },
+            {
+              "x" : "(5+1*cell)+(depth)",
+              "y" : "(5+1*cell)+(height)"
+            },
+            {
+              "x" : "5+1*cell",
+              "y" : "(5+1*cell)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "lid-floor",
+          "name" : "Lid Floor",
+          "polygon" : [
+            {
+              "x" : "5+2*cell",
+              "y" : "5+1*cell"
+            },
+            {
+              "x" : "(5+2*cell)+((lidWidth)+2*stock)",
+              "y" : "5+1*cell"
+            },
+            {
+              "x" : "(5+2*cell)+((lidWidth)+2*stock)",
+              "y" : "(5+1*cell)+((lidDepth)+2*stock)"
+            },
+            {
+              "x" : "5+2*cell",
+              "y" : "(5+1*cell)+((lidDepth)+2*stock)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "lid-front",
+          "name" : "Lid Front",
+          "polygon" : [
+            {
+              "x" : "5+0*cell",
+              "y" : "5+2*cell"
+            },
+            {
+              "x" : "(5+0*cell)+((lidWidth)+2*stock)",
+              "y" : "5+2*cell"
+            },
+            {
+              "x" : "(5+0*cell)+((lidWidth)+2*stock)",
+              "y" : "(5+2*cell)+(lidHeight)"
+            },
+            {
+              "x" : "5+0*cell",
+              "y" : "(5+2*cell)+(lidHeight)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "lid-back",
+          "name" : "Lid Back",
+          "polygon" : [
+            {
+              "x" : "5+1*cell",
+              "y" : "5+2*cell"
+            },
+            {
+              "x" : "(5+1*cell)+((lidWidth)+2*stock)",
+              "y" : "5+2*cell"
+            },
+            {
+              "x" : "(5+1*cell)+((lidWidth)+2*stock)",
+              "y" : "(5+2*cell)+(lidHeight)"
+            },
+            {
+              "x" : "5+1*cell",
+              "y" : "(5+2*cell)+(lidHeight)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "lid-left",
+          "name" : "Lid Left",
+          "polygon" : [
+            {
+              "x" : "5+2*cell",
+              "y" : "5+2*cell"
+            },
+            {
+              "x" : "(5+2*cell)+(lidDepth)",
+              "y" : "5+2*cell"
+            },
+            {
+              "x" : "(5+2*cell)+(lidDepth)",
+              "y" : "(5+2*cell)+(lidHeight)"
+            },
+            {
+              "x" : "5+2*cell",
+              "y" : "(5+2*cell)+(lidHeight)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "lid-right",
+          "name" : "Lid Right",
+          "polygon" : [
+            {
+              "x" : "5+0*cell",
+              "y" : "5+3*cell"
+            },
+            {
+              "x" : "(5+0*cell)+(lidDepth)",
+              "y" : "5+3*cell"
+            },
+            {
+              "x" : "(5+0*cell)+(lidDepth)",
+              "y" : "(5+3*cell)+(lidHeight)"
+            },
+            {
+              "x" : "5+0*cell",
+              "y" : "(5+3*cell)+(lidHeight)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "cutouts" : [
+            {
+              "id" : "product-aperture",
+              "kind" : "window",
+              "polygon" : [
+                {
+                  "x" : "(5+1*cell)+((width-2*clearance)*.25)",
+                  "y" : "(5+3*cell)+((depth-2*clearance)*.2)"
+                },
+                {
+                  "x" : "((5+1*cell)+((width-2*clearance)*.25))+((width-2*clearance)*.5)",
+                  "y" : "(5+3*cell)+((depth-2*clearance)*.2)"
+                },
+                {
+                  "x" : "((5+1*cell)+((width-2*clearance)*.25))+((width-2*clearance)*.5)",
+                  "y" : "((5+3*cell)+((depth-2*clearance)*.2))+((depth-2*clearance)*.6)"
+                },
+                {
+                  "x" : "(5+1*cell)+((width-2*clearance)*.25)",
+                  "y" : "((5+3*cell)+((depth-2*clearance)*.2))+((depth-2*clearance)*.6)"
+                }
+              ]
+            }
+          ],
+          "id" : "insert",
+          "name" : "Insert",
+          "polygon" : [
+            {
+              "x" : "5+1*cell",
+              "y" : "5+3*cell"
+            },
+            {
+              "x" : "(5+1*cell)+(width-2*clearance)",
+              "y" : "5+3*cell"
+            },
+            {
+              "x" : "(5+1*cell)+(width-2*clearance)",
+              "y" : "(5+3*cell)+(depth-2*clearance)"
+            },
+            {
+              "x" : "5+1*cell",
+              "y" : "(5+3*cell)+(depth-2*clearance)"
+            }
+          ],
+          "role" : "body"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 224,
+          "minimum" : 84,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 140
+        },
+        {
+          "maximum" : 72,
+          "minimum" : 27,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 45
+        },
+        {
+          "maximum" : 160,
+          "minimum" : 60,
+          "name" : "depth",
+          "unit" : "mm",
+          "value" : 100
+        },
+        {
+          "maximum" : 3.24,
+          "minimum" : 0.9,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 1.8
+        },
+        {
+          "maximum" : 5,
+          "minimum" : 0,
+          "name" : "clearance",
+          "unit" : "mm",
+          "value" : 1
+        },
+        {
+          "maximum" : 38,
+          "minimum" : 15,
+          "name" : "lidHeight",
+          "unit" : "mm",
+          "value" : 25
+        },
+        {
+          "maximum" : 20,
+          "minimum" : 5,
+          "name" : "insertHeight",
+          "unit" : "mm",
+          "value" : 12
+        }
+      ],
+      "rootPanelID" : "base-floor",
+      "size" : {
+        "x" : "3*cell",
+        "y" : "4*cell"
+      },
+      "solidChecks" : [
+        {
+          "firstPanelID" : "base-front",
+          "id" : "lid-clears-base",
+          "message" : "Nested front boards must not occupy the same solid volume.",
+          "metric" : "interference",
+          "relation" : "<=",
+          "secondPanelID" : "lid-front",
+          "value" : "0"
+        },
+        {
+          "firstPanelID" : "base-front",
+          "id" : "lid-front-clearance",
+          "message" : "The nested lid retains the declared physical board-to-board clearance.",
+          "metric" : "clearance",
+          "relation" : ">=",
+          "secondPanelID" : "lid-front",
+          "value" : "clearance"
+        }
+      ],
+      "stockThickness" : "stock",
+      "version" : 3
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 1,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 100,
+      "height" : 45,
+      "width" : 140
+    },
+    "finishes" : [
+      {
+        "color" : "#C49B48",
+        "depthMM" : 0,
+        "elementIDs" : [
+          "FCC4260C-DDA0-5369-B5AE-76DA5653C3E5"
+        ],
+        "enabled" : true,
+        "heightMM" : 0,
+        "id" : "5CCFE487-AE02-56DF-A480-76240C561216",
+        "kind" : "foil",
+        "metallic" : 1,
+        "name" : "Warm metallic mark",
+        "opacity" : 1,
+        "roughness" : 0.18,
+        "side" : "outside"
+      }
+    ],
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "kind" : "authored",
+    "openingPercent" : 100,
+    "stock" : {
+      "grain" : "parallelHeight",
+      "gsm" : 300,
+      "name" : "FIELD smooth / prototype",
+      "notes" : "Visual prototype stock; verify caliper, grain, creases and print with a physical sample.",
+      "plies" : [
+        {
+          "color" : "#B49D7A",
+          "id" : "8498E2A3-ECB5-5635-94A1-ED73FD3AE391",
+          "name" : "Board core",
+          "thicknessMM" : 1.6
+        },
+        {
+          "color" : "#ECE4D3",
+          "id" : "7C6DE551-830D-509B-A47C-D663967D7D4A",
+          "name" : "Warm wrap",
+          "profile" : {
+            "color" : "#ECE4D3",
+            "opacity" : 1,
+            "roughness" : 0.94,
+            "texture" : "smooth",
+            "textureDepthMM" : 0.008,
+            "textureScaleMM" : 1.1
+          },
+          "thicknessMM" : 0.2
+        }
+      ],
+      "profile" : {
+        "color" : "#ECE4D3",
+        "opacity" : 1,
+        "roughness" : 0.94,
+        "texture" : "smooth",
+        "textureDepthMM" : 0.008,
+        "textureScaleMM" : 1.1
+      },
+      "thicknessMM" : 1.8,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "parameters" : {
+    "clearance" : 1,
+    "depth" : 100,
+    "fold" : 100,
+    "height" : 45,
+    "insertHeight" : 12,
+    "lidHeight" : 25,
+    "opening" : 100,
+    "stock" : 1.8,
+    "width" : 140
+  },
+  "position" : {
+    "x" : 650,
+    "y" : 0,
+    "z" : -430
+  },
+  "recipeID" : "construction-FE9BD168-E884-46C9-8633-8E4DD6B50E78",
+  "relationship" : "original",
+  "rotation" : 0
+}

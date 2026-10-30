@@ -230,7 +230,7 @@ import UniformTypeIdentifiers
   private nonisolated static func boundedName(_ text:String)->String {var result="";for c in text{guard result.utf8.count+String(c).utf8.count<=256 else{break};result.append(c)};return result.isEmpty ? "Exact component":result}
   private nonisolated static func deflection(_ quality:String)->Double?{switch quality{case "preview":return CADTessellation.preview.linearDeflectionMM;case "inspection":return CADTessellation.inspection.linearDeflectionMM;case "fabrication":return CADTessellation.fabrication.linearDeflectionMM;default:return nil}}
   private nonisolated static func newPosition(for representation:CADRepresentation,in project:Project)throws->Vector3 {
-    let objects=project.objects.filter{!$0.isCanvasWorkspace};guard !objects.isEmpty else{return .init()}
+    let objects=project.objects.filter{$0.hasTablePresentation};guard !objects.isEmpty else{return .init()}
     let right=objects.map{object->Double in
       guard let r=object.cadRepresentation else{return object.position.x+object.footprintWidth/2}
       let angle=object.rotation * Double.pi/180,c=cos(angle),s=sin(angle)

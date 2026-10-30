@@ -1,0 +1,637 @@
+{
+  "version": 3,
+  "name": "Straight tuck retail study",
+  "parameters": [
+    {
+      "name": "width",
+      "value": 64,
+      "minimum": 38.4,
+      "maximum": 102.4,
+      "unit": "mm"
+    },
+    {
+      "name": "height",
+      "value": 138,
+      "minimum": 82.8,
+      "maximum": 220.8,
+      "unit": "mm"
+    },
+    {
+      "name": "depth",
+      "value": 38,
+      "minimum": 22.8,
+      "maximum": 60.800000000000004,
+      "unit": "mm"
+    },
+    {
+      "name": "stock",
+      "value": 0.45,
+      "minimum": 0.225,
+      "maximum": 0.81,
+      "unit": "mm"
+    },
+    {
+      "name": "clearance",
+      "value": 1,
+      "minimum": 0,
+      "maximum": 5,
+      "unit": "mm"
+    },
+    {
+      "name": "glueTab",
+      "value": 14,
+      "minimum": 8,
+      "maximum": 22,
+      "unit": "mm"
+    },
+    {
+      "name": "tuck",
+      "value": 23,
+      "minimum": 10,
+      "maximum": 35,
+      "unit": "mm"
+    }
+  ],
+  "size": {
+    "x": "2*(width+depth)+glueTab",
+    "y": "height+2*(depth+tuck)"
+  },
+  "stockThickness": "stock",
+  "panels": [
+    {
+      "id": "front",
+      "name": "Front",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "0",
+          "y": "depth+tuck"
+        },
+        {
+          "x": "(0)+(width)",
+          "y": "depth+tuck"
+        },
+        {
+          "x": "(0)+(width)",
+          "y": "(depth+tuck)+(height)"
+        },
+        {
+          "x": "0",
+          "y": "(depth+tuck)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "right",
+      "name": "Right",
+      "role": "side",
+      "polygon": [
+        {
+          "x": "width",
+          "y": "depth+tuck"
+        },
+        {
+          "x": "(width)+(depth)",
+          "y": "depth+tuck"
+        },
+        {
+          "x": "(width)+(depth)",
+          "y": "(depth+tuck)+(height)"
+        },
+        {
+          "x": "width",
+          "y": "(depth+tuck)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "back",
+      "name": "Back",
+      "role": "body",
+      "polygon": [
+        {
+          "x": "width+depth",
+          "y": "depth+tuck"
+        },
+        {
+          "x": "(width+depth)+(width)",
+          "y": "depth+tuck"
+        },
+        {
+          "x": "(width+depth)+(width)",
+          "y": "(depth+tuck)+(height)"
+        },
+        {
+          "x": "width+depth",
+          "y": "(depth+tuck)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "left",
+      "name": "Left",
+      "role": "side",
+      "polygon": [
+        {
+          "x": "2*width+depth",
+          "y": "depth+tuck"
+        },
+        {
+          "x": "(2*width+depth)+(depth)",
+          "y": "depth+tuck"
+        },
+        {
+          "x": "(2*width+depth)+(depth)",
+          "y": "(depth+tuck)+(height)"
+        },
+        {
+          "x": "2*width+depth",
+          "y": "(depth+tuck)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "glue",
+      "name": "Glue",
+      "role": "glue",
+      "polygon": [
+        {
+          "x": "2*(width+depth)",
+          "y": "depth+tuck"
+        },
+        {
+          "x": "(2*(width+depth))+(glueTab)",
+          "y": "(depth+tuck)+(3)"
+        },
+        {
+          "x": "(2*(width+depth))+(glueTab)",
+          "y": "((depth+tuck)+(height))+(-3)"
+        },
+        {
+          "x": "2*(width+depth)",
+          "y": "(depth+tuck)+(height)"
+        }
+      ]
+    },
+    {
+      "id": "top-bridge",
+      "name": "Top Bridge",
+      "role": "tuck",
+      "polygon": [
+        {
+          "x": "width+depth",
+          "y": "(depth+tuck)+(-depth)"
+        },
+        {
+          "x": "(width+depth)+(width)",
+          "y": "(depth+tuck)+(-depth)"
+        },
+        {
+          "x": "(width+depth)+(width)",
+          "y": "((depth+tuck)+(-depth))+(depth)"
+        },
+        {
+          "x": "width+depth",
+          "y": "((depth+tuck)+(-depth))+(depth)"
+        }
+      ]
+    },
+    {
+      "id": "top-tuck",
+      "name": "Top Tuck",
+      "role": "tuck",
+      "polygon": [
+        {
+          "x": "width+depth",
+          "y": "((depth+tuck)+(-depth))+(0)"
+        },
+        {
+          "x": "2*width+depth",
+          "y": "((depth+tuck)+(-depth))+(0)"
+        },
+        {
+          "x": "2*width+depth-4",
+          "y": "((depth+tuck)+(-depth))+(-tuck)"
+        },
+        {
+          "x": "width+depth+4",
+          "y": "((depth+tuck)+(-depth))+(-tuck)"
+        }
+      ]
+    },
+    {
+      "id": "top-dust-right",
+      "name": "Top Dust Right",
+      "role": "dust",
+      "polygon": [
+        {
+          "x": "(width)+(.4)",
+          "y": "(depth+tuck)+(-min(width*.38,depth*.9))"
+        },
+        {
+          "x": "((width)+(.4))+(depth-.8)",
+          "y": "(depth+tuck)+(-min(width*.38,depth*.9))"
+        },
+        {
+          "x": "((width)+(.4))+(depth-.8)",
+          "y": "((depth+tuck)+(-min(width*.38,depth*.9)))+(min(width*.38,depth*.9))"
+        },
+        {
+          "x": "(width)+(.4)",
+          "y": "((depth+tuck)+(-min(width*.38,depth*.9)))+(min(width*.38,depth*.9))"
+        }
+      ]
+    },
+    {
+      "id": "top-dust-left",
+      "name": "Top Dust Left",
+      "role": "dust",
+      "polygon": [
+        {
+          "x": "(2*width+depth)+(.4)",
+          "y": "(depth+tuck)+(-min(width*.38,depth*.9))"
+        },
+        {
+          "x": "((2*width+depth)+(.4))+(depth-.8)",
+          "y": "(depth+tuck)+(-min(width*.38,depth*.9))"
+        },
+        {
+          "x": "((2*width+depth)+(.4))+(depth-.8)",
+          "y": "((depth+tuck)+(-min(width*.38,depth*.9)))+(min(width*.38,depth*.9))"
+        },
+        {
+          "x": "(2*width+depth)+(.4)",
+          "y": "((depth+tuck)+(-min(width*.38,depth*.9)))+(min(width*.38,depth*.9))"
+        }
+      ]
+    },
+    {
+      "id": "bottom-bridge",
+      "name": "Bottom Bridge",
+      "role": "bottomClosure",
+      "polygon": [
+        {
+          "x": "width+depth",
+          "y": "height+depth+tuck"
+        },
+        {
+          "x": "(width+depth)+(width)",
+          "y": "height+depth+tuck"
+        },
+        {
+          "x": "(width+depth)+(width)",
+          "y": "(height+depth+tuck)+(depth)"
+        },
+        {
+          "x": "width+depth",
+          "y": "(height+depth+tuck)+(depth)"
+        }
+      ]
+    },
+    {
+      "id": "bottom-tuck",
+      "name": "Bottom Tuck",
+      "role": "tuck",
+      "polygon": [
+        {
+          "x": "width+depth",
+          "y": "(height+depth+tuck)+(depth)"
+        },
+        {
+          "x": "2*width+depth",
+          "y": "(height+depth+tuck)+(depth)"
+        },
+        {
+          "x": "2*width+depth-4",
+          "y": "((height+depth+tuck)+(depth))+(tuck)"
+        },
+        {
+          "x": "width+depth+4",
+          "y": "((height+depth+tuck)+(depth))+(tuck)"
+        }
+      ]
+    },
+    {
+      "id": "bottom-dust-right",
+      "name": "Bottom Dust Right",
+      "role": "dust",
+      "polygon": [
+        {
+          "x": "(width)+(.4)",
+          "y": "height+depth+tuck"
+        },
+        {
+          "x": "((width)+(.4))+(depth-.8)",
+          "y": "height+depth+tuck"
+        },
+        {
+          "x": "((width)+(.4))+(depth-.8)",
+          "y": "(height+depth+tuck)+(min(width*.38,depth*.9))"
+        },
+        {
+          "x": "(width)+(.4)",
+          "y": "(height+depth+tuck)+(min(width*.38,depth*.9))"
+        }
+      ]
+    },
+    {
+      "id": "bottom-dust-left",
+      "name": "Bottom Dust Left",
+      "role": "dust",
+      "polygon": [
+        {
+          "x": "(2*width+depth)+(.4)",
+          "y": "height+depth+tuck"
+        },
+        {
+          "x": "((2*width+depth)+(.4))+(depth-.8)",
+          "y": "height+depth+tuck"
+        },
+        {
+          "x": "((2*width+depth)+(.4))+(depth-.8)",
+          "y": "(height+depth+tuck)+(min(width*.38,depth*.9))"
+        },
+        {
+          "x": "(2*width+depth)+(.4)",
+          "y": "(height+depth+tuck)+(min(width*.38,depth*.9))"
+        }
+      ]
+    }
+  ],
+  "hinges": [
+    {
+      "id": "crease-right",
+      "parentPanelID": "front",
+      "childPanelID": "right",
+      "start": {
+        "x": "width",
+        "y": "depth+tuck"
+      },
+      "end": {
+        "x": "width",
+        "y": "(depth+tuck)+(height)"
+      },
+      "angleDegrees": -90,
+      "layerOffsetMM": "0",
+      "opensWithTop": false
+    },
+    {
+      "id": "crease-back",
+      "parentPanelID": "right",
+      "childPanelID": "back",
+      "start": {
+        "x": "width+depth",
+        "y": "depth+tuck"
+      },
+      "end": {
+        "x": "width+depth",
+        "y": "(depth+tuck)+(height)"
+      },
+      "angleDegrees": -90,
+      "layerOffsetMM": "0",
+      "opensWithTop": false
+    },
+    {
+      "id": "crease-left",
+      "parentPanelID": "back",
+      "childPanelID": "left",
+      "start": {
+        "x": "2*width+depth",
+        "y": "depth+tuck"
+      },
+      "end": {
+        "x": "2*width+depth",
+        "y": "(depth+tuck)+(height)"
+      },
+      "angleDegrees": -90,
+      "layerOffsetMM": "0",
+      "opensWithTop": false
+    },
+    {
+      "id": "crease-glue",
+      "parentPanelID": "left",
+      "childPanelID": "glue",
+      "start": {
+        "x": "2*(width+depth)",
+        "y": "depth+tuck"
+      },
+      "end": {
+        "x": "2*(width+depth)",
+        "y": "(depth+tuck)+(height)"
+      },
+      "angleDegrees": -90,
+      "layerOffsetMM": "stock",
+      "opensWithTop": false
+    },
+    {
+      "id": "crease-top-bridge",
+      "parentPanelID": "back",
+      "childPanelID": "top-bridge",
+      "start": {
+        "x": "width+depth",
+        "y": "depth+tuck"
+      },
+      "end": {
+        "x": "2*width+depth",
+        "y": "depth+tuck"
+      },
+      "angleDegrees": -90,
+      "layerOffsetMM": "0",
+      "opensWithTop": true
+    },
+    {
+      "id": "crease-top-tuck",
+      "parentPanelID": "top-bridge",
+      "childPanelID": "top-tuck",
+      "start": {
+        "x": "width+depth",
+        "y": "(depth+tuck)+(-depth)"
+      },
+      "end": {
+        "x": "2*width+depth",
+        "y": "(depth+tuck)+(-depth)"
+      },
+      "angleDegrees": -90,
+      "layerOffsetMM": "2*stock",
+      "opensWithTop": true
+    },
+    {
+      "id": "crease-top-dust-right",
+      "parentPanelID": "right",
+      "childPanelID": "top-dust-right",
+      "start": {
+        "x": "(width)+(.4)",
+        "y": "depth+tuck"
+      },
+      "end": {
+        "x": "(width)+(depth-.4)",
+        "y": "depth+tuck"
+      },
+      "angleDegrees": -90,
+      "layerOffsetMM": "stock",
+      "opensWithTop": true
+    },
+    {
+      "id": "crease-top-dust-left",
+      "parentPanelID": "left",
+      "childPanelID": "top-dust-left",
+      "start": {
+        "x": "(2*width+depth)+(.4)",
+        "y": "depth+tuck"
+      },
+      "end": {
+        "x": "(2*width+depth)+(depth-.4)",
+        "y": "depth+tuck"
+      },
+      "angleDegrees": -90,
+      "layerOffsetMM": "stock",
+      "opensWithTop": true
+    },
+    {
+      "id": "crease-bottom-bridge",
+      "parentPanelID": "back",
+      "childPanelID": "bottom-bridge",
+      "start": {
+        "x": "width+depth",
+        "y": "height+depth+tuck"
+      },
+      "end": {
+        "x": "2*width+depth",
+        "y": "height+depth+tuck"
+      },
+      "angleDegrees": 90,
+      "layerOffsetMM": "0",
+      "opensWithTop": false
+    },
+    {
+      "id": "crease-bottom-tuck",
+      "parentPanelID": "bottom-bridge",
+      "childPanelID": "bottom-tuck",
+      "start": {
+        "x": "width+depth",
+        "y": "(height+depth+tuck)+(depth)"
+      },
+      "end": {
+        "x": "2*width+depth",
+        "y": "(height+depth+tuck)+(depth)"
+      },
+      "angleDegrees": 90,
+      "layerOffsetMM": "2*stock",
+      "opensWithTop": false
+    },
+    {
+      "id": "crease-bottom-dust-right",
+      "parentPanelID": "right",
+      "childPanelID": "bottom-dust-right",
+      "start": {
+        "x": "(width)+(.4)",
+        "y": "height+depth+tuck"
+      },
+      "end": {
+        "x": "(width)+(depth-.4)",
+        "y": "height+depth+tuck"
+      },
+      "angleDegrees": 90,
+      "layerOffsetMM": "stock",
+      "opensWithTop": false
+    },
+    {
+      "id": "crease-bottom-dust-left",
+      "parentPanelID": "left",
+      "childPanelID": "bottom-dust-left",
+      "start": {
+        "x": "(2*width+depth)+(.4)",
+        "y": "height+depth+tuck"
+      },
+      "end": {
+        "x": "(2*width+depth)+(depth-.4)",
+        "y": "height+depth+tuck"
+      },
+      "angleDegrees": 90,
+      "layerOffsetMM": "stock",
+      "opensWithTop": false
+    }
+  ],
+  "joins": [
+    {
+      "id": "body-glue",
+      "name": "Body Glue",
+      "firstPanelID": "glue",
+      "secondPanelID": "front",
+      "kind": "glue",
+      "overlapMM": "glueTab",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "top-retention",
+      "name": "Top Retention",
+      "firstPanelID": "top-tuck",
+      "secondPanelID": "front",
+      "kind": "tuck",
+      "overlapMM": "tuck",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    },
+    {
+      "id": "bottom-retention",
+      "name": "Bottom Retention",
+      "firstPanelID": "bottom-tuck",
+      "secondPanelID": "front",
+      "kind": "tuck",
+      "overlapMM": "tuck",
+      "notes": "Prototype joint on the actual stock; adhesive strength is not simulated."
+    }
+  ],
+  "rootPanelID": "front",
+  "components": [
+    {
+      "id": "body",
+      "name": "Body",
+      "rootPanelID": "front",
+      "anchor": {
+        "x": "0",
+        "y": "(depth+tuck)+(height)"
+      },
+      "position": {
+        "x": "-width/2",
+        "y": "0",
+        "z": "depth/2"
+      },
+      "rotationDegrees": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    }
+  ],
+  "interiors": [
+    {
+      "id": "body-interior",
+      "name": "Body Interior",
+      "componentID": "body",
+      "origin": {
+        "x": "stock/2",
+        "y": "2*stock",
+        "z": "-depth+stock/2"
+      },
+      "size": {
+        "x": "width-stock",
+        "y": "height-4*stock",
+        "z": "depth-stock"
+      },
+      "opening": {
+        "axis": "y",
+        "width": "width-stock",
+        "height": "depth-stock"
+      }
+    }
+  ],
+  "requirements": [
+    {
+      "id": "usable-stock",
+      "lhs": "height",
+      "relation": ">",
+      "rhs": "6*stock",
+      "message": "Height must leave a positive usable cavity after stock layers."
+    }
+  ]
+}

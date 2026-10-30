@@ -1,0 +1,68 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1200,
+  "png_sha256" : "b124b6df39f2b3cd640f5883ee36d65d3e914e9325e0c0632516f067c4e6dfdf",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:paper-template-17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764.svg",
+      "sha256" : "17734d94c53c93cdcea6315750044446b230d0d13795fa129b8708dc6e8aa764"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : -2.5088438185876099,
+      "distance" : 3.1492713230941565,
+      "elevation" : 1.2146394936312479,
+      "projection" : "perspective",
+      "target" : {
+        "x" : -1.45,
+        "y" : 0.0022500000000000324,
+        "z" : 3.7000000000000002
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "0DDAAC49-579C-44D1-96D1-B151BDBD1ED0",
+    "instances" : [
+      {
+        "id" : "5739B78E-7B25-4284-8A85-A21AEB748734",
+        "name" : "10 · Open country \/ Postcard",
+        "positionMM" : {
+          "x" : -145,
+          "y" : 0,
+          "z" : 370
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "0A86453F-9CD8-42DB-B0B1-AD78D33EEE85",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "10-reverse",
+    "pixels" : {
+      "height" : 1200,
+      "width" : 1800
+    },
+    "revision" : 2,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "e0e365dc52ce59fcceb0b27689ab9527246a8795048640bf70bfc7a07843c30e",
+  "source_project_id" : "6677D01F-4B00-40AE-B81C-436ABABB00AE",
+  "width" : 1800
+}

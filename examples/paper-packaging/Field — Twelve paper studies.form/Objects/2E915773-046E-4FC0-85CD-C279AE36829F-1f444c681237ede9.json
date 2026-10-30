@@ -1,0 +1,361 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "color" : "#34443A",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "7D7445E4-33D0-5B54-AD7F-E4B9939D8E9B",
+        "kind" : "text",
+        "name" : "12-outside-front-brand",
+        "text" : "FIELD  /  12",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 104.14,
+        "x" : 11.43,
+        "y" : 6
+      },
+      {
+        "color" : "#34443A",
+        "fontSize" : 64.80000000000001,
+        "height" : 34,
+        "id" : "74514373-B8B1-516D-BD72-56605F03CCB9",
+        "kind" : "text",
+        "name" : "12-outside-front-title",
+        "text" : "Gather",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 104.14,
+        "x" : 11.43,
+        "y" : 44.5
+      },
+      {
+        "color" : "#34443A",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "E2B2C868-A49C-568D-869E-593C3BD56E68",
+        "kind" : "rectangle",
+        "name" : "12-outside-front-rule",
+        "text" : "",
+        "width" : 69.85000000000001,
+        "x" : 11.43,
+        "y" : 115.7
+      },
+      {
+        "color" : "#34443A",
+        "fontSize" : 7.5,
+        "height" : 16,
+        "id" : "5D134FBE-CD6D-5946-90C0-E5871C4305E4",
+        "kind" : "text",
+        "name" : "12-outside-front-copy",
+        "text" : "PAPER LABORATORY\nEDITABLE STUDY  /  12",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 104.14,
+        "x" : 11.43,
+        "y" : 138.84
+      },
+      {
+        "color" : "#34443A",
+        "fontSize" : 14,
+        "height" : 24,
+        "id" : "07A9F954-5904-5402-BC04-61B54A73F94A",
+        "kind" : "star",
+        "name" : "12-outside-front-seal",
+        "sides" : 12,
+        "starInset" : 0.8,
+        "text" : "",
+        "width" : 24,
+        "x" : 91.57,
+        "y" : 101.46
+      }
+    ]
+  },
+  "designID" : "279B78FA-F064-431B-B318-41976C722990",
+  "id" : "2E915773-046E-4FC0-85CD-C279AE36829F",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "12 · Gather / Invitation",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "components" : [
+        {
+          "anchor" : {
+            "x" : "width/2",
+            "y" : "height/2"
+          },
+          "id" : "sheet",
+          "name" : "Paper sheet",
+          "position" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "rootPanelID" : "front",
+          "rotationDegrees" : {
+            "x" : "-90+turn",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        }
+      ],
+      "hinges" : [
+
+      ],
+      "joins" : [
+
+      ],
+      "name" : "Cotton letterpress invitation",
+      "panels" : [
+        {
+          "id" : "front",
+          "name" : "Front / back sheet",
+          "polygon" : [
+            {
+              "x" : "0.0",
+              "y" : "0.0"
+            },
+            {
+              "x" : "(0)+(width)",
+              "y" : "0.0"
+            },
+            {
+              "x" : "(0)+(width)",
+              "y" : "(0)+(height)"
+            },
+            {
+              "x" : "0.0",
+              "y" : "(0)+(height)"
+            }
+          ],
+          "role" : "body"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 203.20000000000002,
+          "minimum" : 76.2,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 127
+        },
+        {
+          "maximum" : 284.8,
+          "minimum" : 106.8,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 178
+        },
+        {
+          "maximum" : 2,
+          "minimum" : 0.4,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 1
+        },
+        {
+          "maximum" : 180,
+          "minimum" : 0,
+          "name" : "turn",
+          "unit" : "°",
+          "value" : 0
+        }
+      ],
+      "rootPanelID" : "front",
+      "size" : {
+        "x" : "width",
+        "y" : "height"
+      },
+      "stockThickness" : "stock",
+      "version" : 3
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 2,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 1,
+      "height" : 178,
+      "width" : 127
+    },
+    "finishes" : [
+      {
+        "color" : "#C49B48",
+        "depthMM" : 0,
+        "elementIDs" : [
+          "7D7445E4-33D0-5B54-AD7F-E4B9939D8E9B"
+        ],
+        "enabled" : true,
+        "heightMM" : 0,
+        "id" : "14BED077-703F-5CE4-9F84-8897BAAEA7B3",
+        "kind" : "foil",
+        "metallic" : 1,
+        "name" : "Warm metallic mark",
+        "opacity" : 1,
+        "roughness" : 0.18,
+        "side" : "outside"
+      },
+      {
+        "depthMM" : 0,
+        "elementIDs" : [
+          "07A9F954-5904-5402-BC04-61B54A73F94A"
+        ],
+        "enabled" : true,
+        "heightMM" : 0.09,
+        "id" : "6EDEBADD-6ECF-51B9-900E-570C836822B2",
+        "kind" : "emboss",
+        "name" : "Blind raised seal",
+        "opacity" : 1,
+        "roughness" : 0.92,
+        "side" : "outside"
+      },
+      {
+        "color" : "#34443A",
+        "depthMM" : 0.1,
+        "elementIDs" : [
+          "74514373-B8B1-516D-BD72-56605F03CCB9",
+          "5D134FBE-CD6D-5946-90C0-E5871C4305E4"
+        ],
+        "enabled" : true,
+        "heightMM" : 0,
+        "id" : "9047F1A3-8B1F-572B-862B-935B6120E685",
+        "kind" : "letterpress",
+        "name" : "Pressed invitation wording",
+        "opacity" : 1,
+        "side" : "outside"
+      }
+    ],
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "insideArtworkSourceID" : "34E17805-C5E8-40C9-B577-A2FA8F2ABEBA",
+    "kind" : "authored",
+    "openingPercent" : 0,
+    "stock" : {
+      "grain" : "parallelHeight",
+      "gsm" : 300,
+      "name" : "FIELD cotton / prototype",
+      "notes" : "Visual prototype stock; verify caliper, grain, creases and print with a physical sample.",
+      "profile" : {
+        "color" : "#EEE5D0",
+        "opacity" : 1,
+        "roughness" : 0.94,
+        "texture" : "cotton",
+        "textureDepthMM" : 0.025,
+        "textureScaleMM" : 1.4
+      },
+      "thicknessMM" : 1,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "parameters" : {
+    "fold" : 100,
+    "height" : 178,
+    "opening" : 0,
+    "stock" : 1,
+    "turn" : 0,
+    "width" : 127
+  },
+  "position" : {
+    "x" : 490,
+    "y" : 0,
+    "z" : 370
+  },
+  "recipeID" : "construction-2E915773-046E-4FC0-85CD-C279AE36829F",
+  "relationship" : "original",
+  "rotation" : 0
+}

@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "tests": 3,
+  "failures": 0,
+  "additional_unique_test": "ObjectPresentationTests.testTemplateOnlyAdditionRaisesSchemaAndSurvivesRepositoryReopen",
+  "runtime": "native AppKit host and official corelibs XCTest",
+  "log": "template-schema-regression.log"
+}

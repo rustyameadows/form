@@ -1,0 +1,417 @@
+{
+  "camera" : {
+    "azimuth" : 0.55,
+    "distance" : 12,
+    "elevation" : 0.7,
+    "projection" : "perspective",
+    "target" : {
+      "x" : 0,
+      "y" : 0.6,
+      "z" : 0
+    }
+  },
+  "createdAt" : "2026-10-30T18:26:23Z",
+  "history" : [
+    {
+      "date" : "2026-10-30T18:26:23Z",
+      "id" : "80728ED7-16ED-4D55-8364-5EFF76D062DB",
+      "source" : "Native paper appearance proof",
+      "text" : "Created Editable material proof sheet"
+    },
+    {
+      "date" : "2026-10-30T18:26:23Z",
+      "id" : "7C05A1F2-E8E3-46CB-B5E6-A75155304AEC",
+      "source" : "Studio",
+      "text" : "Editable front artwork"
+    },
+    {
+      "date" : "2026-10-30T18:26:23Z",
+      "id" : "36500820-0FD1-4E57-8F8C-340459CDD2AF",
+      "source" : "Native paper appearance proof",
+      "text" : "Changed paper construction"
+    },
+    {
+      "date" : "2026-10-30T18:26:23Z",
+      "id" : "7D9A1941-5305-4709-8E40-A9790FFA3F31",
+      "source" : "Native paper appearance proof",
+      "text" : "Changed paper finish"
+    },
+    {
+      "date" : "2026-10-30T18:26:23Z",
+      "id" : "F3CF2369-409C-45FC-AA74-86B09654F612",
+      "source" : "Native paper appearance proof",
+      "text" : "Changed paper finish"
+    },
+    {
+      "date" : "2026-10-30T18:26:23Z",
+      "id" : "BE31E6D7-0F8B-436C-811A-3B80368A20A8",
+      "source" : "Native paper appearance proof",
+      "text" : "Changed paper finish"
+    },
+    {
+      "date" : "2026-10-30T18:26:23Z",
+      "id" : "3ABEC67E-559F-4E16-8309-12D3863F15FA",
+      "source" : "Native paper appearance proof",
+      "text" : "Created registered inside artwork"
+    },
+    {
+      "date" : "2026-10-30T18:26:23Z",
+      "id" : "8254352F-CFED-4CAF-BA8B-8B86B05E6A8C",
+      "source" : "Studio",
+      "text" : "Editable reverse artwork"
+    },
+    {
+      "date" : "2026-10-30T18:26:58Z",
+      "id" : "974B6AD5-BC07-4B9D-A3B5-FFDA10EE8194",
+      "source" : "Studio",
+      "text" : "Changed wording, same finish target"
+    }
+  ],
+  "id" : "1833A424-0B1C-4D65-8399-5273992A3BA4",
+  "materials" : [
+
+  ],
+  "name" : "Native paper appearance proof",
+  "notes" : [
+
+  ],
+  "objects" : [
+    {
+      "artwork" : {
+        "background" : "#FFFFFF",
+        "backgroundOpacity" : 0,
+        "bleed" : 3,
+        "elements" : [
+          {
+            "color" : "#25343B",
+            "fontSize" : 8,
+            "height" : 14,
+            "id" : "48770AFF-73E7-4791-90EE-0FD0FE827651",
+            "kind" : "text",
+            "text" : "THE PAPER STUDIO",
+            "width" : 103,
+            "x" : 10,
+            "y" : 8
+          },
+          {
+            "color" : "#B88A32",
+            "fontSize" : 11,
+            "height" : 21,
+            "id" : "575B3E18-69A2-4C62-B31C-5D1B5BEED945",
+            "kind" : "text",
+            "text" : "Made to keep",
+            "width" : 103,
+            "x" : 10,
+            "y" : 27
+          },
+          {
+            "color" : "#25343B",
+            "fontSize" : 4.5,
+            "height" : 10,
+            "id" : "58F2210D-FA46-4D93-A622-6ADDE1659F7D",
+            "kind" : "text",
+            "text" : "Cotton. Ink. Light.",
+            "width" : 76,
+            "x" : 10,
+            "y" : 55
+          },
+          {
+            "color" : "#000000",
+            "fontSize" : 14,
+            "height" : 13,
+            "id" : "82049C61-E73F-480D-9776-4AA700845CBE",
+            "kind" : "ellipse",
+            "text" : "",
+            "width" : 13,
+            "x" : 94,
+            "y" : 55
+          },
+          {
+            "color" : "#25343B",
+            "fontSize" : 14,
+            "height" : 0.15,
+            "id" : "F043B4FE-25A3-4D1B-911B-D232826A1CFD",
+            "kind" : "rectangle",
+            "text" : "",
+            "width" : 96,
+            "x" : 10,
+            "y" : 72
+          }
+        ]
+      },
+      "designID" : "14289387-BD31-4D91-9D15-3CD84B1B32E0",
+      "id" : "AF3035E7-4EA5-4063-8E26-7E64B0814DD4",
+      "locked" : false,
+      "materialID" : "paper-superfine",
+      "name" : "Editable material proof sheet",
+      "paperConstruction" : {
+        "annotations" : [
+
+        ],
+        "artworkReviewRequired" : false,
+        "authored" : {
+          "components" : [
+            {
+              "anchor" : {
+                "x" : "60",
+                "y" : "40"
+              },
+              "id" : "sheet-component",
+              "name" : "Flat proof sheet",
+              "position" : {
+                "x" : "0",
+                "y" : "0",
+                "z" : "0"
+              },
+              "rootPanelID" : "sheet",
+              "rotationDegrees" : {
+                "x" : "-90",
+                "y" : "0",
+                "z" : "0"
+              }
+            }
+          ],
+          "hinges" : [
+
+          ],
+          "joins" : [
+
+          ],
+          "name" : "Editable material proof sheet",
+          "panels" : [
+            {
+              "id" : "sheet",
+              "name" : "Sheet",
+              "polygon" : [
+                {
+                  "x" : "0",
+                  "y" : "0"
+                },
+                {
+                  "x" : "120",
+                  "y" : "0"
+                },
+                {
+                  "x" : "120",
+                  "y" : "80"
+                },
+                {
+                  "x" : "0",
+                  "y" : "80"
+                }
+              ],
+              "role" : "body"
+            }
+          ],
+          "parameters" : [
+            {
+              "maximum" : 2,
+              "minimum" : 0.2,
+              "name" : "caliper",
+              "unit" : "mm",
+              "value" : 0.8
+            }
+          ],
+          "rootPanelID" : "sheet",
+          "size" : {
+            "x" : "120",
+            "y" : "80"
+          },
+          "stockThickness" : "caliper",
+          "version" : 3
+        },
+        "bottomFlapMM" : 30,
+        "clearanceMM" : 2,
+        "cornerRadiusMM" : 4,
+        "dimensions" : {
+          "depth" : 1,
+          "height" : 80,
+          "width" : 120
+        },
+        "finishes" : [
+          {
+            "color" : "#CEA84D",
+            "depthMM" : 0,
+            "elementIDs" : [
+              "575B3E18-69A2-4C62-B31C-5D1B5BEED945"
+            ],
+            "enabled" : true,
+            "heightMM" : 0,
+            "id" : "01B3BAE8-6E31-4FA5-83D8-ADD35304CBB9",
+            "kind" : "foil",
+            "name" : "Warm metallic foil",
+            "opacity" : 1,
+            "roughness" : 0.16,
+            "side" : "outside"
+          },
+          {
+            "color" : "#25343B",
+            "depthMM" : 0.06,
+            "elementIDs" : [
+              "58F2210D-FA46-4D93-A622-6ADDE1659F7D"
+            ],
+            "enabled" : true,
+            "heightMM" : 0,
+            "id" : "1CD0B0BC-C521-479A-9824-5179BC137D9C",
+            "kind" : "letterpress",
+            "name" : "Printed impression",
+            "opacity" : 1,
+            "side" : "outside"
+          },
+          {
+            "depthMM" : 0,
+            "elementIDs" : [
+              "82049C61-E73F-480D-9776-4AA700845CBE"
+            ],
+            "enabled" : true,
+            "heightMM" : 0.1,
+            "id" : "79C4E714-765F-480F-934F-30E4759E31B9",
+            "kind" : "emboss",
+            "name" : "Blind roundel",
+            "opacity" : 1,
+            "side" : "outside"
+          }
+        ],
+        "foldPercent" : 100,
+        "glueTabMM" : 16,
+        "insideArtworkSourceID" : "7EA27C14-2A0C-4593-8D69-2C5920CA3C67",
+        "kind" : "authored",
+        "openingPercent" : 0,
+        "stock" : {
+          "grain" : "unknown",
+          "gsm" : 300,
+          "name" : "Cotton duplex proof",
+          "notes" : "Prototype assumptions; verify the chosen stock and crease tooling.",
+          "plies" : [
+            {
+              "color" : "#203C47",
+              "id" : "76EB2D4F-9AA3-4ACE-8CFD-1DED1D0C64EA",
+              "name" : "Deep slate back",
+              "thicknessMM" : 0.45
+            },
+            {
+              "color" : "#F4EBDD",
+              "id" : "945AAE40-C11B-40F9-8779-5B244BC0CBFE",
+              "name" : "Warm cotton face",
+              "thicknessMM" : 0.35
+            }
+          ],
+          "profile" : {
+            "opacity" : 1,
+            "roughness" : 0.91,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.025,
+            "textureScaleMM" : 0.7
+          },
+          "thicknessMM" : 0.8,
+          "verified" : false
+        },
+        "topFlapMM" : 38,
+        "version" : 1
+      },
+      "parameters" : {
+        "caliper" : 0.8,
+        "fold" : 100,
+        "opening" : 0
+      },
+      "position" : {
+        "x" : 0,
+        "y" : 0,
+        "z" : 0
+      },
+      "recipeID" : "construction-AF3035E7-4EA5-4063-8E26-7E64B0814DD4",
+      "relationship" : "original",
+      "rotation" : 0
+    },
+    {
+      "artwork" : {
+        "background" : "#FFFFFF",
+        "backgroundOpacity" : 0,
+        "bleed" : 3,
+        "elements" : [
+          {
+            "affine" : {
+              "a" : -1,
+              "b" : 0,
+              "c" : 0,
+              "d" : 1,
+              "tx" : 120,
+              "ty" : 0
+            },
+            "color" : "#F4EBDD",
+            "fontSize" : 8,
+            "height" : 15,
+            "id" : "2B0710CC-6332-4006-98FD-49D4484F0653",
+            "kind" : "text",
+            "text" : "THE OTHER SIDE",
+            "width" : 100,
+            "x" : 10,
+            "y" : 12
+          }
+        ]
+      },
+      "canvasSourceOnly" : true,
+      "designID" : "24F83429-C642-481F-9202-BDADF7D0B60B",
+      "id" : "7EA27C14-2A0C-4593-8D69-2C5920CA3C67",
+      "locked" : false,
+      "materialID" : "paper-superfine",
+      "name" : "Editable material proof sheet · Inside registered",
+      "parameters" : {
+        "depth" : 80,
+        "width" : 120
+      },
+      "position" : {
+        "x" : 190,
+        "y" : 0,
+        "z" : 0
+      },
+      "recipeID" : "artboard",
+      "relationship" : "original",
+      "rotation" : 0
+    }
+  ],
+  "recipes" : [
+    {
+      "id" : "construction-AF3035E7-4EA5-4063-8E26-7E64B0814DD4",
+      "name" : "Editable material proof sheet",
+      "parameters" : [
+        {
+          "id" : "caliper",
+          "maximum" : 2,
+          "minimum" : 0.2,
+          "name" : "caliper",
+          "step" : 0.1,
+          "unit" : "mm",
+          "value" : 0.8
+        },
+        {
+          "id" : "fold",
+          "maximum" : 100,
+          "minimum" : 0,
+          "name" : "Fold",
+          "step" : 1,
+          "unit" : "%",
+          "value" : 100
+        },
+        {
+          "id" : "opening",
+          "maximum" : 100,
+          "minimum" : 0,
+          "name" : "Opening",
+          "step" : 1,
+          "unit" : "%",
+          "value" : 0
+        }
+      ],
+      "parts" : [
+
+      ],
+      "summary" : "Agent-authored physical construction",
+      "symbol" : "square.3.layers.3d"
+    }
+  ],
+  "schemaVersion" : 57,
+  "subtitle" : "A new place to make things.",
+  "unit" : "mm",
+  "updatedAt" : "2026-10-30T18:26:58Z"
+}

@@ -5,7 +5,7 @@ import FormGraphics
 @MainActor enum ProjectPreview {
   static func image(project:Project,size:CGSize,assets:URL)async throws -> NSImage {
     let pageIDs = Set((project.publications ?? []).flatMap { $0.pages.map(\.objectID) })
-    let physicalIDs = Set(project.objects.filter { !$0.isCanvasWorkspace }.map(\.id))
+    let physicalIDs = Set(project.objects.filter { $0.hasTablePresentation }.map(\.id))
     if !physicalIDs.isEmpty, physicalIDs.isSubset(of: pageIDs),
       let page = project.publications?.first(where: { !$0.pages.isEmpty })?.pages.first,
       let object = project.objects.first(where: { $0.id == page.objectID }),

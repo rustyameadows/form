@@ -1,0 +1,200 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 335,
+          "ty" : 0
+        },
+        "color" : "#1C4644",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "DDD112C0-1738-592F-8F5A-7723DE4A3181",
+        "kind" : "text",
+        "name" : "03-inside-front-brand",
+        "text" : "FIELD  /  03",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 196,
+        "x" : 12,
+        "y" : 6
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 335,
+          "ty" : 0
+        },
+        "color" : "#1C4644",
+        "fontSize" : 37.69795275590552,
+        "height" : 17.05,
+        "id" : "61F6C52D-EDFA-52AD-9AD3-F8AA2D495471",
+        "kind" : "text",
+        "name" : "03-inside-front-title",
+        "text" : "Made to keep.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 196,
+        "x" : 12,
+        "y" : 15
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 335,
+          "ty" : 0
+        },
+        "color" : "#1C4644",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "id" : "01414FD8-8A0B-57DD-80C4-54B1CEF6CFD5",
+        "kind" : "rectangle",
+        "name" : "03-inside-front-rule",
+        "text" : "",
+        "width" : 121.00000000000001,
+        "x" : 12,
+        "y" : 35.75
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 335,
+          "ty" : 0
+        },
+        "color" : "#1C4644",
+        "fontSize" : 7.5,
+        "height" : 9.350000000000001,
+        "id" : "895B3579-2A33-5068-9DA2-90EB027155C0",
+        "kind" : "text",
+        "name" : "03-inside-front-copy",
+        "text" : "A quiet detail. A lasting impression.\nDesigned in FIELD.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 196,
+        "x" : 12,
+        "y" : 42.9
+      }
+    ]
+  },
+  "canvasSourceOnly" : true,
+  "designID" : "7696E94B-ACEB-4DA8-A4BD-8FCCB19508E9",
+  "id" : "C3E7880F-7C6E-4B73-B699-9DFCAAA5EB56",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "03 · Field kit / Locking mailer · Inside registered",
+  "parameters" : {
+    "depth" : 485,
+    "width" : 450
+  },
+  "position" : {
+    "x" : 700,
+    "y" : 0,
+    "z" : -430
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

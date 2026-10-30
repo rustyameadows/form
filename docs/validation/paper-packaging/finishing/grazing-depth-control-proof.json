@@ -1,0 +1,386 @@
+{
+  "captures" : [
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 93.0)",
+      "camera_world_from_camera_mm" : [
+        -1,
+        -0,
+        -0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        -299.60000000000002,
+        0,
+        1
+      ],
+      "fill_intensity" : 550,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-details-4k\/inside-registered-reverse-lit.png",
+      "key_direction" : [
+        0.30000001192092896,
+        1,
+        0.40000000596046448
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "inside-registered-reverse-lit",
+      "sha256" : "c68a44b8a96ecfbf2084b90e1c66ce20b080917911e84b49f337d3d6e433b1e1",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d740)",
+          "revision" : "ACC9CD52-8C3D-49BD-B1D6-66DABB7EA14C:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "normal",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d740)",
+          "revision" : "E9EE9604-A607-4AE5-925A-7191B8FE310B:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "roughness",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d740)",
+          "revision" : "045BB66C-019B-44FC-B2E3-549FA302DED9:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "metallic",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d740)",
+          "revision" : "527443D4-18EB-4832-AA22-A94F5A12BA08:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "color",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d800)",
+          "revision" : "2E10AF12-FDE4-4D3B-8916-0B52F7064B65:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "normal",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d800)",
+          "revision" : "75692C00-4474-4FBE-AB60-FD85E25B8C5D:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "roughness",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d800)",
+          "revision" : "FA302033-0B2C-491B-9969-A52967A17A7A:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d800)",
+          "revision" : "C7209C89-5434-40B4-8EE8-A23E59F3373F:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "fb242ea979122185dcb9fc2236a09829354b453c464a4f5f24816196917b5c10",
+      "texture_cache_bytes" : 120000004,
+      "texture_uploads" : 8
+    },
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 18.0)",
+      "camera_world_from_camera_mm" : [
+        1,
+        0,
+        0,
+        0,
+        0,
+        -0.87415727612153771,
+        -0.48564293117863211,
+        0,
+        0,
+        0.48564293117863211,
+        -0.87415727612153771,
+        0,
+        -41,
+        25.400000000000006,
+        -28.500000000000007,
+        1
+      ],
+      "fill_intensity" : 700,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-details-4k\/letterpress-grazing-detail.png",
+      "key_direction" : [
+        0.80000001192092896,
+        -0.30000001192092896,
+        0.40000000596046448
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "letterpress-grazing-detail",
+      "sha256" : "17fd367128da69c764ab5ba676c5deb4007805746f92765f691ad433df8b76db",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d740)",
+          "revision" : "ACC9CD52-8C3D-49BD-B1D6-66DABB7EA14C:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "normal",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d740)",
+          "revision" : "E9EE9604-A607-4AE5-925A-7191B8FE310B:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "roughness",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d740)",
+          "revision" : "045BB66C-019B-44FC-B2E3-549FA302DED9:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "metallic",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d740)",
+          "revision" : "527443D4-18EB-4832-AA22-A94F5A12BA08:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "color",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d800)",
+          "revision" : "2E10AF12-FDE4-4D3B-8916-0B52F7064B65:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "normal",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d800)",
+          "revision" : "75692C00-4474-4FBE-AB60-FD85E25B8C5D:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "roughness",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d800)",
+          "revision" : "FA302033-0B2C-491B-9969-A52967A17A7A:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1d800)",
+          "revision" : "C7209C89-5434-40B4-8EE8-A23E59F3373F:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "fb242ea979122185dcb9fc2236a09829354b453c464a4f5f24816196917b5c10",
+      "texture_cache_bytes" : 120000004,
+      "texture_uploads" : 8
+    },
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 18.0)",
+      "camera_world_from_camera_mm" : [
+        1,
+        0,
+        0,
+        0,
+        0,
+        -0.87415727612153771,
+        -0.48564293117863211,
+        0,
+        0,
+        0.48564293117863211,
+        -0.87415727612153771,
+        0,
+        -41,
+        25.400000000000006,
+        -28.500000000000007,
+        1
+      ],
+      "fill_intensity" : 700,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-details-4k\/letterpress-depth-zero-control.png",
+      "key_direction" : [
+        0.80000001192092896,
+        -0.30000001192092896,
+        0.40000000596046448
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "letterpress-depth-zero-control",
+      "sha256" : "9b07d1b290887cd4bc10ebf97f2bb2247c727fc84a94c828f85ab9449a485f6c",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000aef2d1380)",
+          "revision" : "DE6C6FCE-FE7C-4463-ADED-0A8BC5711329:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "normal",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000aef2d1380)",
+          "revision" : "FA3EA801-B165-4294-A22E-2382B6B22077:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "roughness",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000aef2d1380)",
+          "revision" : "05CEF58A-D136-4B30-8509-1DDF11D01414:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "metallic",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000aef2d1380)",
+          "revision" : "63D4A1A6-A2CB-4D64-A4C8-5B846FC81C6A:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "color",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000aef2d1320)",
+          "revision" : "2E10AF12-FDE4-4D3B-8916-0B52F7064B65:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "normal",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000aef2d1320)",
+          "revision" : "75692C00-4474-4FBE-AB60-FD85E25B8C5D:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "roughness",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000aef2d1320)",
+          "revision" : "FA302033-0B2C-491B-9969-A52967A17A7A:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000aef2d1320)",
+          "revision" : "C7209C89-5434-40B4-8EE8-A23E59F3373F:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "d3430834ac77a53a0a4e79eb0ce8574fe42b2add975a6df5f784c1060b00ad99",
+      "texture_cache_bytes" : 120000004,
+      "texture_uploads" : 16
+    },
+    {
+      "camera_projection" : "orthographic(verticalSpanMM: 18.0)",
+      "camera_world_from_camera_mm" : [
+        1,
+        0,
+        0,
+        0,
+        0,
+        -0.94088741186872682,
+        -0.3387194682727418,
+        0,
+        0,
+        0.3387194682727418,
+        -0.94088741186872682,
+        0,
+        40.499999999999993,
+        18.400000000000009,
+        -28.500000000000004,
+        1
+      ],
+      "fill_intensity" : 700,
+      "image" : "\/Users\/rustymeadows\/Dev\/form\/.local\/validation\/paper-appearance-native-details-4k\/blind-emboss-grazing-detail.png",
+      "key_direction" : [
+        0.80000001192092896,
+        -0.30000001192092896,
+        0.40000000596046448
+      ],
+      "key_intensity" : 3600,
+      "mesh_builds" : 4,
+      "name" : "blind-emboss-grazing-detail",
+      "sha256" : "7a009d8dfe70fbd31c036d174db9cde483ad2ee96585c61b5bb6cd0ddc748fa2",
+      "source_and_undo_unchanged" : true,
+      "source_maps" : [
+        {
+          "channel" : "color",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1f9c0)",
+          "revision" : "7BC9DE21-F973-499C-84B8-2EB938A0FC6B:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "normal",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1f9c0)",
+          "revision" : "13171BB8-6264-4BC4-ABA9-C0A01F644763:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "roughness",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1f9c0)",
+          "revision" : "9291E7C6-D431-4876-84B1-92F6D7105253:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "metallic",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1f9c0)",
+          "revision" : "D38C36AE-E931-4D92-BF4C-1A38E3416880:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "color",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1fa80)",
+          "revision" : "2E10AF12-FDE4-4D3B-8916-0B52F7064B65:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "normal",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1fa80)",
+          "revision" : "75692C00-4474-4FBE-AB60-FD85E25B8C5D:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "roughness",
+          "height" : 2000,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1fa80)",
+          "revision" : "FA302033-0B2C-491B-9969-A52967A17A7A:2",
+          "width" : 3000
+        },
+        {
+          "channel" : "metallic",
+          "height" : 1,
+          "material" : "recipe-material:ObjectIdentifier(0x0000000af0c1fa80)",
+          "revision" : "C7209C89-5434-40B4-8EE8-A23E59F3373F:2",
+          "width" : 1
+        }
+      ],
+      "source_sha256" : "fb242ea979122185dcb9fc2236a09829354b453c464a4f5f24816196917b5c10",
+      "texture_cache_bytes" : 120000004,
+      "texture_uploads" : 24
+    }
+  ],
+  "cua_used" : false,
+  "paper_id" : "AF3035E7-4EA5-4063-8E26-7E64B0814DD4",
+  "project_id" : "1833A424-0B1C-4D65-8399-5273992A3BA4",
+  "relief_representation" : "surface shading; no displaced material\/tooling or manufacturing certification",
+  "renderer" : "Production TableSceneController → GeometryPayloadAdapter → RealityKitSceneRenderer",
+  "source" : "Authored one-panel parametric construction +canonical editable artwork, created through existing command families"
+}

@@ -1,0 +1,227 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 235,
+          "ty" : 62
+        },
+        "color" : "#45402E",
+        "fontSize" : 8,
+        "height" : 6,
+        "hidden" : true,
+        "id" : "18B2B511-4897-596C-AA5F-CA58CD28B336",
+        "kind" : "text",
+        "name" : "07-inside-front-brand",
+        "text" : "FIELD  /  07",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 166,
+        "x" : 12,
+        "y" : 6
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 235,
+          "ty" : 62
+        },
+        "color" : "#45402E",
+        "fontSize" : 62.407318448589166,
+        "height" : 34,
+        "hidden" : true,
+        "id" : "15605939-F53F-53B2-8863-CA5FCDBF2203",
+        "kind" : "text",
+        "name" : "07-inside-front-title",
+        "text" : "Made to keep.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 166,
+        "x" : 12,
+        "y" : 35
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 235,
+          "ty" : 62
+        },
+        "color" : "#45402E",
+        "fontSize" : 14,
+        "height" : 0.42,
+        "hidden" : true,
+        "id" : "87045CA8-83C8-5EB4-86E7-F8E7033EB216",
+        "kind" : "rectangle",
+        "name" : "07-inside-front-rule",
+        "text" : "",
+        "width" : 104.50000000000001,
+        "x" : 12,
+        "y" : 91
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 235,
+          "ty" : 62
+        },
+        "color" : "#45402E",
+        "fontSize" : 7.5,
+        "height" : 16,
+        "hidden" : true,
+        "id" : "B8F86BCB-96C6-5B3F-BFA3-FCB94148946F",
+        "kind" : "text",
+        "name" : "07-inside-front-copy",
+        "text" : "A quiet detail. A lasting impression.\nDesigned in FIELD.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 166,
+        "x" : 12,
+        "y" : 109.2
+      },
+      {
+        "affine" : {
+          "a" : -1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 235,
+          "ty" : 62
+        },
+        "color" : "#45402E",
+        "fontSize" : 14,
+        "height" : 23.8,
+        "hidden" : true,
+        "id" : "53DBFBBB-FD3F-56E1-BECC-DAB95FCCA71E",
+        "kind" : "ellipse",
+        "name" : "07-inside-front-seal",
+        "sides" : 12,
+        "starInset" : 0.8,
+        "text" : "",
+        "width" : 23.8,
+        "x" : 154.2,
+        "y" : 79.8
+      }
+    ]
+  },
+  "canvasSourceOnly" : true,
+  "designID" : "1AB4D8FA-5F60-456C-A350-03C490971106",
+  "id" : "6EAFFFAB-479E-43D4-9048-C9D6607F5DAE",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "07 · Gather / Lined envelope · Inside registered",
+  "parameters" : {
+    "depth" : 272,
+    "width" : 280
+  },
+  "position" : {
+    "x" : 580,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

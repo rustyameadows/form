@@ -98,7 +98,7 @@ private struct RenderSignature: Equatable {
   private var externalCaptureRevision:String?
   var externalCapturePreparationCheckpoint:(()async->Void)?
   func prepareExternalForCapture(project:Project,assets:URL)async throws {
-    let objects=project.objects.filter{!$0.isCanvasWorkspace && (captureObjectIDs?.contains($0.id) ?? true) && ($0.meshAsset != nil || $0.cadRepresentation != nil)}
+    let objects=project.objects.filter{$0.hasTablePresentation && (captureObjectIDs?.contains($0.id) ?? true) && ($0.meshAsset != nil || $0.cadRepresentation != nil)}
     guard !objects.isEmpty else{return}
     let revision=try project.studioDesignDigest()+"/"+assets.path+"/"+(captureObjectIDs?.map(\.uuidString).sorted().joined(separator:",") ?? "all")
     if externalCaptureRevision==revision {return}
@@ -272,7 +272,7 @@ private struct RenderSignature: Equatable {
       camera = project.camera
       updateCamera()
     }
-    let physicalObjects = project.objects.filter { !$0.isCanvasWorkspace && (renderObjectIDs?.contains($0.id) ?? true) }
+    let physicalObjects = project.objects.filter { $0.hasTablePresentation && (renderObjectIDs?.contains($0.id) ?? true) }
     let live = Set(physicalObjects.map(\.id))
     for id in Array(nodes.keys) where !live.contains(id) {
       nodes.removeValue(forKey: id)?.removeFromParentNode()

@@ -194,17 +194,19 @@ struct PaperEnvironmentControls: View {
     VStack(alignment:.leading,spacing:12) {
       SectionLabel("PAPER & EXPRESSION")
       Text(d.stock.name).font(.system(size:13,weight:.medium))
-      Text("White uncoated · subtle tooth · matte").font(.system(size:11)).foregroundStyle(Palette.secondary)
+      Text("\(d.stock.profile?.texture.rawValue.capitalized ?? "Uncoated") · \(d.stock.verified ? "declared measured stock":"visual stock assumptions")").font(.system(size:11)).foregroundStyle(Palette.secondary)
       HStack {
         Button("White") { store.update(object,["color":"#F7F5EF"]) }
         Button("Natural") { store.update(object,["color":"#D9C6A2"]) }
         Button("Blue") { store.update(object,["color":"#254F91"]) }
       }.font(.system(size:11))
-      InspectorColorPicker("Paper color", selection: Binding(
+      InspectorColorPicker("Instance color override", selection: Binding(
         get: { Color(nsColor: NSColor(hex: object.color ?? "#F7F5EF")) },
         set: { store.update(object, ["color": NSColor($0).hexString]) }), supportsOpacity: false,
         targetID: "paper-\(store.project?.id.uuidString ?? "")-\(object.id)",
         onEditingChanged: store.inspectorInteraction("paper-color-\(object.id)"))
+      InspectorDivider()
+      PaperAppearanceControls(object:object)
       InspectorDivider()
       SectionLabel("ARTWORK")
       if d.insideArtworkSourceID == nil { Button("Create inside artwork…") { store.createPaperInside(object); store.showPaper(.dieline,object:object,split:true) } }
@@ -273,11 +275,12 @@ struct PaperEnvironmentControls: View {
       SectionLabel("STOCK & PROTOTYPES")
       Text(d.stock.name).font(.system(size:13,weight:.medium))
       Text(String(format:"%.2f mm · %@",d.stock.thicknessMM,d.stock.verified ? "measured stock" : "unverified prototype stock")).font(.system(size:11)).foregroundStyle(Palette.secondary)
-      TextField("Sheet width · mm",value:$store.paperSheetWidth,format:.number).font(Palette.numericFont).textFieldStyle(.roundedBorder)
-      TextField("Sheet height · mm",value:$store.paperSheetHeight,format:.number).font(Palette.numericFont).textFieldStyle(.roundedBorder)
+      ArtworkUnitField("Sheet width",value:store.paperSheetWidth,unit:.mm) {store.paperSheetWidth=$0}
+      ArtworkUnitField("Sheet height",value:store.paperSheetHeight,unit:.mm) {store.paperSheetHeight=$0}
       Stepper("Prototype quantity: \(store.paperQuantity)",value:$store.paperQuantity,in:1...64)
-      TextField("Margin · mm",value:$store.paperSheetMargin,format:.number).font(Palette.numericFont).textFieldStyle(.roundedBorder)
-      TextField("Gap · mm",value:$store.paperSheetGap,format:.number).font(Palette.numericFont).textFieldStyle(.roundedBorder)
+      ArtworkUnitField("Margin",value:store.paperSheetMargin,unit:.mm) {store.paperSheetMargin=$0}
+      ArtworkUnitField("Gap",value:store.paperSheetGap,unit:.mm) {store.paperSheetGap=$0}
+      ArtworkUnitField("Bleed",value:store.paperBleedMM,unit:.mm) {store.paperBleedMM=min(25,max(0,$0))}
       if let layout = try? PaperOutput.layout(store:store,definition:d) {
         Text("\(layout.sheetCount) sheets · \(layout.placements.count) blanks").font(.system(size:12,weight:.medium))
         ForEach(layout.issues) {issue in Text(issue.message).font(.system(size:11)).foregroundStyle(issue.severity == .error ? Palette.ink : Palette.secondary)}

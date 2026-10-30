@@ -12,6 +12,7 @@ struct CanvasSourceProjection: Equatable {
   let size: Point2
   let sourceToLocal: Affine2
   let boundary: [Point2]
+  var cutouts:[[Point2]]?=nil
   var surfaceKind:PhysicalArtworkSurfaceIdentity.Kind = .panel
 
   var physicalIdentity:PhysicalArtworkSurfaceIdentity {
@@ -34,17 +35,22 @@ struct CanvasSourceProjection: Equatable {
     guard let proof = try? PhysicalArtworkFrame.paper(net:net,inside:inside) else{return []}
     var result = [Self(constructionID: object.id, sourceID: sourceID, panelID: nil,
       inside: inside, title: object.name + (inside ? " · Inside dieline" : " · Dieline"),
-      size:proof.size,sourceToLocal:proof.sourceToLocal,boundary:proof.boundary)]
+      size:proof.size,sourceToLocal:proof.sourceToLocal,boundary:proof.boundary,cutouts:proof.cutouts)]
     for panel in net.panels {
       guard let frame=try? PhysicalArtworkFrame.paper(net:net,panelID:panel.id,inside:inside) else{continue}
       result.append(Self(constructionID:object.id,sourceID:sourceID,panelID:panel.id,inside:inside,
         title:object.name + " · " + panel.name + (inside ? " · Inside":""),
-        size:frame.size,sourceToLocal:frame.sourceToLocal,boundary:frame.boundary))
+        size:frame.size,sourceToLocal:frame.sourceToLocal,boundary:frame.boundary,cutouts:frame.cutouts))
     }
     return result
   }
 
-  var physicalFrame:PhysicalArtworkFrame { .init(size:size,boundary:boundary,sourceToLocal:sourceToLocal) }
+  var physicalFrame:PhysicalArtworkFrame { .init(size:size,boundary:boundary,sourceToLocal:sourceToLocal,cutouts:cutouts) }
+  @MainActor var clipPath:CGPath {
+    let path=CGMutablePath();path.addPath(PaperOutput.path(boundary))
+    for hole in cutouts ?? [] {path.addPath(PaperOutput.path(hole))}
+    return path
+  }
   func display(_ source: Artwork) -> Artwork {physicalFrame.display(source)}
   func source(from displayed: Artwork, original: Artwork) -> Artwork {
     // These frames are rigid rotations/reflections of validated source geometry.
@@ -52,13 +58,23 @@ struct CanvasSourceProjection: Equatable {
   }
 
   @MainActor func contains(_ point: CGPoint) -> Bool {
-    isProof || PaperOutput.path(boundary).contains(point)
+    (isProof || PaperOutput.path(boundary).contains(point)) && !(cutouts ?? []).contains{PaperOutput.path($0).contains(point)}
   }
 
   /// Bulk selection uses the same physical region as pointer hit testing.
   /// Source layers outside this view remain in the shared artwork document.
   @MainActor func intersects(_ bounds: Rect2) -> Bool {
-    guard !isProof, boundary.count >= 3 else { return true }
+    if cutouts?.isEmpty == false {
+      let rect=CGPath(rect:.init(x:bounds.x,y:bounds.y,width:max(bounds.width,1e-7),height:max(bounds.height,1e-7)),transform:nil)
+      let region=CGMutablePath()
+      if isProof {region.addRect(.init(x:0,y:0,width:size.x,height:size.y))}
+      else {region.addPath(PaperOutput.path(boundary))}
+      for hole in cutouts ?? [] {region.addPath(PaperOutput.path(hole))}
+      return !rect.intersection(region,using:.evenOdd).isEmpty
+    }
+    guard !isProof, boundary.count >= 3 else {
+      return true
+    }
     let rect = CGRect(x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height)
     let corners = [CGPoint(x: rect.minX, y: rect.minY), CGPoint(x: rect.maxX, y: rect.minY),
       CGPoint(x: rect.maxX, y: rect.maxY), CGPoint(x: rect.minX, y: rect.maxY)]

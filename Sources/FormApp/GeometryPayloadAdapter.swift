@@ -148,12 +148,16 @@ import simd
     payload.colorEncoding = .srgb
     payload.emissiveColor = .init(emissive.x,emissive.y,emissive.z)
     payload.emissiveIntensity=Float(m.emission.intensity);payload.emissiveTexture=mappedTexture(m.emission)
-    payload.metallic=Float((m.metalness.contents as? NSNumber)?.doubleValue ?? 0)
-    payload.roughness=Float((m.roughness.contents as? NSNumber)?.doubleValue ?? 0.6)
+    let metallicTexture=mappedTexture(m.metalness),roughnessTexture=mappedTexture(m.roughness)
+    // A texture already contains its scalar coverage. Multiplying metallic by
+    // the scalar fallback zero silently erased every procedural foil mask.
+    payload.metallic=Float((m.metalness.contents as? NSNumber)?.doubleValue ?? (metallicTexture == nil ? 0:m.metalness.intensity))
+    payload.roughness=Float((m.roughness.contents as? NSNumber)?.doubleValue ?? (roughnessTexture == nil ? 0.6:m.roughness.intensity))
     payload.doubleSided=m.isDoubleSided;payload.readsDepth=m.readsFromDepthBuffer;payload.writesDepth=m.writesToDepthBuffer
-    payload.unlit=m.lightingModel == .constant;payload.alphaMode=color.w<0.999 || diffuseTexture != nil ? .blend:.opaque
+    let textureHasAlpha=diffuseTexture.map{![CGImageAlphaInfo.none,.noneSkipFirst,.noneSkipLast].contains($0.image.alphaInfo)} ?? false
+    payload.unlit=m.lightingModel == .constant;payload.alphaMode=color.w<0.999 || textureHasAlpha ? .blend:.opaque
     payload.normalScale=Float(m.normal.intensity);payload.baseColorTexture=diffuseTexture;payload.normalTexture=mappedTexture(m.normal)
-    payload.metallicTexture=mappedTexture(m.metalness);payload.roughnessTexture=mappedTexture(m.roughness)
+    payload.metallicTexture=metallicTexture;payload.roughnessTexture=roughnessTexture
     return payload
   }
 }

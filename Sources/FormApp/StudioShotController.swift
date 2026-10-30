@@ -33,7 +33,7 @@ import ImageIO
   var shots:[StudioShot] {store?.project?.studioPresentation?.shots ?? []}
   var subjectSummary:String {
     guard let project=store?.project else{return "Open a project."}
-    let known=Set(project.objects.filter{!$0.isCanvasWorkspace}.map(\.id))
+    let known=Set(project.objects.filter{$0.hasTablePresentation}.map(\.id))
     if visibilityMode=="selection" {return "\(known.intersection(store?.engine.selection ?? []).count) exact selected objects. Include applied details."}
     if visibilityMode=="saved",let id=editingID,let shot=shots.first(where:{$0.id==id}) {return "\(Set(shot.visibility.objectIDs).intersection(known).count) of \(shot.visibility.objectIDs.count) saved objects present."}
     return "\(known.count) current physical objects."
@@ -94,7 +94,7 @@ import ImageIO
     var s=StudioShot(name:name,camera:project.camera,referenceAspect:aspect);s.id=draftID
     if let id=editingID,let saved=shots.first(where:{$0.id==id}) {s.id=id;s.revision=saved.revision;s.visibility=saved.visibility}
     if visibilityMode == "project" {s.visibility = .init()}
-    else if visibilityMode == "selection" {s.visibility=StudioVisibility(mode:.objects,objectIDs:store.engine.selection.filter{id in project.objects.contains{$0.id==id && !$0.isCanvasWorkspace}}.sorted{$0.uuidString<$1.uuidString})}
+    else if visibilityMode == "selection" {s.visibility=StudioVisibility(mode:.objects,objectIDs:store.engine.selection.filter{id in project.objects.contains{$0.id==id && $0.hasTablePresentation}}.sorted{$0.uuidString<$1.uuidString})}
     s.lighting=lighting;s.surface=store.studioPreset;s.pixels=try pixels();try s.validate();try runtimePreflight(project,s);return s
   }
   func recall(_ id:UUID)throws {

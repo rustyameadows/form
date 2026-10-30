@@ -5,8 +5,15 @@ public enum PaperConstructionEngine {
     guard PaperConstruction.isPaper(object) else{throw FormError.invalid("Choose a constructed envelope or carton.")}
     var source=object.paperConstruction ?? defaults(recipeID:object.recipeID)
     if source.authored != nil {
+      // Validate the accepted stock/source pair before deriving a new value;
+      // corrupt caliper metadata must not be silently repaired on read.
+      try validate(source)
       source=applying(object.parameters,to:source)
-      source.stock.thicknessMM=try source.authored!.number(source.authored!.stockThickness)
+      let caliper=try source.authored!.number(source.authored!.stockThickness)
+      if source.stock.plies != nil,abs(caliper-source.stock.resolvedThicknessMM)>1e-9 {
+        throw FormError.invalid("Authored stock caliper must equal its bonded ply total; update the source parameter and plies atomically.")
+      }
+      source.stock.thicknessMM=caliper
       let net=try source.authored!.net()
       source.dimensions = .init(width:object.parameters["width"] ?? net.size.x,
         height:object.parameters["height"] ?? net.size.y,depth:object.parameters["depth"] ?? max(1,source.stock.thicknessMM))
@@ -30,21 +37,27 @@ public enum PaperConstructionEngine {
     if let v=values["width"]{s.dimensions.width=v};if let v=values["height"]{s.dimensions.height=v};if let v=values["depth"]{s.dimensions.depth=v};if let v=values["stock"]{s.stock.thicknessMM=v};if let v=values["clearance"]{s.clearanceMM=v};if let v=values["glueTab"]{s.glueTabMM=v};if let v=values["topFlap"]{s.topFlapMM=v};if let v=values["bottomFlap"]{s.bottomFlapMM=v};if let v=values["cornerRadius"]{s.cornerRadiusMM=v};if let v=values["fold"]{s.foldPercent=v};if let v=values["opening"]{s.openingPercent=v};return s
   }
   public static func validate(_ s:PaperConstruction)throws {
+    try s.stock.validate()
+    guard (s.finishes?.count ?? 0)<=128,Set((s.finishes ?? []).map(\.id)).count==(s.finishes?.count ?? 0) else {
+      throw FormError.invalid("Keep at most 128 uniquely identified paper finish assignments.")
+    }
+    for finish in s.finishes ?? [] {try finish.validate()}
+    guard s.annotations.count<=256,Set(s.annotations.map(\.id)).count==s.annotations.count,s.annotations.allSatisfy({($0.panelID?.utf8.count ?? 0)<=256&&($0.edgeID?.utf8.count ?? 0)<=256&&($0.view.map{["panels","dieline","assembled"].contains($0)} ?? true)&&$0.text.utf8.count<=4096&&($0.position.map{$0.x.isFinite&&$0.y.isFinite&&abs($0.x)<=10000&&abs($0.y)<=10000} ?? true)}) else{throw FormError.invalid("Keep paper annotations bounded, finite and uniquely identified.")}
     if s.kind == .authored {
       guard s.version==1,let authored=s.authored,s.foldPercent.isFinite,(0...100).contains(s.foldPercent),
         s.openingPercent.isFinite,(0...100).contains(s.openingPercent),s.annotations.count<=256,
         s.stock.name.utf8.count<=256,s.stock.notes.utf8.count<=2048,
         s.insideArtwork==nil || s.insideArtworkSourceID==nil else {throw FormError.invalid("Invalid authored construction state.")}
       _ = try authored.net()
+      guard abs(try authored.number(authored.stockThickness)-s.stock.resolvedThicknessMM)<=1e-9 else {
+        throw FormError.invalid("Authored stockThickness must equal the declared stock's resolved total caliper.")
+      }
       if let art=s.insideArtwork{try validateArtwork(art)}
       return
     }
     guard s.authored==nil else{throw FormError.invalid("Authored geometry requires the authored construction kind.")}
     let d=s.dimensions,values=[d.width,d.height,d.depth,s.stock.thicknessMM,s.clearanceMM,s.glueTabMM,s.topFlapMM,s.bottomFlapMM,s.cornerRadiusMM,s.foldPercent,s.openingPercent]
     guard s.version==1,values.allSatisfy(\.isFinite),(30...1200).contains(d.width),(40...1600).contains(d.height),(1...600).contains(d.depth),(0.08...2).contains(s.stock.thicknessMM),(0...20).contains(s.clearanceMM),(6...60).contains(s.glueTabMM),(8...150).contains(s.topFlapMM),(8...150).contains(s.bottomFlapMM),(0...20).contains(s.cornerRadiusMM),(0...100).contains(s.foldPercent),(0...100).contains(s.openingPercent),d.depth<=d.width,d.depth<=d.height*0.8,s.glueTabMM<d.width/2,s.topFlapMM<d.height/2,s.bottomFlapMM<d.height/2 else{throw FormError.invalid("Paper dimensions, stock and flap sizes must be finite and form a physically bounded net. Depth cannot exceed width or 80% of height; glue/tuck flaps must be smaller than half their body dimension.")}
-    guard !s.stock.name.isEmpty,s.stock.name.utf8.count<=256,(s.stock.vendor?.utf8.count ?? 0)<=512,s.stock.notes.utf8.count<=2048,s.stock.gsm.map({$0.isFinite&&(30...1200).contains($0)}) ?? true else{throw FormError.invalid("Declare bounded stock names, thickness and optional GSM; omit unknown measured values.")}
-    if let size=s.stock.sheetSizeMM{guard size.x.isFinite,size.y.isFinite,(50...5000).contains(size.x),(50...5000).contains(size.y) else{throw FormError.invalid("Declared paper sheets must be 50–5000 mm per edge.")}}
-    guard s.annotations.count<=256,Set(s.annotations.map(\.id)).count==s.annotations.count,s.annotations.allSatisfy({($0.panelID?.utf8.count ?? 0)<=256&&($0.edgeID?.utf8.count ?? 0)<=256&&($0.view.map{["panels","dieline","assembled"].contains($0)} ?? true)&&$0.text.utf8.count<=4096&&($0.position.map{$0.x.isFinite&&$0.y.isFinite&&abs($0.x)<=10000&&abs($0.y)<=10000} ?? true)}) else{throw FormError.invalid("Keep paper annotations bounded, finite and uniquely identified.")}
     if let art=s.insideArtwork{try validateArtwork(art)}
     guard s.insideArtwork==nil || s.insideArtworkSourceID==nil else{throw FormError.invalid("Use one inside artwork source; inline and linked inside artwork cannot coexist.")}
   }
@@ -132,6 +145,9 @@ public enum PaperConstructionEngine {
   public static func resolvedPanels(_ source:PaperConstruction,foldPercent:Double?=nil)throws->[PaperResolvedPanel] {
     let net=try net(source),amount=(foldPercent ?? source.foldPercent)/100
     guard amount.isFinite,(0...1).contains(amount) else{throw FormError.invalid("Paper folding is a preview percentage from 0 to 100.")}
+    if source.authored?.components?.isEmpty == false {
+      return try PlanarComponentPoseResolver.resolve(source,net:net,amount:amount).panels
+    }
     let base:[Double]=[1,0,0,-net.size.x/2,0,0,1,source.stock.thicknessMM/2,0,-1,0,-net.size.y/2,0,0,0,1]
     let global=multiply(rotate(axis:.init(1,0,0),radians:amount * .pi/2),base)
     var matrices:[String:[Double]]=[net.rootPanelID:global],closedMatrices:[String:[Double]]=[net.rootPanelID:global],remaining=net.panels.filter{$0.id != net.rootPanelID}
@@ -161,10 +177,16 @@ public enum PaperConstructionEngine {
     if !s.stock.verified{issues.append(.init(severity:.warning,code:"unverified-stock",message:"Stock caliper, grain, scoring and adhesive remain prototype assumptions; prove the construction on actual material."))}
     if s.stock.grain == .unknown{issues.append(.init(severity:.warning,code:"unknown-grain",message:"Declare grain direction before final scoring; grain and fold tooling affect cracking and springback."))}
     if s.artworkReviewRequired{issues.append(.init(severity:.warning,code:"artwork-review",message:"The net dimensions changed. Artwork retains its original physical coordinates and needs a panel/bleed placement review."))}
-    if s.stock.thicknessMM>s.dimensions.depth/5{issues.append(.init(severity:.warning,code:"thick-stock",message:"Stock is thick relative to package depth. Neutral-axis allowances are a starting estimate, not a tested crease specification."))}
-    if let contents{let d=s.dimensions,c=s.clearanceMM;guard [contents.width,contents.height,contents.depth].allSatisfy({$0.isFinite&&$0>0}) else{throw FormError.invalid("Contents measurements must be finite positive millimeters.")};if contents.width+2*c>d.width || contents.height+2*c>d.height || contents.depth+2*c>d.depth{issues.append(.init(severity:.error,code:"contents-fit",message:"Declared contents plus clearance exceed usable internal dimensions."))}}
+    if s.authored==nil,s.stock.thicknessMM>s.dimensions.depth/5{issues.append(.init(severity:.warning,code:"thick-stock",message:"Stock is thick relative to package depth. Neutral-axis allowances are a starting estimate, not a tested crease specification."))}
+    if let contents{
+      guard s.authored==nil else {throw FormError.invalid("Authored construction fit requires a named declared interior and actual contents_object_id; flat-net dimensions are not a usable cavity.")}
+      let d=s.dimensions,c=s.clearanceMM;guard [contents.width,contents.height,contents.depth].allSatisfy({$0.isFinite&&$0>0}) else{throw FormError.invalid("Contents measurements must be finite positive millimeters.")};if contents.width+2*c>d.width || contents.height+2*c>d.height || contents.depth+2*c>d.depth{issues.append(.init(severity:.error,code:"contents-fit",message:"Declared contents plus clearance exceed usable internal dimensions."))}
+    }
+    let interiors=try resolvedInteriors(s)
+    if s.authored != nil,interiors.isEmpty {issues.append(.init(severity:.warning,code:"interior-not-declared",message:"This authored construction has no declared usable interior. Net extents do not establish contents fit."))}
     issues.append(.init(severity:.info,code:"duplex-proof",message:"Inside artwork uses the same registered flat-net coordinates. Verify actual feed/turn orientation with a duplex proof; no machine setup is inferred."))
-    return .init(issues:issues,netSize:net.size,usableInternalDimensions:s.dimensions,requiresArtworkReview:s.artworkReviewRequired)
+    return .init(issues:issues,netSize:net.size,usableInternalDimensions:s.authored==nil ? s.dimensions:nil,
+      requiresArtworkReview:s.artworkReviewRequired,declaredInteriors:interiors.isEmpty ? nil:interiors)
   }
 }
 extension PaperNet {
