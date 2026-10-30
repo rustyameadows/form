@@ -405,6 +405,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     result["draw_count"] = drawCount
     result["last_draw_ms"] = lastDrawMS
     result["last_hover_lookup_ms"] = lastHoverLookupMS
+    result["group_scope_id"] = (session?.scopeID?.uuidString as Any?) ?? NSNull()
+    result["selected_element_ids"] = session?.selection.map(\.uuidString).sorted() ?? []
+    result["pointer_gesture"] = dragMode
     result["sewing_guide_builds"] = sewingGuides.builds
     result["sewing_guide_entries"] = sewingGuides.count
     result["physical_guide_builds"] = physicalArtworkGuides.builds
@@ -1265,6 +1268,30 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       tolerance: 3.5 / (ppm * zoom), excluding: hiddenRoles,
       editingMask: session?.maskEditing?.maskID, renderedArtwork: activeFrame?.artwork)
   }
+  /// Resolve a painted sibling in the nearest enclosing scope, skipping the
+  /// branch we are already editing. The same resolver drives hover and clicks.
+  func externalGroupTarget(at point: CGPoint, in art: Artwork, frame: CanvasFrame,
+    cached: Bool = false) -> ArtworkElement? {
+    guard let s = session, s.maskEditing == nil, var branch = s.scopeID else { return nil }
+    let byID = Dictionary(uniqueKeysWithValues: art.elements.map { ($0.id, $0) })
+    let hidden = ArtworkProduction.hiddenIDs(in: frame.artwork, roles: s.hiddenProductionRoles)
+    var visited = Set<UUID>()
+    while let group = byID[branch], visited.insert(branch).inserted {
+      let excluded = hidden.union([branch])
+      let key = HoverPickKey(frameID: frame.id, scope: group.parentID, mask: nil, excluded: excluded)
+      let picker: ArtworkHitTesting.Picker
+      if cached, let existing = hoverPickers[key] { picker = existing }
+      else {
+        picker = ArtworkHitTesting.Picker(in: art, scope: group.parentID,
+          excluding: excluded, renderedArtwork: frame.artwork)
+        if cached { hoverPickers[key] = picker }
+      }
+      if let target = picker.hit(at: point, tolerance: 3.5 / (ppm * zoom)) { return target }
+      guard let parent = group.parentID else { break }
+      branch = parent
+    }
+    return nil
+  }
   override func mouseDown(with event: NSEvent) {
     guard let s = session else { return }
     refreshFrameSnapshots()
@@ -1417,14 +1444,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           beginText(e)
           return
         }
-        if event.clickCount == 2, e.kind == "group" {
-          if e.component != nil {
-            s.editComponentSource(e)
-            return
-          }
-          s.scopeID = e.id
-          s.choose([])
-          needsDisplay = true
+        if event.clickCount > 0, event.clickCount.isMultiple(of: 2), e.kind == "group" {
+          s.enterGroup(e.id)
           return
         }
         if event.modifierFlags.contains(.shift) {
@@ -1445,6 +1466,25 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         downBounds = s.selectionBounds ?? .init(0, 0, 1, 1)
         dragMode = "move"
       } else {
+        if !event.modifierFlags.contains(.shift), s.scopeID != nil, s.maskEditing == nil {
+          if let target = externalGroupTarget(at: p, in: s.art, frame: f) {
+            s.navigateGroup(to: target.parentID, selection: [target.id])
+            // A click-drag on an external sibling should continue directly into
+            // moving it, with a fresh transaction belonging to its new scope.
+            snapshot = s.art; startSelection = s.selection; startNodes = []
+            gestureSelection = s.selection; gestureNodes = []
+            gestureToken = s.beginGesture(); gestureFrameID = s.activeFrameID
+            downBounds = s.selectionBounds ?? .init(0, 0, 1, 1)
+            dragMode = "move"
+            return
+          }
+          if let group = s.art.elements.first(where: { $0.id == s.scopeID }),
+            (event.clickCount > 0 && event.clickCount.isMultiple(of: 2)
+              || !CGRect(s.art.bounds(of: group)).insetBy(dx: -3.5/(ppm*zoom), dy: -3.5/(ppm*zoom)).contains(p)) {
+            s.leaveGroup()
+            return
+          }
+        }
         if s.tool == .direct, s.primary?.path != nil {
           if !event.modifierFlags.contains(.shift) { s.nodes = [] }
           dragMode = "node_marquee"
@@ -1760,6 +1800,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     window?.invalidateCursorRects(for: self)
     needsDisplay = true
   }
+  func prepareForGroupNavigation() {
+    cancelPointerGesture()
+    if let token = gestureToken { session?.store?.engine.endInteraction(ifGeneration: token) }
+    clearPointerGesture()
+  }
   private func edgeScrollOffset(for event: NSEvent, elapsed: TimeInterval) -> CGPoint {
     // Window coordinates are visual points and +Y up. Convert the resulting
     // offset to the Canvas's +Y-down physical coordinates only when applying it.
@@ -1950,7 +1995,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         hoverPickers[key] = picker
       }
       let p = CGPoint(x: world.x-frame.rect.minX, y: world.y-frame.rect.minY)
-      if let element = picker.hit(at: p, tolerance: 3.5/(ppm*zoom)) {
+      if let element = picker.hit(at: p, tolerance: 3.5/(ppm*zoom))
+        ?? (active && !event.modifierFlags.contains(.shift)
+          ? externalGroupTarget(at: p, in: art, frame: frame, cached: true) : nil) {
         if active && s.selection.contains(element.id) { pointerFeedback = .move }
         else { hoveredElementID = element.id; hoveredFrameID = frame.id }
       }
@@ -2786,8 +2833,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       } else if s.maskEditing != nil {
         s.returnFromMask()
       } else if s.scopeID != nil {
-        s.scopeID = s.art.elements.first { $0.id == s.scopeID }?.parentID
-        s.choose([])
+        s.leaveGroup()
       } else {
         s.choose([])
       }
@@ -2836,47 +2882,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return super.resignFirstResponder()
   }
   override func menu(for event: NSEvent) -> NSMenu? {
-    let menu = NSMenu()
-    if let session, let store = session.store, let project = store.project {
-      var seen = Set<UUID>()
-      let links = LinkedInspectorRelationships.canvas(session, in: project).filter { seen.insert($0.objectID).inserted }
-      if !links.isEmpty {
-        let item = NSMenuItem(title: "Find on Table", action: nil, keyEquivalent: "")
-        if links.count == 1 {
-          item.action = #selector(findOnTableAction(_:)); item.target = self
-          item.representedObject = links[0].objectID
-        } else {
-          let submenu = NSMenu()
-          for link in links {
-            let title = project.objects.first { $0.id == link.objectID }?.name ?? link.title
-            let child = NSMenuItem(title: title, action: #selector(findOnTableAction(_:)), keyEquivalent: "")
-            child.target = self; child.representedObject = link.objectID; submenu.addItem(child)
-          }
-          item.submenu = submenu
-        }
-        menu.addItem(item); menu.addItem(.separator())
-      }
-    }
-    for (title, action) in [
-      ("Duplicate", #selector(duplicateAction)), ("Group", #selector(groupAction)),
-      ("Ungroup", #selector(ungroupAction)), ("Convert text to outlines", #selector(outlineAction)),
-      ("Delete", #selector(deleteAction)),
-    ] {
-      let item = NSMenuItem(title: title, action: action, keyEquivalent: "")
-      item.target = self
-      menu.addItem(item)
-    }
-    return menu
+    makeCanvasContextMenu(for: event)
   }
-  @objc private func findOnTableAction(_ item: NSMenuItem) {
-    guard let id = item.representedObject as? UUID else { return }
-    _ = session?.store?.findOnTable(id)
-  }
-  @objc private func duplicateAction() { session?.execute("duplicate") }
-  @objc private func groupAction() { session?.execute("group") }
-  @objc private func ungroupAction() { session?.execute("ungroup") }
-  @objc private func outlineAction() { session?.convert() }
-  @objc private func deleteAction() { session?.execute("delete") }
   private func updateAccessibilityItems() {
     guard let s = session, let frame = activeFrame, let window else { return }
     let artwork = s.art

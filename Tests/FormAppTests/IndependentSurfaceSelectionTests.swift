@@ -95,8 +95,9 @@ import XCTest
     let before = try XCTUnwrap(store.project), camera = try XCTUnwrap(store.scene).camera
     XCTAssertEqual(store.engine.selection, [tableID]); store.isolated = [tableID]
     let menu = try XCTUnwrap(canvas.menu(for: try event(.rightMouseDown, canvas: canvas, point: .init(x: frame.rect.midX, y: frame.rect.midY))))
-    XCTAssertEqual(menu.items.first?.title, "Find on Table")
-    menu.performActionForItem(at: 0)
+    let findIndex = try XCTUnwrap(menu.items.firstIndex { $0.title == "Find on Table" })
+    XCTAssertTrue(menu.items[findIndex].isEnabled)
+    menu.performActionForItem(at: findIndex)
     XCTAssertEqual(store.engine.selection, [paperID]); XCTAssertFalse(store.tableInspectorVisible)
     XCTAssertTrue(store.isolated.isEmpty)
     XCTAssertNotEqual(store.scene?.camera.target, camera.target)

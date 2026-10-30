@@ -279,4 +279,19 @@ import XCTest
     art.elements = [image]
     XCTAssertNil(hit(art, 50, 50))
   }
+
+  func testDeepLayerProbeRespectsBooleanHolesAndDoesNotExposeDerivedComponentIDs() throws {
+    let behind = rect(), outer = rect(), cutout = rect(25, 25, 50, 50)
+    var art = Artwork(elements: [behind, outer, cutout])
+    let group = try BooleanCommands.create("subtract", artwork: &art, elements: [outer.id, cutout.id])
+    XCTAssertEqual(ArtworkHitTesting.layers(at: .init(x: 50, y: 50), in: art).map(\.id), [behind.id])
+    XCTAssertEqual(ArtworkHitTesting.layers(at: .init(x: 10, y: 10), in: art).map(\.id), [outer.id, group, behind.id])
+    var instance = ArtworkElement(kind: "group", x: 0, y: 0, width: 100, height: 100)
+    instance.contentSize = .init(100, 100); instance.component = .init(sourceObjectID: UUID())
+    let raw = Artwork(elements: [instance])
+    var derived = rect(10, 10, 20, 20); derived.parentID = instance.id
+    var resolved = raw; resolved.elements.append(derived)
+    XCTAssertEqual(ArtworkHitTesting.layers(at: .init(x: 20, y: 20), in: raw,
+      renderedArtwork: resolved).map(\.id), [instance.id])
+  }
 }

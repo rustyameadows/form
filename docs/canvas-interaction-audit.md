@@ -99,3 +99,35 @@ The final running app repeated native Shift selection → Group → immediate dr
 ![Final atlas left open](validation/canvas-interactions/final-dense-atlas.png)
 
 A sampled native hover lookup on the 782-element atlas took 4.11 ms and a sampled draw took 5.37 ms on this machine. These are individual diagnostic samples, not an end-to-end latency benchmark. Native-event tests verify all eight resize directions, rotation feedback, target preview, floating-control occlusion and window-exit cleanup; pinch anchoring and held edge scrolling are also covered by native-event tests.
+
+## Follow-up: group recovery and expert arrangement
+
+The user's subsequent five-click exploration exposed a gap in the initial acceptance coverage: the Atlas could remain isolated inside a group while outside artwork and blank-canvas clicks appeared unresponsive. The original native build reproduced this with blank-canvas and compass clicks; Leave group remained visible. The initial dense tests covered entering groups and manipulating children, but did not adequately exercise repeated entry and exit.
+
+![Outside clicks remain trapped in group scope before the follow-up](validation/canvas-interactions/group-scope-before-outside-clicks.png)
+
+Source inspection identified three interacting issues: picking searched only the current scope, group entry recognized exactly click count 2 rather than successive double-click pairs, and the plain Leave group label had a small hit area inside a larger visible card. Group navigation now has a shared transaction-safe path, resolves outside siblings in the nearest enclosing scope, leaves one level on outside blank clicks or internal blank double-clicks, and restores Canvas focus. Shift retains the current scope for multi-selection. The full-size native Leave group button selects the exited group; Canvas exits all group levels. Hover uses the same outside-target resolver as clicks.
+
+Right-click now targets the pointer location while preserving an existing multi-selection when appropriate. Select Layer probes actual painted descendants with hierarchy labels; Show Inspector, grouping, ungrouping, and layer order are directly available. The audit also caught sibling Forward/Backward operations silently failing when nested child records separated siblings in flat storage; ordering now walks sibling positions.
+
+Alignment and distribution are exposed in the toolbar, inspector, and context menu. Six alignment actions and horizontal/vertical gap or center distribution operate in Canvas coordinates, including through transformed parents, and preserve group structure. The core's previous local-coordinate calculation was corrected for rotated, scaled, reflected, and sheared parents.
+
+### Follow-up verification
+
+The installed ordinary LAB app completed five repeated native cycles of entering the map, Route A, and Station 1.5, then selecting the outside compass with one click. Additional cycles verified blank-canvas exit, Escape, and a press near the enlarged Leave group button's corner. Every navigation cycle retained the viewport and all 782 source elements exactly.
+
+![Direct selection outside three nested groups](validation/canvas-interactions/followup-outside-selects-compass.png)
+
+The native Select Layer submenu reached Station 1.5 directly from the root. Its subsequent drag retained size, and Undo restored the complete artwork. All six inspector alignment buttons and all four toolbar distribution actions were exercised on three complex sections, with Undo after each. A physical click near the Align left button's upper-left corner also performed the correct action. Group/ungroup, immediate context menus, Forward/Backward sibling changes, hidden-inspector restoration, and corner resizing were verified in the same dense document. The final source equals the pre-install snapshot, including existing user edits.
+
+![Geometry-aware layer probe](validation/canvas-interactions/followup-deep-probe-menu.png)
+
+![Alignment and distribution menu](validation/canvas-interactions/followup-arrangement-menu.png)
+
+![Three complex sections aligned left](validation/canvas-interactions/followup-three-groups-align-left.png)
+
+The final focused release run passed **94 tests with zero failures**, including all **27 regressions added in this round**. The full release run executed **1,424 methods: 1,420 passed and four failed**. One failure was an older test invoking menu item zero instead of finding **Find on Table** after the new commands were added. Its selector was corrected without weakening its camera/source/selection/inspector assertions, and all six related tests pass in the final focused run. The remaining three failures are the same main-baseline failures documented above. No production source changed after the candidate build.
+
+The enabled-button corner-routing test was corrected to check active buttons after selecting three items; its disabled-state and 32-point size assertions remain separate. Native corner clicks independently confirmed the target in the installed app. This follow-up explicitly closes the repeated group-entry/exit gap in the first audit; it does not claim universal freedom from interaction bugs.
+
+The running app's executable SHA-256 matches the signed candidate: `b57c664c0e1a689dc64c3f1f7bb5831d4ea034bd6c48be9a215db7d832db3de1`. The Atlas remains open with three sections selected so the arrangement controls are visible. [Native verification records](validation/canvas-interactions/followup-native-results.json) and the screenshots retain the actual test results.

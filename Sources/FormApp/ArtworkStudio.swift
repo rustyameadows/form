@@ -27,7 +27,7 @@ struct ArtworkStudio: View {
         if store.project != nil {
           VectorCanvas(session: session, revision: store.revision, fittingInsets: NSEdgeInsets(
             top: 16, left: layers ? 266 : 16,
-            bottom: hasContextNavigation ? 112 : 72, right: inspector ? 318 : 16))
+            bottom: hasContextNavigation ? 128 : 72, right: inspector ? 318 : 16))
         } else {
           VStack(spacing: 17) {
             Image(systemName: "rectangle.badge.plus").font(.system(size: 36, weight: .ultraLight))
@@ -72,6 +72,10 @@ struct ArtworkStudio: View {
       session.reconcile()
     }
     .onChange(of: store.revision) { _, _ in session.reconcile() }
+    .onReceive(NotificationCenter.default.publisher(for: .formShowCanvasInspector)) { notification in
+      guard (notification.object as? ArtworkSession) === session else { return }
+      showingInspector = true
+    }
     .onChange(of: session.dieline) { _, dieline in
       if dieline { session.canvas?.finishText() }
       DispatchQueue.main.async { session.fit() }
@@ -85,19 +89,33 @@ struct ArtworkStudio: View {
   }
 
   private var contextNavigation: some View {
-    HStack(spacing: 12) {
+    HStack(spacing: WorkspaceToolbarMetrics.spacing) {
       if session.maskEditing != nil {
-        Button("Back to contents", systemImage: "chevron.left") { session.returnFromMask() }
+        WorkspaceToolbarButton("Back to contents", symbol: "chevron.left", showsTitle: true) {
+          session.returnFromMask()
+          session.canvas?.window?.makeFirstResponder(session.canvas)
+        }
       } else if session.componentReturn != nil {
-        Button("Back to instance", systemImage: "chevron.left") { session.returnToComponent() }
-      }
-      if session.scopeID != nil && session.maskEditing == nil {
-        Button("Leave group", systemImage: "arrow.uturn.backward") {
-          session.scopeID = nil
-          session.choose([])
+        WorkspaceToolbarButton("Back to instance", symbol: "chevron.left", showsTitle: true) {
+          session.returnToComponent()
+          session.canvas?.window?.makeFirstResponder(session.canvas)
         }
       }
-    }.buttonStyle(.plain).font(.system(size: 11))
+      if let scope = session.scopeID, session.maskEditing == nil {
+        WorkspaceToolbarButton("Canvas", symbol: "square.dashed", showsTitle: true,
+          identifier: "canvas-group-root") { session.leaveGroup(toRoot: true) }
+        Image(systemName: "chevron.right").font(.system(size: 9)).foregroundStyle(Palette.secondary)
+          .accessibilityHidden(true)
+        Text(session.art.elements.first(where: { $0.id == scope })?.title ?? "Group")
+          .font(.system(size: 11, weight: .medium)).lineLimit(1).truncationMode(.middle)
+          .frame(maxWidth: 160).help("Editing group contents")
+        WorkspaceToolbarDivider()
+        WorkspaceToolbarButton("Leave group", symbol: "arrow.uturn.backward", showsTitle: true,
+          identifier: "canvas-group-leave") {
+          session.leaveGroup()
+        }
+      }
+    }.fixedSize(horizontal: true, vertical: false)
   }
 
   private func tools(layers: Bool, inspector: Bool) -> some View {
@@ -113,6 +131,7 @@ struct ArtworkStudio: View {
       }
       WorkspaceToolbarDivider()
       actions
+      CanvasArrangementMenu(session: session)
       WorkspaceToolbarButton("Canvas background", symbol: "circle.lefthalf.filled",
         isSelected: showingBackground, help: "Canvas background color") { showingBackground.toggle() }
         .popover(isPresented: $showingBackground, arrowEdge: .bottom) {

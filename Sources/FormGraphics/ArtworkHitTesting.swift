@@ -14,6 +14,36 @@ import Foundation
       renderedArtwork: renderedArtwork).hit(at: point, tolerance: tolerance)
   }
 
+  /// Front-to-back painted layers for a context-menu probe, including editable
+  /// descendants beneath ordinary groups. Locked layers remain inspectable;
+  /// masks, hidden content and derived component children are never returned.
+  public static func layers(at point: CGPoint, in artwork: Artwork, tolerance: Double = 0,
+    excluding: Set<UUID> = [], renderedArtwork: Artwork? = nil) -> [ArtworkElement] {
+    guard point.x.isFinite, point.y.isFinite else { return [] }
+    let context = Context(renderedArtwork ?? artwork, excluding: excluding)
+    let children = Dictionary(grouping: artwork.elements, by: \.parentID)
+    var candidates: [ArtworkElement] = [], visited = Set<UUID>()
+    func visit(_ element: ArtworkElement) {
+      guard visited.insert(element.id).inserted else { return }
+      if element.component == nil {
+        for child in (children[element.id] ?? []).reversed() { visit(child) }
+      }
+      candidates.append(element)
+    }
+    for root in (children[nil] ?? []).reversed() { visit(root) }
+    var result: [ArtworkElement] = [], found = Set<UUID>()
+    for allowance in tolerance.isFinite && tolerance > 0 ? [0, tolerance] : [0] {
+      for source in candidates where !found.contains(source.id) {
+        let element = context.byID[source.id] ?? source
+        guard context.ancestorsAllow(element, point: point),
+          context.booleanAncestorsAllow(element, point: point, tolerance: allowance),
+          context.contains(element, point: point, tolerance: allowance) else { continue }
+        result.append(source); found.insert(source.id)
+      }
+    }
+    return result
+  }
+
   /// An immutable artwork snapshot with lazy geometry caches for continuous
   /// pointer hover. Replace it when artwork, isolation scope or visibility changes;
   /// zoom changes only require a different per-call tolerance.
@@ -91,6 +121,15 @@ import Foundation
       var parent = element.parentID, seen = Set<UUID>()
       while let id = parent, let ancestor = byID[id], seen.insert(id).inserted {
         guard visible(ancestor), clipAllows(ancestor, point: point) else { return false }
+        parent = ancestor.parentID
+      }
+      return true
+    }
+
+    func booleanAncestorsAllow(_ element: ArtworkElement, point: CGPoint, tolerance: Double) -> Bool {
+      var parent = element.parentID, seen = Set<UUID>()
+      while let id = parent, let ancestor = byID[id], seen.insert(id).inserted {
+        if ancestor.booleanOperation != nil, !contains(ancestor, point: point, tolerance: tolerance) { return false }
         parent = ancestor.parentID
       }
       return true

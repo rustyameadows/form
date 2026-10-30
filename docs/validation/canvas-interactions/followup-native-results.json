@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-30",
+  "installedExecutableSHA256": "b57c664c0e1a689dc64c3f1f7bb5831d4ea034bd6c48be9a215db7d832db3de1",
+  "projectID": "AD4AC2F4-4B06-4D17-85DE-E545B2DCC62E",
+  "sourceElements": 782,
+  "events": [
+    {
+      "case": "three-level entry",
+      "scope": "D3A00000-0000-4000-8000-0000000007CF",
+      "selection": []
+    },
+    {
+      "case": "deep scope to outside compass",
+      "scope": null,
+      "selection": [
+        "D3A00000-0000-4000-8000-000000000A1E"
+      ],
+      "viewportUnchanged": true
+    },
+    {
+      "case": "repeated navigation: 5 deep cycles plus button corner and 4 blank/Escape exits",
+      "sourceUnchanged": true,
+      "scope": null,
+      "viewportUnchanged": true
+    },
+    {
+      "case": "deep probe station, drag, undo, outside selection",
+      "exactUndo": true
+    },
+    {
+      "case": "all six native alignments and four distributions, each undone",
+      "exactUndo": true
+    },
+    {
+      "case": "native Bring Forward",
+      "rootOrder": [
+        "Locked warm paper",
+        "01 / Atlas title",
+        "02 / Layered coastal map",
+        "03 / Route legend",
+        "05 / Layered tidal chart",
+        "04 / Layered compass emblem"
+      ]
+    },
+    {
+      "case": "native Send Backward",
+      "rootOrder": [
+        "Locked warm paper",
+        "01 / Atlas title",
+        "02 / Layered coastal map",
+        "04 / Layered compass emblem",
+        "03 / Route legend",
+        "05 / Layered tidal chart"
+      ]
+    },
+    {
+      "case": "native alignment button corner click",
+      "aligned": true
+    },
+    {
+      "case": "final native round: group/ungroup, sibling reorder, inspector, resize, alignment corner, Undo",
+      "sourceUnchanged": true,
+      "scope": null,
+      "selection": [
+        "D3A00000-0000-4000-8000-000000000002",
+        "D3A00000-0000-4000-8000-000000000A1E",
+        "D3A00000-0000-4000-8000-000000000B10"
+      ],
+      "viewportUnchanged": true,
+      "drawMS": 5.77390193939209,
+      "hoverMS": 0
+    }
+  ]
+}

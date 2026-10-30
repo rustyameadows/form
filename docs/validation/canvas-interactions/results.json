@@ -91,5 +91,27 @@
     "sample_hover_lookup_ms": 4.112958908081055,
     "sample_draw_ms": 5.370020866394043,
     "timing_note": "Individual diagnostic samples, not end-to-end latency benchmarks."
+  },
+  "followup": {
+    "full_release": {
+      "test_methods": 1424,
+      "passed_methods": 1420,
+      "failed_methods": [
+        "-[FormAppTests.IndependentSurfaceSelectionTests testContextMenuFindExplicitlySelectsAndCentersTableWithoutChangingCanvasOrOpeningInspector]",
+        "-[FormAppTests.PatternAssemblyMoveTests testMissedPanelAndOccludingObjectCannotJumpAnAttachedLabelOrChangeCamera]",
+        "-[FormAppTests.SewingTileEditingTests testNativeFocusedSheetFieldUsesTheRealSaveButtonWithoutTabAndUndoIsExact]",
+        "-[FormAppTests.TextileMoveTests testEveryTextileZoneNormalAndFocusedBoundsMatchTheActualSceneTransform]"
+      ]
+    },
+    "final_focused_release": {
+      "test_methods": 94,
+      "failures": 0
+    },
+    "full_run_followup": "The full run exposed one outdated Find on Table menu-position assertion. The test now resolves the command by title and all six IndependentSurfaceSelectionTests pass in the final focused run. The other three failures are the previously reproduced main baseline failures.",
+    "new_regression_tests_this_round": 27,
+    "new_regression_tests_total": 88,
+    "installed_app_sha256": "b57c664c0e1a689dc64c3f1f7bb5831d4ea034bd6c48be9a215db7d832db3de1",
+    "production_source_unchanged_after_candidate_build": true,
+    "native_verification": "followup-native-results.json"
   }
 }

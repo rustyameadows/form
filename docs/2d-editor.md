@@ -67,6 +67,12 @@ The Canvas background is a saved local display preference, with neutral presets 
 
 Hover artwork to preview the target. Selected artwork shows a grab cursor; resize handles show directional arrows and rotation shows a curved arrow, with the active handle highlighted. Double-click a group to select its children.
 
+Group editing is a navigable scope. Clicking a painted sibling outside the current group selects it in the nearest enclosing scope; clicking empty space outside the group leaves one level. Double-clicking empty space inside the group also leaves one level. Escape and **Leave group** select the group you just exited; the **Canvas** breadcrumb exits all group levels. Ordinary blank clicks inside a group remain available for marquee selection, and Shift preserves the current scope for adding/removing selections.
+
+Right-click the artwork for **Select Layer**, a geometry-aware list of painted layers under the pointer with their group paths. It reaches nested children directly, excludes hidden or clipped-away content, and lets locked layers be inspected. The same menu provides **Show Inspector**, group/ungroup, layer order, alignment and distribution; right-clicking a selected item retains the rest of a multi-selection.
+
+Select two or more objects to enable **Align and distribute** in the Canvas toolbar. Align left/center/right or top/middle/bottom against the combined selection bounds. With three or more objects, distribute horizontal/vertical gaps or centers. These actions use Canvas axes through rotated or scaled parents, retain group structure, and create individual Undo steps without moving the camera.
+
 Drag from a ruler to add a guide. Clear the selection to inspect frame dimensions, guides, grid, and nudge settings. Physical fields accept explicit suffixes such as `8 in`, `25.4 mm`, and `72 pt`.
 
 While editing text, select characters and change typography controls to format that range. Native undo/redo remains granular during editing. After leaving text, document undo restores the complete text-editing session. Cancelling all changes preserves the previous redo branch.

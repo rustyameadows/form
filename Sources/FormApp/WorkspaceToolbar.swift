@@ -39,13 +39,15 @@ struct WorkspaceToolbarButton: NSViewRepresentable {
   let isSelected: Bool
   let help: String?
   let value: String?
+  let showsTitle: Bool
+  let identifier: String?
   let action: () -> Void
   @Environment(\.isEnabled) private var enabled
 
   init(_ title: String, symbol: String, isSelected: Bool = false, help: String? = nil,
-    value: String? = nil, action: @escaping () -> Void) {
+    value: String? = nil, showsTitle: Bool = false, identifier: String? = nil, action: @escaping () -> Void) {
     self.title = title; self.symbol = symbol; self.isSelected = isSelected
-    self.help = help; self.value = value; self.action = action
+    self.help = help; self.value = value; self.showsTitle = showsTitle; self.identifier = identifier; self.action = action
   }
   func makeCoordinator() -> Coordinator { Coordinator(action: action) }
   func makeNSView(context: Context) -> WorkspaceToolbarNativeButton {
@@ -62,12 +64,18 @@ struct WorkspaceToolbarButton: NSViewRepresentable {
       .withSymbolConfiguration(.init(pointSize: WorkspaceToolbarMetrics.symbolSize, weight: .medium))
     button.contentTintColor = NSColor(Palette.ink).withAlphaComponent(enabled ? 1 : 0.35)
     button.isEnabled = enabled; button.selected = isSelected
+    button.title = showsTitle ? title : ""
+    button.font = NSFont.systemFont(ofSize: 11, weight: .medium)
+    button.showsTitle = showsTitle
+    button.imagePosition = showsTitle ? .imageLeading : .imageOnly
+    button.invalidateIntrinsicContentSize()
     button.selectionValue = value ?? (isSelected ? "Selected" : "")
     button.toolTip = help ?? title; button.setAccessibilityLabel(title)
+    button.setAccessibilityIdentifier(identifier)
     button.needsDisplay = true
   }
   func sizeThatFits(_ proposal: ProposedViewSize, nsView: WorkspaceToolbarNativeButton, context: Context) -> CGSize? {
-    .init(width: WorkspaceToolbarMetrics.controlSize, height: WorkspaceToolbarMetrics.controlSize)
+    nsView.intrinsicContentSize
   }
   static func dismantleNSView(_ button: WorkspaceToolbarNativeButton, coordinator: Coordinator) {
     button.target = nil; button.action = nil; coordinator.action = {}
@@ -84,10 +92,13 @@ struct WorkspaceToolbarButton: NSViewRepresentable {
 final class WorkspaceToolbarNativeButton: NSButton {
   var selected = false
   var selectionValue = ""
+  var showsTitle = false
   private var hovered = false
   private var hoverTracking: NSTrackingArea?
   override var intrinsicContentSize: NSSize {
-    .init(width: WorkspaceToolbarMetrics.controlSize, height: WorkspaceToolbarMetrics.controlSize)
+    let labelWidth = (title as NSString).size(withAttributes: [.font: font ?? NSFont.systemFont(ofSize: 11)]).width
+    return .init(width: showsTitle ? ceil(labelWidth) + WorkspaceToolbarMetrics.symbolSize + 26 : WorkspaceToolbarMetrics.controlSize,
+      height: WorkspaceToolbarMetrics.controlSize)
   }
   override var alignmentRectInsets: NSEdgeInsets { .init(top: 0, left: 0, bottom: 0, right: 0) }
   override var acceptsFirstResponder: Bool { isEnabled }
