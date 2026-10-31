@@ -82,6 +82,9 @@ enum ArtworkTool: String, CaseIterable {
   private(set) var frameBuildCount=0
   private var artworkGesture:(key:String,token:UUID)?
 
+  var objectViewRenderToken = UUID()
+  var objectViewRenderTask: Task<Void, Never>?
+  @Published var objectViewRendering = false
   @Published var croppingImageID: UUID?
   @Published var objectID: UUID? {didSet{if objectID != oldValue {cancelArtworkTransfer();projectionFrameID=nil}}}
   @Published var projectionFrameID: UUID? {didSet{if projectionFrameID != oldValue {cancelArtworkTransfer()}}}

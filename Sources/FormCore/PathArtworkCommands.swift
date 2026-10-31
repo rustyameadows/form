@@ -19,6 +19,9 @@ extension PathCommands {
     guard paths.allSatisfy({ !artwork.isLocked($0) }) else {
       throw FormError.invalid("Unlock the selected paths before editing them.")
     }
+    guard paths.allSatisfy({ $0.objectView == nil }) else {
+      throw FormError.invalid("Convert object views to editable paths before editing their nodes.")
+    }
     if ["combine","release","join"].contains(operation),paths.contains(where:{$0.sewingPiece != nil}) {
       throw FormError.invalid("Remove manufacturing annotations and seam pairs before combining, separating, or joining sewing source topology. Compose holes before annotating the piece.")
     }

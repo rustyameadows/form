@@ -163,6 +163,7 @@ struct ArtworkInspector: View {
               ).font(.system(size: 15, design: .default)).textFieldStyle(.plain)
             }
             transformControls
+            if session.elements.count == 1, e.objectView != nil { ObjectViewControls(session: session, element: e) }
             SewingPatternControls(session: session, element: e)
             if session.elements.count == 1, e.booleanOperation != nil { booleanControls(e) }
             if session.elements.count == 1, e.component != nil {
@@ -205,7 +206,7 @@ struct ArtworkInspector: View {
                 }
               }
             }
-            if session.elements.allSatisfy({ $0.kind == "path" }) { pathControls }
+            if session.elements.allSatisfy({ $0.kind == "path" && $0.objectView == nil }) { pathControls }
             if e.kind == "image" { ImageInspector(session: session,element: e) }
             InspectorDivider()
             HStack {

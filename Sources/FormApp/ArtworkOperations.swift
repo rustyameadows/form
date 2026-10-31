@@ -108,6 +108,11 @@ extension StudioStore {
   func exportArtwork(object suppliedObject: ProductObject, arguments: [String: Any]) throws -> Any {
     guard let object=self.project?.objects.first(where:{$0.id==suppliedObject.id}) else{throw FormError.missing("Choose an existing artwork object.")}
     guard object.meshAsset==nil else{throw FormError.invalid("UV placement has no verified physical scale. Export the original artwork frame for physical output, or use a scene PNG for the model preview.")}
+    if arguments["format"] as? String != "preflight", arguments["ink_output"] as? String != "preflight",
+       let project = self.project {
+      try ObjectViewExportGuard.validate(project:project, object:object,
+        elementIDs:arguments["element_ids"] as? [String])
+    }
     if arguments["page_output"] != nil {return try exportArtworkPage(objectID:object.id,arguments:arguments)}
     if arguments["pattern_tiles"] != nil, arguments["pattern_pieces"] as? Bool != true { throw FormError.invalid("Use pattern_tiles only with pattern_pieces:true for sewing template PDF output.") }
     if let value=arguments["ink_output"] {

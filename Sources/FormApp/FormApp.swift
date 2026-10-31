@@ -32,6 +32,8 @@ import SwiftUI
           ForEach(Samples.templates) { template in
             Button(template.title) { store.createProject(template: template.id) }
           }
+          Divider()
+          Button("Object Views — Toy Car") { store.createObjectViewDemo() }
         }
         Button("Open Project…") { store.openPackage() }.keyboardShortcut("o")
         Button("Import SVG Artwork…") { store.importSVGDialog() }.keyboardShortcut(

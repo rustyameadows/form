@@ -123,6 +123,7 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var productionRole: String?
   public var sewingPiece: SewingPatternPiece?
   public var clipID: UUID?
+  public var objectView: ObjectViewSettings?
   public init(
     kind: String, x: Double, y: Double, width: Double = 60, height: Double = 30, text: String = "",
     color: String = "#FFFFFF", fontSize: Double = 14, asset: String? = nil
@@ -410,7 +411,7 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
-  public static let maximumSchemaVersion=57
+  public static let maximumSchemaVersion=58
   public var schemaVersion = 1
   public var id: UUID = UUID()
   public var name: String
@@ -436,6 +437,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if storedArtworks.contains(where: { $0.elements.contains(where: { $0.objectView != nil }) }) { return max(schemaVersion, 58) }
     if objects.contains(where:{$0.paperTemplateReference != nil}) {return max(schemaVersion,57)}
     if objects.contains(where:{$0.canvasSourceOnly != nil}) {return max(schemaVersion,57)}
     if materials.contains(where:{$0.paperStock != nil}) {return max(schemaVersion,57)}

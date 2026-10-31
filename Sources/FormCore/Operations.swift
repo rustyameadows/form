@@ -18,6 +18,7 @@ public final class OperationEngine {
   public var onPrepareGlyph: ((inout ArtworkElement, GlyphOverride?) throws -> Void)?
   public var onPrepareOptical: ((Artwork, Set<UUID>, [String:Any]) throws -> Void)?
   public var onPrepareParagraphs: ((inout Artwork, Set<UUID>) throws -> Void)?
+  public var onPrepareProjectEdit: ((Project, inout Project) throws -> Void)?
   public var onProjectWillChange: (() -> Void)?
   public var onProjectDidChange: (() -> Void)?
   private var interaction: String?
@@ -47,6 +48,7 @@ public final class OperationEngine {
     guard var value = project else { throw FormError.missing("Open or create a project first.") }
     let before = value
     try body(&value)
+    try onPrepareProjectEdit?(before, &value)
     value.refreshLibrarySelections()
     try value.validateArtworkLinks()
     value.schemaVersion = value.minimumSchemaVersion

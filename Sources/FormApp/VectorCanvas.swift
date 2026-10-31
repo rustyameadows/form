@@ -1132,7 +1132,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let tolerance = 7 / (ppm * zoom)
     func near(_ q: CGPoint) -> Bool { hypot(q.x-p.x, q.y-p.y) < tolerance }
     if s.tool == .direct {
-      for e in s.elements.reversed() where !s.art.isLocked(e) {
+      for e in s.elements.reversed() where !s.art.isLocked(e) && e.objectView == nil {
         guard let path = e.path else { continue }
         let transform = s.art.worldTransform(e).followed(by: .scale(e.width/path.width, e.height/path.height))
         for node in path.contours.flatMap(\.nodes).reversed() {
@@ -1202,7 +1202,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       context.strokePath()
     }
     if s.tool == .direct {
-      for e in s.elements {
+      for e in s.elements where e.objectView == nil {
         guard let path = e.path else { continue }
         let t = art.worldTransform(e).followed(
           by: .scale(e.width / path.width, e.height / path.height))
@@ -1419,7 +1419,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         return
       }
       if s.tool == .direct, event.clickCount == 2, let e = s.primary, let path = e.path,
-        !s.art.isLocked(e),
+        e.objectView == nil, !s.art.isLocked(e),
         let segment = PathCommands.nearestSegment(
           path, to: .init(p),
           map: s.art.worldTransform(e).followed(
@@ -1457,7 +1457,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         return
       }
       if let e = hit(p, art: s.art, scope: s.scopeID) {
-        if s.tool == .direct, s.selection.contains(e.id), e.path != nil {
+        if s.tool == .direct, s.selection.contains(e.id), e.path != nil, e.objectView == nil {
           if !event.modifierFlags.contains(.shift) { s.nodes = [] }
           dragMode = "node_marquee"
           marquee = CGRect(origin: p, size: .zero)
@@ -1634,7 +1634,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       marquee = rect
       let ids = Set(
         snapshot.elements.filter { s.selection.contains($0.id) }.flatMap { e -> [UUID] in
-          guard let path = e.path, !snapshot.isLocked(e) else { return [] }
+          guard let path = e.path, e.objectView == nil, !snapshot.isLocked(e) else { return [] }
           let t = snapshot.worldTransform(e).followed(
             by: .scale(e.width / path.width, e.height / path.height))
           return path.contours.flatMap(\.nodes).filter {
@@ -1816,7 +1816,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     if ["node", "incoming", "outgoing"].contains(dragMode), dragDidMove, let s = session {
       s.mutate { art in
-        for i in art.elements.indices where s.selection.contains(art.elements[i].id) {
+        for i in art.elements.indices where s.selection.contains(art.elements[i].id) && art.elements[i].objectView == nil {
           if art.elements[i].path?.contours.flatMap(\.nodes).contains(where: {
             s.nodes.contains($0.id)
           }) == true {
@@ -2147,7 +2147,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let art = s.art
     let threshold = 7 / (ppm * zoom)
     let paths = art.elements.filter {
-      $0.path != nil && (s.maskEditing == nil ? art.editable($0) : $0.id == s.maskEditing?.maskID && !art.isLocked($0))
+      $0.path != nil && $0.objectView == nil && (s.maskEditing == nil ? art.editable($0) : $0.id == s.maskEditing?.maskID && !art.isLocked($0))
         && (s.selection.contains($0.id) || $0.parentID == s.scopeID)
     }
     for e in paths.reversed() {
@@ -2194,7 +2194,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private func dragNodes(_ p: CGPoint, event: NSEvent) {
     guard let s = session else { return }
     var value = snapshot
-    let paths = snapshot.elements.filter { s.selection.contains($0.id) && $0.path != nil }
+    let paths = snapshot.elements.filter { s.selection.contains($0.id) && $0.path != nil && $0.objectView == nil }
     let counts = paths.flatMap { $0.path!.contours.flatMap(\.nodes).map(\.id) }
       .reduce(into: [UUID: Int]()) { $0[$1, default: 0] += 1 }
     guard s.nodes.allSatisfy({ counts[$0] == 1 }) else {

@@ -126,6 +126,7 @@ enum TableTool: String, CaseIterable {
   var fontLibraryPreferences=FontLibraryPreferences.environment()
   lazy var cloth = ClothCoordinator(store:self)
   lazy var artworkSession = ArtworkSession(store: self)
+  lazy var linkedObjectViews = LinkedObjectViewRenderer(store: self)
   private var saveWork: DispatchWorkItem?
   private var previewWork: DispatchWorkItem?
   private var noticeWork: DispatchWorkItem?
@@ -201,7 +202,19 @@ enum TableTool: String, CaseIterable {
         artwork.elements[i].height=max(element.fontSize/TypographyEngine.pointsPerMM*1.4,size.height+0.5)
       }
     }
+    engine.onPrepareProjectEdit = { [weak self] before, next in
+      guard let self else { return }
+      let assets = self.repository.url(for: next.id).appendingPathComponent("Assets")
+      let failures = ObjectViewUpdates.refreshChangedSources(before: before, project: &next, assets: assets)
+      LinkedObjectViewRenderer.markPending(before: before, project: &next)
+      if !failures.isEmpty {
+        self.error = "Some linked object views could not update; their previous appearance was kept.\n"
+          + failures.joined(separator: "\n")
+      }
+    }
     engine.onProjectWillChange = { [weak self] in
+      self?.artworkSession.cancelObjectViewRendering()
+      self?.linkedObjectViews.reset()
       self?.imageWorkflow?.resetForProjectChange()
       self?.imageWorkflow=nil
       self?.assetLibrary=nil
@@ -211,6 +224,7 @@ enum TableTool: String, CaseIterable {
       self?.finishArtworkEditing()
     }
     engine.onProjectDidChange = { [weak self] in
+      if let self { self.linkedObjectViews.synchronize(self.project) }
       self?.closeDetachedCanvas()
       self?.designSurfaceHost?.resetForProjectChange()
       self?.environment = .form
@@ -431,6 +445,7 @@ enum TableTool: String, CaseIterable {
     changed()
   }
   func changed(save: Bool = true) {
+    linkedObjectViews.synchronize(project)
     constructionValidation.projectDidChange(project)
     let ids = Set(project?.objects.map(\.id) ?? [])
     engine.selection.formIntersection(ids)
