@@ -26,9 +26,23 @@ struct StudioImageGenerationOptions:Codable,Equatable {
   var quality:StudioGenerationQuality = .high
   var count=1
   var failureFixture:StudioGenerationFailureFixture = .none
-  var pixels:(width:Int,height:Int) {let n=size.longEdge;return aspect == .square ? (n,n):aspect == .landscape ? (n,n*2/3):(n*2/3,n)}
-  func validate()throws {guard [1,2,4].contains(count) else{throw FormError.invalid("Choose one, two, or four demo images.")}}
-  var redactedMetadata:[String:String] {["model":model.rawValue,"aspect":aspect.rawValue,"size":size.rawValue,"quality":quality.rawValue,"count":String(count),"failure_fixture":failureFixture.rawValue,"transport":"none","mode":"local_demo"]}
+  /// New requests retain the Studio output exactly. Absent on older records,
+  /// whose original aspect/size settings remain readable and reproducible.
+  var outputPixels:StudioPixels?=nil
+  var pixels:(width:Int,height:Int) {
+    if let outputPixels {return (outputPixels.width,outputPixels.height)}
+    let n=size.longEdge;return aspect == .square ? (n,n):aspect == .landscape ? (n,n*2/3):(n*2/3,n)
+  }
+  func validate()throws {
+    guard [1,2,4].contains(count) else{throw FormError.invalid("Choose one, two, or four demo images.")}
+    try outputPixels?.validate()
+  }
+  var redactedMetadata:[String:String] {
+    var value=["model":model.rawValue,"quality":quality.rawValue,"count":String(count),"failure_fixture":failureFixture.rawValue,"transport":"none","mode":"local_demo"]
+    if let outputPixels {value["width"]=String(outputPixels.width);value["height"]=String(outputPixels.height);value["sizing"]="studio"}
+    else {value["aspect"]=aspect.rawValue;value["size"]=size.rawValue}
+    return value
+  }
 }
 struct StudioGenerationReference:Codable,Equatable,Identifiable {
   enum Role:String,Codable,CaseIterable {case style,subject,composition;var title:String{rawValue.capitalized}}
@@ -44,7 +58,9 @@ struct StudioGenerationCapture:Codable,Equatable,Identifiable {
   var designSHA256:String,draftSHA256:String
   var inputAssetID:UUID,width:Int,height:Int
   var warnings:[String]
+  var context:StudioGenerationInputContext?=nil
   var sceneID:UUID {scene.id}
+  var hasExactStudioPixels:Bool {width==scene.pixels.width && height==scene.pixels.height}
 }
 struct StudioGenerationRun:Codable,Equatable,Identifiable {
   enum Status:String,Codable {case running,succeeded,failed,cancelled,stale;var title:String {rawValue.capitalized}}
@@ -55,6 +71,18 @@ struct StudioGenerationRun:Codable,Equatable,Identifiable {
   var error:String?
   var isMock=true
   var provider="Local demo · no AI request"
+  var inputContext:StudioGenerationInputContext? {capture.context}
+}
+struct StudioGenerationPromptPreset:Codable,Equatable,Identifiable {
+  var id:UUID,name:String,prompt:String
+  static var builtins:[Self] {[
+    .init(id:UUID(uuidString:"21B6F53F-1DD1-48F9-B89F-933B031E2101")!,name:"Faithful product",prompt:"Create a polished studio product photograph from this scene input. Preserve the products, arrangement, proportions, artwork and readable wording. Improve natural lighting and material realism with a restrained neutral backdrop."),
+    .init(id:UUID(uuidString:"21B6F53F-1DD1-48F9-B89F-933B031E2102")!,name:"Soft editorial",prompt:"Use the captured products and arrangement for a soft editorial image. Keep their geometry, branding and colors intact. Add gentle daylight, subtle shadows and a warm, quiet background."),
+    .init(id:UUID(uuidString:"21B6F53F-1DD1-48F9-B89F-933B031E2103")!,name:"Bold campaign",prompt:"Create a bold campaign image using the exact products and composition in the scene input. Preserve every product's form, artwork and text. Use a confident colored backdrop, crisp lighting and clear separation."),
+    .init(id:UUID(uuidString:"21B6F53F-1DD1-48F9-B89F-933B031E2104")!,name:"Clean catalog",prompt:"Make a clean catalog photograph on a white background with soft contact shadows. Preserve the exact product identities, proportions, arrangement, printed artwork and readable text from the scene input."),
+    .init(id:UUID(uuidString:"21B6F53F-1DD1-48F9-B89F-933B031E2105")!,name:"Dramatic light",prompt:"Keep the captured products, geometry, arrangement and branding unchanged. Use directional studio light and a dark restrained backdrop for depth, while keeping every product and its printed artwork clearly legible."),
+    .init(id:UUID(uuidString:"21B6F53F-1DD1-48F9-B89F-933B031E2106")!,name:"Material detail",prompt:"Faithfully emphasize the declared material surfaces and existing finishes with natural detailed highlights. Preserve the products, composition, geometry and readable artwork. Do not invent labels, seams, textures or finishes absent from the input.")
+  ]}
 }
 struct StudioGenerationStylePreset:Codable,Equatable,Identifiable {
   var id:UUID,name:String,instructions:String,references:[StudioGenerationReference]
@@ -70,4 +98,5 @@ enum StudioGenerationError:LocalizedError {
 }
 struct StudioGenerationRequest {
   let inputPNG:Data,prompt:String,style:String,references:[StudioGenerationReference],options:StudioImageGenerationOptions
+  var context:StudioGenerationInputContext?=nil
 }
