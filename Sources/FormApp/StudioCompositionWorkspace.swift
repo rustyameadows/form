@@ -6,6 +6,7 @@ struct StudioCompositionWorkspace:View {
   @ObservedObject var controller:StudioCompositionController
   @State private var inspector="Camera"
   @State private var guides=false
+  @StateObject private var thumbnails=StudioSceneThumbnailCache()
   var body:some View {
     VStack(spacing:0) {
       if store.studioShowingImages {
@@ -18,7 +19,7 @@ struct StudioCompositionWorkspace:View {
         TableWorkspace()
       }else {
         HStack(spacing:0) {
-          sceneList.frame(width:230)
+          sceneList.frame(width:176)
           Divider()
           VStack(spacing:0) {
             HStack(alignment:.top) {
@@ -27,7 +28,6 @@ struct StudioCompositionWorkspace:View {
               Toggle("Guides",isOn:$guides).inspectorToggle().font(.system(size:10))
             }.padding(.horizontal,18).padding(.vertical,12)
             stage.frame(minHeight:260,maxHeight:.infinity)
-            timeline
           }.frame(minWidth:350,maxWidth:.infinity,maxHeight:.infinity)
           Divider()
           inspectorPanel.frame(width:290)
@@ -35,7 +35,10 @@ struct StudioCompositionWorkspace:View {
         if let error=controller.error {HStack {Image(systemName:"exclamationmark.circle");Text(error).font(.system(size:11));Spacer();if controller.dirty {Button("Discard draft"){controller.discard()}}}.foregroundStyle(Palette.accent).padding(12).background(Color.white.opacity(0.7))}
         if controller.busy {HStack{ProgressView(value:controller.progress);Text("\(Int(controller.progress*100))%").font(.system(size:10,design:.monospaced));Button("Cancel export"){controller.cancelExport()}}.padding(12)}
       }
-    }.onAppear{controller.reconcile()}.onChange(of:store.project?.id){_,_ in controller.reconcile()}.onChange(of:store.revision){_,_ in controller.reconcile()}.onChange(of:store.environment){_,value in if value != .studio {controller.stop()}}
+    }.task(id:"\(store.project?.id.uuidString ?? "none"):\(store.revision):\(GeometryFactory.fontRevision)") {
+      let project=store.project
+      thumbnails.synchronize(project:project,assets:project.map{store.repository.url(for:$0.id).appendingPathComponent("Assets")})
+    }.onDisappear{thumbnails.reset()}.onAppear{controller.reconcile()}.onChange(of:store.project?.id){_,_ in controller.reconcile()}.onChange(of:store.revision){_,_ in controller.reconcile()}.onChange(of:store.environment){_,value in if value != .studio {controller.stop()}}
       .onChange(of:controller.selectedInstanceID){_,id in if id != nil {inspector="Instance"}}
       .onChange(of:controller.selectionRequest){_,_ in if controller.selectedInstanceID != nil {inspector="Instance"}}
       .confirmationDialog("Save changes to \(controller.draft?.name ?? "this scene")?",isPresented:Binding(
@@ -49,69 +52,60 @@ struct StudioCompositionWorkspace:View {
       .focusedValue(\.designSurface,.studio)
   }
   private var sceneList:some View {
-    VStack(alignment:.leading,spacing:14) {
+    VStack(alignment:.leading,spacing:10) {
       HStack {
-        SectionLabel("SCENES");Spacer()
+        SectionLabel("SCENES");Spacer(minLength:0)
         Menu {
           Button("Empty scene"){controller.newEmptyScene()}
           Button("From Table objects"){controller.newScene()}
-        }label:{Image(systemName:"plus")}.menuStyle(.borderlessButton).fixedSize()
+        }label:{WorkspaceToolbarMenuLabel(symbol:"plus")}.menuStyle(.borderlessButton).fixedSize()
           .help("Create an empty scene or start with Table objects").accessibilityLabel("New Studio scene")
+          .accessibilityIdentifier("studio-new-scene")
       }
-      if controller.scenes.isEmpty {
-        Text("No saved scenes").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
-      }else {
-        ScrollView {
-          VStack(spacing:2) {
-            ForEach(controller.scenes){scene in
-              WorkspaceNavigationRow(title:scene.name,subtitle:"\(scene.instances.count) instances",symbol:"camera",
-                selected:controller.draft?.id==scene.id,accessibilityLabel:"Open Studio scene "+scene.name,
-                identifier:"studio-scene-"+scene.id.uuidString){controller.requestScene(scene.id)}
-            }
-          }
-        }.frame(height:min(166,CGFloat(controller.scenes.count)*42-2)).accessibilityLabel("Saved Studio scenes")
-      }
-      HStack {Button("Save scene"){controller.save()}.buttonStyle(.borderedProminent).tint(Palette.ink);Menu{Button("Duplicate saved scene"){controller.duplicateScene()};Button("Delete saved scene",role:.destructive){controller.deleteScene()};Button("Discard draft"){controller.discard()}}label:{Image(systemName:"ellipsis")}.menuStyle(.borderlessButton).fixedSize()}
-      if controller.dirty {Text("Unsaved scene draft").font(.system(size:10)).foregroundStyle(Palette.accent)}
-      Divider()
-      HStack {SectionLabel("INSTANCES");Spacer()}
-      Menu {
-        ForEach(controller.products){object in Button(object.name){controller.add(object)}}
-        Divider();Button("Shelf / riser prop"){controller.addShelf()}
-      } label:{Label("Add product or prop",systemImage:"plus")}.accessibilityLabel("Add presentation instance")
       ScrollView {
-        VStack(spacing:2) {
-          ForEach(controller.draft?.instances ?? []) {instance in
-            WorkspaceNavigationRow(title:instance.name,subtitle:instance.prop != nil ? "Presentation prop":"Linked product instance",
-              symbol:instance.prop != nil ? "rectangle.3.group":"cube.transparent",selected:controller.selectedInstanceID==instance.id,
-              statusSymbols:instance.visible ? []:["eye.slash"],accessibilityLabel:"Scene instance "+instance.name,
-              identifier:"studio-instance-"+instance.id.uuidString) {
-                controller.selectInstance(instance.id);inspector="Instance"
-              }
+        LazyVStack(spacing:10) {
+          if controller.scenes.isEmpty {
+            Text("Save a scene to keep its view here.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary).padding(.vertical,20)
+          }
+          ForEach(controller.scenes){scene in
+            StudioSceneThumbnail(cache:thumbnails,scene:scene,selected:controller.draft?.id==scene.id,
+              preflight:{project,shot in try store.studioShots.runtimePreflight(project,shot)}){controller.requestScene(scene.id)}
           }
         }
+      }.accessibilityLabel("Saved Studio scenes")
+      if controller.dirty {Text("Unsaved scene draft").font(InspectorStyle.captionFont).foregroundStyle(Palette.accent)}
+      HStack(spacing:4) {
+        WorkspaceToolbarButton("Save scene",symbol:"square.and.arrow.down",help:"Save this scene's camera and instance placement",showsTitle:true,identifier:"studio-save-scene"){controller.save()}
+        Spacer(minLength:0)
+        Menu {
+          Button("Duplicate saved scene"){controller.duplicateScene()}
+          Button("Delete saved scene",role:.destructive){controller.deleteScene()}
+          Divider();Button("Discard draft"){controller.discard()}
+          Divider();Button("Existing saved shots…"){store.studioShowingShots=true}
+        }label:{WorkspaceToolbarMenuLabel(symbol:"ellipsis")}.menuStyle(.borderlessButton).fixedSize().accessibilityLabel("Studio scene actions")
       }
-      HStack(spacing:3) {
-        WorkspaceToolbarButton("Duplicate selected",symbol:"plus.square.on.square",help:"Add another linked instance of the selected product",showsTitle:true,identifier:"studio-duplicate-instance"){controller.duplicateInstance()}
-        WorkspaceToolbarButton("Remove Studio instance",symbol:"trash",help:"Remove the selected instance from this scene",identifier:"studio-remove-instance"){controller.removeInstance()}
-      }.disabled(controller.selected==nil)
-      Divider()
-      Button("Existing saved shots…"){store.studioShowingShots=true}.font(.system(size:10)).buttonStyle(.plain)
-    }.padding(18).disabled(controller.busy)
+    }.padding(12).disabled(controller.busy)
   }
   private var stage:some View {
     GeometryReader {g in
-      let raw=controller.draft?.pixels.aspect ?? 1.5,aspect=raw.isFinite && raw>0 ? min(8,max(0.125,raw)):1.5,w=min(max(1,g.size.width-32),max(1,g.size.height-52)*aspect),h=w/aspect
+      let raw=controller.draft?.pixels.aspect ?? 1.5,aspect=raw.isFinite && raw>0 ? min(8,max(0.125,raw)):1.5,w=min(max(1,g.size.width-32),max(1,g.size.height-16)*aspect),h=w/aspect
       ZStack {
         Color(nsColor:.windowBackgroundColor)
         StudioCompositionViewport(controller:controller).frame(width:w,height:h).overlay {
           if guides {Canvas{context,size in var path=Path();for f in [1.0/3,2.0/3]{path.move(to:.init(x:size.width*f,y:0));path.addLine(to:.init(x:size.width*f,y:size.height));path.move(to:.init(x:0,y:size.height*f));path.addLine(to:.init(x:size.width,y:size.height*f))};context.stroke(path,with:.color(.white.opacity(0.4)),lineWidth:0.7)}.allowsHitTesting(false)}
         }.overlay {
           if controller.draft?.instances.isEmpty == true {Text("Add a product or prop to start composing.").font(InspectorStyle.labelFont).foregroundStyle(Palette.secondary).allowsHitTesting(false)}
-        }.overlay(Rectangle().stroke(Palette.line)).position(x:g.size.width/2,y:g.size.height/2-8)
+        }.overlay(Rectangle().stroke(Palette.line)).position(x:g.size.width/2,y:g.size.height/2)
         VStack {
           Spacer()
           WorkspaceToolbarSurface(maxWidth:max(1,g.size.width-24)) {
+            Menu {
+              ForEach(controller.products){object in Button(object.name){controller.add(object)}}
+              Divider();Button("Shelf / riser prop"){controller.addShelf()}
+            }label:{WorkspaceToolbarMenuLabel(symbol:"plus",value:"Add instance")}
+              .menuStyle(.borderlessButton).fixedSize().help("Add a linked product, design alternative, or presentation prop")
+              .accessibilityLabel("Add presentation instance").accessibilityIdentifier("studio-add-instance")
+            WorkspaceToolbarDivider()
             WorkspaceToolbarButton("Studio transform handles",symbol:"move.3d",isSelected:controller.gizmoVisible,
               help:"Show XYZ move handles and a vertical rotation ring on the selected instance",value:controller.gizmoVisible ? "Shown":"Hidden",
               identifier:"studio-transform-handles"){controller.gizmoVisible.toggle()}
@@ -130,23 +124,30 @@ struct StudioCompositionWorkspace:View {
     }
   }
   private var inspectorPanel:some View {
-    ScrollView {
-      VStack(alignment:.leading,spacing:18) {
-        Picker("Studio inspector",selection:$inspector){Text("Camera").tag("Camera");Text("Instance").tag("Instance");Text("Light").tag("Light")}.inspectorSegmented().labelsHidden().accessibilityLabel("Studio inspector")
-        if let scene=controller.draft {
-          if inspector=="Camera" {camera(scene)}
-          else if inspector=="Instance" {instanceEditor}
-          else {lighting(scene)}
-          Divider();SectionLabel("IMAGE OUTPUT")
-          TextField("Scene name",text:Binding(get:{controller.draft?.name ?? ""},set:{value in controller.change{$0.name=value}})).textFieldStyle(InspectorTextFieldStyle()).accessibilityLabel("Studio scene name")
-          HStack {TextField("Width",value:Binding(get:{scene.pixels.width},set:{value in controller.change{$0.pixels.width=value}}),format:.number.grouping(.never));Text("×");TextField("Height",value:Binding(get:{scene.pixels.height},set:{value in controller.change{$0.pixels.height=value}}),format:.number.grouping(.never));Text("px")}.textFieldStyle(InspectorTextFieldStyle()).font(.system(size:11))
-          Button("Export image…"){controller.exportDialog(video:false)}.frame(maxWidth:.infinity).accessibilityLabel("Export Studio composition image")
-          let pixels=StudioSceneMedia.videoPixels(scene.pixels)
-          Text("Video: \(pixels.width) × \(pixels.height) · H.264 · camera motion").font(.system(size:10)).foregroundStyle(Palette.secondary)
-          Button("Export video…"){controller.exportDialog(video:true)}.buttonStyle(.borderedProminent).tint(Palette.ink).frame(maxWidth:.infinity).accessibilityLabel("Export Studio camera video")
-          if let output=controller.lastOutput {Button("Show "+output.lastPathComponent){NSWorkspace.shared.activateFileViewerSelecting([output])}.font(.system(size:10))}
+    VStack(spacing:0) {
+      ScrollView {
+        VStack(alignment:.leading,spacing:18) {
+          Picker("Studio inspector",selection:$inspector){Text("Camera").tag("Camera");Text("Instance").tag("Instance");Text("Light").tag("Light")}.inspectorSegmented().labelsHidden().accessibilityLabel("Studio inspector")
+          if let scene=controller.draft {
+            if inspector=="Camera" {camera(scene)}
+            else if inspector=="Instance" {instanceEditor}
+            else {lighting(scene)}
+            Divider();SectionLabel("IMAGE OUTPUT")
+            TextField("Scene name",text:Binding(get:{controller.draft?.name ?? ""},set:{value in controller.change{$0.name=value}})).textFieldStyle(InspectorTextFieldStyle()).accessibilityLabel("Studio scene name")
+            HStack {TextField("Width",value:Binding(get:{scene.pixels.width},set:{value in controller.change{$0.pixels.width=value}}),format:.number.grouping(.never));Text("×");TextField("Height",value:Binding(get:{scene.pixels.height},set:{value in controller.change{$0.pixels.height=value}}),format:.number.grouping(.never));Text("px")}.textFieldStyle(InspectorTextFieldStyle()).font(.system(size:11))
+          }
+        }.font(.system(size:11)).padding(18)
+      }
+      Divider()
+      VStack(alignment:.leading,spacing:8) {
+        VStack(spacing:8) {
+          StudioOutputAction("Save still…",symbol:"square.and.arrow.down",help:"Export the current composition as a native PNG with its render record",identifier:"studio-save-still"){controller.exportDialog(video:false)}
+          StudioOutputAction("Generate image",symbol:"sparkles",primary:true,help:"Use a frozen image of this composition in the image workflow",identifier:"studio-generate-image"){store.createStudioStill()}
+        }.disabled(controller.draft?.instances.contains(where:{$0.visible}) != true)
+        if let output=controller.lastOutput {
+          Button("Show "+output.lastPathComponent){NSWorkspace.shared.activateFileViewerSelecting([output])}.font(InspectorStyle.captionFont).lineLimit(1).truncationMode(.middle)
         }
-      }.font(.system(size:11)).padding(18)
+      }.padding(18)
     }.disabled(controller.busy)
   }
   private func camera(_ scene:StudioComposition)->some View {
@@ -189,7 +190,10 @@ struct StudioCompositionWorkspace:View {
       field("Z",value:instance.positionMM.z,unit:"mm"){value in controller.changeInstance(id:instance.id){$0.positionMM.z=value}}
       field("Rotation",value:instance.rotationDegrees,unit:"°"){value in controller.changeInstance(id:instance.id){$0.rotationDegrees=value}}
         .help("Yaw around the vertical Y axis")
-      Button("Duplicate instance"){controller.duplicateInstance()}
+      HStack(spacing:6) {
+        WorkspaceToolbarButton("Duplicate selected",symbol:"plus.square.on.square",help:"Add another linked instance of this product",showsTitle:true,identifier:"studio-duplicate-instance"){controller.duplicateInstance()}
+        WorkspaceToolbarButton("Remove Studio instance",symbol:"trash",help:"Remove the selected instance from this scene",identifier:"studio-remove-instance"){controller.removeInstance()}
+      }
       Text("Placement affects this scene instance only.").font(.system(size:10)).foregroundStyle(Palette.secondary)
     }else {Text("Choose a scene instance to position it or replace its product source.").foregroundStyle(Palette.secondary)}
   }
@@ -201,28 +205,60 @@ struct StudioCompositionWorkspace:View {
       ForEach(StudioShot.surfaces,id:\.self){surface in Button{controller.change{$0.surface=surface}}label:{HStack{Circle().fill(surface=="Graphite" ? Color.gray:surface=="Warm paper" ? Color(nsColor:NSColor(hex:"#D9C6A0")):.white).frame(width:26,height:26).overlay(Circle().stroke(Palette.line));Text(surface);Spacer();if scene.surface==surface {Image(systemName:"checkmark").foregroundStyle(Palette.accent)}}.padding(9).background(Color.white.opacity(0.5),in:RoundedRectangle(cornerRadius:7))}.buttonStyle(.plain)}
     }
   }
-  private var timeline:some View {
-    VStack(alignment:.leading,spacing:12) {
-      HStack {SectionLabel("CAMERA MOTION");Spacer();Button("Capture start"){controller.captureStart()};Button("Capture end"){controller.captureEnd()}}
-      if let scene=controller.draft {
-        HStack(spacing:14) {
-          Button{controller.playing ? controller.stop():controller.play()}label:{Image(systemName:controller.playing ? "pause.fill":"play.fill").frame(width:28,height:28)}.accessibilityLabel("Play Studio camera motion")
-          InspectorSlider(value:Binding(get:{controller.time},set:{controller.scrub($0)}),in:0...1).accessibilityLabel("Studio camera motion time")
-          Text(String(format:"%.1f / %.1f s",controller.time*scene.motion.seconds,scene.motion.seconds)).font(.system(size:10,design:.monospaced)).frame(width:90)
-        }
-        ViewThatFits(in:.horizontal) {
-          HStack {motionKind(scene);motionDuration(scene);motionOrbit(scene);motionFPS(scene)}
-          VStack(alignment:.leading,spacing:10) {HStack{motionKind(scene);motionFPS(scene);Spacer(minLength:0)};HStack{motionDuration(scene);motionOrbit(scene);Spacer(minLength:0)}}
-        }.font(.system(size:10))
-      }
-    }.padding(18).background(Palette.paper).overlay(alignment:.top){Divider()}.disabled(controller.busy)
-  }
-  private func motionKind(_ scene:StudioComposition)->some View {Picker("Motion",selection:Binding(get:{scene.motion.mode},set:{value in controller.change{$0.motion.mode=value}})){Text("Orbit").tag(StudioMotion.Mode.orbit);Text("Start → end").tag(StudioMotion.Mode.between)}.frame(width:180)}
-  private func motionDuration(_ scene:StudioComposition)->some View {field("Duration",value:scene.motion.seconds,unit:"s"){value in controller.change{$0.motion.seconds=value}}.frame(width:160)}
-  @ViewBuilder private func motionOrbit(_ scene:StudioComposition)->some View {if scene.motion.mode == .orbit {field("Orbit",value:scene.motion.orbitDegrees,unit:"°"){value in controller.change{$0.motion.orbitDegrees=value}}.frame(width:150)}}
-  private func motionFPS(_ scene:StudioComposition)->some View {Picker("FPS",selection:Binding(get:{scene.motion.fps},set:{value in controller.change{$0.motion.fps=value}})){ForEach([12,24,30],id:\.self){Text(String($0)).tag($0)}}.frame(width:85)}
   @ViewBuilder private func field(_ title:String,value:Double,unit:String,set:@escaping(Double)->Void)->some View {
     if unit == "mm" { ArtworkUnitField(title, value: value, unit: store.project?.unit == "in" ? .inches : .mm, set) }
     else { ScalarArtworkField(title, value: value, unit: unit, set) }
+  }
+}
+
+/// Full-width inspector actions retain native keyboard and accessibility behavior.
+private struct StudioOutputAction:NSViewRepresentable {
+  let title:String,symbol:String,primary:Bool,help:String,identifier:String,action:()->Void
+  @Environment(\.isEnabled) private var enabled
+  init(_ title:String,symbol:String,primary:Bool=false,help:String,identifier:String,action:@escaping()->Void) {
+    self.title=title;self.symbol=symbol;self.primary=primary;self.help=help;self.identifier=identifier;self.action=action
+  }
+  func makeCoordinator()->Coordinator {Coordinator(action)}
+  func makeNSView(context:Context)->StudioOutputNativeButton {
+    let button=StudioOutputNativeButton(frame:.zero);button.setButtonType(.momentaryPushIn);button.isBordered=false;button.focusRingType = .exterior
+    button.target=context.coordinator;button.action=#selector(Coordinator.press(_:));updateNSView(button,context:context);return button
+  }
+  func updateNSView(_ button:StudioOutputNativeButton,context:Context) {
+    context.coordinator.action=action;button.title=title;button.symbol=symbol;button.primary=primary;button.isEnabled=enabled;button.toolTip=help
+    button.setAccessibilityLabel(title);button.setAccessibilityIdentifier(identifier);button.needsDisplay=true
+  }
+  func sizeThatFits(_ proposal:ProposedViewSize,nsView:StudioOutputNativeButton,context:Context)->CGSize? {.init(width:proposal.width ?? 254,height:WorkspaceToolbarMetrics.controlSize)}
+  static func dismantleNSView(_ button:StudioOutputNativeButton,coordinator:Coordinator){button.target=nil;button.action=nil;coordinator.action={}}
+  final class Coordinator:NSObject {
+    var action:()->Void
+    init(_ action:@escaping()->Void){self.action=action}
+    @objc func press(_ sender:NSButton){if sender.isEnabled {action()}}
+  }
+}
+
+private final class StudioOutputNativeButton:NSButton {
+  var symbol="",primary=false
+  override var alignmentRectInsets:NSEdgeInsets {.init(top:0,left:0,bottom:0,right:0)}
+  override var intrinsicContentSize:NSSize {.init(width:NSView.noIntrinsicMetric,height:WorkspaceToolbarMetrics.controlSize)}
+  override var acceptsFirstResponder:Bool {isEnabled}
+  override func isAccessibilityElement()->Bool {true}
+  override func accessibilityRole()->NSAccessibility.Role? {.button}
+  override func accessibilityPerformPress()->Bool {guard isEnabled,action != nil,target != nil else{return false};performClick(nil);return true}
+  override func hitTest(_ point:NSPoint)->NSView? {isHiddenOrHasHiddenAncestor || alphaValue<=0 || !bounds.contains(convert(point,from:superview)) ? nil:self}
+  override func draw(_ dirtyRect:NSRect) {
+    NSGraphicsContext.saveGraphicsState();defer{NSGraphicsContext.restoreGraphicsState()}
+    if !isEnabled {NSGraphicsContext.current?.cgContext.setAlpha(0.4)}
+    let path=NSBezierPath(roundedRect:bounds.insetBy(dx:0.5,dy:0.5),xRadius:InspectorStyle.controlRadius,yRadius:InspectorStyle.controlRadius)
+    NSColor(primary ? Palette.ink:isHighlighted ? Palette.line:Palette.surface).setFill();path.fill()
+    if !primary {NSColor(Palette.line).setStroke();path.lineWidth=0.75;path.stroke()}
+    let foreground=primary ? NSColor.white:NSColor(Palette.ink),font=NSFont.systemFont(ofSize:11,weight:.medium)
+    let label=NSAttributedString(string:title,attributes:[.font:font,.foregroundColor:foreground]),text=label.size(),total=text.width+20
+    let original=NSImage(systemSymbolName:symbol,accessibilityDescription:nil)?.withSymbolConfiguration(.init(pointSize:WorkspaceToolbarMetrics.symbolSize,weight:.medium))
+    let image=original.map { original in
+      NSImage(size:.init(width:14,height:14),flipped:false){rect in original.draw(in:rect);foreground.setFill();rect.fill(using:.sourceIn);return true}
+    }
+    image?.draw(in:CGRect(x:bounds.midX-total/2,y:bounds.midY-7,width:14,height:14),from:.zero,operation:.sourceOver,fraction:1)
+    label.draw(at:CGPoint(x:bounds.midX-total/2+20,y:bounds.midY-text.height/2))
+    if window?.firstResponder === self {NSColor.keyboardFocusIndicatorColor.setStroke();path.lineWidth=2;path.stroke()}
   }
 }
