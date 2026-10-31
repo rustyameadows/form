@@ -119,7 +119,7 @@ extension FigmaSceneBuilder {
       for fill in selectedFills {painted += try paint(fill,on:base,id:id)}
       let outlines=try stroke(strokes,node:node,geometry:base,id:id)
       if painted.count==1,outlines.count==1,painted[0].kind != "image",painted[0].clipID==nil,
-        outlines[0].stroke != nil,painted[0].blendMode==outlines[0].blendMode {
+        painted[0].paintStack==nil,outlines[0].stroke != nil,painted[0].blendMode==outlines[0].blendMode {
         painted[0].stroke=outlines[0].stroke
       } else {painted += outlines}
       if painted.isEmpty {var invisible=base;invisible.fillEnabled=false;painted=[invisible]}

@@ -37,6 +37,18 @@ struct PhysicalVectorIssue {var message:String,elementID:UUID?,title:String?}
       guard paints.count<100000 else{throw FormError.invalid("Physical vector output supports at most 100,000 paints per page.")}
       paints.append(.init(path:path,evenOdd:evenOdd,color:color,swatchID:swatchID,clips:clips,elementID:element?.id,title:element?.title))
     }
+    func active(_ layers:[ArtworkPaintLayer])->[ArtworkPaintLayer] {
+      layers.filter{$0.enabled && $0.effectivePaint.opacity>0 && ($0.stroke==nil || ($0.stroke?.enabled != false && ($0.stroke?.width ?? 0)>0))}
+    }
+    func supported(_ layers:[ArtworkPaintLayer],element:ArtworkElement)->Bool {
+      guard layers.allSatisfy({$0.paint.kind=="solid"}) else {
+        issue("Image and gradient paint stacks are not supported by this flat physical vector preparation.",element);return false
+      }
+      guard layers.allSatisfy({$0.effectivePaint.opacity==1 && ($0.paint.blendMode ?? "normal")=="normal"}) else {
+        issue("Physical vector paint stacks require opaque, normal-blend solid paints; use explicit ink tints instead of partial opacity.",element);return false
+      }
+      return true
+    }
     let background=art.backgroundOpacity ?? 1
     if background>0 {
       if background != 1 {issue("Partial background opacity is not supported in opaque physical vector output.")}
@@ -50,15 +62,75 @@ struct PhysicalVectorIssue {var message:String,elementID:UUID?,title:String?}
         }
         var masks=clips
         if let id=e.clipID,let mask=tree.byID[id] {
+          guard e.clipMode==nil || e.clipMode=="outline" else{issue("Alpha and luminance masks are not supported by opaque physical vector preparation; use a geometric outline mask.",e);continue}
           guard ["rectangle","ellipse","polygon","star","path"].contains(mask.kind) else{issue("Use geometric vector masks or convert this mask to a path first.",mask);continue}
           masks.append(.init(path:world(VectorGeometry.path(mask),art.worldTransform(mask)),evenOdd:mask.path?.evenOdd==true))
         }
         if e.kind=="group" {try visit(e.id,clips:masks);continue}
         guard e.kind != "image" else{issue("Images are not supported by this vector preparation; they are never replaced with guessed cut silhouettes.",e);continue}
+        let transform=art.worldTransform(e)
+        if e.kind=="text",TextPaintRenderer.usesPaints(e) {
+          // Resolve linked-story paints exactly as the live text renderer does.
+          // Filtering each shaped run retains its declared ink/swatch identity.
+          var text=e
+          if let story=e.storyFrame?.resolved?.story {
+            text.paintStack=story.paintStack;text.textRuns=story.textRuns;text.color=story.color;text.fillSwatchID=story.fillSwatchID
+          }
+          var groups:[[ArtworkPaintLayer]?]=[text.paintStack]
+          for span in text.textRuns ?? [] {
+            let stack=span.paintStack ?? text.paintStack
+            if !groups.contains(where:{$0==stack}) {groups.append(stack)}
+          }
+          guard groups.compactMap({$0}).allSatisfy({supported(active($0),element:e)}) else{continue}
+          if TypographyEngine.overflows(e) {issue("Text is overset or wider than its frame. Add capacity before physical output.",e);continue}
+          do {
+            for stack in groups {
+              let layers=stack.map(active)
+              if layers?.isEmpty==true {continue}
+              if stack==nil {
+                guard text.fillEnabled != false,(text.fillOpacity ?? 1)>0 else{continue}
+                guard (text.fillOpacity ?? 1)==1 else{issue("Partial fill opacity is not a solid material or an explicit ink tint.",e);continue}
+              }
+              let runs=try TypographyEngine.outlinePaintRuns(text,matchingPaintStack:stack,filtering:true)
+              if let layers {
+                for layer in layers {for run in runs {
+                  guard !run.path.isEmpty else{continue}
+                  let path:CGPath
+                  if let stroke=layer.stroke {
+                    var shape=try VectorGeometry.element(from:run.path,color:layer.paint.color);shape.stroke=stroke
+                    path=world(try StrokeGeometry.path(shape),shape.localTransform)
+                  }else{path=run.path}
+                  let swatchID=layer.stroke==nil ? run.swatchID:layer.stroke?.swatchID
+                  try append(world(path,transform),color:layer.paint.color,swatchID:swatchID,clips:masks,element:e)
+                }}
+              }else{
+                for run in runs {try append(world(run.path,transform),color:run.color,swatchID:run.swatchID,clips:masks,element:e)}
+              }
+            }
+          }catch{issue(error.localizedDescription,e)}
+          continue
+        }
+        if let stack=e.paintStack {
+          // A present stack completely owns vector appearance, including an
+          // empty stack. Legacy fill, gradient and stroke are dormant metadata.
+          let layers=active(stack)
+          guard supported(layers,element:e) else{continue}
+          guard ["rectangle","ellipse","line","polygon","star","path"].contains(e.kind) else{issue("Convert this artwork to supported vector paths before physical output.",e);continue}
+          for layer in layers {
+            do {
+              if let stroke=layer.stroke {
+                var shape=e;shape.paintStack=nil;shape.stroke=stroke
+                try append(world(try StrokeGeometry.path(shape),transform),color:layer.paint.color,swatchID:stroke.swatchID,clips:masks,element:e)
+              }else if e.kind != "line" {
+                try append(world(VectorGeometry.path(e),transform),evenOdd:e.path?.evenOdd==true,color:layer.paint.color,swatchID:e.fillSwatchID,clips:masks,element:e)
+              }
+            }catch{issue(error.localizedDescription,e)}
+          }
+          continue
+        }
         if e.gradient != nil,e.fillEnabled != false,(e.fillOpacity ?? 1)>0 {issue("Gradient paints are not supported by this flat vector preparation.",e);continue}
         let fill=e.fillOpacity ?? 1
         if fill>0,fill != 1,e.fillEnabled != false {issue("Partial fill opacity is not a solid material or an explicit ink tint.",e);continue}
-        let transform=art.worldTransform(e)
         if e.kind=="text" {
           guard e.fillEnabled != false,fill>0 else{continue}
           if TypographyEngine.overflows(e) {issue("Text is overset or wider than its frame. Add capacity before physical output.",e);continue}
