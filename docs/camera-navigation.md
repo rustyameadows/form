@@ -20,6 +20,8 @@ This is FORM’s fixed 3D navigation contract. It replaces the earlier direction
 
 There is one pan gesture. Space, Option, middle-drag, and right-drag do not provide additional navigation schemes. The 2D artwork editor has its own editing controls; this contract covers its 3D object inset as well as the Table, Studio, and print preview.
 
+Studio additionally has [presentation placement tools](studio-compositions.md). Move, Lift and Rotate operate on a selected scene instance; empty-space dragging and Orbit retain the camera gestures above. Focus selected frames that instance, while Frame scene includes every visible instance. These tools leave the source design objects and the Table camera unchanged.
+
 ## Orbit and recovery
 
 The default is a constrained, world-up turntable. Horizontal drags rotate indefinitely around the fixed vertical axis and cannot change pitch or bank the view. Vertical drags change pitch only. Diagonal drags combine those independent changes; small pointer noise is not suppressed by an invented axis lock or deadband, and it cannot accumulate roll.

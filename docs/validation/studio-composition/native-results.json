@@ -1,0 +1,329 @@
+{
+  "capture_method": "Owned native NSWindow via screenshot skill; unretouched temporary screenshots copied for evidence. Actual TableSceneView AppKit mouse events; no CUA.",
+  "captures": [
+    {
+      "content_rect": {
+        "height": 900,
+        "width": 1280,
+        "x": 0,
+        "y": 0
+      },
+      "name": "studio-gizmo-1280",
+      "path": "studio-gizmo-1280.png",
+      "sha256": "f3a68153e308314284c335fb98a80a429a7a66376f4eabab2ef6f85dbe91e5a7",
+      "window_id": 59748
+    },
+    {
+      "content_rect": {
+        "height": 800,
+        "width": 1020,
+        "x": 0,
+        "y": 0
+      },
+      "name": "studio-gizmo-1020",
+      "path": "studio-gizmo-1020.png",
+      "sha256": "20d526dfb2cdb3c5692b48e565f5abdb95b3813fb3a1be560462a3ca3a05f1b0",
+      "window_id": 59748
+    }
+  ],
+  "events": [
+    {
+      "after": {
+        "id": "23CD309C-6A29-419E-8430-7392D43891EE",
+        "name": "Dispatch / Design A / 1",
+        "positionMM": {
+          "x": -149.99999999999997,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sourceObjectID": "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible": true
+      },
+      "before": {
+        "id": "23CD309C-6A29-419E-8430-7392D43891EE",
+        "name": "Dispatch / Design A / 1",
+        "positionMM": {
+          "x": -175,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sourceObjectID": "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible": true
+      },
+      "end": {
+        "x": 319.9502468116872,
+        "y": 245.34544718357583
+      },
+      "handle": "x",
+      "one_draft_undo": true,
+      "only_requested_transform": true,
+      "repeated_event_no_drift": true,
+      "source_camera_history_geometry_unchanged": true,
+      "start": {
+        "x": 300.7059054289396,
+        "y": 246.8409476896313
+      },
+      "tool": "orbit"
+    },
+    {
+      "after": {
+        "id": "23CD309C-6A29-419E-8430-7392D43891EE",
+        "name": "Dispatch / Design A / 1",
+        "positionMM": {
+          "x": -175,
+          "y": 25.00000000000007,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sourceObjectID": "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible": true
+      },
+      "before": {
+        "id": "23CD309C-6A29-419E-8430-7392D43891EE",
+        "name": "Dispatch / Design A / 1",
+        "positionMM": {
+          "x": -175,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sourceObjectID": "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible": true
+      },
+      "end": {
+        "x": 216.6159249460749,
+        "y": 357.70445925591065
+      },
+      "handle": "y",
+      "one_draft_undo": true,
+      "only_requested_transform": true,
+      "repeated_event_no_drift": true,
+      "source_camera_history_geometry_unchanged": true,
+      "start": {
+        "x": 217.74880755000396,
+        "y": 337.0887351985768
+      },
+      "tool": "orbit"
+    },
+    {
+      "after": {
+        "id": "23CD309C-6A29-419E-8430-7392D43891EE",
+        "name": "Dispatch / Design A / 1",
+        "positionMM": {
+          "x": -175,
+          "y": 0,
+          "z": 25.000000000000455
+        },
+        "rotationDegrees": 0,
+        "sourceObjectID": "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible": true
+      },
+      "before": {
+        "id": "23CD309C-6A29-419E-8430-7392D43891EE",
+        "name": "Dispatch / Design A / 1",
+        "positionMM": {
+          "x": -175,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sourceObjectID": "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible": true
+      },
+      "end": {
+        "x": 164.70035033058372,
+        "y": 224.7606185131687
+      },
+      "handle": "z",
+      "one_draft_undo": true,
+      "only_requested_transform": true,
+      "repeated_event_no_drift": true,
+      "source_camera_history_geometry_unchanged": true,
+      "start": {
+        "x": 177.09642111797035,
+        "y": 230.81485861057516
+      },
+      "tool": "orbit"
+    },
+    {
+      "after": {
+        "id": "23CD309C-6A29-419E-8430-7392D43891EE",
+        "name": "Dispatch / Design A / 1",
+        "positionMM": {
+          "x": -175,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 44.9999999999997,
+        "sourceObjectID": "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible": true
+      },
+      "before": {
+        "id": "23CD309C-6A29-419E-8430-7392D43891EE",
+        "name": "Dispatch / Design A / 1",
+        "positionMM": {
+          "x": -175,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sourceObjectID": "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible": true
+      },
+      "end": {
+        "x": 250.4452572347767,
+        "y": 266.6384249916514
+      },
+      "handle": "yaw",
+      "one_draft_undo": true,
+      "only_requested_transform": true,
+      "repeated_event_no_drift": true,
+      "source_camera_history_geometry_unchanged": true,
+      "start": {
+        "x": 282.0458987496246,
+        "y": 259.9984754228512
+      },
+      "tool": "orbit"
+    }
+  ],
+  "export_hidden": {
+    "path": ".local/validation/studio-gizmo/run-686D75FC-1414-4DC2-A75E-23F5C19898CF/gizmo-hidden.render/gizmo-hidden.png",
+    "saturated_handle_pixels": 0,
+    "sha256": "484e8daefc57d6c0fcd843781f1d6b01efca04c77978bdc73d776670d1662a9c"
+  },
+  "export_shown": {
+    "path": ".local/validation/studio-gizmo/run-686D75FC-1414-4DC2-A75E-23F5C19898CF/gizmo-shown.render/gizmo-shown.png",
+    "saturated_handle_pixels": 0,
+    "sha256": "484e8daefc57d6c0fcd843781f1d6b01efca04c77978bdc73d776670d1662a9c"
+  },
+  "fixture_manifest_sha256": "f534c15919c23fb8c2e513df7e9d65cb1ce17243a7b5b97bbe9b5410625d186c",
+  "geometry_rebuilds_during_handles": 0,
+  "instance_id": "23CD309C-6A29-419E-8430-7392D43891EE",
+  "project_id": "F7C2F770-6919-4AE9-A813-B97E28E15659",
+  "scene_id": "1FE5A63B-2ECC-4848-A9A1-B59E57D4B90D",
+  "source_objects_camera_history_preserved": true,
+  "source_package": "/Users/rustymeadows/Dev/form/examples/studio-compositions/Dispatch \u2014 Studio compositions.form",
+  "stage_snapshot": {
+    "path": ".local/validation/studio-gizmo/run-686D75FC-1414-4DC2-A75E-23F5C19898CF/stage-snapshot-with-gizmo-visible.png",
+    "saturated_handle_pixels": 0,
+    "sha256": "80b86cc55ca866e201ae4f31cc192d94025921ac1838771d5cd2542248eed1ea"
+  },
+  "status": "passed",
+  "tool": "orbit",
+  "focused_xctest_count": 106,
+  "example_script_test_count": 4,
+  "tests": [
+    "CameraPreferenceTests.testEveryNamedViewFramesTheWholeProjectAfterPanZoomOrbitSelectionAndIsolation",
+    "CameraPreferenceTests.testFirstMouseIsAcceptedAndFreshCardinalAndDiagonalDragsFollowThePointer",
+    "CameraPreferenceTests.testFocusUsesSelectedCenterAndTheNextOrbitKeepsItsPivotWhileFitRecoversAll",
+    "CameraPreferenceTests.testLateAndCancelledDragsNeverReuseAPreviousMouseAnchor",
+    "CameraPreferenceTests.testMostlyHorizontalNativeInputWithSmallVerticalNoiseNeverBanksTheCamera",
+    "CameraPreferenceTests.testNamedProjectViewsKeepTheSamePivotAcrossSelectionsIsolationAndStudio",
+    "CameraPreferenceTests.testNamedViewAppliesItsOrientationWhenTheFitDistanceDoesNotChange",
+    "CameraPreferenceTests.testNativeHorizontalDragsKeepPitchAndHorizonLevelAcrossRepeatedFullTurns",
+    "CameraPreferenceTests.testNativeVerticalEndpointsStayUprightAndReverseOnTheFirstMovement",
+    "CameraPreferenceTests.testNewMouseDownResetsTheAnchorAndThresholdDoesNotLoseMovement",
+    "CameraPreferenceTests.testOpeningAnotherProjectDuringADragRejectsLateEventsAndPreservesItsCamera",
+    "CameraPreferenceTests.testOptionAndSpaceDoNotIntroducePanAliases",
+    "CameraPreferenceTests.testPresetAndFitCancelAnAlreadyStartedMouseDrag",
+    "CameraPreferenceTests.testPressingAndReleasingShiftDuringOneDragSwitchesOnlyTheCurrentMovement",
+    "CameraPreferenceTests.testReopeningASavedBankedViewLevelsItsHorizonWithoutMovingItsComposition",
+    "CameraPreferenceTests.testResizeAndResponderLossCancelInFlightDragsWithoutMovingTheCamera",
+    "CameraPreferenceTests.testScrollWheelZoomPreservesOrientationAndPivotAndReverses",
+    "CameraPreferenceTests.testShiftDragsPanExactlyInEveryScreenDirectionWithoutRotating",
+    "CameraPreferenceTests.testStudioPointerOrbitPanAndZoomRetainPresentationUntilExplicitTableSwitch",
+    "IndependentSurfaceSelectionTests.testCanvasSourceEditsAndSVGImportKeepTableSelectionCameraAndOneUndo",
+    "IndependentSurfaceSelectionTests.testContextMenuFindExplicitlySelectsAndCentersTableWithoutChangingCanvasOrOpeningInspector",
+    "IndependentSurfaceSelectionTests.testNativeCanvasFrameClicksKeepUnrelatedTableSelectionCameraAndPanelContext",
+    "IndependentSurfaceSelectionTests.testNewCanvasFrameKeepsTableSelectionCameraAndClosedInspector",
+    "IndependentSurfaceSelectionTests.testTablePanelPickingDoesNotNavigateOrRefitCanvas",
+    "IndependentSurfaceSelectionTests.testTablePicksAndReconcileKeepCanvasSourceFrameElementsAndViewport",
+    "StudioCompositionWorkspaceTests.testDirectSavedSceneRowsPreserveDirtySwitchContract",
+    "StudioCompositionWorkspaceTests.testFocusedHeightCommitsToItsOriginalInstanceBeforeNativeRowSelectionAndDuplicate",
+    "StudioCompositionWorkspaceTests.testNativeInstanceRowsRevealPlacementAndRepeatedSelectionRespectsUserCameraChoice",
+    "StudioCompositionWorkspaceTests.testNativeSharedPlacementToolsChangeModeWithoutEditingSceneOrDesign",
+    "StudioCompositionWorkspaceTests.testNativeTransformHandleToggleDefaultsOnAndPreservesSelectedSceneAndDesign",
+    "StudioInstanceInteractionTests.testAsymmetricSourceYawGizmoUsesTheActualInstanceOriginRatherThanBoundsCenter",
+    "StudioInstanceInteractionTests.testAttachmentRenderPickSelectsOwningInstanceAndFocusIncludesItsPhysicalGeometry",
+    "StudioInstanceInteractionTests.testDuplicateHighlightVariantsAndEmptySceneKeepCanonicalDesignObjectsUntouched",
+    "StudioInstanceInteractionTests.testExactFrontAndTopMoveLiftUseConstrainedFallbackWithoutOrbiting",
+    "StudioInstanceInteractionTests.testExportInterruptionRollsBackPendingMovementBeforeRejectingDestination",
+    "StudioInstanceInteractionTests.testGizmoNoOpClicksEscapeAndVisibilityCancellationKeepSelectionAndSource",
+    "StudioInstanceInteractionTests.testNativeMoveLiftRotateAreIndependentAndExactlyOneDraftUndoWithoutGeometryRebuild",
+    "StudioInstanceInteractionTests.testNativeXYZGizmoArrowsConstrainWorldAxesInPerspectiveFrontAndTopRegardlessOfTool",
+    "StudioInstanceInteractionTests.testNativeYawRingUsesProjectedQuarterTurnAndUnwrapsAcrossPiWithoutDrift",
+    "StudioInstanceInteractionTests.testNoOpEscapeResizeAndSceneProjectChangesRollbackAndIgnoreLateEvents",
+    "StudioInstanceInteractionTests.testStudioEditingOutlinesAreVisibleButSnapshotsAndDefaultShotStagesExcludeThem",
+    "StudioSceneSelectionTests.testNativeViewportRoundingDoesNotDirtyRecallAndCurrentSourcesUpdateItsPreview",
+    "StudioSceneSelectionTests.testSceneSwitchRequestsPreserveDraftsAndLatestRequestUntilExplicitSaveOrDiscard",
+    "StudioShotEditingTests.testActualMerchandiseLightingProofAndDependencyHashAreSourcePreserving",
+    "StudioShotEditingTests.testActualMouseCaptureAndExportCommitActivePixelDraftWithoutExtraUndo",
+    "StudioShotEditingTests.testCaptureAndMetadataUndoNeverRecallOrRetargetAnExistingReferenceFrame",
+    "StudioShotEditingTests.testConcurrentStudioCapturesKeepTheirOwnFramingWarnings",
+    "StudioShotEditingTests.testExclusiveAtomicFolderRejectsAllFailuresAndDestinationRaces",
+    "StudioShotEditingTests.testHistoryReconciliationPreservesActualFocusedEditorBeforeItsBindingUpdates",
+    "StudioShotEditingTests.testLargePreviewCompositionAndLegacyDefaultPixelsAgreeOnActualRenderedProduct",
+    "StudioShotEditingTests.testMissingSubjectsRemainEditableDeletableAndRepairableWithoutCameraFallback",
+    "StudioShotEditingTests.testMissingVisibleSourceAndRuntimeClothRejectWithoutResetOrMutation",
+    "StudioShotEditingTests.testMouseUpdateUsesActiveFieldAsOneUndoAutosavesAndInvalidDraftRollsBack",
+    "StudioShotEditingTests.testNativeCaptureSelectsNewDefinitionAndUndoSynchronizesOnlyCleanOptions",
+    "StudioShotEditingTests.testPartialStagedFileAndForeignStageNeverDamageExistingContent",
+    "StudioShotEditingTests.testPerspectiveAndOrthographicPreviewMatchOutputWithoutLiveFramingMutation",
+    "StudioShotEditingTests.testPreviewCacheIsBoundedDependencyAwareAndPurgedOnDelete",
+    "StudioShotEditingTests.testQueuedCADCapturesKeepTheirOwnVisibilityLightingSurfacePixelsAndRecords",
+    "StudioShotEditingTests.testReadOnlyShotInspectionPreservesNativeDraftCaretAndDoesNotOpenStudio",
+    "StudioShotEditingTests.testRecallDoesNotAddHistoryAndResizedReferenceViewportKeepsPose",
+    "StudioShotEditingTests.testRecallRejectsUnknownArgumentsBeforeChangingCameraOrWorkingDraft",
+    "StudioShotEditingTests.testSavedExportIsPhysicalPixelsPortableRecordAndLeavesSourceAndCameraExact",
+    "StudioShotEditingTests.testStalePreviewJobsAreDiscardedAcrossSourceAndProjectChanges",
+    "TableInspectorInteractionTests.testInspectorVisibilityIsIndependentOfSelectionAndExplicitFindDoesNotReopenIt",
+    "TableInspectorInteractionTests.testNativeTablePickDoesNotNavigateCanvasAndCloseDoesNotDeselect",
+    "TableViewportFocusTests.testFitAndNamedViewsFrameWholeProjectWhileResizeAndOverlayChangesKeepSavedPose",
+    "TableViewportFocusTests.testFlatBoundsAndDepthHeavyPerspectiveUseActualProjectionWithoutChangingCoreContract",
+    "TableViewportFocusTests.testFocusProjectsLargeSmallRotatedAndThinObjectsIntoFreeRectAcrossLayouts",
+    "TableViewportFocusTests.testShortNavigatorLeavesUsefulSpaceBelowInsteadOfShrinkingToMiddleStrip",
+    "UnifiedDesignSurfaceHostTests.testParkedFormCanvasDoesNotStealVisibleEnvironmentOwnerAndReclaimsOnReturn",
+    "UnifiedDesignSurfaceHostTests.testSingleSplitAndBothDirectionsRetainNativeIdentitiesViewportSourceAndDividerRatios",
+    "UnifiedDesignSurfaceHostTests.testVisibleCanvasEditorAndMarkedSelectionSurviveSplitAndAxisChanges",
+    "WorkspaceToolbarTests.testActualCanvasAndTableDocksUseIdenticalButtonTargetsAndSelectionSemanticsWithoutChangingSource",
+    "WorkspaceToolbarTests.testSharedOverflowKeepsEveryTableActionAndReturnsTheSameControlsAtFullWidth",
+    "CameraFramingTests.testFocusKeepsBoundsClearOfFloatingControlsWithoutMovingTheOrbitPivot",
+    "CameraFramingTests.testFramingDiscardsPreviousPanAndZoomWithoutChangingOrientation",
+    "CameraFramingTests.testFramingProjectsEveryCornerInsideTheViewThroughFullOrbitLoops",
+    "CameraFramingTests.testInvalidFramingInsetsAreBounded",
+    "CameraFramingTests.testNoFiniteBoundsKeepsExistingCamera",
+    "CameraFramingTests.testOrthographicFitsBothAxesUsingNeutralCameraProjection",
+    "CameraFramingTests.testOutputViewportPreservesTheFullSourceViewWithoutCropping",
+    "CameraFramingTests.testPerspectiveFitsDepthAndBothViewportAxes",
+    "CameraNavigationTests.testCameraDirectionMovesTheCameraWithTheDragAndObjectDirectionReversesBothAxes",
+    "CameraNavigationTests.testDefaultOrbitFollowsEveryDragDirectionAwayFromVerticalEndpoints",
+    "CameraNavigationTests.testHorizontalOrbitCompletesRepeatedTurnsWithoutRollOrStops",
+    "CameraNavigationTests.testMostlyHorizontalMouseNoiseAndDiagonalPathsNeverAccumulateBank",
+    "CameraNavigationTests.testOrbitFollowsTheDraggedSurfaceAndKeepsProjection",
+    "CameraNavigationTests.testOrbitSpeedIsBoundedAndDoesNotChangePanOrZoom",
+    "CameraNavigationTests.testPanTracksMousePointsAtEveryViewAngleAndProjection",
+    "CameraNavigationTests.testQuaternionPersistenceAndInvalidRotationFallbackPreserveLegacyCameras",
+    "CameraNavigationTests.testRepeatedOrbitAndPanKeepTheActualCameraOrthonormalAndPivotCentered",
+    "CameraNavigationTests.testSavedFreeOrbitRollIsRemovedWithoutChangingLookDirectionPivotOrZoom",
+    "CameraNavigationTests.testVerticalEndpointsPreventInversionAndReverseImmediatelyWhileYawStaysAvailable",
+    "CameraNavigationTests.testZoomIsReversibleBoundedAndSupportsSmallObjects",
+    "StudioCompositionTests.testCameraMotionHasExactEndpointsFixedOrbitElevationAndBoundedWork",
+    "StudioCompositionTests.testDeletingLastLegacyShotRetainsScenesAndDuplicatingSceneGetsIndependentIDs",
+    "StudioCompositionTests.testInvalidSaveAndOptimisticConflictAreAtomicAndInspectionHasNoUndo",
+    "StudioCompositionTests.testLegacyPresentationDecodesWithoutScenesAndDoesNotRequireSchema54",
+    "StudioCompositionTests.testMissingSourcesStayRepairableAndCannotRender",
+    "StudioCompositionTests.testRenderResolutionIsDeterministicPhysicalAndUsesVariantSourcesWithoutMutatingProject",
+    "StudioCompositionTests.testSavedCompositionInstancesDoNotDuplicateDesignAndSurviveUndoReopen",
+    "StudioShotTests.testAtomicArgumentBoundsAndUnknownOperationFailures",
+    "StudioShotTests.testCaptureUpdateRenameDeleteUndoAndPersistentReopenPreserveSource",
+    "StudioShotTests.testNoOpEditsAndReadClassificationAreExact",
+    "StudioShotTests.testReferenceProjectionContainsSourceExactlyAndDoesNotChangeRawPose",
+    "StudioShotTests.testVisibilityIsExactMissingSourceIsReportedAndDeletionRemainsValid"
+  ],
+  "example_renders": "../../../examples/studio-compositions/README.md",
+  "executable_sha256": "a19d352b2c5fbd14497e5d80debde8d0038f501820d056b7e6a44a9cfd0fdd89",
+  "visual_review": "Both native wide and narrow captures reviewed; live object-attached handles and all inspector fields are visible.",
+  "system_input": "Real AppKit stage events and native accessibility row/toolbar actions. Desktop CUA stalled, so no physical system drag claim."
+}

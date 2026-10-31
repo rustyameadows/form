@@ -1,0 +1,80 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1200,
+  "png_sha256" : "484e8daefc57d6c0fcd843781f1d6b01efca04c77978bdc73d776670d1662a9c",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "font:HelveticaNeue-Bold",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 0.29145679447786704,
+      "distance" : 8.1276412690974862,
+      "elevation" : 0.26202531940590651,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 0.1068528351909373,
+        "y" : 0.81599999999999995,
+        "z" : 0
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "1FE5A63B-2ECC-4848-A9A1-B59E57D4B90D",
+    "instances" : [
+      {
+        "id" : "23CD309C-6A29-419E-8430-7392D43891EE",
+        "name" : "Dispatch \/ Design A \/ 1",
+        "positionMM" : {
+          "x" : -175,
+          "y" : 0,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible" : true
+      },
+      {
+        "id" : "C9424FD9-CD3E-4ADF-AD89-46B08DC2AA2F",
+        "name" : "Dispatch \/ Design B \/ 1",
+        "positionMM" : {
+          "x" : 175,
+          "y" : 0,
+          "z" : 0
+        },
+        "rotationDegrees" : -18,
+        "sourceObjectID" : "1F2D9884-52EA-4B30-B966-A21243504CA0",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "05 \/ Dispatch A and B \/ Design pair",
+    "pixels" : {
+      "height" : 1200,
+      "width" : 1800
+    },
+    "revision" : 2,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "5291a4e6237832de154208338316755622b4b1441281cb70ee055c247120d61f",
+  "source_project_id" : "F7C2F770-6919-4AE9-A813-B97E28E15659",
+  "width" : 1800
+}

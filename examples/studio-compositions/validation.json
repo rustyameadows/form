@@ -1,0 +1,136 @@
+{
+  "status": "passed",
+  "work": "/Users/rustymeadows/Dev/form/.local/validation/dispatch-studio-compositions-final",
+  "project_id": "F7C2F770-6919-4AE9-A813-B97E28E15659",
+  "source_package": "/Users/rustymeadows/Dev/form/examples/paper-packaging/Field \u2014 Twelve paper studies.form",
+  "original_app": "/Users/rustymeadows/Dev/form/build/LAB.app",
+  "original_executable_sha256": "276ecc739287926a4dc8a6110d9f2f712fa6e0a8072afe2288fd52e2813942aa",
+  "private_executable_sha256": "2cab0e334f3e87a9a94c8682e90ecc8f0b254eaaded4dbd52a369442706a81f8",
+  "private_helper_sha256": "ea5bc2da2be110815672b0a5752e0307d3d6a0775311afef042d5ad8a13da130",
+  "bundle_isolation": "Private bundle identifier, ad-hoc signature, unique library and socket; executable signature bytes may differ.",
+  "scenes": [
+    {
+      "name": "01 / Dispatch A / Five aligned",
+      "scene_id": "BC67BA66-C462-4400-B82C-565E915C8863",
+      "instances": 5,
+      "source_ids": [
+        "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5"
+      ],
+      "image": "renders/01-aligned-a.render/01-aligned-a.png",
+      "png_sha256": "6633267a35982b1bcc7b296c412a1e03ad57185148a3a1c0cc50d5f4d25d9182",
+      "record": "renders/01-aligned-a.render/render.json",
+      "framing_warnings": []
+    },
+    {
+      "name": "02 / Dispatch A / Reverse view",
+      "scene_id": "ACDD205A-BC7B-4A58-BB6D-C5D062C3811D",
+      "instances": 5,
+      "source_ids": [
+        "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5"
+      ],
+      "image": "renders/02-reverse-a.render/02-reverse-a.png",
+      "png_sha256": "e253b2de0f4b69a01b831cefd685e0f87160635e96ed6da74c3cc971d77bb043",
+      "record": "renders/02-reverse-a.render/render.json",
+      "framing_warnings": []
+    },
+    {
+      "name": "03 / Dispatch B / Five aligned",
+      "scene_id": "7B102ACC-5B36-47D3-B12C-5C5D90EF7A84",
+      "instances": 5,
+      "source_ids": [
+        "1F2D9884-52EA-4B30-B966-A21243504CA0"
+      ],
+      "image": "renders/03-aligned-b.render/03-aligned-b.png",
+      "png_sha256": "34547d9c41329d9413b5da6410827b3775838756150ac9503523c9f327162751",
+      "record": "renders/03-aligned-b.render/render.json",
+      "framing_warnings": []
+    },
+    {
+      "name": "04 / Dispatch A / Offset cluster",
+      "scene_id": "3FC8A2AB-4B3C-4C3A-98F4-84C6F3A479C0",
+      "instances": 5,
+      "source_ids": [
+        "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5"
+      ],
+      "image": "renders/04-offset-cluster.render/04-offset-cluster.png",
+      "png_sha256": "33dc5449dd6eb952d99a9d26f87426e27f65e6ff7c7f2289b8d07b1c6b97bced",
+      "record": "renders/04-offset-cluster.render/render.json",
+      "framing_warnings": []
+    },
+    {
+      "name": "05 / Dispatch A and B / Design pair",
+      "scene_id": "1FE5A63B-2ECC-4848-A9A1-B59E57D4B90D",
+      "instances": 2,
+      "source_ids": [
+        "1F2D9884-52EA-4B30-B966-A21243504CA0",
+        "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5"
+      ],
+      "image": "renders/05-design-pair.render/05-design-pair.png",
+      "png_sha256": "484e8daefc57d6c0fcd843781f1d6b01efca04c77978bdc73d776670d1662a9c",
+      "record": "renders/05-design-pair.render/render.json",
+      "framing_warnings": []
+    }
+  ],
+  "scope": "Saved Studio occurrences of two independent editable constructions; no revisions or linked variants.",
+  "owned_initial_pid": 40609,
+  "independent_artwork_edit_undo_exact": true,
+  "source_ids": {
+    "A": "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+    "B": "1F2D9884-52EA-4B30-B966-A21243504CA0"
+  },
+  "physical_bounds_mm": {
+    "minimum": [
+      -131.60000000000005,
+      0.0,
+      -91.60000000000004
+    ],
+    "maximum": [
+      131.60000000000002,
+      163.2,
+      91.60000000000004
+    ],
+    "stack_pitch": 163.2
+  },
+  "stack_review": "Nominal stock-slab extents touch at each horizontal layer. No load, crushing or friction simulation is claimed.",
+  "owned_restart_pid": 40695,
+  "reopen_objects_scenes_camera_exact": true,
+  "package": "Dispatch \u2014 Studio compositions.form",
+  "package_files": [
+    {
+      "path": "Dispatch \u2014 Studio compositions.form/Manifest.json",
+      "sha256": "f534c15919c23fb8c2e513df7e9d65cb1ce17243a7b5b97bbe9b5410625d186c"
+    },
+    {
+      "path": "Dispatch \u2014 Studio compositions.form/Objects/1F2D9884-52EA-4B30-B966-A21243504CA0-208063b4fbd2c20a.json",
+      "sha256": "208063b4fbd2c20a768c67f66f4cff47fb0707cd5a455e867ecedf7b74d60e45"
+    },
+    {
+      "path": "Dispatch \u2014 Studio compositions.form/Objects/1F2D9884-52EA-4B30-B966-A21243504CA0-74360f3074651d2d.json",
+      "sha256": "74360f3074651d2ddd0761b8a2e501f5f4ae89ab94480530b357ffe12521cdbe"
+    },
+    {
+      "path": "Dispatch \u2014 Studio compositions.form/Objects/1F2D9884-52EA-4B30-B966-A21243504CA0-af49b3f8eb353405.json",
+      "sha256": "af49b3f8eb353405a079978794e4ff5fe2cb2e4bd3a93e348536ebfd1c4ff0fa"
+    },
+    {
+      "path": "Dispatch \u2014 Studio compositions.form/Objects/1F2D9884-52EA-4B30-B966-A21243504CA0-c81d1c01d1ab358a.json",
+      "sha256": "c81d1c01d1ab358ae1d520248891d3cd5fd12d073862a863d2641866b465f4d9"
+    },
+    {
+      "path": "Dispatch \u2014 Studio compositions.form/Objects/2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5-14682d55cdf5ca1d.json",
+      "sha256": "14682d55cdf5ca1d51493713a51e74a3c2731cff4c550d08ad4c7011b3f1085b"
+    },
+    {
+      "path": "Dispatch \u2014 Studio compositions.form/Objects/2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5-5cc95cfdbd08fc4c.json",
+      "sha256": "5cc95cfdbd08fc4c705b18e349d22ab7da08e68b06365e0ec515aa570c078107"
+    },
+    {
+      "path": "Dispatch \u2014 Studio compositions.form/Objects/2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5-85c27df6f5c3dda6.json",
+      "sha256": "85c27df6f5c3dda674efc7df561d9a84dfd3afcce1a03e748c09e946cb08a9fe"
+    },
+    {
+      "path": "Dispatch \u2014 Studio compositions.form/Preview.png",
+      "sha256": "1098a739eeee4a24e877eba559d55e608e18069590f44ae0fd2364a2cca7d3a3"
+    }
+  ]
+}

@@ -2,11 +2,17 @@ import AppKit
 import Combine
 import FormCore
 import SwiftUI
+import simd
+
+enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
 
 @MainActor final class StudioCompositionController:ObservableObject {
   weak var store:StudioStore?
   @Published private(set) var draft:StudioComposition?
   @Published var selectedInstanceID:UUID?
+  @Published private(set) var selectionRequest=0
+  @Published var tool:StudioCompositionTool = .move {didSet{if oldValue != tool {cancelStagePointer();if let view=stage.view {view.window?.invalidateCursorRects(for:view)}}}}
+  @Published var gizmoVisible=true {didSet{if oldValue != gizmoVisible {cancelStagePointer();gizmoCache=nil;stage.view?.redrawPresentationOverlay()}}}
   @Published var error:String?
   @Published var time=0.0
   @Published private(set) var playing=false
@@ -23,7 +29,22 @@ import SwiftUI
   private var mediaExportActive=false
   private var undoDrafts:[StudioComposition]=[],redoDrafts:[StudioComposition]=[]
   private var baselineWasSaved=false
-  init(store:StudioStore){self.store=store}
+  private var emptyBaseline=false
+  private var renderOwners:[UUID:UUID]=[:]
+  private var gizmoCache:(generation:Int,camera:CameraState,viewport:CGSize,selection:UUID,builds:Int,value:StudioTransformGizmo)?
+  private struct InstanceGesture {
+    let projectID:UUID,sceneID:UUID,instanceID:UUID
+    let before:StudioComposition,tool:StudioCompositionTool,down:NSPoint
+    let initial:Vector3,yaw:Double,planeHeight:Double,planeNormal:Vector3,planeOrigin:Vector3
+    let planeDown:Vector3?,heightPerPoint:Double,groundRight:Vector3,groundUp:Vector3
+    var gizmo:StudioTransformGizmo?=nil
+    var handle:StudioTransformGizmo.Handle?=nil
+    var initialAxis:Double?=nil
+    var lastAngle:Double?=nil
+    var angularDelta=0.0
+  }
+  private var instanceGesture:InstanceGesture?
+  init(store:StudioStore){self.store=store;stage.showsStudioSelection=true}
   var scenes:[StudioComposition]{store?.project?.studioPresentation?.scenes ?? []}
   var dirty:Bool{draft != baseline}
   var canUndoDraft:Bool{!undoDrafts.isEmpty && !busy}
@@ -31,6 +52,7 @@ import SwiftUI
   var selected:StudioInstance?{draft?.instances.first{$0.id==selectedInstanceID}}
   var products:[ProductObject]{store?.project?.objects.filter{$0.hasTablePresentation && $0.recipeID != "reference"} ?? []}
   func reconcile() {
+    cancelStagePointer()
     guard let project=store?.project else{reset();return}
     if owner != project.id {reset();owner=project.id;draft=scenes.first ?? .fromProject(project);baseline=draft;baselineWasSaved=scenes.contains{$0.id==draft?.id};sync();return}
     if !dirty,baselineWasSaved,!scenes.contains(where:{$0.id==baseline?.id}) {draft=scenes.first ?? .fromProject(project);baseline=draft;baselineWasSaved=scenes.contains{$0.id==draft?.id};undoDrafts=[];redoDrafts=[]}
@@ -38,7 +60,7 @@ import SwiftUI
     if let id=selectedInstanceID,draft?.instances.contains(where:{$0.id==id}) != true {selectedInstanceID=nil}
     sync()
   }
-  func reset(){stop();exportTask?.cancel();prepareTask?.cancel();owner=nil;draft=nil;baseline=nil;selectedInstanceID=nil;pendingSceneID=nil;lastOutput=nil;error=nil;generation+=1;sceneSelectionGeneration+=1;renderer.clear();undoDrafts=[];redoDrafts=[];baselineWasSaved=false}
+  func reset(){cancelStagePointer();stop();exportTask?.cancel();prepareTask?.cancel();owner=nil;draft=nil;baseline=nil;selectedInstanceID=nil;pendingSceneID=nil;lastOutput=nil;error=nil;generation+=1;sceneSelectionGeneration+=1;renderer.clear();undoDrafts=[];redoDrafts=[];baselineWasSaved=false;emptyBaseline=false;renderOwners=[:]}
   /// Selection may arrive before the workspace's onAppear reconciliation. The
   /// recalled scene must already belong to this project when that happens.
   private func adoptProject() -> Bool {
@@ -48,6 +70,7 @@ import SwiftUI
   }
   func requestScene(_ id:UUID) {
     guard !busy,adoptProject(),scenes.contains(where:{$0.id==id}) else{return}
+    cancelStagePointer()
     sceneSelectionGeneration+=1
     let token=sceneSelectionGeneration,projectID=owner,currentID=draft?.id
     NSApp.keyWindow?.makeFirstResponder(nil)
@@ -72,25 +95,50 @@ import SwiftUI
   }
   func load(_ id:UUID,discard:Bool=false) {
     guard !busy,adoptProject() else{return}
+    cancelStagePointer()
     guard !dirty || discard else{error="Save this scene or discard its draft before choosing another scene.";return}
     guard let scene=scenes.first(where:{$0.id==id}) else{error="That saved scene is no longer available. Your current draft was kept.";return}
     sceneSelectionGeneration+=1
-    stop();draft=scene;baseline=scene;baselineWasSaved=true;undoDrafts=[];redoDrafts=[];selectedInstanceID=nil;pendingSceneID=nil;time=0;error=nil;sync()
+    stop();draft=scene;baseline=scene;baselineWasSaved=true;emptyBaseline=false;undoDrafts=[];redoDrafts=[];selectedInstanceID=nil;pendingSceneID=nil;time=0;error=nil;sync()
   }
   func newScene(discard:Bool=false) {
     guard !busy,adoptProject(),let project=store?.project else{return}
+    cancelStagePointer()
     guard !dirty || discard else{error="Save this scene or discard its draft before creating another.";return}
     sceneSelectionGeneration+=1
-    stop();draft = .fromProject(project,name:"Still life \(scenes.count+1)");baseline=draft;baselineWasSaved=false;undoDrafts=[];redoDrafts=[];time=0;selectedInstanceID=nil;pendingSceneID=nil;sync()
+    stop();draft = .fromProject(project,name:"Still life \(scenes.count+1)");baseline=draft;baselineWasSaved=false;emptyBaseline=false;undoDrafts=[];redoDrafts=[];time=0;selectedInstanceID=nil;pendingSceneID=nil;error=nil;sync()
   }
-  func discard(){if let id=draft?.id,scenes.contains(where:{$0.id==id}){load(id,discard:true)}else{newScene(discard:true)};error=nil}
+  func newEmptyScene(discard:Bool=false) {
+    guard !busy,adoptProject(),let project=store?.project else{return}
+    cancelStagePointer()
+    guard !dirty || discard else{error="Save this scene or discard its draft before creating another.";return}
+    sceneSelectionGeneration+=1;stop()
+    draft=StudioComposition(name:"Still life \(scenes.count+1)",camera:project.camera)
+    baseline=draft;baselineWasSaved=false;emptyBaseline=true;undoDrafts=[];redoDrafts=[];time=0;selectedInstanceID=nil;pendingSceneID=nil;error=nil;sync()
+  }
+  func discard(){if let id=draft?.id,scenes.contains(where:{$0.id==id}){load(id,discard:true)}else if emptyBaseline{newEmptyScene(discard:true)}else{newScene(discard:true)};error=nil}
   func change(_ body:(inout StudioComposition)->Void) {
-    guard !busy,var value=draft else{return};stop();body(&value);guard value != draft else{return};rememberDraft();draft=value;time=0;error=nil;sync()
+    guard !busy else{return};cancelStagePointer();guard var value=draft else{return};stop();body(&value);guard value != draft else{return};rememberDraft();draft=value;time=0;error=nil;sync()
   }
   private func rememberDraft(){if let draft {undoDrafts.append(draft);if undoDrafts.count>80{undoDrafts.removeFirst()};redoDrafts=[];store?.objectWillChange.send()}}
-  func undoDraft()->Bool {guard !busy,let value=undoDrafts.popLast(),let draft else{return false};stop();redoDrafts.append(draft);self.draft=value;time=0;sync();return true}
-  func redoDraft()->Bool {guard !busy,let value=redoDrafts.popLast(),let draft else{return false};stop();undoDrafts.append(draft);self.draft=value;time=0;sync();return true}
-  func changeInstance(_ body:(inout StudioInstance)->Void) {guard let id=selectedInstanceID else{return};change{scene in if let i=scene.instances.firstIndex(where:{$0.id==id}){body(&scene.instances[i])}}}
+  func undoDraft()->Bool {guard !busy else{return false};cancelStagePointer();guard let value=undoDrafts.popLast(),let draft else{return false};stop();redoDrafts.append(draft);self.draft=value;time=0;sync();return true}
+  func redoDraft()->Bool {guard !busy else{return false};cancelStagePointer();guard let value=redoDrafts.popLast(),let draft else{return false};stop();undoDrafts.append(draft);self.draft=value;time=0;sync();return true}
+  func selectInstance(_ id:UUID?) {
+    guard !busy,id==nil || draft?.instances.contains(where:{$0.id==id})==true else{return}
+    finishStageEditing()
+    cancelStagePointer();selectedInstanceID=id;if id != nil {selectionRequest &+= 1};sync()
+  }
+  func selectRenderedInstance(_ renderID:UUID?) {selectInstance(renderID.flatMap{renderOwners[$0]})}
+  func focusSelected() {
+    finishStageEditing()
+    guard !busy,let id=selectedInstanceID else{return}
+    cancelStagePointer();stop()
+    let ids=Set(renderOwners.compactMap{$0.value==id ? $0.key:nil})
+    guard !ids.isEmpty else{return}
+    stage.frameObjects(ids:ids);cameraEdited()
+  }
+  func changeInstance(_ body:(inout StudioInstance)->Void) {guard let id=selectedInstanceID else{return};changeInstance(id:id,body)}
+  func changeInstance(id:UUID,_ body:(inout StudioInstance)->Void) {change{scene in if let i=scene.instances.firstIndex(where:{$0.id==id}){body(&scene.instances[i])}}}
   func add(_ object:ProductObject) {
     change{scene in
       let count=scene.instances.filter{$0.sourceObjectID==object.id}.count
@@ -99,9 +147,10 @@ import SwiftUI
     }
   }
   func addShelf(){change{scene in let prop=StudioInstance(name:"Shelf / riser",prop:.init(),positionMM:.init(0,0,0));scene.instances.append(prop);selectedInstanceID=prop.id}}
-  func duplicateInstance(){guard var instance=selected else{return};instance.id=UUID();instance.name+=" copy";instance.positionMM.x+=80;change{$0.instances.append(instance)};selectedInstanceID=instance.id}
+  func duplicateInstance(){guard !busy else{return};finishStageEditing();cancelStagePointer();guard var instance=selected else{return};instance.id=UUID();instance.name+=" copy";instance.positionMM.x+=80;change{$0.instances.append(instance);selectedInstanceID=instance.id;selectionRequest &+= 1}}
   func removeInstance(){guard let id=selectedInstanceID else{return};change{$0.instances.removeAll{$0.id==id}};selectedInstanceID=nil}
   func save() {
+    cancelStagePointer()
     NSApp.keyWindow?.makeFirstResponder(nil)
     do {
       guard let store,let draft else{return};try draft.validate()
@@ -120,12 +169,13 @@ import SwiftUI
     camera.viewportAspect=value.camera.viewportAspect
     value.camera=camera;if value != draft {rememberDraft();draft=value};time=0;objectWillChange.send()
   }
-  func frameScene(){stop();stage.fitAll();cameraEdited()}
+  func frameScene(){finishStageEditing();cancelStagePointer();guard !busy,draft?.instances.contains(where:{$0.visible})==true else{return};stop();stage.fitAll();cameraEdited()}
   func captureEnd(){change{$0.motion.endCamera=stage.camera;$0.motion.mode = .between}}
   func captureStart(){let camera=stage.camera;change{$0.camera=camera;$0.motion.startCamera=camera};time=0}
-  func scrub(_ fraction:Double) {stop();time=max(0,min(1,fraction));applyTime()}
+  func scrub(_ fraction:Double) {cancelStagePointer();stop();time=max(0,min(1,fraction));applyTime()}
   private func applyTime(){guard let draft else{return};do{stage.camera=try draft.motion.camera(start:draft.camera,fraction:time);stage.updateCamera();error=nil}catch{self.error=error.localizedDescription}}
   func play() {
+    cancelStagePointer()
     guard !playing,!busy,let draft else{return}
     do{try draft.validate()}catch{self.error=error.localizedDescription;return}
     playing=true;let started=Date(),duration=draft.motion.seconds;time=0
@@ -138,13 +188,40 @@ import SwiftUI
     }
   }
   func stop(){playback?.cancel();playback=nil;playing=false}
+  private func cancelStagePointer() {
+    if let view=stage.view {view.cancelPointerInteraction()} else {cancelPresentationInteraction()}
+  }
+  private func finishStageEditing() {
+    guard let view=stage.view,let window=view.window else{return}
+    if let editor=window.firstResponder as? NSTextView,editor.isFieldEditor {
+      editor.doCommand(by:#selector(NSResponder.insertNewline(_:)))
+    }
+    window.makeFirstResponder(view)
+  }
   func sync() {
     // Invalidate before resolution as well: a failed or empty new scene must
     // never retain an older asynchronous preparation/error as its live preview.
     prepareTask?.cancel();prepareTask=nil;generation+=1;let token=generation
     guard let store,let project=store.project,let draft else{return}
+    if draft.instances.allSatisfy({!$0.visible}) {
+      renderOwners=[:];error=nil
+      stage.sync(project,selection:[],isolated:[],showGrid:false,studio:true,preset:draft.surface,assets:store.repository.url(for:project.id).appendingPathComponent("Assets"),renderObjectIDs:[])
+      stage.camera=draft.camera;stage.updateCamera();stage.applyShotLighting(draft.lighting,studio:true)
+      return
+    }
     do {
       let resolved=try draft.resolved(in:project)
+      let objects=Dictionary(uniqueKeysWithValues:resolved.project.objects.map{($0.id,$0)})
+      let roots=Set(draft.instances.map(\.id))
+      renderOwners=[:]
+      for renderID in resolved.visible {
+        var current=renderID,visited=Set<UUID>()
+        while visited.insert(current).inserted {
+          if roots.contains(current) {renderOwners[renderID]=current;break}
+          guard let object=objects[current],let parent=object.textile?.attachment?.garmentID ?? object.clothAttachment?.surfaceObjectID ?? object.patternAssemblyAttachment?.surfaceObjectID else{break}
+          current=parent
+        }
+      }
       let assets=store.repository.url(for:project.id).appendingPathComponent("Assets")
       stage.sync(resolved.project,selection:Set(selectedInstanceID.map{[$0]} ?? []),isolated:resolved.visible,showGrid:false,studio:true,preset:draft.surface,assets:assets,renderObjectIDs:resolved.visible)
       stage.camera=time>0 ? ((try? draft.motion.camera(start:draft.camera,fraction:time)) ?? draft.camera):draft.camera;stage.updateCamera();stage.applyShotLighting(draft.lighting,studio:true)
@@ -154,6 +231,7 @@ import SwiftUI
         }
       }
     }catch{
+      renderOwners=[:]
       self.error=error.localizedDescription
       stage.sync(project,selection:[],isolated:[],showGrid:false,studio:true,preset:draft.surface,assets:store.repository.url(for:project.id).appendingPathComponent("Assets"),renderObjectIDs:[])
     }
@@ -172,6 +250,8 @@ import SwiftUI
   }
   func cancelExport(){exportTask?.cancel()}
   func export(_ scene:StudioComposition,to destination:URL,video:Bool)async throws->URL {
+    let scene=(scene==draft ? instanceGesture?.before:nil) ?? scene
+    cancelStagePointer()
     guard !mediaExportActive else{throw FormError.invalid("Finish or cancel the active Studio scene export first.")}
     mediaExportActive=true;defer{mediaExportActive=false}
     guard let store,let project=store.project else{throw FormError.missing("Open a project.")}
@@ -187,15 +267,165 @@ import SwiftUI
   }
 }
 
+extension StudioCompositionController:TablePresentationInteraction {
+  func invalidatePresentationGizmo() {gizmoCache=nil}
+  var presentationInputEnabled:Bool {!busy && !mediaExportActive && owner==store?.project?.id && draft != nil}
+  var presentationGizmo:StudioTransformGizmo? {
+    guard gizmoVisible,presentationInputEnabled,let selected,selected.visible,let view=stage.view else{return nil}
+    if let cache=gizmoCache,cache.generation==generation,cache.camera==stage.camera,
+      cache.viewport==view.bounds.size,cache.selection==selected.id,cache.builds==stage.geometryBuilds {return cache.value}
+    var low=SIMD3<Double>(repeating:.infinity),high=SIMD3<Double>(repeating:-.infinity)
+    for (id,owner) in renderOwners where owner==selected.id {
+      guard let node=stage.logicalNode(for:id),let b=stage.localBounds(for:id) else{continue}
+      for x in [b.min.x,b.max.x] {for y in [b.min.y,b.max.y] {for z in [b.min.z,b.max.z] {
+        let p=node.convertPosition(.init(x,y,z),to:nil).simd*100
+        low=simd_min(low,p);high=simd_max(high,p)
+      }}}
+    }
+    // Yaw is authored about the instance's vertical origin, not the center of
+    // an asymmetric mesh. Keep that actual axis at the body's physical height.
+    let pivot=SIMD3(selected.positionMM.x,(low.y+high.y)/2,selected.positionMM.z)
+    guard low.x.isFinite,let value=StudioTransformGizmo(centerMM:pivot,camera:stage.cameraPayload(),viewport:view.bounds.size) else{return nil}
+    gizmoCache=(generation,stage.camera,view.bounds.size,selected.id,stage.geometryBuilds,value)
+    return value
+  }
+  var presentationCursor:NSCursor {
+    switch tool {case .orbit:return .openHand;case .move:return .arrow;case .lift:return .resizeUpDown;case .rotate:return .crosshair}
+  }
+  func beginPresentationInteraction(at point:NSPoint,modifiers:NSEvent.ModifierFlags)->Bool {
+    guard !busy,!mediaExportActive,let projectID=store?.project?.id,projectID==owner,
+      let scene=draft,let view=stage.view,!modifiers.contains(.shift) else{return false}
+    if let gizmo=presentationGizmo,let handle=gizmo.hitTest(point),let instance=selected {
+      stop();selectionRequest &+= 1
+      var gesture=InstanceGesture(projectID:projectID,sceneID:scene.id,instanceID:instance.id,before:scene,tool:tool,down:point,
+        initial:instance.positionMM,yaw:instance.rotationDegrees,planeHeight:gizmo.centerMM.y,planeNormal:.init(0,1,0),
+        planeOrigin:.init(gizmo.centerMM.x,gizmo.centerMM.y,gizmo.centerMM.z),planeDown:nil,heightPerPoint:gizmo.millimetersPerPoint,
+        groundRight:.init(1,0,0),groundUp:.init(0,0,1))
+      gesture.gizmo=gizmo;gesture.handle=handle
+      gesture.initialAxis=gizmo.axisParameter(handle,at:point);gesture.lastAngle=gizmo.yawAngle(at:point)
+      instanceGesture=gesture
+      return true
+    }
+    guard
+      let picked=stage.objectID(at:point),let id=renderOwners[picked],
+      let instance=scene.instances.first(where:{$0.id==id && $0.visible}) else{return false}
+    guard tool != .orbit else{return false}
+    selectedInstanceID=id;selectionRequest &+= 1;sync()
+    stop()
+    let hit=stage.renderer?.pick(atTopLeft:.init(x:point.x,y:view.bounds.height-point.y),viewport:view.bounds.size)
+    let origin=hit.map{Vector3($0.pointMM.x,$0.pointMM.y,$0.pointMM.z)} ?? instance.positionMM
+    let height=origin.y
+    let basis=CameraNavigation.basis(stage.camera)
+    var normal=basis.outward
+    normal.y=0
+    let length=sqrt(normal.x*normal.x+normal.z*normal.z)
+    if length>1e-9 {normal.x/=length;normal.z/=length}
+    else {normal = .init(0,0,1)}
+    // At the horizon a horizontal ray has no unique ground-plane intersection.
+    // Keep Move constrained to XZ using the camera's horizontal screen axes;
+    // grabbing an object must never unexpectedly become a camera orbit.
+    let plane=tool == .move ? (abs(basis.outward.y)<0.05 ? nil:stage.pointOnTable(point,height:height)):stage.pointOnPlane(point,through:origin,normal:normal)
+    var groundUp=Vector3(basis.up.x,0,basis.up.z)
+    let upLength=sqrt(groundUp.x*groundUp.x+groundUp.z*groundUp.z)
+    if upLength>0.05 {groundUp.x/=upLength;groundUp.z/=upLength}
+    else {groundUp = .init(-normal.x,0,-normal.z)}
+    let vertical=stage.camera.projection=="orthographic" ? CameraFraming.orthographicFactor:tan(39 * Double.pi/360)
+    instanceGesture = .init(projectID:projectID,sceneID:scene.id,instanceID:id,before:scene,tool:tool,down:point,
+      initial:instance.positionMM,yaw:instance.rotationDegrees,planeHeight:height,planeNormal:normal,planeOrigin:origin,
+      planeDown:plane,heightPerPoint:2*stage.camera.distance*100*vertical/max(1,view.bounds.height),
+      groundRight:.init(basis.right.x,0,basis.right.z),groundUp:groundUp)
+    return true
+  }
+  func dragPresentationInteraction(to point:NSPoint,modifiers:NSEvent.ModifierFlags) {
+    guard var gesture=instanceGesture else{return}
+    guard !busy,!mediaExportActive,store?.project?.id==gesture.projectID,owner==gesture.projectID,
+      var value=draft,value.id==gesture.sceneID,
+      let index=value.instances.firstIndex(where:{$0.id==gesture.instanceID}),
+      point.x.isFinite,point.y.isFinite else{cancelPresentationInteraction();return}
+    var position=gesture.initial,yaw=gesture.yaw
+    if let gizmo=gesture.gizmo,let handle=gesture.handle {
+      if handle == .yaw {
+        guard let angle=gizmo.yawAngle(at:point),let previous=gesture.lastAngle else{return}
+        var delta=angle-previous
+        if delta>Double.pi {delta-=2*Double.pi};if delta < -Double.pi {delta+=2*Double.pi}
+        gesture.angularDelta+=delta;gesture.lastAngle=angle
+        if abs(gesture.angularDelta)<1e-12 {gesture.angularDelta=0}
+        yaw+=gesture.angularDelta*180/Double.pi
+        instanceGesture=gesture
+      }else {
+        guard let initial=gesture.initialAxis,let now=gizmo.axisParameter(handle,at:point),let axis=gizmo.axis(handle) else{return}
+        let delta=now-initial
+        position.x+=axis.world.x*delta;position.y+=axis.world.y*delta;position.z+=axis.world.z*delta
+      }
+    }else {switch gesture.tool {
+    case .move:
+      if let start=gesture.planeDown,let now=stage.pointOnTable(point,height:gesture.planeHeight) {
+        position.x+=now.x-start.x;position.z+=now.z-start.z
+      }else {
+        let dx=Double(point.x-gesture.down.x)*gesture.heightPerPoint,dy=Double(point.y-gesture.down.y)*gesture.heightPerPoint
+        position.x+=gesture.groundRight.x*dx+gesture.groundUp.x*dy
+        position.z+=gesture.groundRight.z*dx+gesture.groundUp.z*dy
+      }
+    case .lift:
+      if let start=gesture.planeDown,let now=stage.pointOnPlane(point,through:gesture.planeOrigin,normal:gesture.planeNormal) {
+        position.y+=now.y-start.y
+      }else {position.y+=Double(point.y-gesture.down.y)*gesture.heightPerPoint}
+    case .rotate:yaw+=Double(point.x-gesture.down.x)*0.5
+    case .orbit:return
+    }}
+    guard [position.x,position.y,position.z,yaw].allSatisfy({$0.isFinite && abs($0)<=1_000_000}) else{return}
+    value.instances[index].positionMM=position;value.instances[index].rotationDegrees=yaw
+    guard value != draft else{return}
+    draft=value;error=nil;sync()
+  }
+  func endPresentationInteraction(at point:NSPoint,modifiers:NSEvent.ModifierFlags,dragged:Bool) {
+    guard let gesture=instanceGesture else{return}
+    // Mouse-up may be the last physical sample, but a click never creates history.
+    if dragged {dragPresentationInteraction(to:point,modifiers:modifiers)}
+    guard instanceGesture != nil else{return}
+    instanceGesture=nil
+    guard store?.project?.id==gesture.projectID,draft?.id==gesture.sceneID else{return}
+    if draft != gesture.before {
+      undoDrafts.append(gesture.before);if undoDrafts.count>80 {undoDrafts.removeFirst()}
+      redoDrafts=[];store?.objectWillChange.send()
+    }
+  }
+  func cancelPresentationInteraction() {
+    guard let gesture=instanceGesture else{return}
+    instanceGesture=nil
+    guard draft?.id==gesture.sceneID else{return}
+    if draft != gesture.before {draft=gesture.before;error=nil;sync()}
+  }
+  func presentationKeyDown(_ event:NSEvent)->Bool {
+    if event.keyCode==53 {cancelStagePointer();return true}
+    guard !event.modifierFlags.contains(.command),!event.modifierFlags.contains(.control) else{return false}
+    guard presentationInputEnabled else{return true}
+    if event.keyCode==51 || event.keyCode==117 {removeInstance();return true}
+    switch event.charactersIgnoringModifiers?.lowercased() {
+    case "f":focusSelected()
+    case "v":tool = .move
+    case "o":tool = .orbit
+    case "y":tool = .lift
+    case "r":tool = .rotate
+    case "1":stage.preset("perspective");cameraEdited()
+    case "2":stage.preset("overhead");cameraEdited()
+    case "3":stage.preset("front");cameraEdited()
+    default:return false
+    }
+    return true
+  }
+}
+
 struct StudioCompositionViewport:NSViewRepresentable {
   @ObservedObject var controller:StudioCompositionController
   func makeNSView(context:Context)->TableSceneView {
     let view=TableSceneView(frame:.zero);view.clipsToBounds=true;view.controller=controller.stage;controller.stage.view=view
-    view.setAccessibilityLabel("Studio composition stage · drag to orbit, Shift-drag to pan")
+    view.presentationInteraction=controller
+    view.setAccessibilityLabel("Studio composition stage · move, lift or rotate instances; background drag orbits, Shift-drag pans")
     view.onCameraInteraction={[weak controller] in controller?.cameraEdited()}
-    view.onObjectPick={[weak controller] id in if controller?.draft?.instances.contains(where:{$0.id==id})==true{controller?.selectedInstanceID=id;controller?.sync()}}
+    view.onObjectPick={[weak controller] id in controller?.selectRenderedInstance(id)}
     return view
   }
   func updateNSView(_ view:TableSceneView,context:Context){}
-  static func dismantleNSView(_ view:TableSceneView,coordinator:()){view.cancelPointerInteraction();view.onCameraInteraction=nil;view.onObjectPick=nil}
+  static func dismantleNSView(_ view:TableSceneView,coordinator:()){view.cancelPointerInteraction();view.presentationInteraction=nil;view.onCameraInteraction=nil;view.onObjectPick=nil}
 }

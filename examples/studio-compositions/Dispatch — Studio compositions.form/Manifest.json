@@ -1,0 +1,754 @@
+{
+  "objects" : [
+    {
+      "canvasWorkspace" : false,
+      "file" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5-5cc95cfdbd08fc4c.json",
+      "id" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "1F2D9884-52EA-4B30-B966-A21243504CA0-c81d1c01d1ab358a.json",
+      "id" : "1F2D9884-52EA-4B30-B966-A21243504CA0"
+    }
+  ],
+  "project" : {
+    "camera" : {
+      "azimuth" : 0.55,
+      "distance" : 12,
+      "elevation" : 0.7,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 0,
+        "y" : 0.6,
+        "z" : 0
+      },
+      "viewportAspect" : 1.587651598676957
+    },
+    "createdAt" : "2026-10-31T01:02:17Z",
+    "history" : [
+      {
+        "date" : "2026-10-31T01:02:17Z",
+        "id" : "AED28D4C-C873-42B5-8CD9-B3E67CCDCC7F",
+        "source" : "Codex",
+        "text" : "Created Dispatch / Design A"
+      },
+      {
+        "date" : "2026-10-31T01:02:18Z",
+        "id" : "684A5490-EEE6-486D-8875-D24BCEBB729E",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-10-31T01:02:19Z",
+        "id" : "C83234C3-DE29-4261-AC1E-5A5B0CD045B0",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-31T01:02:20Z",
+        "id" : "85495433-4877-4007-A365-FB412D5EC40B",
+        "source" : "Codex",
+        "text" : "Created Dispatch / Design B"
+      },
+      {
+        "date" : "2026-10-31T01:02:20Z",
+        "id" : "BAC70DE1-FB6A-48A8-9F85-BF5EBBA68607",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-10-31T01:02:20Z",
+        "id" : "0A9D4AB2-0A28-4FB5-8A97-C06633364531",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-10-31T01:02:21Z",
+        "id" : "716D33A8-3DC7-4748-923C-337EC5A2B26D",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-31T01:02:21Z",
+        "id" : "AD3B3D50-DFF4-4B86-B31E-E1E538254949",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-31T01:02:22Z",
+        "id" : "BA057248-E56C-40CB-B791-DBFCB9D4E2AD",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-31T01:02:22Z",
+        "id" : "9A408D31-F3A5-4712-BA11-61A7A26F1B53",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-31T01:02:22Z",
+        "id" : "DEA735A7-3794-481B-8532-0955A23E23AB",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-31T01:02:23Z",
+        "id" : "B620FAEE-AA55-4C29-B9BB-C8E1BB930DED",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-31T01:02:23Z",
+        "id" : "C917A27E-B383-43BB-99C9-05CD5191AD1B",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-31T01:02:23Z",
+        "id" : "FB5F590F-662B-4B94-9D98-C87C2130F790",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-31T01:02:24Z",
+        "id" : "02F83415-0484-4912-BE3A-13E24524E29F",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-10-31T01:02:24Z",
+        "id" : "67CECB84-5EEC-496D-8336-C0141794755B",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      }
+    ],
+    "id" : "F7C2F770-6919-4AE9-A813-B97E28E15659",
+    "materials" : [
+
+    ],
+    "name" : "Dispatch / Studio compositions",
+    "notes" : [
+
+    ],
+    "objects" : [
+
+    ],
+    "recipes" : [
+      {
+        "id" : "construction-2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "name" : "RSC shipping study",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 416,
+            "minimum" : 156,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 260
+          },
+          {
+            "id" : "height",
+            "maximum" : 256,
+            "minimum" : 96,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 160
+          },
+          {
+            "id" : "depth",
+            "maximum" : 288,
+            "minimum" : 108,
+            "name" : "depth",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 180
+          },
+          {
+            "id" : "stock",
+            "maximum" : 5.760000000000001,
+            "minimum" : 1.6,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 3.2
+          },
+          {
+            "id" : "clearance",
+            "maximum" : 5,
+            "minimum" : 0,
+            "name" : "clearance",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 1
+          },
+          {
+            "id" : "glueTab",
+            "maximum" : 45,
+            "minimum" : 16,
+            "name" : "glueTab",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 28
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "requirements" : [
+          {
+            "id" : "usable-stock",
+            "lhs" : "height",
+            "message" : "Height must leave a positive usable cavity after stock layers.",
+            "relation" : ">",
+            "rhs" : "6*stock"
+          }
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-1F2D9884-52EA-4B30-B966-A21243504CA0",
+        "name" : "RSC shipping study",
+        "parameters" : [
+          {
+            "id" : "width",
+            "maximum" : 416,
+            "minimum" : 156,
+            "name" : "width",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 260
+          },
+          {
+            "id" : "height",
+            "maximum" : 256,
+            "minimum" : 96,
+            "name" : "height",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 160
+          },
+          {
+            "id" : "depth",
+            "maximum" : 288,
+            "minimum" : 108,
+            "name" : "depth",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 180
+          },
+          {
+            "id" : "stock",
+            "maximum" : 5.760000000000001,
+            "minimum" : 1.6,
+            "name" : "stock",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 3.2
+          },
+          {
+            "id" : "clearance",
+            "maximum" : 5,
+            "minimum" : 0,
+            "name" : "clearance",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 1
+          },
+          {
+            "id" : "glueTab",
+            "maximum" : 45,
+            "minimum" : 16,
+            "name" : "glueTab",
+            "step" : 0.1,
+            "unit" : "mm",
+            "value" : 28
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "requirements" : [
+          {
+            "id" : "usable-stock",
+            "lhs" : "height",
+            "message" : "Height must leave a positive usable cavity after stock layers.",
+            "relation" : ">",
+            "rhs" : "6*stock"
+          }
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      }
+    ],
+    "schemaVersion" : 57,
+    "studioPresentation" : {
+      "scenes" : [
+        {
+          "camera" : {
+            "azimuth" : 0.3805063771123649,
+            "distance" : 15.557324925084172,
+            "elevation" : 0.1836040102789186,
+            "projection" : "perspective",
+            "target" : {
+              "x" : -1.4210854715202004e-16,
+              "y" : 4.08,
+              "z" : 0
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "BC67BA66-C462-4400-B82C-565E915C8863",
+          "instances" : [
+            {
+              "id" : "87B3A770-A0D0-420C-AE1F-E44C60E61C38",
+              "name" : "Dispatch / Design A / 1",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "60707BFC-C9FC-40A2-802B-13850F50B289",
+              "name" : "Dispatch / Design A / 2",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 163.2,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "5E7DF3D9-0087-4C89-8583-CF6A1C415445",
+              "name" : "Dispatch / Design A / 3",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 326.4,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "C439ACC8-5F2E-4E48-846D-84FD7CE1AE98",
+              "name" : "Dispatch / Design A / 4",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 489.59999999999997,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "7C15E955-13CE-433A-A6AA-06FFFCEA4934",
+              "name" : "Dispatch / Design A / 5",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 652.8,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "01 / Dispatch A / Five aligned",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : -2.6387494426619322,
+            "distance" : 15.574287479737098,
+            "elevation" : 0.2405884233482921,
+            "projection" : "perspective",
+            "target" : {
+              "x" : -1.4210854715202004e-16,
+              "y" : 4.08,
+              "z" : 0
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "ACDD205A-BC7B-4A58-BB6D-C5D062C3811D",
+          "instances" : [
+            {
+              "id" : "87B3A770-A0D0-420C-AE1F-E44C60E61C38",
+              "name" : "Dispatch / Design A / 1",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "60707BFC-C9FC-40A2-802B-13850F50B289",
+              "name" : "Dispatch / Design A / 2",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 163.2,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "5E7DF3D9-0087-4C89-8583-CF6A1C415445",
+              "name" : "Dispatch / Design A / 3",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 326.4,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "C439ACC8-5F2E-4E48-846D-84FD7CE1AE98",
+              "name" : "Dispatch / Design A / 4",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 489.59999999999997,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "7C15E955-13CE-433A-A6AA-06FFFCEA4934",
+              "name" : "Dispatch / Design A / 5",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 652.8,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "02 / Dispatch A / Reverse view",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.3805063771123649,
+            "distance" : 15.557324925084172,
+            "elevation" : 0.1836040102789186,
+            "projection" : "perspective",
+            "target" : {
+              "x" : -1.4210854715202004e-16,
+              "y" : 4.08,
+              "z" : 0
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "7B102ACC-5B36-47D3-B12C-5C5D90EF7A84",
+          "instances" : [
+            {
+              "id" : "D485DD5D-19EE-4716-8D78-1E49D7030209",
+              "name" : "Dispatch / Design B / 1",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "1F2D9884-52EA-4B30-B966-A21243504CA0",
+              "visible" : true
+            },
+            {
+              "id" : "C88FBBEA-5B9B-4F1F-98B2-3E45998BBA4A",
+              "name" : "Dispatch / Design B / 2",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 163.2,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "1F2D9884-52EA-4B30-B966-A21243504CA0",
+              "visible" : true
+            },
+            {
+              "id" : "F29BAF0A-E33B-4395-A6E9-3EDFDA8CBB2A",
+              "name" : "Dispatch / Design B / 3",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 326.4,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "1F2D9884-52EA-4B30-B966-A21243504CA0",
+              "visible" : true
+            },
+            {
+              "id" : "89C4FC55-D73C-4B2F-96F7-DCBBB620F953",
+              "name" : "Dispatch / Design B / 4",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 489.59999999999997,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "1F2D9884-52EA-4B30-B966-A21243504CA0",
+              "visible" : true
+            },
+            {
+              "id" : "8AA82C4E-20F1-4DA6-BAE8-B35CFFB332CA",
+              "name" : "Dispatch / Design B / 5",
+              "positionMM" : {
+                "x" : 0,
+                "y" : 652.8,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "1F2D9884-52EA-4B30-B966-A21243504CA0",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "03 / Dispatch B / Five aligned",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.5404195002705842,
+            "distance" : 15.337996799454412,
+            "elevation" : 0.2517884763066306,
+            "projection" : "perspective",
+            "target" : {
+              "x" : -0.024393823895015175,
+              "y" : 4.08,
+              "z" : -0.007639383666508479
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "3FC8A2AB-4B3C-4C3A-98F4-84C6F3A479C0",
+          "instances" : [
+            {
+              "id" : "E25B1993-A5A0-483E-AA42-8DD72A956A68",
+              "name" : "Dispatch / Design A / 1",
+              "positionMM" : {
+                "x" : -75,
+                "y" : 0,
+                "z" : 15
+              },
+              "rotationDegrees" : -12,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "24005457-F3CE-441C-BE85-A3C3EDD64987",
+              "name" : "Dispatch / Design A / 2",
+              "positionMM" : {
+                "x" : -40,
+                "y" : 163.2,
+                "z" : -20
+              },
+              "rotationDegrees" : 7,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "6E38FD7A-99EA-4153-A2E3-2D278188C4F8",
+              "name" : "Dispatch / Design A / 3",
+              "positionMM" : {
+                "x" : 15,
+                "y" : 326.4,
+                "z" : 25
+              },
+              "rotationDegrees" : -8,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "F32BFB11-1F3C-416F-A9B5-792D6C84CB0B",
+              "name" : "Dispatch / Design A / 4",
+              "positionMM" : {
+                "x" : 50,
+                "y" : 489.59999999999997,
+                "z" : -15
+              },
+              "rotationDegrees" : 14,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "C59266EC-144B-4729-A820-1FC5D9235E61",
+              "name" : "Dispatch / Design A / 5",
+              "positionMM" : {
+                "x" : 80,
+                "y" : 652.8,
+                "z" : 10
+              },
+              "rotationDegrees" : -4,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "04 / Dispatch A / Offset cluster",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.29145679447786704,
+            "distance" : 8.127641269097486,
+            "elevation" : 0.2620253194059065,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 0.1068528351909373,
+              "y" : 0.816,
+              "z" : 0
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "1FE5A63B-2ECC-4848-A9A1-B59E57D4B90D",
+          "instances" : [
+            {
+              "id" : "23CD309C-6A29-419E-8430-7392D43891EE",
+              "name" : "Dispatch / Design A / 1",
+              "positionMM" : {
+                "x" : -175,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+              "visible" : true
+            },
+            {
+              "id" : "C9424FD9-CD3E-4ADF-AD89-46B08DC2AA2F",
+              "name" : "Dispatch / Design B / 1",
+              "positionMM" : {
+                "x" : 175,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : -18,
+              "sourceObjectID" : "1F2D9884-52EA-4B30-B966-A21243504CA0",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "05 / Dispatch A and B / Design pair",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        }
+      ],
+      "shots" : [
+
+      ]
+    },
+    "subtitle" : "A new place to make things.",
+    "unit" : "mm",
+    "updatedAt" : "2026-10-31T01:02:24Z"
+  }
+}
