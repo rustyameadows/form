@@ -6,7 +6,7 @@ Updated 2026-10-31. Branch: `codex/figma-paste-foundations`. Base: `31f1e16`.
 
 **Ordinary Copy in Figma → Paste in LAB → native editable artwork.** The native route reads the Figma HTML/binary clipboard representation directly. It does not import SVG, convert text to permanent outlines, embed a screenshot, contact Figma, or require a plugin/account/export command. A separate adapter handles explicitly supplied SVG using the same insertion transaction.
 
-The branch contains the decoder, scene mapper, generic paint/effect/mask model extensions, renderer integration and Canvas Paste transaction. Verification is still in progress. Public source inspection and independently generated payloads establish implementation behavior; they do **not** establish interoperability with the current Figma producer. No Figma app, account, human clipboard or real Figma design has been accessed in this round. That validation remains deferred at the user's request.
+The branch contains the decoder, scene mapper, generic paint/effect/mask model extensions, renderer integration and Canvas Paste transaction. Synthetic verification and the installed native-app audit are complete for this round. Public source inspection and independently generated payloads establish implementation behavior; they do **not** establish interoperability with the current Figma producer. No Figma app, account or real Figma design was accessed. The system clipboard exercise supplied task-authored HTML through computer use, which restored the user's prior clipboard afterward. Real producer validation remains deferred at the user's request.
 
 “Native” describes LAB's resulting objects: selectable layers, editable hierarchy and paths, live text, local image assets, transforms, paint/effect settings and ordinary editing/Undo. It does not imply that every Figma constraint, variable, component relationship or typography metric becomes a live LAB behavior. Temporary glyph paths and raster coverage used by renderers do not replace the editable document source.
 
@@ -14,7 +14,7 @@ The branch contains the decoder, scene mapper, generic paint/effect/mask model e
 
 | Stage | Implementation and behavior |
 | --- | --- |
-| Explicit Paste | `ArtworkSession` prefers LAB's native transfer representation, then a recognized Figma HTML envelope, then supported SVG representations. The native text responder continues to own ordinary text paste. A corrupt preferred representation fails rather than silently choosing a lower-fidelity one. |
+| Explicit Paste | `ArtworkSession` prefers LAB's native transfer representation, then a recognized Figma envelope in the HTML representation, then supported SVG representations. The native text responder continues to own ordinary text paste. A corrupt preferred representation fails rather than silently choosing a lower-fidelity one. |
 | Decode | `FigmaClipboardDecoder` reads inert `(figmeta)` and `(figma)` Base64 markers, `fig-kiwi` framing and length-prefixed chunks. Raw Deflate and Zstandard are decoded locally. `FigmaClipboardKiwi` interprets the embedded schema as bounded data; no generated JavaScript or payload code executes. |
 | Source values | `FigmaValue` retains signed/unsigned integer identities without a floating-point round trip, binary blobs, strings and schema enum names. A positive container version is retained; there is no claim that every positive version has supported semantics. |
 | Native mapping | `FigmaArtworkImporter` and its scene, geometry, paint, image, typography and instance helpers produce native `Artwork`, selected roots, local assets, component definitions and per-node issues. Native Figma parsing/mapping runs off the main actor with cancellation. |
@@ -35,21 +35,21 @@ Relevant source: [Canvas adapter](../Sources/FormApp/ArtworkExternalPaste.swift)
 | Appearance editing | Native inspector rows edit/reorder/disable/add/remove paint and effect stacks, gradient stops and geometry, image placement, stroke geometry, opacity and blending. Stacked layers use these controls rather than ineffective legacy fill/stroke fields. | Base text paints and explicitly styled character paints remain distinct. Editing an individual linked frame cannot replace its shared story's source accidentally. |
 | Masks | Editable alpha and luminance mask subtrees, including text/images/groups. Following siblings are clipped as one content group. Consecutive masks form source-over coverage; masks are not displayed as ordinary layers. Coverage-based picking follows transparent holes and mask transforms. | Generic `outline` remains a geometric vector clip. Figma vector masks use opaque visible fill/stroke coverage on supported leaf shapes; group/image/text vector-mask cases are explicitly unsupported. Figma luminance currently maps to an explicit `luminance-alpha` mode based on the pinned implementation's extra alpha multiplication; real producer comparison remains necessary. |
 | Effects | Generic ordered drop/inner shadows and layer blur, independent shadow blends, knockout coverage, supported analytic spread, node opacity and authored isolation. Live content remains live unless layer blur requires compositing. | Figma radius-to-sigma and silhouette rules follow inspected compatibility code, not an official pixel-fidelity guarantee. Unsupported background/progressive blur, multiple layer blurs, some spread/shape combinations and unknown effects block import. |
-| Components | Compatible definitions/instances use native LAB components. Complex nested overrides, swaps and copied derived geometry can be resolved to editable occurrence layers; supported freeform resize constraints are applied during this resolution. | Materialized occurrences are not linked components. Variant switching, variable bindings and responsive auto-layout are not recreated. Missing definitions, ambiguous override paths and resized auto-layout without resolved layout data are blocking cases. |
-| Images and colors | Embedded local image bytes are content addressed; normalized placement and orientation are retained. Declared sRGB/Display P3 colors convert to LAB's native sRGB representation. | Missing image bytes block import; private image endpoints are never fetched. Nonzero source image adjustments need calibrated mapping and currently block. Legacy/unspecified color interpretation and font substitutions are reported; this is not a guarantee of identical source color management. |
-| Output | Raster/PDF rendering uses native source plus transient coverage/effects. SVG exports editable vector content where available and embeds calculated raster mask/effect coverage where necessary. | Native import does not imply wholly vector export. Strict output validation rejects unsupported glyph outlines or excessive output resolution. Export appearance needs its own comparisons, including transparency, soft masks and non-normal blend backdrops. |
+| Components | Compatible definitions/instances use native LAB components. Source-only support definitions stay out of the ordinary canvas frame list and fit bounds, and remain accessible through source editing. Complex nested overrides, swaps and copied derived geometry can be resolved to editable occurrence layers; supported freeform resize constraints are applied during this resolution. | Materialized occurrences are not linked components. Variant switching, variable bindings and responsive auto-layout are not recreated. Missing definitions, ambiguous override paths and resized auto-layout without resolved layout data are blocking cases. |
+| Images and colors | Embedded PNG/JPEG/TIFF/WebP/HEIC bytes are content addressed; normalized placement and orientation are retained. Declared sRGB/Display P3 colors convert to LAB's native sRGB representation. | Missing image bytes block import; private image endpoints are never fetched. Nonzero source image adjustments need calibrated mapping and currently block. Legacy/unspecified color interpretation and font substitutions are reported; this is not a guarantee of identical source color management. |
+| Output | Raster/PDF rendering uses native source plus transient coverage/effects. SVG exports vector geometry where available and embeds calculated raster mask/effect coverage where necessary. | Native import does not imply wholly vector export. Strict output validation rejects unsupported glyph outlines or excessive output resolution. Export appearance needs its own comparisons, including transparency, soft masks and non-normal blend backdrops. |
 
 Source dimensions use **1 CSS pixel = 25.4/96 mm**; typography converts **1 pixel = 0.75 point** before authored transforms. Source settings are retained even when LAB exposes a resolved or static representation. Warnings/notes can permit import with a disclosed difference; errors prevent the entire native paste. Retaining source metadata is not a substitute for rendering a feature.
 
 The generic paint-stack inspector edits active paint layers rather than ignored legacy stroke/gradient fields. The shared `paint_stack` command replaces the base stack atomically, preserves explicit rich-span overrides and rejects legacy edits that would have no visible effect. Shared story paint changes belong to the story source; linked frame placeholders cannot override it. Per-layer palette color copies are explicitly detached; existing whole-fill palette bindings remain linked.
 
-The new generic native data is schema 58: per-layer source metadata, paint stacks, ordered effect stacks and coverage clip modes. These are reusable LAB features, not opaque Figma-only render objects. Mask dependency validation includes both child and clip edges; transfer includes complete referenced mask subtrees and their assets. Native ungroup cannot discard a combined clipping appearance.
+The new generic native data requires schema 58: per-layer source metadata, paint stacks (including shared-story paints), ordered effect stacks, coverage clip modes, advanced angular/diamond gradients and scoped import provenance. These are reusable LAB features, not opaque Figma-only render objects. Mask dependency validation includes both child and clip edges; transfer includes complete referenced mask subtrees and their assets. Native ungroup cannot discard a combined clipping appearance.
 
 Coverage-mask editing can enter nested mask groups, select zero-alpha ink to restore it, and edit the mask's paint, opacity and effects. Escape/Leave ascends through that editing scope, then returns to the masked content. Geometric outline clips retain their geometry-only policy. Ordinary project data stays hidden/locked as authored outside the active mask-edit scope.
 
 ## Provenance and partial copy
 
-The originating project retains the inert original clipboard envelope as a `.figma` source asset and bounded per-node tagged JSON metadata. Original bytes are not executed or fetched. Source records associate with represented element IDs, and normal resource closure includes images referenced by text/shape paint stacks and mask descendants.
+The originating project retains the inert clipboard HTML envelope, encoded as UTF-8, as a `.figma` source asset and bounded per-node tagged JSON metadata. Original bytes are not executed or fetched. Source records associate with represented element IDs, and normal resource closure includes images referenced by text/shape paint stacks and mask descendants.
 
 Copying only A from an original containing A+B omits a shared opaque original that also contains B. It retains A's required native graph/assets and appropriately scoped per-node metadata; incomplete ancestor shells lose opaque metadata that could expose unselected descendants. Complete copy, duplicate, save/reopen and Undo/Redo preserve their applicable provenance and resources. Source metadata is never silently reapplied over subsequent native edits.
 
@@ -61,18 +61,20 @@ Limits apply at distinct stages; the most restrictive applicable stage wins. A d
 
 | Stage | Current default limits |
 | --- | --- |
-| Canvas representations | Figma HTML/text snapshot: 16 MiB. Explicit SVG: 10,000,000 bytes. |
+| Canvas representations | Clipboard HTML/plain-text snapshot: 16 MiB. Native Figma detection uses HTML; plain text is considered only for explicit SVG. Explicit SVG: 10,000,000 bytes. |
 | Decoder API | HTML input 48 MiB; compressed container 32 MiB; schema 4 MiB; decompressed message 64 MiB; metadata 64 KiB; at most 16 chunks. Canvas uses the smaller snapshot cap above. |
 | Schema/value interpretation | 2,048 definitions; 32,768 fields; 250,000 elements per array; 1,000,000 values; depth 128; 4,000,000 work units. Individual strings 8 MiB and total strings 16 MiB. |
 | Scene and transfer | 5,000 source records and 5,000 expanded native elements including transferred definitions; 64 hierarchy levels; 200,000 mapped vector nodes; transfer graph work 1,000,000. Component definitions: 128, with native component-reference depth 8. |
+| Instance resolution | 1,000,000 work units; 64 occurrence levels/path segments; 10,000 entries per checked property-assignment or override-claim collection. Expanded occurrences also count toward the native element cap. |
 | Source metadata | 256 KiB per layer; 8 MiB aggregate artwork source metadata; transfer metadata 16 MiB. |
-| Local assets | 128 assets; 16 MiB per asset; 64 MiB total. Decoded raster cap 8,192 pixels per edge, 16 megapixels per frame and 32 megapixels total. Source archives count toward asset limits. |
+| Local assets | 128 assets; 16 MiB per asset; 64 MiB total. Decoded raster cap 8,192 pixels per edge, 16 megapixels per frame, 32 megapixels total and 1–32 frames per asset. Source archives count toward asset limits. |
 | Typography | Mapping is bounded at 200,000 UTF-16 units, 4,096 style records and 8,192 generated style ranges. Normal native artwork/transfer validation additionally caps a text element at 10,000 Swift characters. |
-| Native appearance | Up to 16 paint layers per stack and 16 effects per layer. Mask preview coverage is bounded to 8,192 pixels/edge and 16 megapixels per raster, with a 64 MB cache. Effects divide a 32-million-working-pixel budget among capture/intermediate/output layers. Nested mask/effect captures additionally share 128,000,000 reserved bytes and a depth limit of 16. Strict export checks requested resolution instead of silently reducing it. |
+| Native appearance | Up to 16 paint layers per stack, 64 distinct paint stacks per text element and 16 effects per layer. Mask dependency traversal is capped at 50,000 visits and depth 128. |
+| Render captures | Mask preview coverage is bounded to 8,192 pixels/edge and 16 megapixels per raster. Its `NSCache` has a 128-entry/64,000,000-cost eviction target, not a hard process-memory ceiling. Effects divide a 32-million-working-pixel budget among capture/intermediate/output layers. Nested mask/effect captures additionally share 128,000,000 reserved bytes and a depth limit of 16. Strict export checks requested resolution instead of silently reducing it. |
 
-Decoder cancellation is checked during marker scans, decompression, schema/value interpretation and scene conversion. Renderer captures also check cancellation. Shared in-flight capture reservations bound recursively retained mask/effect buffers. A nested failure invalidates the outer capture and prevents caching a partial result; strict output exercises both render paths and rejects failure. These reservations cover accounted capture buffers, not all process memory, renderer caches or operating-system allocations. Central verification of the new nested-budget regressions remains pending.
+Decoder cancellation is checked during marker scans, decompression, schema/value interpretation and scene conversion. Renderer captures also check cancellation. Shared in-flight capture reservations bound recursively retained mask/effect buffers. A nested failure invalidates the outer capture and prevents caching a partial result; strict output exercises both render paths and rejects failure. These reservations cover accounted capture buffers, not all process memory, renderer caches or operating-system allocations. The nested capture failure-propagation and budget-release regression passed in the full `tests10` run; this verifies its synthetic cases, not a process-wide memory bound.
 
-Sources of truth: [decoder limits](../Sources/FormCore/FigmaClipboardValue.swift), [transfer limits](../Sources/FormCore/ArtworkTransferBundle.swift), [image preflight](../Sources/FormGraphics/ArtworkTransferPreflight.swift), [mask coverage](../Sources/FormGraphics/ArtworkMaskRenderer.swift), [effect rasterizer](../Sources/FormGraphics/EffectStackRenderer.swift), [shared capture budget](../Sources/FormGraphics/ArtworkRasterBudget.swift).
+Sources of truth: [decoder limits](../Sources/FormCore/FigmaClipboardValue.swift), [transfer limits](../Sources/FormCore/ArtworkTransferBundle.swift), [paint validation](../Sources/FormCore/ArtworkPaintValidation.swift), [mask graph validation](../Sources/FormCore/ArtworkMasks.swift), [image preflight](../Sources/FormGraphics/ArtworkTransferPreflight.swift), [mask coverage](../Sources/FormGraphics/ArtworkMaskRenderer.swift), [effect rasterizer](../Sources/FormGraphics/EffectStackRenderer.swift), [shared capture budget](../Sources/FormGraphics/ArtworkRasterBudget.swift).
 
 ## Evidence and compatibility maintenance
 
@@ -93,21 +95,68 @@ Authenticated REST file/node/image endpoints and a user-invoked plugin exporter 
 
 ## Current verification record
 
-**In progress. Do not infer an installed/verified candidate from this document.** Root will update this section after the central compile/test loop and candidate verification:
+**Implemented, installed and verified with synthetic data and native UI interaction. The full suite is not green.** No ordinary clipboard payload produced by Figma has been tested.
 
-- Final source revision: **pending**.
-- Central test command/log and passed/failed counts: **pending**.
-- Release build/signature verification: **pending**.
-- Installed app path and executable SHA-256: **pending**.
-- Native UI exercise and remaining known failures: **pending**.
+- Current source revision: `0a8d5dcc358dc3d2a7d8025d8934a3cd19c6db77`.
+- Final release build and `codesign --verify --deep --strict`: **passed**, [build log](../.local/validation/figma-paste/logs/lab-figma-native-build-final.log).
+- Installed regular app: `/Users/rustymeadows/dev/form/build/LAB.app`; executable SHA-256: `be7564651e33e0efa8451ae922908a1d6a06ca10ed999d61abc5bf6f1443cedd`. The app was saved and quit before bundle replacement; only the ordinary app was relaunched.
+- Final installed checks: corrected typography panel and hidden support definition confirmed visually; 1,012-layer native document and materials compared exactly after save/reopen. Final macOS HTML Paste added 61 native layers to the dense scene (1,073 total); one Undo restored all native objects exactly.
+- Saved validation project: **Figma native paste · Systems in motion**, ID `547C7C63-793D-42BA-927B-5F1AB77F24D6`.
 - Real Figma producer interoperability: **not tested; deliberately deferred**.
 
-Tests on the branch cover these contracts; their existence is not a passing result:
+### Automated results
+
+The full production-configuration `tests10` run executed **1,721 test methods**. All 1,000 methods outside FormAppTests passed, including all 919 FormCoreTests and the nested mask/effect capture-budget regression. FormAppTests ran 721 methods, with **eight failing methods and 54 assertion failures**. Local evidence: [tests10 log](../.local/validation/figma-paste/logs/lab-figma-native-tests-10.log).
+
+| Target | Methods | Result in tests10 |
+| --- | ---: | --- |
+| LabRenderingTests | 14 | Passed |
+| FormMeshAssetsTests | 24 | Passed |
+| FormGeometryTests | 3 | Passed |
+| FormCoreTests | 919 | Passed |
+| FormCADModelingTests | 28 | Passed |
+| FormCADKernelTests | 12 | Passed |
+| FormAppTests | 721 | Eight failing methods |
+
+Seven failing methods reproduced on unchanged main `31f1e16` in the same checkout ([baseline comparison](../.local/validation/figma-paste/logs/lab-figma-main-comparison-tests.log)) and remain unresolved in this work:
+
+- `PatternAssemblyMoveTests.testMissedPanelAndOccludingObjectCannotJumpAnAttachedLabelOrChangeCamera`
+- `SewingTileEditingTests.testNativeFocusedSheetFieldUsesTheRealSaveButtonWithoutTabAndUndoIsExact`
+- `StudioCompositionWorkspaceTests.testDirectSavedSceneRowsPreserveDirtySwitchContract`
+- `StudioSceneSelectionTests.testNativeViewportRoundingDoesNotDirtyRecallAndCurrentSourcesUpdateItsPreview`
+- `StudioSceneSelectionTests.testSceneSwitchRequestsPreserveDraftsAndLatestRequestUntilExplicitSaveOrDiscard`
+- `StudioSceneSelectionTests.testTwelveStudyRecallBeforeFirstAppearanceSurvivesReconcileAndChangesLiveStage`
+- `TextileMoveTests.testEveryTextileZoneNormalAndFocusedBoundsMatchTheActualSceneTransform`
+
+The eighth failure, `ArtworkPaintStackInspectorTests.testActualNativePaintControlsReorderDisableAndRemoveWithOneUndoEach`, was a test lookup failure for a native control. The test was corrected to exercise the actual control through pointer input; **all five inspector methods passed** in [tests11](../.local/validation/figma-paste/logs/lab-figma-native-tests-11.log). This focused result does not replace the full-suite result.
+
+After the live UI audit exposed empty paint coverage and support-definition frame bugs, **tests12 ran 44 targeted methods: 20 core and 24 app**. All app methods passed, including source-only component frame/fit/source-edit regressions. One core method failed three color assertions because the test converted already-sRGB bitmap values a second time. After correcting that observation, **all four EmptyPaintCoverageTests passed** in tests13 without loosening expected colors or tolerances. Evidence: [tests12](../.local/validation/figma-paste/logs/lab-figma-native-tests-12.log), [tests13](../.local/validation/figma-paste/logs/lab-figma-native-tests-13.log). The empty-coverage and source-only-frame fixes are in `0a8d5dc` and were confirmed in the final installed app.
+
+### Installed native UI evidence
+
+The following was exercised in the interim installed app from `fd1cf23`, using task-authored synthetic content. This proves behavior of that installed candidate and those fixtures; it is not a real-Figma compatibility comparison.
+
+| Exercise | Observed result |
+| --- | --- |
+| Native macOS HTML Paste | A synthetic payload with 60 source nodes produced 61 native elements, including ten live text elements. Paste was one Undo step; Undo/Redo restored the compared native source exactly. |
+| Dense canvas showcase | 1,012 native elements, including 260 cubic paths, 32 text elements and 191 ellipses. Context probing reached swatch 11; Shift selection reached the intended items 25 and 38. Native Align left and spacing-distribution actions were checked against model values through LAB MCP. |
+| Group and transform interactions | Grouping, dragging and corner resizing each restored the compared source exactly on Undo. Clicking outside the isolated group unwound scope. |
+| Gradient and effects | A diamond-gradient stop moved from 45% to 70%; Undo restored the source exactly. Shadow enable/disable and reorder operations also restored the source exactly on Undo. |
+| Editable alpha mask | Entered a group mask, selected a child circle, changed opacity from 100% to 0%, reselected the transparent child, restored it with Undo and exited with Escape. |
+| Live painted text | Changed `INK / 05` to `INK / 06` while retaining two paints and the effect stack. Undo/Redo restored the compared source exactly. |
+| Existing project preservation | After both installations, the original 782-layer project's objects, recipes, materials, notes, units and camera compared exactly unchanged. |
+
+Visual inspection found two production bugs that the earlier synthetic suite did not expose: an empty glyph/path clip could flood its enclosing panel with paint, and a source-only component definition appeared as an extra physical frame. Both were fixed with focused regression coverage. The final installed build displays the tan typography panel with its visible text and excludes the support definition from Canvas & Surfaces and Fit Canvas. The authored `Aa` specimen was also reduced from 224 to 200 source pixels so its line height fits its text frame; overset coverage is separately tested as empty paint, not hidden by this fixture correction.
+
+Final native outputs: [PNG](../.local/validation/figma-paste/showcase-final.png) and [PDF](../.local/validation/figma-paste/showcase-final.pdf). The full-scene SVG attempt correctly rejected a painted color-font glyph without a vector outline, with an explicit error; PNG/PDF and the live native text remain available. This is a supported-output boundary, not a successful SVG export. The earlier visual failure is retained in [before-fix PNG](../.local/validation/figma-paste/showcase-before-ui-fixes.png). These artifacts are local task evidence, not committed design fixtures.
+
+The branch's test coverage includes the following contracts. Passing results are bounded by the specific runs above:
 
 - [Wire/schema decoder](../Tests/FormCoreTests/FigmaClipboardDecoderTests.swift): independent binary primitives/fixtures, codecs, malformed framing/schema, indices, recursion/count limits and cancellation.
 - [Scene mapping](../Tests/FormCoreTests/FigmaArtworkImportTests.swift), [instances](../Tests/FormCoreTests/FigmaInstanceImportTests.swift), [native typography](../Tests/FormCoreTests/FigmaTypographyTests.swift), [text paints](../Tests/FormCoreTests/FigmaTextPaintImportTests.swift), [mask mapping](../Tests/FormCoreTests/FigmaMaskImportTests.swift), [effect mapping](../Tests/FormCoreTests/FigmaEffectImportTests.swift).
 - [Mask pixels/transfer/picking](../Tests/FormCoreTests/ArtworkMaskTests.swift): 50% coverage applied once to overlapping siblings, alpha/luminance orientation, native image/text/gradient sources, transformed holes, hidden-source cache invalidation, boolean masks, graph cycles and full mask-subtree resource closure.
 - [Native effects integration](../Tests/FormCoreTests/NativeAppearanceIntegrationTests.swift), [text rendering](../Tests/FormCoreTests/NativeTextPaintTests.swift), [text editing](../Tests/FormAppTests/NativeTextPaintEditingTests.swift), [shared-story paint/reflow](../Tests/FormCoreTests/NativeStoryPaintTests.swift), [paint-stack commands](../Tests/FormCoreTests/ArtworkPaintStackEditingTests.swift), [paint resource transfer](../Tests/FormCoreTests/ArtworkPaintTransferTests.swift).
+- [Native paint inspector](../Tests/FormAppTests/ArtworkPaintStackInspectorTests.swift), [effect editing](../Tests/FormAppTests/ArtworkEffectEditingTests.swift), [mask editing and navigation](../Tests/FormAppTests/CanvasMaskEditingTests.swift).
 - [Private-board Paste](../Tests/FormAppTests/FigmaClipboardPasteTests.swift): independently encoded 1,500-layer scene, placement/scope/camera, representation precedence, stale project/scope cancellation, live text handoff, Undo/Redo, save/reopen and partial copy. Tests never read the user's general clipboard.
 
 ## Deferred real-Figma validation matrix
