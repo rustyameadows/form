@@ -13,7 +13,7 @@ final class ObjectViewPersistenceTests: XCTestCase {
     var project = Project(name: "Views")
     project.objects = [ProductObject(name: "Page", recipeID: "artboard", parameters: [:],
       artwork: Artwork(elements: [front, side]))]
-    XCTAssertEqual(project.minimumSchemaVersion, 58)
+    XCTAssertEqual(project.minimumSchemaVersion, 61)
     project.schemaVersion = project.minimumSchemaVersion
     let decoded = try JSONDecoder().decode(Project.self, from: JSONEncoder().encode(project))
     let elements = try XCTUnwrap(decoded.objects.first?.artwork?.elements)

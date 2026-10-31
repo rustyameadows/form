@@ -42,7 +42,11 @@ extension ArtworkSession {
     } catch { store?.error = error.localizedDescription }
   }
 
-  func configureObjectView(_ settings: ObjectViewSettings, changeStyle: Bool = false) {
+  func configureObjectView(_ settings: ObjectViewSettings, changeStyle: Bool = false,
+    render: @escaping LinkedObjectViewRenderer.Render = { object, project, assets, azimuth, elevation, size, pixels in
+      try await ObjectViewRendering.render(object: object, project: project, assets: assets,
+        azimuth: azimuth, elevation: elevation, frameSize: size, pixels: pixels)
+    }) {
     cancelObjectViewRendering()
     let token = objectViewRenderToken
     guard let store, let project = store.project,
@@ -56,6 +60,7 @@ extension ArtworkSession {
     settings.renderPending = nil
     if settings.style == "rendered" {
       let targetFrame = objectID
+      let targetProjection = projectionFrameID
       let folder = assets
       objectViewRendering = true
       objectViewRenderTask = Task { @MainActor [weak self, weak store] in
@@ -66,12 +71,16 @@ extension ArtworkSession {
           }
         }
         do {
-          let png = try await ObjectViewRendering.render(object: source, project: project, assets: folder,
-            azimuth: settings.azimuth, elevation: settings.elevation,
-            frameSize: .init(width: settings.referenceAspect ?? 1, height: 1),
-            pixels: min(4096, max(256, settings.pixels ?? 2048)))
+          let png = try await render(source, project, folder, settings.azimuth, settings.elevation,
+            .init(width: settings.referenceAspect ?? 1, height: 1),
+            min(4096, max(256, settings.pixels ?? 2048)))
           guard self.objectViewRenderToken == token, self.objectID == targetFrame,
-            self.primary == selected else { return }
+            self.projectionFrameID == targetProjection, self.selection.contains(selected.id),
+            self.art.elements.first(where: { $0.id == selected.id }) == selected else { return }
+          self.canvas?.finishText()
+          guard self.objectViewRenderToken == token, self.objectID == targetFrame,
+            self.projectionFrameID == targetProjection, self.selection.contains(selected.id),
+            self.art.elements.first(where: { $0.id == selected.id }) == selected else { return }
           guard store.project == project else {
             store.error = "The project changed while the object view was rendering. Refresh the view to try again."
             return
@@ -79,10 +88,13 @@ extension ArtworkSession {
           try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
           let name = "object-view-" + UUID().uuidString + ".png"
           try png.write(to: folder.appendingPathComponent(name), options: .atomic)
-          self.update { element in
-            ObjectViewRenderResult.apply(to: &element, asset: name, settings: settings)
+          // Selection can expand while the capture is in flight. Publish only
+          // the placement that requested it, never the current multiselection.
+          self.mutate { artwork in
+            guard let i = artwork.elements.firstIndex(where: { $0.id == selected.id }) else { return }
+            ObjectViewRenderResult.apply(to: &artwork.elements[i], asset: name, settings: settings)
           }
-          if self.primary?.asset != name {
+          if self.art.elements.first(where: { $0.id == selected.id })?.asset != name {
             try? FileManager.default.removeItem(at: folder.appendingPathComponent(name))
           }
         } catch {
