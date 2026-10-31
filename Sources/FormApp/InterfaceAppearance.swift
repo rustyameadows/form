@@ -267,6 +267,15 @@ struct AppearanceSettingsView: View {
         if let issue { Label(issue, systemImage: "exclamationmark.circle").font(.system(size: 11)).fixedSize(horizontal: false, vertical: true) }
         Text("Applies throughout LAB. Pale colors use a darker tone for readable controls on white.").font(.system(size: 11)).foregroundStyle(Palette.secondary)
         Divider()
+        VStack(alignment:.leading,spacing:12) {
+          Text("OpenAI").font(.system(size:13,weight:.semibold))
+          Text("Studio stills · local preview").font(.system(size:11)).foregroundStyle(Palette.secondary)
+          Button("Open connection setup…") {store.showingOpenAISetup=true}
+            .accessibilityLabel("Open OpenAI connection setup")
+          Text("Preview provider setup and the image workflow without an API call.")
+            .font(.system(size:11)).foregroundStyle(Palette.secondary)
+        }
+        Divider()
         CanvasBackgroundControls(appearance: appearance)
         Divider()
         VStack(alignment:.leading,spacing:14) {

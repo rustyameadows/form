@@ -249,6 +249,17 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
     }
   }
   func cancelExport(){exportTask?.cancel()}
+  /// Freeze the visible working composition for a separate image workflow.
+  /// Capturing never saves the scene or adds a camera/draft Undo step.
+  func prepareForImageCapture() throws -> StudioComposition {
+    guard !busy,!mediaExportActive else {throw FormError.invalid("Finish or cancel the active Studio export first.")}
+    finishStageEditing();cancelStagePointer();stop()
+    guard var value=draft else {throw FormError.missing("Compose a Studio scene first.")}
+    guard value.instances.contains(where:{$0.visible}) else {throw FormError.invalid("Add a visible product or prop to the scene first.")}
+    value.camera=stage.camera
+    try value.validate()
+    return value
+  }
   func export(_ scene:StudioComposition,to destination:URL,video:Bool)async throws->URL {
     let scene=(scene==draft ? instanceGesture?.before:nil) ?? scene
     cancelStagePointer()

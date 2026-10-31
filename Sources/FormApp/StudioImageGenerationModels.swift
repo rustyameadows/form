@@ -1,0 +1,73 @@
+import Foundation
+import FormCore
+
+enum StudioGenerationModel:String,Codable,CaseIterable {case sunburst="gpt-image-2.5-sunburst",flare="gpt-image-2.5-flare"
+  var title:String {self == .sunburst ? "GPT Image · Sunburst":"GPT Image · Flare"}
+}
+enum StudioGenerationAspect:String,Codable,CaseIterable {case square,landscape,portrait
+  var title:String {rawValue.capitalized}
+  var ratio:Double {self == .square ? 1:self == .landscape ? 1.5:2.0/3}
+}
+enum StudioGenerationSize:String,Codable,CaseIterable {case small,medium,large
+  var title:String {rawValue.capitalized}
+  var longEdge:Int {self == .small ? 512:self == .medium ? 768:1024}
+}
+enum StudioGenerationQuality:String,Codable,CaseIterable {case draft,standard,high
+  var title:String {rawValue.capitalized}
+}
+enum StudioGenerationFailureFixture:String,Codable,CaseIterable {case none,authentication,rateLimit,offline,refused
+  var title:String {switch self {case .none:return "Successful demo";case .authentication:return "Authentication error";case .rateLimit:return "Rate limit";case .offline:return "Offline";case .refused:return "Refused request"}}
+  var message:String {switch self {case .none:return "Local demo completed.";case .authentication:return "Demo authentication failure. No credential was checked.";case .rateLimit:return "Demo rate limit. Retry when ready; no service was contacted.";case .offline:return "Demo offline failure. No network request was attempted.";case .refused:return "Demo refusal. Revise the request to exercise the retry flow."}}
+}
+struct StudioImageGenerationOptions:Codable,Equatable {
+  var model:StudioGenerationModel = .sunburst
+  var aspect:StudioGenerationAspect = .landscape
+  var size:StudioGenerationSize = .medium
+  var quality:StudioGenerationQuality = .high
+  var count=1
+  var failureFixture:StudioGenerationFailureFixture = .none
+  var pixels:(width:Int,height:Int) {let n=size.longEdge;return aspect == .square ? (n,n):aspect == .landscape ? (n,n*2/3):(n*2/3,n)}
+  func validate()throws {guard [1,2,4].contains(count) else{throw FormError.invalid("Choose one, two, or four demo images.")}}
+  var redactedMetadata:[String:String] {["model":model.rawValue,"aspect":aspect.rawValue,"size":size.rawValue,"quality":quality.rawValue,"count":String(count),"failure_fixture":failureFixture.rawValue,"transport":"none","mode":"local_demo"]}
+}
+struct StudioGenerationReference:Codable,Equatable,Identifiable {
+  enum Role:String,Codable,CaseIterable {case style,subject,composition;var title:String{rawValue.capitalized}}
+  var assetID:UUID,role:Role
+  var id:UUID {assetID}
+}
+enum StudioGenerationPhase:String,Codable {case idle,capturing,queued,preparing,generating,writing,finished
+  var title:String {switch self {case .idle:return "Ready";case .capturing:return "Capturing scene";case .queued:return "Queued";case .preparing:return "Preparing local demo";case .generating:return "Making demo images";case .writing:return "Saving to Library";case .finished:return "Results"}}
+}
+struct StudioGenerationCapture:Codable,Equatable,Identifiable {
+  var id:UUID,createdAt:Date,projectID:UUID,projectName:String
+  var scene:StudioComposition,camera:CameraState
+  var designSHA256:String,draftSHA256:String
+  var inputAssetID:UUID,width:Int,height:Int
+  var warnings:[String]
+  var sceneID:UUID {scene.id}
+}
+struct StudioGenerationRun:Codable,Equatable,Identifiable {
+  enum Status:String,Codable {case running,succeeded,failed,cancelled,stale;var title:String {rawValue.capitalized}}
+  var id:UUID,createdAt:Date,completedAt:Date?
+  var status:Status,capture:StudioGenerationCapture
+  var prompt:String,style:String,references:[StudioGenerationReference],options:StudioImageGenerationOptions
+  var outputAssetIDs:[UUID]=[]
+  var error:String?
+  var isMock=true
+  var provider="Local demo · no AI request"
+}
+struct StudioGenerationStylePreset:Codable,Equatable,Identifiable {
+  var id:UUID,name:String,instructions:String,references:[StudioGenerationReference]
+  static var builtins:[Self] {[
+    .init(id:UUID(uuidString:"6C24FDC3-0715-48F5-ADDE-7EB0BEB26101")!,name:"Faithful studio",instructions:"Faithful studio lighting, clear product details, restrained background.",references:[]),
+    .init(id:UUID(uuidString:"6C24FDC3-0715-48F5-ADDE-7EB0BEB26102")!,name:"Soft editorial",instructions:"Soft editorial light, warm neutral surroundings, gentle contrast and generous space.",references:[]),
+    .init(id:UUID(uuidString:"6C24FDC3-0715-48F5-ADDE-7EB0BEB26103")!,name:"Bold backdrop",instructions:"A bold colored backdrop, crisp product silhouette and confident contrast.",references:[])
+  ]}
+}
+enum StudioGenerationError:LocalizedError {
+  case fixture(StudioGenerationFailureFixture),stale,invalid(String)
+  var errorDescription:String? {switch self {case .fixture(let fixture):return fixture.message;case .stale:return "The scene or project changed. Capture the current composition before creating another image.";case .invalid(let message):return message}}
+}
+struct StudioGenerationRequest {
+  let inputPNG:Data,prompt:String,style:String,references:[StudioGenerationReference],options:StudioImageGenerationOptions
+}
