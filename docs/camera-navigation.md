@@ -8,7 +8,8 @@ This is FORM’s fixed 3D navigation contract. It replaces the earlier direction
 | Shift + left drag in Orbit mode | Pan the entire view in screen space, without rotating. |
 | Scroll / pinch | Zoom while retaining the current orientation and orbit pivot. |
 | Click / Shift-click | Select / extend the selection. |
-| Focus / `F` | Frame the selection and place its center at the orbit pivot. |
+| Focus / `F` | Fit and center the selection in the usable viewport around floating panels. |
+| Object list / `⌘F` | Filter Table objects; click a name or press Return to select and focus it. |
 | Fit all / `⌘0` | Frame the visible collection; in isolation this frames the isolated collection. |
 | Perspective / `1` | Reset the perspective orientation, leave isolation, and frame the whole project. |
 | Top / `2` | Reset to exact overhead orthographic view, leave isolation, and frame the whole project. |
@@ -27,7 +28,7 @@ Pitch ends at exact Top and Bottom (±90°). These are FORM’s explicit upright
 
 Earlier saved free-orbit quaternions retain their look direction, pivot, and zoom while rendering with a level world-up frame. No manual leveling step is needed. Named views continue to recover canonical directions and frame the whole project.
 
-Pan uses the same level camera right/up basis as rendering and framing, so the scene follows the pointer without rotating. Focus and Fit preserve orientation. Named views always discard the old pan target and distance and frame all project objects, regardless of selection. Framing reserves room for floating controls without moving the subject-centered pivot. Camera changes are immediate, so a new drag cannot jump ahead of an unfinished framing animation.
+Pan uses the same level camera right/up basis as rendering and framing, so the scene follows the pointer without rotating. Focus and Fit preserve orientation. Named views always discard the old pan target and distance and frame all project objects, regardless of selection. On the Table, framing measures the floating navigator, inspector and toolbar, chooses an unobstructed area that gives the subject the largest useful size, then pans and zooms the camera to center it there. This optical target persists like a manual pan; the next orbit retains it. Resizing a viewport or closing a panel preserves the current pose until another explicit framing action. Camera changes are immediate, so a new drag cannot jump ahead of an unfinished framing animation.
 
 A drag needs a fresh mouse-down and is cancelled when its view resizes, loses the responder, changes windows, or receives a framing command. Late mouse events cannot reuse a previous gesture’s anchor. Clicking a newly active scene accepts the first gesture. Navigation never moves object definitions or rebuilds geometry. Rendering remains demand-driven.
 

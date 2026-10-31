@@ -781,6 +781,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   func fit(all: Bool) {
     _ = fit(rect:contentBounds(all:all),mode:all ? "all":"active")
   }
+  @discardableResult func focusSearchBounds(_ rect: CGRect) -> Bool {
+    fit(rect: rect, mode: "find")
+  }
   /// Fit existing representations together without changing the active source.
   @discardableResult func fit(frameIDs:Set<UUID>)->Bool {
     refreshFrameSnapshots()
@@ -1284,17 +1287,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   /// The renderer clips projected artwork to actual stock. Picking uses that
   /// same material region in frame-local coordinates, including reverse faces.
   func physicalPickingClip(for frame: CanvasFrame) -> CGPath? {
-    guard let projection = frame.projection else { return nil }
+    guard frame.projection != nil else { return nil }
     if let clip = physicalPickingClips[frame.id] { return clip }
-    let clip: CGPath
-    if projection.isProof {
-      if let net = try? PaperConstruction.definition(for: frame.surfaceObject).net() {
-        var transform = CGAffineTransform(a: projection.sourceToLocal.a, b: projection.sourceToLocal.b,
-          c: projection.sourceToLocal.c, d: projection.sourceToLocal.d,
-          tx: projection.sourceToLocal.tx, ty: projection.sourceToLocal.ty)
-        clip = PaperOutput.clipPath(net).normalized(using: .evenOdd).copy(using: &transform) ?? CGMutablePath()
-      } else { clip = CGMutablePath() }
-    } else { clip = projection.clipPath.normalized(using: .evenOdd) }
+    let clip = frame.physicalMaterialClip ?? CGMutablePath()
     physicalPickingClips[frame.id] = clip
     return clip
   }

@@ -52,6 +52,7 @@ Create an artwork sheet from **Object**, or use **Artwork → New Artwork Frame*
 | Extend selection | Shift-click |
 | Constrain movement/rotation/shape | Shift-drag |
 | Duplicate and move artwork | Option-drag (hold Option before clicking or during the drag) |
+| Find a frame, named layer, or text | `⌘F`, then click a result or use Up/Down and Return |
 | Bypass snapping | Hold Option while transforming; artwork moves also duplicate |
 | Nudge / larger nudge | Arrow / Shift-arrow |
 | Fit frames | `⌘0` |
@@ -65,6 +66,8 @@ Create an artwork sheet from **Object**, or use **Artwork → New Artwork Frame*
 | Toggle guides / grid | `⌘;` / `⌘'` |
 
 Canvas outlines, labels, and icons distinguish each view: charcoal rectangles for artboards, blue scissors for dielines and sewing patterns, and rust links for projected surfaces. Customize these colors in **Settings → Canvas frame colors**. These interface marks are omitted from exports. [Native previews and validation](validation/canvas-frame-identities/native-results.json) cover light and dark backgrounds, stable icon sizing, title dragging, preferences, and unchanged artwork.
+
+**Find** searches the currently focused Canvas or Table, including in a split or detached Canvas window. Canvas results include frames, named layers, text and sewing-piece names; linked surface crops share one canonical content result. Up/Down highlights a result, Return or a click reveals it, and Escape clears the query before closing. Table Find uses the floating Objects list and focuses the named object without opening its inspector or changing Canvas selection. [Native navigation previews and checks](validation/workspace-navigation/native-results.json) cover full, side-by-side and stacked views.
 
 The Canvas background is a saved local display preference, with neutral presets and a custom color picker. It does not change frame backgrounds or exported artwork. Thin selection marks and guides adapt to the chosen background. See the [interaction audit and native verification](canvas-interaction-audit.md) for selection, dragging, and viewport behavior.
 

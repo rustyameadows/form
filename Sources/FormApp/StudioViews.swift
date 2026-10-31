@@ -446,16 +446,23 @@ struct WorkspaceView: View {
 
 struct TableWorkspace: View {
   @EnvironmentObject var store: StudioStore
+  @State private var navigationOcclusions: [CGRect] = []
   var body: some View {
     GeometryReader { viewport in
       ZStack {
         StudioFramedTable(controller:store.studioShots)
         VStack {
           HStack(alignment: .top) {
-            TableHeading()
+            VStack(alignment: .leading, spacing: 8) {
+              if store.tableNavigatorVisible && store.environment == .form {
+                TableObjectNavigator(maxHeight: max(180, viewport.size.height - 116))
+                  .tableNavigationOcclusion()
+              }
+              TableHeading().tableNavigationOcclusion()
+            }
             Spacer()
             if store.mode == .studio {
-              StudioPanel()
+              StudioPanel().tableNavigationOcclusion()
             } else if store.tableInspectorVisible && store.environment == .form {
               FloatingPanel("INSPECTOR", closeLabel: "Hide Table inspector", onClose: store.closeTableInspector) {
                 if let object = store.primary {
@@ -468,16 +475,25 @@ struct TableWorkspace: View {
                     .padding(InspectorStyle.panelPadding)
                 }
               }.frame(width: FloatingPanelStyle.inspectorWidth, height: max(180, viewport.size.height - 116))
+                .tableNavigationOcclusion()
             }
           }.padding(FloatingPanelStyle.outerPadding)
           Spacer(minLength: 0)
           HStack(alignment: .bottom) {
-            CameraControls(maxWidth: max(1, viewport.size.width - 32))
+            CameraControls(maxWidth: max(1, viewport.size.width - 32)).tableNavigationOcclusion()
             Spacer()
           }.padding(.horizontal,16).padding(.bottom,16)
         }
         if store.project?.objects.filter({ $0.hasTablePresentation }).isEmpty == true { EmptyTableView() }
       }
+      .coordinateSpace(name: "table-navigation-viewport")
+      .onPreferenceChange(TableNavigationOcclusionKey.self) { rects in
+        navigationOcclusions = rects
+        store.scene?.navigationOcclusions = rects
+      }
+      .onAppear { store.scene?.navigationOcclusions = navigationOcclusions.isEmpty ? nil : navigationOcclusions }
+      .onChange(of: store.tableInspectorVisible) { _, _ in store.scene?.navigationOcclusions = nil }
+      .onChange(of: store.tableNavigatorVisible) { _, _ in store.scene?.navigationOcclusions = nil }
     }.focusedValue(\.designSurface,store.mode == .studio ? .studio : .table)
   }
 }
@@ -520,6 +536,11 @@ struct CameraControls: View {
   var maxWidth: CGFloat = .infinity
   var body: some View {
     WorkspaceToolbarSurface(maxWidth: maxWidth) {
+      if store.environment == .form {
+        WorkspaceToolbarButton("Table objects", symbol: "sidebar.left", isSelected: store.tableNavigatorVisible,
+          value: store.tableNavigatorVisible ? "Shown" : "Hidden") { store.tableNavigatorVisible.toggle() }
+        WorkspaceToolbarButton("Find on Table · ⌘F", symbol: "magnifyingglass") { store.requestWorkspaceFind(.table) }
+      }
       WorkspaceToolbarButton("Table inspector", symbol: "sidebar.right", isSelected: store.tableInspectorVisible,
         value: store.tableInspectorVisible ? "Shown" : "Hidden") { store.toggleTableInspector() }
       WorkspaceToolbarDivider()
