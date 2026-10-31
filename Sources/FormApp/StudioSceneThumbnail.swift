@@ -105,9 +105,9 @@ struct StudioSceneThumbnail:View {
   @State private var image:NSImage?
   @State private var issue:String?
   var body:some View {
-    StudioSceneThumbnailRow(title:scene.name,subtitle:issue ?? "\(scene.instances.filter(\.visible).count) instances",image:image,
+    StudioSceneThumbnailRow(title:scene.name,subtitle:issue,image:image,
       selected:selected,identifier:"studio-scene-"+scene.id.uuidString,action:action)
-      .frame(height:120)
+      .frame(height:StudioSceneThumbnailRow.height(for:issue))
       .task(id:cache.key(for:scene)) {
         image=nil;issue=nil
         do {image=try await cache.image(for:scene,preflight:preflight)}
@@ -117,8 +117,9 @@ struct StudioSceneThumbnail:View {
 }
 
 struct StudioSceneThumbnailRow:NSViewRepresentable {
-  var title:String,subtitle:String,image:NSImage?,selected:Bool,identifier:String
+  var title:String,subtitle:String?=nil,image:NSImage?,selected:Bool,identifier:String
   var action:()->Void
+  static func height(for subtitle:String?)->CGFloat {subtitle?.isEmpty==false ? 120:108}
   @Environment(\.isEnabled) private var enabled
   func makeCoordinator()->Coordinator {Coordinator(action)}
   func makeNSView(context:Context)->StudioSceneThumbnailNativeButton {
@@ -128,11 +129,11 @@ struct StudioSceneThumbnailRow:NSViewRepresentable {
   }
   func updateNSView(_ button:StudioSceneThumbnailNativeButton,context:Context) {
     context.coordinator.action=action;button.rowTitle=title;button.subtitle=subtitle;button.thumbnail=image;button.selected=selected
-    button.isEnabled=enabled;button.toolTip=title+" · "+subtitle
+    button.isEnabled=enabled;button.toolTip=subtitle.flatMap{$0.isEmpty ? nil:title+" · "+$0} ?? title
     button.setAccessibilityLabel("Open Studio scene "+title);button.setAccessibilityIdentifier(identifier);button.setAccessibilityHelp(subtitle)
-    button.needsDisplay=true
+    button.invalidateIntrinsicContentSize();button.needsDisplay=true
   }
-  func sizeThatFits(_ proposal:ProposedViewSize,nsView:StudioSceneThumbnailNativeButton,context:Context)->CGSize? {.init(width:proposal.width ?? 152,height:120)}
+  func sizeThatFits(_ proposal:ProposedViewSize,nsView:StudioSceneThumbnailNativeButton,context:Context)->CGSize? {.init(width:proposal.width ?? 152,height:Self.height(for:subtitle))}
   static func dismantleNSView(_ button:StudioSceneThumbnailNativeButton,coordinator:Coordinator){button.target=nil;button.action=nil;coordinator.action={}}
   final class Coordinator:NSObject {
     var action:()->Void
@@ -142,9 +143,10 @@ struct StudioSceneThumbnailRow:NSViewRepresentable {
 }
 
 final class StudioSceneThumbnailNativeButton:NSButton {
-  var rowTitle="",subtitle="",thumbnail:NSImage?,selected=false
+  var rowTitle="",thumbnail:NSImage?,selected=false
+  var subtitle:String?
   override var isFlipped:Bool {true}
-  override var intrinsicContentSize:NSSize {.init(width:NSView.noIntrinsicMetric,height:120)}
+  override var intrinsicContentSize:NSSize {.init(width:NSView.noIntrinsicMetric,height:StudioSceneThumbnailRow.height(for:subtitle))}
   override var alignmentRectInsets:NSEdgeInsets {.init(top:0,left:0,bottom:0,right:0)}
   override var acceptsFirstResponder:Bool {isEnabled}
   override func isAccessibilityElement()->Bool {true}
@@ -170,6 +172,8 @@ final class StudioSceneThumbnailNativeButton:NSButton {
     }else {NSImage(systemSymbolName:"camera",accessibilityDescription:nil)?.draw(in:CGRect(x:preview.midX-10,y:preview.midY-8,width:20,height:16),from:.zero,operation:.sourceOver,fraction:0.35,respectFlipped:true,hints:nil)}
     let paragraph=NSMutableParagraphStyle();paragraph.lineBreakMode = .byTruncatingTail
     (rowTitle as NSString).draw(in:CGRect(x:8,y:90,width:max(0,bounds.width-16),height:14),withAttributes:[.font:NSFont.systemFont(ofSize:11,weight:selected ? .medium:.regular),.foregroundColor:NSColor(Palette.ink),.paragraphStyle:paragraph])
-    (subtitle as NSString).draw(in:CGRect(x:8,y:105,width:max(0,bounds.width-16),height:12),withAttributes:[.font:NSFont.systemFont(ofSize:9),.foregroundColor:Palette.secondaryNS,.paragraphStyle:paragraph])
+    if let subtitle,!subtitle.isEmpty {
+      (subtitle as NSString).draw(in:CGRect(x:8,y:105,width:max(0,bounds.width-16),height:12),withAttributes:[.font:NSFont.systemFont(ofSize:9),.foregroundColor:Palette.secondaryNS,.paragraphStyle:paragraph])
+    }
   }
 }

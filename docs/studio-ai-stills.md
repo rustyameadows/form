@@ -20,7 +20,7 @@ The preview scenarios exercise authentication failure, rate limits, an offline s
 
 ## Authoring layout and scene context
 
-Studio keeps saved scenes in a narrow thumbnail rail, with the composition viewport in the center and the existing camera, instance and lighting inspector on the right. Thumbnails render saved compositions independently; moving the live camera does not overwrite a saved scene or its preview. Motion and video controls are hidden in this stills workflow. Existing saved motion data and automation interfaces remain supported.
+Studio keeps saved scenes in a narrow thumbnail rail with image-and-title previews, the composition viewport in the center, and one continuous inspector on the right. Compact camera and lighting controls stay above the instance section; selecting an object does not replace the inspector. Scene name, output dimensions, Save still and Generate image remain pinned together at the bottom. Thumbnails render saved compositions independently; moving the live camera does not overwrite a saved scene or its preview. Motion and video controls are hidden in this stills workflow. Existing saved motion data and automation interfaces remain supported.
 
 Image authoring uses three columns at both wide and minimum window sizes: frozen scene input and metadata on the left, prompt presets and an expanding native text editor in the center, and this project's generation history on the right. Upload, Library, model settings and generation controls stay below the prompt. Results open in one owned preview window; returning to the composition or changing projects closes it.
 
