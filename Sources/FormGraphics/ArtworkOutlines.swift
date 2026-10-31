@@ -78,7 +78,10 @@ import Foundation
           fill.blendMode = nil
           fill.blur = nil
           fill.shadow = nil
+          fill.effectStack = nil
+          fill.isolatedBlending = nil
           fill.clipID = nil
+          fill.clipMode = nil
           fill.stroke = nil
           fill.hidden = nil
           fill.locked = nil
@@ -90,14 +93,36 @@ import Foundation
           outline.blendMode = e.blendMode
           outline.blur = e.blur
           outline.shadow = e.shadow
+          outline.effectStack = e.effectStack
+          outline.isolatedBlending = e.isolatedBlending
           outline.clipID = e.clipID
+          outline.clipMode = e.clipMode
           replacements = [outline]
         }
+      } else if TextPaintRenderer.usesPaints(source) {
+        let group=wrapper(source,name:"\(source.title.prefix(450)) · outlines")
+        replacements=[group]
+        for (path,paint) in try TextPaintRenderer.vectorLayers(source) where !path.isEmpty {
+          var vector=try VectorGeometry.element(from:path,color:paint.color,name:"\(source.title.prefix(450)) · outlines",parentID:group.id)
+          // Keep source-frame paint coordinates after path conversion, which
+          // otherwise normalizes each glyph group to its own tight bounds.
+          let origin=Point2(vector.x,vector.y)
+          if var shape=vector.path {
+            for i in shape.contours.indices {shape.contours[i].nodes=shape.contours[i].nodes.map{PathCommands.transformed($0,by:.translation(origin.x,origin.y))}}
+            shape.width=source.width;shape.height=source.height;vector.path=shape
+          }
+          vector.x=0;vector.y=0;vector.width=source.width;vector.height=source.height
+          vector.paintStack=[.init(paint)];vector.productionRole=source.productionRole
+          replacements.append(vector)
+        }
+        if replacements.count==1 {replacements=[]}
       } else {
         let paths = try TypographyEngine.outlinePaintRuns(source)
         let wrap =
           paths.count > 1
           && (source.hasActiveEffects || (source.blendMode ?? "normal") != "normal"
+            || source.isolatedBlending == true || masks.contains(source.id)
+            || (source.clipID != nil && ArtworkMasks.isCoverage(source.clipMode))
             || (source.opacity ?? 1) < 1 || (source.fillOpacity ?? 1) < 1)
         replacements = []
         var parentID = source.parentID
@@ -127,12 +152,19 @@ import Foundation
           vector.blendMode = wrap ? nil : source.blendMode
           vector.blur = wrap ? nil : source.blur
           vector.shadow = wrap ? nil : source.shadow
+          vector.effectStack = wrap ? nil : source.effectStack
+          vector.isolatedBlending = wrap ? nil : source.isolatedBlending
           vector.productionRole = source.productionRole
           vector.clipID = wrap ? nil : source.clipID
+          vector.clipMode = wrap ? nil : source.clipMode
           replacements.append(vector)
         }
       }
       guard !replacements.isEmpty else { continue }
+      if masks.contains(source.id),mode != "shape" {
+        guard let replacement=replacements.first else {continue}
+        for i in result.elements.indices where result.elements[i].clipID==source.id {result.elements[i].clipID=replacement.id}
+      }
       let index = result.elements.firstIndex { $0.id == source.id }!
       result.elements[index].hidden = true
       result.elements[index].name = "\(source.title.prefix(450)) · editable source"
@@ -160,7 +192,10 @@ import Foundation
     group.blendMode = e.blendMode
     group.blur = e.blur
     group.shadow = e.shadow
+    group.effectStack = e.effectStack
+    group.isolatedBlending = e.isolatedBlending
     group.clipID = e.clipID
+    group.clipMode = e.clipMode
     group.productionRole = e.productionRole
     return group
   }

@@ -4,28 +4,39 @@ import Foundation
 
 /// Portable source/resource transport, independent of the project package format.
 public struct ArtworkTransferLimits: Sendable {
-  public var metadataBytes=2*1024*1024, elements=2048, components=64, styles=256, swatches=256
-  public var assets=32, individualAssetBytes=16*1024*1024, totalAssetBytes=32*1024*1024
-  public var depth=32, work=200_000
+  public var metadataBytes=16*1024*1024, elements=5000, components=128, styles=1024, swatches=1024
+  public var assets=128, individualAssetBytes=16*1024*1024, totalAssetBytes=64*1024*1024
+  public var depth=64, work=1_000_000
   public init() {}
 }
 
 public struct ArtworkTransferAsset: Codable, Equatable, Sendable {
   public var sourceName:String, portableName:String, sha256:String
   public var length:Int
+  public init(sourceName:String,portableName:String,sha256:String,length:Int) {self.sourceName=sourceName;self.portableName=portableName;self.sha256=sha256;self.length=length}
 }
 public struct ArtworkTransferComponent: Codable, Equatable, Sendable {
   public var id:UUID, name:String, size:Point2, artwork:Artwork
+  public init(id:UUID,name:String,size:Point2,artwork:Artwork) {self.id=id;self.name=name;self.size=size;self.artwork=artwork}
 }
 public struct ArtworkTransferMetadata: Codable, Equatable, Sendable {
   public var version=1, sourceSchema:Int, projectID:UUID, ownerID:UUID, selection:[UUID]
   public var artwork:Artwork, components:[ArtworkTransferComponent], styles:[ArtworkTextStyle], swatches:[ArtworkSwatch], assets:[ArtworkTransferAsset]
+  /// External imports use projectID/ownerID as resource namespaces, not source LAB project identities.
+  public var sourceApplication:String?
+  public init(version:Int=1,sourceSchema:Int,projectID:UUID,ownerID:UUID,selection:[UUID],artwork:Artwork,components:[ArtworkTransferComponent],styles:[ArtworkTextStyle],swatches:[ArtworkSwatch],assets:[ArtworkTransferAsset],sourceApplication:String?=nil) {
+    self.version=version;self.sourceSchema=sourceSchema;self.projectID=projectID;self.ownerID=ownerID;self.selection=selection;self.artwork=artwork;self.components=components;self.styles=styles;self.swatches=swatches;self.assets=assets
+    self.sourceApplication=sourceApplication
+  }
 }
 public struct ArtworkTransferBundle: Sendable {
   public var metadata:ArtworkTransferMetadata
   public var blobs:[String:Data]
   public init(metadata:ArtworkTransferMetadata,blobs:[String:Data]) {self.metadata=metadata;self.blobs=blobs}
   public static func digest(_ bytes:Data)->String {SHA256.hash(data:bytes).map{String(format:"%02x",$0)}.joined()}
+  public static func portableName(digest:String,extension ext:String)->String {
+    (ext=="icc" ? "icc-":ext=="figma" ? "source-":"image-")+digest+"."+ext
+  }
   public static func safeName(_ name:String)->Bool {
     !name.isEmpty && name.utf8.count<=200 && !name.contains("/") && !name.contains("\\") && !name.contains("..") && !name.contains("\0") && name != "."
   }
@@ -77,6 +88,7 @@ public struct ArtworkTransferBundle: Sendable {
   }
   public func validate(limits:ArtworkTransferLimits = .init())throws {
     let m=metadata,arts=[m.artwork]+m.components.map(\.artwork)
+    guard (m.sourceApplication?.utf8.count ?? 0)<=80 else{throw FormError.invalid("Invalid source application metadata.")}
     guard m.version==1,(1...Project.maximumSchemaVersion).contains(m.sourceSchema),!m.selection.isEmpty,
       m.components.count<=limits.components,m.styles.count<=limits.styles,m.swatches.count<=limits.swatches,m.assets.count<=limits.assets,
       Set(m.components.map(\.id)).count==m.components.count,Set(m.assets.map(\.sourceName)).count==m.assets.count,
@@ -113,13 +125,17 @@ public struct ArtworkTransferBundle: Sendable {
         asset.length<=limits.totalAssetBytes-total,let data=blobs[asset.sourceName],data.count==asset.length,
         Self.digest(data)==asset.sha256 else{throw FormError.invalid("Invalid artwork-transfer asset path, size or digest.")}
       let ext=URL(fileURLWithPath:asset.sourceName).pathExtension.lowercased()
-      let expected=(ext=="icc" ? "icc-":"image-")+asset.sha256+"."+ext
-      guard ["png","jpg","jpeg","tif","tiff","gif","bmp","webp","heic","heif","pdf","svg","icc"].contains(ext),asset.portableName==expected else{throw FormError.invalid("Artwork-transfer assets must use verified content-addressed portable names.")};total+=asset.length
+      let expected=Self.portableName(digest:asset.sha256,extension:ext)
+      guard ["png","jpg","jpeg","tif","tiff","gif","bmp","webp","heic","heif","pdf","svg","icc","figma"].contains(ext),asset.portableName==expected else{throw FormError.invalid("Artwork-transfer assets must use verified content-addressed portable names.")}
+      if ext=="figma" {
+        guard !arts.contains(where:{$0.renderedAssetNames.contains(asset.sourceName)}),arts.contains(where:{($0.imports ?? []).contains(where:{$0.asset==asset.sourceName && $0.format=="figma" && $0.elementIDs != nil})}) else{throw FormError.invalid("Native clipboard sources are inert scoped provenance, never rendered images.")}
+      }
+      total+=asset.length
     }
     guard Set(blobs.keys)==Set(m.assets.map(\.sourceName)) else{throw FormError.invalid("Artwork-transfer has untracked asset data.")}
     let available=Set(m.assets.map(\.sourceName))
     var needed=Set<String>()
-    for art in arts {needed.formUnion(art.elements.compactMap(\.asset));needed.formUnion((art.imports ?? []).map(\.asset));if let p=art.outputColorProfile {needed.insert(p.asset)}}
+    for art in arts {needed.formUnion(art.renderedAssetNames);needed.formUnion((art.imports ?? []).map(\.asset));if let p=art.outputColorProfile {needed.insert(p.asset)}}
     for swatch in m.swatches {if let profile=swatch.printInk?.profile {needed.insert(profile.asset)}}
     guard needed==available else{throw FormError.invalid("Artwork-transfer asset closure is incomplete or contains unused resources.")}
     let assetsByName=Dictionary(uniqueKeysWithValues:m.assets.map{($0.sourceName,$0)})

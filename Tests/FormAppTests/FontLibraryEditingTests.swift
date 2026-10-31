@@ -96,8 +96,8 @@ import XCTest
     let(window,store,canvas,_)=try fixture();defer{canvas.finishText();window.close()}
     FontLibraryCatalog.invalidate();let before=store.project,builds=FontLibraryCatalog.diagnostics["preview_builds"] as! Int
     let hosting=NSHostingView(rootView:FontBrowser(session:store.artworkSession))
-    window.setContentSize(.init(width:400,height:530))
-    hosting.frame=NSRect(x:0,y:0,width:400,height:530);window.contentView=hosting;hosting.layoutSubtreeIfNeeded()
+    window.setContentSize(.init(width:460,height:590))
+    hosting.frame=NSRect(x:0,y:0,width:460,height:590);window.contentView=hosting;hosting.layoutSubtreeIfNeeded()
     let bitmap=try XCTUnwrap(hosting.bitmapImageRepForCachingDisplay(in:hosting.bounds))
     hosting.cacheDisplay(in:hosting.bounds,to:bitmap)
     let created=(FontLibraryCatalog.diagnostics["preview_builds"] as! Int)-builds
@@ -119,11 +119,11 @@ import XCTest
     let raw=try XCTUnwrap(p.storyFrame(frame)?.element);canvas.beginText(raw)
     let editor=try XCTUnwrap(canvas.storyEditor),position=editor.composition.sourceRange(1).location
     editor.nativeUndo.groupsByEvent=false;editor.focus(frame,range:NSRange(location:position,length:8))
-    store.artworkSession.chooseFont("Skia")
+    XCTAssertTrue(store.artworkSession.chooseFont("Skia"),store.error ?? "Font assignment failed")
     let changed=store.project!.textStories![0]
     XCTAssertEqual(changed.text,source.text);XCTAssertEqual(store.project!.objects,p.objects)
     let run=try XCTUnwrap(changed.textRuns?.first{$0.location==position})
-    XCTAssertEqual(run.typography.fontName,"Skia");XCTAssertEqual(run.typography.features,source.typography!.features);XCTAssertEqual(run.typography.variations,[123:2])
+    XCTAssertEqual(run.typography.fontName,try XCTUnwrap(NSFont(name:"Skia",size:14)).fontName);XCTAssertEqual(run.typography.features,source.typography!.features);XCTAssertEqual(run.typography.variations,[123:2])
     editor.nativeUndo.undo();canvas.finishText();XCTAssertEqual(store.project,baseline)
     let args:[String:Any]=["object_id":frame.objectID.uuidString,"element_ids":[frame.elementID.uuidString],"command":"font","font_name":"Georgia-Bold","location":position,"length":8]
     _ = try store.engine.call("form_edit_artwork",arguments:args)

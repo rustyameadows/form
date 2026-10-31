@@ -323,6 +323,7 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
 
 final class VectorCanvasView: NSView, NSTextViewDelegate {
   weak var session: ArtworkSession?
+  var imagePromptPopover:NSPopover?
   // Visual points occupied by floating controls; never document/content insets.
   var fittingInsets = NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
   private let ppm = TypographyEngine.pointsPerMM
@@ -362,6 +363,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   private var publicationEditor:PublicationEditingController?
   var hasMarkedTextInput:Bool {textView?.hasMarkedText() ?? false}
+  var activeTextView:CanvasTextView? {textView as? CanvasTextView}
   var activeStoryView:CanvasTextView? {publicationEditor == nil ? nil:textView as? CanvasTextView}
   var storyEditor:PublicationEditingController? {publicationEditor}
   private var textHost: NativeAffineView?
@@ -394,6 +396,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var accessibilityItems: [ArtworkAccessibilityElement] = []
   private var accessibilityUpdates = 0
   private var frameDragOrigin = CGPoint.zero
+  private var frameResizeOrigin = CGRect.zero
+  private var hoveredArtboardResize: (id: UUID, handle: Int)?
   private var drawCount = 0, lastDrawMS = 0.0
   private var fitRequests = 0
   private var lastFitDiagnostics: [String: Any]?
@@ -581,6 +585,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     return canvasRect(visibleRect)
   }
+  var unobscuredVisibleCanvasRect:CGRect {
+    guard let scroll=enclosingScrollView else{return visibleCanvasRect}
+    return canvasRect(convert(fittingViewport(in:scroll),from:scroll.contentView))
+  }
   func frame(atCanvasPoint point:CGPoint) -> CanvasFrame? {
     frames.last { !$0.isWorkspace && $0.contains(point) } ?? frames.first { $0.isWorkspace }
   }
@@ -628,6 +636,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   private func viewportCoordinatesChanged() {
     updateAccessibilityItems()
+    synchronizeCanvasImagePromptButton()
     textView?.inputContext?.invalidateCharacterCoordinates()
     needsDisplay = true
   }
@@ -738,6 +747,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       window?.invalidateCursorRects(for: self)
     }
     updateAccessibilityItems()
+    synchronizeCanvasImagePromptButton()
   }
   override func viewDidMoveToWindow() {
     super.viewDidMoveToWindow()
@@ -977,6 +987,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         drawHoverOutline(in: f, context: context, scale: scale)
       }
       context.restoreGState()
+      if [.select, .direct].contains(session.tool), editingID == nil,
+        (f.id != activeFrame?.id || session.croppingImageID == nil && session.maskEditing == nil),
+        (f.id == activeFrame?.id && session.selection.isEmpty || hoveredArtboardResize?.id == f.id
+          || dragMode == "frame_resize" && gestureFrameID == f.id) {
+        CanvasArtboardResizing.draw(f, context: context, scale: scale,
+          highlighted: dragMode == "frame_resize" && gestureFrameID == f.id ? handle
+            : hoveredArtboardResize?.id == f.id ? hoveredArtboardResize?.handle : nil)
+      }
       if (dropFrameID == f.id || moveDropFrameID == f.id) && !f.isWorkspace {
         context.setStrokeColor(Palette.accentNS.cgColor)
         context.setLineWidth(3/scale)
@@ -1100,6 +1118,25 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       .init(x: b.maxX, y: b.center.y), .init(x: b.maxX, y: b.maxY), .init(x: b.center.x, y: b.maxY),
       .init(x: b.x, y: b.maxY), .init(x: b.x, y: b.center.y),
     ]
+  }
+  private func artboardResizeTarget(at point: CGPoint) -> (frame: CanvasFrame, handle: Int)? {
+    guard let s = session, [.select, .direct].contains(s.tool), !s.dieline else { return nil }
+    if let active = activeFrame, active.editable {
+      let local = CGPoint(x: point.x-active.rect.minX, y: point.y-active.rect.minY)
+      // Visible controls belong to the selected artwork. Select the frame by
+      // its header before resizing coincident frame/image corners.
+      if selectionHandle(at: local) != nil || hasEditingControl(at: local) { return nil }
+    }
+    for frame in frames.reversed() where !frame.isWorkspace {
+      let editingActiveContents = frame.id == activeFrame?.id && (s.croppingImageID != nil || s.maskEditing != nil)
+      if !editingActiveContents, CanvasArtboardResizing.supports(frame),
+        let handle = CanvasArtboardResizing.handle(at: point, rect: frame.rect, scale: ppm * zoom) {
+        return (frame, handle)
+      }
+      // A frontmost frame's interior occludes controls on the frame behind it.
+      if frame.contains(point) || CanvasFrameChrome.headerRect(for: frame, scale: ppm * zoom).contains(point) { return nil }
+    }
+    return nil
   }
   private func visibleResizeHandles(_ b: Rect2) -> [Int] {
     let width = b.width * ppm * zoom, height = b.height * ppm * zoom
@@ -1298,7 +1335,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return ArtworkHitTesting.hit(at: point, in: art, scope: scope,
       tolerance: 3.5 / (ppm * zoom), excluding: hiddenRoles,
       editingMask: session?.maskEditing?.maskID, renderedArtwork: activeFrame?.artwork,
-      outerClip: activeFrame.flatMap { physicalPickingClip(for: $0) })
+      outerClip: activeFrame.flatMap { physicalPickingClip(for: $0) }, assets: session?.assets)
   }
   /// Resolve a painted sibling in the nearest enclosing scope, skipping the
   /// branch we are already editing. The same resolver drives hover and clicks.
@@ -1315,7 +1352,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if cached, let existing = hoverPickers[key] { picker = existing }
       else {
         picker = ArtworkHitTesting.Picker(in: art, scope: group.parentID,
-          excluding: excluded, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame))
+          excluding: excluded, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame), assets: s.assets)
         if cached { hoverPickers[key] = picker }
       }
       if let target = picker.hit(at: point, tolerance: 3.5 / (ppm * zoom)) { return target }
@@ -1349,6 +1386,23 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       window?.invalidateCursorRects(for: self)
       return
     }
+    // Frame borders are available independently of their contents; selected
+    // artwork handles and explicit content-editing modes keep their priority.
+    if artboardResizeTarget(at: physical) != nil {
+      NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
+      finishText(); refreshFrameSnapshots(force: true)
+      if let target = artboardResizeTarget(at: physical) {
+        let f = target.frame
+        window?.makeFirstResponder(self); s.activate(f.id)
+        s.maskEditing = nil; s.scopeID = nil; s.nodes = []; s.croppingImageID = nil; s.choose([])
+        frames = s.frames
+        frameResizeOrigin = f.rect; down = physical; snapshot = s.art
+        handle = target.handle; dragMode = "frame_resize"
+        gestureToken = s.beginGesture(); gestureFrameID = s.activeFrameID
+        needsDisplay = true; CanvasPointerFeedback.resize(handle).cursor.set()
+        return
+      }
+    }
     // Selected controls can sit outside their frame. Resolve them before a
     // blank-canvas click changes the active source.
     let existingHandle = activeFrame?.editable == true ? selectionHandle(at: point(event)) : nil
@@ -1365,6 +1419,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       finishText()
       window?.makeFirstResponder(self)
       s.activate(f.id)
+      s.maskEditing = nil; s.scopeID = nil; s.nodes = []; s.croppingImageID = nil; s.choose([])
       frames = s.frames
       frameDragOrigin = f.rect.origin
       down = physical
@@ -1615,6 +1670,18 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let p = canvasPoint(convert(event.locationInWindow, from: nil))
       s.moveCanvasFrame(to: .init(
         frameDragOrigin.x+p.x-down.x,frameDragOrigin.y+p.y-down.y))
+      return
+    }
+    if dragMode == "frame_resize", let id = gestureFrameID, let token = gestureToken {
+      let world = canvasPoint(convert(event.locationInWindow, from: nil))
+      let rect = CanvasArtboardResizing.resized(frameResizeOrigin, handle: handle,
+        delta: CGPoint(x: world.x-down.x, y: world.y-down.y),
+        aspectLocked: event.modifierFlags.contains(.shift), fromCenter: event.modifierFlags.contains(.option),
+        minimum: max(0.01, 2 * (snapshot.safeInset ?? 0) + 0.01))
+      s.resizeCanvasArtboard(to: rect, from: frameResizeOrigin, artwork: snapshot,
+        expectedFrameID: id, gestureToken: token)
+      refreshFrameSnapshots(force: true)
+      needsDisplay = true
       return
     }
     if dragMode == "pen" {
@@ -1868,7 +1935,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return CanvasEdgeScrolling.offset(pointer: event.locationInWindow, viewport: viewport, elapsed: elapsed)
   }
   private func updateEdgeScrolling(with event: NSEvent) {
-    guard ["move", "resize", "create", "node", "incoming", "outgoing", "marquee", "node_marquee", "guide", "frame"].contains(dragMode),
+    guard ["move", "resize", "frame_resize", "create", "node", "incoming", "outgoing", "marquee", "node_marquee", "guide", "frame"].contains(dragMode),
       edgeScrollOffset(for: event, elapsed: 1.0/60) != .zero else {
       edgeScrollTimer?.invalidate(); edgeScrollTimer = nil; dragEvent = nil
       return
@@ -1996,7 +2063,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   override func mouseExited(with event: NSEvent) { clearHoverFeedback() }
   private var effectivePointerFeedback: CanvasPointerFeedback {
     if ["pan", "move", "frame", "image_crop"].contains(dragMode) { return .dragging }
-    if dragMode == "resize" { return .resize(handle) }
+    if dragMode == "resize" || dragMode == "frame_resize" { return .resize(handle) }
     if dragMode == "rotate" { return .rotate }
     if space || session?.tool == .hand { return .hand }
     if session?.tool == .text { return .text }
@@ -2004,8 +2071,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return pointerFeedback
   }
   private func clearHoverFeedback() {
-    let changed = hoveredElementID != nil || hoveredControlPoint != nil || pointerFeedback != .arrow
+    let changed = hoveredElementID != nil || hoveredControlPoint != nil || hoveredArtboardResize != nil || pointerFeedback != .arrow
     hoveredElementID = nil; hoveredFrameID = nil; hoveredControlPoint = nil; hoverOutline = nil
+    hoveredArtboardResize = nil
     pointerFeedback = .arrow
     if changed { needsDisplay = true; window?.invalidateCursorRects(for: self) }
   }
@@ -2020,12 +2088,18 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     defer { lastHoverLookupMS = (CFAbsoluteTimeGetCurrent() - start) * 1000 }
     let previousFeedback = pointerFeedback, previousElement = hoveredElementID
     let previousFrame = hoveredFrameID, previousControl = hoveredControlPoint
+    let previousResizeFrame = hoveredArtboardResize?.id, previousResizeHandle = hoveredArtboardResize?.handle
     hoveredElementID = nil; hoveredFrameID = nil; hoveredControlPoint = nil
+    hoveredArtboardResize = nil
     pointerFeedback = .arrow
     let world = canvasPoint(convert(event.locationInWindow, from: nil)), local = point(event)
     if space || s.tool == .hand { pointerFeedback = .hand }
     else if s.tool == .text { pointerFeedback = .text }
     else if ![.select, .direct].contains(s.tool) { pointerFeedback = .crosshair }
+    else if let target = artboardResizeTarget(at: world) {
+      pointerFeedback = .resize(target.handle)
+      hoveredArtboardResize = (target.frame.id, target.handle)
+    }
     else if activeFrame?.editable == true, !s.dieline, s.croppingImageID == nil,
       let control = editingControlPoint(at: local) {
       pointerFeedback = .control; hoveredControlPoint = control
@@ -2046,7 +2120,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if let cached = hoverPickers[key] { picker = cached }
       else {
         picker = ArtworkHitTesting.Picker(in: art, scope: key.scope, excluding: excluded,
-          editingMask: key.mask, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame))
+          editingMask: key.mask, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame), assets: s.assets)
         hoverPickers[key] = picker
       }
       let p = CGPoint(x: world.x-frame.rect.minX, y: world.y-frame.rect.minY)
@@ -2066,7 +2140,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       }
     }
     if previousFeedback != pointerFeedback || previousElement != hoveredElementID
-      || previousFrame != hoveredFrameID || previousControl != hoveredControlPoint {
+      || previousFrame != hoveredFrameID || previousControl != hoveredControlPoint
+      || previousResizeFrame != hoveredArtboardResize?.id || previousResizeHandle != hoveredArtboardResize?.handle {
       needsDisplay = true
       window.invalidateCursorRects(for: self)
     }
@@ -2146,8 +2221,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let s = session else { return false }
     let art = s.art
     let threshold = 7 / (ppm * zoom)
+    let maskMembers=s.maskEditing.map{art.editableMaskElementIDs(rootID:$0.maskID)}
     let paths = art.elements.filter {
-      $0.path != nil && $0.objectView == nil && (s.maskEditing == nil ? art.editable($0) : $0.id == s.maskEditing?.maskID && !art.isLocked($0))
+      $0.path != nil && $0.objectView == nil && (maskMembers?.contains($0.id) ?? art.editable($0))
         && (s.selection.contains($0.id) || $0.parentID == s.scopeID)
     }
     for e in paths.reversed() {
@@ -2476,7 +2552,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       from: source, fallback: e.typography ?? .init())
     if runs.count == 1, let run = runs.first, run.fontSize == e.fontSize, run.color == e.color,
       run.typography == (e.typography ?? .init()), run.swatchID == e.fillSwatchID,
-      run.textStyle == e.textStyle, run.paragraphStyle == e.paragraphStyle
+      run.textStyle == e.textStyle, run.paragraphStyle == e.paragraphStyle, run.paintStack == nil
     {
       e.textRuns = nil
     } else {
@@ -2549,15 +2625,31 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     do {try text.applyParagraphList(arguments)}catch{session?.store?.error=error.localizedDescription}
     return true
   }
+  /// Attribute conversion needs the actual glyph coverage context. A synthetic
+  /// Latin sample would mistake an emoji/RTL display fallback for an authored
+  /// font change. Caret attributes normally inherit the preceding grapheme.
+  private func textStyleSample(_ attributes:[NSAttributedString.Key:Any],range:NSRange,in view:NSTextView)->NSAttributedString {
+    let text=view.string as NSString
+    let sample:String
+    if range.length>0,range.location>=0,range.location<text.length,range.length<=text.length-range.location {
+      sample=text.substring(with:range)
+    } else if text.length>0 {
+      let index=min(text.length-1,max(0,range.location-1))
+      sample=text.substring(with:text.rangeOfComposedCharacterSequence(at:index))
+    } else {sample="A"}
+    return NSAttributedString(string:sample,attributes:attributes)
+  }
   func textInspection() -> TextSpan? {
     guard let tv = textView else { return nil }
     let range = tv.selectedRange()
-    let attrs =
-      range.length > 0 && range.location < (tv.textStorage?.length ?? 0)
-      ? tv.textStorage?.attributes(at: range.location, effectiveRange: nil) ?? tv.typingAttributes
-      : tv.typingAttributes
+    var sampleRange=range,attrs=tv.typingAttributes
+    if range.length>0,range.location<(tv.textStorage?.length ?? 0) {
+      var effective=NSRange()
+      attrs=tv.textStorage?.attributes(at:range.location,effectiveRange:&effective) ?? attrs
+      sampleRange=NSIntersectionRange(range,effective)
+    }
     return TypographyEngine.spans(
-      from: NSAttributedString(string: "A", attributes: attrs),
+      from:textStyleSample(attrs,range:sampleRange,in:tv),
       fallback: session?.primary?.typography ?? .init(), utf16Offset: TextCase.source(tv.attributedString()).sourceRange(range).location
     ).first
   }
@@ -2603,15 +2695,16 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let mapping=TextCase.source(tv.attributedString())
     let selected = tv.selectedRange()
     let partial = selected.location != 0 || selected.length != tv.string.utf16.count
-    func attributes(_ raw: [NSAttributedString.Key: Any], at location: Int) -> [NSAttributedString.Key: Any] {
-      let old = TypographyEngine.spans(from: NSAttributedString(string: "A", attributes: raw), fallback: fallback, utf16Offset: mapping.sourceRange(NSRange(location:location,length:0)).location)[0]
+    func attributes(_ raw: [NSAttributedString.Key: Any], in part:NSRange) -> [NSAttributedString.Key: Any] {
+      let old = TypographyEngine.spans(from:textStyleSample(raw,range:part,in:tv),fallback:fallback,utf16Offset:mapping.sourceRange(NSRange(location:part.location,length:0)).location)[0]
       let style = (command == "assign" ? styleID : old.textStyle?.styleID).flatMap { styles[$0] }
       let changed = command == "reset"
         ? TextStyleCommands.resetting(old, styles: styles, preservingParagraphs: partial)
         : TextStyleCommands.applying(old, style: style, detach: command == "detach", preservingParagraphs: partial)
       var type=changed.typography;type.inheritedLanguage=raw[LanguageHyphenation.inheritedLanguageKey] as? String
       var result=TypographyEngine.attributes(type, size: changed.fontSize, color: changed.color,
-        millimeters: false, swatchID: changed.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
+        millimeters: false, swatchID: changed.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle, paintStack: changed.paintStack)
+      result[TypographyEngine.inheritedPaintStackKey]=raw[TypographyEngine.inheritedPaintStackKey]
       result[TextCase.sourceKey]=raw[TextCase.sourceKey]
       result[GlyphEngine.overrideKey]=raw[GlyphEngine.overrideKey]
       result[PublicationLists.key]=raw[PublicationLists.key]
@@ -2619,14 +2712,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     let range = GlyphEngine.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString())
     if range.length == 0 {
-      tv.typingAttributes = attributes(tv.typingAttributes, at: range.location)
+      tv.typingAttributes = attributes(tv.typingAttributes,in:range)
       session?.objectWillChange.send()
       return true
     }
     let undoRange = command == "reset" ? (tv.string as NSString).paragraphRange(for: range) : range
     guard tv.shouldChangeText(in: undoRange, replacementString: nil) else { return true }
     var replacements: [(NSRange, [NSAttributedString.Key: Any])] = []
-    tv.attributedString().enumerateAttributes(in: range) { raw, part, _ in replacements.append((part, attributes(raw, at: part.location))) }
+    tv.attributedString().enumerateAttributes(in: range) { raw, part, _ in replacements.append((part, attributes(raw,in:part))) }
     tv.textStorage?.beginEditing()
     for (part, raw) in replacements { tv.textStorage?.setAttributes(raw, range: part) }
     if command == "reset" {
@@ -2687,8 +2780,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let range=tv.selectedRange(),fallback=session?.primary?.typography ?? .init()
     if range.length==0 {return [textInspection()?.typography ?? fallback]}
     var result:[Typography]=[]
-    tv.attributedString().enumerateAttributes(in:range) {raw,_,_ in
-      if let type=TypographyEngine.spans(from:NSAttributedString(string:"A",attributes:raw),fallback:fallback).first?.typography {result.append(type)}
+    tv.attributedString().enumerateAttributes(in:range) {raw,part,_ in
+      if let type=TypographyEngine.spans(from:textStyleSample(raw,range:part,in:tv),fallback:fallback).first?.typography {result.append(type)}
     }
     return result
   }
@@ -2700,9 +2793,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if let type=textInspection()?.typography {try OpticalTypography.validateEdit(value,fontName:type.fontName)}
     }else {
       var failure:Error?
-      tv.attributedString().enumerateAttributes(in:range) {raw,_,stop in
+      tv.attributedString().enumerateAttributes(in:range) {raw,part,stop in
         do {
-          let type=TypographyEngine.spans(from:NSAttributedString(string:"A",attributes:raw),fallback:fallback).first!.typography
+          let type=TypographyEngine.spans(from:textStyleSample(raw,range:part,in:tv),fallback:fallback).first!.typography
           try OpticalTypography.validateEdit(value,fontName:type.fontName)
         }catch {failure=error;stop.pointee=true}
       }
@@ -2729,7 +2822,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       changed = TextStyleCommands.recording(changed, from: run)
       tv.typingAttributes = TypographyEngine.attributes(
         t, size: run.fontSize, color: run.color, millimeters: false, swatchID: run.swatchID,
-        textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
+        textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle, paintStack: changed.paintStack)
       session?.objectWillChange.send()
       return true
     }
@@ -2737,7 +2830,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     var replacements: [(NSRange, [NSAttributedString.Key: Any])] = []
     tv.attributedString().enumerateAttributes(in: range) { attributes, part, _ in
       if let run = TypographyEngine.spans(
-        from: NSAttributedString(string: "A", attributes: attributes), fallback: fallback, utf16Offset: mapping.sourceRange(NSRange(location:part.location,length:0)).location
+        from:textStyleSample(attributes,range:part,in:tv),fallback:fallback,utf16Offset:mapping.sourceRange(NSRange(location:part.location,length:0)).location
       ).first {
         var t = run.typography
         body(&t)
@@ -2745,7 +2838,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         var changed = run; changed.typography = t
         changed = TextStyleCommands.recording(changed, from: run)
         var attrs=TypographyEngine.attributes(t, size: run.fontSize, color: run.color, millimeters: false,
-          swatchID: run.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
+          swatchID: run.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle, paintStack: changed.paintStack)
+        attrs[TypographyEngine.inheritedPaintStackKey]=attributes[TypographyEngine.inheritedPaintStackKey]
         attrs[TextCase.sourceKey]=attributes[TextCase.sourceKey]
         attrs[GlyphEngine.overrideKey]=attributes[GlyphEngine.overrideKey]
         attrs[PublicationLists.key]=attributes[PublicationLists.key]
@@ -2780,43 +2874,64 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return (tv.textStorage?.attribute(TypographyEngine.pairKey, at: index, effectiveRange: nil) as? NSNumber)?.doubleValue ?? 0
   }
   func applyTextSize(_ size: Double) -> Bool {
-    guard let tv = textView else { return false }
-    if opticalSizingInspection()?.contains(where:{$0.opticalSizing != nil || $0.characterPosition != nil})==true {return applyOpticalTextSize(size)}
-    let range = tv.selectedRange()
-    let font =
-      (range.location < (tv.textStorage?.length ?? 0)
-      ? tv.textStorage?.attribute(.font, at: range.location, effectiveRange: nil)
-      : tv.typingAttributes[.font]) as? NSFont ?? .systemFont(ofSize: size)
-    return changeText([.font: NSFont(descriptor: font.fontDescriptor, size: size) ?? font])
+    // Every run owns its face and fallback. Resizing from the first run's
+    // native font would assign that face across a mixed selection.
+    applyOpticalTextSize(size)
   }
   private func applyOpticalTextSize(_ size:Double)->Bool {
     guard let tv=textView else{return false}
     let range=GlyphEngine.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString()),fallback=session?.primary?.typography ?? .init()
     let mapping=TextCase.source(tv.attributedString())
-    func resized(_ raw:[NSAttributedString.Key:Any],at location:Int)->[NSAttributedString.Key:Any] {
-      let run=TypographyEngine.spans(from:NSAttributedString(string:"A",attributes:raw),fallback:fallback,utf16Offset:mapping.sourceRange(.init(location:location,length:0)).location)[0]
+    func resized(_ raw:[NSAttributedString.Key:Any],in part:NSRange)->[NSAttributedString.Key:Any] {
+      let run=TypographyEngine.spans(from:textStyleSample(raw,range:part,in:tv),fallback:fallback,utf16Offset:mapping.sourceRange(.init(location:part.location,length:0)).location)[0]
       var changed=run;changed.fontSize=size;changed=TextStyleCommands.recording(changed,from:run)
       var type=changed.typography;type.inheritedLanguage=raw[LanguageHyphenation.inheritedLanguageKey] as? String
-      var attrs=TypographyEngine.attributes(type,size:size,color:changed.color,millimeters:false,swatchID:changed.swatchID,textStyle:changed.textStyle,paragraphStyle:changed.paragraphStyle)
+      var attrs=TypographyEngine.attributes(type,size:size,color:changed.color,millimeters:false,swatchID:changed.swatchID,textStyle:changed.textStyle,paragraphStyle:changed.paragraphStyle,paintStack:changed.paintStack)
       if type.opticalSizing==nil,type.characterPosition==nil,let old=raw[.font] as? NSFont {attrs[.font]=NSFont(descriptor:old.fontDescriptor,size:size) ?? old}
-      for key in [TextCase.sourceKey,GlyphEngine.overrideKey,PublicationLists.key] {attrs[key]=raw[key]}
+      for key in [TextCase.sourceKey,GlyphEngine.overrideKey,PublicationLists.key,TypographyEngine.inheritedPaintStackKey] {attrs[key]=raw[key]}
       return attrs
     }
     tv.undoManager?.beginUndoGrouping();defer{tv.undoManager?.endUndoGrouping()}
-    if range.length==0 {tv.typingAttributes=resized(tv.typingAttributes,at:range.location);session?.objectWillChange.send();return true}
+    if range.length==0 {tv.typingAttributes=resized(tv.typingAttributes,in:range);session?.objectWillChange.send();return true}
     guard tv.shouldChangeText(in:range,replacementString:nil) else{return true}
     var replacements:[(NSRange,[NSAttributedString.Key:Any])]=[]
-    tv.attributedString().enumerateAttributes(in:range) {raw,part,_ in replacements.append((part,resized(raw,at:part.location)))}
+    tv.attributedString().enumerateAttributes(in:range) {raw,part,_ in replacements.append((part,resized(raw,in:part)))}
     tv.textStorage?.beginEditing();for (part,attrs) in replacements {tv.textStorage?.setAttributes(attrs,range:part)}
     if let storage=tv.textStorage {TypographyEngine.updateSpacing(storage,range:range)}
     tv.textStorage?.endEditing();tv.didChangeText();return true
   }
   func applyTextColor(_ color: String) -> Bool {
-    changeText([.foregroundColor: FormColor.color(color)], removing: [TypographyEngine.swatchKey])
+    applyPaintedTextColor(color, swatch: nil)
+  }
+  private func applyPaintedTextColor(_ color: String, swatch: UUID?) -> Bool {
+    guard let tv = textView else { return false }
+    let selected = GlyphEngine.expandedDisplayRange(tv.selectedRange(), in: tv.attributedString())
+    tv.undoManager?.beginUndoGrouping()
+    defer{tv.undoManager?.endUndoGrouping()}
+    func replacement(_ raw: [NSAttributedString.Key: Any]) -> [NSAttributedString.Key: Any] {
+      var attrs = raw
+      let assigned = (raw[TypographyEngine.paintStackKey] as? Data).flatMap { try? JSONDecoder.form.decode([ArtworkPaintLayer].self, from: $0) }
+      let inherited = (raw[TypographyEngine.inheritedPaintStackKey] as? Data).flatMap { try? JSONDecoder.form.decode([ArtworkPaintLayer].self, from: $0) } ?? session?.primary?.paintStack
+      if let stack = assigned ?? inherited {
+        attrs[TypographyEngine.paintStackKey] = try? JSONEncoder.form.encode(ArtworkPaintLayer.recoloringFills(stack, color: color))
+      }
+      attrs[.foregroundColor] = FormColor.color(color); attrs[TypographyEngine.paintColorKey] = color
+      attrs[TypographyEngine.swatchKey] = swatch?.uuidString
+      return attrs
+    }
+    if selected.length == 0 {
+      tv.typingAttributes = replacement(tv.typingAttributes); session?.objectWillChange.send(); return true
+    }
+    guard tv.shouldChangeText(in: selected, replacementString: nil) else { return true }
+    var changes: [(NSRange, [NSAttributedString.Key: Any])] = []
+    tv.attributedString().enumerateAttributes(in: selected) { raw, range, _ in changes.append((range, replacement(raw))) }
+    tv.textStorage?.beginEditing()
+    for (range, attrs) in changes { tv.textStorage?.setAttributes(attrs, range: range) }
+    tv.textStorage?.endEditing(); tv.didChangeText(); return true
   }
   func applyTextSwatch(_ id: UUID?, color: String?) -> Bool {
     if let id, let color {
-      return changeText([.foregroundColor: FormColor.color(color), TypographyEngine.swatchKey: id.uuidString])
+      return applyPaintedTextColor(color, swatch: id)
     }
     return changeText([:], removing: [TypographyEngine.swatchKey])
   }
@@ -2887,7 +3002,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       } else if s.selectedGradientStopID != nil {
         s.selectedGradientStopID = nil
       } else if s.maskEditing != nil {
-        s.returnFromMask()
+        s.leaveGroup()
       } else if s.scopeID != nil {
         s.leaveGroup()
       } else {

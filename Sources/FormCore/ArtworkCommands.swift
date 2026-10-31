@@ -55,12 +55,12 @@ public enum ArtworkCommands {
       }
       let targetIDs = Set(targets.map(\.id))
       guard !art.elements.contains(where:{targetIDs.contains($0.id) && art.isLocked($0)}) else { throw FormError.invalid("Unlock clipped artwork first.") }
-      for i in result.elements.indices where targetIDs.contains(result.elements[i].id) { result.elements[i].clipID = mask.id }
+      for i in result.elements.indices where targetIDs.contains(result.elements[i].id) { result.elements[i].clipID = mask.id; result.elements[i].clipMode = nil }
       selection = targetIDs
     case "release_clip":
       let targetIDs = Set(roots.filter{$0.clipID != nil}.map(\.id))
       guard !targetIDs.isEmpty else { throw FormError.invalid("Choose clipped artwork to release its mask.") }
-      for i in result.elements.indices where targetIDs.contains(result.elements[i].id) { result.elements[i].clipID = nil }
+      for i in result.elements.indices where targetIDs.contains(result.elements[i].id) { result.elements[i].clipID = nil; result.elements[i].clipMode = nil }
       selection = targetIDs
     case "add", "replace":
       guard let raw = arguments["elements"] as? [[String: Any]], !raw.isEmpty else {
@@ -86,7 +86,7 @@ public enum ArtworkCommands {
       result.elements.removeAll { all.contains($0.id) }
       selection = []
       for i in result.elements.indices where result.elements[i].clipID.map(all.contains) == true {
-        result.elements[i].clipID = nil
+        result.elements[i].clipID = nil; result.elements[i].clipMode = nil
       }
     case "duplicate":
       guard [duplicateOffset.x,duplicateOffset.y].allSatisfy({$0.isFinite && abs($0)<=100000}) else {
@@ -140,17 +140,21 @@ public enum ArtworkCommands {
       for group in roots where group.kind == "group" {
         guard group.component == nil else { throw FormError.invalid("Detach the component before ungrouping its artwork.") }
         if group.booleanOperation == nil {
-          guard !group.hasActiveEffects, group.isolatedBlending != true,
+          guard group.clipID == nil, !group.hasActiveEffects, group.isolatedBlending != true,
             group.blendMode == nil || group.blendMode == "normal",
             (group.opacity ?? 1) == 1 else {
-            throw FormError.invalid("Keep this group to preserve its combined appearance, or reset its opacity, blending, and effects before ungrouping.")
+            throw FormError.invalid("Keep this group to preserve its combined appearance, or release its clipping mask and reset its opacity, blending, and effects before ungrouping.")
           }
         }
         if group.booleanOperation != nil, group.clipID != nil,
-          result.elements.contains(where: { $0.parentID == group.id && $0.clipID != nil })
+          (ArtworkMasks.isCoverage(group.clipMode) || result.elements.contains(where: { $0.parentID == group.id && $0.clipID != nil }))
         {
           let index = result.elements.firstIndex { $0.id == group.id }!
           result.elements[index].booleanOperation = nil
+          // The retained group preserves combined clipping and effects. Its
+          // former Boolean result paint belongs to neither the group nor the
+          // restored operands, whose authored paint records remain intact.
+          result.elements[index].paintStack = nil
           result.elements[index].opacity = nil
           result.elements[index].productionRole = nil
           result.elements[index].name = "Operands · clipping group"
@@ -165,6 +169,7 @@ public enum ArtworkCommands {
           result.elements[i].parentID = group.parentID
           if group.booleanOperation != nil, let clip = group.clipID {
             result.elements[i].clipID = clip
+            result.elements[i].clipMode = group.clipMode
           }
           if group.booleanOperation == nil || result.elements[i].hidden != true {
             ungrouped.insert(result.elements[i].id)

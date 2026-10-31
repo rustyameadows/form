@@ -1,0 +1,13 @@
+{
+  "repository": "https://github.com/facebook/zstd",
+  "revision": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+  "version": "1.5.7",
+  "license": "BSD-3-Clause option",
+  "sourceArchiveSHA256": "4b0bd1f0cfb25e61b9103c35f27395530ff5b4c0d2513a00fd745849e85ea52c",
+  "generatedBy": "python3 build/single_file_libs/combine.py -r lib -x legacy/zstd_legacy.h -o zstddeclib.c build/single_file_libs/zstddeclib-in.c (from build/single_file_libs working directory, relative paths adjusted)",
+  "files": {
+    "zstd.h": "9b4bc8245565c98ccfc61c07749928b57e7c0f6fddb0530c4f6aa1971893d88b",
+    "zstddeclib.c": "5eb38abe0a7eea13674b312a006df72002d4192f0f0b4d09e6f03fb927a1f3d0",
+    "zstd_errors.h": "66a8c3f71d12ea6e797e4f622f31f3f8f81c41b36f48cad4f5de7d8bfb6aac0a"
+  }
+}

@@ -57,13 +57,13 @@ import SwiftUI
         ).disabled(store.project == nil)
       }
       CommandGroup(replacing: .undoRedo) {
-        Button("Undo") { store.undo() }.keyboardShortcut("z").disabled(
+        Button("Undo") { store.undo() }.keyboardShortcut("z").disabled(store.artworkSession.canvas?.imagePromptPopover?.isShown != true && (
           store.isStudioImageWorkspace ? store.studioImageTextEditor == nil : store.artworkSession.editingText
-            ? store.artworkSession.canvas?.canUndoText != true : store.engine.undoStack.isEmpty && !(store.environment == .studio && !store.studioShowingShots && store.studioComposition.canUndoDraft))
+            ? store.artworkSession.canvas?.canUndoText != true : store.engine.undoStack.isEmpty && !(store.environment == .studio && !store.studioShowingShots && store.studioComposition.canUndoDraft)))
         Button("Redo") { store.redo() }.keyboardShortcut("z", modifiers: [.command, .shift])
-          .disabled(
+          .disabled(store.artworkSession.canvas?.imagePromptPopover?.isShown != true && (
             store.isStudioImageWorkspace ? store.studioImageTextEditor == nil : store.artworkSession.editingText
-              ? store.artworkSession.canvas?.canRedoText != true : store.engine.redoStack.isEmpty && !(store.environment == .studio && !store.studioShowingShots && store.studioComposition.canRedoDraft))
+              ? store.artworkSession.canvas?.canRedoText != true : store.engine.redoStack.isEmpty && !(store.environment == .studio && !store.studioShowingShots && store.studioComposition.canRedoDraft)))
       }
       CommandGroup(replacing: .printItem) {
         Button("Print…") { store.prepareSelectedPrint() }.keyboardShortcut("p").disabled(
@@ -183,6 +183,7 @@ import SwiftUI
         Button("Project Library") {store.openAssetLibrary()}.disabled(store.project == nil || store.showingHome)
         Button("OpenAI Connection…") {store.showingOpenAISetup=true}
         Divider()
+        Button("Explore Fonts…") {store.fontExploration=FontBrowsingState(session:store.artworkSession)}.disabled(store.project==nil)
         Button("Document Fonts…") {store.showingDocumentFonts=true}.disabled(store.project==nil)
         Button("Materials & Equipment") { store.showingLibrary = true }
         Button("Codex Connection") { store.showingBridge = true }

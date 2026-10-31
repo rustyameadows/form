@@ -186,12 +186,31 @@ public final class StoryTextContainer:NSTextContainer {
     value.layout.drawGlyphs(forGlyphRange:value.glyphRange(index),at:.init(x:0,y:value.offset(index,verticalAlignment:element.typography?.verticalAlignment ?? "top")))
     NSGraphicsContext.restoreGraphicsState();context.restoreGState()
   }
-  public static func outlines(_ element:ArtworkElement) throws -> [(path:CGPath,color:String,swatchID:UUID?)] {
+  static func drawPaintGroup(_ element: ArtworkElement, stack: [ArtworkPaintLayer]?, in context: CGContext) {
+    guard let (value, index) = frame(element) else { return }
+    let range = value.glyphRange(index), offset = value.offset(index, verticalAlignment: element.typography?.verticalAlignment ?? "top")
+    context.saveGState(); context.scaleBy(x: 1 / TypographyEngine.pointsPerMM, y: 1 / TypographyEngine.pointsPerMM)
+    NSGraphicsContext.saveGraphicsState(); NSGraphicsContext.current = NSGraphicsContext(cgContext: context, flipped: true)
+    var start: Int?
+    func flush(_ end: Int) {
+      if let begin = start { value.layout.drawGlyphs(forGlyphRange: .init(location: begin, length: end - begin), at: .init(x: 0, y: offset)) }
+      start = nil
+    }
+    for glyph in range.location..<NSMaxRange(range) {
+      let character = value.layout.characterIndexForGlyph(at: glyph)
+      let data = character < value.storage.length ? value.storage.attribute(TypographyEngine.paintStackKey, at: character, effectiveRange: nil) as? Data : nil
+      if TypographyEngine.matchesPaint(data, element: element, stack: stack) { if start == nil { start = glyph } }
+      else { flush(glyph) }
+    }
+    flush(NSMaxRange(range)); NSGraphicsContext.restoreGraphicsState(); context.restoreGState()
+  }
+  public static func outlines(_ element:ArtworkElement, matchingPaintStack: [ArtworkPaintLayer]? = nil, filtering: Bool = false) throws -> [(path:CGPath,color:String,swatchID:UUID?)] {
     guard let(value,index)=frame(element) else{throw FormError.invalid("Resolve the linked text story before converting its frame to paths.")}
     let range=value.glyphRange(index),factor=1/TypographyEngine.pointsPerMM,offset=value.offset(index,verticalAlignment:element.typography?.verticalAlignment ?? "top")
     var result:[(path:CGPath,color:String,swatchID:UUID?)]=[]
     for glyph in range.location..<NSMaxRange(range) where !value.layout.propertyForGlyph(at:glyph).contains(.controlCharacter) && !value.layout.notShownAttribute(forGlyphAt:glyph) {
       let character=value.layout.characterIndexForGlyph(at:glyph),attrs=value.storage.attributes(at:character,effectiveRange:nil)
+      if filtering && !TypographyEngine.matchesPaint(attrs[TypographyEngine.paintStackKey] as? Data, element: element, stack: matchingPaintStack) { continue }
       let font=try value.layout.outlineFont(forGlyphAt:glyph,authored:attrs[.font] as? NSFont)
       let path=CGMutablePath(),line=value.layout.lineFragmentRect(forGlyphAt:glyph,effectiveRange:nil),position=value.layout.location(forGlyphAt:glyph)
       let baseline=line.minY+position.y+offset
@@ -203,7 +222,7 @@ public final class StoryTextContainer:NSTextContainer {
         path.addPath(outline,transform:CGAffineTransform(a:stretch*factor,b:0,c:0,d:-factor,tx:(line.minX+position.x)*factor,ty:baseline*factor))
       } else {
         let scalar=UnicodeScalar((value.storage.string as NSString).character(at:character))
-        if scalar.map({!CharacterSet.whitespacesAndNewlines.contains($0)})==true {throw FormError.invalid("A story glyph has no vector outline; choose a different font.")}
+        if scalar.map({!CharacterSet.whitespacesAndNewlines.contains($0)}) ?? true {throw FormError.invalid("A story glyph has no vector outline; choose a different font.")}
       }
       let rect=value.layout.boundingRect(forGlyphRange:NSRange(location:glyph,length:1),in:value.containers[index])
       let thickness=max(0.05,CTFontGetUnderlineThickness(font as CTFont))
@@ -211,7 +230,7 @@ public final class StoryTextContainer:NSTextContainer {
       if ((attrs[.strikethroughStyle] as? NSNumber)?.intValue ?? 0)>0 {path.addRect(.init(x:rect.minX*factor,y:(baseline-CTFontGetXHeight(font as CTFont)/2-thickness/2)*factor,width:rect.width*factor,height:thickness*factor))}
       if !path.isEmpty {result.append((path,FormColor.hex(attrs[.foregroundColor] as? NSColor ?? .black),(attrs[TypographyEngine.swatchKey] as? String).flatMap(UUID.init(uuidString:))))}
     }
-    for ink in PublicationLists.ink(layout:value.layout,glyphRange:range) {
+    for ink in PublicationLists.ink(layout:value.layout,glyphRange:range) where !filtering || matchingPaintStack == element.paintStack {
       let path=CGMutablePath();path.addPath(ink.path,transform:CGAffineTransform(a:factor,b:0,c:0,d:factor,tx:0,ty:offset*factor));result.append((path,ink.color,ink.swatchID))
     }
     return result

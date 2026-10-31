@@ -11,6 +11,21 @@ import XCTest
     ArtworkHitTesting.hit(at: .init(x: x, y: y), in: art, scope: scope, tolerance: tolerance)?.id
   }
 
+  func testPaintStacksTargetVisibleStrokeAndIgnoreEmptyDisabledOrTransparentPaints() {
+    let behind = rect(); var front = rect()
+    var art = Artwork(elements: [behind, front])
+    for stack: [ArtworkPaintLayer] in [[], [.init(.init(color: "#FF0000"), enabled: false)], [.init(.init(opacity: 0))]] {
+      front.paintStack = stack; art.elements[1] = front
+      XCTAssertEqual(hit(art, 50, 50, tolerance: 3), behind.id)
+    }
+    var stroke = ArtworkStroke(width: 4); stroke.alignment = "center"
+    front.paintStack = [.init(.init(color: "#FF0000"), stroke: stroke)]; art.elements[1] = front
+    XCTAssertEqual(hit(art, 1, 50), front.id)
+    XCTAssertEqual(hit(art, 50, 50, tolerance: 3), behind.id)
+    front.paintStack?[0].stroke?.enabled = false; art.elements[1] = front
+    XCTAssertEqual(hit(art, 1, 50), behind.id)
+  }
+
   func testUnpaintedAndDisabledStrokeLayersDoNotStealClicks() {
     let behind = rect()
     var front = rect()

@@ -6,7 +6,19 @@ extension ArtworkSession {
     return "\(store?.project?.id.uuidString ?? "")/\((activeFrameID ?? objectID)?.uuidString ?? "")/\(selected)/\(editingText)/\(characterRange.location):\(characterRange.length)/\(channel)"
   }
   var inspectorEditing: (Bool) -> Void {
-    store?.inspectorInteraction("artwork-\(objectID?.uuidString ?? "")") ?? { _ in }
+    let ordinary=store?.inspectorInteraction("artwork-\(objectID?.uuidString ?? "")") ?? { _ in }
+    var finish:(()->Void)?
+    return { [weak self] active in
+      if active {
+        guard finish==nil else{return}
+        if self?.editingText==true,let canvas=self?.canvas,let token=canvas.beginNumericTextInteraction() {
+          // A slider is one native text action, inside the editor's existing
+          // artwork/story interaction. Ending it must not fence prior native
+          // collection or character actions out of the Undo timeline.
+          finish={ [weak canvas] in canvas?.endNumericTextInteraction(ifToken:token) }
+        } else {ordinary(true);finish={ordinary(false)}}
+      } else {let end=finish;finish=nil;end?()}
+    }
   }
 }
 

@@ -44,9 +44,14 @@ extension Artwork {
     var ids = Set([backgroundSwatchID].compactMap { $0 })
     for e in elements {
       ids.formUnion([e.fillSwatchID, e.stroke?.swatchID, e.component?.colorSwatchID, e.shadow?.swatchID].compactMap { $0 })
+      ids.formUnion(e.effectStack?.effects.compactMap(\.swatchID) ?? [])
       ids.formUnion(e.gradient?.stops.compactMap(\.swatchID) ?? [])
       ids.formUnion(e.textRuns?.compactMap(\.swatchID) ?? [])
       ids.formUnion(e.component?.overrides?.compactMap(\.colorSwatchID) ?? [])
+      for layer in e.paintLayers {
+        ids.formUnion(layer.paint.gradient?.stops.compactMap(\.swatchID) ?? [])
+        if let swatch = layer.stroke?.swatchID { ids.insert(swatch) }
+      }
     }
     return ids
   }
@@ -89,13 +94,43 @@ extension Project {
       var value = color ?? "#292D2C"
       if id != nil { resolve(&id, &value); color = value }
     }
+    func resolveStack(_ stack: inout [ArtworkPaintLayer]?) {
+      guard var layers = stack else { return }
+      for index in layers.indices {
+        if var gradient = layers[index].paint.gradient {
+          for stopIndex in gradient.stops.indices {
+            var stop = gradient.stops[stopIndex]; resolve(&stop.swatchID, &stop.color); gradient.stops[stopIndex] = stop
+          }
+          layers[index].paint.gradient = gradient
+        }
+        if var stroke = layers[index].stroke {
+          let previous = stroke.swatchID
+          resolve(&stroke.swatchID, &stroke.color); layers[index].stroke = stroke
+          if let previous, colors[previous] != nil, only == nil || only!.contains(previous), layers[index].paint.kind == "solid" {
+            layers[index].paint.color = stroke.color
+          }
+        }
+      }
+      stack = layers
+    }
     var result = artwork
     resolve(&result.backgroundSwatchID, &result.background)
     for i in result.elements.indices {
       var e = result.elements[i]
+      let fillReference = e.fillSwatchID
       resolve(&e.fillSwatchID, &e.color)
+      if let id = fillReference, colors[id] != nil, only == nil || only!.contains(id), let stack = e.paintStack {
+        e.paintStack = ArtworkPaintLayer.recoloringFills(stack, color: e.color)
+      }
+      resolveStack(&e.paintStack)
       if var stroke = e.stroke { resolve(&stroke.swatchID, &stroke.color); e.stroke = stroke }
       if var shadow = e.shadow { resolve(&shadow.swatchID, &shadow.color); e.shadow = shadow }
+      if var stack=e.effectStack {
+        for index in stack.effects.indices {
+          var effect=stack.effects[index];resolve(&effect.swatchID,&effect.color);stack.effects[index]=effect
+        }
+        e.effectStack=stack
+      }
       if var gradient = e.gradient {
         for index in gradient.stops.indices {
           var stop = gradient.stops[index]
@@ -107,7 +142,12 @@ extension Project {
       if var runs = e.textRuns {
         for index in runs.indices {
           var run = runs[index]
+          let reference = run.swatchID
           resolve(&run.swatchID, &run.color)
+          if let id = reference, colors[id] != nil, only == nil || only!.contains(id), let stack = run.paintStack {
+            run.paintStack = ArtworkPaintLayer.recoloringFills(stack, color: run.color)
+          }
+          resolveStack(&run.paintStack)
           runs[index] = run
         }
         e.textRuns = runs
@@ -202,7 +242,10 @@ public enum SwatchCommands {
       run.location = start
       run.length = end - start
       if start >= location && end <= location + length {
-        if let color { run.color = color }
+        if let color {
+          run.color = color
+          if let stack = run.paintStack ?? element.paintStack { run.paintStack = ArtworkPaintLayer.recoloringFills(stack, color: color) }
+        }
         run.swatchID = swatchID
       }
       result.append(run)
@@ -240,6 +283,7 @@ public enum SwatchCommands {
             guard let location,let length else{throw FormError.invalid("Provide a global story UTF-16 range.")}
             source=current;try textRange(&source,location:location,length:length,color:color,swatchID:swatchID)
           } else {
+            if let color { source.recolorTextFill(color) }
             source.color=color ?? current.color;source.fillSwatchID=swatchID
             for i in source.textRuns?.indices ?? 0..<0 {source.textRuns![i].color=color ?? current.textRuns?[i].color ?? current.color;source.textRuns![i].swatchID=swatchID}
           }
@@ -281,6 +325,8 @@ public enum SwatchCommands {
             stroke.swatchID = swatchID
             e.stroke = stroke
           } else {
+            if let color, e.kind == "text" { e.recolorTextFill(color) }
+            else if let color, let stack = e.paintStack { e.paintStack = ArtworkPaintLayer.recoloringFills(stack, color: color) }
             e.color = color ?? current.color
             e.fillSwatchID = swatchID
             if swatchID != nil { e.gradient = nil; e.fillEnabled = true }

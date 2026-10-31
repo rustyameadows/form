@@ -6,14 +6,22 @@ public struct ArtworkImport: Codable, Equatable, Identifiable, Sendable {
   public var name: String
   public var width: Double
   public var height: Double
-  public var importedAt: Date = Date()
+  // Project JSON stores ISO-8601 timestamps at second precision. Keep the live
+  // record canonical too so save/reopen does not change provenance equality.
+  public var importedAt: Date = Date(timeIntervalSince1970: floor(Date().timeIntervalSince1970))
   public var issues: [String]
-  public init(asset: String, name: String, width: Double, height: Double, issues: [String] = []) {
+  /// All native layers produced from this source, including masks/support layers.
+  /// Nil denotes legacy frame-wide provenance. A partial Copy omits shared opaque bytes.
+  public var elementIDs: [UUID]?
+  public var format: String?
+  public init(asset: String, name: String, width: Double, height: Double, issues: [String] = [], elementIDs: [UUID]? = nil, format: String? = nil) {
     self.asset = asset
     self.name = name
     self.width = width
     self.height = height
     self.issues = issues
+    self.elementIDs = elementIDs
+    self.format = format
   }
 }
 
@@ -24,6 +32,8 @@ extension Project {
     _ imported: Artwork, source: ArtworkImport, targetID: UUID? = nil
   ) throws -> UUID {
     try validateArtwork(imported)
+    var source = source
+    source.elementIDs = imported.elements.map(\.id)
     guard (1...1000).contains(source.width), (1...1000).contains(source.height) else {
       throw FormError.invalid("Imported artwork dimensions must be 1–1000 mm.")
     }

@@ -17,7 +17,8 @@ final class PlanarSolidRequirementTests:XCTestCase {
     XCTAssertEqual(restored,source)
     var old=source;old.version=1;XCTAssertThrowsError(try old.net())
     old.solidChecks=nil;XCTAssertNoThrow(try old.net())
-    old.version=3;XCTAssertThrowsError(try old.net())
+    old.version=3;XCTAssertNoThrow(try old.net())
+    old.version=4;XCTAssertThrowsError(try old.net())
     var numeric=source;numeric.solidChecks![0].value=0
     let raw=try XCTUnwrap(jsonObject(numeric) as? [String:Any]),checks=try XCTUnwrap(raw["solidChecks"] as? [[String:Any]])
     XCTAssertEqual(checks[0]["value"] as? String,"0","CADScalar's established canonical encoding is an expression string")

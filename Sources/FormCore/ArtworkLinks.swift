@@ -130,11 +130,13 @@ extension Project {
     self = candidate
   }
   public func validateArtworkLinks() throws {
+    try fontLibrary?.validate()
     try validatePaperMaterialSnapshots()
     try validateArtworkParameterBindings()
     try validatePhysicalSurfaceBindings()
     try validatePhysicalArtworkIntents()
     for object in objects {
+      if let artwork = object.artwork { try CanvasImageGeneration.validateProvenance(in: artwork) }
       if let positions=object.canvasProjectionPositions {
         guard positions.count<=256,positions.allSatisfy({!$0.key.isEmpty && $0.key.utf8.count<=512 && $0.value.x.isFinite && $0.value.y.isFinite && abs($0.value.x)<=100000 && abs($0.value.y)<=100000}) else {
           throw FormError.invalid("Canvas projection positions must have bounded identities and finite physical coordinates.")

@@ -142,6 +142,15 @@ struct ArtworkInspector: View {
       VStack(alignment: .leading, spacing: InspectorStyle.sectionSpacing) {
         if let object = session.object {
           LinkedObjectInspectorModule(session: session)
+          CanvasImagePromptInspectorShortcut(controller: store.canvasImages, session: session)
+          if session.transferInFlight {
+            HStack {
+              ProgressView("Pasting artwork…").controlSize(.small)
+              Spacer()
+              Button("Cancel"){session.cancelArtworkTransfer()}.buttonStyle(.plain)
+            }.font(InspectorStyle.captionFont)
+          }
+          ArtworkImportNotes(session:session)
           if let review=session.activeCanvasFrame?.sourceReview {
             Text(review).font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
           }
@@ -185,7 +194,7 @@ struct ArtworkInspector: View {
               InspectorDivider()
             }
             MaskInspector(session: session, element: e)
-            if !session.art.elements.contains(where: { $0.clipID == e.id }) {
+            if !session.art.elements.contains(where: { $0.clipID == e.id }) || session.art.isCoverageMask(e.id) {
               appearanceControls
               AppearanceInspector(session: session, element: e)
             }
@@ -503,7 +512,20 @@ struct ArtworkInspector: View {
     VStack(alignment: .leading, spacing: 12) {
       SectionLabel("APPEARANCE")
       if let e {
-        if e.kind != "image", e.kind != "group" || e.booleanOperation != nil {
+        if session.elements.contains(where: { $0.paintStack != nil || $0.textRuns?.contains(where: { $0.paintStack != nil }) == true }) {
+          if session.elements.count == 1 {
+            ArtworkPaintStackInspector(session: session, element: e)
+          } else {
+            Text("Select one layer to edit its individual paints.")
+              .font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+          }
+          if e.kind == "text", session.editingText {
+            InspectorColorPicker("Character color", selection: Binding(
+              get: { Color(nsColor: FormColor.color(session.inspectedColor)) },
+              set: { session.textColor(FormColor.hex(NSColor($0))) }), supportsOpacity: false,
+              targetID: session.inspectorColorTarget("character-fill"), onEditingChanged: session.inspectorEditing)
+          }
+        } else if e.kind != "image", e.kind != "group" || e.booleanOperation != nil {
           HStack {
             Toggle(
               "Fill",
@@ -530,13 +552,15 @@ struct ArtworkInspector: View {
         ScalarArtworkField("Opacity", value: (e.opacity ?? 1) * 100, unit: "%") { v in
           session.update { $0.opacity = min(1, max(0, v / 100)) }
         }
-        if !["image", "group"].contains(e.kind) || e.booleanOperation != nil {
+        if !session.elements.contains(where: { $0.paintStack != nil || $0.textRuns?.contains(where: { $0.paintStack != nil }) == true }),
+          !["image", "group"].contains(e.kind) || e.booleanOperation != nil {
           ScalarArtworkField("Fill opacity", value: (e.fillOpacity ?? 1) * 100, unit: "%") {
             value in
             session.update { $0.fillOpacity = min(1, max(0, value / 100)) }
           }
         }
-        if !["text", "image", "group"].contains(e.kind) || e.booleanOperation != nil {
+        if !session.elements.contains(where: { $0.paintStack != nil || $0.textRuns?.contains(where: { $0.paintStack != nil }) == true }),
+          !["text", "image", "group"].contains(e.kind) || e.booleanOperation != nil {
           StrokeInspector(session: session, element: e)
           if e.kind != "line" { GradientInspector(session: session, element: e) }
         }

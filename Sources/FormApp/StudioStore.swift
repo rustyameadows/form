@@ -104,6 +104,15 @@ enum TableTool: String, CaseIterable {
     return library
   }
   private var imageWorkflow:StudioImageGenerationController?
+  private var canvasImageWorkflow:CanvasImageGenerationController?
+  var canvasImages:CanvasImageGenerationController {
+    let library=studioAssets
+    if let canvasImageWorkflow,canvasImageWorkflow.library === library { return canvasImageWorkflow }
+    canvasImageWorkflow?.resetForProjectChange()
+    let controller=CanvasImageGenerationController(store:self,library:library,connection:studioImageConnection)
+    canvasImageWorkflow=controller
+    return controller
+  }
   var studioImages:StudioImageGenerationController {
     let library=studioAssets
     if let imageWorkflow,imageWorkflow.library === library {return imageWorkflow}
@@ -123,6 +132,7 @@ enum TableTool: String, CaseIterable {
   lazy var cad=CADModelCoordinator(store:self)
   let constructionValidation=ConstructionValidationCoordinator()
   @Published var showingDocumentFonts=false
+  @Published var fontExploration:FontBrowsingState?
   var fontLibraryPreferences=FontLibraryPreferences.environment()
   lazy var cloth = ClothCoordinator(store:self)
   lazy var artworkSession = ArtworkSession(store: self)
@@ -213,6 +223,9 @@ enum TableTool: String, CaseIterable {
       }
     }
     engine.onProjectWillChange = { [weak self] in
+      self?.artworkSession.canvas?.closeCanvasImagePrompt()
+      self?.canvasImageWorkflow?.resetForProjectChange()
+      self?.canvasImageWorkflow=nil
       self?.artworkSession.cancelObjectViewRendering()
       self?.linkedObjectViews.reset()
       self?.imageWorkflow?.resetForProjectChange()
@@ -246,6 +259,7 @@ enum TableTool: String, CaseIterable {
       self?.artworkSession.showingTabs = false
       self?.artworkSession.showingGlyphs = false
       self?.showingDocumentFonts=false
+      self?.fontExploration=nil
     }
   }
   func finishArtworkEditing() {
@@ -427,15 +441,16 @@ enum TableTool: String, CaseIterable {
     revision &+= 1
     scheduleSave()
   }
-  /// Only the two explicit metadata records may differ on this fast path.
+  /// Only these explicit metadata records may differ on this fast path.
   /// Every other source field compares exactly; physical history retains its
   /// established invalidation/reset behavior.
   func historyRecordsChanged(from before:Project?) {
     if let before,let project,ArtworkPageSetup.containsOnlyPageSetupChanges(before,project) {metadataRecordsChanged();return}
     if var previous=before,var current=project,
-      previous.studioPresentation != current.studioPresentation || previous.collectionProduction != current.collectionProduction {
+      previous.studioPresentation != current.studioPresentation || previous.collectionProduction != current.collectionProduction || previous.fontLibrary != current.fontLibrary {
       previous.studioPresentation=nil;current.studioPresentation=nil
       previous.collectionProduction=nil;current.collectionProduction=nil
+      previous.fontLibrary=nil;current.fontLibrary=nil
       previous.history=[];current.history=[]
       previous.updatedAt=Date(timeIntervalSince1970:0);current.updatedAt=previous.updatedAt
       previous.schemaVersion=1;current.schemaVersion=1
@@ -527,6 +542,8 @@ enum TableTool: String, CaseIterable {
     scene?.resetCamera()
   }
   func home() {
+    artworkSession.canvas?.closeCanvasImagePrompt()
+    canvasImageWorkflow?.resetForProjectChange()
     imageWorkflow?.resetForProjectChange()
     studioShowingImages=false
     canvasFindVisible = false
@@ -624,6 +641,7 @@ enum TableTool: String, CaseIterable {
     perform("form_delete_objects", ["object_ids": selected.map { $0.id.uuidString }])
   }
   func undo() {
+    if artworkSession.canvas?.applyCanvasImageTextHistory(redo:false) == true {return}
     if applyStudioImageTextHistory(in:NSApp.keyWindow) {return}
     if environment == .studio,!studioShowingShots,studioComposition.undoDraft(){toast("Undone scene edit");return}
     if mode == .artwork, artworkSession.canvas?.undoText() == true {
@@ -636,6 +654,7 @@ enum TableTool: String, CaseIterable {
     toast("Undone")
   }
   func redo() {
+    if artworkSession.canvas?.applyCanvasImageTextHistory(redo:true) == true {return}
     if applyStudioImageTextHistory(in:NSApp.keyWindow,redo:true) {return}
     if environment == .studio,!studioShowingShots,studioComposition.redoDraft(){toast("Redone scene edit");return}
     if mode == .artwork, artworkSession.canvas?.redoText() == true {

@@ -78,8 +78,28 @@ import FormCore
     NSGraphicsContext.restoreGraphicsState()
     context.restoreGState()
   }
-  static func outlines(_ e:ArtworkElement) throws -> [(path:CGPath,color:String,swatchID:UUID?)] {
-    let value=entry(e);if let ink=value.ink { return ink }
+  static func drawPaintGroup(_ e: ArtworkElement, stack: [ArtworkPaintLayer]?, in context: CGContext) {
+    let value = entry(e)
+    context.saveGState()
+    context.scaleBy(x: 1 / TypographyEngine.pointsPerMM, y: 1 / TypographyEngine.pointsPerMM)
+    NSGraphicsContext.saveGraphicsState()
+    NSGraphicsContext.current = NSGraphicsContext(cgContext: context, flipped: true)
+    var start: Int?
+    func flush(_ end: Int) {
+      if let begin = start { value.layout.drawGlyphs(forGlyphRange: .init(location: begin, length: end - begin), at: .init(x: 0, y: value.offset)) }
+      start = nil
+    }
+    for glyph in value.visible.location..<NSMaxRange(value.visible) {
+      let character = value.layout.characterIndexForGlyph(at: glyph)
+      let data = character < value.storage.length ? value.storage.attribute(TypographyEngine.paintStackKey, at: character, effectiveRange: nil) as? Data : nil
+      if TypographyEngine.matchesPaint(data, element: e, stack: stack) { if start == nil { start = glyph } }
+      else { flush(glyph) }
+    }
+    flush(NSMaxRange(value.visible))
+    NSGraphicsContext.restoreGraphicsState(); context.restoreGState()
+  }
+  static func outlines(_ e:ArtworkElement, matchingPaintStack: [ArtworkPaintLayer]? = nil, filtering: Bool = false) throws -> [(path:CGPath,color:String,swatchID:UUID?)] {
+    let value=entry(e);if !filtering, let ink=value.ink { return ink }
     var result:[(path:CGPath,color:String,swatchID:UUID?)]=[]
     let factor=1/TypographyEngine.pointsPerMM
     for index in value.visible.location..<NSMaxRange(value.visible) {
@@ -87,6 +107,7 @@ import FormCore
       let character=value.layout.characterIndexForGlyph(at:index)
       guard character<value.storage.length else { continue }
       let attrs=value.storage.attributes(at:character,effectiveRange:nil)
+      if filtering && !TypographyEngine.matchesPaint(attrs[TypographyEngine.paintStackKey] as? Data, element: e, stack: matchingPaintStack) { continue }
       let font=try (value.layout as! PublicationLayoutManager).outlineFont(forGlyphAt:index,authored:attrs[.font] as? NSFont)
       let glyph=value.layout.glyph(at:index)
       let path=CGMutablePath()
@@ -100,7 +121,7 @@ import FormCore
         path.addPath(outline,transform:matrix)
       } else {
         let scalar=UnicodeScalar((value.storage.string as NSString).character(at:character))
-        if scalar.map({!CharacterSet.whitespacesAndNewlines.contains($0)}) == true {
+        if scalar.map({!CharacterSet.whitespacesAndNewlines.contains($0)}) ?? true {
           throw FormError.invalid("This font contains a glyph without a vector outline. Use a different font for hyphenated vector text.")
         }
       }
@@ -121,10 +142,10 @@ import FormCore
         } else { result.append((path,color,swatch)) }
       }
     }
-    for ink in PublicationLists.ink(layout:value.layout,glyphRange:value.visible) {
+    for ink in PublicationLists.ink(layout:value.layout,glyphRange:value.visible) where !filtering || matchingPaintStack == e.paintStack {
       let path=CGMutablePath();path.addPath(ink.path,transform:CGAffineTransform(a:factor,b:0,c:0,d:factor,tx:0,ty:value.offset*factor))
       result.append((path,ink.color,ink.swatchID))
     }
-    value.ink=result;return result
+    if !filtering { value.ink=result };return result
   }
 }

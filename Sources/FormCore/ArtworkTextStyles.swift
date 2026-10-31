@@ -89,6 +89,7 @@ public enum TextStyleCommands {
     var value = TextSpan(location: 0, length: element.text.utf16.count,
       typography: element.typography ?? .init(), fontSize: element.fontSize, color: element.color)
     value.swatchID = element.fillSwatchID
+    value.paintStack = element.paintStack
     value.textStyle = element.textStyle
     value.paragraphStyle = element.paragraphStyle
     return value

@@ -5,100 +5,63 @@ import SwiftUI
 
 struct FontBrowserButton: View {
   @ObservedObject var session: ArtworkSession
-  @State private var showing = false
+  @State private var browsing: FontBrowsingState?
+  @State private var exploration: FontBrowsingState?
   var body: some View {
-    Button {
-      showing = true
-    } label: {
-      HStack {
-        Text(
-          NSFont(name: session.inspectedTypography.fontName, size: 12)?.familyName
-            ?? session.inspectedTypography.fontName
-        ).lineLimit(1)
-        Spacer()
-        Image(systemName: "chevron.up.chevron.down").font(.system(size: 9))
-      }.font(InspectorStyle.labelFont).padding(.horizontal, 9).frame(height: InspectorStyle.controlHeight)
-        .background(Palette.surface, in: RoundedRectangle(cornerRadius: InspectorStyle.controlRadius))
-        .overlay(RoundedRectangle(cornerRadius: InspectorStyle.controlRadius).strokeBorder(Palette.line.opacity(0.7)).allowsHitTesting(false))
-    }.buttonStyle(.plain).popover(isPresented: $showing) { FontBrowser(session: session) }
+    HStack(spacing: 5) {
+      Button {
+        browsing = FontBrowsingState(session: session)
+      } label: {
+        HStack(spacing: 8) {
+          Text(NSFont(name: session.inspectedTypography.fontName, size: 12)?.familyName ?? session.inspectedTypography.fontName)
+            .font(Font(NSFont(name: session.inspectedTypography.fontName, size: 17) ?? .systemFont(ofSize: 17)))
+            .lineLimit(1)
+          Spacer(minLength: 0)
+          Image(systemName: "chevron.down").font(.system(size: 9, weight: .medium))
+        }.padding(.horizontal, 10).frame(height: 36).contentShape(Rectangle())
+          .background(Palette.surface, in: RoundedRectangle(cornerRadius: 8))
+      }.buttonStyle(.plain).accessibilityLabel("Choose font family").accessibilityIdentifier("font-browser-open")
+        .popover(item: $browsing) { state in
+          FontBrowser(session: session, state: state, onExplore: { browsing = nil; exploration = state })
+        }
+      FontPressable(title: "Explore fonts", identifier: "font-explorer-open", action: {
+        exploration = FontBrowsingState(session: session)
+      }) {
+        Image(systemName: "rectangle.grid.2x2").font(.system(size: 13)).frame(width: 32, height: 36)
+          .contentShape(Rectangle())
+          .padding(.horizontal, 8).padding(.vertical, 6)
+          .background(Palette.surface, in: RoundedRectangle(cornerRadius: 7)).foregroundStyle(Palette.ink)
+      }.help("Explore fonts with your text")
+    }.sheet(item: $exploration) { state in
+      FontExplorer(session: session, state: state)
+    }
   }
 }
+
 struct FontBrowser: View {
-  @ObservedObject var session:ArtworkSession
-  var onChoose:((String)->Void)?
+  @ObservedObject var session: ArtworkSession
+  var onChoose: ((String) -> Void)?
+  var onExplore: (() -> Void)?
   @Environment(\.dismiss) private var dismiss
-  @StateObject private var preferences:FontLibraryPreferences
-  init(session:ArtworkSession,onChoose:((String)->Void)?=nil) {
-    self.session=session;self.onChoose=onChoose
-    _preferences=StateObject(wrappedValue:session.store?.fontLibraryPreferences ?? .environment())
+  @StateObject private var state: FontBrowsingState
+  @State private var exploring = false
+  init(session: ArtworkSession, onChoose: ((String) -> Void)? = nil,
+    state: FontBrowsingState? = nil, onExplore: (() -> Void)? = nil) {
+    self.session = session; self.onChoose = onChoose; self.onExplore = onExplore
+    _state = StateObject(wrappedValue: state ?? FontBrowsingState(session: session))
   }
-  @State private var query=""
-  @State private var sample=FontLibraryCatalog.defaultPreview
-  @State private var favoriteOnly=false
-  @State private var showingUsage=false
-  @State private var fontRevision=0
-  private var faces:[InstalledFontFace] {
-    _ = fontRevision
-    let all=FontLibraryCatalog.search(query).filter{!favoriteOnly || preferences.favorite($0)}
-    guard query.isEmpty,!favoriteOnly else{return all}
-    let ranks=Dictionary(uniqueKeysWithValues:preferences.recent.enumerated().map{($0.element,$0.offset)})
-    return all.enumerated().sorted {a,b in
-      let left=ranks[a.element.name] ?? Int.max,right=ranks[b.element.name] ?? Int.max
-      return left==right ? a.offset<b.offset:left<right
-    }.map(\.element)
-  }
-  var body:some View {
-    VStack(spacing:12) {
-      HStack { SectionLabel("FONTS"); Spacer(); AppCloseButton("Close fonts", keyEquivalent: "\u{1b}") { dismiss() } }
-      InspectorDivider()
-      HStack {
-        TextField("Search family, style or face",text:$query).textFieldStyle(InspectorTextFieldStyle())
-        Button {favoriteOnly.toggle()} label:{Image(systemName:favoriteOnly ? "star.fill":"star")}
-          .buttonStyle(.plain).help("Show favorite font faces")
+  var body: some View {
+    Group {
+      if let store = session.store {
+        FontLibraryContent(session: session, store: store, preferences: store.fontLibraryPreferences,
+          state: state, expanded: false, onChoose: onChoose, onClose: { dismiss() }, onExplore: {
+            if let onExplore { onExplore() } else { exploring = true }
+          })
       }
-      TextField("Preview text",text:$sample).textFieldStyle(InspectorTextFieldStyle())
-        .onChange(of:sample) {_,value in if value.count>128 {sample=String(value.prefix(128))}}
-      HStack {SectionLabel("FONT FACES ON THIS MAC");Spacer();Text(faces.count == 1 ? "1 face":"\(faces.count) faces").font(.system(size:9)).foregroundStyle(Palette.secondary)}
-      ScrollView {
-        LazyVStack(spacing:3) {
-          ForEach(faces) {face in
-            HStack(spacing:5) {
-              Button {
-                if let onChoose {onChoose(face.name)} else{session.chooseFont(face.name)}
-                dismiss()
-              } label:{
-                VStack(alignment:.leading,spacing:4) {
-                  HStack {
-                    Text(face.family+" · "+face.style).font(.system(size:10)).foregroundStyle(Palette.secondary)
-                    if preferences.recent.contains(face.name) {Image(systemName:"clock").font(.system(size:8)).foregroundStyle(Palette.secondary)}
-                    Spacer()
-                    if session.inspectedTypography.fontName==face.name {Image(systemName:"checkmark").font(.system(size:9)).foregroundStyle(Palette.accent)}
-                  }
-                  if let font=FontLibraryCatalog.preview(face.name) {
-                    let preview=FontLibraryCatalog.previewText(sample,font:font)
-                    Text(preview.text).font(Font(font)).lineLimit(1).foregroundStyle(Palette.ink)
-                    if preview.usesFallback {Text("Some preview characters use system fallback").font(.system(size:8)).foregroundStyle(Palette.secondary)}
-                  }
-                  else {Text("Unavailable").font(.system(size:11)).foregroundStyle(Palette.secondary)}
-                  Text(face.name).font(.system(size:8,design:.monospaced)).foregroundStyle(Palette.secondary).lineLimit(1)
-                }.padding(10).frame(maxWidth:.infinity,alignment:.leading).contentShape(Rectangle())
-              }.buttonStyle(.plain)
-              Button {preferences.toggle(face)} label:{Image(systemName:preferences.favorite(face) ? "star.fill":"star").font(.system(size:11))}
-                .buttonStyle(.plain).foregroundStyle(preferences.favorite(face) ? Palette.accent:Palette.secondary)
-                .help("Favorite \(face.name)").padding(.trailing,12)
-            }.background(.white.opacity(0.6),in:RoundedRectangle(cornerRadius:6))
-          }
-          if faces.isEmpty {Text("No matching installed faces.").font(.system(size:12)).foregroundStyle(Palette.secondary).padding(20)}
-        }
+    }.frame(width: 460, height: 590).background(Palette.paper)
+      .sheet(isPresented: $exploring, onDismiss: { if state.didApply { dismiss() } }) {
+        FontExplorer(session: session, state: state, onChoose: onChoose)
       }
-      if let error=preferences.error {Text(error).font(.system(size:10)).foregroundStyle(Palette.accent)}
-      if onChoose==nil {
-        Button("Document font usage & replacements…",systemImage:"doc.text.magnifyingglass") {showingUsage=true}
-          .buttonStyle(.borderless).font(.system(size:11)).frame(maxWidth:.infinity,alignment:.leading)
-      }
-    }.padding(18).frame(width:400,height:530).background(Palette.paper)
-      .onReceive(NotificationCenter.default.publisher(for:NSFont.fontSetChangedNotification)) {_ in FontLibraryCatalog.invalidate();fontRevision+=1}
-      .sheet(isPresented:$showingUsage) {DocumentFontsPanel(session:session)}
   }
 }
 

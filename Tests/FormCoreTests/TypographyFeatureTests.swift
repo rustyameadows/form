@@ -155,6 +155,31 @@ final class TypographyFeatureTests: XCTestCase {
     }
   }
 
+  func testNativeCoverageFallbackPreservesAuthoredFaceSettingsButGenuineFontChangeDoesNot() async throws {
+    try await MainActor.run {
+      for (name,text) in [("Georgia-Bold","👩🏽‍💻"),("Georgia-Bold","שלום"),("Skia","Ελληνικά")] {
+        var style=Typography();style.fontName=name;style.features=[21:0];style.variations=[123:2]
+        let storage=NSTextStorage(string:text,attributes:TypographyEngine.attributes(style,size:18,color:"#223344",millimeters:false))
+        storage.fixFontAttribute(in:NSRange(location:0,length:storage.length))
+        let actual=try XCTUnwrap(storage.attribute(.font,at:0,effectiveRange:nil) as? NSFont)
+        XCTAssertNotEqual(actual.fontName,name,"Fixture must exercise actual native fallback for \(text).")
+        let restored=TypographyEngine.spans(from:storage,fallback:style)
+        XCTAssertFalse(restored.isEmpty)
+        for span in restored {
+          XCTAssertEqual(span.typography.fontName,name)
+          XCTAssertEqual(span.typography.features,style.features)
+          XCTAssertEqual(span.typography.variations,style.variations)
+        }
+      }
+      var style=Typography();style.fontName="Skia";style.features=[21:0]
+      let changed=NSMutableAttributedString(string:"Real native change",attributes:TypographyEngine.attributes(style,size:18,color:"#223344",millimeters:false))
+      changed.addAttribute(.font,value:try XCTUnwrap(NSFont(name:"Georgia-Bold",size:18)),range:NSRange(location:0,length:changed.length))
+      let spans=TypographyEngine.spans(from:changed,fallback:style)
+      XCTAssertEqual(spans.first?.typography.fontName,"Georgia-Bold")
+      XCTAssertEqual(spans.first?.typography.features,[:],"The genuine native font's own selectors must replace old ones.")
+    }
+  }
+
   func testSchemaElevenIsRequiredForRichRunsAndOlderFilesRemainReadable() throws {
     let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     defer { try? FileManager.default.removeItem(at: root) }

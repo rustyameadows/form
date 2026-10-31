@@ -105,6 +105,8 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var flipY: Bool?
   public var fillEnabled: Bool?
   public var fillOpacity: Double?
+  public var paintStack: [ArtworkPaintLayer]?
+  public var effectStack: ArtworkEffectStack?
   public var booleanOperation: String?
   public var component: ArtworkComponentReference?
   public var stroke: ArtworkStroke?
@@ -123,6 +125,10 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var productionRole: String?
   public var sewingPiece: SewingPatternPiece?
   public var clipID: UUID?
+  public var clipMode: String?
+  /// Original node settings for interoperability/recovery; native fields remain authoritative after edits.
+  public var sourceMetadata: ArtworkSourceMetadata?
+  public var imageGeneration: CanvasImageGenerationProvenance?
   public var objectView: ObjectViewSettings?
   public init(
     kind: String, x: Double, y: Double, width: Double = 60, height: Double = 30, text: String = "",
@@ -411,7 +417,7 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
-  public static let maximumSchemaVersion=58
+  public static let maximumSchemaVersion=61
   public var schemaVersion = 1
   public var id: UUID = UUID()
   public var name: String
@@ -429,6 +435,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var printSetups: [String: PrintConfiguration]?
   public var swatches: [ArtworkSwatch]?
   public var textStyles: [ArtworkTextStyle]?
+  public var fontLibrary: ProjectFontLibrary?
   public var textStories:[TextStory]?
   public var publications:[PublicationDocument]?
   public var productionJobs:[ProductionJob]?
@@ -437,7 +444,10 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
-    if storedArtworks.contains(where: { $0.elements.contains(where: { $0.objectView != nil }) }) { return max(schemaVersion, 58) }
+    if storedArtworks.contains(where: { $0.elements.contains(where: { $0.objectView != nil }) }) { return max(schemaVersion, 61) }
+    if objects.contains(where: { $0.artwork?.elements.contains(where: { $0.imageGeneration != nil }) == true }) { return max(schemaVersion, 60) }
+    if fontLibrary != nil {return max(schemaVersion,59)}
+    if (textStories ?? []).contains(where:{$0.paintStack != nil || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) || objects.contains(where:{$0.artwork?.elements.contains(where:{$0.sourceMetadata != nil || $0.paintStack != nil || $0.effectStack != nil || $0.clipMode != nil || ["angular","diamond"].contains($0.gradient?.kind ?? "") || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) == true || $0.artwork?.imports?.contains(where:{$0.elementIDs != nil || $0.format != nil}) == true}) {return max(schemaVersion,58)}
     if objects.contains(where:{$0.paperTemplateReference != nil}) {return max(schemaVersion,57)}
     if objects.contains(where:{$0.canvasSourceOnly != nil}) {return max(schemaVersion,57)}
     if materials.contains(where:{$0.paperStock != nil}) {return max(schemaVersion,57)}
