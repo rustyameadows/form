@@ -67,10 +67,12 @@ import FormCore
       }
       guard stack.contains(where: { $0.enabled && $0.effectivePaint.opacity > 0 && ($0.stroke == nil || ($0.stroke?.enabled != false && ($0.stroke?.width ?? 0)>0)) }) else { continue }
       let glyphs = try glyphPath(element, stack: stack)
+      guard !glyphs.isEmpty else { continue }
       for layer in stack where layer.enabled && layer.effectivePaint.opacity > 0 {
         if let stroke = layer.stroke {
           guard stroke.enabled != false, stroke.width > 0 else { continue }
-          result.append((try strokePath(glyphs, stroke: stroke), layer.effectivePaint))
+          let coverage = try strokePath(glyphs, stroke: stroke)
+          if !coverage.isEmpty { result.append((coverage, layer.effectivePaint)) }
         } else { result.append((glyphs, layer.effectivePaint)) }
       }
     }
@@ -96,13 +98,18 @@ import FormCore
       }
       if stack.isEmpty { continue }
       let path = try? glyphPath(element, stack: stack)
+      // Empty shaped coverage is valid for whitespace, overset frames and a
+      // base paint entirely replaced by character overrides. Quartz clipping
+      // with no current path does not install an empty clip; painting afterward
+      // would fill the enclosing canvas/group instead of drawing no glyphs.
+      if let path, path.isEmpty { continue }
       var bitmap: Coverage?
       for layer in stack where layer.enabled && layer.effectivePaint.opacity > 0 {
         context.saveGState()
         defer { context.restoreGState() }
         if let stroke = layer.stroke {
           guard stroke.enabled != false, stroke.width > 0, let path,
-            let coverage = try? strokePath(path, stroke: stroke) else { continue }
+            let coverage = try? strokePath(path, stroke: stroke), !coverage.isEmpty else { continue }
           context.addPath(coverage); context.clip()
         } else if let path {
           context.addPath(path); context.clip()

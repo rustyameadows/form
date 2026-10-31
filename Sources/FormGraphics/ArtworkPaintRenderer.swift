@@ -65,9 +65,13 @@ import FormCore
       if let stroke=layer.stroke {
         if stroke.enabled == false || stroke.width<=0 {context.restoreGState();continue}
         var sample=e;sample.paintStack=nil;sample.stroke=stroke
-        if let outline=try? VectorGeometry.expandedStroke(sample){context.addPath(outline);context.clip()}
+        if let outline=try? VectorGeometry.expandedStroke(sample),!outline.isEmpty{context.addPath(outline);context.clip()}
         else{context.restoreGState();continue}
-      }else{context.addPath(path);context.clip(using:rule)}
+      }else{
+        // An empty path is no coverage, not permission to paint the prior clip.
+        guard !path.isEmpty,!path.boundingBoxOfPath.isEmpty else{context.restoreGState();continue}
+        context.addPath(path);context.clip(using:rule)
+      }
       draw(layer.effectivePaint,size:.init(width:e.width,height:e.height),assets:assets,context:context)
       context.restoreGState()
     }

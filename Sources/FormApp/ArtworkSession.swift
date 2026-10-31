@@ -306,6 +306,12 @@ enum ArtworkTool: String, CaseIterable {
     let related = objects.filter { $0.isCanvasWorkspace } + objects.filter {object in
       guard !object.isCanvasWorkspace,!PaperConstruction.isPaper(object),
         object.recipeID=="artboard" || project.isIndependentFlatArtworkSource(object) || project.isIndependentSewingSource(object) || object.artworkParameterBindings?.isEmpty == false || object.id==objectID else{return false}
+      // Transferred component definitions are resources for their instances,
+      // not additional artboards. Expose a source only while it is explicitly
+      // active (for example, Edit component source), then hide it on return.
+      // Paper/CAD projections below still present their actual physical faces.
+      if object.canvasSourceOnly == true, object.componentDefinition == true,
+        object.id != objectID {return false}
       if hasCanonicalSourceRole(object,in:project) || componentReturn != nil && object.id==objectID {return true}
       let uses=paperUses(of:object.id,in:project)
       let selected=uses.first{$0.object.id==linkedTargetID}

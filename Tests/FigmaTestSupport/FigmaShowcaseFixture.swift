@@ -94,7 +94,7 @@ extension FigmaWireFixture {
 
     let typePanel = frame("03 / Character laboratory",board,816,642,720,324,[0.90,0.87,0.80])
     text("03   CHARACTER LABORATORY",typePanel,30,22,580,24,14,bold:true)
-    text("Aa",typePanel,22,44,306,244,224,ink,bold:true)
+    text("Aa",typePanel,22,44,306,244,200,ink,bold:true)
     text("Form follows\nfeeling.",typePanel,332,68,360,116,46,ink,bold:true)
     var specimen = sampleText(id:next,parent:typePanel,name:"Rich Unicode specimen",x:338,y:199); next += 1
     specimen["size"] = .object(["x":.float(330),"y":.float(82)]); nodes.append(specimen)
