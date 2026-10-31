@@ -48,6 +48,7 @@ extension StudioStore {
     report["ink_output"]=inks ? "preview":"none";report["ink_declarations_encoded"]=false
     if inks {report["ink_notice"]="Explicit sRGB appearance preview; declared spot/process originals remain in source and are not encoded by page_output."}
     if arguments["format"] as? String=="preflight" {return report}
+    if let project {try ObjectViewExportGuard.validate(project:project,object:object)}
     let path:URL
     if let value=arguments["path"] {
       guard let raw=value as? String,raw.hasPrefix("/"),raw.utf8.count<=4096 else{throw FormError.invalid("Use a bounded absolute PDF export path.")};path=URL(fileURLWithPath:raw)

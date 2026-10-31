@@ -33,7 +33,13 @@ import XCTest
       .init(0,0,0), .init(0,1,0), .init(0,1,3),
       .init(0,0,0), .init(0,1,3), .init(0,0,3),
     ]
-    let triangles = stride(from:0,to:vertices.count,by:3).map { (vertices[$0],vertices[$0+1],vertices[$0+2]) }
+    var triangles: [(SIMD3<Double>, SIMD3<Double>, SIMD3<Double>)] = []
+    for index in stride(from: 0, to: vertices.count, by: 3) {
+      let first = vertices[index]
+      let second = vertices[index + 1]
+      let third = vertices[index + 2]
+      triangles.append((first, second, third))
+    }
     let mesh = SceneMeshPayload(id:"frame-test",revision:"1",positionsMM:vertices,
       parts:[.init(triangleIndices:Array(0..<UInt32(vertices.count)))])
     let value = SceneRenderablePayload(componentID:"frame-test",objectID:UUID(),mesh:mesh,
