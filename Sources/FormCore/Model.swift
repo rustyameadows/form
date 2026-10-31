@@ -291,9 +291,10 @@ public struct Recipe: Codable, Equatable, Identifiable, Sendable {
   public var parameters: [Parameter]
   public var parts: [PartDefinition]
   public var requirements: [CADModelRequirement]?
+  public var solid: ParametricSolid?
   public init(
     _ id: String, _ name: String, _ symbol: String, _ summary: String, _ parameters: [Parameter],
-    parts: [PartDefinition] = [], requirements: [CADModelRequirement]? = nil
+    parts: [PartDefinition] = [], requirements: [CADModelRequirement]? = nil, solid: ParametricSolid? = nil
   ) {
     self.id = id
     self.name = name
@@ -302,6 +303,7 @@ public struct Recipe: Codable, Equatable, Identifiable, Sendable {
     self.parameters = parameters
     self.parts = parts
     self.requirements = requirements
+    self.solid = solid
   }
   public var defaults: [String: Double] {
     Dictionary(uniqueKeysWithValues: parameters.map { ($0.id, $0.value) })
@@ -322,6 +324,7 @@ public struct Recipe: Codable, Equatable, Identifiable, Sendable {
       throw FormError.invalid("Recipe parameter requirements must have unique bounded identities.")
     }
     for requirement in requirements ?? [] {try requirement.validate(using:all)}
+    if let solid {try solid.validateDefinitions(all)}
     for parameter in parameters where ["sheets", "pages"].contains(parameter.unit) {
       guard all[parameter.id]!.rounded() == all[parameter.id]! else {
         throw FormError.invalid("\(parameter.name) must be a whole number.")
@@ -417,7 +420,7 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
-  public static let maximumSchemaVersion=60
+  public static let maximumSchemaVersion=62
   public var schemaVersion = 1
   public var id: UUID = UUID()
   public var name: String
@@ -444,7 +447,8 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
-    if storedArtworks.contains(where: { $0.elements.contains(where: { $0.objectView != nil }) }) { return max(schemaVersion, 60) }
+    if recipes.contains(where: { $0.solid != nil }) { return max(schemaVersion, 62) }
+    if storedArtworks.contains(where: { $0.elements.contains(where: { $0.objectView != nil }) }) { return max(schemaVersion, 61) }
     if objects.contains(where: { $0.artwork?.elements.contains(where: { $0.imageGeneration != nil }) == true }) { return max(schemaVersion, 60) }
     if fontLibrary != nil {return max(schemaVersion,59)}
     if (textStories ?? []).contains(where:{$0.paintStack != nil || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) || objects.contains(where:{$0.artwork?.elements.contains(where:{$0.sourceMetadata != nil || $0.paintStack != nil || $0.effectStack != nil || $0.clipMode != nil || ["angular","diamond"].contains($0.gradient?.kind ?? "") || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) == true || $0.artwork?.imports?.contains(where:{$0.elementIDs != nil || $0.format != nil}) == true}) {return max(schemaVersion,58)}

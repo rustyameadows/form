@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-28",
+  "version": "0.5.4",
+  "schema": 57,
+  "code_commit": "3c653d0",
+  "tests": {
+    "suites": [
+      {
+        "suite": "LabRenderingTests.xctest",
+        "tests": 14,
+        "failures": 0
+      },
+      {
+        "suite": "FormMeshAssetsTests.xctest",
+        "tests": 24,
+        "failures": 0
+      },
+      {
+        "suite": "FormGeometryTests.xctest",
+        "tests": 7,
+        "failures": 0
+      },
+      {
+        "suite": "FormCoreTests.xctest",
+        "tests": 697,
+        "failures": 0
+      },
+      {
+        "suite": "FormCADModelingTests.xctest",
+        "tests": 8,
+        "failures": 0
+      },
+      {
+        "suite": "FormCADKernelTests.xctest",
+        "tests": 6,
+        "failures": 0
+      },
+      {
+        "suite": "FormAppTests.xctest",
+        "tests": 432,
+        "failures": 0
+      }
+    ],
+    "total": 1188,
+    "failures": 0,
+    "log_sha256": "a103e894b9b62eb395f788e0e11d554e1a1625cf1e1805a5bd21b4bef9a4403a"
+  },
+  "previous_library_files_verified": 209,
+  "library_mismatches": [],
+  "native_slider_acceptance": false,
+  "reference_model_visual_acceptance": false,
+  "generated_24_variant_set_complete": false,
+  "modeling_goal_status": "paused and incomplete",
+  "preview_scope": "Validated source and cancellation-aware worker only; native drag/draft and Fast/Detail publication remain unintegrated.",
+  "recording": {
+    "parts": 5,
+    "seconds": 8998.528333333334,
+    "width": 3420,
+    "height": 1644,
+    "audio_tracks": 0,
+    "scope": "Available actual LAB-window footage, including stalls/failures; capture interruptions documented. Not smooth configurator acceptance."
+  },
+  "printer_commands_sent": false,
+  "release_packaging": {
+    "status": "built; deep strict signature verification passed",
+    "version": "0.5.4",
+    "binary_sha256": "b549243acf97ba15a6e5cc8950fbc4a84aae4481f1a6ce5583b1abaff1e9363a",
+    "installed": false,
+    "reason": "The running ordinary LAB 0.5.3 is left at the user\u2019s completed local slice preview; no restart or second app instance.",
+    "build": "9"
+  }
+}

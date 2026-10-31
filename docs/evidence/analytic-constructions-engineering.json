@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-28",
+  "version": "0.5.3",
+  "schema": 56,
+  "code_commit": "8cac9d5",
+  "installed_binary_sha256": "3aae063c64a348101d95d7c60c4c7e36bbcd5c51be0d6484c68f0f75b93acf92",
+  "engineering_tests": {
+    "suites": [
+      {
+        "suite": "LabRenderingTests.xctest",
+        "tests": 14,
+        "failures": 0
+      },
+      {
+        "suite": "FormMeshAssetsTests.xctest",
+        "tests": 24,
+        "failures": 0
+      },
+      {
+        "suite": "FormGeometryTests.xctest",
+        "tests": 7,
+        "failures": 0
+      },
+      {
+        "suite": "FormCoreTests.xctest",
+        "tests": 686,
+        "failures": 0
+      },
+      {
+        "suite": "FormCADModelingTests.xctest",
+        "tests": 8,
+        "failures": 0
+      },
+      {
+        "suite": "FormCADKernelTests.xctest",
+        "tests": 6,
+        "failures": 0
+      },
+      {
+        "suite": "FormAppTests.xctest",
+        "tests": 429,
+        "failures": 0
+      }
+    ],
+    "total": 1174,
+    "failures": 0,
+    "log_sha256": "424888297c43a0d4c3443ff7f923f29bdcab7622f4192f1310b53e1907ebb753"
+  },
+  "native_bridge": [
+    "project-owned analytic recipe create/replace",
+    "actual surface inspection and PNG rendering",
+    "source-specific saved Studio review scenes",
+    "native mouse orbit and camera field edits"
+  ],
+  "visual_acceptance": false,
+  "goal_status": "active",
+  "qualification": "Native detail studies are intermediate. Analytic assemblies preserve detail as independently closed shells; self-intersection/Boolean-union/manufacturing qualification remain separate.",
+  "private_media_published": false,
+  "printer_commands_sent": false
+}
