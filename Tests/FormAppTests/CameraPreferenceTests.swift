@@ -345,11 +345,17 @@ import XCTest
   func testNamedViewAppliesItsOrientationWhenTheFitDistanceDoesNotChange() throws {
     let (f,store,root) = try scene()
     defer { f.close(); try? FileManager.default.removeItem(at:root) }
-    f.controller.preset("overhead")
-    let topDistance = f.controller.camera.distance
     f.controller.preset("front")
-    // This wide scene needs the same fit distance from either direction.
-    XCTAssertEqual(f.controller.camera.distance,topDistance,accuracy:1e-10)
+    let frontDistance = f.controller.camera.distance
+    f.controller.preset("overhead")
+    // Seed a different orientation at the actual panel-aware Front distance.
+    // Preset must refresh the renderer even when framing leaves distance equal.
+    var overhead = f.controller.camera
+    overhead.distance = frontDistance
+    f.controller.camera = overhead; f.controller.updateCamera()
+    XCTAssertEqual(Double(f.controller.cameraNode.simdWorldUp.y),0,accuracy:1e-6)
+    f.controller.preset("front")
+    XCTAssertEqual(f.controller.camera.distance,frontDistance,accuracy:1e-10)
     XCTAssertEqual(store.project!.camera,f.controller.camera)
     XCTAssertEqual(store.project!.camera.elevation,0)
     XCTAssertEqual(Double(f.controller.cameraNode.simdWorldUp.y),1,accuracy:1e-6)
@@ -363,8 +369,21 @@ import XCTest
     let builds = f.controller.geometryBuilds
     f.controller.focusSelection()
     let focused = f.controller.camera
-    XCTAssertEqual(focused.target.x,objects[0].position.x/100,accuracy:0.001)
-    XCTAssertEqual(focused.target.z,objects[0].position.z/100,accuracy:0.001)
+    let visible = try XCTUnwrap(f.controller.navigationFramingRect)
+    let selectedNode = try XCTUnwrap(f.controller.logicalNode(for:objects[0].id))
+    let bounds = try XCTUnwrap(f.controller.localBounds(for:objects[0].id))
+    var projected = CGRect.null
+    for x in [bounds.min.x,bounds.max.x] {for y in [bounds.min.y,bounds.max.y] {for z in [bounds.min.z,bounds.max.z] {
+      let world = selectedNode.convertPosition(.init(x,y,z),to:nil)
+      let point = f.view.projectPoint(world)
+      XCTAssertTrue(point.x.isFinite && point.y.isFinite && (0...1).contains(point.z))
+      projected = projected.union(.init(x:point.x,y:f.view.bounds.height-point.y,width:0,height:0))
+    }}}
+    XCTAssertTrue(visible.insetBy(dx:-0.5,dy:-0.5).contains(projected))
+    XCTAssertEqual(projected.midX,visible.midX,accuracy:0.5)
+    XCTAssertEqual(projected.midY,visible.midY,accuracy:0.5)
+    // Floating panels require an optical pan. Orbit retains that actual pan
+    // target, while the selected physical bounds occupy the useful viewport.
     let center = f.screen(focused.target)
     XCTAssertEqual(center.x,600,accuracy:0.001); XCTAssertEqual(center.y,400,accuracy:0.001)
     f.drag(80,-60)

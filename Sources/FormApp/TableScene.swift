@@ -86,6 +86,10 @@ private struct RenderSignature: Equatable {
     ]
   }
   var camera = CameraState()
+  /// Actual floating cards in top-left Table-local points. Geometry/layout
+  /// updates never refit an existing pose; only explicit navigation uses them.
+  var navigationOcclusions:[CGRect]?
+  private(set) var navigationFramingRect:CGRect?
   let adapter=GeometryPayloadAdapter()
   private(set) var renderer:RealityKitSceneRenderer?
   private(set) var rendererIssue:String?
@@ -577,23 +581,36 @@ private struct RenderSignature: Equatable {
       return
     }
     let viewport = view?.bounds.size ?? CGSize(width: 600, height: 400)
-    var insets = CameraFraming.Insets()
-    if aspect == nil, view != nil, let store {
-      // Reserve the floating inspector and camera bar without changing the
-      // subject-centered orbit pivot or the camera's actual viewport aspect.
-      insets = .init(
-        top: 80 / max(1, viewport.height),
-        right: (store.mode == .studio ? 264 + 48 : !store.tableInspectorVisible || store.environment != .form ? 0 : FloatingPanelStyle.inspectorWidth + FloatingPanelStyle.outerPadding * 2) / max(1, viewport.width),
-        bottom: 80 / max(1, viewport.height))
+    let fitted:CameraState
+    if aspect==nil,view != nil {
+      let result=TableViewportFraming.fitted(camera,points:points,viewport:viewport,
+        occlusions:navigationOcclusions ?? fallbackNavigationOcclusions(viewport),
+        fieldOfView:Double(cameraNode.camera?.fieldOfView ?? 39))
+      guard let result else{return}
+      navigationFramingRect=result.visibleRect;fitted=result.camera
+    } else {
+      navigationFramingRect=nil
+      fitted=CameraFraming.fitted(camera,points:points,
+        aspect:aspect ?? Double(viewport.width/max(1,viewport.height)),fieldOfView:Double(cameraNode.camera?.fieldOfView ?? 39))
     }
-    let fitted = CameraFraming.fitted(
-      camera, points: points,
-      aspect: aspect ?? Double(viewport.width / max(1, viewport.height)),
-      fieldOfView: Double(cameraNode.camera?.fieldOfView ?? 39), insets: insets)
     // A preset may have changed orientation before fitting. Even when bounds
     // need the same distance/target, apply that orientation to the renderer/store.
     camera = fitted
     updateCamera(animated: animated)
+  }
+  private func fallbackNavigationOcclusions(_ viewport:CGSize)->[CGRect] {
+    guard let store else{return []}
+    var result=[CGRect(x:16,y:max(0,viewport.height-64),width:max(0,viewport.width-32),height:48)]
+    if store.mode == .studio {
+      result.append(.init(x:max(0,viewport.width-312),y:16,width:296,height:max(0,viewport.height-100)))
+    } else {
+      if store.tableNavigatorVisible {result.append(.init(x:16,y:16,width:220,height:min(360,max(180,viewport.height-116))))}
+      if store.tableInspectorVisible && store.environment == .form {
+        result.append(.init(x:viewport.width-16-FloatingPanelStyle.inspectorWidth,y:16,
+          width:FloatingPanelStyle.inspectorWidth,height:max(180,viewport.height-116)))
+      }
+    }
+    return result
   }
   func logicalNode(for id:UUID)->MeshNode? {nodes[id]}
   /// Interface outlines are children of the visible object, but never part of

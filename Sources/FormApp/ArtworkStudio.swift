@@ -39,7 +39,9 @@ struct ArtworkStudio: View {
       }
       .background(Color(nsColor: appearance.canvasBackgroundColor))
       .overlay(alignment: .topLeading) {
-        if layers {
+        if store.canvasFindVisible {
+          CanvasFindPanel().padding(FloatingPanelStyle.outerPadding)
+        } else if layers {
           ArtworkLayers(session: session, onClose: { showingLayers.toggle() })
             .frame(width: 234, height: min(panelHeight, 480))
             .floatingPanelSurface().padding(FloatingPanelStyle.outerPadding)
@@ -64,6 +66,7 @@ struct ArtworkStudio: View {
         }.padding(16)
       }
     }
+    .focusedValue(\.designSurface, .artwork)
     .onAppear {
       if session.object == nil {
         if let object = store.primary, PaperConstruction.isPaper(object) { store.activatePaperArtwork(object) }
@@ -124,6 +127,7 @@ struct ArtworkStudio: View {
         value: layers ? "Shown" : "Hidden") { showingLayers.toggle() }
       WorkspaceToolbarButton("Canvas inspector", symbol: "sidebar.right", isSelected: inspector,
         value: inspector ? "Shown" : "Hidden") { showingInspector.toggle() }
+      WorkspaceToolbarButton("Find on Canvas · ⌘F", symbol: "magnifyingglass") { store.requestWorkspaceFind(.artwork) }
       WorkspaceToolbarDivider()
       ForEach(ArtworkTool.allCases, id: \.self) { tool in
         WorkspaceToolbarButton(tool.rawValue.capitalized + " tool", symbol: tool.symbol,

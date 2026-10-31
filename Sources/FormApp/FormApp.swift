@@ -16,6 +16,7 @@ import SwiftUI
     }
     .windowStyle(.hiddenTitleBar)
     .defaultSize(width: 1440, height: 940)
+    .commands { WorkspaceFindCommands(store: store) }
     .commands {
       CommandGroup(replacing:.appInfo){
         Button("About LAB"){
@@ -149,13 +150,7 @@ import SwiftUI
         Button("Create Component from Selection") { store.artworkSession.component("create") }
           .keyboardShortcut("k", modifiers: [.command, .option])
           .disabled(store.mode != .artwork || store.artworkSession.selection.isEmpty)
-        Menu("Insert Component") {
-          ForEach(store.project?.artworkComponents ?? []) { source in
-            Button(source.name) {
-              store.artworkSession.component("insert", ["source_object_id": source.id.uuidString])
-            }.disabled(source.id == store.artworkSession.objectID)
-          }
-        }.disabled(store.mode != .artwork || store.project?.artworkComponents.isEmpty != false)
+        ComponentInsertionMenu(store: store)
         Button("Detach Component Instance") { store.artworkSession.component("detach") }
           .disabled(store.mode != .artwork || store.artworkSession.primary?.component == nil)
         Divider()
@@ -196,6 +191,23 @@ import SwiftUI
       }
     }
     Settings { AppearanceSettingsView(appearance: .shared, store: store) }
+  }
+}
+
+private struct ComponentInsertionMenu: View {
+  @ObservedObject var store: StudioStore
+  private var sources: [ProductObject] { store.project?.artworkComponents ?? [] }
+  var body: some View {
+    Menu("Insert Component") {
+      ForEach(sources) { source in
+        Button(action: { insert(source.id) }) { Text(source.name) }
+          .disabled(source.id == store.artworkSession.objectID)
+      }
+    }.disabled(store.mode != .artwork || sources.isEmpty)
+  }
+  private func insert(_ id: UUID) {
+    let arguments: [String: Any] = ["source_object_id": id.uuidString]
+    store.artworkSession.component("insert", arguments)
   }
 }
 

@@ -79,6 +79,12 @@ enum TableTool: String, CaseIterable {
   @Published var svgImport: SVGImportReview?
   @Published var showGrid = false
   @Published var tableInspectorVisible = false
+  @Published var tableNavigatorVisible = true
+  @Published var tableSearchQuery = ""
+  @Published var tableSearchFocusRequest = 0
+  @Published var canvasFindVisible = false
+  @Published var canvasSearchQuery = ""
+  @Published var canvasSearchFocusRequest = 0
   @Published var tableTool: TableTool = .orbit
   @Published var isolated: Set<UUID> = []
   lazy var studioShots = StudioShotController(store:self)
@@ -455,6 +461,7 @@ enum TableTool: String, CaseIterable {
     } catch { self.error = error.localizedDescription }
   }
   private func restoreProjectWorkspace() {
+    tableSearchQuery = ""; canvasSearchQuery = ""; canvasFindVisible = false
     tableInspectorVisible = false
     studioShots.reset()
     isolated = []
@@ -469,6 +476,7 @@ enum TableTool: String, CaseIterable {
     scene?.resetCamera()
   }
   func home() {
+    canvasFindVisible = false
     tableInspectorVisible = false
     utilityWindows?.closeProjectWindows()
     environment = .form
