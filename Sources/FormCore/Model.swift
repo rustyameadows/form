@@ -449,9 +449,9 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var minimumSchemaVersion: Int {
     if recipes.contains(where: { $0.solid != nil }) { return max(schemaVersion, 62) }
     if storedArtworks.contains(where: { $0.elements.contains(where: { $0.objectView != nil }) }) { return max(schemaVersion, 61) }
-    if objects.contains(where: { $0.artwork?.elements.contains(where: { $0.imageGeneration != nil }) == true }) { return max(schemaVersion, 60) }
+    if storedArtworks.contains(where: { $0.elements.contains(where: { $0.imageGeneration != nil }) }) { return max(schemaVersion, 60) }
     if fontLibrary != nil {return max(schemaVersion,59)}
-    if (textStories ?? []).contains(where:{$0.paintStack != nil || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) || objects.contains(where:{$0.artwork?.elements.contains(where:{$0.sourceMetadata != nil || $0.paintStack != nil || $0.effectStack != nil || $0.clipMode != nil || ["angular","diamond"].contains($0.gradient?.kind ?? "") || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) == true || $0.artwork?.imports?.contains(where:{$0.elementIDs != nil || $0.format != nil}) == true}) {return max(schemaVersion,58)}
+    if (textStories ?? []).contains(where:{$0.paintStack != nil || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) || storedArtworks.contains(where:{$0.elements.contains(where:{$0.sourceMetadata != nil || $0.paintStack != nil || $0.effectStack != nil || $0.clipMode != nil || ["angular","diamond"].contains($0.gradient?.kind ?? "") || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) || $0.imports?.contains(where:{$0.elementIDs != nil || $0.format != nil}) == true}) {return max(schemaVersion,58)}
     if objects.contains(where:{$0.paperTemplateReference != nil}) {return max(schemaVersion,57)}
     if objects.contains(where:{$0.canvasSourceOnly != nil}) {return max(schemaVersion,57)}
     if materials.contains(where:{$0.paperStock != nil}) {return max(schemaVersion,57)}

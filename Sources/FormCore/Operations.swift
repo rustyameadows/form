@@ -1,5 +1,6 @@
 import CoreFoundation
 import Foundation
+import FormCADModel
 
 /// Used by both the native interface and the local agent bridge. Call from one serial executor.
 public final class OperationEngine {
@@ -1008,9 +1009,19 @@ public func decodeRecipe(_ value: [String: Any]) throws -> Recipe {
     guard data.count<=512_000 else{throw FormError.invalid("Solid definition exceeds 512 KB.")}
     solid=try JSONDecoder().decode(ParametricSolid.self,from:data)
   }else{solid=nil}
+  let requirements:[CADModelRequirement]?
+  if let raw=value["requirements"],!(raw is NSNull) {
+    guard let values=raw as? [[String:Any]],values.count<=128,
+      JSONSerialization.isValidJSONObject(values) else {
+      throw FormError.invalid("Recipe requirements must contain at most 128 JSON-safe comparison rules.")
+    }
+    let data=try JSONSerialization.data(withJSONObject:values)
+    guard data.count<=512_000 else{throw FormError.invalid("Recipe requirements exceed 512 KB.")}
+    requirements=try JSONDecoder().decode([CADModelRequirement].self,from:data)
+  }else{requirements=nil}
   let recipe = Recipe(
     id, name, value["symbol"] as? String ?? "cube.transparent",
-    value["summary"] as? String ?? "A custom parametric object.", parameters, parts: definitions,solid:solid)
+    value["summary"] as? String ?? "A custom parametric object.", parameters, parts: definitions,requirements:requirements,solid:solid)
   try recipe.validate(recipe.defaults)
   return recipe
 }
