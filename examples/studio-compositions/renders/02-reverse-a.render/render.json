@@ -1,0 +1,116 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1200,
+  "png_sha256" : "e253b2de0f4b69a01b831cefd685e0f87160635e96ed6da74c3cc971d77bb043",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "font:HelveticaNeue-Bold",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : -2.6387494426619322,
+      "distance" : 15.574287479737098,
+      "elevation" : 0.24058842334829211,
+      "projection" : "perspective",
+      "target" : {
+        "x" : -1.4210854715202004e-16,
+        "y" : 4.0800000000000001,
+        "z" : 0
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "ACDD205A-BC7B-4A58-BB6D-C5D062C3811D",
+    "instances" : [
+      {
+        "id" : "87B3A770-A0D0-420C-AE1F-E44C60E61C38",
+        "name" : "Dispatch \/ Design A \/ 1",
+        "positionMM" : {
+          "x" : 0,
+          "y" : 0,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible" : true
+      },
+      {
+        "id" : "60707BFC-C9FC-40A2-802B-13850F50B289",
+        "name" : "Dispatch \/ Design A \/ 2",
+        "positionMM" : {
+          "x" : 0,
+          "y" : 163.19999999999999,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible" : true
+      },
+      {
+        "id" : "5E7DF3D9-0087-4C89-8583-CF6A1C415445",
+        "name" : "Dispatch \/ Design A \/ 3",
+        "positionMM" : {
+          "x" : 0,
+          "y" : 326.39999999999998,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible" : true
+      },
+      {
+        "id" : "C439ACC8-5F2E-4E48-846D-84FD7CE1AE98",
+        "name" : "Dispatch \/ Design A \/ 4",
+        "positionMM" : {
+          "x" : 0,
+          "y" : 489.59999999999997,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible" : true
+      },
+      {
+        "id" : "7C15E955-13CE-433A-A6AA-06FFFCEA4934",
+        "name" : "Dispatch \/ Design A \/ 5",
+        "positionMM" : {
+          "x" : 0,
+          "y" : 652.79999999999995,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "02 \/ Dispatch A \/ Reverse view",
+    "pixels" : {
+      "height" : 1200,
+      "width" : 1800
+    },
+    "revision" : 2,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "5291a4e6237832de154208338316755622b4b1441281cb70ee055c247120d61f",
+  "source_project_id" : "F7C2F770-6919-4AE9-A813-B97E28E15659",
+  "width" : 1800
+}

@@ -65,6 +65,8 @@ private struct RenderSignature: Equatable {
   private var paperPoseStates:[UUID:PaperPoseState]=[:]
   private var geometryBounds: [UUID: (min: MeshVector3, max: MeshVector3)] = [:]
   private var selectionNodes: [MeshNode] = []
+  /// Interactive composition stages opt in; saved-shot/export stages remain clean.
+  var showsStudioSelection=false
   private var lastSelection = Set<UUID>()
   private var lastStudio = false
   private var lastPreset = ""
@@ -147,6 +149,7 @@ private struct RenderSignature: Equatable {
       for id in renderedComponents.subtracting(live) {renderer.remove(componentID:id)}
       renderedComponents=live;rendererIssue=nil
       updateRenderCamera();updateRenderLighting()
+      view?.redrawPresentationOverlay()
     } catch {rendererIssue=error.localizedDescription;store?.error="3D viewport: \(error.localizedDescription)"}
   }
   func updateRenderCamera() {
@@ -431,7 +434,7 @@ private struct RenderSignature: Equatable {
   private func rebuildSelection(_ selection: Set<UUID>, studio: Bool) {
     selectionNodes.forEach { $0.removeFromParentNode() }
     selectionNodes = []
-    guard !studio else { return }
+    guard !studio || showsStudioSelection else { return }
     for id in selection {
       guard let node = nodes[id] else { continue }
       let bounds = geometryBounds[id] ?? physicalBounds(of:node)
@@ -470,6 +473,7 @@ private struct RenderSignature: Equatable {
     }
   }
   func updateCamera(animated: Bool = false) {
+    defer {view?.redrawPresentationOverlay()}
     if let size = view?.bounds.size, size.width > 0, size.height > 0 {
       camera.viewportAspect = size.width / size.height
     }
@@ -561,6 +565,8 @@ private struct RenderSignature: Equatable {
       store?.cameraChanged()
     }
   }
+  /// Presentation stages can frame their own instance IDs without a design store.
+  func frameObjects(ids:Set<UUID>) {view?.cancelPointerInteraction();frame(ids:ids)}
   private func frame(ids: Set<UUID>, aspect: Double? = nil, animated: Bool = true) {
     var points: [Vector3] = []
     for id in ids {
@@ -730,13 +736,38 @@ private struct RenderSignature: Equatable {
   }
 }
 
+/// Optional presentation behavior. Design Table editing continues to use its
+/// existing store path; a Studio stage never borrows that mutable design store.
+@MainActor protocol TablePresentationInteraction:AnyObject {
+  var presentationInputEnabled:Bool {get}
+  var presentationCursor:NSCursor {get}
+  var presentationGizmo:StudioTransformGizmo? {get}
+  func invalidatePresentationGizmo()
+  func beginPresentationInteraction(at point:NSPoint,modifiers:NSEvent.ModifierFlags)->Bool
+  func dragPresentationInteraction(to point:NSPoint,modifiers:NSEvent.ModifierFlags)
+  func endPresentationInteraction(at point:NSPoint,modifiers:NSEvent.ModifierFlags,dragged:Bool)
+  func cancelPresentationInteraction()
+  func presentationKeyDown(_ event:NSEvent)->Bool
+}
+
 @MainActor final class TableSceneView:NSView {
+  weak var presentationInteraction:TablePresentationInteraction? {didSet{installPresentationOverlay()}}
+  private lazy var presentationOverlay:StudioTransformGizmoOverlay = {
+    let overlay=StudioTransformGizmoOverlay(frame:bounds);overlay.tableView=self;overlay.autoresizingMask=[.width,.height];overlay.wantsLayer=true;overlay.layer?.backgroundColor=NSColor.clear.cgColor
+    return overlay
+  }()
   weak var controller:TableSceneController? {didSet{installViewport()}}
   private func installViewport() {
     subviews.forEach{$0.removeFromSuperview()}
     if let viewport=controller?.renderer?.nativeView {viewport.frame=bounds;viewport.autoresizingMask=[.width,.height];addSubview(viewport)}
     else {let label=NSTextField(labelWithString:controller?.rendererIssue ?? "3D renderer unavailable");label.frame=bounds.insetBy(dx:24,dy:24);label.autoresizingMask=[.width,.height];addSubview(label)}
+    installPresentationOverlay()
   }
+  private func installPresentationOverlay() {
+    guard presentationInteraction != nil else{presentationOverlay.removeFromSuperview();return}
+    presentationOverlay.frame=bounds;addSubview(presentationOverlay,positioned:.above,relativeTo:nil);presentationOverlay.needsDisplay=true
+  }
+  func redrawPresentationOverlay() {if presentationInteraction != nil {presentationInteraction?.invalidatePresentationGizmo();presentationOverlay.needsDisplay=true}}
   override func hitTest(_ point:NSPoint)->NSView? {isHidden || !bounds.contains(convert(point,from:superview)) ? nil:self}
   func projectPoint(_ p:MeshVector3)->MeshVector3 {
     guard let controller,let q=SceneProjection.project(p.simd*100,camera:controller.cameraPayload(),viewport:bounds.size) else{return .init(.nan,.nan,.nan)}
@@ -770,7 +801,7 @@ private struct RenderSignature: Equatable {
   // Separate presentation viewports reuse the established navigation contract.
   var onCameraInteraction:(()->Void)?
   var onObjectPick:((UUID?)->Void)?
-  private enum DragAction { case orbit, move }
+  private enum DragAction { case orbit, move, presentation }
   private var action: DragAction = .orbit
   private var previous = NSPoint.zero
   private var down = NSPoint.zero
@@ -792,9 +823,11 @@ private struct RenderSignature: Equatable {
   override var acceptsFirstResponder: Bool { true }
   override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
   override func resetCursorRects() {
-    addCursorRect(bounds, cursor: controller?.store?.tableTool == .move ? .arrow : .openHand)
+    let cursor=controller?.store==nil ? presentationInteraction?.presentationCursor:nil
+    addCursorRect(bounds, cursor:cursor ?? (controller?.store?.tableTool == .move ? .arrow:.openHand))
   }
   func cancelPointerInteraction() {
+    if controller?.store==nil {presentationInteraction?.cancelPresentationInteraction()}
     if pointerActive { phase = "cancelled" }
     pointerActive = false
     dragged = false
@@ -815,6 +848,7 @@ private struct RenderSignature: Equatable {
     }
   }
   override func mouseDown(with event: NSEvent) {
+    if controller?.store==nil,presentationInteraction?.presentationInputEnabled==false {cancelPointerInteraction();return}
     window?.makeFirstResponder(self)
     controller?.store?.activateDesignSurface(.table)
     cancelPointerInteraction()
@@ -828,6 +862,10 @@ private struct RenderSignature: Equatable {
     lastAction = "none"
     action = .orbit
     guard let controller else { return }
+    if controller.store==nil,presentationInteraction?.beginPresentationInteraction(at:previous,modifiers:event.modifierFlags)==true {
+      action = .presentation
+      return
+    }
     if controller.store?.tableTool == .move, let store = controller.store,
       let id = controller.objectID(at: previous)
     {
@@ -847,6 +885,7 @@ private struct RenderSignature: Equatable {
     }
   }
   override func mouseDragged(with event: NSEvent) {
+    if controller?.store==nil,presentationInteraction?.presentationInputEnabled==false {cancelPointerInteraction();return}
     // A late drag after a missed/cancelled mouse-down must never reuse an old anchor.
     guard pointerActive, let controller else { return }
     let point = convert(event.locationInWindow, from: nil)
@@ -863,6 +902,9 @@ private struct RenderSignature: Equatable {
     totalDelta.y += dy
     phase = "dragging"
     switch action {
+    case .presentation:
+      lastAction = "presentation"
+      presentationInteraction?.dragPresentationInteraction(to:point,modifiers:event.modifierFlags)
     case .orbit:
       if event.modifierFlags.contains(.shift) {
         lastAction = "pan"
@@ -909,6 +951,9 @@ private struct RenderSignature: Equatable {
   }
   override func mouseUp(with event: NSEvent) {
     guard pointerActive else { return }
+    if action == .presentation,controller?.store==nil {
+      presentationInteraction?.endPresentationInteraction(at:convert(event.locationInWindow,from:nil),modifiers:event.modifierFlags,dragged:dragged)
+    }
     if !dragged, let controller, let store = controller.store {
       let point = convert(event.locationInWindow, from: nil)
       let objectID=controller.objectID(at:point)
@@ -926,19 +971,24 @@ private struct RenderSignature: Equatable {
     attachmentDrag = nil
     objectPositions = [:]
     controller?.store?.cameraChanged()
-    if !dragged,controller?.store==nil {onObjectPick?(controller?.objectID(at:convert(event.locationInWindow,from:nil)))}
-    if dragged {onCameraInteraction?()}
+    if !dragged,action != .presentation,controller?.store==nil {onObjectPick?(controller?.objectID(at:convert(event.locationInWindow,from:nil)))}
+    if dragged,action != .presentation {onCameraInteraction?()}
   }
   override func scrollWheel(with event: NSEvent) {
+    if controller?.store==nil,presentationInteraction?.presentationInputEnabled==false {return}
+    if controller?.store==nil,presentationInteraction != nil {cancelPointerInteraction()}
     let delta = -Double(event.scrollingDeltaY) * (event.hasPreciseScrollingDeltas ? 0.35 : 1)
     controller?.zoom(delta)
     onCameraInteraction?()
   }
   override func magnify(with event: NSEvent) {
+    if controller?.store==nil,presentationInteraction?.presentationInputEnabled==false {return}
+    if controller?.store==nil,presentationInteraction != nil {cancelPointerInteraction()}
     controller?.zoom(-Double(event.magnification) * 100)
     onCameraInteraction?()
   }
   override func keyDown(with event: NSEvent) {
+    if controller?.store==nil,presentationInteraction?.presentationKeyDown(event)==true {return}
     if event.keyCode == 53, let onEscape { onEscape(); return }
     if event.keyCode == 51 || event.keyCode == 117 {
       controller?.store?.deleteSelection()

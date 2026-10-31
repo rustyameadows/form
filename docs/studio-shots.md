@@ -1,5 +1,7 @@
 # Saved Studio shots
 
+The main Studio workspace now uses [compositions with independently placed product instances](studio-compositions.md). Its **Existing saved shots** action opens the project-camera workflow documented below.
+
 Studio can save a named camera composition with its lighting, surface, explicit subjects and output pixels. Shot definitions are project data with stable IDs; their product geometry, source artwork, materials and cloth states remain independent.
 
 The first presets are **Classic**, which preserves the existing Studio rig, **Soft side**, and **Rim**. Daylight, Warm paper and Graphite remain the surface/background choices. These are controlled presentation options, not calibrated lighting or a photorealism claim.

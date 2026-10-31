@@ -1,0 +1,682 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 3,
+    "elements" : [
+
+    ]
+  },
+  "designID" : "19F20B34-6B58-4A75-BFF1-D8E012CD01FE",
+  "id" : "2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "Dispatch / Design A",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "components" : [
+        {
+          "anchor" : {
+            "x" : "0",
+            "y" : "(depth/2)+(height)"
+          },
+          "id" : "body",
+          "name" : "Body",
+          "position" : {
+            "x" : "-width/2",
+            "y" : "0",
+            "z" : "depth/2"
+          },
+          "rootPanelID" : "front",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          }
+        }
+      ],
+      "hinges" : [
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "right",
+          "end" : {
+            "x" : "width",
+            "y" : "(depth/2)+(height)"
+          },
+          "id" : "crease-right",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "front",
+          "start" : {
+            "x" : "width",
+            "y" : "depth/2"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "back",
+          "end" : {
+            "x" : "width+depth",
+            "y" : "(depth/2)+(height)"
+          },
+          "id" : "crease-back",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "right",
+          "start" : {
+            "x" : "width+depth",
+            "y" : "depth/2"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "left",
+          "end" : {
+            "x" : "2*width+depth",
+            "y" : "(depth/2)+(height)"
+          },
+          "id" : "crease-left",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "2*width+depth",
+            "y" : "depth/2"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "glue",
+          "end" : {
+            "x" : "2*(width+depth)",
+            "y" : "(depth/2)+(height)"
+          },
+          "id" : "crease-glue",
+          "layerOffsetMM" : "stock",
+          "opensWithTop" : false,
+          "parentPanelID" : "left",
+          "start" : {
+            "x" : "2*(width+depth)",
+            "y" : "depth/2"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "top-front",
+          "end" : {
+            "x" : "((0)+(width))+(-.6)",
+            "y" : "depth/2"
+          },
+          "id" : "crease-top-front",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : true,
+          "parentPanelID" : "front",
+          "start" : {
+            "x" : "(0)+(.6)",
+            "y" : "depth/2"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "bottom-front",
+          "end" : {
+            "x" : "((0)+(width))+(-.6)",
+            "y" : "height+depth/2"
+          },
+          "id" : "crease-bottom-front",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "front",
+          "start" : {
+            "x" : "(0)+(.6)",
+            "y" : "height+depth/2"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "top-right",
+          "end" : {
+            "x" : "((width)+(depth))+(-.6)",
+            "y" : "depth/2"
+          },
+          "id" : "crease-top-right",
+          "layerOffsetMM" : "stock",
+          "opensWithTop" : true,
+          "parentPanelID" : "right",
+          "start" : {
+            "x" : "(width)+(.6)",
+            "y" : "depth/2"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "bottom-right",
+          "end" : {
+            "x" : "((width)+(depth))+(-.6)",
+            "y" : "height+depth/2"
+          },
+          "id" : "crease-bottom-right",
+          "layerOffsetMM" : "stock",
+          "opensWithTop" : false,
+          "parentPanelID" : "right",
+          "start" : {
+            "x" : "(width)+(.6)",
+            "y" : "height+depth/2"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "top-back",
+          "end" : {
+            "x" : "((width+depth)+(width))+(-.6)",
+            "y" : "depth/2"
+          },
+          "id" : "crease-top-back",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : true,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "(width+depth)+(.6)",
+            "y" : "depth/2"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "bottom-back",
+          "end" : {
+            "x" : "((width+depth)+(width))+(-.6)",
+            "y" : "height+depth/2"
+          },
+          "id" : "crease-bottom-back",
+          "layerOffsetMM" : "0",
+          "opensWithTop" : false,
+          "parentPanelID" : "back",
+          "start" : {
+            "x" : "(width+depth)+(.6)",
+            "y" : "height+depth/2"
+          }
+        },
+        {
+          "angleDegrees" : "-90.0",
+          "childPanelID" : "top-left",
+          "end" : {
+            "x" : "((2*width+depth)+(depth))+(-.6)",
+            "y" : "depth/2"
+          },
+          "id" : "crease-top-left",
+          "layerOffsetMM" : "stock",
+          "opensWithTop" : true,
+          "parentPanelID" : "left",
+          "start" : {
+            "x" : "(2*width+depth)+(.6)",
+            "y" : "depth/2"
+          }
+        },
+        {
+          "angleDegrees" : "90.0",
+          "childPanelID" : "bottom-left",
+          "end" : {
+            "x" : "((2*width+depth)+(depth))+(-.6)",
+            "y" : "height+depth/2"
+          },
+          "id" : "crease-bottom-left",
+          "layerOffsetMM" : "stock",
+          "opensWithTop" : false,
+          "parentPanelID" : "left",
+          "start" : {
+            "x" : "(2*width+depth)+(.6)",
+            "y" : "height+depth/2"
+          }
+        }
+      ],
+      "interiors" : [
+        {
+          "componentID" : "body",
+          "id" : "body-interior",
+          "name" : "Body Interior",
+          "opening" : {
+            "axis" : "y",
+            "height" : "depth-stock",
+            "width" : "width-stock"
+          },
+          "origin" : {
+            "x" : "stock/2",
+            "y" : "2*stock",
+            "z" : "-depth+stock/2"
+          },
+          "size" : {
+            "x" : "width-stock",
+            "y" : "height-4*stock",
+            "z" : "depth-stock"
+          }
+        }
+      ],
+      "joins" : [
+        {
+          "firstPanelID" : "glue",
+          "id" : "body-glue",
+          "kind" : "glue",
+          "name" : "Body Glue",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "glueTab",
+          "secondPanelID" : "front"
+        },
+        {
+          "firstPanelID" : "top-front",
+          "id" : "top-tape-contact",
+          "kind" : "tape",
+          "name" : "Top Tape Contact",
+          "notes" : "Major flap meeting line; tape is a declared assembly operation, not a simulated bond.",
+          "overlapMM" : "0",
+          "secondPanelID" : "top-back"
+        }
+      ],
+      "name" : "RSC shipping study",
+      "panels" : [
+        {
+          "id" : "front",
+          "name" : "Front",
+          "polygon" : [
+            {
+              "x" : "0",
+              "y" : "depth/2"
+            },
+            {
+              "x" : "(0)+(width)",
+              "y" : "depth/2"
+            },
+            {
+              "x" : "(0)+(width)",
+              "y" : "(depth/2)+(height)"
+            },
+            {
+              "x" : "0",
+              "y" : "(depth/2)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "right",
+          "name" : "Right",
+          "polygon" : [
+            {
+              "x" : "width",
+              "y" : "depth/2"
+            },
+            {
+              "x" : "(width)+(depth)",
+              "y" : "depth/2"
+            },
+            {
+              "x" : "(width)+(depth)",
+              "y" : "(depth/2)+(height)"
+            },
+            {
+              "x" : "width",
+              "y" : "(depth/2)+(height)"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "back",
+          "name" : "Back",
+          "polygon" : [
+            {
+              "x" : "width+depth",
+              "y" : "depth/2"
+            },
+            {
+              "x" : "(width+depth)+(width)",
+              "y" : "depth/2"
+            },
+            {
+              "x" : "(width+depth)+(width)",
+              "y" : "(depth/2)+(height)"
+            },
+            {
+              "x" : "width+depth",
+              "y" : "(depth/2)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "left",
+          "name" : "Left",
+          "polygon" : [
+            {
+              "x" : "2*width+depth",
+              "y" : "depth/2"
+            },
+            {
+              "x" : "(2*width+depth)+(depth)",
+              "y" : "depth/2"
+            },
+            {
+              "x" : "(2*width+depth)+(depth)",
+              "y" : "(depth/2)+(height)"
+            },
+            {
+              "x" : "2*width+depth",
+              "y" : "(depth/2)+(height)"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "glue",
+          "name" : "Glue",
+          "polygon" : [
+            {
+              "x" : "2*(width+depth)",
+              "y" : "depth/2"
+            },
+            {
+              "x" : "(2*(width+depth))+(glueTab)",
+              "y" : "(depth/2)+(3)"
+            },
+            {
+              "x" : "(2*(width+depth))+(glueTab)",
+              "y" : "((depth/2)+(height))+(-3)"
+            },
+            {
+              "x" : "2*(width+depth)",
+              "y" : "(depth/2)+(height)"
+            }
+          ],
+          "role" : "glue"
+        },
+        {
+          "id" : "top-front",
+          "name" : "Top Front",
+          "polygon" : [
+            {
+              "x" : "(0)+(.6)",
+              "y" : "0"
+            },
+            {
+              "x" : "((0)+(.6))+((width)-1.2)",
+              "y" : "0"
+            },
+            {
+              "x" : "((0)+(.6))+((width)-1.2)",
+              "y" : "(0)+(depth/2)"
+            },
+            {
+              "x" : "(0)+(.6)",
+              "y" : "(0)+(depth/2)"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "bottom-front",
+          "name" : "Bottom Front",
+          "polygon" : [
+            {
+              "x" : "(0)+(.6)",
+              "y" : "height+depth/2"
+            },
+            {
+              "x" : "((0)+(.6))+((width)-1.2)",
+              "y" : "height+depth/2"
+            },
+            {
+              "x" : "((0)+(.6))+((width)-1.2)",
+              "y" : "(height+depth/2)+(depth/2)"
+            },
+            {
+              "x" : "(0)+(.6)",
+              "y" : "(height+depth/2)+(depth/2)"
+            }
+          ],
+          "role" : "bottomClosure"
+        },
+        {
+          "id" : "top-right",
+          "name" : "Top Right",
+          "polygon" : [
+            {
+              "x" : "(width)+(.6)",
+              "y" : "0"
+            },
+            {
+              "x" : "((width)+(.6))+((depth)-1.2)",
+              "y" : "0"
+            },
+            {
+              "x" : "((width)+(.6))+((depth)-1.2)",
+              "y" : "(0)+(depth/2)"
+            },
+            {
+              "x" : "(width)+(.6)",
+              "y" : "(0)+(depth/2)"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "bottom-right",
+          "name" : "Bottom Right",
+          "polygon" : [
+            {
+              "x" : "(width)+(.6)",
+              "y" : "height+depth/2"
+            },
+            {
+              "x" : "((width)+(.6))+((depth)-1.2)",
+              "y" : "height+depth/2"
+            },
+            {
+              "x" : "((width)+(.6))+((depth)-1.2)",
+              "y" : "(height+depth/2)+(depth/2)"
+            },
+            {
+              "x" : "(width)+(.6)",
+              "y" : "(height+depth/2)+(depth/2)"
+            }
+          ],
+          "role" : "bottomClosure"
+        },
+        {
+          "id" : "top-back",
+          "name" : "Top Back",
+          "polygon" : [
+            {
+              "x" : "(width+depth)+(.6)",
+              "y" : "0"
+            },
+            {
+              "x" : "((width+depth)+(.6))+((width)-1.2)",
+              "y" : "0"
+            },
+            {
+              "x" : "((width+depth)+(.6))+((width)-1.2)",
+              "y" : "(0)+(depth/2)"
+            },
+            {
+              "x" : "(width+depth)+(.6)",
+              "y" : "(0)+(depth/2)"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "bottom-back",
+          "name" : "Bottom Back",
+          "polygon" : [
+            {
+              "x" : "(width+depth)+(.6)",
+              "y" : "height+depth/2"
+            },
+            {
+              "x" : "((width+depth)+(.6))+((width)-1.2)",
+              "y" : "height+depth/2"
+            },
+            {
+              "x" : "((width+depth)+(.6))+((width)-1.2)",
+              "y" : "(height+depth/2)+(depth/2)"
+            },
+            {
+              "x" : "(width+depth)+(.6)",
+              "y" : "(height+depth/2)+(depth/2)"
+            }
+          ],
+          "role" : "bottomClosure"
+        },
+        {
+          "id" : "top-left",
+          "name" : "Top Left",
+          "polygon" : [
+            {
+              "x" : "(2*width+depth)+(.6)",
+              "y" : "0"
+            },
+            {
+              "x" : "((2*width+depth)+(.6))+((depth)-1.2)",
+              "y" : "0"
+            },
+            {
+              "x" : "((2*width+depth)+(.6))+((depth)-1.2)",
+              "y" : "(0)+(depth/2)"
+            },
+            {
+              "x" : "(2*width+depth)+(.6)",
+              "y" : "(0)+(depth/2)"
+            }
+          ],
+          "role" : "tuck"
+        },
+        {
+          "id" : "bottom-left",
+          "name" : "Bottom Left",
+          "polygon" : [
+            {
+              "x" : "(2*width+depth)+(.6)",
+              "y" : "height+depth/2"
+            },
+            {
+              "x" : "((2*width+depth)+(.6))+((depth)-1.2)",
+              "y" : "height+depth/2"
+            },
+            {
+              "x" : "((2*width+depth)+(.6))+((depth)-1.2)",
+              "y" : "(height+depth/2)+(depth/2)"
+            },
+            {
+              "x" : "(2*width+depth)+(.6)",
+              "y" : "(height+depth/2)+(depth/2)"
+            }
+          ],
+          "role" : "bottomClosure"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 416,
+          "minimum" : 156,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 260
+        },
+        {
+          "maximum" : 256,
+          "minimum" : 96,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 160
+        },
+        {
+          "maximum" : 288,
+          "minimum" : 108,
+          "name" : "depth",
+          "unit" : "mm",
+          "value" : 180
+        },
+        {
+          "maximum" : 5.760000000000001,
+          "minimum" : 1.6,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 3.2
+        },
+        {
+          "maximum" : 5,
+          "minimum" : 0,
+          "name" : "clearance",
+          "unit" : "mm",
+          "value" : 1
+        },
+        {
+          "maximum" : 45,
+          "minimum" : 16,
+          "name" : "glueTab",
+          "unit" : "mm",
+          "value" : 28
+        }
+      ],
+      "requirements" : [
+        {
+          "id" : "usable-stock",
+          "lhs" : "height",
+          "message" : "Height must leave a positive usable cavity after stock layers.",
+          "relation" : ">",
+          "rhs" : "6*stock"
+        }
+      ],
+      "rootPanelID" : "front",
+      "size" : {
+        "x" : "2*(width+depth)+glueTab",
+        "y" : "height+depth"
+      },
+      "stockThickness" : "stock",
+      "version" : 3
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 2,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 180,
+      "height" : 160,
+      "width" : 260
+    },
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "kind" : "authored",
+    "openingPercent" : 0,
+    "stock" : {
+      "grain" : "unknown",
+      "gsm" : 300,
+      "name" : "Uncoated paperboard",
+      "notes" : "Prototype assumptions; verify the chosen stock and crease tooling.",
+      "thicknessMM" : 3.2,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "parameters" : {
+    "clearance" : 1,
+    "depth" : 180,
+    "fold" : 100,
+    "glueTab" : 28,
+    "height" : 160,
+    "opening" : 0,
+    "stock" : 3.2,
+    "width" : 260
+  },
+  "position" : {
+    "x" : -350,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "construction-2EE956FA-80FE-4ACA-ABCA-E57D82AFE4B5",
+  "relationship" : "original",
+  "rotation" : 0
+}

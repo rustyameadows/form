@@ -17,10 +17,10 @@ struct StudioCompositionWorkspace:View {
           Divider()
           VStack(spacing:0) {
             HStack(alignment:.top) {
-              EnvironmentPageHeading(eyebrow:"Studio · composition stage",title:controller.draft?.name ?? "Compose a scene.",detail:"Arrange linked products for an image or camera motion. Your design objects stay in place.")
+              Text(controller.draft?.name ?? "Studio").font(.system(size:16,weight:.semibold)).lineLimit(1).truncationMode(.tail)
               Spacer(minLength:0)
               Toggle("Guides",isOn:$guides).inspectorToggle().font(.system(size:10))
-            }.padding(20)
+            }.padding(.horizontal,18).padding(.vertical,12)
             stage.frame(minHeight:260,maxHeight:.infinity)
             timeline
           }.frame(minWidth:350,maxWidth:.infinity,maxHeight:.infinity)
@@ -31,6 +31,8 @@ struct StudioCompositionWorkspace:View {
         if controller.busy {HStack{ProgressView(value:controller.progress);Text("\(Int(controller.progress*100))%").font(.system(size:10,design:.monospaced));Button("Cancel export"){controller.cancelExport()}}.padding(12)}
       }
     }.onAppear{controller.reconcile()}.onChange(of:store.project?.id){_,_ in controller.reconcile()}.onChange(of:store.revision){_,_ in controller.reconcile()}.onChange(of:store.environment){_,value in if value != .studio {controller.stop()}}
+      .onChange(of:controller.selectedInstanceID){_,id in if id != nil {inspector="Instance"}}
+      .onChange(of:controller.selectionRequest){_,_ in if controller.selectedInstanceID != nil {inspector="Instance"}}
       .confirmationDialog("Save changes to \(controller.draft?.name ?? "this scene")?",isPresented:Binding(
         get:{controller.pendingSceneID != nil},set:{if !$0 {controller.cancelSceneSelection()}})) {
           if let id=controller.pendingSceneID {
@@ -43,37 +45,53 @@ struct StudioCompositionWorkspace:View {
   }
   private var sceneList:some View {
     VStack(alignment:.leading,spacing:14) {
-      HStack{SectionLabel("SCENES");Spacer();Button{controller.newScene()}label:{Image(systemName:"plus")}.buttonStyle(.plain).accessibilityLabel("New Studio scene")}
-      Menu(controller.draft?.name ?? "Choose a scene") {
-        ForEach(controller.scenes){scene in Button{controller.requestScene(scene.id)}label:{
-          Label(scene.name,systemImage:controller.draft?.id==scene.id ? "checkmark":"camera")
-        }}
-      }.accessibilityLabel("Saved Studio scenes")
+      HStack {
+        SectionLabel("SCENES");Spacer()
+        Menu {
+          Button("Empty scene"){controller.newEmptyScene()}
+          Button("From Table objects"){controller.newScene()}
+        }label:{Image(systemName:"plus")}.menuStyle(.borderlessButton).fixedSize()
+          .help("Create an empty scene or start with Table objects").accessibilityLabel("New Studio scene")
+      }
+      if controller.scenes.isEmpty {
+        Text("No saved scenes").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+      }else {
+        ScrollView {
+          VStack(spacing:2) {
+            ForEach(controller.scenes){scene in
+              WorkspaceNavigationRow(title:scene.name,subtitle:"\(scene.instances.count) instances",symbol:"camera",
+                selected:controller.draft?.id==scene.id,accessibilityLabel:"Open Studio scene "+scene.name,
+                identifier:"studio-scene-"+scene.id.uuidString){controller.requestScene(scene.id)}
+            }
+          }
+        }.frame(height:min(166,CGFloat(controller.scenes.count)*42-2)).accessibilityLabel("Saved Studio scenes")
+      }
       HStack {Button("Save scene"){controller.save()}.buttonStyle(.borderedProminent).tint(Palette.ink);Menu{Button("Duplicate saved scene"){controller.duplicateScene()};Button("Delete saved scene",role:.destructive){controller.deleteScene()};Button("Discard draft"){controller.discard()}}label:{Image(systemName:"ellipsis")}.menuStyle(.borderlessButton).fixedSize()}
       if controller.dirty {Text("Unsaved scene draft").font(.system(size:10)).foregroundStyle(Palette.accent)}
       Divider()
+      HStack {SectionLabel("INSTANCES");Spacer()}
       Menu {
         ForEach(controller.products){object in Button(object.name){controller.add(object)}}
         Divider();Button("Shelf / riser prop"){controller.addShelf()}
-      } label:{Label("Add to scene",systemImage:"plus")}.accessibilityLabel("Add presentation instance")
+      } label:{Label("Add product or prop",systemImage:"plus")}.accessibilityLabel("Add presentation instance")
       ScrollView {
-        VStack(spacing:6) {
+        VStack(spacing:2) {
           ForEach(controller.draft?.instances ?? []) {instance in
-            Button {controller.selectedInstanceID=instance.id;inspector="Instance";controller.sync()}label:{
-              HStack(alignment:.top,spacing:9) {
-                Image(systemName:instance.prop != nil ? "rectangle.3.group":"cube.transparent").frame(width:22)
-                VStack(alignment:.leading,spacing:4) {Text(instance.name).font(.system(size:11,weight:.medium));Text(instance.prop != nil ? "Presentation prop":"Linked product instance").font(.system(size:9)).foregroundStyle(Palette.secondary)}
-                Spacer(minLength:0)
-                Image(systemName:instance.visible ? "eye":"eye.slash").font(.system(size:10)).foregroundStyle(Palette.secondary)
-              }.padding(10).background(controller.selectedInstanceID==instance.id ? Color.white:Color.clear,in:RoundedRectangle(cornerRadius:7))
-            }.buttonStyle(.plain).accessibilityLabel("Scene instance "+instance.name)
+            WorkspaceNavigationRow(title:instance.name,subtitle:instance.prop != nil ? "Presentation prop":"Linked product instance",
+              symbol:instance.prop != nil ? "rectangle.3.group":"cube.transparent",selected:controller.selectedInstanceID==instance.id,
+              statusSymbols:instance.visible ? []:["eye.slash"],accessibilityLabel:"Scene instance "+instance.name,
+              identifier:"studio-instance-"+instance.id.uuidString) {
+                controller.selectInstance(instance.id);inspector="Instance"
+              }
           }
         }
       }
-      HStack {Button{controller.duplicateInstance()}label:{Image(systemName:"plus.square.on.square")}.help("Duplicate selected instance").accessibilityLabel("Duplicate Studio instance");Button{controller.removeInstance()}label:{Image(systemName:"minus")}.help("Remove from scene").accessibilityLabel("Remove Studio instance")}.disabled(controller.selected==nil)
+      HStack(spacing:3) {
+        WorkspaceToolbarButton("Duplicate selected",symbol:"plus.square.on.square",help:"Add another linked instance of the selected product",showsTitle:true,identifier:"studio-duplicate-instance"){controller.duplicateInstance()}
+        WorkspaceToolbarButton("Remove Studio instance",symbol:"trash",help:"Remove the selected instance from this scene",identifier:"studio-remove-instance"){controller.removeInstance()}
+      }.disabled(controller.selected==nil)
       Divider()
       Button("Existing saved shots…"){store.studioShowingShots=true}.font(.system(size:10)).buttonStyle(.plain)
-      Text("Instances stay linked to their design. Replacing a source selects another product or variant; it does not edit that design.").font(.system(size:10)).foregroundStyle(Palette.secondary)
     }.padding(18).disabled(controller.busy)
   }
   private var stage:some View {
@@ -83,15 +101,33 @@ struct StudioCompositionWorkspace:View {
         Color(nsColor:.windowBackgroundColor)
         StudioCompositionViewport(controller:controller).frame(width:w,height:h).overlay {
           if guides {Canvas{context,size in var path=Path();for f in [1.0/3,2.0/3]{path.move(to:.init(x:size.width*f,y:0));path.addLine(to:.init(x:size.width*f,y:size.height));path.move(to:.init(x:0,y:size.height*f));path.addLine(to:.init(x:size.width,y:size.height*f))};context.stroke(path,with:.color(.white.opacity(0.4)),lineWidth:0.7)}.allowsHitTesting(false)}
+        }.overlay {
+          if controller.draft?.instances.isEmpty == true {Text("Add a product or prop to start composing.").font(InspectorStyle.labelFont).foregroundStyle(Palette.secondary).allowsHitTesting(false)}
         }.overlay(Rectangle().stroke(Palette.line)).position(x:g.size.width/2,y:g.size.height/2-8)
-        VStack{Spacer();HStack{Button("Frame scene"){controller.frameScene()};Spacer();Text("Drag to orbit · Shift-drag to pan · Scroll to zoom").foregroundStyle(Palette.secondary)}.font(.system(size:10)).padding(12)}
+        VStack {
+          Spacer()
+          WorkspaceToolbarSurface(maxWidth:max(1,g.size.width-24)) {
+            WorkspaceToolbarButton("Studio transform handles",symbol:"move.3d",isSelected:controller.gizmoVisible,
+              help:"Show XYZ move handles and a vertical rotation ring on the selected instance",value:controller.gizmoVisible ? "Shown":"Hidden",
+              identifier:"studio-transform-handles"){controller.gizmoVisible.toggle()}
+            WorkspaceToolbarDivider()
+            WorkspaceToolbarButton("Orbit Studio camera",symbol:TableTool.orbit.symbol,isSelected:controller.tool == .orbit,
+              help:"Orbit · O: drag the camera; Shift-drag pans; scroll zooms",identifier:"studio-tool-orbit"){controller.tool = .orbit}
+            WorkspaceToolbarButton("Move Studio instance",symbol:TableTool.move.symbol,isSelected:controller.tool == .move,
+              help:"Move · V: drag an instance along the table",identifier:"studio-tool-move"){controller.tool = .move}
+            WorkspaceToolbarDivider()
+            WorkspaceToolbarButton("Focus Studio selection",symbol:"viewfinder",help:"Focus · F: frame the selected scene instance",identifier:"studio-focus-selection"){controller.focusSelected()}
+              .disabled(controller.selected==nil)
+            WorkspaceToolbarButton("Frame Studio scene",symbol:"arrow.up.left.and.arrow.down.right",help:"Frame all visible scene instances",identifier:"studio-frame-scene"){controller.frameScene()}
+          }.disabled(controller.busy || controller.playing).padding(.bottom,8)
+        }
       }
     }
   }
   private var inspectorPanel:some View {
     ScrollView {
       VStack(alignment:.leading,spacing:18) {
-        Picker("Studio inspector",selection:$inspector){Text("Camera").tag("Camera");Text("Instance").tag("Instance");Text("Light").tag("Light")}.pickerStyle(.segmented).labelsHidden()
+        Picker("Studio inspector",selection:$inspector){Text("Camera").tag("Camera");Text("Instance").tag("Instance");Text("Light").tag("Light")}.inspectorSegmented().labelsHidden().accessibilityLabel("Studio inspector")
         if let scene=controller.draft {
           if inspector=="Camera" {camera(scene)}
           else if inspector=="Instance" {instanceEditor}
@@ -111,7 +147,7 @@ struct StudioCompositionWorkspace:View {
   private func camera(_ scene:StudioComposition)->some View {
     VStack(alignment:.leading,spacing:14) {
       SectionLabel("CAMERA & FRAMING")
-      Picker("Projection",selection:Binding(get:{scene.camera.projection},set:{value in controller.change{$0.camera.projection=value}})){Text("Perspective").tag("perspective");Text("Orthographic").tag("orthographic")}
+      Picker("Projection",selection:Binding(get:{scene.camera.projection},set:{value in controller.change{$0.camera.projection=value}})){Text("Perspective").tag("perspective");Text("Orthographic").tag("orthographic")}.inspectorPicker()
       field("Yaw",value:scene.camera.azimuth*180 / .pi,unit:"°"){value in controller.change{$0.camera.azimuth=value * .pi/180;$0.camera.orientation=nil}}
       field("Elevation",value:scene.camera.elevation*180 / .pi,unit:"°"){value in controller.change{$0.camera.elevation=value * .pi/180;$0.camera.orientation=nil}}
       field("Distance",value:scene.camera.distance*100,unit:"mm"){value in controller.change{$0.camera.distance=value/100}}
@@ -126,27 +162,28 @@ struct StudioCompositionWorkspace:View {
   @ViewBuilder private var instanceEditor:some View {
     if let instance=controller.selected {
       SectionLabel("PRESENTATION INSTANCE")
-      TextField("Instance name",text:Binding(get:{instance.name},set:{value in controller.changeInstance{$0.name=value}})).textFieldStyle(InspectorTextFieldStyle())
-      Toggle("Visible",isOn:Binding(get:{instance.visible},set:{value in controller.changeInstance{$0.visible=value}}))
+      TextField("Instance name",text:Binding(get:{instance.name},set:{value in controller.changeInstance(id:instance.id){$0.name=value}})).textFieldStyle(InspectorTextFieldStyle())
+      Toggle("Visible",isOn:Binding(get:{instance.visible},set:{value in controller.changeInstance(id:instance.id){$0.visible=value}})).inspectorToggle()
       if instance.prop==nil {
-        Picker("Product / variant",selection:Binding<UUID?>(get:{instance.sourceObjectID},set:{value in controller.changeInstance{$0.sourceObjectID=value;$0.materialID=nil}})){
+        Picker("Product / variant",selection:Binding<UUID?>(get:{instance.sourceObjectID},set:{value in controller.changeInstance(id:instance.id){$0.sourceObjectID=value;$0.materialID=nil}})){
           if !controller.products.contains(where:{$0.id==instance.sourceObjectID}) {Text("Missing source · replace").tag(instance.sourceObjectID)}
           ForEach(controller.products){object in Text(object.name).tag(Optional(object.id))}
-        }.accessibilityLabel("Studio instance product variant")
+        }.inspectorPicker().accessibilityLabel("Studio instance product variant")
         if controller.products.first(where:{$0.id==instance.sourceObjectID})?.meshAsset != nil {
           Text("Material slots come from the authored source. Choose a source colorway to change them.").font(.system(size:10)).foregroundStyle(Palette.secondary)
-        }else {Picker("Appearance",selection:Binding<String?>(get:{instance.materialID},set:{value in controller.changeInstance{$0.materialID=value}})){Text("From source design").tag(String?.none);ForEach(store.materials){material in Text(material.name).tag(Optional(material.id))}}}
+        }else {Picker("Appearance",selection:Binding<String?>(get:{instance.materialID},set:{value in controller.changeInstance(id:instance.id){$0.materialID=value}})){Text("From source design").tag(String?.none);ForEach(store.materials){material in Text(material.name).tag(Optional(material.id))}}.inspectorPicker()}
       }else if let prop=instance.prop {
-        field("Prop width",value:prop.widthMM,unit:"mm"){value in controller.changeInstance{$0.prop?.widthMM=value}}
-        field("Prop height",value:prop.heightMM,unit:"mm"){value in controller.changeInstance{$0.prop?.heightMM=value}}
-        field("Prop depth",value:prop.depthMM,unit:"mm"){value in controller.changeInstance{$0.prop?.depthMM=value}}
-        TextField("Prop color #RRGGBB",text:Binding(get:{prop.color},set:{value in controller.changeInstance{$0.prop?.color=value}})).textFieldStyle(InspectorTextFieldStyle())
+        field("Prop width",value:prop.widthMM,unit:"mm"){value in controller.changeInstance(id:instance.id){$0.prop?.widthMM=value}}
+        field("Prop height",value:prop.heightMM,unit:"mm"){value in controller.changeInstance(id:instance.id){$0.prop?.heightMM=value}}
+        field("Prop depth",value:prop.depthMM,unit:"mm"){value in controller.changeInstance(id:instance.id){$0.prop?.depthMM=value}}
+        TextField("Prop color #RRGGBB",text:Binding(get:{prop.color},set:{value in controller.changeInstance(id:instance.id){$0.prop?.color=value}})).textFieldStyle(InspectorTextFieldStyle())
       }
-      Divider();SectionLabel("PLACEMENT · MILLIMETERS")
-      field("X",value:instance.positionMM.x,unit:"mm"){value in controller.changeInstance{$0.positionMM.x=value}}
-      field("Y",value:instance.positionMM.y,unit:"mm"){value in controller.changeInstance{$0.positionMM.y=value}}
-      field("Z",value:instance.positionMM.z,unit:"mm"){value in controller.changeInstance{$0.positionMM.z=value}}
-      field("Rotation",value:instance.rotationDegrees,unit:"°"){value in controller.changeInstance{$0.rotationDegrees=value}}
+      Divider();SectionLabel("PLACEMENT")
+      field("X",value:instance.positionMM.x,unit:"mm"){value in controller.changeInstance(id:instance.id){$0.positionMM.x=value}}
+      field("Height (Y)",value:instance.positionMM.y,unit:"mm"){value in controller.changeInstance(id:instance.id){$0.positionMM.y=value}}
+      field("Z",value:instance.positionMM.z,unit:"mm"){value in controller.changeInstance(id:instance.id){$0.positionMM.z=value}}
+      field("Rotation",value:instance.rotationDegrees,unit:"°"){value in controller.changeInstance(id:instance.id){$0.rotationDegrees=value}}
+        .help("Yaw around the vertical Y axis")
       Button("Duplicate instance"){controller.duplicateInstance()}
       Text("Placement affects this scene instance only.").font(.system(size:10)).foregroundStyle(Palette.secondary)
     }else {Text("Choose a scene instance to position it or replace its product source.").foregroundStyle(Palette.secondary)}
