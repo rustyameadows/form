@@ -49,8 +49,9 @@ import FormCore
   static func draw(_ frame:CanvasFrame,context:CGContext,scale:Double,highlighted:Int?=nil) {
     guard supports(frame),scale>0 else{return}
     context.saveGState();defer{context.restoreGState()}
+    // Canvas already draws the category-colored frame. Resize controls add
+    // accent handles without repainting that persistent outline.
     context.setStrokeColor(Palette.accentNS.cgColor);context.setLineWidth(1/scale)
-    context.stroke(frame.rect)
     for (index,point) in points(frame.rect).enumerated() {
       // At tiny scales show corners only, leaving a useful interior.
       if [1,5].contains(index),frame.rect.width*scale<28 {continue}
