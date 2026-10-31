@@ -129,7 +129,6 @@ struct StudioTopBar: View {
         Menu {
           if store.environment == .studio && !store.studioShowingShots {
             Button("Composition image · PNG + record"){store.studioComposition.exportDialog(video:false)}
-            Button("Camera video · MP4 + record"){store.studioComposition.exportDialog(video:true)}
           }else {
           Button("Studio image · PNG") { store.exportDialog("png") }
           Button("Printable artwork · PDF") { store.exportDialog("pdf") }.disabled(
@@ -144,14 +143,7 @@ struct StudioTopBar: View {
           Image(systemName: "square.and.arrow.up").font(.system(size: 14)).frame(
             width: 28, height: 28)
         }.menuStyle(.borderlessButton).fixedSize().help("Export")
-        if store.environment == .studio && !store.studioShowingShots {
-          if !store.studioShowingImages {
-            Button {store.createStudioStill()} label: {
-              Label("Create still",systemImage:"sparkles").font(.system(size:12,weight:.semibold))
-            }.buttonStyle(.borderedProminent).tint(Palette.ink)
-              .accessibilityLabel("Create AI still from Studio scene").accessibilityIdentifier("studio-create-still")
-          }
-        }else {AddObjectMenu(compact: true)}
+        if store.environment != .studio || store.studioShowingShots {AddObjectMenu(compact: true)}
       }
     }
     .padding(.leading, 92).padding(.trailing, 16).frame(height: 32)

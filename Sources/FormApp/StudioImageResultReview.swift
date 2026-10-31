@@ -31,6 +31,9 @@ struct StudioImageResultReview:View {
   @ObservedObject var controller:StudioImageGenerationController
   @ObservedObject var library:StudioAssetLibrary
   @Binding var selectedAssetID:UUID?
+  /// Browsing a prior result has its own selection, independent of the next
+  /// image's draft and the controller's active generation run.
+  var runID:UUID?=nil
   var onIterate:(UUID)->Void
   var onRegenerate:()->Void
   var onUseInCanvas:((UUID)->Void)?=nil
@@ -40,9 +43,17 @@ struct StudioImageResultReview:View {
   @State private var issue:String?
   @State private var inspectingRun:StudioGenerationRun?
 
-  private var capture:StudioGenerationCapture? {controller.currentRun?.capture ?? controller.capture}
+  private var run:StudioGenerationRun? {
+    guard controller.store?.project?.id==controller.projectID,controller.store?.showingHome==false else{return nil}
+    if let runID {return controller.history.first{$0.id==runID && $0.capture.projectID==controller.projectID}}
+    return controller.currentRun
+  }
+  private var capture:StudioGenerationCapture? {
+    guard controller.store?.project?.id==controller.projectID,controller.store?.showingHome==false else{return nil}
+    return run?.capture ?? (runID==nil ? controller.capture:nil)
+  }
   private var outputID:UUID? {
-    guard let run=controller.currentRun else{return nil}
+    guard let run else{return nil}
     if let selectedAssetID,run.outputAssetIDs.contains(selectedAssetID){return selectedAssetID}
     return run.outputAssetIDs.first
   }
@@ -56,7 +67,7 @@ struct StudioImageResultReview:View {
             Text("Result").tag("Result");Text("Scene input").tag("Scene");Text("Compare").tag("Compare")
           }.labelsHidden().inspectorSegmented().frame(width:230).accessibilityIdentifier("studio-image-compare")
         }
-        if let run=controller.currentRun {
+        if let run {
           Text(run.status.title).font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
           WorkspaceToolbarButton("Run details",symbol:"info.circle",identifier:"studio-run-details"){inspectingRun=run}
         }
@@ -87,6 +98,7 @@ struct StudioImageResultReview:View {
         }
       }
       if let issue {Text(issue).font(InspectorStyle.captionFont).foregroundStyle(Palette.accent).frame(maxWidth:.infinity,alignment:.leading)}
+      if let message=run?.error {Text(message).font(InspectorStyle.captionFont).foregroundStyle(Palette.accent).frame(maxWidth:.infinity,alignment:.leading)}
     }
     .alert("Rename image",isPresented:Binding(get:{renameTarget != nil},set:{if !$0 {renameTarget=nil}})) {
       TextField("Image name",text:$renameDraft)
@@ -156,7 +168,7 @@ struct StudioImageRunDetails:View {
           Text(run.prompt.isEmpty ? "No additional prompt":run.prompt).textSelection(.enabled).frame(maxWidth:.infinity,alignment:.leading)
           if !run.style.isEmpty {InspectorSectionHeader("STYLE");Text(run.style).textSelection(.enabled)}
           InspectorSectionHeader("REQUEST")
-          Text("\(run.options.model.title) · \(run.options.quality.title) · \(run.options.aspect.title) · \(run.options.size.title) · \(run.options.count) image(s)")
+          Text("\(run.options.model.title) · \(run.options.quality.title) · \(run.options.pixels.width) × \(run.options.pixels.height) px"+(run.options.outputPixels != nil ? " · From Studio":"")+" · \(run.options.count) image(s)")
           Text("\(run.capture.scene.name) · \(run.capture.width) × \(run.capture.height) input").foregroundStyle(Palette.secondary)
           if !run.references.isEmpty {
             InspectorSectionHeader("REFERENCES")

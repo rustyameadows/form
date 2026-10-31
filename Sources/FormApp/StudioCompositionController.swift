@@ -280,6 +280,9 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
 
 extension StudioCompositionController:TablePresentationInteraction {
   func invalidatePresentationGizmo() {gizmoCache=nil}
+  // Commit the old inspector target before native focus loss can rebind its
+  // delayed SwiftUI draft to the instance picked by this new pointer gesture.
+  func preparePresentationInteraction() {finishStageEditing()}
   var presentationInputEnabled:Bool {!busy && !mediaExportActive && owner==store?.project?.id && draft != nil}
   var presentationGizmo:StudioTransformGizmo? {
     guard gizmoVisible,presentationInputEnabled,let selected,selected.visible,let view=stage.view else{return nil}

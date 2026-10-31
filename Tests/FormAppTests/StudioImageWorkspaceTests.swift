@@ -90,9 +90,9 @@ import XCTest
     let store=StudioStore(repository:try ProjectRepository(root:directory),seedLibrary:false)
     var project=Project(name:"Local image workflow")
     var object=try project.makeObject(recipeID:"box",parameters:["width":100,"height":80,"depth":60]);object.color="#426A84"
-    project.objects=[object];store.engine.project=project;store.showingHome=false;store.studioComposition.reconcile();store.studioComposition.stage.fitAll()
-    let library=StudioAssetLibrary(root:directory)
-    let controller=StudioImageGenerationController(store:store,library:library,provider:provider ?? LocalStudioImageGenerationProvider(delayNanoseconds:0),captureLimit:160)
+    project.objects=[object];store.engine.project=project;store.showingHome=false;store.studioComposition.reconcile();store.studioComposition.change{$0.pixels = .init(width:300,height:200)};store.studioComposition.stage.fitAll()
+    let library=StudioAssetLibrary(root:directory,projectID:project.id)
+    let controller=StudioImageGenerationController(store:store,library:library,provider:provider ?? LocalStudioImageGenerationProvider(delayNanoseconds:0))
     controller.options.size = .small;controller.prompt="A faithful product view."
     addTeardownBlock{@MainActor in
       controller.cancel();store.studioComposition.reset();store.engine.project=nil;try? FileManager.default.removeItem(at:directory)
@@ -214,6 +214,7 @@ import XCTest
     let window=NSWindow(contentRect:.init(origin:.init(x:-10000,y:-10000),size:size),styleMask:[.titled,.resizable],backing:.buffered,defer:false)
     window.isReleasedWhenClosed=false;window.contentView=host;window.makeKeyAndOrderFront(nil);settle(host)
     addTeardownBlock{@MainActor in
+      for preview in NSApp.windows where preview.identifier==StudioImageReviewPresenter.windowIdentifier {preview.close()}
       if let sheet=window.attachedSheet {window.endSheet(sheet)}
       window.makeFirstResponder(nil);window.contentView=nil;window.close()
     }
@@ -260,21 +261,128 @@ import XCTest
     try await waitUntil{!f.controller.busy && f.controller.currentRun?.status == .succeeded};settle(host)
     let run=try XCTUnwrap(f.controller.currentRun),id=try XCTUnwrap(run.outputAssetIDs.first)
     XCTAssertEqual(run.outputAssetIDs.count,2);XCTAssertEqual(run.capture,input);XCTAssertEqual(run.prompt,prompt)
+    XCTAssertTrue(input.hasExactStudioPixels);XCTAssertEqual(run.options.outputPixels,input.scene.pixels)
     let asset=try XCTUnwrap(f.library.asset(id:id)),bytes=try Data(contentsOf:f.library.fileURL(for:asset))
     XCTAssertTrue(asset.isMock)
-    XCTAssertTrue(try action(host,"studio-result-favorite").accessibilityPerformPress());settle(host)
+    let bitmap=try XCTUnwrap(NSBitmapImageRep(data:bytes))
+    XCTAssertEqual(bitmap.pixelsWide,input.scene.pixels.width);XCTAssertEqual(bitmap.pixelsHigh,input.scene.pixels.height)
+    XCTAssertTrue(try action(host,"studio-image-preview-"+id.uuidString).accessibilityPerformPress());settle(host)
+    let expectedPreview=try f.library.fileURL(for:asset).standardizedFileURL.resolvingSymlinksInPath()
+    let preview=try XCTUnwrap(NSApp.windows.first{$0.identifier==StudioImageReviewPresenter.windowIdentifier && $0.isVisible && $0.representedURL?.standardizedFileURL.resolvingSymlinksInPath()==expectedPreview})
+    let review=try XCTUnwrap(preview.contentView)
+    XCTAssertTrue(try action(review,"studio-result-favorite").accessibilityPerformPress());settle(review)
     XCTAssertTrue(f.library.asset(id:id)?.favorite==true)
     XCTAssertEqual(try Data(contentsOf:f.library.fileURL(for:asset)),bytes)
-    XCTAssertTrue(try action(host,"studio-result-canvas").accessibilityPerformPress());XCTAssertEqual(canvas,[id])
+    XCTAssertTrue(try action(review,"studio-result-canvas").accessibilityPerformPress());XCTAssertEqual(canvas,[id])
     window.setContentSize(.init(width:1440,height:900));settle(host)
-    for name in ["studio-image-back","studio-image-connection","studio-result-reference","studio-run-details"] {
+    for name in ["studio-image-back","studio-image-connection"] {
       let button=try action(host,name)
       XCTAssertTrue(window.convertToScreen(host.bounds).insetBy(dx:-2,dy:-2).intersects(button.accessibilityFrame()))
     }
-    XCTAssertTrue(try action(host,"studio-result-reference").accessibilityPerformPress());settle(host)
+    for name in ["studio-result-reference","studio-run-details"] {
+      XCTAssertTrue(preview.convertToScreen(review.convert(review.bounds,to:nil)).intersects(try action(review,name).accessibilityFrame()))
+    }
+    XCTAssertTrue(try action(review,"studio-result-reference").accessibilityPerformPress());settle(host)
     XCTAssertNil(f.controller.currentRun);XCTAssertTrue(f.controller.references.contains{$0.assetID==id && $0.role == .style})
     XCTAssertEqual(f.controller.history.first{$0.id==run.id},run)
     XCTAssertEqual(f.store.project,before);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
+  }
+
+  func testNativePromptPresetFillsSameEditorAndThreeColumnControlsRemainReachableAtBothWidths()async throws {
+    let f=try fixture();await f.controller.captureScene()
+    let source=try XCTUnwrap(f.store.project),capture=try XCTUnwrap(f.controller.capture),options=f.controller.options,style=f.controller.style
+    XCTAssertTrue(capture.hasExactStudioPixels);XCTAssertEqual(options.outputPixels,capture.scene.pixels)
+    let (window,host)=mount(VStack(spacing:0) {
+      Color.clear.frame(height:56)
+      StudioImageWorkspace(controller:f.controller,library:f.library)
+    },size:.init(width:1020,height:700))
+    let preset=try XCTUnwrap(f.controller.promptPresets.first)
+    let editor=try XCTUnwrap(descendants(host).compactMap{$0 as? NSTextView}.first{!$0.isFieldEditor && $0.isEditable && $0.string==f.controller.prompt})
+    for size in [NSSize(width:1020,height:700),.init(width:1440,height:940)] {
+      window.setContentSize(size);settle(host)
+      for id in ["studio-image-back","studio-image-connection","studio-image-library","studio-image-upload","studio-image-settings","studio-image-generate","studio-image-recapture"] {
+        let button=try action(host,id)
+        XCTAssertTrue(window.convertToScreen(host.convert(host.bounds,to:nil)).insetBy(dx:-1,dy:-1).intersects(button.accessibilityFrame()),id)
+      }
+      let viewport=try XCTUnwrap(editor.enclosingScrollView)
+      XCTAssertGreaterThanOrEqual(viewport.bounds.height,159,"The padded 180pt prompt field retains its native text viewport.")
+      XCTAssertTrue(try action(host,"studio-image-preset-"+preset.id.uuidString).accessibilityPerformPress());settle(host)
+      XCTAssertEqual(f.controller.prompt,preset.prompt);XCTAssertEqual(editor.string,preset.prompt)
+      XCTAssertTrue(descendants(host).contains{$0===editor},"Choosing a preset retains the composing native text editor.")
+    }
+    XCTAssertEqual(f.controller.capture,capture);XCTAssertEqual(f.controller.options,options);XCTAssertEqual(f.controller.style,style)
+    XCTAssertTrue(f.controller.references.isEmpty);XCTAssertTrue(f.controller.history.isEmpty)
+    XCTAssertEqual(f.store.project,source);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
+  }
+
+  func testProductionMinimumHeightKeepsPromptAndFooterInsideWithReferenceFailureAndBusyState()async throws {
+    @MainActor func check(_ host:NSView,_ id:String)throws {
+      let button=try XCTUnwrap(descendants(host).compactMap{$0 as? WorkspaceToolbarNativeButton}.first{$0.accessibilityIdentifier()==id})
+      let buttonRect=button.convert(button.bounds,to:host)
+      XCTAssertTrue(host.bounds.insetBy(dx:-0.5,dy:-0.5).contains(buttonRect),"The entire \(id) target stays inside the 700pt production window: \(buttonRect)")
+      let editor=try XCTUnwrap(descendants(host).compactMap{$0 as? NSTextView}.first{!$0.isFieldEditor})
+      let viewport=try XCTUnwrap(editor.enclosingScrollView),field=viewport.convert(viewport.bounds,to:host).insetBy(dx:-10,dy:-10)
+      XCTAssertGreaterThanOrEqual(viewport.bounds.height,159)
+      XCTAssertTrue(host.bounds.insetBy(dx:-1,dy:-1).contains(field),"The whole 180pt prompt field remains visible: \(field)")
+    }
+    let f=try fixture();f.controller.connection.useDemoConnection();await f.controller.captureScene()
+    f.controller.addReference(assetID:try XCTUnwrap(f.controller.capture?.inputAssetID))
+    f.controller.options.failureFixture = .offline;await f.controller.generate()
+    XCTAssertNotNil(f.controller.error)
+    let source=try XCTUnwrap(f.store.project)
+    let (window,host)=mount(VStack(spacing:0){Color.clear.frame(height:56);StudioImageWorkspace(controller:f.controller,library:f.library)},size:.init(width:1020,height:700))
+    for size in [NSSize(width:1020,height:700),.init(width:1440,height:940)] {
+      window.setContentSize(size);settle(host)
+      try check(host,"studio-image-generate");try check(host,"studio-image-retry")
+    }
+    XCTAssertEqual(f.store.project,source);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
+    let provider=HeldProvider(),busy=try fixture(provider:provider)
+    defer{provider.release()}
+    busy.controller.connection.useDemoConnection();await busy.controller.captureScene()
+    busy.controller.addReference(assetID:try XCTUnwrap(busy.controller.capture?.inputAssetID))
+    let work=Task {await busy.controller.generate()}
+    try await waitUntil{provider.entered}
+    let (busyWindow,busyHost)=mount(VStack(spacing:0){Color.clear.frame(height:56);StudioImageWorkspace(controller:busy.controller,library:busy.library)},size:.init(width:1020,height:700))
+    for size in [NSSize(width:1020,height:700),.init(width:1440,height:940)] {
+      busyWindow.setContentSize(size);settle(busyHost);try check(busyHost,"studio-image-cancel")
+    }
+    provider.release();await work.value
+  }
+
+  func testNativePriorOutputPreviewKeepsUnsentPromptCaretInputAndActiveRunAndClosesOnProjectChange()async throws {
+    let f=try fixture();f.controller.connection.useDemoConnection();await f.controller.captureScene()
+    f.controller.prompt="First saved image";await f.controller.generate()
+    let first=try XCTUnwrap(f.controller.currentRun),firstID=try XCTUnwrap(first.outputAssetIDs.first)
+    f.controller.prompt="Second saved image";await f.controller.generate()
+    let currentID=f.controller.selectedRunID,capture=f.controller.capture,style=f.controller.style,options=f.controller.options,references=f.controller.references
+    let source=try XCTUnwrap(f.store.project),history=f.controller.history
+    let (window,host)=mount(StudioImageWorkspace(controller:f.controller,library:f.library),size:.init(width:1440,height:940))
+    // Corelibs XCTest finishes launching AppKit without NSApplication.run;
+    // it cannot establish real application activation. Preserve its actual key
+    // state here; the foreground NSApplication.run proof requires key=true.
+    let keyBefore=window.isKeyWindow
+    let editor=try XCTUnwrap(descendants(host).compactMap{$0 as? NSTextView}.first{!$0.isFieldEditor && $0.isEditable && $0.string==f.controller.prompt})
+    XCTAssertTrue(window.makeFirstResponder(editor))
+    let draft="Unsent next image prompt"
+    editor.insertText(draft,replacementRange:.init(location:0,length:editor.string.utf16.count));editor.setSelectedRange(.init(location:7,length:3));settle(host)
+    let caret=editor.selectedRange()
+    let button=try XCTUnwrap(descendants(host).compactMap{$0 as? WorkspaceToolbarNativeButton}.first{$0.accessibilityIdentifier()=="studio-image-preview-"+firstID.uuidString})
+    XCTAssertTrue(mouseClick(window,point:button.convert(.init(x:button.bounds.midX,y:button.bounds.midY),to:nil),id:"prior output preview"));settle(host)
+    let expected=try f.library.fileURL(for:try XCTUnwrap(f.library.asset(id:firstID))).standardizedFileURL.resolvingSymlinksInPath()
+    let visiblePreviews=NSApp.windows.filter{$0.identifier==StudioImageReviewPresenter.windowIdentifier && $0.isVisible}
+    XCTAssertEqual(visiblePreviews.count,1,"There must be exactly one current preview; closed autoreleased windows are not candidates.")
+    let preview=try XCTUnwrap(visiblePreviews.first{$0.representedURL?.standardizedFileURL.resolvingSymlinksInPath()==expected})
+    XCTAssertTrue(preview.isVisible);XCTAssertNil(preview.sheetParent);XCTAssertNil(NSApp.modalWindow);XCTAssertEqual(window.isKeyWindow,keyBefore)
+    XCTAssertTrue(window.firstResponder===editor);XCTAssertEqual(editor.selectedRange(),caret)
+    XCTAssertEqual(f.controller.prompt,draft);XCTAssertEqual(f.controller.selectedRunID,currentID)
+    XCTAssertEqual(f.controller.capture,capture);XCTAssertEqual(f.controller.style,style);XCTAssertEqual(f.controller.options,options)
+    XCTAssertEqual(f.controller.references,references);XCTAssertEqual(f.controller.history,history)
+    let represented=try XCTUnwrap(preview.representedURL).standardizedFileURL.resolvingSymlinksInPath()
+    XCTAssertEqual(represented,expected)
+    XCTAssertEqual(f.store.project,source);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
+    let another=Project(name:"Another project");try f.store.repository.save(another)
+    f.store.openProject(another.id);try await waitUntil{!preview.isVisible}
+    XCTAssertFalse(preview.isVisible,"A preview cannot survive its owning project.")
   }
 
   func testBackToCompositionLeavesSameProjectJobRunningAndFrozen()async throws {
