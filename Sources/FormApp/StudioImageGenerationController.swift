@@ -26,7 +26,7 @@ import FormCore
   private let provider:any StudioImageGenerationProvider
   private var task:Task<Void,Never>?,generation=0,activeRunID:UUID?,owner:UUID?
   private var stylesReadFailed=false
-  private var promptsReadFailed=false
+  private var promptObservation:AnyCancellable?
   private var lastScopeActive=false
   private let captureLimit:Int
   private var scopeIsActive:Bool {projectID != nil && store?.project?.id==projectID && store?.showingHome==false}
@@ -39,6 +39,10 @@ import FormCore
     root=store.repository.root.appendingPathComponent("StudioAssets");owner=store.project?.id
     lastScopeActive=scopeIsActive
     loadHistory();loadStyles();loadPrompts()
+    promptObservation=NotificationCenter.default.publisher(for:ImageGenerationPromptLibrary.didChange).sink { [weak self] notification in
+      guard let self,notification.userInfo?["projectID"] as? UUID==self.projectID else{return}
+      self.loadPrompts()
+    }
   }
   private static func hash(_ data:Data)->String {SHA256.hash(data:data).map{String(format:"%02x",$0)}.joined()}
   private static var now:Date {Date(timeIntervalSince1970:Date().timeIntervalSince1970.rounded(.down))}
@@ -262,31 +266,21 @@ import FormCore
     let values=decoded.filter{(scoped || !$0.references.isEmpty) && !$0.name.isEmpty && $0.name.count<=80 && $0.instructions.count<=4000 && ownsReferences($0.references)}
     let ids=Set(values.map(\.id));stylePresets=StudioGenerationStylePreset.builtins.filter{!ids.contains($0.id)}+values
   }
-  private var promptFile:URL? {projectID.map{root.appendingPathComponent("GenerationPrompts").appendingPathComponent($0.uuidString+".json")}}
   func applyPromptPreset(_ preset:StudioGenerationPromptPreset) {
     guard scopeIsActive,promptPresets.contains(preset) else{error="That prompt preset is not available in this project.";return}
     prompt=preset.prompt
   }
   func savePromptPreset(name:String)throws {
-    let name=name.trimmingCharacters(in:.whitespacesAndNewlines)
-    guard scopeIsActive,let file=promptFile,!promptsReadFailed,!name.isEmpty,name.count<=80,
-      !prompt.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty,prompt.count<=8000 else{throw StudioGenerationError.invalid("Save a named project prompt with at most8000 characters and a readable preset file.")}
-    var values=promptPresets
-    if let index=values.firstIndex(where:{$0.name.caseInsensitiveCompare(name) == .orderedSame}) {values[index].prompt=prompt}
-    else {guard values.count<32 else{throw StudioGenerationError.invalid("Keep up to32 project prompt presets.")};values.append(.init(id:UUID(),name:name,prompt:prompt))}
-    try FileManager.default.createDirectory(at:file.deletingLastPathComponent(),withIntermediateDirectories:true)
-    let data=try JSONEncoder.form.encode(values);guard data.count<=2*1024*1024 else{throw StudioGenerationError.invalid("The project prompt file exceeds2MiB.")}
-    try data.write(to:file,options:.atomic);promptPresets=values
+    guard scopeIsActive,let projectID,let store else{throw StudioGenerationError.invalid("Open the project before saving a prompt.")}
+    let library=ImageGenerationPromptLibrary(root:store.repository.root,projectID:projectID)
+    try library.save(name:name,prompt:prompt)
+    promptPresets=library.presets(including:StudioGenerationPromptPreset.builtins)
   }
   private func loadPrompts() {
-    promptPresets=StudioGenerationPromptPreset.builtins;promptsReadFailed=false
-    guard scopeIsActive,let file=promptFile,FileManager.default.fileExists(atPath:file.path) else{return}
-    guard let data=try? Data(contentsOf:file),data.count<=2*1024*1024,
-      let values=try? JSONDecoder.form.decode([StudioGenerationPromptPreset].self,from:data),values.count<=32,
-      Set(values.map(\.id)).count==values.count,
-      values.allSatisfy({!$0.name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty && $0.name.count<=80 && !$0.prompt.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty && $0.prompt.count<=8000}) else{
-      promptsReadFailed=true;error="The project prompt preset file could not be read. Its existing bytes were preserved.";return
-    }
-    let ids=Set(values.map(\.id));promptPresets=StudioGenerationPromptPreset.builtins.filter{!ids.contains($0.id)}+values
+    promptPresets=StudioGenerationPromptPreset.builtins
+    guard scopeIsActive,let projectID,let store else{return}
+    let library=ImageGenerationPromptLibrary(root:store.repository.root,projectID:projectID)
+    promptPresets=library.presets(including:StudioGenerationPromptPreset.builtins)
+    if let issue=library.error {error=issue}
   }
 }

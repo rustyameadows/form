@@ -60,6 +60,193 @@ import XCTest
     try XCTUnwrap(menu.items.first { $0.title == title })
   }
 
+  func testGenerateHereCreatesOneBlankArtboardAtTheContextPointAndUndoRemovesIt() throws {
+    let f=try Fixture([]);defer{f.canvas.closeCanvasImagePrompt();f.close()}
+    let original=f.store.project
+    let menu=try f.menu(.init(x:130,y:90))
+    try f.invoke(item("Generate Image Here…",in:menu))
+    let draft=try XCTUnwrap(f.store.canvasImages.draft)
+    let board=try XCTUnwrap(f.store.project?.objects.first{$0.id==draft.destinationID})
+    XCTAssertEqual(board.artwork?.canvasPosition,Point2(130,90))
+    XCTAssertTrue(board.artwork?.elements.isEmpty == true)
+    XCTAssertEqual(f.store.engine.undoStack.count,1)
+    f.canvas.closeCanvasImagePrompt();f.store.engine.undo()
+    XCTAssertEqual(f.store.project,original)
+    XCTAssertFalse(f.store.canvasImages.canGenerate)
+  }
+
+  func testGenerateFromNestedArtworkKeepsReferenceAndPlacesNewFrameNearby() throws {
+    var group=shape("Dense group",20,40,width:80,height:70);group.kind="group"
+    var a=shape("Nested artwork",3,4);a.parentID=group.id
+    let f=try Fixture([group,a]);defer{f.canvas.closeCanvasImagePrompt();f.close()}
+    let original=f.session.art
+    let menu=try f.menu(.init(x:25,y:48))
+    try f.invoke(item("Generate Image Using This as Reference…",in:menu))
+    let draft=try XCTUnwrap(f.store.canvasImages.draft)
+    XCTAssertEqual(draft.references.count,1)
+    XCTAssertEqual(draft.references.first?.objectID,f.workspaceID)
+    XCTAssertEqual(draft.references.first?.elementIDs,[group.id])
+    XCTAssertEqual(f.store.project?.objects.first{$0.id==f.workspaceID}?.artwork,original)
+    let board=try XCTUnwrap(f.store.project?.objects.first{$0.id==draft.destinationID})
+    XCTAssertLessThan(try XCTUnwrap(board.artwork?.canvasPosition?.x),200,"Workspace references must be placed beside artwork, not at the 2,000 mm workspace edge")
+  }
+
+  func testReferenceInsideFiniteArtboardPlacesResultOutsideItsSourceBoard() throws {
+    let f=try Fixture([]);defer{f.canvas.closeCanvasImagePrompt();f.close()}
+    let layer=shape("Source detail",5,5,width:10,height:10)
+    let index=try XCTUnwrap(f.store.engine.project?.objects.firstIndex{$0.id==f.frameID})
+    f.store.engine.project?.objects[index].artwork?.elements=[layer]
+    f.session.activate(f.frameID);f.canvas.synchronize()
+    let menu=try f.menu(.init(x:310,y:210))
+    try f.invoke(item("Generate Image Using This as Reference…",in:menu))
+    let draft=try XCTUnwrap(f.store.canvasImages.draft)
+    XCTAssertEqual(draft.references.first?.elementIDs,[layer.id])
+    let board=try XCTUnwrap(f.store.project?.objects.first{$0.id==draft.destinationID})
+    XCTAssertEqual(board.artwork?.canvasPosition,Point2(396,200))
+    XCTAssertEqual(f.store.project?.objects[index].artwork?.elements,[layer])
+  }
+
+  func testNativeImagePromptOpensFirstTimeReopensAndRoutesTextUndoWithoutRemovingArtboard()async throws {
+    let f=try Fixture([]);defer{f.canvas.closeCanvasImagePrompt();f.close()}
+    f.window.makeKeyAndOrderFront(nil)
+    try f.invoke(item("Generate Image Here…",in:try f.menu(.init(x:130,y:90))))
+    try await Task.sleep(nanoseconds:80_000_000)
+    let popover=try XCTUnwrap(f.canvas.imagePromptPopover)
+    XCTAssertTrue(popover.isShown)
+    XCTAssertEqual(popover.behavior,.transient)
+    let host=try XCTUnwrap(popover.contentViewController?.view)
+    func descendants(_ view:NSView)->[NSView] {[view]+view.subviews.flatMap(descendants)}
+    let editor=try XCTUnwrap(descendants(host).compactMap{$0 as? CanvasGenerationTextView}.first)
+    XCTAssertGreaterThan(editor.bounds.width,100)
+    let panelWindow=try XCTUnwrap(editor.window)
+    panelWindow.makeKey()
+    XCTAssertTrue(panelWindow.makeFirstResponder(editor))
+    XCTAssertTrue(panelWindow.firstResponder === editor)
+    let before=f.store.project
+    let destinationID=try XCTUnwrap(f.store.canvasImages.draft?.destinationID)
+    editor.insertText("A blue horizon",replacementRange:NSRange(location:0,length:0))
+    editor.breakUndoCoalescing()
+    try await Task.sleep(nanoseconds:80_000_000)
+    XCTAssertEqual(f.store.canvasImages.draft?.prompt,"A blue horizon")
+    XCTAssertTrue(panelWindow.firstResponder === editor)
+    XCTAssertTrue(editor.undoManager?.canUndo == true,"The real prompt editor must own a native text Undo before routing through StudioStore")
+    f.store.undo()
+    XCTAssertEqual(editor.string,"")
+    XCTAssertEqual(f.store.canvasImages.draft?.prompt,"")
+    XCTAssertEqual(f.store.project,before)
+    f.store.undo()
+    XCTAssertEqual(f.store.project,before,"Exhausting prompt Undo must not remove the artboard while text retains focus")
+    f.store.redo()
+    XCTAssertEqual(editor.string,"A blue horizon")
+    XCTAssertEqual(f.store.canvasImages.draft?.prompt,"A blue horizon")
+    f.canvas.closeCanvasImagePrompt();f.canvas.showCanvasImagePrompt()
+    try await Task.sleep(nanoseconds:80_000_000)
+    XCTAssertTrue(f.canvas.imagePromptPopover?.isShown == true)
+    XCTAssertEqual(f.store.canvasImages.draft?.prompt,"A blue horizon")
+    XCTAssertEqual(f.store.project,before)
+    f.canvas.closeCanvasImagePrompt()
+    f.window.makeKey()
+    XCTAssertTrue(f.window.makeFirstResponder(f.canvas))
+    XCTAssertFalse(f.canvas.applyCanvasImageTextHistory(redo:false))
+    f.store.undo()
+    XCTAssertFalse(f.store.project?.objects.contains{$0.id==destinationID} == true)
+    XCTAssertEqual(f.store.project?.objects.count,(before?.objects.count ?? 0)-1)
+    XCTAssertEqual(f.store.engine.redoStack.count,1,"Canvas focus restores ordinary document Undo")
+  }
+
+  func testActualCanvasPopoverMouseClickTransfersTypingFromPromptToSavedName()async throws {
+    let f=try Fixture([]);defer{f.canvas.closeCanvasImagePrompt();f.close()}
+    f.window.makeKeyAndOrderFront(nil)
+    try f.invoke(item("Generate Image Here…",in:try f.menu(.init(x:130,y:90))))
+    try await Task.sleep(nanoseconds:100_000_000)
+    let popover=try XCTUnwrap(f.canvas.imagePromptPopover),host=try XCTUnwrap(popover.contentViewController?.view)
+    let panel=try XCTUnwrap(host.window)
+    func descendants(_ view:NSView)->[NSView] {[view]+view.subviews.flatMap(descendants)}
+    func focusDescription()->String {
+      "active=\(NSApp.isActive), key=\(String(describing:NSApp.keyWindow)), panelKey=\(panel.isKeyWindow), responder=\(String(describing:panel.firstResponder))"
+    }
+    func click(_ target:NSView)throws {
+      let center=CGPoint(x:target.bounds.midX,y:target.bounds.midY)
+      let hit=host.hitTest(target.convert(center,to:host.superview))
+      XCTAssertTrue(hit === target || hit?.isDescendant(of:target)==true,
+        "Actual popover target intercepted by \(String(describing:hit)); \(focusDescription())")
+      let location=target.convert(center,to:nil),time=ProcessInfo.processInfo.systemUptime
+      let down=try XCTUnwrap(NSEvent.mouseEvent(with:.leftMouseDown,location:location,modifierFlags:[],timestamp:time,
+        windowNumber:panel.windowNumber,context:nil,eventNumber:1,clickCount:1,pressure:1))
+      let up=try XCTUnwrap(NSEvent.mouseEvent(with:.leftMouseUp,location:location,modifierFlags:[],timestamp:time+0.01,
+        windowNumber:panel.windowNumber,context:nil,eventNumber:2,clickCount:1,pressure:0))
+      NSApp.postEvent(up,atStart:true);panel.sendEvent(down)
+      if let pending=NSApp.nextEvent(matching:.leftMouseUp,until:.distantPast,inMode:.default,dequeue:true) {panel.sendEvent(pending)}
+    }
+    let prompt=try XCTUnwrap(descendants(host).compactMap{$0 as? CanvasGenerationTextView}.first)
+    XCTAssertTrue(panel.firstResponder === prompt,focusDescription())
+    let initial=try XCTUnwrap(panel.firstResponder as? NSTextView)
+    initial.insertText("A blue horizon",replacementRange:.init(location:NSNotFound,length:0))
+    try await Task.sleep(nanoseconds:80_000_000)
+    let before=f.store.project,undo=f.store.engine.undoStack
+    let save=try XCTUnwrap(descendants(host).compactMap{$0 as? NSButton}.first{$0.accessibilityIdentifier()=="canvas-generation-save-prompt"})
+    try click(save);try await Task.sleep(nanoseconds:80_000_000)
+    host.layoutSubtreeIfNeeded()
+    let name=try XCTUnwrap(descendants(host).compactMap{$0 as? NSTextField}.first{$0.accessibilityIdentifier()=="canvas-generation-prompt-name"})
+    XCTAssertTrue(name.isEditable);XCTAssertTrue(name.isEnabled)
+    try click(name);try await Task.sleep(nanoseconds:80_000_000)
+    XCTAssertFalse(panel.firstResponder === prompt,"Saved-name click retained prompt focus; "+focusDescription())
+    let active=try XCTUnwrap(panel.firstResponder as? NSTextView,focusDescription())
+    XCTAssertTrue(name.currentEditor() === active,"The real clicked name field must own typing; "+focusDescription())
+    active.insertText("Chromatic landscape",replacementRange:.init(location:NSNotFound,length:0))
+    try await Task.sleep(nanoseconds:80_000_000)
+    XCTAssertEqual(f.store.canvasImages.draft?.prompt,"A blue horizon")
+    XCTAssertEqual(name.stringValue,"Chromatic landscape")
+    let enter=try XCTUnwrap(NSEvent.keyEvent(with:.keyDown,location:.zero,modifierFlags:[],timestamp:ProcessInfo.processInfo.systemUptime,
+      windowNumber:panel.windowNumber,context:nil,characters:"\r",charactersIgnoringModifiers:"\r",isARepeat:false,keyCode:36))
+    panel.sendEvent(enter);try await Task.sleep(nanoseconds:80_000_000)
+    let saved=try XCTUnwrap(f.store.canvasImages.promptLibrary?.savedPresets.first{$0.name=="Chromatic landscape"})
+    XCTAssertEqual(saved.prompt,"A blue horizon");XCTAssertFalse(f.store.canvasImages.busy)
+    XCTAssertEqual(f.store.project,before);XCTAssertEqual(f.store.engine.undoStack,undo)
+    XCTAssertTrue(popover.isShown)
+  }
+
+  func testActualCanvasPopoverAccessibilityPressFocusesSavedNameWithoutSubmitting()async throws {
+    let f=try Fixture([]);defer{f.canvas.closeCanvasImagePrompt();f.close()}
+    f.window.makeKeyAndOrderFront(nil)
+    try f.invoke(item("Generate Image Here…",in:try f.menu(.init(x:130,y:90))))
+    try await Task.sleep(nanoseconds:100_000_000)
+    let popover=try XCTUnwrap(f.canvas.imagePromptPopover),host=try XCTUnwrap(popover.contentViewController?.view)
+    let panel=try XCTUnwrap(host.window)
+    func descendants(_ view:NSView)->[NSView] {[view]+view.subviews.flatMap(descendants)}
+    let prompt=try XCTUnwrap(descendants(host).compactMap{$0 as? CanvasGenerationTextView}.first)
+    XCTAssertTrue(panel.firstResponder === prompt)
+    prompt.insertText("An accessible color study",replacementRange:.init(location:NSNotFound,length:0))
+    try await Task.sleep(nanoseconds:80_000_000)
+    let before=f.store.project,history=f.store.engine.undoStack
+    let save=try XCTUnwrap(descendants(host).compactMap{$0 as? NSButton}.first{$0.accessibilityIdentifier()=="canvas-generation-save-prompt"})
+    // AppKit's built-in button can perform the action while returning false
+    // from this direct call; the revealed native field proves the outcome.
+    _ = save.accessibilityPerformPress();try await Task.sleep(nanoseconds:80_000_000)
+    let name=try XCTUnwrap(descendants(host).compactMap{$0 as? CanvasGenerationNativeTextField}.first{$0.accessibilityIdentifier()=="canvas-generation-prompt-name"})
+    let priorResponder=panel.firstResponder
+    name.isEnabled=false
+    XCTAssertFalse(name.accessibilityPerformPress());XCTAssertTrue(panel.firstResponder === priorResponder)
+    name.isEnabled=true;name.isEditable=false
+    XCTAssertFalse(name.accessibilityPerformPress());XCTAssertTrue(panel.firstResponder === priorResponder)
+    name.isEditable=true
+    XCTAssertTrue(name.accessibilityPerformPress())
+    let active=try XCTUnwrap(panel.firstResponder as? NSTextView)
+    XCTAssertTrue(name.currentEditor() === active);XCTAssertFalse(active === prompt)
+    XCTAssertTrue(f.store.canvasImages.promptLibrary?.savedPresets.isEmpty == true)
+    XCTAssertEqual(f.store.canvasImages.draft?.status,.draft);XCTAssertFalse(f.store.canvasImages.busy)
+    active.insertText("Coral forms",replacementRange:.init(location:NSNotFound,length:0))
+    let enter=try XCTUnwrap(NSEvent.keyEvent(with:.keyDown,location:.zero,modifierFlags:[],timestamp:ProcessInfo.processInfo.systemUptime,
+      windowNumber:panel.windowNumber,context:nil,characters:"\r",charactersIgnoringModifiers:"\r",isARepeat:false,keyCode:36))
+    panel.sendEvent(enter);try await Task.sleep(nanoseconds:80_000_000)
+    let saved=try XCTUnwrap(f.store.canvasImages.promptLibrary?.savedPresets.first{$0.name=="Coral forms"})
+    XCTAssertEqual(saved.prompt,"An accessible color study")
+    XCTAssertEqual(f.store.canvasImages.draft?.prompt,"An accessible color study")
+    XCTAssertEqual(f.store.canvasImages.draft?.status,.draft);XCTAssertFalse(f.store.canvasImages.busy)
+    XCTAssertEqual(f.store.project,before);XCTAssertEqual(f.store.engine.undoStack,history)
+    XCTAssertTrue(popover.isShown)
+  }
+
   func testRightClickTargetsTheObjectAndInspectorActionIsScopedWithoutDocumentMutation() throws {
     let a = shape("First"), b = shape("Second", 60)
     let f = try Fixture([a, b]); defer { f.close() }

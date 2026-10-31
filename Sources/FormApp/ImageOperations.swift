@@ -86,6 +86,9 @@ extension StudioStore {
         throw FormError.invalid("Choose an unlocked image to replace.")
       }
       art.elements[index].asset = placeholder
+      // A replacement has a different origin. Crop and transforms may retain
+      // generation history, but swapping the source pixels must not mislabel it.
+      art.elements[index].imageGeneration = nil
       if let info = metadata {
         let old = art.elements[index].imageCrop ?? .full
         let fitted = ImageCrop.filling(pixelWidth: Double(info.width),pixelHeight: Double(info.height),

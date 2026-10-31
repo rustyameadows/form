@@ -10,6 +10,7 @@ private final class CanvasMenuAction: NSObject {
   enum Kind {
     case command(String, String?), select(UUID), inspector, enterGroup(UUID), leaveGroup, canvas
     case outlines, findOnTable(UUID), component(UUID)
+    case generate(Point2, CanvasGenerationReference?), resumeGeneration
   }
   let projectID: UUID, frameID: UUID
   let selection: Set<UUID>
@@ -61,6 +62,26 @@ extension VectorCanvasView {
       return item
     }
 
+    let generation=store.canvasImages
+    if generation.draft?.destinationID == frame.object.id {
+      menu.addItem(item("Continue Image Prompt…", .resumeGeneration))
+    }
+    menu.addItem(item("Generate Image Here…", .generate(.init(physical.x,physical.y),nil), enabled:!generation.busy))
+    if frame.object.recipeID == "artboard", !frame.object.isCanvasWorkspace || !roots.isEmpty {
+      let reference=CanvasGenerationReference(objectID:session.objectID ?? frame.object.id,
+        elementIDs:Array(session.selection),title:roots.count == 1 ? roots[0].title : roots.isEmpty ? frame.object.name : "Selected artwork")
+      let bounds=frame.object.isCanvasWorkspace ? session.selectionBounds.map {
+        CGRect(x:$0.x+frame.rect.minX,y:$0.y+frame.rect.minY,width:$0.width,height:$0.height)
+      } ?? frame.rect : frame.rect
+      menu.addItem(item("Generate Image Using This as Reference…",
+        .generate(.init(bounds.maxX+16,bounds.minY),reference),enabled:!generation.busy))
+      if !frame.object.isCanvasWorkspace,!roots.isEmpty {
+        let artboard=CanvasGenerationReference(objectID:session.objectID ?? frame.object.id,title:frame.object.name)
+        menu.addItem(item("Generate Image Using This Artboard…",
+          .generate(.init(frame.rect.maxX+16,frame.rect.minY),artboard),enabled:!generation.busy))
+      }
+    }
+    menu.addItem(.separator())
     menu.addItem(item("Show Inspector", .inspector))
     let select = NSMenuItem(title: "Select Layer", action: nil, keyEquivalent: "")
     let selectionMenu = NSMenu(); selectionMenu.autoenablesItems = false
@@ -153,6 +174,16 @@ extension VectorCanvasView {
     let art = session.art
     guard action.selection.isSubset(of: Set(art.elements.map(\.id))) else { return }
     switch action.kind {
+    case .generate(let point,let reference):
+      do {
+        _ = try session.store?.canvasImages.begin(at:point,reference:reference)
+        synchronize()
+        DispatchQueue.main.async { [weak self] in self?.showCanvasImagePrompt() }
+      } catch { session.store?.error=error.localizedDescription }
+      return
+    case .resumeGeneration:
+      DispatchQueue.main.async { [weak self] in self?.showCanvasImagePrompt() }
+      return
     case .inspector:
       NotificationCenter.default.post(name: .formShowCanvasInspector, object: session)
     case .select(let id):

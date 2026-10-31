@@ -2,7 +2,9 @@ import Foundation
 import FormCore
 
 enum StudioGenerationModel:String,Codable,CaseIterable {case sunburst="gpt-image-2.5-sunburst",flare="gpt-image-2.5-flare"
-  var title:String {self == .sunburst ? "GPT Image · Sunburst":"GPT Image · Flare"}
+  // The raw values are retained for existing local history. These are demo
+  // configurations, not verified API model identifiers or availability claims.
+  var title:String {self == .sunburst ? "Sunburst · Local demo":"Flare · Local demo"}
 }
 enum StudioGenerationAspect:String,Codable,CaseIterable {case square,landscape,portrait
   var title:String {rawValue.capitalized}
@@ -27,16 +29,27 @@ struct StudioImageGenerationOptions:Codable,Equatable {
   var count=1
   var failureFixture:StudioGenerationFailureFixture = .none
   var pixels:(width:Int,height:Int) {let n=size.longEdge;return aspect == .square ? (n,n):aspect == .landscape ? (n,n*2/3):(n*2/3,n)}
-  func validate()throws {guard [1,2,4].contains(count) else{throw FormError.invalid("Choose one, two, or four demo images.")}}
+  func validate()throws {guard StudioGenerationConfigurationRegistry.counts.contains(count) else{throw FormError.invalid("Choose one, two, or four demo images.")}}
   var redactedMetadata:[String:String] {["model":model.rawValue,"aspect":aspect.rawValue,"size":size.rawValue,"quality":quality.rawValue,"count":String(count),"failure_fixture":failureFixture.rawValue,"transport":"none","mode":"local_demo"]}
+}
+/// The same local-only choices are used in Studio and Canvas. A future network
+/// provider must supply its own verified capabilities rather than reuse these.
+enum StudioGenerationConfigurationRegistry {
+  static let models=StudioGenerationModel.allCases
+  static let aspects=StudioGenerationAspect.allCases
+  static let sizes=StudioGenerationSize.allCases
+  static let qualities=StudioGenerationQuality.allCases
+  static let counts=[1,2,4]
+  static let maximumReferences=8
+  static let providerLabel="Local demo · no AI request"
 }
 struct StudioGenerationReference:Codable,Equatable,Identifiable {
   enum Role:String,Codable,CaseIterable {case style,subject,composition;var title:String{rawValue.capitalized}}
   var assetID:UUID,role:Role
   var id:UUID {assetID}
 }
-enum StudioGenerationPhase:String,Codable {case idle,capturing,queued,preparing,generating,writing,finished
-  var title:String {switch self {case .idle:return "Ready";case .capturing:return "Capturing scene";case .queued:return "Queued";case .preparing:return "Preparing local demo";case .generating:return "Making demo images";case .writing:return "Saving to Library";case .finished:return "Results"}}
+enum StudioGenerationPhase:String,Codable {case idle,capturing,queued,preparing,generating,waitingForEditor,writing,finished
+  var title:String {switch self {case .idle:return "Ready";case .capturing:return "Capturing scene";case .queued:return "Queued";case .preparing:return "Preparing local demo";case .generating:return "Making demo images";case .waitingForEditor:return "Finish the current edit to place image";case .writing:return "Saving to Library";case .finished:return "Results"}}
 }
 struct StudioGenerationCapture:Codable,Equatable,Identifiable {
   var id:UUID,createdAt:Date,projectID:UUID,projectName:String
@@ -81,7 +94,17 @@ enum StudioGenerationError:LocalizedError {
   case fixture(StudioGenerationFailureFixture),stale,invalid(String)
   var errorDescription:String? {switch self {case .fixture(let fixture):return fixture.message;case .stale:return "The scene or project changed. Capture the current composition before creating another image.";case .invalid(let message):return message}}
 }
+struct StudioGenerationReferenceImage:Equatable {
+  let assetID:UUID,name:String,png:Data
+}
 struct StudioGenerationRequest {
-  let inputPNG:Data,prompt:String,style:String,references:[StudioGenerationReference],options:StudioImageGenerationOptions
-  var context:StudioGenerationInputContext?=nil
+  enum Source:String {case studioScene,canvas}
+  let inputPNG:Data?,prompt:String,style:String,references:[StudioGenerationReference],options:StudioImageGenerationOptions
+  var context:StudioGenerationInputContext?
+  let source:Source,referenceImages:[StudioGenerationReferenceImage]
+  init(inputPNG:Data?=nil,prompt:String,style:String,references:[StudioGenerationReference],options:StudioImageGenerationOptions,
+    context:StudioGenerationInputContext?=nil,source:Source = .studioScene,referenceImages:[StudioGenerationReferenceImage]=[]) {
+    self.inputPNG=inputPNG;self.prompt=prompt;self.style=style;self.references=references;self.options=options
+    self.context=context;self.source=source;self.referenceImages=referenceImages
+  }
 }

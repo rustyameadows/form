@@ -323,6 +323,7 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
 
 final class VectorCanvasView: NSView, NSTextViewDelegate {
   weak var session: ArtworkSession?
+  var imagePromptPopover:NSPopover?
   // Visual points occupied by floating controls; never document/content insets.
   var fittingInsets = NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
   private let ppm = TypographyEngine.pointsPerMM

@@ -79,6 +79,25 @@ struct ImageInspector: View {
   var body: some View {
     VStack(alignment: .leading,spacing: 10) {
       SectionLabel("IMAGE")
+      if let generation=element.imageGeneration {
+        DisclosureGroup("Generation details") {
+          VStack(alignment:.leading,spacing:8) {
+            Text(generation.isDemo ? "Local demo · no AI request" : generation.provider)
+              .font(.system(size:10,weight:.medium)).foregroundStyle(Palette.secondary)
+            Text(generation.prompt).font(.system(size:11)).textSelection(.enabled)
+              .fixedSize(horizontal:false,vertical:true)
+            Text((StudioGenerationModel(rawValue:generation.model)?.title ?? generation.model)
+              + " · \(generation.pixelWidth) × \(generation.pixelHeight) px")
+              .font(.system(size:10)).foregroundStyle(Palette.secondary)
+            if !generation.references.isEmpty {
+              Text("References: "+generation.references.map(\.name).joined(separator:", "))
+                .font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
+            }
+            Text(generation.createdAt.formatted(date:.abbreviated,time:.shortened))
+              .font(.system(size:9)).foregroundStyle(Palette.secondary)
+          }.padding(.top,8)
+        }.font(.system(size:11)).accessibilityIdentifier("canvas-image-generation-details")
+      }
       if let name = element.asset,
         let thumbnail = try? ImageRenderer.bitmap(session.assets.appendingPathComponent(name),requestedEdge:128) {
         HStack(spacing:8) {
