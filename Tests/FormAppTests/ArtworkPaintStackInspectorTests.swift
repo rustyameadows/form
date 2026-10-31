@@ -146,10 +146,31 @@ import XCTest
       let column = parts[2] == "forward" ? 0 : parts[2] == "backward" ? 1 : 2
       return try XCTUnwrap(buttons.indices.contains(column) ? buttons[column] : nil)
     }
-    func click(_ view: NSView) throws {
+    func click(_ view: NSView) async throws {
       view.scrollToVisible(view.bounds); host.layoutSubtreeIfNeeded()
       let rect = view.convert(view.bounds, to: host)
       XCTAssertTrue(host.visibleRect.intersects(rect)); XCTAssertGreaterThan(rect.width, 5)
+      let center = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
+      let hit = host.hitTest(view.convert(center, to: host.superview))
+      XCTAssertTrue(hit === view || hit?.isDescendant(of: view) == true,
+        "The actual mounted control must own the visible click target")
+      if let control = view as? NSControl {
+        XCTAssertTrue(control.isEnabled)
+        // Exercise the live native control and its SwiftUI action without
+        // depending on the foreground app or a mouse-up left by another test.
+        // This is the same native activation path used by keyboard/AX presses.
+        control.performClick(nil)
+        return
+      }
+      // Some SwiftUI releases host buttons as plain NSViews. Their pointer
+      // fallback needs an active/key window before the first click; otherwise
+      // AppKit can consume that click only to activate the window.
+      NSApp.activate(ignoringOtherApps: true); window.makeKeyAndOrderFront(nil)
+      for _ in 0..<100 {
+        if NSApp.isActive && window.isKeyWindow { break }
+        try await Task.sleep(nanoseconds: 10_000_000)
+      }
+      XCTAssertTrue(NSApp.isActive); XCTAssertTrue(window.isKeyWindow)
       let location = view.convert(.init(x: view.bounds.midX, y: view.bounds.midY), to: nil)
       let time = ProcessInfo.processInfo.systemUptime
       let down = try XCTUnwrap(NSEvent.mouseEvent(with: .leftMouseDown, location: location,
@@ -158,9 +179,13 @@ import XCTest
       let up = try XCTUnwrap(NSEvent.mouseEvent(with: .leftMouseUp, location: location,
         modifierFlags: [], timestamp: time + 0.02, windowNumber: window.windowNumber, context: nil,
         eventNumber: 2, clickCount: 1, pressure: 0))
-      NSApp.postEvent(up, atStart: false); NSApp.sendEvent(down)
-      while let event = NSApp.nextEvent(matching: .leftMouseUp, until: Date(), inMode: .default, dequeue: true) {
-        NSApp.sendEvent(event)
+      // A tracking loop must receive this control's matching mouse-up first,
+      // never a queued release belonging to a prior test's closed window.
+      NSApp.postEvent(up, atStart: true); window.sendEvent(down)
+      if let event = NSApp.nextEvent(matching: .leftMouseUp, until: Date(), inMode: .default, dequeue: false),
+        event.windowNumber == window.windowNumber, event.timestamp == up.timestamp {
+        _ = NSApp.nextEvent(matching: .leftMouseUp, until: Date(), inMode: .default, dequeue: true)
+        window.sendEvent(event)
       }
     }
     func press(_ identifier: String) async throws {
@@ -189,7 +214,7 @@ import XCTest
         XCTAssertTrue(control.accessibilityActionNames().contains(.press))
         control.accessibilityPerformAction(.press)
       } else {
-        try click(pointerTarget(identifier))
+        try await click(pointerTarget(identifier))
       }
       try await Task.sleep(nanoseconds: 30_000_000)
     }

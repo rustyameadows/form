@@ -1,6 +1,6 @@
 # Native Figma paste: implementation, boundaries and verification
 
-Updated 2026-10-31. Branch: `codex/figma-paste-foundations`. Base: `31f1e16`.
+Updated 2026-10-31. Branch: `codex/figma-paste-foundations`. Initial base: `31f1e16`; synchronized with main `4f5fe73` for PR review.
 
 ## Implemented route
 
@@ -97,7 +97,7 @@ Authenticated REST file/node/image endpoints and a user-invoked plugin exporter 
 
 **Implemented, installed and verified with synthetic data and native UI interaction. The full suite is not green.** No ordinary clipboard payload produced by Figma has been tested.
 
-- Current source revision: `0a8d5dcc358dc3d2a7d8025d8934a3cd19c6db77`.
+- Installed native-audit source revision: `0a8d5dcc358dc3d2a7d8025d8934a3cd19c6db77`. Subsequent PR integration with main is recorded separately below; the installed bundle hash refers to this audited source.
 - Final release build and `codesign --verify --deep --strict`: **passed**, [build log](../.local/validation/figma-paste/logs/lab-figma-native-build-final.log).
 - Installed regular app: `/Users/rustymeadows/dev/form/build/LAB.app`; executable SHA-256: `be7564651e33e0efa8451ae922908a1d6a06ca10ed999d61abc5bf6f1443cedd`. The app was saved and quit before bundle replacement; only the ordinary app was relaunched.
 - Final installed checks: corrected typography panel and hidden support definition confirmed visually; 1,012-layer native document and materials compared exactly after save/reopen. Final macOS HTML Paste added 61 native layers to the dense scene (1,073 total); one Undo restored all native objects exactly.
@@ -131,6 +131,27 @@ Seven failing methods reproduced on unchanged main `31f1e16` in the same checkou
 The eighth failure, `ArtworkPaintStackInspectorTests.testActualNativePaintControlsReorderDisableAndRemoveWithOneUndoEach`, was a test lookup failure for a native control. The test was corrected to exercise the actual control through pointer input; **all five inspector methods passed** in [tests11](../.local/validation/figma-paste/logs/lab-figma-native-tests-11.log). This focused result does not replace the full-suite result.
 
 After the live UI audit exposed empty paint coverage and support-definition frame bugs, **tests12 ran 44 targeted methods: 20 core and 24 app**. All app methods passed, including source-only component frame/fit/source-edit regressions. One core method failed three color assertions because the test converted already-sRGB bitmap values a second time. After correcting that observation, **all four EmptyPaintCoverageTests passed** in tests13 without loosening expected colors or tolerances. Evidence: [tests12](../.local/validation/figma-paste/logs/lab-figma-native-tests-12.log), [tests13](../.local/validation/figma-paste/logs/lab-figma-native-tests-13.log). The empty-coverage and source-only-frame fixes are in `0a8d5dc` and were confirmed in the final installed app.
+
+### PR integration verification (2026-10-31)
+
+PR preparation integrated main `4f5fe73` into the feature branch as `f53ec42` without conflicts. The installed app described above remains the separately audited `0a8d5dc` build; these later results cover the integrated source.
+
+The first integrated release run executed **1,759 methods**: all **1,004 methods outside FormAppTests passed**, including all 923 core methods. The 755 app methods contained 12 failing methods / 67 assertion failures: the seven previously reproduced failures, four newly introduced main-branch Studio UI tests, and the native paint inspector's first simulated click. Local evidence: [integrated release log](../.local/validation/figma-paste/logs/lab-figma-pr-release-tests.log).
+
+The inspector test's event sequence depended on foreground activation and queued mouse-up events from earlier window tests. Its corrected mounted-control path asserts hit ownership and enabled state, then invokes the real native control action; the pointer-only fallback activates the window and consumes its matching release. It preserves the original paint, one-Undo and exact-restoration assertions. All **19 methods** in the preceding page-setup and inspector suites passed together. This verifies mounted controls/action wiring and hit ownership; the installed computer-use audit remains the evidence for physical mouse tracking. Evidence: [inspector with preceding tests](../.local/validation/figma-paste/logs/lab-figma-pr-inspector-tests.log).
+
+The subsequent complete **755-method FormAppTests rerun passed all feature tests**, including the native paint controls. It retained **11 failing methods / 64 assertion failures** in the pre-existing/new-main suites listed in the release run. Evidence: [final app suite](../.local/validation/figma-paste/logs/lab-figma-pr-app-tests-final.log). A subsequent **25-method comparison on unchanged main `4f5fe73` reproduced the same 11 failing methods** (65 assertions on main). There were no candidate-only failing methods. The scene-switch test stops at different nil-pending-scene assertions between runs, so assertion counts vary; the failing-method set matches. Evidence: [current-main comparison](../.local/validation/figma-paste/logs/lab-figma-pr-main-comparison.log). The comparison used this same checkout, then restored the feature branch; it created no worktree.
+
+In addition to the seven earlier baseline methods listed above, the current-main failures include all four `StudioImageWorkspaceTests` methods:
+
+- `testBackToCompositionLeavesSameProjectJobRunningAndFrozen`
+- `testEmptyReferenceChooserHasNativeCloseWithoutChangingTheNextFormOrProject`
+- `testNativeCredentialPreviewIsMaskedClearsOnCloseAndOnlyEnablesDemoConnection`
+- `testNativeGenerateReviewFavoriteReferenceAndCanvasCallbacksPreserveTheDesign`
+
+These Studio tests' fallback clicks hit generic hosting containers and fail before the intended UI action occurs. Their test and affected Studio UI/controller sources are unchanged from current main. All 28 Library, generation and workflow integration tests passed in the candidate's full app run. The baseline failures remain unresolved; this is **not a green full-suite claim**.
+
+PR #22 is prepared for human review with no merge conflicts. GitHub reports no configured checks; local verification above is the available evidence. Real-Figma producer testing remains deferred. Auto-merge is disabled and the PR is left unmerged.
 
 ### Installed native UI evidence
 
