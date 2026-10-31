@@ -6,7 +6,8 @@ import FormCore
 @MainActor final class StudioImageGenerationController:ObservableObject {
   weak var store:StudioStore?
   let library:StudioAssetLibrary
-  let connection=OpenAIConnectionPreviewController()
+  let projectID:UUID?
+  let connection:OpenAIConnectionPreviewController
   @Published var prompt=""
   @Published var style="Faithful studio lighting, clear product details, restrained background."
   @Published var references:[StudioGenerationReference]=[]
@@ -23,19 +24,25 @@ import FormCore
   private let renderer=StudioShotRenderer(),root:URL
   private let provider:any StudioImageGenerationProvider
   private var task:Task<Void,Never>?,generation=0,activeRunID:UUID?,owner:UUID?
+  private var stylesReadFailed=false
+  private var lastScopeActive=false
   private let captureLimit:Int
-  var currentRun:StudioGenerationRun? {history.first{$0.id==selectedRunID}}
+  private var scopeIsActive:Bool {projectID != nil && store?.project?.id==projectID && store?.showingHome==false}
+  var currentRun:StudioGenerationRun? {guard scopeIsActive else{return nil};return history.first{$0.id==selectedRunID && $0.capture.projectID==projectID}}
   var isCaptureStale:Bool {capture.map{!isCurrent($0)} ?? true}
-  init(store:StudioStore,library:StudioAssetLibrary,provider:(any StudioImageGenerationProvider)?=nil,captureLimit:Int=960) {
+  init(store:StudioStore,library:StudioAssetLibrary,provider:(any StudioImageGenerationProvider)?=nil,captureLimit:Int=960,connection:OpenAIConnectionPreviewController?=nil) {
     self.store=store;self.library=library;self.provider=provider ?? LocalStudioImageGenerationProvider();self.captureLimit=max(160,min(1024,captureLimit))
+    self.connection=connection ?? OpenAIConnectionPreviewController()
+    projectID=library.projectID ?? store.project?.id
     root=store.repository.root.appendingPathComponent("StudioAssets");owner=store.project?.id
+    lastScopeActive=scopeIsActive
     loadHistory();loadStyles()
   }
   private static func hash(_ data:Data)->String {SHA256.hash(data:data).map{String(format:"%02x",$0)}.joined()}
   private static var now:Date {Date(timeIntervalSince1970:Date().timeIntervalSince1970.rounded(.down))}
   private func draftHash(_ value:StudioComposition)throws->String {Self.hash(try JSONEncoder.form.encode(value))}
   private func isCurrent(_ value:StudioGenerationCapture)->Bool {
-    guard let store,let project=store.project,project.id==value.projectID,
+    guard scopeIsActive,value.projectID==projectID,let store,let project=store.project,project.id==value.projectID,
       let draft=store.studioComposition.draft,
       (try? project.studioDesignDigest())==value.designSHA256,
       (try? draftHash(draft))==value.draftSHA256 else{return false}
@@ -43,13 +50,13 @@ import FormCore
   }
   private func check(_ token:Int,projectID:UUID)throws {
     try Task.checkCancellation()
-    guard generation==token,store?.project?.id==projectID else{throw CancellationError()}
+    guard scopeIsActive,self.projectID==projectID,generation==token,store?.project?.id==projectID else{throw CancellationError()}
   }
   func reconcile() {
-    if owner != store?.project?.id {resetForProjectChange();owner=store?.project?.id}
+    if owner != store?.project?.id || lastScopeActive != scopeIsActive {resetForProjectChange();owner=store?.project?.id}
     objectWillChange.send()
   }
-  func resetForProjectChange() {cancel();capture=nil;selectedRunID=nil;references=[];prompt="";style="Faithful studio lighting, clear product details, restrained background.";options = .init();error=nil;renderer.clear();owner=store?.project?.id}
+  func resetForProjectChange() {cancel();capture=nil;selectedRunID=nil;references=[];prompt="";style="Faithful studio lighting, clear product details, restrained background.";options = .init();error=nil;renderer.clear();owner=store?.project?.id;lastScopeActive=scopeIsActive;history=[];stylePresets=StudioGenerationStylePreset.builtins;loadHistory();loadStyles()}
   func reset(){resetForProjectChange()}
   func clearError(){error=nil}
   func dismissError(){clearError()}
@@ -59,16 +66,17 @@ import FormCore
     activeRunID=nil;busy=false;isCapturing=false;progress=0;phase = .idle
   }
   func newRun(){if busy {cancel()};selectedRunID=nil;error=nil;progress=0;phase = .idle}
-  func selectRun(_ id:UUID) {guard history.contains(where:{$0.id==id}) else{return};selectedRunID=id}
-  func imageURL(assetID:UUID)throws->URL {guard let asset=library.asset(id:assetID) else{throw StudioGenerationError.invalid("That Library image is unavailable.")};return try library.fileURL(for:asset)}
+  func selectRun(_ id:UUID) {guard scopeIsActive,history.contains(where:{$0.id==id && $0.capture.projectID==projectID}) else{return};selectedRunID=id}
+  func imageURL(assetID:UUID)throws->URL {guard scopeIsActive,let asset=library.asset(id:assetID),asset.metadata.projectID==projectID else{throw StudioGenerationError.invalid("That image is not available in this project's Library.")};return try library.fileURL(for:asset)}
   func addReference(assetID:UUID,role:StudioGenerationReference.Role = .style) {
-    guard let asset=library.asset(id:assetID),asset.kind == .image else{error="Choose an image from Library.";return}
+    guard scopeIsActive,let asset=library.asset(id:assetID),asset.kind == .image,asset.metadata.projectID==projectID else{error="Choose an image from this project's Library.";return}
     if let index=references.firstIndex(where:{$0.assetID==assetID}) {references[index].role=role}
     else if references.count<8 {references.append(.init(assetID:assetID,role:role))}
     else {error="Use up to eight reference images."}
   }
   func removeReference(assetID:UUID){references.removeAll{$0.assetID==assetID}}
   func iterate(resultAssetID:UUID) {
+    guard scopeIsActive,let asset=library.asset(id:resultAssetID),asset.kind == .image,asset.metadata.projectID==projectID else{error="Choose an image from this project's Library.";return}
     selectedRunID=nil
     if !references.contains(where:{$0.assetID==resultAssetID}) {addReference(assetID:resultAssetID,role:.style)}
   }
@@ -81,7 +89,7 @@ import FormCore
     await generate()
   }
   func captureScene()async {
-    guard !busy,let store,let projectID=store.project?.id else{error="Open a project and arrange a Studio scene first.";return}
+    guard scopeIsActive,!busy,let store,let projectID=self.projectID else{error="Open this project and arrange a Studio scene first.";return}
     generation+=1;let token=generation
     busy=true;isCapturing=true;phase = .capturing;progress=0.05;error=nil
     let work=Task { @MainActor [weak self] in
@@ -118,10 +126,10 @@ import FormCore
   }
   func generate()async {
     guard !busy else{return}
-    guard let capture,store?.project?.id==capture.projectID else{error="Capture a Studio composition in the current project, or reopen the project belonging to this frozen input.";return}
+    guard scopeIsActive,let capture,capture.projectID==projectID else{error="Capture a Studio composition in this project, or reopen the project belonging to this frozen input.";return}
     do {
       try options.validate();try validateForm()
-      guard let asset=library.asset(id:capture.inputAssetID),asset.byteCount<=32*1024*1024 else{throw StudioGenerationError.invalid("The scene input is unavailable or too large.")}
+      guard let asset=library.asset(id:capture.inputAssetID),asset.metadata.projectID==projectID,asset.byteCount<=32*1024*1024 else{throw StudioGenerationError.invalid("The scene input is unavailable in this project or too large.")}
       let input=try Data(contentsOf:library.fileURL(for:asset))
       if let expected=asset.sha256,Self.hash(input) != expected {throw StudioGenerationError.invalid("The captured input changed on disk. Recapture the scene.")}
       generation+=1;let token=generation
@@ -165,12 +173,12 @@ import FormCore
   private func validateForm()throws {
     guard !prompt.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty,prompt.count<=8000,style.count<=4000,references.count<=8,Set(references.map(\.assetID)).count==references.count else{throw StudioGenerationError.invalid("Add a prompt up to 8000 characters, a style up to 4000, and at most eight unique references.")}
     for reference in references {
-      guard let asset=library.asset(id:reference.assetID),asset.kind == .image,!asset.isMissing else{throw StudioGenerationError.invalid("A reference image is missing. Replace it before creating another image.")}
+      guard scopeIsActive,let asset=library.asset(id:reference.assetID),asset.metadata.projectID==projectID,asset.kind == .image,!asset.isMissing else{throw StudioGenerationError.invalid("A reference image is missing from this project's Library. Replace it before creating another image.")}
       _ = try library.fileURL(for:asset)
     }
   }
   private var runDirectory:URL {root.appendingPathComponent("GenerationRuns")}
-  private func persist(_ run:StudioGenerationRun)throws {try FileManager.default.createDirectory(at:runDirectory,withIntermediateDirectories:true);let data=try JSONEncoder.form.encode(run);guard data.count<=2*1024*1024 else{throw StudioGenerationError.invalid("Generation provenance exceeds its bounded record size.")};try data.write(to:runDirectory.appendingPathComponent(run.id.uuidString+".json"),options:.atomic)}
+  private func persist(_ run:StudioGenerationRun)throws {guard run.capture.projectID==projectID else{throw StudioGenerationError.invalid("Generation history belongs to another project.")};try FileManager.default.createDirectory(at:runDirectory,withIntermediateDirectories:true);let data=try JSONEncoder.form.encode(run);guard data.count<=2*1024*1024 else{throw StudioGenerationError.invalid("Generation provenance exceeds its bounded record size.")};try data.write(to:runDirectory.appendingPathComponent(run.id.uuidString+".json"),options:.atomic)}
   @discardableResult private func updateRun(_ id:UUID,_ change:(inout StudioGenerationRun)->Void)->Bool {
     guard let index=history.firstIndex(where:{$0.id==id}) else{return false};var run=history[index];change(&run)
     // A completed batch/cancellation is already real. Retain its terminal state
@@ -195,11 +203,13 @@ import FormCore
     return assets.sorted{$0.filename<$1.filename}.map(\.id)
   }
   private func loadHistory() {
-    let files=((try? FileManager.default.contentsOfDirectory(at:runDirectory,includingPropertiesForKeys:[.fileSizeKey,.contentModificationDateKey])) ?? []).filter{$0.pathExtension=="json"}.sorted{((try? $0.resourceValues(forKeys:[.contentModificationDateKey]).contentModificationDate) ?? .distantPast)>((try? $1.resourceValues(forKeys:[.contentModificationDateKey]).contentModificationDate) ?? .distantPast)}.prefix(128)
-    history=files.compactMap {url in
+    guard scopeIsActive else{history=[];return}
+    let files=((try? FileManager.default.contentsOfDirectory(at:runDirectory,includingPropertiesForKeys:[.fileSizeKey,.contentModificationDateKey])) ?? []).filter{$0.pathExtension=="json"}.sorted{((try? $0.resourceValues(forKeys:[.contentModificationDateKey]).contentModificationDate) ?? .distantPast)>((try? $1.resourceValues(forKeys:[.contentModificationDateKey]).contentModificationDate) ?? .distantPast)}.prefix(4096)
+    var values=[StudioGenerationRun]()
+    for url in files {
       guard let size=try? url.resourceValues(forKeys:[.fileSizeKey]).fileSize,size<=2*1024*1024,
         let data=try? Data(contentsOf:url),var run=try? JSONDecoder.form.decode(StudioGenerationRun.self,from:data),
-        (try? run.options.validate()) != nil else{return nil}
+        run.capture.projectID==projectID,(try? run.options.validate()) != nil else{continue}
       if run.status == .running {
         // Library publishes a generated batch in one atomic index transaction.
         // That exact provenance can recover a final history write lost at exit.
@@ -208,17 +218,39 @@ import FormCore
         run.completedAt=Self.now
         do {try persist(run)}catch {self.error="Recovered generation state could not be saved: "+error.localizedDescription}
       }
-      return run
-    }.sorted{$0.createdAt>$1.createdAt}
+      values.append(run);if values.count==128 {break}
+    }
+    history=values.sorted{$0.createdAt>$1.createdAt}
+  }
+  private var styleFile:URL? {projectID.map{root.appendingPathComponent("GenerationStyles").appendingPathComponent($0.uuidString+".json")}}
+  private func ownsReferences(_ values:[StudioGenerationReference])->Bool {
+    values.count<=8 && Set(values.map(\.assetID)).count==values.count && values.allSatisfy {value in
+      guard let asset=library.asset(id:value.assetID) else{return false}
+      return asset.metadata.projectID==projectID && asset.kind == .image
+    }
   }
   func saveStylePreset(name:String)throws {
     let name=name.trimmingCharacters(in:.whitespacesAndNewlines)
-    guard !name.isEmpty,name.count<=80,style.count<=4000,references.count<=8 else{throw StudioGenerationError.invalid("Name the style using at most 80 characters.")}
+    guard scopeIsActive,let file=styleFile,!stylesReadFailed,!name.isEmpty,name.count<=80,style.count<=4000,ownsReferences(references) else{throw StudioGenerationError.invalid("Save a named style with references from this project and a readable project style file.")}
     var values=stylePresets
     if let index=values.firstIndex(where:{$0.name.caseInsensitiveCompare(name) == .orderedSame}) {values[index].instructions=style;values[index].references=references}
     else {guard values.count<32 else{throw StudioGenerationError.invalid("Keep up to 32 reusable styles.")};values.append(.init(id:UUID(),name:name,instructions:style,references:references))}
-    try FileManager.default.createDirectory(at:root,withIntermediateDirectories:true);try JSONEncoder.form.encode(values).write(to:root.appendingPathComponent("GenerationStyles.json"),options:.atomic);stylePresets=values
+    try FileManager.default.createDirectory(at:file.deletingLastPathComponent(),withIntermediateDirectories:true);try JSONEncoder.form.encode(values).write(to:file,options:.atomic);stylePresets=values
   }
-  func applyStylePreset(_ preset:StudioGenerationStylePreset){style=preset.instructions;references=preset.references}
-  private func loadStyles(){guard let data=try? Data(contentsOf:root.appendingPathComponent("GenerationStyles.json")),data.count<=512*1024,let values=try? JSONDecoder.form.decode([StudioGenerationStylePreset].self,from:data),values.count<=32 else{return};let ids=Set(values.map(\.id));stylePresets=StudioGenerationStylePreset.builtins.filter{!ids.contains($0.id)}+values}
+  func applyStylePreset(_ preset:StudioGenerationStylePreset){guard scopeIsActive,stylePresets.contains(preset),ownsReferences(preset.references) else{error="That style is not available in this project.";return};style=preset.instructions;references=preset.references}
+  private func loadStyles(){
+    stylePresets=StudioGenerationStylePreset.builtins;stylesReadFailed=false
+    guard scopeIsActive,let file=styleFile else{return}
+    let scoped=FileManager.default.fileExists(atPath:file.path)
+    let source=scoped ? file:root.appendingPathComponent("GenerationStyles.json")
+    guard FileManager.default.fileExists(atPath:source.path) else{return}
+    guard let data=try? Data(contentsOf:source),data.count<=512*1024,
+      let decoded=try? JSONDecoder.form.decode([StudioGenerationStylePreset].self,from:data),decoded.count<=32 else{
+      if scoped {stylesReadFailed=true;error="The project style file could not be read. Its existing bytes were preserved."};return
+    }
+    // Old global files are never rewritten. Only referenced presets with an
+    // unambiguous owner can be adopted; unassigned text-only presets stay put.
+    let values=decoded.filter{(scoped || !$0.references.isEmpty) && !$0.name.isEmpty && $0.name.count<=80 && $0.instructions.count<=4000 && ownsReferences($0.references)}
+    let ids=Set(values.map(\.id));stylePresets=StudioGenerationStylePreset.builtins.filter{!ids.contains($0.id)}+values
+  }
 }

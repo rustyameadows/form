@@ -55,7 +55,7 @@ import XCTest
     XCTAssertEqual(store.project,before);XCTAssertEqual(store.studioComposition.draft,draft)
   }
 
-  func testGlobalLibraryAndConnectionAreNormalWindowsAcrossHomeAndNativeCloseReleasesKeyEditor()async throws {
+  func testProjectLibraryClosesAtHomeWhileGlobalConnectionSurvivesAndReleasesItsKeyEditor()async throws {
     let store=try fixture(),before=try XCTUnwrap(store.project),windows=StudioUtilityWindows(store:store)
     defer {windows.shutdown()}
     store.openAssetLibrary();store.showingOpenAISetup=true;try await settle()
@@ -71,8 +71,78 @@ import XCTest
     store.showingOpenAISetup=true;try await settle()
     let fresh=try XCTUnwrap(windows.window(for:.openAISetup));XCTAssertFalse(fresh === connection)
     store.home();try await settle()
-    XCTAssertTrue(library.isVisible);XCTAssertTrue(fresh.isVisible)
+    XCTAssertFalse(library.isVisible);XCTAssertNil(library.contentViewController)
+    XCTAssertNil(windows.window(for:.assets));XCTAssertFalse(store.showingAssets)
+    XCTAssertTrue(fresh.isVisible)
+    store.openAssetLibrary();try await settle()
+    XCTAssertFalse(store.showingAssets);XCTAssertNil(windows.window(for:.assets))
+    store.showingAssets=true;try await settle()
+    XCTAssertFalse(store.showingAssets);XCTAssertNil(windows.window(for:.assets),"A stale request cannot reopen project Library on Home")
     XCTAssertEqual(store.project?.objects,before.objects)
+  }
+
+  func testProjectSwitchReplacesLibraryOwnerDiscardsOldWindowAndOpensEmptyProjectNormally()async throws {
+    let store=try fixture(),first=try XCTUnwrap(store.project),windows=StudioUtilityWindows(store:store)
+    defer{windows.shutdown()}
+    try store.repository.save(first)
+    let libraryA=store.studioAssets
+    let connection=store.studioImageConnection
+    connection.useDemoConnection()
+    XCTAssertTrue(store.studioImages.connection === connection)
+    XCTAssertEqual(libraryA.projectID,first.id)
+    let bytes=try png()
+    let asset=try libraryA.register(data:bytes,filename:"only-a.png",metadata:.init(kind:.image,origin:.uploaded))
+    store.openAssetLibrary();try await settle()
+    let oldWindow=try XCTUnwrap(windows.window(for:.assets))
+    XCTAssertTrue(oldWindow.isVisible);XCTAssertTrue(oldWindow.title.contains(first.name))
+    let second=Project(name:"Empty project B");try store.repository.save(second)
+    store.openProject(second.id);try await settle()
+    let libraryB=store.studioAssets
+    XCTAssertTrue(store.studioImages.connection === connection)
+    XCTAssertEqual(store.studioImages.connection.state,.demoReady)
+    XCTAssertFalse(libraryB === libraryA);XCTAssertEqual(libraryB.projectID,second.id)
+    XCTAssertNil(libraryB.asset(id:asset.id));XCTAssertTrue(libraryB.visibleItems.isEmpty)
+    XCTAssertFalse(oldWindow.isVisible);XCTAssertNil(oldWindow.contentViewController);XCTAssertNil(windows.window(for:.assets))
+    XCTAssertFalse(store.showingAssets)
+    let before=try XCTUnwrap(store.project),undo=store.engine.undoStack.count
+    store.openAssetLibrary();try await settle()
+    let emptyWindow=try XCTUnwrap(windows.window(for:.assets))
+    XCTAssertFalse(emptyWindow === oldWindow);XCTAssertTrue(emptyWindow.isVisible)
+    XCTAssertTrue(emptyWindow.title.contains(second.name));XCTAssertNil(emptyWindow.sheetParent);XCTAssertEqual(emptyWindow.level,.normal)
+    XCTAssertEqual(store.project,before);XCTAssertEqual(store.engine.undoStack.count,undo)
+    store.openProject(first.id);try await settle()
+    XCTAssertFalse(emptyWindow.isVisible);XCTAssertNil(emptyWindow.contentViewController)
+    let returned=store.studioAssets
+    XCTAssertEqual(returned.projectID,first.id);XCTAssertNotNil(returned.asset(id:asset.id))
+    XCTAssertEqual(try Data(contentsOf:returned.fileURL(for:asset)),bytes)
+  }
+
+  func testForeignLibraryCanvasAndReferenceActionsCannotMutateTheCurrentProjectOrWorkflow()async throws {
+    let store=try fixture(),first=try XCTUnwrap(store.project)
+    try store.repository.save(first)
+    let oldLibrary=store.studioAssets,data=try png()
+    let foreign=try oldLibrary.register(data:data,filename:"foreign.png",metadata:.init(kind:.image,origin:.uploaded))
+    let sourceURL=try oldLibrary.fileURL(for:foreign)
+    let second=Project(name:"Unrelated empty project");try store.repository.save(second)
+    store.openProject(second.id)
+    let before=try XCTUnwrap(store.project),undo=store.engine.undoStack.count,mode=store.mode,environment=store.environment
+    let currentLibrary=store.studioAssets,workflow=store.studioImages
+    let references=workflow.references,prompt=workflow.prompt
+    store.placeLibraryAssetOnCanvas(foreign)
+    store.useLibraryAssetAsReference(foreign)
+    try await settle()
+    XCTAssertEqual(currentLibrary.projectID,second.id);XCTAssertNil(currentLibrary.asset(id:foreign.id))
+    XCTAssertEqual(store.project,before);XCTAssertEqual(store.engine.undoStack.count,undo)
+    XCTAssertEqual(store.mode,mode);XCTAssertEqual(store.environment,environment);XCTAssertFalse(store.studioShowingImages)
+    XCTAssertNil(store.project?.canvasWorkspace);XCTAssertEqual(workflow.references,references);XCTAssertEqual(workflow.prompt,prompt)
+    XCTAssertNil(workflow.capture);XCTAssertFalse(workflow.busy)
+    XCTAssertEqual(try Data(contentsOf:sourceURL),data)
+    let own=try currentLibrary.register(data:data,filename:"project-b.png",metadata:.init(kind:.image,origin:.uploaded))
+    store.home();let homeProject=store.project
+    store.placeLibraryAssetOnCanvas(own);store.useLibraryAssetAsReference(own)
+    try await settle()
+    XCTAssertTrue(store.showingHome);XCTAssertFalse(store.studioShowingImages)
+    XCTAssertEqual(store.project,homeProject);XCTAssertEqual(store.engine.undoStack.count,undo)
   }
 
   func testCreateStillEntryFreezesWorkingDraftAndHomeCancelsWithoutSavingDesign()async throws {

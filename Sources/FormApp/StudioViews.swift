@@ -105,7 +105,6 @@ struct StudioTopBar: View {
         SettingsLink { Image(systemName: "gearshape").font(.system(size: 15)) }
           .buttonStyle(.plain).foregroundStyle(Palette.secondary).help("Settings · ⌘,")
           .accessibilityLabel("Settings")
-        assetLibraryButton
         IconButton("Materials & equipment", symbol: "square.stack.3d.up", size: 28) { store.showingLibrary = true }
         Button { store.createProject() } label: {
           Label("New project", systemImage: "plus").font(.system(size: 12, weight: .semibold))
@@ -162,7 +161,7 @@ struct StudioTopBar: View {
       Label("Library",systemImage:"photo.on.rectangle.angled").font(.system(size:11,weight:.medium))
         .frame(height:28).padding(.horizontal,5)
     }.buttonStyle(.plain).foregroundStyle(Palette.secondary)
-      .help("Uploaded, generated and exported assets").accessibilityLabel("Asset library")
+      .help("This project’s uploaded and exported assets").accessibilityLabel("Project library")
       .accessibilityIdentifier("studio-asset-library")
   }
 }

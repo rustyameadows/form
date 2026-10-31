@@ -73,6 +73,10 @@ private struct StudioAssetDisk:Sendable {
   let root:URL
   var index:URL {root.appendingPathComponent("StudioAssets/Index.json")}
   static let maximumOwnedBytes=64*1024*1024
+  static func referenceProjectID(_ relativePath:String)->UUID? {
+    guard let package=relativePath.split(separator:"/").first,package.hasSuffix(".form") else{return nil}
+    return UUID(uuidString:String(package.dropLast(5)))
+  }
   private func validateIndexLocation()throws {
     let base=root.standardizedFileURL.resolvingSymlinksInPath()
     guard index.resolvingSymlinksInPath().path.hasPrefix(base.path+"/") else{throw FormError.invalid("The asset index must remain inside this Library.")}
@@ -88,7 +92,7 @@ private struct StudioAssetDisk:Sendable {
     case .owned:
       guard parts.count==4,parts[0]=="StudioAssets",parts[1]=="Files",parts[2]==asset.id.uuidString,parts[3]==asset.filename else {throw FormError.invalid("Owned assets must remain in their own Library folder.")}
     case .projectReference:
-      guard parts.count>=3,parts[0].hasSuffix(".form"),UUID(uuidString:String(parts[0].dropLast(5))) != nil,["Assets","Exports"].contains(parts[1]) else {throw FormError.invalid("Project asset references must stay inside Assets or Exports.")}
+      guard parts.count>=3,Self.referenceProjectID(asset.relativePath) != nil,["Assets","Exports"].contains(parts[1]) else {throw FormError.invalid("Project asset references must stay inside Assets or Exports.")}
     }
     let base=root.standardizedFileURL.resolvingSymlinksInPath(),url=base.appendingPathComponent(asset.relativePath).standardizedFileURL.resolvingSymlinksInPath()
     guard url.path.hasPrefix(base.path+"/") else {throw FormError.invalid("Asset reference escapes this Library.")}
@@ -137,13 +141,19 @@ private struct StudioAssetDisk:Sendable {
     let b=Array(SHA256.hash(data:Data(path.utf8)).prefix(16))
     return .init(uuid:(b[0],b[1],b[2],b[3],b[4],b[5],b[6],b[7],b[8],b[9],b[10],b[11],b[12],b[13],b[14],b[15]))
   }
-  func scan(previous:[StudioAsset],limits:StudioAssetScanLimits)throws->Scan {
+  func scan(previous:[StudioAsset],limits:StudioAssetScanLimits,projectID requestedProjectID:UUID?=nil)throws->Scan {
     let fm=FileManager.default,base=root.standardizedFileURL.resolvingSymlinksInPath()
     let known=Dictionary(uniqueKeysWithValues:previous.map{($0.id,$0)})
     var missing=[UUID:Bool](),found=[StudioAsset](),scanned=0,hashed:Int64=0,limited=false
     for item in previous {try Task.checkCancellation();missing[item.id]=(try? resolve(item)).map{!fm.fileExists(atPath:$0.path)} ?? true}
-    let projects=try fm.contentsOfDirectory(at:base,includingPropertiesForKeys:[.isDirectoryKey],options:.skipsHiddenFiles)
-      .filter{$0.pathExtension=="form"}.sorted{$0.lastPathComponent<$1.lastPathComponent}
+    let projects:[URL]
+    if let requestedProjectID {
+      let target=base.appendingPathComponent(requestedProjectID.uuidString+".form",isDirectory:true)
+      projects=fm.fileExists(atPath:target.path) ? [target]:[]
+    }else {
+      projects=try fm.contentsOfDirectory(at:base,includingPropertiesForKeys:[.isDirectoryKey],options:.skipsHiddenFiles)
+        .filter{$0.pathExtension=="form"}.sorted{$0.lastPathComponent<$1.lastPathComponent}
+    }
     if projects.count>limits.projects {limited=true}
     projectLoop:for project in projects.prefix(max(0,limits.projects)) {
       try Task.checkCancellation()
@@ -153,6 +163,7 @@ private struct StudioAssetDisk:Sendable {
       guard dataSize<=limits.manifestBytes,let data=try? Data(contentsOf:manifest),
         let raw=try? JSONSerialization.jsonObject(with:data) as? [String:Any],let metadata=raw["project"] as? [String:Any],
         let textID=metadata["id"] as? String,let projectID=UUID(uuidString:textID) else{continue}
+      guard requestedProjectID==nil || requestedProjectID==projectID else{continue}
       let name=String((metadata["name"] as? String ?? "Untitled project").prefix(500))
       for folder in ["Assets","Exports"] {
         let directory=project.appendingPathComponent(folder)
@@ -165,6 +176,7 @@ private struct StudioAssetDisk:Sendable {
           let canonical=file.standardizedFileURL.resolvingSymlinksInPath()
           guard canonical.path.hasPrefix(base.path+"/") else{enumerator.skipDescendants();continue}
           let relative=String(canonical.path.dropFirst(base.path.count+1))
+          guard requestedProjectID==nil || Self.referenceProjectID(relative)==requestedProjectID else{enumerator.skipDescendants();continue}
           if relative.split(separator:"/").count>12 || ["cache","caches","thumbnails","tmp","temp","staging"].contains(file.lastPathComponent.lowercased()) {enumerator.skipDescendants();continue}
           guard !["json","plist","lock","tmp"].contains(file.pathExtension.lowercased()),let values=try? file.resourceValues(forKeys:[.isRegularFileKey,.isSymbolicLinkKey,.fileSizeKey,.contentModificationDateKey,.creationDateKey]),values.isRegularFile==true,values.isSymbolicLink != true else{continue}
           let id=Self.referenceID(relative),date=values.contentModificationDate ?? Date.distantPast,size=Int64(values.fileSize ?? 0)
@@ -200,35 +212,79 @@ private struct StudioAssetDisk:Sendable {
 
 @MainActor final class StudioAssetLibrary:ObservableObject {
   let root:URL
+  /// Immutable for the lifetime of an instance. Production always supplies the
+  /// current project; nil retains the low-level unscoped index API.
+  let projectID:UUID?
   @Published private(set) var items=[StudioAsset]()
   @Published private(set) var isLoading=false
   @Published private(set) var issue:String?
   private let disk:StudioAssetDisk,limits:StudioAssetScanLimits
   private var corruptIndex=false,refreshGeneration=UUID()
   private let thumbnails=NSCache<NSString,NSImage>()
-  init(root:URL,limits:StudioAssetScanLimits = .init()) {
-    self.root=root.standardizedFileURL;disk = .init(root:root);self.limits=limits
+  init(root:URL,projectID:UUID?=nil,limits:StudioAssetScanLimits = .init()) {
+    self.root=root.standardizedFileURL;self.projectID=projectID;disk = .init(root:root);self.limits=limits
     thumbnails.countLimit=80;thumbnails.totalCostLimit=48*1024*1024
-    do {items=try disk.load()}catch {corruptIndex=true;issue="Library index could not be read: "+error.localizedDescription}
+    do {items=try disk.load().filter(includes)}catch {corruptIndex=true;issue="Library index could not be read: "+error.localizedDescription}
+  }
+  private func includes(_ asset:StudioAsset)->Bool {
+    guard let projectID else{return true}
+    guard asset.metadata.projectID==projectID else{return false}
+    if asset.storage == .projectReference {
+      return StudioAssetDisk.referenceProjectID(asset.relativePath)==projectID
+    }
+    return true
+  }
+  private func scopedMetadata(_ value:StudioAssetMetadata)throws->StudioAssetMetadata {
+    guard let projectID else{return value}
+    guard value.projectID==nil || value.projectID==projectID else{throw FormError.invalid("This asset belongs to another project's Library.")}
+    guard value.sourceAssetIDs.allSatisfy({asset(id:$0) != nil}) else{throw FormError.invalid("Use references from the current project's Library.")}
+    var result=value;result.projectID=projectID;return result
   }
   var visibleItems:[StudioAsset] {items.filter{$0.archivedAt==nil}.sorted{$0.createdAt>$1.createdAt}}
   func asset(id:UUID)->StudioAsset? {items.first{$0.id==id}}
   func fileURL(for asset:StudioAsset)throws->URL {
+    if projectID != nil {
+      guard includes(asset),let accepted=self.asset(id:asset.id),accepted.relativePath==asset.relativePath,
+        accepted.storage==asset.storage,accepted.filename==asset.filename else{throw FormError.missing("This asset is not in the current project's Library.")}
+    }
     let url=try disk.resolve(asset)
+    if let projectID {
+      let base=root.standardizedFileURL.resolvingSymlinksInPath()
+      if asset.storage == .projectReference {
+        let relative=String(url.path.dropFirst(base.path.count+1))
+        guard StudioAssetDisk.referenceProjectID(relative)==projectID else{throw FormError.invalid("This reference resolves to another project's package.")}
+      }else {
+        guard url.path==base.appendingPathComponent(asset.relativePath).path else{throw FormError.invalid("Owned Library files must remain in their own asset folder.")}
+      }
+    }
     guard FileManager.default.fileExists(atPath:url.path) else{throw FormError.missing("This asset's original file is missing. Its Library metadata was kept.")}
     return url
   }
   private func write(_ values:[StudioAsset])throws {
     guard !corruptIndex else{throw FormError.invalid("Repair or restore the existing Library index before changing assets. Its original bytes were kept.")}
-    try disk.save(values);items=values
+    guard values.allSatisfy(includes) else{throw FormError.invalid("Only the current project's Library can be changed.")}
+    // Read the accepted shared index at the commit boundary: an older scoped
+    // instance must never erase another project's newer imports or metadata.
+    let latest=try disk.load(),before=Dictionary(uniqueKeysWithValues:items.map{($0.id,$0)})
+    let latestByID=Dictionary(uniqueKeysWithValues:latest.map{($0.id,$0)})
+    var merged=latestByID
+    var order=latest.map(\.id)
+    for value in values where before[value.id] != value || merged[value.id]==nil {
+      if let existing=merged[value.id],!includes(existing) {throw FormError.invalid("An asset identifier belongs to another project's Library.")}
+      if merged[value.id]==nil {order.append(value.id)}
+      merged[value.id]=value
+    }
+    guard merged != latestByID else{items=latest.filter(includes);return}
+    let accepted=order.compactMap{merged[$0]}
+    try disk.save(accepted);items=accepted.filter(includes)
   }
   func refresh()async {
     guard !corruptIndex else{return}
     let token=UUID();refreshGeneration=token;isLoading=true
     defer {if refreshGeneration==token {isLoading=false}}
-    let disk=self.disk,previous=items,limits=self.limits
+    let disk=self.disk,previous=items,limits=self.limits,projectID=self.projectID
     do {
-      let worker=Task.detached(priority:.utility){try disk.scan(previous:previous,limits:limits)}
+      let worker=Task.detached(priority:.utility){try disk.scan(previous:previous,limits:limits,projectID:projectID)}
       let scan=try await withTaskCancellationHandler(operation:{try await worker.value},onCancel:{worker.cancel()})
       guard refreshGeneration==token,!Task.isCancelled else{return}
       var current=Dictionary(uniqueKeysWithValues:items.map{($0.id,$0)})
@@ -254,11 +310,12 @@ private struct StudioAssetDisk:Sendable {
       guard !value.data.isEmpty,value.data.count<=StudioAssetDisk.maximumOwnedBytes,
         filename==URL(fileURLWithPath:filename).lastPathComponent,!filename.isEmpty,filename.utf8.count<=240,
         !filename.contains("\\"),!filename.contains("\0"),filename != ".",filename != ".." else {throw FormError.invalid("Choose a local filename and a nonempty asset no larger than 64 MiB.")}
-      try value.metadata.validate()
+      let metadata=try scopedMetadata(value.metadata)
+      try metadata.validate()
       let title=(value.name ?? URL(fileURLWithPath:filename).deletingPathExtension().lastPathComponent).trimmingCharacters(in:.whitespacesAndNewlines)
       guard !title.isEmpty,title.count<=240 else{throw FormError.invalid("Use an asset name of 1–240 characters.")}
       let id=UUID(),date=Date(),hash=SHA256.hash(data:value.data).map{String(format:"%02x",$0)}.joined()
-      let asset=StudioAsset(id:id,name:title,filename:filename,relativePath:"StudioAssets/Files/\(id.uuidString)/\(filename)",storage:.owned,metadata:value.metadata,createdAt:date,modifiedAt:date,byteCount:Int64(value.data.count),sha256:hash)
+      let asset=StudioAsset(id:id,name:title,filename:filename,relativePath:"StudioAssets/Files/\(id.uuidString)/\(filename)",storage:.owned,metadata:metadata,createdAt:date,modifiedAt:date,byteCount:Int64(value.data.count),sha256:hash)
       assets.append(asset);urls.append(try disk.resolve(asset))
     }
     var created=[URL]()
@@ -274,13 +331,14 @@ private struct StudioAssetDisk:Sendable {
     return assets
   }
   @discardableResult func importFile(_ url:URL,metadata:StudioAssetMetadata?=nil)async throws->StudioAsset {
+    let metadata=try scopedMetadata(metadata ?? .init(kind:.infer(url.lastPathComponent),origin:.uploaded))
     let data=try await Task.detached(priority:.utility) {
       let values=try url.resourceValues(forKeys:[.isRegularFileKey,.fileSizeKey])
       guard values.isRegularFile==true,let size=values.fileSize,size>0,size<=StudioAssetDisk.maximumOwnedBytes else{throw FormError.invalid("Import a regular local file no larger than 64 MiB.")}
       try Task.checkCancellation();return try Data(contentsOf:url)
     }.value
     try Task.checkCancellation()
-    return try register(data:data,filename:url.lastPathComponent,metadata:metadata ?? .init(kind:.infer(url.lastPathComponent),origin:.uploaded))
+    return try register(data:data,filename:url.lastPathComponent,metadata:metadata)
   }
   func rename(_ id:UUID,to name:String)throws {
     let value=name.trimmingCharacters(in:.whitespacesAndNewlines)

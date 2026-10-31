@@ -24,14 +24,16 @@ Connection setup is available from the image workspace, Studio menu and Settings
 
 The provider choices are GPT Image Sunburst and Flare, identified separately from the local mock provider. The model identities and future image/reference handoff are based on the [official OpenAI image-generation guide](https://developers.openai.com/api/docs/guides/image-generation). The preview's bounded image sizes and color treatments are local fixtures, not live model capabilities, quality guarantees or pricing estimates. Enabling real API access requires a separate implementation and explicit authorization.
 
-## Global asset Library
+## Project asset Library
 
-**Library** in the top navigation opens an independent window on Home and inside a project. Search and filter uploaded, generated and exported assets by type, project or favorites, then inspect a preview and its provenance. Image uploads are copied into the Library; existing project Assets and Exports are indexed as references. Ordinary renderer record sidecars and temporary files are excluded from media browsing.
+**Library** in each project's top navigation opens an independent window for that project, including projects with no assets. Empty projects show an empty Library. Search, filters, view mode and import share one compact toolbar; source, file type and favorites filters live in its filter menu. There is no cross-project browser or Library entry on Home. Uploads, generated images, exports and reference choices belong to the active project. Switching projects or going Home closes and discards the old Library window.
+
+Uploads are copied into the project's Library inventory; existing project Assets and Exports are indexed as references. Ordinary renderer record sidecars and temporary files are excluded from media browsing. Existing files and index records are preserved when scoping the inventory; unassigned legacy assets are not silently assigned to an arbitrary project.
 
 Rename and favorite affect Library metadata. Removing an item archives its entry; it does not delete the original upload, export or project asset. Missing files remain identifiable. Generated demo images retain their demo label, source-image links and run identity. Saving a copy preserves the original, and placing an image on Canvas uses the existing native image importer as an explicit design edit.
 
-The global index and owned media live under `StudioAssets` in the configured LAB library, separately from `.form` design schemas. Generation records and style presets are stored beside that index. Background indexing is bounded and merges metadata edits made while scanning.
+The shared on-disk index and owned media remain under `StudioAssets` in the configured LAB library, separately from `.form` design schemas. Each Library instance has an immutable project scope, exposes only that inventory and preserves other projects' records when publishing changes. Background indexing scans only the current project and merges metadata edits made while scanning. Generation history and custom styles are also scoped to their owning project.
 
 ## Local validation
 
-The delivery gate passes 65 provider, persistence and native integration checks without any API key or outbound request. It includes real prompt/key-field and mouse actions, result review, empty-reference dismissal, cancellation, project switches, interrupted history recovery, source preservation and Canvas Undo. Existing Studio manipulation, native export and independent Canvas/Table selection checks also pass. Native visual checks cover wide and minimum-width workspaces, connection setup and Library.
+The delivery gate passes 73 provider, persistence and native integration checks without any API key or outbound request. It includes real prompt/key-field and mouse actions, result review, empty-reference dismissal, cancellation, project switches, interrupted history recovery, source preservation and Canvas Undo. Existing Studio manipulation, native export and independent Canvas/Table selection checks also pass. Native visual checks cover wide and minimum-width workspaces, connection setup and Library.

@@ -199,6 +199,96 @@ import XCTest
     XCTAssertEqual(try files(package),before);XCTAssertEqual(try repository.load(project.id),project)
   }
 
+  func testProjectScopeScansOnlyItsOwnPackageAndPreservesForeignIndexRecordsAndSourceBytes()async throws {
+    let root=try fixture(),(repository,a)=try project(root),(_,b)=try project(root)
+    let packageA=repository.url(for:a.id),packageB=repository.url(for:b.id)
+    try png().write(to:packageA.appendingPathComponent("Assets/a.png"))
+    for index in 0..<4 {try png().write(to:packageB.appendingPathComponent("Assets/b-\(index).png"))}
+    let all=StudioAssetLibrary(root:root)
+    let unassigned=try all.register(data:Data("Legacy unassigned".utf8),filename:"legacy.txt",metadata:.init(kind:.file,origin:.uploaded))
+    _ = try all.register(data:Data("B owned".utf8),filename:"b.txt",metadata:.init(kind:.file,origin:.generated,projectID:b.id,isMock:true))
+    await all.refresh()
+    // Preserve a legacy/mistagged index entry without letting its owner label
+    // grant access to a different physical project's package.
+    var mistagged=try XCTUnwrap(all.items.first{$0.storage == .projectReference && $0.metadata.projectID==b.id})
+    mistagged.id=UUID();mistagged.metadata.projectID=a.id
+    let indexed=try JSONSerialization.jsonObject(with:JSONEncoder().encode(all.items+[mistagged]))
+    try JSONSerialization.data(withJSONObject:["version":1,"items":indexed]).write(to:root.appendingPathComponent("StudioAssets/Index.json"),options:.atomic)
+    let foreign=all.items.filter{$0.metadata.projectID != a.id},beforeA=try files(packageA),beforeB=try files(packageB)
+    let library=StudioAssetLibrary(root:root,projectID:a.id,limits:.init(projects:1,files:1))
+    XCTAssertEqual(library.projectID,a.id)
+    await library.refresh()
+    XCTAssertNil(library.issue,"Other packages must not consume this project's one-project/one-file scan budget.")
+    XCTAssertEqual(library.items.count,1);XCTAssertTrue(library.items.allSatisfy{$0.metadata.projectID==a.id})
+    XCTAssertNil(library.asset(id:unassigned.id))
+    XCTAssertNil(library.asset(id:mistagged.id));XCTAssertThrowsError(try library.fileURL(for:mistagged))
+    let own=try XCTUnwrap(library.items.first)
+    try library.rename(own.id,to:"Only A");try library.setFavorite(own.id,true)
+    let reopenedAll=StudioAssetLibrary(root:root)
+    XCTAssertEqual(reopenedAll.items.filter{$0.metadata.projectID != a.id},foreign)
+    XCTAssertEqual(reopenedAll.asset(id:mistagged.id),mistagged)
+    XCTAssertEqual(try files(packageA),beforeA);XCTAssertEqual(try files(packageB),beforeB)
+    XCTAssertEqual(try repository.load(a.id),a);XCTAssertEqual(try repository.load(b.id),b)
+  }
+
+  func testEmptyProjectLibraryRejectsForeignActionsAndAutomaticallyOwnsImportsWithoutChangingOtherProjects()async throws {
+    let root=try fixture(),(_,a)=try project(root),(_,b)=try project(root),bytes=try png()
+    let all=StudioAssetLibrary(root:root)
+    let foreign=try all.register(data:bytes,filename:"b.png",metadata:.init(kind:.image,origin:.generated,projectID:b.id,isMock:true))
+    let index=root.appendingPathComponent("StudioAssets/Index.json"),before=try Data(contentsOf:index)
+    let library=StudioAssetLibrary(root:root,projectID:a.id)
+    await library.refresh()
+    XCTAssertNil(library.issue);XCTAssertTrue(library.items.isEmpty);XCTAssertTrue(library.visibleItems.isEmpty)
+    XCTAssertEqual(try Data(contentsOf:index),before,"Opening an empty project must preserve the existing index exactly.")
+    XCTAssertNil(library.asset(id:foreign.id));XCTAssertThrowsError(try library.fileURL(for:foreign))
+    var forged=foreign;forged.metadata.projectID=a.id
+    XCTAssertThrowsError(try library.fileURL(for:forged))
+    let foreignThumbnail=await library.thumbnail(for:foreign);XCTAssertNil(foreignThumbnail)
+    XCTAssertThrowsError(try library.rename(foreign.id,to:"Leak"));XCTAssertThrowsError(try library.setFavorite(foreign.id,true))
+    XCTAssertThrowsError(try library.archive(foreign.id));XCTAssertThrowsError(try library.saveCopy(foreign.id,to:root.appendingPathComponent("leak.png")))
+    XCTAssertThrowsError(try library.register(data:bytes,filename:"wrong.png",metadata:.init(kind:.image,origin:.uploaded,projectID:b.id)))
+    XCTAssertThrowsError(try library.register(data:bytes,filename:"foreign-reference.png",metadata:.init(kind:.image,origin:.generated,sourceAssetIDs:[foreign.id])))
+    XCTAssertThrowsError(try library.registerBatch([
+      .init(data:bytes,filename:"first.png",metadata:.init(kind:.image,origin:.generated)),
+      .init(data:bytes,filename:"second.png",metadata:.init(kind:.image,origin:.generated,projectID:b.id))]))
+    do {_ = try await library.importFile(try all.fileURL(for:foreign),metadata:.init(kind:.image,origin:.uploaded,projectID:b.id));XCTFail("Foreign ownership must be rejected.")}catch{}
+    XCTAssertEqual(try Data(contentsOf:index),before);XCTAssertTrue(library.items.isEmpty)
+    XCTAssertEqual(try Data(contentsOf:all.fileURL(for:foreign)),bytes)
+    XCTAssertEqual(try FileManager.default.contentsOfDirectory(at:root.appendingPathComponent("StudioAssets/Files"),includingPropertiesForKeys:nil).count,1)
+    let picked=root.appendingPathComponent("local.png");try bytes.write(to:picked)
+    let imported=try await library.importFile(picked)
+    let generated=try library.register(data:bytes,filename:"a.png",metadata:.init(kind:.image,origin:.generated,isMock:true,sourceAssetIDs:[imported.id]))
+    XCTAssertEqual(imported.metadata.projectID,a.id);XCTAssertEqual(generated.metadata.projectID,a.id)
+    XCTAssertEqual(library.items.count,2);XCTAssertNil(library.asset(id:foreign.id))
+    let other=StudioAssetLibrary(root:root,projectID:b.id)
+    XCTAssertEqual(other.items,[foreign]);XCTAssertNil(other.asset(id:imported.id));XCTAssertNil(other.asset(id:generated.id))
+    XCTAssertEqual(try Data(contentsOf:picked),bytes)
+  }
+
+  func testScopedInstancesAndOverlappingRefreshesPreserveBothOwnersAcrossRestart()async throws {
+    let root=try fixture(),(_,a)=try project(root),(_,b)=try project(root),bytes=try png()
+    // Both instances begin before the shared index exists, exercising stale
+    // index snapshots and commit-time preservation of another owner's writes.
+    let first=StudioAssetLibrary(root:root,projectID:a.id),second=StudioAssetLibrary(root:root,projectID:b.id)
+    let assetA=try first.register(data:bytes,filename:"a.png",metadata:.init(kind:.image,origin:.uploaded))
+    let assetB=try second.register(data:bytes,filename:"b.png",metadata:.init(kind:.image,origin:.generated,isMock:true))
+    try first.rename(assetA.id,to:"A retained");try second.setFavorite(assetB.id,true)
+    let refreshA=Task {await first.refresh()},refreshB=Task {await second.refresh()}
+    await Task.yield()
+    try first.archive(assetA.id);try second.rename(assetB.id,to:"B retained")
+    await refreshA.value;await refreshB.value
+    XCTAssertNil(first.issue);XCTAssertNil(second.issue)
+    let reopenedA=StudioAssetLibrary(root:root,projectID:a.id),reopenedB=StudioAssetLibrary(root:root,projectID:b.id)
+    XCTAssertEqual(reopenedA.items.count,1);XCTAssertEqual(reopenedB.items.count,1)
+    let retainedA=try XCTUnwrap(reopenedA.asset(id:assetA.id)),retainedB=try XCTUnwrap(reopenedB.asset(id:assetB.id))
+    XCTAssertEqual(retainedA.name,"A retained");XCTAssertNotNil(retainedA.archivedAt);XCTAssertTrue(reopenedA.visibleItems.isEmpty)
+    XCTAssertEqual(retainedB.name,"B retained");XCTAssertTrue(retainedB.favorite)
+    XCTAssertNil(reopenedA.asset(id:assetB.id));XCTAssertNil(reopenedB.asset(id:assetA.id))
+    XCTAssertEqual(try Data(contentsOf:reopenedA.fileURL(for:retainedA)),bytes)
+    XCTAssertEqual(try Data(contentsOf:reopenedB.fileURL(for:retainedB)),bytes)
+    XCTAssertEqual(StudioAssetLibrary(root:root).items.count,2)
+  }
+
   func testBatchPublicationCommitsAllOutputsAndInvalidSecondInputLeavesAcceptedIndexExact()throws {
     let root=try fixture(),library=StudioAssetLibrary(root:root),metadata=StudioAssetMetadata(kind:.image,origin:.generated,isMock:true)
     let data=try png()
