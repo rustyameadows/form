@@ -4,7 +4,6 @@ import SwiftUI
 struct StudioCompositionWorkspace:View {
   @EnvironmentObject var store:StudioStore
   @ObservedObject var controller:StudioCompositionController
-  @State private var inspector="Camera"
   @State private var guides=false
   @StateObject private var thumbnails=StudioSceneThumbnailCache()
   var body:some View {
@@ -39,8 +38,6 @@ struct StudioCompositionWorkspace:View {
       let project=store.project
       thumbnails.synchronize(project:project,assets:project.map{store.repository.url(for:$0.id).appendingPathComponent("Assets")})
     }.onDisappear{thumbnails.reset()}.onAppear{controller.reconcile()}.onChange(of:store.project?.id){_,_ in controller.reconcile()}.onChange(of:store.revision){_,_ in controller.reconcile()}.onChange(of:store.environment){_,value in if value != .studio {controller.stop()}}
-      .onChange(of:controller.selectedInstanceID){_,id in if id != nil {inspector="Instance"}}
-      .onChange(of:controller.selectionRequest){_,_ in if controller.selectedInstanceID != nil {inspector="Instance"}}
       .confirmationDialog("Save changes to \(controller.draft?.name ?? "this scene")?",isPresented:Binding(
         get:{controller.pendingSceneID != nil},set:{if !$0 {controller.cancelSceneSelection()}})) {
           if let id=controller.pendingSceneID {
@@ -126,20 +123,39 @@ struct StudioCompositionWorkspace:View {
   private var inspectorPanel:some View {
     VStack(spacing:0) {
       ScrollView {
-        VStack(alignment:.leading,spacing:18) {
-          Picker("Studio inspector",selection:$inspector){Text("Camera").tag("Camera");Text("Instance").tag("Instance");Text("Light").tag("Light")}.inspectorSegmented().labelsHidden().accessibilityLabel("Studio inspector")
+        VStack(alignment:.leading,spacing:14) {
           if let scene=controller.draft {
-            if inspector=="Camera" {camera(scene)}
-            else if inspector=="Instance" {instanceEditor}
-            else {lighting(scene)}
-            Divider();SectionLabel("IMAGE OUTPUT")
-            TextField("Scene name",text:Binding(get:{controller.draft?.name ?? ""},set:{value in controller.change{$0.name=value}})).textFieldStyle(InspectorTextFieldStyle()).accessibilityLabel("Studio scene name")
-            HStack {TextField("Width",value:Binding(get:{scene.pixels.width},set:{value in controller.change{$0.pixels.width=value}}),format:.number.grouping(.never));Text("×");TextField("Height",value:Binding(get:{scene.pixels.height},set:{value in controller.change{$0.pixels.height=value}}),format:.number.grouping(.never));Text("px")}.textFieldStyle(InspectorTextFieldStyle()).font(.system(size:11))
+            camera(scene)
+            InspectorDivider()
+            lighting(scene)
+            InspectorDivider()
+            VStack(alignment:.leading,spacing:8) {
+              InspectorSectionHeader("INSTANCE")
+              Picker("Studio instance",selection:Binding<UUID?>(get:{controller.selectedInstanceID},set:{controller.selectInstance($0)})) {
+                Text("Choose an instance").tag(UUID?.none)
+                ForEach(scene.instances){instance in Text(instance.name).tag(Optional(instance.id))}
+              }.labelsHidden().inspectorPicker().accessibilityLabel("Studio instance")
+                .disabled(scene.instances.isEmpty)
+              instanceEditor
+            }
           }
-        }.font(.system(size:11)).padding(18)
-      }
+        }.font(InspectorStyle.labelFont).padding(18)
+      }.accessibilityLabel("Studio scene controls")
       Divider()
-      VStack(alignment:.leading,spacing:8) {
+      VStack(alignment:.leading,spacing:10) {
+        if let scene=controller.draft {
+          InspectorSectionHeader("IMAGE OUTPUT")
+          TextField("Studio scene name",text:Binding(get:{controller.draft?.name ?? ""},set:{value in controller.change{$0.name=value}}))
+            .textFieldStyle(InspectorTextFieldStyle()).accessibilityLabel("Studio scene name")
+          HStack(spacing:8) {
+            TextField("Output width",value:Binding(get:{scene.pixels.width},set:{value in controller.change{$0.pixels.width=value}}),format:.number.grouping(.never))
+              .accessibilityLabel("Output width")
+            Text("×").foregroundStyle(Palette.secondary)
+            TextField("Output height",value:Binding(get:{scene.pixels.height},set:{value in controller.change{$0.pixels.height=value}}),format:.number.grouping(.never))
+              .accessibilityLabel("Output height")
+            Text("px").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+          }.textFieldStyle(InspectorTextFieldStyle(numeric:true))
+        }
         VStack(spacing:8) {
           StudioOutputAction("Save still…",symbol:"square.and.arrow.down",help:"Export the current composition as a native PNG with its render record",identifier:"studio-save-still"){controller.exportDialog(video:false)}
           StudioOutputAction("Generate image",symbol:"sparkles",primary:true,help:"Use a frozen image of this composition in the image workflow",identifier:"studio-generate-image"){store.createStudioStill()}
@@ -147,27 +163,35 @@ struct StudioCompositionWorkspace:View {
         if let output=controller.lastOutput {
           Button("Show "+output.lastPathComponent){NSWorkspace.shared.activateFileViewerSelecting([output])}.font(InspectorStyle.captionFont).lineLimit(1).truncationMode(.middle)
         }
-      }.padding(18)
+      }.padding(18).accessibilityLabel("Studio image output")
     }.disabled(controller.busy)
   }
   private func camera(_ scene:StudioComposition)->some View {
-    VStack(alignment:.leading,spacing:14) {
-      SectionLabel("CAMERA & FRAMING")
-      Picker("Projection",selection:Binding(get:{scene.camera.projection},set:{value in controller.change{$0.camera.projection=value}})){Text("Perspective").tag("perspective");Text("Orthographic").tag("orthographic")}.inspectorPicker()
-      field("Yaw",value:scene.camera.azimuth*180 / .pi,unit:"°"){value in controller.change{$0.camera.azimuth=value * .pi/180;$0.camera.orientation=nil}}
-      field("Elevation",value:scene.camera.elevation*180 / .pi,unit:"°"){value in controller.change{$0.camera.elevation=value * .pi/180;$0.camera.orientation=nil}}
-      field("Distance",value:scene.camera.distance*100,unit:"mm"){value in controller.change{$0.camera.distance=value/100}}
-      Divider();SectionLabel("TARGET · MILLIMETERS")
-      field("X",value:scene.camera.target.x*100,unit:"mm"){value in controller.change{$0.camera.target.x=value/100}}
-      field("Y",value:scene.camera.target.y*100,unit:"mm"){value in controller.change{$0.camera.target.y=value/100}}
-      field("Z",value:scene.camera.target.z*100,unit:"mm"){value in controller.change{$0.camera.target.z=value/100}}
-      Button("Frame all scene instances"){controller.frameScene()}
-      Text("The Studio camera belongs to this presentation. It leaves the design camera unchanged. Perspective uses LAB's 39° vertical field of view.").font(.system(size:10)).foregroundStyle(Palette.secondary)
+    VStack(alignment:.leading,spacing:8) {
+      InspectorSectionHeader("CAMERA")
+        .help("The Studio camera belongs to this scene. Perspective uses a 39° vertical field of view.")
+      HStack(alignment:.top,spacing:8) {
+        VStack(alignment:.leading,spacing:4) {
+          Text("Projection").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+          Picker("Camera projection",selection:Binding(get:{scene.camera.projection},set:{value in controller.change{$0.camera.projection=value}})) {
+            Text("Perspective").tag("perspective");Text("Orthographic").tag("orthographic")
+          }.labelsHidden().inspectorPicker().frame(maxWidth:.infinity,minHeight:InspectorStyle.controlHeight,alignment:.leading)
+        }.frame(maxWidth:.infinity)
+        field("Distance",value:scene.camera.distance*100,unit:"mm",stacked:true,accessibilityName:"Camera distance"){value in controller.change{$0.camera.distance=value/100}}
+      }
+      HStack(spacing:8) {
+        field("Yaw",value:scene.camera.azimuth*180 / .pi,unit:"°",stacked:true,accessibilityName:"Camera yaw"){value in controller.change{$0.camera.azimuth=value * .pi/180;$0.camera.orientation=nil}}
+        field("Elevation",value:scene.camera.elevation*180 / .pi,unit:"°",stacked:true,accessibilityName:"Camera elevation"){value in controller.change{$0.camera.elevation=value * .pi/180;$0.camera.orientation=nil}}
+      }
+      HStack(spacing:8) {
+        field("Target X",value:scene.camera.target.x*100,unit:"mm",stacked:true,accessibilityName:"Camera target X"){value in controller.change{$0.camera.target.x=value/100}}
+        field("Y",value:scene.camera.target.y*100,unit:"mm",stacked:true,accessibilityName:"Camera target Y"){value in controller.change{$0.camera.target.y=value/100}}
+        field("Z",value:scene.camera.target.z*100,unit:"mm",stacked:true,accessibilityName:"Camera target Z"){value in controller.change{$0.camera.target.z=value/100}}
+      }
     }
   }
   @ViewBuilder private var instanceEditor:some View {
     if let instance=controller.selected {
-      SectionLabel("PRESENTATION INSTANCE")
       TextField("Instance name",text:Binding(get:{instance.name},set:{value in controller.changeInstance(id:instance.id){$0.name=value}})).textFieldStyle(InspectorTextFieldStyle())
       Toggle("Visible",isOn:Binding(get:{instance.visible},set:{value in controller.changeInstance(id:instance.id){$0.visible=value}})).inspectorToggle()
       if instance.prop==nil {
@@ -184,30 +208,35 @@ struct StudioCompositionWorkspace:View {
         field("Prop depth",value:prop.depthMM,unit:"mm"){value in controller.changeInstance(id:instance.id){$0.prop?.depthMM=value}}
         TextField("Prop color #RRGGBB",text:Binding(get:{prop.color},set:{value in controller.changeInstance(id:instance.id){$0.prop?.color=value}})).textFieldStyle(InspectorTextFieldStyle())
       }
-      Divider();SectionLabel("PLACEMENT")
-      field("X",value:instance.positionMM.x,unit:"mm"){value in controller.changeInstance(id:instance.id){$0.positionMM.x=value}}
-      field("Height (Y)",value:instance.positionMM.y,unit:"mm"){value in controller.changeInstance(id:instance.id){$0.positionMM.y=value}}
-      field("Z",value:instance.positionMM.z,unit:"mm"){value in controller.changeInstance(id:instance.id){$0.positionMM.z=value}}
+      Text("Position").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+      HStack(spacing:8) {
+        field("X",value:instance.positionMM.x,unit:"mm",stacked:true){value in controller.changeInstance(id:instance.id){$0.positionMM.x=value}}
+        field("Height (Y)",value:instance.positionMM.y,unit:"mm",stacked:true){value in controller.changeInstance(id:instance.id){$0.positionMM.y=value}}
+        field("Z",value:instance.positionMM.z,unit:"mm",stacked:true){value in controller.changeInstance(id:instance.id){$0.positionMM.z=value}}
+      }
       field("Rotation",value:instance.rotationDegrees,unit:"°"){value in controller.changeInstance(id:instance.id){$0.rotationDegrees=value}}
         .help("Yaw around the vertical Y axis")
       HStack(spacing:6) {
         WorkspaceToolbarButton("Duplicate selected",symbol:"plus.square.on.square",help:"Add another linked instance of this product",showsTitle:true,identifier:"studio-duplicate-instance"){controller.duplicateInstance()}
         WorkspaceToolbarButton("Remove Studio instance",symbol:"trash",help:"Remove the selected instance from this scene",identifier:"studio-remove-instance"){controller.removeInstance()}
       }
-      Text("Placement affects this scene instance only.").font(.system(size:10)).foregroundStyle(Palette.secondary)
-    }else {Text("Choose a scene instance to position it or replace its product source.").foregroundStyle(Palette.secondary)}
+    }else {Text("Select an object in the scene or choose one above to edit its placement.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)}
   }
   private func lighting(_ scene:StudioComposition)->some View {
-    VStack(alignment:.leading,spacing:16) {
-      SectionLabel("LIGHTING")
-      Picker("Setup",selection:Binding(get:{scene.lighting},set:{value in controller.change{$0.lighting=value}})){Text("Classic").tag("classic-v1");Text("Soft side").tag("soft-side-v1");Text("Rim").tag("rim-v1")}
-      SectionLabel("BACKDROP")
-      ForEach(StudioShot.surfaces,id:\.self){surface in Button{controller.change{$0.surface=surface}}label:{HStack{Circle().fill(surface=="Graphite" ? Color.gray:surface=="Warm paper" ? Color(nsColor:NSColor(hex:"#D9C6A0")):.white).frame(width:26,height:26).overlay(Circle().stroke(Palette.line));Text(surface);Spacer();if scene.surface==surface {Image(systemName:"checkmark").foregroundStyle(Palette.accent)}}.padding(9).background(Color.white.opacity(0.5),in:RoundedRectangle(cornerRadius:7))}.buttonStyle(.plain)}
+    VStack(alignment:.leading,spacing:8) {
+      InspectorSectionHeader("LIGHTING")
+      Picker("Setup",selection:Binding(get:{scene.lighting},set:{value in controller.change{$0.lighting=value}})) {
+        Text("Classic").tag("classic-v1");Text("Soft side").tag("soft-side-v1");Text("Rim").tag("rim-v1")
+      }.inspectorPicker().accessibilityLabel("Studio lighting setup")
+      Picker("Backdrop",selection:Binding(get:{scene.surface},set:{value in controller.change{$0.surface=value}})) {
+        ForEach(StudioShot.surfaces,id:\.self){surface in Text(surface).tag(surface)}
+      }.inspectorPicker().accessibilityLabel("Studio backdrop")
     }
   }
-  @ViewBuilder private func field(_ title:String,value:Double,unit:String,set:@escaping(Double)->Void)->some View {
-    if unit == "mm" { ArtworkUnitField(title, value: value, unit: store.project?.unit == "in" ? .inches : .mm, set) }
-    else { ScalarArtworkField(title, value: value, unit: unit, set) }
+  @ViewBuilder private func field(_ title:String,value:Double,unit:String,stacked:Bool=false,accessibilityName:String?=nil,set:@escaping(Double)->Void)->some View {
+    if unit == "mm" {
+      ArtworkUnitField(title,value:value,unit:store.project?.unit == "in" ? .inches:.mm,layout:stacked ? .stacked:.row,accessibilityName:accessibilityName,set)
+    }else {ScalarArtworkField(title,value:value,unit:unit,layout:stacked ? .stacked:.row,accessibilityName:accessibilityName,set)}
   }
 }
 

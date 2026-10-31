@@ -16,6 +16,7 @@ enum InspectorStyle {
   static let panelPadding: CGFloat = 16
   static let nativeValueFont = NSFont.monospacedSystemFont(ofSize: 11, weight: .regular)
 }
+enum InspectorFieldLayout { case row,stacked }
 
 struct InspectorSectionHeader: View {
   let title: String

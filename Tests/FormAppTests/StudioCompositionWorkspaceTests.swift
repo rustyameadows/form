@@ -68,10 +68,27 @@ import XCTest
   private func textField(_ host:NSView,_ title:String)->NSTextField? {
     descendants(host).compactMap{$0 as? NSTextField}.first{$0.placeholderString==title || $0.accessibilityLabel()==title}
   }
-  private func inspector(_ host:NSView)throws->NSSegmentedControl {
-    try XCTUnwrap(descendants(host).compactMap{$0 as? NSSegmentedControl}.first { control in
+  private let cameraFieldLabels=["Camera yaw","Camera elevation","Camera distance","Camera target X","Camera target Y","Camera target Z"]
+  private let outputFieldLabels=["Studio scene name","Output width","Output height"]
+  private func fields(_ host:NSView,_ labels:[String])throws->[NSTextField] {
+    try labels.map{label in
+      let field=try XCTUnwrap(textField(host,label),"Missing continuous inspector field: "+label)
+      XCTAssertTrue(field.isEditable,"The named inspector control is an actual editable field: "+label)
+      return field
+    }
+  }
+  private func assertNoInspectorTabs(_ host:NSView,file:StaticString=#filePath,line:UInt=#line) {
+    XCTAssertFalse(descendants(host).compactMap{$0 as? NSSegmentedControl}.contains {control in
       (0..<control.segmentCount).map{control.label(forSegment:$0) ?? ""} == ["Camera","Instance","Light"]
-    },"Studio retains a real segmented inspector control")
+    },"Camera, instance and lighting belong to one continuous inspector",file:file,line:line)
+  }
+  private func insideScrollView(_ view:NSView,until host:NSView)->Bool {
+    var parent=view.superview
+    while let current=parent,current !== host {
+      if current is NSScrollView {return true}
+      parent=current.superview
+    }
+    return false
   }
 
   func testNativeSharedPlacementToolsChangeModeWithoutEditingSceneOrDesign()throws {
@@ -111,28 +128,28 @@ import XCTest
     XCTAssertNotNil(textField(f.host,"Height (Y)"));XCTAssertNotNil(textField(f.host,"Rotation"))
   }
 
-  func testNativeStagePickRevealsPlacementAndRepeatedSelectionRespectsUserCameraChoice()throws {
+  func testNativeStagePickKeepsCameraAndOutputAlongsidePlacementWithoutInspectorTabs()throws {
     let f=try fixture(),before=try XCTUnwrap(f.store.project),instance=try XCTUnwrap(f.first.instances.first)
     f.controller.gizmoVisible=false
-    XCTAssertNil(textField(f.host,"Rotation"))
+    let camera=try fields(f.host,cameraFieldLabels),output=try fields(f.host,outputFieldLabels)
+    let draft=f.controller.draft
+    assertNoInspectorTabs(f.host);XCTAssertNil(textField(f.host,"Rotation"))
     try pick(f,instance.id)
     XCTAssertEqual(f.controller.selectedInstanceID,instance.id)
-    XCTAssertEqual(try inspector(f.host).selectedSegment,1)
-    XCTAssertNotNil(textField(f.host,"Rotation"));XCTAssertTrue(try toolbar(f.host,"studio-focus-selection").isEnabled)
-    let control=try inspector(f.host);control.selectedSegment=0
-    XCTAssertTrue(control.sendAction(control.action,to:control.target));settle(f.host)
-    XCTAssertEqual(try inspector(f.host).selectedSegment,0)
-    XCTAssertNil(textField(f.host,"Rotation"),"Selection does not keep forcing the user away from Camera")
+    XCTAssertNotNil(textField(f.host,"Height (Y)"));XCTAssertNotNil(textField(f.host,"Rotation"))
+    XCTAssertTrue(try toolbar(f.host,"studio-focus-selection").isEnabled)
+    XCTAssertEqual(try fields(f.host,cameraFieldLabels).map(ObjectIdentifier.init),camera.map(ObjectIdentifier.init),"Selection must retain the camera editors")
+    XCTAssertEqual(try fields(f.host,outputFieldLabels).map(ObjectIdentifier.init),output.map(ObjectIdentifier.init),"Selection must retain the pinned output editors")
+    assertNoInspectorTabs(f.host)
     f.controller.selectInstance(instance.id);settle(f.host)
-    XCTAssertEqual(try inspector(f.host).selectedSegment,1,"An explicit repeat pick reveals the selected instance again")
-    XCTAssertEqual(f.store.project,before);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
+    XCTAssertNotNil(textField(f.host,"Rotation"));XCTAssertNotNil(textField(f.host,"Camera yaw"))
+    XCTAssertEqual(f.controller.draft,draft);XCTAssertEqual(f.store.project,before);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
 
     let previous=try XCTUnwrap(f.controller.draft)
     XCTAssertTrue(try toolbar(f.host,"studio-duplicate-instance").accessibilityPerformPress());settle(f.host)
     let copy=try XCTUnwrap(f.controller.selected)
     XCTAssertNotEqual(copy.id,instance.id);XCTAssertEqual(copy.sourceObjectID,instance.sourceObjectID)
-    XCTAssertEqual(f.controller.draft?.instances.count,2)
-    XCTAssertEqual(f.controller.selectedInstanceID,copy.id)
+    XCTAssertEqual(f.controller.draft?.instances.count,2);XCTAssertEqual(f.controller.selectedInstanceID,copy.id)
     XCTAssertTrue(f.controller.undoDraft());settle(f.host)
     XCTAssertEqual(f.controller.draft,previous);XCTAssertEqual(f.store.project,before);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
   }
@@ -178,7 +195,9 @@ import XCTest
   func testDirectSavedSceneRowsPreserveDirtySwitchContract()async throws {
     let f=try fixture(),before=try XCTUnwrap(f.store.project)
     let target=try row(f.host,"studio-scene-"+f.second.id.uuidString)
-    XCTAssertEqual(target.rowTitle,f.second.name);XCTAssertTrue(target.accessibilityPerformPress())
+    XCTAssertEqual(target.rowTitle,f.second.name);XCTAssertNil(target.subtitle)
+    XCTAssertEqual(target.bounds.height,108,accuracy:1);XCTAssertEqual(target.toolTip,f.second.name)
+    XCTAssertTrue(target.accessibilityPerformPress())
     for _ in 0..<12 {await Task.yield()};settle(f.host)
     XCTAssertEqual(f.controller.draft?.id,f.second.id)
     XCTAssertTrue(try row(f.host,"studio-scene-"+f.second.id.uuidString).selected)
@@ -241,23 +260,44 @@ import XCTest
     XCTAssertTrue(f.store.engine.undoStack.isEmpty)
   }
 
-  func testStillActionsStayPinnedAtNarrowAndWideSizesWithoutMotionControlsOrInstanceRows()throws {
-    let f=try fixture(),project=try XCTUnwrap(f.store.project),motion=f.controller.draft?.motion
-    for width in [1020.0,1440.0] {
-      f.window.setContentSize(.init(width:width,height:760));settle(f.host)
-      let save=try XCTUnwrap(descendants(f.host).compactMap{$0 as? NSButton}.first{$0.accessibilityIdentifier()=="studio-save-still"})
-      let generate=try XCTUnwrap(descendants(f.host).compactMap{$0 as? NSButton}.first{$0.accessibilityIdentifier()=="studio-generate-image"})
-      let savedRect=save.convert(save.bounds,to:f.host),generatedRect=generate.convert(generate.bounds,to:f.host)
-      XCTAssertEqual(savedRect.minX,generatedRect.minX,accuracy:1);XCTAssertEqual(savedRect.width,254,accuracy:1)
-      XCTAssertEqual(generatedRect.width,savedRect.width,accuracy:1)
-      XCTAssertEqual(abs(savedRect.midY-generatedRect.midY),40,accuracy:1)
-      XCTAssertGreaterThan(savedRect.minX,width-290);XCTAssertLessThanOrEqual(generatedRect.maxX,width)
-      XCTAssertFalse(savedRect.intersects(generatedRect));XCTAssertTrue(save.isEnabled);XCTAssertTrue(generate.isEnabled)
-      XCTAssertNotNil(try row(f.host,"studio-scene-"+f.first.id.uuidString))
-      XCTAssertFalse(descendants(f.host).compactMap{$0 as? WorkspaceNavigationNativeButton}.contains{($0.accessibilityIdentifier() ?? "").hasPrefix("studio-instance-")})
-      XCTAssertFalse(descendants(f.host).compactMap{$0 as? NSButton}.contains{["Capture start","Capture end","Export video…"].contains($0.title)})
+  func testContinuousInspectorPinsOutputAndRetainsCameraAtNarrowAndWideSizesBeforeAndAfterPick()throws {
+    let f=try fixture(),project=try XCTUnwrap(f.store.project),draft=f.controller.draft
+    let instance=try XCTUnwrap(f.first.instances.first);f.controller.gizmoVisible=false
+    for size in [CGSize(width:1020,height:700),CGSize(width:1440,height:940)] {
+      f.controller.selectInstance(nil);f.window.setContentSize(size);settle(f.host)
+      let cameras=try fields(f.host,cameraFieldLabels),outputs=try fields(f.host,outputFieldLabels)
+      let boundsBefore=outputs.map{$0.convert($0.bounds,to:nil)}
+      for selected in [false,true] {
+        if selected {try pick(f,instance.id)}
+        assertNoInspectorTabs(f.host)
+        XCTAssertEqual(try fields(f.host,cameraFieldLabels).map(ObjectIdentifier.init),cameras.map(ObjectIdentifier.init))
+        XCTAssertEqual(try fields(f.host,outputFieldLabels).map(ObjectIdentifier.init),outputs.map(ObjectIdentifier.init))
+        if selected {XCTAssertNotNil(textField(f.host,"Height (Y)"));XCTAssertNotNil(textField(f.host,"Rotation"))}
+        let save=try XCTUnwrap(descendants(f.host).compactMap{$0 as? NSButton}.first{$0.accessibilityIdentifier()=="studio-save-still"})
+        let generate=try XCTUnwrap(descendants(f.host).compactMap{$0 as? NSButton}.first{$0.accessibilityIdentifier()=="studio-generate-image"})
+        let savedRect=save.convert(save.bounds,to:nil),generatedRect=generate.convert(generate.bounds,to:nil),hostRect=f.host.convert(f.host.bounds,to:nil)
+        XCTAssertEqual(savedRect.minX,generatedRect.minX,accuracy:1)
+        XCTAssertGreaterThan(savedRect.width,200);XCTAssertLessThan(savedRect.width,290)
+        XCTAssertEqual(generatedRect.width,savedRect.width,accuracy:1)
+        XCTAssertEqual(abs(savedRect.midY-generatedRect.midY),40,accuracy:1)
+        XCTAssertFalse(savedRect.intersects(generatedRect));XCTAssertTrue(save.isEnabled);XCTAssertTrue(generate.isEnabled)
+        XCTAssertTrue(hostRect.insetBy(dx:-1,dy:-1).contains(savedRect));XCTAssertTrue(hostRect.insetBy(dx:-1,dy:-1).contains(generatedRect))
+        XCTAssertFalse(insideScrollView(save,until:f.host));XCTAssertFalse(insideScrollView(generate,until:f.host))
+        for (index,field) in outputs.enumerated() {
+          let frame=field.convert(field.bounds,to:nil)
+          XCTAssertEqual(frame,boundsBefore[index],"Instance selection must not displace pinned output fields")
+          XCTAssertGreaterThan(frame.width,20);XCTAssertGreaterThan(frame.height,10)
+          XCTAssertTrue(hostRect.insetBy(dx:-1,dy:-1).contains(frame),"Pinned output remains visible at \(size)")
+          XCTAssertGreaterThanOrEqual(frame.minX,hostRect.maxX-290)
+          XCTAssertFalse(insideScrollView(field,until:f.host),"Output fields stay outside the scrolling inspector")
+          XCTAssertFalse(field.isHiddenOrHasHiddenAncestor)
+        }
+        XCTAssertNotNil(try row(f.host,"studio-scene-"+f.first.id.uuidString))
+        XCTAssertFalse(descendants(f.host).compactMap{$0 as? WorkspaceNavigationNativeButton}.contains{($0.accessibilityIdentifier() ?? "").hasPrefix("studio-instance-")})
+        XCTAssertFalse(descendants(f.host).compactMap{$0 as? NSButton}.contains{["Capture start","Capture end","Export video…"].contains($0.title)})
+      }
     }
-    XCTAssertEqual(f.controller.draft?.motion,motion,"Removing motion controls never clears existing motion data")
+    XCTAssertEqual(f.controller.draft,draft,"Layout and selection retain camera, placement, pixels and saved motion")
     XCTAssertEqual(f.store.project,project);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
   }
 }

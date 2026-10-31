@@ -9,27 +9,33 @@ extension Notification.Name {
 
 struct ArtworkUnitField: View {
   let title: String, value: Double, unit: PhysicalUnit, onCommit: (Double) throws -> Void
-  init(_ title: String, value: Double, unit: PhysicalUnit, _ onCommit: @escaping (Double) throws -> Void) {
+  var layout:InspectorFieldLayout = .row
+  var accessibilityName:String?
+  init(_ title: String, value: Double, unit: PhysicalUnit, layout:InspectorFieldLayout = .row,accessibilityName:String?=nil, _ onCommit: @escaping (Double) throws -> Void) {
     self.title = title
     self.value = value
     self.unit = unit
     self.onCommit = onCommit
+    self.layout=layout;self.accessibilityName=accessibilityName
   }
   var body: some View {
     ArtworkInput(
       title: title, value: value / unit.millimeters, suffix: unit.rawValue,
-      parser: { try unit.parse($0) / unit.millimeters },onCommit:{try onCommit($0 * unit.millimeters)})
+      parser: { try unit.parse($0) / unit.millimeters },onCommit:{try onCommit($0 * unit.millimeters)},layout:layout,accessibilityName:accessibilityName)
   }
 }
 struct ScalarArtworkField: View {
   let title: String, value: Double, unit: String, onCommit: (Double) throws -> Void
   var increment:TypographyIncrement?
-  init(_ title: String, value: Double, unit: String = "",increment:TypographyIncrement?=nil, _ onCommit: @escaping (Double) throws -> Void) {
+  var layout:InspectorFieldLayout = .row
+  var accessibilityName:String?
+  init(_ title: String, value: Double, unit: String = "",increment:TypographyIncrement?=nil,layout:InspectorFieldLayout = .row,accessibilityName:String?=nil, _ onCommit: @escaping (Double) throws -> Void) {
     self.title = title
     self.value = value
     self.unit = unit
     self.onCommit = onCommit
     self.increment=increment
+    self.layout=layout;self.accessibilityName=accessibilityName
   }
   var body: some View {
     ArtworkInput(
@@ -39,12 +45,14 @@ struct ScalarArtworkField: View {
           throw FormError.invalid("Enter a finite number.")
         }
         return value
-      }, onCommit: onCommit,increment:increment)
+      }, onCommit: onCommit,layout:layout,accessibilityName:accessibilityName,increment:increment)
   }
 }
 private struct ArtworkInput: View {
   let title: String, value: Double, suffix: String, parser: (String) throws -> Double,
     onCommit: (Double) throws -> Void
+  var layout:InspectorFieldLayout = .row
+  var accessibilityName:String?
   var increment:TypographyIncrement?=nil
   @State private var draft = ""
   @State private var error = false
@@ -77,13 +85,22 @@ private struct ArtworkInput: View {
   }
   @ViewBuilder private var editor:some View {
     if let increment {
-      FocusedNumericArtworkField(text:$draft,title:title,invalid:error,onFocus:{focused=$0},onSubmit:commit,onCancel:{draft=formatted();lastCommitted=draft;exactCommitted=value;error=false},onBegin:increment.begin,onStep:step)
-    }else {TextField(title,text:$draft).focused($focused).onSubmit{commit()}}
+      FocusedNumericArtworkField(text:$draft,title:accessibilityName ?? title,invalid:error,onFocus:{focused=$0},onSubmit:commit,onCancel:{draft=formatted();lastCommitted=draft;exactCommitted=value;error=false},onBegin:increment.begin,onStep:step)
+    }else {TextField(accessibilityName ?? title,text:$draft).focused($focused).onSubmit{commit()}}
   }
   var body: some View {
-    InspectorRow(title) {
+    Group {
+      if layout == .stacked {
+        VStack(alignment:.leading,spacing:4) {
+          Text(title).font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+          valueBox
+        }.frame(maxWidth:.infinity)
+      }else {InspectorRow(title){valueBox}}
+    }.font(InspectorStyle.labelFont)
+  }
+  private var valueBox:some View {
       InspectorValueBox(suffix: suffix, invalid: error, focused: focused) {
-      editor.font(InspectorStyle.valueFont).multilineTextAlignment(.trailing).textFieldStyle(.plain).frame(minWidth:32,maxWidth:77).foregroundStyle(error ? Palette.accent:Palette.ink).onChange(of:focused) { _, focus in
+      editor.accessibilityLabel(accessibilityName ?? title).font(InspectorStyle.valueFont).multilineTextAlignment(.trailing).textFieldStyle(.plain).frame(minWidth:32,maxWidth:layout == .stacked ? .infinity:77).foregroundStyle(error ? Palette.accent:Palette.ink).onChange(of:focused) { _, focus in
         if !focus {
           commit()
           if !error {
@@ -112,7 +129,6 @@ private struct ArtworkInput: View {
         commit()
       }
       }
-    }.font(InspectorStyle.labelFont)
   }
 }
 
