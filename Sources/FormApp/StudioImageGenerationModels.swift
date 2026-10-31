@@ -28,9 +28,23 @@ struct StudioImageGenerationOptions:Codable,Equatable {
   var quality:StudioGenerationQuality = .high
   var count=1
   var failureFixture:StudioGenerationFailureFixture = .none
-  var pixels:(width:Int,height:Int) {let n=size.longEdge;return aspect == .square ? (n,n):aspect == .landscape ? (n,n*2/3):(n*2/3,n)}
-  func validate()throws {guard StudioGenerationConfigurationRegistry.counts.contains(count) else{throw FormError.invalid("Choose one, two, or four demo images.")}}
-  var redactedMetadata:[String:String] {["model":model.rawValue,"aspect":aspect.rawValue,"size":size.rawValue,"quality":quality.rawValue,"count":String(count),"failure_fixture":failureFixture.rawValue,"transport":"none","mode":"local_demo"]}
+  /// New requests retain the Studio output exactly. Absent on older records,
+  /// whose original aspect/size settings remain readable and reproducible.
+  var outputPixels:StudioPixels?=nil
+  var pixels:(width:Int,height:Int) {
+    if let outputPixels {return (outputPixels.width,outputPixels.height)}
+    let n=size.longEdge;return aspect == .square ? (n,n):aspect == .landscape ? (n,n*2/3):(n*2/3,n)
+  }
+  func validate()throws {
+    guard StudioGenerationConfigurationRegistry.counts.contains(count) else{throw FormError.invalid("Choose one, two, or four demo images.")}
+    try outputPixels?.validate()
+  }
+  var redactedMetadata:[String:String] {
+    var value=["model":model.rawValue,"quality":quality.rawValue,"count":String(count),"failure_fixture":failureFixture.rawValue,"transport":"none","mode":"local_demo"]
+    if let outputPixels {value["width"]=String(outputPixels.width);value["height"]=String(outputPixels.height);value["sizing"]="studio"}
+    else {value["aspect"]=aspect.rawValue;value["size"]=size.rawValue}
+    return value
+  }
 }
 /// The same local-only choices are used in Studio and Canvas. A future network
 /// provider must supply its own verified capabilities rather than reuse these.
@@ -59,6 +73,7 @@ struct StudioGenerationCapture:Codable,Equatable,Identifiable {
   var warnings:[String]
   var context:StudioGenerationInputContext?=nil
   var sceneID:UUID {scene.id}
+  var hasExactStudioPixels:Bool {width==scene.pixels.width && height==scene.pixels.height}
 }
 struct StudioGenerationRun:Codable,Equatable,Identifiable {
   enum Status:String,Codable {case running,succeeded,failed,cancelled,stale;var title:String {rawValue.capitalized}}
@@ -126,6 +141,10 @@ struct StudioGenerationRequest {
   let canvasOutputPixels:StudioGenerationPixelSize?
   var outputPixels:StudioGenerationPixelSize {canvasOutputPixels ?? .init(width:options.pixels.width,height:options.pixels.height)}
   func validateOutputPixels()throws {
+    try options.validate()
+    if source == .canvas, options.outputPixels != nil {
+      throw StudioGenerationError.invalid("Studio output pixels cannot override a Canvas artboard's bounded image resolution.")
+    }
     if let canvasOutputPixels {
       guard source == .canvas else{throw StudioGenerationError.invalid("Custom Canvas output dimensions require a Canvas request.")}
       try canvasOutputPixels.validate(size:options.size)

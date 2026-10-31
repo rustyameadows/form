@@ -90,9 +90,9 @@ import XCTest
     let store=StudioStore(repository:try ProjectRepository(root:directory),seedLibrary:false)
     var project=Project(name:"Local image workflow")
     var object=try project.makeObject(recipeID:"box",parameters:["width":100,"height":80,"depth":60]);object.color="#426A84"
-    project.objects=[object];store.engine.project=project;store.showingHome=false;store.studioComposition.reconcile();store.studioComposition.stage.fitAll()
+    project.objects=[object];store.engine.project=project;store.showingHome=false;store.studioComposition.reconcile();store.studioComposition.change{$0.pixels = .init(width:300,height:200)};store.studioComposition.stage.fitAll()
     let library=StudioAssetLibrary(root:directory,projectID:project.id)
-    let controller=StudioImageGenerationController(store:store,library:library,provider:provider ?? LocalStudioImageGenerationProvider(delayNanoseconds:0),captureLimit:160)
+    let controller=StudioImageGenerationController(store:store,library:library,provider:provider ?? LocalStudioImageGenerationProvider(delayNanoseconds:0))
     controller.options.size = .small;controller.prompt="A faithful product view."
     addTeardownBlock{@MainActor in
       controller.cancel();store.studioComposition.reset();store.engine.project=nil;try? FileManager.default.removeItem(at:directory)
@@ -261,8 +261,11 @@ import XCTest
     try await waitUntil{!f.controller.busy && f.controller.currentRun?.status == .succeeded};settle(host)
     let run=try XCTUnwrap(f.controller.currentRun),id=try XCTUnwrap(run.outputAssetIDs.first)
     XCTAssertEqual(run.outputAssetIDs.count,2);XCTAssertEqual(run.capture,input);XCTAssertEqual(run.prompt,prompt)
+    XCTAssertTrue(input.hasExactStudioPixels);XCTAssertEqual(run.options.outputPixels,input.scene.pixels)
     let asset=try XCTUnwrap(f.library.asset(id:id)),bytes=try Data(contentsOf:f.library.fileURL(for:asset))
     XCTAssertTrue(asset.isMock)
+    let bitmap=try XCTUnwrap(NSBitmapImageRep(data:bytes))
+    XCTAssertEqual(bitmap.pixelsWide,input.scene.pixels.width);XCTAssertEqual(bitmap.pixelsHigh,input.scene.pixels.height)
     XCTAssertTrue(try action(host,"studio-image-preview-"+id.uuidString).accessibilityPerformPress());settle(host)
     let expectedPreview=try f.library.fileURL(for:asset).standardizedFileURL.resolvingSymlinksInPath()
     let preview=try XCTUnwrap(NSApp.windows.first{$0.identifier==StudioImageReviewPresenter.windowIdentifier && $0.isVisible && $0.representedURL?.standardizedFileURL.resolvingSymlinksInPath()==expectedPreview})
@@ -288,6 +291,7 @@ import XCTest
   func testNativePromptPresetFillsSameEditorAndThreeColumnControlsRemainReachableAtBothWidths()async throws {
     let f=try fixture();await f.controller.captureScene()
     let source=try XCTUnwrap(f.store.project),capture=try XCTUnwrap(f.controller.capture),options=f.controller.options,style=f.controller.style
+    XCTAssertTrue(capture.hasExactStudioPixels);XCTAssertEqual(options.outputPixels,capture.scene.pixels)
     let (window,host)=mount(VStack(spacing:0) {
       Color.clear.frame(height:56)
       StudioImageWorkspace(controller:f.controller,library:f.library)

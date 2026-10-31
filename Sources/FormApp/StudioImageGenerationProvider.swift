@@ -2,9 +2,30 @@ import AppKit
 import Combine
 import CryptoKit
 import FormCore
+import ImageIO
 
 @MainActor protocol StudioImageGenerationProvider {
   func generate(_ request:StudioGenerationRequest,progress:@escaping(Double)->Void)async throws->[Data]
+}
+
+/// PNG header dimensions are independent of NSImage's DPI-dependent point size.
+/// Validate the bounded pixel extent before requesting full bitmap decoding.
+enum StudioGenerationPNG {
+  static func pixelSize(of data:Data)throws->StudioPixels {
+    guard data.starts(with:[137,80,78,71,13,10,26,10]),
+      let source=CGImageSourceCreateWithData(data as CFData,nil),CGImageSourceGetCount(source)==1,
+      let properties=CGImageSourceCopyPropertiesAtIndex(source,0,nil) as? [CFString:Any],
+      let width=properties[kCGImagePropertyPixelWidth] as? NSNumber,let height=properties[kCGImagePropertyPixelHeight] as? NSNumber,
+      width.doubleValue.isFinite,height.doubleValue.isFinite,width.doubleValue==Double(width.intValue),height.doubleValue==Double(height.intValue)
+      else{throw StudioGenerationError.invalid("The scene image needs a valid single PNG with exact pixel dimensions.")}
+    let pixels=StudioPixels(width:width.intValue,height:height.intValue);try pixels.validate();return pixels
+  }
+  static func image(of data:Data,matching expected:StudioPixels)throws->CGImage {
+    guard try pixelSize(of:data)==expected,let source=CGImageSourceCreateWithData(data as CFData,nil),
+      let image=CGImageSourceCreateImageAtIndex(source,0,[kCGImageSourceShouldCache:false] as CFDictionary),image.width==expected.width,image.height==expected.height
+      else{throw StudioGenerationError.invalid("The scene image does not match its Studio output pixels. Recapture the scene; no resizing was applied.")}
+    return image
+  }
 }
 
 /// A deliberately local visual fixture, not an AI implementation. It neither

@@ -28,12 +28,12 @@ import FormCore
   private var stylesReadFailed=false
   private var promptObservation:AnyCancellable?
   private var lastScopeActive=false
-  private let captureLimit:Int
   private var scopeIsActive:Bool {projectID != nil && store?.project?.id==projectID && store?.showingHome==false}
   var currentRun:StudioGenerationRun? {guard scopeIsActive else{return nil};return history.first{$0.id==selectedRunID && $0.capture.projectID==projectID}}
   var isCaptureStale:Bool {capture.map{!isCurrent($0)} ?? true}
-  init(store:StudioStore,library:StudioAssetLibrary,provider:(any StudioImageGenerationProvider)?=nil,captureLimit:Int=960,connection:OpenAIConnectionPreviewController?=nil) {
-    self.store=store;self.library=library;self.provider=provider ?? LocalStudioImageGenerationProvider();self.captureLimit=max(160,min(1024,captureLimit))
+  var hasExactStudioPixels:Bool {capture?.hasExactStudioPixels == true}
+  init(store:StudioStore,library:StudioAssetLibrary,provider:(any StudioImageGenerationProvider)?=nil,connection:OpenAIConnectionPreviewController?=nil) {
+    self.store=store;self.library=library;self.provider=provider ?? LocalStudioImageGenerationProvider()
     self.connection=connection ?? OpenAIConnectionPreviewController()
     projectID=library.projectID ?? store.project?.id
     root=store.repository.root.appendingPathComponent("StudioAssets");owner=store.project?.id
@@ -72,6 +72,17 @@ import FormCore
     activeRunID=nil;busy=false;isCapturing=false;progress=0;phase = .idle
   }
   func newRun(){if busy {cancel()};selectedRunID=nil;error=nil;progress=0;phase = .idle}
+  /// Entering from Studio replaces only the scene input. The composing prompt,
+  /// references, model and other generation settings belong to the user.
+  func refreshSceneInputFromStudio() {
+    guard scopeIsActive,!busy else{return}
+    capture=nil
+    let token=generation
+    Task { @MainActor [weak self] in
+      guard let self,self.generation==token,self.scopeIsActive else{return}
+      await self.captureScene()
+    }
+  }
   func selectRun(_ id:UUID) {guard scopeIsActive,history.contains(where:{$0.id==id && $0.capture.projectID==projectID}) else{return};selectedRunID=id}
   func imageURL(assetID:UUID)throws->URL {guard scopeIsActive,let asset=library.asset(id:assetID),asset.metadata.projectID==projectID else{throw StudioGenerationError.invalid("That image is not available in this project's Library.")};return try library.fileURL(for:asset)}
   func addReference(assetID:UUID,role:StudioGenerationReference.Role = .style) {
@@ -115,20 +126,18 @@ import FormCore
         let resolved=try frozen.resolved(in:project)
         var shot=frozen.shot(camera:frozen.camera)
         shot.visibility = .init(mode:.objects,objectIDs:resolved.visible.sorted{$0.uuidString<$1.uuidString})
-        let aspect=max(0.125,min(8,frozen.camera.viewportAspect ?? 1.6)),long=self.captureLimit
-        shot.referenceAspect=aspect
-        shot.pixels = aspect>=1 ? .init(width:long,height:max(64,Int((Double(long)/aspect).rounded()))):.init(width:max(64,Int((Double(long)*aspect).rounded())),height:long)
         let rendered=try await self.renderer.renderResult(project:resolved.project,shot:shot,assets:store.repository.url(for:project.id).appendingPathComponent("Assets"),preview:false,renderObjectIDs:resolved.visible)
         try self.check(token,projectID:project.id)
         var value=StudioGenerationCapture(id:UUID(),createdAt:Self.now,projectID:project.id,projectName:project.name,scene:frozen,camera:frozen.camera,designSHA256:digest,draftSHA256:draftDigest,inputAssetID:UUID(),width:shot.pixels.width,height:shot.pixels.height,warnings:rendered.framingWarnings.isEmpty ? []:["Some scene bounds extend beyond the captured frame."])
         guard self.isCurrent(value) else{throw StudioGenerationError.stale}
         let png=try StudioPNG.encode(rendered.image,designDigest:digest)
-        if let bitmap=NSBitmapImageRep(data:png) {value.width=bitmap.pixelsWide;value.height=bitmap.pixelsHigh}
+        let actual=try StudioGenerationPNG.pixelSize(of:png)
+        guard actual==frozen.pixels else{throw StudioGenerationError.invalid("The native render did not preserve the Studio output pixels. No scene input was published; recapture the scene.")}
         value.context=try StudioGenerationInputContext.make(project:project,scene:frozen,resolved:resolved.project,renderObjectCount:resolved.visible.count,width:value.width,height:value.height,renderer:self.renderer.backendIdentifier)
         var inputOptions=["purpose":"generation_input","renderer":self.renderer.backendIdentifier,"design_sha256":digest,"draft_sha256":draftDigest,"transport":"none"]
         inputOptions["input_context_sha256"]=try value.context?.sha256
         let asset=try self.library.register(data:png,filename:"scene-input.png",name:"Scene input · "+frozen.name,metadata:.init(kind:.image,origin:.exported,projectID:project.id,projectName:project.name,sceneID:frozen.id,isMock:false,options:inputOptions))
-        value.inputAssetID=asset.id;self.capture=value;self.progress=1
+        value.inputAssetID=asset.id;self.capture=value;self.options.outputPixels=frozen.pixels;self.progress=1
       }catch {if self.generation==token {self.error=error is CancellationError ? "Scene capture cancelled.":error.localizedDescription}}
     }
     task=work;await work.value
@@ -137,13 +146,17 @@ import FormCore
     guard !busy else{return}
     guard scopeIsActive,let capture,capture.projectID==projectID else{error="Capture a Studio composition in this project, or reopen the project belonging to this frozen input.";return}
     do {
-      try options.validate();try validateForm()
-      guard let asset=library.asset(id:capture.inputAssetID),asset.metadata.projectID==projectID,asset.byteCount<=32*1024*1024 else{throw StudioGenerationError.invalid("The scene input is unavailable in this project or too large.")}
+      guard capture.hasExactStudioPixels else{throw StudioGenerationError.invalid("This earlier scene input was scaled down. Recapture the scene to use its exact Studio output pixels.")}
+      var effectiveOptions=options;effectiveOptions.outputPixels=capture.scene.pixels
+      try effectiveOptions.validate();try validateForm()
+      guard let asset=library.asset(id:capture.inputAssetID),asset.metadata.projectID==projectID else{throw StudioGenerationError.invalid("The scene input is unavailable in this project. Recapture the scene.")}
       let input=try Data(contentsOf:library.fileURL(for:asset))
       if let expected=asset.sha256,Self.hash(input) != expected {throw StudioGenerationError.invalid("The captured input changed on disk. Recapture the scene.")}
+      guard try StudioGenerationPNG.pixelSize(of:input)==capture.scene.pixels else{throw StudioGenerationError.invalid("The saved scene image does not match its Studio output pixels. Recapture the scene; this image will not be resized.")}
       generation+=1;let token=generation
-      let run=StudioGenerationRun(id:UUID(),createdAt:Self.now,completedAt:nil,status:.running,capture:capture,prompt:prompt,style:style,references:references,options:options)
+      let run=StudioGenerationRun(id:UUID(),createdAt:Self.now,completedAt:nil,status:.running,capture:capture,prompt:prompt,style:style,references:references,options:effectiveOptions)
       try persist(run);history.insert(run,at:0);if history.count>128 {history.removeLast(history.count-128)}
+      options=effectiveOptions
       activeRunID=run.id;selectedRunID=run.id;busy=true;phase = .queued;progress=0;error=nil
       let request=StudioGenerationRequest(inputPNG:input,prompt:run.prompt,style:run.style,references:run.references,options:run.options,context:run.capture.context)
       let work=Task { @MainActor [weak self] in
@@ -164,7 +177,8 @@ import FormCore
           provenance["input_context_sha256"]=try capture.context?.sha256
           for (index,png) in images.enumerated() {
             let dimensions=run.options.pixels
-            guard png.count<=32*1024*1024,png.starts(with:[137,80,78,71,13,10,26,10]),let bitmap=NSBitmapImageRep(data:png),bitmap.pixelsWide==dimensions.width,bitmap.pixelsHigh==dimensions.height else{throw StudioGenerationError.invalid("The local demo returned an invalid or incorrectly sized PNG batch.")}
+            let actual=try StudioGenerationPNG.pixelSize(of:png)
+            guard actual.width==dimensions.width,actual.height==dimensions.height else{throw StudioGenerationError.invalid("The local demo returned an incorrectly sized PNG batch. Studio output pixels must be preserved.")}
             let sourceIDs=Array(Set([capture.inputAssetID]+run.references.map(\.assetID))).sorted{$0.uuidString<$1.uuidString}
             registrations.append(.init(data:png,filename:"demo-\(index+1).png",name:"Demo · \(run.capture.scene.name) · \(index+1)",metadata:.init(kind:.image,origin:.generated,projectID:capture.projectID,projectName:capture.projectName,sceneID:capture.sceneID,generationID:run.id,isMock:true,sourceAssetIDs:sourceIDs,prompt:run.prompt,provider:"Local demo · no AI request",options:provenance)))
           }

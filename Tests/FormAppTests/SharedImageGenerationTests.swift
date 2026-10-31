@@ -143,6 +143,87 @@ import FormCore
       catch {XCTAssertTrue(error is StudioGenerationError)}
     }
   }
+  private func pixelFixture(width:Int,height:Int,noise:Bool=false,halfPointSize:Bool=false)throws->Data {
+    let bitmap=try XCTUnwrap(NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:width,pixelsHigh:height,
+      bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,
+      bitmapFormat:.alphaNonpremultiplied,bytesPerRow:width*4,bitsPerPixel:32))
+    let bytes=try XCTUnwrap(bitmap.bitmapData)
+    var state:UInt32=0x63A927D1
+    for y in 0..<height {for x in 0..<width {
+      let offset=y*bitmap.bytesPerRow+x*4
+      if noise {
+        for channel in 0..<4 {
+          state=state &* 1_664_525 &+ 1_013_904_223
+          bytes[offset+channel]=UInt8(truncatingIfNeeded:state >> 24)
+        }
+      } else {
+        bytes[offset]=x.isMultiple(of:2) ? 255:0;bytes[offset+1]=0
+        bytes[offset+2]=x.isMultiple(of:2) ? 0:255;bytes[offset+3]=255
+      }
+    }}
+    if halfPointSize {bitmap.size = .init(width:Double(width)/2,height:Double(height)/2)}
+    return try XCTUnwrap(bitmap.representation(using:.png,properties:[:]))
+  }
+  func testExactStudioPixelsKeepSinglePixelDetailBeyondReferenceThumbnailLimit()async throws {
+    let width=1291,height=769,input=try pixelFixture(width:width,height:height,halfPointSize:true)
+    var options=StudioImageGenerationOptions();options.outputPixels = .init(width:width,height:height)
+    options.size = .small;options.aspect = .square // Legacy hints cannot override exact Studio pixels.
+    let request=StudioGenerationRequest(inputPNG:input,prompt:"Keep all source pixels",style:"",references:[],options:options)
+    let prepared=try StudioGenerationDemoRenderer.prepare(request)
+    XCTAssertEqual(prepared.scene?.size,NSSize(width:width,height:height))
+    let output=try await LocalStudioImageGenerationProvider(delayNanoseconds:0).generate(request,progress:{_ in})
+    let bitmap=try XCTUnwrap(NSBitmapImageRep(data:XCTUnwrap(output.first)))
+    XCTAssertEqual(bitmap.pixelsWide,width);XCTAssertEqual(bitmap.pixelsHigh,height)
+    for x in [0,1,257,258,1001,1002,width-2,width-1] {
+      let color=try XCTUnwrap(bitmap.colorAt(x:x,y:height/2)?.usingColorSpace(.deviceRGB))
+      if x.isMultiple(of:2) {XCTAssertGreaterThan(color.redComponent,0.8);XCTAssertLessThan(color.blueComponent,0.2)}
+      else {XCTAssertGreaterThan(color.blueComponent,0.8);XCTAssertLessThan(color.redComponent,0.2)}
+    }
+    let mismatch=StudioGenerationRequest(inputPNG:input,prompt:"Mismatch",style:"",references:[],options:{
+      var value=options;value.outputPixels = .init(width:1290,height:769);return value
+    }())
+    XCTAssertThrowsError(try StudioGenerationDemoRenderer.prepare(mismatch),"Exact Studio input must never be resized to conceal a mismatch")
+  }
+  func testStudioSceneAboveCanvasReferenceByteLimitRetainsFullPixels()throws {
+    // Incompressible synthetic pixels exercise the real decode boundary, not a
+    // mocked size constant or a metadata-only image. This stays below Studio's
+    // existing16MP/64MiB limits while exceeding Canvas's32MiB per-reference cap.
+    let data=try pixelFixture(width:3000,height:3000,noise:true)
+    XCTAssertGreaterThan(data.count,32*1024*1024);XCTAssertLessThanOrEqual(data.count,64*1024*1024)
+    var options=StudioImageGenerationOptions();options.outputPixels = .init(width:3000,height:3000)
+    let studio=StudioGenerationRequest(inputPNG:data,prompt:"Exact source",style:"",references:[],options:options)
+    let prepared=try StudioGenerationDemoRenderer.prepare(studio)
+    XCTAssertEqual(prepared.scene?.size,NSSize(width:3000,height:3000))
+    let id=UUID(),canvas=request(references:[.init(assetID:id,role:.composition)],images:[.init(assetID:id,name:"Oversized Canvas reference",png:data)])
+    XCTAssertThrowsError(try StudioGenerationDemoRenderer.prepare(canvas))
+  }
+  func testLegacyOptionsRemainDecodableAndStudioExactSizingCannotLeakIntoCanvas()async throws {
+    let bytes=Data(#"{"model":"gpt-image-2.5-sunburst","aspect":"portrait","size":"small","quality":"standard","count":1,"failureFixture":"none"}"#.utf8)
+    let legacy=try JSONDecoder.form.decode(StudioImageGenerationOptions.self,from:bytes)
+    XCTAssertNil(legacy.outputPixels);XCTAssertEqual(legacy.pixels.width,341);XCTAssertEqual(legacy.pixels.height,512)
+    XCTAssertEqual(legacy.redactedMetadata["aspect"],"portrait");XCTAssertEqual(legacy.redactedMetadata["size"],"small")
+    let input=try png(.orange)
+    let legacyRequest=StudioGenerationRequest(inputPNG:input,prompt:"Legacy request",style:"",references:[],options:legacy)
+    let legacyResult=try await LocalStudioImageGenerationProvider(delayNanoseconds:0).generate(legacyRequest,progress:{_ in})
+    let bitmap=try XCTUnwrap(NSBitmapImageRep(data:XCTUnwrap(legacyResult.first)))
+    XCTAssertEqual(bitmap.pixelsWide,341);XCTAssertEqual(bitmap.pixelsHigh,512)
+    var exact=legacy;exact.outputPixels = .init(width:3000,height:2000)
+    XCTAssertEqual(exact.redactedMetadata["sizing"],"studio");XCTAssertNil(exact.redactedMetadata["aspect"])
+    let wrongCanvas=StudioGenerationRequest(prompt:"Canvas",style:"",references:[],options:exact,source:.canvas)
+    let ambiguous=StudioGenerationRequest(prompt:"Canvas",style:"",references:[],options:exact,source:.canvas,
+      canvasOutputPixels:.init(width:512,height:256))
+    let wrongStudio=StudioGenerationRequest(inputPNG:input,prompt:"Studio",style:"",references:[],options:legacy,
+      canvasOutputPixels:.init(width:512,height:256))
+    for value in [wrongCanvas,ambiguous,wrongStudio] {
+      XCTAssertThrowsError(try StudioGenerationDemoRenderer.prepare(value))
+      XCTAssertThrowsError(try StudioGenerationDemoRenderer.render(value,input:.init(scene:nil,references:[]),index:0))
+    }
+    let canvas=StudioGenerationRequest(prompt:"Canvas",style:"",references:[],options:legacy,source:.canvas,
+      canvasOutputPixels:.init(width:512,height:256))
+    let canvasResult=try await LocalStudioImageGenerationProvider(delayNanoseconds:0).generate(canvas,progress:{_ in})
+    let custom=try XCTUnwrap(NSBitmapImageRep(data:XCTUnwrap(canvasResult.first)))
+    XCTAssertEqual(custom.pixelsWide,512);XCTAssertEqual(custom.pixelsHigh,256)
+  }
   func testPromptLibraryIsSharedProjectScopedAndPreservesConcurrentSurfaceSaves()throws {
     let root=FileManager.default.temporaryDirectory.appendingPathComponent("shared-generation-prompts-"+UUID().uuidString)
     defer{try? FileManager.default.removeItem(at:root)}

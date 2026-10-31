@@ -1,5 +1,6 @@
 import AppKit
 import CryptoKit
+import FormCore
 import ImageIO
 import UniformTypeIdentifiers
 
@@ -8,6 +9,7 @@ import UniformTypeIdentifiers
 @MainActor enum StudioGenerationDemoRenderer {
   struct Input {let scene:NSImage?;let references:[NSImage]}
   static let maximumImageBytes=32*1024*1024
+  static let maximumSceneBytes=64*1024*1024
   static let maximumTotalBytes=64*1024*1024
   static func prepare(_ request:StudioGenerationRequest)throws->Input {
     try request.options.validate();try request.validateOutputPixels();try Task.checkCancellation();try request.context?.validate()
@@ -34,17 +36,40 @@ import UniformTypeIdentifiers
       guard imageIDs.isEmpty || ids==imageIDs else {throw StudioGenerationError.invalid("Reference image bytes do not match the request.")}
     }
     var bytes=request.inputPNG?.count ?? 0
-    guard bytes<=maximumImageBytes else {throw StudioGenerationError.invalid("The image input exceeds 32 MiB.")}
+    // Studio captures retain their full pixels; Canvas references keep the
+    // smaller per-image budget. Both fit the shared Library's owned-byte limit.
+    guard bytes<=maximumSceneBytes else {throw StudioGenerationError.invalid("The Studio scene input exceeds 64 MiB.")}
     for image in request.referenceImages {
       guard image.png.count<=maximumImageBytes,bytes<=maximumTotalBytes-image.png.count else {
         throw StudioGenerationError.invalid("Reference images exceed their 64 MiB total limit.")
       }
       bytes+=image.png.count
     }
-    let scene=try request.inputPNG.map(image)
+    let scene=try request.inputPNG.map { try sceneImage($0,exact:request.options.outputPixels) }
     let ordered=request.references.compactMap {reference in request.referenceImages.first{$0.assetID==reference.assetID}}
     let references=try ordered.map {try image($0.png)}
     return .init(scene:scene,references:references)
+  }
+  private static func sceneImage(_ data:Data,exact pixels:StudioPixels?)throws->NSImage {
+    if let pixels {
+      let image=try StudioGenerationPNG.image(of:data,matching:pixels)
+      // NSImage's point size may reflect PNG DPI metadata. The exact Studio
+      // path deliberately uses the validated pixel extent, never a thumbnail.
+      return NSImage(cgImage:image,size:.init(width:pixels.width,height:pixels.height))
+    }
+    // Retain the pre-exact-pixel legacy aspect/size rendering path while still
+    // bounding full decoding. Reference thumbnails must not downsample scenes.
+    guard data.starts(with:[137,80,78,71,13,10,26,10]),
+      let source=CGImageSourceCreateWithData(data as CFData,[kCGImageSourceShouldCache:false] as CFDictionary),
+      CGImageSourceGetCount(source)==1,
+      let properties=CGImageSourceCopyPropertiesAtIndex(source,0,nil) as? [CFString:Any],
+      let width=properties[kCGImagePropertyPixelWidth] as? Int,let height=properties[kCGImagePropertyPixelHeight] as? Int,
+      width>0,height>0,width<=8192,height<=8192,width<=16_777_216/height,
+      CGImageSourceCreateImageAtIndex(source,0,[kCGImageSourceShouldCache:false] as CFDictionary) != nil,
+      let image=NSImage(data:data),image.size.width>0,image.size.height>0 else {
+      throw StudioGenerationError.invalid("The captured scene needs a valid PNG within 8,192 pixels per side and 16 megapixels.")
+    }
+    return image
   }
   private static func image(_ data:Data)throws->NSImage {
     try Task.checkCancellation()
@@ -76,7 +101,10 @@ import UniformTypeIdentifiers
     let bounds=CGRect(x:0,y:0,width:pixels.width,height:pixels.height),inset=CGFloat(max(20,pixels.width/30))
     if let scene=input.scene {
       NSColor(calibratedHue:hue,saturation:0.055,brightness:0.96,alpha:1).setFill();bounds.fill()
-      let rect=fitted(scene,in:bounds.insetBy(dx:inset,dy:inset+18))
+      let rect:CGRect
+      if request.options.outputPixels != nil {
+        rect=bounds;context.imageInterpolation = .none
+      } else { rect=fitted(scene,in:bounds.insetBy(dx:inset,dy:inset+18)) }
       scene.draw(in:rect,from:.zero,operation:.sourceOver,fraction:1)
       NSColor(calibratedHue:hue,saturation:0.25,brightness:0.85,alpha:0.055+CGFloat(index)*0.01).setFill();rect.fill(using:.sourceAtop)
     } else {
@@ -84,7 +112,14 @@ import UniformTypeIdentifiers
     }
     let ink=NSColor(calibratedWhite:0.17,alpha:1)
     let caption=request.source == .studioScene ? "Scene input + local color treatment · no AI request":input.references.isEmpty ? "Sample artwork · no AI request":"Reference collage · no AI request"
-    if request.canvasOutputPixels != nil, min(pixels.width,pixels.height)<256 {
+    if request.source == .studioScene {
+      // Match Studio's full-canvas treatment: lightweight labels over pixels,
+      // without Canvas demo badge/strip panels that could obscure source edges.
+      let studioInk=NSColor(calibratedWhite:0.2,alpha:1)
+      let font=NSFont.monospacedSystemFont(ofSize:CGFloat(max(9,pixels.width/75)),weight:.medium)
+      ("LOCAL DEMO · \(index+1) / \(request.options.count)" as NSString).draw(at:.init(x:inset,y:bounds.maxY-inset-14),withAttributes:[.font:font,.foregroundColor:studioInk])
+      (caption as NSString).draw(at:.init(x:inset,y:inset/2),withAttributes:[.font:NSFont.systemFont(ofSize:CGFloat(max(8,pixels.width/100))),.foregroundColor:studioInk])
+    } else if request.canvasOutputPixels != nil, min(pixels.width,pixels.height)<256 {
       // A wide or tall custom artboard still needs readable demo identification;
       // fixed margins from the larger presets can otherwise cover the whole image.
       let padding=max(3,min(bounds.width,bounds.height)*0.06),badge="LOCAL DEMO"

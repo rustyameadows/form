@@ -168,7 +168,7 @@ struct StudioImageRunDetails:View {
           Text(run.prompt.isEmpty ? "No additional prompt":run.prompt).textSelection(.enabled).frame(maxWidth:.infinity,alignment:.leading)
           if !run.style.isEmpty {InspectorSectionHeader("STYLE");Text(run.style).textSelection(.enabled)}
           InspectorSectionHeader("REQUEST")
-          Text("\(run.options.model.title) · \(run.options.quality.title) · \(run.options.aspect.title) · \(run.options.size.title) · \(run.options.count) image(s)")
+          Text("\(run.options.model.title) · \(run.options.quality.title) · \(run.options.pixels.width) × \(run.options.pixels.height) px"+(run.options.outputPixels != nil ? " · From Studio":"")+" · \(run.options.count) image(s)")
           Text("\(run.capture.scene.name) · \(run.capture.width) × \(run.capture.height) input").foregroundStyle(Palette.secondary)
           if !run.references.isEmpty {
             InspectorSectionHeader("REFERENCES")
