@@ -90,6 +90,17 @@ enum TableTool: String, CaseIterable {
   lazy var studioShots = StudioShotController(store:self)
   lazy var studioComposition = StudioCompositionController(store:self)
   @Published var studioShowingShots=false
+  @Published var studioShowingImages=false
+  @Published var showingAssets=false
+  @Published var showingOpenAISetup=false
+  lazy var studioAssets = StudioAssetLibrary(root:repository.root)
+  private var imageWorkflow:StudioImageGenerationController?
+  var studioImages:StudioImageGenerationController {
+    if let imageWorkflow {return imageWorkflow}
+    let controller=StudioImageGenerationController(store:self,library:studioAssets)
+    imageWorkflow=controller
+    return controller
+  }
   lazy var fabricationGuide = FabricationGuide(store:self)
   @Published var studioPreset = "Daylight"
   @Published var previewVersion = 0
@@ -180,6 +191,8 @@ enum TableTool: String, CaseIterable {
       }
     }
     engine.onProjectWillChange = { [weak self] in
+      self?.imageWorkflow?.resetForProjectChange()
+      self?.studioShowingImages=false
       self?.utilityWindows?.closeProjectWindows()
       self?.invalidateArtworkTransferProject()
       self?.finishArtworkEditing()
@@ -325,6 +338,16 @@ enum TableTool: String, CaseIterable {
                 "sheet_size_mm":[self.paperSheetWidth,self.paperSheetHeight],"quantity":self.paperQuantity,"bleed_mm":self.paperBleedMM]
               status["primary_environments"] = ProjectEnvironment.primary.map(\.rawValue)
               status["studio_access"] = "secondary_icon_and_menu"
+              status["studio_image_workflow"] = [
+                "mode":"local_demo", "network_enabled":false,
+                "visible":self.studioShowingImages,
+                "library_visible":self.showingAssets,
+                "connection_preview_visible":self.showingOpenAISetup,
+                "busy":self.imageWorkflow?.busy ?? false,
+                "capturing":self.imageWorkflow?.isCapturing ?? false,
+                "phase":self.imageWorkflow?.phase.rawValue ?? "idle",
+                "saved_run_count":self.imageWorkflow?.history.count ?? 0,
+              ] as [String:Any]
               status["design_surfaces"] = [
                 "layout": self.surfaceLayout.rawValue,
                 "focused_surface": self.mode.rawValue.lowercased(),
@@ -476,6 +499,8 @@ enum TableTool: String, CaseIterable {
     scene?.resetCamera()
   }
   func home() {
+    imageWorkflow?.resetForProjectChange()
+    studioShowingImages=false
     canvasFindVisible = false
     tableInspectorVisible = false
     utilityWindows?.closeProjectWindows()
@@ -571,6 +596,7 @@ enum TableTool: String, CaseIterable {
     perform("form_delete_objects", ["object_ids": selected.map { $0.id.uuidString }])
   }
   func undo() {
+    if applyStudioImageTextHistory(in:NSApp.keyWindow) {return}
     if environment == .studio,!studioShowingShots,studioComposition.undoDraft(){toast("Undone scene edit");return}
     if mode == .artwork, artworkSession.canvas?.undoText() == true {
       objectWillChange.send()
@@ -582,6 +608,7 @@ enum TableTool: String, CaseIterable {
     toast("Undone")
   }
   func redo() {
+    if applyStudioImageTextHistory(in:NSApp.keyWindow,redo:true) {return}
     if environment == .studio,!studioShowingShots,studioComposition.redoDraft(){toast("Redone scene edit");return}
     if mode == .artwork, artworkSession.canvas?.redoText() == true {
       objectWillChange.send()

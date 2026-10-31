@@ -8,7 +8,12 @@ struct StudioCompositionWorkspace:View {
   @State private var guides=false
   var body:some View {
     VStack(spacing:0) {
-      if store.studioShowingShots {
+      if store.studioShowingImages {
+        StudioImageWorkspace(controller:store.studioImages,library:store.studioAssets,
+          onBack:{store.studioShowingImages=false;if store.project == nil {store.home()}},
+          onConnection:{store.showingOpenAISetup=true},
+          onUseInCanvas:{id in if let asset=store.studioAssets.asset(id:id){store.placeLibraryAssetOnCanvas(asset)}})
+      }else if store.studioShowingShots {
         HStack {Button("Back to scenes"){store.studioShowingShots=false};Spacer();Text("Saved shots · existing project-camera workflow").font(.system(size:11)).foregroundStyle(Palette.secondary)}.padding(12)
         TableWorkspace()
       }else {

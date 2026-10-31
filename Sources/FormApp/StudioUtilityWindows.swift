@@ -6,13 +6,15 @@ import SwiftUI
 /// Utility content can therefore observe the store without forming an ownership cycle.
 @MainActor final class StudioUtilityWindows: NSObject, NSWindowDelegate {
   enum Kind: String, CaseIterable {
-    case library, projectInfo, printPreparation
+    case library, projectInfo, printPreparation, assets, openAISetup
 
     var title: String {
       switch self {
       case .library: return "LAB Library"
       case .projectInfo: return "Project notebook"
       case .printPreparation: return "Print preparation"
+      case .assets: return "Library"
+      case .openAISetup: return "OpenAI connection"
       }
     }
     var size: NSSize {
@@ -20,6 +22,8 @@ import SwiftUI
       case .library: return .init(width: 760, height: 740)
       case .projectInfo: return .init(width: 640, height: 650)
       case .printPreparation: return .init(width: 1120, height: 760)
+      case .assets: return .init(width: 1120, height: 780)
+      case .openAISetup: return .init(width: 520, height: 650)
       }
     }
     var minimumSize: NSSize {
@@ -27,9 +31,11 @@ import SwiftUI
       case .library: return .init(width: 680, height: 520)
       case .projectInfo: return .init(width: 590, height: 440)
       case .printPreparation: return .init(width: 980, height: 640)
+      case .assets: return .init(width: 880, height: 580)
+      case .openAISetup: return .init(width: 480, height: 570)
       }
     }
-    var isProjectScoped: Bool { self != .library }
+    var isProjectScoped: Bool { self == .projectInfo || self == .printPreparation }
   }
 
   private(set) weak var store: StudioStore?
@@ -47,6 +53,8 @@ import SwiftUI
     subscribe(store.$showingLibrary, kind: .library)
     subscribe(store.$showingProjectInfo, kind: .projectInfo)
     subscribe(store.$showingPrint, kind: .printPreparation)
+    subscribe(store.$showingAssets, kind: .assets)
+    subscribe(store.$showingOpenAISetup, kind: .openAISetup)
     store.$showingHome.dropFirst().sink { [weak self] home in
       guard home else { return }
       DispatchQueue.main.async { [weak self] in
@@ -80,6 +88,8 @@ import SwiftUI
     case .library: return store.showingLibrary
     case .projectInfo: return store.showingProjectInfo
     case .printPreparation: return store.showingPrint
+    case .assets: return store.showingAssets
+    case .openAISetup: return store.showingOpenAISetup
     }
   }
   private func setRequested(_ kind: Kind, _ value: Bool) {
@@ -88,6 +98,8 @@ import SwiftUI
     case .library: store.showingLibrary = value
     case .projectInfo: store.showingProjectInfo = value
     case .printPreparation: store.showingPrint = value
+    case .assets: store.showingAssets = value
+    case .openAISetup: store.showingOpenAISetup = value
     }
   }
 
@@ -119,6 +131,13 @@ import SwiftUI
     case .library: content = AnyView(LibraryView(onClose: close).environmentObject(store).labInterface())
     case .projectInfo: content = AnyView(ProjectInfoView(onClose: close).environmentObject(store).labInterface())
     case .printPreparation: content = AnyView(PrintWorkspace(printing: store.printing, onClose: close).environmentObject(store).labInterface())
+    case .assets:
+      content = AnyView(AssetLibraryWorkspace(library:store.studioAssets,onClose:close,
+        onUseInCanvas:{[weak store] asset in store?.placeLibraryAssetOnCanvas(asset)},
+        onUseAsReference:{[weak store] asset in store?.useLibraryAssetAsReference(asset)},
+        onOpenGeneration:{[weak store] id in store?.reviewStudioImageRun(id)}).labInterface())
+    case .openAISetup:
+      content = AnyView(OpenAIConnectionPreviewView(controller:store.studioImages.connection,onClose:close).labInterface())
     }
     window.contentViewController = NSHostingController(rootView: content)
     window.center()
@@ -177,6 +196,15 @@ import SwiftUI
     guard let window = notification.object as? NSWindow,
       let kind = windows.first(where: { $0.value === window })?.key else { return }
     setRequested(kind, false)
+    if kind == .openAISetup {
+      // A native traffic-light close must release preview SecureField state,
+      // just like the view's own Close action. Never cache credential editors.
+      window.makeFirstResponder(nil)
+      window.endEditing(for:nil)
+      window.delegate=nil
+      window.contentViewController=nil
+      windows[kind]=nil
+    }
   }
 }
 
