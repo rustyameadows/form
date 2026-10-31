@@ -16,6 +16,7 @@ import FormCore
   @Published private(set) var capture:StudioGenerationCapture?
   @Published private(set) var history:[StudioGenerationRun]=[]
   @Published private(set) var stylePresets:[StudioGenerationStylePreset]=StudioGenerationStylePreset.builtins
+  @Published private(set) var promptPresets:[StudioGenerationPromptPreset]=StudioGenerationPromptPreset.builtins
   @Published private(set) var busy=false
   @Published private(set) var isCapturing=false
   @Published private(set) var progress=0.0
@@ -25,6 +26,7 @@ import FormCore
   private let provider:any StudioImageGenerationProvider
   private var task:Task<Void,Never>?,generation=0,activeRunID:UUID?,owner:UUID?
   private var stylesReadFailed=false
+  private var promptsReadFailed=false
   private var lastScopeActive=false
   private let captureLimit:Int
   private var scopeIsActive:Bool {projectID != nil && store?.project?.id==projectID && store?.showingHome==false}
@@ -36,7 +38,7 @@ import FormCore
     projectID=library.projectID ?? store.project?.id
     root=store.repository.root.appendingPathComponent("StudioAssets");owner=store.project?.id
     lastScopeActive=scopeIsActive
-    loadHistory();loadStyles()
+    loadHistory();loadStyles();loadPrompts()
   }
   private static func hash(_ data:Data)->String {SHA256.hash(data:data).map{String(format:"%02x",$0)}.joined()}
   private static var now:Date {Date(timeIntervalSince1970:Date().timeIntervalSince1970.rounded(.down))}
@@ -56,7 +58,7 @@ import FormCore
     if owner != store?.project?.id || lastScopeActive != scopeIsActive {resetForProjectChange();owner=store?.project?.id}
     objectWillChange.send()
   }
-  func resetForProjectChange() {cancel();capture=nil;selectedRunID=nil;references=[];prompt="";style="Faithful studio lighting, clear product details, restrained background.";options = .init();error=nil;renderer.clear();owner=store?.project?.id;lastScopeActive=scopeIsActive;history=[];stylePresets=StudioGenerationStylePreset.builtins;loadHistory();loadStyles()}
+  func resetForProjectChange() {cancel();capture=nil;selectedRunID=nil;references=[];prompt="";style="Faithful studio lighting, clear product details, restrained background.";options = .init();error=nil;renderer.clear();owner=store?.project?.id;lastScopeActive=scopeIsActive;history=[];stylePresets=StudioGenerationStylePreset.builtins;promptPresets=StudioGenerationPromptPreset.builtins;loadHistory();loadStyles();loadPrompts()}
   func reset(){resetForProjectChange()}
   func clearError(){error=nil}
   func dismissError(){clearError()}
@@ -118,7 +120,10 @@ import FormCore
         guard self.isCurrent(value) else{throw StudioGenerationError.stale}
         let png=try StudioPNG.encode(rendered.image,designDigest:digest)
         if let bitmap=NSBitmapImageRep(data:png) {value.width=bitmap.pixelsWide;value.height=bitmap.pixelsHigh}
-        let asset=try self.library.register(data:png,filename:"scene-input.png",name:"Scene input · "+frozen.name,metadata:.init(kind:.image,origin:.exported,projectID:project.id,projectName:project.name,sceneID:frozen.id,isMock:false,options:["purpose":"generation_input","renderer":"RealityKit","design_sha256":digest,"draft_sha256":draftDigest,"transport":"none"]))
+        value.context=try StudioGenerationInputContext.make(project:project,scene:frozen,resolved:resolved.project,renderObjectCount:resolved.visible.count,width:value.width,height:value.height,renderer:self.renderer.backendIdentifier)
+        var inputOptions=["purpose":"generation_input","renderer":self.renderer.backendIdentifier,"design_sha256":digest,"draft_sha256":draftDigest,"transport":"none"]
+        inputOptions["input_context_sha256"]=try value.context?.sha256
+        let asset=try self.library.register(data:png,filename:"scene-input.png",name:"Scene input · "+frozen.name,metadata:.init(kind:.image,origin:.exported,projectID:project.id,projectName:project.name,sceneID:frozen.id,isMock:false,options:inputOptions))
         value.inputAssetID=asset.id;self.capture=value;self.progress=1
       }catch {if self.generation==token {self.error=error is CancellationError ? "Scene capture cancelled.":error.localizedDescription}}
     }
@@ -136,7 +141,7 @@ import FormCore
       let run=StudioGenerationRun(id:UUID(),createdAt:Self.now,completedAt:nil,status:.running,capture:capture,prompt:prompt,style:style,references:references,options:options)
       try persist(run);history.insert(run,at:0);if history.count>128 {history.removeLast(history.count-128)}
       activeRunID=run.id;selectedRunID=run.id;busy=true;phase = .queued;progress=0;error=nil
-      let request=StudioGenerationRequest(inputPNG:input,prompt:run.prompt,style:run.style,references:run.references,options:run.options)
+      let request=StudioGenerationRequest(inputPNG:input,prompt:run.prompt,style:run.style,references:run.references,options:run.options,context:run.capture.context)
       let work=Task { @MainActor [weak self] in
         guard let self else{return}
         defer {if self.generation==token {self.busy=false;self.activeRunID=nil;self.task=nil;self.phase = .finished}}
@@ -151,11 +156,13 @@ import FormCore
           self.phase = .writing;self.progress=0.9
           await Task.yield();try self.check(token,projectID:capture.projectID)
           var registrations=[StudioAssetRegistration]()
+          var provenance=run.options.redactedMetadata.merging(["style":run.style,"design_sha256":capture.designSHA256,"draft_sha256":capture.draftSHA256]){_,new in new}
+          provenance["input_context_sha256"]=try capture.context?.sha256
           for (index,png) in images.enumerated() {
             let dimensions=run.options.pixels
             guard png.count<=32*1024*1024,png.starts(with:[137,80,78,71,13,10,26,10]),let bitmap=NSBitmapImageRep(data:png),bitmap.pixelsWide==dimensions.width,bitmap.pixelsHigh==dimensions.height else{throw StudioGenerationError.invalid("The local demo returned an invalid or incorrectly sized PNG batch.")}
             let sourceIDs=Array(Set([capture.inputAssetID]+run.references.map(\.assetID))).sorted{$0.uuidString<$1.uuidString}
-            registrations.append(.init(data:png,filename:"demo-\(index+1).png",name:"Demo · \(run.capture.scene.name) · \(index+1)",metadata:.init(kind:.image,origin:.generated,projectID:capture.projectID,projectName:capture.projectName,sceneID:capture.sceneID,generationID:run.id,isMock:true,sourceAssetIDs:sourceIDs,prompt:run.prompt,provider:"Local demo · no AI request",options:run.options.redactedMetadata.merging(["style":run.style,"design_sha256":capture.designSHA256,"draft_sha256":capture.draftSHA256]){_,new in new})))
+            registrations.append(.init(data:png,filename:"demo-\(index+1).png",name:"Demo · \(run.capture.scene.name) · \(index+1)",metadata:.init(kind:.image,origin:.generated,projectID:capture.projectID,projectName:capture.projectName,sceneID:capture.sceneID,generationID:run.id,isMock:true,sourceAssetIDs:sourceIDs,prompt:run.prompt,provider:"Local demo · no AI request",options:provenance)))
           }
           let ids=try self.library.registerBatch(registrations).map(\.id)
           self.updateRun(run.id){$0.status = .succeeded;$0.outputAssetIDs=ids;$0.completedAt=Self.now;$0.error=nil}
@@ -199,6 +206,7 @@ import FormCore
         asset.metadata.options?["draft_sha256"]==run.capture.draftSHA256,
         asset.metadata.options?["style"]==run.style,
         run.options.redactedMetadata.allSatisfy({asset.metadata.options?[$0.key]==$0.value}) else{return nil}
+      if let context=run.capture.context {guard let digest=try? context.sha256,asset.metadata.options?["input_context_sha256"]==digest else{return nil}}
     }
     return assets.sorted{$0.filename<$1.filename}.map(\.id)
   }
@@ -210,6 +218,7 @@ import FormCore
       guard let size=try? url.resourceValues(forKeys:[.fileSizeKey]).fileSize,size<=2*1024*1024,
         let data=try? Data(contentsOf:url),var run=try? JSONDecoder.form.decode(StudioGenerationRun.self,from:data),
         run.capture.projectID==projectID,(try? run.options.validate()) != nil else{continue}
+      if let context=run.capture.context,(try? context.validate()) == nil {continue}
       if run.status == .running {
         // Library publishes a generated batch in one atomic index transaction.
         // That exact provenance can recover a final history write lost at exit.
@@ -252,5 +261,32 @@ import FormCore
     // unambiguous owner can be adopted; unassigned text-only presets stay put.
     let values=decoded.filter{(scoped || !$0.references.isEmpty) && !$0.name.isEmpty && $0.name.count<=80 && $0.instructions.count<=4000 && ownsReferences($0.references)}
     let ids=Set(values.map(\.id));stylePresets=StudioGenerationStylePreset.builtins.filter{!ids.contains($0.id)}+values
+  }
+  private var promptFile:URL? {projectID.map{root.appendingPathComponent("GenerationPrompts").appendingPathComponent($0.uuidString+".json")}}
+  func applyPromptPreset(_ preset:StudioGenerationPromptPreset) {
+    guard scopeIsActive,promptPresets.contains(preset) else{error="That prompt preset is not available in this project.";return}
+    prompt=preset.prompt
+  }
+  func savePromptPreset(name:String)throws {
+    let name=name.trimmingCharacters(in:.whitespacesAndNewlines)
+    guard scopeIsActive,let file=promptFile,!promptsReadFailed,!name.isEmpty,name.count<=80,
+      !prompt.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty,prompt.count<=8000 else{throw StudioGenerationError.invalid("Save a named project prompt with at most8000 characters and a readable preset file.")}
+    var values=promptPresets
+    if let index=values.firstIndex(where:{$0.name.caseInsensitiveCompare(name) == .orderedSame}) {values[index].prompt=prompt}
+    else {guard values.count<32 else{throw StudioGenerationError.invalid("Keep up to32 project prompt presets.")};values.append(.init(id:UUID(),name:name,prompt:prompt))}
+    try FileManager.default.createDirectory(at:file.deletingLastPathComponent(),withIntermediateDirectories:true)
+    let data=try JSONEncoder.form.encode(values);guard data.count<=2*1024*1024 else{throw StudioGenerationError.invalid("The project prompt file exceeds2MiB.")}
+    try data.write(to:file,options:.atomic);promptPresets=values
+  }
+  private func loadPrompts() {
+    promptPresets=StudioGenerationPromptPreset.builtins;promptsReadFailed=false
+    guard scopeIsActive,let file=promptFile,FileManager.default.fileExists(atPath:file.path) else{return}
+    guard let data=try? Data(contentsOf:file),data.count<=2*1024*1024,
+      let values=try? JSONDecoder.form.decode([StudioGenerationPromptPreset].self,from:data),values.count<=32,
+      Set(values.map(\.id)).count==values.count,
+      values.allSatisfy({!$0.name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty && $0.name.count<=80 && !$0.prompt.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty && $0.prompt.count<=8000}) else{
+      promptsReadFailed=true;error="The project prompt preset file could not be read. Its existing bytes were preserved.";return
+    }
+    let ids=Set(values.map(\.id));promptPresets=StudioGenerationPromptPreset.builtins.filter{!ids.contains($0.id)}+values
   }
 }

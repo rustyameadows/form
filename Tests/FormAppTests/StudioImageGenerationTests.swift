@@ -6,9 +6,10 @@ import XCTest
 @MainActor final class StudioImageGenerationTests:XCTestCase {
   @MainActor private final class PausedProvider:StudioImageGenerationProvider {
     var entered=false
+    var receivedRequest:StudioGenerationRequest?
     private var continuation:CheckedContinuation<Void,Never>?
     func generate(_ request:StudioGenerationRequest,progress:@escaping(Double)->Void)async throws->[Data] {
-      entered=true;progress(0.2)
+      receivedRequest=request;entered=true;progress(0.2)
       await withCheckedContinuation{continuation=$0}
       try Task.checkCancellation()
       return try await LocalStudioImageGenerationProvider(delayNanoseconds:0).generate(request,progress:progress)
@@ -69,7 +70,7 @@ import XCTest
       return asset
     }
     let input=try Data(contentsOf:f.controller.imageURL(assetID:run.capture.inputAssetID))
-    let request=StudioGenerationRequest(inputPNG:input,prompt:run.prompt,style:run.style,references:run.references,options:run.options)
+    let request=StudioGenerationRequest(inputPNG:input,prompt:run.prompt,style:run.style,references:run.references,options:run.options,context:run.capture.context)
     let repeated=try await LocalStudioImageGenerationProvider(delayNanoseconds:0).generate(request,progress:{_ in})
     for (asset,data) in zip(output,repeated) {XCTAssertEqual(try Data(contentsOf:f.library.fileURL(for:asset)),data)}
     let reopened=StudioImageGenerationController(store:f.store,library:f.library,provider:LocalStudioImageGenerationProvider(delayNanoseconds:0),captureLimit:160)
@@ -263,5 +264,91 @@ import XCTest
     XCTAssertEqual(f.store.project,projectB)
     f.store.engine.project=projectA;restoredA.reconcile()
     XCTAssertTrue(restoredA.stylePresets.contains{$0.name=="A private saved"});XCTAssertFalse(restoredA.stylePresets.contains{$0.id==legacyB.id})
+  }
+  func testFrozenContextResolvesInstanceMaterialAndPhysicalCameraAndReachesProviderUnchanged()async throws {
+    let provider=PausedProvider(),f=try Fixture(provider:provider);defer{provider.release();f.close()}
+    let scene=f.store.studioComposition,id=scene.draft!.instances[0].id
+    scene.selectInstance(id);scene.changeInstance{$0.materialID="aluminum";$0.positionMM = .init(21,35,-15);$0.rotationDegrees=27}
+    scene.stage.camera.target = .init(1.2,0.7,-0.3);scene.stage.updateCamera()
+    let source=f.store.project!,draft=scene.draft!,camera=scene.stage.camera
+    await f.controller.captureScene()
+    let capture=try XCTUnwrap(f.controller.capture),context=try XCTUnwrap(capture.context),object=try XCTUnwrap(context.objects.first)
+    XCTAssertEqual(context.projectID,source.id);XCTAssertEqual(context.sceneID,draft.id);XCTAssertEqual(context.instanceCount,1)
+    XCTAssertEqual(object.id,id);XCTAssertEqual(object.sourceObjectID,source.objects[0].id);XCTAssertEqual(object.sourceName,source.objects[0].name)
+    XCTAssertEqual(object.materialID,"aluminum");XCTAssertEqual(object.materialName,source.material("aluminum").name)
+    XCTAssertEqual(object.color,source.material("aluminum").color,"Scene material overrides clear the source color override")
+    XCTAssertEqual(object.positionMM,.init(21,35,-15));XCTAssertEqual(object.rotationDegrees,27)
+    XCTAssertEqual(object.declaredDimensionsMM,.init(100,90,70))
+    XCTAssertEqual(context.camera.distanceMM,camera.distance*100)
+    XCTAssertEqual(context.camera.targetMM,.init(120,70,-30));XCTAssertEqual(context.viewport.width,capture.width);XCTAssertEqual(context.viewport.height,capture.height)
+    XCTAssertEqual(context.viewport.aspect,Double(capture.width)/Double(capture.height),accuracy:1e-12)
+    XCTAssertNotNil(context.camera.verticalFieldOfViewDegrees);XCTAssertNil(context.camera.orthographicSpanMM)
+    XCTAssertEqual(context.renderer,"RealityKitSceneRenderer")
+    try context.validate();let digest=try context.sha256
+    let work=Task{await f.controller.generate()};try await waitForProvider(provider)
+    XCTAssertEqual(provider.receivedRequest?.context,context)
+    scene.changeInstance{$0.materialID="cobalt";$0.positionMM.y=80}
+    var edited=f.store.project!;edited.objects[0].name="Edited after input capture";f.store.engine.project=edited;scene.reconcile()
+    provider.release();await work.value
+    let run=try XCTUnwrap(f.controller.currentRun),asset=try XCTUnwrap(f.library.asset(id:run.outputAssetIDs[0]))
+    XCTAssertEqual(run.inputContext,context);XCTAssertEqual(provider.receivedRequest?.context,context)
+    XCTAssertEqual(asset.metadata.options?["input_context_sha256"],digest)
+    XCTAssertEqual(f.controller.capture,capture);XCTAssertTrue(f.controller.isCaptureStale);XCTAssertEqual(f.store.project,edited)
+  }
+  func testPaperInputContextUsesActualFaceStockProfilesInsteadOfRegistryFallback()throws {
+    var project=Project(name:"Custom stock context")
+    var source=try project.makeObject(recipeID:"paperEnvelope")
+    source.materialID="chalk";source.color=nil
+    var definition=try PaperConstruction.definition(for:source)
+    definition.stock.name="Two distinct faces"
+    definition.stock.profile = .init(texture:.linen,color:"#AABBCC",roughness:0.41,textureScaleMM:1.25,textureDepthMM:0.012)
+    definition.stock.plies=[.init(name:"Back",color:"#123456",thicknessMM:0.2),
+      .init(name:"Front",color:"#DDBB88",thicknessMM:0.15,profile:.init(texture:.coated,color:"#EEDDCC",roughness:0.27,textureDepthMM:0))]
+    source.paperConstruction=definition;project.objects=[source]
+    let original=project,scene=StudioComposition.fromProject(project),resolved=try scene.resolved(in:project)
+    let context=try StudioGenerationInputContext.make(project:project,scene:scene,resolved:resolved.project,renderObjectCount:resolved.visible.count,width:640,height:400,renderer:"Actual test backend")
+    let object=try XCTUnwrap(context.objects.first),paper=try XCTUnwrap(object.paper)
+    XCTAssertEqual(object.registryMaterial.id,"chalk");XCTAssertEqual(object.registryMaterial.roughness,project.material("chalk").roughness)
+    XCTAssertEqual(object.materialName,"Two distinct faces");XCTAssertTrue(object.materialID.hasPrefix("paper:"))
+    XCTAssertNil(object.color);XCTAssertNil(object.roughness);XCTAssertNil(object.metallic,"Spatial print/finish maps are not a uniform registry material")
+    XCTAssertEqual(paper.front.color,"#EEDDCC");XCTAssertEqual(paper.front.roughness,0.27);XCTAssertEqual(paper.front.texture,"coated")
+    XCTAssertEqual(paper.back.color,"#123456");XCTAssertEqual(paper.back.roughness,0.41);XCTAssertEqual(paper.back.texture,"linen")
+    XCTAssertEqual(paper.back.textureScaleMM,1.25);XCTAssertEqual(paper.thicknessMM,0.35,accuracy:1e-12)
+    XCTAssertEqual(context.renderer,"Actual test backend");XCTAssertEqual(project,original)
+    try context.validate()
+  }
+  func testLegacyCaptureWithoutContextDecodesAndMetadataBoundsRejectOversizedContext()async throws {
+    let f=try Fixture();defer{f.close()};await f.controller.captureScene()
+    let capture=try XCTUnwrap(f.controller.capture)
+    var json=try XCTUnwrap(JSONSerialization.jsonObject(with:JSONEncoder.form.encode(capture)) as? [String:Any])
+    json.removeValue(forKey:"context")
+    let legacy=try JSONDecoder.form.decode(StudioGenerationCapture.self,from:JSONSerialization.data(withJSONObject:json))
+    XCTAssertNil(legacy.context);XCTAssertEqual(legacy.scene,capture.scene);XCTAssertEqual(legacy.camera,capture.camera)
+    var invalid=try XCTUnwrap(capture.context);invalid.objects=Array(repeating:invalid.objects[0],count:129)
+    XCTAssertThrowsError(try invalid.validate())
+    invalid=capture.context!;invalid.viewport.width=0;XCTAssertThrowsError(try invalid.validate())
+  }
+  func testPromptPresetsReplaceOnlyPromptAndPersistWithinTheOwningProject()async throws {
+    let f=try Fixture();defer{f.close()};let projectA=f.store.project!
+    await f.controller.captureScene();let capture=try XCTUnwrap(f.controller.capture)
+    f.controller.style="Separate style remains";f.controller.references=[.init(assetID:capture.inputAssetID,role:.composition)]
+    f.controller.options.count=4;let options=f.controller.options,refs=f.controller.references,selection=f.controller.selectedRunID
+    let preset=try XCTUnwrap(f.controller.promptPresets.first)
+    f.controller.applyPromptPreset(preset)
+    XCTAssertEqual(f.controller.prompt,preset.prompt);XCTAssertEqual(f.controller.style,"Separate style remains")
+    XCTAssertEqual(f.controller.references,refs);XCTAssertEqual(f.controller.options,options);XCTAssertEqual(f.controller.capture,capture);XCTAssertEqual(f.controller.selectedRunID,selection)
+    f.controller.prompt="My project A prompt";try f.controller.savePromptPreset(name:"A product prompt")
+    let custom=try XCTUnwrap(f.controller.promptPresets.first{$0.name=="A product prompt"})
+    let fileA=f.root.appendingPathComponent("StudioAssets/GenerationPrompts/\(projectA.id.uuidString).json"),bytesA=try Data(contentsOf:fileA)
+    let reopened=StudioImageGenerationController(store:f.store,library:f.library)
+    XCTAssertTrue(reopened.promptPresets.contains(custom));reopened.applyPromptPreset(custom);XCTAssertEqual(reopened.prompt,"My project A prompt")
+    let projectB=Project(name:"Prompt project B");f.store.engine.project=projectB
+    let libraryB=StudioAssetLibrary(root:f.root,projectID:projectB.id),controllerB=StudioImageGenerationController(store:f.store,library:libraryB)
+    XCTAssertFalse(controllerB.promptPresets.contains{$0.id==custom.id})
+    controllerB.prompt="B draft";controllerB.applyPromptPreset(custom);XCTAssertEqual(controllerB.prompt,"B draft")
+    try controllerB.savePromptPreset(name:"B product prompt")
+    XCTAssertEqual(try Data(contentsOf:fileA),bytesA);XCTAssertEqual(f.store.project,projectB)
+    f.store.engine.project=projectA;f.controller.reconcile();XCTAssertTrue(f.controller.promptPresets.contains(custom))
+    XCTAssertFalse(f.controller.promptPresets.contains{$0.name=="B product prompt"})
   }
 }

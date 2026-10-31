@@ -743,6 +743,7 @@ private struct RenderSignature: Equatable {
   var presentationCursor:NSCursor {get}
   var presentationGizmo:StudioTransformGizmo? {get}
   func invalidatePresentationGizmo()
+  func preparePresentationInteraction()
   func beginPresentationInteraction(at point:NSPoint,modifiers:NSEvent.ModifierFlags)->Bool
   func dragPresentationInteraction(to point:NSPoint,modifiers:NSEvent.ModifierFlags)
   func endPresentationInteraction(at point:NSPoint,modifiers:NSEvent.ModifierFlags,dragged:Bool)
@@ -849,6 +850,7 @@ private struct RenderSignature: Equatable {
   }
   override func mouseDown(with event: NSEvent) {
     if controller?.store==nil,presentationInteraction?.presentationInputEnabled==false {cancelPointerInteraction();return}
+    if controller?.store==nil {presentationInteraction?.preparePresentationInteraction()}
     window?.makeFirstResponder(self)
     controller?.store?.activateDesignSurface(.table)
     cancelPointerInteraction()

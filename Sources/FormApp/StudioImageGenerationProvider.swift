@@ -13,6 +13,7 @@ import FormCore
   var delayNanoseconds:UInt64=90_000_000
   func generate(_ request:StudioGenerationRequest,progress:@escaping(Double)->Void)async throws->[Data] {
     try request.options.validate();try Task.checkCancellation()
+    try request.context?.validate()
     guard let input=NSImage(data:request.inputPNG),input.size.width>0,input.size.height>0 else{throw StudioGenerationError.invalid("The captured scene image is unavailable.")}
     for step in 1...3 {try await Task.sleep(nanoseconds:delayNanoseconds);try Task.checkCancellation();progress(Double(step)*0.1)}
     if request.options.failureFixture != .none {throw StudioGenerationError.fixture(request.options.failureFixture)}
@@ -21,7 +22,8 @@ import FormCore
       try Task.checkCancellation()
       let pixels=request.options.pixels
       guard let bitmap=NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:pixels.width,pixelsHigh:pixels.height,bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,bytesPerRow:0,bitsPerPixel:0),let context=NSGraphicsContext(bitmapImageRep:bitmap) else{throw StudioGenerationError.invalid("Unable to allocate a bounded demo image.")}
-      let seed=Data((request.prompt+request.style+request.options.model.rawValue+String(index)+request.references.map{$0.assetID.uuidString+$0.role.rawValue}.joined()).utf8)
+      let contextHash=try request.context?.sha256 ?? ""
+      let seed=Data((request.prompt+request.style+request.options.model.rawValue+String(index)+contextHash+request.references.map{$0.assetID.uuidString+$0.role.rawValue}.joined()).utf8)
       let hash=Array(SHA256.hash(data:seed)),hue=CGFloat(hash[0])/255
       NSGraphicsContext.saveGraphicsState();NSGraphicsContext.current=context
       let bounds=CGRect(x:0,y:0,width:pixels.width,height:pixels.height)
