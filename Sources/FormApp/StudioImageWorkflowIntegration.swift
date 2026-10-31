@@ -26,7 +26,8 @@ extension StudioStore {
     showEnvironment(.studio)
     studioShowingShots=false;studioShowingImages=true
     studioImages.reconcile()
-    if studioImages.capture == nil {Task {await studioImages.captureScene()}}
+    let images=studioImages
+    images.refreshSceneInputFromStudio()
   }
 
   func reviewStudioImageRun(_ id:UUID) {

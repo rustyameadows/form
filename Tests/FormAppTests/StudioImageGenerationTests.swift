@@ -1,4 +1,5 @@
 import AppKit
+import CryptoKit
 import FormCore
 import XCTest
 @testable import FormApp
@@ -18,16 +19,17 @@ import XCTest
   }
   @MainActor private final class Fixture {
     let root:URL,store:StudioStore,library:StudioAssetLibrary,controller:StudioImageGenerationController
-    init(provider:(any StudioImageGenerationProvider)?=nil)throws {
+    init(provider:(any StudioImageGenerationProvider)?=nil,pixels:StudioPixels = .init(width:160,height:120))throws {
       _ = NSApplication.shared
       root=FileManager.default.temporaryDirectory.appendingPathComponent("studio-image-demo-"+UUID().uuidString)
       store=StudioStore(repository:try ProjectRepository(root:root),seedLibrary:false)
       var project=Project(name:"Unsaved native composition")
       var object=try project.makeObject(recipeID:"box",parameters:["width":100,"height":90,"depth":70]);object.color="#A95131";project.objects=[object]
       store.engine.project=project;store.showingHome=false;store.studioComposition.reconcile()
+      store.studioComposition.change{$0.pixels=pixels}
       store.studioComposition.stage.fitAll()
       library=StudioAssetLibrary(root:root,projectID:project.id)
-      controller=StudioImageGenerationController(store:store,library:library,provider:provider ?? LocalStudioImageGenerationProvider(delayNanoseconds:0),captureLimit:160)
+      controller=StudioImageGenerationController(store:store,library:library,provider:provider ?? LocalStudioImageGenerationProvider(delayNanoseconds:0))
       controller.prompt="A faithful product photograph for the local demo."
       controller.options.size = .small
     }
@@ -36,6 +38,73 @@ import XCTest
   private func waitForProvider(_ value:PausedProvider)async throws {
     for _ in 0..<1000 {if value.entered{return};try await Task.sleep(nanoseconds:1_000_000)}
     XCTFail("Local provider was not reached")
+  }
+  func testFullStudioPixelsReachNativeCaptureAndProviderUnchangedForPortraitAndOddFrames()async throws {
+    let provider=PausedProvider(),f=try Fixture(provider:provider,pixels:.init(width:1800,height:2400))
+    defer{provider.release();f.close()}
+    let composition=f.store.studioComposition
+    for pixels in [StudioPixels(width:1800,height:2400),.init(width:641,height:853)] {
+      composition.change{$0.pixels=pixels}
+      composition.stage.camera.viewportAspect=1.9;composition.stage.updateCamera()
+      let source=f.store.project!,draft=composition.draft!,camera=composition.stage.camera,undo=f.store.engine.undoStack.count
+      await f.controller.captureScene()
+      let capture=try XCTUnwrap(f.controller.capture,f.controller.error ?? "No native full-resolution input")
+      let asset=try XCTUnwrap(f.library.asset(id:capture.inputAssetID)),bytes=try Data(contentsOf:f.library.fileURL(for:asset))
+      let bitmap=try XCTUnwrap(NSBitmapImageRep(data:bytes))
+      XCTAssertTrue(capture.hasExactStudioPixels);XCTAssertEqual(capture.scene.pixels,pixels)
+      XCTAssertEqual(capture.width,pixels.width);XCTAssertEqual(capture.height,pixels.height)
+      XCTAssertEqual(bitmap.pixelsWide,pixels.width);XCTAssertEqual(bitmap.pixelsHigh,pixels.height)
+      XCTAssertNotNil(bitmap.colorAt(x:pixels.width-1,y:pixels.height-1),"The decoded bitmap includes its complete final pixel")
+      XCTAssertEqual(asset.sha256,SHA256.hash(data:bytes).map{String(format:"%02x",$0)}.joined())
+      XCTAssertEqual(f.controller.options.outputPixels,pixels)
+      let context=try XCTUnwrap(capture.context)
+      XCTAssertEqual(context.viewport.width,pixels.width);XCTAssertEqual(context.viewport.height,pixels.height)
+      XCTAssertEqual(context.viewport.aspect,Double(pixels.width)/Double(pixels.height),accuracy:1e-12)
+      XCTAssertNotEqual(context.viewport.aspect,try XCTUnwrap(camera.viewportAspect),"Studio output is not inferred from the live viewport aspect")
+      XCTAssertEqual(capture.camera,camera);XCTAssertEqual(capture.scene.camera,camera)
+      // Legacy options or stale draft dimensions cannot alter a frozen input.
+      f.controller.options.aspect = .square;f.controller.options.size = .small;f.controller.options.outputPixels = .init(width:64,height:64)
+      provider.entered=false
+      let work=Task{await f.controller.generate()};try await waitForProvider(provider)
+      let request=try XCTUnwrap(provider.receivedRequest)
+      XCTAssertEqual(request.inputPNG,bytes);XCTAssertEqual(request.context,context)
+      XCTAssertEqual(request.options.outputPixels,pixels)
+      XCTAssertEqual(request.options.pixels.width,pixels.width);XCTAssertEqual(request.options.pixels.height,pixels.height)
+      provider.release();await work.value
+      let run=try XCTUnwrap(f.controller.currentRun),output=try XCTUnwrap(run.outputAssetIDs.first)
+      let outputAsset=try XCTUnwrap(f.library.asset(id:output))
+      let result=try XCTUnwrap(NSBitmapImageRep(data:Data(contentsOf:f.controller.imageURL(assetID:output))))
+      XCTAssertEqual(run.status,.succeeded);XCTAssertEqual(run.capture,capture);XCTAssertEqual(run.options.outputPixels,pixels)
+      XCTAssertEqual(result.pixelsWide,pixels.width);XCTAssertEqual(result.pixelsHigh,pixels.height)
+      XCTAssertEqual(outputAsset.metadata.options?["width"],String(pixels.width));XCTAssertEqual(outputAsset.metadata.options?["height"],String(pixels.height))
+      XCTAssertEqual(outputAsset.metadata.options?["sizing"],"studio");XCTAssertNil(outputAsset.metadata.options?["aspect"]);XCTAssertNil(outputAsset.metadata.options?["size"])
+      XCTAssertEqual(f.store.project,source);XCTAssertEqual(composition.draft,draft);XCTAssertEqual(composition.stage.camera,camera)
+      XCTAssertEqual(f.store.engine.undoStack.count,undo)
+    }
+  }
+  func testExactPixelProviderKeepsFullImageEdgesEvenWhenPNGHasDifferentPointSize()async throws {
+    let pixels=StudioPixels(width:641,height:853)
+    let bitmap=try XCTUnwrap(NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:pixels.width,pixelsHigh:pixels.height,bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,bytesPerRow:0,bitsPerPixel:0))
+    let graphics=try XCTUnwrap(NSGraphicsContext(bitmapImageRep:bitmap))
+    NSGraphicsContext.saveGraphicsState();NSGraphicsContext.current=graphics
+    NSColor.green.setFill();NSRect(x:0,y:0,width:pixels.width,height:pixels.height).fill()
+    NSColor.red.setFill();NSRect(x:0,y:0,width:20,height:pixels.height).fill()
+    NSColor.blue.setFill();NSRect(x:pixels.width-20,y:0,width:20,height:pixels.height).fill()
+    NSGraphicsContext.restoreGraphicsState()
+    bitmap.size = .init(width:Double(pixels.width)/2,height:Double(pixels.height)/2)
+    let input=try XCTUnwrap(bitmap.representation(using:.png,properties:[:]))
+    XCTAssertEqual(try StudioGenerationPNG.pixelSize(of:input),pixels,"PNG resolution metadata does not reduce its pixel dimensions")
+    var options=StudioImageGenerationOptions();options.outputPixels=pixels
+    let request=StudioGenerationRequest(inputPNG:input,prompt:"Retain all source pixels",style:"",references:[],options:options)
+    let output=try await LocalStudioImageGenerationProvider(delayNanoseconds:0).generate(request,progress:{_ in})
+    let outputBytes=try XCTUnwrap(output.first),image=try XCTUnwrap(NSBitmapImageRep(data:outputBytes))
+    XCTAssertEqual(image.pixelsWide,641);XCTAssertEqual(image.pixelsHigh,853)
+    let left=try XCTUnwrap(image.colorAt(x:2,y:426)?.usingColorSpace(.deviceRGB))
+    let middle=try XCTUnwrap(image.colorAt(x:320,y:426)?.usingColorSpace(.deviceRGB))
+    let right=try XCTUnwrap(image.colorAt(x:638,y:426)?.usingColorSpace(.deviceRGB))
+    XCTAssertGreaterThan(left.redComponent,0.8);XCTAssertLessThan(left.greenComponent,0.2)
+    XCTAssertGreaterThan(middle.greenComponent,0.8);XCTAssertLessThan(middle.redComponent,0.2)
+    XCTAssertGreaterThan(right.blueComponent,0.8);XCTAssertLessThan(right.redComponent,0.2)
   }
   func testNativeCaptureFreezesUnsavedInstancesAndEffectiveCameraWithoutSavingSource()async throws {
     let f=try Fixture();defer{f.close()};let c=f.store.studioComposition
@@ -66,14 +135,14 @@ import XCTest
       XCTAssertEqual(asset.metadata.generationID,run.id);XCTAssertEqual(asset.metadata.options?["transport"],"none")
       XCTAssertEqual(asset.metadata.options?["model"],StudioGenerationModel.sunburst.rawValue)
       let bitmap=try XCTUnwrap(NSBitmapImageRep(data:Data(contentsOf:f.library.fileURL(for:asset))))
-      XCTAssertEqual(bitmap.pixelsWide,512);XCTAssertEqual(bitmap.pixelsHigh,341)
+      XCTAssertEqual(bitmap.pixelsWide,run.capture.scene.pixels.width);XCTAssertEqual(bitmap.pixelsHigh,run.capture.scene.pixels.height)
       return asset
     }
     let input=try Data(contentsOf:f.controller.imageURL(assetID:run.capture.inputAssetID))
     let request=StudioGenerationRequest(inputPNG:input,prompt:run.prompt,style:run.style,references:run.references,options:run.options,context:run.capture.context)
     let repeated=try await LocalStudioImageGenerationProvider(delayNanoseconds:0).generate(request,progress:{_ in})
     for (asset,data) in zip(output,repeated) {XCTAssertEqual(try Data(contentsOf:f.library.fileURL(for:asset)),data)}
-    let reopened=StudioImageGenerationController(store:f.store,library:f.library,provider:LocalStudioImageGenerationProvider(delayNanoseconds:0),captureLimit:160)
+    let reopened=StudioImageGenerationController(store:f.store,library:f.library,provider:LocalStudioImageGenerationProvider(delayNanoseconds:0))
     XCTAssertEqual(reopened.history.first(where:{$0.id==run.id}),run)
     reopened.prompt="Next form B, already edited";reopened.style="Cool B direction";reopened.options.aspect = .portrait;reopened.options.count=4
     reopened.references=[.init(assetID:output[1].id,role:.subject)]
@@ -124,7 +193,7 @@ import XCTest
     }
     f.controller.options.failureFixture = .none;await f.controller.retry()
     XCTAssertEqual(f.controller.currentRun?.status,.succeeded)
-    let paused=PausedProvider(),c=StudioImageGenerationController(store:f.store,library:f.library,provider:paused,captureLimit:160)
+    let paused=PausedProvider(),c=StudioImageGenerationController(store:f.store,library:f.library,provider:paused)
     c.prompt="Local cancellation fixture";await c.captureScene()
     let count=f.library.items.filter{$0.origin == .generated}.count
     let work=Task{await c.generate()};try await waitForProvider(paused)
@@ -205,11 +274,11 @@ import XCTest
     let runA=try XCTUnwrap(f.controller.currentRun),outputA=try XCTUnwrap(runA.outputAssetIDs.first)
     let outputBytes=try Data(contentsOf:f.controller.imageURL(assetID:outputA))
     var projectB=Project(name:"Private B");projectB.objects=[try projectB.makeObject(recipeID:"box")]
-    f.store.engine.project=projectB;f.store.studioComposition.reconcile();f.controller.reconcile()
+    f.store.engine.project=projectB;f.store.studioComposition.reconcile();f.store.studioComposition.change{$0.pixels = .init(width:160,height:120)};f.controller.reconcile()
     XCTAssertTrue(f.controller.history.isEmpty);XCTAssertNil(f.controller.currentRun);XCTAssertNil(f.controller.capture)
     XCTAssertThrowsError(try f.controller.imageURL(assetID:outputA),"An inactive cached controller must not expose its old project")
     let libraryB=StudioAssetLibrary(root:f.root,projectID:projectB.id)
-    let controllerB=StudioImageGenerationController(store:f.store,library:libraryB,provider:LocalStudioImageGenerationProvider(delayNanoseconds:0),captureLimit:160)
+    let controllerB=StudioImageGenerationController(store:f.store,library:libraryB,provider:LocalStudioImageGenerationProvider(delayNanoseconds:0))
     controllerB.prompt="B local study";controllerB.options.size = .small
     await controllerB.captureScene();await controllerB.generate()
     let runB=try XCTUnwrap(controllerB.currentRun)
@@ -327,6 +396,36 @@ import XCTest
     var invalid=try XCTUnwrap(capture.context);invalid.objects=Array(repeating:invalid.objects[0],count:129)
     XCTAssertThrowsError(try invalid.validate())
     invalid=capture.context!;invalid.viewport.width=0;XCTAssertThrowsError(try invalid.validate())
+  }
+  func testLegacyScaledCaptureRemainsReadableButRequiresRecaptureBeforeRetry()async throws {
+    let f=try Fixture();defer{f.close()};await f.controller.captureScene()
+    var legacy=try XCTUnwrap(f.controller.capture)
+    legacy.scene.pixels = .init(width:320,height:240)
+    f.store.studioComposition.change{$0.pixels=legacy.scene.pixels}
+    let currentDraft=try XCTUnwrap(f.store.studioComposition.draft),draftBytes=try JSONEncoder.form.encode(currentDraft)
+    legacy.draftSHA256=SHA256.hash(data:draftBytes).map{String(format:"%02x",$0)}.joined()
+    XCTAssertFalse(legacy.hasExactStudioPixels)
+    let run=StudioGenerationRun(id:UUID(),createdAt:Date(timeIntervalSince1970:100),completedAt:Date(timeIntervalSince1970:101),status:.failed,capture:legacy,prompt:"Preserved legacy prompt",style:"Preserved legacy style",references:[],options:f.controller.options,error:"Prior demo failure")
+    var object=try XCTUnwrap(JSONSerialization.jsonObject(with:JSONEncoder.form.encode(run)) as? [String:Any])
+    var options=try XCTUnwrap(object["options"] as? [String:Any]);options.removeValue(forKey:"outputPixels");object["options"]=options
+    let bytes=try JSONSerialization.data(withJSONObject:object,options:[.sortedKeys])
+    let decoded=try JSONDecoder.form.decode(StudioGenerationRun.self,from:bytes)
+    XCTAssertNil(decoded.options.outputPixels);XCTAssertFalse(decoded.capture.hasExactStudioPixels)
+    XCTAssertEqual(decoded.options.pixels.width,512);XCTAssertEqual(decoded.options.pixels.height,341,"Legacy aspect/size remains decodable for history")
+    let folder=f.root.appendingPathComponent("StudioAssets/GenerationRuns"),file=folder.appendingPathComponent(run.id.uuidString+".json")
+    try FileManager.default.createDirectory(at:folder,withIntermediateDirectories:true);try bytes.write(to:file)
+    let reopened=StudioImageGenerationController(store:f.store,library:f.library,provider:LocalStudioImageGenerationProvider(delayNanoseconds:0))
+    reopened.selectRun(run.id);XCTAssertEqual(reopened.currentRun,decoded)
+    let source=f.store.project!,draft=f.store.studioComposition.draft,count=f.library.items.count
+    await reopened.retry()
+    XCTAssertTrue(reopened.error?.localizedCaseInsensitiveContains("recapture")==true)
+    XCTAssertEqual(reopened.history,[decoded]);XCTAssertEqual(reopened.currentRun,decoded)
+    XCTAssertEqual(f.library.items.count,count);XCTAssertEqual(try Data(contentsOf:file),bytes)
+    await reopened.captureScene();XCTAssertTrue(reopened.capture?.hasExactStudioPixels==true)
+    await reopened.generate();XCTAssertEqual(reopened.currentRun?.status,.succeeded)
+    XCTAssertEqual(reopened.currentRun?.options.outputPixels,f.store.studioComposition.draft?.pixels)
+    XCTAssertEqual(reopened.history.first{$0.id==run.id},decoded)
+    XCTAssertEqual(f.store.project,source);XCTAssertEqual(f.store.studioComposition.draft,draft);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
   }
   func testPromptPresetsReplaceOnlyPromptAndPersistWithinTheOwningProject()async throws {
     let f=try Fixture();defer{f.close()};let projectA=f.store.project!

@@ -34,7 +34,13 @@ struct StudioImageAuthoringLayout {
           VStack(alignment:.leading,spacing:5) {
             Text(capture.scene.name).font(.system(size:13,weight:.medium)).fixedSize(horizontal:false,vertical:true)
             Text(capture.projectName).font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
-            Text("\(capture.width) × \(capture.height) px").font(InspectorStyle.valueFont).foregroundStyle(Palette.secondary)
+            Text("\(capture.width) × \(capture.height) px"+(capture.hasExactStudioPixels ? " · From Studio":" · Older input"))
+              .font(InspectorStyle.valueFont).foregroundStyle(Palette.secondary)
+              .accessibilityIdentifier("studio-image-input-dimensions")
+          }
+          if !capture.hasExactStudioPixels {
+            Label("Recapture for \(capture.scene.pixels.width) × \(capture.scene.pixels.height) px from Studio.",systemImage:"camera.badge.ellipsis")
+              .font(InspectorStyle.labelFont).foregroundStyle(Palette.accent).fixedSize(horizontal:false,vertical:true)
           }
           if controller.isCaptureStale {
             Label("Scene changed since capture",systemImage:"camera.badge.ellipsis")
