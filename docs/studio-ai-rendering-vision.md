@@ -2,6 +2,8 @@
 
 This document records the product direction established for AI rendering in Studio.
 
+The [local still-workflow implementation](studio-ai-stills.md) now rehearses scene input, prompts, references, provider setup, generation states, result review and the project asset Library. It uses a clearly labeled local mock and makes no API calls.
+
 - **Studio should provide fine-grained camera and scene controls**, especially through MCP, so a user or agent can compose a shot and configure the camera.
 
 - **Studio should support AI rendering as part of the existing rendering flow.** A user can choose an AI option, provide a prompt, and generate an image from the configured scene.

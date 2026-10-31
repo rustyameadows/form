@@ -105,13 +105,14 @@ struct StudioTopBar: View {
         SettingsLink { Image(systemName: "gearshape").font(.system(size: 15)) }
           .buttonStyle(.plain).foregroundStyle(Palette.secondary).help("Settings · ⌘,")
           .accessibilityLabel("Settings")
-        IconButton("LAB Library", symbol: "square.stack.3d.up", size: 28) { store.showingLibrary = true }
+        IconButton("Materials & equipment", symbol: "square.stack.3d.up", size: 28) { store.showingLibrary = true }
         Button { store.createProject() } label: {
           Label("New project", systemImage: "plus").font(.system(size: 12, weight: .semibold))
             .padding(.horizontal, 10).frame(height: 28).foregroundStyle(.white)
             .background(Palette.ink, in: RoundedRectangle(cornerRadius: 6))
         }.buttonStyle(.plain).accessibilityLabel("New project")
       } else {
+        assetLibraryButton
         SettingsLink {
           Image(systemName: "gearshape").font(.system(size: 14)).frame(width: 28, height: 28)
         }.buttonStyle(.plain).foregroundStyle(Palette.secondary)
@@ -143,12 +144,25 @@ struct StudioTopBar: View {
             width: 28, height: 28)
         }.menuStyle(.borderlessButton).fixedSize().help("Export")
         if store.environment == .studio && !store.studioShowingShots {
-          Button("Save scene"){store.studioComposition.save()}.font(.system(size:12,weight:.semibold))
+          if !store.studioShowingImages {
+            Button {store.createStudioStill()} label: {
+              Label("Create still",systemImage:"sparkles").font(.system(size:12,weight:.semibold))
+            }.buttonStyle(.borderedProminent).tint(Palette.ink)
+              .accessibilityLabel("Create AI still from Studio scene").accessibilityIdentifier("studio-create-still")
+          }
         }else {AddObjectMenu(compact: true)}
       }
     }
     .padding(.leading, 92).padding(.trailing, 16).frame(height: 32)
     .background(Palette.paper)
+  }
+  private var assetLibraryButton:some View {
+    Button {store.openAssetLibrary()} label: {
+      Label("Library",systemImage:"photo.on.rectangle.angled").font(.system(size:11,weight:.medium))
+        .frame(height:28).padding(.horizontal,5)
+    }.buttonStyle(.plain).foregroundStyle(Palette.secondary)
+      .help("This project’s uploaded and exported assets").accessibilityLabel("Project library")
+      .accessibilityIdentifier("studio-asset-library")
   }
 }
 
