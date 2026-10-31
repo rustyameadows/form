@@ -57,7 +57,74 @@ struct CanvasImageGenerationDraft: Identifiable, Equatable {
     guard !busy, let draft, draft.status != .succeeded,
       CanvasImageGenerationProvenance.validPrompt(draft.prompt), draft.options.count == 1,
       draft.references.count <= 8 else { return false }
-    return (try? checkedDestination(for: draft)) != nil
+    return (try? checkedDestination(for: draft, allowingResize: true)) != nil && outputPixels != nil
+  }
+
+  private var completedResult: (object: ProductObject, provenance: CanvasImageGenerationProvenance)? {
+    guard let draft, draft.status == .succeeded, let store, let project = store.project,
+      project.id == draft.projectID, store.artworkTransferProjectEpoch == draft.projectEpoch,
+      let object = project.objects.first(where: { $0.id == draft.destinationID }),
+      let element = object.artwork?.elements.first(where: { $0.id == draft.resultElementID }),
+      let provenance = element.imageGeneration, provenance.id == draft.generationID else { return nil }
+    return (object,provenance)
+  }
+  /// Completed request details come from the saved image, not a newer transient
+  /// draft edited after Undo. Redo must not mislabel the old result or erase the
+  /// next draft that another Undo should restore.
+  var presentationPrompt: String { completedResult?.provenance.prompt ?? draft?.prompt ?? "" }
+  var presentationOptions: StudioImageGenerationOptions {
+    guard let provenance = completedResult?.provenance else { return draft?.options ?? .init() }
+    var options = StudioImageGenerationOptions()
+    options.model = StudioGenerationModel(rawValue:provenance.model) ?? options.model
+    options.aspect = provenance.settings["aspect"].flatMap(StudioGenerationAspect.init(rawValue:)) ?? options.aspect
+    options.size = provenance.settings["size"].flatMap(StudioGenerationSize.init(rawValue:)) ?? options.size
+    options.quality = provenance.settings["quality"].flatMap(StudioGenerationQuality.init(rawValue:)) ?? options.quality
+    options.failureFixture = provenance.settings["failure_fixture"].flatMap(StudioGenerationFailureFixture.init(rawValue:)) ?? .none
+    options.count = 1
+    return options
+  }
+  var presentationReferences: [CanvasGenerationReference] {
+    guard let provenance = completedResult?.provenance else { return draft?.references ?? [] }
+    return provenance.references.map { .init(objectID:$0.objectID,elementIDs:$0.elementIDs,title:$0.name) }
+  }
+  var destinationSizeMM: Point2? {
+    if let result = completedResult { return .init(result.object["width"],result.object["depth"]) }
+    guard let draft, let project = try? checkedDestination(for: draft, allowingResize: !busy),
+      let current = try? CanvasImageGeneration.destination(in: project, objectID: draft.destinationID) else { return nil }
+    return .init(current.width,current.height)
+  }
+  var outputPixels: StudioGenerationPixelSize? {
+    if let result = completedResult { return .init(width:result.provenance.pixelWidth,height:result.provenance.pixelHeight) }
+    guard let size = destinationSizeMM, let options = draft?.options else { return nil }
+    return try? .canvas(widthMM: size.x,heightMM: size.y,size: options.size)
+  }
+  var outputSizeError: String? {
+    if completedResult != nil { return nil }
+    guard let size = destinationSizeMM, let options = draft?.options else { return nil }
+    do { _ = try StudioGenerationPixelSize.canvas(widthMM: size.x,heightMM: size.y,size: options.size); return nil }
+    catch { return error.localizedDescription }
+  }
+  var shapePreset: StudioGenerationAspect? {
+    guard let size = destinationSizeMM else { return nil }
+    return StudioGenerationAspect.allCases.first { abs($0.ratio - size.x / size.y) < 0.000001 }
+  }
+  /// Presets resize the blank document frame, preserving its chosen long edge
+  /// and top-left position. Free Canvas resizing remains authoritative.
+  @discardableResult func updateShape(_ shape: StudioGenerationAspect) -> Bool {
+    guard !busy, let draft, draft.status != .succeeded, let store else { return false }
+    do {
+      let project = try checkedDestination(for: draft, allowingResize: true)
+      let current = try CanvasImageGeneration.destination(in: project, objectID: draft.destinationID)
+      let edge = max(current.width,current.height), ratio = shape.ratio
+      try store.engine.edit("Changed image artboard shape", source: "Studio") { project in
+        try CanvasImageGeneration.validateDestination(current, in: project)
+        guard let index = project.objects.firstIndex(where: { $0.id == current.objectID }) else { throw CancellationError() }
+        project.objects[index].parameters["width"] = ratio >= 1 ? edge : edge * ratio
+        project.objects[index].parameters["depth"] = ratio >= 1 ? edge / ratio : edge
+      }
+      self.draft?.options.aspect = shape
+      store.changed(); reconcile(); error = nil; return true
+    } catch { self.error = error.localizedDescription; return false }
   }
 
   @discardableResult func begin(at position: Point2, reference: CanvasGenerationReference? = nil) throws -> UUID {
@@ -87,6 +154,7 @@ struct CanvasImageGenerationDraft: Identifiable, Equatable {
   func updateOptions(_ value: StudioImageGenerationOptions) {
     guard !busy, draft?.status != .succeeded else { return }
     guard value.count == 1 else { error = "Generate one image per Canvas artboard."; return }
+    if let previous = draft?.options, previous.aspect != value.aspect, !updateShape(value.aspect) { return }
     draft?.options = value; error = nil
   }
   @discardableResult func addReference(_ reference: CanvasGenerationReference) -> Bool {
@@ -124,8 +192,12 @@ struct CanvasImageGenerationDraft: Identifiable, Equatable {
       self.draft?.status = .succeeded; error = nil; return
     }
     do {
-      _ = try checkedDestination(for: draft)
-      if draft.status == .succeeded || draft.status == .stale { self.draft?.status = .draft; error = nil }
+      let project = try checkedDestination(for: draft, allowingResize: !busy)
+      if !busy {
+        destination = try CanvasImageGeneration.destination(in: project, objectID: draft.destinationID)
+        if draft.status == .succeeded || draft.status == .stale || draft.status == .draft { self.draft?.status = .draft; error = nil }
+        if let outputSizeError { error = outputSizeError }
+      }
     }
     catch {
       if busy { cancel() }
@@ -146,7 +218,11 @@ struct CanvasImageGenerationDraft: Identifiable, Equatable {
         Set(draft.references.map(\.id)).count == draft.references.count else {
         throw FormError.invalid("Generate one image with up to eight different Canvas references.")
       }
-      let referenceProject = try checkedDestination(for: draft)
+      let referenceProject = try checkedDestination(for: draft, allowingResize: true)
+      let frozenDestination = try CanvasImageGeneration.destination(in: referenceProject, objectID: draft.destinationID)
+      let pixels = try StudioGenerationPixelSize.canvas(widthMM: frozenDestination.width,
+        heightMM: frozenDestination.height, size: draft.options.size)
+      destination = frozenDestination
       generation = token; busy = true; progress = 0; phase = .preparing; error = nil
       self.draft?.status = .preparing
       let work = Task { @MainActor [weak self] in
@@ -171,7 +247,7 @@ struct CanvasImageGenerationDraft: Identifiable, Equatable {
           }
           await Task.yield(); _ = try self.check(token, draft: draft)
           let request = StudioGenerationRequest(inputPNG: nil, prompt: draft.prompt, style: "",
-            references: references, options: draft.options, context: nil, source: .canvas, referenceImages: payloads)
+            references: references, options: draft.options, context: nil, source: .canvas, referenceImages: payloads, canvasOutputPixels: pixels)
           self.draft?.status = .generating; self.phase = .generating
           let images = try await self.provider.generate(request) { [weak self] value in
             guard let self, self.generation == token, value.isFinite else { return }
@@ -179,11 +255,16 @@ struct CanvasImageGenerationDraft: Identifiable, Equatable {
           }
           _ = try self.check(token, draft: draft)
           guard images.count == 1, let png = images.first else { throw FormError.invalid("The image provider returned an incomplete result.") }
-          try self.validatePNG(png, options: draft.options)
+          try self.validatePNG(png, pixels: pixels)
+          let shape = StudioGenerationAspect.allCases.first { abs($0.ratio - frozenDestination.width / frozenDestination.height) < 0.000001 }
+          let settings = draft.options.redactedMetadata.merging([
+            "aspect": shape?.rawValue ?? "custom", "output_width": String(pixels.width), "output_height": String(pixels.height),
+            "canvas_width_mm": String(frozenDestination.width), "canvas_height_mm": String(frozenDestination.height)
+          ]) { _, actual in actual }
           let provenance = CanvasImageGenerationProvenance(createdAt: Date(timeIntervalSince1970: Date().timeIntervalSince1970.rounded(.down)),
             prompt: draft.prompt, model: draft.options.model.rawValue, provider: "Local demo · no AI request", isDemo: true,
-            settings: draft.options.redactedMetadata, references: provenanceReferences,
-            outputSHA256: Self.hash(png), pixelWidth: draft.options.pixels.width, pixelHeight: draft.options.pixels.height)
+            settings: settings, references: provenanceReferences,
+            outputSHA256: Self.hash(png), pixelWidth: pixels.width, pixelHeight: pixels.height)
           try provenance.validate()
           self.phase = .writing; self.progress = 0.9
           await Task.yield(); _ = try self.check(token, draft: draft)
@@ -211,14 +292,14 @@ struct CanvasImageGenerationDraft: Identifiable, Equatable {
   private func libraryRepository() throws -> ProjectRepository {
     guard let store else { throw CancellationError() }; return store.repository
   }
-  private func checkedDestination(for draft: CanvasImageGenerationDraft) throws -> Project {
+  private func checkedDestination(for draft: CanvasImageGenerationDraft, allowingResize: Bool = false) throws -> Project {
     guard let store, let project = store.project, project.id == projectID, project.id == draft.projectID,
       store.artworkTransferProjectEpoch == draft.projectEpoch, !store.showingHome,
       library.projectID == nil || library.projectID == project.id,
       let destination, destination.objectID == draft.destinationID else {
       throw FormError.invalid("The project changed. Start a new image generation in the current project.")
     }
-    try CanvasImageGeneration.validateDestination(destination, in: project)
+    try CanvasImageGeneration.validateDestination(destination, in: project, allowingResize: allowingResize)
     return project
   }
   private func check(_ token: UUID, draft: CanvasImageGenerationDraft) throws -> Project {
@@ -237,12 +318,12 @@ struct CanvasImageGenerationDraft: Identifiable, Equatable {
       throw FormError.invalid("Choose existing Canvas artwork or a finite artboard as the reference.")
     }
   }
-  private func validatePNG(_ data: Data, options: StudioImageGenerationOptions) throws {
+  private func validatePNG(_ data: Data, pixels: StudioGenerationPixelSize) throws {
     guard data.count <= 32 * 1024 * 1024, data.starts(with: [137,80,78,71,13,10,26,10]),
       let source = CGImageSourceCreateWithData(data as CFData, nil), CGImageSourceGetCount(source) == 1,
       let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
-      (properties[kCGImagePropertyPixelWidth] as? NSNumber)?.intValue == options.pixels.width,
-      (properties[kCGImagePropertyPixelHeight] as? NSNumber)?.intValue == options.pixels.height,
+      (properties[kCGImagePropertyPixelWidth] as? NSNumber)?.intValue == pixels.width,
+      (properties[kCGImagePropertyPixelHeight] as? NSNumber)?.intValue == pixels.height,
       CGImageSourceCreateImageAtIndex(source, 0, [kCGImageSourceShouldCache: false] as CFDictionary) != nil else {
       throw FormError.invalid("The image provider returned an invalid or incorrectly sized PNG.")
     }

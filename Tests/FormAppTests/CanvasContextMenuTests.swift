@@ -1,5 +1,6 @@
 import AppKit
 import FormCore
+import FormGraphics
 import SwiftUI
 import XCTest
 @testable import FormApp
@@ -152,6 +153,142 @@ import XCTest
     XCTAssertFalse(f.store.project?.objects.contains{$0.id==destinationID} == true)
     XCTAssertEqual(f.store.project?.objects.count,(before?.objects.count ?? 0)-1)
     XCTAssertEqual(f.store.engine.redoStack.count,1,"Canvas focus restores ordinary document Undo")
+  }
+
+  func testContinuePromptReopensTheCapturedDraftAfterSelectionChangesWithoutRefittingOrHistory() async throws {
+    let f = try Fixture([]); defer { f.canvas.closeCanvasImagePrompt(); f.close() }
+    f.window.makeKeyAndOrderFront(nil)
+    let destination = try f.store.canvasImages.begin(at: .init(130, 90),
+      reference: .init(objectID: f.frameID, title: "Other source"))
+    f.store.canvasImages.updatePrompt("Keep this quiet coral landscape")
+    var options = try XCTUnwrap(f.store.canvasImages.draft?.options)
+    options.model = .flare
+    f.store.canvasImages.updateOptions(options)
+    f.canvas.synchronize(); XCTAssertTrue(f.canvas.fit(frameIDs: [destination]))
+    let menu = try f.menu(.init(x: 140, y: 100))
+    let resume = try item("Continue Image Prompt…", in: menu)
+    // An inspector selection or a delayed menu action must not make reopening
+    // depend on the old layer selection, or create a second image artboard.
+    f.session.activate(f.workspaceID); f.canvas.synchronize()
+    let before = f.store.project, history = f.store.engine.undoStack
+    let draft = f.store.canvasImages.draft, viewport = f.canvas.visibleCanvasRect
+    let zoom = f.canvas.zoom
+    let fitRequest = try XCTUnwrap((f.canvas.diagnostics["last_fit"] as? [String: Any])?["request"] as? Int)
+    // AppKit aligns the clip origin when the native popover gains focus. Allow
+    // at most half a backing pixel of translation, while requiring unchanged
+    // zoom and the exact fit invocation count.
+    let roundingMM = 0.5 / (TypographyEngine.pointsPerMM * zoom * f.window.backingScaleFactor)
+    try f.invoke(resume)
+    try await Task.sleep(nanoseconds: 100_000_000)
+    XCTAssertTrue(f.canvas.imagePromptPopover?.isShown == true)
+    XCTAssertEqual(f.store.canvasImages.draft, draft)
+    XCTAssertEqual(f.session.activeFrameID, destination)
+    XCTAssertEqual(f.store.project, before); XCTAssertEqual(f.store.engine.undoStack, history)
+    XCTAssertEqual(f.canvas.zoom, zoom)
+    XCTAssertEqual((f.canvas.diagnostics["last_fit"] as? [String: Any])?["request"] as? Int, fitRequest)
+    let delta = hypot(f.canvas.visibleCanvasRect.minX - viewport.minX, f.canvas.visibleCanvasRect.minY - viewport.minY)
+    XCTAssertLessThanOrEqual(delta, roundingMM)
+    XCTAssertEqual(f.canvas.visibleCanvasRect.width, viewport.width, accuracy: 0.00001)
+    XCTAssertEqual(f.canvas.visibleCanvasRect.height, viewport.height, accuracy: 0.00001)
+    f.canvas.closeCanvasImagePrompt()
+    let fresh = try item("Continue Image Prompt…", in: f.menu(.init(x: 140, y: 100)))
+    try f.invoke(fresh)
+    try await Task.sleep(nanoseconds: 80_000_000)
+    XCTAssertTrue(f.canvas.imagePromptPopover?.isShown == true)
+    XCTAssertEqual(f.store.canvasImages.draft, draft)
+    XCTAssertEqual(f.canvas.zoom, zoom)
+    XCTAssertEqual((f.canvas.diagnostics["last_fit"] as? [String: Any])?["request"] as? Int, fitRequest)
+  }
+
+  func testDeferredContinueCannotOpenAReplacementDraftOrAnotherProjectEpoch() async throws {
+    let f = try Fixture([]); defer { f.canvas.closeCanvasImagePrompt(); f.close() }
+    f.window.makeKeyAndOrderFront(nil)
+    _ = try f.store.canvasImages.begin(at: .init(130, 90))
+    f.canvas.synchronize()
+    let oldAction = try item("Continue Image Prompt…", in: f.menu(.init(x: 140, y: 100)))
+    try f.invoke(oldAction)
+    let replacement = try f.store.canvasImages.begin(at: .init(410, 90))
+    f.store.canvasImages.updatePrompt("A different draft")
+    let expected = f.store.canvasImages.draft
+    try await Task.sleep(nanoseconds: 80_000_000)
+    XCTAssertNil(f.canvas.imagePromptPopover)
+    XCTAssertEqual(f.store.canvasImages.draft, expected)
+    try f.invoke(oldAction)
+    try await Task.sleep(nanoseconds: 30_000_000)
+    XCTAssertNil(f.canvas.imagePromptPopover)
+    XCTAssertEqual(f.store.canvasImages.draft?.destinationID, replacement)
+    let current = try XCTUnwrap(f.canvas.canvasImagePromptIdentity)
+    XCTAssertTrue(f.canvas.requestCanvasImagePrompt(current))
+    f.store.artworkTransferProjectEpoch = UUID()
+    try await Task.sleep(nanoseconds: 30_000_000)
+    XCTAssertNil(f.canvas.imagePromptPopover)
+    XCTAssertFalse(f.canvas.requestCanvasImagePrompt(current))
+  }
+
+  func testNativeArtboardPromptButtonKeepsItsScreenTargetThroughZoomAndScrollAndReopens() async throws {
+    let f = try Fixture([]); defer { f.canvas.closeCanvasImagePrompt(); f.close() }
+    f.window.makeKeyAndOrderFront(nil)
+    let destination = try f.store.canvasImages.begin(at: .init(130, 90))
+    f.store.canvasImages.updatePrompt("A folded paper landscape")
+    f.canvas.synchronize(); XCTAssertTrue(f.canvas.fit(frameIDs: [destination]))
+    let button = try XCTUnwrap(f.scroll.subviews.compactMap { $0 as? CanvasImagePromptButton }.first)
+    let board = try XCTUnwrap(f.session.frames.first { $0.id == destination })
+    let corner = CGPoint(x: board.rect.maxX, y: board.rect.minY)
+    for zoom in [0.25, 1.0, 4.0] {
+      f.canvas.setZoom(zoom, atCanvasPoint: corner)
+      XCTAssertFalse(button.isHidden, "Prompt action should remain reachable at \(zoom)×")
+      XCTAssertEqual(button.frame.size, CanvasImagePromptButton.buttonSize)
+      let anchor = f.canvas.convert(f.canvas.documentPoint(corner), to: f.scroll)
+      XCTAssertEqual(button.frame.maxX, anchor.x, accuracy: 0.00001)
+      let gap = f.scroll.isFlipped ? anchor.y - button.frame.maxY : button.frame.minY - anchor.y
+      XCTAssertGreaterThanOrEqual(gap, 18, "The action must not steal the artboard title or resize-corner hit target")
+    }
+    let clip = f.scroll.contentView
+    clip.scroll(to: .init(x: clip.bounds.minX + 3, y: clip.bounds.minY + 2))
+    f.scroll.reflectScrolledClipView(clip)
+    try await Task.sleep(nanoseconds: 30_000_000)
+    let afterScroll = f.canvas.convert(f.canvas.documentPoint(corner), to: f.scroll)
+    XCTAssertEqual(button.frame.maxX, afterScroll.x, accuracy: 0.00001)
+    XCTAssertFalse(button.isHidden)
+    let center = NSPoint(x: button.bounds.midX, y: button.bounds.midY)
+    let hit = f.scroll.hitTest(button.convert(center, to: f.scroll.superview))
+    XCTAssertTrue(hit === button, "The visible control must own its actual pointer target")
+    let location = button.convert(center, to: nil), time = ProcessInfo.processInfo.systemUptime
+    let down = try XCTUnwrap(NSEvent.mouseEvent(with: .leftMouseDown, location: location,
+      modifierFlags: [], timestamp: time, windowNumber: f.window.windowNumber, context: nil,
+      eventNumber: 1, clickCount: 1, pressure: 1))
+    let up = try XCTUnwrap(NSEvent.mouseEvent(with: .leftMouseUp, location: location,
+      modifierFlags: [], timestamp: time + 0.01, windowNumber: f.window.windowNumber, context: nil,
+      eventNumber: 2, clickCount: 1, pressure: 0))
+    let before = f.store.project, history = f.store.engine.undoStack
+    NSApp.postEvent(up, atStart: true); f.window.sendEvent(down)
+    if let pending = NSApp.nextEvent(matching: .leftMouseUp, until: .distantPast, inMode: .default, dequeue: true) {
+      f.window.sendEvent(pending)
+    }
+    try await Task.sleep(nanoseconds: 100_000_000)
+    XCTAssertTrue(f.canvas.imagePromptPopover?.isShown == true)
+    XCTAssertEqual(f.store.canvasImages.draft?.prompt, "A folded paper landscape")
+    XCTAssertEqual(f.store.project, before); XCTAssertEqual(f.store.engine.undoStack, history)
+  }
+
+  func testPromptButtonDisappearsOnArtboardUndoAndCannotOpenFromAStaleControl() async throws {
+    let f = try Fixture([]); defer { f.canvas.closeCanvasImagePrompt(); f.close() }
+    f.window.makeKeyAndOrderFront(nil)
+    let destination = try f.store.canvasImages.begin(at: .init(130, 90))
+    f.canvas.synchronize(); XCTAssertTrue(f.canvas.fit(frameIDs: [destination]))
+    let button = try XCTUnwrap(f.scroll.subviews.compactMap { $0 as? CanvasImagePromptButton }.first)
+    let identity = try XCTUnwrap(f.canvas.canvasImagePromptIdentity)
+    f.store.engine.undo(); f.canvas.synchronize()
+    XCTAssertNil(button.superview)
+    XCTAssertFalse(f.canvas.requestCanvasImagePrompt(identity))
+    button.performClick(nil)
+    try await Task.sleep(nanoseconds: 30_000_000)
+    XCTAssertNil(f.canvas.imagePromptPopover)
+    f.store.engine.redo(); f.canvas.synchronize()
+    XCTAssertNotNil(f.canvas.canvasImagePromptIdentity)
+    XCTAssertNotNil(f.scroll.subviews.compactMap { $0 as? CanvasImagePromptButton }.first)
+    f.store.canvasImages.dismiss(); f.canvas.synchronize()
+    XCTAssertTrue(f.scroll.subviews.compactMap { $0 as? CanvasImagePromptButton }.isEmpty)
   }
 
   func testActualCanvasPopoverMouseClickTransfersTypingFromPromptToSavedName()async throws {

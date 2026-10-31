@@ -123,19 +123,30 @@ public enum CanvasImageGeneration {
     guard let object = project.objects.first(where: { $0.id == objectID }),
       object.recipeID == "artboard", !object.isCanvasWorkspace, object.componentDefinition != true, object.canvasSourceOnly != true,
       object.artworkSourceID == nil, !object.locked, !project.artworkOwner(object).locked,
-      let artwork = object.artwork, artwork.elements.isEmpty else {
+      let artwork = object.artwork, artwork.elements.isEmpty,
+      object["width"].isFinite, object["depth"].isFinite,
+      object["width"] > 0, object["depth"] > 0, object["width"] <= 100_000, object["depth"] <= 100_000 else {
       throw FormError.invalid("Use the unlocked blank image artboard as the generation destination.")
     }
     return .init(projectID: project.id, objectID: object.id, designID: object.designID,
       width: object["width"], height: object["depth"], artwork: artwork)
   }
 
-  public static func validateDestination(_ expected: CanvasImageGenerationDestination, in project: Project) throws {
+  public static func validateDestination(_ expected: CanvasImageGenerationDestination, in project: Project, allowingResize: Bool = false) throws {
     let current = try destination(in: project, objectID: expected.objectID)
-    var before = expected.artwork, after = current.artwork
-    before.canvasPosition = nil; after.canvasPosition = nil
+    func renderingIdentity(_ artwork: Artwork) -> Artwork {
+      var value = artwork
+      // Ruler/grid preferences and local guide coordinates are editing aids.
+      // Moving a left/top frame edge translates guides to preserve their world
+      // positions; that must not invalidate a still-blank generation target.
+      value.canvasPosition = nil; value.guides = nil; value.showGuides = nil
+      value.showGrid = nil; value.gridSpacing = nil; value.snapEnabled = nil
+      value.nudge = nil; value.unit = nil
+      return value
+    }
+    let before = renderingIdentity(expected.artwork), after = renderingIdentity(current.artwork)
     guard current.projectID == expected.projectID, current.designID == expected.designID,
-      current.width == expected.width, current.height == expected.height, before == after else {
+      (allowingResize || (current.width == expected.width && current.height == expected.height)), before == after else {
       throw FormError.invalid("The image artboard changed. Start a new generation to preserve its current contents.")
     }
   }
@@ -149,14 +160,13 @@ public enum CanvasImageGeneration {
       let index = project.objects.firstIndex(where: { $0.id == destination.objectID }) else {
       throw FormError.invalid("Use a generated PNG stored in this project's Assets folder.")
     }
-    let ratio = Double(provenance.pixelWidth) / Double(provenance.pixelHeight)
-    let width = ratio >= 1 ? artboardLongEdgeMM : artboardLongEdgeMM * ratio
-    let height = ratio >= 1 ? artboardLongEdgeMM / ratio : artboardLongEdgeMM
+    // Pixel dimensions describe output resolution. The user's physical Canvas
+    // frame is authoritative and must not jump or resize when the image arrives.
+    let width = destination.width, height = destination.height
     var element = ArtworkElement(kind: "image", x: 0, y: 0, width: width, height: height, asset: asset)
     element.name = provenance.isDemo ? "Generated image · Local demo" : "Generated image"
     element.imageGeneration = provenance
     var candidate = project
-    candidate.objects[index].parameters["width"] = width; candidate.objects[index].parameters["depth"] = height
     candidate.objects[index].artwork!.elements = [element]
     try candidate.validateArtworkLinks(); project = candidate
     return element.id

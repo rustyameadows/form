@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
   static let maximumImageBytes=32*1024*1024
   static let maximumTotalBytes=64*1024*1024
   static func prepare(_ request:StudioGenerationRequest)throws->Input {
-    try request.options.validate();try Task.checkCancellation();try request.context?.validate()
+    try request.options.validate();try request.validateOutputPixels();try Task.checkCancellation();try request.context?.validate()
     guard !request.prompt.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty,
       request.prompt.count<=8000,request.prompt.utf8.count<=32_000,
       request.style.count<=4000,request.style.utf8.count<=16_000 else {
@@ -63,8 +63,8 @@ import UniformTypeIdentifiers
     return NSImage(cgImage:image,size:.init(width:image.width,height:image.height))
   }
   static func render(_ request:StudioGenerationRequest,input:Input,index:Int)throws->Data {
-    try Task.checkCancellation()
-    let pixels=request.options.pixels
+    try Task.checkCancellation();try request.validateOutputPixels()
+    let pixels=request.outputPixels
     guard let bitmap=NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:pixels.width,pixelsHigh:pixels.height,bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,bytesPerRow:0,bitsPerPixel:0),
       let context=NSGraphicsContext(bitmapImageRep:bitmap) else{throw StudioGenerationError.invalid("Unable to allocate a bounded demo image.")}
     let contextHash=try request.context?.sha256 ?? ""
@@ -83,15 +83,32 @@ import UniformTypeIdentifiers
       drawCanvas(bounds:bounds,hue:hue,references:input.references)
     }
     let ink=NSColor(calibratedWhite:0.17,alpha:1)
-    let font=NSFont.monospacedSystemFont(ofSize:CGFloat(max(11,pixels.width/65)),weight:.semibold)
-    let badge="LOCAL DEMO · \(index+1) / \(request.options.count)"
-    let badgeRect=CGRect(x:inset-8,y:bounds.maxY-inset-23,width:min(bounds.width-2*inset+16,CGFloat(pixels.width)*0.56),height:30)
-    NSColor.white.withAlphaComponent(0.9).setFill();NSBezierPath(roundedRect:badgeRect,xRadius:8,yRadius:8).fill()
-    (badge as NSString).draw(at:.init(x:inset,y:bounds.maxY-inset-15),withAttributes:[.font:font,.foregroundColor:ink])
     let caption=request.source == .studioScene ? "Scene input + local color treatment · no AI request":input.references.isEmpty ? "Sample artwork · no AI request":"Reference collage · no AI request"
-    let strip=CGRect(x:0,y:0,width:bounds.width,height:inset*1.8)
-    NSColor.white.withAlphaComponent(0.92).setFill();strip.fill()
-    (caption as NSString).draw(at:.init(x:inset,y:inset/2),withAttributes:[.font:NSFont.systemFont(ofSize:CGFloat(max(9,pixels.width/85))),.foregroundColor:ink])
+    if request.canvasOutputPixels != nil, min(pixels.width,pixels.height)<256 {
+      // A wide or tall custom artboard still needs readable demo identification;
+      // fixed margins from the larger presets can otherwise cover the whole image.
+      let padding=max(3,min(bounds.width,bounds.height)*0.06),badge="LOCAL DEMO"
+      let fontSize=min(11,max(5,(bounds.width-padding*4)/7))
+      let font=NSFont.monospacedSystemFont(ofSize:fontSize,weight:.semibold)
+      let textSize=(badge as NSString).size(withAttributes:[.font:font])
+      let badgeRect=CGRect(x:padding,y:bounds.maxY-padding-textSize.height-6,
+        width:min(bounds.width-padding*2,textSize.width+8),height:textSize.height+6)
+      NSColor.white.withAlphaComponent(0.9).setFill();NSBezierPath(roundedRect:badgeRect,xRadius:4,yRadius:4).fill()
+      (badge as NSString).draw(at:.init(x:badgeRect.minX+4,y:badgeRect.minY+3),withAttributes:[.font:font,.foregroundColor:ink])
+      let footer="NO AI REQUEST",footerFont=NSFont.systemFont(ofSize:min(9,max(5,(bounds.width-padding*2)/8)))
+      let strip=CGRect(x:0,y:0,width:bounds.width,height:footerFont.pointSize*1.6+padding)
+      NSColor.white.withAlphaComponent(0.92).setFill();strip.fill()
+      (footer as NSString).draw(at:.init(x:padding,y:padding/2),withAttributes:[.font:footerFont,.foregroundColor:ink])
+    } else {
+      let font=NSFont.monospacedSystemFont(ofSize:CGFloat(max(11,pixels.width/65)),weight:.semibold)
+      let badge="LOCAL DEMO · \(index+1) / \(request.options.count)"
+      let badgeRect=CGRect(x:inset-8,y:bounds.maxY-inset-23,width:min(bounds.width-2*inset+16,CGFloat(pixels.width)*0.56),height:30)
+      NSColor.white.withAlphaComponent(0.9).setFill();NSBezierPath(roundedRect:badgeRect,xRadius:8,yRadius:8).fill()
+      (badge as NSString).draw(at:.init(x:inset,y:bounds.maxY-inset-15),withAttributes:[.font:font,.foregroundColor:ink])
+      let strip=CGRect(x:0,y:0,width:bounds.width,height:inset*1.8)
+      NSColor.white.withAlphaComponent(0.92).setFill();strip.fill()
+      (caption as NSString).draw(at:.init(x:inset,y:inset/2),withAttributes:[.font:NSFont.systemFont(ofSize:CGFloat(max(9,pixels.width/85))),.foregroundColor:ink])
+    }
     guard let image=bitmap.cgImage else{throw StudioGenerationError.invalid("Unable to finish the demo image.")}
     let data=NSMutableData()
     guard let destination=CGImageDestinationCreateWithData(data,UTType.png.identifier as CFString,1,nil) else{throw StudioGenerationError.invalid("Unable to encode the demo image.")}
@@ -121,12 +138,14 @@ import UniformTypeIdentifiers
     guard !references.isEmpty else{return}
     let count=min(StudioGenerationConfigurationRegistry.maximumReferences,references.count)
     let columns=count==1 ? 1:count<=4 ? 2:3,rows=(count+columns-1)/columns
-    let area=CGRect(x:bounds.width*0.12,y:bounds.height*0.19,width:bounds.width*0.76,height:bounds.height*0.61),gap=CGFloat(12)
+    let area=CGRect(x:bounds.width*0.12,y:bounds.height*0.19,width:bounds.width*0.76,height:bounds.height*0.61)
+    let gap=min(12,min(area.width/CGFloat(columns),area.height/CGFloat(rows))*0.15)
     let width=(area.width-gap*CGFloat(columns-1))/CGFloat(columns),height=(area.height-gap*CGFloat(rows-1))/CGFloat(rows)
     for (index,image) in references.prefix(count).enumerated() {
       let rect=CGRect(x:area.minX+CGFloat(index%columns)*(width+gap),y:area.maxY-CGFloat(index/columns+1)*height-CGFloat(index/columns)*gap,width:width,height:height)
-      NSColor.white.withAlphaComponent(0.94).setFill();NSBezierPath(roundedRect:rect,xRadius:8,yRadius:8).fill()
-      image.draw(in:fitted(image,in:rect.insetBy(dx:8,dy:8)),from:.zero,operation:.sourceOver,fraction:1)
+      let inset=min(8,min(rect.width,rect.height)*0.1)
+      NSColor.white.withAlphaComponent(0.94).setFill();NSBezierPath(roundedRect:rect,xRadius:inset,yRadius:inset).fill()
+      image.draw(in:fitted(image,in:rect.insetBy(dx:inset,dy:inset)),from:.zero,operation:.sourceOver,fraction:1)
     }
   }
 }

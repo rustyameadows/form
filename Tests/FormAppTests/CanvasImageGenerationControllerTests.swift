@@ -200,6 +200,127 @@ import XCTest
     f.store.redo(); XCTAssertEqual(f.store.project,afterDrag)
     f.store.redo(); XCTAssertEqual(f.store.project,completed)
   }
+  func testCustomBlankFrameDrivesPixelShapeAndResultPreservesPhysicalGeometryAndUndo() async throws {
+    let f = try Fixture(); defer { f.close() }; let id = try f.begin()
+    try f.store.engine.edit("Resize blank image frame") { project in
+      let index = project.objects.firstIndex { $0.id == id }!
+      project.objects[index].parameters["width"] = 240
+      project.objects[index].parameters["depth"] = 96
+      project.objects[index].artwork?.canvasPosition = .init(-35,72)
+    }
+    f.store.changed()
+    XCTAssertEqual(f.controller.destinationSizeMM,.init(240,96))
+    XCTAssertEqual(f.controller.outputPixels,.init(width:512,height:204))
+    XCTAssertNil(f.controller.shapePreset); XCTAssertTrue(f.controller.canGenerate)
+    let resized = try XCTUnwrap(f.store.project), undoCount = f.store.engine.undoStack.count
+    await f.controller.generate()
+    XCTAssertEqual(f.controller.draft?.status,.succeeded,f.controller.error ?? "")
+    let board = try XCTUnwrap(f.store.project?.objects.first { $0.id == id }), image = try XCTUnwrap(board.artwork?.elements.first)
+    XCTAssertEqual(board["width"],240); XCTAssertEqual(board["depth"],96)
+    XCTAssertEqual(board.artwork?.canvasPosition,.init(-35,72)); XCTAssertEqual(image.width,240); XCTAssertEqual(image.height,96)
+    XCTAssertEqual(image.imageGeneration?.pixelWidth,512); XCTAssertEqual(image.imageGeneration?.pixelHeight,204)
+    XCTAssertEqual(image.imageGeneration?.settings["aspect"],"custom")
+    XCTAssertEqual(f.controller.destinationSizeMM,.init(240,96))
+    XCTAssertEqual(f.controller.outputPixels,.init(width:512,height:204))
+    XCTAssertEqual(image.imageGeneration?.settings["canvas_width_mm"],"240.0")
+    XCTAssertEqual(f.store.engine.undoStack.count,undoCount+1)
+    let completed = f.store.project
+    f.store.undo(); XCTAssertEqual(f.store.project,resized); XCTAssertTrue(f.controller.canGenerate)
+    f.store.redo(); XCTAssertEqual(f.store.project,completed)
+  }
+  func testShapePresetsResizeBlankBoardAsOneUndoAndExtremeCustomShapeIsRecoverable() throws {
+    let f = try Fixture(); defer { f.close() }; let id = try f.begin(), original = f.store.project
+    XCTAssertTrue(f.controller.updateShape(.portrait))
+    XCTAssertEqual(try XCTUnwrap(f.controller.destinationSizeMM).x,160*2.0/3,accuracy:0.000001)
+    XCTAssertEqual(f.controller.destinationSizeMM?.y,160)
+    XCTAssertEqual(f.controller.outputPixels,.init(width:341,height:512)); XCTAssertEqual(f.controller.shapePreset,.portrait)
+    XCTAssertEqual(f.store.engine.undoStack.count,2)
+    XCTAssertEqual(f.store.project?.objects.first { $0.id == id }?.artwork?.canvasPosition,.init(130,240))
+    f.store.undo(); XCTAssertEqual(f.store.project,original); XCTAssertEqual(f.controller.shapePreset,.landscape)
+    try f.store.engine.edit("Extreme custom frame") { project in
+      let index = project.objects.firstIndex { $0.id == id }!
+      project.objects[index].parameters["width"] = 1000; project.objects[index].parameters["depth"] = 10
+    }
+    f.store.changed(); XCTAssertFalse(f.controller.canGenerate); XCTAssertNil(f.controller.outputPixels)
+    XCTAssertTrue(f.controller.outputSizeError?.contains("1:8") == true)
+    XCTAssertTrue(f.controller.updateShape(.square))
+    XCTAssertEqual(f.controller.destinationSizeMM,.init(1000,1000)); XCTAssertEqual(f.controller.outputPixels,.init(width:512,height:512))
+    XCTAssertTrue(f.controller.canGenerate); XCTAssertNil(f.controller.error)
+  }
+  func testResizeDuringPendingGenerationDiscardsOldRatioAndRetryUsesCurrentFrame() async throws {
+    let provider = PausedProvider(), f = try Fixture(provider:provider); defer { provider.release(); f.close() }
+    let id = try f.begin(), work = Task { await f.controller.generate() }; try await wait { provider.entered }
+    XCTAssertEqual(provider.request?.canvasOutputPixels,.init(width:512,height:341))
+    try f.store.engine.edit("Change pending frame shape") { project in
+      let index = project.objects.firstIndex { $0.id == id }!
+      project.objects[index].parameters["width"] = 100; project.objects[index].parameters["depth"] = 200
+    }
+    f.store.changed(); let resized = f.store.project
+    provider.release(); await work.value
+    XCTAssertFalse(f.controller.busy); XCTAssertTrue(f.library.items.isEmpty); XCTAssertEqual(f.store.project,resized)
+    XCTAssertEqual(f.controller.draft?.prompt,"A calm geometric composition")
+    XCTAssertTrue(f.controller.canGenerate); XCTAssertEqual(f.controller.outputPixels,.init(width:256,height:512))
+    provider.entered = false
+    let retry = Task { await f.controller.retry() }; try await wait { provider.entered }
+    XCTAssertEqual(provider.request?.canvasOutputPixels,.init(width:256,height:512))
+    provider.release(); await retry.value
+    XCTAssertEqual(f.controller.draft?.status,.succeeded,f.controller.error ?? "")
+    XCTAssertEqual(f.element(id)?.width,100); XCTAssertEqual(f.element(id)?.height,200)
+    XCTAssertEqual(f.element(id)?.imageGeneration?.pixelWidth,256)
+    XCTAssertEqual(f.element(id)?.imageGeneration?.pixelHeight,512)
+  }
+  func testGuideAwareTopLeftResizeKeepsDraftUsableAndResultPreservesWorldGuidesAndUndo() async throws {
+    let f = try Fixture(); defer { f.close() }; let id = try f.begin(), session = f.store.artworkSession
+    try f.store.engine.edit("Add layout guides") { project in
+      let index = project.objects.firstIndex { $0.id == id }!
+      project.objects[index].artwork?.guides = [.init(axis:"x",position:25),.init(axis:"y",position:35)]
+      project.objects[index].artwork?.unit = .inches; project.objects[index].artwork?.showGrid = true
+      project.objects[index].artwork?.gridSpacing = 5; project.objects[index].artwork?.snapEnabled = false
+    }
+    f.store.changed(); XCTAssertTrue(f.controller.canGenerate,f.controller.error ?? "")
+    let withGuides = try XCTUnwrap(f.store.project), frame = try XCTUnwrap(session.frames.first { $0.id == id })
+    let snapshot = session.art, token = try XCTUnwrap(session.beginGesture())
+    let resizedRect = CGRect(x:frame.rect.minX-20,y:frame.rect.minY-10,width:frame.rect.width+20,height:frame.rect.height+10)
+    session.resizeCanvasArtboard(to:resizedRect,from:frame.rect,artwork:snapshot,expectedFrameID:id,gestureToken:token)
+    session.endGesture()
+    XCTAssertTrue(f.controller.canGenerate,f.controller.error ?? "")
+    let resized = try XCTUnwrap(f.store.project), beforeArt = try XCTUnwrap(resized.objects.first { $0.id == id }?.artwork)
+    XCTAssertEqual(beforeArt.guides?[0].position,45); XCTAssertEqual(beforeArt.guides?[1].position,45)
+    XCTAssertEqual((beforeArt.canvasPosition?.x ?? 0)+(beforeArt.guides?[0].position ?? 0),155,accuracy:0.000001)
+    XCTAssertEqual((beforeArt.canvasPosition?.y ?? 0)+(beforeArt.guides?[1].position ?? 0),275,accuracy:0.000001)
+    await f.controller.generate()
+    XCTAssertEqual(f.controller.draft?.status,.succeeded,f.controller.error ?? "")
+    var afterArt = try XCTUnwrap(f.store.project?.objects.first { $0.id == id }?.artwork)
+    afterArt.elements = []; XCTAssertEqual(afterArt,beforeArt)
+    f.store.undo(); XCTAssertEqual(f.store.project,resized)
+    f.store.undo(); XCTAssertEqual(f.store.project,withGuides)
+  }
+  func testRedoPresentsSavedRequestWithoutOverwritingNewerTransientDraft() async throws {
+    let f = try Fixture(); defer { f.close() }; _ = try f.begin(reference:true)
+    let originalPrompt = f.controller.presentationPrompt, originalOptions = f.controller.presentationOptions
+    let originalReferences = f.controller.presentationReferences
+    await f.controller.generate()
+    XCTAssertEqual(f.controller.draft?.status,.succeeded,f.controller.error ?? "")
+    f.store.undo()
+    f.controller.updatePrompt("Next image, a different idea")
+    var nextOptions = f.controller.draft!.options
+    nextOptions.model = .flare; nextOptions.size = .large; nextOptions.quality = .draft
+    f.controller.updateOptions(nextOptions)
+    f.controller.removeReference(id:try XCTUnwrap(originalReferences.first?.id))
+    XCTAssertEqual(f.controller.presentationPrompt,"Next image, a different idea")
+    f.store.redo()
+    XCTAssertEqual(f.controller.draft?.status,.succeeded)
+    XCTAssertEqual(f.controller.presentationPrompt,originalPrompt)
+    XCTAssertEqual(f.controller.presentationOptions,originalOptions)
+    XCTAssertEqual(f.controller.presentationReferences,originalReferences)
+    XCTAssertEqual(f.controller.outputPixels,.init(width:512,height:341))
+    XCTAssertEqual(f.controller.draft?.prompt,"Next image, a different idea")
+    XCTAssertEqual(f.controller.draft?.options,nextOptions); XCTAssertTrue(f.controller.draft?.references.isEmpty == true)
+    f.store.undo()
+    XCTAssertEqual(f.controller.presentationPrompt,"Next image, a different idea")
+    XCTAssertEqual(f.controller.presentationOptions,nextOptions); XCTAssertTrue(f.controller.presentationReferences.isEmpty)
+    XCTAssertEqual(f.controller.outputPixels,.init(width:1024,height:682)); XCTAssertTrue(f.controller.canGenerate)
+  }
   func testUnsupportedReferencesAndMalformedProviderFailWithoutUnexpectedDocumentOrLibraryChanges() async throws {
     let f = try Fixture(provider: InvalidProvider()); defer { f.close() }
     f.store.engine.project?.objects[1].canvasSourceOnly = true

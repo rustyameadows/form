@@ -29,8 +29,10 @@ final class CanvasImageGenerationTests: XCTestCase {
     }
     let result = engine.project!, object = try XCTUnwrap(result.objects.first { $0.id == id })
     XCTAssertEqual(result.minimumSchemaVersion, 60)
-    XCTAssertEqual(object["width"], 160.0 * 2 / 3, accuracy: 1e-8)
-    XCTAssertEqual(object["depth"], 160)
+    XCTAssertEqual(object["width"], snapshot.width)
+    XCTAssertEqual(object["depth"], snapshot.height)
+    XCTAssertEqual(object.artwork?.elements.first?.width, snapshot.width)
+    XCTAssertEqual(object.artwork?.elements.first?.height, snapshot.height)
     XCTAssertEqual(object.artwork?.elements.first?.kind, "image")
     XCTAssertEqual(object.artwork?.elements.first?.imageGeneration, metadata)
     XCTAssertEqual(engine.undoStack.count, 2)
@@ -65,6 +67,26 @@ final class CanvasImageGenerationTests: XCTestCase {
       XCTAssertThrowsError(try CanvasImageGeneration.placeResult(in: &changed, destination: snapshot, asset: "generated.png", provenance: provenance()))
       XCTAssertEqual(changed, before)
     }
+  }
+  func testEditingAidsDoNotInvalidateBlankDestinationButRenderingConfigurationDoes() throws {
+    var project = Project(name:"Editing aids")
+    let id = try CanvasImageGeneration.createArtboard(in:&project,at:.init(20,30)).id
+    let snapshot = try CanvasImageGeneration.destination(in:project,objectID:id)
+    project.objects[0].artwork?.guides = [.init(axis:"x",position:12),.init(axis:"y",position:18)]
+    project.objects[0].artwork?.showGuides = false; project.objects[0].artwork?.showGrid = true
+    project.objects[0].artwork?.gridSpacing = 5; project.objects[0].artwork?.snapEnabled = false
+    project.objects[0].artwork?.nudge = 2; project.objects[0].artwork?.unit = .inches
+    XCTAssertNoThrow(try CanvasImageGeneration.validateDestination(snapshot,in:project))
+    let aids = project.objects[0].artwork!
+    for mutation: (inout Artwork)->Void in [
+      { $0.backgroundOpacity = 0.5 }, { $0.bleed = 2 }, { $0.safeInset = 4 }, { $0.language = "fr" }
+    ] {
+      var changed = project; mutation(&changed.objects[0].artwork!)
+      XCTAssertThrowsError(try CanvasImageGeneration.validateDestination(snapshot,in:changed,allowingResize:true))
+    }
+    try CanvasImageGeneration.placeResult(in:&project,destination:snapshot,asset:"generated.png",provenance:provenance())
+    var retained = project.objects[0].artwork!; retained.elements = []
+    XCTAssertEqual(retained,aids,"Result publication preserves all user editing aids")
   }
   func testMalformedOrOversizedProvenanceAndUnsafePathsAreRejectedAtomically() throws {
     var project = Project(name: "Bounded")

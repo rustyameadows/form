@@ -21,7 +21,7 @@ import XCTest
   }
   private func mount<V:View>(_ root:V)->NSHostingView<V> {
     let host=NSHostingView(rootView:root)
-    let window=NSWindow(contentRect:.init(x:-10000,y:-10000,width:392,height:530),styleMask:[.titled],backing:.buffered,defer:false)
+    let window=NSWindow(contentRect:.init(x:-10000,y:-10000,width:820,height:640),styleMask:[.titled],backing:.buffered,defer:false)
     window.isReleasedWhenClosed=false;window.contentView=host;window.makeKeyAndOrderFront(nil)
     addTeardownBlock{@MainActor in window.makeFirstResponder(nil);window.contentView=nil;window.close()}
     return host
@@ -72,6 +72,47 @@ import XCTest
       host.cacheDisplay(in:host.bounds,to:bitmap)
       try FileManager.default.createDirectory(atPath:path,withIntermediateDirectories:true)
       try bitmap.representation(using:.png,properties:[:])?.write(to:URL(fileURLWithPath:path).appendingPathComponent("canvas-generation-result.png"))
+    }
+  }
+  func testComposerKeepsEightReferencesAndSettingsReachableWithoutOuterScrolling()async throws {
+    let store=try fixture(),controller=store.canvasImages
+    for index in 0..<8 {
+      var board=try XCTUnwrap(store.project).makeObject(recipeID:"artboard",name:"Reference \(index+1)",parameters:["width":80,"depth":60])
+      board.artwork=Artwork(background:"#FFFFFF",bleed:0)
+      try store.engine.edit("Added test reference",source:"Test"){$0.objects.append(board)}
+      store.changed()
+      XCTAssertTrue(controller.addReference(.init(objectID:board.id,title:board.name)))
+    }
+    for index in 0..<3 {_ = try controller.promptLibrary?.save(name:"Saved study \(index+1)",prompt:"Soft editorial composition \(index+1)")}
+    controller.updatePrompt("A geometric landscape")
+    for height in [640.0,600.0] {
+      let size=CGSize(width:820,height:height)
+      let host=mount(CanvasImageGenerationPanel(controller:controller,store:store,size:size,close:{}))
+      try await settle(host)
+      let editor=try XCTUnwrap(descendants(host).compactMap{$0 as? CanvasGenerationTextView}.first)
+      let scroll=try XCTUnwrap(editor.enclosingScrollView)
+      XCTAssertNil(scroll.enclosingScrollView,"The prompt must not be nested in an outer scrolling composer")
+      XCTAssertGreaterThanOrEqual(scroll.visibleRect.height,119)
+      let controls=descendants(host).compactMap{$0 as? NSButton}.filter{
+        ["canvas-generation-submit","canvas-generation-save-prompt"].contains($0.accessibilityIdentifier() ?? "")
+      }
+      XCTAssertEqual(controls.count,2)
+      for control in controls {
+        let rect=control.convert(control.bounds,to:host)
+        XCTAssertTrue(host.bounds.insetBy(dx:-1,dy:-1).contains(rect),"Control must be on screen at \(height) pt: \(rect)")
+        XCTAssertNil(control.enclosingScrollView,"Settings and actions must be outside scrolling containers")
+      }
+      let save=try XCTUnwrap(controls.first{$0.accessibilityIdentifier()=="canvas-generation-save-prompt"})
+      save.performClick(nil);try await settle(host)
+      let name=try XCTUnwrap(descendants(host).compactMap{$0 as? NSTextField}.first{$0.accessibilityIdentifier()=="canvas-generation-prompt-name"})
+      XCTAssertTrue(host.bounds.contains(name.convert(name.bounds,to:host)))
+      XCTAssertGreaterThanOrEqual(scroll.visibleRect.height,119,"Saving must leave room for the prompt with all eight references")
+      if let path=ProcessInfo.processInfo.environment["FORM_CANVAS_GENERATION_PROOF_DIR"],
+        let bitmap=host.bitmapImageRepForCachingDisplay(in:host.bounds) {
+        host.cacheDisplay(in:host.bounds,to:bitmap)
+        try FileManager.default.createDirectory(atPath:path,withIntermediateDirectories:true)
+        try bitmap.representation(using:.png,properties:[:])?.write(to:URL(fileURLWithPath:path).appendingPathComponent("canvas-generation-eight-references-\(Int(height)).png"))
+      }
     }
   }
   func testControllerAndPromptLibraryAreRecreatedForAnotherProject()throws {

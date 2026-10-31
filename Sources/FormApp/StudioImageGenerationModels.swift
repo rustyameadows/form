@@ -97,14 +97,44 @@ enum StudioGenerationError:LocalizedError {
 struct StudioGenerationReferenceImage:Equatable {
   let assetID:UUID,name:String,png:Data
 }
+/// Pixel-only output contract; physical Canvas dimensions never enter Studio's
+/// aspect presets or its persisted generation options.
+struct StudioGenerationPixelSize: Codable, Equatable {
+  let width: Int, height: Int
+  static func canvas(widthMM: Double, heightMM: Double, size: StudioGenerationSize) throws -> Self {
+    guard widthMM.isFinite, heightMM.isFinite, widthMM > 0, heightMM > 0,
+      (0.125...8).contains(widthMM / heightMM) else {
+      throw StudioGenerationError.invalid("Resize the image artboard to a shape between 1:8 and 8:1.")
+    }
+    let edge = size.longEdge, ratio = widthMM / heightMM
+    let result = ratio >= 1 ? Self(width: edge, height: max(64, Int((Double(edge) / ratio).rounded(.down))))
+      : Self(width: max(64, Int((Double(edge) * ratio).rounded(.down))), height: edge)
+    try result.validate(size: size); return result
+  }
+  func validate(size: StudioGenerationSize) throws {
+    guard width >= 64, height >= 64, width <= size.longEdge, height <= size.longEdge,
+      max(width,height) == size.longEdge, (0.125...8).contains(Double(width) / Double(height)) else {
+      throw StudioGenerationError.invalid("Canvas output must match the selected resolution and a shape between 1:8 and 8:1.")
+    }
+  }
+}
 struct StudioGenerationRequest {
   enum Source:String {case studioScene,canvas}
   let inputPNG:Data?,prompt:String,style:String,references:[StudioGenerationReference],options:StudioImageGenerationOptions
   var context:StudioGenerationInputContext?
   let source:Source,referenceImages:[StudioGenerationReferenceImage]
+  let canvasOutputPixels:StudioGenerationPixelSize?
+  var outputPixels:StudioGenerationPixelSize {canvasOutputPixels ?? .init(width:options.pixels.width,height:options.pixels.height)}
+  func validateOutputPixels()throws {
+    if let canvasOutputPixels {
+      guard source == .canvas else{throw StudioGenerationError.invalid("Custom Canvas output dimensions require a Canvas request.")}
+      try canvasOutputPixels.validate(size:options.size)
+    }
+  }
   init(inputPNG:Data?=nil,prompt:String,style:String,references:[StudioGenerationReference],options:StudioImageGenerationOptions,
-    context:StudioGenerationInputContext?=nil,source:Source = .studioScene,referenceImages:[StudioGenerationReferenceImage]=[]) {
+    context:StudioGenerationInputContext?=nil,source:Source = .studioScene,referenceImages:[StudioGenerationReferenceImage]=[],
+    canvasOutputPixels:StudioGenerationPixelSize?=nil) {
     self.inputPNG=inputPNG;self.prompt=prompt;self.style=style;self.references=references;self.options=options
-    self.context=context;self.source=source;self.referenceImages=referenceImages
+    self.context=context;self.source=source;self.referenceImages=referenceImages;self.canvasOutputPixels=canvasOutputPixels
   }
 }

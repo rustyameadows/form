@@ -10,7 +10,7 @@ private final class CanvasMenuAction: NSObject {
   enum Kind {
     case command(String, String?), select(UUID), inspector, enterGroup(UUID), leaveGroup, canvas
     case outlines, findOnTable(UUID), component(UUID)
-    case generate(Point2, CanvasGenerationReference?), resumeGeneration
+    case generate(Point2, CanvasGenerationReference?), resumeGeneration(CanvasImagePromptIdentity)
   }
   let projectID: UUID, frameID: UUID
   let selection: Set<UUID>
@@ -63,8 +63,8 @@ extension VectorCanvasView {
     }
 
     let generation=store.canvasImages
-    if generation.draft?.destinationID == frame.object.id {
-      menu.addItem(item("Continue Image Prompt…", .resumeGeneration))
+    if let identity = canvasImagePromptIdentity, identity.destinationID == frame.object.id {
+      menu.addItem(item("Continue Image Prompt…", .resumeGeneration(identity)))
     }
     menu.addItem(item("Generate Image Here…", .generate(.init(physical.x,physical.y),nil), enabled:!generation.busy))
     if frame.object.recipeID == "artboard", !frame.object.isCanvasWorkspace || !roots.isEmpty {
@@ -167,8 +167,12 @@ extension VectorCanvasView {
 
   @objc func performCanvasMenuAction(_ sender: NSMenuItem) {
     guard sender.isEnabled, let action = sender.representedObject as? CanvasMenuAction,
-      let session, session.store?.project?.id == action.projectID,
-      session.activeFrameID == action.frameID else { return }
+      let session, session.store?.project?.id == action.projectID else { return }
+    if case .resumeGeneration(let identity) = action.kind {
+      requestCanvasImagePrompt(identity)
+      return
+    }
+    guard session.activeFrameID == action.frameID else { return }
     prepareForGroupNavigation()
     finishText(); session.endGesture()
     let art = session.art
@@ -178,12 +182,13 @@ extension VectorCanvasView {
       do {
         _ = try session.store?.canvasImages.begin(at:point,reference:reference)
         synchronize()
-        DispatchQueue.main.async { [weak self] in self?.showCanvasImagePrompt() }
+        if let identity = canvasImagePromptIdentity {
+          _ = fit(frameIDs: [identity.destinationID])
+          requestCanvasImagePrompt(identity)
+        }
       } catch { session.store?.error=error.localizedDescription }
       return
-    case .resumeGeneration:
-      DispatchQueue.main.async { [weak self] in self?.showCanvasImagePrompt() }
-      return
+    case .resumeGeneration: return
     case .inspector:
       NotificationCenter.default.post(name: .formShowCanvasInspector, object: session)
     case .select(let id):
