@@ -40,12 +40,16 @@ import LabRendering
   private(set) var framingWarnings:[[String:Any]]=[]
   func clear() {controller=nil;owner=nil;lastPixelBytes=0}
   var geometryBuilds:Int {controller?.geometryBuilds ?? 0}
+  var backendIdentifier:String {
+    guard let renderer=controller?.renderer else{return "Native scene renderer"}
+    return String(describing:type(of:renderer))
+  }
   static func rss()->Int64 {var r=rusage();getrusage(RUSAGE_SELF,&r);return Int64(r.ru_maxrss)}
   struct RenderResult {var image:NSImage;var framingWarnings:[[String:Any]]}
-  func render(project:Project,shot:StudioShot,assets:URL,preview:Bool,renderObjectIDs:Set<UUID>?=nil)async throws->NSImage {
-    try await renderResult(project:project,shot:shot,assets:assets,preview:preview,renderObjectIDs:renderObjectIDs).image
+  func render(project:Project,shot:StudioShot,assets:URL,preview:Bool,renderObjectIDs:Set<UUID>?=nil,textureLimit:Int=2048)async throws->NSImage {
+    try await renderResult(project:project,shot:shot,assets:assets,preview:preview,renderObjectIDs:renderObjectIDs,textureLimit:textureLimit).image
   }
-  func renderResult(project:Project,shot:StudioShot,assets:URL,preview:Bool,renderObjectIDs:Set<UUID>?=nil)async throws->RenderResult {
+  func renderResult(project:Project,shot:StudioShot,assets:URL,preview:Bool,renderObjectIDs:Set<UUID>?=nil,textureLimit:Int=2048)async throws->RenderResult {
     try shot.validate();let ids=try shot.visibility.resolved(in:project)
     // A capture owns this cached controller until the GPU has cloned/rendered
     // its complete composition, including any external-source preparation.
@@ -59,7 +63,7 @@ import LabRendering
     if owner != project.id {clear();owner=project.id;controller=TableSceneController()}
     let c=controller!;c.externalCapturePreparationCheckpoint=externalPreparationCheckpoint
     var copy=project;copy.camera=shot.camera;copy.camera.viewportAspect=shot.referenceAspect
-    c.sync(copy,selection:[],isolated:ids,showGrid:false,studio:true,preset:shot.surface,assets:assets,renderObjectIDs:renderObjectIDs)
+    c.sync(copy,selection:[],isolated:ids,showGrid:false,studio:true,preset:shot.surface,assets:assets,textureLimit:max(64,min(2048,textureLimit)),renderObjectIDs:renderObjectIDs)
     // sync intentionally restores a camera only on a new project. Explicit render
     // composition uses its own owner and never mutates the native editing scene.
     c.camera=copy.camera;c.updateCamera();c.applyShotLighting(shot.lighting,studio:true)

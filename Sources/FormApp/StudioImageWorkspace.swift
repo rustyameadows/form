@@ -1,13 +1,18 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct StudioImageWorkspace:View {
+@MainActor struct StudioImageWorkspace:View {
   @ObservedObject var controller:StudioImageGenerationController
   @ObservedObject var library:StudioAssetLibrary
   @ObservedObject private var connection:OpenAIConnectionPreviewController
   var onBack:()->Void
   var onConnection:(()->Void)?
   var onUseInCanvas:((UUID)->Void)?
+  @StateObject private var reviewer=StudioImageReviewPresenter()
+  @State private var showingSettings=false
+  @State private var showingPromptPresetName=false
+  @State private var promptPresetName=""
+  @State private var promptPresetIssue:String?
   @State private var showingConnection=false
   @State private var showingImporter=false
   @State private var showingReferencePicker=false
@@ -25,26 +30,22 @@ struct StudioImageWorkspace:View {
     self.onUseInCanvas=onUseInCanvas
     _connection=ObservedObject(wrappedValue:controller.connection)
   }
-  private var outputs:[UUID] {controller.currentRun?.outputAssetIDs ?? []}
-  private var selectedOutput:UUID? {selectedAssetID.flatMap{outputs.contains($0) ? $0:nil} ?? outputs.first}
   private var editingDisabled:Bool {controller.busy || controller.isCapturing || importing}
   var body:some View {
     VStack(spacing:0) {
       header
       Divider()
-      HStack(spacing:0) {
-        VStack(spacing:14) {
-          if controller.capture != nil && controller.isCaptureStale {staleBanner}
-          StudioImageResultReview(controller:controller,library:library,selectedAssetID:$selectedAssetID,
-            onIterate:{id in controller.iterate(resultAssetID:id)},onRegenerate:{Task{await controller.retry()}},onUseInCanvas:onUseInCanvas)
-            .frame(minHeight:220,maxHeight:.infinity)
-          if controller.busy || controller.isCapturing {progress}
-          if !outputs.isEmpty {outputGrid}
-          if !controller.history.isEmpty {history}
-          if let message=issue ?? controller.error {errorBanner(message)}
-        }.padding(20).frame(maxWidth:.infinity,maxHeight:.infinity)
-        Divider()
-        sidebar.frame(width:320)
+      GeometryReader {geometry in
+        let layout=StudioImageAuthoringLayout(width:geometry.size.width,height:geometry.size.height,
+          hasReferences:!controller.references.isEmpty,hasMessage:issue != nil || controller.error != nil,isBusy:controller.busy || controller.isCapturing)
+        HStack(spacing:0) {
+          StudioImageInputPanel(controller:controller,library:library).frame(width:layout.inputWidth)
+          Divider()
+          composer(layout).frame(maxWidth:.infinity,maxHeight:.infinity)
+          Divider()
+          StudioImageOutputRail(controller:controller,library:library,selectedAssetID:selectedAssetID,onPreview:review)
+            .frame(width:layout.outputWidth)
+        }
       }
     }.background(Palette.paper)
       .sheet(isPresented:$showingConnection) {
@@ -54,6 +55,10 @@ struct StudioImageWorkspace:View {
         referencePicker
       }
       .sheet(isPresented:$showingPresetName){presetSheet}
+      .sheet(isPresented:$showingPromptPresetName){promptPresetSheet}
+      .onDisappear{reviewer.close()}
+      .onChange(of:library.projectID){_,_ in reviewer.close()}
+      .onChange(of:controller.store?.project?.id){_,id in if id != controller.projectID {reviewer.close()}}
       .fileImporter(isPresented:$showingImporter,allowedContentTypes:[.png,.jpeg,.heic,.tiff,.webP],allowsMultipleSelection:true) {result in
         switch result {case .success(let urls):importReferences(urls);case .failure(let error):issue=error.localizedDescription}
       }
@@ -62,7 +67,7 @@ struct StudioImageWorkspace:View {
         if controller.store?.project?.id==referenceProjectID {controller.addReference(assetID:id,role:.style)}
         showingReferencePicker=false
       }
-      .onChange(of:controller.selectedRunID){_,_ in selectedAssetID=controller.currentRun?.outputAssetIDs.first}
+
   }
   private var header:some View {
     HStack(spacing:12) {
@@ -79,65 +84,112 @@ struct StudioImageWorkspace:View {
       }.disabled(editingDisabled)
     }.padding(.horizontal,16).padding(.vertical,9)
   }
-  private var staleBanner:some View {
-    HStack(spacing:8) {
-      Image(systemName:"camera.badge.ellipsis")
-      Text("Scene changed. The next image still uses your frozen input.").font(InspectorStyle.labelFont)
-      Spacer(minLength:4)
-      Button("Recapture"){Task{await controller.captureScene()}}.disabled(editingDisabled)
-    }.padding(10).background(Palette.accent.opacity(0.08),in:RoundedRectangle(cornerRadius:8))
+  private func composer(_ layout:StudioImageAuthoringLayout)->some View {
+    VStack(alignment:.leading,spacing:layout.spacing) {
+      promptPresets(height:layout.presetHeight)
+      HStack {
+        InspectorSectionHeader("PROMPT")
+        Spacer()
+        WorkspaceToolbarButton("Save prompt preset",symbol:"square.and.arrow.down",identifier:"studio-image-save-prompt") {
+          promptPresetName="";promptPresetIssue=nil;showingPromptPresetName=true
+        }.disabled(editingDisabled || controller.prompt.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
+      }
+      TextEditor(text:$controller.prompt).font(.system(size:13)).scrollContentBackground(.hidden)
+        .padding(10).frame(minHeight:180,maxHeight:.infinity)
+        .background(Palette.surface,in:RoundedRectangle(cornerRadius:9))
+        .overlay(RoundedRectangle(cornerRadius:9).stroke(Palette.line,lineWidth:0.75).allowsHitTesting(false))
+        .overlay(alignment:.topLeading) {
+          if controller.prompt.isEmpty {Text("Describe the image you want to make…").font(.system(size:13)).foregroundStyle(Palette.secondary).padding(15).allowsHitTesting(false).accessibilityHidden(true)}
+        }
+        .accessibilityLabel("Image prompt").accessibilityIdentifier("studio-image-prompt")
+        .disabled(editingDisabled)
+      if !controller.references.isEmpty {
+        ScrollView {
+          LazyVStack(spacing:8){ForEach(controller.references){reference in referenceRow(reference)}}
+        }.frame(height:layout.referenceHeight).disabled(editingDisabled)
+      }
+      composerFooter
+    }.padding(16)
   }
-  private var sidebar:some View {
+  private func promptPresets(height:CGFloat)->some View {
+    VStack(alignment:.leading,spacing:9) {
+      InspectorSectionHeader("PROMPT PRESETS",subtitle:"Choose a starting point, then make it yours.")
+      ScrollView {
+        LazyVGrid(columns:Array(repeating:GridItem(.flexible(),spacing:8),count:3),spacing:8) {
+          ForEach(controller.promptPresets){preset in
+            VStack(alignment:.leading,spacing:4) {
+              HStack(spacing:2) {
+                Text(preset.name).font(.system(size:11,weight:.medium)).lineLimit(1)
+                Spacer(minLength:0)
+                WorkspaceToolbarButton("Use prompt "+preset.name,symbol:"arrow.down",identifier:"studio-image-preset-"+preset.id.uuidString) {
+                  controller.applyPromptPreset(preset)
+                }
+              }
+              Text(preset.prompt).font(.system(size:10)).foregroundStyle(Palette.secondary).lineLimit(2)
+                .frame(maxWidth:.infinity,alignment:.leading)
+            }.padding(.horizontal,9).padding(.bottom,8)
+              .frame(maxWidth:.infinity,minHeight:76,alignment:.topLeading)
+              .background(Palette.surface,in:RoundedRectangle(cornerRadius:8))
+              .overlay(RoundedRectangle(cornerRadius:8).stroke(Palette.line,lineWidth:0.75).allowsHitTesting(false))
+              .contentShape(Rectangle()).onTapGesture{if !editingDisabled {controller.applyPromptPreset(preset)}}
+              .help(preset.prompt)
+          }
+        }
+      }.frame(height:height).disabled(editingDisabled)
+    }
+  }
+  private var composerFooter:some View {
+    VStack(alignment:.leading,spacing:10) {
+      if controller.busy || controller.isCapturing {progress}
+      if let message=issue ?? controller.error {errorBanner(message)}
+      HStack(spacing:5) {
+        WorkspaceToolbarButton("Upload reference",symbol:"square.and.arrow.up",identifier:"studio-image-upload") {
+          referenceProjectID=controller.store?.project?.id;showingImporter=true
+        }.disabled(editingDisabled)
+        WorkspaceToolbarButton("Choose reference from Library",symbol:"photo.on.rectangle",identifier:"studio-image-library") {
+          referenceProjectID=controller.store?.project?.id;chosenReference=nil;showingReferencePicker=true
+        }.disabled(editingDisabled)
+        Picker("Model",selection:$controller.options.model){ForEach(StudioGenerationModel.allCases,id:\.self){Text($0.title).tag($0)}}
+          .labelsHidden().inspectorPicker().frame(maxWidth:170).disabled(editingDisabled)
+        WorkspaceToolbarButton("Image settings",symbol:"slider.horizontal.3",identifier:"studio-image-settings"){showingSettings.toggle()}
+          .disabled(editingDisabled)
+          .popover(isPresented:$showingSettings){settingsPanel}
+        Spacer(minLength:0)
+        if controller.busy {
+          WorkspaceToolbarButton("Cancel demo generation",symbol:"xmark",showsTitle:true,identifier:"studio-image-cancel"){controller.cancel()}
+        }else {
+          WorkspaceToolbarButton(primaryTitle,symbol:controller.capture==nil ? "camera":"sparkles",isSelected:true,showsTitle:true,identifier:"studio-image-generate"){performPrimary()}
+            .disabled(controller.isCapturing || importing)
+        }
+      }
+      Text("Local demo · no AI request or charge. \(controller.options.pixels.width) × \(controller.options.pixels.height) px · \(controller.options.count) image(s)")
+        .font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
+    }
+  }
+  private var settingsPanel:some View {
     VStack(spacing:0) {
+      HStack {Text("Image settings").font(.system(size:14,weight:.semibold));Spacer();AppCloseButton("Close image settings"){showingSettings=false}}.padding(16)
+      Divider()
       ScrollView {
         VStack(alignment:.leading,spacing:18) {
-          InspectorSectionHeader("NEXT IMAGE")
-          if let capture=controller.capture {
-            HStack(spacing:9) {
-              StudioAssetImageView(library:library,assetID:capture.inputAssetID,maximumPixelSize:180,label:"Next image scene input")
-                .frame(width:58,height:43).clipShape(RoundedRectangle(cornerRadius:5))
-              VStack(alignment:.leading,spacing:3) {
-                Text("Scene input").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
-                Text(capture.scene.name).font(InspectorStyle.labelFont).lineLimit(1)
-                Text(capture.createdAt.formatted(date:.omitted,time:.shortened)).font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
-              }
-            }
-          }
-          TextEditor(text:$controller.prompt).font(.system(size:12)).scrollContentBackground(.hidden)
-            .padding(7).frame(height:118).background(Palette.surface,in:RoundedRectangle(cornerRadius:8))
-            .overlay(RoundedRectangle(cornerRadius:8).stroke(Palette.line,lineWidth:0.75))
-            .overlay(alignment:.topLeading) {
-              if controller.prompt.isEmpty {Text("Describe the image you want to make…").font(.system(size:12)).foregroundStyle(Palette.secondary).padding(12).allowsHitTesting(false).accessibilityHidden(true)}
-            }
-            .accessibilityLabel("Image prompt").accessibilityIdentifier("studio-image-prompt")
-          styleSettings
-          InspectorDivider()
-          referenceSettings
-          InspectorDivider()
           imageSettings
+          InspectorDivider()
+          styleSettings
           InspectorDivider()
           Menu {
             ForEach(StudioGenerationFailureFixture.allCases,id:\.self){fixture in
               Button{controller.options.failureFixture=fixture}label:{Label(fixture.title,systemImage:controller.options.failureFixture==fixture ? "checkmark":"circle")}
             }
           }label:{Label("Demo scenario",systemImage:"slider.horizontal.3")}
-            .help("Try success, authentication, rate-limit, offline or refusal states without contacting a service")
             .accessibilityIdentifier("studio-image-scenario")
-          if controller.options.failureFixture != .none {Text(controller.options.failureFixture.title).font(InspectorStyle.captionFont).foregroundStyle(Palette.accent)}
-        }.padding(16).disabled(editingDisabled)
+          Text(controller.options.failureFixture.title).font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+        }.padding(16)
       }
-      Divider()
-      VStack(alignment:.leading,spacing:9) {
-        if controller.busy {
-          Button("Cancel demo generation"){controller.cancel()}.frame(maxWidth:.infinity).accessibilityIdentifier("studio-image-cancel")
-        }else {
-          Button(primaryTitle){performPrimary()}.buttonStyle(.borderedProminent).tint(Palette.ink).controlSize(.large)
-            .frame(maxWidth:.infinity).disabled(controller.isCapturing || importing).accessibilityIdentifier("studio-image-generate")
-        }
-        Text("Local demo PNGs from your captured scene. No AI request or charge.").font(InspectorStyle.captionFont)
-          .foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
-      }.padding(16)
-    }
+    }.frame(width:350,height:540).background(Palette.paper)
+  }
+  private func review(_ runID:UUID,_ assetID:UUID?) {
+    selectedAssetID=assetID
+    reviewer.show(controller:controller,library:library,runID:runID,assetID:assetID,onUseInCanvas:onUseInCanvas)
   }
   private var styleSettings:some View {
     VStack(alignment:.leading,spacing:9) {
@@ -151,17 +203,6 @@ struct StudioImageWorkspace:View {
         .padding(7).frame(height:65).background(Palette.surface,in:RoundedRectangle(cornerRadius:8))
         .accessibilityLabel("Image style instructions").accessibilityIdentifier("studio-image-style")
       Button("Save as style preset…"){presetName="";presetIssue=nil;showingPresetName=true}.font(InspectorStyle.captionFont)
-    }
-  }
-  private var referenceSettings:some View {
-    VStack(alignment:.leading,spacing:10) {
-      InspectorSectionHeader("REFERENCES",subtitle:"Optional images for style, subject or composition.")
-      HStack {
-        Button{referenceProjectID=controller.store?.project?.id;showingImporter=true}label:{Label("Upload",systemImage:"square.and.arrow.up")}.accessibilityIdentifier("studio-image-upload")
-        Button{referenceProjectID=controller.store?.project?.id;chosenReference=nil;showingReferencePicker=true}label:{Label("Library",systemImage:"photo.on.rectangle")}.accessibilityIdentifier("studio-image-library")
-      }
-      ForEach(controller.references){reference in referenceRow(reference)}
-      if controller.references.isEmpty {Text("No reference images").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)}
     }
   }
   private func referenceRow(_ reference:StudioGenerationReference)->some View {
@@ -195,46 +236,19 @@ struct StudioImageWorkspace:View {
       Text("\(Int(controller.progress*100))%").font(InspectorStyle.valueFont).frame(width:35,alignment:.trailing)
     }.accessibilityElement(children:.combine).accessibilityIdentifier("studio-image-progress")
   }
-  private var outputGrid:some View {
-    LazyVGrid(columns:Array(repeating:GridItem(.flexible(),spacing:8),count:min(4,max(1,outputs.count))),spacing:8) {
-      ForEach(outputs,id:\.self){id in
-        Button{selectedAssetID=id}label:{
-          StudioAssetImageView(library:library,assetID:id,maximumPixelSize:320,label:library.asset(id:id)?.name ?? "Demo image")
-            .frame(height:84).overlay(alignment:.topLeading){Text("Demo").font(.system(size:9,weight:.semibold)).padding(4).background(Palette.paper.opacity(0.9),in:RoundedRectangle(cornerRadius:4)).padding(5)}
-            .clipShape(RoundedRectangle(cornerRadius:6)).overlay(RoundedRectangle(cornerRadius:6).stroke(selectedOutput==id ? Palette.accent:Palette.line,lineWidth:selectedOutput==id ? 2:0.75))
-        }.buttonStyle(.plain).accessibilityLabel("Review demo image "+(library.asset(id:id)?.name ?? "result"))
-      }
-    }
-  }
-  private var history:some View {
-    VStack(alignment:.leading,spacing:5) {
-      InspectorSectionHeader("RECENT RUNS")
-      ScrollView(.horizontal,showsIndicators:true) {
-        HStack(spacing:6) {
-          ForEach(controller.history.sorted{$0.createdAt>$1.createdAt}) {run in
-            WorkspaceNavigationRow(title:run.prompt.isEmpty ? run.capture.scene.name:String(run.prompt.prefix(48)),
-              subtitle:run.createdAt.formatted(date:.omitted,time:.shortened)+" · "+run.status.title,
-              symbol:"photo",selected:controller.selectedRunID==run.id,accessibilityLabel:"Review image run "+run.createdAt.formatted(),identifier:"studio-image-run-"+run.id.uuidString) {
-                controller.selectRun(run.id)
-              }.frame(width:210)
-          }
-        }
-      }.frame(height:46)
-    }
-  }
   private func errorBanner(_ message:String)->some View {
     HStack(spacing:8) {
       Image(systemName:"exclamationmark.circle")
-      Text(message).font(InspectorStyle.labelFont).fixedSize(horizontal:false,vertical:true)
+      Text(message).font(InspectorStyle.labelFont).lineLimit(2).help(message)
       Spacer(minLength:4)
-      Button("Retry"){issue=nil;Task{await controller.retry()}}.disabled(editingDisabled || controller.currentRun == nil)
+      WorkspaceToolbarButton("Retry",symbol:"arrow.clockwise",showsTitle:true,identifier:"studio-image-retry"){issue=nil;Task{await controller.retry()}}.disabled(editingDisabled || controller.currentRun == nil)
       AppCloseButton("Dismiss image message"){issue=nil;controller.dismissError()}
     }.foregroundStyle(Palette.accent).padding(10).background(Palette.accent.opacity(0.07),in:RoundedRectangle(cornerRadius:8))
   }
   private var primaryTitle:String {
     if controller.capture == nil {return "Capture scene"}
     if connection.state != .demoReady {return "Connect with demo"}
-    return controller.options.count == 1 ? "Generate demo image":"Generate \(controller.options.count) demo images"
+    return controller.options.count == 1 ? "Generate":"Generate \(controller.options.count)"
   }
   private func performPrimary() {
     issue=nil
@@ -251,6 +265,17 @@ struct StudioImageWorkspace:View {
       }.padding(.horizontal,14).padding(.top,12)
       StudioAssetPicker(library:library,selection:$chosenReference)
     }.frame(minWidth:580,minHeight:450).background(Palette.paper)
+  }
+  private var promptPresetSheet:some View {
+    VStack(alignment:.leading,spacing:16) {
+      HStack {Text("Save prompt preset").font(.system(size:16,weight:.semibold));Spacer();AppCloseButton("Close prompt preset"){showingPromptPresetName=false}}
+      TextField("Preset name",text:$promptPresetName).textFieldStyle(InspectorTextFieldStyle())
+      Text("Saves this prompt in the current project. Applying it changes only the prompt.").font(InspectorStyle.labelFont).foregroundStyle(Palette.secondary)
+      if let promptPresetIssue {Text(promptPresetIssue).font(InspectorStyle.captionFont).foregroundStyle(Palette.accent)}
+      HStack {Spacer();Button("Save preset"){
+        do{try controller.savePromptPreset(name:promptPresetName);showingPromptPresetName=false;promptPresetIssue=nil}catch{promptPresetIssue=error.localizedDescription}
+      }.buttonStyle(.borderedProminent).tint(Palette.ink).disabled(promptPresetName.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)}
+    }.padding(24).frame(width:400).background(Palette.paper)
   }
   private var presetSheet:some View {
     VStack(alignment:.leading,spacing:16) {

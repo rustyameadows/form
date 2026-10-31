@@ -45,8 +45,25 @@ import XCTest
   private func toolbar(_ host:NSView,_ identifier:String)throws->WorkspaceToolbarNativeButton {
     try XCTUnwrap(descendants(host).compactMap{$0 as? WorkspaceToolbarNativeButton}.first{$0.accessibilityIdentifier()==identifier},"Missing Studio tool "+identifier)
   }
-  private func row(_ host:NSView,_ identifier:String)throws->WorkspaceNavigationNativeButton {
-    try XCTUnwrap(descendants(host).compactMap{$0 as? WorkspaceNavigationNativeButton}.first{$0.accessibilityIdentifier()==identifier},"Missing visible Studio row "+identifier)
+  private func row(_ host:NSView,_ identifier:String)throws->StudioSceneThumbnailNativeButton {
+    try XCTUnwrap(descendants(host).compactMap{$0 as? StudioSceneThumbnailNativeButton}.first{$0.accessibilityIdentifier()==identifier},"Missing visible Studio row "+identifier)
+  }
+  private func pick(_ f:Fixture,_ id:UUID)throws {
+    let view=try XCTUnwrap(f.controller.stage.view)
+    let node=try XCTUnwrap(f.controller.stage.logicalNode(for:id)),bounds=try XCTUnwrap(f.controller.stage.localBounds(for:id))
+    let projected=view.projectPoint(node.convertPosition(.init((bounds.min.x+bounds.max.x)/2,(bounds.min.y+bounds.max.y)/2,(bounds.min.z+bounds.max.z)/2),to:nil))
+    var point:NSPoint?
+    for y in stride(from:-20.0,through:20,by:4) {for x in stride(from:-20.0,through:20,by:4) {
+      let candidate=NSPoint(x:projected.x+x,y:projected.y+y)
+      if f.controller.stage.objectID(at:candidate)==id {point=candidate;break}
+    };if point != nil {break}}
+    let hit=try XCTUnwrap(point,"Pick the real rendered instance, without an instance sidebar")
+    let location=view.convert(hit,to:nil)
+    for kind in [NSEvent.EventType.leftMouseDown,.leftMouseUp] {
+      let event=try XCTUnwrap(NSEvent.mouseEvent(with:kind,location:location,modifierFlags:[],timestamp:ProcessInfo.processInfo.systemUptime,windowNumber:f.window.windowNumber,context:nil,eventNumber:1,clickCount:1,pressure:kind == .leftMouseUp ? 0:1))
+      if kind == .leftMouseDown {view.mouseDown(with:event)}else{view.mouseUp(with:event)}
+    }
+    settle(f.host)
   }
   private func textField(_ host:NSView,_ title:String)->NSTextField? {
     descendants(host).compactMap{$0 as? NSTextField}.first{$0.placeholderString==title || $0.accessibilityLabel()==title}
@@ -94,10 +111,11 @@ import XCTest
     XCTAssertNotNil(textField(f.host,"Height (Y)"));XCTAssertNotNil(textField(f.host,"Rotation"))
   }
 
-  func testNativeInstanceRowsRevealPlacementAndRepeatedSelectionRespectsUserCameraChoice()throws {
+  func testNativeStagePickRevealsPlacementAndRepeatedSelectionRespectsUserCameraChoice()throws {
     let f=try fixture(),before=try XCTUnwrap(f.store.project),instance=try XCTUnwrap(f.first.instances.first)
+    f.controller.gizmoVisible=false
     XCTAssertNil(textField(f.host,"Rotation"))
-    XCTAssertTrue(try row(f.host,"studio-instance-"+instance.id.uuidString).accessibilityPerformPress());settle(f.host)
+    try pick(f,instance.id)
     XCTAssertEqual(f.controller.selectedInstanceID,instance.id)
     XCTAssertEqual(try inspector(f.host).selectedSegment,1)
     XCTAssertNotNil(textField(f.host,"Rotation"));XCTAssertTrue(try toolbar(f.host,"studio-focus-selection").isEnabled)
@@ -114,13 +132,14 @@ import XCTest
     let copy=try XCTUnwrap(f.controller.selected)
     XCTAssertNotEqual(copy.id,instance.id);XCTAssertEqual(copy.sourceObjectID,instance.sourceObjectID)
     XCTAssertEqual(f.controller.draft?.instances.count,2)
-    XCTAssertTrue(try row(f.host,"studio-instance-"+copy.id.uuidString).selected)
+    XCTAssertEqual(f.controller.selectedInstanceID,copy.id)
     XCTAssertTrue(f.controller.undoDraft());settle(f.host)
     XCTAssertEqual(f.controller.draft,previous);XCTAssertEqual(f.store.project,before);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
   }
 
-  func testFocusedHeightCommitsToItsOriginalInstanceBeforeNativeRowSelectionAndDuplicate()throws {
+  func testFocusedHeightCommitsToItsOriginalInstanceBeforeNativeStageSelectionAndDuplicate()throws {
     let f=try fixture(),first=try XCTUnwrap(f.first.instances.first)
+    f.controller.gizmoVisible=false
     f.controller.add(try XCTUnwrap(f.store.project?.objects.first))
     let second=try XCTUnwrap(f.controller.selected)
     f.controller.save();f.controller.selectInstance(first.id);settle(f.host)
@@ -133,7 +152,7 @@ import XCTest
     }
     try typeHeight("27")
     XCTAssertEqual(f.controller.selected?.positionMM.y,0,"Typing retains a draft until the native edit is committed")
-    XCTAssertTrue(try row(f.host,"studio-instance-"+second.id.uuidString).accessibilityPerformPress());settle(f.host)
+    try pick(f,second.id)
     XCTAssertEqual(f.controller.selectedInstanceID,second.id)
     XCTAssertEqual(f.controller.draft?.instances.first{$0.id==first.id}?.positionMM.y,27)
     XCTAssertEqual(f.controller.selected?.positionMM.y,0,"The old field's value must not move the newly selected instance")
@@ -171,5 +190,74 @@ import XCTest
     f.controller.cancelSceneSelection();settle(f.host)
     XCTAssertNil(f.controller.pendingSceneID);XCTAssertEqual(f.controller.draft,draft)
     XCTAssertEqual(f.store.project,before);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
+  }
+
+  func testSavedThumbnailUsesItsOwnRendererCoalescesAndInvalidatesForLinkedSourceChanges()async throws {
+    let f=try fixture(),project=try XCTUnwrap(f.store.project)
+    f.controller.change{$0.instances[0].rotationDegrees=67;$0.instances[0].positionMM.x=35}
+    let draft=f.controller.draft,camera=f.controller.stage.camera,undo=f.store.engine.undoStack.count
+    let cache=StudioSceneThumbnailCache(),assets=f.store.repository.url(for:project.id).appendingPathComponent("Assets")
+    defer{cache.reset()}
+    cache.synchronize(project:project,assets:assets)
+    let key=cache.key(for:f.first)
+    async let first=cache.image(for:f.first,preflight:{_,_ in})
+    async let second=cache.image(for:f.first,preflight:{_,_ in})
+    let (image,repeatImage)=try await(first,second)
+    XCTAssertEqual(cache.renderCount,1,"Concurrent requests for a saved scene share one native capture")
+    XCTAssertEqual(image.tiffRepresentation,repeatImage.tiffRepresentation)
+    let pixels=try XCTUnwrap(image.cgImage(forProposedRect:nil,context:nil,hints:nil)),bitmap=NSBitmapImageRep(cgImage:pixels)
+    XCTAssertLessThanOrEqual(bitmap.pixelsWide,512);XCTAssertLessThanOrEqual(bitmap.pixelsHigh,512)
+    var bluePixels=0
+    for y in stride(from:0,to:bitmap.pixelsHigh,by:4) {for x in stride(from:0,to:bitmap.pixelsWide,by:4) {
+      if let color=bitmap.colorAt(x:x,y:y)?.usingColorSpace(.deviceRGB),color.blueComponent>color.redComponent*1.2,color.blueComponent>color.greenComponent*1.1 {bluePixels+=1}
+    }}
+    XCTAssertGreaterThan(bluePixels,10,"The native thumbnail contains the actual blue product, not a placeholder")
+    _ = try await cache.image(for:f.first,preflight:{_,_ in});XCTAssertEqual(cache.renderCount,1)
+    var changed=project;changed.camera.distance+=1;changed.history=[]
+    cache.synchronize(project:changed,assets:assets)
+    XCTAssertEqual(cache.key(for:f.first),key,"Unrelated design-camera navigation does not regenerate scene thumbnails")
+    changed.objects[0].color="#B14E36";cache.synchronize(project:changed,assets:assets)
+    XCTAssertNotEqual(cache.key(for:f.first),key)
+    let red=try await cache.image(for:f.first,preflight:{_,_ in})
+    XCTAssertNotEqual(red.tiffRepresentation,image.tiffRepresentation,"Linked source changes must be rendered")
+    XCTAssertEqual(cache.renderCount,2)
+    var alternate=f.first;alternate.camera.azimuth+=0.3
+    XCTAssertNotEqual(cache.key(for:alternate),cache.key(for:f.first),"Full saved camera state participates even without a revision bump")
+    XCTAssertEqual(f.controller.draft,draft);XCTAssertEqual(f.controller.stage.camera,camera)
+    XCTAssertEqual(f.store.project,project);XCTAssertEqual(f.store.engine.undoStack.count,undo)
+  }
+
+  func testThumbnailRuntimeGuardAlsoRejectsCachedImagesAndEmptyScenesStayReadOnly()async throws {
+    let f=try fixture(),project=try XCTUnwrap(f.store.project),draft=f.controller.draft
+    let cache=StudioSceneThumbnailCache(),assets=f.store.repository.url(for:project.id).appendingPathComponent("Assets")
+    defer{cache.reset()};cache.synchronize(project:project,assets:assets)
+    _ = try await cache.image(for:f.first,preflight:{_,_ in})
+    do {_ = try await cache.image(for:f.first,preflight:{_,_ in throw FormError.invalid("Unpersisted cloth preview")});XCTFail("Cached committed thumbnails still respect the current cloth guard")}
+    catch {XCTAssertTrue(error.localizedDescription.contains("Unpersisted cloth"))}
+    var empty=f.first;empty.instances=[]
+    do {_ = try await cache.image(for:empty,preflight:{_,_ in});XCTFail("An empty scene is a labeled placeholder")}
+    catch {XCTAssertTrue(error.localizedDescription.contains("Empty scene"))}
+    XCTAssertEqual(cache.renderCount,1);XCTAssertEqual(f.controller.draft,draft);XCTAssertEqual(f.store.project,project)
+    XCTAssertTrue(f.store.engine.undoStack.isEmpty)
+  }
+
+  func testStillActionsStayPinnedAtNarrowAndWideSizesWithoutMotionControlsOrInstanceRows()throws {
+    let f=try fixture(),project=try XCTUnwrap(f.store.project),motion=f.controller.draft?.motion
+    for width in [1020.0,1440.0] {
+      f.window.setContentSize(.init(width:width,height:760));settle(f.host)
+      let save=try XCTUnwrap(descendants(f.host).compactMap{$0 as? NSButton}.first{$0.accessibilityIdentifier()=="studio-save-still"})
+      let generate=try XCTUnwrap(descendants(f.host).compactMap{$0 as? NSButton}.first{$0.accessibilityIdentifier()=="studio-generate-image"})
+      let savedRect=save.convert(save.bounds,to:f.host),generatedRect=generate.convert(generate.bounds,to:f.host)
+      XCTAssertEqual(savedRect.minX,generatedRect.minX,accuracy:1);XCTAssertEqual(savedRect.width,254,accuracy:1)
+      XCTAssertEqual(generatedRect.width,savedRect.width,accuracy:1)
+      XCTAssertEqual(abs(savedRect.midY-generatedRect.midY),40,accuracy:1)
+      XCTAssertGreaterThan(savedRect.minX,width-290);XCTAssertLessThanOrEqual(generatedRect.maxX,width)
+      XCTAssertFalse(savedRect.intersects(generatedRect));XCTAssertTrue(save.isEnabled);XCTAssertTrue(generate.isEnabled)
+      XCTAssertNotNil(try row(f.host,"studio-scene-"+f.first.id.uuidString))
+      XCTAssertFalse(descendants(f.host).compactMap{$0 as? WorkspaceNavigationNativeButton}.contains{($0.accessibilityIdentifier() ?? "").hasPrefix("studio-instance-")})
+      XCTAssertFalse(descendants(f.host).compactMap{$0 as? NSButton}.contains{["Capture start","Capture end","Export video…"].contains($0.title)})
+    }
+    XCTAssertEqual(f.controller.draft?.motion,motion,"Removing motion controls never clears existing motion data")
+    XCTAssertEqual(f.store.project,project);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
   }
 }
