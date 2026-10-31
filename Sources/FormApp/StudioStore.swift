@@ -93,11 +93,22 @@ enum TableTool: String, CaseIterable {
   @Published var studioShowingImages=false
   @Published var showingAssets=false
   @Published var showingOpenAISetup=false
-  lazy var studioAssets = StudioAssetLibrary(root:repository.root)
+  let studioImageConnection=OpenAIConnectionPreviewController()
+  private var assetLibrary:StudioAssetLibrary?
+  private let inactiveAssetProjectID=UUID(uuidString:"00000000-0000-0000-0000-000000000000")!
+  var studioAssets:StudioAssetLibrary {
+    let owner=project?.id ?? inactiveAssetProjectID
+    if let assetLibrary,assetLibrary.projectID==owner {return assetLibrary}
+    let library=StudioAssetLibrary(root:repository.root,projectID:owner)
+    assetLibrary=library
+    return library
+  }
   private var imageWorkflow:StudioImageGenerationController?
   var studioImages:StudioImageGenerationController {
-    if let imageWorkflow {return imageWorkflow}
-    let controller=StudioImageGenerationController(store:self,library:studioAssets)
+    let library=studioAssets
+    if let imageWorkflow,imageWorkflow.library === library {return imageWorkflow}
+    imageWorkflow?.resetForProjectChange()
+    let controller=StudioImageGenerationController(store:self,library:library,connection:studioImageConnection)
     imageWorkflow=controller
     return controller
   }
@@ -192,6 +203,8 @@ enum TableTool: String, CaseIterable {
     }
     engine.onProjectWillChange = { [weak self] in
       self?.imageWorkflow?.resetForProjectChange()
+      self?.imageWorkflow=nil
+      self?.assetLibrary=nil
       self?.studioShowingImages=false
       self?.utilityWindows?.closeProjectWindows()
       self?.invalidateArtworkTransferProject()

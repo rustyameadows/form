@@ -25,7 +25,7 @@ import XCTest
       var object=try project.makeObject(recipeID:"box",parameters:["width":100,"height":90,"depth":70]);object.color="#A95131";project.objects=[object]
       store.engine.project=project;store.showingHome=false;store.studioComposition.reconcile()
       store.studioComposition.stage.fitAll()
-      library=StudioAssetLibrary(root:root)
+      library=StudioAssetLibrary(root:root,projectID:project.id)
       controller=StudioImageGenerationController(store:store,library:library,provider:provider ?? LocalStudioImageGenerationProvider(delayNanoseconds:0),captureLimit:160)
       controller.prompt="A faithful product photograph for the local demo."
       controller.options.size = .small
@@ -108,7 +108,10 @@ import XCTest
     f.controller.resetForProjectChange();provider.release();await again.value
     XCTAssertNil(f.controller.capture);XCTAssertNil(f.controller.currentRun);XCTAssertFalse(f.controller.busy)
     XCTAssertEqual(f.library.items.filter{$0.origin == .generated}.count,existing)
-    XCTAssertEqual(f.controller.history.filter{$0.status == .cancelled}.count,1);XCTAssertEqual(f.store.project,next)
+    XCTAssertTrue(f.controller.history.isEmpty);XCTAssertEqual(f.store.project,next)
+    let records=try FileManager.default.contentsOfDirectory(at:f.root.appendingPathComponent("StudioAssets/GenerationRuns"),includingPropertiesForKeys:nil)
+    let saved=records.compactMap{try? JSONDecoder.form.decode(StudioGenerationRun.self,from:Data(contentsOf:$0))}
+    XCTAssertEqual(saved.filter{$0.status == .cancelled && $0.capture.projectID==captured.projectID}.count,1)
   }
   func testFailureFixturesRetryAndExplicitCancelPreserveSourceAndNoPartialResults()async throws {
     let f=try Fixture();defer{f.close()};let before=f.store.project!
@@ -173,7 +176,7 @@ import XCTest
     // terminal overwrite; the Library's committed batch is the recovery proof.
     try FileManager.default.removeItem(at:path);try FileManager.default.moveItem(at:backup,to:path)
     XCTAssertEqual(try Data(contentsOf:path),original)
-    let durableLibrary=StudioAssetLibrary(root:f.root)
+    let durableLibrary=StudioAssetLibrary(root:f.root,projectID:f.store.project!.id)
     let reopened=StudioImageGenerationController(store:f.store,library:durableLibrary)
     let recovered=try XCTUnwrap(reopened.history.first{$0.id==started.id})
     XCTAssertEqual(recovered.status,.succeeded);XCTAssertEqual(recovered.outputAssetIDs,completed.outputAssetIDs)
@@ -189,10 +192,76 @@ import XCTest
     XCTAssertEqual(f.controller.currentRun?.status,.cancelled);XCTAssertFalse(f.controller.busy)
     XCTAssertTrue(f.controller.error?.contains("history") == true);XCTAssertTrue(f.library.items.filter{$0.origin == .generated}.isEmpty)
     try FileManager.default.removeItem(at:path);try FileManager.default.moveItem(at:backup,to:path)
-    let durableLibrary=StudioAssetLibrary(root:f.root)
+    let durableLibrary=StudioAssetLibrary(root:f.root,projectID:f.store.project!.id)
     let reopened=StudioImageGenerationController(store:f.store,library:durableLibrary)
     XCTAssertEqual(reopened.history.first(where:{$0.id==run.id})?.status,.cancelled)
     f.controller.resetForProjectChange();XCTAssertNil(f.controller.error);XCTAssertNil(f.controller.capture);XCTAssertNil(f.controller.currentRun)
     XCTAssertEqual(f.store.project,source)
+  }
+  func testSharedRootHistoryAndOutputActionsStayScopedAndNeverRewriteForeignRuns()async throws {
+    let f=try Fixture();defer{f.close()};let projectA=f.store.project!
+    await f.controller.captureScene();await f.controller.generate()
+    let runA=try XCTUnwrap(f.controller.currentRun),outputA=try XCTUnwrap(runA.outputAssetIDs.first)
+    let outputBytes=try Data(contentsOf:f.controller.imageURL(assetID:outputA))
+    var projectB=Project(name:"Private B");projectB.objects=[try projectB.makeObject(recipeID:"box")]
+    f.store.engine.project=projectB;f.store.studioComposition.reconcile();f.controller.reconcile()
+    XCTAssertTrue(f.controller.history.isEmpty);XCTAssertNil(f.controller.currentRun);XCTAssertNil(f.controller.capture)
+    XCTAssertThrowsError(try f.controller.imageURL(assetID:outputA),"An inactive cached controller must not expose its old project")
+    let libraryB=StudioAssetLibrary(root:f.root,projectID:projectB.id)
+    let controllerB=StudioImageGenerationController(store:f.store,library:libraryB,provider:LocalStudioImageGenerationProvider(delayNanoseconds:0),captureLimit:160)
+    controllerB.prompt="B local study";controllerB.options.size = .small
+    await controllerB.captureScene();await controllerB.generate()
+    let runB=try XCTUnwrap(controllerB.currentRun)
+    XCTAssertTrue(controllerB.history.allSatisfy{$0.capture.projectID==projectB.id})
+    controllerB.selectRun(runA.id);XCTAssertEqual(controllerB.currentRun?.id,runB.id)
+    XCTAssertThrowsError(try controllerB.imageURL(assetID:outputA))
+    controllerB.addReference(assetID:outputA);XCTAssertTrue(controllerB.references.isEmpty)
+    controllerB.iterate(resultAssetID:outputA);XCTAssertEqual(controllerB.currentRun?.id,runB.id)
+    let count=controllerB.history.count
+    controllerB.references=[.init(assetID:outputA,role:.style)]
+    await controllerB.generate();XCTAssertEqual(controllerB.history.count,count)
+    XCTAssertThrowsError(try controllerB.saveStylePreset(name:"Foreign references"))
+    // Many newer B records must not consume A's128-history allowance. Reading
+    // A must also leave B's interrupted records byte-for-byte untouched.
+    let directory=f.root.appendingPathComponent("StudioAssets/GenerationRuns")
+    var foreign=runB;foreign.status = .running;foreign.outputAssetIDs=[]
+    var originals=[URL:Data]()
+    for _ in 0..<129 {foreign.id=UUID();let data=try JSONEncoder.form.encode(foreign),url=directory.appendingPathComponent(foreign.id.uuidString+".json");try data.write(to:url);originals[url]=data}
+    f.store.engine.project=projectA;f.store.studioComposition.reconcile();f.controller.reconcile();controllerB.reconcile()
+    XCTAssertTrue(controllerB.history.isEmpty)
+    XCTAssertEqual(f.controller.history.map(\.id),[runA.id])
+    for (url,data) in originals {XCTAssertEqual(try Data(contentsOf:url),data)}
+    XCTAssertEqual(try Data(contentsOf:f.controller.imageURL(assetID:outputA)),outputBytes)
+    XCTAssertEqual(f.store.project,projectA)
+  }
+  func testProjectStylesAdoptOnlyOwnedLegacyReferencesAndPreserveGlobalBytes()async throws {
+    let f=try Fixture();defer{f.close()};let projectA=f.store.project!
+    await f.controller.captureScene();await f.controller.generate()
+    let assetA=try XCTUnwrap(f.controller.currentRun?.outputAssetIDs.first),png=try Data(contentsOf:f.controller.imageURL(assetID:assetA))
+    let projectB=Project(name:"Style owner B"),libraryB=StudioAssetLibrary(root:f.root,projectID:projectB.id)
+    let assetB=try libraryB.register(data:png,filename:"b.png",metadata:.init(kind:.image,origin:.uploaded,projectID:projectB.id))
+    let legacyA=StudioGenerationStylePreset(id:UUID(),name:"Legacy A",instructions:"A owned style",references:[.init(assetID:assetA,role:.style)])
+    let legacyB=StudioGenerationStylePreset(id:UUID(),name:"Legacy B",instructions:"B private style",references:[.init(assetID:assetB.id,role:.style)])
+    let unassigned=StudioGenerationStylePreset(id:UUID(),name:"Unassigned",instructions:"Ownership is unknown",references:[])
+    let legacyURL=f.root.appendingPathComponent("StudioAssets/GenerationStyles.json"),legacyBytes=try JSONEncoder.form.encode([legacyA,legacyB,unassigned])
+    try legacyBytes.write(to:legacyURL)
+    let restoredA=StudioImageGenerationController(store:f.store,library:f.library)
+    XCTAssertTrue(restoredA.stylePresets.contains{$0.id==legacyA.id})
+    XCTAssertFalse(restoredA.stylePresets.contains{$0.id==legacyB.id || $0.id==unassigned.id})
+    restoredA.applyStylePreset(legacyA);XCTAssertEqual(restoredA.references,legacyA.references)
+    restoredA.applyStylePreset(legacyB);XCTAssertEqual(restoredA.references,legacyA.references)
+    try restoredA.saveStylePreset(name:"A private saved")
+    let aFile=f.root.appendingPathComponent("StudioAssets/GenerationStyles/\(projectA.id.uuidString).json"),aBytes=try Data(contentsOf:aFile)
+    f.store.engine.project=projectB;f.store.studioComposition.reconcile()
+    let restoredB=StudioImageGenerationController(store:f.store,library:libraryB)
+    XCTAssertTrue(restoredB.stylePresets.contains{$0.id==legacyB.id})
+    XCTAssertFalse(restoredB.stylePresets.contains{$0.id==legacyA.id || $0.id==unassigned.id})
+    restoredB.applyStylePreset(legacyB);try restoredB.saveStylePreset(name:"B private saved")
+    restoredB.references=[.init(assetID:assetA,role:.subject)]
+    XCTAssertThrowsError(try restoredB.saveStylePreset(name:"Must not cross scopes"))
+    XCTAssertEqual(try Data(contentsOf:legacyURL),legacyBytes);XCTAssertEqual(try Data(contentsOf:aFile),aBytes)
+    XCTAssertEqual(f.store.project,projectB)
+    f.store.engine.project=projectA;restoredA.reconcile()
+    XCTAssertTrue(restoredA.stylePresets.contains{$0.name=="A private saved"});XCTAssertFalse(restoredA.stylePresets.contains{$0.id==legacyB.id})
   }
 }

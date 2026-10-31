@@ -35,7 +35,7 @@ import SwiftUI
       case .openAISetup: return .init(width: 480, height: 570)
       }
     }
-    var isProjectScoped: Bool { self == .projectInfo || self == .printPreparation }
+    var isProjectScoped: Bool { self == .projectInfo || self == .printPreparation || self == .assets }
   }
 
   private(set) weak var store: StudioStore?
@@ -121,7 +121,7 @@ import SwiftUI
     let window = StudioUtilityWindow(contentRect: .init(origin: .zero, size: kind.size),
       styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: false)
     window.identifier = .init("lab.utility." + kind.rawValue)
-    window.title = kind.title
+    window.title = kind == .assets ? "Library · "+(store.project?.name ?? "Project"):kind.title
     window.contentMinSize = kind.minimumSize
     window.isReleasedWhenClosed = false
     window.delegate = self
@@ -132,12 +132,12 @@ import SwiftUI
     case .projectInfo: content = AnyView(ProjectInfoView(onClose: close).environmentObject(store).labInterface())
     case .printPreparation: content = AnyView(PrintWorkspace(printing: store.printing, onClose: close).environmentObject(store).labInterface())
     case .assets:
-      content = AnyView(AssetLibraryWorkspace(library:store.studioAssets,onClose:close,
+      content = AnyView(AssetLibraryWorkspace(library:store.studioAssets,projectName:store.project?.name ?? "Project",onClose:close,
         onUseInCanvas:{[weak store] asset in store?.placeLibraryAssetOnCanvas(asset)},
         onUseAsReference:{[weak store] asset in store?.useLibraryAssetAsReference(asset)},
         onOpenGeneration:{[weak store] id in store?.reviewStudioImageRun(id)}).labInterface())
     case .openAISetup:
-      content = AnyView(OpenAIConnectionPreviewView(controller:store.studioImages.connection,onClose:close).labInterface())
+      content = AnyView(OpenAIConnectionPreviewView(controller:store.studioImageConnection,onClose:close).labInterface())
     }
     window.contentViewController = NSHostingController(rootView: content)
     window.center()

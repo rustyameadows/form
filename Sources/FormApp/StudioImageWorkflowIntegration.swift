@@ -16,6 +16,7 @@ extension StudioStore {
   }
 
   func openAssetLibrary() {
+    guard project != nil,!showingHome else{return}
     showingAssets=true
     Task {await studioAssets.refresh()}
   }
@@ -29,22 +30,23 @@ extension StudioStore {
   }
 
   func reviewStudioImageRun(_ id:UUID) {
-    guard studioImages.history.contains(where:{$0.id==id}) else {return}
-    if project != nil {showEnvironment(.studio)}
-    else {showingHome=false;environment = .studio;mode = .studio}
+    guard let project,!showingHome,studioImages.history.contains(where:{$0.id==id && $0.capture.projectID==project.id}) else {return}
+    showEnvironment(.studio)
     studioShowingShots=false;studioShowingImages=true
     studioImages.selectRun(id)
   }
 
   func useLibraryAssetAsReference(_ asset:StudioAsset) {
-    guard project != nil else {error="Open a project and compose a scene before adding a rendering reference.";return}
+    guard project != nil,!showingHome else{return}
+    guard asset.metadata.projectID==project?.id else{return}
     guard asset.kind == .image else {error="Choose an image as a rendering reference.";return}
     createStudioStill()
     studioImages.addReference(assetID:asset.id)
   }
 
   func placeLibraryAssetOnCanvas(_ asset:StudioAsset) {
-    guard project != nil else {error="Open a project before placing a Library asset on Canvas.";return}
+    guard project != nil,!showingHome else{return}
+    guard asset.metadata.projectID==project?.id else{return}
     guard [.image,.pdf,.vector].contains(asset.kind) else {error="Choose an image, PDF or vector to place on Canvas.";return}
     do {
       let url=try studioAssets.fileURL(for:asset)

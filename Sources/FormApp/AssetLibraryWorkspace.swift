@@ -27,6 +27,7 @@ import SwiftUI
 
 @MainActor struct AssetLibraryWorkspace:View {
   @ObservedObject var library:StudioAssetLibrary
+  var projectName="Project"
   var onClose:(()->Void)?=nil
   var onUseInCanvas:((StudioAsset)->Void)?=nil
   var onUseAsReference:((StudioAsset)->Void)?=nil
@@ -34,7 +35,6 @@ import SwiftUI
   @State private var query=""
   @State private var origin:StudioAssetOrigin?
   @State private var kind:StudioAssetKind?
-  @State private var projectID:UUID?
   @State private var favoritesOnly=false
   @State private var list=false
   @State private var selectedID:UUID?
@@ -44,39 +44,50 @@ import SwiftUI
   private var filtered:[StudioAsset] {
     let words=query.folding(options:[.caseInsensitive,.diacriticInsensitive],locale:.current).split(whereSeparator:\.isWhitespace)
     return library.visibleItems.filter {item in
-      guard origin==nil || item.origin==origin,kind==nil || item.kind==kind,projectID==nil || item.metadata.projectID==projectID,!favoritesOnly || item.favorite else{return false}
+      guard origin==nil || item.origin==origin,kind==nil || item.kind==kind,!favoritesOnly || item.favorite else{return false}
       let text=[item.name,item.filename,item.metadata.projectName ?? "",item.metadata.prompt ?? "",item.metadata.provider ?? "",item.kind.title].joined(separator:" ").folding(options:[.caseInsensitive,.diacriticInsensitive],locale:.current)
       return words.allSatisfy{text.contains($0)}
     }
   }
   private var selected:StudioAsset? {selectedID.flatMap{library.asset(id:$0)}}
-  private var projects:[(id:UUID,name:String)] {
-    var values=[UUID:String]()
-    for item in library.items {if let id=item.metadata.projectID {values[id]=item.metadata.projectName ?? "Project"}}
-    return values.map{(id:$0.key,name:$0.value)}.sorted{$0.name.localizedStandardCompare($1.name) == .orderedAscending}
-  }
+  private var hasFilters:Bool {origin != nil || kind != nil || favoritesOnly}
+  private func clearFilters(){origin=nil;kind=nil;favoritesOnly=false}
   var body:some View {
     VStack(spacing:0) {
-      HStack(spacing:12) {
-        Text("Asset Library").font(.system(size:17,weight:.semibold))
-        Spacer()
+      HStack(spacing:8) {
+        Text("Library").font(.system(size:14,weight:.semibold))
         if library.isLoading {ProgressView().controlSize(.small)}
-        Button {Task{await library.refresh()}} label:{Image(systemName:"arrow.clockwise")}.buttonStyle(.borderless).help("Refresh project Assets and Exports")
-        Button("Import files…",action:importFiles).buttonStyle(.bordered)
+        Spacer(minLength:4)
+        HStack(spacing:6) {
+          Image(systemName:"magnifyingglass").font(.system(size:11)).foregroundStyle(Palette.secondary)
+          TextField("Search assets",text:$query).textFieldStyle(.plain).font(.system(size:12))
+            .accessibilityLabel("Search project Library")
+          if !query.isEmpty {AppCloseButton("Clear asset search"){query=""}}
+        }.padding(.horizontal,8).frame(height:28).background(Palette.surface,in:RoundedRectangle(cornerRadius:6))
+          .frame(minWidth:140,maxWidth:280)
+        Menu {
+          Picker("Source",selection:$origin) {
+            Text("All assets").tag(StudioAssetOrigin?.none)
+            ForEach(StudioAssetOrigin.allCases,id:\.self){Text($0.title).tag(Optional($0))}
+          }
+          Picker("File type",selection:$kind) {
+            Text("All types").tag(StudioAssetKind?.none)
+            ForEach(StudioAssetKind.allCases,id:\.self){Text($0.title).tag(Optional($0))}
+          }
+          Toggle("Favorites only",isOn:$favoritesOnly)
+          if hasFilters {Button("Clear filters",action:clearFilters)}
+          Divider()
+          Button("Refresh"){Task{await library.refresh()}}
+        }label:{Image(systemName:hasFilters ? "line.3.horizontal.decrease.circle.fill":"line.3.horizontal.decrease")
+          .font(WorkspaceToolbarMetrics.symbolFont).frame(width:32,height:32)}
+          .menuStyle(.borderlessButton).fixedSize().help("Filter project assets")
+          .accessibilityLabel("Filter project assets").accessibilityIdentifier("project-library-filters")
+        Picker("Layout",selection:$list) {
+          Image(systemName:"square.grid.2x2").tag(false);Image(systemName:"list.bullet").tag(true)
+        }.labelsHidden().pickerStyle(.segmented).controlSize(.small).frame(width:66)
+        WorkspaceToolbarButton("Import files",symbol:"plus",identifier:"project-library-import",action:importFiles)
         if let onClose {AppCloseButton("Close Asset Library",action:onClose)}
-      }.padding(16)
-      HStack(spacing:12) {
-        Image(systemName:"magnifyingglass").foregroundStyle(Palette.secondary)
-        TextField("Search names, prompts, or projects",text:$query).textFieldStyle(InspectorTextFieldStyle()).accessibilityLabel("Search Asset Library")
-        Picker("Layout",selection:$list) {Image(systemName:"square.grid.2x2").tag(false);Image(systemName:"list.bullet").tag(true)}.labelsHidden().pickerStyle(.segmented).frame(width:76)
-      }.padding(.horizontal,16).padding(.bottom,12)
-      HStack(spacing:10) {
-        Picker("Show",selection:$origin) {Text("All assets").tag(StudioAssetOrigin?.none);ForEach(StudioAssetOrigin.allCases,id:\.self){Text($0.title).tag(Optional($0))}}.labelsHidden().inspectorPicker().frame(width:160)
-        Picker("Type",selection:$kind) {Text("All types").tag(StudioAssetKind?.none);ForEach(StudioAssetKind.allCases,id:\.self){Text($0.title).tag(Optional($0))}}.labelsHidden().inspectorPicker().frame(width:150)
-        Picker("Project",selection:$projectID) {Text("All projects").tag(UUID?.none);ForEach(projects,id:\.id){Text($0.name).tag(Optional($0.id))}}.labelsHidden().inspectorPicker().frame(width:200)
-        Toggle(isOn:$favoritesOnly){Image(systemName:favoritesOnly ? "star.fill":"star")}.toggleStyle(.button).help("Favorites only")
-        Spacer(minLength:0)
-      }.font(.system(size:11)).padding(.horizontal,16).padding(.bottom,12)
+      }.padding(.horizontal,12).padding(.vertical,6).accessibilityIdentifier("project-library-toolbar")
       Divider()
       if let text=issue ?? library.issue {Text(text).font(.system(size:11)).foregroundStyle(Palette.accent).frame(maxWidth:.infinity,alignment:.leading).padding(12)}
       HStack(spacing:0) {
@@ -87,8 +98,7 @@ import SwiftUI
       HStack {
         Text("\(filtered.count) assets").font(.system(size:10,design:.monospaced))
         Spacer()
-        Text("Project files stay in their original folders.").font(.system(size:10)).foregroundStyle(Palette.secondary)
-      }.padding(.horizontal,16).padding(.vertical,10)
+      }.padding(.horizontal,16).padding(.vertical,6)
     }.background(Palette.paper).foregroundStyle(Palette.ink)
       .task {await library.refresh()}
       .alert("Rename asset",isPresented:Binding(get:{renameID != nil},set:{if !$0{renameID=nil}})) {
@@ -102,9 +112,11 @@ import SwiftUI
     if values.isEmpty {
       VStack(spacing:14) {
         Image(systemName:library.isLoading ? "tray":"photo.on.rectangle.angled").font(.system(size:35,weight:.ultraLight)).foregroundStyle(Palette.secondary)
-        Text(library.isLoading ? "Indexing your project files…":library.visibleItems.isEmpty ? "Your assets will appear here":"No matching assets").font(.system(size:14,weight:.medium))
-        Text("Import local files, save a Studio image, or generate a demo still.").font(.system(size:11)).foregroundStyle(Palette.secondary).multilineTextAlignment(.center)
-        Button("Import files…",action:importFiles)
+        Text(library.isLoading ? "Indexing your project files…":library.visibleItems.isEmpty ? "This project’s library is empty":"No matching assets").font(.system(size:14,weight:.medium))
+        Text(library.visibleItems.isEmpty ? "Files you upload or export in this project will appear here.":"Try another search or clear the filters.")
+          .font(.system(size:11)).foregroundStyle(Palette.secondary).multilineTextAlignment(.center)
+        if library.visibleItems.isEmpty {Button("Import files…",action:importFiles)}
+        else {Button("Clear search and filters"){query="";clearFilters()}}
       }.padding(24).frame(maxWidth:.infinity,maxHeight:.infinity)
     }else {
       ScrollView {
@@ -182,7 +194,7 @@ import SwiftUI
     let panel=NSOpenPanel();panel.canChooseFiles=true;panel.canChooseDirectories=false;panel.allowsMultipleSelection=true
     panel.prompt="Import copies"
     panel.begin {response in guard response == .OK else{return};Task { @MainActor in
-      for url in panel.urls {do{let item=try await library.importFile(url);selectedID=item.id;issue=nil}catch{issue=error.localizedDescription}}
+      for url in panel.urls {do{let item=try await library.importFile(url,metadata:.init(kind:.infer(url.lastPathComponent),origin:.uploaded,projectID:library.projectID,projectName:projectName));selectedID=item.id;issue=nil}catch{issue=error.localizedDescription}}
     }}
   }
   private func saveCopy(_ item:StudioAsset) {

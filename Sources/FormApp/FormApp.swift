@@ -178,7 +178,7 @@ import SwiftUI
       CommandMenu("Studio") {
         Button("Show Studio") { store.showEnvironment(.studio) }.disabled(store.project == nil)
         Button("Create AI Still…") {store.createStudioStill()}.disabled(store.project == nil)
-        Button("Asset Library") {store.openAssetLibrary()}
+        Button("Project Library") {store.openAssetLibrary()}.disabled(store.project == nil || store.showingHome)
         Button("OpenAI Connection…") {store.showingOpenAISetup=true}
         Divider()
         Button("Document Fonts…") {store.showingDocumentFonts=true}.disabled(store.project==nil)
