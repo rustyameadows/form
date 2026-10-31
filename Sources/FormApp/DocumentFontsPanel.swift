@@ -11,25 +11,29 @@ struct DocumentFontsPanel:View {
   @State private var choosing=false
   @State private var showAll=false
   @State private var report:[String:Any]?
+  @State private var context:FontDocumentContext
+  init(session:ArtworkSession) {
+    self.session=session;_context=State(initialValue:FontDocumentContext(store:session.store))
+  }
+  private var currentProject:Bool {context.matches(session.store)}
   private var usage:[[String:Any]] {session.store?.project.map{FontLibraryCatalog.usage($0)} ?? []}
   private var missing:Int {usage.filter{$0["available"] as? Bool==false}.count}
   private var selected:[[String:Any]] {usage.filter{$0["font_name"] as? String==from}}
   private func review() {
     guard let store=session.store else{return}
-    do {report=try store.replaceFontCall(["from_font":from,"to_font":to,"dry_run":true]) as? [String:Any]}
+    do {report=try store.replaceDocumentFont(from:from,to:to,context:context,dryRun:true) as? [String:Any]}
     catch {store.error=error.localizedDescription}
   }
   private func replace() {
     guard let store=session.store else{return}
     do {
-      _ = try store.replaceFontCall(["from_font":from,"to_font":to,"dry_run":true])
-      session.canvas?.finishText()
-      report=try store.replaceFontCall(["from_font":from,"to_font":to,"_source":"Studio"]) as? [String:Any]
+      report=try store.replaceDocumentFont(from:from,to:to,context:context,dryRun:false) as? [String:Any]
     }catch {store.error=error.localizedDescription}
   }
   var body:some View {
     VStack(alignment:.leading,spacing:15) {
       HStack {Text("Document fonts").font(.system(size: 22, weight: .semibold));Spacer();AppCloseButton("Close", keyEquivalent: "\u{1b}"){dismiss()}}
+      if !currentProject {Text("The project changed. Close and reopen Document fonts for the current project.").font(.system(size:11)).foregroundStyle(Palette.secondary)}
       ScrollView {
       VStack(alignment:.leading,spacing:15) {
       Text("\(usage.count) assigned faces · \(missing) missing").font(.system(size:11)).foregroundStyle(missing>0 ? Palette.accent:Palette.secondary)
@@ -66,7 +70,10 @@ struct DocumentFontsPanel:View {
         }.font(.system(size:10))
         HStack {
           Button(to.isEmpty ? "Choose installed replacement…":to) {choosing=true}
-            .popover(isPresented:$choosing) {FontBrowser(session:session,onChoose:{name in to=name;report=nil;choosing=false})}
+            .popover(isPresented:$choosing) {FontBrowser(session:session,onChoose:{name in
+              guard context.matches(session.store) else{choosing=false;return}
+              to=name;report=nil;choosing=false
+            })}
           Spacer()
           Button("Review") {review()}.disabled(to.isEmpty || from==to)
         }
@@ -76,7 +83,7 @@ struct DocumentFontsPanel:View {
           Button("Replace throughout document") {replace()}.disabled((report["replaced_assignments"] as? Int ?? 0)==0)
         }
       }
-      }.frame(maxWidth:.infinity,alignment:.leading)
+      }.frame(maxWidth:.infinity,alignment:.leading).disabled(!currentProject)
       }
     }.padding(24).frame(width:570,height:610).background(Palette.paper)
   }

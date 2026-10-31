@@ -31,6 +31,7 @@ struct RootView: View {
       if let surface { store.activateDesignSurface(surface) }
     }
     .sheet(isPresented:$store.showingDocumentFonts) {DocumentFontsPanel(session:store.artworkSession)}
+    .sheet(item:$store.fontExploration) {FontExplorer(session:store.artworkSession,state:$0)}
     .background {ModelAssetImportPresenter(store:store)}
     .background {CADModelEditorPresenter(store:store)}
     .background { StudioUtilityWindowPresenter(store: store).frame(width: 0, height: 0) }

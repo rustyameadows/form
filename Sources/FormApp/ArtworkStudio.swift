@@ -159,6 +159,7 @@ struct ArtworkStudio: View {
       Divider()
       Button("Palette…", systemImage: "swatchpalette") { session.showingPalette = true }
       Button("Text styles…", systemImage: "textformat.size") { session.showingTextStyles = true }
+      Button("Explore fonts…", systemImage: "textformat") { store.fontExploration = FontBrowsingState(session:session) }
       if let construction = session.paperContext {
         Menu("Artwork side") {
           Picker("Artwork side", selection: Binding(get: { store.paperInside }, set: {

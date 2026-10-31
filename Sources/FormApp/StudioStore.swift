@@ -123,6 +123,7 @@ enum TableTool: String, CaseIterable {
   lazy var cad=CADModelCoordinator(store:self)
   let constructionValidation=ConstructionValidationCoordinator()
   @Published var showingDocumentFonts=false
+  @Published var fontExploration:FontBrowsingState?
   var fontLibraryPreferences=FontLibraryPreferences.environment()
   lazy var cloth = ClothCoordinator(store:self)
   lazy var artworkSession = ArtworkSession(store: self)
@@ -232,6 +233,7 @@ enum TableTool: String, CaseIterable {
       self?.artworkSession.showingTabs = false
       self?.artworkSession.showingGlyphs = false
       self?.showingDocumentFonts=false
+      self?.fontExploration=nil
     }
   }
   func finishArtworkEditing() {
@@ -413,15 +415,16 @@ enum TableTool: String, CaseIterable {
     revision &+= 1
     scheduleSave()
   }
-  /// Only the two explicit metadata records may differ on this fast path.
+  /// Only these explicit metadata records may differ on this fast path.
   /// Every other source field compares exactly; physical history retains its
   /// established invalidation/reset behavior.
   func historyRecordsChanged(from before:Project?) {
     if let before,let project,ArtworkPageSetup.containsOnlyPageSetupChanges(before,project) {metadataRecordsChanged();return}
     if var previous=before,var current=project,
-      previous.studioPresentation != current.studioPresentation || previous.collectionProduction != current.collectionProduction {
+      previous.studioPresentation != current.studioPresentation || previous.collectionProduction != current.collectionProduction || previous.fontLibrary != current.fontLibrary {
       previous.studioPresentation=nil;current.studioPresentation=nil
       previous.collectionProduction=nil;current.collectionProduction=nil
+      previous.fontLibrary=nil;current.fontLibrary=nil
       previous.history=[];current.history=[]
       previous.updatedAt=Date(timeIntervalSince1970:0);current.updatedAt=previous.updatedAt
       previous.schemaVersion=1;current.schemaVersion=1

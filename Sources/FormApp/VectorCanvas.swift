@@ -362,6 +362,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   private var publicationEditor:PublicationEditingController?
   var hasMarkedTextInput:Bool {textView?.hasMarkedText() ?? false}
+  var activeTextView:CanvasTextView? {textView as? CanvasTextView}
   var activeStoryView:CanvasTextView? {publicationEditor == nil ? nil:textView as? CanvasTextView}
   var storyEditor:PublicationEditingController? {publicationEditor}
   private var textHost: NativeAffineView?
@@ -2554,15 +2555,31 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     do {try text.applyParagraphList(arguments)}catch{session?.store?.error=error.localizedDescription}
     return true
   }
+  /// Attribute conversion needs the actual glyph coverage context. A synthetic
+  /// Latin sample would mistake an emoji/RTL display fallback for an authored
+  /// font change. Caret attributes normally inherit the preceding grapheme.
+  private func textStyleSample(_ attributes:[NSAttributedString.Key:Any],range:NSRange,in view:NSTextView)->NSAttributedString {
+    let text=view.string as NSString
+    let sample:String
+    if range.length>0,range.location>=0,range.location<text.length,range.length<=text.length-range.location {
+      sample=text.substring(with:range)
+    } else if text.length>0 {
+      let index=min(text.length-1,max(0,range.location-1))
+      sample=text.substring(with:text.rangeOfComposedCharacterSequence(at:index))
+    } else {sample="A"}
+    return NSAttributedString(string:sample,attributes:attributes)
+  }
   func textInspection() -> TextSpan? {
     guard let tv = textView else { return nil }
     let range = tv.selectedRange()
-    let attrs =
-      range.length > 0 && range.location < (tv.textStorage?.length ?? 0)
-      ? tv.textStorage?.attributes(at: range.location, effectiveRange: nil) ?? tv.typingAttributes
-      : tv.typingAttributes
+    var sampleRange=range,attrs=tv.typingAttributes
+    if range.length>0,range.location<(tv.textStorage?.length ?? 0) {
+      var effective=NSRange()
+      attrs=tv.textStorage?.attributes(at:range.location,effectiveRange:&effective) ?? attrs
+      sampleRange=NSIntersectionRange(range,effective)
+    }
     return TypographyEngine.spans(
-      from: NSAttributedString(string: "A", attributes: attrs),
+      from:textStyleSample(attrs,range:sampleRange,in:tv),
       fallback: session?.primary?.typography ?? .init(), utf16Offset: TextCase.source(tv.attributedString()).sourceRange(range).location
     ).first
   }
@@ -2608,8 +2625,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let mapping=TextCase.source(tv.attributedString())
     let selected = tv.selectedRange()
     let partial = selected.location != 0 || selected.length != tv.string.utf16.count
-    func attributes(_ raw: [NSAttributedString.Key: Any], at location: Int) -> [NSAttributedString.Key: Any] {
-      let old = TypographyEngine.spans(from: NSAttributedString(string: "A", attributes: raw), fallback: fallback, utf16Offset: mapping.sourceRange(NSRange(location:location,length:0)).location)[0]
+    func attributes(_ raw: [NSAttributedString.Key: Any], in part:NSRange) -> [NSAttributedString.Key: Any] {
+      let old = TypographyEngine.spans(from:textStyleSample(raw,range:part,in:tv),fallback:fallback,utf16Offset:mapping.sourceRange(NSRange(location:part.location,length:0)).location)[0]
       let style = (command == "assign" ? styleID : old.textStyle?.styleID).flatMap { styles[$0] }
       let changed = command == "reset"
         ? TextStyleCommands.resetting(old, styles: styles, preservingParagraphs: partial)
@@ -2625,14 +2642,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     let range = GlyphEngine.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString())
     if range.length == 0 {
-      tv.typingAttributes = attributes(tv.typingAttributes, at: range.location)
+      tv.typingAttributes = attributes(tv.typingAttributes,in:range)
       session?.objectWillChange.send()
       return true
     }
     let undoRange = command == "reset" ? (tv.string as NSString).paragraphRange(for: range) : range
     guard tv.shouldChangeText(in: undoRange, replacementString: nil) else { return true }
     var replacements: [(NSRange, [NSAttributedString.Key: Any])] = []
-    tv.attributedString().enumerateAttributes(in: range) { raw, part, _ in replacements.append((part, attributes(raw, at: part.location))) }
+    tv.attributedString().enumerateAttributes(in: range) { raw, part, _ in replacements.append((part, attributes(raw,in:part))) }
     tv.textStorage?.beginEditing()
     for (part, raw) in replacements { tv.textStorage?.setAttributes(raw, range: part) }
     if command == "reset" {
@@ -2693,8 +2710,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let range=tv.selectedRange(),fallback=session?.primary?.typography ?? .init()
     if range.length==0 {return [textInspection()?.typography ?? fallback]}
     var result:[Typography]=[]
-    tv.attributedString().enumerateAttributes(in:range) {raw,_,_ in
-      if let type=TypographyEngine.spans(from:NSAttributedString(string:"A",attributes:raw),fallback:fallback).first?.typography {result.append(type)}
+    tv.attributedString().enumerateAttributes(in:range) {raw,part,_ in
+      if let type=TypographyEngine.spans(from:textStyleSample(raw,range:part,in:tv),fallback:fallback).first?.typography {result.append(type)}
     }
     return result
   }
@@ -2706,9 +2723,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if let type=textInspection()?.typography {try OpticalTypography.validateEdit(value,fontName:type.fontName)}
     }else {
       var failure:Error?
-      tv.attributedString().enumerateAttributes(in:range) {raw,_,stop in
+      tv.attributedString().enumerateAttributes(in:range) {raw,part,stop in
         do {
-          let type=TypographyEngine.spans(from:NSAttributedString(string:"A",attributes:raw),fallback:fallback).first!.typography
+          let type=TypographyEngine.spans(from:textStyleSample(raw,range:part,in:tv),fallback:fallback).first!.typography
           try OpticalTypography.validateEdit(value,fontName:type.fontName)
         }catch {failure=error;stop.pointee=true}
       }
@@ -2743,7 +2760,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     var replacements: [(NSRange, [NSAttributedString.Key: Any])] = []
     tv.attributedString().enumerateAttributes(in: range) { attributes, part, _ in
       if let run = TypographyEngine.spans(
-        from: NSAttributedString(string: "A", attributes: attributes), fallback: fallback, utf16Offset: mapping.sourceRange(NSRange(location:part.location,length:0)).location
+        from:textStyleSample(attributes,range:part,in:tv),fallback:fallback,utf16Offset:mapping.sourceRange(NSRange(location:part.location,length:0)).location
       ).first {
         var t = run.typography
         body(&t)
@@ -2787,21 +2804,16 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return (tv.textStorage?.attribute(TypographyEngine.pairKey, at: index, effectiveRange: nil) as? NSNumber)?.doubleValue ?? 0
   }
   func applyTextSize(_ size: Double) -> Bool {
-    guard let tv = textView else { return false }
-    if opticalSizingInspection()?.contains(where:{$0.opticalSizing != nil || $0.characterPosition != nil})==true {return applyOpticalTextSize(size)}
-    let range = tv.selectedRange()
-    let font =
-      (range.location < (tv.textStorage?.length ?? 0)
-      ? tv.textStorage?.attribute(.font, at: range.location, effectiveRange: nil)
-      : tv.typingAttributes[.font]) as? NSFont ?? .systemFont(ofSize: size)
-    return changeText([.font: NSFont(descriptor: font.fontDescriptor, size: size) ?? font])
+    // Every run owns its face and fallback. Resizing from the first run's
+    // native font would assign that face across a mixed selection.
+    applyOpticalTextSize(size)
   }
   private func applyOpticalTextSize(_ size:Double)->Bool {
     guard let tv=textView else{return false}
     let range=GlyphEngine.expandedDisplayRange(tv.selectedRange(),in:tv.attributedString()),fallback=session?.primary?.typography ?? .init()
     let mapping=TextCase.source(tv.attributedString())
-    func resized(_ raw:[NSAttributedString.Key:Any],at location:Int)->[NSAttributedString.Key:Any] {
-      let run=TypographyEngine.spans(from:NSAttributedString(string:"A",attributes:raw),fallback:fallback,utf16Offset:mapping.sourceRange(.init(location:location,length:0)).location)[0]
+    func resized(_ raw:[NSAttributedString.Key:Any],in part:NSRange)->[NSAttributedString.Key:Any] {
+      let run=TypographyEngine.spans(from:textStyleSample(raw,range:part,in:tv),fallback:fallback,utf16Offset:mapping.sourceRange(.init(location:part.location,length:0)).location)[0]
       var changed=run;changed.fontSize=size;changed=TextStyleCommands.recording(changed,from:run)
       var type=changed.typography;type.inheritedLanguage=raw[LanguageHyphenation.inheritedLanguageKey] as? String
       var attrs=TypographyEngine.attributes(type,size:size,color:changed.color,millimeters:false,swatchID:changed.swatchID,textStyle:changed.textStyle,paragraphStyle:changed.paragraphStyle,paintStack:changed.paintStack)
@@ -2810,10 +2822,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       return attrs
     }
     tv.undoManager?.beginUndoGrouping();defer{tv.undoManager?.endUndoGrouping()}
-    if range.length==0 {tv.typingAttributes=resized(tv.typingAttributes,at:range.location);session?.objectWillChange.send();return true}
+    if range.length==0 {tv.typingAttributes=resized(tv.typingAttributes,in:range);session?.objectWillChange.send();return true}
     guard tv.shouldChangeText(in:range,replacementString:nil) else{return true}
     var replacements:[(NSRange,[NSAttributedString.Key:Any])]=[]
-    tv.attributedString().enumerateAttributes(in:range) {raw,part,_ in replacements.append((part,resized(raw,at:part.location)))}
+    tv.attributedString().enumerateAttributes(in:range) {raw,part,_ in replacements.append((part,resized(raw,in:part)))}
     tv.textStorage?.beginEditing();for (part,attrs) in replacements {tv.textStorage?.setAttributes(attrs,range:part)}
     if let storage=tv.textStorage {TypographyEngine.updateSpacing(storage,range:range)}
     tv.textStorage?.endEditing();tv.didChangeText();return true

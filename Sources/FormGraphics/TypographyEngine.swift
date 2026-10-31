@@ -622,19 +622,25 @@ public enum FormColor {
       }
       let font = attrs[.font] as? NSFont ?? self.font(fallback, size: 14)
       let assignedFont = self.font(style, size: font.pointSize)
+      // TextKit substitutes coverage fonts in storage while retaining our
+      // authored style. Such a glyph fallback is not a new face assignment.
+      // Check the real characters and expected CoreText fallback, so changing
+      // a native font on characters the assigned face covers still takes effect.
+      let coverageFallback = attrs[styleKey] != nil && assignedFont.fontName != font.fontName
+        && isCoverageFallback(font, for:assignedFont, text:attributed.string, range:range)
       // AppKit can omit explicit selectors that currently equal a face's
       // defaults. Retain our assignment when the native font is unchanged;
       // otherwise a later font/default change would silently lose that intent.
       let assignedFeatures = assignedFont.fontDescriptor.object(forKey: .featureSettings) as? NSArray ?? []
       let actualFeatures = font.fontDescriptor.object(forKey: .featureSettings) as? NSArray ?? []
-      let preserveFeatures = attrs[styleKey] != nil && assignedFont.fontName == font.fontName
-        && assignedFeatures.isEqual(actualFeatures)
+      let preserveFeatures = coverageFallback || (attrs[styleKey] != nil && assignedFont.fontName == font.fontName
+        && assignedFeatures.isEqual(actualFeatures))
       let preserveOpticalFace = style.opticalSizing != nil && attrs[OpticalTypography.resolvedFaceKey] as? String == font.fontName
-      let preserveAssignedName = attrs[styleKey] != nil && (assignedFont.fontName == font.fontName || preserveOpticalFace)
+      let preserveAssignedName = attrs[styleKey] != nil && (assignedFont.fontName == font.fontName || preserveOpticalFace || coverageFallback)
       if !preserveAssignedName { style.fontName = font.fontName }
       let assignedVariations=assignedFont.fontDescriptor.object(forKey:.variation) as? NSDictionary ?? [:]
       let actualVariations=font.fontDescriptor.object(forKey:.variation) as? NSDictionary ?? [:]
-      if !(preserveAssignedName && assignedVariations.isEqual(actualVariations)),let values = font.fontDescriptor.object(forKey: .variation) as? [NSNumber: NSNumber] {
+      if !coverageFallback,!(preserveAssignedName && assignedVariations.isEqual(actualVariations)),let values = font.fontDescriptor.object(forKey: .variation) as? [NSNumber: NSNumber] {
         let legacyOptical=style.variations[OpticalSizing.axisID]
         style.variations = Dictionary(
           uniqueKeysWithValues: values.compactMap { entry in
@@ -719,6 +725,14 @@ public enum FormColor {
       result.append(span)
     }
     return result
+  }
+  private static func isCoverageFallback(_ actual:NSFont,for assigned:NSFont,text:String,range:NSRange)->Bool {
+    guard range.length>0 else{return false}
+    let part=(text as NSString).substring(with:range)
+    let visible=CharacterSet(charactersIn:part).subtracting(.whitespacesAndNewlines).subtracting(.controlCharacters)
+    guard !visible.isSubset(of:assigned.coveredCharacterSet) else{return false}
+    let fallback=CTFontCreateForString(assigned as CTFont,part as CFString,CFRange(location:0,length:part.utf16.count))
+    return (CTFontCopyPostScriptName(fallback) as String)==actual.fontName
   }
 }
 

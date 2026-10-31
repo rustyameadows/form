@@ -3,6 +3,15 @@ import FormCore
 import FormGraphics
 
 extension StudioStore {
+  func replaceDocumentFont(from:String,to:String,context:FontDocumentContext,dryRun:Bool) throws -> Any {
+    guard context.matches(self) else{throw FormError.invalid("The project changed. Reopen Document fonts for the current project.")}
+    let arguments:[String:Any]=["from_font":from,"to_font":to,"dry_run":true]
+    let report=try replaceFontCall(arguments)
+    if dryRun {return report}
+    artworkSession.canvas?.finishText()
+    guard context.matches(self) else{throw FormError.invalid("The project changed. Reopen Document fonts for the current project.")}
+    return try replaceFontCall(["from_font":from,"to_font":to,"dry_run":false,"_source":"Studio"])
+  }
   func preflightFontHandoff(_ name:String,_ arguments:[String:Any]) throws {
     if name=="form_replace_font" {var validation=arguments;validation["dry_run"]=true;_ = try replaceFontCall(validation);return}
     guard name=="form_edit_artwork",arguments["command"] as? String=="font" else{return}
@@ -57,9 +66,50 @@ extension StudioStore {
 }
 
 extension ArtworkSession {
-  func chooseFont(_ name:String) {
-    guard FontLibraryCatalog.installed(name) else{store?.error="The selected face is no longer available. Refresh the font browser.";return}
-    typography{$0.fontName=name}
-    store?.fontLibraryPreferences.used(name)
+  @discardableResult func chooseFont(_ name:String,context:FontSelectionContext?=nil)->Bool {
+    let context=context ?? captureFontSelection()
+    guard let store else{return false}
+    if let reason=fontSelectionUnavailableReason(context:context) {store.error=reason;return false}
+    // Existing inspector integrations may provide an installed family alias
+    // (for example Skia). Resolve it to the actual installed face; the browser
+    // itself already supplies exact catalog identities.
+    let name=FontLibraryCatalog.faces.contains(where:{$0.name==name}) ? name:(NSFont(name:name,size:14)?.fontName ?? name)
+    guard FontLibraryCatalog.faces.contains(where:{$0.name==name}),FontLibraryCatalog.installed(name) else{
+      store.error="The selected face is no longer available. Refresh the font browser.";return false
+    }
+    guard let objectID else{return false}
+    var arguments:[String:Any]=["object_id":objectID.uuidString,"element_ids":context.textElementIDs.map(\.uuidString),
+      "command":"font","font_name":name]
+    if let range=context.sourceRange,range.length>0 {arguments["location"]=range.location;arguments["length"]=range.length}
+    do {
+      // Validate locks, source ranges and shared-story ownership before moving
+      // focus or altering native storage. Failed picks never enter Recents.
+      try store.preflightFontHandoff("form_edit_artwork",arguments)
+      if context.wasEditing {
+        guard let view=context.nativeView,let range=context.sourceRange,let canvas else{return false}
+        let mapping=TextCase.source(view.attributedString())
+        guard view.window?.makeFirstResponder(view)==true else{
+          throw FormError.invalid("The text editor could not regain focus. Reopen the font picker.")
+        }
+        view.setSelectedRange(mapping.displayRange(range))
+        guard canvas.applyTextStyle({$0.fontName=name}) else{return false}
+        // NSTextView can veto an edit. A handled action is not by itself proof
+        // that a font was assigned, so inspect its resulting source attributes.
+        let assigned:Bool
+        if range.length==0 {assigned=canvas.textInspection()?.typography.fontName==name}
+        else {
+          let source=TextCase.source(view.attributedString()).text
+          let runs=TypographyEngine.spans(from:source.attributedSubstring(from:range),fallback:.init())
+          assigned = !runs.isEmpty && runs.allSatisfy{$0.typography.fontName==name}
+        }
+        guard assigned else{throw FormError.invalid("The text editor could not assign the selected face.")}
+      } else {
+        store.engine.endInteraction()
+        _ = try store.engine.call("form_edit_artwork",arguments:arguments,source:"Studio")
+        store.changed()
+      }
+      context.didApply();store.fontLibraryPreferences.used(name)
+      return true
+    } catch {store.error=error.localizedDescription;return false}
   }
 }
