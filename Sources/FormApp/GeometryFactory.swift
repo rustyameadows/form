@@ -364,7 +364,8 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
           switch part.kind {
           case "cylinder":
             let c = MeshCylinder(radius: mm(p["radius"] ?? 50), height: mm(p["height"] ?? 100))
-            c.radialSegmentCount = 64
+            if let segments = p["segments"], segments.isFinite { c.radialSegmentCount = Int(max(3, min(512, segments))) }
+            else { c.radialSegmentCount = 64 }
             geo = c
           case "cone":
             let c = MeshCone(
@@ -380,9 +381,11 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
             let w = p["width"] ?? 100
             let h = p["height"] ?? 100
             let d = p["depth"] ?? 100
-            geo = MeshBox(
+            let box = MeshBox(
               width: mm(w), height: mm(h), length: mm(d),
               chamferRadius: mm(min(p["corner"] ?? 1, w / 2, h / 2, d / 2)))
+            if let segments = p["segments"], segments.isFinite { box.chamferSegmentCount = Int(max(2, min(32, segments))) }
+            geo = box
           }
           var partMat = mat
           if let color = part.color {

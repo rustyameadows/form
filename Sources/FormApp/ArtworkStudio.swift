@@ -153,6 +153,16 @@ struct ArtworkStudio: View {
 
   private var actions: some View {
     Menu {
+      Menu("Place object view") {
+        ForEach(store.project?.objects.filter { $0.hasTablePresentation } ?? []) { object in
+          Button(object.name) { session.placeObjectView(object) }
+        }
+      }.disabled(store.project?.objects.contains(where: { $0.hasTablePresentation }) != true)
+      Menu("Place four object views") {
+        ForEach(store.project?.objects.filter { $0.hasTablePresentation } ?? []) { object in
+          Button(object.name) { session.placeObjectView(object, fourViews: true) }
+        }
+      }.disabled(store.project?.objects.contains(where: { $0.hasTablePresentation }) != true)
       Button("Place image…", systemImage: "photo.badge.plus") { session.importImage() }
       Button("Import editable SVG…", systemImage: "square.and.arrow.down") { store.importSVGDialog() }
       Button("New frame…", systemImage: "rectangle.badge.plus") { newFrame = true }

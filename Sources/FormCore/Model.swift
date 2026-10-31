@@ -129,6 +129,7 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   /// Original node settings for interoperability/recovery; native fields remain authoritative after edits.
   public var sourceMetadata: ArtworkSourceMetadata?
   public var imageGeneration: CanvasImageGenerationProvenance?
+  public var objectView: ObjectViewSettings?
   public init(
     kind: String, x: Double, y: Double, width: Double = 60, height: Double = 30, text: String = "",
     color: String = "#FFFFFF", fontSize: Double = 14, asset: String? = nil
@@ -443,6 +444,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if storedArtworks.contains(where: { $0.elements.contains(where: { $0.objectView != nil }) }) { return max(schemaVersion, 60) }
     if objects.contains(where: { $0.artwork?.elements.contains(where: { $0.imageGeneration != nil }) == true }) { return max(schemaVersion, 60) }
     if fontLibrary != nil {return max(schemaVersion,59)}
     if (textStories ?? []).contains(where:{$0.paintStack != nil || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) || objects.contains(where:{$0.artwork?.elements.contains(where:{$0.sourceMetadata != nil || $0.paintStack != nil || $0.effectStack != nil || $0.clipMode != nil || ["angular","diamond"].contains($0.gradient?.kind ?? "") || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) == true || $0.artwork?.imports?.contains(where:{$0.elementIDs != nil || $0.format != nil}) == true}) {return max(schemaVersion,58)}
