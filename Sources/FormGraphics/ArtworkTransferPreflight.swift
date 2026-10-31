@@ -9,8 +9,14 @@ import ImageIO
   public static func validate(_ bundle:ArtworkTransferBundle)throws->Report {
     try bundle.validate()
     let arts=[bundle.metadata.artwork]+bundle.metadata.components.map(\.artwork)
-    let rendered=Set(arts.flatMap{$0.elements.filter{$0.kind=="image"}.compactMap(\.asset)})
+    let rendered=Set(arts.flatMap{Array($0.renderedAssetNames)})
     var report=Report()
+    for art in arts {
+      for element in art.elements where TextPaintRenderer.usesPaints(element) {
+        try Task.checkCancellation()
+        try TextPaintRenderer.validateOutput(element)
+      }
+    }
     for asset in bundle.metadata.assets {
       let data=bundle.blobs[asset.sourceName]!,ext=URL(fileURLWithPath:asset.sourceName).pathExtension.lowercased()
       if ext=="icc" {guard !rendered.contains(asset.sourceName) else{throw FormError.invalid("An ICC profile cannot be used as an image asset.")};continue}

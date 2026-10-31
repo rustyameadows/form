@@ -42,7 +42,7 @@ public struct ArtworkProductionPage {
       let filtered = try ArtworkProduction.filtered(scoped,roles:[role])
       if filtered.contentIDs.isEmpty && role != .print {continue}
       if [.cut,.score,.stitch].contains(role) {
-        guard !filtered.artwork.elements.contains(where:{$0.kind == "image" || $0.hasActiveEffects}) else {
+        guard !filtered.artwork.elements.contains(where:{$0.kind == "image" || !$0.renderedAssetNames.isEmpty || $0.hasActiveEffects}) else {
           throw FormError.invalid("\(role.title) output needs vector geometry without images, blur, or shadows. Outline or simplify that layer first.")
         }
       }

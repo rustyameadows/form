@@ -294,6 +294,7 @@ public struct TextSpan: Codable, Equatable, Sendable {
   public var typography: Typography
   public var fontSize: Double
   public var color: String
+  public var paintStack: [ArtworkPaintLayer]?
   public var swatchID: UUID?
   public var textStyle: TextStyleReference?
   public var paragraphStyle: TextStyleReference?
@@ -395,7 +396,7 @@ extension Artwork {
       let before = required
       for e in elements where required.contains(e.id) {
         if let parent = e.parentID { required.insert(parent) }
-        if let clip = e.clipID { required.insert(clip) }
+        if let clip = e.clipID { required.formUnion(descendants(of: [clip])) }
       }
       if before == required { break }
     }
@@ -451,7 +452,7 @@ extension Artwork {
       var seen = Set<UUID>()
       while let id = parent, let item = elements.first(where: { $0.id == id }), !seen.contains(id) {
         seen.insert(id)
-        if item.hidden == true || (item.productionRole != nil && ArtworkProductionRole.resolve(item.productionRole) != .print) {
+        if !masks.contains(id) && (item.hidden == true || (item.productionRole != nil && ArtworkProductionRole.resolve(item.productionRole) != .print)) {
           return false
         }
         parent = item.parentID

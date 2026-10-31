@@ -86,6 +86,9 @@ import Foundation
         }.map { try build($0, depth: depth + 1, root: false) }
       }
       if !root, let id = e.clipID, let mask = index.byID[id] {
+        guard !ArtworkMasks.isCoverage(e.clipMode) else {
+          throw FormError.invalid("Boolean operands cannot flatten alpha or luminance masks. Keep the mask on the enclosing result.")
+        }
         node.mask = [try build(mask, depth: depth + 1, root: false)]
       }
       return node
@@ -194,11 +197,11 @@ import Foundation
     var removed = Set<UUID>()
     var replacements: [UUID: ArtworkElement] = [:]
     do {
-      for group in groups where group.hidden != true {
+      for group in groups where group.hidden != true || index.masks.contains(group.id) {
         var parent = group.parentID
         var skip = false
         while let id = parent, let ancestor = index.byID[id] {
-          if ancestor.booleanOperation != nil || ancestor.hidden == true {
+          if ancestor.booleanOperation != nil || (ancestor.hidden == true && !index.masks.contains(ancestor.id)) {
             skip = true
             break
           }
@@ -283,6 +286,7 @@ import Foundation
     result.opacity = opacity == 1 ? nil : opacity
     result.parentID = owner.parentID
     result.clipID = owner.clipID
+    result.clipMode = owner.clipMode
     result.productionRole = owner.productionRole
     result.contentSize = nil
     result.path = try definition(path, size: .init(result.width, result.height))

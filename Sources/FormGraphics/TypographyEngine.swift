@@ -21,6 +21,9 @@ public enum FormColor {
   public static let pointsPerMM = 72.0 / 25.4
   private static let styleKey = NSAttributedString.Key("studio.form.typography")
   public nonisolated static let swatchKey = NSAttributedString.Key("studio.form.swatch")
+  public static let paintStackKey = NSAttributedString.Key("studio.form.paintStack")
+  public static let inheritedPaintStackKey = NSAttributedString.Key("studio.form.inheritedPaintStack")
+  public static let paintColorKey = NSAttributedString.Key("studio.form.paintColor")
   public static let textStyleKey = NSAttributedString.Key("studio.form.textStyle")
   public static let paragraphStyleKey = NSAttributedString.Key("studio.form.paragraphTextStyle")
   public static let spacingKey = NSAttributedString.Key("studio.form.spacingAdjustment")
@@ -77,6 +80,8 @@ public enum FormColor {
     PublicationStoryLayout.invalidate()
     FontCatalog.invalidate()
     AppearanceRenderer.invalidateFonts()
+    TextPaintRenderer.invalidateFonts()
+    ArtworkMaskRenderer.invalidateFonts()
   }
   public static var diagnostics: [String: Any] {
     ["layout_builds": builds, "layout_cache_hits": hits, "layout_cache_limit": 800]
@@ -128,7 +133,8 @@ public enum FormColor {
     return NSFont(descriptor: base.fontDescriptor.addingAttributes(attrs), size: size) ?? base
   }
   public static func attributes(_ style: Typography, size: Double, color: String, millimeters: Bool,
-    swatchID: UUID? = nil, textStyle: TextStyleReference? = nil, paragraphStyle: TextStyleReference? = nil)
+    swatchID: UUID? = nil, textStyle: TextStyleReference? = nil, paragraphStyle: TextStyleReference? = nil,
+    paintStack: [ArtworkPaintLayer]? = nil)
     -> [NSAttributedString.Key: Any]
   {
     let f = millimeters ? 1 / pointsPerMM : 1
@@ -153,6 +159,7 @@ public enum FormColor {
     p.lineBreakMode = .byWordWrapping
     var result: [NSAttributedString.Key: Any] = [
       styleKey: (try? JSONEncoder.form.encode(style)) ?? Data(),
+      paintColorKey: color,
       .font: font(style, size: size * f,opticalPointSize:size), .foregroundColor: FormColor.color(color),
       .paragraphStyle: p, .baselineOffset: style.baseline * f,
       .ligature: style.ligatures,
@@ -165,6 +172,7 @@ public enum FormColor {
     if style.characterPosition != nil {result[CharacterTypography.seedKey]=CharacterTypography.seed(size:size,factor:f)}
     if let language=style.language ?? style.inheritedLanguage {result[LanguageHyphenation.languageKey]=language}
     if let language=style.inheritedLanguage {result[LanguageHyphenation.inheritedLanguageKey]=language}
+    if let paintStack { result[paintStackKey] = try? JSONEncoder.form.encode(paintStack) }
     if let swatchID { result[swatchKey] = swatchID.uuidString }
     if let textStyle { result[textStyleKey] = try? JSONEncoder.form.encode(textStyle) }
     if let paragraphStyle { result[paragraphStyleKey] = try? JSONEncoder.form.encode(paragraphStyle) }
@@ -186,8 +194,11 @@ public enum FormColor {
       type.inheritedLanguage=type.inheritedLanguage ?? base.language ?? base.inheritedLanguage
       result.setAttributes(
         attributes(type, size: run.fontSize, color: run.color, millimeters: millimeters,
-          swatchID: run.swatchID, textStyle: run.textStyle, paragraphStyle: run.paragraphStyle),
+          swatchID: run.swatchID, textStyle: run.textStyle, paragraphStyle: run.paragraphStyle, paintStack: run.paintStack),
         range: .init(location: run.location, length: run.length))
+    }
+    if let stack = element.paintStack, let data = try? JSONEncoder.form.encode(stack) {
+      result.addAttribute(inheritedPaintStackKey, value: data, range: NSRange(location: 0, length: result.length))
     }
     PublicationLists.apply(element.listItems ?? [],to:result)
     updateSpacing(result, millimeters: millimeters, fallbackPairs: base.pairKerning)
@@ -465,6 +476,59 @@ public enum FormColor {
     }
     context.restoreGState()
   }
+  static func matchesPaint(_ data: Data?, element: ArtworkElement, stack: [ArtworkPaintLayer]?) -> Bool {
+    let assigned = data.flatMap { try? JSONDecoder.form.decode([ArtworkPaintLayer].self, from: $0) }
+    return (assigned ?? element.paintStack) == stack
+  }
+  /// Draws the already-shaped glyphs belonging to one effective paint stack.
+  /// Source UTF-16 ranges have already traveled through case and glyph composition
+  /// as attributed metadata, so this never reshapes a substring or reorders RTL.
+  public static func drawPaintGroup(_ element: ArtworkElement, stack: [ArtworkPaintLayer]?, in context: CGContext) {
+    context.saveGState()
+    context.clip(to: .init(x: 0, y: 0, width: element.width, height: element.height))
+    defer { context.restoreGState() }
+    if element.storyFrame != nil {
+      PublicationStoryLayout.drawPaintGroup(element, stack: stack, in: context); return
+    }
+    if usesParagraphLayout(element) {
+      ParagraphLayout.drawPaintGroup(element, stack: stack, in: context); return
+    }
+    let entry = cachedLayout(element)
+    context.saveGState()
+    context.scaleBy(x: 1 / pointsPerMM, y: 1 / pointsPerMM)
+    context.translateBy(x: entry.horizontalOffset, y: element.height * pointsPerMM + entry.offset)
+    context.scaleBy(x: 1, y: -1)
+    context.textMatrix = .identity
+    context.setAllowsFontSubpixelPositioning(true); context.setShouldSubpixelPositionFonts(true)
+    context.setAllowsFontSubpixelQuantization(false); context.setShouldSubpixelQuantizeFonts(false)
+    context.setAllowsFontSmoothing(false); context.setShouldSmoothFonts(false)
+    let lines = CTFrameGetLines(entry.drawingFrame) as! [CTLine]
+    var origins = [CGPoint](repeating: .zero, count: lines.count)
+    CTFrameGetLineOrigins(entry.drawingFrame, CFRange(), &origins)
+    for (index, line) in lines.enumerated() {
+      for run in CTLineGetGlyphRuns(line) as! [CTRun] {
+        let attrs = CTRunGetAttributes(run) as NSDictionary
+        guard matchesPaint(attrs[paintStackKey] as? Data, element: element, stack: stack) else { continue }
+        context.textPosition = origins[index]
+        CTRunDraw(run, context, CFRange())
+      }
+    }
+    context.restoreGState()
+    let decoratedLines = CTFrameGetLines(entry.frame) as! [CTLine]
+    var decoratedOrigins = [CGPoint](repeating: .zero, count: decoratedLines.count)
+    CTFrameGetLineOrigins(entry.frame, CFRange(), &decoratedOrigins)
+    for (index, line) in decoratedLines.enumerated() {
+      for run in CTLineGetGlyphRuns(line) as! [CTRun] {
+        let attrs = CTRunGetAttributes(run) as NSDictionary
+        guard matchesPaint(attrs[paintStackKey] as? Data, element: element, stack: stack) else { continue }
+        let path = decoration(run, origin: .init(x: decoratedOrigins[index].x + entry.horizontalOffset,
+          y: decoratedOrigins[index].y), height: element.height * pointsPerMM, offset: entry.offset)
+        var mm = CGAffineTransform(scaleX: 1 / pointsPerMM, y: 1 / pointsPerMM)
+        context.setFillColor((attrs[NSAttributedString.Key.foregroundColor] as? NSColor ?? FormColor.color(element.color)).cgColor)
+        if let path = path.copy(using: &mm) { context.addPath(path); context.fillPath() }
+      }
+    }
+  }
   public static func outlines(_ element: ArtworkElement) throws -> CGPath {
     let result = CGMutablePath()
     for (path, _) in try outlineRuns(element) { result.addPath(path) }
@@ -473,11 +537,11 @@ public enum FormColor {
   public static func outlineRuns(_ element: ArtworkElement) throws -> [(CGPath, String)] {
     try outlinePaintRuns(element).map { ($0.path, $0.color) }
   }
-  public static func outlinePaintRuns(_ element: ArtworkElement) throws
+  public static func outlinePaintRuns(_ element: ArtworkElement, matchingPaintStack: [ArtworkPaintLayer]? = nil, filtering: Bool = false) throws
     -> [(path: CGPath, color: String, swatchID: UUID?)] {
-    if element.storyFrame != nil {return try PublicationStoryLayout.outlines(element)}
+    if element.storyFrame != nil {return try PublicationStoryLayout.outlines(element, matchingPaintStack: matchingPaintStack, filtering: filtering)}
     try GlyphEngine.validateOutput(element, outlines: true)
-    if usesParagraphLayout(element) { return try ParagraphLayout.outlines(element) }
+    if usesParagraphLayout(element) { return try ParagraphLayout.outlines(element, matchingPaintStack: matchingPaintStack, filtering: filtering) }
     let (frame, offset) = layout(element)
     let lines = CTFrameGetLines(frame) as! [CTLine]
     var origins = [CGPoint](repeating: .zero, count: lines.count)
@@ -490,6 +554,7 @@ public enum FormColor {
         let path = CGMutablePath()
         let count = CTRunGetGlyphCount(run)
         let attrs = CTRunGetAttributes(run) as NSDictionary
+        if filtering && !matchesPaint(attrs[paintStackKey] as? Data, element: element, stack: matchingPaintStack) { continue }
         guard let font = attrs[kCTFontAttributeName] else { continue }
         let ct = font as! CTFont
         var glyphs = [CGGlyph](repeating: 0, count: count)
@@ -508,8 +573,7 @@ public enum FormColor {
             transform = CTRunGetTextMatrix(run).concatenating(transform)
             path.addPath(glyph, transform: transform)
           } else if indices[j] < text.length,
-            let scalar = UnicodeScalar(text.character(at: indices[j])),
-            !CharacterSet.whitespacesAndNewlines.contains(scalar)
+            UnicodeScalar(text.character(at: indices[j])).map({ !CharacterSet.whitespacesAndNewlines.contains($0) }) ?? true
           {
             throw FormError.invalid(
               "This font contains a glyph without a vector outline. Keep it as live text or use a different font."
@@ -644,6 +708,11 @@ public enum FormColor {
           location: range.location + utf16Offset, length: range.length, typography: style,
           fontSize: CharacterTypography.sourcePointSize(in:attrs) ?? font.pointSize,
           color: FormColor.hex(attrs[.foregroundColor] as? NSColor ?? .black))
+      span.paintStack = (attrs[paintStackKey] as? Data).flatMap { try? JSONDecoder.form.decode([ArtworkPaintLayer].self, from: $0) }
+      if let authored = attrs[paintColorKey] as? String, authored.uppercased() != span.color.uppercased(),
+        let effective = span.paintStack ?? (attrs[inheritedPaintStackKey] as? Data).flatMap({ try? JSONDecoder.form.decode([ArtworkPaintLayer].self, from: $0) }) {
+        span.paintStack = ArtworkPaintLayer.recoloringFills(effective, color: span.color)
+      }
       span.swatchID = (attrs[swatchKey] as? String).flatMap(UUID.init(uuidString:))
       span.textStyle = (attrs[textStyleKey] as? Data).flatMap { try? JSONDecoder.form.decode(TextStyleReference.self, from: $0) }
       span.paragraphStyle = (attrs[paragraphStyleKey] as? Data).flatMap { try? JSONDecoder.form.decode(TextStyleReference.self, from: $0) }

@@ -32,10 +32,13 @@ struct AppearanceInspector: View {
         Toggle("Isolate blending", isOn: Binding(get: { element.isolatedBlending == true },
           set: { session.appearance(["isolate": $0]) }))
           .inspectorToggle().font(.system(size: 10))
-          .help("Blend children with each other before compositing this group. Opacity and effects also isolate a group.")
+          .help("Blend children with each other before compositing this group. Opacity and layer blur also isolate a group.")
       }
       DisclosureGroup("Effects") {
         VStack(alignment: .leading, spacing: 12) {
+          if let stack=element.effectStack {
+            ArtworkEffectStackInspector(session:session,element:element,stack:stack)
+          } else {
           Toggle("Blur", isOn: Binding(get: { element.blur?.enabled == true },
             set: { session.appearance(["blur": ["enabled": $0]]) }))
             .inspectorToggle()
@@ -70,6 +73,7 @@ struct AppearanceInspector: View {
                 session.appearance(["shadow": ["opacity": $0 / 100]])
               }
             }.disabled(!shadow.enabled)
+          }
           }
           Text("Effects remain editable. A group's opacity and effects apply to the whole group.")
             .font(.system(size: 9)).foregroundStyle(Palette.secondary)

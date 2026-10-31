@@ -27,7 +27,7 @@ extension ArtworkTransferGraph {
     var target=owner.artwork ?? Artwork(background:"#FFFFFF")
     try validateArtwork(target)
     guard !(original.publications ?? []).contains(where:{$0.pages.contains(where:{$0.objectID==owner.id})}) else{throw FormError.invalid("Publication pages require a complete publication transfer.")}
-    let m=bundle.metadata,sameProject=m.projectID==original.id
+    let m=bundle.metadata,sameProject=m.sourceApplication==nil && m.projectID==original.id
     guard offset.x.isFinite,offset.y.isFinite,abs(offset.x)<=100000,abs(offset.y)<=100000 else{throw FormError.invalid("Paste placement must be a bounded physical millimeter offset.")}
     var placement=Affine2.translation(offset.x,offset.y)
     if let scopeID {
@@ -35,7 +35,10 @@ extension ArtworkTransferGraph {
       guard let inverse=target.worldTransform(scope).inverse else{throw FormError.invalid("The destination scope has no invertible physical transform.")}
       placement=inverse.followed(by:placement)
     }
-    if target.elements.isEmpty {target.language=m.artwork.language;target.unit=m.artwork.unit;target.outputColorProfile=m.artwork.outputColorProfile}
+    if m.sourceApplication != nil {
+      // External adapters normalize source colors/units; destination document
+      // settings remain authoritative even for an empty canvas.
+    }else if target.elements.isEmpty {target.language=m.artwork.language;target.unit=m.artwork.unit;target.outputColorProfile=m.artwork.outputColorProfile}
     else {
       guard target.language==m.artwork.language else{throw FormError.invalid("Document languages differ; transfer into an empty or matching-language frame to preserve source language defaults.")}
       guard target.outputColorProfile==m.artwork.outputColorProfile else{throw FormError.invalid("Output profiles differ; choose an empty or matching-profile frame before pasting.")}
@@ -69,7 +72,7 @@ extension ArtworkTransferGraph {
       for ref in def.artwork.elements.compactMap(\.component) {try component(ref.sourceObjectID,depth:depth+1)}
       let resourcesMatch=def.artwork.referencedSwatches.allSatisfy{swatchMap[$0]==$0} && def.artwork.referencedTextStyles.allSatisfy{styleMap[$0]==$0}
         && def.artwork.elements.compactMap(\.component).allSatisfy{objectMap[$0.sourceObjectID]==$0.sourceObjectID}
-        && def.artwork.elements.compactMap(\.asset).allSatisfy{assetMap[$0]==$0}
+        && def.artwork.renderedAssetNames.allSatisfy{assetMap[$0]==$0}
         && (def.artwork.imports ?? []).allSatisfy{assetMap[$0.asset]==$0.asset}
       if sameProject,resourcesMatch,let current=original.objects.first(where:{$0.id==id}),current.componentDefinition==true,current.artwork==def.artwork,current.artworkSize==def.size {objectMap[id]=id;reused.insert(id)}else{objectMap[id]=UUID()}
     }
@@ -97,7 +100,31 @@ extension ArtworkTransferGraph {
         for n in e.listItems?.indices ?? 0..<0 {e.listItems![n].id=UUID();e.listItems![n].listID=listMaps[ownerID]![e.listItems![n].listID]!;e.listItems![n].resolvedNumber=nil}
         func paint(_ id:UUID?)throws->UUID? {guard let id else{return nil};guard let new=swatchMap[id] else{throw FormError.invalid("Missing palette dependency.")};return new}
         func style(_ ref:TextStyleReference?)throws->TextStyleReference? {guard var ref else{return nil};guard let new=styleMap[ref.styleID] else{throw FormError.invalid("Missing text-style dependency.")};ref.styleID=new;return ref}
+        var paintStopIDs=[UUID:UUID]()
+        func stack(_ layers:[ArtworkPaintLayer]?)throws->[ArtworkPaintLayer]? {
+          guard var layers else{return nil}
+          for j in layers.indices {
+            if let name=layers[j].paint.asset {guard let new=assetMap[name] else{throw FormError.invalid("Missing image paint bytes.")};layers[j].paint.asset=new}
+            if var gradient=layers[j].paint.gradient {
+              for k in gradient.stops.indices {
+                let old=gradient.stops[k].id
+                if paintStopIDs[old] == nil{paintStopIDs[old]=UUID()}
+                gradient.stops[k].id=paintStopIDs[old]!
+                gradient.stops[k].swatchID=try paint(gradient.stops[k].swatchID)
+              }
+              layers[j].paint.gradient=gradient
+            }
+            if var stroke=layers[j].stroke {stroke.swatchID=try paint(stroke.swatchID);layers[j].stroke=stroke}
+          }
+          return layers
+        }
+        e.paintStack=try stack(e.paintStack)
+        for n in e.textRuns?.indices ?? 0..<0 {e.textRuns![n].paintStack=try stack(e.textRuns![n].paintStack)}
         e.fillSwatchID=try paint(e.fillSwatchID);if var stroke=e.stroke {stroke.swatchID=try paint(stroke.swatchID);e.stroke=stroke};if var shadow=e.shadow {shadow.swatchID=try paint(shadow.swatchID);e.shadow=shadow}
+        if var effects=e.effectStack {
+          for index in effects.effects.indices {effects.effects[index].swatchID=try paint(effects.effects[index].swatchID)}
+          e.effectStack=effects
+        }
         e.textStyle=try style(e.textStyle);e.paragraphStyle=try style(e.paragraphStyle)
         for n in e.textRuns?.indices ?? 0..<0 {e.textRuns![n].swatchID=try paint(e.textRuns![n].swatchID);e.textRuns![n].textStyle=try style(e.textRuns![n].textStyle);e.textRuns![n].paragraphStyle=try style(e.textRuns![n].paragraphStyle)}
         if var ref=e.component {
@@ -108,7 +135,11 @@ extension ArtworkTransferGraph {
         if let name=e.asset {guard let new=assetMap[name] else{throw FormError.invalid("Missing image bytes.")};e.asset=new}
         result.elements[i]=e
       }
-      for i in result.imports?.indices ?? 0..<0 {result.imports![i].id=UUID();guard let name=assetMap[result.imports![i].asset] else{throw FormError.invalid("Missing original import bytes.")};result.imports![i].asset=name}
+      for i in result.imports?.indices ?? 0..<0 {
+        result.imports![i].id=UUID()
+        guard let name=assetMap[result.imports![i].asset] else{throw FormError.invalid("Missing original import bytes.")};result.imports![i].asset=name
+        if let ids=result.imports![i].elementIDs {result.imports![i].elementIDs=ids.compactMap{maps[ownerID]?[$0]}}
+      }
       for i in result.sewingSeams?.indices ?? 0..<0 {
         result.sewingSeams![i].id=UUID()
         func end(_ old:SewingSeamEnd)throws->SewingSeamEnd {var value=old;guard let new=maps[ownerID]?[old.elementID] else{throw FormError.invalid("Incomplete seam pair.")};value.elementID=new;if let id=old.edgeID {guard let new=nodeMaps[old.elementID]?[id] else{throw FormError.invalid("Missing seam edge identity.")};value.edgeID=new};if let id=old.endID {guard let new=nodeMaps[old.elementID]?[id] else{throw FormError.invalid("Missing seam endpoint guard.")};value.endID=new};return value}
@@ -119,7 +150,7 @@ extension ArtworkTransferGraph {
     }
     var added=[UUID]()
     for def in m.components where !reused.contains(def.id) {
-      var object=ProductObject(name:def.name,recipeID:"artboard",parameters:["width":def.size.x,"depth":def.size.y,"thickness":1],artwork:try translated(def.artwork,ownerID:def.id));object.id=objectMap[def.id]!;object.componentDefinition=true;candidate.objects.append(object);added.append(object.id)
+      var object=ProductObject(name:def.name,recipeID:"artboard",parameters:["width":def.size.x,"depth":def.size.y,"thickness":1],artwork:try translated(def.artwork,ownerID:def.id));object.id=objectMap[def.id]!;object.componentDefinition=true;object.canvasSourceOnly=true;candidate.objects.append(object);added.append(object.id)
     }
     var pasted=try translated(m.artwork,ownerID:m.ownerID)
     if let boundary=pasted.boundary {

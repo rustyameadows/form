@@ -62,7 +62,7 @@ enum ArtworkTool: String, CaseIterable {
   var transferPasteboardPublisher:((NSPasteboard,Data,NSPasteboard.PasteboardType)throws->Bool)?
   var transferTask:Task<Void,Never>?
   var transferGeneration=UUID()
-  var transferInFlight=false
+  @Published var transferInFlight=false
   var lastTransferError:String?
   var lastTransferResult:[String:Any]?
   private struct FrameInputs:Equatable {
@@ -92,7 +92,8 @@ enum ArtworkTool: String, CaseIterable {
       if let selectedGradientStopID, primary?.gradient?.stops.contains(where: { $0.id == selectedGradientStopID }) != true {
         self.selectedGradientStopID = nil
       }
-      if let maskEditing, !selection.isEmpty && selection != [maskEditing.maskID] { self.maskEditing = nil }
+      if let maskEditing, !selection.isEmpty,
+        !selection.isSubset(of:art.editableMaskElementIDs(rootID:maskEditing.maskID)) { self.maskEditing = nil }
       pruneNodeSelection()
       store?.objectWillChange.send()
     }
@@ -518,8 +519,9 @@ enum ArtworkTool: String, CaseIterable {
   }
   func selectionCandidates(in artwork: Artwork) -> [ArtworkElement] {
     let projection = activeProjection
+    let editing=maskEditing.map{artwork.editableMaskElementIDs(rootID:$0.maskID)}
     return artwork.elements.filter {
-      $0.parentID == scopeID && artwork.editable($0)
+      $0.parentID == scopeID && (editing?.contains($0.id) ?? artwork.editable($0))
         && (projection?.intersects(artwork.bounds(of: $0)) ?? true)
     }
   }
@@ -737,12 +739,13 @@ enum ArtworkTool: String, CaseIterable {
   func textColor(_ color: String) {
     if canvas?.applyTextColor(color) == true { return }
     if editLinkedTextSources({e in
-      e.color=color;e.fillSwatchID=nil
-      for i in e.textRuns?.indices ?? 0..<0 {e.textRuns?[i].color=color;e.textRuns?[i].swatchID=nil}
+      e.recolorTextFill(color)
     }) {return}
     update {
+      if $0.kind == "text" { $0.recolorTextFill(color); return }
       $0.color = color
       $0.fillSwatchID = nil
+      if let stack=$0.paintStack { $0.paintStack=ArtworkPaintLayer.recoloringFills(stack,color:color) }
       if $0.kind != "text" { $0.gradient = nil; $0.fillEnabled = true }
       for i in $0.textRuns?.indices ?? 0..<0 {
         $0.textRuns?[i].color = color

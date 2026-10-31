@@ -18,6 +18,7 @@ public struct TextStory:Codable,Equatable,Identifiable,Sendable {
   public var textStyle:TextStyleReference?
   public var paragraphStyle:TextStyleReference?
   public var textRuns:[TextSpan]?
+  public var paintStack:[ArtworkPaintLayer]?
   public var glyphOverrides:[GlyphOverride]?
   public var listItems:[ParagraphListItem]?
   public var language:String?
@@ -26,18 +27,18 @@ public struct TextStory:Codable,Equatable,Identifiable,Sendable {
   public init(name:String="Text story",source:ArtworkElement,frames:[StoryFrameID]=[],language:String?=nil,publicationID:UUID?=nil) {
     self.name=name;self.text=source.text;self.typography=source.typography;self.fontSize=source.fontSize;self.color=source.color
     self.fillSwatchID=source.fillSwatchID;self.textStyle=source.textStyle;self.paragraphStyle=source.paragraphStyle
-    self.textRuns=source.textRuns;self.glyphOverrides=source.glyphOverrides;self.listItems=source.listItems
+    self.paintStack=source.paintStack;self.textRuns=source.textRuns;self.glyphOverrides=source.glyphOverrides;self.listItems=source.listItems
     self.frames=frames;self.language=language;self.publicationID=publicationID
     normalizeFrameBehavior()
   }
   public var sourceElement:ArtworkElement {
     var e=ArtworkElement(kind:"text",x:0,y:0,width:100,height:100,text:text,color:color,fontSize:fontSize)
     e.id=id;e.name=name;e.typography=typography;e.fillSwatchID=fillSwatchID;e.textStyle=textStyle;e.paragraphStyle=paragraphStyle
-    e.textRuns=textRuns;e.glyphOverrides=glyphOverrides;e.listItems=listItems;return e
+    e.paintStack=paintStack;e.textRuns=textRuns;e.glyphOverrides=glyphOverrides;e.listItems=listItems;return e
   }
   public mutating func setSource(_ e:ArtworkElement) {
     text=e.text;typography=e.typography;fontSize=e.fontSize;color=e.color;fillSwatchID=e.fillSwatchID
-    textStyle=e.textStyle;paragraphStyle=e.paragraphStyle;textRuns=e.textRuns;glyphOverrides=e.glyphOverrides;listItems=e.listItems
+    paintStack=e.paintStack;textStyle=e.textStyle;paragraphStyle=e.paragraphStyle;textRuns=e.textRuns;glyphOverrides=e.glyphOverrides;listItems=e.listItems
     normalizeFrameBehavior()
   }
   private mutating func normalizeFrameBehavior() {

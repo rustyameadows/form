@@ -581,6 +581,10 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     }
     return canvasRect(visibleRect)
   }
+  var unobscuredVisibleCanvasRect:CGRect {
+    guard let scroll=enclosingScrollView else{return visibleCanvasRect}
+    return canvasRect(convert(fittingViewport(in:scroll),from:scroll.contentView))
+  }
   func frame(atCanvasPoint point:CGPoint) -> CanvasFrame? {
     frames.last { !$0.isWorkspace && $0.contains(point) } ?? frames.first { $0.isWorkspace }
   }
@@ -1298,7 +1302,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return ArtworkHitTesting.hit(at: point, in: art, scope: scope,
       tolerance: 3.5 / (ppm * zoom), excluding: hiddenRoles,
       editingMask: session?.maskEditing?.maskID, renderedArtwork: activeFrame?.artwork,
-      outerClip: activeFrame.flatMap { physicalPickingClip(for: $0) })
+      outerClip: activeFrame.flatMap { physicalPickingClip(for: $0) }, assets: session?.assets)
   }
   /// Resolve a painted sibling in the nearest enclosing scope, skipping the
   /// branch we are already editing. The same resolver drives hover and clicks.
@@ -1315,7 +1319,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if cached, let existing = hoverPickers[key] { picker = existing }
       else {
         picker = ArtworkHitTesting.Picker(in: art, scope: group.parentID,
-          excluding: excluded, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame))
+          excluding: excluded, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame), assets: s.assets)
         if cached { hoverPickers[key] = picker }
       }
       if let target = picker.hit(at: point, tolerance: 3.5 / (ppm * zoom)) { return target }
@@ -2046,7 +2050,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       if let cached = hoverPickers[key] { picker = cached }
       else {
         picker = ArtworkHitTesting.Picker(in: art, scope: key.scope, excluding: excluded,
-          editingMask: key.mask, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame))
+          editingMask: key.mask, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame), assets: s.assets)
         hoverPickers[key] = picker
       }
       let p = CGPoint(x: world.x-frame.rect.minX, y: world.y-frame.rect.minY)
@@ -2146,8 +2150,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let s = session else { return false }
     let art = s.art
     let threshold = 7 / (ppm * zoom)
+    let maskMembers=s.maskEditing.map{art.editableMaskElementIDs(rootID:$0.maskID)}
     let paths = art.elements.filter {
-      $0.path != nil && (s.maskEditing == nil ? art.editable($0) : $0.id == s.maskEditing?.maskID && !art.isLocked($0))
+      $0.path != nil && (maskMembers?.contains($0.id) ?? art.editable($0))
         && (s.selection.contains($0.id) || $0.parentID == s.scopeID)
     }
     for e in paths.reversed() {
@@ -2476,7 +2481,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       from: source, fallback: e.typography ?? .init())
     if runs.count == 1, let run = runs.first, run.fontSize == e.fontSize, run.color == e.color,
       run.typography == (e.typography ?? .init()), run.swatchID == e.fillSwatchID,
-      run.textStyle == e.textStyle, run.paragraphStyle == e.paragraphStyle
+      run.textStyle == e.textStyle, run.paragraphStyle == e.paragraphStyle, run.paintStack == nil
     {
       e.textRuns = nil
     } else {
@@ -2611,7 +2616,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         : TextStyleCommands.applying(old, style: style, detach: command == "detach", preservingParagraphs: partial)
       var type=changed.typography;type.inheritedLanguage=raw[LanguageHyphenation.inheritedLanguageKey] as? String
       var result=TypographyEngine.attributes(type, size: changed.fontSize, color: changed.color,
-        millimeters: false, swatchID: changed.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
+        millimeters: false, swatchID: changed.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle, paintStack: changed.paintStack)
+      result[TypographyEngine.inheritedPaintStackKey]=raw[TypographyEngine.inheritedPaintStackKey]
       result[TextCase.sourceKey]=raw[TextCase.sourceKey]
       result[GlyphEngine.overrideKey]=raw[GlyphEngine.overrideKey]
       result[PublicationLists.key]=raw[PublicationLists.key]
@@ -2729,7 +2735,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       changed = TextStyleCommands.recording(changed, from: run)
       tv.typingAttributes = TypographyEngine.attributes(
         t, size: run.fontSize, color: run.color, millimeters: false, swatchID: run.swatchID,
-        textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
+        textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle, paintStack: changed.paintStack)
       session?.objectWillChange.send()
       return true
     }
@@ -2745,7 +2751,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         var changed = run; changed.typography = t
         changed = TextStyleCommands.recording(changed, from: run)
         var attrs=TypographyEngine.attributes(t, size: run.fontSize, color: run.color, millimeters: false,
-          swatchID: run.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle)
+          swatchID: run.swatchID, textStyle: changed.textStyle, paragraphStyle: changed.paragraphStyle, paintStack: changed.paintStack)
+        attrs[TypographyEngine.inheritedPaintStackKey]=attributes[TypographyEngine.inheritedPaintStackKey]
         attrs[TextCase.sourceKey]=attributes[TextCase.sourceKey]
         attrs[GlyphEngine.overrideKey]=attributes[GlyphEngine.overrideKey]
         attrs[PublicationLists.key]=attributes[PublicationLists.key]
@@ -2799,7 +2806,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       var type=changed.typography;type.inheritedLanguage=raw[LanguageHyphenation.inheritedLanguageKey] as? String
       var attrs=TypographyEngine.attributes(type,size:size,color:changed.color,millimeters:false,swatchID:changed.swatchID,textStyle:changed.textStyle,paragraphStyle:changed.paragraphStyle)
       if type.opticalSizing==nil,type.characterPosition==nil,let old=raw[.font] as? NSFont {attrs[.font]=NSFont(descriptor:old.fontDescriptor,size:size) ?? old}
-      for key in [TextCase.sourceKey,GlyphEngine.overrideKey,PublicationLists.key] {attrs[key]=raw[key]}
+      for key in [TextCase.sourceKey,GlyphEngine.overrideKey,PublicationLists.key,TypographyEngine.inheritedPaintStackKey] {attrs[key]=raw[key]}
       return attrs
     }
     tv.undoManager?.beginUndoGrouping();defer{tv.undoManager?.endUndoGrouping()}
@@ -2812,11 +2819,35 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     tv.textStorage?.endEditing();tv.didChangeText();return true
   }
   func applyTextColor(_ color: String) -> Bool {
-    changeText([.foregroundColor: FormColor.color(color)], removing: [TypographyEngine.swatchKey])
+    applyPaintedTextColor(color, swatch: nil)
+  }
+  private func applyPaintedTextColor(_ color: String, swatch: UUID?) -> Bool {
+    guard let tv = textView else { return false }
+    let selected = GlyphEngine.expandedDisplayRange(tv.selectedRange(), in: tv.attributedString())
+    func replacement(_ raw: [NSAttributedString.Key: Any]) -> [NSAttributedString.Key: Any] {
+      var attrs = raw
+      let assigned = (raw[TypographyEngine.paintStackKey] as? Data).flatMap { try? JSONDecoder.form.decode([ArtworkPaintLayer].self, from: $0) }
+      let inherited = (raw[TypographyEngine.inheritedPaintStackKey] as? Data).flatMap { try? JSONDecoder.form.decode([ArtworkPaintLayer].self, from: $0) } ?? session?.primary?.paintStack
+      if let stack = assigned ?? inherited {
+        attrs[TypographyEngine.paintStackKey] = try? JSONEncoder.form.encode(ArtworkPaintLayer.recoloringFills(stack, color: color))
+      }
+      attrs[.foregroundColor] = FormColor.color(color); attrs[TypographyEngine.paintColorKey] = color
+      attrs[TypographyEngine.swatchKey] = swatch?.uuidString
+      return attrs
+    }
+    if selected.length == 0 {
+      tv.typingAttributes = replacement(tv.typingAttributes); session?.objectWillChange.send(); return true
+    }
+    guard tv.shouldChangeText(in: selected, replacementString: nil) else { return true }
+    var changes: [(NSRange, [NSAttributedString.Key: Any])] = []
+    tv.attributedString().enumerateAttributes(in: selected) { raw, range, _ in changes.append((range, replacement(raw))) }
+    tv.textStorage?.beginEditing()
+    for (range, attrs) in changes { tv.textStorage?.setAttributes(attrs, range: range) }
+    tv.textStorage?.endEditing(); tv.didChangeText(); return true
   }
   func applyTextSwatch(_ id: UUID?, color: String?) -> Bool {
     if let id, let color {
-      return changeText([.foregroundColor: FormColor.color(color), TypographyEngine.swatchKey: id.uuidString])
+      return applyPaintedTextColor(color, swatch: id)
     }
     return changeText([:], removing: [TypographyEngine.swatchKey])
   }
@@ -2887,7 +2918,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       } else if s.selectedGradientStopID != nil {
         s.selectedGradientStopID = nil
       } else if s.maskEditing != nil {
-        s.returnFromMask()
+        s.leaveGroup()
       } else if s.scopeID != nil {
         s.leaveGroup()
       } else {

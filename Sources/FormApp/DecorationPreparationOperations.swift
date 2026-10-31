@@ -118,7 +118,7 @@ extension StudioStore {
       values[name] = .init(name:name,role:"profile",mediaType:"application/vnd.iccprofile",data:profile.data);bytesRead+=profile.data.count
     }
     var names=Set<String>()
-    for value in art {names.formUnion(value.elements.compactMap(\.asset));names.formUnion(value.imports?.map(\.asset) ?? [])}
+    for value in art {names.formUnion(Array(value.renderedAssetNames));names.formUnion(value.imports?.map(\.asset) ?? [])}
     let types=["png":"image/png","jpg":"image/jpeg","jpeg":"image/jpeg","gif":"image/gif","tif":"image/tiff","tiff":"image/tiff","heic":"image/heic","webp":"image/webp","svg":"image/svg+xml"]
     for asset in names.sorted() {
       let name="Assets/"+asset;if values[name] != nil {continue}

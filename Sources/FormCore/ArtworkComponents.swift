@@ -86,6 +86,7 @@ public enum ComponentCommands {
     for i in sourceArt.elements.indices where rootIDs.contains(sourceArt.elements[i].id) {
       sourceArt.elements[i].parentID = nil
       sourceArt.elements[i].clipID = nil
+      sourceArt.elements[i].clipMode = nil
     }
     let copiedRoots = sourceArt.selectionRoots(rootIDs)
     let visual = sourceArt.elements.contains { $0.hasVisualOverflow }
@@ -111,6 +112,7 @@ public enum ComponentCommands {
     instance.contentSize = source.artworkSize
     instance.parentID = roots[0].parentID
     instance.clipID = roots[0].clipID
+    instance.clipMode = roots[0].clipMode
     let front = art.elements.firstIndex { $0.id == roots.last!.id }!
     let insertion = art.elements[..<front].filter { !all.contains($0.id) }.count
     art.elements.removeAll { all.contains($0.id) }
@@ -265,6 +267,8 @@ extension Project {
     let started = Date.timeIntervalSinceReferenceDate
     func paint(_ color: String, swatchID: UUID? = nil, on e: inout ArtworkElement) {
       guard e.kind != "group" || e.booleanOperation != nil, e.kind != "image" else { return }
+      if e.kind == "text" { e.recolorTextFill(color) }
+      if let stack=e.paintStack {e.paintStack=ArtworkPaintLayer.recoloringFills(stack,color:color)}
       e.color = color
       e.fillSwatchID = swatchID
       e.gradient = nil

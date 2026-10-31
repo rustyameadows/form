@@ -45,6 +45,7 @@ import FormCore
   private static let uniformKeys: [NSAttributedString.Key] = [
     .font, .foregroundColor, .baselineOffset, .expansion, .tracking, .kern,
     .underlineStyle, .strikethroughStyle, TypographyEngine.swatchKey,
+    TypographyEngine.paintStackKey, TypographyEngine.inheritedPaintStackKey,
   ]
 
   public static func validateSelection(_ element: ArtworkElement, choice: GlyphOverride) throws {

@@ -28,6 +28,7 @@ extension ArtworkElement {
   }
   public var hasVisualOverflow: Bool {
     hasActiveEffects || (visibleStroke != nil && visibleStroke?.alignment != "inside")
+      || paintLayers.contains{$0.enabled && $0.paint.opacity>0 && $0.stroke?.enabled != false && ($0.stroke?.width ?? 0)>0 && $0.stroke?.alignment != "inside"}
   }
 }
 
@@ -75,17 +76,41 @@ public enum PaintCommands {
       ids.isSubset(of: Set(art.elements.map(\.id)))
     else { throw FormError.invalid("Choose editable vector artwork.") }
     let masks = Set(art.elements.compactMap(\.clipID))
+    let replacesStack = arguments["paint_stack"] != nil
+    guard !replacesStack || (command == "update" && arguments["stroke"] == nil && arguments["gradient"] == nil) else {
+      throw FormError.invalid("Replace the paint stack separately from legacy stroke or gradient edits.")
+    }
     let roots = art.selectionRoots(ids)
     guard
       roots.allSatisfy({
-        !art.isLocked($0) && !masks.contains($0.id)
+        !art.isLocked($0) && (!masks.contains($0.id) || art.isCoverageMask($0.id))
           && (BooleanCommands.shapeKinds.contains($0.kind) || $0.kind == "line"
-            || $0.booleanOperation != nil)
+            || $0.booleanOperation != nil || (replacesStack && $0.kind == "text"))
       })
     else {
       throw FormError.invalid(
-        "Choose unlocked vector artwork. Clipping masks use geometry; convert text to outlines for vector paint."
+        "Choose unlocked vector artwork or live text for a paint stack. Outline-only masks use geometry; alpha and luminance masks have editable paint."
       )
+    }
+    if !replacesStack, roots.contains(where: { $0.paintStack != nil }) {
+      throw FormError.invalid("Edit this layer's paint stack; legacy stroke and gradient controls do not change its active paints.")
+    }
+    if replacesStack, roots.contains(where: { $0.storyFrame != nil }) {
+      throw FormError.invalid("Edit the shared text story source to change its paints; a linked frame cannot override them.")
+    }
+    var replacement: [ArtworkPaintLayer]?
+    if let value=arguments["paint_stack"], !(value is NSNull) {
+      guard let layers=value as? [[String:Any]],layers.count<=16,
+        layers.allSatisfy({Set($0.keys).isSubset(of:["paint","stroke","enabled"])}),
+        layers.allSatisfy({layer in
+          guard let paint=layer["paint"] as? [String:Any] else{return false}
+          return Set(paint.keys).isSubset(of:["kind","color","opacity","blendMode","gradient","asset","imageTransform","imageAdjustments","imageRepeat"])
+        }),JSONSerialization.isValidJSONObject(layers) else {
+        throw FormError.invalid("Use up to 16 explicit native paint layers with valid paint, stroke and enabled fields.")
+      }
+      let bytes=try JSONSerialization.data(withJSONObject:layers)
+      guard bytes.count<=256*1024 else{throw FormError.invalid("Paint stack settings exceed their byte budget.")}
+      replacement=try JSONDecoder.form.decode([ArtworkPaintLayer].self,from:bytes)
     }
     if command != "update" && roots.count != 1 {
       throw FormError.invalid("Choose one object to edit its gradient stops.")
@@ -120,6 +145,16 @@ public enum PaintCommands {
     var selectedStop: UUID?
     for root in roots {
       let i = art.elements.firstIndex(where: { $0.id == root.id })!
+      if replacesStack {
+        art.elements[i].paintStack=replacement
+        art.elements[i].fillSwatchID=nil
+        if let fill=replacement?.first(where:{$0.stroke==nil && $0.paint.kind=="solid"}) {
+          art.elements[i].color=fill.paint.color
+        }
+        // Explicit rich-span stacks keep their source ownership. The base
+        // replacement affects inherited spans and ordinary vector geometry.
+        continue
+      }
       if command == "update" {
         if let value = arguments["stroke"] {
           if value is NSNull {

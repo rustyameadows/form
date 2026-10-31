@@ -17,6 +17,16 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
     else {
       throw FormError.invalid("Invalid imported artwork provenance.")
     }
+    if let ids = source.elementIDs {
+      guard ids.count <= 5000, Set(ids).count == ids.count else {throw FormError.invalid("Invalid imported source layer associations.")}
+    }
+    guard (source.format?.utf8.count ?? 0) <= 80 else {throw FormError.invalid("Invalid imported source format.")}
+  }
+  var sourceBytes = 0
+  for element in artwork.elements {
+    try element.sourceMetadata?.validate()
+    sourceBytes += element.sourceMetadata?.properties.count ?? 0
+    guard sourceBytes <= 8 * 1024 * 1024 else {throw FormError.invalid("Imported source settings exceed the artwork metadata budget.")}
   }
   if let boundary = artwork.boundary {
     var shape = ArtworkElement(
@@ -57,6 +67,9 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
   let children = Dictionary(grouping: artwork.elements, by: \.parentID)
   func operandSize(_ e: ArtworkElement, depth: Int) throws -> (Int, Int) {
     guard e.component == nil else { throw FormError.invalid("Detach component instances before using them as boolean operands.") }
+    guard depth == 0 || e.clipID == nil || !ArtworkMasks.isCoverage(e.clipMode) else {
+      throw FormError.invalid("Boolean operands cannot flatten alpha or luminance masks. Keep the mask on the enclosing result.")
+    }
     guard depth <= 16 else {
       throw FormError.invalid("Boolean operands support at most 16 nested group levels.")
     }
@@ -82,6 +95,7 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
     }
     return (1, e.path?.contours.reduce(0) { $0 + $1.nodes.count } ?? 0)
   }
+  try ArtworkMasks.validate(artwork)
   for e in artwork.elements {
     if e.listItems != nil {
       guard e.kind=="text" else {throw FormError.invalid("Paragraph lists belong to editable text objects.")}
@@ -89,6 +103,8 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
     }
     if let origin = e.transformOrigin { try ArtworkTransforms.validateOrigin(origin) }
     try ImageCommands.validate(e)
+    try ArtworkPaintValidation.validate(e)
+    try e.effectStack?.validate()
     guard AppearanceCommands.blendModes.contains(e.blendMode ?? "normal") else {
       throw FormError.invalid("Unsupported artwork blend mode.")
     }
@@ -147,11 +163,6 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
       seen.insert(id)
       parent = group.parentID
     }
-    if let clip = e.clipID {
-      guard let mask = byID[clip], clip != e.id, mask.parentID == e.parentID, mask.kind != "group",
-        mask.kind != "text", mask.kind != "image", mask.clipID == nil
-      else { throw FormError.invalid("Use a vector shape in the same group as the clipping mask.") }
-    }
     if let stroke = e.stroke {
       try validateColor(stroke.color)
       guard ["center","inside","outside"].contains(stroke.alignment ?? "center"),
@@ -171,8 +182,8 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
       }
     }
     if let g = e.gradient {
-      guard ["linear", "radial"].contains(g.kind),
-        finite([g.start.x, g.start.y, g.end.x, g.end.y], 10), (2...32).contains(g.stops.count),
+      guard ["linear", "radial", "angular", "diamond"].contains(g.kind),
+        finite([g.start.x, g.start.y, g.end.x, g.end.y], 10), (2...256).contains(g.stops.count),
         Set(g.stops.map(\.id)).count == g.stops.count,
         g.stops.allSatisfy({ $0.offset.isFinite && (0...1).contains($0.offset) }),
         g.stops.map(\.offset) == g.stops.map(\.offset).sorted()
