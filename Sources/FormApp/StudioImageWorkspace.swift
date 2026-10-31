@@ -31,6 +31,7 @@ import UniformTypeIdentifiers
     _connection=ObservedObject(wrappedValue:controller.connection)
   }
   private var editingDisabled:Bool {controller.busy || controller.isCapturing || importing}
+  private var needsCapture:Bool {controller.capture?.hasExactStudioPixels != true}
   var body:some View {
     VStack(spacing:0) {
       header
@@ -158,11 +159,11 @@ import UniformTypeIdentifiers
         if controller.busy {
           WorkspaceToolbarButton("Cancel demo generation",symbol:"xmark",showsTitle:true,identifier:"studio-image-cancel"){controller.cancel()}
         }else {
-          WorkspaceToolbarButton(primaryTitle,symbol:controller.capture==nil ? "camera":"sparkles",isSelected:true,showsTitle:true,identifier:"studio-image-generate"){performPrimary()}
+          WorkspaceToolbarButton(primaryTitle,symbol:needsCapture ? "camera":"sparkles",isSelected:true,showsTitle:true,identifier:"studio-image-generate"){performPrimary()}
             .disabled(controller.isCapturing || importing)
         }
       }
-      Text("Local demo · no AI request or charge. \(controller.options.pixels.width) × \(controller.options.pixels.height) px · \(controller.options.count) image(s)")
+      Text("Local demo · no AI request or charge. "+pixelSummary+" · \(controller.options.count) image(s)")
         .font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
     }
   }
@@ -222,12 +223,24 @@ import UniformTypeIdentifiers
       InspectorSectionHeader("OPENAI · GPT IMAGE")
       InspectorRow("Model") {Picker("Model",selection:$controller.options.model){ForEach(StudioGenerationModel.allCases,id:\.self){Text($0.title).tag($0)}}.labelsHidden().inspectorPicker()}
       InspectorRow("Quality") {Picker("Quality",selection:$controller.options.quality){ForEach(StudioGenerationQuality.allCases,id:\.self){Text($0.title).tag($0)}}.labelsHidden().inspectorPicker()}
-      InspectorRow("Aspect") {Picker("Aspect",selection:$controller.options.aspect){ForEach(StudioGenerationAspect.allCases,id:\.self){Text($0.title).tag($0)}}.labelsHidden().inspectorPicker()}
-      InspectorRow("Size") {Picker("Size",selection:$controller.options.size){ForEach(StudioGenerationSize.allCases,id:\.self){Text($0.title).tag($0)}}.labelsHidden().inspectorPicker()}
+      if let capture=controller.capture {
+        StudioImageMetadataRow("From Studio","\(capture.scene.pixels.width) × \(capture.scene.pixels.height) px")
+          .accessibilityElement(children:.combine)
+          .accessibilityLabel("\(capture.scene.pixels.width) × \(capture.scene.pixels.height) px · From Studio")
+          .accessibilityIdentifier("studio-image-output-dimensions")
+        if !capture.hasExactStudioPixels {
+          Text("Recapture scene to use its full dimensions.").font(InspectorStyle.captionFont).foregroundStyle(Palette.accent)
+        }
+      }else {
+        Text("Set output dimensions in Studio, then capture the scene.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+      }
       InspectorRow("Images") {Picker("Image count",selection:$controller.options.count){ForEach([1,2,4],id:\.self){Text(String($0)).tag($0)}}.labelsHidden().inspectorSegmented().frame(width:155)}
-      Text("\(controller.options.pixels.width) × \(controller.options.pixels.height) pixels per image")
-        .font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary).frame(maxWidth:.infinity,alignment:.trailing)
     }
+  }
+  private var pixelSummary:String {
+    guard let capture=controller.capture else{return "Capture Studio output"}
+    guard capture.hasExactStudioPixels else{return "Recapture scene required"}
+    return "\(controller.options.pixels.width) × \(controller.options.pixels.height) px · From Studio"
   }
   private var progress:some View {
     HStack(spacing:10) {
@@ -247,12 +260,13 @@ import UniformTypeIdentifiers
   }
   private var primaryTitle:String {
     if controller.capture == nil {return "Capture scene"}
+    if needsCapture {return "Recapture scene"}
     if connection.state != .demoReady {return "Connect with demo"}
     return controller.options.count == 1 ? "Generate":"Generate \(controller.options.count)"
   }
   private func performPrimary() {
     issue=nil
-    if controller.capture == nil {Task{await controller.captureScene()}}
+    if needsCapture {Task{await controller.captureScene()}}
     else if connection.state != .demoReady {openConnection()}
     else {selectedAssetID=nil;Task{await controller.generate()}}
   }

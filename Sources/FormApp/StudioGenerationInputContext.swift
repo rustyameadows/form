@@ -103,7 +103,7 @@ struct StudioGenerationInputContext:Codable,Equatable {
     let azimuth=horizontal>1e-10 ? atan2(basis.outward.x,basis.outward.z):state.azimuth.remainder(dividingBy:2*Double.pi)
     let elevation=atan2(basis.outward.y,horizontal)
     let position=Vector3((target.x+basis.outward.x*state.distance)*100,(target.y+basis.outward.y*state.distance)*100,(target.z+basis.outward.z*state.distance)*100)
-    var shot=scene.shot(camera:state);shot.referenceAspect=state.viewportAspect ?? Double(width)/Double(max(1,height));shot.pixels = .init(width:width,height:height)
+    var shot=scene.shot(camera:state);shot.pixels = .init(width:width,height:height)
     let camera=Camera(projection:state.projection,azimuthDegrees:azimuth*180/Double.pi,elevationDegrees:elevation*180/Double.pi,
       distanceMM:state.distance*100,targetMM:.init(target.x*100,target.y*100,target.z*100),positionMM:position,upDirection:basis.up,
       verticalFieldOfViewDegrees:state.projection=="perspective" ? shot.outputFieldOfView:nil,

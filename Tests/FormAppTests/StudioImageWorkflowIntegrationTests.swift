@@ -21,7 +21,7 @@ import XCTest
     project.objects=[try project.makeObject(recipeID:"box",parameters:["width":100,"height":80,"depth":60])]
     if canvas {_ = try project.ensureCanvasWorkspace()}
     store.engine.project=project;store.showingHome=false;store.showEnvironment(.studio)
-    store.studioComposition.reconcile();store.studioComposition.frameScene()
+    store.studioComposition.reconcile();store.studioComposition.change{$0.pixels = .init(width:300,height:200)};store.studioComposition.frameScene()
     addTeardownBlock {@MainActor in
       store.studioImages.reset();store.studioComposition.reset();store.utilityWindows?.shutdown();store.engine.project=nil
       try? FileManager.default.removeItem(at:root)
@@ -161,6 +161,84 @@ import XCTest
     store.home()
     XCTAssertFalse(store.studioShowingImages);XCTAssertNil(store.studioImages.capture);XCTAssertFalse(store.studioImages.busy)
     XCTAssertEqual(store.project?.objects,before.objects)
+  }
+
+  func testGenerateImageEntryRefreshesChangedStudioPixelsAndKeepsNextFormAndPriorRunFrozen()async throws {
+    let store=try fixture(),source=try XCTUnwrap(store.project),composition=store.studioComposition,images=store.studioImages
+    images.prompt="First native view";await images.captureScene();await images.generate()
+    let previous=try XCTUnwrap(images.currentRun),oldCapture=try XCTUnwrap(images.capture)
+    let oldBytes=try Data(contentsOf:images.imageURL(assetID:oldCapture.inputAssetID))
+    images.prompt="Keep this next image prompt";images.style="Keep this next style"
+    images.options.model = .flare;images.options.quality = .draft;images.options.count=2
+    images.references=[.init(assetID:oldCapture.inputAssetID,role:.composition)]
+    let prompt=images.prompt,style=images.style,references=images.references
+    var expected=images.options;let pixels=StudioPixels(width:641,height:853);expected.outputPixels=pixels
+    composition.change{$0.pixels=pixels}
+    let draft=composition.draft,camera=composition.stage.camera,undo=store.engine.undoStack.count
+    store.studioShowingImages=false;store.createStudioStill()
+    for _ in 0..<400 {
+      if images.capture?.id != oldCapture.id,images.capture?.hasExactStudioPixels==true,!images.busy {break}
+      try await Task.sleep(nanoseconds:10_000_000)
+    }
+    let fresh=try XCTUnwrap(images.capture,images.error ?? "No refreshed native image")
+    XCTAssertNotEqual(fresh.id,oldCapture.id);XCTAssertEqual(fresh.scene.pixels,pixels)
+    XCTAssertEqual(fresh.width,641);XCTAssertEqual(fresh.height,853)
+    let bitmap=try XCTUnwrap(NSBitmapImageRep(data:Data(contentsOf:images.imageURL(assetID:fresh.inputAssetID))))
+    XCTAssertEqual(bitmap.pixelsWide,641);XCTAssertEqual(bitmap.pixelsHigh,853)
+    XCTAssertEqual(images.prompt,prompt);XCTAssertEqual(images.style,style);XCTAssertEqual(images.references,references);XCTAssertEqual(images.options,expected)
+    XCTAssertEqual(images.history.first{$0.id==previous.id},previous)
+    XCTAssertEqual(try Data(contentsOf:images.imageURL(assetID:oldCapture.inputAssetID)),oldBytes)
+    XCTAssertTrue(store.studioShowingImages);XCTAssertFalse(images.isCaptureStale)
+    XCTAssertEqual(store.project,source);XCTAssertEqual(composition.draft,draft);XCTAssertEqual(composition.stage.camera,camera);XCTAssertEqual(store.engine.undoStack.count,undo)
+  }
+
+  func testEveryStudioEntryRefreshesOnlyInputAcrossSavedScenesAndUnchangedSceneReentry()async throws {
+    let store=try fixture(),composition=store.studioComposition,images=store.studioImages
+    composition.save();let first=try XCTUnwrap(composition.draft)
+    var second=first;second.id=UUID();second.name="Portrait alternate view";second.pixels = .init(width:641,height:853)
+    second.instances[0].id=UUID();second.instances[0].positionMM.x=35;second.instances[0].rotationDegrees=28
+    _ = try store.engine.call("form_studio_scene",arguments:["command":"save","scene":try jsonObject(second)],source:"Test saved scene")
+    store.metadataRecordsChanged();composition.load(first.id)
+    XCTAssertEqual(composition.draft?.id,first.id)
+    @MainActor func waitForInput(after id:UUID?)async throws->StudioGenerationCapture {
+      for _ in 0..<400 {
+        if let capture=images.capture,capture.id != id,capture.hasExactStudioPixels,!images.busy {return capture}
+        try await Task.sleep(nanoseconds:10_000_000)
+      }
+      return try XCTUnwrap(nil as StudioGenerationCapture?,images.error ?? "No fresh Studio input arrived")
+    }
+    images.prompt="First saved view";store.createStudioStill()
+    let oldCapture=try await waitForInput(after:nil)
+    XCTAssertEqual(oldCapture.sceneID,first.id)
+    await images.generate();let previous=try XCTUnwrap(images.currentRun),oldOutput=try XCTUnwrap(previous.outputAssetIDs.first)
+    let inputBytes=try Data(contentsOf:images.imageURL(assetID:oldCapture.inputAssetID))
+    let outputBytes=try Data(contentsOf:images.imageURL(assetID:oldOutput))
+    let record=store.repository.root.appendingPathComponent("StudioAssets/GenerationRuns/"+previous.id.uuidString+".json"),recordBytes=try Data(contentsOf:record)
+    images.prompt="Keep all of my next-image instructions";images.style="Keep this custom finish direction"
+    images.options.model = .flare;images.options.quality = .draft;images.options.count=4
+    images.references=[.init(assetID:oldCapture.inputAssetID,role:.composition),.init(assetID:oldOutput,role:.style)]
+    let prompt=images.prompt,style=images.style,references=images.references
+    var expected=images.options;expected.outputPixels=second.pixels
+    store.studioShowingImages=false;composition.load(second.id)
+    XCTAssertEqual(composition.draft?.id,second.id,"Switch using the same saved-scene controller path as thumbnails")
+    let source=try XCTUnwrap(store.project),draft=composition.draft,camera=composition.stage.camera,undo=store.engine.undoStack.count
+    store.createStudioStill();XCTAssertNil(images.capture,"Explicit entry clears the previous input before asynchronous capture")
+    let fresh=try await waitForInput(after:oldCapture.id)
+    XCTAssertNotEqual(fresh.sceneID,oldCapture.sceneID);XCTAssertEqual(fresh.sceneID,second.id)
+    XCTAssertEqual(fresh.scene.pixels,second.pixels);XCTAssertEqual(fresh.width,641);XCTAssertEqual(fresh.height,853)
+    let bitmap=try XCTUnwrap(NSBitmapImageRep(data:Data(contentsOf:images.imageURL(assetID:fresh.inputAssetID))))
+    XCTAssertEqual(bitmap.pixelsWide,641);XCTAssertEqual(bitmap.pixelsHigh,853)
+    XCTAssertEqual(images.prompt,prompt);XCTAssertEqual(images.style,style);XCTAssertEqual(images.references,references);XCTAssertEqual(images.options,expected)
+    // Reenter without changing the scene: an old exact, nonstale input must
+    // still be replaced, while the user's next-image form remains intact.
+    store.studioShowingImages=false;store.createStudioStill();XCTAssertNil(images.capture)
+    let repeated=try await waitForInput(after:fresh.id)
+    XCTAssertNotEqual(repeated.id,fresh.id);XCTAssertEqual(repeated.sceneID,second.id);XCTAssertEqual(repeated.scene.pixels,second.pixels)
+    XCTAssertEqual(images.prompt,prompt);XCTAssertEqual(images.style,style);XCTAssertEqual(images.references,references);XCTAssertEqual(images.options,expected)
+    XCTAssertEqual(images.history.first{$0.id==previous.id},previous)
+    XCTAssertEqual(try Data(contentsOf:images.imageURL(assetID:oldCapture.inputAssetID)),inputBytes)
+    XCTAssertEqual(try Data(contentsOf:images.imageURL(assetID:oldOutput)),outputBytes);XCTAssertEqual(try Data(contentsOf:record),recordBytes)
+    XCTAssertEqual(store.project,source);XCTAssertEqual(composition.draft,draft);XCTAssertEqual(composition.stage.camera,camera);XCTAssertEqual(store.engine.undoStack.count,undo)
   }
 
   func testExplicitLibraryCanvasPlacementUsesExistingImporterAndOneUndoPreservesOriginalAsset()throws {

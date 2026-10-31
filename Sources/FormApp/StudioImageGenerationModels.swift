@@ -26,9 +26,23 @@ struct StudioImageGenerationOptions:Codable,Equatable {
   var quality:StudioGenerationQuality = .high
   var count=1
   var failureFixture:StudioGenerationFailureFixture = .none
-  var pixels:(width:Int,height:Int) {let n=size.longEdge;return aspect == .square ? (n,n):aspect == .landscape ? (n,n*2/3):(n*2/3,n)}
-  func validate()throws {guard [1,2,4].contains(count) else{throw FormError.invalid("Choose one, two, or four demo images.")}}
-  var redactedMetadata:[String:String] {["model":model.rawValue,"aspect":aspect.rawValue,"size":size.rawValue,"quality":quality.rawValue,"count":String(count),"failure_fixture":failureFixture.rawValue,"transport":"none","mode":"local_demo"]}
+  /// New requests retain the Studio output exactly. Absent on older records,
+  /// whose original aspect/size settings remain readable and reproducible.
+  var outputPixels:StudioPixels?=nil
+  var pixels:(width:Int,height:Int) {
+    if let outputPixels {return (outputPixels.width,outputPixels.height)}
+    let n=size.longEdge;return aspect == .square ? (n,n):aspect == .landscape ? (n,n*2/3):(n*2/3,n)
+  }
+  func validate()throws {
+    guard [1,2,4].contains(count) else{throw FormError.invalid("Choose one, two, or four demo images.")}
+    try outputPixels?.validate()
+  }
+  var redactedMetadata:[String:String] {
+    var value=["model":model.rawValue,"quality":quality.rawValue,"count":String(count),"failure_fixture":failureFixture.rawValue,"transport":"none","mode":"local_demo"]
+    if let outputPixels {value["width"]=String(outputPixels.width);value["height"]=String(outputPixels.height);value["sizing"]="studio"}
+    else {value["aspect"]=aspect.rawValue;value["size"]=size.rawValue}
+    return value
+  }
 }
 struct StudioGenerationReference:Codable,Equatable,Identifiable {
   enum Role:String,Codable,CaseIterable {case style,subject,composition;var title:String{rawValue.capitalized}}
@@ -46,6 +60,7 @@ struct StudioGenerationCapture:Codable,Equatable,Identifiable {
   var warnings:[String]
   var context:StudioGenerationInputContext?=nil
   var sceneID:UUID {scene.id}
+  var hasExactStudioPixels:Bool {width==scene.pixels.width && height==scene.pixels.height}
 }
 struct StudioGenerationRun:Codable,Equatable,Identifiable {
   enum Status:String,Codable {case running,succeeded,failed,cancelled,stale;var title:String {rawValue.capitalized}}

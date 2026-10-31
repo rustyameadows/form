@@ -1,16 +1,18 @@
 # Studio stills and Library
 
-Studio's **Generate image** action opens a local preview of the AI-assisted rendering workflow. It captures the current working composition, including unsaved instance placement and the camera currently on screen. Capturing does not save the scene or change design objects, artwork, the Table camera or their Undo history.
+Studio's **Generate image** action opens a local preview of the AI-assisted rendering workflow. It captures the current working composition at its exact Studio output dimensions, including unsaved instance placement and the camera currently on screen. Capturing does not save the scene or change design objects, artwork, the Table camera or their Undo history.
 
 This implementation is deliberately a mock. It has no OpenAI client, network transport, ambient credential lookup or Keychain integration. Its local provider produces native scene images with a deterministic color treatment and a visible **LOCAL DEMO** mark. Prompts and references are recorded for the workflow; no model interprets them. They are not AI-generated final assets.
 
 ## Scene to still
 
 1. Compose a Studio scene and choose **Generate image** below **Save still…** in the inspector. Saved scenes live in the left thumbnail strip; add instances and props from the viewport dock.
-2. Review the captured input. The capture is fixed; use **Recapture** to bring later scene edits into another run.
-3. Choose a prompt preset to fill the editor, then edit it freely. Save reusable prompts within the project. Choose model, aspect, preview size, quality and one, two or four outputs. Optional references can come from local image files or Library, with a declared role.
+2. Review the captured input and its **From Studio** dimensions. Every entry through **Generate image** refreshes the scene input automatically. Your prompt, model, quality, count and references stay as you left them; earlier project results remain in the output strip.
+3. Choose a prompt preset to fill the editor, then edit it freely. Save reusable prompts within the project. Set width and height in Studio; image generation has no separate aspect or size preset. Choose model, quality and one, two or four outputs. Optional references can come from local image files or Library, with a declared role.
 4. Choose **Use demo connection** in OpenAI connection setup, then create demo images. Progress, cancellation, failure and retry all run locally.
 5. Browse project results in the right thumbnail strip. Preview opens a separate, nonmodal window without replacing the prompt, input, options or references being authored. Compare a result with its original scene, rename or favorite it, save a copy, reuse it as a reference, or explicitly place it on Canvas. Regenerate is an explicit action that loads the earlier run.
+
+Studio output dimensions remain authoritative throughout the handoff. A 1800 × 2400 Studio scene supplies a 1800 × 2400 input PNG, and each result uses those same dimensions and framing. The local provider draws the entire source across the output without extra margins or a separate preview-size conversion. Earlier reduced captures remain identifiable in history and require **Recapture scene** before another generation.
 
 Returning to the composition leaves an active job running within the same project. Switching projects or going Home cancels the active job and prevents a late result from appearing in the next project. Completed results and run history remain in Library. A running request uses its frozen input even if the scene is edited afterward.
 
@@ -30,7 +32,7 @@ A capture records a bounded context alongside its native scene image: visible ob
 
 Connection setup is available from the image workspace, Studio menu and Settings. It opens a normal, independent Mac window. **Use demo connection** works without entering a key. The optional secure field demonstrates masked API-key entry; its contents stay inside that view, are never passed to the provider, and are cleared when the window closes. **Run demo check** simulates connection outcomes. No key is stored, tested or transmitted.
 
-The provider choices are GPT Image Sunburst and Flare, identified separately from the local mock provider. The model identities and future image/reference handoff are based on the [official OpenAI image-generation guide](https://developers.openai.com/api/docs/guides/image-generation). The preview's bounded image sizes and color treatments are local fixtures, not live model capabilities, quality guarantees or pricing estimates. Enabling real API access requires a separate implementation and explicit authorization.
+The provider choices are GPT Image Sunburst and Flare, identified separately from the local mock provider. The model identities and future image/reference handoff are based on the [official OpenAI image-generation guide](https://developers.openai.com/api/docs/guides/image-generation). The color treatments are local fixtures, not live model capabilities, quality guarantees or pricing estimates. Output pixels come from Studio, independently of the model label. Enabling real API access requires a separate implementation and explicit authorization.
 
 ## Project asset Library
 
