@@ -8,10 +8,12 @@ import XCTest
   private struct Host: View {
     @ObservedObject var store: StudioStore
     var body: some View {
-      if let element = store.artworkSession.primary {
-        ArtworkPaintStackInspector(session: store.artworkSession,
-          element: store.artworkSession.colored(element)).environmentObject(store).padding(16)
-      }
+      ScrollView {
+        if let element = store.artworkSession.primary {
+          ArtworkPaintStackInspector(session: store.artworkSession,
+            element: store.artworkSession.colored(element)).environmentObject(store).padding(16)
+        }
+      }.frame(width: 370, height: 900).background(Palette.paper)
     }
   }
   private func fixture(_ element: ArtworkElement) throws -> StudioStore {
@@ -102,7 +104,7 @@ import XCTest
     shape.paintStack = [.init(.init(color: "#FF0000")), .init(.init(color: "#0000FF"))]
     let store = try fixture(shape), original = try XCTUnwrap(store.project)
     NSApp.setActivationPolicy(.accessory)
-    let window = NSWindow(contentRect: .init(x: 60, y: 60, width: 370, height: 1000),
+    let window = NSWindow(contentRect: .init(x: 60, y: 60, width: 370, height: 900),
       styleMask: [.titled], backing: .buffered, defer: false)
     window.isReleasedWhenClosed = false
     let host = NSHostingView(rootView: Host(store: store).labInterface()); window.contentView = host
@@ -119,9 +121,51 @@ import XCTest
       return [node] + children.flatMap { nodes($0, depth: depth + 1) }
     }
     func views(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(views) }
+    func pointerTarget(_ identifier: String) throws -> NSView {
+      let parts = identifier.split(separator: "-")
+      let index = try XCTUnwrap(parts.count == 3 ? Int(parts[1]) : nil)
+      let mounted = views(host).filter { !$0.isHiddenOrHasHiddenAncestor && !$0.bounds.isEmpty }
+      let switches = mounted.filter { String(describing: type(of: $0)) == "PlatformSwitch" }
+        .sorted {
+          let a = $0.convert($0.bounds, to: host).midY, b = $1.convert($1.bounds, to: host).midY
+          return host.isFlipped ? a < b : a > b
+        }
+      XCTAssertEqual(switches.count, 2, "Both actual paint rows must be mounted before interacting")
+      let row = 1 - index
+      let toggle = try XCTUnwrap(switches.indices.contains(row) ? switches[row] : nil)
+      if parts[2] == "enabled" { return toggle }
+      let y = toggle.convert(toggle.bounds, to: host).midY
+      // The rendered dump exposes these actual NSViews even when SwiftUI does
+      // not publish its virtual AX buttons in an in-process test. Match the
+      // row geometrically and click the real forward/back/remove control.
+      let buttons = mounted.filter {
+        String(describing: type(of: $0)) == "SwiftUIAppKitButton"
+          && abs($0.convert($0.bounds, to: host).midY - y) < 12
+      }.sorted { $0.convert($0.bounds, to: host).midX < $1.convert($1.bounds, to: host).midX }
+      XCTAssertEqual(buttons.count, 3, "Each actual paint header has forward, backward and remove buttons")
+      let column = parts[2] == "forward" ? 0 : parts[2] == "backward" ? 1 : 2
+      return try XCTUnwrap(buttons.indices.contains(column) ? buttons[column] : nil)
+    }
+    func click(_ view: NSView) throws {
+      view.scrollToVisible(view.bounds); host.layoutSubtreeIfNeeded()
+      let rect = view.convert(view.bounds, to: host)
+      XCTAssertTrue(host.visibleRect.intersects(rect)); XCTAssertGreaterThan(rect.width, 5)
+      let location = view.convert(.init(x: view.bounds.midX, y: view.bounds.midY), to: nil)
+      let time = ProcessInfo.processInfo.systemUptime
+      let down = try XCTUnwrap(NSEvent.mouseEvent(with: .leftMouseDown, location: location,
+        modifierFlags: [], timestamp: time, windowNumber: window.windowNumber, context: nil,
+        eventNumber: 1, clickCount: 1, pressure: 1))
+      let up = try XCTUnwrap(NSEvent.mouseEvent(with: .leftMouseUp, location: location,
+        modifierFlags: [], timestamp: time + 0.02, windowNumber: window.windowNumber, context: nil,
+        eventNumber: 2, clickCount: 1, pressure: 0))
+      NSApp.postEvent(up, atStart: false); NSApp.sendEvent(down)
+      while let event = NSApp.nextEvent(matching: .leftMouseUp, until: Date(), inMode: .default, dequeue: true) {
+        NSApp.sendEvent(event)
+      }
+    }
     func press(_ identifier: String) async throws {
       var button: NSObject?
-      for _ in 0..<150 {
+      for _ in 0..<15 {
         host.layoutSubtreeIfNeeded(); window.displayIfNeeded()
         button = views(host).flatMap { nodes($0) }.first {
           ($0 as? any NSAccessibilityProtocol)?.accessibilityIdentifier() == identifier
@@ -139,12 +183,13 @@ import XCTest
         }.joined(separator: "\n")
         try tree.write(to: URL(fileURLWithPath: "/tmp/lab-paint-inspector-accessibility.txt"), atomically: true, encoding: .utf8)
       }
-      let control = try XCTUnwrap(button, "Missing native paint control: \(identifier)")
-      if let control = control as? any NSAccessibilityProtocol {
+      if let control = button as? any NSAccessibilityProtocol {
         XCTAssertTrue(control.accessibilityPerformPress())
-      } else {
+      } else if let control = button {
         XCTAssertTrue(control.accessibilityActionNames().contains(.press))
         control.accessibilityPerformAction(.press)
+      } else {
+        try click(pointerTarget(identifier))
       }
       try await Task.sleep(nanoseconds: 30_000_000)
     }

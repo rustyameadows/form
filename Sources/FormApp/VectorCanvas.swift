@@ -2804,7 +2804,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let run=TypographyEngine.spans(from:NSAttributedString(string:"A",attributes:raw),fallback:fallback,utf16Offset:mapping.sourceRange(.init(location:location,length:0)).location)[0]
       var changed=run;changed.fontSize=size;changed=TextStyleCommands.recording(changed,from:run)
       var type=changed.typography;type.inheritedLanguage=raw[LanguageHyphenation.inheritedLanguageKey] as? String
-      var attrs=TypographyEngine.attributes(type,size:size,color:changed.color,millimeters:false,swatchID:changed.swatchID,textStyle:changed.textStyle,paragraphStyle:changed.paragraphStyle)
+      var attrs=TypographyEngine.attributes(type,size:size,color:changed.color,millimeters:false,swatchID:changed.swatchID,textStyle:changed.textStyle,paragraphStyle:changed.paragraphStyle,paintStack:changed.paintStack)
       if type.opticalSizing==nil,type.characterPosition==nil,let old=raw[.font] as? NSFont {attrs[.font]=NSFont(descriptor:old.fontDescriptor,size:size) ?? old}
       for key in [TextCase.sourceKey,GlyphEngine.overrideKey,PublicationLists.key,TypographyEngine.inheritedPaintStackKey] {attrs[key]=raw[key]}
       return attrs
@@ -2824,6 +2824,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private func applyPaintedTextColor(_ color: String, swatch: UUID?) -> Bool {
     guard let tv = textView else { return false }
     let selected = GlyphEngine.expandedDisplayRange(tv.selectedRange(), in: tv.attributedString())
+    tv.undoManager?.beginUndoGrouping()
+    defer{tv.undoManager?.endUndoGrouping()}
     func replacement(_ raw: [NSAttributedString.Key: Any]) -> [NSAttributedString.Key: Any] {
       var attrs = raw
       let assigned = (raw[TypographyEngine.paintStackKey] as? Data).flatMap { try? JSONDecoder.form.decode([ArtworkPaintLayer].self, from: $0) }

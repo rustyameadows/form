@@ -36,7 +36,13 @@ import XCTest
     canvas.beginText(changed)
     editor = try XCTUnwrap(window.firstResponder as? CanvasTextView)
     editor.setSelectedRange(.init(location: 1, length: 2))
+    editor.undoManager?.groupsByEvent=false
+    let beforeColor=NSAttributedString(attributedString:editor.attributedString())
     XCTAssertTrue(canvas.applyTextColor("#00AA00"))
+    let afterColor=NSAttributedString(attributedString:editor.attributedString())
+    XCTAssertTrue(editor.undoManager?.canUndo == true)
+    editor.undoManager?.undo();XCTAssertEqual(editor.attributedString(),beforeColor)
+    editor.undoManager?.redo();XCTAssertEqual(editor.attributedString(),afterColor)
     canvas.finishText()
     let recolored = try current()
     XCTAssertEqual(recolored.paintStack, element.paintStack)
