@@ -176,11 +176,6 @@ import XCTest
       guard let styleScroll else{return nil}
       let frame=styleScroll.convert(styleScroll.bounds,to:nil)
       point = .init(x:rect.maxX-190,y:frame.minY-137)
-    case "studio-preview-key-continue":
-      guard let secure=descendants(host).compactMap({$0 as? NSSecureTextField}).first else{return nil}
-      let frame=secure.convert(secure.bounds,to:nil)
-      let hasText = !(secure.currentEditor()?.string ?? secure.stringValue).isEmpty
-      point = .init(x:frame.minX+90,y:frame.minY-(hasText ? 65:31))
     default:return nil
     }
     guard let content=window.contentView,content.bounds.contains(content.convert(point,from:nil)),
@@ -229,9 +224,13 @@ import XCTest
     _ = NSApplication.shared
     let controller=OpenAIConnectionPreviewController()
     var closes=0
-    let (_,host)=mount(OpenAIConnectionPreviewView(controller:controller){closes+=1},size:.init(width:500,height:640))
-    let continueAction=try action(host,"studio-preview-key-continue")
-    _ = continueAction.accessibilityPerformPress();settle(host)
+    let (window,host)=mount(OpenAIConnectionPreviewView(controller:controller){closes+=1},size:.init(width:500,height:640))
+    let continueButton=try XCTUnwrap(descendants(host).compactMap{$0 as? WorkspaceToolbarNativeButton}.first {
+      $0.accessibilityIdentifier()=="studio-preview-key-continue"
+    })
+    XCTAssertEqual(continueButton.accessibilityLabel(),"Continue with demo setup")
+    XCTAssertFalse(continueButton.isEnabled)
+    XCTAssertFalse(continueButton.accessibilityPerformPress());settle(host)
     XCTAssertEqual(controller.state,.disconnected);XCTAssertEqual(closes,0,"An empty key preview cannot continue")
     let secure=try XCTUnwrap(descendants(host).compactMap{$0 as? NSSecureTextField}.first)
     secure.selectText(nil)
@@ -239,9 +238,13 @@ import XCTest
     editor.insertText("preview text only",replacementRange:.init(location:0,length:editor.string.utf16.count));settle(host)
     XCTAssertFalse(secure.stringValue.isEmpty)
     XCTAssertEqual(controller.state,.disconnected)
-    let readyContinue=try action(host,"studio-preview-key-continue")
-    XCTAssertTrue(readyContinue.isAccessibilityEnabled())
-    XCTAssertTrue(readyContinue.accessibilityPerformPress());settle(host)
+    XCTAssertTrue(continueButton.isEnabled)
+    let content=try XCTUnwrap(window.contentView)
+    let point=continueButton.convert(.init(x:continueButton.bounds.midX,y:continueButton.bounds.midY),to:content)
+    XCTAssertTrue(content.bounds.contains(point))
+    XCTAssertTrue(content.hitTest(content.superview?.convert(point,from:content) ?? point) === continueButton,
+      "The enabled Continue target must be its actual mounted native control.")
+    XCTAssertTrue(continueButton.accessibilityPerformPress());settle(host)
     XCTAssertEqual(controller.state,.demoReady);XCTAssertEqual(closes,1);XCTAssertTrue(secure.stringValue.isEmpty)
     XCTAssertTrue(controller.detail?.contains("no AI request")==true)
   }
