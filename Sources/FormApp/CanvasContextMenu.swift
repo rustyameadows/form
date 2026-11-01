@@ -11,12 +11,15 @@ private final class CanvasMenuAction: NSObject {
     case command(String, String?), select(UUID), inspector, enterGroup(UUID), leaveGroup, canvas
     case outlines, findOnTable(UUID), component(UUID)
     case generate(Point2, CanvasGenerationReference?), resumeGeneration(CanvasImagePromptIdentity)
+    case copy(LABSelectionReference?, Bool)
   }
   let projectID: UUID, frameID: UUID
+  let originFrameID: UUID?, scopeID: UUID?
   let selection: Set<UUID>
   let kind: Kind
-  init(projectID: UUID, frameID: UUID, selection: Set<UUID>, kind: Kind) {
+  init(projectID: UUID, frameID: UUID, originFrameID: UUID?, scopeID: UUID?, selection: Set<UUID>, kind: Kind) {
     self.projectID = projectID; self.frameID = frameID; self.selection = selection; self.kind = kind
+    self.originFrameID = originFrameID; self.scopeID = scopeID
   }
 }
 
@@ -25,16 +28,18 @@ extension VectorCanvasView {
     let menu = NSMenu(); menu.autoenablesItems = false
     guard let session, let store = session.store else { return menu }
     prepareForGroupNavigation()
-    NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
-    finishText(); session.endGesture()
-    store.activateDesignSurface(.artwork)
     synchronize()
     let physical = canvasPoint(convert(event.locationInWindow, from: nil))
-    if session.maskEditing == nil, let frame = frame(atCanvasPoint: physical), frame.id != activeFrame?.id {
-      session.activate(frame.id); synchronize()
-    }
-    guard let project = store.project, let frame = activeFrame else { return menu }
-    let art = session.art
+    let header = session.frames.last { !$0.isWorkspace &&
+      CanvasFrameChrome.headerRect(for: $0,scale: TypographyEngine.pointsPerMM*zoom).contains(physical) }
+    guard let project = store.project,
+      let frame = session.maskEditing == nil ? header ?? self.frame(atCanvasPoint: physical) ?? activeFrame : activeFrame else { return menu }
+    let isActive = frame.id == activeFrame?.id
+    let source = frame.projection?.requiresInsideSource == true
+      ? frame.surfaceObject.paperConstruction?.insideArtwork ?? Artwork(background: "#FFFFFF")
+      : project.editableArtwork(frame.object) ?? Artwork(background: "#FFFFFF")
+    let art = isActive ? session.art : frame.projection?.display(source) ?? source
+    var selection = isActive ? session.selection : [], scopeID = isActive ? session.scopeID : nil
     let point = CGPoint(x: physical.x - frame.rect.minX, y: physical.y - frame.rect.minY)
     let hidden = ArtworkProduction.hiddenIDs(in: frame.artwork, roles: session.hiddenProductionRoles)
     let targets = ArtworkHitTesting.layers(at: point, in: art, tolerance: 3.5 / (TypographyEngine.pointsPerMM * zoom),
@@ -42,25 +47,30 @@ extension VectorCanvasView {
     // Merely opening a menu must not leave mask editing. A deep layer choice is
     // explicit navigation; otherwise retain the mask and its inspector context.
     if session.maskEditing == nil {
-      let scoped = targets.first { $0.parentID == session.scopeID }
-      if let target = scoped ?? externalGroupTarget(at: point, in: art, frame: frame) {
-        if target.parentID != session.scopeID || !session.selection.contains(target.id) {
-          session.navigateGroup(to: target.parentID, selection: [target.id])
+      let scoped = targets.first { $0.parentID == scopeID }
+      if let target = scoped ?? (isActive ? externalGroupTarget(at: point, in: art, frame: frame) : nil) {
+        if target.parentID != scopeID || !selection.contains(target.id) {
+          scopeID = target.parentID; selection = [target.id]
         }
-      } else { session.choose([]) }
+      } else { selection = [] }
     }
-    window?.makeFirstResponder(self)
-    needsDisplay = true
 
-    let roots = art.selectionRoots(session.selection)
+    let roots = art.selectionRoots(selection)
     let editable = session.maskEditing == nil && frame.editable && !roots.isEmpty && roots.allSatisfy { !art.isLocked($0) }
     func item(_ title: String, _ kind: CanvasMenuAction.Kind, enabled: Bool = true) -> NSMenuItem {
       let item = NSMenuItem(title: title, action: #selector(performCanvasMenuAction(_:)), keyEquivalent: "")
       item.target = self; item.isEnabled = enabled
-      item.representedObject = CanvasMenuAction(projectID: project.id, frameID: session.activeFrameID ?? frame.id,
-        selection: session.selection, kind: kind)
+      item.representedObject = CanvasMenuAction(projectID: project.id, frameID: frame.id,
+        originFrameID: session.activeFrameID, scopeID: scopeID, selection: selection, kind: kind)
       return item
     }
+
+    let reference = store.canvasSelectionReference(frameID: frame.id, elementIDs: selection)
+    let copy = item("Copy reference", .copy(reference, false), enabled: reference != nil)
+    copy.identifier = .init("canvas-copy-reference"); menu.addItem(copy)
+    let ids = item(selection.count > 1 ? "Copy IDs" : "Copy ID", .copy(reference, true), enabled: reference != nil)
+    ids.identifier = .init("canvas-copy-id"); menu.addItem(ids)
+    menu.addItem(.separator())
 
     let generation=store.canvasImages
     if let identity = canvasImagePromptIdentity, identity.destinationID == frame.object.id {
@@ -68,15 +78,18 @@ extension VectorCanvasView {
     }
     menu.addItem(item("Generate Image Here…", .generate(.init(physical.x,physical.y),nil), enabled:!generation.busy))
     if frame.object.recipeID == "artboard", !frame.object.isCanvasWorkspace || !roots.isEmpty {
-      let reference=CanvasGenerationReference(objectID:session.objectID ?? frame.object.id,
-        elementIDs:Array(session.selection),title:roots.count == 1 ? roots[0].title : roots.isEmpty ? frame.object.name : "Selected artwork")
-      let bounds=frame.object.isCanvasWorkspace ? session.selectionBounds.map {
+      let reference=CanvasGenerationReference(objectID:frame.object.id,
+        elementIDs:Array(selection),title:roots.count == 1 ? roots[0].title : roots.isEmpty ? frame.object.name : "Selected artwork")
+      let selectionBounds = roots.map { art.bounds(of: $0) }.reduce(nil as Rect2?) { result, bounds in
+        result.map { $0.union(bounds) } ?? bounds
+      }
+      let bounds=frame.object.isCanvasWorkspace ? selectionBounds.map {
         CGRect(x:$0.x+frame.rect.minX,y:$0.y+frame.rect.minY,width:$0.width,height:$0.height)
       } ?? frame.rect : frame.rect
       menu.addItem(item("Generate Image Using This as Reference…",
         .generate(.init(bounds.maxX+16,bounds.minY),reference),enabled:!generation.busy))
       if !frame.object.isCanvasWorkspace,!roots.isEmpty {
-        let artboard=CanvasGenerationReference(objectID:session.objectID ?? frame.object.id,title:frame.object.name)
+        let artboard=CanvasGenerationReference(objectID:frame.object.id,title:frame.object.name)
         menu.addItem(item("Generate Image Using This Artboard…",
           .generate(.init(frame.rect.maxX+16,frame.rect.minY),artboard),enabled:!generation.busy))
       }
@@ -93,7 +106,7 @@ extension VectorCanvasView {
       }
       let label = names.joined(separator: " › ") + (art.isLocked(target) ? " (Locked)" : "")
       let choice = item(label, .select(target.id))
-      choice.state = session.selection.contains(target.id) ? .on : .off
+      choice.state = selection.contains(target.id) ? .on : .off
       choice.identifier = NSUserInterfaceItemIdentifier(target.id.uuidString)
       selectionMenu.addItem(choice)
     }
@@ -105,8 +118,8 @@ extension VectorCanvasView {
       menu.addItem(item(group.component == nil ? "Enter Group" : "Edit Component Source",
         group.component == nil ? .enterGroup(group.id) : .component(group.id), enabled: editable || maskNavigation))
     }
-    if session.scopeID != nil { menu.addItem(item("Leave Group", .leaveGroup)) }
-    if session.scopeID != nil || session.maskEditing != nil || session.componentReturn != nil {
+    if scopeID != nil { menu.addItem(item("Leave Group", .leaveGroup)) }
+    if scopeID != nil || session.maskEditing != nil || session.componentReturn != nil {
       menu.addItem(item("Return to Canvas", .canvas))
     }
     menu.addItem(.separator())
@@ -149,7 +162,11 @@ extension VectorCanvasView {
     menu.addItem(item("Delete", .command("delete", nil), enabled: editable))
 
     var seenLinks = Set<UUID>()
-    let links = LinkedInspectorRelationships.canvas(session, in: project).filter { seenLinks.insert($0.objectID).inserted }
+    let links = (isActive ? LinkedInspectorRelationships.canvas(session, in: project)
+      : project.objects.filter { $0.hasTablePresentation && LinkedInspectorRelationships.hasPhysicalView($0,in:project) }
+        .flatMap { LinkedInspectorRelationships.table($0,in:project) }
+        .filter { $0.sourceID == frame.object.id && (frame.projection == nil || $0.objectID == frame.surfaceObject.id) })
+      .filter { seenLinks.insert($0.objectID).inserted }
     if !links.isEmpty {
       menu.addItem(.separator())
       if let link = links.first, links.count == 1 { menu.addItem(item("Find on Table", .findOnTable(link.objectID))) }
@@ -168,15 +185,26 @@ extension VectorCanvasView {
   @objc func performCanvasMenuAction(_ sender: NSMenuItem) {
     guard sender.isEnabled, let action = sender.representedObject as? CanvasMenuAction,
       let session, session.store?.project?.id == action.projectID else { return }
+    if case .copy(let reference, let idsOnly) = action.kind {
+      session.store?.copySelectionReference(reference, idsOnly: idsOnly)
+      return
+    }
     if case .resumeGeneration(let identity) = action.kind {
       requestCanvasImagePrompt(identity)
       return
     }
-    guard session.activeFrameID == action.frameID else { return }
+    guard session.activeFrameID == action.originFrameID else { return }
     prepareForGroupNavigation()
+    NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
     finishText(); session.endGesture()
+    session.store?.activateDesignSurface(.artwork)
+    if activeFrame?.id != action.frameID { session.activate(action.frameID); synchronize() }
+    guard activeFrame?.id == action.frameID else { return }
     let art = session.art
     guard action.selection.isSubset(of: Set(art.elements.map(\.id))) else { return }
+    if session.maskEditing == nil {
+      session.navigateGroup(to: action.scopeID, selection: action.selection)
+    }
     switch action.kind {
     case .generate(let point,let reference):
       do {
@@ -188,7 +216,7 @@ extension VectorCanvasView {
         }
       } catch { session.store?.error=error.localizedDescription }
       return
-    case .resumeGeneration: return
+    case .resumeGeneration, .copy: return
     case .inspector:
       NotificationCenter.default.post(name: .formShowCanvasInspector, object: session)
     case .select(let id):

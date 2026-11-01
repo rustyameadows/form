@@ -112,7 +112,11 @@ public enum MCP {
         "name":string,"value":number,"values":["type":"object","additionalProperties":number],"feature_id":objectID,"feature":["type":"object"],"operation":["type":"object"],"action":["type":"string","enum":["append","replace","suppress","remove"]],"suppressed":["type":"boolean"],"output":["type":"boolean"],"outputs":["type":"array","items":string],"path":string,"source_up_axis":["type":"string","enum":["y","z"]],"quality":["type":"string","enum":["preview","inspection","fabrication"]],"format":["type":"string","enum":["step","brep"]],"output_id":objectID,"first_output_id":objectID,"second_output_id":objectID
       ],required:["command"]),
       tool(
-        "form_status", "Read LAB's current project, selection, version, and library location.",
+        "form_status", "Read LAB's current project, version, library location, and live native selection context. The context field matches form_get_context; selected_objects is the legacy object selection, not an inferred edit target.",
+        readOnly: true),
+      tool(
+        "form_get_context",
+        "Read the current native UI context and filtered selections for Canvas, Table, and Studio without changing focus, committing drafts, or editing history. Read fresh when the user refers to this, the selected item, or the current artboard. Explicit copied references/IDs take precedence; never silently retarget an edit to another selection. ID lists may be bounded: check ids_complete/selection_complete and full counts, and never interpret an incomplete list as the entire selection. Native Copy reference provides the full explicit reference. UI-unavailable responses do not identify an active target.",
         readOnly: true),
       tool("form_list_projects", "List saved projects and their project IDs.", readOnly: true),
       tool("form_cloth", "Configure and inspect real bounded cloth studies. Initial mesh, masses, material UVs, pins, seams, static colliders and solver settings are saved/undoable. Runtime Run/Stop/Step/Reset and snapshots share the native controller, never commit text drafts, append project history or persist motion. Contacts: static plane, swept vertex/sphere and discrete triangle/sphere; no self-collision/calibrated fit. Cloth remains an open surface and cannot be sliced as a solid. Add clothPanel or clothTote with form_add_object for prepared templates; pouchAssembly is an original curved-pattern project template. assemble creates source-linked sewn panels with explicit rigid poses, source-edge seam fractions and material-coordinate attachments. Pattern assemblies first perform bounded gravity-free preparation: physical seconds/frames stay 0 until every structural length is within 5% and P95 absolute error within 1%; source pose remains visible until ready. Step advances a preparation batch before physical frames; inspect diagnostics.preparation and reset after failure. Initial/worst joining strain and unready candidate positions remain separately inspectable. No generated mesh is an editable document source. Attach a separate object at physical material coordinates; detach before deleting its surface.", [
@@ -627,7 +631,7 @@ public enum MCP {
         "protocolVersion": version, "serverInfo": ["name": "lab", "version": LabIdentity.version],
         "capabilities": ["tools": [:], "resources": [:], "prompts": [:]],
         "instructions":
-          "LAB is a native creative environment for designing and making physical things. Use form_list_recipes and form_get_project before editing. Create custom recipes for new object categories. All physical dimensions are millimeters. Use form_batch for coherent multi-part changes. Native edits and MCP edits share undo history. No external model calls occur in LAB.",
+          "LAB is a native creative environment for designing and making physical things. Use form_list_recipes and form_get_project before editing. Call form_get_context fresh when the user refers to this, the selected item, or the current artboard. Explicit copied references and IDs take precedence over the current selection; never silently retarget an edit if that target is missing or ambiguous. Check ID completeness flags and counts: incomplete ID lists never represent the entire selection. Native Copy reference provides the full explicit reference. UI-unavailable context does not establish an active target. Create custom recipes for new object categories. All physical dimensions are millimeters. Use form_batch for coherent multi-part changes. Native edits and MCP edits share undo history. No external model calls occur in LAB.",
       ]
     case "ping": result = [String: String]()
     case "tools/list": result = ["tools": tools]
@@ -658,6 +662,7 @@ public enum MCP {
       result = [
         "resources": [
           ["uri": "form://project", "name": "Current project", "mimeType": "application/json"],
+          ["uri": "form://context", "name": "Live native selection context", "mimeType": "application/json"],
           [
             "uri": "form://recipes", "name": "Editable object recipes",
             "mimeType": "application/json",
@@ -665,11 +670,14 @@ public enum MCP {
         ]
       ]
     case "resources/read":
-      guard let uri = params["uri"] as? String, ["form://project", "form://recipes"].contains(uri)
+      let resourceTools = [
+        "form://project": "form_get_project", "form://recipes": "form_list_recipes",
+        "form://context": "form_get_context",
+      ]
+      guard let uri = params["uri"] as? String, let toolName = resourceTools[uri]
       else { return error(id, -32602, "Unknown resource") }
       do {
-        let value = try invoke(
-          uri == "form://project" ? "form_get_project" : "form_list_recipes", [:])
+        let value = try invoke(toolName, [:])
         let text = String(
           data: try JSONSerialization.data(withJSONObject: value, options: [.sortedKeys]),
           encoding: .utf8)!

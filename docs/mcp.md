@@ -37,13 +37,42 @@ build/LAB.app/Contents/MacOS/lab-mcp --call form_add_object '{"recipe_id":"lamp"
 
 `form_set_view` accepts `form`, `function`, and `fabricate` for primary environments, and `studio` for the separate presentation environment. Switching these retains the same project, selection and camera. `form_status` reports `environment`, the three `primary_environments`, `studio_access`, and the existing `design_surfaces` state. `table`, `canvas`, `split`, `canvas_window`, and `artwork` remain surface commands; camera presets and saved Studio shot operations keep their existing behavior.
 
-Paper commands and physical arguments are illustrated in the [constructed-paper guide](constructed-paper-goods.md). `form_status.paper_workspace` reports representation, side, selected panel/fold, quantity and sheet dimensions. Current discovery exposes **64 tools**.
+Paper commands and physical arguments are illustrated in the [constructed-paper guide](constructed-paper-goods.md). `form_status.paper_workspace` reports representation, side, selected panel/fold, quantity and sheet dimensions. Use MCP `tools/list` for the current tool catalog.
+
+## Live context and copied references
+
+Read `form_get_context` immediately before interpreting “this,” “the selected item,” or “the current artboard.” The same live snapshot is available at `form_status.context` and `form://context`. Reading it does not change focus, commit native text, save drafts, or add history. `form_get_project` retains its existing Project JSON shape.
+
+In LAB, choose **Edit → Copy reference** (**⌘⌥C**) to copy the current target as labeled JSON, then paste it into chat. **Copy ID/IDs** copies just the most specific IDs: selected path nodes, layers, Studio instance/scene/shot, or objects. Canvas context menus and Canvas frame/layer, Table object, and Studio scene/instance menus also copy the addressed item without selecting it. Prefer the full reference when sharing a physical surface or Studio instance: a bare UUID omits its project, owner, and coordinate context.
+
+Explicit copied references and IDs take precedence over later selection changes. Check their `project_id` and target existence before editing. If the referenced target is gone or ambiguous, resolve that ambiguity instead of silently editing the current selection. A live context snapshot is observational, not a persistent binding or an instruction to change selection.
+
+The native schema has `schema_version: 1` and these principal fields:
+
+| Field | Meaning |
+| --- | --- |
+| `project_id`, `project_generation` | Current document and runtime assignment generation; the generation is not a saved revision or edit token. |
+| `environment`, `focused_surface`, `layout`, `canvas_window_open` | LAB workspace state, including split and detached Canvas. `focus_scope: "last_active_lab_surface"` deliberately survives switching to another app. |
+| `active_target` | A reference for the last active supported surface, or `null` when none is available. Home has no active target. |
+| `canvas` | Retained frame/reference, tool, editability, selected element/node IDs, group/mask scope, and text-edit state. `text_selection_utf16` uses UTF-16 offsets; `uncommitted_text_may_differ` warns that the stored text may lag the native editor. |
+| `table` | Existing Table-presented object IDs, isolation, and validated paper owner/panel/fold context. |
+| `studio`, `studio_subview`, `shot` | Composition draft/instance state and the visible Studio subview: `composition`, `images`, or `shots`. |
+
+Each surface's `active` flag distinguishes its retained selection from the active target. Function and Fabricate target the working Table selection even when the previous Canvas or Studio mode is retained. Object/layer detail arrays stop at 64 entries and report `details_truncated`. Image Library has no supported active selection target; Saved shots uses the Table selection, or the reviewed/edited saved shot when no Table object is selected. Neither silently substitutes a hidden composition instance.
+
+Context ID lists stop at 4,096 entries each. References report `ids_limit`, `ids_complete`, and full `element_count`/`node_count`/`object_count`. Canvas aliases report `selection_complete`, `selected_element_count`, and `selected_node_count`; Table reports `selection_complete`/`selected_object_count` and `isolation_complete`/`isolated_object_count`. **Never interpret an incomplete ID list as the entire selection.** Native **Copy reference** and **Copy ID/IDs** retain the full lists and are not truncated by this transport bound.
+
+Canvas references keep source `object_id`, `element_ids`, and `node_ids` separate from display `frame_id` and physical `physical_object_id`/`surface_id`/`side`. Use `canvas.canonical_artwork_query` with `form_get_artwork` for authored source coordinates. When present, `canvas.view_artwork_query` supplies the construction object and `physical_frame` arguments for readable paper-view coordinates; `physical_surface.source_to_view` describes that transform. A projection is not a new artwork owner. `source_available: false` means no canonical editable source is available, including an inside face that still needs `form_paper ensure_inside`.
+
+Studio references separate `scene_id`, `instance_id`, and `source_object_id`. `scene_saved` and `instance_saved` indicate whether those identities exist in the saved project; reference `saved` applies to the addressed scene or instance. `has_unsaved_changes` compares the visible composition with the current saved scene, while `studio.native_draft_changed` compares it with the controller's loaded baseline. A saved ID does not mean the displayed draft matches saved data. `form_studio_scene get/save` operates on saved project scenes, not the live native draft: explicitly save or resolve draft differences before editing through those APIs. A new unsaved instance must not be treated as an existing instance in the saved scene.
+
+Core-only operation reports `ui_available: false`, `active_target: null`, and only existing Table-presented IDs in `table.selected_object_ids`. It does not invent Canvas or Studio focus. `form_status.selected_objects` remains the legacy object-selection array, filtered to existing objects; use the context for native targeting.
 
 ## Tools
 
 | Tools | Use |
 | --- | --- |
-| `form_status`, `form_list_projects`, `form_get_project` | Inspect the app, selection, renderer diagnostics, and saved/current projects |
+| `form_status`, `form_get_context`, `form_list_projects`, `form_get_project` | Inspect the app, live native context, renderer diagnostics, and saved/current projects |
 | `form_create_project`, `form_open_project` | Start blank, clock, cyanotype envelope, cosmetics carton, lamps, or forms studies; continue a saved project |
 | `form_paper` | Inspect/configure paper constructions, stable panels/folds/joins, annotations, independent inside sources, physical layout, linked views and exclusive SVG/PDF/packet export |
 | `form_list_recipes`, `form_list_materials` | Discover schemas, ranges, defaults, and material IDs |
@@ -75,7 +104,7 @@ Paper commands and physical arguments are illustrated in the [constructed-paper 
 | `form_list_filaments`, `form_save_filament` | Read and edit reusable Studio filament/inventory profiles |
 | `form_list_printers`, `form_connect_printer` | Read metadata/status or connect using credentials already saved in Keychain |
 
-Read-only project and recipe resources are also exposed as `form://project` and `form://recipes`. The `design_object` prompt supplies a starting workflow.
+Read-only project, live context, and recipe resources are also exposed as `form://project`, `form://context`, and `form://recipes`. The `design_object` prompt supplies a starting workflow.
 
 `form_boolean_artwork` defaults to live Union/Subtract/Intersect/Exclude groups; `operation: divide` creates editable regions. `mode` also accepts `update`, `flatten`, `release`, and `path` for a direct flat result with hidden source operands. These edits and `form_convert_to_paths` participate in atomic `form_batch` operations. See the [live boolean guide](live-booleans.md) for examples, compatibility constraints, and schema-5 persistence.
 
