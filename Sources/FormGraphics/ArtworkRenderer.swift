@@ -66,6 +66,11 @@ import FormCore
       context.restoreGState()
       return
     }
+    drawPrepared(art, tree: ArtworkRenderTree(art, assets: assets, production: production, excluding: excluding),
+      width: width, height: height, context: context, effectScale: effectScale, unbounded: unbounded)
+  }
+  static func drawPrepared(_ art: Artwork, tree: ArtworkRenderTree, width: Double, height: Double,
+    context: CGContext, effectScale: Double?, unbounded: Bool) {
     context.saveGState()
     if !unbounded { context.clip(to: CGRect(x: 0, y: 0, width: width, height: height)) }
     if !unbounded, let boundary = art.boundary {
@@ -80,12 +85,11 @@ import FormCore
         FormColor.color(art.background).withAlphaComponent(art.backgroundOpacity ?? 1).cgColor)
       context.fill(CGRect(x: 0, y: 0, width: width, height: height))
     }
-    ArtworkRenderTree(art, assets: assets, production: production, excluding: excluding)
-      .drawChildren(nil, context: context,
+    tree.drawChildren(nil, context: context,
         effectScale: effectScale.map { $0 / max(0.001, AppearanceRenderer.scale(context)) })
     context.restoreGState()
   }
-  public static func drawElement(_ e: ArtworkElement, assets: URL, context: CGContext) {
+  public static func drawElement(_ e: ArtworkElement, assets: URL, context: CGContext, vectorPath: CGPath? = nil) {
     let rect = CGRect(x: 0, y: 0, width: e.width, height: e.height)
     if e.kind == "text" {
       if TextPaintRenderer.usesPaints(e) { TextPaintRenderer.draw(e, assets: assets, context: context); return }
@@ -130,7 +134,7 @@ import FormCore
       return
     }
     if e.paintStack != nil { ArtworkPaintRenderer.drawVector(e, assets: assets, context: context); return }
-    let path = VectorGeometry.path(e)
+    let path = vectorPath ?? VectorGeometry.path(e)
     let rule: CGPathFillRule = e.path?.evenOdd == true ? .evenOdd : .winding
     if e.fillEnabled != false && e.kind != "line" {
       if let gradient = e.gradient, let colors = makeGradient(gradient, opacity: e.fillOpacity ?? 1)

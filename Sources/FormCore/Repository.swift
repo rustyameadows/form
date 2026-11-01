@@ -25,6 +25,23 @@ private struct Manifest: Codable {
 
 public final class ProjectRepository {
   public let root: URL
+  private struct SavedObject {
+    let object:ProductObject,reference:ObjectReference
+  }
+  private struct SavedSnapshot {
+    let projectID:UUID,objects:[UUID:SavedObject]
+    let encoded:Int,reused:Int
+  }
+  private let saveCacheLock=NSLock()
+  // One successfully published project only. Exact values retain their shared
+  // array storage; no second serialized copy of dense artwork is held in RAM.
+  private var savedSnapshot:SavedSnapshot?
+  var lastSaveEncodedObjectCount:Int {
+    saveCacheLock.lock();defer{saveCacheLock.unlock()};return savedSnapshot?.encoded ?? 0
+  }
+  var lastSaveReusedObjectCount:Int {
+    saveCacheLock.lock();defer{saveCacheLock.unlock()};return savedSnapshot?.reused ?? 0
+  }
   public init(root: URL = FormPaths.library) throws {
     self.root = root
     try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
@@ -87,23 +104,37 @@ public final class ProjectRepository {
   }
   public func save(_ project: Project) throws {
     try project.validateArtworkLinks()
+    saveCacheLock.lock()
+    let previous=savedSnapshot?.projectID==project.id ? savedSnapshot?.objects ?? [:]:[:]
+    saveCacheLock.unlock()
     let package = url(for: project.id)
     let objectFolder = package.appendingPathComponent("Objects", isDirectory: true)
     try FileManager.default.createDirectory(at: objectFolder, withIntermediateDirectories: true)
     try FileManager.default.createDirectory(
       at: package.appendingPathComponent("Assets"), withIntermediateDirectories: true)
     var references: [ObjectReference] = []
+    var saved:[UUID:SavedObject]=[:],encoded=0,reused=0
+    func regularFileExists(_ url:URL)->Bool {
+      guard let attributes=try? FileManager.default.attributesOfItem(atPath:url.path) else{return false}
+      return attributes[.type] as? FileAttributeType == .typeRegular
+    }
     for object in project.objects {
+      if let cached=previous[object.id],cached.object==object,
+        regularFileExists(objectFolder.appendingPathComponent(cached.reference.file)) {
+        references.append(cached.reference);saved[object.id]=cached;reused+=1;continue
+      }
       let data = try JSONEncoder.form.encode(object)
+      encoded+=1
       let hash = SHA256.hash(data: data).prefix(8).map { String(format: "%02x", $0) }.joined()
       let filename = object.id.uuidString + "-" + hash + ".json"
       let target = objectFolder.appendingPathComponent(filename)
-      if !FileManager.default.fileExists(atPath: target.path) {
+      if !regularFileExists(target) {
         try data.write(to: target, options: .atomic)
       }
-      references.append(.init(id:object.id,file:filename,canvasWorkspace:object.isCanvasWorkspace,
+      let reference=ObjectReference(id:object.id,file:filename,canvasWorkspace:object.isCanvasWorkspace,
         canvasSourceOnly:object.canvasSourceOnly,
-        canvasItemCount:object.isCanvasWorkspace ? ProjectContent.looseItems(in:object.artwork) : nil))
+        canvasItemCount:object.isCanvasWorkspace ? ProjectContent.looseItems(in:object.artwork) : nil)
+      references.append(reference);saved[object.id] = .init(object:object,reference:reference)
     }
     var metadata = project
     metadata.schemaVersion = project.minimumSchemaVersion
@@ -111,6 +142,10 @@ public final class ProjectRepository {
     // Immutable object revisions are written first; publishing the manifest is one atomic operation.
     try JSONEncoder.form.encode(Manifest(project: metadata, objects: references)).write(
       to: package.appendingPathComponent("Manifest.json"), options: .atomic)
+    // Failed object writes or manifest publication must not advance this cache.
+    saveCacheLock.lock()
+    savedSnapshot = .init(projectID:project.id,objects:saved,encoded:encoded,reused:reused)
+    saveCacheLock.unlock()
   }
   public func importAsset(_ source: URL, into id: UUID) throws -> String {
     guard

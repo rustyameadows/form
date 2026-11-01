@@ -329,9 +329,15 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private let ppm = TypographyEngine.pointsPerMM
   private var frames: [CanvasFrame] = []
   private struct FrameSnapshotKey: Equatable {
-    var projectID: UUID?, updatedAt: Date?, revision: Int?, activeFrameID: UUID?
+    var projectID: UUID?, generation: UInt64?, revision: Int?, activeFrameID: UUID?
+    var objectID: UUID?, linkedTargetID: UUID?, dieline: Bool, editingComponent: Bool
+    var fonts: Int, paperGuides: Bool
+    var engine: ObjectIdentifier?
   }
   private var frameSnapshotKey: FrameSnapshotKey?
+  private var editableSnapshot = Artwork()
+  private var editableFrameID: UUID?
+  private var frameSnapshotUpdates = 0
   private var projectID: UUID?
   private var fitted = false
   private(set) var canvasOrigin = CGPoint.zero
@@ -387,13 +393,27 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var hoveredFrameID: UUID?
   private var hoverOutline: CGPath?
   private var lastHoverLookupMS = 0.0
+  private struct HoverContext: Equatable {
+    var tool: ArtworkTool
+    var selection: Set<UUID>, nodes: Set<UUID>
+    var scope: UUID?, mask: UUID?, crop: UUID?, gradientStop: UUID?
+    var hiddenRoles: Set<ArtworkProductionRole>
+    var editingText: Bool
+  }
+  private var hoverContext: HoverContext?
   private struct HoverPickKey: Hashable {
     var frameID: UUID, scope: UUID?, mask: UUID?, excluded: Set<UUID>
   }
   private var hoverPickers: [HoverPickKey: ArtworkHitTesting.Picker] = [:]
+  private var hoverPickerOrder: [HoverPickKey] = []
+  private var hoverPickerBuilds = 0
   private var physicalPickingClips: [UUID: CGPath] = [:]
   private var overlayAccent: NSColor { activeFrame?.isWorkspace == true ? Palette.canvasAccentNS : Palette.accentNS }
   private var accessibilityItems: [ArtworkAccessibilityElement] = []
+  private var accessibilityItemsByID: [UUID: ArtworkAccessibilityElement] = [:]
+  private let accessibilitySnapshot = CanvasAccessibilitySnapshot()
+  private var accessibilitySelection = Set<UUID>()
+  private var accessibilityFrameID: UUID?
   private var accessibilityUpdates = 0
   private var frameDragOrigin = CGPoint.zero
   private var frameResizeOrigin = CGRect.zero
@@ -403,6 +423,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var lastFitDiagnostics: [String: Any]?
   private let sewingGuides = CanvasSewingGuideCache()
   private let physicalArtworkGuides = CanvasPhysicalArtworkGuideCache()
+  private let preparedArtwork = CanvasPreparedArtworkCache()
+  private let overviewArtwork = CanvasOverviewRasterCache()
+  private var lastDrawnFrames = 0, lastDrawnElements = 0, lastCulledElements = 0
+  private var lastRasterFrames = 0
+  private var lastFrameSetupMS = 0.0, lastFrameChromeMS = 0.0, lastFrameContentMS = 0.0, lastOverviewLookupMS = 0.0
   var diagnostics: [String: Any] {
     var result = TypographyEngine.diagnostics
     result["image_drag_starts"] = session?.imageDragStarts ?? 0
@@ -411,6 +436,28 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     result["draw_count"] = drawCount
     result["last_draw_ms"] = lastDrawMS
     result["last_hover_lookup_ms"] = lastHoverLookupMS
+    result["frame_snapshot_updates"] = frameSnapshotUpdates
+    result["hover_picker_builds"] = hoverPickerBuilds
+    result["hover_picker_entries"] = hoverPickers.count
+    result["prepared_artwork_builds"] = preparedArtwork.builds
+    result["prepared_artwork_hits"] = preparedArtwork.hits
+    result["prepared_artwork_entries"] = preparedArtwork.count
+    result["prepared_artwork_estimated_bytes"] = preparedArtwork.retainedBytes
+    result["overview_raster_builds"] = overviewArtwork.builds
+    result["overview_raster_hits"] = overviewArtwork.hits
+    result["overview_raster_entries"] = overviewArtwork.count
+    result["overview_raster_bytes"] = overviewArtwork.retainedBytes
+    result["last_raster_frames"] = lastRasterFrames
+    result["last_frame_setup_ms"] = lastFrameSetupMS
+    result["last_frame_chrome_ms"] = lastFrameChromeMS
+    result["last_frame_content_ms"] = lastFrameContentMS
+    result["last_overview_lookup_ms"] = lastOverviewLookupMS
+    result["header_cache_builds"] = CanvasFrameChrome.headerCacheBuilds
+    result["header_cache_hits"] = CanvasFrameChrome.headerCacheHits
+    result["header_cache_bytes"] = CanvasFrameChrome.headerCacheBytes
+    result["last_drawn_frames"] = lastDrawnFrames
+    result["last_drawn_elements"] = lastDrawnElements
+    result["last_culled_elements"] = lastCulledElements
     result["group_scope_id"] = (session?.scopeID?.uuidString as Any?) ?? NSNull()
     result["selected_element_ids"] = session?.selection.map(\.uuidString).sorted() ?? []
     result["pointer_gesture"] = dragMode
@@ -420,6 +467,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     result["physical_guide_entries"] = physicalArtworkGuides.count
     result["frames"] = frames.count
     result["accessibility_updates"] = accessibilityUpdates
+    result["accessibility_snapshot_builds"] = accessibilitySnapshot.builds
+    result["accessibility_bounds_builds"] = accessibilitySnapshot.boundsBuilds
     result["live_preview"] = session?.preview ?? false
     result["renders_continuously"] = false
     result["viewport"] = viewportDiagnostics
@@ -635,7 +684,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     scroll.reflectScrolledClipView(clip)
   }
   private func viewportCoordinatesChanged() {
-    updateAccessibilityItems()
+    // AX children convert their retained document bounds when queried. Panning
+    // must not walk and resolve every nested layer just to move the viewport.
     synchronizeCanvasImagePromptButton()
     textView?.inputContext?.invalidateCharacterCoordinates()
     needsDisplay = true
@@ -685,32 +735,66 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     needsDisplay = true
     return true
   }
-  private func refreshFrameSnapshots(force: Bool = false) {
-    guard let session else { return }
+  @discardableResult private func refreshFrameSnapshots(force: Bool = false) -> Bool {
+    guard let session else { return false }
     let key = FrameSnapshotKey(projectID: session.store?.project?.id,
-      updatedAt: session.store?.project?.updatedAt, revision: session.store?.revision,
-      activeFrameID: session.activeFrameID)
-    guard force || key != frameSnapshotKey else { return }
+      generation: session.store?.engine.projectGeneration, revision: session.store?.revision,
+      activeFrameID: session.activeFrameID, objectID: session.objectID,
+      linkedTargetID: session.linkedTargetID, dieline: session.dieline,
+      editingComponent: session.componentReturn != nil, fonts: ArtworkRenderer.displayFontGeneration,
+      paperGuides: session.store?.paperShowingGuides == true,
+      engine: session.store.map { ObjectIdentifier($0.engine) })
+    guard force || key != frameSnapshotKey else { return false }
     // Native input can follow Group, Undo, or an agent edit before SwiftUI's
     // next representable update. Picking and hover must use the same current
     // hierarchy as the source, without refitting or interrupting a held gesture.
-    frames = session.frames
+    let previous = Dictionary(uniqueKeysWithValues: frames.map { ($0.id, $0) })
+    let next = session.frames
+    let editable = session.art
+    let activeID = session.activeCanvasFrame(in: next)?.id
+    var reusable = Set<UUID>()
+    if key.projectID == frameSnapshotKey?.projectID, key.engine == frameSnapshotKey?.engine,
+      key.fonts == frameSnapshotKey?.fonts {
+      for frame in next {
+        guard let old = previous[frame.id], old.projection == frame.projection,
+          old.surfaceObject.recipeID == frame.surfaceObject.recipeID,
+          old.surfaceObject.parameters == frame.surfaceObject.parameters,
+          old.surfaceObject.paperConstruction == frame.surfaceObject.paperConstruction else { continue }
+        var before = old.artwork, after = frame.artwork
+        before.canvasPosition = nil; after.canvasPosition = nil
+        guard before == after else { continue }
+        if frame.id == activeID || frame.id == editableFrameID {
+          guard activeID == editableFrameID, editable == editableSnapshot else { continue }
+        }
+        reusable.insert(frame.id)
+      }
+    }
+    frames = next
+    editableSnapshot = editable
+    editableFrameID = activeID
+    frameSnapshotUpdates += 1
     frameSnapshotKey = key
     clearHoverFeedback()
-    hoverPickers.removeAll(keepingCapacity: true)
-    physicalPickingClips.removeAll(keepingCapacity: true)
+    hoverPickers = hoverPickers.filter { reusable.contains($0.key.frameID) }
+    hoverPickerOrder.removeAll { !reusable.contains($0.frameID) }
+    physicalPickingClips = physicalPickingClips.filter { reusable.contains($0.key) }
     needsDisplay = true
+    return true
   }
   func synchronize() {
     guard let session else { return }
     if projectID != session.store?.project?.id {
       clearPointerGesture(); space = false
       canvasExtent = .null; canvasOrigin = .zero; sewingGuides.clear();physicalArtworkGuides.clear()
+      preparedArtwork.clear(); overviewArtwork.clear(); accessibilitySnapshot.clear()
     }
-    refreshFrameSnapshots(force: true)
-    sewingGuides.retain(Set(frames.map(\.id)))
-    physicalArtworkGuides.retain(Set(frames.map{$0.physicalGuideObject.id}))
-    expandCanvas(toInclude:contentBounds(all:true).union(CGRect(x:0,y:0,width:400,height:260)).insetBy(dx:-180,dy:-180))
+    if refreshFrameSnapshots() {
+      let ids = Set(frames.map(\.id))
+      sewingGuides.retain(ids); preparedArtwork.retain(ids); overviewArtwork.retain(ids)
+      physicalArtworkGuides.retain(Set(frames.map{$0.physicalGuideObject.id}))
+      expandCanvas(toInclude:contentBounds(all:true).union(CGRect(x:0,y:0,width:400,height:260)).insetBy(dx:-180,dy:-180))
+    }
+    synchronizeHoverContext()
     if projectID != session.store?.project?.id {
       projectID = session.store?.project?.id
       fitted = false
@@ -868,6 +952,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   override func draw(_ dirtyRect: NSRect) {
     let start = CFAbsoluteTimeGetCurrent()
+    lastDrawnFrames = 0; lastDrawnElements = 0; lastCulledElements = 0; lastRasterFrames = 0
+    lastFrameSetupMS = 0; lastFrameChromeMS = 0; lastFrameContentMS = 0; lastOverviewLookupMS = 0
     defer {
       drawCount += 1
       lastDrawMS = (CFAbsoluteTimeGetCurrent() - start) * 1000
@@ -881,13 +967,19 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     guard let session else { return }
     context.scaleBy(x: ppm, y: ppm)
     context.translateBy(x:-canvasOrigin.x,y:-canvasOrigin.y)
-    let scale = ppm * zoom
+    let drawingZoom = zoom, scale = ppm * zoom
+    let activeID = activeFrame?.id, assets = session.assets
+    let backingScale = max(1,window?.backingScaleFactor ?? 1)
     var reports:[UUID:PhysicalArtworkIntentReport]=[:],attempted=Set<UUID>()
     for f in frames {
+      let setupStart = CFAbsoluteTimeGetCurrent()
       let guideReport=physicalGuideReport(for:f,attempted:&attempted,reports:&reports)
       var drawingBounds=guideReport.map{f.physicalGuideBounds(report:$0,scale:max(0.001,scale))} ?? f.rect
       if !f.isWorkspace { drawingBounds = drawingBounds.union(CanvasFrameChrome.headerRect(for: f, scale: scale)) }
+      lastFrameSetupMS += (CFAbsoluteTimeGetCurrent()-setupStart)*1000
       guard f.isWorkspace || dirtyRect.intersects(documentRect(drawingBounds.insetBy(dx:-12,dy:-12))) else{continue}
+      lastDrawnFrames += 1
+      let chromeStart = CFAbsoluteTimeGetCurrent()
       let frameColor = InterfaceAppearance.shared.frameColor(for: f.role)
       if !f.isWorkspace {
       context.saveGState()
@@ -899,15 +991,17 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       context.restoreGState()
       CanvasFrameChrome.drawHeader(f, context: context, scale: scale)
       }
+      lastFrameChromeMS += (CFAbsoluteTimeGetCurrent()-chromeStart)*1000
+      let contentStart = CFAbsoluteTimeGetCurrent()
       context.saveGState()
       context.translateBy(x: f.rect.minX, y: f.rect.minY)
-      if session.dieline, f.surfaceObject.recipeID == "sleeve", f.id == activeFrame?.id {
+      if session.dieline, f.surfaceObject.recipeID == "sleeve", f.id == activeID {
         context.setFillColor(NSColor.white.cgColor)
         context.fill(.init(origin: .zero, size: f.rect.size))
         context.saveGState()
         context.translateBy(x: f.surfaceObject["width"] + f.surfaceObject["height"], y: 0)
         ArtworkRenderer.draw(
-          f.artwork, width: f.surfaceObject["width"], height: f.rect.height, assets: session.assets)
+          f.artwork, width: f.surfaceObject["width"], height: f.rect.height, assets: assets)
         context.restoreGState()
         context.setStrokeColor(frameColor.cgColor)
         context.setLineWidth(1 / scale)
@@ -920,37 +1014,65 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           context.strokePath()
         }
       } else {
-        let paperNet = PaperConstruction.isPaper(f.surfaceObject) && f.projection?.panelID == nil
-          ? try? PaperConstruction.definition(for:f.surfaceObject).net() : nil
+        let paper = PaperConstruction.isPaper(f.surfaceObject)
+          ? f.paperDefinition ?? (try? PaperConstruction.definition(for: f.surfaceObject)) : nil
+        let paperNet = f.projection?.panelID == nil
+          ? f.paperNet ?? paper.flatMap { try? $0.net() } : nil
         let sewing = sewingGuides.overlay(frameID: f.id, source: f.artwork)
-        context.saveGState()
-        if let projection = f.projection, !projection.isProof {
-          context.addPath(projection.clipPath); context.clip(using:.evenOdd)
-        }
-        if let paperNet {
-          var transform = CGAffineTransform(a:f.projection?.sourceToLocal.a ?? 1,b:f.projection?.sourceToLocal.b ?? 0,
-            c:f.projection?.sourceToLocal.c ?? 0,d:f.projection?.sourceToLocal.d ?? 1,
-            tx:f.projection?.sourceToLocal.tx ?? 0,ty:f.projection?.sourceToLocal.ty ?? 0)
-          context.addPath(PaperOutput.clipPath(paperNet).copy(using:&transform)!); context.clip()
-        }
-        if PaperConstruction.isPaper(f.surfaceObject),let project=session.store?.project,
-          let paper=try? PaperConstruction.definition(for:f.surfaceObject) {
-          let face=PaperGeometry.faceAppearance(for:f.surfaceObject,stock:paper.stock,project:project,inside:f.projection?.inside == true)
-          context.setFillColor(FormColor.color(face.resolvedColor).withAlphaComponent(face.profile.opacity).cgColor)
-          context.fill(CGRect(origin:.zero,size:f.rect.size))
-        }
-        ArtworkRenderer.draw(
-          f.artwork, width: f.rect.width, height: f.rect.height, assets: session.assets,
-          production: false,
-          excluding: (f.id == activeFrame?.id ? Set([editingID].compactMap { $0 }).union(
+        let face = paper.flatMap { paper in session.store?.project.map {
+          PaperGeometry.faceAppearance(for:f.surfaceObject,stock:paper.stock,project:$0,inside:f.projection?.inside == true)
+        } }
+        let excluded = (f.id == activeID ? Set([editingID].compactMap { $0 }).union(
             dragMode == "move" && moveDropFrameID != nil ? session.art.descendants(of:startSelection) : []) : [])
             .union(ArtworkProduction.hiddenIDs(in:f.artwork,roles:session.hiddenProductionRoles))
             .union(sewing?.sourceStrokeIDs ?? [])
-            .union(publicationEditor?.excluded(in:f.id) ?? []),
-          unbounded:f.isWorkspace)
-        context.restoreGState()
+            .union(publicationEditor?.excluded(in:f.id) ?? [])
+        func drawArtwork(in target: CGContext, preparingOverview: Bool) {
+          target.saveGState(); defer { target.restoreGState() }
+          if let projection = f.projection, !projection.isProof {
+            target.addPath(projection.clipPath); target.clip(using:.evenOdd)
+          }
+          if let paperNet {
+            var transform = CGAffineTransform(a:f.projection?.sourceToLocal.a ?? 1,b:f.projection?.sourceToLocal.b ?? 0,
+              c:f.projection?.sourceToLocal.c ?? 0,d:f.projection?.sourceToLocal.d ?? 1,
+              tx:f.projection?.sourceToLocal.tx ?? 0,ty:f.projection?.sourceToLocal.ty ?? 0)
+            target.addPath(PaperOutput.clipPath(paperNet).copy(using:&transform)!); target.clip()
+          }
+          if let face {
+            target.setFillColor(FormColor.color(face.resolvedColor).withAlphaComponent(face.profile.opacity).cgColor)
+            target.fill(CGRect(origin:.zero,size:f.rect.size))
+          }
+          // Overview pixels retain their own compact backing; do not evict
+          // close-up prepared vector trees while visiting hundreds of frames.
+          let renderer = preparingOverview
+            ? try? ArtworkRenderer.Prepared(f.artwork, assets: assets, excluding: excluded)
+            : preparedArtwork.renderer(frameID: f.id, source: f.artwork, assets: assets, excluding: excluded)
+          if let renderer {
+            renderer.draw(width: f.rect.width, height: f.rect.height, unbounded: f.isWorkspace)
+            lastDrawnElements += renderer.diagnostics["drawn_elements"] ?? 0
+            lastCulledElements += renderer.diagnostics["culled_elements"] ?? 0
+          } else {
+            ArtworkRenderer.draw(f.artwork,width:f.rect.width,height:f.rect.height,assets:assets,
+              production:false,excluding:excluded,unbounded:f.isWorkspace)
+          }
+        }
+        let presentation = CanvasOverviewRasterCache.Presentation(size: f.rect.size, projection: f.projection,
+          paperNet: paperNet, paperColor: face?.resolvedColor, paperOpacity: face?.profile.opacity)
+        let lookupStart = CFAbsoluteTimeGetCurrent()
+        let image = f.isWorkspace ? nil : overviewArtwork.image(frameID: f.id, source: f.artwork,
+          assets: assets, excluding: excluded, presentation: presentation, zoom: drawingZoom,
+          pixelsPerMM: scale*backingScale,
+          render: { drawArtwork(in: $0, preparingOverview: true) })
+        lastOverviewLookupMS += (CFAbsoluteTimeGetCurrent()-lookupStart)*1000
+        if let image {
+          CanvasOverviewRasterCache.draw(image, size: f.rect.size, context: context)
+          lastRasterFrames += 1
+        } else {
+          drawArtwork(in: context, preparingOverview: false)
+        }
+        lastFrameContentMS += (CFAbsoluteTimeGetCurrent()-contentStart)*1000
         if let guideReport {
-          drawPhysicalArtworkGuides(f,report:guideReport,context:context,scale:scale,active:f.id==activeFrame?.id)
+          drawPhysicalArtworkGuides(f,report:guideReport,context:context,scale:scale,active:f.id==activeID)
         }
         if let paperNet, session.store?.paperShowingGuides == true {
           context.saveGState()
@@ -967,7 +1089,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
             context.addPath(projection.clipPath); context.clip(using:.evenOdd)
           }
           ArtworkRenderer.draw(sewing.interfaceArtwork(scale: scale), width: f.rect.width, height: f.rect.height,
-            assets: session.assets, production: false,
+            assets: assets, production: false,
             excluding: ArtworkProduction.hiddenIDs(in: sewing.artwork, roles: session.hiddenProductionRoles), unbounded: true)
           context.restoreGState()
         }
@@ -976,11 +1098,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           if let projection = f.projection, !projection.isProof { context.addPath(projection.clipPath) }
           else { context.addRect(.init(origin: .zero, size: f.rect.size)) }
           context.setStrokeColor(frameColor.cgColor)
-          context.setLineWidth((f.id == activeFrame?.id ? 1.5 : 1) / scale)
+          context.setLineWidth((f.id == activeID ? 1.5 : 1) / scale)
           context.strokePath()
           context.restoreGState()
         }
-        if f.id == activeFrame?.id && f.editable {
+        if f.id == activeID && f.editable {
           drawOverlays(f, context: context, scale: scale)
           if editingID == nil && !(dragMode == "move" && moveDropFrameID != nil) { drawSelection(context: context, scale: scale) }
         }
@@ -988,8 +1110,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       }
       context.restoreGState()
       if [.select, .direct].contains(session.tool), editingID == nil,
-        (f.id != activeFrame?.id || session.croppingImageID == nil && session.maskEditing == nil),
-        (f.id == activeFrame?.id && session.selection.isEmpty || hoveredArtboardResize?.id == f.id
+        (f.id != activeID || session.croppingImageID == nil && session.maskEditing == nil),
+        (f.id == activeID && session.selection.isEmpty || hoveredArtboardResize?.id == f.id
           || dragMode == "frame_resize" && gestureFrameID == f.id) {
         CanvasArtboardResizing.draw(f, context: context, scale: scale,
           highlighted: dragMode == "frame_resize" && gestureFrameID == f.id ? handle
@@ -1006,7 +1128,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       context.saveGState()
       context.translateBy(x:active.rect.minX+exported.bounds.x,y:active.rect.minY+exported.bounds.y)
       ArtworkRenderer.draw(exported.artwork,width:exported.bounds.width,height:exported.bounds.height,
-        assets:session.assets,production:false,unbounded:true)
+        assets:assets,production:false,unbounded:true)
       context.restoreGState()
       context.saveGState(); context.translateBy(x:active.rect.minX,y:active.rect.minY)
       drawSelection(context:context,scale:scale); context.restoreGState()
@@ -1330,6 +1452,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     physicalPickingClips[frame.id] = clip
     return clip
   }
+  private func rememberHoverPicker(_ picker: ArtworkHitTesting.Picker, for key: HoverPickKey) {
+    hoverPickers[key] = picker
+    hoverPickerBuilds += 1
+    hoverPickerOrder.removeAll { $0 == key }; hoverPickerOrder.append(key)
+    // A scope can retain a dense hierarchy and lazily constructed paths. Keep
+    // browsing many frames/groups from retaining an unbounded collection.
+    while hoverPickerOrder.count > 8 { hoverPickers.removeValue(forKey: hoverPickerOrder.removeFirst()) }
+  }
   private func hit(_ point: CGPoint, art: Artwork, scope: UUID?) -> ArtworkElement? {
     let hiddenRoles = ArtworkProduction.hiddenIDs(in:activeFrame?.artwork ?? art,roles:session?.hiddenProductionRoles ?? [])
     return ArtworkHitTesting.hit(at: point, in: art, scope: scope,
@@ -1353,7 +1483,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       else {
         picker = ArtworkHitTesting.Picker(in: art, scope: group.parentID,
           excluding: excluded, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame), assets: s.assets)
-        if cached { hoverPickers[key] = picker }
+        if cached { rememberHoverPicker(picker, for: key) }
       }
       if let target = picker.hit(at: point, tolerance: 3.5 / (ppm * zoom)) { return target }
       guard let parent = group.parentID else { break }
@@ -2070,16 +2200,47 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     if let tool = session?.tool, ![.select, .direct].contains(tool) { return .crosshair }
     return pointerFeedback
   }
+  private func hoverFeedbackBounds() -> CGRect {
+    let padding = 10 / max(0.001, ppm*zoom)
+    var rect = CGRect.null
+    if let path = hoverOutline, let id = hoveredFrameID, let frame = frames.first(where: { $0.id == id }) {
+      rect = rect.union(path.boundingBoxOfPath.offsetBy(dx: frame.rect.minX, dy: frame.rect.minY))
+    }
+    if let point = hoveredControlPoint, let frame = activeFrame {
+      rect = rect.union(CGRect(x: point.x+frame.rect.minX, y: point.y+frame.rect.minY, width: 0, height: 0))
+    }
+    if let target = hoveredArtboardResize, let frame = frames.first(where: { $0.id == target.id }) {
+      rect = rect.union(frame.rect)
+    }
+    return rect.isNull ? .null : documentRect(rect.insetBy(dx: -padding, dy: -padding))
+  }
   private func clearHoverFeedback() {
     let changed = hoveredElementID != nil || hoveredControlPoint != nil || hoveredArtboardResize != nil || pointerFeedback != .arrow
+    let dirty = hoverFeedbackBounds()
     hoveredElementID = nil; hoveredFrameID = nil; hoveredControlPoint = nil; hoverOutline = nil
     hoveredArtboardResize = nil
     pointerFeedback = .arrow
-    if changed { needsDisplay = true; window?.invalidateCursorRects(for: self) }
+    if changed {
+      if !dirty.isNull { setNeedsDisplay(dirty) }
+      window?.invalidateCursorRects(for: self)
+    }
+  }
+  private func synchronizeHoverContext() {
+    guard let session else { return }
+    let context = HoverContext(tool: session.tool, selection: session.selection, nodes: session.nodes,
+      scope: session.scopeID, mask: session.maskEditing?.maskID, crop: session.croppingImageID,
+      gradientStop: session.selectedGradientStopID, hiddenRoles: session.hiddenProductionRoles,
+      editingText: session.editingText)
+    guard hoverContext != context else { return }
+    hoverContext = context
+    // Keyboard and inspector changes can alter the pointer's meaning while it
+    // stays still. Clear only feedback; geometry remains reusable by its key.
+    clearHoverFeedback()
   }
   private func updateHoverFeedback(with event: NSEvent) {
     guard dragMode.isEmpty, let s = session, let window, let root = window.contentView else { return }
     refreshFrameSnapshots()
+    synchronizeHoverContext()
     let hitView = root.hitTest(root.superview?.convert(event.locationInWindow, from: nil) ?? event.locationInWindow)
     // Tracking areas include floating cards and live text views. Feedback belongs
     // only to a pointer that actually reaches the native drawing surface.
@@ -2089,6 +2250,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     let previousFeedback = pointerFeedback, previousElement = hoveredElementID
     let previousFrame = hoveredFrameID, previousControl = hoveredControlPoint
     let previousResizeFrame = hoveredArtboardResize?.id, previousResizeHandle = hoveredArtboardResize?.handle
+    let previousBounds = hoverFeedbackBounds()
     hoveredElementID = nil; hoveredFrameID = nil; hoveredControlPoint = nil
     hoveredArtboardResize = nil
     pointerFeedback = .arrow
@@ -2112,7 +2274,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       CanvasFrameChrome.headerRect(for: $0, scale: ppm*zoom).contains(world) }) { pointerFeedback = .frame }
     else if !s.dieline, let frame = frame(atCanvasPoint: world), frame.editable {
       let active = frame.id == activeFrame?.id
-      let art = active ? s.art : frame.artwork
+      let art = active ? editableSnapshot : frame.artwork
       let excluded = ArtworkProduction.hiddenIDs(in: frame.artwork, roles: s.hiddenProductionRoles)
       let key = HoverPickKey(frameID: frame.id, scope: active ? s.scopeID : nil,
         mask: active ? s.maskEditing?.maskID : nil, excluded: excluded)
@@ -2121,7 +2283,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       else {
         picker = ArtworkHitTesting.Picker(in: art, scope: key.scope, excluding: excluded,
           editingMask: key.mask, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame), assets: s.assets)
-        hoverPickers[key] = picker
+        rememberHoverPicker(picker, for: key)
       }
       let p = CGPoint(x: world.x-frame.rect.minX, y: world.y-frame.rect.minY)
       if let element = picker.hit(at: p, tolerance: 3.5/(ppm*zoom))
@@ -2142,7 +2304,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     if previousFeedback != pointerFeedback || previousElement != hoveredElementID
       || previousFrame != hoveredFrameID || previousControl != hoveredControlPoint
       || previousResizeFrame != hoveredArtboardResize?.id || previousResizeHandle != hoveredArtboardResize?.handle {
-      needsDisplay = true
+      let dirty = previousBounds.union(hoverFeedbackBounds())
+      if !dirty.isNull { setNeedsDisplay(dirty) }
       window.invalidateCursorRects(for: self)
     }
     effectivePointerFeedback.cursor.set()
@@ -3056,18 +3219,28 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     makeCanvasContextMenu(for: event)
   }
   private func updateAccessibilityItems() {
-    guard let s = session, let frame = activeFrame, let window else { return }
-    let artwork = s.art
+    guard let s = session, let frame = activeFrame, window != nil else {
+      accessibilityItems = []; accessibilityItemsByID = [:]
+      accessibilitySnapshot.clear(); accessibilityFrameID = nil
+      accessibilitySelection = []
+      return
+    }
+    let artwork = editableSnapshot
     let selection = s.selection
-    let existing = Dictionary(
-      uniqueKeysWithValues: accessibilityItems.compactMap { item in
-        item.elementID.map { ($0, item) }
-      })
+    let geometryChanged = accessibilitySnapshot.update(artwork)
+    if !geometryChanged, accessibilityFrameID == frame.id {
+      for id in selection.symmetricDifference(accessibilitySelection) {
+        guard let child = accessibilityItemsByID[id] else { continue }
+        let value = selection.contains(id) ? "Selected" : ""
+        child.setAccessibilityValue(value); child.cachedValue = value
+        accessibilityUpdates += 1
+      }
+      accessibilitySelection = selection
+      return
+    }
+    let existing = accessibilityItemsByID
     var next: [ArtworkAccessibilityElement] = []
     for element in artwork.elements where element.hidden != true {
-      let bounds = artwork.bounds(of: element)
-      let rect = documentRect(CGRect(x:frame.rect.minX+bounds.x,y:frame.rect.minY+bounds.y,
-        width:bounds.width,height:bounds.height))
       let child = existing[element.id] ?? ArtworkAccessibilityElement()
       if child.elementID == nil {
         child.setAccessibilityElement(true)
@@ -3079,17 +3252,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         child.setAccessibilityIdentifier(element.id.uuidString)
       }
       let label = "\(element.title), \(element.kind)"
-      let screen = window.convertToScreen(convert(rect, to: nil))
       let value = selection.contains(element.id) ? "Selected" : ""
       var changed = false
       if child.cachedLabel != label {
         child.setAccessibilityLabel(label)
         child.cachedLabel = label
-        changed = true
-      }
-      if child.cachedFrame != screen {
-        child.setAccessibilityFrame(screen)
-        child.cachedFrame = screen
         changed = true
       }
       if child.cachedValue != value {
@@ -3101,8 +3268,20 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       next.append(child)
     }
     accessibilityItems = next
+    accessibilityItemsByID = Dictionary(uniqueKeysWithValues: next.compactMap { item in
+      item.elementID.map { ($0, item) }
+    })
+    accessibilitySelection = selection
+    accessibilityFrameID = frame.id
+  }
+  fileprivate func accessibilityScreenFrame(for id: UUID) -> CGRect {
+    guard let frame = activeFrame, let window, let bounds = accessibilitySnapshot.bounds(of: id) else { return .zero }
+    let rect = documentRect(CGRect(x: frame.rect.minX+bounds.x, y: frame.rect.minY+bounds.y,
+      width: bounds.width, height: bounds.height))
+    return window.convertToScreen(convert(rect, to: nil))
   }
   override func accessibilityChildren() -> [Any]? {
+    if refreshFrameSnapshots() { updateAccessibilityItems() }
     var result: [Any] = accessibilityItems
     if let textView { result.append(textView) }
     return result
@@ -3113,8 +3292,11 @@ private final class ArtworkAccessibilityElement: NSAccessibilityElement {
   weak var canvas: VectorCanvasView?
   var elementID: UUID?
   var cachedLabel: String?
-  var cachedFrame: CGRect?
   var cachedValue: String?
+  override func accessibilityFrame() -> NSRect {
+    guard let id = elementID else { return .zero }
+    return canvas?.accessibilityScreenFrame(for: id) ?? .zero
+  }
   override func accessibilityPerformPress() -> Bool {
     guard let id = elementID else { return false }
     Task { @MainActor [weak self] in

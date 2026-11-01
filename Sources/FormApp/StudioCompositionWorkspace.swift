@@ -5,7 +5,7 @@ struct StudioCompositionWorkspace:View {
   @EnvironmentObject var store:StudioStore
   @ObservedObject var controller:StudioCompositionController
   @State private var guides=false
-  @StateObject private var thumbnails=StudioSceneThumbnailCache()
+  private var thumbnails:StudioSceneThumbnailCache {controller.thumbnails}
   var body:some View {
     VStack(spacing:0) {
       if store.studioShowingImages {
@@ -37,7 +37,7 @@ struct StudioCompositionWorkspace:View {
     }.task(id:"\(store.project?.id.uuidString ?? "none"):\(store.revision):\(GeometryFactory.fontRevision)") {
       let project=store.project
       thumbnails.synchronize(project:project,assets:project.map{store.repository.url(for:$0.id).appendingPathComponent("Assets")})
-    }.onDisappear{thumbnails.reset()}.onAppear{controller.reconcile()}.onChange(of:store.project?.id){_,_ in controller.reconcile()}.onChange(of:store.revision){_,_ in controller.reconcile()}.onChange(of:store.environment){_,value in if value != .studio {controller.stop()}}
+    }.onDisappear{thumbnails.suspend()}.onAppear{controller.reconcile()}.onChange(of:store.project?.id){_,_ in controller.reconcile()}.onChange(of:store.revision){_,_ in controller.reconcile()}.onChange(of:store.environment){_,value in if value != .studio {controller.stop()}}
       .confirmationDialog("Save changes to \(controller.draft?.name ?? "this scene")?",isPresented:Binding(
         get:{controller.pendingSceneID != nil},set:{if !$0 {controller.cancelSceneSelection()}})) {
           if let id=controller.pendingSceneID {
@@ -148,11 +148,9 @@ struct StudioCompositionWorkspace:View {
           TextField("Studio scene name",text:Binding(get:{controller.draft?.name ?? ""},set:{value in controller.change{$0.name=value}}))
             .textFieldStyle(InspectorTextFieldStyle()).accessibilityLabel("Studio scene name")
           HStack(spacing:8) {
-            TextField("Output width",value:Binding(get:{scene.pixels.width},set:{value in controller.change{$0.pixels.width=value}}),format:.number.grouping(.never))
-              .accessibilityLabel("Output width")
+            outputDimension("Width",scene:scene,width:true)
             Text("×").foregroundStyle(Palette.secondary)
-            TextField("Output height",value:Binding(get:{scene.pixels.height},set:{value in controller.change{$0.pixels.height=value}}),format:.number.grouping(.never))
-              .accessibilityLabel("Output height")
+            outputDimension("Height",scene:scene,width:false)
             Text("px").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
           }.textFieldStyle(InspectorTextFieldStyle(numeric:true))
         }
@@ -165,6 +163,15 @@ struct StudioCompositionWorkspace:View {
         }
       }.padding(18).accessibilityLabel("Studio image output")
     }.disabled(controller.busy)
+  }
+  private func outputDimension(_ title:String,scene:StudioComposition,width:Bool)->some View {
+    let projectID=store.project?.id,sceneID=scene.id
+    return ScalarArtworkField(title,value:Double(width ? scene.pixels.width:scene.pixels.height),
+      layout:.stacked,accessibilityName:"Output "+title.lowercased()) { value in
+      guard store.project?.id==projectID,controller.draft?.id==sceneID else{return}
+      let integer=try StudioPixels.integer(NSNumber(value:value),name:"Output "+title.lowercased())
+      controller.change { if width {$0.pixels.width=integer} else {$0.pixels.height=integer} }
+    }
   }
   private func camera(_ scene:StudioComposition)->some View {
     VStack(alignment:.leading,spacing:8) {

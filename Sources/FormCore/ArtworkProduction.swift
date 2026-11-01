@@ -118,7 +118,8 @@ public enum ArtworkProduction {
   }
 
   public static func hiddenIDs(in art:Artwork,roles:Set<ArtworkProductionRole>) -> Set<UUID> {
-    Set(effectiveRoles(in:art).filter {roles.contains($0.value)}.keys)
+    guard !roles.isEmpty else { return [] }
+    return Set(effectiveRoles(in:art).filter {roles.contains($0.value)}.keys)
   }
 }
 

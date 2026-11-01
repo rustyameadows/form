@@ -69,6 +69,39 @@ struct NewArtworkFrame: View {
   }
 }
 
+/// Authored layer rows, in front-to-back order. Indexing children once keeps a
+/// fully expanded hierarchy traversal linear rather than rescanning the complete
+/// document for each group. Projection bounds use the accumulated
+/// parent transform; boolean groups retain their operand-bounds semantics.
+@MainActor struct ArtworkLayerRows {
+  let rows: [(element: ArtworkElement, depth: Int)]
+  let candidatesVisited: Int
+
+  init(artwork: Artwork, projection: CanvasSourceProjection?, collapsed: Set<UUID> = []) {
+    let children = Dictionary(grouping: artwork.elements.reversed(), by: \.parentID)
+    var result: [(element: ArtworkElement, depth: Int)] = []
+    var seen = Set<UUID>(), visited = 0
+    func append(_ parent: UUID?, depth: Int, transform: Affine2) {
+      for element in children[parent] ?? [] where !seen.contains(element.id) {
+        visited += 1
+        let world = transform.followed(by: element.localTransform)
+        if let projection, !projection.isProof || projection.cutouts?.isEmpty == false {
+          let bounds = element.booleanOperation != nil ? artwork.bounds(of: element) : world.bounds(.init(
+            0, 0, element.kind == "group" ? element.contentSize?.x ?? element.width : element.width,
+            element.kind == "group" ? element.contentSize?.y ?? element.height : element.height))
+          guard projection.intersects(bounds) else { continue }
+        }
+        seen.insert(element.id); result.append((element, depth))
+        if element.kind == "group", !collapsed.contains(element.id) {
+          append(element.id, depth: depth + 1, transform: world)
+        }
+      }
+    }
+    append(nil, depth: 0, transform: .init())
+    rows = result; candidatesVisited = visited
+  }
+}
+
 struct ArtworkLayers: View {
   @ObservedObject var session: ArtworkSession
   var onClose: (() -> Void)? = nil
@@ -76,35 +109,22 @@ struct ArtworkLayers: View {
   @State private var collapsed = Set<UUID>()
   var rows:[(element:ArtworkElement,depth:Int)] {
     let projection=session.activeCanvasFrame(in:session.frames)?.projection
-    let source=session.sourceArtwork
-    return makeRows(in:projection?.display(source) ?? source,projection:projection)
+    return makeRows(in:session.art,projection:projection)
   }
   private func makeRows(in artwork:Artwork,projection:CanvasSourceProjection?)->[(element:ArtworkElement,depth:Int)] {
-    var result: [(ArtworkElement, Int)] = []
-    var seen = Set<UUID>()
-    func children(_ parent: UUID?, _ depth: Int) {
-      for e in artwork.elements.reversed() where e.parentID == parent && !seen.contains(e.id)
-        && (projection?.intersects(artwork.bounds(of: e)) ?? true) {
-        seen.insert(e.id)
-        result.append((e, depth))
-        if e.kind == "group", !collapsed.contains(e.id) { children(e.id, depth + 1) }
-      }
-    }
-    children(nil, 0)
-    return result
+    ArtworkLayerRows(artwork: artwork, projection: projection, collapsed: collapsed).rows
   }
   var body: some View {
     let frames=session.frames
     let activeFrame=session.activeCanvasFrame(in:frames)
-    let source=session.sourceArtwork
-    let artwork=activeFrame?.projection?.display(source) ?? source
+    let artwork=session.art
     let layerRows=makeRows(in:artwork,projection:activeFrame?.projection)
     VStack(alignment: .leading, spacing: 0) {
       FloatingPanelHeader("CANVAS & SURFACES", closeLabel: "Close Canvas layers", onClose: onClose) {
         Text("\(frames.filter { !$0.isWorkspace }.count)").foregroundStyle(Palette.secondary).font(.system(size: 9))
       }
       ScrollView {
-        VStack(alignment: .leading, spacing: 0) {
+        LazyVStack(alignment: .leading, spacing: 0) {
           ForEach(frames) { frame in
             Button {
               session.activate(frame.id)

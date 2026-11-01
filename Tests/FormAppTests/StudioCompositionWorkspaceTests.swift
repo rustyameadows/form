@@ -211,6 +211,57 @@ import XCTest
     XCTAssertEqual(f.store.project,before);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
   }
 
+  func testFocusedCameraDraftCommitsBeforeSavedSceneDecisionAndCannotLeakIntoDestination()throws {
+    let f=try fixture(),before=try XCTUnwrap(f.store.project)
+    let field=try XCTUnwrap(textField(f.host,"Camera distance"))
+    field.selectText(nil)
+    let editor=try XCTUnwrap(field.currentEditor() as? NSTextView)
+    editor.insertText("825",replacementRange:.init(location:0,length:editor.string.utf16.count));settle(f.host)
+    XCTAssertEqual(f.controller.draft?.camera.distance,f.first.camera.distance,"Typing alone retains the numeric draft")
+    XCTAssertTrue(try row(f.host,"studio-scene-"+f.second.id.uuidString).accessibilityPerformPress());settle(f.host)
+    XCTAssertEqual(f.controller.pendingSceneID,f.second.id)
+    XCTAssertEqual(f.controller.draft?.id,f.first.id)
+    XCTAssertEqual(f.controller.draft?.camera.distance,8.25,"Commit to the old scene before deciding whether switching needs confirmation")
+    XCTAssertEqual(f.store.project,before)
+    f.controller.saveAndLoadScene(f.second.id);settle(f.host)
+    XCTAssertEqual(f.controller.draft,f.second)
+    XCTAssertEqual(f.store.project?.studioPresentation?.scenes?.first{$0.id==f.first.id}?.camera.distance,8.25)
+    XCTAssertEqual(f.store.engine.undoStack.count,1)
+    f.window.makeFirstResponder(nil);settle(f.host)
+    XCTAssertEqual(f.controller.draft,f.second,"A delayed focus callback cannot apply the old draft to the new scene")
+  }
+
+  private func assertFocusedOutputDraftCommitsBeforeSceneSwitch(width:Bool)throws {
+    let f=try fixture(),before=try XCTUnwrap(f.store.project)
+    let name=width ? "Output width":"Output height",value=width ? 4000:1800
+    let field=try XCTUnwrap(textField(f.host,name))
+    field.selectText(nil)
+    let editor=try XCTUnwrap(field.currentEditor() as? NSTextView)
+    editor.insertText(String(value),replacementRange:.init(location:0,length:editor.string.utf16.count));settle(f.host)
+    XCTAssertEqual(f.controller.draft?.pixels,f.first.pixels,"Typing does not prematurely change output framing")
+    XCTAssertTrue(try row(f.host,"studio-scene-"+f.second.id.uuidString).accessibilityPerformPress());settle(f.host)
+    var expected=f.first.pixels
+    if width {expected.width=value} else {expected.height=value}
+    XCTAssertEqual(f.controller.pendingSceneID,f.second.id)
+    XCTAssertEqual(f.controller.draft?.id,f.first.id)
+    XCTAssertEqual(f.controller.draft?.pixels,expected,"Commit the output draft before the dirty-scene decision")
+    XCTAssertEqual(f.store.project,before);XCTAssertTrue(f.store.engine.undoStack.isEmpty)
+    f.controller.saveAndLoadScene(f.second.id);settle(f.host)
+    XCTAssertEqual(f.controller.draft,f.second)
+    XCTAssertEqual(f.store.project?.studioPresentation?.scenes?.first{$0.id==f.first.id}?.pixels,expected)
+    XCTAssertEqual(f.store.engine.undoStack.count,1)
+    f.window.makeFirstResponder(nil);settle(f.host)
+    XCTAssertEqual(f.controller.draft,f.second,"Delayed width/height focus loss must not resize the destination scene")
+  }
+
+  func testFocusedOutputWidthCommitsBeforeSavedSceneSwitch()throws {
+    try assertFocusedOutputDraftCommitsBeforeSceneSwitch(width:true)
+  }
+
+  func testFocusedOutputHeightCommitsBeforeSavedSceneSwitch()throws {
+    try assertFocusedOutputDraftCommitsBeforeSceneSwitch(width:false)
+  }
+
   func testSavedThumbnailUsesItsOwnRendererCoalescesAndInvalidatesForLinkedSourceChanges()async throws {
     let f=try fixture(),project=try XCTUnwrap(f.store.project)
     f.controller.change{$0.instances[0].rotationDegrees=67;$0.instances[0].positionMM.x=35}

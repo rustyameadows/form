@@ -73,10 +73,12 @@ private struct RenderSignature: Equatable {
   private var lastStudio = false
   private var lastPreset = ""
   private(set) var geometryBuilds = 0
+  private(set) var paperSourceBuilds = 0, paperTemplateReuses = 0
   private(set) var lastSyncMilliseconds = 0.0
   var diagnostics: [String: Any] {
     [
       "object_nodes": nodes.count, "geometry_builds": geometryBuilds,
+      "paper_source_builds":paperSourceBuilds,"paper_template_reuses":paperTemplateReuses,
       "cloth_surfaces":clothSurfaces.count,"cloth_issues":Dictionary(uniqueKeysWithValues:clothIssues.map {($0.key.uuidString,$0.value)}),
       "embroidery_program_builds":EmbroiderySurface.programBuilds,"embroidery_texture_builds":EmbroiderySurface.textureBuilds,
       "embroidery_texture_max_edge":EmbroiderySurface.maximumTextureEdge,
@@ -263,6 +265,18 @@ private struct RenderSignature: Equatable {
     preset: String, assets: URL, textureLimit: Int = 2048, renderObjectIDs:Set<UUID>?=nil,
     sourceSampling:[UUID:SourceTextureSamplingPlan]=[:],solidSurfaces:[UUID:SolidSurface]=[:],deferSolidConstruction:Bool=false
   ) {
+    // These are references to buffers already retained by the live scene, not
+    // another persistent texture cache. They survive node removal only until
+    // this synchronous update ends, and allow returning scenes to reuse them.
+    var paperTemplates:[(signature:RenderSignature,construction:MeshNode)]=[]
+    if projectID==project.id,captureAssets==assets {
+      for (id,node) in nodes {
+        guard paperTemplates.count<32,let signature=fingerprints[id],signature.paperRevision != nil,
+          !paperTemplates.contains(where:{$0.signature==signature}),
+          let construction=node.childNode(withName:PaperGeometry.constructionName,recursively:false) else{continue}
+        paperTemplates.append((signature,construction))
+      }
+    }
     captureSource=project;captureAssets=assets;captureVisibility=isolated;captureObjectIDs=renderObjectIDs
     let started = CFAbsoluteTimeGetCurrent()
     defer { lastSyncMilliseconds = (CFAbsoluteTimeGetCurrent() - started) * 1000 }
@@ -293,6 +307,7 @@ private struct RenderSignature: Equatable {
       geometryBounds.removeValue(forKey: id)
     }
     var geometryChanged = false
+    var paperSources:[(key:ProductObject,artwork:Artwork?,revision:String?)]=[]
     for object in physicalObjects {
       let sampling=sourceSampling[object.id]
       let textureLimit=sampling.flatMap{try? $0.raster.rasterSize(width:object.artworkSize.x,height:object.artworkSize.y)}.map{max($0.width,$0.height)} ?? textureLimit
@@ -311,15 +326,29 @@ private struct RenderSignature: Equatable {
         }
       }
       let deferSolid=isSolid && (store != nil || deferSolidConstruction) && suppliedSolid==nil
+      let paperKey=PaperConstruction.isPaper(object) && project.textStories?.isEmpty != false
+        ? GeometryFactory.paperSourceKey(object):nil
+      let artwork:Artwork?,paperRevision:String?
+      if let paperKey,let source=paperSources.first(where:{$0.key==paperKey}) {
+        artwork=source.artwork;paperRevision=source.revision
+      }else {
+        artwork=project.surfaceArtwork(object).map{GeometryFactory.artworkDefinition($0,object:object)}
+        paperRevision=PaperGeometry.sourceRevision(object,project:project)
+        if let paperKey {
+          paperSourceBuilds+=1
+          if paperSources.count<32 {paperSources.append((paperKey,artwork,paperRevision))}
+        }
+      }
+      let samplesTextures=GeometryFactory.usesTextureSampling(geometryObject,project:geometryProject,artwork:artwork)
       var fingerprint = RenderSignature(
         recipe: geometryProject.recipe(object.recipeID),
         parameters: GeometryFactory.geometryParameters(geometryObject),
         material: project.material(object.materialID).withoutFabricPattern, color: object.color,
-        artwork: project.surfaceArtwork(object).map {GeometryFactory.artworkDefinition($0,object:object)},
+        artwork: artwork,
         asset: object.asset,
         fontRevision: project.editableArtwork(object) == nil && project.material(object.materialID).fabric?.pattern == nil ? 0 : GeometryFactory.fontRevision,
-        textureLimit: textureLimit, sourceSampling:sampling, textile: object.textile?.renderDefinition,
-        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth, merchandiseSurface:project.conformedMerchandiseSignature(object),merchandiseMaterials:project.merchandiseMaterialDependencies(object),assemblyRevision:object.patternAssembly==nil ? nil:ClothSceneSurface.sourceIdentity(object:object,project:project).revision,modelRevision:object.meshAsset.map{$0.geometryRevision+"/"+$0.appearanceRevision} ?? object.cadRepresentation?.definitionSHA256,paperRevision:PaperGeometry.sourceRevision(object,project:project),solidRevision:solidRevision)
+        textureLimit: samplesTextures ? textureLimit:0, sourceSampling:samplesTextures ? sampling:nil, textile: object.textile?.renderDefinition,
+        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth, merchandiseSurface:project.conformedMerchandiseSignature(object),merchandiseMaterials:project.merchandiseMaterialDependencies(object),assemblyRevision:object.patternAssembly==nil ? nil:ClothSceneSurface.sourceIdentity(object:object,project:project).revision,modelRevision:object.meshAsset.map{$0.geometryRevision+"/"+$0.appearanceRevision} ?? object.cadRepresentation?.definitionSHA256,paperRevision:paperRevision,solidRevision:solidRevision)
       if deferSolid,solidSurface==nil,let previous=fingerprints[object.id],nodes[object.id] != nil {fingerprint=previous}
       if let node=nodes[object.id],let prior=fingerprints[object.id],prior != fingerprint,
         canUpdateEmbroiderySurface(prior,fingerprint,object:object) {
@@ -338,7 +367,13 @@ private struct RenderSignature: Equatable {
           } catch {clothIssues[object.id]=error.localizedDescription;clothSurfaces[object.id]=nil;node=MeshNode()}
         } else {
           clothSurfaces[object.id]=nil;clothIssues[object.id]=nil
-          node=GeometryFactory.object(geometryObject,project:geometryProject,assets:assets,textureLimit:textureLimit,sourceSampling:sampling,solidSurface:solidSurface,solidRevision:solidRevision,deferSolidConstruction:deferSolid)
+          if PaperConstruction.isPaper(object),let template=paperTemplates.first(where:{$0.signature==fingerprint}) {
+            node=MeshNode();node.addChildNode(template.construction.clone())
+            try? PaperGeometry.updatePose(node,object:object)
+            paperTemplateReuses+=1
+          }else {
+            node=GeometryFactory.object(geometryObject,project:geometryProject,assets:assets,textureLimit:textureLimit,sourceSampling:sampling,solidSurface:solidSurface,solidRevision:solidRevision,deferSolidConstruction:deferSolid)
+          }
         }
         geometryBuilds += 1
         node.name = "object:\(object.id.uuidString)"
@@ -350,6 +385,11 @@ private struct RenderSignature: Equatable {
         geometryChanged = true
       }
       let node = nodes[object.id]!
+      if PaperConstruction.isPaper(object),paperTemplates.count<32,
+        !paperTemplates.contains(where:{$0.signature==fingerprint}),
+        let construction=node.childNode(withName:PaperGeometry.constructionName,recursively:false) {
+        paperTemplates.append((fingerprint,construction))
+      }
       if let reference=object.meshAsset {
         let size=reference.boundsMM.size,s=object["scalePercent"]/100
         geometryBounds[object.id] = (.init(-size.x*s/200,0,-size.z*s/200),.init(size.x*s/200,size.y*s/100,size.z*s/200))
@@ -451,6 +491,12 @@ private struct RenderSignature: Equatable {
   func refreshInterfaceAccent(_ color: NSColor) {
     for node in selectionNodes { node.geometry?.firstMaterial?.diffuse.contents = color }
     if !selectionNodes.isEmpty { renderScene() }
+  }
+  /// Selection-only updates leave expensive source/geometry fingerprints alone.
+  func updateSelection(_ selection:Set<UUID>,studio:Bool) {
+    guard selection != lastSelection else{return}
+    rebuildSelection(selection,studio:studio);lastSelection=selection
+    renderScene();view?.redrawPresentationOverlay()
   }
   private func rebuildSelection(_ selection: Set<UUID>, studio: Bool) {
     selectionNodes.forEach { $0.removeFromParentNode() }

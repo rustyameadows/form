@@ -17,6 +17,27 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
       ? object.parameters.filter { !["hour", "minute", "hands"].contains($0.key) }
       : object.parameters
   }
+  /// Exact source comparison within one immutable scene sync. Paper copies
+  /// differ in root identity/placement and fold pose, not in their print source.
+  static func paperSourceKey(_ source:ProductObject)->ProductObject {
+    var key=source
+    key.id=UUID(uuidString:"00000000-0000-0000-0000-000000000000")!
+    key.name="";key.position = .init();key.rotation=0;key.groupID=nil
+    key.parameters=geometryParameters(key)
+    key.paperConstruction=key.paperConstruction.map(PaperGeometry.geometryDefinition)
+    return key
+  }
+  /// The ordinary box recipe has fixed primitive tessellation and no quality-
+  /// dependent appearance without artwork. Keep every richer source conservative.
+  static func usesTextureSampling(_ object:ProductObject,project:Project,artwork:Artwork?)->Bool {
+    guard object.recipeID=="box",artwork==nil,object.asset==nil,
+      object.paperConstruction==nil,object.meshAsset==nil,object.cadRepresentation==nil,object.cadModel==nil,
+      object.textile==nil,object.cloth==nil,object.clothAttachment==nil,
+      object.patternAssembly==nil,object.patternAssemblyAttachment==nil,object.surfaceArtworkBindings==nil,
+      project.recipe(object.recipeID)?.solid==nil,
+      project.material(object.materialID).fabric==nil,project.material(object.materialID).category != "Fabric" else{return true}
+    return false
+  }
   private(set) static var fontRevision = 0
   static func invalidateFontResources() {
     cache.removeAllObjects()
@@ -138,10 +159,11 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     if let materials=project.merchandiseMaterialDependencies(object){signature.append((try? JSONEncoder.form.encode(materials)) ?? Data())}
     if let surface=project.conformedMerchandiseSignature(object){signature.append((try? JSONEncoder.form.encode(surface)) ?? Data())}
     signature.append(Data(assets.path.utf8))
-    if let sourceSampling {signature.append((try? JSONEncoder.form.encode(sourceSampling)) ?? Data())}
+    let samplesTextures=usesTextureSampling(object,project:project,artwork:object.artwork)
+    if samplesTextures,let sourceSampling {signature.append((try? JSONEncoder.form.encode(sourceSampling)) ?? Data())}
     if let solidRevision {signature.append(Data(solidRevision.utf8))}
     signature.append(Data("defer-solid:\(deferSolidConstruction)".utf8))
-    signature.append(Data("texture-limit:\(textureLimit)".utf8))
+    signature.append(Data("texture-limit:\(samplesTextures ? textureLimit:0)".utf8))
     let cacheKey =
       SHA256.hash(data: signature).map { String(format: "%02x", $0) }.joined() as NSString
     if let cached = cache.object(forKey: cacheKey) {

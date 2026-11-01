@@ -32,7 +32,7 @@ import simd
   }
   private struct Key: Encodable {
     let version: Int, rect: PaperBounds, netSize: Point2, profile: PaperSurfaceProfile
-    let color: String, grain: PaperStock.Grain, artwork: Artwork?, finishes: [PaperFinishAssignment]
+    let color: String, grain: PaperStock.Grain, artworkRevision: String?, finishes: [PaperFinishAssignment]
     let width: Int, height: Int, fontRevision: Int, assets: String
   }
   private static let cache: NSCache<NSString, Maps> = {
@@ -48,10 +48,45 @@ import simd
   private static let glyphCache:NSCache<NSString,NSObject>={let value=NSCache<NSString,NSObject>();value.countLimit=128;return value}()
   private static var blackMap:NSImage?
   private(set) static var builds = 0
+  private(set) static var sourcePreparations = 0
+
+  /// One immutable face source shared by all its panel crops. This retains only
+  /// editable vector data; each panel still gets its original pixel allocation.
+  @MainActor final class PreparedArtwork {
+    let artwork:Artwork,finishes:[PaperFinishAssignment],assets:URL,fontRevision:Int
+    let revision:String,glyphRevision:String
+    private var sources:(print:Artwork,ink:Artwork)?
+    init(_ artwork:Artwork,finishes:[PaperFinishAssignment],assets:URL)throws {
+      self.artwork=artwork;self.finishes=finishes;self.assets=assets
+      fontRevision=GeometryFactory.fontRevision
+      let rendered=try artwork.renderCacheData()
+      // Retain the old exact authored key and add runtime story dependencies,
+      // which ordinary Artwork Codable deliberately does not persist.
+      var raw=try JSONEncoder.form.encode(artwork);raw.append(rendered)
+      revision=SHA256.hash(data:raw).map{String(format:"%02x",$0)}.joined()
+      var glyph=rendered;glyph.append(Data("\(fontRevision):\(assets.path)".utf8))
+      glyphRevision=SHA256.hash(data:glyph).map{String(format:"%02x",$0)}.joined()
+      PaperSurfaceRasterizer.sourcePreparations+=1
+    }
+    func matches(_ artwork:Artwork?,finishes:[PaperFinishAssignment],assets:URL)->Bool {
+      self.artwork==artwork && self.finishes==finishes && self.assets==assets && fontRevision==GeometryFactory.fontRevision
+    }
+    func printSources()throws->(print:Artwork,ink:Artwork) {
+      if let sources{return sources}
+      let key=glyphRevision as NSString
+      if PaperSurfaceRasterizer.glyphCache.object(forKey:key)==nil {
+        try ArtworkRenderer.validateGlyphOutput(artwork,assets:assets)
+        PaperSurfaceRasterizer.glyphCache.setObject(NSObject(),forKey:key)
+      }
+      let printArt=try ArtworkProduction.filtered(artwork,roles:[.print]).artwork
+      let value=(print:printArt,ink:try PaperSurfaceRasterizer.printArtwork(printArt,finishes:finishes))
+      sources=value;return value
+    }
+  }
 
   static func make(rect: PaperBounds, netSize: Point2, profile: PaperSurfaceProfile,
     color: String, grain: PaperStock.Grain, artwork: Artwork?, finishes: [PaperFinishAssignment],
-    assets: URL, maximumEdge: Int, pixelBudget: Int) throws -> Maps {
+    assets: URL, maximumEdge: Int, pixelBudget: Int,preparedArtwork:PreparedArtwork?=nil) throws -> Maps {
     guard [rect.x,rect.y,rect.width,rect.height,netSize.x,netSize.y].allSatisfy(\.isFinite),rect.width>0,rect.height>0,netSize.x>0,netSize.y>0,pixelBudget>0 else{throw FormError.invalid("Paper viewing maps require finite positive physical bounds and a pixel budget.")}
     let edge=max(128,min(SourceTextureSampling.maximumEdge,maximumEdge)), area=rect.width*rect.height
     let density=min(Double(edge)/max(rect.width,rect.height),sqrt(Double(pixelBudget)/area))
@@ -63,24 +98,21 @@ import simd
       else {height=max(1,pixelBudget/width)}
     }
     guard width*height<=16_000_000 else { throw FormError.invalid("Paper viewing maps exceed their bounded pixel allocation.") }
-    let key=Key(version:2,rect:rect,netSize:netSize,profile:profile,color:color,grain:grain,
-      artwork:artwork,finishes:finishes,width:width,height:height,fontRevision:GeometryFactory.fontRevision,assets:assets.path)
+    let prepared:PreparedArtwork?
+    if let preparedArtwork,preparedArtwork.matches(artwork,finishes:finishes,assets:assets) {prepared=preparedArtwork}
+    else {prepared=try artwork.map{try PreparedArtwork($0,finishes:finishes,assets:assets)}}
+    let key=Key(version:3,rect:rect,netSize:netSize,profile:profile,color:color,grain:grain,
+      artworkRevision:prepared?.revision,finishes:finishes,width:width,height:height,fontRevision:GeometryFactory.fontRevision,assets:assets.path)
     let revision=SHA256.hash(data:try JSONEncoder.form.encode(key)).map{String(format:"%02x",$0)}.joined()
     if let maps=cache.object(forKey:revision as NSString) { return maps }
-    if let artwork {
-      var bytes=try artwork.renderCacheData();bytes.append(Data("\(GeometryFactory.fontRevision):\(assets.path)".utf8))
-      let key=SHA256.hash(data:bytes).map{String(format:"%02x",$0)}.joined() as NSString
-      if glyphCache.object(forKey:key)==nil {try ArtworkRenderer.validateGlyphOutput(artwork,assets:assets);glyphCache.setObject(NSObject(),forKey:key)}
-    }
     let count=width*height,dx=rect.width/Double(width),dy=rect.height/Double(height)
     let field=try stockField(rect:rect,profile:profile,color:color,grain:grain,width:width,height:height)
     var heights=field.heights,rgba=field.color,rough=field.roughness,metal=[UInt8](repeating:255,count:count*4)
     var finishHeights=[Float](repeating:0,count:count)
     for i in 0..<count {for c in 0..<3{metal[i*4+c]=0}}
     var hasRelief=false,hasFinish=false
-    if let artwork {
-      let printArt=try ArtworkProduction.filtered(artwork,roles:[.print]).artwork
-      let inkArt=try printArtwork(printArt,finishes:finishes)
+    if let prepared {
+      let (printArt,inkArt)=try prepared.printSources()
       let pixels=try raster(inkArt,rect:rect,netSize:netSize,width:width,height:height,assets:assets)
       for i in 0..<count { let j=i*4,a=Double(pixels[j+3])/255
         for c in 0..<3 { rgba[j+c]=UInt8(min(255,Int((Double(pixels[j+c])+Double(field.color[j+c])*(1-a)).rounded()))) }
