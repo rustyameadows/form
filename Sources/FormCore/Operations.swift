@@ -18,6 +18,9 @@ public final class OperationEngine {
   public var selection: Set<UUID> = []
   public private(set) var undoStack: [Project] = []
   public private(set) var redoStack: [Project] = []
+  /// A fresh, observational snapshot supplied by the native UI on the engine's
+  /// serial executor. Reading context must not commit drafts or change focus.
+  public var onContext: (() -> [String: Any])?
   public var onStudioShotValidate:((StudioShot)throws->Void)?
   public var onView: ((String, [String: Any]) throws -> Any)?
   public var onExport: ((String, [String: Any]) throws -> Any)?
@@ -153,6 +156,20 @@ public final class OperationEngine {
     lastCoalesce = nil
   }
 
+  private func contextSnapshot() -> [String: Any] {
+    if let onContext { return onContext() }
+    // Core-only callers know the Table selection, not which native surface or
+    // editor currently owns focus. Never infer an active edit target from it.
+    let selected = (project?.objects ?? []).filter {
+      $0.hasTablePresentation && selection.contains($0.id)
+    }.map { $0.id.uuidString }.sorted()
+    return [
+      "schema_version": 1, "ui_available": false,
+      "project_id": project?.id.uuidString as Any? ?? NSNull(),
+      "table": ["selected_object_ids": selected], "active_target": NSNull(),
+    ]
+  }
+
   @discardableResult public func call(
     _ name: String, arguments a: [String: Any] = [:], source: String = "Codex"
   ) throws -> Any {
@@ -186,13 +203,16 @@ public final class OperationEngine {
     case "form_paper":return try PaperCommands.call(engine:self,arguments:a,source:source)
     case "form_construction":return try ConstructionCommands.call(engine:self,arguments:a,source:source)
     case "form_surface":return try PhysicalSurfaceCommands.call(engine:self,arguments:a,source:source)
+    case "form_get_context": return contextSnapshot()
     case "form_status":
       return [
         "application": LabIdentity.name, "version": LabIdentity.version,
         "project_id": project?.id.uuidString as Any? ?? NSNull(),
         "project_name": project?.name as Any? ?? NSNull(),
-        "selected_objects": selection.map(\.uuidString), "external_model_calls": false,
+        "selected_objects": (project?.objects ?? []).filter { selection.contains($0.id) }
+          .map { $0.id.uuidString }.sorted(), "external_model_calls": false,
         "library_path": repository.root.path, "can_undo": !undoStack.isEmpty,
+        "context": contextSnapshot(),
       ]
     case "form_list_projects": return try jsonObject(repository.list())
     case "form_create_project":

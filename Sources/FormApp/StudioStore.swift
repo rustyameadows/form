@@ -55,6 +55,7 @@ enum TableTool: String, CaseIterable {
   @Published var paperRepresentation: PaperRepresentation = .panels
   @Published var functionRepresentation="Assembly"
   @Published var paperInside = false
+  var paperSelectionObjectID: UUID?
   @Published var paperSelectedPanelID: String?
   @Published var paperSelectedFoldID: String?
   @Published var paperShowingArtwork = true
@@ -141,6 +142,7 @@ enum TableTool: String, CaseIterable {
   private var saveWork: DispatchWorkItem?
   private var previewWork: DispatchWorkItem?
   private var noticeWork: DispatchWorkItem?
+  var selectionReferencePasteboard:NSPasteboard?
   var bridgeReady = false
   var choosingSVG = false
   var artworkTransferProjectEpoch=UUID()
@@ -166,6 +168,7 @@ enum TableTool: String, CaseIterable {
       if seedLibrary { try repository.seedIfEmpty() }
       projects = try repository.list()
     } catch { fatalError("LAB could not open its project library: \(error.localizedDescription)") }
+    engine.onContext = { [weak self] in self?.selectionContext() ?? ["schema_version":1,"ui_available":false,"active_target":NSNull()] }
     engine.onStudioShotValidate = { [weak self] shot in
       guard let self,let project=self.project else{return};try self.studioShots.runtimePreflight(project,shot)
     }
@@ -244,6 +247,7 @@ enum TableTool: String, CaseIterable {
       self?.designSurfaceHost?.resetForProjectChange()
       self?.environment = .form
       self?.paperInside = false
+      self?.paperSelectionObjectID = nil
       self?.paperSelectedPanelID = nil
       self?.paperSelectedFoldID = nil
       self?.paperRepresentation = .panels
@@ -353,7 +357,7 @@ enum TableTool: String, CaseIterable {
               (name == "form_construction" && ConstructionCommands.isReadOnly(args)) ||
               (name == "form_surface" && PhysicalSurfaceCommands.isReadOnly(args)) ||
               [
-                "form_status", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones", "form_solid",
+                "form_status", "form_get_context", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones", "form_solid",
                 "form_list_materials", "form_get_print_setup", "form_get_slice_status",
                 "form_list_filaments", "form_list_printers", "form_get_artwork",
                 "form_list_fonts", "form_font_features", "form_image_info", "form_export_publication",

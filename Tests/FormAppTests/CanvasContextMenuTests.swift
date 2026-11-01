@@ -390,13 +390,14 @@ import XCTest
     f.session.choose([a.id])
     let before = f.store.project
     let menu = try f.menu(.init(x: 70, y: 10))
-    XCTAssertEqual(f.session.selection, [b.id])
+    XCTAssertEqual(f.session.selection, [a.id], "Opening a menu captures its target without changing the current selection.")
     var received: ArtworkSession?
     let observer = NotificationCenter.default.addObserver(forName: .formShowCanvasInspector,
       object: nil, queue: .main) { notification in received = notification.object as? ArtworkSession }
     defer { NotificationCenter.default.removeObserver(observer) }
     try f.invoke(item("Show Inspector", in: menu))
     XCTAssertTrue(received === f.session)
+    XCTAssertEqual(f.session.selection, [b.id])
     XCTAssertEqual(f.store.project, before)
     XCTAssertTrue(f.store.engine.undoStack.isEmpty)
   }
@@ -430,11 +431,11 @@ import XCTest
     XCTAssertNotEqual(f.store.project, before)
     _ = try f.menu(.init(x: 70, y: 10))
     XCTAssertEqual(f.store.project, before, "Opening a context menu cancels the held drag before changing selection")
-    XCTAssertEqual(f.session.selection, [b.id])
+    XCTAssertEqual(f.session.selection, [a.id])
     f.canvas.mouseDragged(with: f.mouse(.leftMouseDragged, .init(x: 100, y: 40)))
     f.canvas.mouseUp(with: f.mouse(.leftMouseUp, .init(x: 100, y: 40)))
     XCTAssertEqual(f.store.project, before)
-    XCTAssertEqual(f.session.selection, [b.id])
+    XCTAssertEqual(f.session.selection, [a.id])
     XCTAssertTrue(f.store.engine.undoStack.isEmpty)
   }
 
@@ -509,7 +510,7 @@ import XCTest
     let f = try Fixture([locked, hidden, mask]); defer { f.close() }
     let before = f.store.project
     let lockedMenu = try f.menu(.init(x: 10, y: 10))
-    XCTAssertEqual(f.session.selection, [locked.id])
+    XCTAssertTrue(f.session.selection.isEmpty)
     XCTAssertFalse(try item("Delete", in: lockedMenu).isEnabled)
     XCTAssertFalse(try item("Arrange", in: lockedMenu).isEnabled)
     let probe = try XCTUnwrap(item("Select Layer", in: lockedMenu).submenu)
@@ -567,9 +568,10 @@ import XCTest
     let before = f.store.project
     let point = f.session.art.worldTransform(sibling).apply(.init(10, 10))
     let menu = try f.menu(.init(x: point.x, y: point.y))
-    XCTAssertEqual(f.session.scopeID, inner.id)
-    XCTAssertEqual(f.session.selection, [sibling.id], "Right click uses the same nearest-scope target as hover and left click")
+    XCTAssertEqual(f.session.scopeID, deep.id)
+    XCTAssertEqual(f.session.selection, [leaf.id], "Opening a context menu must preserve the current editing scope.")
     try f.invoke(item("Delete", in: menu))
+    XCTAssertEqual(f.session.scopeID, inner.id, "The chosen action adopts its captured nearest-scope target.")
     XCTAssertEqual(Set(f.session.art.elements.map(\.id)), [outer.id, inner.id, deep.id, leaf.id])
     XCTAssertEqual(f.store.engine.undoStack.count, 1)
     f.store.engine.undo(); XCTAssertEqual(f.store.project, before)
@@ -622,5 +624,59 @@ import XCTest
     XCTAssertEqual(f.store.project, before)
     f.session.choose([a.id]); settle()
     XCTAssertTrue(controls().allSatisfy { !$0.isEnabled })
+  }
+
+  func testNativeCopyReferenceTargetsHoveredLayerWithoutCommittingTextOrChangingSelection() throws {
+    let text = ArtworkElement(kind: "text",x: 0,y: 0,width: 45,height: 24,text: "Editing this label",fontSize: 10)
+    let other = shape("Reference this shape",70)
+    let f = try Fixture([text,other]); defer { f.close() }
+    let pasteboard = NSPasteboard.withUniqueName(); f.store.selectionReferencePasteboard = pasteboard
+    f.session.choose([text.id]); f.canvas.beginText(text)
+    let editor = try XCTUnwrap(f.canvas.activeTextView)
+    editor.setSelectedRange(.init(location: 2,length: 4))
+    let project = f.store.project, history = f.store.engine.undoStack, selection = f.session.selection
+    let range = editor.selectedRange(), interaction = f.store.engine.hasActiveInteraction
+    var commits = 0
+    let observer = NotificationCenter.default.addObserver(forName: .formCommitArtworkFields,object: nil,queue: .main) { _ in commits += 1 }
+    defer { NotificationCenter.default.removeObserver(observer) }
+    let menu = try f.menu(.init(x: 80,y: 10))
+    let reference = try item("Copy reference",in: menu)
+    XCTAssertEqual(reference.identifier?.rawValue,"canvas-copy-reference")
+    try f.invoke(reference)
+    let copied = try XCTUnwrap(pasteboard.string(forType: .string))
+    XCTAssertTrue(copied.contains(other.id.uuidString)); XCTAssertTrue(copied.contains(f.workspaceID.uuidString))
+    XCTAssertTrue(copied.contains("Reference this shape")); XCTAssertFalse(copied.contains(text.id.uuidString))
+    try f.invoke(item("Copy ID",in: menu))
+    XCTAssertEqual(pasteboard.string(forType: .string),other.id.uuidString)
+    XCTAssertEqual(commits,0); XCTAssertEqual(f.session.selection,selection)
+    XCTAssertTrue(f.canvas.activeTextView === editor); XCTAssertTrue(f.session.editingText)
+    XCTAssertEqual(editor.selectedRange(),range)
+    XCTAssertEqual(f.store.engine.hasActiveInteraction,interaction)
+    XCTAssertEqual(f.store.project,project); XCTAssertEqual(f.store.engine.undoStack,history)
+  }
+
+  func testNativeCopyFrameHeaderAndMultipleLayerIDsKeepExistingSourceAndRejectAnotherProject() throws {
+    let a = shape("First"), b = shape("Second",60)
+    let f = try Fixture([a,b]); defer { f.close() }
+    let pasteboard = NSPasteboard.withUniqueName(); f.store.selectionReferencePasteboard = pasteboard
+    f.session.choose([a.id,b.id]); let before = f.store.project
+    let menu = try f.menu(.init(x: 70,y: 10))
+    try f.invoke(item("Copy IDs",in: menu))
+    XCTAssertEqual(Set(try XCTUnwrap(pasteboard.string(forType: .string)).split(separator: "\n").map(String.init)),
+      Set([a.id.uuidString,b.id.uuidString]))
+    let frame = try XCTUnwrap(f.session.frames.first { $0.id == f.frameID })
+    let header = CanvasFrameChrome.headerRect(for: frame,scale: TypographyEngine.pointsPerMM*f.canvas.zoom)
+    let frameMenu = try f.menu(.init(x: header.midX,y: header.midY))
+    try f.invoke(item("Copy reference",in: frameMenu))
+    let copied = try XCTUnwrap(pasteboard.string(forType: .string))
+    XCTAssertTrue(copied.contains(f.frameID.uuidString)); XCTAssertTrue(copied.contains("Other source"))
+    try f.invoke(item("Copy ID",in: frameMenu))
+    XCTAssertEqual(pasteboard.string(forType: .string),f.frameID.uuidString)
+    XCTAssertEqual(f.session.activeFrameID,f.workspaceID); XCTAssertEqual(f.session.selection,[a.id,b.id])
+    XCTAssertEqual(f.store.project,before); XCTAssertTrue(f.store.engine.undoStack.isEmpty)
+    pasteboard.clearContents(); pasteboard.setString("Keep current clipboard",forType: .string)
+    f.store.engine.project = Project(name: "Different project")
+    try f.invoke(item("Copy reference",in: frameMenu))
+    XCTAssertEqual(pasteboard.string(forType: .string),"Keep current clipboard")
   }
 }

@@ -55,6 +55,8 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
   private var instanceGesture:InstanceGesture?
   init(store:StudioStore){self.store=store;stage.showsStudioSelection=true}
   var scenes:[StudioComposition]{store?.project?.studioPresentation?.scenes ?? []}
+  var contextProjectID:UUID? {owner}
+  var contextWasSaved:Bool {baselineWasSaved}
   var dirty:Bool{draft != baseline}
   var canUndoDraft:Bool{!undoDrafts.isEmpty && !busy}
   var canRedoDraft:Bool{!redoDrafts.isEmpty && !busy}

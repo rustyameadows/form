@@ -67,6 +67,9 @@ struct StudioCompositionWorkspace:View {
           ForEach(controller.scenes){scene in
             StudioSceneThumbnail(cache:thumbnails,scene:scene,selected:controller.draft?.id==scene.id,
               preflight:{project,shot in try store.studioShots.runtimePreflight(project,shot)}){controller.requestScene(scene.id)}
+              .contextMenu {
+                SelectionReferenceMenuActions(store: store, reference: store.studioSelectionReference(sceneID: scene.id))
+              }
           }
         }
       }.accessibilityLabel("Saved Studio scenes")
@@ -75,6 +78,9 @@ struct StudioCompositionWorkspace:View {
         WorkspaceToolbarButton("Save scene",symbol:"square.and.arrow.down",help:"Save this scene's camera and instance placement",showsTitle:true,identifier:"studio-save-scene"){controller.save()}
         Spacer(minLength:0)
         Menu {
+          SelectionReferenceMenuActions(store: store,
+            reference: controller.draft.flatMap { store.studioSelectionReference(sceneID: $0.id) })
+          Divider()
           Button("Duplicate saved scene"){controller.duplicateScene()}
           Button("Delete saved scene",role:.destructive){controller.deleteScene()}
           Divider();Button("Discard draft"){controller.discard()}
@@ -226,6 +232,12 @@ struct StudioCompositionWorkspace:View {
       HStack(spacing:6) {
         WorkspaceToolbarButton("Duplicate selected",symbol:"plus.square.on.square",help:"Add another linked instance of this product",showsTitle:true,identifier:"studio-duplicate-instance"){controller.duplicateInstance()}
         WorkspaceToolbarButton("Remove Studio instance",symbol:"trash",help:"Remove the selected instance from this scene",identifier:"studio-remove-instance"){controller.removeInstance()}
+        Menu {
+          SelectionReferenceMenuActions(store: store,
+            reference: store.studioSelectionReference(sceneID: controller.draft?.id, instanceID: instance.id))
+        } label: { WorkspaceToolbarMenuLabel(symbol: "ellipsis") }
+          .menuStyle(.borderlessButton).fixedSize()
+          .accessibilityLabel("Studio instance actions").accessibilityIdentifier("studio-instance-actions")
       }
     }else {Text("Select an object in the scene or choose one above to edit its placement.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)}
   }
