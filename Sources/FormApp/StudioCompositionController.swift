@@ -22,6 +22,15 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
   @Published private(set) var pendingSceneID:UUID?
   let stage=TableSceneController()
   let renderer=StudioShotRenderer()
+  let thumbnails=StudioSceneThumbnailCache()
+  private let resolutionCache=StudioCompositionResolutionCache()
+  private struct StageInput:Equatable {
+    let sourceRevision:Int,instances:[StudioInstance],surface:String,assets:String,fontRevision:Int
+  }
+  private var stageInput:StageInput?
+  private var appliedLighting:String?
+  private(set) var stageSyncCount=0
+  var resolutionBuildCount:Int {resolutionCache.builds}
   private var owner:UUID?,baseline:StudioComposition?
   private var playback:Task<Void,Never>?,exportTask:Task<Void,Never>?,prepareTask:Task<Void,Never>?
   private var generation=0
@@ -60,7 +69,7 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
     if let id=selectedInstanceID,draft?.instances.contains(where:{$0.id==id}) != true {selectedInstanceID=nil}
     sync()
   }
-  func reset(){cancelStagePointer();stop();exportTask?.cancel();prepareTask?.cancel();owner=nil;draft=nil;baseline=nil;selectedInstanceID=nil;pendingSceneID=nil;lastOutput=nil;error=nil;generation+=1;sceneSelectionGeneration+=1;renderer.clear();undoDrafts=[];redoDrafts=[];baselineWasSaved=false;emptyBaseline=false;renderOwners=[:]}
+  func reset(){cancelStagePointer();stop();exportTask?.cancel();prepareTask?.cancel();owner=nil;draft=nil;baseline=nil;selectedInstanceID=nil;pendingSceneID=nil;lastOutput=nil;error=nil;generation+=1;sceneSelectionGeneration+=1;renderer.clear();thumbnails.reset();resolutionCache.reset();stageInput=nil;appliedLighting=nil;undoDrafts=[];redoDrafts=[];baselineWasSaved=false;emptyBaseline=false;renderOwners=[:]}
   /// Selection may arrive before the workspace's onAppear reconciliation. The
   /// recalled scene must already belong to this project when that happens.
   private func adoptProject() -> Bool {
@@ -73,17 +82,21 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
     cancelStagePointer()
     sceneSelectionGeneration+=1
     let token=sceneSelectionGeneration,projectID=owner,currentID=draft?.id
+    // Commit the old scene's numeric drafts synchronously before focus loss can
+    // rebind those controls to the destination. A row click must not be queued
+    // behind background captures just to wait for a SwiftUI focus update.
+    NotificationCenter.default.post(name:.formCommitArtworkFields,object:nil)
     NSApp.keyWindow?.makeFirstResponder(nil)
-    // SwiftUI's focused numeric fields commit on the next focus update. Check
-    // the draft after that commit, while rejecting a superseded scene request.
-    Task { [weak self] in
-      await Task.yield()
-      guard let self,!self.busy,self.sceneSelectionGeneration==token,
-        self.store?.project?.id==projectID,currentID==nil || self.draft?.id==currentID else{return}
-      guard id != self.draft?.id else{return}
-      if self.dirty {self.pendingSceneID=id;return}
-      self.load(id)
+    guard !busy,sceneSelectionGeneration==token,
+      store?.project?.id==projectID,currentID==nil || draft?.id==currentID else{return}
+    guard id != draft?.id else {
+      // A failed external/solid preparation is retryable without changing the
+      // saved scene or dirtying its draft. Healthy current-scene clicks are free.
+      if !dirty,stageInput==nil {sync()}
+      return
     }
+    if dirty {pendingSceneID=id;return}
+    load(id)
   }
   func cancelSceneSelection(){pendingSceneID=nil}
   func discardAndLoadScene(_ id:UUID){load(id,discard:true)}
@@ -199,18 +212,35 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
     window.makeFirstResponder(view)
   }
   func sync() {
-    // Invalidate before resolution as well: a failed or empty new scene must
-    // never retain an older asynchronous preparation/error as its live preview.
-    prepareTask?.cancel();prepareTask=nil;generation+=1;let token=generation
     guard let store,let project=store.project,let draft else{return}
+    let assets=store.repository.url(for:project.id).appendingPathComponent("Assets")
+    do {try draft.validate()} catch {
+      prepareTask?.cancel();prepareTask=nil;generation+=1;stageInput=nil;renderOwners=[:]
+      self.error=error.localizedDescription
+      stage.sync(project,selection:[],isolated:[],showGrid:false,studio:true,preset:draft.surface,assets:assets,renderObjectIDs:[])
+      stageSyncCount &+= 1;return
+    }
+    let input=StageInput(sourceRevision:resolutionCache.synchronize(project),instances:draft.instances,
+      surface:draft.surface,assets:assets.standardizedFileURL.path,fontRevision:GeometryFactory.fontRevision)
+    if stageInput==input {
+      // Selection and camera edits do not change geometry. In particular, keep
+      // an in-flight solid/model preparation alive while the user picks a copy.
+      stage.updateSelection(Set(selectedInstanceID.map{[$0]} ?? []),studio:true)
+      applyPresentation(draft)
+      return
+    }
+    // Invalidate before resolution: a failed new scene cannot publish an older
+    // asynchronous preparation into its preview.
+    prepareTask?.cancel();prepareTask=nil;generation+=1;let token=generation
+    stageInput=nil
     if draft.instances.allSatisfy({!$0.visible}) {
       renderOwners=[:];error=nil
-      stage.sync(project,selection:[],isolated:[],showGrid:false,studio:true,preset:draft.surface,assets:store.repository.url(for:project.id).appendingPathComponent("Assets"),renderObjectIDs:[])
-      stage.camera=draft.camera;stage.updateCamera();stage.applyShotLighting(draft.lighting,studio:true)
+      stage.sync(project,selection:[],isolated:[],showGrid:false,studio:true,preset:draft.surface,assets:assets,renderObjectIDs:[])
+      stageSyncCount &+= 1;stageInput=input;applyPresentation(draft,forceLighting:true)
       return
     }
     do {
-      let resolved=try draft.resolved(in:project)
+      let resolved=try resolutionCache.resolve(draft,in:project)
       let objects=Dictionary(uniqueKeysWithValues:resolved.project.objects.map{($0.id,$0)})
       let roots=Set(draft.instances.map(\.id))
       renderOwners=[:]
@@ -222,27 +252,40 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
           current=parent
         }
       }
-      let assets=store.repository.url(for:project.id).appendingPathComponent("Assets")
       stage.sync(resolved.project,selection:Set(selectedInstanceID.map{[$0]} ?? []),isolated:resolved.visible,showGrid:false,studio:true,preset:draft.surface,assets:assets,renderObjectIDs:resolved.visible,deferSolidConstruction:true)
-      stage.camera=time>0 ? ((try? draft.motion.camera(start:draft.camera,fraction:time)) ?? draft.camera):draft.camera;stage.updateCamera();stage.applyShotLighting(draft.lighting,studio:true)
-      if resolved.project.objects.contains(where:{$0.hasTablePresentation && ($0.meshAsset != nil || $0.cadRepresentation != nil || resolved.project.recipe($0.recipeID)?.solid != nil)}) {
-        let selection=Set(selectedInstanceID.map{[$0]} ?? [])
+      stageSyncCount &+= 1;stageInput=input;applyPresentation(draft,forceLighting:true)
+      if resolved.project.objects.contains(where:{resolved.visible.contains($0.id) && ($0.meshAsset != nil || $0.cadRepresentation != nil || resolved.project.recipe($0.recipeID)?.solid != nil)}) {
         prepareTask=Task{[weak self] in
           do {
             let solids=try await SolidRecipeGeometry.prepareFullSources(project:resolved.project,objectIDs:resolved.visible)
-            guard let self,!Task.isCancelled,self.generation==token else{return}
-            self.stage.sync(resolved.project,selection:selection,isolated:resolved.visible,showGrid:false,studio:true,preset:draft.surface,assets:assets,renderObjectIDs:resolved.visible,solidSurfaces:solids,deferSolidConstruction:true)
-            self.stage.camera=self.time>0 ? ((try? draft.motion.camera(start:draft.camera,fraction:self.time)) ?? draft.camera):draft.camera
-            self.stage.updateCamera();self.stage.applyShotLighting(draft.lighting,studio:true)
+            guard let self,!Task.isCancelled,self.generation==token,let current=self.draft else{return}
+            self.stage.sync(resolved.project,selection:Set(self.selectedInstanceID.map{[$0]} ?? []),isolated:resolved.visible,showGrid:false,studio:true,preset:current.surface,assets:assets,renderObjectIDs:resolved.visible,solidSurfaces:solids,deferSolidConstruction:true)
+            self.stageSyncCount &+= 1;self.applyPresentation(current,forceLighting:true)
             try await self.stage.prepareExternalForCapture(project:resolved.project,assets:assets)
-            guard !Task.isCancelled,self.generation==token else{return};self.stage.renderScene()
-          }catch{if !Task.isCancelled,self?.generation==token{self?.error=error.localizedDescription}}
+            guard !Task.isCancelled,self.generation==token else{return}
+            self.prepareTask=nil;self.error=nil;self.stage.renderScene()
+          }catch{
+            if !Task.isCancelled,let self,self.generation==token {
+              // This input has a placeholder, not a successfully prepared
+              // stage. Retrying the same scene must perform the load again.
+              self.stageInput=nil;self.prepareTask=nil;self.error=error.localizedDescription
+            }
+          }
         }
       }
     }catch{
       renderOwners=[:]
       self.error=error.localizedDescription
-      stage.sync(project,selection:[],isolated:[],showGrid:false,studio:true,preset:draft.surface,assets:store.repository.url(for:project.id).appendingPathComponent("Assets"),renderObjectIDs:[])
+      stage.sync(project,selection:[],isolated:[],showGrid:false,studio:true,preset:draft.surface,assets:assets,renderObjectIDs:[])
+      stageSyncCount &+= 1
+    }
+  }
+  private func applyPresentation(_ draft:StudioComposition,forceLighting:Bool=false) {
+    var camera=time>0 ? ((try? draft.motion.camera(start:draft.camera,fraction:time)) ?? draft.camera):draft.camera
+    if let size=stage.view?.bounds.size,size.width>0,size.height>0 {camera.viewportAspect=size.width/size.height}
+    if stage.camera != camera {stage.camera=camera;stage.updateCamera()}
+    if forceLighting || appliedLighting != draft.lighting {
+      stage.applyShotLighting(draft.lighting,studio:true);appliedLighting=draft.lighting
     }
   }
   func exportDialog(video:Bool) {

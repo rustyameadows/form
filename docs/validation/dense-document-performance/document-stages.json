@@ -1,0 +1,90 @@
+{
+  "formatVersion": 1,
+  "frameBuilds": 12,
+  "frames": 216,
+  "inputBytes": 134926292,
+  "inputSHA256": "6c57bf8831e61b6d011305ebd2ef946f90c85df99892e4a9d17d51c3c9f0c832",
+  "objects": 36,
+  "pathNodes": 54119,
+  "projectedElements": 166717,
+  "samples": [
+    {
+      "milliseconds": [
+        342.100875,
+        340.669875,
+        338.598584
+      ],
+      "stage": "repository.load-and-validate"
+    },
+    {
+      "milliseconds": [
+        25.505208,
+        25.340042,
+        24.805917
+      ],
+      "stage": "project.validateArtworkLinks"
+    },
+    {
+      "milliseconds": [
+        379.593667
+      ],
+      "stage": "repository.first-save"
+    },
+    {
+      "milliseconds": [
+        29.334209,
+        30.12025,
+        28.625583
+      ],
+      "stage": "repository.unchanged-save"
+    },
+    {
+      "milliseconds": [
+        56.72775
+      ],
+      "stage": "canvas.frames-cold"
+    },
+    {
+      "milliseconds": [
+        0.147667,
+        0.119875,
+        0.144291
+      ],
+      "stage": "canvas.frames-warm-100-reads"
+    },
+    {
+      "milliseconds": [
+        12.959333,
+        12.912667,
+        12.528334
+      ],
+      "stage": "linked-views.unchanged-source-signatures"
+    },
+    {
+      "milliseconds": [
+        0.117208,
+        0.089042,
+        0.085791
+      ],
+      "stage": "linked-views.unchanged-refresh-hooks"
+    },
+    {
+      "milliseconds": [
+        31.417791,
+        8.03525,
+        9.06725
+      ],
+      "stage": "canvas.frame-position-edit-and-frame-read"
+    },
+    {
+      "milliseconds": [
+        122.549458,
+        75.883625,
+        75.53625
+      ],
+      "stage": "canvas.artwork-translate-and-frame-read"
+    }
+  ],
+  "sourceUnchanged": true,
+  "storedElements": 13091
+}

@@ -39,8 +39,8 @@ import FormCADModel
   func testTwelveCaseLayerTraversalAndRepeatedInspectorReadsBuildFramesOnlyOnce()throws {
     var p=Project(name:"Twelve paper frame graphs")
     let directory=URL(fileURLWithPath:#filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("examples/paper-packaging")
-    let files=try FileManager.default.contentsOfDirectory(at:directory,includingPropertiesForKeys:nil)
-      .filter{$0.pathExtension=="json" && !$0.lastPathComponent.contains("liner-component")}.sorted{$0.path<$1.path}
+    let files=Array(try FileManager.default.contentsOfDirectory(at:directory,includingPropertiesForKeys:nil)
+      .filter{$0.pathExtension=="json" && !$0.lastPathComponent.contains("liner-component")}.sorted{$0.path<$1.path}.prefix(12))
     XCTAssertEqual(files.count,12)
     for (index,file) in files.enumerated() {
       let d=try JSONDecoder.form.decode(PlanarConstructionDefinition.self,from:Data(contentsOf:file)),net=try d.net()
@@ -160,4 +160,46 @@ import FormCADModel
     s.linkedTargetID=sheet.id;let unlinked=try XCTUnwrap(s.activeCanvasFrame)
     XCTAssertEqual(unlinked.surfaceObject.id,sheet.id);XCTAssertEqual(unlinked.rect.size,ordinary.rect.size)
   }
+  func testFramePlacementReusesPaperGeometryAndProjectedArtwork()throws {
+    let (p,id,_,_)=try project(),store=try makeStore(p),s=store.artworkSession
+    s.activate(id)
+    let initial=try proof(s,id),key=try XCTUnwrap(initial.projection?.key)
+    let geometry=s.paperGeometryBuildCount,projections=s.projectionBuildCount
+    for step in 1...12 {
+      var moved=p
+      moved.objects[0].canvasProjectionPositions=[key:.init(Double(step)*10,800)]
+      store.engine.project=moved
+      let frame=try proof(s,id)
+      XCTAssertEqual(frame.rect.origin,.init(x:Double(step)*10,y:800))
+      XCTAssertEqual(frame.artwork,initial.artwork)
+      XCTAssertNotNil(frame.paperDefinition);XCTAssertNotNil(frame.paperNet)
+    }
+    XCTAssertEqual(s.paperGeometryBuildCount,geometry)
+    XCTAssertEqual(s.projectionBuildCount,projections)
+    var changed=p;changed.objects[0].parameters["width"]=110
+    store.engine.project=changed
+    XCTAssertEqual(try proof(s,id).rect.width,220)
+    XCTAssertGreaterThan(s.paperGeometryBuildCount,geometry)
+  }
+  func testUnrelatedArtworkEditReusesPaperProjectionsButPaintChangesInvalidate()throws {
+    let (p,id,loose,_)=try project(),store=try makeStore(p),s=store.artworkSession
+    s.activate(id);let initial=try proof(s,id)
+    let geometry=s.paperGeometryBuildCount,projections=s.projectionBuildCount
+    var changed=p
+    let looseIndex=try XCTUnwrap(changed.objects.firstIndex{$0.id==loose})
+    changed.objects[looseIndex].artwork!.elements[0].x+=5
+    store.engine.project=changed
+    XCTAssertEqual(try proof(s,id).artwork,initial.artwork)
+    XCTAssertEqual(s.paperGeometryBuildCount,geometry)
+    XCTAssertEqual(s.projectionBuildCount,projections)
+    changed.objects[0].artwork!.elements[0].text="Changed paper print"
+    store.engine.project=changed
+    XCTAssertEqual(try proof(s,id).artwork.elements[0].text,"Changed paper print")
+    XCTAssertEqual(s.paperGeometryBuildCount,geometry)
+    XCTAssertGreaterThan(s.projectionBuildCount,projections)
+    store.engine.project=nil;XCTAssertTrue(s.frames.isEmpty)
+    store.engine.project=p
+    XCTAssertEqual(try proof(s,id).artwork,initial.artwork)
+  }
+
 }

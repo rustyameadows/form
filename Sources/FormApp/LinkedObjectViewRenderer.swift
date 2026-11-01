@@ -38,29 +38,49 @@ import Foundation
     let surface: Artwork?, outside: Artwork?, inside: Artwork?
     let physical: [Artwork?]
     let materials: [FormCore.Material]
-    let fabric, recipe, merchandise, merchandiseMaterials, paper: Data?
+    let fabric, recipe, merchandise, merchandiseMaterials: Data?
+    let paperFontRevision: Int?
   }
   static func state(_ object: ProductObject, in project: Project) -> SourceState {
-    var normalized = object
+    var normalized = ObjectViewSourceChanges.withoutCanvasPlacement(object)
     normalized.position = .init(); normalized.rotation = 0
+    // Canvas placement belongs to the editor, not the physical source. Keep it
+    // out of both raw and resolved identities so dragging a frame cannot rebuild
+    // its linked vector projections or start another GPU capture.
+    func artwork(_ source: Artwork?) -> Artwork? {
+      guard var source else { return nil }
+      source.canvasPosition = nil
+      return source
+    }
     let encoder = JSONEncoder.form
     let fabric = (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition
-    let paperRevision = PaperGeometry.sourceRevision(object, project: project)
-    return .init(object: normalized, surface: project.surfaceArtwork(object),
-      outside: project.paperArtwork(for: object, inside: false),
-      inside: project.paperArtwork(for: object, inside: true),
-      physical: (object.surfaceArtworkBindings ?? []).map { project.physicalSurfaceArtwork($0) },
+    let surface = artwork(project.surfaceArtwork(normalized))
+    let isPaper = PaperConstruction.isPaper(normalized)
+    let inside: Artwork?
+    if let source = project.paperArtwork(for: normalized, inside: true) {
+      // Detached inside artwork still needs its component and swatch sources.
+      // Retain the value, including runtime story snapshots, rather than JSON
+      // encoding it again just to compare its hash. The complete raw object
+      // above already covers every construction/parameter input to paper shape.
+      let expanded = (try? project.resolvingComponents(in: source)) ?? source
+      inside = artwork(project.resolvingSwatches(in: expanded))
+    } else { inside = nil }
+    return .init(object: normalized, surface: surface,
+      outside: isPaper ? surface : nil,
+      inside: inside,
+      physical: (normalized.surfaceArtworkBindings ?? []).map { artwork(project.physicalSurfaceArtwork($0)) },
       materials: project.materials,
       fabric: fabric.flatMap { try? encoder.encode($0) },
       recipe: project.recipe(object.recipeID).flatMap { try? encoder.encode($0) },
       merchandise: project.conformedMerchandiseSignature(object).flatMap { try? encoder.encode($0) },
       merchandiseMaterials: project.merchandiseMaterialDependencies(object).flatMap { try? encoder.encode($0) },
-      paper: paperRevision.map { Data($0.utf8) })
+      paperFontRevision: isPaper ? GeometryFactory.fontRevision : nil)
   }
 
   /// Mark affected raster views in the same transaction as a source edit, so
   /// quitting or saving before the GPU returns cannot lose a pending update.
   static func markPending(before: Project, project: inout Project) {
+    guard !ObjectViewSourceChanges.sameExceptCanvasPlacement(before, project) else { return }
     let targets = Self.targets(in: project)
     let sources = Set(targets.map { $0.target.settings.sourceID })
     let old = Dictionary(uniqueKeysWithValues: before.objects.map { ($0.id, $0) })
@@ -93,9 +113,11 @@ import Foundation
     let currentTargets = Self.targets(in: project)
     let sources = Set(currentTargets.map { $0.target.settings.sourceID })
     var changed = Set<UUID>()
-    for object in project.objects where sources.contains(object.id) {
-      guard let old = oldObjects[object.id] else { changed.insert(object.id); continue }
-      if Self.state(old, in: before) != Self.state(object, in: project) { changed.insert(object.id) }
+    if !ObjectViewSourceChanges.sameExceptCanvasPlacement(before, project) {
+      for object in project.objects where sources.contains(object.id) {
+        guard let old = oldObjects[object.id] else { changed.insert(object.id); continue }
+        if Self.state(old, in: before) != Self.state(object, in: project) { changed.insert(object.id) }
+      }
     }
     var oldTargets: [String: Target] = [:]
     for item in Self.targets(in: before) { oldTargets[item.identity] = item.target }

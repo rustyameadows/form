@@ -2,10 +2,41 @@ import Foundation
 import FormCore
 import FormGeometry
 
+/// A conservative edit classification, before resolving any artwork or encoding
+/// render signatures. All document dependencies remain exact except the two
+/// Canvas placement fields and ordinary edit bookkeeping.
+enum ObjectViewSourceChanges {
+  static func withoutCanvasPlacement(_ object: ProductObject) -> ProductObject {
+    var object = object
+    object.canvasProjectionPositions = nil
+    object.artwork?.canvasPosition = nil
+    object.paperConstruction?.insideArtwork?.canvasPosition = nil
+    for index in object.surfaceArtworkBindings?.indices ?? 0..<0 {
+      object.surfaceArtworkBindings?[index].artwork?.canvasPosition = nil
+    }
+    return object
+  }
+
+  static func sameExceptCanvasPlacement(_ before: Project, _ after: Project) -> Bool {
+    guard before.objects.count == after.objects.count else { return false }
+    var previous = before, current = after
+    previous.updatedAt = .distantPast; current.updatedAt = .distantPast
+    previous.history = []; current.history = []
+    // Unchanged value buffers stay shared; only changed objects need even the
+    // small struct copies used to remove their editor placement metadata.
+    for index in previous.objects.indices where previous.objects[index] != current.objects[index] {
+      previous.objects[index] = withoutCanvasPlacement(previous.objects[index])
+      current.objects[index] = withoutCanvasPlacement(current.objects[index])
+    }
+    return previous == current
+  }
+}
+
 /// Keep the stored path current so canvas previews, pattern tiles and exports all
 /// consume the same artwork. The last valid path remains if a source is unavailable.
 @MainActor enum ObjectViewUpdates {
   static func refreshChangedSources(before: Project, project: inout Project, assets: URL) -> [String] {
+    guard !ObjectViewSourceChanges.sameExceptCanvasPlacement(before, project) else { return [] }
     let sources = Set(project.storedArtworks.flatMap(\.elements).compactMap { element -> UUID? in
       guard let view = element.objectView, view.linked, view.style != "rendered" else { return nil }
       return view.sourceID

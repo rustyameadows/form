@@ -38,6 +38,7 @@ import LabRendering
   private(set) var renders=0,maximumMilliseconds=0.0,maximumProcessRSSBytes:Int64=0
   private(set) var lastSourceSampling:[UUID:SourceTextureSamplingPlan]=[:]
   private(set) var lastPixelBytes=0
+  private(set) var lastValidatedArtworkCount=0
   private(set) var framingWarnings:[[String:Any]]=[]
   func clear() {controller=nil;owner=nil;lastPixelBytes=0;lastSourceSampling=[:]}
   var geometryBuilds:Int {controller?.geometryBuilds ?? 0}
@@ -56,10 +57,7 @@ import LabRendering
     // its complete composition, including any external-source preparation.
     // Waiting releases the UI actor; cancellation removes a queued preview.
     try await acquireCapture();defer{releaseCapture()}
-    for object in project.objects where ids.contains(object.id) {
-      let artworks=PaperConstruction.isPaper(object) ? [project.paperArtwork(for:object,inside:false),project.paperArtwork(for:object,inside:true)].compactMap{$0}:[project.surfaceArtwork(object)].compactMap{$0}
-      for art in artworks {try ArtworkRenderer.validateGlyphOutput(art,assets:assets)}
-    }
+    try validateCaptureArtwork(project:project,objectIDs:ids,assets:assets)
     let started=Date();defer{maximumMilliseconds=max(maximumMilliseconds,Date().timeIntervalSince(started)*1000);maximumProcessRSSBytes=max(maximumProcessRSSBytes,Self.rss())}
     if owner != project.id {clear();owner=project.id;controller=TableSceneController()}
     let c=controller!;c.externalCapturePreparationCheckpoint=externalPreparationCheckpoint
@@ -111,6 +109,19 @@ import LabRendering
     let bitmap=NSBitmapImageRep(cgImage:pixels);bitmap.size=NSSize(width:width,height:height)
     let image=NSImage(size:bitmap.size);image.addRepresentation(bitmap)
     lastPixelBytes=width*height*4;renders+=1;return .init(image:image,framingWarnings:capturedWarnings)
+  }
+  /// Repeated presentation instances commonly share complete registered
+  /// artwork. Validate each distinct resolved document once per capture; never
+  /// carry a validation result across source revisions or explicit exports.
+  func validateCaptureArtwork(project:Project,objectIDs:Set<UUID>,assets:URL)throws {
+    var validated:[Artwork]=[];lastValidatedArtworkCount=0
+    for object in project.objects where objectIDs.contains(object.id) {
+      let artworks=PaperConstruction.isPaper(object) ? [project.paperArtwork(for:object,inside:false),project.paperArtwork(for:object,inside:true)].compactMap{$0}:[project.surfaceArtwork(object)].compactMap{$0}
+      for art in artworks where !validated.contains(art) {
+        try ArtworkRenderer.validateGlyphOutput(art,assets:assets)
+        validated.append(art);lastValidatedArtworkCount+=1
+      }
+    }
   }
   static func resources(project:Project,assets:URL)throws->[[String:String]] {
     var result=[[String:String]](),total:Int64=0

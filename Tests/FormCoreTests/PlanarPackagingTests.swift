@@ -87,15 +87,15 @@ final class PlanarPackagingTests:XCTestCase {
     XCTAssertThrowsError(try PaperConstruction.definition(for:object))
     p=try paper(source());p.stock.sheetSizeMM = .init(1,2);XCTAssertThrowsError(try PaperConstructionEngine.validate(p))
   }
-  func testTwelvePackagingSourcesAndSeparateLinerCreateEditUndoAndReopen()throws {
+  func testFourteenPackagingSourcesAndSeparateLinerCreateEditUndoAndReopen()throws {
     let repoURL=FileManager.default.temporaryDirectory.appendingPathComponent("packaging-"+UUID().uuidString)
     defer{try? FileManager.default.removeItem(at:repoURL)}
     let engine=OperationEngine(repository:try ProjectRepository(root:repoURL));engine.project=Project(name:"Packaging source tests")
     let root=URL(fileURLWithPath:#filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("examples/paper-packaging")
     let files=try FileManager.default.contentsOfDirectory(at:root,includingPropertiesForKeys:nil).filter{$0.pathExtension=="json"}.sorted{$0.path<$1.path}
-    XCTAssertEqual(files.count,13)
+    XCTAssertEqual(files.count,15)
     let primary=files.filter{!$0.lastPathComponent.contains("liner-component")}
-    XCTAssertEqual(Set(primary.map{String($0.lastPathComponent.prefix(2))}),Set((1...12).map{String(format:"%02d",$0)}))
+    XCTAssertEqual(Set(primary.map{String($0.lastPathComponent.prefix(2))}),Set((1...14).map{String(format:"%02d",$0)}))
     XCTAssertEqual(files.filter{$0.lastPathComponent=="07-liner-component.json"}.count,1)
     for file in files {
       let data=try Data(contentsOf:file),definition=try JSONDecoder.form.decode(PlanarConstructionDefinition.self,from:data)

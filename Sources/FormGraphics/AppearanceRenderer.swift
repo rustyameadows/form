@@ -29,7 +29,7 @@ import FormCore
       "last_build_ms": lastMilliseconds, "cache_limit_bytes": 64_000_000,
       "maximum_pixels": maximumPixels, "last_error": lastError ?? ""]
   }
-  public static func invalidateFonts() { cache.removeAllObjects();NativeEffectCompositor.invalidateFonts();ArtworkMaskRenderer.invalidateFonts() }
+  public static func invalidateFonts() { cache.removeAllObjects();NativeEffectCompositor.invalidateFonts();ArtworkMaskRenderer.invalidateFonts();ArtworkRenderer.invalidatePreparedFonts() }
   public static func blend(_ name: String?) -> CGBlendMode {
     switch name {
     case "multiply": return .multiply
@@ -141,11 +141,23 @@ import FormCore
   private var signatures: [UUID: Data] = [:]
   private var activeDraws=Set<UUID>()
   private var outputIDs:Set<UUID>?
-  init(_ art: Artwork, assets: URL, production: Bool, excluding: Set<UUID>) {
+  private let cullsToClip: Bool
+  private var paths: [UUID: CGPath] = [:]
+  private(set) var vectorPathBuilds = 0, boundsBuilds = 0
+  private(set) var drawnElements = 0, culledElements = 0
+  init(_ art: Artwork, assets: URL, production: Bool, excluding: Set<UUID>, cullsToClip: Bool = false) {
     self.art = art; self.assets = assets; self.production = production; self.excluding = excluding
+    self.cullsToClip = cullsToClip
     byID = Dictionary(uniqueKeysWithValues: art.elements.map { ($0.id, $0) })
     children = Dictionary(grouping: art.elements, by: \.parentID)
     masks = Set(art.elements.compactMap(\.clipID))
+  }
+  func resetDrawMetrics() { drawnElements = 0; culledElements = 0 }
+  private func vectorPath(_ element: ArtworkElement) -> CGPath {
+    if let cached = paths[element.id] { return cached }
+    let path = VectorGeometry.path(element)
+    paths[element.id] = path; vectorPathBuilds += 1
+    return path
   }
   func visible(_ e: ArtworkElement) -> Bool {
     e.hidden != true && (e.opacity ?? 1) > 0 && !excluding.contains(e.id) && !masks.contains(e.id)
@@ -173,13 +185,14 @@ import FormCore
   }
   func localBounds(_ e: ArtworkElement) -> CGRect {
     if let value = boxes[e.id] { return value }
+    boundsBuilds += 1
     var box: CGRect
     if e.kind == "group" {
       box = .null
       for child in children[e.id] ?? [] where visible(child) {
         var value = localBounds(child).applying(child.localTransform.cg)
         if let id = child.clipID, let mask = byID[id] {
-          let clip=ArtworkMasks.isCoverage(child.clipMode) ? localBounds(mask).applying(mask.localTransform.cg):VectorGeometry.path(mask).boundingBoxOfPath.applying(mask.localTransform.cg)
+          let clip=ArtworkMasks.isCoverage(child.clipMode) ? localBounds(mask).applying(mask.localTransform.cg):vectorPath(mask).boundingBoxOfPath.applying(mask.localTransform.cg)
           value = value.intersection(clip)
         }
         box = box.union(value)
@@ -196,11 +209,11 @@ import FormCore
           guard stroke.enabled != false,stroke.width>0 else{continue}
           var proxy=e;proxy.paintStack=nil;proxy.stroke=stroke
           if let path=try? VectorGeometry.expandedStroke(proxy){box=box.union(path.boundingBoxOfPath)}
-        }else if e.kind != "line" {box=box.union(VectorGeometry.path(e).boundingBoxOfPath)}
+        }else if e.kind != "line" {box=box.union(vectorPath(e).boundingBoxOfPath)}
       }
     }
     else {
-      box = e.fillEnabled == false || e.kind == "line" ? .null : VectorGeometry.path(e).boundingBoxOfPath
+      box = e.fillEnabled == false || e.kind == "line" ? .null : vectorPath(e).boundingBoxOfPath
       if e.visibleStroke != nil, let stroke = try? VectorGeometry.expandedStroke(e) {
         box = box.union(stroke.boundingBoxOfPath)
       }
@@ -278,7 +291,8 @@ import FormCore
   }
   private func drawContent(_ e:ArtworkElement,context:CGContext,effectScale:Double?) {
     if e.kind == "group"{drawChildren(e.id,context:context,effectScale:effectScale)}
-    else{ArtworkRenderer.drawElement(e,assets:assets,context:context)}
+    else{ArtworkRenderer.drawElement(e,assets:assets,context:context,
+      vectorPath: e.kind == "text" || e.kind == "image" || e.paintStack != nil ? nil:vectorPath(e))}
   }
   private func drawSilhouetteContent(_ root:ArtworkElement,context:CGContext,knockout:Bool) {
     if root.kind != "group" {
@@ -311,11 +325,22 @@ import FormCore
   }
   func drawChildren(_ parent: UUID?, context: CGContext, effectScale: Double?) {
     for e in children[parent] ?? [] where visible(e) {
+      if cullsToClip {
+        let clip = context.boundingBoxOfClipPath
+        // Effect bounds are included before rejecting a source outside the
+        // viewport: its shadow/blur may still paint inside the dirty region.
+        let box = localBounds(e).applying(e.localTransform.cg)
+        if !clip.isInfinite, !box.isInfinite,
+          !box.intersects(clip.insetBy(dx: -0.000001, dy: -0.000001)) {
+          culledElements += 1; continue
+        }
+      }
       drawElement(e,context:context,effectScale:effectScale)
     }
   }
   func drawElement(_ e:ArtworkElement,context:CGContext,effectScale:Double?,ignoringRootVisibility:Bool=false) {
       guard (ignoringRootVisibility ? (e.opacity ?? 1)>0:visible(e)),activeDraws.insert(e.id).inserted else{return}
+      drawnElements += 1
       defer{activeDraws.remove(e.id)}
       context.saveGState()
       defer{context.restoreGState()}
@@ -326,7 +351,7 @@ import FormCore
           guard ArtworkMaskRenderer.install(coverage,context:context) else{return}
         }else{
           var map = mask.localTransform.cg
-          context.addPath(VectorGeometry.path(mask).copy(using: &map) ?? VectorGeometry.path(mask))
+          context.addPath(vectorPath(mask).copy(using: &map) ?? vectorPath(mask))
           context.clip(using: mask.path?.evenOdd == true ? .evenOdd : .winding)
         }
       }

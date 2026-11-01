@@ -1,0 +1,53 @@
+{
+  "configuration": "release",
+  "cpu": "Apple M5",
+  "memoryGB": 24,
+  "macOS": "26.6.2",
+  "tests": 2078,
+  "failures": 0,
+  "skipped": 3,
+  "suites": [
+    {
+      "suite": "LabRenderingTests.xctest",
+      "status": "passed",
+      "tests": 14,
+      "result": "with 0 failures (0 unexpected) in 0.448 (0.449) seconds"
+    },
+    {
+      "suite": "FormMeshAssetsTests.xctest",
+      "status": "passed",
+      "tests": 24,
+      "result": "with 0 failures (0 unexpected) in 0.056 (0.057) seconds"
+    },
+    {
+      "suite": "FormGeometryTests.xctest",
+      "status": "passed",
+      "tests": 10,
+      "result": "with 0 failures (0 unexpected) in 0.027 (0.028) seconds"
+    },
+    {
+      "suite": "FormCoreTests.xctest",
+      "status": "passed",
+      "tests": 1002,
+      "result": "with 0 failures (0 unexpected) in 35.053 (35.105) seconds"
+    },
+    {
+      "suite": "FormCADModelingTests.xctest",
+      "status": "passed",
+      "tests": 28,
+      "result": "with 0 failures (0 unexpected) in 5.956 (5.958) seconds"
+    },
+    {
+      "suite": "FormCADKernelTests.xctest",
+      "status": "passed",
+      "tests": 12,
+      "result": "with 0 failures (0 unexpected) in 2.958 (2.959) seconds"
+    },
+    {
+      "suite": "FormAppTests.xctest",
+      "status": "passed",
+      "tests": 988,
+      "result": "with 3 tests skipped and 0 failures (0 unexpected) in 185.594 (185.679) seconds"
+    }
+  ]
+}
