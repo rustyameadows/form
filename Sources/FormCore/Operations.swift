@@ -1,5 +1,6 @@
 import CoreFoundation
 import Foundation
+import FormCADModel
 
 /// Used by both the native interface and the local agent bridge. Call from one serial executor.
 public final class OperationEngine {
@@ -795,10 +796,16 @@ public final class OperationEngine {
       }
       let recipe = try decodeRecipe(value)
       try edit("Added parametric recipe: \(recipe.name)", source: source) { p in
-        guard p.recipe(recipe.id) == nil else {
-          throw FormError.invalid("Recipe ID already exists. Choose a unique ID.")
+        if let i=p.recipes.firstIndex(where:{$0.id==recipe.id}) {
+          guard a["replace"] as? Bool == true else{throw FormError.invalid("Recipe ID already exists. Use replace:true to edit its project-owned definition.")}
+          for j in p.objects.indices where p.objects[j].recipeID==recipe.id {
+            let values=recipe.defaults.merging(p.objects[j].parameters){_,new in new};try recipe.validate(values);p.objects[j].parameters=values
+          }
+          p.recipes[i]=recipe
+        }else{
+          guard p.recipe(recipe.id)==nil else{throw FormError.invalid("Built-in recipes cannot be replaced by a project.")}
+          p.recipes.append(recipe)
         }
-        p.recipes.append(recipe)
       }
       return try jsonObject(recipe)
     case "form_import_reference":
@@ -995,9 +1002,26 @@ public func decodeRecipe(_ value: [String: Any]) throws -> Recipe {
     if let color = part["color"] as? String { try validateColor(color) }
     return .init(kind, values, color: part["color"] as? String)
   }
+  let solid:ParametricSolid?
+  if let raw=value["solid"] {
+    guard parts.isEmpty,let dictionary=raw as? [String:Any] else{throw FormError.invalid("Use either ordinary parts or a solid construction.")}
+    let data=try JSONSerialization.data(withJSONObject:dictionary)
+    guard data.count<=512_000 else{throw FormError.invalid("Solid definition exceeds 512 KB.")}
+    solid=try JSONDecoder().decode(ParametricSolid.self,from:data)
+  }else{solid=nil}
+  let requirements:[CADModelRequirement]?
+  if let raw=value["requirements"],!(raw is NSNull) {
+    guard let values=raw as? [[String:Any]],values.count<=128,
+      JSONSerialization.isValidJSONObject(values) else {
+      throw FormError.invalid("Recipe requirements must contain at most 128 JSON-safe comparison rules.")
+    }
+    let data=try JSONSerialization.data(withJSONObject:values)
+    guard data.count<=512_000 else{throw FormError.invalid("Recipe requirements exceed 512 KB.")}
+    requirements=try JSONDecoder().decode([CADModelRequirement].self,from:data)
+  }else{requirements=nil}
   let recipe = Recipe(
     id, name, value["symbol"] as? String ?? "cube.transparent",
-    value["summary"] as? String ?? "A custom parametric object.", parameters, parts: definitions)
+    value["summary"] as? String ?? "A custom parametric object.", parameters, parts: definitions,requirements:requirements,solid:solid)
   try recipe.validate(recipe.defaults)
   return recipe
 }

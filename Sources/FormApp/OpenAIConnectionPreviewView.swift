@@ -30,8 +30,9 @@ struct OpenAIConnectionPreviewView:View {
         Label("Preview text only · cleared when this window closes",systemImage:"lock")
           .font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
       }
-      Button("Continue with demo setup"){finishDemoSetup()}
-        .disabled(keyDraft.isEmpty).accessibilityIdentifier("studio-preview-key-continue")
+      WorkspaceToolbarButton("Continue with demo setup",symbol:"arrow.right",showsTitle:true,
+        identifier:"studio-preview-key-continue"){finishDemoSetup()}
+        .disabled(keyDraft.isEmpty)
       InspectorDivider()
       InspectorSectionHeader("DEMO CONNECTION CHECK")
       InspectorRow("Scenario") {Picker("Scenario",selection:$controller.fixture) {

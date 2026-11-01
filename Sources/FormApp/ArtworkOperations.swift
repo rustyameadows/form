@@ -9,6 +9,7 @@ extension StudioStore {
     if name == "form_paper" { return try paperOutputCall(args) }
     if name == "form_model_asset" {return try modelAssets.call(args)}
     if name == "form_cad" {return try cad.call(name,args)}
+    if name == "form_solid" {return try solidModelCall(args)}
     if ArtworkTransferCommands.recognizes(name,args) {return try artworkTransferCall(args)}
     if name == "form_cloth" {return try clothCall(args)}
     if ["form_textile_stock","form_production_job"].contains(name) {return try productionCall(name,arguments:args)}

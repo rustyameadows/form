@@ -9,7 +9,7 @@ public enum MCP {
     "form_list_printers", "form_connect_printer",
   ]
   public static let graphicsToolNames: Set<String> = [
-    "form_import_image", "form_image_info", "form_model_asset", "form_cad",
+    "form_import_image", "form_image_info", "form_model_asset", "form_cad", "form_solid",
     "form_list_fonts", "form_font_features", "form_replace_font", "form_convert_to_paths", "form_boolean_artwork",
     "form_export_artwork", "form_import_svg",
     "form_export_publication", "form_textile_stock", "form_production_job", "form_color_profile", "form_cloth",
@@ -64,6 +64,7 @@ public enum MCP {
       ],
       "description": "Complete textile product specification or null to clear. Garments are generic presentation blanks. Optional embroidery stores regenerable digitizing settings; machine programs export separately. Attachments reference a supported garment and physical region; offsets are centered region-local millimeters. Discover bounds with form_textile_zones for crewTee/curvedCap/canvasTote. Direct artwork uses textilePrint/directPrint and clearance 0–0.25 mm; cap rigid patch/label/embroidery placements reject. laidFaceDown explicitly turns over tee/tote with every attachment; caps remain upright.",
     ]
+    @inline(never)
     func tool(
       _ name: String, _ description: String, _ properties: [String: Any] = [:],
       required: [String] = [], readOnly: Bool = false, destructive: Bool = false
@@ -79,7 +80,9 @@ public enum MCP {
         ],
       ]
     }
-    return [
+    @inline(never)
+    func catalogGroup1() -> [[String: Any]] {
+      return [
       tool("form_surface","Inspect physical source surfaces and bind independent Canvas artwork to a named planar CAD surface. Surface identity, physical source size, readable orientation and exact face revision are preserved. bind/unbind and set_intent/clear_intent are one Undo. intent is {surface:{kind:net|panel|cadSurface|sewingPiece,surfaceID?:string,side:outside|inside},bleedMM:0..25,safeInsetMM:0..100}. Net has no surfaceID; panels/CAD use stable source IDs and sewingPiece uses its element UUID. Inside applies to paper sources. Guides derive from the current polygon (sewn trim includes its authored cut allowance) on the shared0.001mm physical grid; artwork is never scaled. inspect reports source_revision, current trim/bleed/safe polygons, collapse/unresolved/overlap/work-limit reviews. Net offsets use the union of cuts; shared-crease bleed overlaps require review, not blanket rejection. expected_revision guards guide edits. Deleting a bound artwork frame retains a detached snapshot.",[
         "command":["type":"string","enum":["inspect","bind","unbind","set_intent","clear_intent"]],"object_id":objectID,"surface_id":string,"source_object_id":objectID,
         "intent":["type":"object"],"surface":["type":"object"],"expected_revision":string
@@ -154,6 +157,12 @@ public enum MCP {
               "Optional Codex conversation URL or identifier to preserve with this project.",
           ],
         ], required: ["name"]),
+      ]
+    }
+
+    @inline(never)
+    func catalogGroup2() -> [[String: Any]] {
+      return [
       tool(
         "form_open_project", "Open a saved project in the running LAB window.",
         ["project_id": string], required: ["project_id"]),
@@ -216,17 +225,32 @@ public enum MCP {
         ], required: ["object_ids"]),
       tool(
         "form_create_recipe",
-        "Define a new parametric object type in this project. Parameters: id,name,value,minimum,maximum, optional unit/step. Parts: kind (box/cylinder/cone/sphere/torus), values (arithmetic expression strings for width/height/depth/radius/topRadius/bottomRadius/ringRadius/pipeRadius/x/y/z/rotationX/rotationY/rotationZ/corner), optional hex color. Expressions support variables, numbers, + - * / and parentheses. Values are mm, rotations degrees. Parts inherit the object's material. This creates first-class editable controls without executing code. An independent canonical artwork source may declare parts:[] and use saved artwork_parameter_bindings on its object; it needs no placeholder solid.",
+        "Define a project-owned parametric object with native controls. Parameters: id,name,value,minimum,maximum, optional unit/step. Use parts (box/cylinder/cone/sphere/torus) OR parts:[] plus solid. Solid: spacing expression (0.15–2 mm), optional floorY and normalizeHeight expressions, optional fillVoids boolean (explicitly fill enclosed air; exterior openings remain), nodes. Nodes: kind group/segment/ellipsoid/sweep; optional count expression and unique index variable; ordered bindings [{name,expression}]. group has children. segment values: x/y/z,endX/endY/endZ,radius/endRadius, optional aspect/endAspect (0.25–1), roll radians, blend. ellipsoid values: x/y/z,radiusX/radiusY/radiusZ,optional axisX/Y/Z and roll (radians),blend. sweep uses a sweep payload: samples expression (2–128), variable (unique local path coordinate 0–1), optional ordered curve bindings, values x/y/z/radiusX/radiusY/roll expressions, sides (3–64, default16) OR profile [[x,y],...] (3–64 simple polygon points within ±10), optional initialNormal [x,y,z] expressions and smoothProfile boolean. Sweeps retain analytic profiles/normals and positive capped tips (radii 0.005–500mm). All values are expression strings. Sampled primitives fuse; analytic sweep surfaces assemble without Boolean union. floorY is for sampled constructions only. Table, Studio and fabrication share the same geometry. Optional requirements retain up to 128 unique parameter comparisons with id, lhs/rhs scalar expressions, relation (<, <=, ==, >=, >, !=), message and optional tolerance (0–1); they are checked before construction and preserved when replacing a full recipe definition. Limits: 12k expanded primitives, depth12, 512KB source and 512KB requirements. Expressions: + - * /, pi, parentheses; sin/cos/sqrt/abs/floor/ceil/round/fract; pow/atan2/min/max; clamp/mix; pick(zero-based index,choices...). Angles in radians inside functions; traditional part rotations degrees. No code execution. User models remain project data. An independent canonical artwork source may declare parts:[] without a solid and use saved artwork_parameter_bindings on its object; it needs no placeholder geometry.",
         [
+          "replace":["type":"boolean","description":"Explicitly replace a project-owned recipe, retaining matching object parameters with validation and shared Undo. Built-ins cannot be replaced."],
           "recipe": [
             "type": "object",
             "properties": [
               "id": string, "name": string, "summary": string, "symbol": string,
               "parameters": ["type": "array", "items": ["type": "object"]],
               "parts": ["type": "array", "items": ["type": "object"]],
+              "solid":["type":"object"],
+              "requirements":["type":["array","null"],"maxItems":128,"items":["type":"object","properties":[
+                "id":string,"lhs":["type":["string","number"]],"relation":["type":"string","enum":["<","<=","==",">=",">","!="]],
+                "rhs":["type":["string","number"]],"message":string,"tolerance":["type":["number","null"],"minimum":0,"maximum":1]
+              ],"required":["id","lhs","relation","rhs","message"],"additionalProperties":false]],
             ], "required": ["id", "name", "parameters", "parts"],
           ]
         ], required: ["recipe"]),
+      ]
+    }
+
+    @inline(never)
+    func catalogGroup3() -> [[String: Any]] {
+      return [
+      tool("form_solid","Inspect the actual sampled union or analytic assembly of a project-defined solid recipe: physical bounds, indexed connectivity, closed/oriented topology, volume and duration. export_stl writes that same geometry in millimeters, Z up, to an unused absolute .stl path. No slicing or printer commands. Geometry checks do not certify manufacture.",[
+        "command":["type":"string","enum":["inspect","export_stl"]],"object_id":objectID,"path":string
+      ],required:["object_id"]),
       tool(
         "form_set_artwork",
         "Replace linked surface artwork. Artwork: background, bleed (mm), elements, optional unit/guides/gridSpacing/snapEnabled. Elements: id,kind (text/rectangle/ellipse/line/image/polygon/star/path/group), x,y,width,height in mm, text,color,fontSize in pt. Optional name,rotation,opacity,hidden,locked,parentID,stroke,gradient,path,typography,textRuns,productionRole. Typography preserves installed fontName, tracking, leading, alignment, variable axes/features, paragraphs and UTF-16 rich text ranges. The native editor and 3D material use the same definition.",
@@ -311,6 +335,12 @@ public enum MCP {
         ["command":["type":"string","enum":["list","get","create","append","reorder","unlink","edit","publication","delete","layout"]],
          "story_id":string,"publication_id":["type":["string","null"]],"name":string,"text":string,"source":["type":"object"],"language":["type":["string","null"]],
          "frames":["type":"array","minItems":1,"maxItems":400,"items":["type":"object","properties":["object_id":string,"element_id":string],"required":["object_id","element_id"],"additionalProperties":false]]],required:["command"]),
+      ]
+    }
+
+    @inline(never)
+    func catalogGroup4() -> [[String: Any]] {
+      return [
       tool("form_publication",
         "Manage an explicit ordered physical page document. list/get/preflight are read-only. create adopts independent artwork sheets in page_ids order; settings changes name, language, millimeter margins and optional baseline_grid in points. reorder includes all current page IDs exactly once. add_page creates a physical sheet with one to four body columns, optionally appended to story_id; no displayed text fragments are duplicated. Grid alignment is an opt-in paragraph Typography.alignToBaselineGrid property. preflight reports actual story overset, frame/font issues, physical page sizes and output-profile conflicts before export. delete removes document membership while retaining pages/stories. All mutations share native Undo and atomic batches.",
         ["command":["type":"string","enum":["list","get","create","settings","reorder","add_page","delete","preflight"]],
@@ -452,6 +482,12 @@ public enum MCP {
           "layout_preflight": ["type":"boolean","description":"With cut_layout true, return exact issues, copy poses and consumption/cost assumptions without writing a file."],
           "include_fabric_preview": ["type":"boolean","description":"With cut_layout true, optionally add a roll-anchored fabric reference layer clipped to cut pieces. The upper/right ply is shown for folded stock. Motif phase is physical; seam continuity and machine postprocessing are not verified."],
         ], required: ["object_id", "format"]),
+      ]
+    }
+
+    @inline(never)
+    func catalogGroup5() -> [[String: Any]] {
+      return [
       tool(
         "form_import_svg",
         "Import a local SVG as editable native artwork, preserving physical dimensions, groups, text, paths, and the original SVG asset. Omit object_id to create a new frame, or provide a target to add at original size, centered in its canonical artwork source. dry_run returns dimensions and fidelity issues without changing the project or writing assets. Warnings require allow_unsupported=true after inspection. External resources and scripts are never loaded.",
@@ -529,6 +565,12 @@ public enum MCP {
       tool(
         "form_cancel_slice",
         "Cancel the running local slicer process. Does not send printer commands."),
+      ]
+    }
+
+    @inline(never)
+    func catalogGroup6() -> [[String: Any]] {
+      return [
       tool(
         "form_list_filaments",
         "Read Studio filament inventory and profiles, including polymer, color, diameter, density, temperatures, flow, grams remaining and cost.",
@@ -552,7 +594,9 @@ public enum MCP {
          "profile_path": ["type": "string", "description": "For set: absolute path to a local RGB/CMYK ICC file under 16 MB; bytes are copied into the project Assets with a SHA-256 identity."]]),
       tool("form_undo", "Undo the last native or MCP edit."),
       tool("form_redo", "Redo an undone edit."),
-    ]
+      ]
+    }
+    return catalogGroup1() + catalogGroup2() + catalogGroup3() + catalogGroup4() + catalogGroup5() + catalogGroup6()
   }
 
   /// JSON-RPC framing and discovery are independent of the running GUI.
