@@ -223,11 +223,20 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
         }
       }
       let assets=store.repository.url(for:project.id).appendingPathComponent("Assets")
-      stage.sync(resolved.project,selection:Set(selectedInstanceID.map{[$0]} ?? []),isolated:resolved.visible,showGrid:false,studio:true,preset:draft.surface,assets:assets,renderObjectIDs:resolved.visible)
+      stage.sync(resolved.project,selection:Set(selectedInstanceID.map{[$0]} ?? []),isolated:resolved.visible,showGrid:false,studio:true,preset:draft.surface,assets:assets,renderObjectIDs:resolved.visible,deferSolidConstruction:true)
       stage.camera=time>0 ? ((try? draft.motion.camera(start:draft.camera,fraction:time)) ?? draft.camera):draft.camera;stage.updateCamera();stage.applyShotLighting(draft.lighting,studio:true)
-      if resolved.project.objects.contains(where:{$0.hasTablePresentation && ($0.meshAsset != nil || $0.cadRepresentation != nil)}) {
+      if resolved.project.objects.contains(where:{$0.hasTablePresentation && ($0.meshAsset != nil || $0.cadRepresentation != nil || resolved.project.recipe($0.recipeID)?.solid != nil)}) {
+        let selection=Set(selectedInstanceID.map{[$0]} ?? [])
         prepareTask=Task{[weak self] in
-          do {guard let self else{return};try await self.stage.prepareExternalForCapture(project:resolved.project,assets:assets);guard !Task.isCancelled,self.generation==token else{return};self.stage.renderScene()}catch{if !Task.isCancelled,self?.generation==token{self?.error=error.localizedDescription}}
+          do {
+            let solids=try await SolidRecipeGeometry.prepareFullSources(project:resolved.project,objectIDs:resolved.visible)
+            guard let self,!Task.isCancelled,self.generation==token else{return}
+            self.stage.sync(resolved.project,selection:selection,isolated:resolved.visible,showGrid:false,studio:true,preset:draft.surface,assets:assets,renderObjectIDs:resolved.visible,solidSurfaces:solids,deferSolidConstruction:true)
+            self.stage.camera=self.time>0 ? ((try? draft.motion.camera(start:draft.camera,fraction:self.time)) ?? draft.camera):draft.camera
+            self.stage.updateCamera();self.stage.applyShotLighting(draft.lighting,studio:true)
+            try await self.stage.prepareExternalForCapture(project:resolved.project,assets:assets)
+            guard !Task.isCancelled,self.generation==token else{return};self.stage.renderScene()
+          }catch{if !Task.isCancelled,self?.generation==token{self?.error=error.localizedDescription}}
         }
       }
     }catch{

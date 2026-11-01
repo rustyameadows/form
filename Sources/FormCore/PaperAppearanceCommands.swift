@@ -98,7 +98,7 @@ public enum PaperAppearanceCommands {
     let specific: Set<String> = command == "set_finish" ? ["finish"] : command == "remove_finish" ? ["finish_id"] : []
     guard Set(args.keys).isSubset(of: Set(["command", "object_id"]).union(specific)) else { throw FormError.invalid("Unknown paper appearance arguments.") }
     if command == "stock_presets" {
-      return ["stocks": try jsonObject(presets), "units": "millimeters", "measured": false, "ply_order": "backToFront", "finish_kinds": PaperFinishAssignment.Kind.allCases.map(\.rawValue), "relief_representation": "surfaceShading", "manufacturing_verified": false]
+      return ["stocks": try jsonObject(presets), "units": "millimeters", "measured": false, "ply_order": "backToFront", "finish_kinds": PaperFinishAssignment.Kind.allCases.map(\.rawValue), "relief_representation": "surfaceShading", "final_capture_relief_representation": "boundedMacroGeometryAndSurfaceShading", "manufacturing_verified": false]
     }
     guard let project = engine.project, let raw = args["object_id"] as? String, let id = UUID(uuidString: raw),
       let object = project.objects.first(where: { $0.id == id }), PaperConstruction.isPaper(object) else { throw FormError.missing("Choose a paper construction in the current project.") }

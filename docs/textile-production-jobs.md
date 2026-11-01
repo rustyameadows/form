@@ -44,6 +44,7 @@ Export a ZIP or a new folder. Every packet includes:
 
 - `Job.json`, `Revision.json`, and `Estimate.json` with source/revision/program identity, declarations, assumptions, user records, and unknowns.
 - `Review.pdf` with specifications, measured thread schedule, cost assumptions, declared compatibility, and user history. Its final page is an actual-size hoop drawing with 16 mm margins; needle positions keep their physical origin and scale.
+- `Artwork.svg`, the ordinary source artwork at its physical size, distinct from needle paths. Visible stitch and print source layers are included without changing their stored production roles. New jobs capture these self-contained SVG bytes in their immutable revision, so later source deletion, edits or font changes cannot rewrite the manufacturer reference. Historical revisions without captured SVG derive it from their archived artwork, explicitly identified as a legacy derivation in the manifest; their original revision bytes remain unchanged.
 - Chosen actual outputs: `Needle.dst` with ordered `Needle.threads.json`, `Needle.svg`, and/or `Program.json`. SVG and the review hoop omit travel as thread. DST retains real travel/trim/color-change semantics.
 - `Manifest.json` listing each file's size and SHA-256, plus the packet digest and explicit no-contact/no-deduction/no-automatic-verification flags.
 

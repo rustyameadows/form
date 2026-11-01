@@ -1,6 +1,7 @@
 import AppKit
 import PDFKit
 import SwiftUI
+import Vision
 import XCTest
 @testable import FormApp
 @testable import FormCore
@@ -218,6 +219,66 @@ import XCTest
       try XCTUnwrap(bitmap.representation(using: .png, properties: [:])).write(to: root.appendingPathComponent("native-tiled-pattern-review.png"))
     }
   }
+  /// Locate the real mounted button. SwiftUI may expose virtual NSObject AX
+  /// children without declaring NSAccessibilityProtocol, so read both APIs.
+  private func saveButton(_ view:NSView)throws -> (frame:CGRect,enabled:Bool?) {
+    func descendants(_ root:NSView)->[NSView] {[root]+root.subviews.flatMap(descendants)}
+    if let button=descendants(view).compactMap({$0 as? NSButton}).first(where:{$0.title=="Save sheet options"}) {
+      let window=try XCTUnwrap(button.window)
+      return (window.convertToScreen(button.convert(button.bounds,to:nil)),button.isEnabled)
+    }
+    var seen=Set<ObjectIdentifier>()
+    func search(_ value:Any,depth:Int=0)->(CGRect,Bool)? {
+      guard depth<40,seen.count<3000,let object=value as? NSObject,seen.insert(ObjectIdentifier(object)).inserted else{return nil}
+      let modern=object as? any NSAccessibilityProtocol
+      func raw(_ name:String)->Any? {
+        let selector=NSSelectorFromString(name)
+        return object.responds(to:selector) ? object.perform(selector)?.takeUnretainedValue():nil
+      }
+      func legacy(_ name:String)->Any? {
+        object.responds(to:NSSelectorFromString("accessibilityAttributeValue:")) ? object.accessibilityAttributeValue(.init(rawValue:name)):nil
+      }
+      let role=modern?.accessibilityRole()?.rawValue ?? (raw("accessibilityRole") ?? legacy("AXRole")) as? String
+      let label=modern?.accessibilityLabel() ?? (raw("accessibilityLabel") ?? legacy("AXDescription")) as? String
+      let title=modern?.accessibilityTitle() ?? (raw("accessibilityTitle") ?? legacy("AXTitle")) as? String
+      if role==NSAccessibility.Role.button.rawValue,[label,title].compactMap({$0}).contains(where:{["Save pattern sheet options","Save sheet options"].contains($0)}) {
+        let frame=modern?.accessibilityFrame() ?? CGRect(origin:(legacy("AXPosition") as? NSValue)?.pointValue ?? .zero,size:(legacy("AXSize") as? NSValue)?.sizeValue ?? .zero)
+        let enabled=modern?.isAccessibilityEnabled() ?? (legacy("AXEnabled") as? NSNumber)?.boolValue
+        if let enabled,frame.width>0,frame.height>0 {return(frame,enabled)}
+      }
+      var children=modern?.accessibilityChildren() ?? []
+      if let navigation=raw("accessibilityChildrenInNavigationOrder") as? NSArray {children += navigation.map{$0}}
+      if modern==nil {children += raw("accessibilityChildren") as? [Any] ?? []}
+      if children.isEmpty {children += legacy("AXChildren") as? [Any] ?? [];children += legacy("AXChildrenInNavigationOrder") as? [Any] ?? []}
+      for child in children {if let found=search(child,depth:depth+1) {return found}}
+      return nil
+    }
+    for root in descendants(view) {if let found=search(root) {return(found.0,found.1)}}
+    // Inactive offscreen SwiftUI can expose neither NSButton nor AX children.
+    // Read the actual rendered label instead of assuming a position or invoking
+    // the closure. The following native click/action-count assertion proves the
+    // control is enabled even when AppKit exposes no enabled-state getter.
+    let bitmap=try XCTUnwrap(view.bitmapImageRepForCachingDisplay(in:view.bounds))
+    view.cacheDisplay(in:view.bounds,to:bitmap)
+    if let directory=ProcessInfo.processInfo.environment["FORM_SEWING_TILE_PROOF_DIR"] {
+      let root=URL(fileURLWithPath:directory);try FileManager.default.createDirectory(at:root,withIntermediateDirectories:true)
+      try XCTUnwrap(bitmap.representation(using:.png,properties:[:])).write(to:root.appendingPathComponent("native-sheet-options-save-target.png"))
+    }
+    let image=try XCTUnwrap(bitmap.cgImage),request=VNRecognizeTextRequest()
+    request.recognitionLevel = .accurate;request.recognitionLanguages=["en-US"];request.usesLanguageCorrection=false
+    try VNImageRequestHandler(cgImage:image).perform([request])
+    let window=try XCTUnwrap(view.window)
+    for observation in request.results ?? [] {
+      guard let text=observation.topCandidates(1).first,
+        let range=text.string.range(of:"Save sheet options",options:.caseInsensitive),
+        let label=try text.boundingBox(for:range) else{continue}
+      let box=label.boundingBox
+      let rect=CGRect(x:box.minX*view.bounds.width,y:(view.isFlipped ? 1-box.maxY:box.minY)*view.bounds.height,width:box.width*view.bounds.width,height:box.height*view.bounds.height)
+      guard !rect.isEmpty,view.bounds.contains(rect) else{continue}
+      return(window.convertToScreen(view.convert(rect,to:nil)),nil)
+    }
+    return try XCTUnwrap(Optional<(frame:CGRect,enabled:Bool?)>.none,"The actual mounted Save sheet options label must be discovered before a native click")
+  }
   func testNativeFocusedSheetFieldUsesTheRealSaveButtonWithoutTabAndUndoIsExact() throws {
     let (store, _) = try fixture(), before = store.project!
     let model = SewingPatternReviewModel(session: store.artworkSession)
@@ -226,9 +287,12 @@ import XCTest
       styleMask: [.titled], backing: .buffered, defer: false)
     window.isReleasedWhenClosed = false
     defer { window.close() }
+    var saves=0
     let view = NSHostingView(rootView: SewingTileSettings(draft: model.draft, saved: false,
-      save: { model.saveOptions() }, clear: { model.saveOptions(clear: true) }).padding(20).background(Palette.paper))
+      save: { saves+=1;model.saveOptions() }, clear: { model.saveOptions(clear: true) }).padding(20).background(Palette.paper))
+    view.sizingOptions=[]
     window.contentView = view
+    view.frame=window.contentView!.bounds
     window.orderBack(nil)
     view.layoutSubtreeIfNeeded()
     RunLoop.main.run(until: Date().addingTimeInterval(0.05))
@@ -242,10 +306,19 @@ import XCTest
     editor.insertText("13.75", replacementRange: .init(location: NSNotFound, length: 0))
     RunLoop.main.run(until: Date().addingTimeInterval(0.02))
     view.layoutSubtreeIfNeeded()
-    // This mounted, fixed-size fixture dispatches a real current mouse event to
-    // its Save Button, without sending input to the OS or the installed app.
-    let point = NSPoint(x: 95, y: view.isFlipped ? 416 : view.bounds.height - 416)
-    let location = view.convert(point, to: nil), stamp = ProcessInfo.processInfo.systemUptime
+    XCTAssertEqual(model.draft.values[SewingTileDraft.Field.left.rawValue],"13.75","The active native field must remain authoritative before Save")
+    // Find the actual mounted control after layout; shared field styling is free
+    // to change row heights without silently moving this event onto another row.
+    let button=try saveButton(view)
+    if let enabled=button.enabled {XCTAssertTrue(enabled)}
+    let buttonInWindow=window.convertFromScreen(button.frame)
+    let location=NSPoint(x:buttonInWindow.midX,y:buttonInWindow.midY)
+    let point=view.convert(location,from:nil)
+    XCTAssertTrue(view.bounds.contains(point),"Save must be inside the mounted form")
+    let hit=try XCTUnwrap(view.hitTest(view.superview?.convert(point,from:view) ?? point))
+    XCTAssertFalse(hit.isHiddenOrHasHiddenAncestor)
+    if let control=hit as? NSControl {XCTAssertTrue(control.isEnabled)}
+    let stamp = ProcessInfo.processInfo.systemUptime
     let down = try XCTUnwrap(NSEvent.mouseEvent(with: .leftMouseDown, location: location,
       modifierFlags: [], timestamp: stamp, windowNumber: window.windowNumber, context: nil,
       eventNumber: 1, clickCount: 1, pressure: 1))
@@ -256,7 +329,8 @@ import XCTest
     NSApp.sendEvent(down)
     NSApp.sendEvent(up)
     RunLoop.main.run(until: Date().addingTimeInterval(0.05))
-    XCTAssertEqual(store.project!.objects[0].artwork!.sewingTiles?.margins.left, 13.75)
+    XCTAssertEqual(saves,1,"The actual mounted Save button must receive the native click")
+    XCTAssertEqual(store.project!.objects[0].artwork!.sewingTiles?.margins.left, 13.75,model.error)
     XCTAssertEqual(store.engine.undoStack.count, 1)
     store.engine.undo()
     XCTAssertEqual(store.project, before)

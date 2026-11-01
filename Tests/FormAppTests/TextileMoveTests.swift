@@ -160,32 +160,43 @@ import XCTest
     let f = try Fixture(); defer {f.close()}
     f.select([f.patchID])
     let builds = f.scene.geometryBuilds
-    for zone in [TextileAttachment.Zone.leftChest,.rightChest,.leftSleeve,.rightSleeve,.collar,.back] {
-      let index = f.store.project!.objects.firstIndex {$0.id == f.patchID}!
-      f.store.engine.project!.objects[index].textile?.attachment?.zone = zone
-      f.store.synchronizeScene()
-      let placement = f.store.project!.textilePlacement(f.object(f.patchID)),node = f.node(f.patchID)
-      XCTAssertEqual(Double(node.simdWorldUp.x),placement.normal.x,accuracy:0.00001)
-      XCTAssertEqual(Double(node.simdWorldUp.y),placement.normal.y,accuracy:0.00001)
-      XCTAssertEqual(Double(node.simdWorldUp.z),placement.normal.z,accuracy:0.00001)
-      XCTAssertEqual(Double(node.position.x)*100,placement.position.x,accuracy:0.0001)
-      XCTAssertEqual(Double(node.position.y)*100,placement.position.y,accuracy:0.0001)
-      XCTAssertEqual(Double(node.position.z)*100,placement.position.z,accuracy:0.0001)
-      for projection in ["perspective","orthographic"] {
-        f.scene.camera.orientation = nil
-        f.scene.camera.azimuth = 0.43
-        f.scene.camera.elevation = zone == .back ? -0.8:0.8
-        f.scene.camera.projection = projection
-        f.scene.focusSelection()
-        let bounds = node.boundingBox
-        for x in [bounds.min.x,bounds.max.x] {for y in [bounds.min.y,bounds.max.y] {for z in [bounds.min.z,bounds.max.z] {
-          let point = f.view.projectPoint(node.convertPosition(.init(x,y,z),to:nil))
-          XCTAssertGreaterThanOrEqual(point.x,0)
-          XCTAssertLessThanOrEqual(point.x,1200-ObjectInspector.width-48)
-          XCTAssertGreaterThanOrEqual(point.y,80)
-          XCTAssertLessThanOrEqual(point.y,720)
-          XCTAssertGreaterThan(point.z,0); XCTAssertLessThan(point.z,1)
-        }}}
+    for inspectorVisible in [false,true] {
+      f.store.tableInspectorVisible=inspectorVisible
+      // This fixture hosts the native viewport without SwiftUI overlays. Let its
+      // normal fallback reserve exactly the controls declared by the store.
+      f.scene.navigationOcclusions=nil
+      for zone in [TextileAttachment.Zone.leftChest,.rightChest,.leftSleeve,.rightSleeve,.collar,.back] {
+        let index = f.store.project!.objects.firstIndex {$0.id == f.patchID}!
+        f.store.engine.project!.objects[index].textile?.attachment?.zone = zone
+        f.store.synchronizeScene()
+        let placement = f.store.project!.textilePlacement(f.object(f.patchID)),node = f.node(f.patchID)
+        XCTAssertEqual(Double(node.simdWorldUp.x),placement.normal.x,accuracy:0.00001)
+        XCTAssertEqual(Double(node.simdWorldUp.y),placement.normal.y,accuracy:0.00001)
+        XCTAssertEqual(Double(node.simdWorldUp.z),placement.normal.z,accuracy:0.00001)
+        XCTAssertEqual(Double(node.position.x)*100,placement.position.x,accuracy:0.0001)
+        XCTAssertEqual(Double(node.position.y)*100,placement.position.y,accuracy:0.0001)
+        XCTAssertEqual(Double(node.position.z)*100,placement.position.z,accuracy:0.0001)
+        for projection in ["perspective","orthographic"] {
+          f.scene.camera.orientation = nil
+          f.scene.camera.azimuth = 0.43
+          f.scene.camera.elevation = zone == .back ? -0.8:0.8
+          f.scene.camera.projection = projection
+          f.scene.focusSelection()
+          let free=try XCTUnwrap(f.scene.navigationFramingRect)
+          XCTAssertTrue(f.view.bounds.contains(free),"Focus must return a real useful viewport region")
+          let bounds = node.boundingBox
+          for x in [bounds.min.x,bounds.max.x] {for y in [bounds.min.y,bounds.max.y] {for z in [bounds.min.z,bounds.max.z] {
+            let point = f.view.projectPoint(node.convertPosition(.init(x,y,z),to:nil))
+            // Useful-region rectangles use top-left coordinates; native projected
+            // points use bottom-left coordinates. Test every physical corner.
+            let top=f.view.bounds.height-point.y
+            XCTAssertGreaterThanOrEqual(point.x,free.minX)
+            XCTAssertLessThanOrEqual(point.x,free.maxX)
+            XCTAssertGreaterThanOrEqual(top,free.minY)
+            XCTAssertLessThanOrEqual(top,free.maxY)
+            XCTAssertGreaterThan(point.z,0); XCTAssertLessThan(point.z,1)
+          }}}
+        }
       }
     }
     XCTAssertEqual(f.scene.geometryBuilds,builds)

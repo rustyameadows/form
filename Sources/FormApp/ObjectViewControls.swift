@@ -8,15 +8,43 @@ extension ArtworkSession {
     objectViewRenderTask?.cancel(); objectViewRenderTask = nil
     objectViewRendering = false
   }
+  /// A cold source is prepared without replacing the focused editor or blocking
+  /// native events. A later source, target or project invalidates this request.
+  private func prepareSolidObjectView(_ source:ProductObject,project:Project,then:@escaping @MainActor (SolidSurface)->Void)->Bool {
+    guard let definition=project.recipe(source.recipeID)?.solid,
+      (try? SolidRecipeGeometry.cachedSurface(definition,parameters:source.parameters))==nil else{return false}
+    cancelObjectViewRendering()
+    let token=objectViewRenderToken,target=objectID,projection=projectionFrameID,selected=selection
+    let state=LinkedObjectViewRenderer.state(source,in:project)
+    objectViewRendering=true
+    objectViewRenderTask=Task{[weak self] in
+      defer{if let self,self.objectViewRenderToken==token {self.objectViewRendering=false;self.objectViewRenderTask=nil}}
+      do {
+        let solids=try await SolidRecipeGeometry.prepareFullSources(project:project,objectIDs:[source.id])
+        try Task.checkCancellation()
+        guard let self,self.objectViewRenderToken==token,self.objectID==target,self.projectionFrameID==projection,self.selection==selected,
+          let current=self.store?.project,current.id==project.id,
+          let latest=current.objects.first(where:{$0.id==source.id}),LinkedObjectViewRenderer.state(latest,in:current)==state,
+          let surface=solids[source.id] else{return}
+        self.objectViewRendering=false;self.objectViewRenderTask=nil;then(surface)
+      }catch {
+        guard let self,self.objectViewRenderToken==token else{return}
+        self.objectViewRendering=false;self.objectViewRenderTask=nil
+        if !Task.isCancelled {self.store?.error=error.localizedDescription}
+      }
+    }
+    return true
+  }
   /// Each projection has its own camera and never moves or edits the source.
-  func placeObjectView(_ source: ProductObject, fourViews: Bool = false) {
+  func placeObjectView(_ source: ProductObject, fourViews: Bool = false,solidSurface:SolidSurface?=nil) {
     guard let project = store?.project else { return }
+    if solidSurface==nil,prepareSolidObjectView(source,project:project,then:{[weak self] surface in self?.placeObjectView(source,fourViews:fourViews,solidSurface:surface)}) {return}
     do {
       let angles: [(String, Double)] = fourViews
         ? [("Front", 0), ("Right", 90), ("Back", 180), ("Left", -90)] : [("Front", 0)]
       var views = try angles.map { label, angle in
         var view = try ObjectViewProjection.make(object: source, project: project, assets: assets,
-          azimuth: angle, elevation: 0, style: "silhouette")
+          azimuth: angle, elevation: 0, style: "silhouette",solidSurface:solidSurface)
         var settings = ObjectViewSettings(sourceID: source.id, azimuth: angle, elevation: 0,
           style: "silhouette", linked: true)
         settings.referenceAspect = settings.framingAspect(for: view)
@@ -46,7 +74,7 @@ extension ArtworkSession {
     render: @escaping LinkedObjectViewRenderer.Render = { object, project, assets, azimuth, elevation, size, pixels in
       try await ObjectViewRendering.render(object: object, project: project, assets: assets,
         azimuth: azimuth, elevation: elevation, frameSize: size, pixels: pixels)
-    }) {
+    },solidSurface:SolidSurface?=nil) {
     cancelObjectViewRendering()
     let token = objectViewRenderToken
     guard let store, let project = store.project,
@@ -55,6 +83,8 @@ extension ArtworkSession {
       store?.error = "The source object is no longer available. The last view remains on the canvas."
       return
     }
+    if settings.style != "rendered",solidSurface==nil,
+      prepareSolidObjectView(source,project:project,then:{[weak self] surface in self?.configureObjectView(settings,changeStyle:changeStyle,render:render,solidSurface:surface)}) {return}
     var settings = settings
     settings.referenceAspect = settings.framingAspect(for: selected)
     settings.renderPending = nil
@@ -105,7 +135,7 @@ extension ArtworkSession {
     }
     do {
       let result = try ObjectViewProjection.make(object: source, project: project, assets: assets,
-        azimuth: settings.azimuth, elevation: settings.elevation, style: settings.style)
+        azimuth: settings.azimuth, elevation: settings.elevation, style: settings.style,solidSurface:solidSurface)
       guard let fitted = ObjectViewProjection.fit(result, into: settings.framingTarget(for: selected)) else {
         throw FormError.invalid("The view cannot be fitted to this artwork frame.")
       }

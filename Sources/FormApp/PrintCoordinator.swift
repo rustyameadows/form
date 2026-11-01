@@ -227,6 +227,26 @@ import SwiftUI
         }
         return
       }
+      if project.recipe(object.recipeID)?.solid != nil {
+        let token=preparationToken,epoch=store.artworkTransferProjectEpoch,input=currentInput
+        let configuration=self.configuration,printer=self.printer,assets=store.repository.url(for:project.id).appendingPathComponent("Assets")
+        preparing=true;status="Preparing full-detail solid…"
+        preparationTask=Task { [weak self] in
+          guard let self else{return}
+          defer{if self.preparationToken==token {self.preparing=false;self.preparationTask=nil}}
+          do {
+            let solids=try await SolidRecipeGeometry.prepareFullSources(project:project,objectIDs:[object.id])
+            try Task.checkCancellation()
+            guard self.preparationToken==token,self.store?.artworkTransferProjectEpoch==epoch,self.currentInput==input else{return}
+            let generated=try PrintMeshBuilder.mesh(object:object,project:project,assets:assets,configuration:configuration,solidSurface:solids[object.id]).centered(on:printer)
+            self.publish(generated,object:object,persist:persist,sourceMesh:false)
+          }catch {
+            guard !Task.isCancelled,self.preparationToken==token,self.store?.artworkTransferProjectEpoch==epoch,self.currentInput==input else{return}
+            self.status="Check print setup";self.validationError=error.localizedDescription
+          }
+        }
+        return
+      }
       let generated = try PrintMeshBuilder.mesh(
         object: object, project: project,
         assets: store.repository.url(for: project.id).appendingPathComponent("Assets"),

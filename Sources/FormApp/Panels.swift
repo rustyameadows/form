@@ -231,23 +231,26 @@ struct ParameterControl: View {
     }
     return low...max(low, high)
   }
+  var isSolid:Bool {store.project?.recipe(object.recipeID)?.solid != nil}
+  var value:Double {isSolid ? store.solids.value(for:object,parameter:parameter.id):object[parameter.id]}
   var binding: Binding<Double> {
     Binding(
-      get: { object[parameter.id] },
-      set: { store.update(object, ["parameters": [parameter.id: $0]]) })
+      get: { value },
+      set: { if isSolid {store.solids.set(object,parameters:[parameter.id:$0])}else{store.update(object, ["parameters": [parameter.id: $0]])} })
   }
   var body: some View {
     VStack(spacing: InspectorStyle.rowSpacing) {
       let projectID = store.project?.id
       if parameter.unit == "mm" {
-        ArtworkUnitField(parameter.name, value: object[parameter.id], unit: displayedUnit == "in" ? .inches : .mm) { physical in
+        ArtworkUnitField(parameter.name, value: value, unit: displayedUnit == "in" ? .inches : .mm) { physical in
           try commit(physical, projectID: projectID)
         }
       } else {
-        ScalarArtworkField(parameter.name, value: object[parameter.id], unit: displayedUnit) { physical in
+        ScalarArtworkField(parameter.name, value: value, unit: displayedUnit) { physical in
           try commit(physical, projectID: projectID)
         }
       }
+      let solidInteraction=solidInteraction()
       InspectorSlider(
         value: Binding(
           get: { binding.wrappedValue },
@@ -255,13 +258,19 @@ struct ParameterControl: View {
             binding.wrappedValue = min(
               range.upperBound,
               max(range.lowerBound, ($0 / parameter.step).rounded() * parameter.step))
-          }), in: range, label: parameter.name, onEditingChanged: store.inspectorInteraction("parameter-\(object.id)-\(parameter.id)")
+          }), in: range, label: parameter.name, onEditingChanged: isSolid ? solidInteraction.changed:store.inspectorInteraction("parameter-\(object.id)-\(parameter.id)"),onEditingCancelled:isSolid ? solidInteraction.cancel:nil
       )
     }
+  }
+  private func solidInteraction()->(changed:(Bool)->Void,cancel:()->Void) {
+    let coordinator=store.solids
+    var token:UUID?
+    return ({editing in if editing {token=coordinator.beginGesture(object)}else if let active=token {coordinator.endGesture(active);token=nil}}, {if let active=token {coordinator.cancelGesture(active);token=nil}})
   }
   private func commit(_ physical: Double, projectID: UUID?) throws {
     guard physical.isFinite, range.contains(physical) else { throw FormError.invalid("Enter a value within this parameter's supported range.") }
     guard store.project?.id == projectID else { throw FormError.invalid("The parameter's project changed.") }
+    if isSolid {store.solids.set(object,parameters:[parameter.id:physical]);return}
     try store.engine.call("form_update_object", arguments: ["object_id": object.id.uuidString, "parameters": [parameter.id: physical]], source: "Studio")
     store.changed()
   }

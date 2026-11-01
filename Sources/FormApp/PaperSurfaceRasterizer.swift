@@ -12,11 +12,22 @@ import simd
     let width: Int, height: Int
     let rectMM: PaperBounds
     let revision: String
-    var cost: Int { width * height * 16 }
+    /// Macro finish displacement excludes substrate tooth. It is consumed only
+    /// by bounded final-view geometry; editable artwork remains authoritative.
+    let finishReliefMM: [Float]?
+    let reliefRevision: String?
+    var cost: Int { width * height * (finishReliefMM == nil ? 16:20) }
     init(color: NSImage, normal: NSImage, roughness: NSImage, metallic: NSImage,
-      width: Int, height: Int, rectMM: PaperBounds, revision: String) {
+      width: Int, height: Int, rectMM: PaperBounds, revision: String,
+      finishReliefMM: [Float]? = nil) {
       self.color=color;self.normal=normal;self.roughness=roughness;self.metallic=metallic
       self.width=width;self.height=height;self.rectMM=rectMM;self.revision=revision
+      self.finishReliefMM=finishReliefMM
+      if let finishReliefMM {
+        var bytes=finishReliefMM.withUnsafeBytes {Data($0)}
+        bytes.append(Data("\(width),\(height):\(rectMM.x),\(rectMM.y),\(rectMM.width),\(rectMM.height)".utf8))
+        self.reliefRevision=SHA256.hash(data:bytes).map{String(format:"%02x",$0)}.joined()
+      }else{self.reliefRevision=nil}
     }
   }
   private struct Key: Encodable {
@@ -42,11 +53,17 @@ import simd
     color: String, grain: PaperStock.Grain, artwork: Artwork?, finishes: [PaperFinishAssignment],
     assets: URL, maximumEdge: Int, pixelBudget: Int) throws -> Maps {
     guard [rect.x,rect.y,rect.width,rect.height,netSize.x,netSize.y].allSatisfy(\.isFinite),rect.width>0,rect.height>0,netSize.x>0,netSize.y>0,pixelBudget>0 else{throw FormError.invalid("Paper viewing maps require finite positive physical bounds and a pixel budget.")}
-    let edge=max(128,min(4096,maximumEdge)), area=rect.width*rect.height
+    let edge=max(128,min(SourceTextureSampling.maximumEdge,maximumEdge)), area=rect.width*rect.height
     let density=min(Double(edge)/max(rect.width,rect.height),sqrt(Double(pixelBudget)/area))
-    let width=max(1,Int(floor(rect.width*density))),height=max(1,Int(floor(rect.height*density)))
+    var width=max(1,Int(floor(rect.width*density))),height=max(1,Int(floor(rect.height*density)))
+    // A very thin face still needs one pixel on its short axis. Account for
+    // that rounding before retaining its long axis allocation.
+    if width*height>pixelBudget {
+      if width>=height {width=max(1,pixelBudget/height)}
+      else {height=max(1,pixelBudget/width)}
+    }
     guard width*height<=16_000_000 else { throw FormError.invalid("Paper viewing maps exceed their bounded pixel allocation.") }
-    let key=Key(version:1,rect:rect,netSize:netSize,profile:profile,color:color,grain:grain,
+    let key=Key(version:2,rect:rect,netSize:netSize,profile:profile,color:color,grain:grain,
       artwork:artwork,finishes:finishes,width:width,height:height,fontRevision:GeometryFactory.fontRevision,assets:assets.path)
     let revision=SHA256.hash(data:try JSONEncoder.form.encode(key)).map{String(format:"%02x",$0)}.joined()
     if let maps=cache.object(forKey:revision as NSString) { return maps }
@@ -58,6 +75,7 @@ import simd
     let count=width*height,dx=rect.width/Double(width),dy=rect.height/Double(height)
     let field=try stockField(rect:rect,profile:profile,color:color,grain:grain,width:width,height:height)
     var heights=field.heights,rgba=field.color,rough=field.roughness,metal=[UInt8](repeating:255,count:count*4)
+    var finishHeights=[Float](repeating:0,count:count)
     for i in 0..<count {for c in 0..<3{metal[i*4+c]=0}}
     var hasRelief=false,hasFinish=false
     if let artwork {
@@ -86,7 +104,6 @@ import simd
           let j=i*4,a=Double(maskPixels[j+3])/255*finish.opacity
           coverage[i]=Float(a)
           guard a>0 else { continue }
-          heights[i]+=Float(relief*a)
           if paintsConductor || restoresInk {
             if let ink {
               let values=[ink.redComponent,ink.greenComponent,ink.blueComponent]
@@ -105,17 +122,19 @@ import simd
         // the normal field while the separate ink/foil mask remains crisp.
         if relief != 0 {
           let smoothed=blur(coverage,width:width,height:height,radius:min(6,max(1,Int((0.035/max(dx,dy)).rounded()))))
-          for i in 0..<count { heights[i]+=Float(relief)*(smoothed[i]-coverage[i]) }
+          for i in 0..<count { finishHeights[i]+=Float(relief)*smoothed[i] }
         }
         priorFoil = priorFoil || paintsConductor
       }
     }
+    if hasRelief {for i in 0..<count {heights[i]+=finishHeights[i]}}
     let normalImage=try hasRelief ? image(normals(heights,width:width,height:height,dx:dx,dy:dy),width:width,height:height,linear:true):field.normal
     if blackMap==nil {blackMap=try image([0,0,0,255],width:1,height:1,linear:true)}
     let maps=try Maps(color:image(rgba,width:width,height:height,linear:false),normal:normalImage,
       roughness:hasFinish ? image(rough,width:width,height:height,linear:true):field.roughnessImage,
       metallic:hasFinish ? image(metal,width:width,height:height,linear:true):blackMap!,
-      width:width,height:height,rectMM:rect,revision:revision)
+      width:width,height:height,rectMM:rect,revision:revision,
+      finishReliefMM:hasRelief ? finishHeights:nil)
     builds+=1;cache.setObject(maps,forKey:revision as NSString,cost:maps.cost);return maps
   }
   private static func stockField(rect:PaperBounds,profile:PaperSurfaceProfile,color:String,grain:PaperStock.Grain,width:Int,height:Int)throws->StockField {

@@ -93,8 +93,14 @@ import XCTest
     let result=try store.productionCall("form_production_job",arguments:["command":"export","job_id":job.id.uuidString,"format":"folder","path":folder.path]) as! [String:Any]
     XCTAssertEqual(result["inventory_deducted"] as? Bool,false);XCTAssertEqual(result["machine_contacted"] as? Bool,false)
     let manifest=try JSONSerialization.jsonObject(with:Data(contentsOf:folder.appendingPathComponent("Manifest.json"))) as! [String:Any],files=manifest["files"] as! [String:[String:Any]]
-    XCTAssertEqual(Set(files.keys),["Job.json","Revision.json","Estimate.json","Review.pdf","Program.json","Needle.svg","Needle.dst","Needle.threads.json"])
+    XCTAssertEqual(Set(files.keys),["Job.json","Revision.json","Estimate.json","Review.pdf","Program.json","Artwork.svg","Needle.svg","Needle.dst","Needle.threads.json"])
     for (name,metadata) in files {let data=try Data(contentsOf:folder.appendingPathComponent(name));XCTAssertEqual(ProductionAssets.digest(data),metadata["sha256"] as? String);XCTAssertEqual(data.count,metadata["bytes"] as? Int)}
+    let archivedArtwork=try XCTUnwrap(try store.productionRevision(job:job).sourceArtworkSVG)
+    let ordinary=try Data(contentsOf:folder.appendingPathComponent("Artwork.svg"))
+    XCTAssertEqual(ordinary,Data(archivedArtwork.utf8));XCTAssertTrue(archivedArtwork.contains("width=\"80.0mm\""));XCTAssertTrue(archivedArtwork.contains("height=\"60.0mm\""))
+    XCTAssertTrue(archivedArtwork.contains("#C75332"));XCTAssertTrue(archivedArtwork.contains("#285B8A"))
+    XCTAssertNotEqual(ordinary,try Data(contentsOf:folder.appendingPathComponent("Needle.svg")))
+    XCTAssertEqual(manifest["source_artwork_origin"] as? String,"captured_in_revision")
     XCTAssertEqual(files["Revision.json"]?["sha256"] as? String,job.revisionDigest);XCTAssertEqual(files["Program.json"]?["sha256"] as? String,job.programDigest)
     let pdf=try XCTUnwrap(PDFDocument(url:folder.appendingPathComponent("Review.pdf")))
     XCTAssertGreaterThanOrEqual(pdf.pageCount,2);XCTAssertTrue(pdf.string!.contains(job.sourceDigest));XCTAssertTrue(pdf.string!.contains("Unknown"))
@@ -118,6 +124,7 @@ import XCTest
     let stock=try thread(store)
     _ = try store.productionCall("form_textile_stock",arguments:["command":"assign_thread","object_id":id.uuidString,"thread_index":0,"stock_id":stock.id.uuidString])
     let job=try capture(store,id),captured=try store.productionProgram(job:job)
+    let archivedArtwork=try XCTUnwrap(try store.productionRevision(job:job).sourceArtworkSVG)
     store.engine.project!.objects.removeAll {$0.id==id || $0.id==sourceID};try store.engine.flush()
     let movedRoot=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString);defer {try? FileManager.default.removeItem(at:movedRoot)}
     let moved=try ProjectRepository(root:movedRoot),projectID=store.project!.id
@@ -130,6 +137,56 @@ import XCTest
     let result=try reopened.productionCall("form_production_job",arguments:["command":"get","job_id":job.id.uuidString]) as! [String:Any]
     XCTAssertEqual(result["current_source"] as? String,"missing")
     _ = try reopened.exportProductionPacket(job:saved,arguments:["format":"folder","path":movedRoot.appendingPathComponent("PortablePacket").path])
+    XCTAssertEqual(try Data(contentsOf:movedRoot.appendingPathComponent("PortablePacket/Artwork.svg")),Data(archivedArtwork.utf8))
+    XCTAssertEqual(try reopened.productionRevision(job:saved).sourceArtworkSVG,archivedArtwork)
+  }
+  func testOrdinarySourceReferenceIncludesStitchAndPrintRolesWithoutMutatingThem()throws {
+    let(store,root,id,sourceID)=try fixture();defer{clean(store,root)}
+    let index=try XCTUnwrap(store.engine.project?.objects.firstIndex{$0.id==sourceID})
+    var authored=try XCTUnwrap(store.project!.objects[index].artwork)
+    authored.elements[0].productionRole="stitch";authored.elements[1].productionRole="print"
+    _=try store.engine.call("form_set_artwork",arguments:["object_id":sourceID.uuidString,"artwork":try jsonObject(authored)])
+    let accepted=try XCTUnwrap(store.project),source=try XCTUnwrap(accepted.objects[index].artwork)
+    let patch=try XCTUnwrap(accepted.objects.first{$0.id==id})
+    let physicalReference=try XCTUnwrap(accepted.surfaceArtwork(patch))
+    let job=try capture(store,id),revision=try store.productionRevision(job:job)
+    let svg=try XCTUnwrap(revision.sourceArtworkSVG)
+    for element in source.elements {XCTAssertTrue(svg.contains("layer-"+element.id.uuidString));XCTAssertTrue(svg.contains(element.color))}
+    XCTAssertEqual(store.project!.objects[index].artwork,source)
+    XCTAssertEqual(revision.object.artwork,physicalReference)
+    XCTAssertEqual(revision.object.artwork?.elements.map(\.productionRole),["stitch","print"])
+    var legacy=revision;legacy.sourceArtworkSVG=nil
+    var legacyJob=job;legacyJob.revisionDigest=try ProductionAssets.write(JSONEncoder.form.encode(legacy),kind:"revision",repository:store.repository,projectID:store.project!.id)
+    let output=root.appendingPathComponent("Legacy-stitch-reference")
+    _=try store.exportProductionPacket(job:legacyJob,arguments:["format":"folder","path":output.path])
+    let restored=String(decoding:try Data(contentsOf:output.appendingPathComponent("Artwork.svg")),as:UTF8.self)
+    for element in source.elements {XCTAssertTrue(restored.contains("layer-"+element.id.uuidString));XCTAssertTrue(restored.contains(element.color))}
+    XCTAssertEqual(store.project!.objects[index].artwork,source)
+  }
+  func testSourceArtworkBytesStayCapturedAfterLiveEditsAndLegacyRevisionExportsWithoutRewrite()throws {
+    let(store,root,id,sourceID)=try fixture();defer{clean(store,root)}
+    let job=try capture(store,id),revision=try store.productionRevision(job:job)
+    let captured=try XCTUnwrap(revision.sourceArtworkSVG)
+    let index=try XCTUnwrap(store.engine.project?.objects.firstIndex{$0.id==sourceID})
+    store.engine.project!.objects[index].artwork!.elements[0].color="#00FF00"
+    store.engine.project!.objects[index].artwork!.elements[0].width=18
+    let state=store.project,undo=store.engine.undoStack.count
+    let output=root.appendingPathComponent("Captured-source")
+    _=try store.exportProductionPacket(job:job,arguments:["format":"folder","path":output.path])
+    XCTAssertEqual(try Data(contentsOf:output.appendingPathComponent("Artwork.svg")),Data(captured.utf8))
+    XCTAssertEqual(store.project,state);XCTAssertEqual(store.engine.undoStack.count,undo)
+    var legacy=revision;legacy.sourceArtworkSVG=nil
+    let legacyBytes=try JSONEncoder.form.encode(legacy)
+    var legacyJob=job;legacyJob.revisionDigest=try ProductionAssets.write(legacyBytes,kind:"revision",repository:store.repository,projectID:store.project!.id)
+    let legacyPath=ProductionAssets.folder(repository:store.repository,projectID:store.project!.id).appendingPathComponent(legacyJob.revisionDigest+".revision.json")
+    let folder=root.appendingPathComponent("Legacy-source")
+    _=try store.exportProductionPacket(job:legacyJob,arguments:["format":"folder","path":folder.path])
+    let svg=String(decoding:try Data(contentsOf:folder.appendingPathComponent("Artwork.svg")),as:UTF8.self)
+    XCTAssertTrue(svg.contains("#C75332"));XCTAssertFalse(svg.contains("#00FF00"))
+    let manifest=try JSONSerialization.jsonObject(with:Data(contentsOf:folder.appendingPathComponent("Manifest.json"))) as! [String:Any]
+    XCTAssertEqual(manifest["source_artwork_origin"] as? String,"derived_from_legacy_revision")
+    XCTAssertEqual(try Data(contentsOf:legacyPath),legacyBytes)
+    XCTAssertEqual(store.project,state);XCTAssertEqual(store.engine.undoStack.count,undo)
   }
   func testBadInputsAndCorruptAssetsPreserveExistingPacketAndState()throws {
     let (store,root,id,_)=try fixture();defer {clean(store,root)}

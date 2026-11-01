@@ -36,9 +36,10 @@ import LabRendering
     else {captureWaiters.removeFirst().continuation.resume(returning:true)}
   }
   private(set) var renders=0,maximumMilliseconds=0.0,maximumProcessRSSBytes:Int64=0
+  private(set) var lastSourceSampling:[UUID:SourceTextureSamplingPlan]=[:]
   private(set) var lastPixelBytes=0
   private(set) var framingWarnings:[[String:Any]]=[]
-  func clear() {controller=nil;owner=nil;lastPixelBytes=0}
+  func clear() {controller=nil;owner=nil;lastPixelBytes=0;lastSourceSampling=[:]}
   var geometryBuilds:Int {controller?.geometryBuilds ?? 0}
   var backendIdentifier:String {
     guard let renderer=controller?.renderer else{return "Native scene renderer"}
@@ -46,10 +47,10 @@ import LabRendering
   }
   static func rss()->Int64 {var r=rusage();getrusage(RUSAGE_SELF,&r);return Int64(r.ru_maxrss)}
   struct RenderResult {var image:NSImage;var framingWarnings:[[String:Any]]}
-  func render(project:Project,shot:StudioShot,assets:URL,preview:Bool,renderObjectIDs:Set<UUID>?=nil,textureLimit:Int=2048)async throws->NSImage {
+  func render(project:Project,shot:StudioShot,assets:URL,preview:Bool,renderObjectIDs:Set<UUID>?=nil,textureLimit:Int?=nil)async throws->NSImage {
     try await renderResult(project:project,shot:shot,assets:assets,preview:preview,renderObjectIDs:renderObjectIDs,textureLimit:textureLimit).image
   }
-  func renderResult(project:Project,shot:StudioShot,assets:URL,preview:Bool,renderObjectIDs:Set<UUID>?=nil,textureLimit:Int=2048)async throws->RenderResult {
+  func renderResult(project:Project,shot:StudioShot,assets:URL,preview:Bool,renderObjectIDs:Set<UUID>?=nil,textureLimit:Int?=nil)async throws->RenderResult {
     try shot.validate();let ids=try shot.visibility.resolved(in:project)
     // A capture owns this cached controller until the GPU has cloned/rendered
     // its complete composition, including any external-source preparation.
@@ -63,7 +64,13 @@ import LabRendering
     if owner != project.id {clear();owner=project.id;controller=TableSceneController()}
     let c=controller!;c.externalCapturePreparationCheckpoint=externalPreparationCheckpoint
     var copy=project;copy.camera=shot.camera;copy.camera.viewportAspect=shot.referenceAspect
-    c.sync(copy,selection:[],isolated:ids,showGrid:false,studio:true,preset:shot.surface,assets:assets,textureLimit:max(64,min(2048,textureLimit)),renderObjectIDs:renderObjectIDs)
+    let visible=renderObjectIDs.map{ids.intersection($0)} ?? ids
+    let fullSolids=try await SolidRecipeGeometry.prepareFullSources(project:copy,objectIDs:visible)
+    // Only this isolated capture controller receives a cheap geometry/bounds pass.
+    // Ordinary editing and thumbnail sampling retain their established limits.
+    let baseLimit=max(64,min(preview ? 2048:256,textureLimit ?? (preview ? 2048:256)))
+    c.sync(copy,selection:[],isolated:ids,showGrid:false,studio:true,preset:shot.surface,assets:assets,
+      textureLimit:baseLimit,renderObjectIDs:renderObjectIDs,solidSurfaces:fullSolids)
     // sync intentionally restores a camera only on a new project. Explicit render
     // composition uses its own owner and never mutates the native editing scene.
     c.camera=copy.camera;c.updateCamera();c.applyShotLighting(shot.lighting,studio:true)
@@ -72,6 +79,14 @@ import LabRendering
     case .orthographic(let span):outputCamera.projection = .orthographic(verticalSpanMM:span*shot.expansion)
     case .perspective:outputCamera.projection = .perspective(verticalFieldOfViewDegrees:shot.outputFieldOfView)
     }
+    if !preview {
+      let plans=try StudioSourceSampling.plans(controller:c,project:copy,camera:outputCamera,
+        viewport:CGSize(width:shot.pixels.width,height:shot.pixels.height),objectIDs:visible,
+        maximumEdge:max(64,min(SourceTextureSampling.maximumEdge,textureLimit ?? SourceTextureSampling.maximumEdge)))
+      c.sync(copy,selection:[],isolated:ids,showGrid:false,studio:true,preset:shot.surface,assets:assets,
+        textureLimit:baseLimit,renderObjectIDs:renderObjectIDs,sourceSampling:plans,solidSurfaces:fullSolids)
+      lastSourceSampling=plans
+    } else {lastSourceSampling=[:]}
     framingWarnings=[]
     for subject in c.objectRoot.childNodes {
       guard let name=subject.name,name.hasPrefix("object:"),let id=UUID(uuidString:String(name.dropFirst(7))),ids.contains(id) else{continue}

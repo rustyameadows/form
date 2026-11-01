@@ -1,0 +1,87 @@
+{
+  "date": "2026-11-01",
+  "base_main": "a3c79a5e81398eec0b1b7c87810f6c9c33b74fc3",
+  "app_sha256": "61517401d1f6189c2b25cb0517ff64c2228ee6cd71307b5aab8221b3dca2cb53",
+  "packaging": "release; deep/strict code signature verified; corresponding pinned OCCT source included",
+  "test_gates": [
+    {
+      "methods": 89,
+      "failures": 0
+    },
+    {
+      "methods": 43,
+      "failures": 0
+    }
+  ],
+  "unique_test_methods": 118,
+  "original_user_object_files": 146,
+  "original_user_object_files_changed": 0,
+  "native_public_bridge": {
+    "solid_full_inspection_stl_undo_reopen": "native_source_export_and_capture_checks_passed_visual_review_pending",
+    "sampled_spacing_mm": 0.45,
+    "rapid_parameter_edits": 14,
+    "status_helper_roundtrip_ms": {
+      "count": 15,
+      "maximum": 55.408,
+      "median": 24.073541,
+      "p95": 55.408
+    },
+    "native_slider_check": {
+      "method": "actual native AX slider authoring action and Command-Z through ordinary LAB",
+      "height": [
+        146,
+        155,
+        146
+      ],
+      "width": [
+        90,
+        96,
+        90
+      ],
+      "undo_steps": 2,
+      "physical_held_drag_latency_measured": false
+    },
+    "paper_original_twelve_preserved": true,
+    "paper_addendum_reopen_exact": true,
+    "finish_captures": 12,
+    "finish_source_restored": true,
+    "embroidery_reader": "Pyembroidery 1.5.1",
+    "production_job_decoded_records": 506,
+    "production_job_stitches": 462,
+    "physical_needle_decoded_records": 1314,
+    "physical_needle_stitches": 1088,
+    "fabric_pattern_workflow": "native source links, colorways, repeat transforms, Undo, output-only cache reuse, SVG/PDF/PNG/JPEG and reopening passed"
+  },
+  "visual_review": {
+    "paper": "Round one rejected for clipped heading text and crowded liner prototype text. Round two shows full COMMON GROUND glyphs, three inks, stock grain and independent clean suite envelope; originals unchanged.",
+    "finishes": "Reviewed fixed front/grazing/reverse views of flat, letterpress, emboss and foil; canonical reverse artwork reads correctly and remains asymmetric.",
+    "solids": "Coarse 1.6 mm source was refined to 0.45 mm and rerendered; smooth silhouette and junction improved. Full source inspection and STL are preserved.",
+    "embroidery": "Orange satin, blue fill with a real hole, cloth and border render; neon source background is excluded."
+  },
+  "images": [
+    {
+      "file": "embroidery-source.jpg",
+      "sha256": "b89a3f7d9b5760da3c7ef2bb3a0c103245f32bd7fa24530020d48548d22d4ccb"
+    },
+    {
+      "file": "paper-finishes.jpg",
+      "sha256": "ecd2abf991d9592266bbbabf13246d980918145ec745a812b490e643eff9978b"
+    },
+    {
+      "file": "paper-studies.jpg",
+      "sha256": "5db5a6653ac4ac3141b3854123a125342634d5966cc662030b620ff6070344c7"
+    },
+    {
+      "file": "solid-sources.jpg",
+      "sha256": "fffc273b30843f58cada35eed1156553f74e134c097bc178fc8bf0b2fe44ed7d"
+    }
+  ],
+  "limits": [
+    "Physical held-drag latency/FPS not measured; native AX actions and deterministic ownership tests cover separate contracts.",
+    "Source allocation budgets are not a peak RSS guarantee.",
+    "Final Studio macro relief is a bounded display representation, not press tooling.",
+    "Reference-tree visual acceptance, general garment fit/self-contact and physical press/sew-out remain separate."
+  ],
+  "external_model_calls": 0,
+  "hardware_operations": 0
+}

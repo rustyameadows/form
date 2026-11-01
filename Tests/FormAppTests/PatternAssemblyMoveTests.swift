@@ -59,6 +59,9 @@ import XCTest
     // Other geometry covers a valid destination, while the grab remains visible.
     let blocker=try f.store.project!.makeObject(recipeID:"box",parameters:["width":16,"depth":25,"height":50],position:.init(center.x+35,center.y-25,center.z+35))
     try f.store.engine.edit("Occluder") {$0.objects.append(blocker)};f.store.changed(save:false);f.store.synchronizeScene()
+    // Frame the complete interaction, while retaining only the label selection.
+    // Focusing a 45 mm label alone need not retain a destination 35 mm away.
+    f.scene.frameObjects(ids:[f.labelID,blocker.id])
     let target=Vector3(center.x+35,center.y,center.z),start=f.screen(center),end=f.screen(target),before=f.store.project!,camera=f.scene.camera,undos=f.store.engine.undoStack.count
     XCTAssertTrue(f.view.bounds.contains(end));XCTAssertEqual(f.scene.objectID(at:end),blocker.id)
     XCTAssertNil(f.scene.attachmentTarget(target,for:f.object(f.labelID)))

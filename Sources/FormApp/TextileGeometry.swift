@@ -143,7 +143,7 @@ import simd
     let pull=GeometryFactory.box(8,3,20,metal,y:TextileDesign.bodyTop(o,x:0,z:-d*0.33)+5,z:-d*0.33,corner:2);pull.name="Zipper pull";root.addChildNode(pull)
     return root
   }
-  static func decoration(_ o:ProductObject,project:Project,assets:URL,textureLimit:Int)->MeshNode {
+  static func decoration(_ o:ProductObject,project:Project,assets:URL,textureLimit:Int,sampling:SourceTextureRasterPlan?=nil)->MeshNode {
     let root=MeshNode(),w=o["width"],h=o["depth"],thickness=o["height"],r=min(o["corner"],min(w,h)/2)
     let path=NSBezierPath(roundedRect:NSRect(x:-w/200,y:-h/200,width:w/100,height:h/100),xRadius:r/100,yRadius:r/100)
     path.flatness=0.0003
@@ -151,7 +151,7 @@ import simd
     let cloth=GeometryFactory.material(o,project:project),base=GeometryFactory.solid(shape,cloth)
     base.eulerAngles.x = -.pi/2;base.name="Independent textile base";root.addChildNode(base)
     root.name=EmbroiderySceneSurface.containerName
-    EmbroiderySceneSurface.update(root,object:o,project:project,assets:assets,textureLimit:textureLimit)
+    EmbroiderySceneSurface.update(root,object:o,project:project,assets:assets,textureLimit:textureLimit,sampling:sampling)
     let border=o["borderWidth"]
     if border>0 {
       let inset=max(border/2,0.5),x=w/2-inset,z=h/2-inset,corner=max(0,r-inset)

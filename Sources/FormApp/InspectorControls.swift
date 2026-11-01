@@ -179,16 +179,20 @@ extension View {
     _ = sendAction(action, to: target); needsDisplay = true
   }
   var editingChanged: ((Bool) -> Void)?
+  var editingCancelled:(()->Void)?
   var stepSize: Double?
   private(set) var editing = false
   func beginEditing() { guard !editing else { return }; editing = true; editingChanged?(true) }
   func endEditing() { guard editing else { return }; editing = false; editingChanged?(false) }
+  func cancelEditing() {guard editing else{return};editing=false;if let editingCancelled {editingCancelled()}else{editingChanged?(false)}}
+  override func cancelOperation(_ sender:Any?) {if editingCancelled != nil {cancelEditing()}else{super.cancelOperation(sender)}}
   override func mouseDown(with event: NSEvent) {
     guard isEnabled else { return }
     beginEditing(); defer { endEditing() }
     super.mouseDown(with: event)
   }
   override func keyDown(with event: NSEvent) {
+    if event.keyCode==53,editingCancelled != nil {cancelEditing();return}
     let modifiers = event.modifierFlags.intersection([.command, .control, .option, .shift])
     guard isEnabled, [UInt16(123),124,125,126].contains(event.keyCode), modifiers.isSubset(of: [.shift]) else { endEditing(); super.keyDown(with: event); return }
     beginEditing()
@@ -219,9 +223,10 @@ struct InspectorSlider: NSViewRepresentable {
   var label: String?
   var tickCount: Int
   var onEditingChanged: (Bool) -> Void
+  var onEditingCancelled:(()->Void)?
   @Environment(\.isEnabled) private var enabled
-  init(value: Binding<Double>, in range: ClosedRange<Double> = 0...1, step: Double? = nil, label: String? = nil, tickCount: Int = 0, onEditingChanged: @escaping (Bool) -> Void = { _ in }) {
-    _value = value; self.range = range; self.step = step; self.label = label; self.tickCount = tickCount; self.onEditingChanged = onEditingChanged
+  init(value: Binding<Double>, in range: ClosedRange<Double> = 0...1, step: Double? = nil, label: String? = nil, tickCount: Int = 0, onEditingChanged: @escaping (Bool) -> Void = { _ in },onEditingCancelled:(()->Void)?=nil) {
+    _value = value; self.range = range; self.step = step; self.label = label; self.tickCount = tickCount; self.onEditingChanged = onEditingChanged;self.onEditingCancelled=onEditingCancelled
   }
   @MainActor final class Coordinator: NSObject {
     var parent: InspectorSlider
@@ -231,6 +236,7 @@ struct InspectorSlider: NSViewRepresentable {
       if isEditing { guard active == nil else { return }; active = parent; active?.onEditingChanged(true) }
       else { let original = active; active = nil; original?.onEditingChanged(false) }
     }
+    func cancelled() {let original=active;active=nil;(original ?? parent).onEditingCancelled?()}
     @objc func changed(_ sender: InspectorNativeSlider) {
       let owner = active ?? parent
       var next = min(owner.range.upperBound, max(owner.range.lowerBound, sender.doubleValue))
@@ -245,6 +251,7 @@ struct InspectorSlider: NSViewRepresentable {
     slider.target = context.coordinator; slider.action = #selector(Coordinator.changed(_:))
     let coordinator = context.coordinator
     slider.editingChanged = { [weak coordinator] in coordinator?.editing($0) }
+    slider.editingCancelled=onEditingCancelled == nil ? nil:{[weak coordinator] in coordinator?.cancelled()}
     slider.setContentHuggingPriority(.defaultLow, for: .horizontal)
     slider.setAccessibilityHelp("Arrow keys step this value. Shift uses ten times the step.")
     return slider
@@ -261,7 +268,7 @@ struct InspectorSlider: NSViewRepresentable {
     slider.needsDisplay = true
   }
   static func dismantleNSView(_ slider: InspectorNativeSlider, coordinator: Coordinator) {
-    slider.endEditing(); slider.editingChanged = nil; slider.target = nil
+    if slider.editingCancelled != nil {slider.cancelEditing()}else{slider.endEditing()};slider.editingChanged = nil;slider.editingCancelled=nil; slider.target = nil
   }
   func sizeThatFits(_ proposal: ProposedViewSize, nsView: InspectorNativeSlider, context: Context) -> CGSize? { .init(width: proposal.width ?? 160, height: InspectorStyle.controlHeight) }
 }

@@ -9,7 +9,7 @@ import simd
 /// Camera angles belong to the placement; table position and rotation are ignored.
 @MainActor enum ObjectViewProjection {
   static func make(object: ProductObject, project: Project, assets: URL,
-                   azimuth: Double, elevation: Double, style: String) throws -> ArtworkElement {
+                   azimuth: Double, elevation: Double, style: String,solidSurface:SolidSurface?=nil) throws -> ArtworkElement {
     guard azimuth.isFinite, elevation.isFinite else { throw FormError.invalid("Choose finite view angles.") }
     var triangles: [(SIMD3<Double>, SIMD3<Double>, SIMD3<Double>)] = []
     if let reference = object.meshAsset {
@@ -24,7 +24,12 @@ import simd
       let scene = try CADSceneAdapter.prepare(for: local, assets: assets)
       for item in scene.renderables { try append(mesh: item.mesh, transform: item.transform, to: &triangles) }
     } else {
-      let root = GeometryFactory.object(object, project: project, assets: assets)
+      let prepared:SolidSurface?
+      if let definition=project.recipe(object.recipeID)?.solid {
+        prepared=try solidSurface ?? SolidRecipeGeometry.cachedSurface(definition,parameters:object.parameters)
+        guard prepared != nil else{throw FormError.invalid("The full-detail solid view is still preparing. Its last valid path remains available.")}
+      }else{prepared=nil}
+      let root = GeometryFactory.object(object, project: project, assets: assets,solidSurface:prepared,solidRevision:prepared.map{_ in "full-object-view"})
       try collect(root, into: &triangles)
     }
     return try Self.project(triangles, azimuth: azimuth, elevation: elevation, style: style, name: object.name)
