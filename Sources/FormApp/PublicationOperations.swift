@@ -30,6 +30,13 @@ extension StudioStore {
     let id=try uuid("publication_id")
     if name=="form_publication" {return PublicationOutput.preflight(project,documentID:id,assets:assets)}
     guard let document=project.publications?.first(where:{$0.id==id}) else{throw FormError.missing("Publication not found.")}
+    if arguments["ink_output"] as? String != "preflight" {
+      for page in document.pages {
+        if let object = project.objects.first(where: { $0.id == page.objectID }) {
+          try ObjectViewExportGuard.validate(project:project, object:object)
+        }
+      }
+    }
     if let value=arguments["ink_output"] {
       guard let text=value as? String,let mode=InkOutputMode(rawValue:text) else{throw FormError.invalid("Choose a valid ink_output mode.")}
       if mode == .preflight {return ProductionInkPDF.preflight(project:project,pages:try inkPublicationPages(id),assets:assets)}
