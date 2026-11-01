@@ -49,8 +49,14 @@ import FormGraphics
       let point=transform.apply(.init(x,y))
       return try XCTUnwrap(bitmap.colorAt(x:Int((point.x*8).rounded()),y:Int((point.y*8).rounded()))?.usingColorSpace(.deviceRGB))
     }
-    let edge=try pixel(0.4,fill.height/2),middle=try pixel(fill.width/2,fill.height/2)
-    XCTAssertEqual(edge.redComponent,strokeOpacity,accuracy:0.06,"The red stroke must remain visible over the tiled blue fill")
+    // The centered stroke extends beyond the fill. Probe that transparent
+    // exterior to measure its alpha directly: NSColor returns unpremultiplied
+    // channels, so half-opacity red is red1/alpha0.5, not red0.5.
+    let inside=try pixel(0.4,fill.height/2),edge=try pixel(-0.4,fill.height/2),middle=try pixel(fill.width/2,fill.height/2)
+    print("FigmaTiledStroke opacity=\(strokeOpacity) inside=\(inside.redComponent),\(inside.greenComponent),\(inside.blueComponent),\(inside.alphaComponent) outside=\(edge.redComponent),\(edge.greenComponent),\(edge.blueComponent),\(edge.alphaComponent)")
+    XCTAssertGreaterThan(edge.redComponent,0.95,"The red outline must remain visible beside the tiled blue fill")
+    XCTAssertLessThan(edge.blueComponent,0.05)
+    XCTAssertEqual(edge.alphaComponent,strokeOpacity,accuracy:0.02,"The rendered stroke must apply its authored opacity exactly once")
     XCTAssertGreaterThan(middle.blueComponent,0.95);XCTAssertLessThan(middle.redComponent,0.05)
     XCTAssertEqual(middle.alphaComponent,1,accuracy:0.02)
   }
