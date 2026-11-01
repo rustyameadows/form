@@ -9,7 +9,7 @@ import FormCore
     guard !artwork.requiresInkOutput else{throw FormError.invalid("Declared production inks need an explicit appearance preview; this page workflow does not implement plates or named-ink page output.")}
     _ = try ArtworkPageSetup.sourceWorkload(artwork)
     let tree=ArtworkRenderTree(artwork,assets:assets,production:true,excluding:[])
-    let names=Set(artwork.elements.filter{$0.kind=="image" && tree.displayed($0)}.compactMap(\.asset))
+    let names=Set(artwork.elements.filter{tree.requiredForOutput($0)}.flatMap{Array($0.renderedAssetNames)})
     guard names.count<=maximumAssets else{throw FormError.invalid("Physical page PDF supports at most 128 unique image assets.")}
     var total=0
     for name in names {

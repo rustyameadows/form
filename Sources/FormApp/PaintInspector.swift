@@ -7,6 +7,7 @@ struct MaskEditingContext {
   var maskID: UUID
   var targets: Set<UUID>
   var scope: UUID?
+  var tool:ArtworkTool = .select
 }
 
 extension ArtworkSession {
@@ -29,21 +30,27 @@ extension ArtworkSession {
     } catch { store.error = error.localizedDescription }
   }
   func editMask(_ id: UUID) {
-    guard let mask = art.elements.first(where: { $0.id == id }) else { return }
+    guard let mask = art.elements.first(where: { $0.id == id }),!art.isLocked(mask),
+      art.elements.contains(where:{$0.clipID==id}) else { return }
+    canvas?.prepareForGroupNavigation()
     canvas?.finishText()
     let targets = Set(art.elements.filter { $0.clipID == id }.map(\.id))
     let priorScope = mask.parentID
+    let priorTool=tool
     choose([id])
     scopeID = mask.parentID
-    tool = .direct
-    maskEditing = .init(maskID: id, targets: targets, scope: priorScope)
+    tool = mask.kind == "group" ? .select:.direct
+    maskEditing = .init(maskID: id, targets: targets, scope: priorScope,tool:priorTool)
+    canvas?.synchronize()
     canvas?.window?.makeFirstResponder(canvas)
   }
   func returnFromMask() {
     guard let context = maskEditing else { return }
+    canvas?.prepareForGroupNavigation();canvas?.finishText();endGesture()
     maskEditing = nil
     scopeID = context.scope
     choose(context.targets.intersection(Set(art.elements.map(\.id))))
+    tool=context.tool;canvas?.synchronize()
     canvas?.window?.makeFirstResponder(canvas)
   }
   func convertMaskToPath() {
@@ -210,6 +217,8 @@ struct GradientInspector: View {
           Picker("Type", selection: Binding(get: { gradient.kind }, set: { patch(["kind": $0]) })) {
             Text("Linear").tag("linear")
             Text("Radial").tag("radial")
+            Text("Angular").tag("angular")
+            Text("Diamond").tag("diamond")
           }
           HStack {
             ScalarArtworkField("Start X", value: gradient.start.x * 100, unit: "%") {
@@ -310,11 +319,13 @@ struct MaskInspector: View {
     }
     if session.art.elements.contains(where: { $0.clipID == element.id }) {
       VStack(alignment: .leading, spacing: 8) {
-        SectionLabel("MASK GEOMETRY")
-        Text("Edit the shape or its nodes. Its paint does not affect the clipped artwork.")
+        SectionLabel(session.art.isCoverageMask(element.id) ? "MASK CONTENT":"MASK GEOMETRY")
+        Text(session.art.isCoverageMask(element.id)
+          ? "Edit shapes, paint, opacity and effects to change the mask. Enter a group to edit its children."
+          : "Edit the shape or its nodes. Its paint does not affect the clipped artwork.")
           .foregroundStyle(Palette.secondary)
         if session.maskEditing == nil {
-          Button("Edit mask geometry") { session.editMask(element.id) }
+          Button(session.art.isCoverageMask(element.id) ? "Edit mask contents":"Edit mask geometry") { session.editMask(element.id) }
         } else {
           if ["rectangle", "ellipse", "polygon", "star"].contains(element.kind) {
             Button("Convert mask to path") { session.convertMaskToPath() }

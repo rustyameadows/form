@@ -315,7 +315,8 @@ final class SVGImportTests: XCTestCase {
       engine.redo()
       try engine.flush()
       let loaded = try repo.load(engine.project!.id)
-      XCTAssertEqual(loaded.schemaVersion, 4)
+      XCTAssertEqual(loaded.schemaVersion, 58)
+      XCTAssertEqual(loaded.editableArtwork(physical)?.imports?.last?.elementIDs, extra.artwork.elements.map(\.id))
       XCTAssertEqual(loaded.editableArtwork(physical)?.imports?.count, 2)
       var bad = source
       bad.asset = "../escape.svg"

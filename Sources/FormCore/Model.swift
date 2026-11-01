@@ -105,6 +105,8 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var flipY: Bool?
   public var fillEnabled: Bool?
   public var fillOpacity: Double?
+  public var paintStack: [ArtworkPaintLayer]?
+  public var effectStack: ArtworkEffectStack?
   public var booleanOperation: String?
   public var component: ArtworkComponentReference?
   public var stroke: ArtworkStroke?
@@ -123,6 +125,9 @@ public struct ArtworkElement: Codable, Equatable, Identifiable, Sendable {
   public var productionRole: String?
   public var sewingPiece: SewingPatternPiece?
   public var clipID: UUID?
+  public var clipMode: String?
+  /// Original node settings for interoperability/recovery; native fields remain authoritative after edits.
+  public var sourceMetadata: ArtworkSourceMetadata?
   public init(
     kind: String, x: Double, y: Double, width: Double = 60, height: Double = 30, text: String = "",
     color: String = "#FFFFFF", fontSize: Double = 14, asset: String? = nil
@@ -410,7 +415,7 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
-  public static let maximumSchemaVersion=57
+  public static let maximumSchemaVersion=58
   public var schemaVersion = 1
   public var id: UUID = UUID()
   public var name: String
@@ -436,6 +441,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if (textStories ?? []).contains(where:{$0.paintStack != nil || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) || objects.contains(where:{$0.artwork?.elements.contains(where:{$0.sourceMetadata != nil || $0.paintStack != nil || $0.effectStack != nil || $0.clipMode != nil || ["angular","diamond"].contains($0.gradient?.kind ?? "") || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) == true || $0.artwork?.imports?.contains(where:{$0.elementIDs != nil || $0.format != nil}) == true}) {return max(schemaVersion,58)}
     if objects.contains(where:{$0.paperTemplateReference != nil}) {return max(schemaVersion,57)}
     if objects.contains(where:{$0.canvasSourceOnly != nil}) {return max(schemaVersion,57)}
     if materials.contains(where:{$0.paperStock != nil}) {return max(schemaVersion,57)}

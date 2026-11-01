@@ -55,7 +55,7 @@ extension ArtworkSession {
     guard let store,let objectID else{return}
     // Tests inject a private board. Native user actions use the ordinary board.
     let board=transferPasteboard ?? .general
-    guard let data=board.data(forType:ArtworkTransferPasteboard.type) else{return}
+    guard let data=board.data(forType:ArtworkTransferPasteboard.type) else{pasteExternalArtwork(from:board);return}
     let projection=activeProjection
     let prepared:PreparedArtworkTransfer
     do {prepared=try store.prepareArtworkTransfer(ArtworkTransferBundle.decode(data),objectID:objectID,scopeID:scopeID,sourceTransform:projection?.sourceToLocal.inverse)}catch{lastTransferError=error.localizedDescription;store.toast(error.localizedDescription,symbol:"exclamationmark.triangle");return}

@@ -1,0 +1,65 @@
+Figma clipboard compatibility reference acknowledgments
+
+The bounded Swift decoder is an independent implementation of the public Kiwi
+wire specification. The test-only wire fixtures use a small subset of documented
+field names and numeric tags. No JavaScript evaluator or generated third-party
+schema code is linked into LAB. These notices accompany the reference material
+used to implement and verify compatibility.
+
+Kiwi, Evan Wallace
+https://github.com/evanw/kiwi/tree/fe3ca9484ac055ccd39fe144218ec11f720222ae
+Reference: README.md, cpp/kiwi.h, js/byte-buffer.ts and binary schema format.
+
+Copyright (c) 2016-2023 Evan Wallace
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+OpenPencil
+https://github.com/open-pencil/open-pencil/tree/e9aa2b0b569e0219c898166ba67a2f65fe5cfc87
+References: packages/fig/src/clipboard/import.ts,
+packages/kiwi/src/fig/container.ts, packages/kiwi/src/fig/schema/fig.kiwi,
+packages/kiwi/src/schema-runtime/interpreter.ts,
+packages/core/src/canvas/effects.ts, packages/core/src/canvas/shadows.ts,
+packages/core/src/canvas/shadows/silhouette.ts, packages/core/src/canvas/shadows/shape.ts,
+packages/core/src/canvas/shapes.ts, packages/core/src/canvas/scene.ts.
+
+MIT License
+
+Copyright (c) 2026 Danila Poyarkov and OpenPencil contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Zstandard's separate BSD license and pinned upstream provenance are located at
+Sources/CFormFigmaCompression/LICENSE and UPSTREAM.json.

@@ -71,10 +71,11 @@ extension StudioStore {
       let plan=try artworkTransferPlan(prepared,into:current,folder:folder)
       if !plan.assetWrites.isEmpty {guard let publication else{throw FormError.invalid("Portable asset staging is missing.")};try publication.publish(plan.assetWrites,beforeEach:beforePublish)}
       try afterPublish?()
-      try engine.edit("Pasted portable artwork",source:source) {$0=try plan.applying(to:$0)}
+      let label=prepared.bundle.metadata.sourceApplication.map{"Pasted \($0) artwork"} ?? "Pasted portable artwork"
+      try engine.edit(label,source:source) {$0=try plan.applying(to:$0)}
       publication?.finish("committed")
       let missing=FontLibraryCatalog.usage(plan.project).filter{$0["available"] as? Bool==false}
-      return ["selected_elements":plan.selection.map(\.uuidString),"added_component_objects":plan.addedComponentIDs.map(\.uuidString),"imported_assets":plan.assetWrites.keys.sorted(),"published_assets":publication?.published.map{$0.name} ?? [],"reused_assets":Set(plan.assetMap.values).subtracting(Set(plan.assetWrites.keys)).union(publication?.reused ?? []).sorted(),"journal":publication?.journal as Any? ?? NSNull(),"source_project_id":prepared.bundle.metadata.projectID.uuidString,"missing_font_assignments":missing,"decoded_pixels":prepared.report.rasterPixels,"vector_elements":prepared.report.vectorElements,"opaque_provenance_assets":prepared.report.opaqueProvenance]
+      return ["selected_elements":plan.selection.map(\.uuidString),"added_component_objects":plan.addedComponentIDs.map(\.uuidString),"imported_assets":plan.assetWrites.keys.sorted(),"published_assets":publication?.published.map{$0.name} ?? [],"reused_assets":Set(plan.assetMap.values).subtracting(Set(plan.assetWrites.keys)).union(publication?.reused ?? []).sorted(),"journal":publication?.journal as Any? ?? NSNull(),"source_project_id":prepared.bundle.metadata.sourceApplication == nil ? prepared.bundle.metadata.projectID.uuidString as Any:NSNull(),"source_application":prepared.bundle.metadata.sourceApplication as Any? ?? NSNull(),"missing_font_assignments":missing,"decoded_pixels":prepared.report.rasterPixels,"vector_elements":prepared.report.vectorElements,"opaque_provenance_assets":prepared.report.opaqueProvenance]
     }catch {if let publication {throw publication.failure(error)};throw error}
   }
   func importArtworkTransfer(_ prepared:PreparedArtworkTransfer,source:String,validateContext:(()throws->Void)?=nil)async throws->[String:Any] {
@@ -97,7 +98,7 @@ extension StudioStore {
       guard command==ArtworkTransferCommands.importName,let x=args["offset_x"] as? NSNumber,let y=args["offset_y"] as? NSNumber,CFGetTypeID(x) != CFBooleanGetTypeID(),CFGetTypeID(y) != CFBooleanGetTypeID(),x.doubleValue.isFinite,y.doubleValue.isFinite else{throw FormError.invalid("Imports accept both finite millimeter offsets together.")};offset = .init(x.doubleValue,y.doubleValue)
     }
     let ids:Set<UUID>
-    if let value=args["element_ids"] {guard command==ArtworkTransferCommands.exportName,let raw=value as? [String],!raw.isEmpty,raw.count<=2048 else{throw FormError.invalid("element_ids is an export-only selection.")};ids=Set(raw.compactMap(UUID.init(uuidString:)));guard ids.count==raw.count else{throw FormError.invalid("Use distinct source element UUIDs.")}}else{ids=[]}
+    if let value=args["element_ids"] {guard command==ArtworkTransferCommands.exportName,let raw=value as? [String],!raw.isEmpty,raw.count<=ArtworkTransferLimits().elements else{throw FormError.invalid("element_ids is an export-only selection.")};ids=Set(raw.compactMap(UUID.init(uuidString:)));guard ids.count==raw.count else{throw FormError.invalid("Use distinct source element UUIDs.")}}else{ids=[]}
     return(command,id,URL(fileURLWithPath:path),scope,offset,ids)
   }
   func artworkTransferCall(_ args:[String:Any])throws->Any {

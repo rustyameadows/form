@@ -29,7 +29,7 @@ import FormCore
       "last_build_ms": lastMilliseconds, "cache_limit_bytes": 64_000_000,
       "maximum_pixels": maximumPixels, "last_error": lastError ?? ""]
   }
-  public static func invalidateFonts() { cache.removeAllObjects() }
+  public static func invalidateFonts() { cache.removeAllObjects();NativeEffectCompositor.invalidateFonts();ArtworkMaskRenderer.invalidateFonts() }
   public static func blend(_ name: String?) -> CGBlendMode {
     switch name {
     case "multiply": return .multiply
@@ -138,6 +138,9 @@ import FormCore
   let children: [UUID?: [ArtworkElement]]
   let masks: Set<UUID>
   private var boxes: [UUID: CGRect] = [:]
+  private var signatures: [UUID: Data] = [:]
+  private var activeDraws=Set<UUID>()
+  private var outputIDs:Set<UUID>?
   init(_ art: Artwork, assets: URL, production: Bool, excluding: Set<UUID>) {
     self.art = art; self.assets = assets; self.production = production; self.excluding = excluding
     byID = Dictionary(uniqueKeysWithValues: art.elements.map { ($0.id, $0) })
@@ -157,6 +160,17 @@ import FormCore
     }
     return true
   }
+  func requiredForOutput(_ element:ArtworkElement)->Bool {
+    if let outputIDs{return outputIDs.contains(element.id)}
+    var required=Set<UUID>()
+    func include(_ e:ArtworkElement,maskRoot:Bool=false) {
+      guard (maskRoot ? (e.opacity ?? 1)>0:visible(e)),required.insert(e.id).inserted else{return}
+      if let id=e.clipID,let mask=byID[id]{include(mask,maskRoot:true)}
+      for child in children[e.id] ?? []{include(child)}
+    }
+    for root in children[nil] ?? []{include(root)}
+    outputIDs=required;return required.contains(element.id)
+  }
   func localBounds(_ e: ArtworkElement) -> CGRect {
     if let value = boxes[e.id] { return value }
     var box: CGRect
@@ -165,13 +179,26 @@ import FormCore
       for child in children[e.id] ?? [] where visible(child) {
         var value = localBounds(child).applying(child.localTransform.cg)
         if let id = child.clipID, let mask = byID[id] {
-          value = value.intersection(VectorGeometry.path(mask).boundingBoxOfPath.applying(mask.localTransform.cg))
+          let clip=ArtworkMasks.isCoverage(child.clipMode) ? localBounds(mask).applying(mask.localTransform.cg):VectorGeometry.path(mask).boundingBoxOfPath.applying(mask.localTransform.cg)
+          value = value.intersection(clip)
         }
         box = box.union(value)
       }
     } else if e.kind == "text" {
-      box = (try? TypographyEngine.outlineRuns(e).reduce(CGRect.null) { $0.union($1.0.boundingBoxOfPath) }) ?? .null
+      if TextPaintRenderer.usesPaints(e) {
+        box = (try? TextPaintRenderer.vectorLayers(e).reduce(CGRect.null){$0.union($1.0.boundingBoxOfPath)}) ?? .null
+      }else{box = (try? TypographyEngine.outlineRuns(e).reduce(CGRect.null) { $0.union($1.0.boundingBoxOfPath) }) ?? .null}
     } else if e.kind == "image" { box = .init(x: 0, y: 0, width: e.width, height: e.height) }
+    else if let stack=e.paintStack {
+      box = .null
+      for layer in stack where layer.enabled && layer.paint.opacity>0 {
+        if let stroke=layer.stroke {
+          guard stroke.enabled != false,stroke.width>0 else{continue}
+          var proxy=e;proxy.paintStack=nil;proxy.stroke=stroke
+          if let path=try? VectorGeometry.expandedStroke(proxy){box=box.union(path.boundingBoxOfPath)}
+        }else if e.kind != "line" {box=box.union(VectorGeometry.path(e).boundingBoxOfPath)}
+      }
+    }
     else {
       box = e.fillEnabled == false || e.kind == "line" ? .null : VectorGeometry.path(e).boundingBoxOfPath
       if e.visibleStroke != nil, let stroke = try? VectorGeometry.expandedStroke(e) {
@@ -179,8 +206,11 @@ import FormCore
       }
     }
     if box.isNull || box.isEmpty { box = CGRect(x: 0, y: 0, width: max(0.01, e.width), height: max(0.01, e.height)) }
-    if let blur = e.blur, blur.enabled { box = box.insetBy(dx: -blur.radius * 4, dy: -blur.radius * 4) }
-    if let shadow = e.shadow, shadow.enabled, shadow.opacity > 0 {
+    if let stack=e.effectStack {
+      let expanded=stack.expandedBounds(.init(box.minX,box.minY,box.width,box.height))
+      box = .init(x:expanded.x,y:expanded.y,width:expanded.width,height:expanded.height)
+    }else if let blur = e.blur, blur.enabled { box = box.insetBy(dx: -blur.radius * 4, dy: -blur.radius * 4) }
+    if e.effectStack == nil,let shadow = e.shadow, shadow.enabled, shadow.opacity > 0 {
       box = box.union(box.insetBy(dx: -shadow.blur * 4, dy: -shadow.blur * 4)
         .offsetBy(dx: shadow.offset.x, dy: shadow.offset.y))
     }
@@ -188,10 +218,14 @@ import FormCore
     return box
   }
   private func signature(_ root: ArtworkElement) -> Data {
+    if let value=signatures[root.id]{return value}
     var source: [ArtworkElement] = []
+    var visited=Set<UUID>()
     func collect(_ e: ArtworkElement) {
+      guard visited.insert(e.id).inserted else{return}
       source.append(e)
       for child in children[e.id] ?? [] { collect(child) }
+      if let id=e.clipID,let mask=byID[id]{collect(mask)}
     }
     collect(root)
     let ids = Dictionary(uniqueKeysWithValues: source.enumerated().map { index, e in
@@ -202,6 +236,7 @@ import FormCore
       source[i].parentID = source[i].parentID.flatMap { ids[$0] }
       source[i].clipID = source[i].clipID.flatMap { ids[$0] }
       source[i].name = nil; source[i].locked = nil
+      source[i].sourceMetadata = nil
       source[i]=source[i].withBakedListNumbers
       if source[i].blur?.enabled != true { source[i].blur = nil }
       if source[i].shadow?.enabled != true { source[i].shadow = nil }
@@ -210,35 +245,111 @@ import FormCore
     source[0].rotation = nil; source[0].flipX = nil; source[0].flipY = nil
     source[0].parentID = nil; source[0].clipID = nil
     source[0].opacity = nil; source[0].blendMode = nil
-    var data = (try? Artwork(elements:source).renderCacheData()) ?? Data()
+    // This dependency list deliberately includes referenced hidden mask roots
+    // and their editable descendants. A standalone renderDefinition would
+    // discard them once the outer target/root clip is removed for this key.
+    var data = (try? JSONEncoder.form.encode(source)) ?? Data()
+    // Runtime story source/layout and frame identity are intentionally absent
+    // from saved elements, but all affect raster appearance and cache reuse.
+    var storyIDs=Set<UUID>()
+    let stories=source.compactMap { element -> ResolvedTextStory? in
+      guard let story=element.storyFrame?.resolved,storyIDs.insert(story.story.id).inserted else{return nil}
+      return story
+    }
+    data.append((try? JSONEncoder.form.encode(stories)) ?? Data())
+    data.append((try? JSONEncoder.form.encode(source.compactMap{$0.storyFrame?.frame})) ?? Data())
     data.append(Data("|\(assets.path)|\(production)|\(excluding.sorted { $0.uuidString < $1.uuidString })".utf8))
+    signatures[root.id]=data
     return data
+  }
+  func maskCoverage(_ mask:ArtworkElement,mode:String,density:Double)->ArtworkMaskRenderer.Coverage? {
+    // Unlike effect signatures, mask coverage includes the root's parent-space
+    // placement and opacity: both change the installed/sampleable coverage.
+    var data=signature(mask)
+    data.append((try? JSONEncoder.form.encode(mask)) ?? Data())
+    return ArtworkMaskRenderer.coverage(mode:mode,bounds:localBounds(mask).applying(mask.localTransform.cg),signature:data,pixelsPerMM:density) { target in
+      self.drawElement(mask,context:target,effectScale:nil,ignoringRootVisibility:true)
+    }
+  }
+  func effectRaster(_ element:ArtworkElement,density:Double,strict:Bool=false)throws->NativeEffectCompositor.Entry {
+    try NativeEffectCompositor.raster(element,signature:signature(element),bounds:localBounds(element),pixelsPerMM:density,strict:strict,
+      content:{target in self.drawContent(element,context:target,effectScale:nil)},
+      silhouette:{target,knockout in self.drawSilhouetteContent(element,context:target,knockout:knockout)})
+  }
+  private func drawContent(_ e:ArtworkElement,context:CGContext,effectScale:Double?) {
+    if e.kind == "group"{drawChildren(e.id,context:context,effectScale:effectScale)}
+    else{ArtworkRenderer.drawElement(e,assets:assets,context:context)}
+  }
+  private func drawSilhouetteContent(_ root:ArtworkElement,context:CGContext,knockout:Bool) {
+    if root.kind != "group" {
+      var source=root;source.hidden=nil
+      if let proxy=EffectSilhouetteRenderer.element(source,knockout:knockout){ArtworkRenderer.drawElement(proxy,assets:assets,context:context)}
+      return
+    }
+    for child in children[root.id] ?? [] where visible(child) {
+      context.saveGState()
+      let coverageClip=child.clipID != nil && ArtworkMasks.isCoverage(child.clipMode)
+      if let id=child.clipID,let mask=byID[id] {
+        if ArtworkMasks.isCoverage(child.clipMode) {
+          _ = ArtworkMaskRenderer.install(maskCoverage(mask,mode:child.clipMode!,density:AppearanceRenderer.scale(context)),context:context)
+        }else{
+          var map=mask.localTransform.cg
+          let path=VectorGeometry.path(mask).copy(using:&map) ?? VectorGeometry.path(mask)
+          if knockout {context.setFillColor(NSColor.white.cgColor);context.addPath(path);context.fillPath(using:mask.path?.evenOdd == true ? .evenOdd:.winding)}
+          context.addPath(path);context.clip(using:mask.path?.evenOdd == true ? .evenOdd:.winding)
+        }
+      }
+      context.concatenate(child.localTransform.cg)
+      // Positive child opacity gates casting but does not attenuate a
+      // geometric silhouette. The original node opacity is composed outside.
+      context.setAlpha(1);context.setBlendMode(.normal)
+      if coverageClip{context.beginTransparencyLayer(auxiliaryInfo:nil)}
+      drawSilhouetteContent(child,context:context,knockout:knockout)
+      if coverageClip{context.endTransparencyLayer()}
+      context.restoreGState()
+    }
   }
   func drawChildren(_ parent: UUID?, context: CGContext, effectScale: Double?) {
     for e in children[parent] ?? [] where visible(e) {
+      drawElement(e,context:context,effectScale:effectScale)
+    }
+  }
+  func drawElement(_ e:ArtworkElement,context:CGContext,effectScale:Double?,ignoringRootVisibility:Bool=false) {
+      guard (ignoringRootVisibility ? (e.opacity ?? 1)>0:visible(e)),activeDraws.insert(e.id).inserted else{return}
+      defer{activeDraws.remove(e.id)}
       context.saveGState()
+      defer{context.restoreGState()}
+      let coverageClip=e.clipID != nil && ArtworkMasks.isCoverage(e.clipMode)
       if let id = e.clipID, let mask = byID[id] {
-        var map = mask.localTransform.cg
-        context.addPath(VectorGeometry.path(mask).copy(using: &map) ?? VectorGeometry.path(mask))
-        context.clip(using: mask.path?.evenOdd == true ? .evenOdd : .winding)
+        if coverageClip {
+          let coverage=maskCoverage(mask,mode:e.clipMode!,density:AppearanceRenderer.scale(context)*(effectScale ?? 1))
+          guard ArtworkMaskRenderer.install(coverage,context:context) else{return}
+        }else{
+          var map = mask.localTransform.cg
+          context.addPath(VectorGeometry.path(mask).copy(using: &map) ?? VectorGeometry.path(mask))
+          context.clip(using: mask.path?.evenOdd == true ? .evenOdd : .winding)
+        }
       }
       context.concatenate(e.localTransform.cg)
       context.setAlpha(e.opacity ?? 1)
       context.setBlendMode(AppearanceRenderer.blend(e.blendMode))
-      let isolated = e.isolatedBlending == true || e.hasActiveEffects || (e.opacity ?? 1) < 1
+      let hasLayerBlur=e.effectStack?.activeEffects.contains(where:{$0.kind == "blur"}) == true
+      let isolated = coverageClip || hasLayerBlur || e.isolatedBlending == true || (e.hasActiveEffects && e.effectStack == nil) || (e.opacity ?? 1) < 1
         || (e.blendMode ?? "normal") != "normal"
       if isolated { context.beginTransparencyLayer(auxiliaryInfo: nil) }
       func content(_ target: CGContext, scale: Double?) {
-        if e.kind == "group" { drawChildren(e.id, context: target, effectScale: scale) }
-        else { ArtworkRenderer.drawElement(e, assets: assets, context: target) }
+        drawContent(e,context:target,effectScale:scale)
       }
-      if !e.hasActiveEffects || !AppearanceRenderer.draw(e, signature: signature(e),
+      if let stack=e.effectStack,stack.hasActiveEffects {
+        if !NativeEffectCompositor.draw(e,signature:signature(e),bounds:localBounds(e),context:context,pixelsPerMM:effectScale,
+          content:{content($0,scale:nil)},silhouette:{target,knockout in self.drawSilhouetteContent(e,context:target,knockout:knockout)}) {
+          content(context,scale:effectScale)
+        }
+      }else if !e.hasActiveEffects || !AppearanceRenderer.draw(e, signature: signature(e),
         bounds: { localBounds(e) }, context: context, pixelsPerMM: effectScale,
         content: { content($0, scale: nil) }) {
         content(context, scale: effectScale)
       }
       if isolated { context.endTransparencyLayer() }
-      context.restoreGState()
-    }
   }
 }

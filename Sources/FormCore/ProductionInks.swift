@@ -108,6 +108,7 @@ extension Project {
       }
       guard visible else{continue}
       if e.shadow?.enabled==true,(e.shadow?.opacity ?? 0)>0,ink(e.shadow?.swatchID) {return true}
+      if e.effectStack?.activeEffects.contains(where:{$0.kind != "blur" && ink($0.swatchID)})==true{return true}
       if e.kind=="group",e.booleanOperation==nil {continue}
       if !["text","image"].contains(e.kind),let stroke=e.visibleStroke,ink(stroke.swatchID) {return true}
       if e.kind=="image" || e.kind=="line" {continue}

@@ -87,6 +87,7 @@ extension PathCommands {
           selectedElements.remove(target.id)
           for i in next.elements.indices where next.elements[i].clipID == target.id {
             next.elements[i].clipID = nil
+            next.elements[i].clipMode = nil
           }
         }
       }
@@ -104,7 +105,7 @@ extension PathCommands {
     guard paths.count >= 2, Set(paths.map(\.parentID)).count == 1 else {
       throw FormError.invalid("Select two or more paths in the same group.")
     }
-    guard Set(paths.map(\.clipID)).count == 1 else {
+    guard Set(paths.map(\.clipID)).count == 1, Set(paths.map { $0.clipMode ?? "outline" }).count == 1 else {
       throw FormError.invalid("The paths must share the same clipping mask before combining.")
     }
     let ids = Set(paths.map(\.id))

@@ -35,7 +35,8 @@ public struct ArtworkShadow: Codable, Equatable, Sendable {
 
 extension ArtworkElement {
   public var hasActiveEffects: Bool {
-    (blur?.enabled == true && (blur?.radius ?? 0) > 0)
+    if let effectStack{return effectStack.hasActiveEffects}
+    return (blur?.enabled == true && (blur?.radius ?? 0) > 0)
       || (shadow?.enabled == true && (shadow?.opacity ?? 0) > 0)
   }
 }
@@ -53,10 +54,10 @@ public enum AppearanceCommands {
     else { throw FormError.invalid("Choose artwork layers to edit their appearance.") }
     let roots = art.selectionRoots(ids)
     let masks = Set(art.elements.compactMap(\.clipID))
-    guard roots.allSatisfy({ !art.isLocked($0) && !masks.contains($0.id) }) else {
-      throw FormError.invalid("Choose unlocked artwork; clipping masks use geometry only.")
+    guard roots.allSatisfy({ !art.isLocked($0) && (!masks.contains($0.id) || art.isCoverageMask($0.id)) }) else {
+      throw FormError.invalid("Choose unlocked artwork; outline masks use geometry only.")
     }
-    guard Set(values.keys).isSubset(of: ["opacity", "blend_mode", "isolate", "blur", "shadow"]) else {
+    guard Set(values.keys).isSubset(of: ["opacity", "blend_mode", "isolate", "blur", "shadow", "effect_stack"]) else {
       throw FormError.invalid("Unknown appearance property.")
     }
     func number(_ value: Any?, _ old: Double) throws -> Double {
@@ -74,9 +75,23 @@ public enum AppearanceCommands {
         art.elements[i].isolatedBlending = nil
         art.elements[i].blur = nil
         art.elements[i].shadow = nil
+        art.elements[i].effectStack = nil
         continue
       }
       if let value = values["opacity"] { art.elements[i].opacity = try number(value, 1) }
+      if let value=values["effect_stack"] {
+        if value is NSNull {art.elements[i].effectStack=nil}
+        else {
+          guard let input=value as? [String:Any],Set(input.keys).isSubset(of:["coverage","effects"]),
+            let effects=input["effects"] as? [[String:Any]],effects.count<=16,
+            effects.allSatisfy({Set($0.keys).isSubset(of:["kind","enabled","offset","blur","spread","color","opacity","blendMode","knockout","swatchID"])}) else{throw FormError.invalid("Use an explicit effect stack with at most16 native effects.")}
+          let stack=try JSONDecoder.form.decode(ArtworkEffectStack.self,from:JSONSerialization.data(withJSONObject:input))
+          try stack.validate();art.elements[i].effectStack=stack;art.elements[i].blur=nil;art.elements[i].shadow=nil
+        }
+      }
+      if art.elements[i].effectStack != nil,(values["blur"] != nil || values["shadow"] != nil) {
+        throw FormError.invalid("Edit the appearance stack to change this layer's effects.")
+      }
       if let value = values["blend_mode"] {
         guard let mode = value as? String else { throw FormError.invalid("Choose a blend mode.") }
         art.elements[i].blendMode = mode == "normal" ? nil : mode
@@ -173,9 +188,16 @@ extension Artwork {
           let cap = e.kind == "line" && stroke.cap == "square" ? sqrt(2.0) : 1
           bounds = bounds.expanded(stroke.width * alignment * max(corner,cap))
         }
+        let paintExpansion=e.paintLayers.filter{$0.enabled && $0.paint.opacity>0}.compactMap(\.stroke).filter{$0.enabled != false}.map {stroke in
+          let alignment=stroke.alignment == "inside" ? 0.0:stroke.alignment == "outside" ? 1.0:0.5
+          let join=(stroke.join ?? "miter") == "miter" ? max(1,stroke.miter ?? 10):1
+          return stroke.width*alignment*join
+        }.max() ?? 0
+        bounds=bounds.expanded(paintExpansion)
       }
-      if let blur = e.blur, blur.enabled { bounds = bounds.expanded(blur.radius * 4) }
-      if let shadow = e.shadow, shadow.enabled, shadow.opacity > 0 {
+      if let stack=e.effectStack {bounds=stack.expandedBounds(bounds)}
+      else if let blur = e.blur, blur.enabled { bounds = bounds.expanded(blur.radius * 4) }
+      if e.effectStack == nil,let shadow = e.shadow, shadow.enabled, shadow.opacity > 0 {
         bounds = bounds.union(bounds.expanded(shadow.blur * 4).translated(shadow.offset))
       }
       return bounds

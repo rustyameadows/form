@@ -45,7 +45,9 @@ import FormCore
       {
         let id = e.id.uuidString
         var effect = ""
-        if e.hasActiveEffects {
+        let stackRaster:NativeEffectCompositor.Entry? = e.effectStack?.hasActiveEffects == true ? try tree.effectRaster(e,density:300/25.4,strict:true):nil
+        let stackBlur=e.effectStack?.activeEffects.contains(where:{$0.kind == "blur"}) == true
+        if e.hasActiveEffects && e.effectStack == nil {
           let bounds = tree.localBounds(e)
           var primitives = ""
           var input = "SourceGraphic"
@@ -60,18 +62,33 @@ import FormCore
           effect = " filter=\"url(#effect-\(id))\""
         }
         if let clip = e.clipID, let mask = art.elements.first(where: { $0.id == clip }) {
-          definitions +=
+          if ArtworkMasks.isCoverage(e.clipMode) {
+            let parent=e.parentID.flatMap{id in art.elements.first{$0.id==id}}.map{art.worldTransform($0)} ?? .init()
+            let density=300/25.4*AppearanceRenderer.scale(parent.cg)
+            try ArtworkMaskRenderer.validate(bounds:tree.localBounds(mask).applying(mask.localTransform.cg),pixelsPerMM:density)
+            guard let coverage=tree.maskCoverage(mask,mode:e.clipMode!,density:density) else{throw FormError.invalid("Could not render the editable mask for SVG.")}
+            let r=coverage.bounds
+            definitions += "<mask id=\"clip-\(id)\" maskUnits=\"userSpaceOnUse\" maskContentUnits=\"userSpaceOnUse\" x=\"\(r.minX)\" y=\"\(r.minY)\" width=\"\(r.width)\" height=\"\(r.height)\" style=\"mask-type:alpha\">\(try NativeEffectCompositor.svgMaskImage(coverage))</mask>"
+            output += "<g mask=\"url(#clip-\(id))\">"
+          }else{
+            definitions +=
             "<clipPath id=\"clip-\(id)\"><path d=\"\(data(VectorGeometry.path(mask)))\" transform=\"\(transform(mask.localTransform))\" clip-rule=\"\(mask.path?.evenOdd == true ? "evenodd":"nonzero")\"/></clipPath>"
-          output += "<g clip-path=\"url(#clip-\(id))\">"
+            output += "<g clip-path=\"url(#clip-\(id))\">"
+          }
         }
-        let isolated = e.isolatedBlending == true || e.hasActiveEffects || (e.opacity ?? 1) < 1
+        let isolated = ArtworkMasks.isCoverage(e.clipMode) || stackBlur || e.isolatedBlending == true || (e.hasActiveEffects && e.effectStack == nil) || (e.opacity ?? 1) < 1
           || (e.blendMode ?? "normal") != "normal"
         output +=
           "<g id=\"layer-\(id)\" transform=\"\(transform(e.localTransform))\" opacity=\"\(e.opacity ?? 1)\" style=\"isolation:\(isolated ? "isolate" : "auto");mix-blend-mode:\(e.blendMode ?? "normal")\"\(effect)><title>\(xml(e.title))</title>"
-        if e.kind == "group" {
+        if let entry=stackRaster {for layer in entry.raster.behind{output += try NativeEffectCompositor.svgImage(layer.image,bounds:entry.bounds,blend:layer.blendMode)}}
+        if stackBlur,let entry=stackRaster {
+          output += try NativeEffectCompositor.svgImage(entry.raster.content,bounds:entry.bounds)
+        } else if e.kind == "group" {
           output += try children(e.id)
         } else if e.kind == "text" {
-          if e.fillEnabled == false { /* invisible text retains its editable source */
+          if TextPaintRenderer.usesPaints(e) {
+            output += try SVGPaintRenderer.layers(TextPaintRenderer.vectorLayers(e),size:.init(width:e.width,height:e.height),assets:assets,prefix:"paint-\(id)")
+          } else if e.fillEnabled == false { /* invisible text retains its editable source */
           } else if outlineText || TypographyEngine.requiresComposedOutlines(e) {
             output += "<g opacity=\"\(e.fillOpacity ?? 1)\">"
             for (path, color) in try TypographyEngine.outlineRuns(e) {
@@ -118,6 +135,18 @@ import FormCore
             }
             output += "<svg width=\"\(e.width)\" height=\"\(e.height)\" viewBox=\"\(crop.x) \(crop.y) \(crop.width) \(crop.height)\" preserveAspectRatio=\"none\" overflow=\"hidden\"><image width=\"1\" height=\"1\" href=\"data:\(mime);base64,\(bytes.base64EncodedString())\" preserveAspectRatio=\"none\"\(adjustment)/></svg>"
           }
+        } else if let stack=e.paintStack {
+          for (paintIndex,layer) in stack.enumerated() where layer.enabled {
+            if let stroke=layer.stroke,stroke.enabled == false || stroke.width<=0 {continue}
+            var geometry=e;geometry.paintStack=nil;geometry.stroke=layer.stroke
+            let path=try layer.stroke == nil ? VectorGeometry.path(geometry):VectorGeometry.expandedStroke(geometry)
+            output += try SVGPaintRenderer.layers([(path,layer.effectivePaint)],size:.init(width:e.width,height:e.height),assets:assets,prefix:"paint-\(id)-\(paintIndex)",evenOdd:layer.stroke == nil && e.path?.evenOdd == true)
+          }
+        } else if let gradient=e.gradient,NativeGradientRenderer.handles(gradient) {
+          var paints:[(CGPath,ArtworkPaint)]=[]
+          if e.fillEnabled != false && e.kind != "line" {paints.append((VectorGeometry.path(e),.init(kind:"gradient",opacity:e.fillOpacity ?? 1,gradient:gradient)))}
+          if let stroke=e.visibleStroke {paints.append((try VectorGeometry.expandedStroke(e),.init(color:stroke.color,opacity:stroke.opacity ?? 1)))}
+          output += try SVGPaintRenderer.layers(paints,size:.init(width:e.width,height:e.height),assets:assets,prefix:"paint-\(id)",evenOdd:e.path?.evenOdd == true)
         } else {
           var fill = e.fillEnabled == false || e.kind == "line" ? "none" : e.color
           if let g = e.gradient, e.fillEnabled != false {
@@ -152,6 +181,7 @@ import FormCore
             output += "<path d=\"\(data(outline))\" fill=\"\(stroke.color)\" fill-opacity=\"\(stroke.opacity ?? 1)\"/>"
           }
         }
+        if let entry=stackRaster {for layer in entry.raster.above{output += try NativeEffectCompositor.svgImage(layer.image,bounds:entry.bounds,blend:layer.blendMode)}}
         output += "</g>"
         if e.clipID != nil { output += "</g>" }
       }

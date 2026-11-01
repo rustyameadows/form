@@ -47,7 +47,8 @@ import XCTest
     XCTAssertEqual(importedID,workspace.id);XCTAssertEqual(after.objects.count,before.objects.count);XCTAssertEqual(engine.undoStack.count,1)
     XCTAssertEqual(after.camera,before.camera);XCTAssertEqual(destination.parameters,workspace.parameters);XCTAssertEqual(destination.position,workspace.position)
     XCTAssertEqual(art.elements.first,loose);XCTAssertEqual(art.elements.count,1+result.artwork.elements.count)
-    XCTAssertEqual(art.imports,(before.canvasWorkspace!.artwork!.imports ?? [])+[source])
+    var scopedSource=source;scopedSource.elementIDs=result.artwork.elements.map(\.id)
+    XCTAssertEqual(art.imports,(before.canvasWorkspace!.artwork!.imports ?? [])+[scopedSource])
     var stripped=art;stripped.elements=[loose];stripped.imports=before.canvasWorkspace!.artwork!.imports
     XCTAssertEqual(stripped,before.canvasWorkspace!.artwork!)
     XCTAssertNil(art.safeInset);XCTAssertEqual(art.bleed,0)

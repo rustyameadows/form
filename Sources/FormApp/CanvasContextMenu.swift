@@ -37,7 +37,7 @@ extension VectorCanvasView {
     let point = CGPoint(x: physical.x - frame.rect.minX, y: physical.y - frame.rect.minY)
     let hidden = ArtworkProduction.hiddenIDs(in: frame.artwork, roles: session.hiddenProductionRoles)
     let targets = ArtworkHitTesting.layers(at: point, in: art, tolerance: 3.5 / (TypographyEngine.pointsPerMM * zoom),
-      excluding: hidden, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame))
+      excluding: hidden, renderedArtwork: frame.artwork, outerClip: physicalPickingClip(for: frame), assets: session.assets)
     // Merely opening a menu must not leave mask editing. A deep layer choice is
     // explicit navigation; otherwise retain the mask and its inspector context.
     if session.maskEditing == nil {
@@ -80,8 +80,9 @@ extension VectorCanvasView {
     menu.addItem(select)
 
     if let group = roots.first, roots.count == 1, group.kind == "group" {
+      let maskNavigation=group.component==nil && session.maskEditing.map{art.editableMaskElementIDs(rootID:$0.maskID).contains(group.id)} == true
       menu.addItem(item(group.component == nil ? "Enter Group" : "Edit Component Source",
-        group.component == nil ? .enterGroup(group.id) : .component(group.id), enabled: editable))
+        group.component == nil ? .enterGroup(group.id) : .component(group.id), enabled: editable || maskNavigation))
     }
     if session.scopeID != nil { menu.addItem(item("Leave Group", .leaveGroup)) }
     if session.scopeID != nil || session.maskEditing != nil || session.componentReturn != nil {

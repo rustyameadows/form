@@ -104,11 +104,13 @@ struct ArtworkStudio: View {
           session.canvas?.window?.makeFirstResponder(session.canvas)
         }
       }
-      if let scope = session.scopeID, session.maskEditing == nil {
-        WorkspaceToolbarButton("Canvas", symbol: "square.dashed", showsTitle: true,
-          identifier: "canvas-group-root") { session.leaveGroup(toRoot: true) }
-        Image(systemName: "chevron.right").font(.system(size: 9)).foregroundStyle(Palette.secondary)
-          .accessibilityHidden(true)
+      if let scope = session.scopeID, session.maskEditing == nil || session.maskEditing.map({session.art.editableMaskElementIDs(rootID:$0.maskID).contains(scope)}) == true {
+        if session.maskEditing == nil {
+          WorkspaceToolbarButton("Canvas", symbol: "square.dashed", showsTitle: true,
+            identifier: "canvas-group-root") { session.leaveGroup(toRoot: true) }
+          Image(systemName: "chevron.right").font(.system(size: 9)).foregroundStyle(Palette.secondary)
+            .accessibilityHidden(true)
+        }
         Text(session.art.elements.first(where: { $0.id == scope })?.title ?? "Group")
           .font(.system(size: 11, weight: .medium)).lineLimit(1).truncationMode(.middle)
           .frame(maxWidth: 160).help("Editing group contents")

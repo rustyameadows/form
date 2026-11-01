@@ -5,27 +5,46 @@ import FormCore
   public static func validateGlyphOutput(_ source: Artwork, assets: URL) throws {
     let art=try BooleanGeometry.materialized(source)
     let tree=ArtworkRenderTree(art,assets:assets,production:true,excluding:[])
-    for e in art.elements where e.kind=="text" && tree.displayed(e) { try GlyphEngine.validateOutput(e) }
+    for e in art.elements where e.kind=="text" && tree.requiredForOutput(e) { try GlyphEngine.validateOutput(e) }
   }
   public static func validateAppearanceOutput(_ source: Artwork, assets: URL, pixelsPerMM: Double) throws {
     let art = try BooleanGeometry.materialized(source)
     let tree = ArtworkRenderTree(art, assets: assets, production: true, excluding: [])
-    for e in art.elements where e.visibleStroke != nil && tree.displayed(e) {
+    for e in art.elements where e.visibleStroke != nil && tree.requiredForOutput(e) {
       _ = try VectorGeometry.expandedStroke(e)
     }
-    for e in art.elements where e.kind == "text" && tree.displayed(e) {
+    for e in art.elements where e.kind == "text" && tree.requiredForOutput(e) {
       try GlyphEngine.validateOutput(e)
+      try TextPaintRenderer.validateOutput(e)
     }
-    for e in art.elements where e.kind == "image" && tree.displayed(e) {
+    for e in art.elements where e.kind == "image" && tree.requiredForOutput(e) {
       try ImageRenderer.validateOutput(e, assets: assets, pixelsPerMM: pixelsPerMM, transform: art.worldTransform(e))
     }
-    for e in art.elements where e.hasActiveEffects && tree.displayed(e) {
+    for e in art.elements where tree.requiredForOutput(e) {
+      try ArtworkPaintRenderer.validateOutput(e, assets: assets, pixelsPerMM: pixelsPerMM, transform: art.worldTransform(e))
+      let gradients=[e.gradient].compactMap{$0}+e.paintLayers.compactMap{$0.paint.gradient}
+      if gradients.contains(where:NativeGradientRenderer.handles) {
+        try NativeGradientRenderer.validateOutput(bounds:tree.localBounds(e),pixelsPerMM:pixelsPerMM*AppearanceRenderer.scale(art.worldTransform(e).cg))
+      }
+    }
+    for e in art.elements where e.hasActiveEffects && tree.requiredForOutput(e) {
       let box = tree.localBounds(e)
       let density = pixelsPerMM * AppearanceRenderer.scale(art.worldTransform(e).cg)
+      if let stack=e.effectStack {
+        try NativeEffectCompositor.validate(stack,bounds:box,pixelsPerMM:density)
+        _ = try tree.effectRaster(e,density:density,strict:true)
+      }
       let width = ceil(box.width * density), height = ceil(box.height * density)
       guard width.isFinite, height.isFinite, width <= Double(AppearanceRenderer.maximumEdge),
         height <= Double(AppearanceRenderer.maximumEdge), width * height <= Double(AppearanceRenderer.maximumPixels)
       else { throw FormError.invalid("An effect is too large at this resolution. Lower the export DPI, reduce the layer size, or export SVG to retain vector effects.") }
+    }
+    for e in art.elements where tree.requiredForOutput(e) && ArtworkMasks.isCoverage(e.clipMode) {
+      guard let id=e.clipID,let mask=art.elements.first(where:{$0.id==id}) else{continue}
+      let parent=e.parentID.flatMap{id in art.elements.first{$0.id==id}}.map{art.worldTransform($0)} ?? .init()
+      let density=pixelsPerMM*AppearanceRenderer.scale(parent.cg)
+      try ArtworkMaskRenderer.validate(bounds:tree.localBounds(mask).applying(mask.localTransform.cg),pixelsPerMM:density)
+      guard tree.maskCoverage(mask,mode:e.clipMode!,density:density) != nil else{throw FormError.invalid("An editable mask could not render within its resource budget.")}
     }
   }
   private static let images: NSCache<NSString, NSImage> = {
@@ -69,6 +88,7 @@ import FormCore
   public static func drawElement(_ e: ArtworkElement, assets: URL, context: CGContext) {
     let rect = CGRect(x: 0, y: 0, width: e.width, height: e.height)
     if e.kind == "text" {
+      if TextPaintRenderer.usesPaints(e) { TextPaintRenderer.draw(e, assets: assets, context: context); return }
       guard e.fillEnabled != false else { return }
       if let opacity = e.fillOpacity, opacity < 1 {
         context.saveGState()
@@ -109,6 +129,7 @@ import FormCore
       context.restoreGState()
       return
     }
+    if e.paintStack != nil { ArtworkPaintRenderer.drawVector(e, assets: assets, context: context); return }
     let path = VectorGeometry.path(e)
     let rule: CGPathFillRule = e.path?.evenOdd == true ? .evenOdd : .winding
     if e.fillEnabled != false && e.kind != "line" {
@@ -117,6 +138,9 @@ import FormCore
         context.saveGState()
         context.addPath(path)
         context.clip(using: rule)
+        if NativeGradientRenderer.handles(gradient) {
+          NativeGradientRenderer.draw(gradient,size:.init(width:e.width,height:e.height),opacity:e.fillOpacity ?? 1,context:context)
+        } else {
         if let transform = gradient.transform { context.concatenate(transform.cg) }
         let start = CGPoint(x: gradient.start.x * e.width, y: gradient.start.y * e.height)
         let end = CGPoint(x: gradient.end.x * e.width, y: gradient.end.y * e.height)
@@ -132,6 +156,7 @@ import FormCore
           context.drawLinearGradient(
             colors, start: start, end: end,
             options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
+        }
         }
         context.restoreGState()
       } else {

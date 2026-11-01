@@ -25,7 +25,8 @@ public enum BooleanCommands {
   public static func compatible(_ element: ArtworkElement, in art: Artwork) -> Bool {
     let children = Dictionary(grouping: art.elements, by: \.parentID)
     func check(_ e: ArtworkElement, depth: Int) -> Bool {
-      guard depth <= 16, e.component == nil else { return false }
+      guard depth <= 16, e.component == nil,
+        depth == 0 || e.clipID == nil || !ArtworkMasks.isCoverage(e.clipMode) else { return false }
       if e.kind == "group" {
         return (children[e.id] ?? []).filter { $0.hidden != true }.allSatisfy {
           check($0, depth: depth + 1)
@@ -45,6 +46,7 @@ public enum BooleanCommands {
     guard ids.isSubset(of: Set(artwork.elements.map(\.id))), selected.count >= 2,
       selected.count <= 64, Set(selected.map(\.parentID)).count == 1,
       Set(selected.map(\.clipID)).count == 1,
+      Set(selected.map { $0.clipMode ?? "outline" }).count == 1,
       selected.allSatisfy({ compatible($0, in: artwork) }), operations.contains(operation)
     else {
       throw FormError.invalid(
@@ -76,16 +78,20 @@ public enum BooleanCommands {
     group.blendMode = paint.blendMode
     group.blur = paint.blur
     group.shadow = paint.shadow
+    group.paintStack = paint.paintStack
+    group.effectStack = paint.effectStack
     group.opacity = opacity == 1 ? nil : opacity
     group.gradient = paint.gradient
     group.stroke = paint.stroke
     group.clipID = front.clipID
+    group.clipMode = front.clipMode
     group.productionRole = front.productionRole
     var result = artwork
     for i in result.elements.indices where roots.contains(result.elements[i].id) {
       result.elements[i].affine = inverse.followed(by: result.elements[i].affine ?? .init())
       result.elements[i].parentID = group.id
       result.elements[i].clipID = nil
+      result.elements[i].clipMode = nil
     }
     let frontIndex = result.elements.firstIndex { $0.id == front.id }!
     result.elements.insert(group, at: frontIndex + 1)
