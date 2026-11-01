@@ -1,13 +1,21 @@
 import AppKit
+import ImageIO
 import XCTest
 import FormCore
 import FormGraphics
 
 @MainActor final class FigmaTiledStrokeTests:XCTestCase {
   private func imported(strokeOpacity:Double)throws->FigmaArtworkImportResult {
-    let bitmap=try XCTUnwrap(NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:2,pixelsHigh:2,bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,bytesPerRow:0,bitsPerPixel:0))
-    for y in 0..<2 {for x in 0..<2 {bitmap.setColor(.blue,atX:x,y:y)}}
-    let bytes=try XCTUnwrap(bitmap.representation(using:.png,properties:[:]))
+    // Explicit sRGB bytes avoid dynamic/catalog NSColor conversion through
+    // NSBitmapImageRep.setColor, which can leave a transparent test fixture.
+    let rgba=Data([0,0,255,255,0,0,255,255,0,0,255,255,0,0,255,255])
+    let provider=try XCTUnwrap(CGDataProvider(data:rgba as CFData))
+    let raster=try XCTUnwrap(CGImage(width:2,height:2,bitsPerComponent:8,bitsPerPixel:32,bytesPerRow:8,
+      space:CGColorSpace(name:CGColorSpace.sRGB)!,bitmapInfo:CGBitmapInfo(rawValue:CGImageAlphaInfo.premultipliedLast.rawValue),
+      provider:provider,decode:nil,shouldInterpolate:false,intent:.defaultIntent))
+    let encoded=NSMutableData(),destination=try XCTUnwrap(CGImageDestinationCreateWithData(encoded,"public.png" as CFString,1,nil))
+    CGImageDestinationAddImage(destination,raster,nil);XCTAssertTrue(CGImageDestinationFinalize(destination))
+    let bytes=encoded as Data
     let image:FigmaValue = .object(["type":.string("IMAGE"),"image":.object(["dataBlob":.uint(0)]),"imageScaleMode":.string("TILE")])
     // PASS_THROUGH maps to the native default normal blend. It exercises the
     // fill/stroke coalescing path that previously hid a tiled fill's stroke.
@@ -29,6 +37,10 @@ import FormGraphics
     defer{try? FileManager.default.removeItem(at:root)}
     try FileManager.default.createDirectory(at:root,withIntermediateDirectories:true)
     for(name,bytes) in result.assets {try bytes.write(to:root.appendingPathComponent(name))}
+    let asset=try XCTUnwrap(fill.paintStack?.first?.paint.asset)
+    let decoded=try ImageRenderer.bitmap(root.appendingPathComponent(asset),requestedEdge:2)
+    let sourcePixel=try XCTUnwrap(NSBitmapImageRep(cgImage:decoded).colorAt(x:0,y:0)?.usingColorSpace(.deviceRGB))
+    XCTAssertGreaterThan(sourcePixel.blueComponent,0.95);XCTAssertEqual(sourcePixel.alphaComponent,1,accuracy:0.01)
     var art=result.artwork;art.backgroundOpacity=0
     let rendered=ArtworkRenderer.image(art,width:40,height:30,assets:root,pixelsPerMM:8)
     let bitmap=try XCTUnwrap(rendered.representations.first as? NSBitmapImageRep)
