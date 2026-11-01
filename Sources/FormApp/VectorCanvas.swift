@@ -323,6 +323,7 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
 
 final class VectorCanvasView: NSView, NSTextViewDelegate {
   weak var session: ArtworkSession?
+  var imagePromptPopover:NSPopover?
   // Visual points occupied by floating controls; never document/content insets.
   var fittingInsets = NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
   private let ppm = TypographyEngine.pointsPerMM
@@ -395,6 +396,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var accessibilityItems: [ArtworkAccessibilityElement] = []
   private var accessibilityUpdates = 0
   private var frameDragOrigin = CGPoint.zero
+  private var frameResizeOrigin = CGRect.zero
+  private var hoveredArtboardResize: (id: UUID, handle: Int)?
   private var drawCount = 0, lastDrawMS = 0.0
   private var fitRequests = 0
   private var lastFitDiagnostics: [String: Any]?
@@ -633,6 +636,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   }
   private func viewportCoordinatesChanged() {
     updateAccessibilityItems()
+    synchronizeCanvasImagePromptButton()
     textView?.inputContext?.invalidateCharacterCoordinates()
     needsDisplay = true
   }
@@ -743,6 +747,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       window?.invalidateCursorRects(for: self)
     }
     updateAccessibilityItems()
+    synchronizeCanvasImagePromptButton()
   }
   override func viewDidMoveToWindow() {
     super.viewDidMoveToWindow()
@@ -982,6 +987,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         drawHoverOutline(in: f, context: context, scale: scale)
       }
       context.restoreGState()
+      if [.select, .direct].contains(session.tool), editingID == nil,
+        (f.id != activeFrame?.id || session.croppingImageID == nil && session.maskEditing == nil),
+        (f.id == activeFrame?.id && session.selection.isEmpty || hoveredArtboardResize?.id == f.id
+          || dragMode == "frame_resize" && gestureFrameID == f.id) {
+        CanvasArtboardResizing.draw(f, context: context, scale: scale,
+          highlighted: dragMode == "frame_resize" && gestureFrameID == f.id ? handle
+            : hoveredArtboardResize?.id == f.id ? hoveredArtboardResize?.handle : nil)
+      }
       if (dropFrameID == f.id || moveDropFrameID == f.id) && !f.isWorkspace {
         context.setStrokeColor(Palette.accentNS.cgColor)
         context.setLineWidth(3/scale)
@@ -1105,6 +1118,25 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       .init(x: b.maxX, y: b.center.y), .init(x: b.maxX, y: b.maxY), .init(x: b.center.x, y: b.maxY),
       .init(x: b.x, y: b.maxY), .init(x: b.x, y: b.center.y),
     ]
+  }
+  private func artboardResizeTarget(at point: CGPoint) -> (frame: CanvasFrame, handle: Int)? {
+    guard let s = session, [.select, .direct].contains(s.tool), !s.dieline else { return nil }
+    if let active = activeFrame, active.editable {
+      let local = CGPoint(x: point.x-active.rect.minX, y: point.y-active.rect.minY)
+      // Visible controls belong to the selected artwork. Select the frame by
+      // its header before resizing coincident frame/image corners.
+      if selectionHandle(at: local) != nil || hasEditingControl(at: local) { return nil }
+    }
+    for frame in frames.reversed() where !frame.isWorkspace {
+      let editingActiveContents = frame.id == activeFrame?.id && (s.croppingImageID != nil || s.maskEditing != nil)
+      if !editingActiveContents, CanvasArtboardResizing.supports(frame),
+        let handle = CanvasArtboardResizing.handle(at: point, rect: frame.rect, scale: ppm * zoom) {
+        return (frame, handle)
+      }
+      // A frontmost frame's interior occludes controls on the frame behind it.
+      if frame.contains(point) || CanvasFrameChrome.headerRect(for: frame, scale: ppm * zoom).contains(point) { return nil }
+    }
+    return nil
   }
   private func visibleResizeHandles(_ b: Rect2) -> [Int] {
     let width = b.width * ppm * zoom, height = b.height * ppm * zoom
@@ -1354,6 +1386,23 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       window?.invalidateCursorRects(for: self)
       return
     }
+    // Frame borders are available independently of their contents; selected
+    // artwork handles and explicit content-editing modes keep their priority.
+    if artboardResizeTarget(at: physical) != nil {
+      NotificationCenter.default.post(name: .formCommitArtworkFields, object: nil)
+      finishText(); refreshFrameSnapshots(force: true)
+      if let target = artboardResizeTarget(at: physical) {
+        let f = target.frame
+        window?.makeFirstResponder(self); s.activate(f.id)
+        s.maskEditing = nil; s.scopeID = nil; s.nodes = []; s.croppingImageID = nil; s.choose([])
+        frames = s.frames
+        frameResizeOrigin = f.rect; down = physical; snapshot = s.art
+        handle = target.handle; dragMode = "frame_resize"
+        gestureToken = s.beginGesture(); gestureFrameID = s.activeFrameID
+        needsDisplay = true; CanvasPointerFeedback.resize(handle).cursor.set()
+        return
+      }
+    }
     // Selected controls can sit outside their frame. Resolve them before a
     // blank-canvas click changes the active source.
     let existingHandle = activeFrame?.editable == true ? selectionHandle(at: point(event)) : nil
@@ -1370,6 +1419,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       finishText()
       window?.makeFirstResponder(self)
       s.activate(f.id)
+      s.maskEditing = nil; s.scopeID = nil; s.nodes = []; s.croppingImageID = nil; s.choose([])
       frames = s.frames
       frameDragOrigin = f.rect.origin
       down = physical
@@ -1620,6 +1670,18 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       let p = canvasPoint(convert(event.locationInWindow, from: nil))
       s.moveCanvasFrame(to: .init(
         frameDragOrigin.x+p.x-down.x,frameDragOrigin.y+p.y-down.y))
+      return
+    }
+    if dragMode == "frame_resize", let id = gestureFrameID, let token = gestureToken {
+      let world = canvasPoint(convert(event.locationInWindow, from: nil))
+      let rect = CanvasArtboardResizing.resized(frameResizeOrigin, handle: handle,
+        delta: CGPoint(x: world.x-down.x, y: world.y-down.y),
+        aspectLocked: event.modifierFlags.contains(.shift), fromCenter: event.modifierFlags.contains(.option),
+        minimum: max(0.01, 2 * (snapshot.safeInset ?? 0) + 0.01))
+      s.resizeCanvasArtboard(to: rect, from: frameResizeOrigin, artwork: snapshot,
+        expectedFrameID: id, gestureToken: token)
+      refreshFrameSnapshots(force: true)
+      needsDisplay = true
       return
     }
     if dragMode == "pen" {
@@ -1873,7 +1935,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return CanvasEdgeScrolling.offset(pointer: event.locationInWindow, viewport: viewport, elapsed: elapsed)
   }
   private func updateEdgeScrolling(with event: NSEvent) {
-    guard ["move", "resize", "create", "node", "incoming", "outgoing", "marquee", "node_marquee", "guide", "frame"].contains(dragMode),
+    guard ["move", "resize", "frame_resize", "create", "node", "incoming", "outgoing", "marquee", "node_marquee", "guide", "frame"].contains(dragMode),
       edgeScrollOffset(for: event, elapsed: 1.0/60) != .zero else {
       edgeScrollTimer?.invalidate(); edgeScrollTimer = nil; dragEvent = nil
       return
@@ -2001,7 +2063,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   override func mouseExited(with event: NSEvent) { clearHoverFeedback() }
   private var effectivePointerFeedback: CanvasPointerFeedback {
     if ["pan", "move", "frame", "image_crop"].contains(dragMode) { return .dragging }
-    if dragMode == "resize" { return .resize(handle) }
+    if dragMode == "resize" || dragMode == "frame_resize" { return .resize(handle) }
     if dragMode == "rotate" { return .rotate }
     if space || session?.tool == .hand { return .hand }
     if session?.tool == .text { return .text }
@@ -2009,8 +2071,9 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     return pointerFeedback
   }
   private func clearHoverFeedback() {
-    let changed = hoveredElementID != nil || hoveredControlPoint != nil || pointerFeedback != .arrow
+    let changed = hoveredElementID != nil || hoveredControlPoint != nil || hoveredArtboardResize != nil || pointerFeedback != .arrow
     hoveredElementID = nil; hoveredFrameID = nil; hoveredControlPoint = nil; hoverOutline = nil
+    hoveredArtboardResize = nil
     pointerFeedback = .arrow
     if changed { needsDisplay = true; window?.invalidateCursorRects(for: self) }
   }
@@ -2025,12 +2088,18 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     defer { lastHoverLookupMS = (CFAbsoluteTimeGetCurrent() - start) * 1000 }
     let previousFeedback = pointerFeedback, previousElement = hoveredElementID
     let previousFrame = hoveredFrameID, previousControl = hoveredControlPoint
+    let previousResizeFrame = hoveredArtboardResize?.id, previousResizeHandle = hoveredArtboardResize?.handle
     hoveredElementID = nil; hoveredFrameID = nil; hoveredControlPoint = nil
+    hoveredArtboardResize = nil
     pointerFeedback = .arrow
     let world = canvasPoint(convert(event.locationInWindow, from: nil)), local = point(event)
     if space || s.tool == .hand { pointerFeedback = .hand }
     else if s.tool == .text { pointerFeedback = .text }
     else if ![.select, .direct].contains(s.tool) { pointerFeedback = .crosshair }
+    else if let target = artboardResizeTarget(at: world) {
+      pointerFeedback = .resize(target.handle)
+      hoveredArtboardResize = (target.frame.id, target.handle)
+    }
     else if activeFrame?.editable == true, !s.dieline, s.croppingImageID == nil,
       let control = editingControlPoint(at: local) {
       pointerFeedback = .control; hoveredControlPoint = control
@@ -2071,7 +2140,8 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       }
     }
     if previousFeedback != pointerFeedback || previousElement != hoveredElementID
-      || previousFrame != hoveredFrameID || previousControl != hoveredControlPoint {
+      || previousFrame != hoveredFrameID || previousControl != hoveredControlPoint
+      || previousResizeFrame != hoveredArtboardResize?.id || previousResizeHandle != hoveredArtboardResize?.handle {
       needsDisplay = true
       window.invalidateCursorRects(for: self)
     }

@@ -104,6 +104,15 @@ enum TableTool: String, CaseIterable {
     return library
   }
   private var imageWorkflow:StudioImageGenerationController?
+  private var canvasImageWorkflow:CanvasImageGenerationController?
+  var canvasImages:CanvasImageGenerationController {
+    let library=studioAssets
+    if let canvasImageWorkflow,canvasImageWorkflow.library === library { return canvasImageWorkflow }
+    canvasImageWorkflow?.resetForProjectChange()
+    let controller=CanvasImageGenerationController(store:self,library:library,connection:studioImageConnection)
+    canvasImageWorkflow=controller
+    return controller
+  }
   var studioImages:StudioImageGenerationController {
     let library=studioAssets
     if let imageWorkflow,imageWorkflow.library === library {return imageWorkflow}
@@ -203,6 +212,9 @@ enum TableTool: String, CaseIterable {
       }
     }
     engine.onProjectWillChange = { [weak self] in
+      self?.artworkSession.canvas?.closeCanvasImagePrompt()
+      self?.canvasImageWorkflow?.resetForProjectChange()
+      self?.canvasImageWorkflow=nil
       self?.imageWorkflow?.resetForProjectChange()
       self?.imageWorkflow=nil
       self?.assetLibrary=nil
@@ -515,6 +527,8 @@ enum TableTool: String, CaseIterable {
     scene?.resetCamera()
   }
   func home() {
+    artworkSession.canvas?.closeCanvasImagePrompt()
+    canvasImageWorkflow?.resetForProjectChange()
     imageWorkflow?.resetForProjectChange()
     studioShowingImages=false
     canvasFindVisible = false
@@ -612,6 +626,7 @@ enum TableTool: String, CaseIterable {
     perform("form_delete_objects", ["object_ids": selected.map { $0.id.uuidString }])
   }
   func undo() {
+    if artworkSession.canvas?.applyCanvasImageTextHistory(redo:false) == true {return}
     if applyStudioImageTextHistory(in:NSApp.keyWindow) {return}
     if environment == .studio,!studioShowingShots,studioComposition.undoDraft(){toast("Undone scene edit");return}
     if mode == .artwork, artworkSession.canvas?.undoText() == true {
@@ -624,6 +639,7 @@ enum TableTool: String, CaseIterable {
     toast("Undone")
   }
   func redo() {
+    if artworkSession.canvas?.applyCanvasImageTextHistory(redo:true) == true {return}
     if applyStudioImageTextHistory(in:NSApp.keyWindow,redo:true) {return}
     if environment == .studio,!studioShowingShots,studioComposition.redoDraft(){toast("Redone scene edit");return}
     if mode == .artwork, artworkSession.canvas?.redoText() == true {

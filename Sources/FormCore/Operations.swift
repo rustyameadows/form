@@ -73,6 +73,8 @@ public final class OperationEngine {
     selection = selection.intersection(Set(previous.objects.map(\.id)))
     lastCoalesce = nil
   }
+  /// Async document publications wait for the current native transaction to finish.
+  public var hasActiveInteraction: Bool { interaction != nil }
   /// Native command adapters may preserve a matching gesture without exposing its mutable state.
   public func isInteracting(with key:String)->Bool {interaction==key}
   public func isInteracting(withGeneration token: UUID) -> Bool { interactionGeneration == token }

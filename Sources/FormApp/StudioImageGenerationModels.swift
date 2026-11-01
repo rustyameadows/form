@@ -2,7 +2,9 @@ import Foundation
 import FormCore
 
 enum StudioGenerationModel:String,Codable,CaseIterable {case sunburst="gpt-image-2.5-sunburst",flare="gpt-image-2.5-flare"
-  var title:String {self == .sunburst ? "GPT Image · Sunburst":"GPT Image · Flare"}
+  // The raw values are retained for existing local history. These are demo
+  // configurations, not verified API model identifiers or availability claims.
+  var title:String {self == .sunburst ? "Sunburst · Local demo":"Flare · Local demo"}
 }
 enum StudioGenerationAspect:String,Codable,CaseIterable {case square,landscape,portrait
   var title:String {rawValue.capitalized}
@@ -34,7 +36,7 @@ struct StudioImageGenerationOptions:Codable,Equatable {
     let n=size.longEdge;return aspect == .square ? (n,n):aspect == .landscape ? (n,n*2/3):(n*2/3,n)
   }
   func validate()throws {
-    guard [1,2,4].contains(count) else{throw FormError.invalid("Choose one, two, or four demo images.")}
+    guard StudioGenerationConfigurationRegistry.counts.contains(count) else{throw FormError.invalid("Choose one, two, or four demo images.")}
     try outputPixels?.validate()
   }
   var redactedMetadata:[String:String] {
@@ -44,13 +46,24 @@ struct StudioImageGenerationOptions:Codable,Equatable {
     return value
   }
 }
+/// The same local-only choices are used in Studio and Canvas. A future network
+/// provider must supply its own verified capabilities rather than reuse these.
+enum StudioGenerationConfigurationRegistry {
+  static let models=StudioGenerationModel.allCases
+  static let aspects=StudioGenerationAspect.allCases
+  static let sizes=StudioGenerationSize.allCases
+  static let qualities=StudioGenerationQuality.allCases
+  static let counts=[1,2,4]
+  static let maximumReferences=8
+  static let providerLabel="Local demo · no AI request"
+}
 struct StudioGenerationReference:Codable,Equatable,Identifiable {
   enum Role:String,Codable,CaseIterable {case style,subject,composition;var title:String{rawValue.capitalized}}
   var assetID:UUID,role:Role
   var id:UUID {assetID}
 }
-enum StudioGenerationPhase:String,Codable {case idle,capturing,queued,preparing,generating,writing,finished
-  var title:String {switch self {case .idle:return "Ready";case .capturing:return "Capturing scene";case .queued:return "Queued";case .preparing:return "Preparing local demo";case .generating:return "Making demo images";case .writing:return "Saving to Library";case .finished:return "Results"}}
+enum StudioGenerationPhase:String,Codable {case idle,capturing,queued,preparing,generating,waitingForEditor,writing,finished
+  var title:String {switch self {case .idle:return "Ready";case .capturing:return "Capturing scene";case .queued:return "Queued";case .preparing:return "Preparing local demo";case .generating:return "Making demo images";case .waitingForEditor:return "Finish the current edit to place image";case .writing:return "Saving to Library";case .finished:return "Results"}}
 }
 struct StudioGenerationCapture:Codable,Equatable,Identifiable {
   var id:UUID,createdAt:Date,projectID:UUID,projectName:String
@@ -96,7 +109,51 @@ enum StudioGenerationError:LocalizedError {
   case fixture(StudioGenerationFailureFixture),stale,invalid(String)
   var errorDescription:String? {switch self {case .fixture(let fixture):return fixture.message;case .stale:return "The scene or project changed. Capture the current composition before creating another image.";case .invalid(let message):return message}}
 }
+struct StudioGenerationReferenceImage:Equatable {
+  let assetID:UUID,name:String,png:Data
+}
+/// Pixel-only output contract; physical Canvas dimensions never enter Studio's
+/// aspect presets or its persisted generation options.
+struct StudioGenerationPixelSize: Codable, Equatable {
+  let width: Int, height: Int
+  static func canvas(widthMM: Double, heightMM: Double, size: StudioGenerationSize) throws -> Self {
+    guard widthMM.isFinite, heightMM.isFinite, widthMM > 0, heightMM > 0,
+      (0.125...8).contains(widthMM / heightMM) else {
+      throw StudioGenerationError.invalid("Resize the image artboard to a shape between 1:8 and 8:1.")
+    }
+    let edge = size.longEdge, ratio = widthMM / heightMM
+    let result = ratio >= 1 ? Self(width: edge, height: max(64, Int((Double(edge) / ratio).rounded(.down))))
+      : Self(width: max(64, Int((Double(edge) * ratio).rounded(.down))), height: edge)
+    try result.validate(size: size); return result
+  }
+  func validate(size: StudioGenerationSize) throws {
+    guard width >= 64, height >= 64, width <= size.longEdge, height <= size.longEdge,
+      max(width,height) == size.longEdge, (0.125...8).contains(Double(width) / Double(height)) else {
+      throw StudioGenerationError.invalid("Canvas output must match the selected resolution and a shape between 1:8 and 8:1.")
+    }
+  }
+}
 struct StudioGenerationRequest {
-  let inputPNG:Data,prompt:String,style:String,references:[StudioGenerationReference],options:StudioImageGenerationOptions
-  var context:StudioGenerationInputContext?=nil
+  enum Source:String {case studioScene,canvas}
+  let inputPNG:Data?,prompt:String,style:String,references:[StudioGenerationReference],options:StudioImageGenerationOptions
+  var context:StudioGenerationInputContext?
+  let source:Source,referenceImages:[StudioGenerationReferenceImage]
+  let canvasOutputPixels:StudioGenerationPixelSize?
+  var outputPixels:StudioGenerationPixelSize {canvasOutputPixels ?? .init(width:options.pixels.width,height:options.pixels.height)}
+  func validateOutputPixels()throws {
+    try options.validate()
+    if source == .canvas, options.outputPixels != nil {
+      throw StudioGenerationError.invalid("Studio output pixels cannot override a Canvas artboard's bounded image resolution.")
+    }
+    if let canvasOutputPixels {
+      guard source == .canvas else{throw StudioGenerationError.invalid("Custom Canvas output dimensions require a Canvas request.")}
+      try canvasOutputPixels.validate(size:options.size)
+    }
+  }
+  init(inputPNG:Data?=nil,prompt:String,style:String,references:[StudioGenerationReference],options:StudioImageGenerationOptions,
+    context:StudioGenerationInputContext?=nil,source:Source = .studioScene,referenceImages:[StudioGenerationReferenceImage]=[],
+    canvasOutputPixels:StudioGenerationPixelSize?=nil) {
+    self.inputPNG=inputPNG;self.prompt=prompt;self.style=style;self.references=references;self.options=options
+    self.context=context;self.source=source;self.referenceImages=referenceImages;self.canvasOutputPixels=canvasOutputPixels
+  }
 }

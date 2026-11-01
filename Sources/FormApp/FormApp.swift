@@ -55,13 +55,13 @@ import SwiftUI
         ).disabled(store.project == nil)
       }
       CommandGroup(replacing: .undoRedo) {
-        Button("Undo") { store.undo() }.keyboardShortcut("z").disabled(
+        Button("Undo") { store.undo() }.keyboardShortcut("z").disabled(store.artworkSession.canvas?.imagePromptPopover?.isShown != true && (
           store.isStudioImageWorkspace ? store.studioImageTextEditor == nil : store.artworkSession.editingText
-            ? store.artworkSession.canvas?.canUndoText != true : store.engine.undoStack.isEmpty && !(store.environment == .studio && !store.studioShowingShots && store.studioComposition.canUndoDraft))
+            ? store.artworkSession.canvas?.canUndoText != true : store.engine.undoStack.isEmpty && !(store.environment == .studio && !store.studioShowingShots && store.studioComposition.canUndoDraft)))
         Button("Redo") { store.redo() }.keyboardShortcut("z", modifiers: [.command, .shift])
-          .disabled(
+          .disabled(store.artworkSession.canvas?.imagePromptPopover?.isShown != true && (
             store.isStudioImageWorkspace ? store.studioImageTextEditor == nil : store.artworkSession.editingText
-              ? store.artworkSession.canvas?.canRedoText != true : store.engine.redoStack.isEmpty && !(store.environment == .studio && !store.studioShowingShots && store.studioComposition.canRedoDraft))
+              ? store.artworkSession.canvas?.canRedoText != true : store.engine.redoStack.isEmpty && !(store.environment == .studio && !store.studioShowingShots && store.studioComposition.canRedoDraft)))
       }
       CommandGroup(replacing: .printItem) {
         Button("Print…") { store.prepareSelectedPrint() }.keyboardShortcut("p").disabled(

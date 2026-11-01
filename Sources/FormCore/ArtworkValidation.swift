@@ -25,8 +25,13 @@ public func validateArtworkDetails(_ artwork: Artwork) throws {
   var sourceBytes = 0
   for element in artwork.elements {
     try element.sourceMetadata?.validate()
+    guard element.imageGeneration == nil || element.kind == "image" else {
+      throw FormError.invalid("Image generation provenance belongs only to image layers.")
+    }
+    try element.imageGeneration?.validate()
     sourceBytes += element.sourceMetadata?.properties.count ?? 0
-    guard sourceBytes <= 8 * 1024 * 1024 else {throw FormError.invalid("Imported source settings exceed the artwork metadata budget.")}
+    if let generation = element.imageGeneration { sourceBytes += try JSONEncoder.form.encode(generation).count }
+    guard sourceBytes <= 8 * 1024 * 1024 else {throw FormError.invalid("Artwork source and generation settings exceed the artwork metadata budget.")}
   }
   if let boundary = artwork.boundary {
     var shape = ArtworkElement(

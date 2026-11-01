@@ -142,6 +142,7 @@ struct ArtworkInspector: View {
       VStack(alignment: .leading, spacing: InspectorStyle.sectionSpacing) {
         if let object = session.object {
           LinkedObjectInspectorModule(session: session)
+          CanvasImagePromptInspectorShortcut(controller: store.canvasImages, session: session)
           if session.transferInFlight {
             HStack {
               ProgressView("Pasting artwork…").controlSize(.small)
