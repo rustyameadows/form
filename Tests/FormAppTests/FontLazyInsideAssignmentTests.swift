@@ -72,7 +72,14 @@ import XCTest
     XCTAssertEqual(inside.elements[0].typography?.fontName,"Georgia-Bold")
     var expected=try XCTUnwrap(before.objects[0].paperConstruction?.insideArtwork)
     _ = try ArtworkCommands.apply("font",to:&expected,ids:[f.textID],arguments:arguments)
-    XCTAssertEqual(inside,expected,"Font assignment must retain registered placement and all inside metadata.")
+    XCTAssertEqual(inside.worldTransform(inside.elements[0]),expected.worldTransform(expected.elements[0]))
+    // The shared projection inverse may serialize a formerly implicit identity
+    // affine. Compare that equivalent representation while retaining exact
+    // equality for every transform value and all other source metadata.
+    var normalizedInside=inside
+    for i in normalizedInside.elements.indices {normalizedInside.elements[i].affine=normalizedInside.elements[i].affine ?? .init()}
+    for i in expected.elements.indices {expected.elements[i].affine=expected.elements[i].affine ?? .init()}
+    XCTAssertEqual(normalizedInside,expected,"Font assignment must retain registered placement and all inside metadata.")
     XCTAssertEqual(f.store.fontLibraryPreferences.recent,["Georgia-Bold"])
     XCTAssertEqual(f.store.engine.undoStack.count,1)
     f.store.engine.undo();f.session.reconcile();XCTAssertEqual(f.store.project,before)
