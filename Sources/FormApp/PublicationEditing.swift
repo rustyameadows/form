@@ -14,6 +14,8 @@ import FormGraphics
   private var ids:[ObjectIdentifier:StoryFrameID]=[:]
   private var snapshot:NSAttributedString
   private var published:NSAttributedString
+  private let originalInput:NSAttributedString
+  private let originalSource:ArtworkElement
   private var overflowWindow:NSWindow?
   private var galleyLayout:PublicationLayoutManager?
   private var finishing=false
@@ -23,6 +25,8 @@ import FormGraphics
     self.canvas=canvas;self.session=session;storyID=context.story.id
     let value=StoryComposition(context);composition=value
     snapshot=NSAttributedString(attributedString:value.storage);published=NSAttributedString(attributedString:value.storage)
+    originalInput=NSAttributedString(attributedString:value.storage)
+    originalSource=session.store?.project?.textStories?.first{$0.id==context.story.id}?.sourceElement ?? context.story.sourceElement
     super.init()
     session.store?.engine.beginInteraction("story-\(storyID)")
     for (index,geometry) in context.frames.enumerated() {
@@ -143,18 +147,35 @@ import FormGraphics
     let items=PublicationLists.items(from:source,trailingAttributes:text.typingAttributes)
     if GlyphEngine.nativeEqual(native,published),items==previous.listItems {return}
     published=NSAttributedString(attributedString:native)
-    var element=previous.sourceElement;element.text=source.string
-    element.glyphOverrides=GlyphEngine.overrides(from:source);if element.glyphOverrides?.isEmpty==true {element.glyphOverrides=nil}
-    element.listItems=items
-    let runs=merged(TypographyEngine.spans(from:source,fallback:previous.typography ?? .init()))
-    let oldRuns=merged(TypographyEngine.spans(from:TypographyEngine.sourceAttributed(previous.sourceElement.inheritingLanguage(composition.context.language)),fallback:previous.typography ?? .init()))
-    if previous.text==element.text,previous.glyphOverrides==element.glyphOverrides,previous.listItems==items,runs==oldRuns {return}
-    if runs.count==1,let run=runs.first,run.fontSize==element.fontSize,run.color==element.color,run.typography==(element.typography ?? .init()),run.swatchID==element.fillSwatchID,run.textStyle==element.textStyle,run.paragraphStyle==element.paragraphStyle {element.textRuns=nil}
-    else {element.textRuns=runs}
+    // TextCase may rearchive identical source attributes during native Undo.
+    // Compare the recovered source, not the derived archive's byte identity.
+    let restoringOriginal=GlyphEngine.nativeEqual(source,TextCase.source(originalInput).text) && items==originalSource.listItems
+    var element=previous.sourceElement
+    if restoringOriginal {
+      // Native Undo can return exactly to the opening source. Preserve its
+      // sparse inherited ranges and style references instead of materializing
+      // every default run as a new source assignment.
+      element=originalSource
+      var restored=previous;restored.setSource(element)
+      if restored==previous {return}
+    } else {
+      element.text=source.string
+      element.glyphOverrides=GlyphEngine.overrides(from:source);if element.glyphOverrides?.isEmpty==true {element.glyphOverrides=nil}
+      element.listItems=items
+      let runs=merged(TypographyEngine.spans(from:source,fallback:previous.typography ?? .init()))
+      let oldRuns=merged(TypographyEngine.spans(from:TypographyEngine.sourceAttributed(previous.sourceElement.inheritingLanguage(composition.context.language)),fallback:previous.typography ?? .init()))
+      if previous.text==element.text,previous.glyphOverrides==element.glyphOverrides,previous.listItems==items,runs==oldRuns {return}
+      if runs.count==1,let run=runs.first,run.fontSize==element.fontSize,run.color==element.color,run.typography==(element.typography ?? .init()),run.swatchID==element.fillSwatchID,run.textStyle==element.textStyle,run.paragraphStyle==element.paragraphStyle {element.textRuns=nil}
+      else {element.textRuns=runs}
+    }
     publishing=true;defer{publishing=false}
     do {
       try store.engine.edit("Edited text story",source:"Studio",coalescing:"story-\(storyID)") {project in
-        try PublicationCommands.setSource(in:&project,storyID:self.storyID,source:element)
+        if restoringOriginal,let index=project.textStories?.firstIndex(where:{$0.id==self.storyID}) {
+          try PublicationCommands.ensureEditable(project.textStories![index],in:project)
+          project.textStories![index].setSource(element)
+          try project.validatePublications()
+        } else {try PublicationCommands.setSource(in:&project,storyID:self.storyID,source:element)}
       }
       store.changed();session.characterRange=TextCase.source(text.attributedString()).sourceRange(text.selectedRange())
       canvas?.needsDisplay=true

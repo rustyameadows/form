@@ -181,6 +181,7 @@ import SwiftUI
         Button("Project Library") {store.openAssetLibrary()}.disabled(store.project == nil || store.showingHome)
         Button("OpenAI Connection…") {store.showingOpenAISetup=true}
         Divider()
+        Button("Explore Fonts…") {store.fontExploration=FontBrowsingState(session:store.artworkSession)}.disabled(store.project==nil)
         Button("Document Fonts…") {store.showingDocumentFonts=true}.disabled(store.project==nil)
         Button("Materials & Equipment") { store.showingLibrary = true }
         Button("Codex Connection") { store.showingBridge = true }
