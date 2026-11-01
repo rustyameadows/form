@@ -7,7 +7,7 @@ import simd
 
 /// Read-only fit of actual modeled bounds against an explicitly authored cavity.
 @MainActor enum PaperNativeFit {
-  static func preflight(store:StudioStore,args:[String:Any])throws->Any {
+  static func preflight(store:StudioStore,args:[String:Any],solidSurface:SolidSurface?=nil)throws->Any {
     guard let project=store.project,
       let sourceRaw=args["object_id"] as? String,let sourceID=UUID(uuidString:sourceRaw),
       let source=project.objects.first(where:{$0.id==sourceID}),PaperConstruction.isPaper(source),
@@ -23,7 +23,7 @@ import simd
     if let raw=args["clearance_mm"] {guard let n=raw as? NSNumber,CFGetTypeID(n) != CFBooleanGetTypeID(),n.doubleValue.isFinite,(0...100).contains(n.doubleValue) else{throw FormError.invalid("Use0–100mm finite contents clearance.")};clearance=n.doubleValue}else{clearance=0}
     let definition=try PaperConstruction.definition(for:source)
     let assets=store.repository.url(for:project.id).appendingPathComponent("Assets")
-    let geometry=GeometryFactory.object(target,project:project,assets:assets,textureLimit:64)
+    let geometry=GeometryFactory.object(target,project:project,assets:assets,textureLimit:64,solidSurface:solidSurface,solidRevision:solidSurface.map{_ in "full-fit"})
     guard !allNodes(geometry).contains(where:{$0.name?.hasPrefix("paper.invalid:")==true}),
       allNodes(geometry).contains(where:{$0.geometry?.sources(for:.vertex).first?.vectors.isEmpty == false}) else {
       throw FormError.invalid("Contents geometry could not be resolved; no fit result was fabricated.")

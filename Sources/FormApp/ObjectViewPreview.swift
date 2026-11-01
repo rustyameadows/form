@@ -63,33 +63,34 @@ struct ObjectViewPreview: NSViewRepresentable {
     let state = LinkedObjectViewRenderer.state(object, in: project)
     guard sourceState != state || sourceAssets != assets else { return }
     sourceState = state; sourceAssets = assets
-    task?.cancel(); renderer?.reset(); message?.removeFromSuperview(); message = nil
-    do {
-      guard let renderer else { showError("3D preview unavailable"); return }
-      // Use the same isolated geometry and appearance as the rendered view.
-      let values = try ObjectViewRendering.renderables(object: object, project: project, assets: assets)
-      var low = SIMD3<Double>(repeating: .infinity), high = SIMD3<Double>(repeating: -.infinity)
-      for value in values where value.visible {
-        let matrix = value.transform.matrixMM
-        for p in value.mesh.positionsMM {
-          let q = matrix * SIMD4(p, 1), point = SIMD3(q.x, q.y, q.z)
-          low = simd_min(low, point); high = simd_max(high, point)
-        }
-      }
-      guard low.x.isFinite, high.x.isFinite else { throw FormError.invalid("No 3D geometry to preview.") }
-      center = (low + high) / 2; radius = max(0.001, simd_length(high - low) / 2)
-      updateCamera()
-      task = Task { [weak self] in
-        do {
-          for value in values where value.visible {
-            try Task.checkCancellation(); try await renderer.upsertAsync(value)
+    task?.cancel(); message?.removeFromSuperview(); message = nil
+    guard let renderer else {showError("3D preview unavailable");return}
+    task=Task { [weak self] in
+      do {
+        let solids=try await SolidRecipeGeometry.prepareFullSources(project:project,objectIDs:[object.id])
+        try Task.checkCancellation()
+        guard let self,self.sourceState==state,self.sourceAssets==assets else{return}
+        let values=try ObjectViewRendering.renderables(object:object,project:project,assets:assets,solidSurface:solids[object.id])
+        var low=SIMD3<Double>(repeating:.infinity),high=SIMD3<Double>(repeating:-.infinity)
+        for value in values where value.visible {
+          let matrix=value.transform.matrixMM
+          for p in value.mesh.positionsMM {
+            let q=matrix*SIMD4(p,1),point=SIMD3(q.x,q.y,q.z)
+            low=simd_min(low,point);high=simd_max(high,point)
           }
-        } catch {
-          if !Task.isCancelled && !(error is CancellationError) { self?.showError("3D preview unavailable: " + error.localizedDescription) }
         }
+        guard low.x.isFinite,high.x.isFinite else{throw FormError.invalid("No 3D geometry to preview.")}
+        renderer.reset()
+        self.center=(low+high)/2;self.radius=max(0.001,simd_length(high-low)/2);self.updateCamera()
+        for value in values where value.visible {
+          try Task.checkCancellation();try await renderer.upsertAsync(value)
+        }
+      }catch {
+        if !Task.isCancelled,!(error is CancellationError) {self?.showError("3D preview unavailable: "+error.localizedDescription)}
       }
-    } catch { showError("3D preview unavailable: " + error.localizedDescription) }
+    }
   }
+
   func setAngles(azimuth: Double, elevation: Double) {
     guard last == nil else { return }
     self.azimuth = azimuth; self.elevation = elevation; updateCamera()

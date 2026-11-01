@@ -99,6 +99,8 @@ extension StudioStore {
       var snapshot=object;snapshot.artwork=art;snapshot.artworkSourceID=nil;snapshot.artworkFit=nil;snapshot.artwork?.imports=nil
       let programData=try JSONEncoder.form.encode(program),programHash=ProductionAssets.digest(programData)
       var immutable=ProductionJobRevision(object:snapshot,material:project.material(object.materialID).withoutFabricPattern,quantity:quantity,outputs:outputs,assumptions:assumptions,program:program,programDigest:programHash,equipment:equipment)
+      let sourceReference=try ArtworkProduction.filtered(art,roles:Set(ArtworkProductionRole.allCases)).artwork
+      immutable.sourceArtworkSVG=try SVGRenderer.document(sourceReference,width:snapshot.artworkSize.x,height:snapshot.artworkSize.y,assets:repository.url(for:project.id).appendingPathComponent("Assets"))
       if let garmentID=object.textile?.attachment?.garmentID,let garment=project.objects.first(where:{$0.id==garmentID}) {immutable.garment=garment;immutable.garmentMaterial=project.material(garment.materialID).withoutFabricPattern}
       try immutable.validate()
       let revisionData=try JSONEncoder.form.encode(immutable),revisionHash=ProductionAssets.digest(revisionData)

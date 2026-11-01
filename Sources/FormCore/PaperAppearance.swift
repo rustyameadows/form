@@ -136,6 +136,7 @@ public struct PaperAppearanceInspection: Codable, Equatable, Sendable {
   public var finishes: [PaperFinishInspection]
   public var issues: [PaperAppearanceIssue]
   public var reliefRepresentation = "surfaceShading"
+  public var finalCaptureReliefRepresentation: String? = "boundedMacroGeometryAndSurfaceShading"
   public var manufacturingVerified = false
   public var units = "millimeters"
   public var plyOrder = "backToFront"

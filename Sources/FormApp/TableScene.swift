@@ -29,6 +29,7 @@ private struct RenderSignature: Equatable {
   let asset: String?
   let fontRevision: Int
   let textureLimit: Int
+  let sourceSampling: SourceTextureSamplingPlan?
   let textile: TextileProduct?
   let fabricPattern: ResolvedFabricPattern?
   let cloth:ClothStudy?
@@ -37,6 +38,7 @@ private struct RenderSignature: Equatable {
   let assemblyRevision:String?
   let modelRevision:String?
   let paperRevision:String?
+  let solidRevision:String?
 }
 
 @MainActor final class TableSceneController {
@@ -56,8 +58,8 @@ private struct RenderSignature: Equatable {
   private var embroideryDigests:[UUID:String]=[:]
   func embroideryIssue(for id:UUID)->String? {embroideryIssues[id]}
   func embroiderySourceDigest(for id:UUID)->String? {embroideryDigests[id]}
-  private func updateEmbroideryStatus(_ object:ProductObject,project:Project,textureLimit:Int) {
-    let status=EmbroiderySceneSurface.status(object:object,project:project,textureLimit:textureLimit)
+  private func updateEmbroideryStatus(_ object:ProductObject,project:Project,textureLimit:Int,sampling:SourceTextureRasterPlan?=nil) {
+    let status=EmbroiderySceneSurface.status(object:object,project:project,textureLimit:textureLimit,sampling:sampling)
     embroideryIssues[object.id]=status.issue;embroideryDigests[object.id]=status.digest
   }
   private var fingerprints: [UUID: RenderSignature] = [:]
@@ -258,7 +260,8 @@ private struct RenderSignature: Equatable {
   }
   func sync(
     _ project: Project, selection: Set<UUID>, isolated: Set<UUID>, showGrid: Bool, studio: Bool,
-    preset: String, assets: URL, textureLimit: Int = 2048, renderObjectIDs:Set<UUID>?=nil
+    preset: String, assets: URL, textureLimit: Int = 2048, renderObjectIDs:Set<UUID>?=nil,
+    sourceSampling:[UUID:SourceTextureSamplingPlan]=[:],solidSurfaces:[UUID:SolidSurface]=[:],deferSolidConstruction:Bool=false
   ) {
     captureSource=project;captureAssets=assets;captureVisibility=isolated;captureObjectIDs=renderObjectIDs
     let started = CFAbsoluteTimeGetCurrent()
@@ -291,20 +294,38 @@ private struct RenderSignature: Equatable {
     }
     var geometryChanged = false
     for object in physicalObjects {
-      let fingerprint = RenderSignature(
-        recipe: project.recipe(object.recipeID),
-        parameters: GeometryFactory.geometryParameters(object),
+      let sampling=sourceSampling[object.id]
+      let textureLimit=sampling.flatMap{try? $0.raster.rasterSize(width:object.artworkSize.x,height:object.artworkSize.y)}.map{max($0.width,$0.height)} ?? textureLimit
+      let suppliedSolid=solidSurfaces[object.id]
+      let isSolid=project.recipe(object.recipeID)?.solid != nil
+      let display=isSolid && suppliedSolid==nil ? store?.solids.display(for:object,project:project,needsSurface:nodes[object.id]==nil):nil
+      let solidSurface=suppliedSolid ?? display?.surface
+      let suppliedRevision=project.recipe(object.recipeID)?.solid.flatMap{try? SolidRecipeGeometry.sourceKey($0,parameters:object.parameters,isEditingPreview:false)}
+      let solidRevision=suppliedSolid != nil ? suppliedRevision:display?.revision
+      var geometryObject=object
+      var geometryProject=project
+      if let display {
+        geometryObject.parameters=display.parameters
+        if project.recipe(object.recipeID) != display.recipe {
+          geometryProject.recipes.removeAll{$0.id==display.recipe.id};geometryProject.recipes.append(display.recipe)
+        }
+      }
+      let deferSolid=isSolid && (store != nil || deferSolidConstruction) && suppliedSolid==nil
+      var fingerprint = RenderSignature(
+        recipe: geometryProject.recipe(object.recipeID),
+        parameters: GeometryFactory.geometryParameters(geometryObject),
         material: project.material(object.materialID).withoutFabricPattern, color: object.color,
         artwork: project.surfaceArtwork(object).map {GeometryFactory.artworkDefinition($0,object:object)},
         asset: object.asset,
         fontRevision: project.editableArtwork(object) == nil && project.material(object.materialID).fabric?.pattern == nil ? 0 : GeometryFactory.fontRevision,
-        textureLimit: textureLimit, textile: object.textile?.renderDefinition,
-        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth, merchandiseSurface:project.conformedMerchandiseSignature(object),merchandiseMaterials:project.merchandiseMaterialDependencies(object),assemblyRevision:object.patternAssembly==nil ? nil:ClothSceneSurface.sourceIdentity(object:object,project:project).revision,modelRevision:object.meshAsset.map{$0.geometryRevision+"/"+$0.appearanceRevision} ?? object.cadRepresentation?.definitionSHA256,paperRevision:PaperGeometry.sourceRevision(object,project:project))
+        textureLimit: textureLimit, sourceSampling:sampling, textile: object.textile?.renderDefinition,
+        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth, merchandiseSurface:project.conformedMerchandiseSignature(object),merchandiseMaterials:project.merchandiseMaterialDependencies(object),assemblyRevision:object.patternAssembly==nil ? nil:ClothSceneSurface.sourceIdentity(object:object,project:project).revision,modelRevision:object.meshAsset.map{$0.geometryRevision+"/"+$0.appearanceRevision} ?? object.cadRepresentation?.definitionSHA256,paperRevision:PaperGeometry.sourceRevision(object,project:project),solidRevision:solidRevision)
+      if deferSolid,solidSurface==nil,let previous=fingerprints[object.id],nodes[object.id] != nil {fingerprint=previous}
       if let node=nodes[object.id],let prior=fingerprints[object.id],prior != fingerprint,
         canUpdateEmbroiderySurface(prior,fingerprint,object:object) {
-        EmbroiderySceneSurface.update(node,object:object,project:project,assets:assets,textureLimit:textureLimit)
+        EmbroiderySceneSurface.update(node,object:object,project:project,assets:assets,textureLimit:textureLimit,sampling:sampling?.raster)
         fingerprints[object.id]=fingerprint;geometryBounds[object.id]=physicalBounds(of:node);geometryChanged=true
-        updateEmbroideryStatus(object,project:project,textureLimit:textureLimit)
+        updateEmbroideryStatus(object,project:project,textureLimit:textureLimit,sampling:sampling?.raster)
       } else if nodes[object.id] == nil || fingerprints[object.id] != fingerprint {
         nodes[object.id]?.removeFromParentNode()
         let node:MeshNode
@@ -312,12 +333,12 @@ private struct RenderSignature: Equatable {
           node=MeshNode();clothSurfaces[object.id]=nil;clothIssues[object.id]=nil
         } else if object.isFlexibleSurface {
           do {
-            let surface=try ClothSceneSurface(object:object,project:project,frame:store?.cloth.frame(for:object,in:project),assets:assets,textureLimit:textureLimit)
+            let surface=try ClothSceneSurface(object:object,project:project,frame:store?.cloth.frame(for:object,in:project),assets:assets,textureLimit:textureLimit,sampling:sampling)
             clothSurfaces[object.id]=surface;clothIssues[object.id]=nil;node=surface.root
           } catch {clothIssues[object.id]=error.localizedDescription;clothSurfaces[object.id]=nil;node=MeshNode()}
         } else {
           clothSurfaces[object.id]=nil;clothIssues[object.id]=nil
-          node=GeometryFactory.object(object,project:project,assets:assets,textureLimit:textureLimit)
+          node=GeometryFactory.object(geometryObject,project:geometryProject,assets:assets,textureLimit:textureLimit,sourceSampling:sampling,solidSurface:solidSurface,solidRevision:solidRevision,deferSolidConstruction:deferSolid)
         }
         geometryBuilds += 1
         node.name = "object:\(object.id.uuidString)"
@@ -325,7 +346,7 @@ private struct RenderSignature: Equatable {
         geometryBounds[object.id] = clothSurfaces[object.id]?.geometricBounds ?? physicalBounds(of:node)
         objectRoot.addChildNode(node)
         fingerprints[object.id] = fingerprint
-        updateEmbroideryStatus(object,project:project,textureLimit:textureLimit)
+        updateEmbroideryStatus(object,project:project,textureLimit:textureLimit,sampling:sampling?.raster)
         geometryChanged = true
       }
       let node = nodes[object.id]!

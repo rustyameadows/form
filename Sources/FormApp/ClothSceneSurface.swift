@@ -15,15 +15,15 @@ import FormGraphics
     let b=try! ClothBounds(positionsMm:points)
     return (MeshVector3(b.minimumMm.x/100,b.minimumMm.y/100,b.minimumMm.z/100),MeshVector3(b.maximumMm.x/100,b.maximumMm.y/100,b.maximumMm.z/100))
   }
-  init(object:ProductObject,project:Project,frame:ClothFrame? = nil,assets:URL,textureLimit:Int = 2048)throws {
+  init(object:ProductObject,project:Project,frame:ClothFrame? = nil,assets:URL,textureLimit:Int = 2048,sampling:SourceTextureSamplingPlan?=nil)throws {
     let assembly=try AssemblyProducts.product(for:object,in:project)
     guard let study=object.cloth ?? assembly?.study else {throw FormError.invalid("This object has no cloth study.")}
     colliders=study.colliders
     let initial=try frame ?? ClothSolver(mesh:study.mesh,settings:study.settings,colliders:study.colliders,preparation:study.preparation).frame
     if let assembly,let source=object.patternAssembly.flatMap({id in project.objects.first(where:{$0.id==id.sourceObjectID})?.artwork}) {
-      let materials=try Dictionary(uniqueKeysWithValues:assembly.panels.map {($0.panelIndex,try AssemblyMaterialRenderer.material(panel:$0,source:source,project:project,assets:assets,fontRevision:GeometryFactory.fontRevision,textureLimit:textureLimit))})
+      let materials=try Dictionary(uniqueKeysWithValues:assembly.panels.map {($0.panelIndex,try AssemblyMaterialRenderer.material(panel:$0,source:source,project:project,assets:assets,fontRevision:GeometryFactory.fontRevision,textureLimit:textureLimit,sampling:sampling?.surfaces[SourceTextureSamplingPlan.clothPanel($0.panelIndex)]))})
       surface=try ClothSurface(mesh:study.mesh,frame:initial,panelMaterials:materials,fallbackMaterial:GeometryFactory.material(object,project:project))
-    } else {surface=try ClothSurface(mesh:study.mesh,frame:initial,material:Self.material(object:object,project:project,assets:assets,textureLimit:textureLimit))}
+    } else {surface=try ClothSurface(mesh:study.mesh,frame:initial,material:Self.material(object:object,project:project,assets:assets,textureLimit:textureLimit,sampling:sampling?.raster))}
     surface.node.name="cloth.surface";surface.node.categoryBitMask=2;root.addChildNode(surface.node)
     for collider in study.colliders where collider.kind == .sphere {
       let sphere=MeshSphere(radius:collider.radiusMm/100);sphere.segmentCount=64
@@ -72,13 +72,16 @@ import FormGraphics
     return .init(projectID:project.id,objectID:object.id,revision:revision)
   }
   private static let images:NSCache<NSString,NSImage> = {let c=NSCache<NSString,NSImage>();c.countLimit=8;c.totalCostLimit=32_000_000;return c}()
-  static func material(object:ProductObject,project:Project,assets:URL,textureLimit:Int)->MeshMaterial {
+  static func material(object:ProductObject,project:Project,assets:URL,textureLimit:Int,sampling:SourceTextureRasterPlan?=nil)->MeshMaterial {
     let material=GeometryFactory.material(object,project:project),width=object.artworkSize.x,height=object.artworkSize.y
     let pattern=try? project.resolvedFabricPattern(materialID:object.materialID),art=project.surfaceArtwork(object)
     guard pattern != nil || art != nil else {return material}
-    let limit=min(2048,max(128,textureLimit)),key="\(sourceIdentity(object:object,project:project).revision):\(assets.path):\(limit)" as NSString
+    let raster=try? sampling?.rasterSize(width:width,height:height)
+    let sampleKey=sampling.map{"\($0.maximumEdge):\($0.maximumPixels)"} ?? "preview"
+    let limit=min(2048,max(128,textureLimit)),key="\(sampleKey):\(sourceIdentity(object:object,project:project).revision):\(assets.path):\(limit)" as NSString
     if let image=images.object(forKey:key) {material.diffuse.contents=image;return material}
-    let density=Double(limit)/max(width,height),pixels=NSSize(width:max(1,ceil(width*density)),height:max(1,ceil(height*density)))
+    let density=raster.map{min(Double($0.width)/width,Double($0.height)/height)} ?? Double(limit)/max(width,height)
+    let pixels=raster.map{NSSize(width:$0.width,height:$0.height)} ?? NSSize(width:max(1,ceil(width*density)),height:max(1,ceil(height*density)))
     guard let bitmap=NSBitmapImageRep(bitmapDataPlanes:nil,pixelsWide:Int(pixels.width),pixelsHigh:Int(pixels.height),bitsPerSample:8,samplesPerPixel:4,hasAlpha:true,isPlanar:false,colorSpaceName:.deviceRGB,bytesPerRow:0,bitsPerPixel:0),let context=NSGraphicsContext(bitmapImageRep:bitmap) else {return material}
     bitmap.size=pixels
     NSGraphicsContext.saveGraphicsState();NSGraphicsContext.current=context

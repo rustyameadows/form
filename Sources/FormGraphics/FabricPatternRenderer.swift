@@ -32,15 +32,17 @@ import FormCore
     }
     context.restoreGState()
   }
-  public static func texture(_ design: ResolvedFabricPattern, assets: URL, limit: Int = 1536, fontRevision: Int = 0) -> NSImage {
+  public static func texture(_ design: ResolvedFabricPattern, assets: URL, limit: Int = 1536, fontRevision: Int = 0, sampling: SourceTextureRasterPlan? = nil) -> NSImage {
     let edge = min(4096, max(64, limit)), size = design.supertileSize
     let definition = TextureDefinition(artwork: design.artwork.renderDefinition, sourceSize: design.sourceSize,
       repeatMode: design.pattern.repeatMode, scale: design.pattern.scale, spacing: design.pattern.spacing, baseColor: design.baseColor)
     var keyData = (try? JSONEncoder.form.encode(definition)) ?? Data()
-    keyData.append(Data("\(assets.path)|\(edge)|\(fontRevision)".utf8))
+    keyData.append(Data("\(assets.path)|\(edge)|\(fontRevision)".utf8));if let sampling {keyData.append((try? JSONEncoder.form.encode(sampling)) ?? Data())}
     let key = SHA256.hash(data: keyData).map { String(format: "%02x", $0) }.joined() as NSString
     if let cached = textures.object(forKey: key) { return cached }
-    let density = min(20, Double(edge) / max(size.x, size.y))
+    let requested = try? sampling?.rasterSize(width:size.x,height:size.y)
+    let density = requested.map{min(Double($0.width)/size.x,Double($0.height)/size.y).nextDown}
+      ?? min(20, Double(edge) / max(size.x, size.y))
     let image = bitmap(width: size.x, height: size.y, density: density) {
       drawSupertile(design, assets: assets, effectScale: density)
     }
@@ -50,9 +52,9 @@ import FormCore
   }
   /// Raster previews reuse one supertile; repeat count does not multiply source shaping/geometry work.
   public static func drawPreview(_ design: ResolvedFabricPattern, assets: URL, width: Double, height: Double,
-    textureLimit: Int = 1536, fontRevision: Int = 0) {
+    textureLimit: Int = 1536, fontRevision: Int = 0, sampling: SourceTextureRasterPlan? = nil) {
     guard let context = NSGraphicsContext.current?.cgContext else { return }
-    let image = texture(design, assets: assets, limit: textureLimit, fontRevision: fontRevision)
+    let image = texture(design, assets: assets, limit: textureLimit, fontRevision: fontRevision, sampling: sampling)
     guard let cg = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else { return }
     let size = design.supertileSize
     context.saveGState(); context.clip(to: .init(x: 0, y: 0, width: width, height: height))

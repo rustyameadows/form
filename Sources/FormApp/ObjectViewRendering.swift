@@ -17,7 +17,8 @@ import simd
       throw FormError.invalid("Choose finite view angles, a positive frame, and 64–4096 output pixels.")
     }
     try Task.checkCancellation()
-    let values = try renderables(object: object, project: project, assets: assets)
+    let solids=try await SolidRecipeGeometry.prepareFullSources(project:project,objectIDs:[object.id])
+    let values = try renderables(object: object, project: project, assets: assets,solidSurface:solids[object.id])
     let width: Int, height: Int
     if frameSize.width >= frameSize.height {
       width = pixels; height = max(1, Int((Double(pixels) * Double(frameSize.height / frameSize.width)).rounded()))
@@ -41,7 +42,7 @@ import simd
     return png
   }
 
-  static func renderables(object: ProductObject, project: Project, assets: URL) throws -> [SceneRenderablePayload] {
+  static func renderables(object: ProductObject, project: Project, assets: URL,solidSurface:SolidSurface?=nil) throws -> [SceneRenderablePayload] {
     if let reference = object.meshAsset {
       let document = try ModelAssetCoordinator.readAsset(reference, assets: assets)
       let scene = try MeshAssetSceneAdapter.prepare(document: document, reference: reference)
@@ -65,8 +66,14 @@ import simd
       return try CADSurfaceAppearance.apply(prepared, object: local, project: project,
         assets: assets, materials: project.materials + FormCore.Material.presets)
     }
+    let prepared:SolidSurface?
+    if let definition=project.recipe(object.recipeID)?.solid {
+      prepared=try solidSurface ?? SolidRecipeGeometry.cachedSurface(definition,parameters:object.parameters)
+      guard prepared != nil else{throw FormError.invalid("The full-detail solid view is still preparing.")}
+    }else{prepared=nil}
+    guard prepared?.isEditingPreview != true else{throw FormError.invalid("Rendered object views require the full-detail solid source.")}
     let scene = MeshScene()
-    scene.rootNode.addChildNode(GeometryFactory.object(object, project: project, assets: assets))
+    scene.rootNode.addChildNode(GeometryFactory.object(object, project: project, assets: assets,solidSurface:prepared,solidRevision:prepared.map{_ in "full-object-view"}))
     return GeometryPayloadAdapter().renderables(scene: scene)
   }
 

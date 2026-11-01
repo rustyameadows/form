@@ -15,7 +15,7 @@ enum ObjectViewExportGuard {
         art = exported.artwork
       }
       if art.renderDefinition.elements.contains(where: {
-        $0.kind == "image" && $0.objectView?.linked == true && $0.objectView?.renderPending == true
+        $0.objectView?.linked == true && $0.objectView?.renderPending == true
       }) {
         throw FormError.invalid("A linked object view is still updating. Wait for its render to finish or freeze it before exporting.")
       }

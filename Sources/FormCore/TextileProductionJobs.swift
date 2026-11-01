@@ -88,6 +88,9 @@ public struct ProductionJobRevision:Codable,Equatable,Sendable {
   public var assumptions:ProductionAssumptions
   public var sourceDigest:String
   public var programDigest:String
+  /// Self-contained ordinary artwork captured with this immutable revision.
+  /// Nil on historical revisions, whose saved source remains readable.
+  public var sourceArtworkSVG:String?=nil
   public var threadSequence:[Int]
   public var usage:[ThreadNeedleUsage]
   public var compatibility:EmbroideryCompatibility
@@ -101,6 +104,9 @@ public struct ProductionJobRevision:Codable,Equatable,Sendable {
       let design=object.textile?.embroidery,usage.count<=32,Set(usage.map(\.threadIndex)).count==usage.count,
       !threadSequence.isEmpty,threadSequence.count<=128,threadSequence.allSatisfy({design.threads.indices.contains($0)}),
       usage.allSatisfy({design.threads.indices.contains($0.threadIndex) && $0.stitches>0 && $0.stitches<=100000 && [$0.needleMeters,$0.underlayMeters,$0.tieMeters].allSatisfy {$0.isFinite && (0...10000).contains($0)}}) else {throw FormError.invalid("Invalid immutable production revision or thread schedule.")}
+    if let sourceArtworkSVG {
+      guard !sourceArtworkSVG.isEmpty,sourceArtworkSVG.utf8.count<=32_000_000,sourceArtworkSVG.hasPrefix("<?xml"),sourceArtworkSVG.contains("<svg ") else {throw FormError.invalid("The archived ordinary artwork must be a bounded self-contained SVG.")}
+    }
     try design.validate();try assumptions.validate();try equipment?.validate()
     guard compatibility == .check(design:design,equipment:equipment,outputs:outputs) else {throw FormError.invalid("Production equipment assessment does not match its saved declarations.")}
   }

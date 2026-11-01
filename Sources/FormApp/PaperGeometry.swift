@@ -63,7 +63,7 @@ import simd
     if let color=object.color {profile.color=color}
     return .init(profile:profile,color:object.color ?? ply?.color ?? project.material(object.materialID).color)
   }
-  static func make(_ object:ProductObject,project:Project,assets:URL,limit:Int,foldPercent:Double?=nil,selectedPanelID:String?=nil)throws->MeshNode {
+  static func make(_ object:ProductObject,project:Project,assets:URL,limit:Int,foldPercent:Double?=nil,selectedPanelID:String?=nil,sampling:SourceTextureSamplingPlan?=nil)throws->MeshNode {
     let definition=try PaperConstruction.definition(for:object),net=try definition.net()
     let outside=resolvedArtwork(object,project:project,inside:false),inside=resolvedArtwork(object,project:project,inside:true)
     let root=MeshNode();root.name=constructionName
@@ -79,18 +79,31 @@ import simd
     let minimum=min(16_384,pool/max(1,net.panels.count*2)),remaining=max(0,pool-minimum*net.panels.count*2)
     for panel in net.panels {
       let rect=panel.bounds,share=max(1,minimum+Int(Double(remaining)*rect.width*rect.height/max(area,1)/2))
+      func allocation(inside:Bool)->SourceTextureRasterPlan? {
+        guard let sampling else{return nil}
+        return sampling.surfaces[SourceTextureSamplingPlan.paperFace(panel.id,inside:inside)]
+          ?? .init(maximumEdge:sampling.raster.maximumEdge,
+            maximumPixels:max(1,sampling.raster.maximumPixels/max(1,net.panels.count*2)))
+      }
+      let outsideSampling=allocation(inside:false),insideSampling=allocation(inside:true)
       let before=PaperSurfaceRasterizer.builds
-      let front=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:frontProfile,color:frontColor,grain:stock.grain,artwork:outside,finishes:(definition.finishes ?? []).filter{$0.side == .outside},assets:assets,maximumEdge:edge,pixelBudget:share)
-      let back=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:backProfile,color:backColor,grain:stock.grain,artwork:inside,finishes:(definition.finishes ?? []).filter{$0.side == .inside},assets:assets,maximumEdge:edge,pixelBudget:share)
+      let front=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:frontProfile,color:frontColor,grain:stock.grain,artwork:outside,finishes:(definition.finishes ?? []).filter{$0.side == .outside},assets:assets,maximumEdge:outsideSampling?.maximumEdge ?? edge,pixelBudget:outsideSampling?.maximumPixels ?? share)
+      let back=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:backProfile,color:backColor,grain:stock.grain,artwork:inside,finishes:(definition.finishes ?? []).filter{$0.side == .inside},assets:assets,maximumEdge:insideSampling?.maximumEdge ?? edge,pixelBudget:insideSampling?.maximumPixels ?? share)
       textureBuilds+=PaperSurfaceRasterizer.builds-before
       var materials=[surfaceMaterial("Paper / outside",maps:front,netSize:net.size,opacity:frontProfile.opacity),surfaceMaterial("Paper / inside",maps:back,netSize:net.size,opacity:backProfile.opacity)]
-      let mesh:MeshGeometry
+      var mesh:MeshGeometry
       if plies.isEmpty {
         materials.append(edgeMaterial("Paper / cut fiber edge",color:object.color ?? defaultProfile.color ?? legacyColor,roughness:defaultProfile.roughness))
         mesh=try panelMesh(panel,netSize:net.size,thicknessMM:stock.resolvedThicknessMM)
       } else {
         materials+=plies.map{edgeMaterial("Paper / ply / "+$0.name,color:$0.color,roughness:$0.profile?.roughness ?? defaultProfile.roughness)}
         mesh=try bondedPanelMesh(panel,netSize:net.size,plies:plies)
+      }
+      if sampling?.isFinalCapture == true {
+        let budget=min(PaperReliefGeometry.maximumTrianglesPerFace,
+          max(128,96_000/max(1,net.panels.count*2)))
+        mesh=try PaperReliefGeometry.make(base:mesh,front:front,back:back,panel:panel,
+          thicknessMM:stock.resolvedThicknessMM,triangleBudget:budget)
       }
       mesh.materials=materials
       let node=MeshNode(geometry:mesh);node.name=panelPrefix+panel.id;node.categoryBitMask=2

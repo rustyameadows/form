@@ -6,7 +6,7 @@ import FormGeometry
 @MainActor enum EmbroiderySceneSurface {
   static let containerName="Textile decoration"
   static let faceName="Textile face surface"
-  static func update(_ root:MeshNode,object:ProductObject,project:Project,assets:URL,textureLimit:Int) {
+  static func update(_ root:MeshNode,object:ProductObject,project:Project,assets:URL,textureLimit:Int,sampling:SourceTextureRasterPlan?=nil) {
     guard let container=root.name==containerName ? root:root.childNode(withName:containerName,recursively:true) else {return}
     let existing=container.childNode(withName:faceName,recursively:false)
     let w=object["width"],h=object["depth"],thickness=object["height"]
@@ -19,7 +19,7 @@ import FormGeometry
       // decoration's settings from changing another cached instance's surface.
       node.geometry=node.geometry?.copy() as? MeshGeometry
       do {
-        let resources=try EmbroiderySurface.resources(object:object,project:project,fontRevision:GeometryFactory.fontRevision,textureLimit:textureLimit)
+        let resources=try EmbroiderySurface.resources(object:object,project:project,fontRevision:GeometryFactory.fontRevision,textureLimit:textureLimit,sampling:sampling)
         let material=MeshMaterial();material.name="Actual generated embroidery"
         material.lightingModel = .physicallyBased;material.diffuse.contents=resources.diffuse
         material.normal.contents=resources.normal;material.normal.intensity=0.65
@@ -36,9 +36,9 @@ import FormGeometry
       }
     }
   }
-  static func status(object:ProductObject,project:Project,textureLimit:Int)->(digest:String?,issue:String?) {
+  static func status(object:ProductObject,project:Project,textureLimit:Int,sampling:SourceTextureRasterPlan?=nil)->(digest:String?,issue:String?) {
     guard object.textile?.embroidery != nil else {return (nil,nil)}
-    do {return (try EmbroiderySurface.resources(object:object,project:project,fontRevision:GeometryFactory.fontRevision,textureLimit:textureLimit).program.sourceDigest,nil)}
+    do {return (try EmbroiderySurface.resources(object:object,project:project,fontRevision:GeometryFactory.fontRevision,textureLimit:textureLimit,sampling:sampling).program.sourceDigest,nil)}
     catch {return (nil,error.localizedDescription)}
   }
 }

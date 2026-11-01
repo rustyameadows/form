@@ -129,6 +129,7 @@ enum TableTool: String, CaseIterable {
   var scene: TableSceneController?
   lazy var printing = PrintCoordinator(store: self)
   lazy var modelAssets=ModelAssetCoordinator(store:self)
+  lazy var solids=SolidModelCoordinator(store:self)
   lazy var cad=CADModelCoordinator(store:self)
   let constructionValidation=ConstructionValidationCoordinator()
   @Published var showingDocumentFonts=false
@@ -223,6 +224,7 @@ enum TableTool: String, CaseIterable {
       }
     }
     engine.onProjectWillChange = { [weak self] in
+      self?.solids.reset()
       self?.artworkSession.canvas?.closeCanvasImagePrompt()
       self?.canvasImageWorkflow?.resetForProjectChange()
       self?.canvasImageWorkflow=nil
@@ -286,6 +288,25 @@ enum TableTool: String, CaseIterable {
                   let result=try await self.artworkTransferCallAsync(args)
                   if args["command"] as? String==ArtworkTransferCommands.importName {self.changed();try self.engine.flush();self.saving=false;self.showingHome=false}
                   completion(.success(result))
+                }catch{completion(.failure(error))}
+              }
+              return
+            }
+            if name == "form_solid" {
+              Task { @MainActor [weak self] in
+                guard let self else{completion(.failure(FormError.missing("LAB is closing.")));return}
+                do{completion(.success(try await self.solidModelCallAsync(args)))}catch{completion(.failure(error))}
+              }
+              return
+            }
+            if name == "form_paper",args["command"] as? String=="preflight",let raw=args["contents_object_id"] as? String,let id=UUID(uuidString:raw),
+              let project=self.project,project.objects.contains(where:{$0.id==id && project.recipe($0.recipeID)?.solid != nil}) {
+              Task { @MainActor [weak self] in
+                guard let self else{completion(.failure(FormError.missing("LAB is closing.")));return}
+                do {
+                  let solids=try await SolidRecipeGeometry.prepareFullSources(project:project,objectIDs:[id])
+                  guard self.project==project else{throw FormError.invalid("The project changed while its contents geometry was preparing.")}
+                  completion(.success(try PaperNativeFit.preflight(store:self,args:args,solidSurface:solids[id])))
                 }catch{completion(.failure(error))}
               }
               return
@@ -460,6 +481,7 @@ enum TableTool: String, CaseIterable {
     changed()
   }
   func changed(save: Bool = true) {
+    solids.synchronize(project)
     linkedObjectViews.synchronize(project)
     constructionValidation.projectDidChange(project)
     let ids = Set(project?.objects.map(\.id) ?? [])
@@ -641,6 +663,7 @@ enum TableTool: String, CaseIterable {
     perform("form_delete_objects", ["object_ids": selected.map { $0.id.uuidString }])
   }
   func undo() {
+    solids.cancelDrafts()
     if artworkSession.canvas?.applyCanvasImageTextHistory(redo:false) == true {return}
     if applyStudioImageTextHistory(in:NSApp.keyWindow) {return}
     if environment == .studio,!studioShowingShots,studioComposition.undoDraft(){toast("Undone scene edit");return}
@@ -654,6 +677,7 @@ enum TableTool: String, CaseIterable {
     toast("Undone")
   }
   func redo() {
+    solids.cancelDrafts()
     if artworkSession.canvas?.applyCanvasImageTextHistory(redo:true) == true {return}
     if applyStudioImageTextHistory(in:NSApp.keyWindow,redo:true) {return}
     if environment == .studio,!studioShowingShots,studioComposition.redoDraft(){toast("Redone scene edit");return}

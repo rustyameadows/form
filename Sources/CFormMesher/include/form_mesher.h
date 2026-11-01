@@ -21,6 +21,10 @@ typedef struct FMOrganicShape {
 } FMOrganicShape;
 typedef struct FMOrganicMesh { double *xyz; uint32_t *indices; size_t vertex_count,index_count; } FMOrganicMesh;
 int fm_organic_mesh(const FMOrganicShape *shapes,size_t count,double spacing,int trim_floor,double floor_y,int fill_voids,FMOrganicMesh *result);
+/* The caller owns a thread-safe cooperative probe until this call returns.
+   Cancellation returns -4 and never publishes a partial mesh. */
+typedef int (*FMOrganicCancellationProbe)(void *context);
+int fm_organic_mesh_cancellable(const FMOrganicShape *shapes,size_t count,double spacing,int trim_floor,double floor_y,int fill_voids,FMOrganicCancellationProbe probe,void *context,FMOrganicMesh *result);
 void fm_free_organic_mesh(FMOrganicMesh *result);
 #ifdef __cplusplus
 }

@@ -6,7 +6,7 @@ import FormCADModeling
 
 @MainActor enum PrintMeshBuilder {
   static func mesh(
-    object: ProductObject, project: Project, assets: URL, configuration: PrintConfiguration
+    object: ProductObject, project: Project, assets: URL, configuration: PrintConfiguration,solidSurface:SolidSurface?=nil
   ) throws -> PrintMesh {
     guard !PaperConstruction.isPaper(object) else{throw FormError.invalid("This is a folded paper construction. Use Paper Fabricate for its flat print/cut/score files; it is not an FDM print solid.")}
     if object.meshAsset != nil || object.cadRepresentation != nil {
@@ -16,7 +16,8 @@ import FormCADModeling
     guard !TextileDesign.recipeIDs.contains(object.recipeID) else {
       throw FormError.invalid("This is a textile presentation product. Export its linked artwork; it is not an FDM-printable mesh.")
     }
-    let root = GeometryFactory.object(object, project: project, assets: assets)
+    guard solidSurface?.isEditingPreview != true else{throw FormError.invalid("Printing requires the full-detail solid source.")}
+    let root = GeometryFactory.object(object, project: project, assets: assets,solidSurface:solidSurface,solidRevision:solidSurface.map{_ in "full-print"})
     if object.recipeID == "deskClock" {
       guard DeskClockDesign.components.contains(configuration.component) else {throw FormError.invalid("Choose one desk-clock component; the assembled clock is not one fused print.")}
       let construction=root.childNodes.first

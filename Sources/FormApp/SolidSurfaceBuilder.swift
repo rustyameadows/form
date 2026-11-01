@@ -7,6 +7,7 @@ import simd
 /// Buffer preparation deliberately stays with construction, away from the main
 /// actor; scene objects and materials are created only by the display adapter.
 struct SolidSurface: Sendable {
+  let storageID=UUID()
   struct DisplayChunk: Sendable {
     /// Display coordinates use the historical 100 mm construction unit.
     let positions: [Double]
@@ -31,8 +32,9 @@ struct SolidSurface: Sendable {
 /// task for interactive use. The authoritative construction is always selected
 /// unless the caller explicitly requests a project-authored editing preview.
 enum SolidSurfaceBuilder {
-  static func build(_ definition: ParametricSolid, parameters: [String: Double], useEditingPreview: Bool = false) throws -> SolidSurface {
+  static func build(_ definition: ParametricSolid, parameters: [String: Double], useEditingPreview: Bool = false, cancellation: OrganicMeshCancellation? = nil) throws -> SolidSurface {
     try Task.checkCancellation()
+    if cancellation?.isCancelled==true {throw CancellationError()}
     var source = definition
     let isPreview = useEditingPreview && definition.previewNodes != nil
     if isPreview { source.nodes = definition.previewNodes! }
@@ -53,7 +55,7 @@ enum SolidSurfaceBuilder {
     var positions: [SIMD3<Double>] = [], indices: [UInt32] = [], normals: [SIMD3<Double>] = []
     if !construction.primitives.isEmpty {
       try Task.checkCancellation()
-      let sampled = try solid.mesh(spacing: construction.spacing, floorY: construction.floorY, fillVoids: construction.fillVoids)
+      let sampled = try solid.mesh(spacing: construction.spacing, floorY: construction.floorY, fillVoids: construction.fillVoids,cancellation:cancellation)
       try Task.checkCancellation()
       positions = sampled.positions
       indices = sampled.indices

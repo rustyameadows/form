@@ -1,8 +1,22 @@
 # Modeling branch handoff
 
-October 28, 2026. Branch: `codex/project-solid-modeling`. PR base: `main`.
+## Current integration checkpoint — November 1, 2026
 
-Draft [PR #7](https://github.com/rustyameadows/form/pull/7) contains the committed application work. All 1,188 tests pass. LAB 0.5.4 (build 9) packages successfully and passes deep/strict signature verification. The verified bundle is at `.local/solid-upgrade/LAB.app`; it has not been launched or installed over the running app. The single ordinary app remains open at the user's completed local slice preview.
+Branch: `codex/solid-render-quality`, based on main `a3c79a5`. This is a review branch; do not merge it as part of verification. The original solid-modeling work from [PR #7](https://github.com/rustyameadows/form/pull/7) is already integrated into that main baseline.
+
+The native solid parameter loop is now implemented. Held sliders use transient values and authored editing geometry on bounded background workers; recipes without an editing source evaluate their full geometry off the UI actor. Only a completed valid full result publishes a native edit through the existing parameter command. Supersession and project ownership guards reject late results, Escape retains the accepted source, and successive released controls preserve accumulated intent with separate Undo publication. The Table keeps its camera when a surface completes.
+
+Cold sources are prepared before ordinary Studio captures, print preparation, isolated object views and native `form_solid` inspection/STL export. Final consumers receive full surfaces directly and never substitute the editing preview cache. Linked vector views retain a pending last-valid path until full completion; exports reject pending linked views. Full-cache reuse and actual shared-buffer accounting cover repeated instances and Undo/Redo. [The solid-source documentation](parametric-solids.md) records the implementation and resource limits.
+
+The integrated gate passes 89 test methods with zero failures; the compatibility gate passes 43 with zero failures. Their 14 coordinator methods overlap, giving 118 unique passing methods. All 14 coordinator tests, three surface-worker tests and three native cancellation tests pass. The release build is signed and passes deep/strict signature verification; the ordinary LAB app is running as the sole instance.
+
+Native MCP validation exercised a sampled union at 0.45 mm spacing and an analytic source with 96 path samples and 64 profile sides. The rapid-control/status exercise recorded 14 parameter updates and 15 status requests; its helper roundtrip summary was median 24.07 ms and maximum 55.41 ms. Full-source inspection/revision evidence, STL exports, Undo/Redo, reopening and camera preservation were checked, and three actual 2000 × 1600 native renders were reviewed. Native accessibility slider actions changed Height 146 → 155 and Width 90 → 96; Command-Z restored Width 90 and then Height 146 as separate Undo steps. See [the consolidated validation record](quality-consolidation-validation.md).
+
+These measurements establish the recorded command/control, source and export behavior. They do not measure a physically held mouse drag, hardware-event-to-display latency or frame rate. The private reference-led visual goal below remains incomplete.
+
+## Historical baseline — October 28, 2026
+
+Branch: `codex/project-solid-modeling`, PR base: `main`. That checkpoint reported 1,188 passing tests and packaged LAB 0.5.4 (build 9), including deep/strict signature verification. Its bundle was `.local/solid-upgrade/LAB.app`; it had not been launched or installed over the ordinary running app. These are historical results, not verification of the current branch.
 
 ## Committed application work
 
@@ -12,11 +26,11 @@ Draft [PR #7](https://github.com/rustyameadows/form/pull/7) contains the committ
 - Optional validated `previewNodes` source (schema 62 after integration), cancellation-aware CPU surface builder, prepared display buffers and separate preview/full cache identities.
 - Permanent generic-modeling and actual visual-review requirements in `AGENTS.md`.
 
-## Important incomplete integration
+## Remaining interaction acceptance
 
-**Native parameter dragging is not fixed.** The editing-preview source and worker are foundations. The native slider path still commits synchronously through `ParameterControl` → `StudioStore.update` → `form_update_object`, and Table still requests geometry synchronously. No native Fast/Detail switch, latest-result publication or drag draft/coalescing controller has been integrated. Do not describe these foundations or expression microbenchmarks as smooth UI acceptance.
+The current checkpoint replaces the historical synchronous slider/Table path with the integrated lifecycle described above. The passing regressions, native MCP sequence, native accessibility slider actions, reviewed renders and full-detail exports establish their specific source, ownership and publication behavior. Physically held pointer-drag responsiveness, hardware-event-to-visible-result latency and frame rate remain unmeasured. Measure those on representative sampled and analytic sources before claiming smooth configurator acceptance. Preserve existing project data, camera controls and the user's parameter choices.
 
-Next implementation: lightweight project-authored preview geometry; immediate native draft values; background validation/build; cancellation and stale-result rejection; one Undo per gesture; explicit detail selection; full-detail-only production/export. Measure real mouse-drag latency/frame behavior and record the result. Preserve camera controls and user parameters.
+The editing source is selected automatically during a native gesture. There is no new mandatory authoring format, product registration, MCP command or manual Fast/Detail switch.
 
 ## Private reference-led model study
 

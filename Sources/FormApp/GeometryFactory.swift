@@ -94,9 +94,10 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
       at: v(x / 100, y / 100, z / 100))
   }
   static func object(
-    _ sourceObject: ProductObject, project: Project, assets: URL, textureLimit: Int = 2048
+    _ sourceObject: ProductObject, project: Project, assets: URL, textureLimit: Int = 2048,
+    sourceSampling:SourceTextureSamplingPlan?=nil,solidSurface:SolidSurface?=nil,solidRevision:String?=nil,deferSolidConstruction:Bool=false
   ) -> MeshNode {
-    if sourceObject.isFlexibleSurface,let cloth=try? ClothSceneSurface(object:sourceObject,project:project,assets:assets,textureLimit:textureLimit) {return cloth.root}
+    if sourceObject.isFlexibleSurface,let cloth=try? ClothSceneSurface(object:sourceObject,project:project,assets:assets,textureLimit:textureLimit,sampling:sourceSampling) {return cloth.root}
     var object = sourceObject
     object.artwork = project.surfaceArtwork(sourceObject)
     object.artworkSourceID = nil
@@ -137,6 +138,9 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     if let materials=project.merchandiseMaterialDependencies(object){signature.append((try? JSONEncoder.form.encode(materials)) ?? Data())}
     if let surface=project.conformedMerchandiseSignature(object){signature.append((try? JSONEncoder.form.encode(surface)) ?? Data())}
     signature.append(Data(assets.path.utf8))
+    if let sourceSampling {signature.append((try? JSONEncoder.form.encode(sourceSampling)) ?? Data())}
+    if let solidRevision {signature.append(Data(solidRevision.utf8))}
+    signature.append(Data("defer-solid:\(deferSolidConstruction)".utf8))
     signature.append(Data("texture-limit:\(textureLimit)".utf8))
     let cacheKey =
       SHA256.hash(data: signature).map { String(format: "%02x", $0) }.joined() as NSString
@@ -151,7 +155,7 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     let mat = material(object, project: project)
     switch object.recipeID {
     case _ where PaperConstruction.isPaper(object):
-      do{root.addChildNode(try PaperGeometry.make(object,project:project,assets:assets,limit:textureLimit))}
+      do{root.addChildNode(try PaperGeometry.make(object,project:project,assets:assets,limit:textureLimit,sampling:sourceSampling))}
       catch{root.name="paper.invalid: "+error.localizedDescription}
     case "crewTee":root.addChildNode(MerchandiseGeometry.tee(object,project:project,assets:assets,limit:textureLimit))
     case "pulloverHoodie", "cuffedBeanie", "hemmedTextile":
@@ -162,7 +166,7 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     case "bomberJacket":
       root.addChildNode(TextileGeometry.bomber(object, project: project, assets: assets, textureLimit: textureLimit))
     case "textilePatch", "textileLabel":
-      root.addChildNode(TextileGeometry.decoration(object, project: project, assets: assets, textureLimit: textureLimit))
+      root.addChildNode(TextileGeometry.decoration(object, project: project, assets: assets, textureLimit: textureLimit,sampling:sourceSampling?.raster))
     case "deskClock":root.addChildNode(DeskClockGeometry.make(object,project:project,assets:assets,limit:textureLimit))
     case "clock":
       let d = object["diameter"]
@@ -359,7 +363,10 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     default:
       if let recipe = project.recipe(object.recipeID) {
         if let definition=recipe.solid {
-          do {root.addChildNode(try SolidRecipeGeometry.make(object,definition:definition,project:project))}
+          do {
+            if let solidSurface {root.addChildNode(SolidRecipeGeometry.make(object,from:solidSurface,project:project))}
+            else if !deferSolidConstruction {root.addChildNode(try SolidRecipeGeometry.make(object,definition:definition,project:project))}
+          }
           catch {root.name="solid.invalid: "+error.localizedDescription}
         }
         for part in recipe.parts {
@@ -491,7 +498,7 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     if let image = artworkImages.object(forKey: key) { return image }
     let image = ArtworkDrawing.image(
       art, width: width, height: depth, assets: assets,
-      pixelsPerMM: min(max(5, 1024 / max(width, depth)), Double(textureLimit) / max(width, depth)))
+      pixelsPerMM: textureLimit>2048 ? Double(textureLimit)/max(width,depth):min(max(5, 1024 / max(width, depth)), Double(textureLimit) / max(width, depth)))
     let pixels = image.representations.map { $0.pixelsWide * $0.pixelsHigh }.max() ?? 1
     artworkImages.setObject(image, forKey: key, cost: pixels * 8)
     return image

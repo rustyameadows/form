@@ -12,6 +12,7 @@ import subprocess
 import time
 import uuid
 import zipfile
+import xml.etree.ElementTree as ET
 from smoke_mcp import Client, OUTPUT, ROOT
 from smoke_embroidery import element
 from verify_embroidery_dst import verify
@@ -35,6 +36,15 @@ def check_packet(folder):
     assert digest((folder/"Revision.json").read_bytes()) == manifest["revision_digest"]
     assert digest((folder/"Program.json").read_bytes()) == manifest["program_digest"]
     assert revision["sourceDigest"] == program["sourceDigest"] == manifest["source_digest"]
+    ordinary=(folder/"Artwork.svg").read_text()
+    assert ordinary == revision["sourceArtworkSVG"]
+    assert manifest["source_artwork_origin"] == "captured_in_revision"
+    svg=ET.fromstring(ordinary)
+    assert float(svg.attrib["width"].removesuffix("mm")) == revision["object"]["parameters"]["width"]
+    assert float(svg.attrib["height"].removesuffix("mm")) == revision["object"]["parameters"]["depth"]
+    for element in revision["object"]["artwork"]["elements"]:
+        assert "layer-"+element["id"] in ordinary and element["color"] in ordinary
+    assert (folder/"Artwork.svg").read_bytes() != (folder/"Needle.svg").read_bytes()
     independent=verify(folder/"Needle.dst",folder/"Program.json",folder/"Needle.threads.json")
     return manifest,revision,independent
 
@@ -137,6 +147,7 @@ def main():
         zip_manifest,_,zip_reader=check_packet(unpacked/"Production")
         assert zip_manifest["revision_digest"] == job["revisionDigest"]
         assert (unpacked/"Production"/"Needle.dst").read_bytes() == (folder/"Needle.dst").read_bytes()
+        assert (unpacked/"Production"/"Artwork.svg").read_bytes() == (folder/"Artwork.svg").read_bytes()
         report=dict(project_id=p["id"],job_id=job["id"],source_digest=job["sourceDigest"],revision_digest=job["revisionDigest"],physical_hoop_page_mm=[132,132],independent_reader=independent,portable_zip_reader=zip_reader,packet=str(archive),studio_stock_deducted=False,machine_contacted=False)
         path=OUTPUT/"production-jobs-report.json";path.write_text(json.dumps(report,indent=2))
         print(json.dumps(dict(passed=True,report=str(path),**independent),indent=2))

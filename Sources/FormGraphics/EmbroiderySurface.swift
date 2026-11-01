@@ -26,28 +26,29 @@ import FormCore
   public private(set) static var programBuilds=0
   public private(set) static var textureBuilds=0
   public static func invalidate() {cache.removeAllObjects()}
-  public static func resources(object:ProductObject,project:Project,fontRevision:Int = 0,textureLimit:Int = 1024)throws -> Resources {
+  public static func resources(object:ProductObject,project:Project,fontRevision:Int = 0,textureLimit:Int = 1024,sampling:SourceTextureRasterPlan?=nil)throws -> Resources {
     guard let design=object.textile?.embroidery,let art=project.surfaceArtwork(object) else {throw FormError.invalid("A physical embroidery surface needs saved digitizing settings and artwork.")}
     let size=object.artworkSize,edge=min(maximumTextureEdge,max(32,textureLimit))
     var signature=try JSONEncoder.form.encode(art.embroideryRenderDefinition)
-    signature.append(try JSONEncoder.form.encode(design))
+    signature.append(try JSONEncoder.form.encode(design));if let sampling {signature.append(try JSONEncoder.form.encode(sampling))}
     signature.append(Data("\(size.x),\(size.y),\(object["corner"]),\(fontRevision),\(edge)".utf8))
     let key=SHA256.hash(data:signature).map {String(format:"%02x",$0)}.joined() as NSString
     if let entry=cache.object(forKey:key) {return try entry.result.get()}
     do {
       programBuilds+=1
       let program=try EmbroideryDigitizer.generate(object:object,project:project)
-      let resources=try make(program:program,width:size.x,height:size.y,limit:edge)
+      let resources=try make(program:program,width:size.x,height:size.y,limit:edge,sampling:sampling)
       let cost=resources.pixelsWide*resources.pixelsHigh*16+program.commands.count*80
       cache.setObject(Entry(.success(resources)),forKey:key,cost:cost)
       return resources
     } catch {cache.setObject(Entry(.failure(error)),forKey:key,cost:1024);throw error}
   }
-  public static func make(program:EmbroideryProgram,width:Double,height:Double,limit:Int = 1024)throws -> Resources {
+  public static func make(program:EmbroideryProgram,width:Double,height:Double,limit:Int = 1024,sampling:SourceTextureRasterPlan?=nil)throws -> Resources {
     try program.validate()
     guard width.isFinite,height.isFinite,(1...500).contains(width),(1...500).contains(height) else {throw FormError.invalid("Physical embroidery textures need a finite 1–500 mm face.")}
     let edge=min(maximumTextureEdge,max(32,limit)),scale=Double(edge)/max(width,height)
-    let w=max(1,Int((width*scale).rounded())),h=max(1,Int((height*scale).rounded()))
+    let requested=try sampling?.rasterSize(width:width,height:height)
+    let w=requested?.width ?? max(1,Int((width*scale).rounded())),h=requested?.height ?? max(1,Int((height*scale).rounded()))
     func context()->CGContext? {CGContext(data:nil,width:w,height:h,bitsPerComponent:8,bytesPerRow:w*4,space:CGColorSpace(name:CGColorSpace.sRGB)!,bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue)}
     guard let color=context(),let heightMap=context(),let heightPixels=heightMap.data else {throw FormError.invalid("Could not allocate the bounded embroidery face maps.")}
     struct Run {var path:CGPath;var thread:Int}

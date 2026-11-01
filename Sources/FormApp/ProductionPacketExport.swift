@@ -11,6 +11,14 @@ extension StudioStore {
     guard revision.object.textile?.embroidery==program.design,revision.usage==ThreadNeedleUsage.measure(program),revision.threadSequence==program.threadOrder else {throw FormError.invalid("Archived program and production specification differ.")}
     let estimate=ProductionCostEstimate.estimate(revision)
     var files:[String:Data]=["Job.json":try JSONEncoder.form.encode(job),"Revision.json":try JSONEncoder.form.encode(revision),"Estimate.json":try JSONEncoder.form.encode(estimate),"Review.pdf":try ProductionPacketPDF.data(job:job,revision:revision,program:program)]
+    if let artwork=revision.sourceArtworkSVG {files["Artwork.svg"]=Data(artwork.utf8)}
+    else {
+      // Historical revisions predate captured SVG bytes. Derive only from the
+      // archived source, never from the live object or its current artwork.
+      guard let artwork=revision.object.artwork else {throw FormError.invalid("The archived production revision has no ordinary source artwork.")}
+      let reference=try ArtworkProduction.filtered(artwork,roles:Set(ArtworkProductionRole.allCases)).artwork
+      files["Artwork.svg"]=Data(try SVGRenderer.document(reference,width:revision.object.artworkSize.x,height:revision.object.artworkSize.y,assets:repository.url(for:project.id).appendingPathComponent("Assets")).utf8)
+    }
     if revision.outputs.contains("json") {files["Program.json"]=try JSONEncoder.form.encode(program)}
     if revision.outputs.contains("svg") {files["Needle.svg"]=Data(try EmbroideryRenderer.svg(program,showJumps:false).utf8)}
     if revision.outputs.contains("dst") {
@@ -30,7 +38,7 @@ extension StudioStore {
     guard files.values.reduce(0,{$0+$1.count})<=128_000_000 else {throw FormError.invalid("This packet exceeds 128 MB. Select fewer reference outputs or split the source.")}
     let entries:[String:[String:Any]]=files.mapValues {["sha256":ProductionAssets.digest($0),"bytes":$0.count]}
     var manifest:[String:Any]=["application":"LAB","packet_version":1,"job_id":job.id.uuidString,"source_digest":job.sourceDigest,"revision_digest":job.revisionDigest,
-      "program_digest":job.programDigest,"quantity":job.quantity,"user_record_count":job.records.count,"outputs":revision.outputs,"files":entries,
+      "program_digest":job.programDigest,"source_artwork_origin":revision.sourceArtworkSVG == nil ? "derived_from_legacy_revision":"captured_in_revision","quantity":job.quantity,"user_record_count":job.records.count,"outputs":revision.outputs,"files":entries,
       "inventory_deducted":false,"machine_contacted":false,"automatically_verified_sew_out":false]
     let packetDigest=ProductionAssets.digest(try JSONSerialization.data(withJSONObject:manifest,options:.sortedKeys))
     manifest["packet_digest"]=packetDigest

@@ -152,6 +152,6 @@ extension Project {
       !object.isFlexibleSurface,!PaperConstruction.isPaper(object),object.cadModel==nil,
       object.meshAsset==nil,object.asset==nil else{return false}
     if object.recipeID=="artboard" {return true}
-    return recipes.contains{$0.id==object.recipeID && $0.parts.isEmpty}
+    return recipes.contains{$0.id==object.recipeID && $0.parts.isEmpty && $0.solid==nil}
   }
 }
