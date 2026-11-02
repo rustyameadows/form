@@ -187,7 +187,7 @@ struct PublicationControls:View {
         }.buttonStyle(.borderless).font(.system(size:10)).padding(.top,8)
       }
       .popover(isPresented:$preflightOpen) {preflight.padding(18).frame(width:360)}
-      if let document {PublicationWorkspaceInspector(session:session,controller:session.publicationWorkspace,publicationID:document.id)}
+      if let document {PublicationWorkspaceInspector(session:session,controller:session.publicationWorkspace,publicationID:document.id).id("publication-settings")}
     }
   }
   private var preflight:some View {

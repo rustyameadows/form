@@ -31,7 +31,13 @@ import FormGraphics
     return (project?.textStories ?? []).filter{$0.publicationID==document.id}
   }
   var activeStory:TextStory? {
-    session?.selectedTextStory.flatMap{value in stories.first{$0.id==value.id}} ?? stories.first
+    guard let pageID=currentPageID else{return nil}
+    let candidates=stories.filter{$0.frames.contains{$0.objectID==pageID}}
+    if let selected=session?.selectedTextStory,let story=candidates.first(where:{$0.id==selected.id}) {return story}
+    // A page tile has no text-layer selection. Its own unambiguous chapter is
+    // the useful default; a cover or a multi-story page must not pick a foreign
+    // first story simply because it comes first in the publication's array.
+    return candidates.count==1 ? candidates.first:nil
   }
   var spreads:[PublicationSpread] {document?.spreads() ?? []}
   func open(_ id:UUID?=nil) {
@@ -181,14 +187,49 @@ import FormGraphics
     }),let identifier {_=focusMaster(identifier,publicationID:documentID);return identifier}
     return nil
   }
+  private func newPageColumns(from object:ProductObject?,story:TextStory?,document:PublicationDocument)->(columns:Int,gutter:Double) {
+    let fallback=(columns:1,gutter:8.0)
+    guard let object,let artwork=object.artwork,let story else{return fallback}
+    let ids=Set(story.frames.filter{$0.objectID==object.id}.map(\.elementID))
+    let frames=artwork.elements.filter{ids.contains($0.id)}
+    guard (2...4).contains(frames.count) else{return fallback}
+    let tolerance=0.0001
+    var columns:[(x:Double,y:Double,width:Double,height:Double)]=[]
+    for frame in frames {
+      let t=artwork.worldTransform(frame)
+      guard abs(t.a-1)<tolerance,abs(t.d-1)<tolerance,abs(t.b)<tolerance,abs(t.c)<tolerance else{return fallback}
+      columns.append((t.tx,t.ty,frame.width,frame.height))
+    }
+    columns.sort{$0.x<$1.x}
+    let first=columns[0],last=columns[columns.count-1],margins=document.resolvedMargins(for:object.id)
+    let gutter=columns[1].x-first.x-first.width
+    guard gutter.isFinite,(0...100).contains(gutter),
+      abs(first.x-margins.left)<tolerance,abs(last.x+last.width-(object.artworkSize.x-margins.right))<tolerance,
+      columns.allSatisfy({abs($0.width-first.width)<tolerance && abs($0.height-first.height)<tolerance && abs($0.y-first.y)<tolerance}),
+      zip(columns,columns.dropFirst()).allSatisfy({pair in abs(pair.1.x-pair.0.x-pair.0.width-gutter)<tolerance}) else{return fallback}
+    return(columns.count,gutter)
+  }
   @discardableResult func addPage(linkStory:Bool=true)->UUID? {
     guard let document else{return nil}
     let source=(currentPageID ?? document.pages.last?.objectID).flatMap{id in project?.objects.first{$0.id==id}}
     let position=currentPageID.flatMap{id in document.pages.firstIndex{$0.objectID==id}}.map{$0+1} ?? document.pages.count
-    let story=linkStory ? activeStory?.id:nil
+    let chapter=activeStory,layout=newPageColumns(from:source,story:chapter,document:document)
+    let story=linkStory ? chapter?.id:nil
     var identifier:UUID?
     if edit("Added publication page",{project in
-      identifier=try PublicationCommands.addPage(in:&project,publicationID:document.id,width:source?.artworkSize.x ?? 148,height:source?.artworkSize.y ?? 210,storyID:story,columns:1,at:position).0
+      let added=try PublicationCommands.addPage(in:&project,publicationID:document.id,width:source?.artworkSize.x ?? 148,height:source?.artworkSize.y ?? 210,storyID:story,columns:layout.columns,gutter:layout.gutter,at:position).0
+      if let inherited=source?.artwork,let index=project.objects.firstIndex(where:{$0.id==added}),var artwork=project.objects[index].artwork {
+        // Continue the adjacent page's output/substrate intent, never its
+        // artwork, source identities, page labels or independent Canvas position.
+        artwork.background=inherited.background;artwork.backgroundOpacity=inherited.backgroundOpacity
+        artwork.backgroundSwatchID=inherited.backgroundSwatchID;artwork.outputColorProfile=inherited.outputColorProfile
+        artwork.bleed=inherited.bleed;artwork.safeInset=inherited.safeInset
+        artwork.unit=inherited.unit;artwork.language=inherited.language
+        artwork.gridSpacing=inherited.gridSpacing;artwork.showGrid=inherited.showGrid;artwork.showGuides=inherited.showGuides
+        artwork.snapEnabled=inherited.snapEnabled;artwork.nudge=inherited.nudge
+        project.objects[index].artwork=artwork
+      }
+      identifier=added
     }),let identifier {focusPage(identifier);return identifier}
     return nil
   }

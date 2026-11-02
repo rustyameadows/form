@@ -91,7 +91,12 @@ struct StudioTopBar: View {
             .foregroundStyle(store.environment == .studio ? Palette.accent : Palette.secondary)
             .background(store.environment == .studio ? Palette.accent.opacity(0.09) : .clear, in: RoundedRectangle(cornerRadius: 6))
         }.buttonStyle(.plain).help("Studio · lighting, saved shots & presentation").accessibilityLabel("Studio environment")
-        if store.environment == .form { DesignSurfaceMenu() }
+        if store.environment == .form {
+          DesignSurfaceMenu()
+          if store.project?.publications?.isEmpty == false {
+            PublicationPagesButton(controller:store.artworkSession.publicationWorkspace)
+          }
+        }
         Spacer(minLength: 8)
       }
       if store.showingHome {
@@ -411,6 +416,8 @@ struct DesignSurfaceMenu: View {
         }
       }
       Divider()
+      Button("Publication pages",systemImage:"book.pages") {store.showPublicationPages()}
+        .accessibilityIdentifier("workspace-publication-pages")
       Button { store.detachCanvas() } label: {
         Label("Open Canvas window", systemImage: "arrow.up.forward.square")
       }.accessibilityLabel("Open Canvas window")

@@ -12,11 +12,20 @@ struct PublicationNavigator:View {
   @State private var createOpen=false
   @State private var chapterOpen=false
   @State private var chapterName=""
+  @State private var pageQuery=""
+  @State private var pageQueryIssue:String?
+  private var selectedRowID:UUID? {
+    guard let page=controller.currentPageID else{return nil}
+    return controller.showsSpreads ? controller.spreads.first{$0.pages.contains{$0.objectID==page}}?.id:page
+  }
   var body:some View {
     VStack(spacing:0) {
       HStack {
-        Text("PUBLICATION").font(InspectorStyle.headingFont).tracking(1).foregroundStyle(Palette.secondary)
+        Text("PAGES").font(InspectorStyle.headingFont).tracking(1).foregroundStyle(Palette.secondary)
         Spacer()
+        WorkspaceToolbarButton("Publication settings",symbol:"slider.horizontal.3",identifier:"publication-show-settings"){
+          controller.showSettings()
+        }
         AppCloseButton("Hide publication pages"){controller.close()}
       }.padding(.horizontal,12).frame(height:FloatingPanelStyle.headerHeight)
       InspectorDivider().padding(.horizontal,12)
@@ -31,14 +40,33 @@ struct PublicationNavigator:View {
           WorkspaceToolbarButton("New publication",symbol:"plus",identifier:"publication-create-open"){createOpen=true}
         }
         if let document=controller.document {
+          let position=PublicationNavigationPosition(document:document,selectedPageID:controller.currentPageID,spreads:controller.showsSpreads)
           HStack(spacing:3) {
             WorkspaceToolbarButton("Previous spread",symbol:"chevron.left",identifier:"publication-previous"){controller.navigate(-1)}
+              .disabled(!position.canNavigate(-1))
             Spacer(minLength:0)
-            Text("\(document.pages.count) pages").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+            Text(position.title).font(InspectorStyle.labelFont).lineLimit(1).truncationMode(.middle)
+              .accessibilityLabel("Current pages").accessibilityValue(position.title).accessibilityIdentifier("publication-current-pages")
             Spacer(minLength:0)
             WorkspaceToolbarButton("Next spread",symbol:"chevron.right",identifier:"publication-next"){controller.navigate(1)}
-            WorkspaceToolbarButton("Show facing pages",symbol:"book.pages",isSelected:controller.showsSpreads,identifier:"publication-spread-view"){controller.showsSpreads.toggle();if let id=controller.currentPageID {controller.focusPage(id)}}
+              .disabled(!position.canNavigate(1))
           }
+          HStack(spacing:8) {
+            Text("\(document.pages.count) pages").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+            Spacer(minLength:0)
+            TextField("Go to page",text:$pageQuery).textFieldStyle(InspectorTextFieldStyle())
+              .frame(width:92).accessibilityLabel("Go to page label").accessibilityIdentifier("publication-go-to-page")
+              .help("Enter a printed page label, such as 18 or Front cover, then Return")
+              .onChange(of:pageQuery){_,_ in pageQueryIssue=nil}
+              .onSubmit{
+                if let page=PublicationNavigationPosition.resolve(pageQuery,in:document) {
+                  controller.focusPage(page);pageQuery="";pageQueryIssue=nil
+                }else{pageQueryIssue="No page labelled ‘\(pageQuery)’."}
+              }
+          }
+          Picker("Thumbnail layout",selection:$controller.showsSpreads){Text("Spreads").tag(true);Text("Pages").tag(false)}
+            .labelsHidden().pickerStyle(.segmented).accessibilityIdentifier("publication-thumbnail-layout")
+          if let pageQueryIssue {Text(pageQueryIssue).font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)}
           ScrollViewReader { proxy in
             ScrollView {
               LazyVStack(alignment:.leading,spacing:12) {
@@ -48,19 +76,31 @@ struct PublicationNavigator:View {
                       if let title=spread.pages.compactMap(\.chapterTitle).first {Text(title).font(.system(size:10,weight:.medium)).foregroundStyle(Palette.secondary).lineLimit(1)}
                       HStack(alignment:.top,spacing:4) {
                         if spread.left==nil && document.layout?.facingPages==true {Color.clear.frame(width:92,height:128)}
-                        ForEach(spread.pages){page in pageTile(page,document:document).id(page.objectID)}
+                        ForEach(spread.pages){page in pageTile(page,document:document)}
                       }
-                    }
+                    }.id(spread.id)
                   }
                 }else {ForEach(document.pages){page in pageTile(page,document:document).frame(maxWidth:.infinity).id(page.objectID)}}
               }.padding(.vertical,6)
-            }.onChange(of:session.objectID){_,id in if let id {withAnimation(.easeOut(duration:0.15)){proxy.scrollTo(id,anchor:.center)}}}
+            }.onChange(of:selectedRowID,initial:true){_,id in
+              guard let id else{return}
+              // A far thumbnail is not realized yet. The lazy stack knows its
+              // outer row identity; nested page IDs inside a spread cannot be
+              // used to locate that row until it has already been displayed.
+              DispatchQueue.main.async {
+                guard controller.isVisible,selectedRowID==id else{return}
+                withAnimation(.easeOut(duration:0.15)){proxy.scrollTo(id,anchor:.center)}
+              }
+            }
           }.frame(maxHeight:.infinity)
           InspectorDivider()
           HStack(spacing:3) {
             WorkspaceToolbarButton("Add page after selection",symbol:"doc.badge.plus",identifier:"publication-add-page"){controller.addPage()}
             WorkspaceToolbarButton("Duplicate selected page",symbol:"plus.square.on.square",identifier:"publication-duplicate-page"){controller.duplicatePage()}.disabled(controller.currentPageID==nil)
             WorkspaceToolbarButton("New chapter",symbol:"text.badge.plus",identifier:"publication-new-chapter"){chapterName="Chapter \(controller.stories.count+1)";chapterOpen=true}
+            WorkspaceToolbarButton("Edit page story",symbol:"text.alignleft",identifier:"publication-edit-current-story"){
+              if let story=controller.activeStory {controller.openStory(story.id)}
+            }.disabled(controller.activeStory==nil)
             Spacer(minLength:0)
             Menu {
               if let id=controller.currentPageID {
@@ -83,6 +123,7 @@ struct PublicationNavigator:View {
         if let issue=controller.issue {Text(issue).font(InspectorStyle.captionFont).foregroundStyle(Palette.accent).fixedSize(horizontal:false,vertical:true)}
       }.padding(12)
     }.frame(width:234).frame(maxHeight:maxHeight).floatingPanelSurface()
+      .onChange(of:controller.publicationID){_,_ in pageQuery="";pageQueryIssue=nil}
       .popover(isPresented:$createOpen){PublicationCreateView(controller:controller).labInterface()}
       .popover(isPresented:$chapterOpen){
         VStack(alignment:.leading,spacing:14) {
@@ -96,7 +137,14 @@ struct PublicationNavigator:View {
   private func pageTile(_ page:PublicationPage,document:PublicationDocument)->some View {
     let project=store.project
     let object=project?.objects.first{$0.id==page.objectID}
-    let image=object.flatMap{object in project?.surfaceArtwork(object).map{ArtworkRenderer.image($0,width:object.artworkSize.x,height:object.artworkSize.y,assets:session.assets,pixelsPerMM:200/max(object.artworkSize.x,object.artworkSize.y),opaqueBackground:true)}}
+    let frame=session.frames.first{$0.object.id==page.objectID && $0.projection==nil}
+    let stock=project.flatMap{project in frame.flatMap{CanvasPublicationSpreads.substrate(for:$0,project:project)}}
+    let image=object.flatMap{object in project.flatMap{project in
+      project.surfaceArtwork(object).flatMap{artwork in
+        PublicationThumbnailCache.shared.image(projectID:project.id,objectID:object.id,artwork:artwork,
+          width:object.artworkSize.x,height:object.artworkSize.y,assets:session.assets,paperColor:stock?.color,paperOpacity:stock?.opacity ?? 1)
+      }
+    }}
     return PublicationPageThumbnail(title:document.pageLabel(for:page.objectID) ?? "—",subtitle:page.chapterTitle ?? object?.name ?? "Missing page",image:image,selected:controller.currentPageID==page.objectID,identifier:"publication-page-"+page.objectID.uuidString){controller.focusPage(page.objectID)}
       .frame(width:controller.showsSpreads ? 92:174,height:controller.showsSpreads ? 128:190)
       .contextMenu {
