@@ -88,7 +88,7 @@ extension ArtworkSession {
           ArtworkCommands.translate(&art.elements[i],dx:dx,dy:dy)
         }
         for i in art.guides?.indices ?? 0..<0 {art.guides![i].position += art.guides![i].axis == "x" ? dx:dy}
-        art.canvasPosition = .init(rect.minX,rect.minY)
+        if project.publicationReaderSpread(for:expectedFrameID)==nil {art.canvasPosition = .init(rect.minX,rect.minY)}
         try validateArtwork(art)
         project.objects[index].parameters=parameters;project.objects[index].artwork=art
       }

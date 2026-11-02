@@ -1,0 +1,367 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 11771.4,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 9,
+        "height" : 8,
+        "id" : "1A42C494-10CC-5C16-AD17-953BBEA65EB6",
+        "kind" : "text",
+        "name" : "various_back-kicker",
+        "text" : "FIELD NOTES",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 12.15,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 18
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 31,
+        "height" : 37,
+        "id" : "CF714095-0093-5B0D-BDBC-16BF7D399450",
+        "kind" : "text",
+        "name" : "various_back-title",
+        "text" : "Various / Keep for next time",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 41.85,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 34
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 13,
+        "height" : 29,
+        "id" : "84D43D28-DFD7-5D87-BD0A-34E773A20510",
+        "kind" : "text",
+        "name" : "various_back-standfirst",
+        "text" : "A few small instructions for looking again, followed by the issue’s working record.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 17.55,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 77
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "402E7F16-1599-565F-8E1A-678870C02610",
+        "kind" : "text",
+        "name" : "various_back_01-caption",
+        "text" : "First contact\nA tab gives the hand somewhere to approach.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 109,
+        "x" : 18,
+        "y" : 242
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 15,
+        "id" : "23E737BB-EA4E-55FE-8F8E-B2E07791C4F8",
+        "kind" : "text",
+        "name" : "various_back_02-caption",
+        "text" : "Working edge\nThe working edge stays distinct from the grip.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 169
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 15,
+        "id" : "2E7BF043-88F0-5FC3-826F-7505DAAF6BCB",
+        "kind" : "text",
+        "name" : "various_back_03-caption",
+        "text" : "Joined / apart\nA gap explains the parts’ relationship.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 244
+      },
+      {
+        "asset" : "2C9395BD-BE60-4AC8-97ED-C75DA57C1A30.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 10,
+        "height" : 125,
+        "id" : "BB54A6D0-AEA0-57B6-ACD0-703E8459234B",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.6976,
+          "x" : 0.1512,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "various_back_01-placed-vector",
+        "text" : "",
+        "width" : 109,
+        "x" : 18,
+        "y" : 113
+      },
+      {
+        "asset" : "CDD89896-9556-4777-85E6-E5505442E699.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 52,
+        "id" : "A602F651-DF81-41CF-A682-A3903EC99044",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.9061538461538461,
+          "x" : 0.046923076923076956,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / various_back_02",
+        "text" : "",
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 113
+      },
+      {
+        "asset" : "D08597D2-BB8F-40C1-94F9-C2CFAF6D9A1A.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 39,
+        "id" : "3F4175D7-AC57-4656-B116-0FCDE1A77B28",
+        "imageCrop" : {
+          "height" : 0.8276740237691002,
+          "width" : 1,
+          "x" : 0,
+          "y" : 0.08616298811544992
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / various_back_03",
+        "text" : "",
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 201
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "2594D722-5211-4ED5-9610-4E641285DA0C",
+  "id" : "1D62ACE6-A204-4DC3-8221-AE4EDD36C9F8",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 45 / various back",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 11587.39999999999,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

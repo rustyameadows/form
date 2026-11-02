@@ -1,0 +1,2467 @@
+{
+  "objects" : [
+    {
+      "canvasWorkspace" : false,
+      "file" : "98F8DD1A-FE17-489D-862E-9B25F30B5879-3f9ba1cca1d52be1.json",
+      "id" : "98F8DD1A-FE17-489D-862E-9B25F30B5879"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "6CFA81B0-5B47-4469-B903-AD24729CF2EE-0be755023f0674e0.json",
+      "id" : "6CFA81B0-5B47-4469-B903-AD24729CF2EE"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "DA7E2DB2-1B54-47D7-B70A-3469DF69214B-599ea2bc4423c7d9.json",
+      "id" : "DA7E2DB2-1B54-47D7-B70A-3469DF69214B"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "F8798876-E888-42E7-A8D2-BF2223C8A317-9dbd0524d5f359d7.json",
+      "id" : "F8798876-E888-42E7-A8D2-BF2223C8A317"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "F8953C8B-5B57-4C50-8044-1088385D96A4-f83155d5ccce92e9.json",
+      "id" : "F8953C8B-5B57-4C50-8044-1088385D96A4"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "852060E6-5CA6-457E-865C-C40EF87B89F6-b884984bbefa472f.json",
+      "id" : "852060E6-5CA6-457E-865C-C40EF87B89F6"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "D19B4E2B-19C3-445D-8C00-A1D8AF868DCC-d70b752905ad325c.json",
+      "id" : "D19B4E2B-19C3-445D-8C00-A1D8AF868DCC"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "476A266D-1FEF-4CB9-87A0-F33C2B016ED0-246d06b6fbdd3017.json",
+      "id" : "476A266D-1FEF-4CB9-87A0-F33C2B016ED0"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "FC7ACE46-85DF-4DDC-92E5-9BD199932DC5-134fcbfda681bf2f.json",
+      "id" : "FC7ACE46-85DF-4DDC-92E5-9BD199932DC5"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "747F8603-D23E-498A-8CAE-5619EF7E6A71-19031eadbe3357a3.json",
+      "id" : "747F8603-D23E-498A-8CAE-5619EF7E6A71"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "A9BC52FF-60F4-4C75-921E-861866F18307-e0aaa12a70659bcb.json",
+      "id" : "A9BC52FF-60F4-4C75-921E-861866F18307"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "778171E4-C086-43DD-A0A9-EF55F53337E3-dee3dc781db482f8.json",
+      "id" : "778171E4-C086-43DD-A0A9-EF55F53337E3"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "38F27C96-4A86-42E5-B85E-FC759937ADDE-53d4cfb2e4ffbba8.json",
+      "id" : "38F27C96-4A86-42E5-B85E-FC759937ADDE"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "C9265C60-F98C-4A3A-8B3A-F639DB3C6FEE-0d6f950bb962e827.json",
+      "id" : "C9265C60-F98C-4A3A-8B3A-F639DB3C6FEE"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "E7AF7CBB-CD0D-4EEE-BCAF-2F5FDD96AE33-e06189d46b76f8fe.json",
+      "id" : "E7AF7CBB-CD0D-4EEE-BCAF-2F5FDD96AE33"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "7AA375A5-13DE-44ED-92CD-911090155124-4327b8a6b833f7d6.json",
+      "id" : "7AA375A5-13DE-44ED-92CD-911090155124"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "8B3FD30E-CF5F-4AC2-9AC8-F4AC772F53CD-ed3fc1aaa518d411.json",
+      "id" : "8B3FD30E-CF5F-4AC2-9AC8-F4AC772F53CD"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "3B7FC8C4-E41C-46C6-A2BA-D827BF5F42C2-638736924672c677.json",
+      "id" : "3B7FC8C4-E41C-46C6-A2BA-D827BF5F42C2"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "941601F8-CFC5-4E5C-966A-09F0411667FF-eceecf490b3793a4.json",
+      "id" : "941601F8-CFC5-4E5C-966A-09F0411667FF"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "3000D234-CC52-431E-B9B4-C4A477677312-c2f199cb8cb227c4.json",
+      "id" : "3000D234-CC52-431E-B9B4-C4A477677312"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "93BE258A-2024-42EB-B319-6AD3C6E74984-8a3a50baafeb1027.json",
+      "id" : "93BE258A-2024-42EB-B319-6AD3C6E74984"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "0467F4EB-ED1B-43BD-BB01-093D909944F6-74c49c0078353c4b.json",
+      "id" : "0467F4EB-ED1B-43BD-BB01-093D909944F6"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "2AE07988-9BB8-4329-84C1-84B0F7375D9E-391b47388b434500.json",
+      "id" : "2AE07988-9BB8-4329-84C1-84B0F7375D9E"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "6B49A775-EE5D-4E29-B904-BA79520CB754-8a2088a883ecd80e.json",
+      "id" : "6B49A775-EE5D-4E29-B904-BA79520CB754"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "F25F3F37-CAF4-4F63-9C64-7A702AEAAE6D-bfcc21513dd2f2b5.json",
+      "id" : "F25F3F37-CAF4-4F63-9C64-7A702AEAAE6D"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "839CD4CD-16BC-4DF4-A03A-8F5B80C49385-9babdc2de4b7496f.json",
+      "id" : "839CD4CD-16BC-4DF4-A03A-8F5B80C49385"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "B216B948-6639-4F2B-8A30-36CBD9EB6A52-b540b374b7ecab39.json",
+      "id" : "B216B948-6639-4F2B-8A30-36CBD9EB6A52"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "93E5CA17-815F-4FE4-BFBD-5741C11C4DA7-efd4d6124e00a0a6.json",
+      "id" : "93E5CA17-815F-4FE4-BFBD-5741C11C4DA7"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "98958C58-4D13-41B7-A978-8198BCBF8860-06a9798dec980987.json",
+      "id" : "98958C58-4D13-41B7-A978-8198BCBF8860"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "4066C744-2877-4E2E-8691-A552A126FBC6-2c9ca9e76d89f039.json",
+      "id" : "4066C744-2877-4E2E-8691-A552A126FBC6"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "88356541-03E5-44C3-888F-2F4E752215E0-7986789c57ede1df.json",
+      "id" : "88356541-03E5-44C3-888F-2F4E752215E0"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "B09DDDBE-42D4-426E-B833-7CBB2A875E13-fcdcc322d27560ee.json",
+      "id" : "B09DDDBE-42D4-426E-B833-7CBB2A875E13"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "6B505F22-1313-4FA2-894E-257EA52912ED-e64db7f6b2841d7c.json",
+      "id" : "6B505F22-1313-4FA2-894E-257EA52912ED"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "D62521F5-8317-4ED4-AD7A-7380E7626F04-e24f5ff0a9262205.json",
+      "id" : "D62521F5-8317-4ED4-AD7A-7380E7626F04"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "245CEAE3-4DD6-453B-AED3-45B796FE249F-fbd61a5405017458.json",
+      "id" : "245CEAE3-4DD6-453B-AED3-45B796FE249F"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "45B809FF-DAFD-47DA-A2CC-C81EE03F5404-77430d28dcdd8bf2.json",
+      "id" : "45B809FF-DAFD-47DA-A2CC-C81EE03F5404"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "A663AAF2-DDA5-41F0-95BB-C413F8AB2D5C-317b7a186ddc043e.json",
+      "id" : "A663AAF2-DDA5-41F0-95BB-C413F8AB2D5C"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "8F52DCF3-749E-4FE6-986A-B846BBB258B5-93c61f74b16f6838.json",
+      "id" : "8F52DCF3-749E-4FE6-986A-B846BBB258B5"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "398F2D52-6F89-4886-B35E-9EED268549A9-2f0fce3bf5cc30cd.json",
+      "id" : "398F2D52-6F89-4886-B35E-9EED268549A9"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "B181AA7E-82CC-41FA-92DA-844DF07B79A1-0c2966e2b94efa7e.json",
+      "id" : "B181AA7E-82CC-41FA-92DA-844DF07B79A1"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "A77C5952-06B0-41AC-ACAC-5733E1F83E77-e16eabc07b7e5df3.json",
+      "id" : "A77C5952-06B0-41AC-ACAC-5733E1F83E77"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "11FADFD1-8AF8-43CA-BD47-D21EA185BD1A-42d05df6ff362840.json",
+      "id" : "11FADFD1-8AF8-43CA-BD47-D21EA185BD1A"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "271AFD7D-1A68-432A-A975-F923007B23F8-a5ee861f9c4be1be.json",
+      "id" : "271AFD7D-1A68-432A-A975-F923007B23F8"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "8A1C8413-C213-4DC3-B88E-6E35DD056ED2-728c76b225b178f7.json",
+      "id" : "8A1C8413-C213-4DC3-B88E-6E35DD056ED2"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "9BB66B75-F258-43BC-BC40-3BDCDBD54CE7-207140ec2fbd47aa.json",
+      "id" : "9BB66B75-F258-43BC-BC40-3BDCDBD54CE7"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "8AC0654E-32FF-463F-9059-E3C3C45637BA-de5ff645a51f50d9.json",
+      "id" : "8AC0654E-32FF-463F-9059-E3C3C45637BA"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "9AE1EC95-ABDC-4724-84DA-A761E805A782-164deb3d39dfc5aa.json",
+      "id" : "9AE1EC95-ABDC-4724-84DA-A761E805A782"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "405FA96B-8FAD-4AC9-A924-2C14CA0B9919-670c7ac31423c974.json",
+      "id" : "405FA96B-8FAD-4AC9-A924-2C14CA0B9919"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "06D310B2-CAD7-482D-A489-08C699A8770F-01a3d66f2cbab7cd.json",
+      "id" : "06D310B2-CAD7-482D-A489-08C699A8770F"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "8BBF3CAC-10D5-4EAE-82B1-57A064C2BC71-324852f62a2bba8d.json",
+      "id" : "8BBF3CAC-10D5-4EAE-82B1-57A064C2BC71"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "26635BD4-727D-4C00-BFA8-7709CE8C07AA-b4164bb07679ff79.json",
+      "id" : "26635BD4-727D-4C00-BFA8-7709CE8C07AA"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "6EC6584A-324B-4E23-ACEC-F40E97D24252-615514ba18797edb.json",
+      "id" : "6EC6584A-324B-4E23-ACEC-F40E97D24252"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "D1F4C9F4-35B0-4BBD-9B11-00B0D20F6B35-7a45aa1717be8abf.json",
+      "id" : "D1F4C9F4-35B0-4BBD-9B11-00B0D20F6B35"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "539B3C5C-09FF-44B6-B723-D8F9DD6BD416-450a9598cf687a8f.json",
+      "id" : "539B3C5C-09FF-44B6-B723-D8F9DD6BD416"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "694A8CF0-74E8-4B8E-A417-00BF1C908003-7bc9ec2d930ae277.json",
+      "id" : "694A8CF0-74E8-4B8E-A417-00BF1C908003"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "78E83A0F-D96D-40AC-A6D1-A6DB03DFE3FF-75b1fd47884ab14d.json",
+      "id" : "78E83A0F-D96D-40AC-A6D1-A6DB03DFE3FF"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "2BEEABA1-9F8B-4609-88A2-22A617F3A545-110b0546f7c57418.json",
+      "id" : "2BEEABA1-9F8B-4609-88A2-22A617F3A545"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "5192999D-2345-49CB-855C-FF27E293541A-afa6d86147acd6d6.json",
+      "id" : "5192999D-2345-49CB-855C-FF27E293541A"
+    }
+  ],
+  "project" : {
+    "camera" : {
+      "azimuth" : 0.55,
+      "distance" : 12,
+      "elevation" : 0.7,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 0,
+        "y" : 0.6,
+        "z" : 0
+      },
+      "viewportAspect" : 1.587651598676957
+    },
+    "createdAt" : "2026-11-02T01:26:37Z",
+    "history" : [
+      {
+        "date" : "2026-11-02T01:26:37Z",
+        "id" : "1980353D-C0C0-4C86-85BA-91619BB24D65",
+        "source" : "Codex",
+        "text" : "Created fold_bureau_01"
+      },
+      {
+        "date" : "2026-11-02T01:26:37Z",
+        "id" : "D0C90D3F-C13B-4235-92C7-C893B52F278B",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:37Z",
+        "id" : "6B8C6E33-0936-4849-A25E-A3470DF24DD0",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-11-02T01:26:37Z",
+        "id" : "E1874E85-EE3A-4A51-9244-ABA361E3F8A9",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:38Z",
+        "id" : "8EEB7029-2FAF-46E0-AF00-ECCB330B6A68",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:38Z",
+        "id" : "E06F49B9-8AC9-494B-8C02-F84D13A6B38E",
+        "source" : "Codex",
+        "text" : "Created fold_bureau_02"
+      },
+      {
+        "date" : "2026-11-02T01:26:39Z",
+        "id" : "981BE26E-39F4-465B-A0B6-454918500C40",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:39Z",
+        "id" : "C1069983-DCB3-47E2-A056-C9B4A36707CB",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-11-02T01:26:39Z",
+        "id" : "8B48300E-36AC-498E-98BE-FA33787DD44E",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:26:39Z",
+        "id" : "8B10612A-08C6-48AB-A23C-881C0CD9C21B",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:40Z",
+        "id" : "DF71A716-4CA7-405F-BAFE-C42E81312ED4",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:40Z",
+        "id" : "87C25159-4001-4795-8601-0A6AA408D965",
+        "source" : "Codex",
+        "text" : "Created fold_bureau_03"
+      },
+      {
+        "date" : "2026-11-02T01:26:41Z",
+        "id" : "689B9E57-8A5F-4EDC-B056-32E35B1AAB4C",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:41Z",
+        "id" : "2F0A1DA0-600F-41D9-AAC6-65620AAEF132",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-11-02T01:26:41Z",
+        "id" : "EB5D9E7C-0F2F-44E7-B1E4-464232C35209",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:42Z",
+        "id" : "41C8609B-E5FF-42B1-826C-28A028318945",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:42Z",
+        "id" : "88876D00-DF17-4026-A4DC-84388F31F5B8",
+        "source" : "Codex",
+        "text" : "Created fold_bureau_04"
+      },
+      {
+        "date" : "2026-11-02T01:26:42Z",
+        "id" : "883690B0-3E2A-4C86-9A18-443766F10698",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:42Z",
+        "id" : "944C2493-992D-4B50-99B6-B4C571C4B3D1",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-11-02T01:26:43Z",
+        "id" : "4FA23CEC-8BB6-4B29-B03A-DF83ED0FA417",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:44Z",
+        "id" : "E1D79A1B-B49B-48C4-BDD2-F388134C6B9A",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:44Z",
+        "id" : "FCE57188-EC76-45B1-8AE6-5BA75E17CCC6",
+        "source" : "Codex",
+        "text" : "Created fold_bureau_05"
+      },
+      {
+        "date" : "2026-11-02T01:26:44Z",
+        "id" : "DEC77056-E7BD-47D9-99C1-ACDDE6764771",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:44Z",
+        "id" : "3A033519-D5C7-48CB-9328-40721709E883",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-11-02T01:26:45Z",
+        "id" : "A131A642-180E-4911-B99F-67CEC4F6F8C7",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:45Z",
+        "id" : "C7C4E530-7831-4C8B-BDC0-FD231C9CBB78",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:45Z",
+        "id" : "92F6A68C-CFD9-4E22-BB09-7BD9A571F394",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:47Z",
+        "id" : "31D2C665-3659-420C-A130-236D18E29251",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:47Z",
+        "id" : "AB207E28-5C18-4784-8DDE-5378B9F62BE6",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:48Z",
+        "id" : "67152575-0470-4425-BE96-5FBB4FBD2331",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:48Z",
+        "id" : "87CF337A-3608-480D-A093-84203AEB5549",
+        "source" : "Codex",
+        "text" : "Created fold_bureau_08_flat"
+      },
+      {
+        "date" : "2026-11-02T01:26:48Z",
+        "id" : "E47441E4-22F7-47AD-B5BE-9237350C4F16",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:48Z",
+        "id" : "E5FE5616-9F0C-4D1B-B2B3-F7D4ED3B2301",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-11-02T01:26:49Z",
+        "id" : "019728ED-6497-4598-8F24-FB287418D8B9",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:26:49Z",
+        "id" : "B80500F7-58F8-4E83-9BF3-384F63138B5F",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:26:49Z",
+        "id" : "66898D78-99DF-4186-AC77-3B08518ECEC8",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:26:50Z",
+        "id" : "BC968D9F-E1DB-4BAC-B6F1-C4E8F1658087",
+        "source" : "CAD",
+        "text" : "Created exact CAD model"
+      },
+      {
+        "date" : "2026-11-02T01:26:50Z",
+        "id" : "3DD36E51-5670-4F4F-8CF9-A500D29A89F7",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:26:50Z",
+        "id" : "363AA230-6B1A-44F6-9E1F-44A13D3C760E",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:26:50Z",
+        "id" : "8D48BCF0-2918-47CD-B4FE-2C08FB151636",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:50Z",
+        "id" : "D1032E8F-DE3A-449E-ABF6-24E1F9306787",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:50Z",
+        "id" : "3D33DD06-5731-4E05-B6EC-0E5193EA2BC0",
+        "source" : "CAD",
+        "text" : "Created exact CAD model"
+      },
+      {
+        "date" : "2026-11-02T01:26:51Z",
+        "id" : "9F141CD6-78DB-462B-A84B-95D03A6EDE4E",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:26:51Z",
+        "id" : "6FF93E36-E394-477A-AF7D-8B989AFEA192",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:26:51Z",
+        "id" : "4A67E18B-211D-4591-A07F-23B036598A64",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:51Z",
+        "id" : "F1A49196-25B2-4831-AF83-7B4673824A94",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:51Z",
+        "id" : "7DE15FA8-5C19-4A4A-8127-2E707595AE85",
+        "source" : "CAD",
+        "text" : "Created exact CAD model"
+      },
+      {
+        "date" : "2026-11-02T01:26:51Z",
+        "id" : "5841EE7A-F5C3-46D8-8BE0-B655C1864F75",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:26:51Z",
+        "id" : "A6FDEF47-0C49-4F9B-9D8E-64313ED23963",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:26:51Z",
+        "id" : "F8C1DF48-0C1E-4865-B3A6-CED98646BE49",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:52Z",
+        "id" : "FED5D753-F166-4923-832B-2398F39F0AB1",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:52Z",
+        "id" : "87E0E09A-7B49-483F-89B6-1DBD160A0D6C",
+        "source" : "CAD",
+        "text" : "Created exact CAD model"
+      },
+      {
+        "date" : "2026-11-02T01:26:52Z",
+        "id" : "F019AF9C-FBFF-4598-8029-0CFD0B90F720",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:26:52Z",
+        "id" : "142FCCDB-96EC-4B0F-9E59-BDDC7911B6F8",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:26:52Z",
+        "id" : "A749F130-5DCD-4967-9FDD-160E73EF7CDE",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:52Z",
+        "id" : "9971140E-0739-4818-BA77-AEBBA22F25D3",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:53Z",
+        "id" : "319DA5E6-2154-44B0-8903-0A1E4474552F",
+        "source" : "CAD",
+        "text" : "Created exact CAD model"
+      },
+      {
+        "date" : "2026-11-02T01:26:53Z",
+        "id" : "89B0FD76-2E36-4804-B2A6-01BBD88F730A",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:26:53Z",
+        "id" : "C3D93724-A30D-4114-BA88-8099746C82D5",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:26:53Z",
+        "id" : "6ACF6625-D3F8-4ABE-A7D0-F43F8E951A64",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:53Z",
+        "id" : "25185EF6-84FC-4FE5-B4F5-D971D7BC8DDC",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:53Z",
+        "id" : "D31DAFC5-AAEE-4F77-86A8-779CF1D4770E",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:53Z",
+        "id" : "7CB273AB-D71C-4923-86D4-808D77D82E6F",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:53Z",
+        "id" : "82A58F3D-5C23-462E-99C2-4F1F6F0BE7A9",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "C01B0EC0-C072-41B8-809C-D403BEE009D8",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "538C56E4-FA38-4B2E-B8EE-127AFADA414A",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "2FCEF9E3-860B-4972-ABD7-4328324E4ABB",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "BD0F8C59-B779-433B-93CA-7EE17B8F7971",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "2C6A9746-2656-4915-B377-098F8DC2DF00",
+        "source" : "Codex",
+        "text" : "Added signal_rooms_01 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "5A1D67FE-706B-4D03-BF34-1F22E6962B43",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "62E1A76F-7E84-400E-965A-7D697DCB904C",
+        "source" : "Codex",
+        "text" : "Added signal_rooms_02 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "65612636-58D4-44BD-9A48-DC55651F9273",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "B1E4DBC5-74CF-4DA5-A32B-C655F87FAC20",
+        "source" : "Codex",
+        "text" : "Added signal_rooms_03 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "819E61B9-683F-46CE-A044-13F1D7DF88C6",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "916884A2-87C7-4F3C-B83B-A19AB83F7D2B",
+        "source" : "Codex",
+        "text" : "Added signal_rooms_04 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "737AE3C4-4783-4E84-8ACD-4D3347EBDBEF",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "72225ECD-36C5-416A-AC8B-DFCFFC27B3B1",
+        "source" : "Codex",
+        "text" : "Added signal_rooms_05 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "F54EF022-FFEA-401D-BCF1-316BBDB258B7",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "DDD26060-29F2-480F-874E-D881F7E3B116",
+        "source" : "Codex",
+        "text" : "Added signal_rooms_06 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "6855E1D6-6012-4917-B5A2-87CF083318C3",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:54Z",
+        "id" : "6F57CA62-82EA-4272-883C-78BC595661B3",
+        "source" : "Codex",
+        "text" : "Added signal_rooms_07 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "A084A125-6675-470B-89FC-7554CA54CC1D",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "02DD5E2F-9081-4F3C-BA92-D173B1FA776D",
+        "source" : "Codex",
+        "text" : "Added signal_rooms_08 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "0B007800-2D48-4D6C-9F87-6BB4F80F9B13",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "673027A7-1AB9-4518-B013-99C94551D474",
+        "source" : "Codex",
+        "text" : "Added parametric recipe: common_current_01"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "75CDA930-7D08-4207-A51A-C15E7518CEE3",
+        "source" : "Codex",
+        "text" : "Added common_current_01"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "A7CF0B1E-802A-4B76-AE82-EAC2F12151D3",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "B212A7A5-F749-429C-A7C1-EFA568A45F71",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "56814BF8-5AA2-4F85-A71B-CC850A636B48",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "0C5BA63B-58FC-4604-8313-85C5086EE986",
+        "source" : "Codex",
+        "text" : "Added parametric recipe: common_current_02"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "BF074958-9D2E-4CE0-BFC0-BE4B59AA9ED7",
+        "source" : "Codex",
+        "text" : "Added common_current_02"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "97D166B4-05DA-4E26-8C73-25364F923169",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "B02B01FD-CADE-4BC1-A5F0-F1CB31C5FC36",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:55Z",
+        "id" : "08A57E8E-A873-4918-B9A2-28EDA8B013E9",
+        "source" : "Codex",
+        "text" : "Added parametric recipe: common_current_03"
+      },
+      {
+        "date" : "2026-11-02T01:26:56Z",
+        "id" : "6228E2B3-C838-4464-9494-0FBAE8600FFC",
+        "source" : "Codex",
+        "text" : "Added common_current_03"
+      },
+      {
+        "date" : "2026-11-02T01:26:56Z",
+        "id" : "46BDC34A-2B23-4B64-A47C-698C4C1AFEFD",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:56Z",
+        "id" : "DF975EC7-F265-4D9A-9F10-AA574320247A",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:56Z",
+        "id" : "07B26217-A72B-44E5-9E1C-7D0B15B2766A",
+        "source" : "Codex",
+        "text" : "Added parametric recipe: common_current_04"
+      },
+      {
+        "date" : "2026-11-02T01:26:56Z",
+        "id" : "9B08920E-F561-439C-AB94-204D2FF037B5",
+        "source" : "Codex",
+        "text" : "Added common_current_04"
+      },
+      {
+        "date" : "2026-11-02T01:26:56Z",
+        "id" : "EC380EE7-E81B-4DA7-829B-1CA2A2019B37",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:56Z",
+        "id" : "69FFA412-7F06-4528-A650-3C3CEF426082",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:56Z",
+        "id" : "7252565F-0212-41C7-A899-E8FCCCFB1487",
+        "source" : "Codex",
+        "text" : "Added parametric recipe: common_current_05"
+      },
+      {
+        "date" : "2026-11-02T01:26:56Z",
+        "id" : "1AC24FD2-CA30-4081-A14A-F7537800E5B5",
+        "source" : "Codex",
+        "text" : "Added common_current_05"
+      },
+      {
+        "date" : "2026-11-02T01:26:56Z",
+        "id" : "7111E147-E7E7-4B12-B7AD-9380E85C1F1C",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "F8ABA538-2F03-4659-99DC-2364E50A919F",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "8E922F71-0283-4C28-BBB9-C7ECC514F96D",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "7B57BACF-08DA-4CA9-94F5-954FD1D47813",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "EA1465B3-2743-45F7-B102-A50C90FBD540",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "E75B837E-D8D3-4F69-9CF1-F834CA2E59C6",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "0903BB92-4AB1-4F25-BC24-CEAE319AD2A8",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "C0C66458-8EF8-44EC-B8C0-46F1FCDB6064",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "D6BE16B4-D53A-42EE-ADE5-906363B6253D",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "2A07DD21-F6AA-48B8-AB70-102B963CCA2A",
+        "source" : "Codex",
+        "text" : "Added soft_registry_01 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "C12D68C9-E44C-419B-81F4-1D1D7B201771",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "780E857A-8B87-44B6-BDEC-1A439E2E3108",
+        "source" : "Codex",
+        "text" : "Added soft_registry_02 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "75966700-9676-4EF9-B580-1D317801C4D5",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:57Z",
+        "id" : "5A6136A5-0B93-4627-8163-AD6A57A2D23B",
+        "source" : "Codex",
+        "text" : "Added soft_registry_03 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:58Z",
+        "id" : "771C425A-E639-4B84-B89A-5722E9C971EA",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:58Z",
+        "id" : "DF6C372F-4E91-4B9F-80D8-B765189F8FC3",
+        "source" : "Codex",
+        "text" : "Added soft_registry_04 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:58Z",
+        "id" : "D566F897-66A4-4169-80FC-960D25580A98",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:58Z",
+        "id" : "F277A96D-B840-43BC-9CCE-2B47A742DE80",
+        "source" : "Codex",
+        "text" : "Added soft_registry_05 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:58Z",
+        "id" : "5EEA9653-C951-4323-BCC5-A18A3A7AFDD7",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:58Z",
+        "id" : "8476768E-7665-43AB-9F97-335EEF9D1F85",
+        "source" : "Codex",
+        "text" : "Added soft_registry_06 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:58Z",
+        "id" : "1F9C7795-0429-4F13-9354-222749DE86B8",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:58Z",
+        "id" : "07E35358-EBE1-4BF6-ABF8-433DD951C41E",
+        "source" : "Codex",
+        "text" : "Added soft_registry_07 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:58Z",
+        "id" : "4B990BCF-E9B4-45FC-95CC-B087890F0FD0",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:59Z",
+        "id" : "D5B2D02B-6F53-4810-8F62-9624643338EC",
+        "source" : "Codex",
+        "text" : "Added soft_registry_08 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:26:59Z",
+        "id" : "EB72317D-8B22-4F2E-825A-7A3E0413847B",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:26:59Z",
+        "id" : "25B44D47-3D1B-4136-9D83-A1272B45C448",
+        "source" : "Codex",
+        "text" : "Added parametric recipe: index_works_01"
+      },
+      {
+        "date" : "2026-11-02T01:26:59Z",
+        "id" : "7DF28B92-2BF7-4EE1-ACF5-719B9B5923E4",
+        "source" : "Codex",
+        "text" : "Added index_works_01"
+      },
+      {
+        "date" : "2026-11-02T01:26:59Z",
+        "id" : "1D1272EB-994E-4F1B-AF85-D475E152B5C4",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:00Z",
+        "id" : "4B38299E-DDFC-4BAC-90CF-3FD1BF7C79FA",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:00Z",
+        "id" : "E0DD163D-1D0A-4B68-BD31-B5DDA07407A8",
+        "source" : "Codex",
+        "text" : "Added parametric recipe: index_works_02"
+      },
+      {
+        "date" : "2026-11-02T01:27:00Z",
+        "id" : "F7138211-9B6D-49C2-B687-754ECA1E871D",
+        "source" : "Codex",
+        "text" : "Added index_works_02"
+      },
+      {
+        "date" : "2026-11-02T01:27:00Z",
+        "id" : "EDCAB173-10E6-4BA9-ADCA-1F76A8B115C0",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:27:00Z",
+        "id" : "3F3BF9DF-1EBD-4ED1-8649-0B7944654A38",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:01Z",
+        "id" : "3F76908F-3C54-40CB-9707-E71812CC874A",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:01Z",
+        "id" : "D8B396A2-4BA6-42ED-A394-4737F0B9F366",
+        "source" : "Codex",
+        "text" : "Added parametric recipe: index_works_03"
+      },
+      {
+        "date" : "2026-11-02T01:27:01Z",
+        "id" : "F908B40D-88C7-4CDE-9389-B420A0460C68",
+        "source" : "Codex",
+        "text" : "Added index_works_03"
+      },
+      {
+        "date" : "2026-11-02T01:27:01Z",
+        "id" : "D773FB95-122A-43CF-A248-177F065BB8F7",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:02Z",
+        "id" : "47CDB888-FF91-43B6-98A1-DA33B59031CC",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:02Z",
+        "id" : "6A9E0896-4C17-4DBA-9B47-759B42CDE09E",
+        "source" : "Codex",
+        "text" : "Added parametric recipe: index_works_04"
+      },
+      {
+        "date" : "2026-11-02T01:27:02Z",
+        "id" : "44F54019-AF11-4FDD-8EF4-23C3FC7D6491",
+        "source" : "Codex",
+        "text" : "Added index_works_04"
+      },
+      {
+        "date" : "2026-11-02T01:27:02Z",
+        "id" : "7BBEA24A-4F14-49E2-86C0-E871A28056B0",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:03Z",
+        "id" : "C7998C60-E03D-4F45-B616-5B6AAF5F9534",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:03Z",
+        "id" : "0D947487-3A21-40E6-84A6-F7AABC229AE1",
+        "source" : "Codex",
+        "text" : "Added parametric recipe: index_works_05"
+      },
+      {
+        "date" : "2026-11-02T01:27:03Z",
+        "id" : "4C9C9B33-DB77-45CB-B40F-AFB0ABFD7F8D",
+        "source" : "Codex",
+        "text" : "Added index_works_05"
+      },
+      {
+        "date" : "2026-11-02T01:27:03Z",
+        "id" : "A488C761-ACBB-4B64-B258-DB6CD83E3162",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:27:03Z",
+        "id" : "1436F75D-278A-496C-8064-A1FCFF5371FE",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:04Z",
+        "id" : "F776F42E-D645-4642-840F-3F79F1141F12",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:04Z",
+        "id" : "7CAAE57D-ACFD-4E08-A6B0-38CEDC0F65D7",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:04Z",
+        "id" : "0274D23C-4236-4DC3-A012-801EE5BA49CA",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:04Z",
+        "id" : "2302B5A7-DB83-4D0F-94EC-7C576F96A29E",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:05Z",
+        "id" : "BE48CE9F-E03C-4C07-B8BA-3C854BAF3388",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:05Z",
+        "id" : "05571AC0-4747-4673-8573-E7D16E0A2721",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:27:05Z",
+        "id" : "BB767316-FA24-4E7C-9D41-3729F459022E",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:27:05Z",
+        "id" : "9D852C57-201B-411B-970B-FE5A9C781866",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:27:06Z",
+        "id" : "45E73DF1-5090-48A5-A303-CD0F377BF3CB",
+        "source" : "Codex",
+        "text" : "Added editorial_process_01 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:06Z",
+        "id" : "94145A59-B7B5-44A3-8145-B8767CC7C71D",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:06Z",
+        "id" : "04748332-233D-473A-AD74-28F394A21616",
+        "source" : "Codex",
+        "text" : "Added editorial_process_02 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:06Z",
+        "id" : "6D05F630-8449-4D0A-B143-45E5318D0FFE",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:06Z",
+        "id" : "5D839831-BB89-4321-AEFC-9BB772BD0977",
+        "source" : "Codex",
+        "text" : "Added editorial_process_03 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:06Z",
+        "id" : "E0FD9635-8091-4EE7-9795-36E3BAD9A229",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:07Z",
+        "id" : "E421C5C4-324E-45ED-95F3-172E6EAA565C",
+        "source" : "Codex",
+        "text" : "Added editorial_process_04 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:07Z",
+        "id" : "808ED3E4-EEB3-4230-845A-3C8811736CFE",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:07Z",
+        "id" : "1C849F91-6E5C-4C4D-8081-7A4C0DB846F3",
+        "source" : "Codex",
+        "text" : "Added editorial_process_05 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:07Z",
+        "id" : "FB08F138-2F26-4DE4-BD67-60147559F404",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:07Z",
+        "id" : "A1CECAA5-3C1F-4E98-9A50-072FB4AC6ECE",
+        "source" : "Codex",
+        "text" : "Added editorial_process_06 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:07Z",
+        "id" : "1ABB596A-5212-482F-9DE2-DBC2E4770FDB",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:08Z",
+        "id" : "6BB5470A-ED61-44C6-BE29-5666BD705FB8",
+        "source" : "Codex",
+        "text" : "Added editorial_process_07 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:08Z",
+        "id" : "8AB722E5-F72A-410F-B2BF-FADBBE3E3C5F",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:08Z",
+        "id" : "4D91F737-DF53-4E3A-A1CB-926FFA25B4D5",
+        "source" : "Codex",
+        "text" : "Added editorial_process_08 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:08Z",
+        "id" : "64C1EF18-9889-4A4E-9251-A385EF63B409",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:08Z",
+        "id" : "929A7187-AAC1-4CE6-B733-AADDC30FC16C",
+        "source" : "Codex",
+        "text" : "Added editorial_process_09 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:08Z",
+        "id" : "EE057F1C-477E-4796-8671-A47F04BF75F4",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:09Z",
+        "id" : "CE7D88CA-325D-4C81-9384-9956DBF2980A",
+        "source" : "Codex",
+        "text" : "Added editorial_process_10 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:09Z",
+        "id" : "4C3EF887-A8A4-458E-8BEF-5D9353FDB128",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:09Z",
+        "id" : "260AD555-38CD-48C4-BDFA-853177D8ACED",
+        "source" : "Codex",
+        "text" : "Added editorial_process_11 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:09Z",
+        "id" : "7AC8C59A-2242-4CD6-9D36-C56CBFBEE476",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:09Z",
+        "id" : "DC6ECF78-C481-4963-A530-5BB0A73E6D6C",
+        "source" : "Codex",
+        "text" : "Added editorial_process_12 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:10Z",
+        "id" : "FA591F58-7293-4C2A-A419-9035C72644E3",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:10Z",
+        "id" : "45F1B1A4-8403-4406-B98F-CA53ECE81ACA",
+        "source" : "Codex",
+        "text" : "Added editorial_process_13 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:10Z",
+        "id" : "9CD141DD-9F7E-4B77-B857-B1171A9BE9F4",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:10Z",
+        "id" : "F8F34470-7796-4763-992B-4D5D4DF5A028",
+        "source" : "Codex",
+        "text" : "Added editorial_process_14 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:10Z",
+        "id" : "F0D702C4-41EE-4049-B14B-73857B5A2EA3",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:11Z",
+        "id" : "4FC857E2-370F-445C-8BC1-AC2669C072AE",
+        "source" : "Codex",
+        "text" : "Added editorial_process_15 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:11Z",
+        "id" : "E7C47B9C-3249-4262-BC60-A46FB47E467B",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:11Z",
+        "id" : "06AD508E-0C17-45FA-ACB0-36E39EB53676",
+        "source" : "Codex",
+        "text" : "Added editorial_process_16 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:11Z",
+        "id" : "3935230E-7C46-4635-BEEA-A7D42032DFBD",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:11Z",
+        "id" : "1D05BB39-2CC7-42F5-8615-3EA7A18E177C",
+        "source" : "Codex",
+        "text" : "Added editorial_process_17 / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:11Z",
+        "id" : "0A859932-2CC6-4CBA-A0BF-6FE03F6385E3",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:12Z",
+        "id" : "A17542E4-796D-4BA3-941F-B529D2DDB634",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:13Z",
+        "id" : "46E3513E-CA6A-411C-953B-FCCD2A150EA4",
+        "source" : "Codex",
+        "text" : "Edited Studio shot"
+      },
+      {
+        "date" : "2026-11-02T01:27:14Z",
+        "id" : "857B35FE-94C2-4B60-9A8F-349FE8F816D0",
+        "source" : "Codex",
+        "text" : "Added cover_front / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:14Z",
+        "id" : "01906ADC-DA27-4F01-841B-21FB4C37B384",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:14Z",
+        "id" : "0E11BD04-17F7-4909-930A-B4F1CDC7352B",
+        "source" : "Codex",
+        "text" : "Added cover_inside_front / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:14Z",
+        "id" : "97330D4B-F906-4F54-87DD-EF1770D3A27A",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:14Z",
+        "id" : "9E389698-18C7-470B-B687-350C42B1DC81",
+        "source" : "Codex",
+        "text" : "Added cover_inside_back / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:15Z",
+        "id" : "0B57DE8E-192C-4333-9243-BBC531B69975",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:27:15Z",
+        "id" : "E4C821C7-367A-41E3-8D39-2CF47D5E7445",
+        "source" : "Codex",
+        "text" : "Added cover_back / editable graphic"
+      },
+      {
+        "date" : "2026-11-02T01:27:15Z",
+        "id" : "B3877469-840F-47FF-8E22-A42D9144A878",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      }
+    ],
+    "id" : "CF4EEC12-77FF-4AB9-9714-A41FF0F8A5F2",
+    "materials" : [
+
+    ],
+    "name" : "VARIOUS / original portfolio sources",
+    "notes" : [
+
+    ],
+    "objects" : [
+
+    ],
+    "recipes" : [
+      {
+        "id" : "construction-98F8DD1A-FE17-489D-862E-9B25F30B5879",
+        "name" : "fold_bureau_01",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "scale",
+            "step" : 0.1,
+            "unit" : "×",
+            "value" : 1
+          },
+          {
+            "id" : "foldAngle",
+            "maximum" : 120,
+            "minimum" : 30,
+            "name" : "foldAngle",
+            "step" : 0.1,
+            "unit" : "°",
+            "value" : 90
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-6CFA81B0-5B47-4469-B903-AD24729CF2EE",
+        "name" : "fold_bureau_02",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "scale",
+            "step" : 0.1,
+            "unit" : "×",
+            "value" : 1
+          },
+          {
+            "id" : "foldAngle",
+            "maximum" : 120,
+            "minimum" : 30,
+            "name" : "foldAngle",
+            "step" : 0.1,
+            "unit" : "°",
+            "value" : 90
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-DA7E2DB2-1B54-47D7-B70A-3469DF69214B",
+        "name" : "fold_bureau_03",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "scale",
+            "step" : 0.1,
+            "unit" : "×",
+            "value" : 1
+          },
+          {
+            "id" : "foldAngle",
+            "maximum" : 120,
+            "minimum" : 30,
+            "name" : "foldAngle",
+            "step" : 0.1,
+            "unit" : "°",
+            "value" : 90
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-F8798876-E888-42E7-A8D2-BF2223C8A317",
+        "name" : "fold_bureau_04",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "scale",
+            "step" : 0.1,
+            "unit" : "×",
+            "value" : 1
+          },
+          {
+            "id" : "foldAngle",
+            "maximum" : 120,
+            "minimum" : 30,
+            "name" : "foldAngle",
+            "step" : 0.1,
+            "unit" : "°",
+            "value" : 90
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-F8953C8B-5B57-4C50-8044-1088385D96A4",
+        "name" : "fold_bureau_05",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "scale",
+            "step" : 0.1,
+            "unit" : "×",
+            "value" : 1
+          },
+          {
+            "id" : "foldAngle",
+            "maximum" : 120,
+            "minimum" : 30,
+            "name" : "foldAngle",
+            "step" : 0.1,
+            "unit" : "°",
+            "value" : 90
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "construction-852060E6-5CA6-457E-865C-C40EF87B89F6",
+        "name" : "fold_bureau_08 / actual flat parameter variant",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "scale",
+            "step" : 0.1,
+            "unit" : "×",
+            "value" : 1
+          },
+          {
+            "id" : "foldAngle",
+            "maximum" : 120,
+            "minimum" : 0,
+            "name" : "foldAngle",
+            "step" : 0.1,
+            "unit" : "°",
+            "value" : 0
+          },
+          {
+            "id" : "fold",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Fold",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 100
+          },
+          {
+            "id" : "opening",
+            "maximum" : 100,
+            "minimum" : 0,
+            "name" : "Opening",
+            "step" : 1,
+            "unit" : "%",
+            "value" : 0
+          }
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "Agent-authored physical construction",
+        "symbol" : "square.3.layers.3d"
+      },
+      {
+        "id" : "various_common_current_01",
+        "name" : "common_current_01",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "Scale",
+            "step" : 0.05,
+            "unit" : "×",
+            "value" : 1
+          }
+        ],
+        "parts" : [
+
+        ],
+        "solid" : {
+          "nodes" : [
+            {
+              "kind" : "ellipsoid",
+              "values" : {
+                "radiusX" : "33*scale",
+                "radiusY" : "4*scale",
+                "radiusZ" : "25*scale",
+                "x" : "-55*scale",
+                "y" : "4*scale",
+                "z" : "0*scale"
+              }
+            },
+            {
+              "kind" : "segment",
+              "values" : {
+                "endRadius" : "3*scale",
+                "endX" : "-55*scale",
+                "endY" : "40*scale",
+                "endZ" : "0*scale",
+                "radius" : "3*scale",
+                "x" : "-55*scale",
+                "y" : "6*scale",
+                "z" : "0*scale"
+              }
+            },
+            {
+              "kind" : "sweep",
+              "sweep" : {
+                "samples" : "96",
+                "sides" : 32,
+                "values" : {
+                  "radiusX" : "3*scale",
+                  "radiusY" : "3*scale",
+                  "roll" : "0",
+                  "x" : "-55*cos(pi*u)*scale",
+                  "y" : "(40+65*sin(pi*u))*scale",
+                  "z" : "0"
+                },
+                "variable" : "u"
+              }
+            },
+            {
+              "kind" : "ellipsoid",
+              "values" : {
+                "radiusX" : "30*scale",
+                "radiusY" : "3*scale",
+                "radiusZ" : "23*scale",
+                "x" : "55*scale",
+                "y" : "40*scale",
+                "z" : "0*scale"
+              }
+            }
+          ],
+          "spacing" : "1.25"
+        },
+        "summary" : "Original analytic arc and sampled support assembly.",
+        "symbol" : "lamp.desk"
+      },
+      {
+        "id" : "various_common_current_02",
+        "name" : "common_current_02",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "Scale",
+            "step" : 0.05,
+            "unit" : "×",
+            "value" : 1
+          }
+        ],
+        "parts" : [
+          {
+            "kind" : "cylinder",
+            "values" : {
+              "height" : "5*scale",
+              "radius" : "30*scale",
+              "x" : "0*scale",
+              "y" : "2.5*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "cylinder",
+            "values" : {
+              "height" : "118*scale",
+              "radius" : "3*scale",
+              "x" : "0*scale",
+              "y" : "64*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "3*scale",
+              "depth" : "50*scale",
+              "height" : "5*scale",
+              "rotationZ" : "-8",
+              "width" : "75*scale",
+              "x" : "-15*scale",
+              "y" : "123*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "3*scale",
+              "depth" : "46*scale",
+              "height" : "5*scale",
+              "rotationZ" : "8",
+              "width" : "63*scale",
+              "x" : "18*scale",
+              "y" : "141*scale",
+              "z" : "0*scale"
+            }
+          }
+        ],
+        "summary" : "Original project-authored physical assembly study.",
+        "symbol" : "cube"
+      },
+      {
+        "id" : "various_common_current_03",
+        "name" : "common_current_03",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "Scale",
+            "step" : 0.05,
+            "unit" : "×",
+            "value" : 1
+          }
+        ],
+        "parts" : [
+          {
+            "kind" : "cylinder",
+            "values" : {
+              "height" : "42*scale",
+              "radius" : "24*scale",
+              "x" : "-38*scale",
+              "y" : "21*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "2*scale",
+              "depth" : "7*scale",
+              "height" : "118*scale",
+              "rotationZ" : "-15",
+              "width" : "7*scale",
+              "x" : "-38*scale",
+              "y" : "82*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "2*scale",
+              "depth" : "7*scale",
+              "height" : "6*scale",
+              "rotationZ" : "12",
+              "width" : "110*scale",
+              "x" : "9*scale",
+              "y" : "140*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "cone",
+            "values" : {
+              "bottomRadius" : "35*scale",
+              "height" : "27*scale",
+              "topRadius" : "8*scale",
+              "x" : "58*scale",
+              "y" : "127*scale",
+              "z" : "0*scale"
+            }
+          }
+        ],
+        "summary" : "Original project-authored physical assembly study.",
+        "symbol" : "cube"
+      },
+      {
+        "id" : "various_common_current_04",
+        "name" : "common_current_04",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "Scale",
+            "step" : 0.05,
+            "unit" : "×",
+            "value" : 1
+          }
+        ],
+        "parts" : [
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "4*scale",
+              "depth" : "45*scale",
+              "height" : "6*scale",
+              "width" : "65*scale",
+              "x" : "0*scale",
+              "y" : "3*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1*scale",
+              "depth" : "6*scale",
+              "height" : "120*scale",
+              "rotationZ" : "-10",
+              "width" : "6*scale",
+              "x" : "-18*scale",
+              "y" : "65*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1*scale",
+              "depth" : "6*scale",
+              "height" : "5*scale",
+              "rotationZ" : "-15",
+              "width" : "75*scale",
+              "x" : "15*scale",
+              "y" : "126*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "torus",
+            "values" : {
+              "pipeRadius" : "3*scale",
+              "ringRadius" : "30*scale",
+              "rotationZ" : "-15",
+              "x" : "50*scale",
+              "y" : "115*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "sphere",
+            "values" : {
+              "radius" : "12*scale",
+              "x" : "50*scale",
+              "y" : "111*scale",
+              "z" : "0*scale"
+            }
+          }
+        ],
+        "summary" : "Original project-authored physical assembly study.",
+        "symbol" : "cube"
+      },
+      {
+        "id" : "various_common_current_05",
+        "name" : "common_current_05",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "Scale",
+            "step" : 0.05,
+            "unit" : "×",
+            "value" : 1
+          }
+        ],
+        "parts" : [
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "3*scale",
+              "depth" : "50*scale",
+              "height" : "6*scale",
+              "width" : "65*scale",
+              "x" : "0*scale",
+              "y" : "3*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1*scale",
+              "depth" : "6*scale",
+              "height" : "125*scale",
+              "width" : "6*scale",
+              "x" : "-18*scale",
+              "y" : "66*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1*scale",
+              "depth" : "70*scale",
+              "height" : "3*scale",
+              "rotationZ" : "-22",
+              "width" : "90*scale",
+              "x" : "17*scale",
+              "y" : "128*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1*scale",
+              "depth" : "70*scale",
+              "height" : "3*scale",
+              "rotationZ" : "25",
+              "width" : "70*scale",
+              "x" : "67*scale",
+              "y" : "115*scale",
+              "z" : "0*scale"
+            }
+          }
+        ],
+        "summary" : "Original project-authored physical assembly study.",
+        "symbol" : "cube"
+      },
+      {
+        "id" : "various_index_works_01",
+        "name" : "index_works_01",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "Scale",
+            "step" : 0.05,
+            "unit" : "×",
+            "value" : 1
+          }
+        ],
+        "parts" : [
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1.5*scale",
+              "depth" : "32*scale",
+              "height" : "5*scale",
+              "width" : "120*scale",
+              "x" : "0*scale",
+              "y" : "2.5*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1.2*scale",
+              "depth" : "24*scale",
+              "height" : "5*scale",
+              "width" : "80*scale",
+              "x" : "20*scale",
+              "y" : "17*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "0.6*scale",
+              "depth" : "24*scale",
+              "height" : "18*scale",
+              "width" : "5*scale",
+              "x" : "-17.5*scale",
+              "y" : "10*scale",
+              "z" : "0*scale"
+            }
+          }
+        ],
+        "summary" : "Original project-authored physical assembly study.",
+        "symbol" : "cube"
+      },
+      {
+        "id" : "various_index_works_02",
+        "name" : "index_works_02",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "Scale",
+            "step" : 0.05,
+            "unit" : "×",
+            "value" : 1
+          }
+        ],
+        "parts" : [
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1.2*scale",
+              "depth" : "12*scale",
+              "height" : "82*scale",
+              "width" : "8*scale",
+              "x" : "-42*scale",
+              "y" : "45*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1.2*scale",
+              "depth" : "12*scale",
+              "height" : "55*scale",
+              "width" : "8*scale",
+              "x" : "42*scale",
+              "y" : "31.5*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1.2*scale",
+              "depth" : "12*scale",
+              "height" : "8*scale",
+              "width" : "92*scale",
+              "x" : "0*scale",
+              "y" : "8*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1.2*scale",
+              "depth" : "12*scale",
+              "height" : "8*scale",
+              "width" : "64*scale",
+              "x" : "-10*scale",
+              "y" : "82*scale",
+              "z" : "0*scale"
+            }
+          }
+        ],
+        "summary" : "Original project-authored physical assembly study.",
+        "symbol" : "cube"
+      },
+      {
+        "id" : "various_index_works_03",
+        "name" : "index_works_03",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "Scale",
+            "step" : 0.05,
+            "unit" : "×",
+            "value" : 1
+          }
+        ],
+        "parts" : [
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "2*scale",
+              "depth" : "48*scale",
+              "height" : "5*scale",
+              "width" : "110*scale",
+              "x" : "0*scale",
+              "y" : "2.5*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1*scale",
+              "depth" : "36*scale",
+              "height" : "55*scale",
+              "width" : "6*scale",
+              "x" : "-42*scale",
+              "y" : "30*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1*scale",
+              "depth" : "36*scale",
+              "height" : "55*scale",
+              "width" : "6*scale",
+              "x" : "42*scale",
+              "y" : "30*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1*scale",
+              "depth" : "36*scale",
+              "height" : "5*scale",
+              "width" : "90*scale",
+              "x" : "0*scale",
+              "y" : "57*scale",
+              "z" : "0*scale"
+            }
+          }
+        ],
+        "summary" : "Original project-authored physical assembly study.",
+        "symbol" : "cube"
+      },
+      {
+        "id" : "various_index_works_04",
+        "name" : "index_works_04",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "Scale",
+            "step" : 0.05,
+            "unit" : "×",
+            "value" : 1
+          }
+        ],
+        "parts" : [
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "5*scale",
+              "depth" : "48*scale",
+              "height" : "25*scale",
+              "width" : "72*scale",
+              "x" : "0*scale",
+              "y" : "12.5*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1*scale",
+              "depth" : "35*scale",
+              "height" : "3*scale",
+              "rotationZ" : "-18",
+              "width" : "80*scale",
+              "x" : "5*scale",
+              "y" : "35*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "cylinder",
+            "values" : {
+              "height" : "8*scale",
+              "radius" : "4*scale",
+              "x" : "24*scale",
+              "y" : "28*scale",
+              "z" : "0*scale"
+            }
+          }
+        ],
+        "summary" : "Original project-authored physical assembly study.",
+        "symbol" : "cube"
+      },
+      {
+        "id" : "various_index_works_05",
+        "name" : "index_works_05",
+        "parameters" : [
+          {
+            "id" : "scale",
+            "maximum" : 1.5,
+            "minimum" : 0.65,
+            "name" : "Scale",
+            "step" : 0.05,
+            "unit" : "×",
+            "value" : 1
+          }
+        ],
+        "parts" : [
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1*scale",
+              "depth" : "38*scale",
+              "height" : "5*scale",
+              "width" : "110*scale",
+              "x" : "0*scale",
+              "y" : "2.5*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "box",
+            "values" : {
+              "corner" : "1*scale",
+              "depth" : "38*scale",
+              "height" : "5*scale",
+              "rotationZ" : "70",
+              "width" : "32*scale",
+              "x" : "42*scale",
+              "y" : "19*scale",
+              "z" : "0*scale"
+            }
+          },
+          {
+            "kind" : "cylinder",
+            "values" : {
+              "height" : "40*scale",
+              "radius" : "6*scale",
+              "rotationX" : "90",
+              "x" : "42*scale",
+              "y" : "5*scale",
+              "z" : "0*scale"
+            }
+          }
+        ],
+        "summary" : "Original project-authored physical assembly study.",
+        "symbol" : "cube"
+      }
+    ],
+    "schemaVersion" : 62,
+    "subtitle" : "A new place to make things.",
+    "unit" : "mm",
+    "updatedAt" : "2026-11-02T01:27:15Z"
+  }
+}

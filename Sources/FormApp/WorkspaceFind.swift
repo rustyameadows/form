@@ -186,8 +186,9 @@ extension StudioStore {
     if frame.isWorkspace { return true }
     let b = frame.artwork.bounds(of: element)
     let rect = CGRect(x: b.x, y: b.y, width: max(b.width, 0.001), height: max(b.height, 0.001))
-    guard rect.intersects(CGRect(origin: .zero, size: frame.rect.size)) else { return false }
-    guard frame.projection != nil else { return true }
+    let region=frame.publicationSpread?.bounds.offsetBy(dx:-frame.rect.minX,dy:-frame.rect.minY) ?? CGRect(origin:.zero,size:frame.rect.size)
+    guard rect.intersects(region) else { return false }
+    guard frame.projection != nil || frame.publicationSpread != nil else { return true }
     let clip: CGPath
     if let cached = clips[frame.id] { clip = cached }
     else { clip = frame.physicalMaterialClip ?? CGMutablePath(); clips[frame.id] = clip }

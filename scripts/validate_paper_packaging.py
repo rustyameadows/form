@@ -46,6 +46,38 @@ def element(kind, name, x, y, w, h, color, text='', size=14, **other):
     return value
 
 
+MAXIMUM_MCP_BYTES = 8 * 1024 * 1024
+
+def decode_public_mcp_response(raw, request_id):
+    """Read the existing helper's one-line tools/call result without changing its value."""
+    if len(raw.encode('utf-8')) > MAXIMUM_MCP_BYTES:
+        raise ValueError('Oversized public MCP response.')
+    lines = [line for line in raw.splitlines() if line.strip()]
+    if len(lines) != 1:
+        raise ValueError('Expected exactly one public MCP response.')
+    response = json.loads(lines[0])
+    if not isinstance(response, dict) or response.get('jsonrpc') != '2.0' or response.get('id') != request_id:
+        raise ValueError('Public MCP response identity or protocol mismatch.')
+    if 'error' in response:
+        raise ValueError('Public MCP protocol error: ' + str(response['error']))
+    result = response.get('result')
+    if not isinstance(result, dict):
+        raise ValueError('Missing public MCP tool result.')
+    if result.get('isError') is not False:
+        raise ValueError('Public MCP tool error: ' + str(result.get('content')))
+    content = result.get('content')
+    if not isinstance(content, list) or not all(isinstance(item, dict) for item in content):
+        raise ValueError('Invalid public MCP content list.')
+    texts = [item.get('text') for item in content if item.get('type') == 'text']
+    if len(texts) != 1 or not isinstance(texts[0], str):
+        raise ValueError('Expected one JSON public MCP tool value.')
+    value = json.loads(texts[0])
+    expected = value if isinstance(value, dict) else dict(result=value)
+    if result.get('structuredContent') != expected:
+        raise ValueError('Public MCP structured/text result mismatch.')
+    return value
+
+
 class Session:
     def __init__(self, app, socket, output):
         self.app = app.resolve()
@@ -65,26 +97,44 @@ class Session:
     def call(self, name, args=None, expected_failure=False):
         args = args or {}
         start = time.monotonic()
-        result = subprocess.run([str(self.helper), '--call', name, json.dumps(args)], env=self.env,
-                                text=True, capture_output=True, timeout=240)
+        raw_arguments = json.dumps(args, separators=(',', ':'), ensure_ascii=False)
+        # The ordinary helper already speaks MCP over stdin. Large coherent edits
+        # use it directly, avoiding macOS argv limits while retaining one Undo.
+        use_stdio = len(raw_arguments.encode('utf-8')) > 220_000
+        command = [str(self.helper)]
+        kwargs = dict(env=self.env, text=True, capture_output=True,
+                      timeout=660 if name == 'form_export_publication' else 240)
+        if use_stdio:
+            request = dict(jsonrpc='2.0', id=1, method='tools/call', params=dict(name=name, arguments=args))
+            raw_request = json.dumps(request, separators=(',', ':'), ensure_ascii=False)
+            if len(raw_request.encode('utf-8')) > MAXIMUM_MCP_BYTES:
+                raise ValueError('Public MCP request exceeds the existing 8 MiB helper budget.')
+            kwargs['input'] = raw_request + '\n'
+        else:
+            command += ['--call', name, raw_arguments]
+        result = subprocess.run(command, **kwargs)
         record = dict(name=name, arguments=args, elapsed_seconds=time.monotonic()-start,
-                      returncode=result.returncode)
+                      returncode=result.returncode, transport='mcp_stdio' if use_stdio else 'direct_cli')
+        data = None
         if result.returncode:
             record['error'] = result.stderr
-            with (self.output / 'requests.jsonl').open('a') as f:
-                f.write(json.dumps(record) + '\n')
+        else:
+            try:
+                data = decode_public_mcp_response(result.stdout, 1) if use_stdio else json.loads(result.stdout)
+                record['response_sha256'] = hashlib.sha256(result.stdout.encode()).hexdigest()
+            except (ValueError, TypeError, KeyError) as error:
+                record['error'] = str(error)
+        with (self.output / 'requests.jsonl').open('a') as f:
+            f.write(json.dumps(record) + '\n')
+        if 'error' in record:
             if expected_failure:
                 return record
             # A helper Session may not own the seeder checkpoint. Request
             # diagnostics are already appended above; never replace a valid
             # saved seed with this Session's empty constructor report.
-            raise RuntimeError(f'{name}: {result.stderr}')
+            raise RuntimeError(f"{name}: {record['error']}")
         if expected_failure:
             raise AssertionError(f'{name} incorrectly accepted the invalid request')
-        data = json.loads(result.stdout)
-        record['response_sha256'] = hashlib.sha256(result.stdout.encode()).hexdigest()
-        with (self.output / 'requests.jsonl').open('a') as f:
-            f.write(json.dumps(record) + '\n')
         return data
 
     def launch(self):

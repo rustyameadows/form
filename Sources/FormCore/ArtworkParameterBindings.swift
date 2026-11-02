@@ -148,7 +148,7 @@ extension Project {
   /// Flat sources keep canonical artwork; generated geometry remains a consumer.
   /// Existing artboards retain their source role. A custom source needs no solid.
   public func isIndependentFlatArtworkSource(_ object:ProductObject)->Bool {
-    guard !object.isCanvasWorkspace,object.artworkSourceID==nil,object.artwork != nil,
+    guard object.sheetAssembly==nil,!object.isCanvasWorkspace,object.artworkSourceID==nil,object.artwork != nil,
       !object.isFlexibleSurface,!PaperConstruction.isPaper(object),object.cadModel==nil,
       object.meshAsset==nil,object.asset==nil else{return false}
     if object.recipeID=="artboard" {return true}

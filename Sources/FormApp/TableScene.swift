@@ -39,6 +39,7 @@ private struct RenderSignature: Equatable {
   let modelRevision:String?
   let paperRevision:String?
   let solidRevision:String?
+  let sheetRevision:String?
 }
 
 @MainActor final class TableSceneController {
@@ -65,6 +66,7 @@ private struct RenderSignature: Equatable {
   private var fingerprints: [UUID: RenderSignature] = [:]
   private struct PaperPoseState:Equatable {let fold:Double;let opening:Double}
   private var paperPoseStates:[UUID:PaperPoseState]=[:]
+  private var sheetPoseStates:[UUID:Double]=[:]
   private var geometryBounds: [UUID: (min: MeshVector3, max: MeshVector3)] = [:]
   private var selectionNodes: [MeshNode] = []
   /// Interactive composition stages opt in; saved-shot/export stages remain clean.
@@ -273,7 +275,7 @@ private struct RenderSignature: Equatable {
       clothSurfaces=[:];clothIssues=[:]
       embroideryIssues=[:];embroideryDigests=[:]
       fingerprints = [:]
-      paperPoseStates=[:]
+      paperPoseStates=[:];sheetPoseStates=[:]
       geometryBounds = [:]
       selectionNodes = []
       lastSelection = []
@@ -282,13 +284,14 @@ private struct RenderSignature: Equatable {
       camera = project.camera
       updateCamera()
     }
-    let physicalObjects = project.objects.filter { $0.hasTablePresentation && (renderObjectIDs?.contains($0.id) ?? true) }
+    let physicalObjects = renderObjectIDs.map { ids in project.objects.filter{$0.hasTablePresentation && ids.contains($0.id)} }
+      ?? project.tablePresentationObjects
     let live = Set(physicalObjects.map(\.id))
     for id in Array(nodes.keys) where !live.contains(id) {
       nodes.removeValue(forKey: id)?.removeFromParentNode()
       clothSurfaces.removeValue(forKey:id);clothIssues.removeValue(forKey:id)
       fingerprints.removeValue(forKey: id)
-      paperPoseStates.removeValue(forKey:id)
+      paperPoseStates.removeValue(forKey:id);sheetPoseStates.removeValue(forKey:id)
       embroideryIssues.removeValue(forKey:id);embroideryDigests.removeValue(forKey:id)
       geometryBounds.removeValue(forKey: id)
     }
@@ -317,16 +320,16 @@ private struct RenderSignature: Equatable {
         material: project.material(object.materialID).withoutFabricPattern, color: object.color,
         artwork: project.surfaceArtwork(object).map {GeometryFactory.artworkDefinition($0,object:object)},
         asset: object.asset,
-        fontRevision: project.editableArtwork(object) == nil && project.material(object.materialID).fabric?.pattern == nil ? 0 : GeometryFactory.fontRevision,
+        fontRevision: project.editableArtwork(object) == nil && object.sheetAssembly == nil && project.material(object.materialID).fabric?.pattern == nil ? 0 : GeometryFactory.fontRevision,
         textureLimit: textureLimit, sourceSampling:sampling, textile: object.textile?.renderDefinition,
-        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth, merchandiseSurface:project.conformedMerchandiseSignature(object),merchandiseMaterials:project.merchandiseMaterialDependencies(object),assemblyRevision:object.patternAssembly==nil ? nil:ClothSceneSurface.sourceIdentity(object:object,project:project).revision,modelRevision:object.meshAsset.map{$0.geometryRevision+"/"+$0.appearanceRevision} ?? object.cadRepresentation?.definitionSHA256,paperRevision:PaperGeometry.sourceRevision(object,project:project),solidRevision:solidRevision)
+        fabricPattern: (try? project.resolvedFabricPattern(materialID: object.materialID))?.renderDefinition,cloth:object.cloth, merchandiseSurface:project.conformedMerchandiseSignature(object),merchandiseMaterials:project.merchandiseMaterialDependencies(object),assemblyRevision:object.patternAssembly==nil ? nil:ClothSceneSurface.sourceIdentity(object:object,project:project).revision,modelRevision:object.meshAsset.map{$0.geometryRevision+"/"+$0.appearanceRevision} ?? object.cadRepresentation?.definitionSHA256,paperRevision:PaperGeometry.sourceRevision(object,project:project),solidRevision:solidRevision,sheetRevision:SheetAssemblyGeometry.sourceRevision(object,project:project))
       if deferSolid,solidSurface==nil,let previous=fingerprints[object.id],nodes[object.id] != nil {fingerprint=previous}
       if let node=nodes[object.id],let prior=fingerprints[object.id],prior != fingerprint,
         canUpdateEmbroiderySurface(prior,fingerprint,object:object) {
         EmbroiderySceneSurface.update(node,object:object,project:project,assets:assets,textureLimit:textureLimit,sampling:sampling?.raster)
         fingerprints[object.id]=fingerprint;geometryBounds[object.id]=physicalBounds(of:node);geometryChanged=true
         updateEmbroideryStatus(object,project:project,textureLimit:textureLimit,sampling:sampling?.raster)
-      } else if nodes[object.id] == nil || fingerprints[object.id] != fingerprint {
+      } else if nodes[object.id] == nil || nodes[object.id]?.constructionFailure != nil || fingerprints[object.id] != fingerprint {
         nodes[object.id]?.removeFromParentNode()
         let node:MeshNode
         if object.meshAsset != nil || object.cadRepresentation != nil {
@@ -343,6 +346,7 @@ private struct RenderSignature: Equatable {
         geometryBuilds += 1
         node.name = "object:\(object.id.uuidString)"
         nodes[object.id] = node
+        sheetPoseStates.removeValue(forKey:object.id)
         geometryBounds[object.id] = clothSurfaces[object.id]?.geometricBounds ?? physicalBounds(of:node)
         objectRoot.addChildNode(node)
         fingerprints[object.id] = fingerprint
@@ -366,6 +370,11 @@ private struct RenderSignature: Equatable {
         if paperPoseStates[object.id] != pose {
           geometryBounds[object.id]=physicalBounds(of:node);geometryChanged=true;paperPoseStates[object.id]=pose
         }
+      }
+      if let sheets=object.sheetAssembly,sheetPoseStates[object.id] != sheets.openingDegrees {
+        try? SheetAssemblyGeometry.updatePose(node,object:object,project:project)
+        geometryBounds[object.id]=physicalBounds(of:node);geometryChanged=true
+        sheetPoseStates[object.id]=sheets.openingDegrees
       }
       let placement = project.textilePlacement(object)
       node.position = v(placement.position.x / 100, placement.position.y / 100, placement.position.z / 100)
@@ -723,13 +732,13 @@ private struct RenderSignature: Equatable {
     if fitContents {controller.frame(ids:Set(controller.nodes.keys),aspect:size.width/max(1,size.height),animated:false)}
     return try await controller.snapshot(size:size)
   }
-  func snapshot(size:CGSize,camera outputCamera:SceneCameraPayload?=nil)async throws->NSImage {
+  func snapshot(size:CGSize,camera outputCamera:SceneCameraPayload?=nil,sampling:SceneCaptureSampling = .native)async throws->NSImage {
     guard let renderer else{throw FormError.invalid(rendererIssue ?? "RealityKit renderer is unavailable.")}
     if let project=captureSource,let assets=captureAssets {try await prepareExternalForCapture(project:project,assets:assets)}
     // Selection is an editing overlay and never part of a project export.
     let overlays=selectionNodes,hidden=overlays.map(\.isHidden);overlays.forEach{$0.isHidden=true};renderScene()
     defer {for (node,wasHidden) in zip(overlays,hidden){node.isHidden=wasHidden};renderScene()}
-    let image=try await renderer.capture(width:Int(size.width),height:Int(size.height),camera:outputCamera ?? cameraPayload(size:size))
+    let image=try await renderer.capture(width:Int(size.width),height:Int(size.height),camera:outputCamera ?? cameraPayload(size:size),sampling:sampling)
     return NSImage(cgImage:image,size:size)
   }
 

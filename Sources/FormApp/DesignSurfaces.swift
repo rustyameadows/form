@@ -35,7 +35,7 @@ extension StudioStore {
     if mode != surface { mode = surface }
   }
 
-  func showSurface(_ surface: WorkspaceMode) {
+  func showSurface(_ surface: WorkspaceMode,ensureCanvasIfNeeded:Bool=true) {
     guard project != nil else { return }
     if surface == .studio { showEnvironment(.studio); return }
     if environment == .studio { showEnvironment(.form) }
@@ -51,23 +51,23 @@ extension StudioStore {
     }
     showingHome = false
     mode = surface
-    if surface == .artwork { _ = ensureCanvas() }
+    if surface == .artwork,ensureCanvasIfNeeded { _ = ensureCanvas() }
     designSurfaceHost?.refresh()
   }
 
-  func showSplit(_ direction: DesignSurfaceSplitDirection? = nil) {
+  func showSplit(_ direction: DesignSurfaceSplitDirection? = nil,ensureCanvasIfNeeded:Bool=true) {
     guard project != nil else { return }
     if environment == .studio { showEnvironment(.form) }
     closeDetachedCanvas()
     if let direction { splitDirection = direction }
-    _ = ensureCanvas()
+    if ensureCanvasIfNeeded {_ = ensureCanvas()}
     surfaceLayout = .split
     showingHome = false
     if mode == .studio { mode = .table }
     designSurfaceHost?.refresh()
   }
 
-  func detachCanvas() {
+  func detachCanvas(ensureCanvasIfNeeded:Bool=true) {
     guard project != nil else { return }
     if environment == .studio { showEnvironment(.form) }
     if surfaceLayout == .detached, let controller = canvasWindowController {
@@ -75,7 +75,7 @@ extension StudioStore {
       return
     }
     finishArtworkEditing()
-    _ = ensureCanvas()
+    if ensureCanvasIfNeeded {_ = ensureCanvas()}
     surfaceLayout = .detached
     showingHome = false
     mode = .table

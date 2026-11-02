@@ -25,7 +25,7 @@ public struct StudioVisibility:Codable,Equatable,Sendable {
   public func resolved(in project:Project)throws->Set<UUID> {
     try validate();let ids=Set(project.objects.filter{$0.hasTablePresentation}.map(\.id))
     guard mode == .project || Set(objectIDs).isSubset(of:ids) else {throw FormError.missing("A saved shot subject is missing or is an internal Canvas workspace. Repair its explicit visibility before rendering.")}
-    let result=mode == .project ? ids:Set(objectIDs)
+    let result=mode == .project ? Set(project.tablePresentationObjects.map(\.id)):Set(objectIDs)
     guard !result.isEmpty,result.count<=4096 else {throw FormError.invalid("The shot needs 1–4096 physical subjects.")};return result
   }
 }

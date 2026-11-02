@@ -137,7 +137,17 @@ public enum PublicationCommands {
     }
     try candidate.validatePublications();project=candidate
   }
+  /// Admission validates actual canonical owners. Runtime Studio copies and
+  /// legacy documents are not additional page memberships or implicit detaches.
+  static func ensureIndependentPageOwners(_ ids:Set<UUID>,in project:Project)throws {
+    for id in ids {
+      guard let object=project.objects.first(where:{$0.id==id}),project.objects.filter({$0.designID==object.designID}).count==1 else {
+        throw FormError.invalid("A publication page needs an independent design. Make a linked variant an independent iteration before adding it.")
+      }
+    }
+  }
   @discardableResult public static func createPublication(in project:inout Project,name:String,pages:[UUID],margins:PublicationMargins = .init(),language:String?=nil) throws -> UUID {
+    try ensureIndependentPageOwners(Set(pages),in:project)
     var candidate=project
     let document=PublicationDocument(name:name,pages:pages.map{PublicationPage(objectID:$0)},margins:margins,language:try language.map{try ParagraphLanguage.canonical($0)})
     if candidate.publications==nil {candidate.publications=[]};candidate.publications!.append(document)
@@ -147,7 +157,13 @@ public enum PublicationCommands {
   public static func setPublication(in project:inout Project,document:PublicationDocument) throws {
     var candidate=project
     guard let index=candidate.publications?.firstIndex(where:{$0.id==document.id}) else{throw FormError.missing("Publication not found.")}
-    candidate.publications![index]=document;adoptStories(in:&candidate,document:document);try candidate.validatePublications();project=candidate
+    let added=Set(document.pages.map(\.objectID)).subtracting(candidate.publications![index].pages.map(\.objectID))
+    try ensureIndependentPageOwners(added,in:candidate)
+    candidate.publications![index]=document;adoptStories(in:&candidate,document:document)
+    try candidate.validatePublications()
+    reconcileImplicitAssemblyPreviews(in:&candidate,publicationID:document.id)
+    try SheetAssemblyCommands.reconcileParentSheets(in:&candidate,publicationID:document.id)
+    try candidate.validateSheetAssemblies();project=candidate
   }
   public static func assignStory(in project:inout Project,storyID:UUID,publicationID:UUID?) throws {
     var candidate=project
@@ -170,7 +186,7 @@ public enum PublicationCommands {
       if frames != story.frames {try ensureEditable(story,in:project);project.textStories![i].frames=frames}
     }
   }
-  public static func retainAvailableFrames(in project:inout Project) {
+  public static func retainAvailableFrames(in project:inout Project) throws {
     for i in project.textStories?.indices ?? 0..<0 {
       let story=project.textStories![i]
       let frames=story.frames.filter{project.storyFrame($0)?.element.storyFrame?.storyID==story.id}
@@ -178,14 +194,21 @@ public enum PublicationCommands {
     }
     let ids=Set(project.objects.map(\.id))
     for i in project.publications?.indices ?? 0..<0 {project.publications![i].pages.removeAll{!ids.contains($0.objectID)}}
+    try project.validatePublications()
+    reconcileImplicitAssemblyPreviews(in:&project)
+    for id in (project.publications ?? []).map(\.id) {try SheetAssemblyCommands.reconcileParentSheets(in:&project,publicationID:id)}
   }
   public static func duplicatePage(in project:inout Project,from sourceID:UUID,to targetID:UUID) throws {
     for i in project.publications?.indices ?? 0..<0 {
       if let index=project.publications![i].pages.firstIndex(where:{$0.objectID==sourceID}) {
-        project.publications![i].pages.insert(.init(objectID:targetID),at:index+1)
+        let original=project.publications![i].pages[index]
+        project.publications![i].pages.insert(.init(objectID:targetID,margins:original.margins,masterIDs:original.masterIDs),at:index+1)
       }
     }
     if let artwork=project.objects.first(where:{$0.id==targetID})?.artwork {try reconcileFrames(in:&project,objectID:targetID,artwork:artwork)}
+    for id in (project.publications ?? []).filter({$0.pages.contains{$0.objectID==targetID}}).map(\.id) {
+      try SheetAssemblyCommands.reconcileParentSheets(in:&project,publicationID:id)
+    }
     try project.validatePublications()
   }
   public static func transferFrames(in project:inout Project,from sourceID:UUID,to targetID:UUID,mapping:[UUID:UUID]) throws {
@@ -204,32 +227,38 @@ public enum PublicationCommands {
       project.textStories![i].frames=frames
     }
   }
-  @discardableResult public static func addPage(in project:inout Project,publicationID:UUID,width:Double=160,height:Double=210,storyID:UUID?=nil,columns:Int=1,gutter:Double=8) throws -> (UUID,[StoryFrameID]) {
+  @discardableResult public static func addPage(in project:inout Project,publicationID:UUID,width:Double=160,height:Double=210,storyID:UUID?=nil,columns:Int=1,gutter:Double=8,at:Int?=nil) throws -> (UUID,[StoryFrameID]) {
     var candidate=project
     guard let index=candidate.publications?.firstIndex(where:{$0.id==publicationID}),width.isFinite,height.isFinite,
       (20...2000).contains(width),(20...2000).contains(height),(1...4).contains(columns),gutter.isFinite,(0...100).contains(gutter) else{
       throw FormError.invalid("Choose a publication, 20–2000mm page size, one to four columns and a finite gutter.")
     }
-    let document=candidate.publications![index],margins=document.margins
+    let insertion=at ?? candidate.publications![index].pages.count
+    guard (0...candidate.publications![index].pages.count).contains(insertion) else{throw FormError.invalid("Choose an insertion index within the publication.")}
+    var page=try candidate.makeObject(recipeID:"artboard",name:"\(candidate.publications![index].name) / Page \(insertion+1)",parameters:["width":width,"depth":height])
+    candidate.publications![index].pages.insert(.init(objectID:page.id),at:insertion)
+    let document=candidate.publications![index],margins=document.resolvedMargins(for:page.id)
     let column=(width-margins.left-margins.right-gutter*Double(columns-1))/Double(columns)
     guard column>=5,height-margins.top-margins.bottom>=5 else{throw FormError.invalid("Page margins and columns must leave at least a 5mm text frame.")}
-    var page=try candidate.makeObject(recipeID:"artboard",name:"\(document.name) / Page \(document.pages.count+1)",parameters:["width":width,"depth":height])
     var artwork=Artwork(background:"#F5F1E6",bleed:0),frames:[StoryFrameID]=[]
     for i in 0..<columns {
       var e=ArtworkElement(kind:"text",x:margins.left+Double(i)*(column+gutter),y:margins.top,width:column,height:height-margins.top-margins.bottom,text:"",color:"#24353D",fontSize:14)
       e.name="Body column \(i+1)";e.typography=Typography()
       artwork.elements.append(e);frames.append(.init(objectID:page.id,elementID:e.id))
     }
-    if let last=document.pages.last.flatMap({entry in candidate.objects.first{$0.id==entry.objectID}}) {
-      page.position = .init(last.position.x+last.artworkSize.x+60,0,last.position.z)
-      if let position=last.artwork?.canvasPosition {artwork.canvasPosition = .init(position.x+last.artworkSize.x+36,position.y)}
+    let adjacent=insertion>0 ? document.pages[insertion-1].objectID:document.pages.dropFirst().first?.objectID
+    if let adjacent,let neighbor=candidate.objects.first(where:{$0.id==adjacent}) {
+      let delta=insertion>0 ? neighbor.artworkSize.x+36:-(width+36)
+      page.position = .init(neighbor.position.x+delta,0,neighbor.position.z)
+      if let position=neighbor.artwork?.canvasPosition {artwork.canvasPosition = .init(position.x+delta,position.y)}
     }
-    page.artwork=artwork;candidate.objects.append(page);candidate.publications![index].pages.append(.init(objectID:page.id))
+    page.artwork=artwork;candidate.objects.append(page)
     if let storyID {
       guard let storyIndex=candidate.textStories?.firstIndex(where:{$0.id==storyID}),candidate.textStories![storyIndex].publicationID==nil || candidate.textStories![storyIndex].publicationID==publicationID else{throw FormError.invalid("The story belongs to another publication.")}
       candidate.textStories![storyIndex].publicationID=publicationID
       try appendFrames(in:&candidate,storyID:storyID,frames:frames)
     }
-    try candidate.validatePublications();project=candidate;return(page.id,frames)
+    try SheetAssemblyCommands.reconcileParentSheets(in:&candidate,publicationID:publicationID)
+    try candidate.validatePublications();try candidate.validateSheetAssemblies();project=candidate;return(page.id,frames)
   }
 }

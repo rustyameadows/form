@@ -1,0 +1,1377 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 6653.400000000001,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 9,
+        "height" : 8,
+        "id" : "0D5EC86F-754B-5852-84A5-F16973CA0680",
+        "kind" : "text",
+        "name" : "style_02-kicker",
+        "text" : "STYLE / AN ESSAY",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 12.15,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 18
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 31,
+        "height" : 37,
+        "id" : "B4867072-D3CC-5195-96B5-5254FC13AC3D",
+        "kind" : "text",
+        "name" : "style_02-title",
+        "text" : "Surfaces that keep time",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 41.85,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 34
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 13,
+        "height" : 29,
+        "id" : "732BA858-98A2-5717-B2C2-1418C99BB264",
+        "kind" : "text",
+        "name" : "style_02-standfirst",
+        "text" : "A surface can hold a record of attention without pretending to tell the whole story of an object.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 17.55,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 77
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "1BDC624D-CE21-5AC5-820C-AD01D4F46520",
+        "kind" : "text",
+        "name" : "surfaces_time_02-caption",
+        "text" : "Fold memory\nThe fold records a change of direction.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 180
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11,
+        "height" : 49,
+        "id" : "0DE1115B-1972-56F7-B167-9AF207BA3862",
+        "kind" : "text",
+        "name" : "style_02-body-frame-0",
+        "storyFrame" : {
+          "storyID" : "9D5A747B-83A9-4070-8ACD-AABAADE5BF9B"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 203
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11,
+        "height" : 49,
+        "id" : "4B9C1D37-199D-5630-8577-D202C00785DE",
+        "kind" : "text",
+        "name" : "style_02-body-frame-1",
+        "storyFrame" : {
+          "storyID" : "9D5A747B-83A9-4070-8ACD-AABAADE5BF9B"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 203
+      },
+      {
+        "clipID" : "AFC6145D-9646-57AD-8A3D-7BB8270D3A78",
+        "color" : "#000000",
+        "contentSize" : {
+          "x" : 100,
+          "y" : 100
+        },
+        "fontSize" : 10,
+        "height" : 61,
+        "id" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "kind" : "group",
+        "name" : "surfaces_time_02-placed-vector",
+        "text" : "",
+        "width" : 61,
+        "x" : 77.45,
+        "y" : 115
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "18BC60B1-4D2B-55D5-AF26-106671EDCDCD",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/0",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 8.524984287072513,
+                    "y" : 24.687594520670068
+                  },
+                  "id" : "A659CCEB-694E-5489-842A-B056157584F2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.57274612569223,
+                    "y" : 39.24663276382575
+                  },
+                  "id" : "BA8B5163-8516-55C6-8C0A-2387E012AF80"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.57274612569223,
+                    "y" : 82.24110652691537
+                  },
+                  "id" : "A1B36DEE-E399-5C67-89FA-9E89375D37A9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8.524984287072513,
+                    "y" : 67.68206828375968
+                  },
+                  "id" : "8B232577-F2D2-54D7-B6A5-3F6DA8D433F2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8.524984287072513,
+                    "y" : 24.687594520670068
+                  },
+                  "id" : "D8FC3179-BAF3-5A30-A375-143AC68F9458"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "9A23FFC9-5C88-5C1C-AF86-4BB993296209",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/1",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 8.111588854990927,
+                    "y" : 24.95662195543973
+                  },
+                  "id" : "A87D229E-F659-5616-BB38-A36AC181D581"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.159350693610634,
+                    "y" : 39.51566019859542
+                  },
+                  "id" : "167A2AB5-5F1F-5082-968C-3577BD262C28"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.159350693610634,
+                    "y" : 82.51013396168504
+                  },
+                  "id" : "54AF7DB9-EE19-5AC4-9080-B48889F7D021"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8.111588854990927,
+                    "y" : 67.95109571852934
+                  },
+                  "id" : "F4E499C9-7DE7-5C6B-A4E4-E1282DF7DCDD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8.111588854990927,
+                    "y" : 24.95662195543973
+                  },
+                  "id" : "9E4D134F-C4C5-529A-8410-55B76B0BCDF7"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "B43B318D-EC8A-5754-AB29-B28003A861ED",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/2",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 8.524984287072513,
+                    "y" : 24.687594520670068
+                  },
+                  "id" : "CF52BA1E-4AFC-5546-9197-16AFD72E9D4D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8.111588854990927,
+                    "y" : 24.95662195543973
+                  },
+                  "id" : "68F786FD-969D-5B93-989E-1B8FB420E431"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "216EDA1B-9F84-5673-914E-21EA3885E03D",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/3",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 61.57274612569223,
+                    "y" : 39.24663276382575
+                  },
+                  "id" : "44F9D159-85EE-51CE-8D2D-E9DAF0495B35"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.159350693610634,
+                    "y" : 39.51566019859542
+                  },
+                  "id" : "2B2CD1D0-9F51-58F9-9318-E172D8A65927"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "C6709C89-A0BA-5D51-89F7-8664C1E231F0",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/4",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 61.57274612569223,
+                    "y" : 82.24110652691537
+                  },
+                  "id" : "CF134AAF-3E9A-504D-A9D1-B6A308464CC2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.159350693610634,
+                    "y" : 82.51013396168504
+                  },
+                  "id" : "031268E5-8A8A-5E7B-98BF-DF63A75DDC2F"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "FDF077B5-B37D-5B9B-9392-9C1D5B32CF5E",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/5",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 8.524984287072513,
+                    "y" : 67.68206828375968
+                  },
+                  "id" : "639BF758-3E5B-5019-ABB9-C4B67CDB8E0D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8.111588854990927,
+                    "y" : 67.95109571852934
+                  },
+                  "id" : "07AF0F37-131F-5646-AC7D-D5D4CCEBD68F"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "D588C35E-8E91-50B1-80F4-F1882D6348D3",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/6",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 32.06231429335372,
+                    "y" : 9.66457449723282
+                  },
+                  "id" : "35E0620F-8E2A-533F-A01A-D0549E72AD3D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8.636573142063433,
+                    "y" : 24.909462467513826
+                  },
+                  "id" : "EB9D2A1B-D78F-5690-BB37-2801BDBE73ED"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8.636573142063433,
+                    "y" : 67.90393623060345
+                  },
+                  "id" : "CEE1A256-CBB8-5641-B0DB-4223EB91D3D1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32.06231429335372,
+                    "y" : 52.659048260322436
+                  },
+                  "id" : "4F06E1AD-1D0D-55B1-8D45-D8B73E974A14"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32.06231429335372,
+                    "y" : 9.66457449723282
+                  },
+                  "id" : "B1CCBC52-F96C-51BF-A759-8E534FD088D8"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "DAD06598-1196-591A-AEF5-D1A3A7234088",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/7",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 31.425741151290286,
+                    "y" : 9.489866038314958
+                  },
+                  "id" : "6B8452A3-AFA5-5915-9505-556BA9F6CA1F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8,
+                    "y" : 24.734754008595957
+                  },
+                  "id" : "ED3B8291-CF53-53B8-BEC7-CCE82F0F05CB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8,
+                    "y" : 67.72922777168557
+                  },
+                  "id" : "271581FF-AC5C-5D32-8591-40A4EE6D28B6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31.425741151290282,
+                    "y" : 52.48433980140457
+                  },
+                  "id" : "CC5118EC-7029-5FA3-A699-60A48527597E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31.425741151290286,
+                    "y" : 9.489866038314958
+                  },
+                  "id" : "E4E80A67-8B41-5C50-B1E6-1BEB64AD97EB"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "D8B1BC43-222D-551E-AAE3-E68569AEF619",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/8",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 32.06231429335372,
+                    "y" : 9.66457449723282
+                  },
+                  "id" : "3A6C5305-EE3B-5475-AB41-9CA90A60FF94"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31.425741151290286,
+                    "y" : 9.489866038314958
+                  },
+                  "id" : "A66124EA-6504-5E04-8021-8B555432F5F6"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "16410580-0CEF-5EAF-A5C1-0DD664FF42E8",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/9",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 8.636573142063433,
+                    "y" : 24.909462467513826
+                  },
+                  "id" : "67E6B470-6CCF-57CD-A7F5-4984D731D8E3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8,
+                    "y" : 24.734754008595957
+                  },
+                  "id" : "83061136-54E9-55B7-A572-DF8B4464BE9C"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "34186592-1EE5-5B92-B3E8-426860B1FF92",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/10",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 8.636573142063433,
+                    "y" : 67.90393623060345
+                  },
+                  "id" : "D221ADF7-4259-5C2C-9C99-8AECB6BCA8B5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8,
+                    "y" : 67.72922777168557
+                  },
+                  "id" : "5C757C5C-DFD2-5DF9-BA3D-BE8715791208"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "2985D3E3-3066-558D-AABF-3003EC69F087",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/11",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 32.06231429335372,
+                    "y" : 52.659048260322436
+                  },
+                  "id" : "CB11A766-FE7A-5A3C-B8EC-2CC1CCB9CA24"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31.425741151290282,
+                    "y" : 52.48433980140457
+                  },
+                  "id" : "1A88BACD-4201-5776-BDE5-52BDDD61B376"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "B1AEDD00-A212-5E98-90AF-A145B4022491",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/12",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 61.04776183861972,
+                    "y" : 39.293792251751654
+                  },
+                  "id" : "BA6CF5DE-7DF7-5195-9EA5-809EAAA12B97"
+                },
+                {
+                  "anchor" : {
+                    "x" : 91.36342685793656,
+                    "y" : 19.56511370197623
+                  },
+                  "id" : "1D2B1704-A5D4-5536-B37D-6C9575FF69F5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 91.36342685793656,
+                    "y" : 62.559587465065846
+                  },
+                  "id" : "61F0CCBF-E7E3-510F-8458-951C30B65A66"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.04776183861972,
+                    "y" : 82.28826601484127
+                  },
+                  "id" : "0CE53010-AE6C-5321-9270-D661BE0B5398"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.04776183861972,
+                    "y" : 39.293792251751654
+                  },
+                  "id" : "13268015-CC26-5DFC-B756-49509BCB94BD"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "65E8A198-E43B-5385-916A-51C60FEA2760",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/13",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 61.684334980683154,
+                    "y" : 39.46850071066952
+                  },
+                  "id" : "F208E56E-8934-5FCD-A61C-67122CA731B6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 92,
+                    "y" : 19.7398221608941
+                  },
+                  "id" : "E9C5038F-C4FB-5B99-87CF-E86F4AA53463"
+                },
+                {
+                  "anchor" : {
+                    "x" : 92,
+                    "y" : 62.734295923983716
+                  },
+                  "id" : "134B13C2-22E7-54DA-9B08-6327918B9B76"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.684334980683154,
+                    "y" : 82.46297447375915
+                  },
+                  "id" : "7A2296EE-117E-5123-85B5-834D99B20C3B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.684334980683154,
+                    "y" : 39.46850071066952
+                  },
+                  "id" : "2F72D3AF-F0BB-551C-A2D0-17E94E495B51"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "C672DC91-075A-52B4-8168-A5230ABDDFF1",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/14",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 61.04776183861972,
+                    "y" : 39.293792251751654
+                  },
+                  "id" : "9C43AA17-61AD-52DB-BE97-E08BD1D84496"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.684334980683154,
+                    "y" : 39.46850071066952
+                  },
+                  "id" : "FC863C4E-95CC-5075-98A0-82A23D2B7770"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "AF115B07-A0CA-597F-B3D9-1BA3DCFF8197",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/15",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 91.36342685793656,
+                    "y" : 19.56511370197623
+                  },
+                  "id" : "1ACD6D54-DBFA-5F50-8AD7-E6C594C36463"
+                },
+                {
+                  "anchor" : {
+                    "x" : 92,
+                    "y" : 19.7398221608941
+                  },
+                  "id" : "F5268BDB-57A9-53B6-BF9C-75D86A45C755"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "01C60F5B-4656-5C18-A91B-68FAEFA5D747",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/16",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 91.36342685793656,
+                    "y" : 62.559587465065846
+                  },
+                  "id" : "CAC828BF-52DE-52B9-B984-3B5A4D7341FC"
+                },
+                {
+                  "anchor" : {
+                    "x" : 92,
+                    "y" : 62.734295923983716
+                  },
+                  "id" : "140A98CB-F4BA-50D3-BD92-3BC30C8D6B19"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "24F60A7C-88B4-5EAD-8A95-2F5A39BC8C59",
+        "kind" : "path",
+        "name" : "fold_bureau_06/projection/17",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 61.04776183861972,
+                    "y" : 82.28826601484127
+                  },
+                  "id" : "93C71137-5DD0-516B-99E6-392998E61E14"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.684334980683154,
+                    "y" : 82.46297447375915
+                  },
+                  "id" : "143FD033-8F67-578E-B94A-98C97EB614C2"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "6EBAF2DD-A949-517A-BC8D-5C790B8719BD",
+        "kind" : "text",
+        "name" : "fold_bureau_06/projection-note",
+        "parentID" : "08D03939-0ECD-5727-A5E6-DAF8A8DF6067",
+        "text" : "NATIVE FOLDED STOCK / NOMINAL EDGES",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 13.919999999999998,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 90,
+        "x" : 8,
+        "y" : 94
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 10,
+        "height" : 61,
+        "id" : "AFC6145D-9646-57AD-8A3D-7BB8270D3A78",
+        "kind" : "rectangle",
+        "name" : "surfaces_time_02-frame-mask",
+        "text" : "",
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 115
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "EBDEA4A3-C389-4DC1-8F79-780B07225D45",
+  "id" : "54EAB234-FE06-4592-9B66-623923BAD14B",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 25 / style 02",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 6549.399999999998,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

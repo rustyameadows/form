@@ -19,7 +19,7 @@ import FormCore
     }
     try ArtworkRenderer.validateAppearanceOutput(artwork,assets:assets,pixelsPerMM:dpi/25.4)
     var art=try BooleanGeometry.materialized(artwork)
-    if outlineText {let ids=Set(art.elements.filter{$0.kind=="text" && $0.hidden != true}.map(\.id));if !ids.isEmpty {art=try ArtworkOutlines.convert(art,ids:ids,mode:"text",resolvedPaint:art).artwork}}
+    if outlineText {let ids=Set(art.elements.filter{$0.kind=="text" && $0.hidden != true}.map(\.id));if !ids.isEmpty {art=try ArtworkOutlines.convert(art,ids:ids,mode:"text",resolvedPaint:art,forOutput:true).artwork}}
     let result=NSMutableData(),factor=ArtworkPageGeometry.pointsPerMM
     func cg(_ r:Rect2)->CGRect {.init(x:r.x*factor,y:r.y*factor,width:r.width*factor,height:r.height*factor)}
     func box(_ r:Rect2)->Data {var r=cg(r);return Data(bytes:&r,count:MemoryLayout<CGRect>.size)}

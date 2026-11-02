@@ -685,7 +685,7 @@ public final class OperationEngine {
         p.detachArtworkConsumers(of: ids)
         p.detachTextileConsumers(of: ids)
         p.objects.removeAll { ids.contains($0.id) }
-        PublicationCommands.retainAvailableFrames(in:&p)
+        try PublicationCommands.retainAvailableFrames(in:&p)
       }
       selection.subtract(ids)
       return ["removed": ids.count]
@@ -821,6 +821,9 @@ public final class OperationEngine {
       selection = [object.id]
       return try jsonObject(object)
     case "form_set_view":
+      if a["publication_id"] != nil,!["canvas","split","artwork","canvas_window"].contains(a["view"] as? String ?? "") {
+        throw FormError.invalid("Publication navigation requires canvas, split, artwork or canvas_window.")
+      }
       if a["view"] as? String == "studio", a["studio_command"] != nil, a["studio_command"] as? String != "recall" {
         guard let current=project else {throw FormError.missing("Open a project first.")}
         if StudioShotCommands.isInspection(a) {return try StudioShotCommands.inspect(current,args:a)}

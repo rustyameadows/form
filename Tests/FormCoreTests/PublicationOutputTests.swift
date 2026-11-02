@@ -97,4 +97,59 @@ import XCTest
     XCTAssertEqual(result["can_export"] as? Bool,true)
   }
 
+  private func boundsFixture(_ elements:[ArtworkElement])throws->(Project,UUID) {
+    var project=Project(name:"Clipped physical page")
+    var page=try project.makeObject(recipeID:"artboard",parameters:["width":100,"depth":140])
+    page.artwork=Artwork(elements:elements,bleed:3);project.objects=[page]
+    let id=try PublicationCommands.createPublication(in:&project,name:"Clip preflight",pages:[page.id])
+    return(project,id)
+  }
+  private func overflowIDs(_ project:Project,_ id:UUID)->Set<String> {
+    let issues=PublicationOutput.preflight(project,documentID:id)["issues"] as? [[String:Any]] ?? []
+    return Set(issues.filter{($0["message"] as? String)?.contains("extends beyond")==true}.compactMap{$0["element_id"] as? String})
+  }
+  func testBleedPreflightRespectsOwnClipAndRetainsUnmaskedAndEscapingClipWarnings()throws {
+    var mask=ArtworkElement(kind:"rectangle",x:10,y:10,width:40,height:40);mask.hidden=true
+    var clipped=ArtworkElement(kind:"rectangle",x:-100,y:-100,width:300,height:300);clipped.clipID=mask.id
+    let unmasked=ArtworkElement(kind:"rectangle",x:-15,y:20,width:30,height:30)
+    var escapingMask=ArtworkElement(kind:"rectangle",x:90,y:20,width:30,height:30);escapingMask.hidden=true
+    var escaping=ArtworkElement(kind:"rectangle",x:80,y:10,width:100,height:100);escaping.clipID=escapingMask.id
+    let(project,id)=try boundsFixture([mask,clipped,unmasked,escapingMask,escaping]),before=project
+    XCTAssertEqual(overflowIDs(project,id),[unmasked.id.uuidString,escaping.id.uuidString])
+    XCTAssertEqual(project,before)
+  }
+  func testBleedPreflightRespectsEveryTransformedAncestorClipForOutlineAndCoverage()throws {
+    for mode in ["outline","alpha","luminance"] {
+      var outerMask=ArtworkElement(kind:"rectangle",x:15,y:15,width:60,height:60);outerMask.hidden=true
+      var outer=ArtworkElement(kind:"group",x:20,y:20,width:50,height:50);outer.contentSize = .init(50,50);outer.rotation=20;outer.affine = .scale(1.2,0.9);outer.clipID=outerMask.id;outer.clipMode=mode
+      var innerMask=ArtworkElement(kind:"rectangle",x:-80,y:-80,width:300,height:300);innerMask.hidden=true;innerMask.parentID=outer.id
+      var inner=ArtworkElement(kind:"group",x:-50,y:-50,width:200,height:200);inner.contentSize = .init(200,200);inner.rotation = -15;inner.parentID=outer.id;inner.clipID=innerMask.id;inner.clipMode=mode
+      var paint=ArtworkElement(kind:"rectangle",x:-300,y:-300,width:700,height:700);paint.parentID=inner.id
+      var(project,id)=try boundsFixture([outerMask,outer,innerMask,inner,paint]);let before=project
+      XCTAssertTrue(overflowIDs(project,id).isEmpty,"All parent-coordinate masks must constrain the transformed child: \(mode)")
+      XCTAssertEqual(project,before)
+      project.objects[0].artwork!.elements[1].clipID=nil
+      XCTAssertTrue(overflowIDs(project,id).contains(paint.id.uuidString),"The inner clip still escapes; removing the outer clip must expose that warning")
+    }
+  }
+  func testBleedPreflightPreservesAncestorEffectOverflowUntilAnOuterClipContainsIt()throws {
+    var group=ArtworkElement(kind:"group",x:0,y:0,width:100,height:140);group.contentSize = .init(100,140)
+    var shadow=ArtworkShadow();shadow.enabled=true;shadow.offset = .init(20,0);shadow.blur=0;shadow.opacity=0.8;group.shadow=shadow
+    var mask=ArtworkElement(kind:"rectangle",x:80,y:20,width:10,height:20);mask.parentID=group.id;mask.hidden=true
+    var paint=ArtworkElement(kind:"rectangle",x:70,y:10,width:40,height:40);paint.parentID=group.id;paint.clipID=mask.id
+    var(project,id)=try boundsFixture([group,mask,paint])
+    XCTAssertEqual(overflowIDs(project,id),[paint.id.uuidString],"The group's effect is applied after the child clip and really crosses the bleed")
+    var outerMask=ArtworkElement(kind:"rectangle",x:0,y:0,width:100,height:140);outerMask.hidden=true
+    project.objects[0].artwork!.elements.append(outerMask);project.objects[0].artwork!.elements[0].clipID=outerMask.id
+    let before=project
+    XCTAssertTrue(overflowIDs(project,id).isEmpty,"The outer clip also contains the ancestor's effect")
+    XCTAssertEqual(project,before)
+  }
+  func testBleedPreflightChecksActualStrokeExtentBeyondGeometricFrame()throws {
+    var paint=ArtworkElement(kind:"rectangle",x:96,y:20,width:5,height:20)
+    paint.stroke = .init(color:"#000000",width:4);paint.stroke?.alignment="outside"
+    let(project,id)=try boundsFixture([paint])
+    XCTAssertEqual(overflowIDs(project,id),[paint.id.uuidString])
+  }
+
 }

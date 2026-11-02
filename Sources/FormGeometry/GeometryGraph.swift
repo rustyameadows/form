@@ -112,6 +112,7 @@ public final class MeshLight {
 }
 public final class MeshNode:NSObject {
   public var name:String?,geometry:MeshGeometry?,camera:MeshCamera?,light:MeshLight?
+  public var constructionFailure:MeshConstructionFailure?
   public var isHidden=false,castsShadow=true,categoryBitMask=1,renderingOrder=0,opacity=1.0
   public private(set) weak var parent:MeshNode?
   public private(set) var childNodes:[MeshNode]=[]
@@ -133,7 +134,7 @@ public final class MeshNode:NSObject {
   public func removeFromParentNode(){parent?.childNodes.removeAll{$0 === self};parent=nil}
   public func childNode(withName name:String,recursively:Bool)->MeshNode? {for child in childNodes {if child.name==name{return child};if recursively,let found=child.childNode(withName:name,recursively:true){return found}};return nil}
   public func enumerateChildNodes(_ block:(MeshNode,UnsafeMutablePointer<ObjCBool>)->Void){var stop=ObjCBool(false);func visit(_ node:MeshNode){for child in Array(node.childNodes){block(child,&stop);if stop.boolValue{return};visit(child);if stop.boolValue{return}}};visit(self)}
-  public func clone()->MeshNode {let n=MeshNode(geometry:geometry);n.name=name;n.camera=camera?.copy() as? MeshCamera;n.light=light;n.isHidden=isHidden;n.castsShadow=castsShadow;n.categoryBitMask=categoryBitMask;n.renderingOrder=renderingOrder;n.opacity=opacity;n.matrix=matrix;n.euler=euler;for child in childNodes{n.addChildNode(child.clone())};return n}
+  public func clone()->MeshNode {let n=MeshNode(geometry:geometry);n.name=name;n.constructionFailure=constructionFailure;n.camera=camera?.copy() as? MeshCamera;n.light=light;n.isHidden=isHidden;n.castsShadow=castsShadow;n.categoryBitMask=categoryBitMask;n.renderingOrder=renderingOrder;n.opacity=opacity;n.matrix=matrix;n.euler=euler;for child in childNodes{n.addChildNode(child.clone())};return n}
   public func flattenedClone()->MeshNode {clone()}
   public func convertPosition(_ p:MeshVector3,to node:MeshNode?)->MeshVector3 {let m=(node?.worldTransform.raw.inverse ?? matrix_identity_double4x4)*worldTransform.raw,q=m*SIMD4(p.simd,1);return .init(q.x/q.w,q.y/q.w,q.z/q.w)}
   public func convertPosition(_ p:MeshVector3,from node:MeshNode?)->MeshVector3 {let m=worldTransform.raw.inverse*(node?.worldTransform.raw ?? matrix_identity_double4x4),q=m*SIMD4(p.simd,1);return .init(q.x/q.w,q.y/q.w,q.z/q.w)}

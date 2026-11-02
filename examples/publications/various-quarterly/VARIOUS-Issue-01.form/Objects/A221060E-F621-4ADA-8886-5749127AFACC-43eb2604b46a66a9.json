@@ -1,0 +1,260 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 11259.6,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "48E59A19-AD46-52BC-8DF4-2BEAE6756980",
+        "kind" : "text",
+        "name" : "index_works_03-caption",
+        "text" : "Pocket bridge\nThe opening remains part of the span.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 241
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "5AB62D93-3744-50F4-B346-EA67072B24B1",
+        "kind" : "text",
+        "name" : "index_works_04-caption",
+        "text" : "Reading weight\nThe low profile emphasizes the table.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 241
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11.25,
+        "height" : 126,
+        "id" : "30410F4B-D63F-586F-B8F8-CC9997EBFE45",
+        "kind" : "text",
+        "name" : "artist_06-body-frame-2",
+        "storyFrame" : {
+          "storyID" : "F8F812AD-476B-434A-8E3D-0990A0CA93D6"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 28
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11.25,
+        "height" : 126,
+        "id" : "6D794B6C-79C8-5C3A-9837-A9982C1326B3",
+        "kind" : "text",
+        "name" : "artist_06-body-frame-3",
+        "storyFrame" : {
+          "storyID" : "F8F812AD-476B-434A-8E3D-0990A0CA93D6"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 28
+      },
+      {
+        "asset" : "F326744A-7D8C-41FF-B8AC-29C2391B80EF.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 61,
+        "id" : "C1357B69-F512-441A-8C11-7F67B49E10F4",
+        "imageCrop" : {
+          "height" : 0.8871436881908086,
+          "width" : 1,
+          "x" : 0,
+          "y" : 0.05642815590459571
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / index_works_03",
+        "text" : "",
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 176
+      },
+      {
+        "asset" : "AFD51CE1-E9B0-4FD7-91A6-71F852E4F076.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 61,
+        "id" : "E22902B3-1FB7-41B0-A129-CDC59545E793",
+        "imageCrop" : {
+          "height" : 0.8871436881908086,
+          "width" : 1,
+          "x" : 0,
+          "y" : 0.05642815590459571
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / index_works_04",
+        "text" : "",
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 176
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "C4626706-1AEC-4E84-8A63-928769E24D16",
+  "id" : "A221060E-F621-4ADA-8886-5749127AFACC",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 43 / artist 06",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 11083.599999999991,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

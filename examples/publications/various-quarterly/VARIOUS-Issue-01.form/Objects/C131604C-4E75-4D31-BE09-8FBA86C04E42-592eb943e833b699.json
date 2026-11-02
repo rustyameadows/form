@@ -1,0 +1,290 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 8444.7,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "2B98B724-DB8F-54C9-A65C-C318C46EFA3D",
+        "kind" : "text",
+        "name" : "common_current_05-caption",
+        "text" : "Folded light\nRelated planes leave the interval unenclosed.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 109,
+        "x" : 18,
+        "y" : 184
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "C264A02D-956B-57C0-AAB1-2826859752AF",
+        "kind" : "text",
+        "name" : "common_current_06-caption",
+        "text" : "Under the arc\nThe lower view retains support and shade.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 94
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "DE170FE9-6F93-5735-A8AF-DA0343E59F2D",
+        "kind" : "text",
+        "name" : "common_current_07-caption",
+        "text" : "Base / junction\nThe junction is shown without fabrication claims.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 187
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 15,
+        "id" : "961581B8-103E-50F8-A128-8CC84BE4101D",
+        "kind" : "text",
+        "name" : "common_current_08-caption",
+        "text" : "Three silhouettes\nRelated views keep a consistent visual scale.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 254
+      },
+      {
+        "asset" : "B92A203C-6647-4334-BB70-3594C19B4BC3.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 154,
+        "id" : "367DE368-3D16-4550-BAEE-230939EDFCE0",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.5662337662337662,
+          "x" : 0.2168831168831169,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / common_current_05",
+        "text" : "",
+        "width" : 109,
+        "x" : 18,
+        "y" : 26
+      },
+      {
+        "asset" : "9D037BBE-97C7-480B-A4D5-A1B9AF1C212D.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 64,
+        "id" : "B7DEF6E0-AA28-4A69-B113-D2AD7AC6548B",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.73625,
+          "x" : 0.13187500000000002,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / common_current_06",
+        "text" : "",
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 26
+      },
+      {
+        "asset" : "D17B7708-EC8D-46DC-AA5A-846CD306D9AA.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 64,
+        "id" : "909754AD-80F9-4A7D-8BD8-1BADE60481AE",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.73625,
+          "x" : 0.13187500000000002,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / common_current_07",
+        "text" : "",
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 119
+      },
+      {
+        "asset" : "7F595F5F-2126-4A03-8738-DEFC6F4D44A1.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 35,
+        "id" : "6C98D829-1AB5-4180-900C-756DCA3C05E2",
+        "kind" : "image",
+        "name" : "VARIOUS / common_current_08",
+        "text" : "",
+        "width" : 63.01575393848462,
+        "x" : 76.4421230307577,
+        "y" : 216
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "952B18B2-88C0-4B03-92D6-CE38E1D5DAE2",
+  "id" : "C131604C-4E75-4D31-BE09-8FBA86C04E42",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 32 / artist 04",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 8312.699999999995,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

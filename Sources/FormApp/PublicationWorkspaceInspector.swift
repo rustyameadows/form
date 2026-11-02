@@ -1,0 +1,242 @@
+import AppKit
+import FormCore
+import FormGraphics
+import FormCADModel
+import SwiftUI
+import UniformTypeIdentifiers
+
+/// The same source/physical controls are embedded by Canvas and Table inspectors.
+/// Editing shared data updates its representations; navigation is always explicit.
+struct PublicationWorkspaceInspector:View {
+  @ObservedObject var session:ArtworkSession
+  @ObservedObject var controller:PublicationWorkspaceController
+  var publicationID:UUID?=nil
+  @State private var preflightOpen=false
+  @State private var report:[String:Any]=[:]
+  @State private var exportLayout:PublicationPDFLayout = .pages
+  @State private var padBooklet=false
+  private var project:Project?{session.store?.project}
+  private var document:PublicationDocument? {
+    if let publicationID {return project?.publications?.first{$0.id==publicationID}}
+    return controller.document ?? session.currentPublication
+  }
+  private func update(_ document:PublicationDocument,_ body:@escaping(inout PublicationDocument)->Void){
+    guard let id=project?.id else{return};_=controller.update(documentID:document.id,expectedProjectID:id,body)
+  }
+  var body:some View {
+    if let project,let document {
+      VStack(alignment:.leading,spacing:InspectorStyle.sectionSpacing) {
+        VStack(alignment:.leading,spacing:10) {
+          InspectorSectionHeader("PUBLICATION")
+          PublicationCommittedField(title:"Publication name",value:document.name,allowsEmpty:false){name in update(document){$0.name=name}}.textFieldStyle(InspectorTextFieldStyle())
+          HStack {
+            Text("\(document.pages.count) pages · \(document.leafPairs().count) leaves").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+            Spacer()
+            WorkspaceToolbarButton("Open pages on Canvas",symbol:"arrow.up.left.square",identifier:"publication-inspector-open-pages"){
+              session.store?.showSurface(.artwork);controller.open(document.id)
+            }
+          }
+          Toggle("Facing pages",isOn:Binding(get:{document.layout?.facingPages==true},set:{value in update(document){if $0.layout==nil {$0.layout = .init()};$0.layout!.facingPages=value}})).inspectorToggle()
+          if document.layout?.facingPages==true {
+            InspectorRow("First page") {
+              Picker("First page side",selection:Binding(get:{document.layout?.firstPageSide ?? .recto},set:{value in update(document){$0.layout?.firstPageSide=value}})){
+                Text("Right / recto").tag(PublicationPageSide.recto);Text("Left / verso").tag(PublicationPageSide.verso)
+              }.labelsHidden().pickerStyle(.menu).font(InspectorStyle.labelFont)
+            }
+            HStack(spacing:10) {
+              ArtworkUnitField("Inside",value:document.layout?.innerMargin ?? document.margins.left,unit:.mm){value in update(document){$0.layout?.innerMargin=value}}
+              ArtworkUnitField("Outside",value:document.layout?.outerMargin ?? document.margins.right,unit:.mm){value in update(document){$0.layout?.outerMargin=value}}
+            }
+          }
+          DisclosureGroup("Margins & baseline") {
+            VStack(spacing:8) {
+              HStack(spacing:10) {
+                ArtworkUnitField("Top",value:document.margins.top,unit:.mm){value in update(document){$0.margins.top=value}}
+                ArtworkUnitField("Bottom",value:document.margins.bottom,unit:.mm){value in update(document){$0.margins.bottom=value}}
+              }
+              HStack(spacing:10) {
+                ArtworkUnitField("Left",value:document.margins.left,unit:.mm){value in update(document){$0.margins.left=value}}
+                ArtworkUnitField("Right",value:document.margins.right,unit:.mm){value in update(document){$0.margins.right=value}}
+              }
+              Toggle("Baseline grid",isOn:Binding(get:{document.baselineGrid != nil},set:{value in update(document){$0.baselineGrid=value ? .init():nil}})).inspectorToggle()
+              if let grid=document.baselineGrid {
+                HStack(spacing:10) {
+                  ScalarArtworkField("Spacing",value:grid.spacing,unit:"pt"){value in update(document){$0.baselineGrid?.spacing=value}}
+                  ScalarArtworkField("Origin",value:grid.origin,unit:"pt"){value in update(document){$0.baselineGrid?.origin=value}}
+                }
+              }
+              Text("Margins define new body frames. Existing artwork keeps its physical coordinates.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+            }.padding(.top,8)
+          }.font(InspectorStyle.labelFont)
+          numbering(document)
+        }
+        InspectorDivider()
+        sources(document,project:project)
+        InspectorDivider()
+        masters(document,project:project)
+        InspectorDivider()
+        PublicationBindingControls(session:session,publicationID:document.id)
+        InspectorDivider()
+        VStack(alignment:.leading,spacing:10) {
+          InspectorSectionHeader("OUTPUT")
+          Picker("PDF layout",selection:$exportLayout) {
+            Text("Reader pages").tag(PublicationPDFLayout.pages)
+            Text("Reader spreads").tag(PublicationPDFLayout.spreads)
+            Text("Booklet sheets").tag(PublicationPDFLayout.booklet)
+          }.pickerStyle(.menu).font(InspectorStyle.labelFont)
+          if exportLayout == .booklet,document.layout?.firstPageSide == .verso || document.pages.count%4 != 0 {
+            Toggle("Pad with explicit blank pages",isOn:$padBooklet).inspectorToggle()
+            Text(document.layout?.firstPageSide == .verso ? "A left/verso first page reserves a blank front. Padding completes the folded sheets; source pages stay exact.":"Booklet sheets need a multiple of four pages. Padding changes the exported layout; source pages stay exact.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+          }
+          HStack {
+            Button("Preflight"){
+              session.canvas?.finishText()
+              do {if let store=session.store {report=try store.publicationPreflightReport(document.id,layout:exportLayout,padToMultipleOfFour:padBooklet)}}
+              catch{report=["can_export":false,"issues":[["severity":"error","message":error.localizedDescription]]]}
+              preflightOpen=true
+            }.buttonStyle(InspectorActionStyle()).accessibilityIdentifier("publication-preflight")
+            Spacer()
+            Button("Export PDF…"){export(document)}.buttonStyle(InspectorActionStyle()).accessibilityIdentifier("publication-export-pdf")
+          }
+        }
+      }.font(InspectorStyle.labelFont)
+        .popover(isPresented:$preflightOpen){
+          VStack(alignment:.leading,spacing:12) {
+            HStack {Text("Publication preflight").font(.system(size:15,weight:.semibold));Spacer();AppCloseButton("Close preflight"){preflightOpen=false}}
+            Text(report["can_export"] as? Bool==true ? "Ready to export":"Review before export").font(InspectorStyle.labelFont)
+            ForEach(Array((report["issues"] as? [[String:Any]] ?? []).enumerated()),id:\.offset){_,item in Text(item["message"] as? String ?? "").font(InspectorStyle.labelFont).foregroundStyle(item["severity"] as? String=="error" ? Palette.accent:Palette.secondary)}
+          }.padding(18).frame(width:340).labInterface()
+        }
+    }
+  }
+  private func numbering(_ document:PublicationDocument)->some View {
+    DisclosureGroup("Page labels") {
+      VStack(spacing:8) {
+        Picker("Number style",selection:Binding(get:{document.numbering?.style ?? .arabic},set:{style in update(document){if $0.numbering==nil {$0.numbering = .init()};$0.numbering!.style=style}})) {
+          Text("1, 2, 3").tag(PublicationNumberStyle.arabic);Text("i, ii, iii").tag(PublicationNumberStyle.lowerRoman);Text("I, II, III").tag(PublicationNumberStyle.upperRoman);Text("a, b, c").tag(PublicationNumberStyle.lowerAlpha);Text("A, B, C").tag(PublicationNumberStyle.upperAlpha)
+        }.pickerStyle(.menu)
+        ScalarArtworkField("Start at",value:Double(document.numbering?.start ?? 1),unit:""){value in guard value.isFinite,value.rounded()==value,(1...999999).contains(value) else{throw FormError.invalid("Use a whole starting page number from1 to999999.")};update(document){if $0.numbering==nil {$0.numbering = .init()};$0.numbering!.start=Int(value)}}
+        PublicationCommittedField(title:"Prefix",value:document.numbering?.prefix ?? "",allowsEmpty:true){value in update(document){if $0.numbering==nil {$0.numbering = .init()};$0.numbering!.prefix=value}}.textFieldStyle(InspectorTextFieldStyle())
+      }.padding(.top,8)
+    }.font(InspectorStyle.labelFont)
+  }
+  private func sources(_ document:PublicationDocument,project:Project)->some View {
+    let stories=(project.textStories ?? []).filter{$0.publicationID==document.id}
+    return VStack(alignment:.leading,spacing:8) {
+      HStack {InspectorSectionHeader("CHAPTERS & TEXT");Spacer();WorkspaceToolbarButton("Reflow stories",symbol:"arrow.triangle.2.circlepath",identifier:"publication-reflow"){controller.reflow()}}
+      if stories.isEmpty {Text("Select a text frame to start a linked story, or add a chapter from the page rail.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)}
+      ForEach(stories){story in
+        let overset=project.resolvedTextStory(story.id).map{PublicationStoryLayout.composition($0).oversetRange.length} ?? 0
+        WorkspaceNavigationRow(title:story.name,subtitle:overset>0 ? "\(overset) overset source units":"\(story.frames.count) frames · \(story.text.count) characters",symbol:"text.alignleft",statusSymbols:overset>0 ? ["exclamationmark.triangle"]:[],accessibilityLabel:"Edit story "+story.name,identifier:"publication-story-"+story.id.uuidString){
+          session.store?.showSurface(.artwork);controller.open(document.id);controller.openStory(story.id)
+        }
+      }
+    }
+  }
+  private func masters(_ document:PublicationDocument,project:Project)->some View {
+    VStack(alignment:.leading,spacing:8) {
+      HStack {InspectorSectionHeader("MASTERS");Spacer();WorkspaceToolbarButton("Add master artwork",symbol:"plus",identifier:"publication-add-master"){controller.createMaster(documentID:document.id,expectedProjectID:project.id)}}
+      ForEach(document.masters ?? []) {master in
+        VStack(alignment:.leading,spacing:5) {
+          WorkspaceNavigationRow(title:master.name,subtitle:master.side == .all ? "All pages":"\(master.side.rawValue.capitalized) pages",symbol:"rectangle.on.rectangle",accessibilityLabel:"Edit master "+master.name,identifier:"publication-master-"+master.id.uuidString){_=controller.focusMaster(master.sourceObjectID,publicationID:document.id)}
+          HStack {
+            Picker("Master sides",selection:Binding(get:{master.side},set:{value in update(document){doc in if let index=doc.masters?.firstIndex(where:{$0.id==master.id}) {doc.masters![index].side=value}}})){
+              Text("All pages").tag(PublicationMasterSide.all);Text("Right pages").tag(PublicationMasterSide.recto);Text("Left pages").tag(PublicationMasterSide.verso)
+            }.labelsHidden().pickerStyle(.menu)
+            Spacer()
+            Button("Remove"){update(document){$0.masters?.removeAll{$0.id==master.id};for index in $0.pages.indices {$0.pages[index].masterIDs?.removeAll{$0==master.id}}}}.buttonStyle(.borderless)
+          }
+        }
+      }
+      if document.masters?.isEmpty != false {Text("Master artwork stays editable on the Canvas and appears on every assigned page.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)}
+    }
+  }
+  private func export(_ document:PublicationDocument){
+    guard let store=session.store else{return};session.canvas?.finishText()
+    let panel=NSSavePanel();panel.allowedContentTypes=[.pdf];panel.nameFieldStringValue=document.name.replacingOccurrences(of:"/",with:"-")+".pdf"
+    guard panel.runModal() == .OK,let url=panel.url else{return}
+    do {_=try store.publicationGraphicsCall("form_export_publication",["publication_id":document.id.uuidString,"path":url.path,"layout":exportLayout.rawValue,"pad_to_multiple_of_four":padBooklet]);store.toast("Publication PDF exported")}
+    catch{store.error=error.localizedDescription}
+  }
+}
+
+struct PublicationBindingControls:View {
+  @ObservedObject var session:ArtworkSession
+  @EnvironmentObject private var observedStore:StudioStore
+  let publicationID:UUID
+  private var store:StudioStore?{observedStore}
+  private var assemblies:[ProductObject]{store?.project?.tablePresentationObjects.filter{$0.sheetAssembly?.publicationID==publicationID} ?? []}
+  private func configure(_ object:ProductObject,expectedProject:UUID,_ body:(inout SheetAssemblyDefinition)->Void){
+    guard let store,var definition=store.project?.objects.first(where:{$0.id==object.id})?.sheetAssembly,store.project?.id==expectedProject else{return}
+    body(&definition)
+    let key="sheet-assembly-\(object.id)"
+    do {try store.engine.edit("Updated sheet assembly",source:"Studio",coalescing:store.engine.isInteracting(with:key) ? key:nil){project in try SheetAssemblyCommands.configure(in:&project,objectID:object.id,definition:definition)};store.changed()}
+    catch{store.error=error.localizedDescription}
+  }
+  var body:some View {
+    VStack(alignment:.leading,spacing:10) {
+      InspectorSectionHeader("PHYSICAL SHEETS")
+      if let store,let project=store.project {
+        if assemblies.isEmpty {
+          WorkspaceToolbarButton("Create linked physical sheets",symbol:"book.closed",showsTitle:true,identifier:"publication-create-binding"){
+            do {session.canvas?.finishText();try store.engine.edit("Created linked physical sheets",source:"Studio"){project in _=try SheetAssemblyCommands.create(in:&project,definition:.init(publicationID:publicationID),name:project.publications?.first{$0.id==publicationID}?.name ?? "Sheet assembly")};store.changed()}
+            catch{store.error=error.localizedDescription}
+          }
+        }
+        ForEach(assemblies) {object in
+          if let definition=object.sheetAssembly {
+            let resolved=try? project.resolvedSheetAssembly(object)
+            VStack(alignment:.leading,spacing:10) {
+              HStack {
+                Text(object.name).font(.system(size:11,weight:.medium)).lineLimit(1)
+                Spacer()
+                WorkspaceToolbarButton("Find physical sheets on Table",symbol:"cube.transparent",identifier:"publication-find-binding-"+object.id.uuidString){_=store.findOnTable(object.id)}
+              }
+              if let resolved {
+                SheetPoseControls(openingDegrees:Binding(get:{definition.openingDegrees},set:{value in configure(object,expectedProject:project.id){$0.openingDegrees=value}}),
+                  activeSpread:Binding(get:{definition.activeSpread},set:{value in configure(object,expectedProject:project.id){$0.activeSpread=value}}),
+                  bendMM:Binding(get:{definition.bendMM},set:{value in configure(object,expectedProject:project.id){$0.bendMM=value}}),
+                  document:project.publications?.first{$0.id==publicationID},leaves:resolved.leaves,
+                  onEditingChanged:store.inspectorInteraction("sheet-assembly-\(object.id)"))
+              }
+              SheetFastenerControls(binding:Binding(get:{definition.binding ?? .init()},set:{value in configure(object,expectedProject:project.id){$0.binding=value}}))
+              if let parents=definition.parentSheets,!parents.isEmpty {
+                DisclosureGroup("Parent sheets (\(parents.count))") {
+                  VStack(alignment:.leading,spacing:10) {
+                    ForEach(Array(parents.enumerated()),id:\.element.id){ordinal,parent in
+                      SheetParentStockControls(parent:Binding(get:{parent},set:{value in configure(object,expectedProject:project.id){model in
+                        if let index=model.parentSheets?.firstIndex(where:{$0.id==value.id}) {model.parentSheets![index]=value}
+                      }}),ordinal:ordinal,targetID:"sheet-parent-\(object.id)-\(parent.id)",
+                        onEditingChanged:store.inspectorInteraction("sheet-assembly-\(object.id)"))
+                    }
+                  }.padding(.top,8)
+                }.font(InspectorStyle.labelFont)
+              }else{
+                ArtworkUnitField("Leaf caliper",value:definition.stock.resolvedThicknessMM,unit:.mm){value in configure(object,expectedProject:project.id){model in
+                  let old=model.stock.resolvedThicknessMM;model.stock.thicknessMM=value
+                  if model.stock.plies != nil,old>0 {for index in model.stock.plies!.indices {model.stock.plies![index].thicknessMM *= value/old}}
+                }}
+              }
+              if let resolved {Text("\(resolved.leaves.count) leaves · \(String(format:"%.2f",resolved.stackThicknessMM)) mm stack").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)}
+              if !(definition.enclosure ?? []).isEmpty {
+                DisclosureGroup("Enclosure panels (\(definition.enclosure!.count))") {
+                  ForEach(definition.enclosure ?? []) {plane in
+                    VStack(alignment:.leading,spacing:5) {
+                      Text(plane.name).font(.system(size:11,weight:.medium))
+                      ForEach(Array([plane.front,plane.back].compactMap{$0}.enumerated()),id:\.offset){_,face in
+                        if let source=project.objects.first(where:{$0.id==face.sourceObjectID}) {
+                          Button("Edit \(source.name)"){store.showSurface(.artwork);session.activate(source.id);session.canvas?.synchronize();_=session.canvas?.fit(frameIDs:[source.id])}.buttonStyle(InspectorActionStyle())
+                        }
+                      }
+                      ArtworkUnitField("Panel caliper",value:plane.stock.resolvedThicknessMM,unit:.mm){value in configure(object,expectedProject:project.id){model in if let index=model.enclosure?.firstIndex(where:{$0.id==plane.id}) {model.enclosure![index].stock.thicknessMM=value}}}
+                    }.padding(.top,8)
+                  }
+                }.font(InspectorStyle.labelFont)
+              }
+            }.disabled(object.locked)
+          }
+        }
+      }
+    }
+  }
+}

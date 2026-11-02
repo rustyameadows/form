@@ -1,0 +1,221 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "elements" : [
+      {
+        "affine" : {
+          "a" : 0.86,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.86,
+          "tx" : 3,
+          "ty" : 12
+        },
+        "color" : "#235C8B",
+        "fillEnabled" : true,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "179D4C8D-E962-543C-9E64-34F01AC52EAC",
+        "kind" : "path",
+        "name" : "signal_rooms_07-a",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 8,
+                    "y" : 17
+                  },
+                  "id" : "1B732D6B-DEAE-5474-832F-1AB338BC04DD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64,
+                    "y" : 17
+                  },
+                  "id" : "0D4ED4F6-EE40-5351-8765-AD8D12CD6EF1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64,
+                    "y" : 39
+                  },
+                  "id" : "AF9BA75C-4108-59C2-B2DA-B0E56CC7C94E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31,
+                    "y" : 39
+                  },
+                  "id" : "CD22D9B9-90FE-5FDA-B396-FD6A79E2F8F9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31,
+                    "y" : 87
+                  },
+                  "id" : "CC7015F2-F1C4-580D-9EDC-7E5542F1FC17"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8,
+                    "y" : 87
+                  },
+                  "id" : "95AF8491-C831-5374-8267-5E9CC17654C4"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.86,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.86,
+          "tx" : 12,
+          "ty" : 3
+        },
+        "color" : "#E9583C",
+        "fillEnabled" : true,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "16F2F527-6BDF-5A77-9808-64EBAA54C98B",
+        "kind" : "path",
+        "name" : "signal_rooms_07-b",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 39,
+                    "y" : 8
+                  },
+                  "id" : "A0EF2761-75BA-5339-847F-E0165887A21B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 91,
+                    "y" : 8
+                  },
+                  "id" : "F2EC20B4-246B-5E80-972B-862F022C298D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 91,
+                    "y" : 86
+                  },
+                  "id" : "18D73B19-8116-5D85-9CD7-6191FC79DEA7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 86
+                  },
+                  "id" : "E21B919A-D9A2-554B-933F-C3D7FEC73E2C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 31
+                  },
+                  "id" : "40EB220A-2A74-5B53-A4B7-13CC5A438640"
+                },
+                {
+                  "anchor" : {
+                    "x" : 39,
+                    "y" : 31
+                  },
+                  "id" : "4A62A7BC-1C41-5DC5-9095-FDF62585F31E"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#191D1D",
+        "fontSize" : 16,
+        "height" : 20,
+        "id" : "7497C320-7165-54B2-94B8-FAB5F14141BE",
+        "kind" : "text",
+        "name" : "signal_rooms_07-id",
+        "text" : "CUT / 03",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 18.56,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 32,
+        "x" : 40,
+        "y" : 62
+      }
+    ],
+    "showGuides" : false,
+    "unit" : "mm"
+  },
+  "designID" : "1C7B2389-8B7F-4AA4-BED1-81032434FBEE",
+  "id" : "3B7FC8C4-E41C-46C6-A2BA-D827BF5F42C2",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "signal_rooms_07 / editable graphic",
+  "parameters" : {
+    "depth" : 100,
+    "width" : 100
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}
