@@ -1,0 +1,566 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 12283.2,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "D1F47966-8A01-59DA-8EAF-069A56A9E9BA",
+        "kind" : "text",
+        "name" : "various_back_07-caption",
+        "text" : "The necessary detail\nThe detail answers the wider view’s question.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 54.9,
+        "x" : 18,
+        "y" : 110
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "0E206B8B-9580-5420-97F9-2F3286BEA612",
+        "kind" : "text",
+        "name" : "various_back_08-caption",
+        "text" : "Caption edit\nA short caption names one visible relation.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 54.9,
+        "x" : 80.5,
+        "y" : 110
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "7075C05F-B5BF-543B-A5E9-C18E73B60825",
+        "kind" : "text",
+        "name" : "various_back_09-caption",
+        "text" : "A common frame\nRelated studies retain one consistent scale.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 54.9,
+        "x" : 143,
+        "y" : 110
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 13,
+        "height" : 13,
+        "id" : "21DEE41F-CB9D-5F77-9A26-95403DEF6616",
+        "kind" : "text",
+        "name" : "three_views-heading",
+        "text" : "Three ways to look",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 17.55,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 137
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 10.75,
+        "height" : 97,
+        "id" : "F78C6107-4442-5FF7-B0D8-8C909AF74ED4",
+        "kind" : "text",
+        "name" : "various_back-three_views-frame-0",
+        "storyFrame" : {
+          "storyID" : "939D6360-C530-4C46-9FED-33A9B387BC01"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 155
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 13,
+        "height" : 13,
+        "id" : "75BD30B3-8D9A-54DD-A870-998AD3189C60",
+        "kind" : "text",
+        "name" : "after_image-heading",
+        "text" : "After the image",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 17.55,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 137
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 10.75,
+        "height" : 97,
+        "id" : "C970657A-45EA-576E-B614-C1D1E949FA7A",
+        "kind" : "text",
+        "name" : "various_back-after_image-frame-0",
+        "storyFrame" : {
+          "storyID" : "C6DCD728-4BB6-453F-8606-EAC62CBD649B"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 155
+      },
+      {
+        "asset" : "4895E413-A08C-444E-A152-63F62D79E349.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 10,
+        "height" : 84,
+        "id" : "67DE00A0-8B38-5589-9575-FDC4C66264C1",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.5228571428571429,
+          "x" : 0.23857142857142855,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "various_back_07-placed-vector",
+        "text" : "",
+        "width" : 54.9,
+        "x" : 18,
+        "y" : 22
+      },
+      {
+        "clipID" : "E880ED97-21AA-5C51-B800-830E16D2FF61",
+        "color" : "#000000",
+        "contentSize" : {
+          "x" : 100,
+          "y" : 100
+        },
+        "fontSize" : 10,
+        "height" : 54.9,
+        "id" : "48B98E9A-6F2E-5831-A5E8-C62D0227D5B4",
+        "kind" : "group",
+        "name" : "VARIOUS / various_back_08",
+        "text" : "",
+        "width" : 54.9,
+        "x" : 80.5,
+        "y" : 36.55
+      },
+      {
+        "color" : "#235C8B",
+        "fontSize" : 12,
+        "height" : 84,
+        "id" : "C6E5F3BA-CD3F-5664-BB8E-5A3E23BDD80B",
+        "kind" : "rectangle",
+        "name" : "signal_rooms_05-plate",
+        "parentID" : "48B98E9A-6F2E-5831-A5E8-C62D0227D5B4",
+        "text" : "",
+        "width" : 84,
+        "x" : 8,
+        "y" : 8
+      },
+      {
+        "color" : "#F4ECD9",
+        "fontSize" : 60,
+        "height" : 36,
+        "id" : "133DDBB3-65F0-58DF-994A-01865397F2B6",
+        "kind" : "text",
+        "name" : "signal_rooms_05-type",
+        "parentID" : "48B98E9A-6F2E-5831-A5E8-C62D0227D5B4",
+        "text" : "OPEN",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 69.6,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 80,
+        "x" : 12,
+        "y" : 24
+      },
+      {
+        "color" : "#F4ECD9",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "00256A80-D83D-5D56-B7BD-21AE84CE6140",
+        "kind" : "path",
+        "name" : "signal_rooms_05-line",
+        "parentID" : "48B98E9A-6F2E-5831-A5E8-C62D0227D5B4",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 15,
+                    "y" : 72
+                  },
+                  "id" : "A92C6B83-A8EB-5BDD-B61B-BD9746EBF405"
+                },
+                {
+                  "anchor" : {
+                    "x" : 84,
+                    "y" : 72
+                  },
+                  "id" : "6BDA7A50-D536-51BA-81EE-CC4F80EA7358"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#F4ECD9",
+          "join" : "round",
+          "width" : 0.8
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#F4ECD9",
+        "fontSize" : 7,
+        "height" : 10,
+        "id" : "1CA7B990-69FF-5D9C-9A90-00B4832DB78F",
+        "kind" : "text",
+        "name" : "signal_rooms_05-foot",
+        "parentID" : "48B98E9A-6F2E-5831-A5E8-C62D0227D5B4",
+        "text" : "LEAVE ROOM FOR THE NEXT WORD",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 8.12,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 73,
+        "x" : 15,
+        "y" : 79
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 10,
+        "height" : 84,
+        "id" : "E880ED97-21AA-5C51-B800-830E16D2FF61",
+        "kind" : "rectangle",
+        "name" : "various_back_08-frame-mask",
+        "text" : "",
+        "width" : 54.9,
+        "x" : 80.5,
+        "y" : 22
+      },
+      {
+        "asset" : "7F595F5F-2126-4A03-8738-DEFC6F4D44A1.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 30.492375,
+        "id" : "C48266FB-81CC-4DB4-8511-CDB6E1D3443A",
+        "kind" : "image",
+        "name" : "VARIOUS / various_back_09",
+        "text" : "",
+        "width" : 54.9,
+        "x" : 143,
+        "y" : 48.7538125
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "B52EAF39-EF4B-42AF-AA74-E9F2D1C0168C",
+  "id" : "65A5A656-9336-4CBF-A309-D5D2628F3564",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 47 / various back",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 12091.19999999999,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

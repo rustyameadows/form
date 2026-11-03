@@ -27,6 +27,20 @@ public struct ArtworkTextStyle: Codable, Equatable, Identifiable, Sendable {
 /// Styles hold character and paragraph formatting; frame behavior and manual
 /// pair positions belong to individual text objects. Colors retain palette links.
 public enum TextStyleCommands {
+  // Authored decimal literals and arithmetic/JSON values can differ by a few
+  // representable Doubles. Count IEEE-754 steps, rather than accepting a fixed
+  // epsilon that would hide meaningful small values or large-scale overrides.
+  private static func numericallyEquivalent(_ lhs: Double, _ rhs: Double) -> Bool {
+    guard lhs.isFinite, rhs.isFinite else { return false }
+    if lhs == rhs { return true }
+    func ordered(_ value: Double) -> UInt64 {
+      let sign = UInt64(1) << 63
+      let bits = value.bitPattern, magnitude = bits & (sign - 1)
+      return bits & sign == 0 ? sign + magnitude : sign - magnitude
+    }
+    let a = ordered(lhs), b = ordered(rhs)
+    return (a > b ? a - b : b - a) <= 8
+  }
   private struct Property {
     let name: String
     let differs: (Typography, Typography) -> Bool
@@ -34,6 +48,22 @@ public enum TextStyleCommands {
     init<T: Equatable>(_ name: String, _ path: WritableKeyPath<Typography, T>) {
       self.name = name
       differs = { $0[keyPath: path] != $1[keyPath: path] }
+      copy = { $0[keyPath: path] = $1[keyPath: path] }
+    }
+    init(_ name: String, _ path: WritableKeyPath<Typography, Double>) {
+      self.name = name
+      differs = { !TextStyleCommands.numericallyEquivalent($0[keyPath: path], $1[keyPath: path]) }
+      copy = { $0[keyPath: path] = $1[keyPath: path] }
+    }
+    init(_ name: String, _ path: WritableKeyPath<Typography, Double?>) {
+      self.name = name
+      differs = {
+        switch ($0[keyPath: path], $1[keyPath: path]) {
+        case (nil, nil): return false
+        case let (a?, b?): return !TextStyleCommands.numericallyEquivalent(a, b)
+        default: return true
+        }
+      }
       copy = { $0[keyPath: path] = $1[keyPath: path] }
     }
   }
@@ -62,7 +92,7 @@ public enum TextStyleCommands {
       var keys = Set(ref.overrides)
       for p in properties where p.differs(after.typography, before.typography)
         && (ref.characterOnly != true || !paragraphProperties.contains(p.name)) { keys.insert(p.name) }
-      if after.fontSize != before.fontSize { keys.insert("fontSize") }
+      if !numericallyEquivalent(after.fontSize, before.fontSize) { keys.insert("fontSize") }
       ref.overrides = keys.sorted(); result.textStyle = ref
     }
     if var ref = after.paragraphStyle, ref == before.paragraphStyle {
@@ -144,7 +174,7 @@ public enum TextStyleCommands {
   }
   public static func inheritsCorrectly(_ value: TextSpan, style: ArtworkTextStyle) -> Bool {
     let overrides = Set(value.textStyle?.overrides ?? [])
-    return (overrides.contains("fontSize") || value.fontSize == style.fontSize)
+    return (overrides.contains("fontSize") || numericallyEquivalent(value.fontSize, style.fontSize))
       && properties.allSatisfy { overrides.contains($0.name)
         || (value.textStyle?.characterOnly == true && paragraphProperties.contains($0.name))
         || !$0.differs(value.typography, style.typography) }
@@ -154,7 +184,7 @@ public enum TextStyleCommands {
     return properties.filter { !overrides.contains($0.name)
       && (value.textStyle?.characterOnly != true || !paragraphProperties.contains($0.name))
       && $0.differs(value.typography, style.typography) }.map(\.name)
-      + ((!overrides.contains("fontSize") && value.fontSize != style.fontSize) ? ["fontSize"] : [])
+      + ((!overrides.contains("fontSize") && !numericallyEquivalent(value.fontSize, style.fontSize)) ? ["fontSize"] : [])
   }
   private static func set(_ value: TextSpan, on element: inout ArtworkElement) {
     element.typography = value.typography

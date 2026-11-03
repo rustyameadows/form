@@ -12,7 +12,9 @@ struct ArtworkStudio: View {
   @State private var productionOutput = "print"
   @State private var showingLayers = true
   @State private var showingInspector = true
+  @State private var publicationInspectorRequest:UUID?
   @State private var showingBackground = false
+  @State private var showingPublicationCreate = false
   @ObservedObject private var appearance = InterfaceAppearance.shared
   private var hasContextNavigation: Bool {
     session.maskEditing != nil || session.componentReturn != nil || session.scopeID != nil
@@ -20,13 +22,14 @@ struct ArtworkStudio: View {
 
   var body: some View {
     GeometryReader { geometry in
-      let layers = showingLayers
+      let publicationNavigation=session.publicationWorkspace.isVisible && !store.canvasFindVisible
+      let layers = showingLayers && !publicationNavigation && !store.canvasFindVisible
       let inspector = showingInspector
       let panelHeight = max(180, geometry.size.height - 116)
       ZStack {
         if store.project != nil {
           VectorCanvas(session: session, revision: store.revision, fittingInsets: NSEdgeInsets(
-            top: 16, left: layers ? 266 : 16,
+            top: 16, left: layers || publicationNavigation || store.canvasFindVisible ? 266 : 16,
             bottom: hasContextNavigation ? 128 : 72, right: inspector ? 318 : 16))
         } else {
           VStack(spacing: 17) {
@@ -41,6 +44,9 @@ struct ArtworkStudio: View {
       .overlay(alignment: .topLeading) {
         if store.canvasFindVisible {
           CanvasFindPanel().padding(FloatingPanelStyle.outerPadding)
+        } else if publicationNavigation {
+          PublicationNavigator(session:session,controller:session.publicationWorkspace,maxHeight:panelHeight)
+            .padding(FloatingPanelStyle.outerPadding)
         } else if layers {
           ArtworkLayers(session: session, onClose: { showingLayers.toggle() })
             .frame(width: 234, height: min(panelHeight, 480))
@@ -50,7 +56,7 @@ struct ArtworkStudio: View {
       .overlay(alignment: .topTrailing) {
         if inspector {
           FloatingPanel(closeLabel: "Hide Canvas inspector", onClose: { showingInspector = false }) {
-            ArtworkInspector(session: session)
+            ArtworkInspector(session: session,publicationFocusRequest:publicationInspectorRequest)
           }.frame(width: FloatingPanelStyle.inspectorWidth, height: panelHeight)
             .padding(FloatingPanelStyle.outerPadding)
         }
@@ -77,6 +83,7 @@ struct ArtworkStudio: View {
     .onChange(of: store.revision) { _, _ in session.reconcile() }
     .onReceive(NotificationCenter.default.publisher(for: .formShowCanvasInspector)) { notification in
       guard (notification.object as? ArtworkSession) === session else { return }
+      publicationInspectorRequest=notification.userInfo?["publication_settings"] as? Bool == true ? UUID():nil
       showingInspector = true
     }
     .onChange(of: session.dieline) { _, dieline in
@@ -126,10 +133,21 @@ struct ArtworkStudio: View {
   private func tools(layers: Bool, inspector: Bool) -> some View {
     HStack(spacing: WorkspaceToolbarMetrics.spacing) {
       WorkspaceToolbarButton("Canvas & Surfaces", symbol: "sidebar.left", isSelected: layers,
-        value: layers ? "Shown" : "Hidden") { showingLayers.toggle() }
+        value: layers ? "Shown" : "Hidden") {
+          showingLayers = !layers
+          store.canvasFindVisible=false
+          session.publicationWorkspace.close()
+        }
       WorkspaceToolbarButton("Canvas inspector", symbol: "sidebar.right", isSelected: inspector,
-        value: inspector ? "Shown" : "Hidden") { showingInspector.toggle() }
+        value: inspector ? "Shown" : "Hidden") { publicationInspectorRequest=nil;showingInspector.toggle() }
       WorkspaceToolbarButton("Find on Canvas · ⌘F", symbol: "magnifyingglass") { store.requestWorkspaceFind(.artwork) }
+      WorkspaceToolbarButton("Publication pages",symbol:"book.closed",isSelected:session.publicationWorkspace.isVisible && !store.canvasFindVisible,
+        help:"Publication pages · ⇧⌘P",identifier:"canvas-publication-pages") {
+          if store.project?.publications?.isEmpty != false {showingPublicationCreate=true}
+          else{store.togglePublicationPages()}
+        }.popover(isPresented:$showingPublicationCreate) {
+          PublicationCreateView(controller:session.publicationWorkspace).labInterface()
+        }
       WorkspaceToolbarDivider()
       ForEach(ArtworkTool.allCases, id: \.self) { tool in
         WorkspaceToolbarButton(tool.rawValue.capitalized + " tool", symbol: tool.symbol,

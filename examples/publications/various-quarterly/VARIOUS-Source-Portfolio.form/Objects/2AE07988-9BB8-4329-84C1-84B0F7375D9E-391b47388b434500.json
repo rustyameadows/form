@@ -1,0 +1,19 @@
+{
+  "color" : "#9AA688",
+  "designID" : "C7BB932B-BC6E-44ED-81CA-6FE3CC169CF9",
+  "id" : "2AE07988-9BB8-4329-84C1-84B0F7375D9E",
+  "locked" : false,
+  "materialID" : "sage",
+  "name" : "common_current_04",
+  "parameters" : {
+    "scale" : 1
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "various_common_current_04",
+  "relationship" : "original",
+  "rotation" : 0
+}

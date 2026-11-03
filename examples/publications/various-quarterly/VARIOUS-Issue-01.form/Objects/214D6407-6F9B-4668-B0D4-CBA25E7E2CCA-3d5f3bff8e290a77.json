@@ -1,0 +1,290 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 11515.5,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "6786E86D-9EA9-580A-ABB7-261D722BA821",
+        "kind" : "text",
+        "name" : "index_works_05-caption",
+        "text" : "Turn tab\nA turned end suggests a clear gesture.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 109,
+        "x" : 18,
+        "y" : 184
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "B4003391-CA44-5154-9B8E-E18308084348",
+        "kind" : "text",
+        "name" : "index_works_06-caption",
+        "text" : "Softened edge\nThe softened edge keeps a straight comparison.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 94
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "B285BDF8-6CDF-5F89-8164-9244741CEAE9",
+        "kind" : "text",
+        "name" : "index_works_07-caption",
+        "text" : "Finger space\nThe opening remains connected to its support.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 187
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 15,
+        "id" : "3544D5EA-690C-5134-B270-C005D5512143",
+        "kind" : "text",
+        "name" : "index_works_08-caption",
+        "text" : "Family / scale\nThe wider view restores the family’s scale.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 254
+      },
+      {
+        "asset" : "2C9395BD-BE60-4AC8-97ED-C75DA57C1A30.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 154,
+        "id" : "ACCDF47E-AE42-4CB0-B013-6A7B470F84F8",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.5662337662337662,
+          "x" : 0.2168831168831169,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / index_works_05",
+        "text" : "",
+        "width" : 109,
+        "x" : 18,
+        "y" : 26
+      },
+      {
+        "asset" : "4895E413-A08C-444E-A152-63F62D79E349.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 64,
+        "id" : "456F1729-105A-4AB2-80FC-982D1F008CEE",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.73625,
+          "x" : 0.13187500000000002,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / index_works_06",
+        "text" : "",
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 26
+      },
+      {
+        "asset" : "43F98765-D1CB-43AE-8BAF-FD6CB4DF1A0A.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 64,
+        "id" : "BE91E01D-C8E4-4293-AA06-F41528415339",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.73625,
+          "x" : 0.13187500000000002,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / index_works_07",
+        "text" : "",
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 119
+      },
+      {
+        "asset" : "D175AE87-2604-4D66-90F9-C12DE44690B8.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 35,
+        "id" : "B0E5B0A8-3840-48F7-96AB-F7057956C80F",
+        "kind" : "image",
+        "name" : "VARIOUS / index_works_08",
+        "text" : "",
+        "width" : 63.01575393848462,
+        "x" : 76.4421230307577,
+        "y" : 216
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "FD329C1E-B775-4EA3-88FF-F2FABFE79860",
+  "id" : "214D6407-6F9B-4668-B0D4-CBA25E7E2CCA",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 44 / artist 06",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 11335.49999999999,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

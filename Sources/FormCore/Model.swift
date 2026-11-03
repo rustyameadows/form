@@ -228,6 +228,7 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var cadModel: CADModelDefinition?
   public var cadRepresentation: CADRepresentation?
   public var paperConstruction:PaperConstruction?
+  public var sheetAssembly:SheetAssemblyDefinition?
   public var paperTemplateReference:PaperTemplateReference?
   public var canvasSourceOnly:Bool?
   public var canvasProjectionPositions:[String:Point2]?
@@ -420,7 +421,7 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
-  public static let maximumSchemaVersion=62
+  public static let maximumSchemaVersion=63
   public var schemaVersion = 1
   public var id: UUID = UUID()
   public var name: String
@@ -447,6 +448,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if objects.contains(where:{$0.sheetAssembly != nil}) || publications?.contains(where:{$0.requiresExtendedPublicationSchema}) == true {return max(schemaVersion,63)}
     if recipes.contains(where: { $0.solid != nil }) { return max(schemaVersion, 62) }
     if storedArtworks.contains(where: { $0.elements.contains(where: { $0.objectView != nil }) }) { return max(schemaVersion, 61) }
     if storedArtworks.contains(where: { $0.elements.contains(where: { $0.imageGeneration != nil }) }) { return max(schemaVersion, 60) }

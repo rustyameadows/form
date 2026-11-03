@@ -1,0 +1,4469 @@
+{
+  "objects" : [
+    {
+      "canvasWorkspace" : false,
+      "file" : "222A3F2B-2472-42FE-8B42-7493974E1689-5a7affc748db97fa.json",
+      "id" : "222A3F2B-2472-42FE-8B42-7493974E1689"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "CA0839B1-BDDF-468B-8836-94B50695563B-38ce90a6aa71b7f1.json",
+      "id" : "CA0839B1-BDDF-468B-8836-94B50695563B"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "017E3E1B-F9CE-400C-937C-5E793DE14322-aa2ae3b983b68e10.json",
+      "id" : "017E3E1B-F9CE-400C-937C-5E793DE14322"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "552CF261-B6B0-481D-BF83-069CE0D0B472-25f603202b388288.json",
+      "id" : "552CF261-B6B0-481D-BF83-069CE0D0B472"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "B75096B3-4073-42E1-98F6-A42155546A50-63833e86da156683.json",
+      "id" : "B75096B3-4073-42E1-98F6-A42155546A50"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "168FE156-47D9-490D-BC4C-D3D3B558F9D5-77e30a4fb3d80fcb.json",
+      "id" : "168FE156-47D9-490D-BC4C-D3D3B558F9D5"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "9FBBFDBB-33D0-4515-9D4B-EE8E63A5F2EB-f70d3066cb640c57.json",
+      "id" : "9FBBFDBB-33D0-4515-9D4B-EE8E63A5F2EB"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "E708DE4A-1AFA-4747-9E3F-B30D1C9E1513-a58550324c52d3c7.json",
+      "id" : "E708DE4A-1AFA-4747-9E3F-B30D1C9E1513"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "CC22552B-A22C-40C0-8BC2-378F1CB29066-f0939a72da0638d5.json",
+      "id" : "CC22552B-A22C-40C0-8BC2-378F1CB29066"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "40486AF8-ACA7-4CE6-8CA1-6E800719DA50-e007ce9760f13a28.json",
+      "id" : "40486AF8-ACA7-4CE6-8CA1-6E800719DA50"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "44EC34F6-EF67-4241-B536-47E57151F2C8-401a9927135af55d.json",
+      "id" : "44EC34F6-EF67-4241-B536-47E57151F2C8"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "ED0333F7-DC87-42FF-A748-D0EAC2529D98-f35e33a391b6dc15.json",
+      "id" : "ED0333F7-DC87-42FF-A748-D0EAC2529D98"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "608060F0-BCBB-4DDF-BE6A-AAB62697C96F-339ef2d76555b398.json",
+      "id" : "608060F0-BCBB-4DDF-BE6A-AAB62697C96F"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "91E819C2-1CED-4005-82E6-2667597A6C1A-a145c3335a44049d.json",
+      "id" : "91E819C2-1CED-4005-82E6-2667597A6C1A"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "3A3A81E1-E410-42AB-A095-F09EBB278B9F-14dbaa09f0aefee5.json",
+      "id" : "3A3A81E1-E410-42AB-A095-F09EBB278B9F"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "9C31CDD0-4200-484D-B704-51C60ED8395B-e45f365fcd9d32f0.json",
+      "id" : "9C31CDD0-4200-484D-B704-51C60ED8395B"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "B7793FB0-685D-4B01-947A-9E2712605A38-243953ff8d4c4e64.json",
+      "id" : "B7793FB0-685D-4B01-947A-9E2712605A38"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "C0736664-F161-426E-8279-F2901D16EED5-bdafe088038b3548.json",
+      "id" : "C0736664-F161-426E-8279-F2901D16EED5"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "2DCCC6EF-243A-477D-B1C7-3A764B07345D-abaf0aae4e071039.json",
+      "id" : "2DCCC6EF-243A-477D-B1C7-3A764B07345D"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "33B8BCA9-1573-4955-AF18-F017658BE94D-5bc0ae7faf142587.json",
+      "id" : "33B8BCA9-1573-4955-AF18-F017658BE94D"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "6F2FF6FE-4CC2-4F4C-922B-06E76B0401B1-9861ade1177587af.json",
+      "id" : "6F2FF6FE-4CC2-4F4C-922B-06E76B0401B1"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "173ED48C-6C1E-4DD3-8567-3CAE5FB1EB56-1b23bedae1e211e6.json",
+      "id" : "173ED48C-6C1E-4DD3-8567-3CAE5FB1EB56"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "0AF6840C-CD09-4007-A25B-05A616461433-0336c857798f2090.json",
+      "id" : "0AF6840C-CD09-4007-A25B-05A616461433"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "9151306C-FADA-4782-B7F5-325D8AA52894-757bd3f06aa57672.json",
+      "id" : "9151306C-FADA-4782-B7F5-325D8AA52894"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "713937C7-2C56-4077-A461-AFB0FF584791-38be4e62132e14a2.json",
+      "id" : "713937C7-2C56-4077-A461-AFB0FF584791"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "D8D710C7-2E86-472E-A441-CD71A91BBF0D-6fa54288be6284fa.json",
+      "id" : "D8D710C7-2E86-472E-A441-CD71A91BBF0D"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "54EAB234-FE06-4592-9B66-623923BAD14B-300b4b53e15e2ce5.json",
+      "id" : "54EAB234-FE06-4592-9B66-623923BAD14B"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "4ECAD001-54BC-407C-A4A1-A4EC782BE63A-05fdcd451f788ccb.json",
+      "id" : "4ECAD001-54BC-407C-A4A1-A4EC782BE63A"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "D1EB84E0-44A7-469D-83A3-7D2A8DF488B7-b9d86cc04f5797c1.json",
+      "id" : "D1EB84E0-44A7-469D-83A3-7D2A8DF488B7"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "19BFB3AE-45C3-4053-809F-6F518C0BFA95-07a92dff569514ed.json",
+      "id" : "19BFB3AE-45C3-4053-809F-6F518C0BFA95"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "84093D97-14AB-4C6E-98E1-B50F4CB7CC47-73579fc92ebfd0d4.json",
+      "id" : "84093D97-14AB-4C6E-98E1-B50F4CB7CC47"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "48B841C1-735C-4146-A777-1F31A786B414-943d80eca8ca123a.json",
+      "id" : "48B841C1-735C-4146-A777-1F31A786B414"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "3513752B-216C-476B-9F2D-E80D02C1FF0E-be2e2b7d25223215.json",
+      "id" : "3513752B-216C-476B-9F2D-E80D02C1FF0E"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "C131604C-4E75-4D31-BE09-8FBA86C04E42-592eb943e833b699.json",
+      "id" : "C131604C-4E75-4D31-BE09-8FBA86C04E42"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "B4A1C05B-33A8-46E5-B967-1C5C300A91F6-b6e93ece7d93bb06.json",
+      "id" : "B4A1C05B-33A8-46E5-B967-1C5C300A91F6"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "431F3BF0-C24A-4E01-AD59-FBEA3E28A602-0221f2713153a61d.json",
+      "id" : "431F3BF0-C24A-4E01-AD59-FBEA3E28A602"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "367E7E82-37F9-4D8F-93FC-550505185B13-8bd31969466e44bb.json",
+      "id" : "367E7E82-37F9-4D8F-93FC-550505185B13"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "13C06A64-89DD-4EA4-B51F-202FE4F0B84F-880f0097c3cc644e.json",
+      "id" : "13C06A64-89DD-4EA4-B51F-202FE4F0B84F"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "A1DF2B76-DC1A-4F9E-8C9B-D44961A8A7C3-26bef4c59d98e02d.json",
+      "id" : "A1DF2B76-DC1A-4F9E-8C9B-D44961A8A7C3"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "CB20A71E-8B60-4A09-9EAF-D9897EB3C2F3-7d7ecb7fcae086d3.json",
+      "id" : "CB20A71E-8B60-4A09-9EAF-D9897EB3C2F3"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "2EA72A47-D940-4B3A-87BC-354A4877CD43-5a07cd694ac74248.json",
+      "id" : "2EA72A47-D940-4B3A-87BC-354A4877CD43"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "F7145393-4C43-4D51-9B82-91E1DBC9BEC2-9147f79b50ceba90.json",
+      "id" : "F7145393-4C43-4D51-9B82-91E1DBC9BEC2"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "E92F8B1A-BFEC-4E23-B75D-F1D07F26BA69-19181ea0b8a7e11d.json",
+      "id" : "E92F8B1A-BFEC-4E23-B75D-F1D07F26BA69"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "F22044BF-17E8-4E04-8157-9608DA790C10-c6f08f154dcdd678.json",
+      "id" : "F22044BF-17E8-4E04-8157-9608DA790C10"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "A221060E-F621-4ADA-8886-5749127AFACC-43eb2604b46a66a9.json",
+      "id" : "A221060E-F621-4ADA-8886-5749127AFACC"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "214D6407-6F9B-4668-B0D4-CBA25E7E2CCA-3d5f3bff8e290a77.json",
+      "id" : "214D6407-6F9B-4668-B0D4-CBA25E7E2CCA"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "1D62ACE6-A204-4DC3-8221-AE4EDD36C9F8-73b6163ebba9746d.json",
+      "id" : "1D62ACE6-A204-4DC3-8221-AE4EDD36C9F8"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "FF2DFBBB-BE76-4C06-84A2-34092735F5F6-34de275d2a1fe98b.json",
+      "id" : "FF2DFBBB-BE76-4C06-84A2-34092735F5F6"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "65A5A656-9336-4CBF-A309-D5D2628F3564-1ff193d82d9bc9d2.json",
+      "id" : "65A5A656-9336-4CBF-A309-D5D2628F3564"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "24ADDF72-1CB1-4E93-A493-A5FB758E86E2-4526b38deab69636.json",
+      "id" : "24ADDF72-1CB1-4E93-A493-A5FB758E86E2"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "14FA4D2E-D6D5-4FCA-8692-D12D5F72E190-49932262ac3fc069.json",
+      "id" : "14FA4D2E-D6D5-4FCA-8692-D12D5F72E190"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "A880885D-98C2-4B4E-8E15-081C2B95FCCA-c8dca1ba5292ca7a.json",
+      "id" : "A880885D-98C2-4B4E-8E15-081C2B95FCCA"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "36423940-1496-4D45-81E3-FFFB7726067E-976082fd26994043.json",
+      "id" : "36423940-1496-4D45-81E3-FFFB7726067E"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "B2F69C71-64E8-4CD4-B572-CDC35C58BED8-71ea2b0ac8f8a491.json",
+      "id" : "B2F69C71-64E8-4CD4-B572-CDC35C58BED8"
+    },
+    {
+      "canvasWorkspace" : false,
+      "file" : "181E7802-8D6E-40F9-ACD1-BF19BB912EA2-0f7ecbbfba856f84.json",
+      "id" : "181E7802-8D6E-40F9-ACD1-BF19BB912EA2"
+    }
+  ],
+  "project" : {
+    "camera" : {
+      "azimuth" : 0.55,
+      "distance" : 12,
+      "elevation" : 0.7,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 0,
+        "y" : 0.6,
+        "z" : 0
+      },
+      "viewportAspect" : 1.587651598676957
+    },
+    "createdAt" : "2026-11-02T01:31:25Z",
+    "history" : [
+      {
+        "date" : "2026-11-02T01:31:35Z",
+        "id" : "64A14DEF-0B6A-4859-A13B-80C7A2753635",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:35Z",
+        "id" : "E827E2B6-7DCE-4FA2-BB7B-DB35A2A4D2AA",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:35Z",
+        "id" : "13EF456A-40EA-4C7F-87D7-0CBA64EBFFE1",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:35Z",
+        "id" : "E50A16E6-E2E9-4F39-8B04-38429DDB74FA",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:35Z",
+        "id" : "DA5BD425-01B9-4D0C-81D6-658103CF1C6B",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:35Z",
+        "id" : "62A36F49-5D68-41E8-8AD0-5B9302DB34B1",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:35Z",
+        "id" : "BCC5E8FC-1D9D-413C-9A5B-A371C59F11CC",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:35Z",
+        "id" : "78A07CD5-F2F6-403C-8536-051AD199A7CE",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:35Z",
+        "id" : "7E55FB2F-942D-4B29-B884-F0B05585F304",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:35Z",
+        "id" : "AB01DDE8-C39C-492A-A4A1-6D144D3605BA",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:35Z",
+        "id" : "7C26FD27-054F-4436-94DB-30E38F784EBC",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:35Z",
+        "id" : "DD391155-4788-4C6C-9754-9C0BAF288F03",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "30EC6E9C-C0B9-41D2-ADB8-FAA345E1877E",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "C1A2260A-81B9-4F6D-871A-AB28BD9D07A1",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "0B6B5DA5-5C1B-45B9-A69C-BFE691E55A8C",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "BFA1085C-6572-4C3A-90D4-1224B979FE82",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "DF968594-9CC4-4165-A508-D2A32528F3C2",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "172FD263-8D32-4C6C-8BCC-F4800EAA42BA",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "0ACD037E-5A73-42DC-9123-637C8212F006",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "D44EF6CA-0F6E-43B5-AE74-715132379631",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "1661176B-1AB9-407C-8BA0-4DA833157C6D",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "789BC196-F60B-4107-A526-D753E7BF4F0F",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "7C67C605-6C7A-490B-A99C-3410EC62C93D",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "AC53954D-7E2E-47E3-B21C-42B700D2C8FC",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "6B5DBA53-627A-41DE-8789-988DF0230B47",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "AAD15111-3023-4027-B69E-4BBECD406D4D",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "2CC7DD95-6BC5-436C-9BD8-9A1160EA3AEF",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:36Z",
+        "id" : "1C63D559-4CE3-4D93-9A7F-5A0380788906",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "89F15512-4B2E-4FE6-90F0-D999FC0F2F62",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "8FCB5615-1C88-4FAB-84E8-9DB9C66314D9",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "3DC1AF4F-E014-4AC0-A309-430762BCCC5C",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "65B28F00-B8B3-4A8D-AE71-ECA4BEB5CC3C",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "DE77E8E6-C21B-46DF-8C59-162D3220E1B4",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "AEF3FA6A-90B8-4A30-87CA-72AFD39F469F",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "BBDC30FC-B6D3-47D2-B2A7-8907AC9E71B8",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "36A0ACA0-AB1C-4AAF-8594-6DC75292AB00",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "47190DE8-76B7-4A7D-9290-2A9A64B31242",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "6964FD96-4ECC-4C9E-AEA2-9A1663B32809",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "CEB81312-FD96-4F83-A922-17301103A280",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "4FE77E20-0E04-4D31-A134-4BBD6E384915",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "967B2908-38F0-492C-8E76-5D8322B85A9A",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "E8DCDB37-9596-4E14-B9D1-791F896FD6FA",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:37Z",
+        "id" : "B6888796-A025-4FC9-AD22-A4A1F97DDE9A",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "15066D94-700F-4CC0-A9AE-596B66C3EFA6",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "05118721-A014-4F55-9F06-ADC31ECE78CC",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "85E22650-2DCE-4758-8428-3C469E1D4A7C",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "545473A8-D8AF-479E-853D-EF2A7B73AAD1",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "7DCD847C-C6F5-4B18-B265-D51F2AA6EDB6",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "F3E9F8E1-AEC9-4151-A927-D1A1A8347A88",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "5798370C-9CF3-44EE-8684-1D9D3B67D3D5",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "4C2324F3-9CBB-4870-8788-508B1AE546D7",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "AB612FEF-E040-4267-8014-9F327C781066",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "0AD15958-4BE9-4712-B375-040BB71E2915",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "BB3CC49A-8E6E-4C47-93B6-3D0967534F93",
+        "source" : "Codex",
+        "text" : "Updated object parameters"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "A593D526-97CF-48AA-B095-EA0FE0E1C422",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:38Z",
+        "id" : "5775A71E-6C54-4BA1-9D04-A8AC23443746",
+        "source" : "Codex",
+        "text" : "Publication: page_settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:39Z",
+        "id" : "8C162EDC-2706-4828-B526-E82E004E3A3B",
+        "source" : "Codex",
+        "text" : "Added VARIOUS / Verso running furniture"
+      },
+      {
+        "date" : "2026-11-02T01:31:39Z",
+        "id" : "DFC8C81A-EF8B-4C65-9AEA-59B7C120D647",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:39Z",
+        "id" : "AB46CBE8-6C24-4421-9C60-ED9274CD1EBE",
+        "source" : "Codex",
+        "text" : "Added VARIOUS / Recto running furniture"
+      },
+      {
+        "date" : "2026-11-02T01:31:39Z",
+        "id" : "E51919F8-314F-454D-8A32-93F1A141F224",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T01:31:39Z",
+        "id" : "C3508701-624C-4678-9D92-28272483C1DB",
+        "source" : "Codex",
+        "text" : "Publication: settings"
+      },
+      {
+        "date" : "2026-11-02T01:31:41Z",
+        "id" : "EFB1EAD6-76EF-4A6A-A05A-B31D7C45340B",
+        "source" : "Codex",
+        "text" : "Text style: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:41Z",
+        "id" : "31BE1100-DABF-4A14-AD78-02A753BDE14F",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:41Z",
+        "id" : "A02D7100-B631-4916-A2EA-6442C9D8C09E",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:42Z",
+        "id" : "F8154D84-19F5-4AA8-B439-F51B09B2F12A",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:42Z",
+        "id" : "185B3A05-3CBD-4F23-9399-1EAF3628CBF6",
+        "source" : "Codex",
+        "text" : "Text style: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:42Z",
+        "id" : "DCA8A59B-8FBB-4504-BB88-C510D02CBC64",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:42Z",
+        "id" : "7453A7C7-C674-45E8-A9BD-F9B92C02E1D3",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:42Z",
+        "id" : "D5217518-D21A-482D-A996-B0760A6EB9B2",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:43Z",
+        "id" : "6ED66FD9-D061-42D9-962D-F0A46AEE0600",
+        "source" : "Codex",
+        "text" : "Text style: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:43Z",
+        "id" : "6355D8C5-0A0B-4D8C-A542-820AD915C1DF",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:43Z",
+        "id" : "DD65F705-3BC3-4696-B1F6-C45D9EAD3DC4",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:43Z",
+        "id" : "C57457A6-7661-42E5-B83F-636EDDA5DAE2",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:43Z",
+        "id" : "A09E33D8-C28A-477E-B5B7-43F7010F5898",
+        "source" : "Codex",
+        "text" : "Text style: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:44Z",
+        "id" : "615930E7-C737-451A-90C3-1ADE9C871FB8",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:44Z",
+        "id" : "D3B0BC24-07C3-4075-B942-25ED477DCB8D",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:44Z",
+        "id" : "5D3DBA66-7CF1-437B-8198-2C5BF0DA47A2",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:44Z",
+        "id" : "B92E64D5-4DBD-47E1-A8B0-FB14DA7977D1",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:44Z",
+        "id" : "F5532E48-D5BE-4C3C-AE2E-A6D65C5865B6",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:45Z",
+        "id" : "684812CD-2535-4711-B663-5140AEA05B1C",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:45Z",
+        "id" : "F01EA2B7-507D-4B9B-A2AD-2C009D0E23CC",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:45Z",
+        "id" : "F68751B3-1515-4863-8DE6-D5B31179BF53",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:45Z",
+        "id" : "3D7FF8CE-E4B6-49E5-91AF-704DBA2F83F0",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:46Z",
+        "id" : "76921F6A-4829-44A5-A13A-295891F4F2ED",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:46Z",
+        "id" : "F06B75A2-E74F-4FD2-B018-84B6A9198919",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:46Z",
+        "id" : "2CE76909-09DE-47E0-967E-4E7DCAAD1C83",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:46Z",
+        "id" : "FC9869C1-1ACB-43A6-8467-DBF22C4CC666",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:47Z",
+        "id" : "D1EA6AC3-F9AC-4739-A9B0-B467829877A6",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:47Z",
+        "id" : "A5DC1673-77A9-4E09-B527-94F9FBE27710",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:47Z",
+        "id" : "775E983B-344B-4DCD-BF93-27BFF5EEF3EA",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:47Z",
+        "id" : "03E8739B-AF6C-4819-B276-AB495257311F",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:48Z",
+        "id" : "EDCC1558-647B-4D2B-B036-C4CD9FF67A62",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:48Z",
+        "id" : "E6008A85-FC15-444B-8ECD-BCD838FB927E",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:48Z",
+        "id" : "5AC13189-3F65-42DB-AD29-C978504CEE06",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:48Z",
+        "id" : "DE475EAF-5686-46EA-A888-5554C13CFBB9",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:49Z",
+        "id" : "DA399BB8-6ABB-4665-A69C-BC1722D1027E",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:49Z",
+        "id" : "B47ABA7A-30B9-40EB-A3B8-093B822B8F50",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:49Z",
+        "id" : "E9DC7DBC-029E-4F1C-8590-5E7CB6247EC9",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:49Z",
+        "id" : "3EA5D713-CA18-4EE1-800D-A6926CB00860",
+        "source" : "Codex",
+        "text" : "Text style: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:49Z",
+        "id" : "67D5B1A3-81F5-4671-A6D7-E201D6C72DE2",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:50Z",
+        "id" : "CE27975A-A031-44C6-A767-8133817C55E7",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:50Z",
+        "id" : "8C6CD2FF-6CD5-4C32-A2F6-FF8F9C2BB7FB",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:50Z",
+        "id" : "36932C5F-F74A-4768-8515-BD942B570389",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:51Z",
+        "id" : "FA7BAB07-0AE6-4630-A6D3-8AE4BCE4D40C",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:51Z",
+        "id" : "87BE1052-3CBF-40A9-9FE8-52CBD88D4693",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:51Z",
+        "id" : "704AE31A-CF0D-4D13-9353-DFE164C5F677",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:51Z",
+        "id" : "52033C52-D812-4280-8B75-B4B2918D0C86",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:52Z",
+        "id" : "66867756-FC14-4E28-A3E5-2AD511B667F3",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:52Z",
+        "id" : "72FA54E4-0FA4-43B9-AF40-BF3562B00AE3",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:52Z",
+        "id" : "499486EB-E5FB-434B-BA6E-53320897E8E5",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:53Z",
+        "id" : "153F6B34-7710-4C3E-9008-2C64AD9CC024",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:53Z",
+        "id" : "41288D30-6CA6-434E-99F3-01715CFF1DB1",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:53Z",
+        "id" : "6E0CF0CC-AEA1-4110-843E-B069E01C171B",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:53Z",
+        "id" : "77902FEA-6093-4223-A900-3C006E3994FC",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:54Z",
+        "id" : "7D5AA809-4379-4A19-8106-B313EDC8D757",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:54Z",
+        "id" : "56883514-6AB5-4EBE-9918-8926FADC7495",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:54Z",
+        "id" : "E330E152-6AE3-4BCE-8787-F4F05DFD252A",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:55Z",
+        "id" : "AAD6D285-505C-4B24-88CC-B2A550DB7991",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:55Z",
+        "id" : "48371F58-F782-4A8F-8793-7B40D6DE1CCF",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:55Z",
+        "id" : "8383A77E-060F-4187-934E-B0B96D8B26BA",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:56Z",
+        "id" : "F66A9363-25E3-4A9A-A27C-92FDF8804DA8",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:56Z",
+        "id" : "762C3985-A369-451B-BE5D-BB35E5B5F38D",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:56Z",
+        "id" : "5AAD03ED-2669-4F91-84F5-196C348DEBAB",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:56Z",
+        "id" : "0573368F-101D-4D25-B234-E2654FD4AD6F",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:56Z",
+        "id" : "7CBF8B7A-2F0E-4064-8C0B-AA0E5222B831",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:57Z",
+        "id" : "BF8D32DD-472E-407A-A6DD-3612A35A27F7",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:57Z",
+        "id" : "CAD7D2D2-AC2A-4326-A561-5A0D82728C21",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:57Z",
+        "id" : "1A786D78-3C81-4782-A37F-0C5DA7F3E9AA",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:57Z",
+        "id" : "15F72161-A6BF-4CFE-BE40-D54D37EF75C6",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:58Z",
+        "id" : "8A90498B-16D7-422C-A62C-1C863529BE21",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:58Z",
+        "id" : "1107B8F7-4C63-485A-8537-6B663C977979",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:58Z",
+        "id" : "2745A7B1-94BC-4CC3-B884-BC59AA2D5461",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:59Z",
+        "id" : "C1187D2A-E8C3-48E8-BBC1-AA866A773666",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:31:59Z",
+        "id" : "0667B0BC-7DCA-4839-A94B-E9A155164763",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:31:59Z",
+        "id" : "233EC829-D344-40DE-A1E2-E220C7E466A3",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:31:59Z",
+        "id" : "3B118164-1A1D-47ED-9D80-1489554261E6",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:32:00Z",
+        "id" : "51D3D2FE-6936-4678-8172-7EA1260AE974",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:32:00Z",
+        "id" : "4811CD10-FA9E-4F85-82C7-0984646488E0",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:32:00Z",
+        "id" : "7BEBF7B9-3AAC-4745-BB1E-B8F67A3D5E01",
+        "source" : "Codex",
+        "text" : "Text style: create"
+      },
+      {
+        "date" : "2026-11-02T01:32:00Z",
+        "id" : "27FFC686-BAF2-4A82-89A8-3A49519204FE",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:32:00Z",
+        "id" : "84FC8246-54A4-43B7-AA5C-46FAB5A40552",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:32:01Z",
+        "id" : "32240B16-8D67-4300-B568-EFC7C1D8720F",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:32:01Z",
+        "id" : "E90EDA74-E7B0-4FE4-A88D-54003C4B075C",
+        "source" : "Codex",
+        "text" : "Text story: create"
+      },
+      {
+        "date" : "2026-11-02T01:32:01Z",
+        "id" : "23E404BA-7BB0-45BD-8492-7991200D43FA",
+        "source" : "Codex",
+        "text" : "Text story: replace_text"
+      },
+      {
+        "date" : "2026-11-02T01:32:01Z",
+        "id" : "2C53F0FE-8575-43C3-AB74-45A15C040D8F",
+        "source" : "Codex",
+        "text" : "Text story: edit"
+      },
+      {
+        "date" : "2026-11-02T01:32:02Z",
+        "id" : "4ED829F0-DD03-41ED-A8BB-687514D55131",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:02Z",
+        "id" : "8C7FCC9A-8962-4876-97B9-4E74439EDD18",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:02Z",
+        "id" : "16EF090E-BFD6-4E75-8F35-FF53E2B907A0",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:02Z",
+        "id" : "F9DADB88-6D1B-4A54-99A8-76BD99FED28A",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:03Z",
+        "id" : "CBFE40A5-B265-4E2D-AD60-F9E158E94F5B",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:03Z",
+        "id" : "72B0D9C8-4597-4AD1-B5D0-3FC77DF80A9B",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:03Z",
+        "id" : "25B53571-C0FE-4494-91AD-863CAE7DB54A",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:03Z",
+        "id" : "69470FE8-4133-4AF1-BE45-42A2F05BE92C",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:04Z",
+        "id" : "5858AFAA-A4AE-44C8-B69C-8E2638A63752",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:04Z",
+        "id" : "12D368C0-70F4-4091-A101-976BE51F729B",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:04Z",
+        "id" : "9DF9C66F-B505-47FF-AC4B-64470FB4E2ED",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:04Z",
+        "id" : "3CD9AC59-7C82-422C-9642-65DFA9BE47DA",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:05Z",
+        "id" : "0715EEB5-872E-4859-A748-CED991082FE0",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:05Z",
+        "id" : "C4A6763E-6894-4869-BFE9-E6EE077EB844",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:05Z",
+        "id" : "3B158744-F092-4F99-A37C-A2F1489654CD",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:05Z",
+        "id" : "61E86E8F-11ED-4259-923E-ABFBF3373856",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:06Z",
+        "id" : "52FC155B-2907-4097-BDBA-02A76BE44182",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:06Z",
+        "id" : "1145995B-CDE0-4D06-A780-D04EC8F87651",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:07Z",
+        "id" : "9739064D-6EFF-4452-ABA3-E8F764092F34",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:07Z",
+        "id" : "9B85A06D-6CDA-4878-B445-3B3BFCD2C7B3",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:08Z",
+        "id" : "3DE1F243-D1D5-4AD5-B375-199C4553322C",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:08Z",
+        "id" : "7585FF01-E207-4956-9C89-F26A45FD9288",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:09Z",
+        "id" : "DEE928EA-85F1-406D-8626-0085F4EFFB46",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:10Z",
+        "id" : "CFF3F550-7BF6-45AE-9028-A58667C8E248",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:10Z",
+        "id" : "5F9FBC32-C8A4-4FAB-A2AC-16383E498046",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:11Z",
+        "id" : "51F68BF6-DFF8-4FF8-B955-CAADCA429272",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:11Z",
+        "id" : "FF8820A1-8337-456E-8799-0D8A087E5B16",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:11Z",
+        "id" : "6C7DCF0D-434E-4FF5-891D-7DFCD5F291FE",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:12Z",
+        "id" : "8B3202F4-44D2-4D10-A894-0F32EBBC7C1E",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:12Z",
+        "id" : "F2128F0D-5AB1-446A-B9A4-1EEE79015614",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:12Z",
+        "id" : "4D4EA8B4-DCC4-4761-8022-526EB5A0008E",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:12Z",
+        "id" : "DFDBAE01-AD7D-4E02-8003-54EDD6A9C9E6",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:13Z",
+        "id" : "2ACFC0DA-8C61-4B16-AECF-131D96B13BCE",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:13Z",
+        "id" : "FCDAF3E3-FABE-45F6-97A3-EA13F6AE6BE1",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:14Z",
+        "id" : "A1A38644-CD66-458A-B0AC-30C7F651353B",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:14Z",
+        "id" : "08EFAB45-C24C-4626-A22E-0B09D8065EB0",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:15Z",
+        "id" : "1C01DF27-527A-4E91-8E79-A426740895B8",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:15Z",
+        "id" : "3ECFDB8C-6E34-4382-82E7-0AB50B21ED53",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:15Z",
+        "id" : "3A057275-E3AD-4493-9F6A-41B9A43359DB",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:16Z",
+        "id" : "F0E7638F-DFDD-4A11-ADC2-00FD4FA9B0F5",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:16Z",
+        "id" : "35B57BE5-792D-4409-ADEA-62AF70797E01",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:17Z",
+        "id" : "32417430-9934-455C-BC6C-3D0013B3CFDF",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:18Z",
+        "id" : "634ACABC-8E6C-45C7-A628-C809F4050FC6",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:18Z",
+        "id" : "F256C495-4136-42C6-8332-FEECE6DE68DC",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:18Z",
+        "id" : "321A1981-7D4A-4872-BEC8-31C37770AC47",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:18Z",
+        "id" : "6C043174-93A5-4625-BF81-EFE8D78C71B0",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:19Z",
+        "id" : "D6DBB3CD-8997-4C8C-A450-79D92C9F6F80",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:19Z",
+        "id" : "BFECAECE-7CEB-47A2-8E61-812FDAC1E1B6",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:19Z",
+        "id" : "ECE98897-BA55-46F2-8D99-A71931C21BE6",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:19Z",
+        "id" : "ABB1771D-3776-4C84-9DF0-C461F6AF485E",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:20Z",
+        "id" : "A93BDE60-4582-44CC-8051-FA6D3B04B420",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:20Z",
+        "id" : "44D583C4-429D-4A22-A4C8-C1D96A6EAEFF",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:20Z",
+        "id" : "440E7A14-B858-41A3-9FAC-7359E7D5B2A5",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:21Z",
+        "id" : "AA0A0A0D-963C-4AFA-8E06-056B504E9523",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:21Z",
+        "id" : "C724B277-79C0-47F4-9040-8343248F6337",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:22Z",
+        "id" : "3AFF61F0-482B-42BF-B68D-FC74703939B9",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:22Z",
+        "id" : "438D4873-A0B3-4564-AE05-D7BD460A5485",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:23Z",
+        "id" : "EDF4842A-FCCD-4332-BDAA-187C687AB27F",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:23Z",
+        "id" : "08E0574A-A2AF-460B-A4A3-94A59FA94F82",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:24Z",
+        "id" : "3C6E3E3D-0478-4F87-B9C1-A7F6802E27AF",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:24Z",
+        "id" : "4926F505-48D2-4022-A634-BA30CC398BB7",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:25Z",
+        "id" : "3243B85C-67D5-432A-B1CA-9CA8F84DBC2D",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:25Z",
+        "id" : "F684729E-AD46-455E-9B22-53967FB01537",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:26Z",
+        "id" : "70CD8EA7-15E3-4936-98C6-A48AA419A91A",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:27Z",
+        "id" : "8E59459C-F677-47D0-B52F-F8E1783DF5C0",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:27Z",
+        "id" : "D9A945BE-8049-4EA2-B367-15AF34A08C9D",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:28Z",
+        "id" : "90E4B974-BDD8-40F5-B7A9-B1945534415F",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:29Z",
+        "id" : "722D6F68-1D35-4ECE-98E3-7C178B7E9BB6",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:29Z",
+        "id" : "E740D4EA-A6CD-4A95-B15F-AC54A084B5DC",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:29Z",
+        "id" : "D4441FCA-4200-47A6-9F8A-6AEEA82EFCD3",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:30Z",
+        "id" : "866DA230-E3FB-4249-8EA5-1774B1A6EC7F",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:30Z",
+        "id" : "600D3C8F-6FA7-479C-A273-5806D27E3576",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:31Z",
+        "id" : "3EABFC56-B340-4BC7-948B-ED5D4722A31C",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:32Z",
+        "id" : "B0FD9F38-05DF-49F9-832A-D97462EFFB03",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:32Z",
+        "id" : "08EBA3B0-A4E0-4659-BABB-61CA57C1C8A2",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:33Z",
+        "id" : "BBD3672D-3DC0-43B4-880F-A8135A693F04",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:34Z",
+        "id" : "354E3B90-97B3-4D1A-AEBD-68169A179576",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:35Z",
+        "id" : "12D5F597-5AE0-427C-B248-7EC9ECD2FDA8",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:36Z",
+        "id" : "1D793BEC-0F81-400B-B113-FBFFE5EE8AE8",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:37Z",
+        "id" : "631B2563-C7F6-4D8A-98E8-FE05FADB1874",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:38Z",
+        "id" : "C7C6B692-5124-4B17-8DD9-F81181C8E2B1",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:39Z",
+        "id" : "24D5559A-25D5-4E4F-BBCA-26C0F5BE0ED5",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:40Z",
+        "id" : "9FC713AE-7F45-4162-8207-80D684B741B9",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:41Z",
+        "id" : "B9C58B7E-F1A1-4850-A5D5-38D496870A4D",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:42Z",
+        "id" : "C37CB589-9ED5-45A2-8467-E15AEEB2992D",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:43Z",
+        "id" : "075EFFCD-6897-4871-9174-471208039E9E",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:44Z",
+        "id" : "9898612E-C085-48F8-9919-DB749DCCE80F",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:45Z",
+        "id" : "B4AD296C-773D-4EB9-BA14-9D8AFDCA13B2",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:46Z",
+        "id" : "15D69EBF-D668-40F0-87A0-593EF9FF320D",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:47Z",
+        "id" : "EF1D24D7-F3F9-48DE-AAC8-248C74A2F8A1",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:48Z",
+        "id" : "11715332-34C3-4467-ADC2-AEA856212394",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:49Z",
+        "id" : "337FA0D2-3A18-4842-A0C8-C83CF95D4C92",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:50Z",
+        "id" : "4AD40F5C-A8FB-433E-967B-A3914883A9F6",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:51Z",
+        "id" : "6B106528-56B1-4420-BE40-6F3A92712A5D",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:51Z",
+        "id" : "7190551D-7BB2-4A71-BB32-273C8C48923C",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:52Z",
+        "id" : "EB026E9E-8798-463F-9A1C-1807EBB51143",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:54Z",
+        "id" : "A1F630C0-63B0-4021-9F98-B59E7E75BBB0",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:55Z",
+        "id" : "8C643B60-E594-4FA3-88DC-B6A9AF069AC5",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:56Z",
+        "id" : "DB6E4C14-7EF4-4802-8558-E7360DD01F2C",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:56Z",
+        "id" : "B98FFF37-798A-4E6C-B9FE-6356EB25454F",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:32:57Z",
+        "id" : "C8FE0214-ACD4-4C51-A25C-C2462BC70A06",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:32:58Z",
+        "id" : "0A5FAA19-A478-4914-83CD-D8B86CDD22EC",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:33:00Z",
+        "id" : "D70304F2-5587-4B89-8EDC-3FFCB79A27E1",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:33:01Z",
+        "id" : "0F446A6D-E862-4E49-882A-2E06E993522C",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:33:02Z",
+        "id" : "4A067583-82BC-480A-96C1-F8D8A9F100A6",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:33:03Z",
+        "id" : "15292EC5-85A8-4B98-A295-DD137EB95356",
+        "source" : "Codex",
+        "text" : "Place image"
+      },
+      {
+        "date" : "2026-11-02T01:33:04Z",
+        "id" : "3FC9A838-3E00-447F-9DC0-C4C3F30ED0A2",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:33:05Z",
+        "id" : "026A7C4D-847C-4EBB-8A02-66B82C852EB7",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:33:05Z",
+        "id" : "8046CDEC-F725-4D72-B255-1DD7E83DB657",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:33:06Z",
+        "id" : "EAB23580-E06F-4CDA-81DA-9426F96F130A",
+        "source" : "Codex",
+        "text" : "Artwork: add"
+      },
+      {
+        "date" : "2026-11-02T01:33:08Z",
+        "id" : "CD50A9E9-27B7-4E0A-A08A-3FAC2E32A6EC",
+        "source" : "Codex",
+        "text" : "Publication: sheet_assembly_create"
+      },
+      {
+        "date" : "2026-11-02T01:33:11Z",
+        "id" : "BD582FD1-2852-4F89-8943-1D22681C0771",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:33:12Z",
+        "id" : "69606F32-7C08-4463-BF12-43E58B10CAAB",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:33:13Z",
+        "id" : "84ADA068-14AD-498B-86E0-B82932E6937C",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-02T01:33:14Z",
+        "id" : "29BAFF92-7D49-49AD-A078-516ADF410693",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-02T02:14:57Z",
+        "id" : "8D626246-1306-4F74-B6CA-AD4C738DE3CB",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T02:14:57Z",
+        "id" : "422CF3AA-58F3-4EA7-9B30-A6D16270432E",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T02:14:57Z",
+        "id" : "6AC7E515-188A-49CE-941F-E7354544B216",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T02:14:58Z",
+        "id" : "B8E6AA1A-32E4-4E4B-8047-0CEC5FE98C27",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "2F54AA4F-3850-4E37-91C6-75DEE7A3E7B7",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "BAFAC219-A984-430F-8F14-4860A45CA186",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "C3E5C9A5-9B6A-470E-94C0-C91F18A4411F",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "B48B8067-B006-48C5-9A27-905FE557F3EA",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "E9F3141C-62B6-4913-884C-646D611BDEFD",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "E2B9F9F6-E418-4BB1-B4E0-E5D9FF9F2C0E",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "3F3D9005-C7A2-46DA-92DB-CA5BF0AE3998",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "AE94C40D-3CF2-4791-9C27-6F6990544DC5",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "BF4916D5-C43E-403F-A9E3-9C60B083952B",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "B36F291E-521C-4107-BC72-ED4B602D75D9",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "BE14FA05-3705-4D36-9822-E0B58B4F79AD",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "2F6C2517-DB6B-4038-A73E-13988CA9C8B1",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:15:59Z",
+        "id" : "E5F91971-D40A-4DE7-A6F8-297E2CF3B50F",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "9BD8ACFA-71A4-482B-9695-EDFB8522D530",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "BD73C403-BAAA-47CB-B2A5-BEC1BB292E41",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "F014D3A9-3D2E-4360-BC2B-AC9486D47A35",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "BCA9C58E-3128-4786-9C5B-2B3B93D70B4E",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "6C76C6B0-D688-4BF5-86C6-C9633113A9FF",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "EA45EC75-E947-4B0F-8131-7A2AE7DBCEFA",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "AE3D20CC-3D66-457E-BD3B-1115102CD818",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "9B55DDDC-805E-4912-811B-89CAF0276BAD",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "2FA6264F-A85F-4712-9F51-18A7AA6D47D9",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "29BA4D8F-96F8-4F6D-9002-CA5732F3A5FA",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "C5E0AC90-C872-4F1A-860C-13657D65DBD9",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "0F24F8F8-49BB-4B11-89D4-9A0F8A86584D",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "57EE2B8A-8419-41D0-B637-1D779CAF73CE",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:00Z",
+        "id" : "42F0803A-48AD-4BA9-ACD6-FCD19F27AFA4",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:01Z",
+        "id" : "2CA4F046-62B5-45DF-804D-F8CB2A06FA6C",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:16:01Z",
+        "id" : "4DB5F2FE-1CC6-4C82-B806-3264B45313CC",
+        "source" : "Codex",
+        "text" : "Edited artwork"
+      },
+      {
+        "date" : "2026-11-02T03:52:15Z",
+        "id" : "9639CBC0-E112-42A5-9BDE-01465F29998B",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-11-02T03:52:15Z",
+        "id" : "7F297568-D868-4B7B-BBE8-695BCC007A39",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-11-02T03:52:15Z",
+        "id" : "C393EF15-FEB6-4E7F-A41F-846CB93446A6",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-11-02T03:52:15Z",
+        "id" : "38AC0BAF-4D43-4C41-960D-EEDC790C7B48",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-11-02T03:52:15Z",
+        "id" : "A28A7A2C-EC2B-4D2D-8F92-810EC17CF1FE",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-11-02T03:52:15Z",
+        "id" : "D550687B-8295-4FAA-A612-5ADC22BA768B",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      },
+      {
+        "date" : "2026-11-02T04:17:43Z",
+        "id" : "5EBD9158-0A66-4167-9A3C-713167BD06E3",
+        "source" : "Codex",
+        "text" : "Artwork: replace"
+      }
+    ],
+    "id" : "D61FBFF9-F110-45FD-BF93-903CFB346567",
+    "materials" : [
+
+    ],
+    "name" : "VARIOUS / 01 / Small adjustments",
+    "notes" : [
+
+    ],
+    "objects" : [
+
+    ],
+    "publications" : [
+      {
+        "id" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "language" : "en",
+        "layout" : {
+          "facingPages" : true,
+          "firstPageSide" : "recto",
+          "innerMargin" : 18,
+          "outerMargin" : 18
+        },
+        "margins" : {
+          "bottom" : 18,
+          "left" : 18,
+          "right" : 18,
+          "top" : 18
+        },
+        "masters" : [
+          {
+            "behind" : false,
+            "id" : "F5F81419-15CA-5792-B14C-A7FABCAC12CD",
+            "name" : "Verso / folio and running section",
+            "side" : "verso",
+            "sourceObjectID" : "36423940-1496-4D45-81E3-FFFB7726067E",
+            "x" : 0,
+            "y" : 0
+          },
+          {
+            "behind" : false,
+            "id" : "C8AD10E3-03A6-5E90-9481-E2F910C575C4",
+            "name" : "Recto / folio and running section",
+            "side" : "recto",
+            "sourceObjectID" : "B2F69C71-64E8-4CD4-B572-CDC35C58BED8",
+            "x" : 0,
+            "y" : 0
+          }
+        ],
+        "name" : "VARIOUS / Issue 01",
+        "numbering" : {
+          "prefix" : "",
+          "start" : 1,
+          "style" : "arabic",
+          "suffix" : ""
+        },
+        "pages" : [
+          {
+            "chapterTitle" : "Front cover",
+            "id" : "17ABDE41-F991-403E-926B-61FE5429083C",
+            "label" : "Front cover",
+            "masterIDs" : [
+
+            ],
+            "objectID" : "222A3F2B-2472-42FE-8B42-7493974E1689"
+          },
+          {
+            "chapterTitle" : "Inside front cover",
+            "id" : "E96DAA52-8394-4064-A847-2F8ECB1B5B09",
+            "label" : "Inside front cover",
+            "masterIDs" : [
+
+            ],
+            "objectID" : "CA0839B1-BDDF-468B-8836-94B50695563B"
+          },
+          {
+            "chapterTitle" : "A little more attention",
+            "id" : "C088FB6E-ABDC-4C5D-9148-8D1175EAB27E",
+            "label" : "01",
+            "numberOverride" : 1,
+            "objectID" : "017E3E1B-F9CE-400C-937C-5E793DE14322"
+          },
+          {
+            "chapterTitle" : "A little more attention",
+            "id" : "1604D417-3B0A-4F72-AA1B-B6BE773B29EF",
+            "label" : "02",
+            "numberOverride" : 2,
+            "objectID" : "552CF261-B6B0-481D-BF83-069CE0D0B472"
+          },
+          {
+            "chapterTitle" : "A little more attention",
+            "id" : "656FAC77-797F-4774-A62E-CE4D4D8D2FAC",
+            "label" : "03",
+            "numberOverride" : 3,
+            "objectID" : "B75096B3-4073-42E1-98F6-A42155546A50"
+          },
+          {
+            "chapterTitle" : "A little more attention",
+            "id" : "8BF27B17-304E-4969-AA96-1ABDF69A2311",
+            "label" : "04",
+            "numberOverride" : 4,
+            "objectID" : "168FE156-47D9-490D-BC4C-D3D3B558F9D5"
+          },
+          {
+            "chapterTitle" : "Various / Field signals",
+            "id" : "E1A0DC02-1464-4B75-A871-E697E696359F",
+            "label" : "05",
+            "numberOverride" : 5,
+            "objectID" : "9FBBFDBB-33D0-4515-9D4B-EE8E63A5F2EB"
+          },
+          {
+            "chapterTitle" : "Various / Field signals",
+            "id" : "FDE1438C-F609-4B83-B8A7-BFA6C4257906",
+            "label" : "06",
+            "numberOverride" : 6,
+            "objectID" : "E708DE4A-1AFA-4747-9E3F-B30D1C9E1513"
+          },
+          {
+            "chapterTitle" : "Various / Field signals",
+            "id" : "B9AAE448-BF74-47C7-AF3A-55A97C7B5405",
+            "label" : "07",
+            "numberOverride" : 7,
+            "objectID" : "CC22552B-A22C-40C0-8BC2-378F1CB29066"
+          },
+          {
+            "chapterTitle" : "Various / Field signals",
+            "id" : "CD9DA429-80E0-40E5-9ED5-690CBD4FA1E4",
+            "label" : "08",
+            "numberOverride" : 8,
+            "objectID" : "40486AF8-ACA7-4CE6-8CA1-6E800719DA50"
+          },
+          {
+            "chapterTitle" : "Fold Bureau",
+            "id" : "5213FFA8-0497-4C90-9CF4-3B70CF4F2B99",
+            "label" : "09",
+            "numberOverride" : 9,
+            "objectID" : "44EC34F6-EF67-4241-B536-47E57151F2C8"
+          },
+          {
+            "chapterTitle" : "Fold Bureau",
+            "id" : "3FBDBF1E-0A2F-4711-A06D-ACB2334686BD",
+            "label" : "10",
+            "numberOverride" : 10,
+            "objectID" : "ED0333F7-DC87-42FF-A748-D0EAC2529D98"
+          },
+          {
+            "chapterTitle" : "Fold Bureau",
+            "id" : "0CBEBE4E-53AA-446A-8F72-C26142CBCA2B",
+            "label" : "11",
+            "numberOverride" : 11,
+            "objectID" : "608060F0-BCBB-4DDF-BE6A-AAB62697C96F"
+          },
+          {
+            "chapterTitle" : "Fold Bureau",
+            "id" : "2B29EB9B-A792-4A76-8170-0F82BEFCBCAE",
+            "label" : "12",
+            "numberOverride" : 12,
+            "objectID" : "91E819C2-1CED-4005-82E6-2667597A6C1A"
+          },
+          {
+            "chapterTitle" : "Matter Study",
+            "id" : "EE48EA5E-9220-4DB6-A413-0444A6484880",
+            "label" : "13",
+            "numberOverride" : 13,
+            "objectID" : "3A3A81E1-E410-42AB-A095-F09EBB278B9F"
+          },
+          {
+            "chapterTitle" : "Matter Study",
+            "id" : "4E73C0BB-F71E-4A8B-AF09-1D3CBA003F29",
+            "label" : "14",
+            "numberOverride" : 14,
+            "objectID" : "9C31CDD0-4200-484D-B704-51C60ED8395B"
+          },
+          {
+            "chapterTitle" : "Matter Study",
+            "id" : "DAC0CE0E-8F41-436F-A1DD-22E056F8CBC3",
+            "label" : "15",
+            "numberOverride" : 15,
+            "objectID" : "B7793FB0-685D-4B01-947A-9E2712605A38"
+          },
+          {
+            "chapterTitle" : "Matter Study",
+            "id" : "C8E6A924-57BB-45AB-A5BC-83AE82521EFB",
+            "label" : "16",
+            "numberOverride" : 16,
+            "objectID" : "C0736664-F161-426E-8279-F2901D16EED5"
+          },
+          {
+            "chapterTitle" : "The useful gap",
+            "id" : "1E739D43-61C1-4C87-9E23-B47535406C8E",
+            "label" : "17",
+            "numberOverride" : 17,
+            "objectID" : "2DCCC6EF-243A-477D-B1C7-3A764B07345D"
+          },
+          {
+            "chapterTitle" : "The useful gap",
+            "id" : "22DFA693-030B-4BDC-89A4-AD781ACC6EB8",
+            "label" : "18",
+            "numberOverride" : 18,
+            "objectID" : "33B8BCA9-1573-4955-AF18-F017658BE94D"
+          },
+          {
+            "chapterTitle" : "The useful gap",
+            "id" : "E80DC536-2258-41F4-AD37-0CB54ED14F07",
+            "label" : "19",
+            "numberOverride" : 19,
+            "objectID" : "6F2FF6FE-4CC2-4F4C-922B-06E76B0401B1"
+          },
+          {
+            "chapterTitle" : "The useful gap",
+            "id" : "7071B09A-7FE4-40A6-85EE-375EB83A0649",
+            "label" : "20",
+            "numberOverride" : 20,
+            "objectID" : "173ED48C-6C1E-4DD3-8567-3CAE5FB1EB56"
+          },
+          {
+            "chapterTitle" : "Signal Rooms",
+            "id" : "238DDA4F-58C0-4FE8-B66C-A5D7F4755B85",
+            "label" : "21",
+            "numberOverride" : 21,
+            "objectID" : "0AF6840C-CD09-4007-A25B-05A616461433"
+          },
+          {
+            "chapterTitle" : "Signal Rooms",
+            "id" : "8C770611-80C8-4E4B-BF7F-E64508754C67",
+            "label" : "22",
+            "numberOverride" : 22,
+            "objectID" : "9151306C-FADA-4782-B7F5-325D8AA52894"
+          },
+          {
+            "chapterTitle" : "Signal Rooms",
+            "id" : "88758705-6C2B-4294-8BF0-1F84CA39C23D",
+            "label" : "23",
+            "numberOverride" : 23,
+            "objectID" : "713937C7-2C56-4077-A461-AFB0FF584791"
+          },
+          {
+            "chapterTitle" : "Signal Rooms",
+            "id" : "316AA595-B15A-4B9A-A18D-C89F5B4D8B6B",
+            "label" : "24",
+            "numberOverride" : 24,
+            "objectID" : "D8D710C7-2E86-472E-A441-CD71A91BBF0D"
+          },
+          {
+            "chapterTitle" : "Surfaces that keep time",
+            "id" : "27F25B8B-3BE3-43D4-9931-30CB370A363E",
+            "label" : "25",
+            "numberOverride" : 25,
+            "objectID" : "54EAB234-FE06-4592-9B66-623923BAD14B"
+          },
+          {
+            "chapterTitle" : "Surfaces that keep time",
+            "id" : "FB9D15B1-59B1-4499-9E53-7F6E61192CAE",
+            "label" : "26",
+            "numberOverride" : 26,
+            "objectID" : "4ECAD001-54BC-407C-A4A1-A4EC782BE63A"
+          },
+          {
+            "chapterTitle" : "Surfaces that keep time",
+            "id" : "888C7F8C-3817-487A-8503-20AFD1C3DBD3",
+            "label" : "27",
+            "numberOverride" : 27,
+            "objectID" : "D1EB84E0-44A7-469D-83A3-7D2A8DF488B7"
+          },
+          {
+            "chapterTitle" : "Surfaces that keep time",
+            "id" : "4C169205-21B1-4F22-89B1-C637D8B06BAA",
+            "label" : "28",
+            "numberOverride" : 28,
+            "objectID" : "19BFB3AE-45C3-4053-809F-6F518C0BFA95"
+          },
+          {
+            "chapterTitle" : "Common Current",
+            "id" : "63A1F544-2904-4C8F-A386-E4BE5726AA97",
+            "label" : "29",
+            "numberOverride" : 29,
+            "objectID" : "84093D97-14AB-4C6E-98E1-B50F4CB7CC47"
+          },
+          {
+            "chapterTitle" : "Common Current",
+            "id" : "B027D3C2-04F2-49D7-95FF-0C9AB50CD58E",
+            "label" : "30",
+            "numberOverride" : 30,
+            "objectID" : "48B841C1-735C-4146-A777-1F31A786B414"
+          },
+          {
+            "chapterTitle" : "Common Current",
+            "id" : "6D53992F-C9C5-4680-B77C-AE529CE7F754",
+            "label" : "31",
+            "numberOverride" : 31,
+            "objectID" : "3513752B-216C-476B-9F2D-E80D02C1FF0E"
+          },
+          {
+            "chapterTitle" : "Common Current",
+            "id" : "61FC5E21-5A29-4155-9F37-A5CA37CBA1F9",
+            "label" : "32",
+            "numberOverride" : 32,
+            "objectID" : "C131604C-4E75-4D31-BE09-8FBA86C04E42"
+          },
+          {
+            "chapterTitle" : "Soft Registry",
+            "id" : "AA6C6BC3-E083-459A-B164-4A3D0675429C",
+            "label" : "33",
+            "numberOverride" : 33,
+            "objectID" : "B4A1C05B-33A8-46E5-B967-1C5C300A91F6"
+          },
+          {
+            "chapterTitle" : "Soft Registry",
+            "id" : "E494F98F-B50B-4E1F-967B-5294B17BD3A2",
+            "label" : "34",
+            "numberOverride" : 34,
+            "objectID" : "431F3BF0-C24A-4E01-AD59-FBEA3E28A602"
+          },
+          {
+            "chapterTitle" : "Soft Registry",
+            "id" : "751F32BC-C2AE-426C-8803-0FFABD523D84",
+            "label" : "35",
+            "numberOverride" : 35,
+            "objectID" : "367E7E82-37F9-4D8F-93FC-550505185B13"
+          },
+          {
+            "chapterTitle" : "Soft Registry",
+            "id" : "61C82EA8-FF0F-4F08-8BE6-8E1BFF8E51D4",
+            "label" : "36",
+            "numberOverride" : 36,
+            "objectID" : "13C06A64-89DD-4EA4-B51F-202FE4F0B84F"
+          },
+          {
+            "chapterTitle" : "Systems with room for accident",
+            "id" : "76BDBAFF-968D-452B-9DE7-A36598E3AD85",
+            "label" : "37",
+            "numberOverride" : 37,
+            "objectID" : "A1DF2B76-DC1A-4F9E-8C9B-D44961A8A7C3"
+          },
+          {
+            "chapterTitle" : "Systems with room for accident",
+            "id" : "571E6F4F-901F-498D-9432-BB346C569989",
+            "label" : "38",
+            "numberOverride" : 38,
+            "objectID" : "CB20A71E-8B60-4A09-9EAF-D9897EB3C2F3"
+          },
+          {
+            "chapterTitle" : "Systems with room for accident",
+            "id" : "AF95BF38-40AE-492D-A4CF-2867C16F84C2",
+            "label" : "39",
+            "numberOverride" : 39,
+            "objectID" : "2EA72A47-D940-4B3A-87BC-354A4877CD43"
+          },
+          {
+            "chapterTitle" : "Systems with room for accident",
+            "id" : "CBB253B8-5083-45C2-BFF3-E2EF5DA3E6B6",
+            "label" : "40",
+            "numberOverride" : 40,
+            "objectID" : "F7145393-4C43-4D51-9B82-91E1DBC9BEC2"
+          },
+          {
+            "chapterTitle" : "Index Works",
+            "id" : "BBEE3CDC-4B5F-47F3-8EF5-B74C5B7D5A6A",
+            "label" : "41",
+            "numberOverride" : 41,
+            "objectID" : "E92F8B1A-BFEC-4E23-B75D-F1D07F26BA69"
+          },
+          {
+            "chapterTitle" : "Index Works",
+            "id" : "8452E236-986E-4103-ADD4-A1BC69106325",
+            "label" : "42",
+            "numberOverride" : 42,
+            "objectID" : "F22044BF-17E8-4E04-8157-9608DA790C10"
+          },
+          {
+            "chapterTitle" : "Index Works",
+            "id" : "A579ED44-37B4-4AAF-8463-FA7E4296B20E",
+            "label" : "43",
+            "numberOverride" : 43,
+            "objectID" : "A221060E-F621-4ADA-8886-5749127AFACC"
+          },
+          {
+            "chapterTitle" : "Index Works",
+            "id" : "F9B62038-8503-48C6-8D18-9710D61F4E52",
+            "label" : "44",
+            "numberOverride" : 44,
+            "objectID" : "214D6407-6F9B-4668-B0D4-CBA25E7E2CCA"
+          },
+          {
+            "chapterTitle" : "Various / Keep for next time",
+            "id" : "C56C5D20-CC54-4CB4-82A2-F9A2F30CAEDC",
+            "label" : "45",
+            "numberOverride" : 45,
+            "objectID" : "1D62ACE6-A204-4DC3-8221-AE4EDD36C9F8"
+          },
+          {
+            "chapterTitle" : "Various / Keep for next time",
+            "id" : "FF2EF043-1D7E-47AB-B157-1A985C32C36C",
+            "label" : "46",
+            "numberOverride" : 46,
+            "objectID" : "FF2DFBBB-BE76-4C06-84A2-34092735F5F6"
+          },
+          {
+            "chapterTitle" : "Various / Keep for next time",
+            "id" : "B86D6724-7CFD-4C39-887B-03FBF7614096",
+            "label" : "47",
+            "numberOverride" : 47,
+            "objectID" : "65A5A656-9336-4CBF-A309-D5D2628F3564"
+          },
+          {
+            "chapterTitle" : "Various / Keep for next time",
+            "id" : "8AE81C45-989D-4F9D-9087-D145A7A4C1BB",
+            "label" : "48",
+            "numberOverride" : 48,
+            "objectID" : "24ADDF72-1CB1-4E93-A493-A5FB758E86E2"
+          },
+          {
+            "chapterTitle" : "Inside back cover",
+            "id" : "5328FEC8-1F0E-4B6A-9A14-E870A1AAC04E",
+            "label" : "Inside back cover",
+            "masterIDs" : [
+
+            ],
+            "objectID" : "14FA4D2E-D6D5-4FCA-8692-D12D5F72E190"
+          },
+          {
+            "chapterTitle" : "Back cover",
+            "id" : "C08CEF93-1D67-4AC8-93C9-3FBFA2685552",
+            "label" : "Back cover",
+            "masterIDs" : [
+
+            ],
+            "objectID" : "A880885D-98C2-4B4E-8E15-081C2B95FCCA"
+          }
+        ]
+      }
+    ],
+    "recipes" : [
+      {
+        "id" : "sheet-source-90F0B88D-9E0D-4771-925C-2477AECBF49F",
+        "name" : "Linked sheets",
+        "parameters" : [
+
+        ],
+        "parts" : [
+
+        ],
+        "summary" : "A project-authored ordered physical sheet assembly.",
+        "symbol" : "square.stack.3d.up"
+      }
+    ],
+    "schemaVersion" : 63,
+    "studioPresentation" : {
+      "scenes" : [
+        {
+          "camera" : {
+            "azimuth" : 0.40489178628508343,
+            "distance" : 17.237546451697753,
+            "elevation" : 1.1421808210221485,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 0,
+              "y" : 1.2,
+              "z" : 0
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "68F75E7C-44EC-47E7-9993-9F2285825466",
+          "instances" : [
+            {
+              "id" : "EEB73D31-8BC4-593E-B5C7-886081DD7CA4",
+              "name" : "Closed / front cover",
+              "positionMM" : {
+                "x" : -255,
+                "y" : 0,
+                "z" : -177
+              },
+              "rotationDegrees" : 0,
+              "sheetPose" : {
+                "activeSpread" : 0,
+                "bendMM" : 0,
+                "bindingStyle" : "saddleStitch",
+                "openingDegrees" : 0
+              },
+              "sourceObjectID" : "181E7802-8D6E-40F9-ACD1-BF19BB912EA2",
+              "visible" : true
+            },
+            {
+              "id" : "638DB41C-D594-5A84-8B83-85786B482BB6",
+              "name" : "Fold Bureau / open",
+              "positionMM" : {
+                "x" : 245,
+                "y" : 0,
+                "z" : -177
+              },
+              "rotationDegrees" : 0,
+              "sheetPose" : {
+                "activeSpread" : 6,
+                "bendMM" : 1.5,
+                "bindingStyle" : "saddleStitch",
+                "openingDegrees" : 180
+              },
+              "sourceObjectID" : "181E7802-8D6E-40F9-ACD1-BF19BB912EA2",
+              "visible" : true
+            },
+            {
+              "id" : "01E15776-ACAC-5250-B50E-D712995CF9D8",
+              "name" : "Style01 / cross-gutter",
+              "positionMM" : {
+                "x" : -255,
+                "y" : 0,
+                "z" : 177
+              },
+              "rotationDegrees" : 0,
+              "sheetPose" : {
+                "activeSpread" : 10,
+                "bendMM" : 1.5,
+                "bindingStyle" : "saddleStitch",
+                "openingDegrees" : 180
+              },
+              "sourceObjectID" : "181E7802-8D6E-40F9-ACD1-BF19BB912EA2",
+              "visible" : true
+            },
+            {
+              "id" : "B61D1D40-95BD-58A8-93BB-FF8EE1729424",
+              "name" : "Soft Registry / open",
+              "positionMM" : {
+                "x" : 245,
+                "y" : 0,
+                "z" : 177
+              },
+              "rotationDegrees" : 0,
+              "sheetPose" : {
+                "activeSpread" : 18,
+                "bendMM" : 1.5,
+                "bindingStyle" : "saddleStitch",
+                "openingDegrees" : 135
+              },
+              "sourceObjectID" : "181E7802-8D6E-40F9-ACD1-BF19BB912EA2",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "VARIOUS / Four independent reader positions",
+          "pixels" : {
+            "height" : 1600,
+            "width" : 2400
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.40489178628508343,
+            "distance" : 17.237546451697753,
+            "elevation" : 1.1421808210221485,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 0,
+              "y" : 1.2,
+              "z" : 0
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "10361B6F-D10D-41BF-9B2C-D401E4FDAE1E",
+          "instances" : [
+            {
+              "id" : "53E7F182-DA96-5CA0-BF3A-15972F74A7FD",
+              "name" : "Saddle stitch",
+              "positionMM" : {
+                "x" : -255,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sheetPose" : {
+                "activeSpread" : 10,
+                "bendMM" : 1.5,
+                "bindingStyle" : "saddleStitch",
+                "openingDegrees" : 155
+              },
+              "sourceObjectID" : "181E7802-8D6E-40F9-ACD1-BF19BB912EA2",
+              "visible" : true
+            },
+            {
+              "id" : "AF9B8415-51FF-5DB6-AA65-EB8B28516EDD",
+              "name" : "Side staples",
+              "positionMM" : {
+                "x" : 245,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sheetPose" : {
+                "activeSpread" : 10,
+                "bendMM" : 1.5,
+                "bindingStyle" : "sideStaple",
+                "openingDegrees" : 155
+              },
+              "sourceObjectID" : "181E7802-8D6E-40F9-ACD1-BF19BB912EA2",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "VARIOUS / Binding comparison",
+          "pixels" : {
+            "height" : 1600,
+            "width" : 2400
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        }
+      ],
+      "shots" : [
+
+      ]
+    },
+    "subtitle" : "A new place to make things.",
+    "swatches" : [
+      {
+        "color" : "#1A1919",
+        "colorSpace" : "sRGB",
+        "id" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "name" : "VARIOUS / Process K / 100%",
+        "printInk" : {
+          "components" : {
+            "black" : 1,
+            "cyan" : 0,
+            "magenta" : 0,
+            "yellow" : 0
+          },
+          "kind" : "process_cmyk",
+          "profile" : {
+            "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+            "model" : "CMYK",
+            "name" : "Generic CMYK",
+            "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+          },
+          "tint" : 1
+        }
+      }
+    ],
+    "textStories" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11.25,
+        "frames" : [
+          {
+            "elementID" : "55B17FFB-4D46-5D12-90E2-D2612588A368",
+            "objectID" : "B75096B3-4073-42E1-98F6-A42155546A50"
+          }
+        ],
+        "id" : "FC518557-A8D2-45EC-AE97-A146C432B682",
+        "name" : "Editor's letter",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "A useful object can change the pace of a room. A folded edge gives the hand somewhere to land. An opening turns a heavy shape into a frame. A line of type asks us to slow down before the next line begins. These are small decisions, but they are enough to start an issue.\n\nVARIOUS collects six fictional studio studies and three conversations between their materials. The work is original to this demonstration. The studios are an editorial device: a way of giving each family of forms its own questions, habits and visual language. They are not profiles of real artists.\n\nMove between the large view and the detail. Read a caption before deciding what an image means. We have left space around the work because attention needs somewhere to gather. The aim is not a final answer. It is a more exact next question.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "3CA31823-9BAD-4764-AA58-22A145F586CB"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 15.2,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.5,
+        "frames" : [
+          {
+            "elementID" : "5718AF12-DBA9-582D-ABF5-162FFFB5E716",
+            "objectID" : "168FE156-47D9-490D-BC4C-D3D3B558F9D5"
+          }
+        ],
+        "id" : "3F637178-D3F8-4A60-935C-6B690C14757C",
+        "name" : "Masthead",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "VARIOUS quarterly / Issue 01 / Autumn 2026. Original editorial text, digital studies and artwork authored for the LAB publication demonstration. Six fictional studio families; no real artist biographies, commissioned interviews or advertisements. Editorial direction, layout and image production: the LAB demonstration project.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "50019C1D-2B8D-4D4B-9C7F-B842100CADD6"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.5,
+        "frames" : [
+          {
+            "elementID" : "B5843B0A-7703-5567-B046-7365B102BF1C",
+            "objectID" : "168FE156-47D9-490D-BC4C-D3D3B558F9D5"
+          }
+        ],
+        "id" : "A9CE105A-EF18-44E2-B36C-699F05F75FF0",
+        "name" : "Six useful fictions",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Fold Bureau / Paper planes, held edges and the consequences of a crease.\nMatter Study / Ceramic forms arranged around openings rather than solid centers.\nSignal Rooms / Graphic prints that distribute attention through type and interval.\nCommon Current / Sculptural lighting studies built around shade, support and space.\nSoft Registry / Woven strand studies and printed repeats with deliberate interruptions.\nIndex Works / Small metal forms that suggest clear, unhurried hand movements.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "FD13335D-BA19-4C25-B654-FDD3151E7B8E"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.5,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.75,
+        "frames" : [
+          {
+            "elementID" : "BA56D1E7-16EA-5770-BACC-1C993B9EBCF3",
+            "objectID" : "E708DE4A-1AFA-4747-9E3F-B30D1C9E1513"
+          }
+        ],
+        "id" : "7CFDFC83-E2EF-4070-AE1B-4E6F2C17CDBD",
+        "name" : "One corner is enough",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Before drawing a whole object, draw one corner. Give it an edge, a thickness and a little surrounding space. Decide whether two surfaces meet cleanly or let the join remain visible. The fragment often reveals the terms of the larger thing: whether it wants to be folded, joined, wrapped or left open. A corner is small enough to revise without ceremony. It is also difficult to hide behind. Keep the first version beside the next one, and let the difference do the explaining.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.75,
+        "frames" : [
+          {
+            "elementID" : "85CF33D2-FFAA-5973-90DA-8C687914C70F",
+            "objectID" : "E708DE4A-1AFA-4747-9E3F-B30D1C9E1513"
+          }
+        ],
+        "id" : "AF4DEFF6-0B14-410C-8489-D4F2BD3AFC26",
+        "name" : "The second light",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "An image made under one light can make every surface seem certain. Imagine the same form lit from the other side. A depression becomes harder to read; an opening becomes clearer; the outline changes its emphasis. The exercise is not a search for the most flattering view. It is a way to ask which details belong to the object and which belong to the photograph. In the studies here, a second angle is often more informative than a more elaborate first image.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.75,
+        "frames" : [
+          {
+            "elementID" : "84D15188-B687-5F62-9F34-38F6E3517D52",
+            "objectID" : "CC22552B-A22C-40C0-8BC2-378F1CB29066"
+          }
+        ],
+        "id" : "47395AC6-B936-46B9-B61E-D79CCE960D2F",
+        "name" : "Offcut index",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "A remainder is a useful scale model of a decision. The strip left beside a cut tells us how much room was needed. The small triangle beside a fold records an angle more directly than its label. Arrange a few such fragments without making them into a composition too quickly. Their relationships may suggest a family of widths, a repeated gap or a simpler way to divide the next sheet. An index can begin as a place to keep things that have not yet become useful.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.75,
+        "frames" : [
+          {
+            "elementID" : "0833B733-13CA-5AA5-A8E1-AA11D041BD28",
+            "objectID" : "CC22552B-A22C-40C0-8BC2-378F1CB29066"
+          }
+        ],
+        "id" : "E5BD10F7-8006-4130-88D9-865DC9A9E82F",
+        "name" : "Quiet hardware",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "A connection can be legible without becoming a feature. A pin, a tab or a small folded return may tell the eye where two parts meet, then step back into the whole. The difficult choice is often the amount of difference to leave visible. Too little and the connection becomes mysterious; too much and every joint asks for attention at once. A useful drawing gives the connection one clear view, then checks whether the object still reads from farther away.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.75,
+        "frames" : [
+          {
+            "elementID" : "D248205F-1C7C-5784-BCFB-F1675918049B",
+            "objectID" : "40486AF8-ACA7-4CE6-8CA1-6E800719DA50"
+          }
+        ],
+        "id" : "A20AE42E-37F5-4EDF-8329-0CC1AD402C77",
+        "name" : "Count, then interrupt",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "A repeat establishes an expectation before it establishes a pattern. Three marks can suggest a rhythm; a fourth can confirm it or make the sequence uncertain. Try changing only one interval. Keep the marks themselves the same size and shape. The interruption becomes easier to understand because the rest of the system has remained dependable. Soft Registry uses this distinction between a repeated unit and the space around it. Signal Rooms carries the same question into the arrangement of words.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.75,
+        "frames" : [
+          {
+            "elementID" : "FC6B16ED-4CFB-5431-BA1A-1217535A67DA",
+            "objectID" : "40486AF8-ACA7-4CE6-8CA1-6E800719DA50"
+          }
+        ],
+        "id" : "A1662779-10D4-4CAF-A5A9-037D6EB97F55",
+        "name" : "Between uses",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Objects spend a great deal of time waiting. A tool rests on a table; a vessel stands empty; a lamp is seen without a pool of light. These quieter conditions deserve their own drawings. They reveal a base, a shadow or an open side that the active view may conceal. A proposal that only makes sense in its most dramatic pose is difficult to know. The inactive view asks a gentler question: what remains understandable when the object is simply there?",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11.25,
+        "frames" : [
+          {
+            "elementID" : "090EBB73-B2AD-5283-8F80-D7BFA5532B7C",
+            "objectID" : "ED0333F7-DC87-42FF-A748-D0EAC2529D98"
+          },
+          {
+            "elementID" : "462F9AC1-93F0-5F89-AC91-DF1E73D51191",
+            "objectID" : "ED0333F7-DC87-42FF-A748-D0EAC2529D98"
+          },
+          {
+            "elementID" : "21F8F28C-4498-57CD-A419-0EABC49BC734",
+            "objectID" : "608060F0-BCBB-4DDF-BE6A-AAB62697C96F"
+          },
+          {
+            "elementID" : "1915115B-2859-5628-B232-73FF197B0827",
+            "objectID" : "608060F0-BCBB-4DDF-BE6A-AAB62697C96F"
+          }
+        ],
+        "id" : "B6DFD8A5-5286-4495-8EC7-20AF6DBD40AB",
+        "name" : "Fold Bureau / Profile",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Fold Bureau begins with an ordinary proposition: a sheet is already a space, even before it is folded. It has an edge, a direction and two sides that cannot be seen together from every position. This fictional studio treats those conditions as the start of a design language. Its digital studies are deliberately spare. A plane moves, another plane answers, and a narrow opening becomes the subject of the whole arrangement.\n\nThe work is not an attempt to disguise paper as something more permanent. Edges remain thin. Corners do not acquire ornamental weight. A crease is allowed to divide a surface sharply, while the rest of the sheet continues without explanation. The forms ask what can be gained by changing direction rather than adding another part. Seen together, they look less like a collection of objects than a collection of possible decisions.\n\nOffset study places parallel planes just far enough apart to keep their order legible. The eye moves across them, then returns to the small differences between their edges. Open pocket makes a different invitation. Its two wings frame a channel that is easier to understand from an oblique view than from above. Neither study needs a large gesture. The interest lies in the way a short edge can redirect a larger surface.\n\nShelter fold introduces an interval that feels sheltered without becoming a closed interior. Its upper plane gives the lower space a limit; the open sides keep that space connected to the page around it. Step fan repeats a change of direction until the crease becomes a rhythm. Held corner interrupts that rhythm with a single tucked relation. The family remains recognizable because each proposal keeps the same economy of means.\n\nA close view changes the scale of the questions. Where exactly does one plane stop? Which edge belongs to the surface behind it? Is a dark line a mark, a gap or the shadow of a return? The details are not presented as fabrication instructions. They are ways of reading the visible model more carefully. A crease junction can be as informative as a whole-object view when its neighboring planes are left in the frame.\n\nThe flat and folded views should therefore stay near one another. The flat drawing preserves a sequence of intentions; the folded view shows their spatial consequences. Moving between them is more useful than treating either as the final image. The viewer can trace a line across the sheet, lose it around a corner, then find it again. That small act of recognition is the work’s most generous form of explanation.\n\nRestraint, here, is a way of making decisions visible. A sheet may remain almost empty and still give a precise account of how one edge relates to another. The next revision may simply make that account clearer.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "3CA31823-9BAD-4764-AA58-22A145F586CB"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 15.2,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11.25,
+        "frames" : [
+          {
+            "elementID" : "30FC7A97-A970-596C-B837-2B5B75D0FA04",
+            "objectID" : "9C31CDD0-4200-484D-B704-51C60ED8395B"
+          },
+          {
+            "elementID" : "F1F0AC82-1489-539E-9859-92857CEF97D7",
+            "objectID" : "9C31CDD0-4200-484D-B704-51C60ED8395B"
+          },
+          {
+            "elementID" : "373A0200-1E84-56DA-8A61-50522942C2B8",
+            "objectID" : "B7793FB0-685D-4B01-947A-9E2712605A38"
+          },
+          {
+            "elementID" : "A72C588C-0139-5917-B211-EE56BB3D9012",
+            "objectID" : "B7793FB0-685D-4B01-947A-9E2712605A38"
+          }
+        ],
+        "id" : "9352DF1D-1983-4352-B45F-95612805F47B",
+        "name" : "Matter Study / Profile",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "The first thing to notice in Matter Study is often the part that is not there. A mouth, a handle or a gap between two volumes provides the clearest route into the form. This fictional studio is organized around that reversal. Its ceramic studies are digital proposals, but their questions are familiar to anyone who has turned a vessel in the hand: where does the wall become a rim, and how does an opening belong to the shape around it?\n\nThe outer silhouettes are intentionally calm. Rounded shoulders, low bodies and short transitions give each piece a relatively quiet outline. That quiet makes the interior easier to read. A bright upper edge can lead the eye down into a cavity; an offset opening can make an otherwise balanced form feel more alert. The interest is not in hiding a complicated surface inside a simple one. It is in letting the two describe each other.\n\nWindow vessel is the most direct statement of the approach. Its opening is not a small accessory to a dominant solid. The surrounding wall becomes a frame for the space it contains. Twin mouth introduces a second center of attention, allowing two openings to share one body without pretending to be identical. Low aperture draws the same conversation closer to the table, where the relation between the upper edge and the base becomes more apparent.\n\nHandle field treats the space inside a handle as a form worth considering on its own. The void has a width, an outline and a direction. It changes as the view changes, even when the surrounding shape remains familiar. Offset cup moves the opening away from an expected center. The result is a small shift in emphasis rather than a theatrical deformation. The study asks how little asymmetry is needed before the whole object begins to read differently.\n\nThe detail views resist the temptation to turn every surface into an atmosphere. Rim and section remain visible together. A view through the handle includes enough of the body to explain the opening’s position. Three elevations are kept at a common scale so that the differences do not depend on camera distance. The images offer evidence for looking, rather than claims about how an unmade object would perform.\n\nThere is also a distinction between a soft outline and an indistinct one. A rounded surface still needs a clear transition into its opening. Without that transition, the eye has little reason to move from the exterior to the interior. Matter Study keeps returning to this threshold: the small stretch of form where a wall becomes a lip, where a lip turns inward, or where an opening meets the space of the room.\n\nA vessel holds several kinds of emptiness: the space inside, the space a hand might occupy, and the interval that keeps its silhouette legible. Matter Study gives each a boundary worth examining.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "3CA31823-9BAD-4764-AA58-22A145F586CB"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 15.2,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11,
+        "frames" : [
+          {
+            "elementID" : "9A0B0DA2-4AF7-58AB-967B-EAA0ABB1BB89",
+            "objectID" : "2DCCC6EF-243A-477D-B1C7-3A764B07345D"
+          },
+          {
+            "elementID" : "29B4E36E-8F2E-54ED-AC5F-7A222F26BACA",
+            "objectID" : "2DCCC6EF-243A-477D-B1C7-3A764B07345D"
+          },
+          {
+            "elementID" : "BFBF5FEA-9E58-5536-9D93-4303279BEE6C",
+            "objectID" : "33B8BCA9-1573-4955-AF18-F017658BE94D"
+          },
+          {
+            "elementID" : "AA6F9CAF-EF9A-565D-BF49-03D4254BA13C",
+            "objectID" : "33B8BCA9-1573-4955-AF18-F017658BE94D"
+          },
+          {
+            "elementID" : "0C5ADF62-1025-5D22-97F3-C9CB819D7EEB",
+            "objectID" : "6F2FF6FE-4CC2-4F4C-922B-06E76B0401B1"
+          }
+        ],
+        "id" : "6C55C865-8E62-4916-B311-403B30BF4ACD",
+        "name" : "The useful gap",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "A gap is often described by what it separates. Two edges, two lines of type, two parts waiting to meet. That description is useful, but incomplete. The interval also has an outline and a pace. It may feel generous, compressed, continuous or abruptly interrupted. Once we begin to draw it as carefully as the neighboring forms, it becomes a decision rather than a remainder.\n\nThe paper studies make the argument with almost nothing. A short return turns an open sheet into a shallow interior. The interior is not enclosed, yet it has acquired a limit. In the ceramic studies, the same question becomes the space inside a handle or the opening at a rim. The material changes; the need for a legible relationship does not. An empty interval can carry the most specific part of a form’s identity.\n\nOn a printed page, the gap is also a means of giving attention somewhere to go. A caption placed too close to an image becomes part of its texture. A caption placed without a clear relation becomes a separate voice. Between those conditions is a distance at which the two can explain one another. The exact distance belongs to the particular page. The useful habit is to keep asking what the interval is doing.\n\nThis is why enlarging everything rarely creates the same effect as making room. A larger object may occupy more of the page while becoming less distinct from its surroundings. A carefully held gap can make a small detail easier to see without increasing its size. Try the relation first with simple shapes. Change the interval while leaving the shapes alone. Then return to the more complicated arrangement with a clearer sense of what has actually changed.\n\nThe useful gap is neither neutral nor decorative. It is the part of the composition that allows two things to remain different while still belonging together. It gives a fold its depth, a vessel its opening and a line its place in a paragraph. Sometimes the most effective addition to a design is a boundary drawn around the space it already contains.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "30E3C968-ACE3-49E1-B5CE-D5121C289F66"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11.25,
+        "frames" : [
+          {
+            "elementID" : "C0F80D7F-A154-5D18-9EAC-D12E27E8A019",
+            "objectID" : "9151306C-FADA-4782-B7F5-325D8AA52894"
+          },
+          {
+            "elementID" : "CB257235-F648-5FC8-97CE-D0E47E5C11FE",
+            "objectID" : "9151306C-FADA-4782-B7F5-325D8AA52894"
+          },
+          {
+            "elementID" : "84A95142-58FB-5565-BCC0-466FA31D5A0D",
+            "objectID" : "713937C7-2C56-4077-A461-AFB0FF584791"
+          },
+          {
+            "elementID" : "EA521C51-52AD-5A27-B886-3EE31C3701C5",
+            "objectID" : "713937C7-2C56-4077-A461-AFB0FF584791"
+          }
+        ],
+        "id" : "0232BA9A-1DB0-48A2-90D8-1BAEF074F86B",
+        "name" : "Signal Rooms / Profile",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Signal Rooms begins with the thought that a message has more than one speed. A word may be recognized before it is read. A large shape may arrive before a small instruction. A caption may make us return to an image we thought we had already understood. This fictional graphic practice builds its prints around those differences. The aim is not to make every element equally loud, but to give each a clear moment.\n\nThe work uses a limited set of means: type, bands, blocks and spaces that remain visibly related to the grid. Within those limits, the arrangements can be surprisingly open. A word is interrupted without becoming illegible. A block comes close to an edge without quite meeting it. A sequence begins regularly, then changes its interval. The page offers enough consistency for a small disruption to be noticed.\n\nOne word, four beats treats a familiar word as a sequence of shapes before allowing it to settle into language. The letters keep their relationship to the baseline, but their emphasis changes across the field. Interval atlas makes the spaces more explicit. Its marks are deliberately simple, so that differences in position, weight and distance remain the subject. These are studies of attention rather than samples of a finished identity system.\n\nCut register introduces an overlap that can be read in more than one order. One shape seems to continue beneath another; a second view makes the relation less certain. Three speeds gives a large gesture, a middle rhythm and a small instruction their own roles. Open caption leaves a space that feels reserved for an explanation, then asks whether the surrounding arrangement can make that expectation useful.\n\nThe small type matters as much as the large type. It provides a place to enter after the initial image has been recognized. Signal Rooms uses this slower register to name a relation or direct a second look. The words do not need to describe everything that is visible. A short line can change the way an image is read by pointing to a detail that had seemed incidental. Precision is more useful here than a larger quantity of copy.\n\nThe process views make the layers accountable. A close view of type keeps enough neighboring letters to explain its spacing. A layer diagram shows which edge continues and which one stops. A margin key makes the system visible without pretending that the system made every decision. The most useful grid is not the one with the most divisions. It is the one that allows a particular page to make its relationships clear.\n\nThe prints remain open to another arrangement. A band could move; a pause could lengthen. Signal Rooms keeps those possibilities near the surface, where they become part of the reading.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "3CA31823-9BAD-4764-AA58-22A145F586CB"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 15.2,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11,
+        "frames" : [
+          {
+            "elementID" : "0DE1115B-1972-56F7-B167-9AF207BA3862",
+            "objectID" : "54EAB234-FE06-4592-9B66-623923BAD14B"
+          },
+          {
+            "elementID" : "4B9C1D37-199D-5630-8577-D202C00785DE",
+            "objectID" : "54EAB234-FE06-4592-9B66-623923BAD14B"
+          },
+          {
+            "elementID" : "742148FA-E57D-52D8-BA4E-B46936EC15E3",
+            "objectID" : "4ECAD001-54BC-407C-A4A1-A4EC782BE63A"
+          },
+          {
+            "elementID" : "2459DE14-EFEF-5056-A00C-E78035ACF5F8",
+            "objectID" : "4ECAD001-54BC-407C-A4A1-A4EC782BE63A"
+          },
+          {
+            "elementID" : "A792D9AE-0717-5530-BC0E-10E0EDBE0E3A",
+            "objectID" : "D1EB84E0-44A7-469D-83A3-7D2A8DF488B7"
+          }
+        ],
+        "id" : "9D5A747B-83A9-4070-8ACD-AABAADE5BF9B",
+        "name" : "Surfaces that keep time",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "A new surface can look strangely complete. Its outline is certain, its color is uninterrupted, and the image offers little reason to ask what happened before it arrived on the page. Yet many of the qualities we value in objects come from a less settled condition: a softened edge, a visible join, a repeated fold or a slight difference between neighboring strands.\n\nIn these digital studies, such details are proposals rather than evidence of use. That distinction matters. An image of a worn edge is not a history, and a texture should not be asked to supply one. What the studies can do is make a place for time in the way a form is considered. Where would the hand return? Which edge would be seen most often? Which part might deserve to remain easy to repair or replace?\n\nThe answer need not be an artificial patina. A clear material boundary can be enough. A paper fold records a change of direction. A woven strand passes over one neighbor and under the next. A small metal form gives its working edge a different outline from its resting edge. Each condition makes an action visible without claiming a particular age. The surface becomes informative because its structure can be read.\n\nA useful close view therefore includes a little more than the detail itself. The rim needs part of its wall. The crossing thread needs the repeat around it. The softened corner needs a neighboring edge that remains comparatively straight. Without those relations, every texture begins to look like a decorative field. With them, the surface can explain something about the form to which it belongs.\n\nKeeping time may mean leaving that explanation open. A design can make room for handling, variation and a future revision without drawing all of them in advance. The generous surface is not the one that looks most convincingly old. It is the one that remains understandable as our attention moves from the whole object to the places where ordinary actions might gather.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "30E3C968-ACE3-49E1-B5CE-D5121C289F66"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11.25,
+        "frames" : [
+          {
+            "elementID" : "448A112F-9B8D-5724-AD06-4BF08A685920",
+            "objectID" : "48B841C1-735C-4146-A777-1F31A786B414"
+          },
+          {
+            "elementID" : "71D3F1C1-F63D-5421-8879-228983B155AE",
+            "objectID" : "48B841C1-735C-4146-A777-1F31A786B414"
+          },
+          {
+            "elementID" : "E2F76ECD-462F-5DDA-95BD-28B1ECE2C3E7",
+            "objectID" : "3513752B-216C-476B-9F2D-E80D02C1FF0E"
+          },
+          {
+            "elementID" : "40217CBE-0A6C-5024-9232-899A3681715D",
+            "objectID" : "3513752B-216C-476B-9F2D-E80D02C1FF0E"
+          }
+        ],
+        "id" : "3CD99516-B9AF-49DA-B60C-EA84E003F2E2",
+        "name" : "Common Current / Profile",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Common Current gives a lamp the same attention whether it is imagined in use or simply standing in a room. This fictional studio studies the shape of shade, the direction of support and the empty space between them. Its forms suggest lighting objects, but the images make no claim about electrical function or measured illumination. They are a way to ask what a light-bearing object contributes before it is asked to glow.\n\nThe supports are easy to follow. A line rises, changes direction and arrives at a plane. A base keeps the upper form from seeming detached from its surroundings. The path between those points is often the most expressive part of the study. A slight offset can make a rigid arrangement feel alert. An open interval can keep a broad shade from becoming a visually heavy cap.\n\nLow arc draws that path as one continuous change of direction. Its upper element seems to belong to the support rather than being placed on top of it. Split shade divides a single broad plane into two related levels. The division gives the eye a route between the upper edge and the underside, where a second outline can be read. Counterweight makes the relation to the base more explicit, allowing an offset upper form to answer a quieter shape below.\n\nReading room treats the space inside a loop as part of the silhouette. The outline remains continuous, but its center belongs to the room around it. Folded light approaches the same question through planes. One surface turns toward another without closing the interval between them. The two studies belong to the same family because they give the empty region a visible role, even though their construction languages differ.\n\nA view beneath the shade is particularly useful. It can reveal whether the upper element is one shape or several, how the support approaches it, and which edges remain visible from a lower position. These are compositional questions, not substitutes for testing a physical fixture. A persuasive silhouette cannot establish how a proposed lamp would distribute light. It can establish whether the object has a coherent form from more than one viewpoint.\n\nThe base details keep that distinction clear. A junction is shown at a readable scale, with the direction of each part still visible. Three silhouettes use a common frame so that the variation belongs to the forms rather than the camera. A close view gives way to a wide view before the sequence ends. The object is allowed to return to its ordinary size on the page.\n\nA support makes a direction legible. A shade gives an interval a roof. A base makes the space above it deliberate. Those relations give the proposal a coherent beginning while its practical questions remain open.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "3CA31823-9BAD-4764-AA58-22A145F586CB"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 15.2,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11.25,
+        "frames" : [
+          {
+            "elementID" : "3E658754-77F8-5A9C-B7D0-F799506DA8B3",
+            "objectID" : "431F3BF0-C24A-4E01-AD59-FBEA3E28A602"
+          },
+          {
+            "elementID" : "C0109321-9E4B-5EC5-902E-1241B194D9B3",
+            "objectID" : "431F3BF0-C24A-4E01-AD59-FBEA3E28A602"
+          },
+          {
+            "elementID" : "2F498E8D-62AD-59D1-87C0-B73DA3EBBE30",
+            "objectID" : "367E7E82-37F9-4D8F-93FC-550505185B13"
+          },
+          {
+            "elementID" : "A83D162C-6C00-52F8-B86E-D3C449CD7D3D",
+            "objectID" : "367E7E82-37F9-4D8F-93FC-550505185B13"
+          }
+        ],
+        "id" : "E4602CA7-4606-4112-978F-AEEA502297DE",
+        "name" : "Soft Registry / Profile",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Soft Registry begins by separating a unit from its repeat. A strand, a mark or a small printed shape may be simple on its own; the interval between one occurrence and the next can make it feel entirely different. This fictional textile practice works with that distinction. Its studies include actual interlaced strand compositions and flat graphic repeats, allowing structure and image to remain related without being mistaken for the same thing.\n\nThe woven studies make their crossings visible. One strand passes over a neighbor and under the next, giving the surface a rhythm that can be followed from a close view. The repeat prints use a different kind of continuity. A mark ends at the boundary of one field and returns at the edge of another. Neither method needs a complicated unit. The work becomes more specific as its intervals become easier to read.\n\nShift weave holds a familiar crossing sequence, then changes the register of one group of strands. The interruption is small enough to belong to the surface but clear enough to redirect attention. Open repeat gives a printed motif more surrounding space than its neighbors might lead us to expect. The motif remains unchanged; its place in the field has become less certain. Both studies rely on consistency to make a difference visible.\n\nLong interval reduces the number of crossings so that the spaces between them can become part of the composition. Cross register brings two printed rhythms together without forcing them to coincide. Loose count gives the edge a different pace from the center. These are not proposals for upholstered objects or demonstrations of stitching. Their subject is the relation between a repeat, its boundary and the directions a viewer can follow across it.\n\nThe close views are chosen to explain that relation. Over and under remain in the same image. A repeat boundary includes the neighboring field rather than stopping exactly at the seam of the diagram. An edge detail retains enough of the center to make its difference meaningful. Texture alone would be less informative. The structure needs a little context before its variation can be understood as more than surface noise.\n\nThere is also a useful difference between a break in a system and a system that permits a break. In the first, the interruption can look accidental because the surrounding rules are unclear. In the second, the rules remain legible and the departure acquires a place. Soft Registry’s studies aim for the latter condition. A repeated field can remain calm while allowing one interval to ask for a slower look.\n\nA caption can follow a grid without occupying the same position every time. A detail can change scale without losing the whole. Consistency makes variation readable; it need not make every part behave alike.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "3CA31823-9BAD-4764-AA58-22A145F586CB"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 15.2,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11,
+        "frames" : [
+          {
+            "elementID" : "FBF076E2-8901-5A8C-810A-DAFFB6650124",
+            "objectID" : "A1DF2B76-DC1A-4F9E-8C9B-D44961A8A7C3"
+          },
+          {
+            "elementID" : "A317AD94-6C65-517F-BB98-C9EDD7E27E16",
+            "objectID" : "A1DF2B76-DC1A-4F9E-8C9B-D44961A8A7C3"
+          },
+          {
+            "elementID" : "3C0F30BD-32CC-51D6-9F93-553494FF3951",
+            "objectID" : "CB20A71E-8B60-4A09-9EAF-D9897EB3C2F3"
+          },
+          {
+            "elementID" : "3B68A459-DE76-5BC3-9CDD-DBC4CAA12CBA",
+            "objectID" : "CB20A71E-8B60-4A09-9EAF-D9897EB3C2F3"
+          },
+          {
+            "elementID" : "DEDB8403-1723-5A15-8186-F294BA0A5060",
+            "objectID" : "2EA72A47-D940-4B3A-87BC-354A4877CD43"
+          }
+        ],
+        "id" : "A97B1798-8756-4EB9-88CE-F46B1A1999CC",
+        "name" : "Systems with room for accident",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "A system is often easiest to recognize when one part departs from it. A line begins later than expected. A strand changes its interval. A shape crosses the boundary of its assigned field. The departure becomes meaningful because something else has remained dependable. Without that surrounding order, there may be no visible difference between an accident and an ordinary part of the arrangement.\n\nThis does not mean that a design should manufacture irregularity simply to look less controlled. A repeated disturbance can become a mannerism of its own. The more useful question is what the system can accommodate. Can a caption become longer? Can an image cross a gutter? Can a module turn without losing its relationship to the next one? A generous structure gives those changes a place before they become problems.\n\nThe studio studies offer several ways to think about that generosity. Fold Bureau repeats a direction, then lets one corner interrupt it. Soft Registry keeps the unit and changes the interval. Signal Rooms gives different kinds of information different tempos. In each case, the variation can be described without explaining away the whole composition. The relation remains clear enough for the viewer to notice what has changed.\n\nA printed sequence adds another test. The page needs enough consistency to make navigation easy, yet enough difference to make each encounter worth a closer look. Not every image should occupy the same fraction of the sheet. Not every opening needs the same kind of headline. A recurring scale, a reliable folio or a steady caption voice can hold the sequence together while the larger arrangements change.\n\nRoom for accident is therefore less about leaving a design unfinished than about choosing which decisions should remain open. The structure can be precise about ownership, scale and order while allowing the visible result to vary. A small disturbance then has something to work against. It can make the system more informative rather than merely making it harder to recognize.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "30E3C968-ACE3-49E1-B5CE-D5121C289F66"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11.25,
+        "frames" : [
+          {
+            "elementID" : "B90DA6AA-3A32-5AEB-973F-661133E0D3DE",
+            "objectID" : "F22044BF-17E8-4E04-8157-9608DA790C10"
+          },
+          {
+            "elementID" : "0CF4F9F9-BDE7-55C6-9F4D-3B2A0EFA6E3F",
+            "objectID" : "F22044BF-17E8-4E04-8157-9608DA790C10"
+          },
+          {
+            "elementID" : "30410F4B-D63F-586F-B8F8-CC9997EBFE45",
+            "objectID" : "A221060E-F621-4ADA-8886-5749127AFACC"
+          },
+          {
+            "elementID" : "6D794B6C-79C8-5C3A-9837-A9982C1326B3",
+            "objectID" : "A221060E-F621-4ADA-8886-5749127AFACC"
+          }
+        ],
+        "id" : "F8F812AD-476B-434A-8E3D-0990A0CA93D6",
+        "name" : "Index Works / Profile",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Index Works is interested in the moment before a tool is used. A hand approaches a tab, an edge is placed beside a line, or a small weight is moved onto a page. The gesture can be familiar even when the object is new. This fictional studio builds its studies around that recognition. The forms suggest possible uses, but they remain digital proposals rather than tested instruments or certified hardware.\n\nThe language is economical. A strip becomes a return. An opening leaves room for a finger. A low body gives a page a place to meet its weight. Each study separates a working relation from the rest of the outline so that the eye has somewhere clear to begin. That distinction does not require a loud color or an elaborate handle. It can be carried by a small change in direction or a carefully held interval.\n\nOffset rule starts with the familiar straight edge, then gives it a second level. The difference makes the strip easier to read as a three-dimensional object without losing its line. Open square keeps a gap in an otherwise dependable outline. Pocket bridge turns a short span into a suggestion of support, with enough space below it for the opening to remain part of the form rather than a dark detail.\n\nReading weight is deliberately quiet. Its low profile makes the relation to the table more important than the view from above. Turn tab gives one end a different direction from the rest of the strip, allowing the imagined gesture to be read before any instruction is supplied. Together, the studies ask how much of an action can be made visible in the object’s outline, and how much should remain a practical question for another stage.\n\nThe details keep the proposed actions modest. A softened edge is shown beside a straight stretch, rather than enlarged until it becomes an abstract landscape. Finger space is drawn with its surrounding support. The family view uses a consistent visual scale so that the smallest piece does not need a more dramatic camera to remain interesting. A useful comparison should make the differences easier to name.\n\nThere is a temptation, when drawing a tool, to make every surface explain itself. Index Works leaves some surfaces alone. A plain field can give the eye a rest between the edge that meets the work and the part that meets the hand. The absence of extra detail is not an argument that the object is finished. It is a way to keep the next question close to the visible proposal.\n\nThe test is modest: suggest a clear next gesture without pretending to settle every question of use. A later drawing may change dimensions, material or construction. It should preserve the clarity that made the gesture legible.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "3CA31823-9BAD-4764-AA58-22A145F586CB"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 15.2,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.75,
+        "frames" : [
+          {
+            "elementID" : "5182CBF0-BCF2-58A1-A5F4-2C4AA8479F88",
+            "objectID" : "FF2DFBBB-BE76-4C06-84A2-34092735F5F6"
+          }
+        ],
+        "id" : "8A24FD8B-EC22-40B8-AC8E-73B3DE41628A",
+        "name" : "The pocket test",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Imagine carrying a small object from one room to another. Which surface would the hand find first? Which edge would be easiest to keep track of without looking? The exercise does not prove that a proposed object is comfortable or safe. It gives the next drawing a more particular point of view. A view made for the hand may reveal a relation that the front elevation has kept hidden. Draw that relation before adding a handle simply because the object seems to need one.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.75,
+        "frames" : [
+          {
+            "elementID" : "2CADF319-984A-5341-8976-F7402478753C",
+            "objectID" : "FF2DFBBB-BE76-4C06-84A2-34092735F5F6"
+          }
+        ],
+        "id" : "DC8C2F7E-CEE3-4E9F-8F2B-4E840A257186",
+        "name" : "Room for a repair",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "An object can leave a connection visible without looking unfinished. A clear join gives a future revision somewhere to begin. In a drawing, try separating the parts by a small, consistent distance. Keep their order and orientation intact. The exploded view should make the relation easier to understand, not turn every component into a separate performance. Then bring the parts back together and check whether the same relation can still be read. The gap is an explanation, not the final design.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.75,
+        "frames" : [
+          {
+            "elementID" : "F78C6107-4442-5FF7-B0D8-8C909AF74ED4",
+            "objectID" : "65A5A656-9336-4CBF-A309-D5D2628F3564"
+          }
+        ],
+        "id" : "939D6360-C530-4C46-9FED-33A9B387BC01",
+        "name" : "Three ways to look",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Keep one wide view, one working view and one detail. The wide view establishes proportion. The working view explains a relation between parts. The detail answers a question that the other two have made worth asking. If a detail does not answer such a question, it may simply be another image. This small editing rule is useful when a sequence begins to feel crowded. Removing one unnecessary close view can give the remaining images a clearer reason to sit together.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.75,
+        "frames" : [
+          {
+            "elementID" : "C970657A-45EA-576E-B614-C1D1E949FA7A",
+            "objectID" : "65A5A656-9336-4CBF-A309-D5D2628F3564"
+          }
+        ],
+        "id" : "C6DCD728-4BB6-453F-8606-EAC62CBD649B",
+        "name" : "After the image",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Write the caption after looking away from the image for a moment. What is the one relation worth remembering? Return to the page and check whether the words point to something that can actually be seen. A caption need not repeat the title or describe every contour. It can name a change, locate an opening or ask the reader to compare two edges. Keep claims about materials and making within the evidence the study provides. A clear limitation can be more useful than an impressive sentence.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.75,
+        "frames" : [
+          {
+            "elementID" : "9B56824C-24A4-5E69-8BD5-A717B27EE3D8",
+            "objectID" : "24ADDF72-1CB1-4E93-A493-A5FB758E86E2"
+          }
+        ],
+        "id" : "3BD8F175-3538-4BA5-B46D-3466D874149A",
+        "name" : "Borrowed scale",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "A familiar interval can make an unfamiliar form easier to read. The width of a page, the space between two lines or the rhythm of a repeated mark gives the eye something dependable to borrow. The comparison does not have to become a measurement claim. It simply needs to remain consistent across the sequence. If every image changes its own scale, even closely related forms can begin to look like separate worlds. A shared frame is often the quietest way to keep a family together.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10.75,
+        "frames" : [
+          {
+            "elementID" : "EF83E3DA-2C24-5883-AFD2-354B8A192EA6",
+            "objectID" : "24ADDF72-1CB1-4E93-A493-A5FB758E86E2"
+          }
+        ],
+        "id" : "76F53911-1EC1-4DDD-9C4B-5B42ECB8ED51",
+        "name" : "Next time",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Keep a short record of the questions the final image cannot answer. Does the opening still read from below? Would a different interval make the repeat clearer? Which surface belongs to the hand, and which belongs to the work? These are more useful than a list of vague improvements. A good next question names a relation and suggests a way to examine it. The issue ends here, but the studies remain available for another view, another arrangement and a more exact revision.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11,
+        "frames" : [
+          {
+            "elementID" : "B5CFC06B-744A-52E9-A9E6-BB8665AEFE98",
+            "objectID" : "CA0839B1-BDDF-468B-8836-94B50695563B"
+          }
+        ],
+        "id" : "BEC5AD81-4374-4BBB-8F30-864126EAA71E",
+        "name" : "An issue to move through",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "The studio names in this issue are fictional. Their digital forms, graphic studies and editorial voices were authored for the LAB publication demonstration. Read the work as a set of visual propositions, not a catalogue of manufactured objects. The pages invite close looking; physical material and performance claims remain outside their evidence.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "A77F435E-8F72-425A-BBA8-A38796A9C064"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 15,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11,
+        "frames" : [
+          {
+            "elementID" : "D161D29C-2D56-5D48-984B-2739197FAE08",
+            "objectID" : "14FA4D2E-D6D5-4FCA-8692-D12D5F72E190"
+          }
+        ],
+        "id" : "83C62E3E-F364-40AE-B051-B4ACA385B845",
+        "name" : "Working record",
+        "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+        "text" : "Original LAB-authored text, artwork, layouts and fictional studio studies. No advertisements. Source artwork, linked stories and physical stock remain editable project data. Digital appearance is not a calibrated press or manufactured binding proof. This demonstration was composed as 48 editorial pages and four cover faces on thirteen folded uncoated parent sheets.",
+        "textStyle" : {
+          "overrides" : [
+
+          ],
+          "styleID" : "A77F435E-8F72-425A-BBA8-A38796A9C064"
+        },
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 15,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      }
+    ],
+    "textStyles" : [
+      {
+        "fontSize" : 11.25,
+        "id" : "3CA31823-9BAD-4764-AA58-22A145F586CB",
+        "name" : "VARIOUS / Body 11.25 / 15.2",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 15.2,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "fontSize" : 10.5,
+        "id" : "50019C1D-2B8D-4D4B-9C7F-B842100CADD6",
+        "name" : "VARIOUS / Body 10.5 / 14",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "fontSize" : 10.5,
+        "id" : "FD13335D-BA19-4C25-B654-FDD3151E7B8E",
+        "name" : "VARIOUS / Body 10.5 / 14.5",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.5,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "fontSize" : 10.75,
+        "id" : "73B4BF2E-2137-44ED-A547-5B1D6B263F6B",
+        "name" : "VARIOUS / Body 10.75 / 14.4",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "fontSize" : 11,
+        "id" : "30E3C968-ACE3-49E1-B5CE-D5121C289F66",
+        "name" : "VARIOUS / Body 11 / 14.8",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      },
+      {
+        "fontSize" : 11,
+        "id" : "A77F435E-8F72-425A-BBA8-A38796A9C064",
+        "name" : "VARIOUS / Body 11 / 15",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 15,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        }
+      }
+    ],
+    "unit" : "mm",
+    "updatedAt" : "2026-11-02T04:17:43Z"
+  }
+}

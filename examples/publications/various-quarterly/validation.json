@@ -1,0 +1,272 @@
+{
+  "version": 1,
+  "review_date": "2026-11-01",
+  "status": "accepted_native_visual_scope",
+  "project_id": "D61FBFF9-F110-45FD-BF93-903CFB346567",
+  "publication_id": "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+  "schema_version": 63,
+  "canonical_source_sha256": "6bec16a32ce73173fe8043f90e8e3462c06bd68cd09ff8053a8879d977e1ea02",
+  "canonical_hash_fields": [
+    "id",
+    "objects",
+    "publications",
+    "textStories",
+    "textStyles",
+    "swatches",
+    "studioPresentation"
+  ],
+  "app_binary_sha256": "07cf787c0e8a71930134ba7f3ac09c433a964afbf9c8139187815590953ea92b",
+  "editorial_words": 6542,
+  "logical_pages": 52,
+  "numbered_interior_pages": 48,
+  "cover_faces": 4,
+  "reader_views": 27,
+  "parent_sheets": 13,
+  "imposed_sides": 26,
+  "visual_placements": 110,
+  "linked_stories": 26,
+  "editorial_sha256": "60ce62fe230e958ed423ce764bc00ae4b5aae1331846e6b1817554bd3b185e53",
+  "asset_manifest_sha256": "fc049a89e52e138b771e7bb34fb61d29ed0719de9ebefcf2cfd2dd78a39a6793",
+  "native_publication_preflight": {
+    "pages_issues": 0,
+    "spreads_issues": 0,
+    "booklet_issues": 0
+  },
+  "native_visual_review": "All reader views were inspected individually; page/imposition contacts and both actual Studio scenes were reviewed. Round8 whole-view photo framing was accepted without changing editorial words or source assets.",
+  "actual_ink_audit": {
+    "path": ".local/validation/publications/various-accepted-exports/actual-print-ink-and-boxes.json",
+    "pdf_sha256": "45aec5625a5d248bc1286e32ca2a0e63b9413d9670135b8a832799d4e8804c3e",
+    "black_only_sides": [
+      1,
+      2,
+      9,
+      10,
+      17,
+      18,
+      25,
+      26
+    ],
+    "all_cmy_components_exactly_zero": true,
+    "embedded_profile_sha256": "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a",
+    "profile_matches": true,
+    "exact_media_trim_bleed_mm": [
+      431.8,
+      279.4
+    ],
+    "media_matches": true,
+    "results": [
+      {
+        "side": 1,
+        "paint_operations": 14,
+        "cmyk_operations": 14,
+        "gray_operations": 0,
+        "images": 0,
+        "issues": [],
+        "passed": true
+      },
+      {
+        "side": 2,
+        "paint_operations": 671,
+        "cmyk_operations": 671,
+        "gray_operations": 0,
+        "images": 0,
+        "issues": [],
+        "passed": true
+      },
+      {
+        "side": 9,
+        "paint_operations": 1853,
+        "cmyk_operations": 1853,
+        "gray_operations": 0,
+        "images": 0,
+        "issues": [],
+        "passed": true
+      },
+      {
+        "side": 10,
+        "paint_operations": 937,
+        "cmyk_operations": 937,
+        "gray_operations": 0,
+        "images": 0,
+        "issues": [],
+        "passed": true
+      },
+      {
+        "side": 17,
+        "paint_operations": 2447,
+        "cmyk_operations": 2447,
+        "gray_operations": 0,
+        "images": 0,
+        "issues": [],
+        "passed": true
+      },
+      {
+        "side": 18,
+        "paint_operations": 165,
+        "cmyk_operations": 165,
+        "gray_operations": 0,
+        "images": 0,
+        "issues": [],
+        "passed": true
+      },
+      {
+        "side": 25,
+        "paint_operations": 2011,
+        "cmyk_operations": 2011,
+        "gray_operations": 0,
+        "images": 0,
+        "issues": [],
+        "passed": true
+      },
+      {
+        "side": 26,
+        "paint_operations": 621,
+        "cmyk_operations": 621,
+        "gray_operations": 0,
+        "images": 0,
+        "issues": [],
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "exports": [
+    {
+      "kind": "pdf",
+      "layout": "pages",
+      "path": ".local/validation/publications/various-accepted-exports/exports/various-pages.pdf",
+      "page_count": 52,
+      "sha256": "b6f00869fbc3e2043ccc05e74d7a9fe8571392b4a10e06b976ff5cec832d62c4"
+    },
+    {
+      "kind": "pdf",
+      "layout": "spreads",
+      "path": ".local/validation/publications/various-accepted-exports/exports/various-spreads.pdf",
+      "page_count": 27,
+      "sha256": "7da4fab1416cf732a091982bd21934b5f27cde4d9154f3429b60736e92b59cd1"
+    },
+    {
+      "kind": "pdf",
+      "layout": "booklet",
+      "path": ".local/validation/publications/various-accepted-exports/exports/various-booklet.pdf",
+      "page_count": 26,
+      "sha256": "45aec5625a5d248bc1286e32ca2a0e63b9413d9670135b8a832799d4e8804c3e"
+    },
+    {
+      "kind": "native_studio_png",
+      "scene_id": "68F75E7C-44EC-47E7-9993-9F2285825466",
+      "path": ".local/validation/publications/various-accepted-exports/various-scene-1.render/various-scene-1.png",
+      "sha256": "7be68344fb3bf3e5f56f4c0bfd0898248f93e0a5d6e4f2442357d0aa44d11f12"
+    },
+    {
+      "kind": "native_studio_png",
+      "scene_id": "10361B6F-D10D-41BF-9B2C-D401E4FDAE1E",
+      "path": ".local/validation/publications/various-accepted-exports/various-scene-2.render/various-scene-2.png",
+      "sha256": "5606c7a322aa0a9cac832df3fcd09eae9002e699989a20d5acd8c89fc7d01d61"
+    }
+  ],
+  "evidence_report": ".local/validation/publications/various-accepted-exports/magazine-report.json",
+  "source_snapshot": ".local/validation/publications/various-accepted-exports/source-snapshot.json",
+  "delivered_package_names": [
+    "VARIOUS-Issue-01.form",
+    "VARIOUS-Source-Portfolio.form"
+  ],
+  "boundaries": [
+    "Digital native visual/source/output acceptance for this 52-page issue; not maximum-budget performance.",
+    "No physical printing, press calibration, binding strength, adhesive, stretch or manufactured-sample claim.",
+    "Both provided packages were also opened natively in the same ordinary LAB; byte-copy certificates, native imports and the scoped visual/output review remain distinct evidence."
+  ],
+  "retained_proofs": [
+    {
+      "path": "proofs/studio-reader-poses.png",
+      "source_path": ".local/validation/publications/various-accepted-exports/various-scene-1.render/various-scene-1.png",
+      "sha256": "7be68344fb3bf3e5f56f4c0bfd0898248f93e0a5d6e4f2442357d0aa44d11f12",
+      "bytes": 1074885,
+      "kind": "native_studio_render",
+      "byte_identical": true,
+      "transformed": false
+    },
+    {
+      "path": "proofs/studio-binding-comparison.png",
+      "source_path": ".local/validation/publications/various-accepted-exports/various-scene-2.render/various-scene-2.png",
+      "sha256": "5606c7a322aa0a9cac832df3fcd09eae9002e699989a20d5acd8c89fc7d01d61",
+      "bytes": 664585,
+      "kind": "native_studio_render",
+      "byte_identical": true,
+      "transformed": false
+    },
+    {
+      "path": "proofs/reader-spread-25.png",
+      "source_path": ".local/validation/publications/various-accepted-exports/corrected-proof/spread25.png",
+      "sha256": "1bff5d918cc8d690530668a0ea29dc1d6ce498949c5a6bfcd1b5b8b2458521b3",
+      "bytes": 337667,
+      "kind": "actual_exported_reader_pdf_proof",
+      "byte_identical": true,
+      "transformed": false
+    }
+  ],
+  "delivered_packages": [
+    {
+      "path": "VARIOUS-Issue-01.form",
+      "source_project_id": "D61FBFF9-F110-45FD-BF93-903CFB346567",
+      "manifest_sha256": "3fbf2ff9da76fcb5a11f70179a750bf45dea5dec4b6a9009fe1b5a667c2da0a9",
+      "objects": 55,
+      "asset_files": 55,
+      "total_files": 111,
+      "bytes": 41934735,
+      "copy_verified": true,
+      "source_bytes_unchanged": true,
+      "native_file_open": true,
+      "native_import": {
+        "native_file_open": true,
+        "imported_project_id": "86AC8896-5DA6-4477-936B-9E6D973F1886",
+        "canonical_source_sha256_after_normalizing_import_id": "6bec16a32ce73173fe8043f90e8e3462c06bd68cd09ff8053a8879d977e1ea02",
+        "objects": 55,
+        "publications": 1,
+        "text_stories": 26,
+        "saved_scenes": 2
+      },
+      "certificate_path": ".local/validation/publications/package-handoff/magazine-certificate.json",
+      "native_import_proof_path": ".local/validation/publications/package-handoff/native-magazine-import.json"
+    },
+    {
+      "path": "VARIOUS-Source-Portfolio.form",
+      "source_project_id": "CF4EEC12-77FF-4AB9-9714-A41FF0F8A5F2",
+      "manifest_sha256": "8b0dcc19128cfe7b5d72ab2c471bb095edb52f5bbe643c4d1907344de0faa76f",
+      "objects": 58,
+      "asset_files": 10,
+      "total_files": 69,
+      "bytes": 5670703,
+      "copy_verified": true,
+      "source_bytes_unchanged": true,
+      "native_file_open": true,
+      "native_import": {
+        "native_file_open": true,
+        "project_id": "CF4EEC12-77FF-4AB9-9714-A41FF0F8A5F2",
+        "objects": 58,
+        "saved_scenes": 0
+      },
+      "certificate_path": ".local/validation/publications/package-handoff/portfolio-certificate.json",
+      "native_import_proof_path": ".local/validation/publications/package-handoff/native-portfolio-import.json"
+    }
+  ],
+  "native_interaction": {
+    "canonical_source_sha256": "6bec16a32ce73173fe8043f90e8e3462c06bd68cd09ff8053a8879d977e1ea02",
+    "original_user_objects_verified": 146,
+    "native_pose_checks": {
+      "opening_before": 180,
+      "opening_after": 135,
+      "spread_before": "18\u201319",
+      "spread_after": "14\u201315",
+      "undo_restored": true,
+      "saved_source_unchanged": true
+    },
+    "proof_path": ".local/validation/publications/package-handoff/native-final-verification.json",
+    "undo_count": 2
+  },
+  "native_canvas_screenshot": {
+    "path": "proofs/native-canvas-spread.png",
+    "sha256": "fd6a732e4adfea63a857213ae01f9978ca76513b81f039264f9def1c71c8f7e6",
+    "scope": "Actual native Canvas with 52-page publication navigator, facing pages and one canonical cross-gutter image; no image edits."
+  }
+}

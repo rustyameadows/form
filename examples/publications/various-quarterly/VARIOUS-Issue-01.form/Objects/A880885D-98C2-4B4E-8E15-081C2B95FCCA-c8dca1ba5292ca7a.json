@@ -1,0 +1,336 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 13050.9,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 11,
+        "height" : 10,
+        "id" : "E97080D4-36EE-56B9-B521-886DB063E5BC",
+        "kind" : "text",
+        "name" : "cover_back-subtitle",
+        "text" : "VARIOUS / 01",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 14.85,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 23
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 41,
+        "height" : 77,
+        "id" : "2811E6C0-2DAA-506E-AF8C-39975DD0124F",
+        "kind" : "text",
+        "name" : "cover_back-title",
+        "text" : "Keep the next question close.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 55.35,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 53
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10,
+        "height" : 18,
+        "id" : "FCC6F013-7B33-56D2-BB43-60EE9F769906",
+        "kind" : "text",
+        "name" : "cover_back-text",
+        "text" : "A field guide to small, deliberate changes. Original fictional studio studies / LAB.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 13.5,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 244
+      },
+      {
+        "color" : "#000000",
+        "contentSize" : {
+          "x" : 100,
+          "y" : 100
+        },
+        "fontSize" : 10,
+        "height" : 72,
+        "id" : "DA04F1DF-678F-5686-9C9C-052C1D312D63",
+        "kind" : "group",
+        "name" : "cover_back-placed-vector",
+        "text" : "",
+        "width" : 72,
+        "x" : 71.95,
+        "y" : 146
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "DD753ED6-33FF-5172-AFC0-502269AA7C47",
+        "kind" : "path",
+        "name" : "cover_back-return",
+        "parentID" : "DA04F1DF-678F-5686-9C9C-052C1D312D63",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 15,
+                    "y" : 84
+                  },
+                  "id" : "AF8FFC0A-1ABC-5CBE-AC19-2372BC6F89F5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 15,
+                    "y" : 22
+                  },
+                  "id" : "F6C4C94A-29C8-5FFF-AF18-C69D7151306B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 22
+                  },
+                  "id" : "ABB70B6D-39D0-544D-BFD3-8390C03771E6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 71
+                  },
+                  "id" : "ED5D4BDF-10EA-5065-805D-5D7ACE15DBEA"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44,
+                    "y" : 71
+                  },
+                  "id" : "627DB299-5E66-5DC6-8462-FF0E379878C0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44,
+                    "y" : 49
+                  },
+                  "id" : "32BC77E1-7D97-590B-90D8-9BDD64763654"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61,
+                    "y" : 49
+                  },
+                  "id" : "33879F0B-2FBF-556A-987C-FA6CAB7A5462"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 2
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 7,
+        "id" : "CC0EDF68-7585-5A42-81FC-67E136967A03",
+        "kind" : "ellipse",
+        "name" : "cover_back-point",
+        "parentID" : "DA04F1DF-678F-5686-9C9C-052C1D312D63",
+        "text" : "",
+        "width" : 7,
+        "x" : 75,
+        "y" : 8
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "0E196AF8-48A7-5DCB-8919-7EE2212B473A",
+        "kind" : "path",
+        "name" : "cover_back-datum",
+        "parentID" : "DA04F1DF-678F-5686-9C9C-052C1D312D63",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 15,
+                    "y" : 92
+                  },
+                  "id" : "5951156F-4124-501A-90E0-DDD7C97121A0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 87,
+                    "y" : 92
+                  },
+                  "id" : "9659D5E0-8667-544C-A8AE-3088F4264CF8"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "498D1C46-C007-4450-AB66-995E7818B4C2",
+  "id" : "A880885D-98C2-4B4E-8E15-081C2B95FCCA",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / Back cover / cover back",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 12846.899999999989,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

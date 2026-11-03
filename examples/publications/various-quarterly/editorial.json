@@ -1,0 +1,1493 @@
+{
+  "schema_version": 1,
+  "publication": {
+    "title": "VARIOUS",
+    "subtitle": "Quarterly studies in ordinary things",
+    "issue_number": "01",
+    "season": "Autumn 2026",
+    "theme": "Small adjustments",
+    "language": "en"
+  },
+  "editorial_notice": "All six studios are explicitly fictional editorial families. Text and artwork are original LAB-authored demonstration material. No real artist biographies, commissioned interviews or advertisements are represented.",
+  "physical_brief": {
+    "trim_mm": [
+      215.9,
+      279.4
+    ],
+    "logical_page_count": 52,
+    "interior_pages": 48,
+    "cover_faces": 4,
+    "reader_spreads": 27,
+    "parent_sheets": 13,
+    "print_sides": 26,
+    "parent_mm": [
+      431.8,
+      279.4
+    ],
+    "bleed_mm": 0,
+    "colored_parent_indices": [
+      0,
+      4,
+      8,
+      12
+    ]
+  },
+  "covers": [
+    {
+      "key": "cover_front",
+      "logical_page": 1,
+      "title": "VARIOUS",
+      "subtitle": "01 / SMALL ADJUSTMENTS",
+      "text": "Quarterly studies in ordinary things. Six fictional studios. One shared field of attention.",
+      "visual_key": "cover_front"
+    },
+    {
+      "key": "cover_inside_front",
+      "logical_page": 2,
+      "title": "An issue to move through",
+      "subtitle": "A note on the work",
+      "text": "The studio names in this issue are fictional. Their digital forms, graphic studies and editorial voices were authored for the LAB publication demonstration. Read the work as a set of visual propositions, not a catalogue of manufactured objects. The pages invite close looking; physical material and performance claims remain outside their evidence.",
+      "visual_key": "cover_inside_front"
+    },
+    {
+      "key": "cover_inside_back",
+      "logical_page": 51,
+      "title": "Working record",
+      "subtitle": "Colophon / Issue 01",
+      "text": "Original LAB-authored text, artwork, layouts and fictional studio studies. No advertisements. Source artwork, linked stories and physical stock remain editable project data. Digital appearance is not a calibrated press or manufactured binding proof. This demonstration was composed as 48 editorial pages and four cover faces on thirteen folded uncoated parent sheets.",
+      "visual_key": "cover_inside_back"
+    },
+    {
+      "key": "cover_back",
+      "logical_page": 52,
+      "title": "Keep the next question close.",
+      "subtitle": "VARIOUS / 01",
+      "text": "A field guide to small, deliberate changes. Original fictional studio studies / LAB.",
+      "visual_key": "cover_back"
+    }
+  ],
+  "contents": [
+    {
+      "key": "frontmatter",
+      "title": "A little more attention",
+      "interior_start": 1,
+      "interior_end": 4
+    },
+    {
+      "key": "various_front",
+      "title": "Various / Field signals",
+      "interior_start": 5,
+      "interior_end": 8
+    },
+    {
+      "key": "artist_01",
+      "title": "Fold Bureau",
+      "interior_start": 9,
+      "interior_end": 12
+    },
+    {
+      "key": "artist_02",
+      "title": "Matter Study",
+      "interior_start": 13,
+      "interior_end": 16
+    },
+    {
+      "key": "style_01",
+      "title": "The useful gap",
+      "interior_start": 17,
+      "interior_end": 20
+    },
+    {
+      "key": "artist_03",
+      "title": "Signal Rooms",
+      "interior_start": 21,
+      "interior_end": 24
+    },
+    {
+      "key": "style_02",
+      "title": "Surfaces that keep time",
+      "interior_start": 25,
+      "interior_end": 28
+    },
+    {
+      "key": "artist_04",
+      "title": "Common Current",
+      "interior_start": 29,
+      "interior_end": 32
+    },
+    {
+      "key": "artist_05",
+      "title": "Soft Registry",
+      "interior_start": 33,
+      "interior_end": 36
+    },
+    {
+      "key": "style_03",
+      "title": "Systems with room for accident",
+      "interior_start": 37,
+      "interior_end": 40
+    },
+    {
+      "key": "artist_06",
+      "title": "Index Works",
+      "interior_start": 41,
+      "interior_end": 44
+    },
+    {
+      "key": "various_back",
+      "title": "Various / Keep for next time",
+      "interior_start": 45,
+      "interior_end": 48
+    }
+  ],
+  "sections": [
+    {
+      "key": "frontmatter",
+      "kind": "frontmatter",
+      "title": "A little more attention",
+      "interior_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "logical_pages": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "standfirst": "An issue about looking closely, making room and leaving useful questions open.",
+      "body": [
+        "A useful object can change the pace of a room. A folded edge gives the hand somewhere to land. An opening turns a heavy shape into a frame. A line of type asks us to slow down before the next line begins. These are small decisions, but they are enough to start an issue.",
+        "VARIOUS collects six fictional studio studies and three conversations between their materials. The work is original to this demonstration. The studios are an editorial device: a way of giving each family of forms its own questions, habits and visual language. They are not profiles of real artists.",
+        "Move between the large view and the detail. Read a caption before deciding what an image means. We have left space around the work because attention needs somewhere to gather. The aim is not a final answer. It is a more exact next question."
+      ],
+      "modules": [
+        {
+          "key": "masthead",
+          "title": "Masthead",
+          "body": "VARIOUS quarterly / Issue 01 / Autumn 2026. Original editorial text, digital studies and artwork authored for the LAB publication demonstration. Six fictional studio families; no real artist biographies, commissioned interviews or advertisements. Editorial direction, layout and image production: the LAB demonstration project."
+        },
+        {
+          "key": "contributors",
+          "title": "Six useful fictions",
+          "items": [
+            {
+              "title": "Fold Bureau",
+              "body": "Paper planes, held edges and the consequences of a crease."
+            },
+            {
+              "title": "Matter Study",
+              "body": "Ceramic forms arranged around openings rather than solid centers."
+            },
+            {
+              "title": "Signal Rooms",
+              "body": "Graphic prints that distribute attention through type and interval."
+            },
+            {
+              "title": "Common Current",
+              "body": "Sculptural lighting studies built around shade, support and space."
+            },
+            {
+              "title": "Soft Registry",
+              "body": "Woven strand studies and printed repeats with deliberate interruptions."
+            },
+            {
+              "title": "Index Works",
+              "body": "Small metal forms that suggest clear, unhurried hand movements."
+            }
+          ]
+        }
+      ],
+      "works": [
+        {
+          "key": "frontmatter_01",
+          "title": "The issue in six forms",
+          "caption": "One silhouette introduces each fictional studio family.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_works": [
+            "fold_bureau_01",
+            "matter_study_01",
+            "signal_rooms_01",
+            "common_current_01",
+            "soft_registry_01",
+            "index_works_01"
+          ]
+        },
+        {
+          "key": "frontmatter_02",
+          "title": "A small index",
+          "caption": "Six material languages share one physical page.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "frontmatter_03",
+          "title": "Space for a caption",
+          "caption": "An interval invites a second, closer reading.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "frontmatter_04",
+          "title": "The sequence",
+          "caption": "Profiles alternate with essays and short observations.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        }
+      ],
+      "word_counts": {
+        "title": 4,
+        "standfirst": 12,
+        "body": 145,
+        "modules": 112,
+        "work_titles": 14,
+        "captions": 28,
+        "total": 315
+      }
+    },
+    {
+      "key": "various_front",
+      "kind": "dispatches",
+      "title": "Various / Field signals",
+      "interior_pages": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "logical_pages": [
+        7,
+        8,
+        9,
+        10
+      ],
+      "standfirst": "Short observations for the moment before a project acquires a name.",
+      "body": [],
+      "modules": [
+        {
+          "key": "one_corner",
+          "title": "One corner is enough",
+          "body": "Before drawing a whole object, draw one corner. Give it an edge, a thickness and a little surrounding space. Decide whether two surfaces meet cleanly or let the join remain visible. The fragment often reveals the terms of the larger thing: whether it wants to be folded, joined, wrapped or left open. A corner is small enough to revise without ceremony. It is also difficult to hide behind. Keep the first version beside the next one, and let the difference do the explaining."
+        },
+        {
+          "key": "second_light",
+          "title": "The second light",
+          "body": "An image made under one light can make every surface seem certain. Imagine the same form lit from the other side. A depression becomes harder to read; an opening becomes clearer; the outline changes its emphasis. The exercise is not a search for the most flattering view. It is a way to ask which details belong to the object and which belong to the photograph. In the studies here, a second angle is often more informative than a more elaborate first image."
+        },
+        {
+          "key": "offcut_index",
+          "title": "Offcut index",
+          "body": "A remainder is a useful scale model of a decision. The strip left beside a cut tells us how much room was needed. The small triangle beside a fold records an angle more directly than its label. Arrange a few such fragments without making them into a composition too quickly. Their relationships may suggest a family of widths, a repeated gap or a simpler way to divide the next sheet. An index can begin as a place to keep things that have not yet become useful."
+        },
+        {
+          "key": "quiet_hardware",
+          "title": "Quiet hardware",
+          "body": "A connection can be legible without becoming a feature. A pin, a tab or a small folded return may tell the eye where two parts meet, then step back into the whole. The difficult choice is often the amount of difference to leave visible. Too little and the connection becomes mysterious; too much and every joint asks for attention at once. A useful drawing gives the connection one clear view, then checks whether the object still reads from farther away."
+        },
+        {
+          "key": "repeat_count",
+          "title": "Count, then interrupt",
+          "body": "A repeat establishes an expectation before it establishes a pattern. Three marks can suggest a rhythm; a fourth can confirm it or make the sequence uncertain. Try changing only one interval. Keep the marks themselves the same size and shape. The interruption becomes easier to understand because the rest of the system has remained dependable. Soft Registry uses this distinction between a repeated unit and the space around it. Signal Rooms carries the same question into the arrangement of words."
+        },
+        {
+          "key": "between_uses",
+          "title": "Between uses",
+          "body": "Objects spend a great deal of time waiting. A tool rests on a table; a vessel stands empty; a lamp is seen without a pool of light. These quieter conditions deserve their own drawings. They reveal a base, a shadow or an open side that the active view may conceal. A proposal that only makes sense in its most dramatic pose is difficult to know. The inactive view asks a gentler question: what remains understandable when the object is simply there?"
+        }
+      ],
+      "works": [
+        {
+          "key": "various_front_01",
+          "title": "Corner / folded",
+          "caption": "A short return redirects the sheet’s edge.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_front_02",
+          "title": "Corner / joined",
+          "caption": "A narrow interval keeps the join visible.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_front_03",
+          "title": "One form, two lights",
+          "caption": "The second angle gives the opening emphasis.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_front_04",
+          "title": "The waiting view",
+          "caption": "A quiet view makes the support legible.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_front_05",
+          "title": "Remainder / strip",
+          "caption": "The remainder records a particular width.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_front_06",
+          "title": "Remainder / angle",
+          "caption": "An offcut makes an angle available again.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_front_07",
+          "title": "Tab / connection",
+          "caption": "A short tab explains the intended connection.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_front_08",
+          "title": "Pin / connection",
+          "caption": "The pin stays subordinate to the whole.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_front_09",
+          "title": "Three, then four",
+          "caption": "A regular sequence reveals one changed interval.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_front_10",
+          "title": "Held interval",
+          "caption": "The marks stay; the interval changes.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_front_11",
+          "title": "At rest",
+          "caption": "The base receives its own view.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_front_12",
+          "title": "Open side",
+          "caption": "An open side interrupts the familiar silhouette.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        }
+      ],
+      "word_counts": {
+        "title": 3,
+        "standfirst": 11,
+        "body": 0,
+        "modules": 508,
+        "work_titles": 28,
+        "captions": 81,
+        "total": 631
+      }
+    },
+    {
+      "key": "artist_01",
+      "kind": "profile",
+      "title": "A fold keeps a decision",
+      "interior_pages": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "logical_pages": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "standfirst": "Fold Bureau uses paper as a way to think in planes, keeping the evidence of each change visible.",
+      "body": [
+        "Fold Bureau begins with an ordinary proposition: a sheet is already a space, even before it is folded. It has an edge, a direction and two sides that cannot be seen together from every position. This fictional studio treats those conditions as the start of a design language. Its digital studies are deliberately spare. A plane moves, another plane answers, and a narrow opening becomes the subject of the whole arrangement.",
+        "The work is not an attempt to disguise paper as something more permanent. Edges remain thin. Corners do not acquire ornamental weight. A crease is allowed to divide a surface sharply, while the rest of the sheet continues without explanation. The forms ask what can be gained by changing direction rather than adding another part. Seen together, they look less like a collection of objects than a collection of possible decisions.",
+        "Offset study places parallel planes just far enough apart to keep their order legible. The eye moves across them, then returns to the small differences between their edges. Open pocket makes a different invitation. Its two wings frame a channel that is easier to understand from an oblique view than from above. Neither study needs a large gesture. The interest lies in the way a short edge can redirect a larger surface.",
+        "Shelter fold introduces an interval that feels sheltered without becoming a closed interior. Its upper plane gives the lower space a limit; the open sides keep that space connected to the page around it. Step fan repeats a change of direction until the crease becomes a rhythm. Held corner interrupts that rhythm with a single tucked relation. The family remains recognizable because each proposal keeps the same economy of means.",
+        "A close view changes the scale of the questions. Where exactly does one plane stop? Which edge belongs to the surface behind it? Is a dark line a mark, a gap or the shadow of a return? The details are not presented as fabrication instructions. They are ways of reading the visible model more carefully. A crease junction can be as informative as a whole-object view when its neighboring planes are left in the frame.",
+        "The flat and folded views should therefore stay near one another. The flat drawing preserves a sequence of intentions; the folded view shows their spatial consequences. Moving between them is more useful than treating either as the final image. The viewer can trace a line across the sheet, lose it around a corner, then find it again. That small act of recognition is the work’s most generous form of explanation.",
+        "Restraint, here, is a way of making decisions visible. A sheet may remain almost empty and still give a precise account of how one edge relates to another. The next revision may simply make that account clearer."
+      ],
+      "family_key": "fold_bureau",
+      "studio": "Fold Bureau",
+      "fictional": true,
+      "printed_notice": "Fictional studio study / Original LAB-authored work",
+      "works": [
+        {
+          "key": "fold_bureau_01",
+          "title": "Offset study",
+          "caption": "Parallel planes keep their narrow openings legible.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "fold_bureau_02",
+          "title": "Open pocket",
+          "caption": "Two wings hold one open channel.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "fold_bureau_03",
+          "title": "Shelter fold",
+          "caption": "An upper plane gives the interval a roof.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "fold_bureau_04",
+          "title": "Step fan",
+          "caption": "Repeated direction changes become a spatial rhythm.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "fold_bureau_05",
+          "title": "Held corner",
+          "caption": "One tucked relation interrupts the open edges.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "fold_bureau_06",
+          "title": "Crease junction",
+          "caption": "Offset study’s junction retains its neighboring planes.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "fold_bureau_01"
+        },
+        {
+          "key": "fold_bureau_07",
+          "title": "Edge register",
+          "caption": "Shelter fold’s edge stays connected to its underside.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "fold_bureau_03"
+        },
+        {
+          "key": "fold_bureau_08",
+          "title": "Flat / folded",
+          "caption": "A held edge moves from line to space.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "fold_bureau_05"
+        }
+      ],
+      "word_counts": {
+        "title": 5,
+        "standfirst": 18,
+        "body": 466,
+        "modules": 0,
+        "work_titles": 16,
+        "captions": 58,
+        "total": 563
+      }
+    },
+    {
+      "key": "artist_02",
+      "kind": "profile",
+      "title": "The shape of what is missing",
+      "interior_pages": [
+        13,
+        14,
+        15,
+        16
+      ],
+      "logical_pages": [
+        15,
+        16,
+        17,
+        18
+      ],
+      "standfirst": "Matter Study places openings at the center of a family of ceramic forms, making empty space the most deliberate material.",
+      "body": [
+        "The first thing to notice in Matter Study is often the part that is not there. A mouth, a handle or a gap between two volumes provides the clearest route into the form. This fictional studio is organized around that reversal. Its ceramic studies are digital proposals, but their questions are familiar to anyone who has turned a vessel in the hand: where does the wall become a rim, and how does an opening belong to the shape around it?",
+        "The outer silhouettes are intentionally calm. Rounded shoulders, low bodies and short transitions give each piece a relatively quiet outline. That quiet makes the interior easier to read. A bright upper edge can lead the eye down into a cavity; an offset opening can make an otherwise balanced form feel more alert. The interest is not in hiding a complicated surface inside a simple one. It is in letting the two describe each other.",
+        "Window vessel is the most direct statement of the approach. Its opening is not a small accessory to a dominant solid. The surrounding wall becomes a frame for the space it contains. Twin mouth introduces a second center of attention, allowing two openings to share one body without pretending to be identical. Low aperture draws the same conversation closer to the table, where the relation between the upper edge and the base becomes more apparent.",
+        "Handle field treats the space inside a handle as a form worth considering on its own. The void has a width, an outline and a direction. It changes as the view changes, even when the surrounding shape remains familiar. Offset cup moves the opening away from an expected center. The result is a small shift in emphasis rather than a theatrical deformation. The study asks how little asymmetry is needed before the whole object begins to read differently.",
+        "The detail views resist the temptation to turn every surface into an atmosphere. Rim and section remain visible together. A view through the handle includes enough of the body to explain the opening’s position. Three elevations are kept at a common scale so that the differences do not depend on camera distance. The images offer evidence for looking, rather than claims about how an unmade object would perform.",
+        "There is also a distinction between a soft outline and an indistinct one. A rounded surface still needs a clear transition into its opening. Without that transition, the eye has little reason to move from the exterior to the interior. Matter Study keeps returning to this threshold: the small stretch of form where a wall becomes a lip, where a lip turns inward, or where an opening meets the space of the room.",
+        "A vessel holds several kinds of emptiness: the space inside, the space a hand might occupy, and the interval that keeps its silhouette legible. Matter Study gives each a boundary worth examining."
+      ],
+      "family_key": "matter_study",
+      "studio": "Matter Study",
+      "fictional": true,
+      "printed_notice": "Fictional studio study / Original LAB-authored work",
+      "works": [
+        {
+          "key": "matter_study_01",
+          "title": "Window vessel",
+          "caption": "The ceramic wall frames an open center.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "matter_study_02",
+          "title": "Twin mouth",
+          "caption": "Two openings share a body, not a direction.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "matter_study_03",
+          "title": "Low aperture",
+          "caption": "The upper edge stays near the base.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "matter_study_04",
+          "title": "Handle field",
+          "caption": "The handle’s interior becomes a second form.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "matter_study_05",
+          "title": "Offset cup",
+          "caption": "An off-center opening changes the silhouette’s emphasis.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "matter_study_06",
+          "title": "Rim / section",
+          "caption": "The wall turns into a clearly readable lip.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "matter_study_01"
+        },
+        {
+          "key": "matter_study_07",
+          "title": "Shadow of an opening",
+          "caption": "The cavity keeps its surrounding surface in view.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "matter_study_03"
+        },
+        {
+          "key": "matter_study_08",
+          "title": "Three elevations",
+          "caption": "A consistent scale reveals the unequal sides.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "matter_study_05"
+        }
+      ],
+      "word_counts": {
+        "title": 6,
+        "standfirst": 20,
+        "body": 480,
+        "modules": 0,
+        "work_titles": 18,
+        "captions": 59,
+        "total": 583
+      }
+    },
+    {
+      "key": "style_01",
+      "kind": "essay",
+      "title": "The useful gap",
+      "interior_pages": [
+        17,
+        18,
+        19,
+        20
+      ],
+      "logical_pages": [
+        19,
+        20,
+        21,
+        22
+      ],
+      "standfirst": "Empty space becomes useful when it has a clear relation to the things around it.",
+      "body": [
+        "A gap is often described by what it separates. Two edges, two lines of type, two parts waiting to meet. That description is useful, but incomplete. The interval also has an outline and a pace. It may feel generous, compressed, continuous or abruptly interrupted. Once we begin to draw it as carefully as the neighboring forms, it becomes a decision rather than a remainder.",
+        "The paper studies make the argument with almost nothing. A short return turns an open sheet into a shallow interior. The interior is not enclosed, yet it has acquired a limit. In the ceramic studies, the same question becomes the space inside a handle or the opening at a rim. The material changes; the need for a legible relationship does not. An empty interval can carry the most specific part of a form’s identity.",
+        "On a printed page, the gap is also a means of giving attention somewhere to go. A caption placed too close to an image becomes part of its texture. A caption placed without a clear relation becomes a separate voice. Between those conditions is a distance at which the two can explain one another. The exact distance belongs to the particular page. The useful habit is to keep asking what the interval is doing.",
+        "This is why enlarging everything rarely creates the same effect as making room. A larger object may occupy more of the page while becoming less distinct from its surroundings. A carefully held gap can make a small detail easier to see without increasing its size. Try the relation first with simple shapes. Change the interval while leaving the shapes alone. Then return to the more complicated arrangement with a clearer sense of what has actually changed.",
+        "The useful gap is neither neutral nor decorative. It is the part of the composition that allows two things to remain different while still belonging together. It gives a fold its depth, a vessel its opening and a line its place in a paragraph. Sometimes the most effective addition to a design is a boundary drawn around the space it already contains."
+      ],
+      "works": [
+        {
+          "key": "useful_gap_01",
+          "title": "Two edges",
+          "caption": "The edges turn; the interval remains constant.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "useful_gap_02",
+          "title": "Held open",
+          "caption": "One plane gives open space a limit.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "useful_gap_03",
+          "title": "A handle’s interior",
+          "caption": "The opening returns to its surrounding body.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "useful_gap_04",
+          "title": "Caption distance",
+          "caption": "Caption positions test three different relationships.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "useful_gap_05",
+          "title": "Between lines",
+          "caption": "Two lines make the interval visible.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "useful_gap_06",
+          "title": "Near / nearer",
+          "caption": "The detail keeps its original surrounding space.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "useful_gap_07",
+          "title": "Negative silhouette",
+          "caption": "The interior is isolated as a positive shape.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "useful_gap_08",
+          "title": "At the edge",
+          "caption": "A short return changes the open outline.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "useful_gap_09",
+          "title": "Shared boundary",
+          "caption": "Different shapes share one continuous edge.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "useful_gap_10",
+          "title": "Room to read",
+          "caption": "Each element has somewhere distinct to begin.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        }
+      ],
+      "word_counts": {
+        "title": 3,
+        "standfirst": 15,
+        "body": 350,
+        "modules": 0,
+        "work_titles": 23,
+        "captions": 68,
+        "total": 459
+      }
+    },
+    {
+      "key": "artist_03",
+      "kind": "profile",
+      "title": "More than one tempo",
+      "interior_pages": [
+        21,
+        22,
+        23,
+        24
+      ],
+      "logical_pages": [
+        23,
+        24,
+        25,
+        26
+      ],
+      "standfirst": "Signal Rooms gives type, image and interval different jobs, then lets their rhythms meet on the same page.",
+      "body": [
+        "Signal Rooms begins with the thought that a message has more than one speed. A word may be recognized before it is read. A large shape may arrive before a small instruction. A caption may make us return to an image we thought we had already understood. This fictional graphic practice builds its prints around those differences. The aim is not to make every element equally loud, but to give each a clear moment.",
+        "The work uses a limited set of means: type, bands, blocks and spaces that remain visibly related to the grid. Within those limits, the arrangements can be surprisingly open. A word is interrupted without becoming illegible. A block comes close to an edge without quite meeting it. A sequence begins regularly, then changes its interval. The page offers enough consistency for a small disruption to be noticed.",
+        "One word, four beats treats a familiar word as a sequence of shapes before allowing it to settle into language. The letters keep their relationship to the baseline, but their emphasis changes across the field. Interval atlas makes the spaces more explicit. Its marks are deliberately simple, so that differences in position, weight and distance remain the subject. These are studies of attention rather than samples of a finished identity system.",
+        "Cut register introduces an overlap that can be read in more than one order. One shape seems to continue beneath another; a second view makes the relation less certain. Three speeds gives a large gesture, a middle rhythm and a small instruction their own roles. Open caption leaves a space that feels reserved for an explanation, then asks whether the surrounding arrangement can make that expectation useful.",
+        "The small type matters as much as the large type. It provides a place to enter after the initial image has been recognized. Signal Rooms uses this slower register to name a relation or direct a second look. The words do not need to describe everything that is visible. A short line can change the way an image is read by pointing to a detail that had seemed incidental. Precision is more useful here than a larger quantity of copy.",
+        "The process views make the layers accountable. A close view of type keeps enough neighboring letters to explain its spacing. A layer diagram shows which edge continues and which one stops. A margin key makes the system visible without pretending that the system made every decision. The most useful grid is not the one with the most divisions. It is the one that allows a particular page to make its relationships clear.",
+        "The prints remain open to another arrangement. A band could move; a pause could lengthen. Signal Rooms keeps those possibilities near the surface, where they become part of the reading."
+      ],
+      "family_key": "signal_rooms",
+      "studio": "Signal Rooms",
+      "fictional": true,
+      "printed_notice": "Fictional studio study / Original LAB-authored work",
+      "works": [
+        {
+          "key": "signal_rooms_01",
+          "title": "One word, four beats",
+          "caption": "The word moves between shape and language.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "signal_rooms_02",
+          "title": "Interval atlas",
+          "caption": "Simple marks make their intervals the subject.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "signal_rooms_03",
+          "title": "Cut register",
+          "caption": "Overlaps suggest more than one layer order.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "signal_rooms_04",
+          "title": "Three speeds",
+          "caption": "Three scales give information three different tempos.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "signal_rooms_05",
+          "title": "Open caption",
+          "caption": "A reserved space anticipates an explanation.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "signal_rooms_06",
+          "title": "Type / close",
+          "caption": "Neighboring letters keep the spacing accountable.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "signal_rooms_01"
+        },
+        {
+          "key": "signal_rooms_07",
+          "title": "Layer order",
+          "caption": "The fields separate to reveal their edges.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "signal_rooms_03"
+        },
+        {
+          "key": "signal_rooms_08",
+          "title": "Margin key",
+          "caption": "The grid explains, without replacing, individual decisions.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "signal_rooms_05"
+        }
+      ],
+      "word_counts": {
+        "title": 4,
+        "standfirst": 18,
+        "body": 461,
+        "modules": 0,
+        "work_titles": 18,
+        "captions": 54,
+        "total": 555
+      }
+    },
+    {
+      "key": "style_02",
+      "kind": "essay",
+      "title": "Surfaces that keep time",
+      "interior_pages": [
+        25,
+        26,
+        27,
+        28
+      ],
+      "logical_pages": [
+        27,
+        28,
+        29,
+        30
+      ],
+      "standfirst": "A surface can hold a record of attention without pretending to tell the whole story of an object.",
+      "body": [
+        "A new surface can look strangely complete. Its outline is certain, its color is uninterrupted, and the image offers little reason to ask what happened before it arrived on the page. Yet many of the qualities we value in objects come from a less settled condition: a softened edge, a visible join, a repeated fold or a slight difference between neighboring strands.",
+        "In these digital studies, such details are proposals rather than evidence of use. That distinction matters. An image of a worn edge is not a history, and a texture should not be asked to supply one. What the studies can do is make a place for time in the way a form is considered. Where would the hand return? Which edge would be seen most often? Which part might deserve to remain easy to repair or replace?",
+        "The answer need not be an artificial patina. A clear material boundary can be enough. A paper fold records a change of direction. A woven strand passes over one neighbor and under the next. A small metal form gives its working edge a different outline from its resting edge. Each condition makes an action visible without claiming a particular age. The surface becomes informative because its structure can be read.",
+        "A useful close view therefore includes a little more than the detail itself. The rim needs part of its wall. The crossing thread needs the repeat around it. The softened corner needs a neighboring edge that remains comparatively straight. Without those relations, every texture begins to look like a decorative field. With them, the surface can explain something about the form to which it belongs.",
+        "Keeping time may mean leaving that explanation open. A design can make room for handling, variation and a future revision without drawing all of them in advance. The generous surface is not the one that looks most convincingly old. It is the one that remains understandable as our attention moves from the whole object to the places where ordinary actions might gather."
+      ],
+      "works": [
+        {
+          "key": "surfaces_time_01",
+          "title": "A held edge",
+          "caption": "The corner keeps a straight neighbor nearby.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "surfaces_time_02",
+          "title": "Fold memory",
+          "caption": "The fold records a change of direction.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "surfaces_time_03",
+          "title": "Over / under",
+          "caption": "A crossing explains the surface’s structure.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "surfaces_time_04",
+          "title": "Rim and wall",
+          "caption": "The rim stays connected to its wall.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "surfaces_time_05",
+          "title": "At rest / in use",
+          "caption": "One form is considered in two orientations.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "surfaces_time_06",
+          "title": "Material boundary",
+          "caption": "The join remains readable between surfaces.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "surfaces_time_07",
+          "title": "Repeat nearby",
+          "caption": "The detail retains its surrounding repeat.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "surfaces_time_08",
+          "title": "An open record",
+          "caption": "A quiet surface avoids an invented history.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "surfaces_time_09",
+          "title": "The useful side",
+          "caption": "One edge receives a different role.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "surfaces_time_10",
+          "title": "Return to the whole",
+          "caption": "The wide view restores the details’ proportion.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        }
+      ],
+      "word_counts": {
+        "title": 4,
+        "standfirst": 18,
+        "body": 336,
+        "modules": 0,
+        "work_titles": 28,
+        "captions": 66,
+        "total": 452
+      }
+    },
+    {
+      "key": "artist_04",
+      "kind": "profile",
+      "title": "Light, with somewhere to go",
+      "interior_pages": [
+        29,
+        30,
+        31,
+        32
+      ],
+      "logical_pages": [
+        31,
+        32,
+        33,
+        34
+      ],
+      "standfirst": "Common Current studies sculptural lighting forms through shade, support and the spaces around them, without treating a render as a lighting test.",
+      "body": [
+        "Common Current gives a lamp the same attention whether it is imagined in use or simply standing in a room. This fictional studio studies the shape of shade, the direction of support and the empty space between them. Its forms suggest lighting objects, but the images make no claim about electrical function or measured illumination. They are a way to ask what a light-bearing object contributes before it is asked to glow.",
+        "The supports are easy to follow. A line rises, changes direction and arrives at a plane. A base keeps the upper form from seeming detached from its surroundings. The path between those points is often the most expressive part of the study. A slight offset can make a rigid arrangement feel alert. An open interval can keep a broad shade from becoming a visually heavy cap.",
+        "Low arc draws that path as one continuous change of direction. Its upper element seems to belong to the support rather than being placed on top of it. Split shade divides a single broad plane into two related levels. The division gives the eye a route between the upper edge and the underside, where a second outline can be read. Counterweight makes the relation to the base more explicit, allowing an offset upper form to answer a quieter shape below.",
+        "Reading room treats the space inside a loop as part of the silhouette. The outline remains continuous, but its center belongs to the room around it. Folded light approaches the same question through planes. One surface turns toward another without closing the interval between them. The two studies belong to the same family because they give the empty region a visible role, even though their construction languages differ.",
+        "A view beneath the shade is particularly useful. It can reveal whether the upper element is one shape or several, how the support approaches it, and which edges remain visible from a lower position. These are compositional questions, not substitutes for testing a physical fixture. A persuasive silhouette cannot establish how a proposed lamp would distribute light. It can establish whether the object has a coherent form from more than one viewpoint.",
+        "The base details keep that distinction clear. A junction is shown at a readable scale, with the direction of each part still visible. Three silhouettes use a common frame so that the variation belongs to the forms rather than the camera. A close view gives way to a wide view before the sequence ends. The object is allowed to return to its ordinary size on the page.",
+        "A support makes a direction legible. A shade gives an interval a roof. A base makes the space above it deliberate. Those relations give the proposal a coherent beginning while its practical questions remain open."
+      ],
+      "family_key": "common_current",
+      "studio": "Common Current",
+      "fictional": true,
+      "printed_notice": "Fictional studio study / Original LAB-authored work",
+      "works": [
+        {
+          "key": "common_current_01",
+          "title": "Low arc",
+          "caption": "The support leads back to the base.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "common_current_02",
+          "title": "Split shade",
+          "caption": "Two levels reveal edge and underside together.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "common_current_03",
+          "title": "Counterweight",
+          "caption": "The offset shade answers a quieter base.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "common_current_04",
+          "title": "Reading room",
+          "caption": "The loop keeps its center open.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "common_current_05",
+          "title": "Folded light",
+          "caption": "Related planes leave the interval unenclosed.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "common_current_06",
+          "title": "Under the arc",
+          "caption": "The lower view retains support and shade.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "common_current_01"
+        },
+        {
+          "key": "common_current_07",
+          "title": "Base / junction",
+          "caption": "The junction is shown without fabrication claims.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "common_current_03"
+        },
+        {
+          "key": "common_current_08",
+          "title": "Three silhouettes",
+          "caption": "Related views keep a consistent visual scale.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "common_current_05"
+        }
+      ],
+      "word_counts": {
+        "title": 5,
+        "standfirst": 22,
+        "body": 460,
+        "modules": 0,
+        "work_titles": 16,
+        "captions": 54,
+        "total": 557
+      }
+    },
+    {
+      "key": "artist_05",
+      "kind": "profile",
+      "title": "Leave one interval unresolved",
+      "interior_pages": [
+        33,
+        34,
+        35,
+        36
+      ],
+      "logical_pages": [
+        35,
+        36,
+        37,
+        38
+      ],
+      "standfirst": "Soft Registry uses woven strands and printed repeats to ask how a dependable system can leave room for a different reading.",
+      "body": [
+        "Soft Registry begins by separating a unit from its repeat. A strand, a mark or a small printed shape may be simple on its own; the interval between one occurrence and the next can make it feel entirely different. This fictional textile practice works with that distinction. Its studies include actual interlaced strand compositions and flat graphic repeats, allowing structure and image to remain related without being mistaken for the same thing.",
+        "The woven studies make their crossings visible. One strand passes over a neighbor and under the next, giving the surface a rhythm that can be followed from a close view. The repeat prints use a different kind of continuity. A mark ends at the boundary of one field and returns at the edge of another. Neither method needs a complicated unit. The work becomes more specific as its intervals become easier to read.",
+        "Shift weave holds a familiar crossing sequence, then changes the register of one group of strands. The interruption is small enough to belong to the surface but clear enough to redirect attention. Open repeat gives a printed motif more surrounding space than its neighbors might lead us to expect. The motif remains unchanged; its place in the field has become less certain. Both studies rely on consistency to make a difference visible.",
+        "Long interval reduces the number of crossings so that the spaces between them can become part of the composition. Cross register brings two printed rhythms together without forcing them to coincide. Loose count gives the edge a different pace from the center. These are not proposals for upholstered objects or demonstrations of stitching. Their subject is the relation between a repeat, its boundary and the directions a viewer can follow across it.",
+        "The close views are chosen to explain that relation. Over and under remain in the same image. A repeat boundary includes the neighboring field rather than stopping exactly at the seam of the diagram. An edge detail retains enough of the center to make its difference meaningful. Texture alone would be less informative. The structure needs a little context before its variation can be understood as more than surface noise.",
+        "There is also a useful difference between a break in a system and a system that permits a break. In the first, the interruption can look accidental because the surrounding rules are unclear. In the second, the rules remain legible and the departure acquires a place. Soft Registry’s studies aim for the latter condition. A repeated field can remain calm while allowing one interval to ask for a slower look.",
+        "A caption can follow a grid without occupying the same position every time. A detail can change scale without losing the whole. Consistency makes variation readable; it need not make every part behave alike."
+      ],
+      "family_key": "soft_registry",
+      "studio": "Soft Registry",
+      "fictional": true,
+      "printed_notice": "Fictional studio study / Original LAB-authored work",
+      "works": [
+        {
+          "key": "soft_registry_01",
+          "title": "Shift weave",
+          "caption": "The register shifts; crossings remain readable.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "soft_registry_02",
+          "title": "Open repeat",
+          "caption": "The unit stays; its interval becomes uncertain.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "soft_registry_03",
+          "title": "Long interval",
+          "caption": "Fewer crossings give the openings greater emphasis.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "soft_registry_04",
+          "title": "Cross register",
+          "caption": "The printed rhythms meet without fully coinciding.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "soft_registry_05",
+          "title": "Loose count",
+          "caption": "The outer strands set a different pace.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "soft_registry_06",
+          "title": "Over / under",
+          "caption": "Neighboring crossings explain over and under.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "soft_registry_01"
+        },
+        {
+          "key": "soft_registry_07",
+          "title": "Crossing field",
+          "caption": "Open regions remain beside the crossing strands.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "soft_registry_03"
+        },
+        {
+          "key": "soft_registry_08",
+          "title": "Edge rhythm",
+          "caption": "The boundary keeps the center in view.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "soft_registry_05"
+        }
+      ],
+      "word_counts": {
+        "title": 4,
+        "standfirst": 21,
+        "body": 463,
+        "modules": 0,
+        "work_titles": 16,
+        "captions": 54,
+        "total": 558
+      }
+    },
+    {
+      "key": "style_03",
+      "kind": "essay",
+      "title": "Systems with room for accident",
+      "interior_pages": [
+        37,
+        38,
+        39,
+        40
+      ],
+      "logical_pages": [
+        39,
+        40,
+        41,
+        42
+      ],
+      "standfirst": "A clear system can make variation legible without deciding in advance where every difference must appear.",
+      "body": [
+        "A system is often easiest to recognize when one part departs from it. A line begins later than expected. A strand changes its interval. A shape crosses the boundary of its assigned field. The departure becomes meaningful because something else has remained dependable. Without that surrounding order, there may be no visible difference between an accident and an ordinary part of the arrangement.",
+        "This does not mean that a design should manufacture irregularity simply to look less controlled. A repeated disturbance can become a mannerism of its own. The more useful question is what the system can accommodate. Can a caption become longer? Can an image cross a gutter? Can a module turn without losing its relationship to the next one? A generous structure gives those changes a place before they become problems.",
+        "The studio studies offer several ways to think about that generosity. Fold Bureau repeats a direction, then lets one corner interrupt it. Soft Registry keeps the unit and changes the interval. Signal Rooms gives different kinds of information different tempos. In each case, the variation can be described without explaining away the whole composition. The relation remains clear enough for the viewer to notice what has changed.",
+        "A printed sequence adds another test. The page needs enough consistency to make navigation easy, yet enough difference to make each encounter worth a closer look. Not every image should occupy the same fraction of the sheet. Not every opening needs the same kind of headline. A recurring scale, a reliable folio or a steady caption voice can hold the sequence together while the larger arrangements change.",
+        "Room for accident is therefore less about leaving a design unfinished than about choosing which decisions should remain open. The structure can be precise about ownership, scale and order while allowing the visible result to vary. A small disturbance then has something to work against. It can make the system more informative rather than merely making it harder to recognize."
+      ],
+      "works": [
+        {
+          "key": "room_accident_01",
+          "title": "One rule",
+          "caption": "A repeated direction establishes the first rule.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "room_accident_02",
+          "title": "One departure",
+          "caption": "One shifted unit redirects the field.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "room_accident_03",
+          "title": "Longer caption",
+          "caption": "Another line fits without enlarging the image.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "room_accident_04",
+          "title": "Across the gutter",
+          "caption": "A folded view returns within a single page.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "room_accident_05",
+          "title": "A turned module",
+          "caption": "The unit turns without losing its neighbors.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "room_accident_06",
+          "title": "Different tempos",
+          "caption": "Three scales retain three different roles.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "room_accident_07",
+          "title": "A loose edge",
+          "caption": "The boundary departs from the regular center.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "room_accident_08",
+          "title": "A steady folio",
+          "caption": "A recurring folio steadies the changing sequence.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "room_accident_09",
+          "title": "Room to revise",
+          "caption": "A usable interval remains beside the settled form.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "room_accident_10",
+          "title": "Return to the rule",
+          "caption": "The final view returns to the organizing rule.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        }
+      ],
+      "word_counts": {
+        "title": 5,
+        "standfirst": 16,
+        "body": 327,
+        "modules": 0,
+        "work_titles": 27,
+        "captions": 71,
+        "total": 446
+      }
+    },
+    {
+      "key": "artist_06",
+      "kind": "profile",
+      "title": "A clear next gesture",
+      "interior_pages": [
+        41,
+        42,
+        43,
+        44
+      ],
+      "logical_pages": [
+        43,
+        44,
+        45,
+        46
+      ],
+      "standfirst": "Index Works gives small metal forms a readable direction, treating a suggested action as the beginning of a design rather than a promise of performance.",
+      "body": [
+        "Index Works is interested in the moment before a tool is used. A hand approaches a tab, an edge is placed beside a line, or a small weight is moved onto a page. The gesture can be familiar even when the object is new. This fictional studio builds its studies around that recognition. The forms suggest possible uses, but they remain digital proposals rather than tested instruments or certified hardware.",
+        "The language is economical. A strip becomes a return. An opening leaves room for a finger. A low body gives a page a place to meet its weight. Each study separates a working relation from the rest of the outline so that the eye has somewhere clear to begin. That distinction does not require a loud color or an elaborate handle. It can be carried by a small change in direction or a carefully held interval.",
+        "Offset rule starts with the familiar straight edge, then gives it a second level. The difference makes the strip easier to read as a three-dimensional object without losing its line. Open square keeps a gap in an otherwise dependable outline. Pocket bridge turns a short span into a suggestion of support, with enough space below it for the opening to remain part of the form rather than a dark detail.",
+        "Reading weight is deliberately quiet. Its low profile makes the relation to the table more important than the view from above. Turn tab gives one end a different direction from the rest of the strip, allowing the imagined gesture to be read before any instruction is supplied. Together, the studies ask how much of an action can be made visible in the object’s outline, and how much should remain a practical question for another stage.",
+        "The details keep the proposed actions modest. A softened edge is shown beside a straight stretch, rather than enlarged until it becomes an abstract landscape. Finger space is drawn with its surrounding support. The family view uses a consistent visual scale so that the smallest piece does not need a more dramatic camera to remain interesting. A useful comparison should make the differences easier to name.",
+        "There is a temptation, when drawing a tool, to make every surface explain itself. Index Works leaves some surfaces alone. A plain field can give the eye a rest between the edge that meets the work and the part that meets the hand. The absence of extra detail is not an argument that the object is finished. It is a way to keep the next question close to the visible proposal.",
+        "The test is modest: suggest a clear next gesture without pretending to settle every question of use. A later drawing may change dimensions, material or construction. It should preserve the clarity that made the gesture legible."
+      ],
+      "family_key": "index_works",
+      "studio": "Index Works",
+      "fictional": true,
+      "printed_notice": "Fictional studio study / Original LAB-authored work",
+      "works": [
+        {
+          "key": "index_works_01",
+          "title": "Offset rule",
+          "caption": "A second level makes the edge spatial.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "index_works_02",
+          "title": "Open square",
+          "caption": "One gap interrupts a dependable metal outline.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "index_works_03",
+          "title": "Pocket bridge",
+          "caption": "The opening remains part of the span.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "index_works_04",
+          "title": "Reading weight",
+          "caption": "The low profile emphasizes the table.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "index_works_05",
+          "title": "Turn tab",
+          "caption": "A turned end suggests a clear gesture.",
+          "role": "original_work",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "index_works_06",
+          "title": "Softened edge",
+          "caption": "The softened edge keeps a straight comparison.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "index_works_01"
+        },
+        {
+          "key": "index_works_07",
+          "title": "Finger space",
+          "caption": "The opening remains connected to its support.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "index_works_03"
+        },
+        {
+          "key": "index_works_08",
+          "title": "Family / scale",
+          "caption": "The wider view restores the family’s scale.",
+          "role": "process_or_detail",
+          "provenance": "Original LAB-authored fictional studio study.",
+          "source_work": "index_works_05",
+          "source_works": [
+            "index_works_01",
+            "index_works_02",
+            "index_works_03",
+            "index_works_04",
+            "index_works_05"
+          ]
+        }
+      ],
+      "word_counts": {
+        "title": 4,
+        "standfirst": 25,
+        "body": 464,
+        "modules": 0,
+        "work_titles": 16,
+        "captions": 55,
+        "total": 564
+      }
+    },
+    {
+      "key": "various_back",
+      "kind": "dispatches",
+      "title": "Various / Keep for next time",
+      "interior_pages": [
+        45,
+        46,
+        47,
+        48
+      ],
+      "logical_pages": [
+        47,
+        48,
+        49,
+        50
+      ],
+      "standfirst": "A few small instructions for looking again, followed by the issue’s working record.",
+      "body": [],
+      "modules": [
+        {
+          "key": "pocket_test",
+          "title": "The pocket test",
+          "body": "Imagine carrying a small object from one room to another. Which surface would the hand find first? Which edge would be easiest to keep track of without looking? The exercise does not prove that a proposed object is comfortable or safe. It gives the next drawing a more particular point of view. A view made for the hand may reveal a relation that the front elevation has kept hidden. Draw that relation before adding a handle simply because the object seems to need one."
+        },
+        {
+          "key": "repair_room",
+          "title": "Room for a repair",
+          "body": "An object can leave a connection visible without looking unfinished. A clear join gives a future revision somewhere to begin. In a drawing, try separating the parts by a small, consistent distance. Keep their order and orientation intact. The exploded view should make the relation easier to understand, not turn every component into a separate performance. Then bring the parts back together and check whether the same relation can still be read. The gap is an explanation, not the final design."
+        },
+        {
+          "key": "three_views",
+          "title": "Three ways to look",
+          "body": "Keep one wide view, one working view and one detail. The wide view establishes proportion. The working view explains a relation between parts. The detail answers a question that the other two have made worth asking. If a detail does not answer such a question, it may simply be another image. This small editing rule is useful when a sequence begins to feel crowded. Removing one unnecessary close view can give the remaining images a clearer reason to sit together."
+        },
+        {
+          "key": "after_image",
+          "title": "After the image",
+          "body": "Write the caption after looking away from the image for a moment. What is the one relation worth remembering? Return to the page and check whether the words point to something that can actually be seen. A caption need not repeat the title or describe every contour. It can name a change, locate an opening or ask the reader to compare two edges. Keep claims about materials and making within the evidence the study provides. A clear limitation can be more useful than an impressive sentence."
+        },
+        {
+          "key": "borrowed_scale",
+          "title": "Borrowed scale",
+          "body": "A familiar interval can make an unfamiliar form easier to read. The width of a page, the space between two lines or the rhythm of a repeated mark gives the eye something dependable to borrow. The comparison does not have to become a measurement claim. It simply needs to remain consistent across the sequence. If every image changes its own scale, even closely related forms can begin to look like separate worlds. A shared frame is often the quietest way to keep a family together."
+        },
+        {
+          "key": "next_question",
+          "title": "Next time",
+          "body": "Keep a short record of the questions the final image cannot answer. Does the opening still read from below? Would a different interval make the repeat clearer? Which surface belongs to the hand, and which belongs to the work? These are more useful than a list of vague improvements. A good next question names a relation and suggests a way to examine it. The issue ends here, but the studies remain available for another view, another arrangement and a more exact revision."
+        }
+      ],
+      "works": [
+        {
+          "key": "various_back_01",
+          "title": "First contact",
+          "caption": "A tab gives the hand somewhere to approach.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_back_02",
+          "title": "Working edge",
+          "caption": "The working edge stays distinct from the grip.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_back_03",
+          "title": "Joined / apart",
+          "caption": "A gap explains the parts’ relationship.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_back_04",
+          "title": "Return to the join",
+          "caption": "The assembled view checks the same connection.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_back_05",
+          "title": "Wide view",
+          "caption": "The complete silhouette establishes shared proportions.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_back_06",
+          "title": "Working view",
+          "caption": "A second view makes the relation legible.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_back_07",
+          "title": "The necessary detail",
+          "caption": "The detail answers the wider view’s question.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_back_08",
+          "title": "Caption edit",
+          "caption": "A short caption names one visible relation.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_back_09",
+          "title": "A common frame",
+          "caption": "Related studies retain one consistent scale.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_back_10",
+          "title": "Borrowed interval",
+          "caption": "A repeated interval offers a familiar reference.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_back_11",
+          "title": "One open question",
+          "caption": "One relation remains deliberately unresolved.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        },
+        {
+          "key": "various_back_12",
+          "title": "Keep this view",
+          "caption": "The final frame leaves room to revise.",
+          "role": "editorial_visual",
+          "provenance": "Original LAB-authored fictional studio study."
+        }
+      ],
+      "word_counts": {
+        "title": 5,
+        "standfirst": 13,
+        "body": 0,
+        "modules": 516,
+        "work_titles": 30,
+        "captions": 81,
+        "total": 645
+      }
+    }
+  ],
+  "asset_policy": {
+    "source": "Original LAB-authored procedural forms, graphics and native renders. No external artist images or uncredited source photographs.",
+    "reuse": "Every work has a stable key. Process/detail entries explicitly name their canonical source work. Record crop, camera, monochrome variant and generator parameters in the visual asset manifest.",
+    "fictional_label": "Fictional studio study / Original LAB-authored work",
+    "print": "Colored parent faces use declared process-K artwork. Stock color is nonprinting substrate. Do not put RGB tint rectangles beneath black-only pages."
+  },
+  "word_count_policy": "Unicode lexical words; apostrophized and hyphenated compounds count as one. Slash-separated labels and standalone numbers count separately. Counts include printed-once headings, standfirsts, body, modules, work titles/captions, contents and cover copy. Metadata, provenance labels and repeated running furniture are excluded.",
+  "word_counts": {
+    "sections": 6328,
+    "contents": 60,
+    "covers": 154,
+    "total": 6542
+  },
+  "visual_placements": {
+    "interior": 106,
+    "covers": 4,
+    "total": 110
+  }
+}

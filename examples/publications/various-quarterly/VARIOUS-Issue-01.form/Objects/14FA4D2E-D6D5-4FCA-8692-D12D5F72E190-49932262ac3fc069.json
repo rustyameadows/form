@@ -1,0 +1,584 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 12795,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10,
+        "height" : 10,
+        "id" : "8CE9B0E4-971C-5199-80FB-ED4DBD8B463A",
+        "kind" : "text",
+        "name" : "cover_inside_back-subtitle",
+        "text" : "Colophon / Issue 01",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 13.5,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 25
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 30,
+        "height" : 40,
+        "id" : "198C7766-B756-568B-B909-59BDB0DCF904",
+        "kind" : "text",
+        "name" : "cover_inside_back-title",
+        "text" : "Working record",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 40.5,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 48
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11,
+        "height" : 52,
+        "id" : "D161D29C-2D56-5D48-984B-2739197FAE08",
+        "kind" : "text",
+        "name" : "cover_inside_back-source-frame-0",
+        "storyFrame" : {
+          "storyID" : "83C62E3E-F364-40AE-B051-B4ACA385B845"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 207
+      },
+      {
+        "color" : "#000000",
+        "contentSize" : {
+          "x" : 100,
+          "y" : 100
+        },
+        "fontSize" : 10,
+        "height" : 80,
+        "id" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "kind" : "group",
+        "name" : "cover_inside_back-placed-vector",
+        "text" : "",
+        "width" : 80,
+        "x" : 67.95,
+        "y" : 103
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "BED86A35-7356-59B9-992E-8D1CF7467641",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-anchor0",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "text" : "",
+        "width" : 6,
+        "x" : 77,
+        "y" : 47
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "67CC09F3-580B-5B0B-B535-EA72AB8C22C7",
+        "kind" : "path",
+        "name" : "cover_inside_back-spoke0",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 80,
+                    "y" : 50
+                  },
+                  "id" : "DBB9A5D9-FFDB-5F61-B7F3-98483CF7B88F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 50
+                  },
+                  "id" : "7D7FC958-B8A4-5885-82DB-DB0E20FAE8BB"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "02F22237-D008-51AE-8B60-F3E804A65446",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-anchor1",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "text" : "",
+        "width" : 6,
+        "x" : 62,
+        "y" : 72.98076211353316
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "21123834-4DA1-57A8-8C9F-CADEB4163B66",
+        "kind" : "path",
+        "name" : "cover_inside_back-spoke1",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 65,
+                    "y" : 75.98076211353316
+                  },
+                  "id" : "0C82FCDA-E3F3-5A11-98D6-6D6E267C66FD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 50
+                  },
+                  "id" : "9DB4416B-1AAA-533E-BE00-5224271F412B"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "E605FA01-E5EA-586C-9D32-C3A72E2E95EE",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-anchor2",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "text" : "",
+        "width" : 6,
+        "x" : 32.00000000000001,
+        "y" : 72.98076211353316
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "48F17E1F-D494-5432-B8A5-CE7D6B7EA32D",
+        "kind" : "path",
+        "name" : "cover_inside_back-spoke2",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 35.00000000000001,
+                    "y" : 75.98076211353316
+                  },
+                  "id" : "D0FE5045-7BF2-59A8-8FDB-B4CA6449F594"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 50
+                  },
+                  "id" : "F4A12F8A-D816-5960-A783-8FC4003A6CE4"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "6D63AFCB-02E0-5827-8472-1B4F54837751",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-anchor3",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "text" : "",
+        "width" : 6,
+        "x" : 17,
+        "y" : 47.00000000000001
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "866D1D04-B43F-5B6A-B109-A6BC8C1B7842",
+        "kind" : "path",
+        "name" : "cover_inside_back-spoke3",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 20,
+                    "y" : 50.00000000000001
+                  },
+                  "id" : "5915773D-0CE6-5FE9-9462-343178010E9D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 50
+                  },
+                  "id" : "4CE3118A-864C-5713-94B1-37F45463C3A9"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "31D5352A-3816-5F43-9453-326AB15F8713",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-anchor4",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "text" : "",
+        "width" : 6,
+        "x" : 31.999999999999986,
+        "y" : 21.019237886466847
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "A0207856-EB26-57EE-9ACA-6E8B7CA3DD15",
+        "kind" : "path",
+        "name" : "cover_inside_back-spoke4",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 34.999999999999986,
+                    "y" : 24.019237886466847
+                  },
+                  "id" : "9964073A-5544-51DC-9243-37C6B71026B9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 50
+                  },
+                  "id" : "F5EB0C46-C644-5DCC-93BA-9C47CE5B2E01"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "7E199D21-3CB9-548B-A7CA-80277695D0F2",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-anchor5",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "text" : "",
+        "width" : 6,
+        "x" : 62,
+        "y" : 21.019237886466843
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "E0987B64-A0F1-575F-8F16-783A90AACD6E",
+        "kind" : "path",
+        "name" : "cover_inside_back-spoke5",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 65,
+                    "y" : 24.019237886466843
+                  },
+                  "id" : "334A2F4B-EAE2-589A-852E-C97AE8EA654C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 50
+                  },
+                  "id" : "90135746-F1E2-5AF5-A40D-8F2E7AFF163C"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 22,
+        "id" : "1B49D935-918E-5366-9574-FB7C62A775B5",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-center",
+        "parentID" : "57FAB48D-170E-5A46-AD00-EBFF489F9273",
+        "stroke" : {
+          "color" : "#1A1919",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 1
+        },
+        "text" : "",
+        "width" : 22,
+        "x" : 39,
+        "y" : 39
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "1D1D911F-12F0-42F4-9692-91EE35219DF8",
+  "id" : "14FA4D2E-D6D5-4FCA-8692-D12D5F72E190",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / Inside back cover / cover inside back",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 12594.999999999989,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

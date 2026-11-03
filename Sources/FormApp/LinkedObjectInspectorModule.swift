@@ -5,12 +5,14 @@ import SwiftUI
 
 /// A relationship to existing source, never a second artwork document.
 struct LinkedInspectorAssociation: Equatable, Identifiable {
-  enum Kind: Equatable { case artwork, paper(inside: Bool), cuttingSource, surface(String), unassigned }
+  enum Kind: Equatable { case artwork, paper(inside: Bool), cuttingSource, surface(String), publicationPage(String), unassigned }
   let objectID: UUID
   let sourceID: UUID?
   let kind: Kind
   let title: String
   var review: String?
+  var publicationFace: ResolvedSheetAssemblyFace?
+  var publicationFaceSize: Point2?
   var id: String {
     let suffix: String
     switch kind {
@@ -18,6 +20,7 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
     case .paper(let inside): suffix = inside ? "inside" : "outside"
     case .cuttingSource: suffix = "cutting"
     case .surface(let id): suffix = "surface:" + id
+    case .publicationPage(let id): suffix = "publication:" + id
     case .unassigned: suffix = "unassigned"
     }
     return objectID.uuidString + ":" + suffix
@@ -26,6 +29,7 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
 
 @MainActor enum LinkedInspectorRelationships {
   static func table(_ object: ProductObject, in project: Project) -> [LinkedInspectorAssociation] {
+    if object.sheetAssembly != nil {return publicationFaces(object,in:project,visibleOnly:true)}
     if PaperConstruction.isPaper(object) {
       guard (try? PaperConstruction.definition(for: object).net()) != nil else { return [] }
       var result = [LinkedInspectorAssociation(objectID: object.id, sourceID: project.artworkOwner(object).id,
@@ -68,10 +72,38 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
     return []
   }
 
+  /// The same canonical faces serve the physical preview and source navigation.
+  /// Canvas resolves every consumer; the Table picker lists exposed faces only.
+  static func publicationFaces(_ object:ProductObject,in project:Project,visibleOnly:Bool)->[LinkedInspectorAssociation] {
+    guard let resolved=try? project.resolvedSheetAssembly(object),
+      let document=project.publications?.first(where:{$0.id==resolved.publicationID}) else{return []}
+    func association(_ face:ResolvedSheetAssemblyFace?,id:String,title:String,size:Point2)->LinkedInspectorAssociation? {
+      guard let face,let source=project.objects.first(where:{$0.id==face.sourceObjectID}) else{return nil}
+      let sourceID:UUID
+      if PaperConstruction.isPaper(source),face.sourceSide == .inside {sourceID=source.paperConstruction?.insideArtworkSourceID ?? source.id}
+      else {sourceID=project.artworkOwner(source).id}
+      return .init(objectID:object.id,sourceID:sourceID,kind:.publicationPage(id),title:title,publicationFace:face,publicationFaceSize:size)
+    }
+    var result=[LinkedInspectorAssociation]()
+    for leaf in resolved.leaves {
+      for (pageID,face,visible,side) in [(leaf.frontPageID,leaf.front,leaf.frontVisible,"front"),(leaf.backPageID,leaf.back,leaf.backVisible,"back")] {
+        guard !visibleOnly || visible,let face else{continue}
+        let label=document.pageLabel(for:face.sourceObjectID) ?? project.objects.first{$0.id==face.sourceObjectID}?.name ?? "Page"
+        if let link=association(face,id:pageID?.uuidString ?? leaf.id.uuidString+":"+side,title:"Page "+label,size:leaf.size){result.append(link)}
+      }
+    }
+    for plane in resolved.enclosure {
+      for (side,face) in [("Front",plane.front),("Back",plane.back)] {
+        if let link=association(face,id:"enclosure:"+plane.id+":"+side.lowercased(),title:plane.name+" · "+side,size:plane.size){result.append(link)}
+      }
+    }
+    return result
+  }
+
   static func canvas(_ session: ArtworkSession, in project: Project) -> [LinkedInspectorAssociation] {
     guard let sourceID = session.objectID else { return [] }
-    let all = project.objects.filter { $0.hasTablePresentation && hasPhysicalView($0, in: project) }
-      .flatMap { table($0, in: project) }.filter { $0.sourceID == sourceID }
+    let all = project.tablePresentationObjects.filter { hasPhysicalView($0, in: project) }
+      .flatMap { $0.sheetAssembly != nil ? publicationFaces($0,in:project,visibleOnly:false):table($0, in: project) }.filter { $0.sourceID == sourceID }
     if let target = session.activeProjection?.constructionID ?? session.linkedTargetID {
       let focused = all.filter { $0.objectID == target }
       if !focused.isEmpty { return focused }
@@ -82,7 +114,7 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
 
   static func hasPhysicalView(_ object: ProductObject, in project: Project) -> Bool {
     PaperConstruction.isPaper(object) || object.isFlexibleSurface || object.meshAsset != nil
-      || object.cadModel != nil || object.cadRepresentation != nil
+      || object.cadModel != nil || object.cadRepresentation != nil || object.sheetAssembly != nil
       || project.recipe(object.recipeID)?.parts.isEmpty == false
   }
 
@@ -94,6 +126,9 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
     case .surface(let id):
       return source.artwork != nil && object.cadModel != nil
         && object.cadRepresentation?.resolvedSurfaces?.contains(where: { $0.id == id }) == true
+    case .publicationPage:
+      return publicationFaces(object,in:project,visibleOnly:false).contains{$0.id==link.id && $0.sourceID==sourceID}
+        && project.editableArtwork(source) != nil
     case .artwork, .cuttingSource: return project.editableArtwork(source) != nil
     case .unassigned: return false
     }
@@ -112,6 +147,7 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
     } else { surfaceFrameID = nil }
     store.finishArtworkEditing()
     store.showEnvironment(.form)
+    var deferredPublicationFocus=false
     switch link.kind {
     case .paper(let inside):
       store.paperInside = inside
@@ -122,6 +158,15 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
     case .surface:
       guard let surfaceFrameID else { return false }
       store.artworkSession.activate(surfaceFrameID)
+    case .publicationPage:
+      if let face=link.publicationFace,let source=project.objects.first(where:{$0.id==face.sourceObjectID}),PaperConstruction.isPaper(source) {
+        store.paperInside=face.sourceSide == .inside;store.activatePaperArtwork(source)
+        store.focusConstructionCanvas(objectID:source.id,panelID:nil,inside:store.paperInside)
+      }else if let id=object.sheetAssembly?.publicationID,let document=project.publications?.first(where:{$0.id==id}),document.pages.contains(where:{$0.objectID==sourceID}) {
+        let workspace=store.artworkSession.publicationWorkspace
+        workspace.open(id);workspace.focusPage(sourceID,deferFit:true)
+        store.artworkSession.linkedTargetID=object.id;deferredPublicationFocus=true
+      }else {store.artworkSession.activate(sourceID);store.artworkSession.linkedTargetID=object.id}
     case .artwork:
       store.artworkSession.activate(sourceID)
       store.artworkSession.linkedTargetID = sourceID == object.id ? nil : object.id
@@ -134,7 +179,7 @@ struct LinkedInspectorAssociation: Equatable, Identifiable {
       store.canvasWindowController?.window?.makeKeyAndOrderFront(nil)
     }
     store.artworkSession.canvas?.synchronize()
-    if case .paper=link.kind {} else {store.artworkSession.canvas?.fit(all:false)}
+    if case .paper=link.kind {} else if !deferredPublicationFocus {store.artworkSession.canvas?.fit(all:false)}
     return true
   }
 
@@ -161,6 +206,8 @@ struct LinkedInspectorArtworkContent: Equatable {
   var stockColor = "#FFFFFF"
   var guides = true
   var hiddenRoles: Set<ArtworkProductionRole> = []
+  var sourceOrigin: Point2 = .init()
+  var sourceSize: Point2? = nil
 }
 
 @MainActor enum LinkedInspectorArtwork {
@@ -174,6 +221,12 @@ struct LinkedInspectorArtworkContent: Equatable {
       let art=project.paperArtwork(for:object,inside:inside) ?? blank
       return .init(artwork: art, size: frame.size, net: net, frame: frame,
         stockColor: object.color ?? project.material(object.materialID).color, guides: guides && art.showGuides != false, hiddenRoles: hiddenRoles)
+    }
+    if case .publicationPage = link.kind {
+      guard let face=link.publicationFace,let size=link.publicationFaceSize,
+        let source=project.objects.first(where:{$0.id==face.sourceObjectID}),
+        let art=PaperConstruction.isPaper(source) ? project.paperArtwork(for:source,inside:face.sourceSide == .inside):project.surfaceArtwork(source) else{return nil}
+      return .init(artwork:art,size:size,guides:guides,hiddenRoles:hiddenRoles,sourceOrigin:face.originMM,sourceSize:project.artworkSize(source))
     }
     if case .surface(let id) = link.kind {
       guard let binding = object.surfaceArtworkBindings?.first(where: { $0.surfaceID == id }),
@@ -226,13 +279,15 @@ struct LinkedInspectorArtworkContent: Equatable {
       let overlay = content.guides ? content.artwork.elements.first(where: { $0.sewingPiece != nil })
         .flatMap { sewing.overlay(frameID: $0.id, source: content.artwork) } : nil
       if let overlay { art.elements.removeAll { overlay.sourceStrokeIDs.contains($0.id) } }
-      ArtworkRenderer.draw(art, width: content.size.x, height: content.size.y, assets: assets, production: false)
+      context.translateBy(x:-content.sourceOrigin.x,y:-content.sourceOrigin.y)
+      let sourceSize=content.sourceSize ?? content.size
+      ArtworkRenderer.draw(art, width: sourceSize.x, height: sourceSize.y, assets: assets, production: false)
       if let overlay {
         var technical = overlay.interfaceArtwork(scale: density / 2)
         let technicalRoles = ArtworkProduction.effectiveRoles(in: technical)
         technical.elements.removeAll { content.hiddenRoles.contains(technicalRoles[$0.id] ?? .guide) }
         technical.backgroundOpacity = 0
-        ArtworkRenderer.draw(technical, width: content.size.x, height: content.size.y, assets: assets, production: false)
+        ArtworkRenderer.draw(technical, width: sourceSize.x, height: sourceSize.y, assets: assets, production: false)
       }
       context.restoreGState()
     }

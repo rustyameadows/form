@@ -450,4 +450,59 @@ import XCTest
     f.store.engine.project=projectA;f.controller.reconcile();XCTAssertTrue(f.controller.promptPresets.contains(custom))
     XCTAssertFalse(f.controller.promptPresets.contains{$0.name=="B product prompt"})
   }
+  func testLatestStudioEntryQueuesDuringProviderJobAndPreservesItsCompletedHistory()async throws {
+    let provider=PausedProvider(),f=try Fixture(provider:provider)
+    defer{provider.release();f.close()}
+    let composition=f.store.studioComposition
+    composition.save();let first=try XCTUnwrap(composition.draft)
+    var second=first;second.id=UUID();second.name="Queued intermediate view";second.pixels = .init(width:251,height:173)
+    second.instances[0].id=UUID();second.instances[0].positionMM.x=31
+    var third=first;third.id=UUID();third.name="Latest queued view";third.pixels = .init(width:333,height:221)
+    third.instances[0].id=UUID();third.instances[0].rotationDegrees=29;third.camera.azimuth+=0.4
+    for scene in [second,third]{_ = try f.store.engine.call("form_studio_scene",arguments:["command":"save","scene":try jsonObject(scene)],source:"Provider entry race")}
+    f.store.metadataRecordsChanged();composition.load(first.id)
+    await f.controller.captureScene();let originalInput=try XCTUnwrap(f.controller.capture)
+    let originalBytes=try Data(contentsOf:f.controller.imageURL(assetID:originalInput.inputAssetID))
+    let originalPrompt=f.controller.prompt,originalOptions=f.controller.options
+    let work=Task{await f.controller.generate()};try await waitForProvider(provider)
+    let running=try XCTUnwrap(f.controller.currentRun)
+    f.controller.prompt="Keep the next image prompt";f.controller.style="Keep the next custom style"
+    f.controller.options.model = .flare;f.controller.options.quality = .draft;f.controller.options.count=4
+    f.controller.references=[.init(assetID:originalInput.inputAssetID,role:.composition)]
+    let prompt=f.controller.prompt,style=f.controller.style,references=f.controller.references
+    var expected=f.controller.options;expected.outputPixels=third.pixels
+    let source=try XCTUnwrap(f.store.project),undo=f.store.engine.undoStack.count
+    // The injected local provider remains paused while the same controller
+    // entry action receives Back / saved-scene B / entry / Back / C / entry.
+    f.store.studioShowingImages=false;composition.load(second.id);f.store.studioShowingImages=true;f.controller.refreshSceneInputFromStudio()
+    f.store.studioShowingImages=false;composition.load(third.id);f.store.studioShowingImages=true;f.controller.refreshSceneInputFromStudio()
+    let draft=composition.draft,camera=composition.stage.camera
+    XCTAssertTrue(f.controller.busy);XCTAssertFalse(f.controller.isCapturing);XCTAssertTrue(f.controller.sceneInputRefreshPending)
+    XCTAssertNil(f.controller.capture,"Queued entry must never display the previous scene input")
+    XCTAssertEqual(f.controller.history.first{$0.id==running.id}?.status,.running,"Entering another scene must not cancel an in-flight provider job")
+    provider.release();await work.value
+    var fresh:StudioGenerationCapture?
+    for _ in 0..<800 {
+      if let value=f.controller.capture,value.sceneID==third.id,!f.controller.busy{fresh=value;break}
+      try await Task.sleep(nanoseconds:10_000_000)
+    }
+    let captured=try XCTUnwrap(fresh,f.controller.error ?? "The queued latest entry never captured")
+    let completed=try XCTUnwrap(f.controller.history.first{$0.id==running.id})
+    XCTAssertEqual(completed.status,.succeeded);XCTAssertEqual(completed.capture,originalInput)
+    XCTAssertEqual(completed.prompt,originalPrompt);XCTAssertEqual(completed.options,originalOptions);XCTAssertEqual(completed.outputAssetIDs.count,1)
+    XCTAssertEqual(provider.receivedRequest?.inputPNG,originalBytes)
+    let durable=try JSONDecoder.form.decode(StudioGenerationRun.self,from:Data(contentsOf:f.root.appendingPathComponent("StudioAssets/GenerationRuns/"+completed.id.uuidString+".json")))
+    XCTAssertEqual(durable,completed,"The original job must finish durably in history")
+    let output=try XCTUnwrap(completed.outputAssetIDs.first)
+    XCTAssertEqual(try StudioGenerationPNG.pixelSize(of:Data(contentsOf:f.controller.imageURL(assetID:output))),originalInput.scene.pixels)
+    XCTAssertEqual(try Data(contentsOf:f.controller.imageURL(assetID:originalInput.inputAssetID)),originalBytes)
+    XCTAssertEqual(captured.sceneID,third.id);XCTAssertEqual(captured.scene.instances,third.instances);XCTAssertEqual(captured.camera,camera)
+    XCTAssertEqual(try StudioGenerationPNG.pixelSize(of:Data(contentsOf:f.controller.imageURL(assetID:captured.inputAssetID))),third.pixels)
+    XCTAssertEqual(f.controller.prompt,prompt);XCTAssertEqual(f.controller.style,style);XCTAssertEqual(f.controller.references,references);XCTAssertEqual(f.controller.options,expected)
+    XCTAssertFalse(f.controller.sceneInputRefreshPending);XCTAssertFalse(f.controller.busy);XCTAssertFalse(f.controller.isCaptureStale)
+    let freshInputs=f.library.items.filter{$0.metadata.options?["purpose"]=="generation_input" && $0.id != originalInput.inputAssetID}
+    XCTAssertEqual(freshInputs.count,1);XCTAssertEqual(freshInputs.first?.metadata.sceneID,third.id)
+    XCTAssertEqual(f.store.project,source);XCTAssertEqual(composition.draft,draft);XCTAssertEqual(composition.stage.camera,camera);XCTAssertEqual(f.store.engine.undoStack.count,undo)
+  }
+
 }

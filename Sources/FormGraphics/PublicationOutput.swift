@@ -26,6 +26,34 @@ import FormCore
       "frames":frames,"overset_location":value.oversetRange.location,"overset_length":value.oversetRange.length,
       "renderer":PublicationStoryLayout.diagnostics]
   }
+  /// Follow the painter's order: layer effects, its parent-coordinate clip,
+  /// then each ancestor's effects and clip. AABB intersections are conservative;
+  /// neither mask holes nor translucent coverage can hide real overflow here.
+  private static func preflightPaintBounds(_ element:ArtworkElement,tree:ArtworkRenderTree,byID:[UUID:ArtworkElement])->Rect2? {
+    guard tree.displayed(element) else{return nil}
+    var bounds=tree.localBounds(element),node=element,visited=Set<UUID>()
+    while visited.insert(node.id).inserted {
+      bounds=bounds.applying(node.localTransform.cg)
+      if let id=node.clipID,let mask=byID[id] {
+        let clip=ArtworkMasks.isCoverage(node.clipMode) ? tree.localBounds(mask):VectorGeometry.path(mask).boundingBoxOfPath
+        bounds=bounds.intersection(clip.applying(mask.localTransform.cg))
+      }
+      guard !bounds.isNull,!bounds.isEmpty else{return nil}
+      guard let id=node.parentID,let parent=byID[id] else{break}
+      // Group effects are applied after descendant clips, before the group's
+      // own clip. Keep that expansion so a clipped child can still cast beyond
+      // the bleed unless an outer clip actually contains the resulting effect.
+      if let stack=parent.effectStack {
+        let box=stack.expandedBounds(.init(bounds.minX,bounds.minY,bounds.width,bounds.height))
+        bounds = .init(x:box.x,y:box.y,width:box.width,height:box.height)
+      }else if let blur=parent.blur,blur.enabled {bounds=bounds.insetBy(dx:-blur.radius*4,dy:-blur.radius*4)}
+      if parent.effectStack==nil,let shadow=parent.shadow,shadow.enabled,shadow.opacity>0 {
+        bounds=bounds.union(bounds.insetBy(dx:-shadow.blur*4,dy:-shadow.blur*4).offsetBy(dx:shadow.offset.x,dy:shadow.offset.y))
+      }
+      node=parent
+    }
+    return .init(bounds.minX,bounds.minY,bounds.width,bounds.height)
+  }
   public static func preflight(_ project:Project,documentID:UUID,assets:URL?=nil,previewOnly:Bool=false)->[String:Any] {
     var issues:[[String:Any]]=[]
     func issue(_ severity:String,_ message:String,page:UUID?=nil,element:UUID?=nil,story:UUID?=nil,code:String?=nil) {
@@ -65,20 +93,37 @@ import FormCore
       guard let object=project.objects.first(where:{$0.id==page.objectID}),let art=project.surfaceArtwork(object) else{continue}
       pages.append(["index":index+1,"page_id":page.id.uuidString,"object_id":object.id.uuidString,"name":page.label ?? object.name,
         "width_mm":object.artworkSize.x,"height_mm":object.artworkSize.y,"bleed_mm":art.bleed])
-      for font in FontCatalog.missing(in:art) {issue("warning","\(object.name) uses missing font \(font).",page:object.id)}
-      let independent=Artwork(elements:art.elements.filter{$0.storyFrame==nil})
+      let editorial=project.removingPublicationSpreadArtwork(from:art,objectID:object.id)
+      let canonicalIDs=Set(project.removingPublicationFurniture(from:editorial,objectID:object.id).elements.map(\.id))
+      let reader=project.publicationReaderSpread(for:object.id)
+      let placement=reader?.pages.first{$0.objectID==object.id}
+      let tree=ArtworkRenderTree(editorial,assets:assets ?? FileManager.default.temporaryDirectory,production:true,excluding:[])
+      let byID=Dictionary(uniqueKeysWithValues:editorial.elements.map{($0.id,$0)})
+      for font in FontCatalog.missing(in:editorial) {issue("warning","\(object.name) uses missing font \(font).",page:object.id)}
+      let independent=Artwork(elements:editorial.elements.filter{$0.storyFrame==nil})
       for message in CharacterTypography.warnings(independent)+SmallCapsTypography.warnings(independent) {issue("warning",message,page:object.id,code:"character_forms")}
-      for element in art.elements where element.kind != "group" && element.hidden != true {
-        let bounds=art.bounds(of:element)
-        if bounds.x < -art.bleed - 0.001 || bounds.y < -art.bleed - 0.001 || bounds.maxX > object.artworkSize.x+art.bleed+0.001 || bounds.maxY > object.artworkSize.y+art.bleed+0.001 {
-          issue("warning","\(element.title) extends beyond \(object.name)'s bleed area.",page:object.id,element:element.id)
+      for element in editorial.elements where element.kind != "group" && element.hidden != true {
+        guard let bounds=preflightPaintBounds(element,tree:tree,byID:byID) else{continue}
+        let isSpreadSource=canonicalIDs.contains(element.id) && reader != nil && placement != nil
+        let left=isSpreadSource ? -placement!.originMM.x:0
+        let top=isSpreadSource ? -placement!.originMM.y:0
+        let width=isSpreadSource ? reader!.sizeMM.x:object.artworkSize.x
+        let height=isSpreadSource ? reader!.sizeMM.y:object.artworkSize.y
+        if bounds.x < left-art.bleed-0.001 || bounds.y < top-art.bleed-0.001 || bounds.maxX > left+width+art.bleed+0.001 || bounds.maxY > top+height+art.bleed+0.001 {
+          let region=isSpreadSource ? "reader spread":"page"
+          issue("warning","\(element.title) extends beyond the \(region)'s bleed area.",page:object.id,element:element.id)
         }
       }
-      for element in art.elements where element.storyFrame != nil && element.hidden==true {
+      for element in editorial.elements where element.storyFrame != nil && element.hidden==true {
         issue("warning","\(element.title) is hidden but still reserves story capacity. Its outlined replacement is frozen; unhide the frame to return to live text.",page:object.id,element:element.id,story:element.storyFrame?.storyID)
       }
     }
     return ["publication_id":document.id.uuidString,"name":document.name,"can_export":!issues.contains{$0["severity"] as? String=="error"},"issues":issues,"pages":pages,"stories":stories]
+  }
+  public static func validateExportContent(_ project:Project,documentID:UUID,assets:URL,allowOverset:Bool=false,previewOnly:Bool=false)throws {
+    let report=preflight(project,documentID:documentID,assets:assets,previewOnly:previewOnly)
+    let errors=(report["issues"] as? [[String:Any]] ?? []).filter{$0["severity"] as? String=="error" && !(allowOverset && $0["code"] as? String=="overset")}.compactMap{$0["message"] as? String}
+    if !errors.isEmpty {throw FormError.invalid(errors.joined(separator:"\n"))}
   }
   public static func pdf(_ project:Project,documentID:UUID,assets:URL,dpi:Double=300,outlineText:Bool=false,allowOverset:Bool=false,inkOutput:InkOutputMode?=nil) throws -> Data {
     try project.validatePublications()
@@ -89,14 +134,12 @@ import FormCore
       guard let object=project.objects.first(where:{$0.id==page.objectID}),let art=project.surfaceArtwork(object,keepingSwatchReferences:true) else{throw FormError.missing("A physical publication page is missing.")}
       return .init(id:object.id,name:object.name,artwork:art,width:object.artworkSize.x,height:object.artworkSize.y)
     }
+    try validateExportContent(project,documentID:documentID,assets:assets,allowOverset:allowOverset,previewOnly:inkOutput == .preview)
     if inkOutput == .composite || inkOutput == .plates {
       return try ProductionInkPDF.export(project:project,pages:physicalPages,assets:assets,mode:inkOutput!,title:document.name).data
     }
     if physicalPages.contains(where:{$0.artwork.requiresInkOutput}),inkOutput != .preview {throw FormError.invalid("This publication declares production inks. Choose an explicit preview, composite or plates output.")}
     let profile=inkOutput == .preview ? nil:try outputProfile(project,document:document)
-    let report=preflight(project,documentID:documentID,assets:assets,previewOnly:inkOutput == .preview)
-    let errors=(report["issues"] as? [[String:Any]] ?? []).filter{$0["severity"] as? String=="error" && !(allowOverset && $0["code"] as? String=="overset")}.compactMap{$0["message"] as? String}
-    if !errors.isEmpty {throw FormError.invalid(errors.joined(separator:"\n"))}
     let data=NSMutableData();var first=CGRect(x:0,y:0,width:100,height:100)
     guard let consumer=CGDataConsumer(data:data),let context=CGContext(consumer:consumer,mediaBox:&first,[kCGPDFContextTitle:document.name] as CFDictionary) else{throw FormError.invalid("Could not create publication PDF.")}
     func box(_ value:CGRect)->Data {var value=value;return Data(bytes:&value,count:MemoryLayout<CGRect>.size)}
@@ -108,7 +151,7 @@ import FormCore
       }
       if outlineText {
         let ids=Set(art.elements.filter{$0.kind=="text" && $0.hidden != true}.map(\.id))
-        if !ids.isEmpty {art=try ArtworkOutlines.convert(art,ids:ids,mode:"text",resolvedPaint:art).artwork}
+        if !ids.isEmpty {art=try ArtworkOutlines.convert(art,ids:ids,mode:"text",resolvedPaint:art,forOutput:true).artwork}
       }
       try ArtworkRenderer.validateAppearanceOutput(art,assets:assets,pixelsPerMM:dpi/25.4)
       let width=object.artworkSize.x,height=object.artworkSize.y,bleed=art.bleed,factor=TypographyEngine.pointsPerMM

@@ -3,6 +3,7 @@ import AVFoundation
 import CoreVideo
 import Darwin
 import FormCore
+import LabRendering
 
 /// Streaming camera-only media output. Frames are not accumulated in memory.
 @MainActor enum StudioSceneMedia {
@@ -41,7 +42,7 @@ import FormCore
     shot.pixels=pixels
     for index in 0..<count {
       try check();shot.camera=try scene.motion.camera(start:scene.camera,fraction:Double(index)/Double(count-1))
-      let image=try await renderer.render(project:resolved.project,shot:shot,assets:assets,preview:false,renderObjectIDs:resolved.visible)
+      let image=try await renderer.render(project:resolved.project,shot:shot,assets:assets,preview:false,renderObjectIDs:resolved.visible,sampling:.native)
       try check()
       let readyDeadline=Date().addingTimeInterval(30)
       while !input.isReadyForMoreMediaData {

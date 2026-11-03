@@ -6,7 +6,8 @@ import Foundation
 /// remain recoverable; masks keep referring to the replacement geometry.
 @MainActor public enum ArtworkOutlines {
   public static func convert(
-    _ artwork: Artwork, ids: Set<UUID>, mode: String, resolvedPaint: Artwork? = nil
+    _ artwork: Artwork, ids: Set<UUID>, mode: String, resolvedPaint: Artwork? = nil,
+    forOutput: Bool = false
   ) throws
     -> (artwork: Artwork, created: [ArtworkElement])
   {
@@ -37,7 +38,7 @@ import Foundation
         ? ["rectangle", "ellipse", "line", "polygon", "star"].contains(source.kind)
         : mode == "stroke" ? source.visibleStroke != nil : source.kind == "text"
       guard eligible else { continue }
-      guard !artwork.isLocked(source), mode != "stroke" || !masks.contains(source.id) else {
+      guard (forOutput || !artwork.isLocked(source)), mode != "stroke" || !masks.contains(source.id) else {
         throw FormError.invalid(
           "Unlock the selected layers first. Clipping masks use geometry rather than stroke paint.")
       }

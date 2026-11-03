@@ -63,9 +63,11 @@ import simd
     if let color=object.color {profile.color=color}
     return .init(profile:profile,color:object.color ?? ply?.color ?? project.material(object.materialID).color)
   }
-  static func make(_ object:ProductObject,project:Project,assets:URL,limit:Int,foldPercent:Double?=nil,selectedPanelID:String?=nil,sampling:SourceTextureSamplingPlan?=nil)throws->MeshNode {
+  struct FaceArtworkSources {var outside:Artwork?,inside:Artwork?}
+  static func make(_ object:ProductObject,project:Project,assets:URL,limit:Int,foldPercent:Double?=nil,selectedPanelID:String?=nil,sampling:SourceTextureSamplingPlan?=nil,artworkSources:FaceArtworkSources?=nil)throws->MeshNode {
     let definition=try PaperConstruction.definition(for:object),net=try definition.net()
-    let outside=resolvedArtwork(object,project:project,inside:false),inside=resolvedArtwork(object,project:project,inside:true)
+    let outside=artworkSources == nil ? resolvedArtwork(object,project:project,inside:false):artworkSources!.outside
+    let inside=artworkSources == nil ? resolvedArtwork(object,project:project,inside:true):artworkSources!.inside
     let outsideFinishes=(definition.finishes ?? []).filter{$0.side == .outside}
     let insideFinishes=(definition.finishes ?? []).filter{$0.side == .inside}
     let preparedOutside=try outside.map{try PaperSurfaceRasterizer.PreparedArtwork($0,finishes:outsideFinishes,assets:assets)}

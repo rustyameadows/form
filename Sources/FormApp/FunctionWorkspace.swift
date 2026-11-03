@@ -17,7 +17,7 @@ struct EnvironmentPageHeading:View {
 struct FunctionWorkspace:View {
   @EnvironmentObject var store:StudioStore
   private var representation:String {get{store.functionRepresentation} nonmutating set{store.functionRepresentation=newValue}}
-  private var objects:[ProductObject] {store.project?.objects.filter{$0.hasTablePresentation} ?? []}
+  private var objects:[ProductObject] {store.project?.tablePresentationObjects ?? []}
   var body:some View {
     GeometryReader {g in
       HStack(spacing:0) {

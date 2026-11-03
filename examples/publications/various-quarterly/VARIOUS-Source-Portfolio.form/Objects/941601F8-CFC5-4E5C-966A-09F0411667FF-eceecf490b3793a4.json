@@ -1,0 +1,192 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "elements" : [
+      {
+        "color" : "#235C8B",
+        "fontSize" : 12,
+        "height" : 84,
+        "id" : "E4B7E907-2A8F-565A-8BD6-E6FE6F377AF9",
+        "kind" : "rectangle",
+        "name" : "signal_rooms_08-plate",
+        "text" : "",
+        "width" : 84,
+        "x" : 8,
+        "y" : 8
+      },
+      {
+        "color" : "#F4ECD9",
+        "fontSize" : 60,
+        "height" : 36,
+        "id" : "734B75F0-2A45-51EF-BF14-54C68E95BABD",
+        "kind" : "text",
+        "name" : "signal_rooms_08-type",
+        "text" : "OPEN",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 69.6,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 80,
+        "x" : 12,
+        "y" : 24
+      },
+      {
+        "color" : "#F4ECD9",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "73EC4E83-94C5-5A5D-B4C0-63B43A0AF256",
+        "kind" : "path",
+        "name" : "signal_rooms_08-line",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 15,
+                    "y" : 72
+                  },
+                  "id" : "B47AA9C7-9E0A-57F3-94FD-D21F63C39FF0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 84,
+                    "y" : 72
+                  },
+                  "id" : "082857E6-1ABC-5F1E-9D16-AF8ED8E5CFC8"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#F4ECD9",
+          "join" : "round",
+          "width" : 0.8
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#F4ECD9",
+        "fontSize" : 7,
+        "height" : 10,
+        "id" : "9D8BB63B-1F20-5AAE-B5CE-7CCFA4242371",
+        "kind" : "text",
+        "name" : "signal_rooms_08-foot",
+        "text" : "LEAVE ROOM FOR THE NEXT WORD",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 8.12,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 73,
+        "x" : 15,
+        "y" : 79
+      },
+      {
+        "color" : "#E64F34",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 72,
+        "id" : "6BFF2540-E120-5601-8D2D-912528DC3860",
+        "kind" : "rectangle",
+        "name" : "signal_rooms_08-margin",
+        "stroke" : {
+          "color" : "#E64F34",
+          "dash" : [
+            2,
+            1
+          ],
+          "width" : 0.8
+        },
+        "text" : "",
+        "width" : 74,
+        "x" : 13,
+        "y" : 14
+      }
+    ],
+    "showGuides" : false,
+    "unit" : "mm"
+  },
+  "designID" : "C8B84367-502F-456A-91F4-41B0B6E6E94A",
+  "id" : "941601F8-CFC5-4E5C-966A-09F0411667FF",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "signal_rooms_08 / editable graphic",
+  "parameters" : {
+    "depth" : 100,
+    "width" : 100
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

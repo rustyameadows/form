@@ -1,0 +1,372 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 10236,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "D95A1CE3-6B17-5B8D-B3CD-4FEADAF9B590",
+        "kind" : "text",
+        "name" : "room_accident_03-caption",
+        "text" : "Longer caption\nAnother line fits without enlarging the image.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 155
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 15,
+        "id" : "727C8474-8F5D-54A9-9C46-4D206318B019",
+        "kind" : "text",
+        "name" : "room_accident_04-caption",
+        "text" : "Across the gutter\nA folded view returns within a single page.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.9,
+        "x" : 112,
+        "y" : 245
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11,
+        "height" : 67,
+        "id" : "DEDB8403-1723-5A15-8186-F294BA0A5060",
+        "kind" : "text",
+        "name" : "style_03-body-frame-4",
+        "storyFrame" : {
+          "storyID" : "A97B1798-8756-4EB9-88CE-F46B1A1999CC"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 185
+      },
+      {
+        "clipID" : "F7490FB9-955D-5CE0-8A5A-74E322596A92",
+        "color" : "#000000",
+        "contentSize" : {
+          "x" : 100,
+          "y" : 100
+        },
+        "fontSize" : 10,
+        "height" : 128,
+        "id" : "02A31A8A-4A93-5060-83D3-1B2AA46E1738",
+        "kind" : "group",
+        "name" : "room_accident_03-placed-vector",
+        "text" : "",
+        "width" : 128,
+        "x" : 43.95,
+        "y" : 23
+      },
+      {
+        "color" : "#235C8B",
+        "fontSize" : 12,
+        "height" : 84,
+        "id" : "F418EAFC-8705-5156-8AC9-E7CA81DB0C8B",
+        "kind" : "rectangle",
+        "name" : "signal_rooms_05-plate",
+        "parentID" : "02A31A8A-4A93-5060-83D3-1B2AA46E1738",
+        "text" : "",
+        "width" : 84,
+        "x" : 8,
+        "y" : 8
+      },
+      {
+        "color" : "#F4ECD9",
+        "fontSize" : 60,
+        "height" : 36,
+        "id" : "570ED555-7AD9-5FED-84F1-6E44BC86D991",
+        "kind" : "text",
+        "name" : "signal_rooms_05-type",
+        "parentID" : "02A31A8A-4A93-5060-83D3-1B2AA46E1738",
+        "text" : "OPEN",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 69.6,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 80,
+        "x" : 12,
+        "y" : 24
+      },
+      {
+        "color" : "#F4ECD9",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "2A3209F0-78C6-5E76-988B-01C5D0A3B9F4",
+        "kind" : "path",
+        "name" : "signal_rooms_05-line",
+        "parentID" : "02A31A8A-4A93-5060-83D3-1B2AA46E1738",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 15,
+                    "y" : 72
+                  },
+                  "id" : "AE0A07DE-1C24-5E9C-929A-41CAA6DE9E2D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 84,
+                    "y" : 72
+                  },
+                  "id" : "5F65F60B-EF68-52D5-B20F-E9D00D89B6EA"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#F4ECD9",
+          "join" : "round",
+          "width" : 0.8
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#F4ECD9",
+        "fontSize" : 7,
+        "height" : 10,
+        "id" : "6D89B107-5A5E-5FB7-916E-9FEBEE275B3C",
+        "kind" : "text",
+        "name" : "signal_rooms_05-foot",
+        "parentID" : "02A31A8A-4A93-5060-83D3-1B2AA46E1738",
+        "text" : "LEAVE ROOM FOR THE NEXT WORD",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 8.12,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 73,
+        "x" : 15,
+        "y" : 79
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 10,
+        "height" : 128,
+        "id" : "F7490FB9-955D-5CE0-8A5A-74E322596A92",
+        "kind" : "rectangle",
+        "name" : "room_accident_03-frame-mask",
+        "text" : "",
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 23
+      },
+      {
+        "asset" : "7950861D-7774-4B0D-BD61-E035AE28F009.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 52,
+        "id" : "64672E01-AA65-4834-874A-CA27DFA62AD0",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.5506410256410257,
+          "x" : 0.22467948717948716,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / room_accident_04",
+        "text" : "",
+        "width" : 85.9,
+        "x" : 112,
+        "y" : 189
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "D9337E2B-55DB-42B7-9DF7-8C1441C35DE8",
+  "id" : "2EA72A47-D940-4B3A-87BC-354A4877CD43",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 39 / style 03",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 10075.999999999993,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}
