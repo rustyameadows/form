@@ -414,13 +414,23 @@ public enum FormColor {
     builds += 1
     return entry
   }
-  public static func overflows(_ element: ArtworkElement) -> Bool {
-    if element.storyFrame != nil {return PublicationStoryLayout.overflows(element)}
-    if usesParagraphLayout(element) { return ParagraphLayout.overflows(element) }
-    let frame = layout(element).0
-    let range = CTFrameGetVisibleStringRange(frame)
-    return range.location + range.length < cachedLayout(element).text.length
+  public static func capacity(_ element: ArtworkElement) -> TextFrameCapacity {
+    if element.storyFrame != nil { return PublicationStoryLayout.capacity(element) }
+    if usesParagraphLayout(element) { return ParagraphLayout.capacity(element) }
+    let entry = cachedLayout(element), range = CTFrameGetVisibleStringRange(entry.frame)
+    let lines = CTFrameGetLines(entry.frame) as! [CTLine]
+    var origins = [CGPoint](repeating: .zero, count: lines.count)
+    CTFrameGetLineOrigins(entry.frame, CFRange(), &origins)
+    let width = element.width * pointsPerMM
+    let tooWide = lines.enumerated().contains { index, line in
+      let advance = max(0, CTLineGetTypographicBounds(line, nil, nil, nil) - CTLineGetTrailingWhitespaceWidth(line))
+      let left = origins[index].x + entry.horizontalOffset
+      return advance > 0 && (left < -0.01 || left + advance > width + 0.01)
+    }
+    return independentCapacity(element, display: entry.text,
+      visible: NSRange(location: max(0, range.location), length: max(0, range.length)), widthOverflow: tooWide)
   }
+  public static func overflows(_ element: ArtworkElement) -> Bool { capacity(element).overflows }
   public static func firstBaseline(_ element: ArtworkElement) -> Double {
     if element.storyFrame != nil {return PublicationStoryLayout.firstBaseline(element)}
     if usesParagraphLayout(element) { return ParagraphLayout.firstBaseline(element) }

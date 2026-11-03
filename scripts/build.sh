@@ -40,6 +40,7 @@ cp Sources/CFormMesher/LICENSE "$bundle/Contents/Resources/ThirdPartyNotices/Ear
 cp Sources/CFormFigmaCompression/LICENSE "$bundle/Contents/Resources/ThirdPartyNotices/Zstd-BSD.txt"
 cp Resources/ThirdPartyNotices/FigmaClipboardReferences.txt "$bundle/Contents/Resources/ThirdPartyNotices/FigmaClipboardReferences.txt"
 python3 scripts/package-occt.py "$bundle" "${LAB_OCCT_ROOT:-$PWD/.local/engines/occt-8.0.1-form-gprop2}"
+python3 scripts/package-mcp.py "$bundle" "$configuration"
 swift Resources/Icon.swift "$stage/LAB.iconset"
 iconutil -c icns "$stage/LAB.iconset" -o "$bundle/Contents/Resources/LAB.icns"
 codesign --force --deep --sign - "$bundle"

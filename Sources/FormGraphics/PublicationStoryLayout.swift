@@ -4,10 +4,25 @@ import FormCore
 
 /// A line is accepted only when its reserved height fits the bounded frame.
 public final class StoryTextContainer:NSTextContainer {
+  // An actual finalized line may be taller than TextKit's initial probe when
+  // a larger run occurs later. Reflow that whole line into the next container.
+  fileprivate var acceptedEnd:Int?
   public override func lineFragmentRect(forProposedRect proposed:CGRect,at character:Int,writingDirection:NSWritingDirection,remaining:UnsafeMutablePointer<CGRect>?)->CGRect {
+    if let acceptedEnd,character>=acceptedEnd {remaining?.pointee = .zero;return .zero}
     var height=proposed.height
-    if let storage=layoutManager?.textStorage,character<storage.length,
-      let style=storage.attribute(.paragraphStyle,at:character,effectiveRange:nil) as? NSParagraphStyle {
+    if let manager=layoutManager,let storage=manager.textStorage,character<storage.length {
+      let attributes=storage.attributes(at:character,effectiveRange:nil)
+      let style=attributes[.paragraphStyle] as? NSParagraphStyle ?? .default
+      // TextKit can probe with a zero-height fragment before committing the
+      // natural line height. Automatic leading must reserve that height now;
+      // otherwise a tiny frame consumes a full line that its paint clip hides.
+      if let font=attributes[.font] as? NSFont {
+        var natural=manager.defaultLineHeight(for:font)
+        if style.lineHeightMultiple>0 {natural *= style.lineHeightMultiple}
+        natural=max(natural,style.minimumLineHeight)
+        if style.maximumLineHeight>0 {natural=min(natural,style.maximumLineHeight)}
+        height=max(height,natural)
+      }
       height=max(height,style.minimumLineHeight,style.maximumLineHeight)
     }
     guard proposed.minY+height<=size.height+1e-7 else{remaining?.pointee = .zero;return .zero}
@@ -27,6 +42,10 @@ public final class StoryTextContainer:NSTextContainer {
   private var origins:[ObjectIdentifier:Double]=[:]
   private let baseAscent:Double
   private var usesGrid:Bool
+  private var flowNeedsLayout=true
+  private var stabilizing=false
+  private var flowSizes:[CGSize]=[]
+  public private(set) var layoutAvailable=true
   public init(_ context:ResolvedTextStory) {
     self.context=context
     let source=context.story.sourceElement.inheritingLanguage(context.language)
@@ -46,8 +65,75 @@ public final class StoryTextContainer:NSTextContainer {
     }
     overflow.lineFragmentPadding=0;layout.addTextContainer(overflow)
     origins[ObjectIdentifier(overflow)]=(context.baselineGrid?.origin ?? 0)-baseAscent
+    NotificationCenter.default.addObserver(self,selector:#selector(sourceWillChange(_:)),
+      name:NSTextStorage.willProcessEditingNotification,object:storage)
     storage.setAttributedString(preparing(attributed))
-    layout.ensureLayout(for:overflow)
+    ensureLayout()
+  }
+  @objc private func sourceWillChange(_ notification:Notification) {
+    // Native character edits, formatting and IME drafts all invalidate measured
+    // line boundaries. Do not re-enter TextKit while storage processes edits.
+    flowNeedsLayout=true
+    for box in containers {box.acceptedEnd=nil}
+  }
+  private func reservedLineHeight(_ range:NSRange)->CGFloat {
+    guard range.length>0 else{return 0}
+    let first=layout.characterIndexForGlyph(at:range.location)
+    guard first<storage.length else{return 0}
+    let style=storage.attribute(.paragraphStyle,at:first,effectiveRange:nil) as? NSParagraphStyle ?? .default
+    var ascent:CGFloat=0,descent:CGFloat=0
+    for glyph in range.location..<NSMaxRange(range) {
+      let character=layout.characterIndexForGlyph(at:glyph)
+      guard character<storage.length else{continue}
+      let attributes=storage.attributes(at:character,effectiveRange:nil)
+      guard let font=layout.fontForGeneratedGlyph(glyph) ?? attributes[.font] as? NSFont else{continue}
+      let height=layout.defaultLineHeight(for:font),baseline=layout.defaultBaselineOffset(for:font)
+      let shift=CGFloat((attributes[.baselineOffset] as? NSNumber)?.doubleValue ?? 0)
+      ascent=max(ascent,baseline+shift)
+      descent=max(descent,height-baseline-shift)
+    }
+    var height=ascent+descent
+    if style.lineHeightMultiple>0 {height *= style.lineHeightMultiple}
+    height=max(height,style.minimumLineHeight)
+    if style.maximumLineHeight>0 {height=min(height,style.maximumLineHeight)}
+    return height
+  }
+  /// Keep native editing and production on the same real TextKit line ranges.
+  /// Fix the earliest overflowing frame first; each correction keeps its valid
+  /// prefix and moves its first invalid line (and remainder) to the next frame.
+  /// Thus a fixed source needs at most one correction per physical container.
+  public func ensureLayout() {
+    guard !stabilizing else{return}
+    let sizes=containers.map(\.size)
+    guard flowNeedsLayout || sizes != flowSizes else{return}
+    stabilizing=true;defer{stabilizing=false}
+    flowNeedsLayout=false;flowSizes=sizes;layoutAvailable=true
+    for box in containers {box.acceptedEnd=nil}
+    layout.invalidateLayout(forCharacterRange:NSRange(location:0,length:storage.length),actualCharacterRange:nil)
+    for _ in 0...containers.count {
+      layout.ensureLayout(for:overflow)
+      var invalid:(index:Int,character:Int)?
+      for (index,box) in containers.enumerated() {
+        layout.enumerateLineFragments(forGlyphRange:layout.glyphRange(for:box)) {rect,_,_,range,stop in
+          // TextKit can also clip its finalized rectangle to the container even
+          // though a later run's generated font is taller. Measure only this
+          // actual line, retaining authored maximum leading and earlier lines.
+          let height=max(rect.height,self.reservedLineHeight(range))
+          if rect.minY+height>box.size.height+1e-7,range.length>0 {
+            invalid=(index,self.layout.characterIndexForGlyph(at:range.location));stop.pointee=true
+          }
+        }
+        if invalid != nil {break}
+      }
+      guard let invalid else{return}
+      let box=containers[invalid.index]
+      guard box.acceptedEnd != invalid.character else{layoutAvailable=false;return}
+      box.acceptedEnd=invalid.character
+      for later in containers.dropFirst(invalid.index+1) {later.acceptedEnd=nil}
+      layout.invalidateLayout(forCharacterRange:NSRange(location:invalid.character,length:storage.length-invalid.character),actualCharacterRange:nil)
+    }
+    // Never label an unstable composition as fitting or silently approve export.
+    layoutAvailable=false
   }
   private func topPadding(pageY:Double)->Double {
     guard usesGrid,let grid=context.baselineGrid else{return 0}
@@ -129,14 +215,16 @@ public final class StoryTextContainer:NSTextContainer {
     return true
   }
   public func index(_ frame:StoryFrameID)->Int? {context.frames.firstIndex{$0.frame==frame}}
-  public func glyphRange(_ index:Int)->NSRange {layout.glyphRange(for:containers[index])}
+  public func glyphRange(_ index:Int)->NSRange {ensureLayout();return layout.glyphRange(for:containers[index])}
   public func displayRange(_ index:Int)->NSRange {layout.characterRange(forGlyphRange:glyphRange(index),actualGlyphRange:nil)}
   public func sourceRange(_ index:Int)->NSRange {TextCase.source(storage).sourceRange(displayRange(index))}
   public var oversetRange:NSRange {
+    ensureLayout()
     let first=containers.last.map{NSMaxRange(layout.characterRange(forGlyphRange:layout.glyphRange(for:$0),actualGlyphRange:nil))} ?? 0
     return TextCase.source(storage).sourceRange(NSRange(location:first,length:max(0,storage.length-first)))
   }
   public func offset(_ index:Int,verticalAlignment:String="top")->Double {
+    ensureLayout()
     let padding=topOffsets[index]
     guard !usesGrid else{return padding}
     let remaining=max(0,context.frames[index].height*TypographyEngine.pointsPerMM-padding-layout.usedRect(for:containers[index]).height)
@@ -154,7 +242,7 @@ public final class StoryTextContainer:NSTextContainer {
   public static var diagnostics:[String:Any] {["story_layout_builds":builds,"story_layout_hits":hits,"story_layout_cache_limit":64]}
   public static func invalidate() {cache.removeAllObjects()}
   public static func composition(_ context:ResolvedTextStory)->StoryComposition {
-    if let entry=cache.object(forKey:context.story.id as NSUUID),entry.signature==context {hits+=1;return entry.composition}
+    if let entry=cache.object(forKey:context.story.id as NSUUID),entry.signature==context {hits+=1;entry.composition.ensureLayout();return entry.composition}
     let entry=Entry(context);cache.setObject(entry,forKey:context.story.id as NSUUID,cost:max(1000,context.story.text.utf16.count*250));builds+=1
     return entry.composition
   }
@@ -167,10 +255,19 @@ public final class StoryTextContainer:NSTextContainer {
     let rect=value.layout.usedRect(for:value.containers[index]),factor=points ? 1:1/TypographyEngine.pointsPerMM
     return .init(width:rect.width*factor,height:rect.height*factor)
   }
-  public static func overflows(_ element:ArtworkElement)->Bool {
-    guard let(value,index)=frame(element) else{return true}
-    return value.layout.usedRect(for:value.containers[index]).width>value.containers[index].size.width+0.01 || (index==value.containers.count-1 && value.oversetRange.length>0)
+  public static func capacity(_ element:ArtworkElement)->TextFrameCapacity {
+    guard let(value,index)=frame(element) else{
+      return .init(sourceLength:0,displayLength:0,sourceRange:.init(location:0,length:0),
+        displayRange:.init(location:0,length:0),oversetRange:.init(location:0,length:0),available:false)
+    }
+    let range=value.sourceRange(index)
+    return .init(sourceLength:value.context.story.text.utf16.count,displayLength:value.storage.length,
+      sourceRange:range,displayRange:value.displayRange(index),
+      oversetRange:index==value.containers.count-1 ? value.oversetRange:.init(location:NSMaxRange(range),length:0),
+      widthOverflow:value.layout.usedRect(for:value.containers[index]).width>value.containers[index].size.width+0.01,
+      available:value.layoutAvailable)
   }
+  public static func overflows(_ element:ArtworkElement)->Bool {capacity(element).overflows}
   public static func verticalOffset(_ element:ArtworkElement,points:Bool)->Double {
     guard let(value,index)=frame(element) else{return 0}
     return value.offset(index,verticalAlignment:element.typography?.verticalAlignment ?? "top")/(points ? 1:TypographyEngine.pointsPerMM)

@@ -357,12 +357,12 @@ enum TableTool: String, CaseIterable {
               return
             }
             if name=="form_set_view" {_ = try self.publicationViewRequest(args["view"] as? String ?? "",args)}
-            let readOnly = (name=="form_studio_scene" && ["list","get"].contains(args["command"] as? String ?? "")) || (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
+            let readOnly = (name=="form_studio_scene" && ["list","get","pose_get"].contains(args["command"] as? String ?? "")) || (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
               (name == "form_paper" && PaperCommands.preservesDocumentDrafts(args)) ||
               (name == "form_construction" && ConstructionCommands.isReadOnly(args)) ||
               (name == "form_surface" && PhysicalSurfaceCommands.isReadOnly(args)) ||
               [
-                "form_status", "form_get_context", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones", "form_solid",
+                "form_status", "form_capabilities", "form_get_context", "form_list_projects", "form_get_project", "form_list_recipes", "form_textile_zones", "form_solid",
                 "form_list_materials", "form_get_print_setup", "form_get_slice_status",
                 "form_list_filaments", "form_list_printers", "form_get_artwork",
                 "form_list_fonts", "form_font_features", "form_image_info", "form_export_publication",
@@ -378,8 +378,9 @@ enum TableTool: String, CaseIterable {
                 || (name == "form_color_profile" && ["list", "get"].contains(args["command"] as? String ?? "list"))
                 || (["form_textile_stock","form_production_job"].contains(name) && ["list","get"].contains(args["command"] as? String ?? "list"))
                 || (name == "form_story" && ["list","get","layout"].contains(args["command"] as? String ?? "list"))
-                || (name == "form_publication" && ["list","get","preflight","spreads"].contains(args["command"] as? String ?? "list"))
+                || (name == "form_publication" && ["list","get","preflight","spreads","sheet_assembly_inspect"].contains(args["command"] as? String ?? "list"))
             if !readOnly {
+              try self.preflightStudioPoseHandoff(name,args)
               try self.preflightCharacterPositionHandoff(name,args)
               try self.preflightPageSetupHandoff(name,args)
               try self.preflightOpticalHandoff(name,args)

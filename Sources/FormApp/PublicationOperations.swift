@@ -3,14 +3,30 @@ import FormCore
 import FormGraphics
 
 extension StudioStore {
+  /// Targeted saved-scene writes must reject stale revisions and malformed
+  /// selectors before the general bridge handoff can finish a Canvas draft.
+  func preflightStudioPoseHandoff(_ name:String,_ arguments:[String:Any]) throws {
+    guard name=="form_studio_scene",["pose_update","pose_reset"].contains(arguments["command"] as? String ?? "") else{return}
+    if let raw=arguments["scene_id"] as? String,let sceneID=UUID(uuidString:raw),
+      studioComposition.contextProjectID==project?.id,studioComposition.draft?.id==sceneID,studioComposition.dirty {
+      throw FormError.invalid("Save or discard this native Studio draft before editing its saved publication pose.")
+    }
+    let mirror=OperationEngine(repository:repository);mirror.project=project;mirror.selection=engine.selection
+    _=try mirror.call(name,arguments:arguments,source:"Validation")
+    guard artworkSession.canvas?.activeTextView?.hasMarkedText() != true,
+      artworkSession.canvas?.storyEditor?.views.contains(where:{$0.hasMarkedText()}) != true else {
+      throw FormError.invalid("Finish the current text input before changing a Studio publication pose.")
+    }
+  }
   /// Validate source/page edits against a detached in-memory engine before ending
   /// native editing. A rejected request leaves responder, selection and undo intact.
   func preflightPublicationHandoff(_ name:String,_ arguments:[String:Any]) throws {
-    guard let editor=artworkSession.canvas?.storyEditor else{return}
+    guard let canvas=artworkSession.canvas,canvas.storyEditor != nil || canvas.activeTextView != nil else{return}
     let operations=arguments["operations"] as? [[String:Any]] ?? []
     let relevant=["form_story","form_publication"].contains(name) || (name=="form_batch" && operations.contains{["form_story","form_publication"].contains($0["name"] as? String ?? "")})
     guard relevant else{return}
-    guard !editor.views.contains(where:{$0.hasMarkedText()}) else{throw FormError.invalid("Finish the current text input before changing a linked story or its pages.")}
+    guard canvas.activeTextView?.hasMarkedText() != true,
+      canvas.storyEditor?.views.contains(where:{$0.hasMarkedText()}) != true else{throw FormError.invalid("Finish the current text input before changing a linked story or its pages.")}
     let mirror=OperationEngine(repository:repository);mirror.project=project;mirror.selection=engine.selection
     mirror.onPrepareGlyph=engine.onPrepareGlyph;mirror.onPrepareParagraphs=engine.onPrepareParagraphs
     mirror.onValidatePaint=engine.onValidatePaint

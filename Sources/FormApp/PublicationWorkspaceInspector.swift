@@ -42,10 +42,6 @@ struct PublicationWorkspaceInspector:View {
   @ObservedObject var session:ArtworkSession
   @ObservedObject var controller:PublicationWorkspaceController
   var publicationID:UUID?=nil
-  @State private var preflightOpen=false
-  @State private var report:[String:Any]=[:]
-  @State private var exportLayout:PublicationPDFLayout = .pages
-  @State private var padBooklet=false
   @State private var pageSettingsExpanded=true
   @State private var chaptersExpanded=false
   @State private var mastersExpanded=false
@@ -115,36 +111,9 @@ struct PublicationWorkspaceInspector:View {
         InspectorDivider()
         PublicationBindingControls(session:session,publicationID:document.id)
         InspectorDivider()
-        VStack(alignment:.leading,spacing:10) {
-          InspectorSectionHeader("OUTPUT")
-          Picker("PDF layout",selection:$exportLayout) {
-            Text("Reader pages").tag(PublicationPDFLayout.pages)
-            Text("Reader spreads").tag(PublicationPDFLayout.spreads)
-            Text("Booklet sheets").tag(PublicationPDFLayout.booklet)
-          }.pickerStyle(.menu).font(InspectorStyle.labelFont)
-          if exportLayout == .booklet,document.layout?.firstPageSide == .verso || document.pages.count%4 != 0 {
-            Toggle("Pad with explicit blank pages",isOn:$padBooklet).inspectorToggle()
-            Text(document.layout?.firstPageSide == .verso ? "A left/verso first page reserves a blank front. Padding completes the folded sheets; source pages stay exact.":"Booklet sheets need a multiple of four pages. Padding changes the exported layout; source pages stay exact.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
-          }
-          HStack {
-            Button("Preflight"){
-              session.canvas?.finishText()
-              do {if let store=session.store {report=try store.publicationPreflightReport(document.id,layout:exportLayout,padToMultipleOfFour:padBooklet)}}
-              catch{report=["can_export":false,"issues":[["severity":"error","message":error.localizedDescription]]]}
-              preflightOpen=true
-            }.buttonStyle(InspectorActionStyle()).accessibilityIdentifier("publication-preflight")
-            Spacer()
-            Button("Export PDF…"){export(document)}.buttonStyle(InspectorActionStyle()).accessibilityIdentifier("publication-export-pdf")
-          }
-        }
+        PublicationOutputControls(session:session,controller:controller,project:project,document:document)
+          .id("publication-output-"+project.id.uuidString+document.id.uuidString)
       }.font(InspectorStyle.labelFont)
-        .popover(isPresented:$preflightOpen){
-          VStack(alignment:.leading,spacing:12) {
-            HStack {Text("Publication preflight").font(.system(size:15,weight:.semibold));Spacer();AppCloseButton("Close preflight"){preflightOpen=false}}
-            Text(report["can_export"] as? Bool==true ? "Ready to export":"Review before export").font(InspectorStyle.labelFont)
-            ForEach(Array((report["issues"] as? [[String:Any]] ?? []).enumerated()),id:\.offset){_,item in Text(item["message"] as? String ?? "").font(InspectorStyle.labelFont).foregroundStyle(item["severity"] as? String=="error" ? Palette.accent:Palette.secondary)}
-          }.padding(18).frame(width:340).labInterface()
-        }
     }
   }
   private func numbering(_ document:PublicationDocument,projectID:UUID)->some View {
@@ -246,13 +215,7 @@ struct PublicationWorkspaceInspector:View {
     }label:{InspectorSectionHeader("MASTERS",subtitle:"\(document.masters?.count ?? 0) artwork sources")}
       .font(InspectorStyle.labelFont).accessibilityIdentifier("publication-masters-disclosure")
   }
-  private func export(_ document:PublicationDocument){
-    guard let store=session.store else{return};session.canvas?.finishText()
-    let panel=NSSavePanel();panel.allowedContentTypes=[.pdf];panel.nameFieldStringValue=document.name.replacingOccurrences(of:"/",with:"-")+".pdf"
-    guard panel.runModal() == .OK,let url=panel.url else{return}
-    do {_=try store.publicationGraphicsCall("form_export_publication",["publication_id":document.id.uuidString,"path":url.path,"layout":exportLayout.rawValue,"pad_to_multiple_of_four":padBooklet]);store.toast("Publication PDF exported")}
-    catch{store.error=error.localizedDescription}
-  }
+
 }
 
 struct PublicationBindingControls:View {

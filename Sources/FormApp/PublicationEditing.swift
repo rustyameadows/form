@@ -98,7 +98,9 @@ import FormGraphics
     snapshot=NSAttributedString(attributedString:storage)
   }
   func textDidChange(_ notification:Notification) {
-    guard !publishing,let text=notification.object as? CanvasTextView,!text.hasMarkedText() else{return}
+    guard !publishing,let text=notification.object as? CanvasTextView else{return}
+    composition.ensureLayout()
+    guard !text.hasMarkedText() else{return}
     publish(text)
     for other in views where other !== text {other.resetSourceTracking()}
   }
@@ -110,6 +112,7 @@ import FormGraphics
   }
   func textViewDidChangeSelection(_ notification:Notification) {
     guard let text=notification.object as? CanvasTextView else{return}
+    composition.ensureLayout()
     let range=text.selectedRange()
     session?.characterRange=TextCase.source(text.attributedString()).sourceRange(range)
     session?.objectWillChange.send()
@@ -117,7 +120,7 @@ import FormGraphics
     // across separately transformed page hosts. Keep the native caret visible.
     guard !redirectingSelection,range.length==0,text.window?.firstResponder === text,
       ids[ObjectIdentifier(text)] != nil,!text.hasMarkedText() else{return}
-    composition.layout.ensureLayout(for:composition.overflow)
+    composition.ensureLayout()
     guard let index=composition.containers.indices.first(where:{
       let coverage=composition.displayRange($0)
       return range.location>=coverage.location && range.location<NSMaxRange(coverage)

@@ -57,11 +57,13 @@ import FormCore
     return (value.layout.lineFragmentRect(forGlyphAt:0,effectiveRange:nil).minY
       + value.layout.location(forGlyphAt:0).y + value.offset)/TypographyEngine.pointsPerMM
   }
-  static func overflows(_ e:ArtworkElement)->Bool {
+  static func capacity(_ e:ArtworkElement)->TextFrameCapacity {
     let value=entry(e)
-    return value.size.height > e.height*TypographyEngine.pointsPerMM+1e-7
-      || value.size.width > e.width*TypographyEngine.pointsPerMM+1e-7
+    let visible=value.layout.characterRange(forGlyphRange:value.visible,actualGlyphRange:nil)
+    return TypographyEngine.independentCapacity(e,display:value.storage,visible:visible,
+      widthOverflow:value.size.width > e.width*TypographyEngine.pointsPerMM+0.01)
   }
+  static func overflows(_ e:ArtworkElement)->Bool {capacity(e).overflows}
   static func draw(_ e:ArtworkElement,in context:CGContext) {
     let value=entry(e)
     context.saveGState()

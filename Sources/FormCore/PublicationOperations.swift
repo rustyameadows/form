@@ -5,6 +5,12 @@ extension OperationEngine {
   func publicationCall(_ name:String,_ arguments:[String:Any],source:String) throws -> Any {
     guard let current=project else{throw FormError.missing("Open a project first.")}
     let command=arguments["command"] as? String ?? "list"
+    if name=="form_publication",command=="sheet_assembly_inspect" {
+      guard Set(arguments.keys).isSubset(of:["command","object_id","offset","limit"]),
+        let raw=arguments["object_id"] as? String,let id=UUID(uuidString:raw),
+        let object=current.objects.first(where:{$0.id==id}) else {throw FormError.invalid("Physical inspection needs an existing object_id and optional offset/limit.")}
+      return try PublicationPhysicalInspection.inspect(project:current,object:object,page:.parse(arguments))
+    }
     if let language=arguments["language"],!(language is String),!(language is NSNull) {throw FormError.invalid("Language must be a BCP47 identifier or null.")}
     func uuid(_ key:String) throws -> UUID {
       guard let value=arguments[key] as? String,let id=UUID(uuidString:value) else{throw FormError.invalid("Provide a valid \(key) UUID.")};return id
@@ -159,6 +165,7 @@ extension OperationEngine {
           try PublicationCommands.setPublication(in:&p,document:document);result=["page":try jsonObject(document.pages[index])]
         case "sheet_assembly_create":
           guard let raw=arguments["definition"] as? [String:Any] else{throw FormError.invalid("Provide the complete sheet assembly definition.")}
+          try PublicationPhysicalToolSchema.validateFields(raw,schema:PublicationPhysicalToolSchema.assembly,path:"definition")
           let definition=try JSONDecoder.form.decode(SheetAssemblyDefinition.self,from:JSONSerialization.data(withJSONObject:raw))
           if arguments["publication_id"] != nil,try uuid("publication_id") != definition.publicationID {throw FormError.invalid("The assembly definition must reference this publication.")}
           let position:Vector3
@@ -174,6 +181,7 @@ extension OperationEngine {
           guard var definition=p.objects.first(where:{$0.id==id})?.sheetAssembly else{throw FormError.missing("Sheet assembly not found.")}
           if let supplied=arguments["definition"] {
             guard let raw=supplied as? [String:Any] else{throw FormError.invalid("Provide a complete sheet assembly definition object.")}
+            try PublicationPhysicalToolSchema.validateFields(raw,schema:PublicationPhysicalToolSchema.assembly,path:"definition")
             definition=try JSONDecoder.form.decode(SheetAssemblyDefinition.self,from:JSONSerialization.data(withJSONObject:raw))
           }
           else {
@@ -189,7 +197,7 @@ extension OperationEngine {
           p.publications?.removeAll{$0.id==id}
           for i in p.textStories?.indices ?? 0..<0 where p.textStories![i].publicationID==id {p.textStories![i].publicationID=nil}
           result=["deleted":true]
-        default:throw FormError.invalid("Publication commands: list/get/spreads/create/settings/reorder/add_page/create_pages/insert/remove/duplicate/page_settings/sheet_assembly_create/sheet_assembly_configure/delete/preflight.")
+        default:throw FormError.invalid("Publication commands: list/get/spreads/create/settings/reorder/add_page/create_pages/insert/remove/duplicate/page_settings/sheet_assembly_create/sheet_assembly_configure/sheet_assembly_inspect/delete/preflight.")
         }
       }
     }
