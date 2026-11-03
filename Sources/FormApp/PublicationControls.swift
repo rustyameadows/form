@@ -150,7 +150,7 @@ struct PublicationControls:View {
               Button("Story source") {session.canvas?.openStorySource(story.id)}
             }
             if overset>0 {
-              Button("Overset text: \(overset) source units",systemImage:"plus.app") {session.canvas?.openStorySource(story.id)}.foregroundStyle(Palette.accent)
+              Button("Text extends beyond its frames",systemImage:"plus.app") {session.canvas?.openStorySource(story.id,revealOverflow:true)}.foregroundStyle(Palette.accent)
             }
             if let frame,let index=story.frames.firstIndex(of:frame) {
               HStack {

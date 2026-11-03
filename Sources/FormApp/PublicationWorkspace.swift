@@ -98,9 +98,16 @@ struct PublicationNavigator:View {
             WorkspaceToolbarButton("Add page after selection",symbol:"doc.badge.plus",identifier:"publication-add-page"){controller.addPage()}
             WorkspaceToolbarButton("Duplicate selected page",symbol:"plus.square.on.square",identifier:"publication-duplicate-page"){controller.duplicatePage()}.disabled(controller.currentPageID==nil)
             WorkspaceToolbarButton("New chapter",symbol:"text.badge.plus",identifier:"publication-new-chapter"){chapterName="Chapter \(controller.stories.count+1)";chapterOpen=true}
-            WorkspaceToolbarButton("Edit page story",symbol:"text.alignleft",identifier:"publication-edit-current-story"){
-              if let story=controller.activeStory {controller.openStory(story.id)}
-            }.disabled(controller.activeStory==nil)
+            Menu {
+              if !controller.currentPageStories.isEmpty {
+                Section("On this page") {ForEach(controller.currentPageStories){story in Button(story.name){controller.openStory(story.id)}}}
+                Divider()
+              }
+              Section("All stories") {ForEach(controller.stories){story in Button(story.name){controller.openStory(story.id)}}}
+            }label:{WorkspaceToolbarMenuLabel(symbol:"text.alignleft",value:"Stories")}
+              .menuStyle(.borderlessButton).fixedSize().disabled(controller.stories.isEmpty)
+              .help("Edit story text, formatting, notes and references").accessibilityLabel("Stories")
+              .accessibilityIdentifier("publication-edit-current-story")
             Spacer(minLength:0)
             Menu {
               if let id=controller.currentPageID {
