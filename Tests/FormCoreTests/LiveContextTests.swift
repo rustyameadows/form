@@ -128,7 +128,7 @@ final class LiveContextTests: XCTestCase {
     XCTAssertEqual(schema["additionalProperties"] as? Bool, false)
     XCTAssertTrue(try dictionary(schema["properties"] as Any).isEmpty)
     let resources = try dictionary(response("resources/list", engine: engine)["result"] as Any)
-    XCTAssertEqual(Set((resources["resources"] as? [[String: Any]] ?? []).compactMap { $0["uri"] as? String }), ["form://project", "form://recipes", "form://context"])
+    XCTAssertEqual(Set((resources["resources"] as? [[String: Any]] ?? []).compactMap { $0["uri"] as? String }), ["form://project", "form://recipes", "form://context", "form://capabilities"])
     let initialized = try dictionary(response("initialize", engine: engine)["result"] as Any)
     let instructions = try XCTUnwrap(initialized["instructions"] as? String)
     XCTAssertTrue(instructions.contains("Call form_get_context fresh"))

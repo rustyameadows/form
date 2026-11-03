@@ -74,12 +74,8 @@ import FormCore
       if story.frames.contains(where:{!pageIDs.contains($0.objectID)}) {issue("error","\(story.name) also flows through frames outside this publication. Move its complete flow onto these pages before exporting.",story:story.id)}
       if let layout=try? storyLayout(project,storyID:story.id) {
         stories.append(layout)
-        if (layout["overset_length"] as? Int ?? 0)>0 {issue("error","\(story.name) has \(layout["overset_length"]!) source units beyond its linked frames. Add capacity or edit the overset source.",story:story.id,code:"overset")}
-        if let context=project.resolvedTextStory(story.id) {
-          let value=PublicationStoryLayout.composition(context)
-          for index in value.containers.indices where value.layout.usedRect(for:value.containers[index]).width>value.containers[index].size.width+0.01 {
-            issue("error","A glyph or unbreakable line in \(story.name) is wider than its frame. Widen the frame or reduce its text size.",page:context.frames[index].frame.objectID,element:context.frames[index].frame.elementID,story:story.id)
-          }
+        if story.frames.isEmpty,(layout["overset_length"] as? Int ?? 0)>0 {
+          issue("error","\(story.name) has source text but no linked frame capacity. Add a text frame before exporting.",story:story.id,code:"overset")
         }
       }
       let missing=FontCatalog.missing(in:Artwork(elements:[story.sourceElement]))
@@ -88,7 +84,7 @@ import FormCore
       let sourceArt=Artwork(elements:[story.sourceElement.inheritingLanguage(story.language ?? document.language)])
       for message in CharacterTypography.warnings(sourceArt)+SmallCapsTypography.warnings(sourceArt) {issue("warning",message,story:story.id,code:"character_forms")}
     }
-    var pages:[[String:Any]]=[]
+    var pages:[[String:Any]]=[],textFrames:[[String:Any]]=[]
     for (index,page) in document.pages.enumerated() {
       guard let object=project.objects.first(where:{$0.id==page.objectID}),let art=project.surfaceArtwork(object) else{continue}
       pages.append(["index":index+1,"page_id":page.id.uuidString,"object_id":object.id.uuidString,"name":page.label ?? object.name,
@@ -99,6 +95,8 @@ import FormCore
       let placement=reader?.pages.first{$0.objectID==object.id}
       let tree=ArtworkRenderTree(editorial,assets:assets ?? FileManager.default.temporaryDirectory,production:true,excluding:[])
       let byID=Dictionary(uniqueKeysWithValues:editorial.elements.map{($0.id,$0)})
+      let textReport=textPreflight(project,document:document,page:page,object:object,artwork:editorial,tree:tree)
+      textFrames.append(contentsOf:textReport.frames);issues.append(contentsOf:textReport.issues)
       for font in FontCatalog.missing(in:editorial) {issue("warning","\(object.name) uses missing font \(font).",page:object.id)}
       let independent=Artwork(elements:editorial.elements.filter{$0.storyFrame==nil})
       for message in CharacterTypography.warnings(independent)+SmallCapsTypography.warnings(independent) {issue("warning",message,page:object.id,code:"character_forms")}
@@ -118,7 +116,7 @@ import FormCore
         issue("warning","\(element.title) is hidden but still reserves story capacity. Its outlined replacement is frozen; unhide the frame to return to live text.",page:object.id,element:element.id,story:element.storyFrame?.storyID)
       }
     }
-    return ["publication_id":document.id.uuidString,"name":document.name,"can_export":!issues.contains{$0["severity"] as? String=="error"},"issues":issues,"pages":pages,"stories":stories]
+    return ["publication_id":document.id.uuidString,"name":document.name,"can_export":!issues.contains{$0["severity"] as? String=="error"},"issues":issues,"pages":pages,"stories":stories,"text_frames":textFrames]
   }
   public static func validateExportContent(_ project:Project,documentID:UUID,assets:URL,allowOverset:Bool=false,previewOnly:Bool=false)throws {
     let report=preflight(project,documentID:documentID,assets:assets,previewOnly:previewOnly)
@@ -150,7 +148,9 @@ import FormCore
         if let story=element.storyFrame?.resolved {try GlyphEngine.validateOutput(story.story.sourceElement.inheritingLanguage(story.language),outlines:outlineText)}
       }
       if outlineText {
-        let ids=Set(art.elements.filter{$0.kind=="text" && $0.hidden != true}.map(\.id))
+        // Explicitly reviewed all-overset text has no glyphs to outline. Leave
+        // that empty draw in place rather than failing conversion of an empty set.
+        let ids=Set(art.elements.filter{$0.kind=="text" && $0.hidden != true && TypographyEngine.capacity($0).displayRange.length>0}.map(\.id))
         if !ids.isEmpty {art=try ArtworkOutlines.convert(art,ids:ids,mode:"text",resolvedPaint:art,forOutput:true).artwork}
       }
       try ArtworkRenderer.validateAppearanceOutput(art,assets:assets,pixelsPerMM:dpi/25.4)

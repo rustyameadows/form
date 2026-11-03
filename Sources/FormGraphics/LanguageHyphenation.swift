@@ -50,6 +50,26 @@ public enum LanguageHyphenation {
 /// AppKit calls this overridable NSAttributedString boundary while typesetting.
 /// Explicit language and limits therefore drive the actual native/generated glyphs.
 public class PublicationTextStorage:NSTextStorage {
+  /// Unlike NSTextStorage.didProcessEditing, this notification runs after both
+  /// processing and the outer endEditing have actually returned. Layout is safe.
+  public static let didFinishEditingNotification=Notification.Name("studio.form.publicationTextStorageDidFinishEditing")
+  private var editingDepth=0,processingDepth=0
+  public var isProcessingEditing:Bool {editingDepth>0 || processingDepth>0}
+  public override func beginEditing() {editingDepth+=1;super.beginEditing()}
+  public override func endEditing() {
+    super.endEditing()
+    editingDepth=max(0,editingDepth-1)
+    notifyIfSettled()
+  }
+  public override func processEditing() {
+    processingDepth+=1
+    super.processEditing()
+    processingDepth-=1
+    notifyIfSettled()
+  }
+  private func notifyIfSettled() {
+    if !isProcessingEditing {NotificationCenter.default.post(name:Self.didFinishEditingNotification,object:self)}
+  }
   private let backing=NSMutableAttributedString(string:"")
   public override var string:String {backing.string}
   public override func attributes(at location:Int,effectiveRange range:NSRangePointer?)->[NSAttributedString.Key:Any] {

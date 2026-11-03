@@ -204,6 +204,7 @@ public final class OperationEngine {
     case "form_construction":return try ConstructionCommands.call(engine:self,arguments:a,source:source)
     case "form_surface":return try PhysicalSurfaceCommands.call(engine:self,arguments:a,source:source)
     case "form_get_context": return contextSnapshot()
+    case "form_capabilities": return try MCPCapabilities.call(a)
     case "form_status":
       return [
         "application": LabIdentity.name, "version": LabIdentity.version,
@@ -213,6 +214,7 @@ public final class OperationEngine {
           .map { $0.id.uuidString }.sorted(), "external_model_calls": false,
         "library_path": repository.root.path, "can_undo": !undoStack.isEmpty,
         "context": contextSnapshot(),
+        "capabilities": MCPCapabilities.status,
       ]
     case "form_list_projects": return try jsonObject(repository.list())
     case "form_create_project":

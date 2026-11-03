@@ -27,6 +27,31 @@ import FormCore
     let element=effectivePaints(element)
     return element.kind == "text" && (element.paintStack != nil || element.textRuns?.contains { $0.paintStack != nil } == true)
   }
+  /// Paint eligibility without asking for glyph bounds. Empty glyph coverage
+  /// can mean overset text, so it cannot decide whether that loss is important.
+  /// Use the same base/run inheritance and stroke opacity as live drawing.
+  public static func hasEnabledPaint(_ element: ArtworkElement) -> Bool {
+    let element = effectivePaints(element)
+    func paints(_ stack: [ArtworkPaintLayer]?) -> Bool {
+      guard let stack else { return element.fillEnabled != false && (element.fillOpacity ?? 1) > 0 }
+      return stack.contains { layer in
+        layer.enabled && layer.effectivePaint.opacity > 0
+          && (layer.stroke == nil || (layer.stroke?.enabled != false && (layer.stroke?.width ?? 0) > 0))
+          && (layer.paint.gradient?.stops.contains { ($0.opacity ?? 1) > 0 } ?? true)
+      }
+    }
+    let length = (element.storyFrame?.resolved?.story.text ?? element.text).utf16.count
+    let base = paints(element.paintStack)
+    if length == 0 { return base }
+    var cursor = 0
+    for span in (element.textRuns ?? []).sorted(by: { $0.location < $1.location }) {
+      guard span.length > 0, span.location >= 0, span.location < length else { continue }
+      if cursor < span.location, base { return true }
+      if paints(span.paintStack ?? element.paintStack) { return true }
+      cursor = max(cursor, min(length, span.location + span.length))
+    }
+    return cursor < length && base
+  }
   private static func groups(_ element: ArtworkElement) -> [[ArtworkPaintLayer]?] {
     var groups: [[ArtworkPaintLayer]?] = [element.paintStack]
     for span in element.textRuns ?? [] {

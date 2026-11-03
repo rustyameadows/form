@@ -236,4 +236,45 @@ import XCTest
     XCTAssertEqual(f.store.project,committed)
     f.store.engine.undo();XCTAssertEqual(f.store.project,baseline)
   }
+  func testMarkedSourceUpdatesKeepGlobalUTF16ContextCurrentWithoutPublishingUntilCommitAndUndoExactly()throws {
+    let f=try Fixture();defer{f.close()};try f.open(frame:1)
+    let editor=f.editor,text=f.text,baseline=try XCTUnwrap(f.store.project),undo=f.store.engine.undoStack
+    let frameRange=editor.composition.sourceRange(1),point=frameRange.location+1
+    XCTAssertGreaterThan(frameRange.location,0);XCTAssertGreaterThan(frameRange.length,1)
+    text.setSelectedRange(.init(location:point,length:0))
+    func assertContext(_ offset:Int)throws {
+      let context=try XCTUnwrap(f.store.engine.call("form_get_context") as? [String:Any])
+      let canvas=try XCTUnwrap(context["canvas"] as? [String:Any])
+      let reported=try XCTUnwrap(canvas["text_selection_utf16"] as? [String:Int])
+      let actual=TextCase.source(text.attributedString()).sourceRange(text.selectedRange())
+      XCTAssertEqual(actual,NSRange(location:point+offset,length:0))
+      XCTAssertEqual(reported,["location":actual.location,"length":actual.length])
+      XCTAssertEqual(f.store.artworkSession.characterRange,actual)
+      XCTAssertEqual(canvas["text_editing"] as? Bool,true)
+      XCTAssertTrue(text.hasMarkedText());XCTAssertTrue(text.window?.firstResponder === text)
+      XCTAssertEqual(f.store.project,baseline);XCTAssertEqual(f.store.engine.undoStack,undo)
+    }
+    // Represent one native input event explicitly because this fixture disables
+    // automatic event Undo grouping to make the final composition one action.
+    editor.nativeUndo.beginUndoGrouping()
+    defer{if editor.nativeUndo.groupingLevel>0 {editor.nativeUndo.endUndoGrouping()}}
+    text.setMarkedText("に",selectedRange:.init(location:1,length:0),replacementRange:.init(location:point,length:0))
+    text.didChangeText()
+    try assertContext(1)
+    let committed="日本語🧵"
+    text.setMarkedText(committed,selectedRange:.init(location:committed.utf16.count,length:0),replacementRange:.init(location:NSNotFound,length:0))
+    text.didChangeText()
+    try assertContext(committed.utf16.count)
+    XCTAssertEqual(text.markedRange(),NSRange(location:point,length:committed.utf16.count))
+    text.insertText(committed,replacementRange:.init(location:NSNotFound,length:0))
+    editor.nativeUndo.endUndoGrouping()
+    XCTAssertFalse(text.hasMarkedText())
+    let expected=(baseline.textStories![0].text as NSString).replacingCharacters(in:.init(location:point,length:0),with:committed)
+    XCTAssertEqual(Array(try f.source().text.utf16),Array(expected.utf16))
+    XCTAssertEqual(f.store.project?.objects,baseline.objects)
+    let edited=try XCTUnwrap(f.store.project)
+    editor.nativeUndo.undo();assertNativeSource(f.store.project,equals:baseline)
+    editor.nativeUndo.redo();assertNativeSource(f.store.project,equals:edited)
+    f.canvas.finishText();f.store.engine.undo();XCTAssertEqual(f.store.project,baseline)
+  }
 }

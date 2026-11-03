@@ -136,6 +136,9 @@ public struct StudioComposition:Codable,Equatable,Identifiable,Sendable {
 
 public enum StudioSceneCommands {
   public static func call(engine:OperationEngine,arguments a:[String:Any],source:String)throws->Any {
+    if let command=a["command"] as? String,StudioSheetPoseCommands.names.contains(command) {
+      return try StudioSheetPoseCommands.call(engine:engine,arguments:a,source:source)
+    }
     guard Set(a.keys).isSubset(of:["command","scene_id","scene","name"]),let command=a["command"] as? String,let project=engine.project else{throw FormError.invalid("Open a project and use a known Studio scene command.")}
     let scenes=project.studioPresentation?.scenes ?? []
     if command=="list" {guard a.count==1 else{throw FormError.invalid("List accepts command only.")};return try jsonObject(scenes)}

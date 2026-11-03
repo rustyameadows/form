@@ -21,6 +21,35 @@ The app's **Codex connection** panel copies the exact configuration for its curr
 
 LAB advertises server name `lab`. Existing `form_*` tool identifiers, `form://` resources, the `form-mcp` helper, and the default local socket remain compatible. Existing clients do not need to rename their configured server. New environment variables `LAB_LIBRARY_PATH`, `LAB_SOCKET_PATH`, and `LAB_ORCA_APP_PATH` take precedence over their `FORM_` counterparts; the ordinary project library stays in `~/Library/Application Support/FORM`.
 
+## Capability discovery and stale client declarations
+
+The running app, stdio helper, and a client's cached tool wrapper are separate surfaces. A wrapper can omit fields that the installed app supports. Do not silently drop those fields or substitute a different export mode. A confirmed wrapper mismatch does not establish why the host retained that declaration, and these diagnostics do not refresh it.
+
+`form_status.capabilities` reports the app's deterministic `schema_fingerprint`, runtime identity, compact command/field support, and exact recovery schemas for `form_publication` and `form_export_publication`. The two recovery schemas have a combined 128 KiB budget; `recovery_schemas_complete` and `omitted_recovery_schemas` explicitly identify omissions. This works through an existing no-argument status call when a cached client cannot yet expose the new discovery tool.
+
+For complete authoritative discovery, call read-only `form_capabilities`:
+
+| Request | Result |
+| --- | --- |
+| `{"command":"summary"}` | Compact tool names, fields, commands, required arguments and per-tool schema resource URIs. |
+| `{"command":"list","offset":0,"limit":16}` | A catalog page; follow `next_offset` until null. Maximum 32 entries per page. |
+| `{"command":"schema","tool_names":["form_publication","form_export_publication"]}` | Complete schemas, including typed physical-sheet definitions. Request 1–8 distinct names; discovery payloads are limited to 1 MiB before helper diagnostics and protocol wrapping, and are never silently truncated. |
+
+Publication recovery schemas include complete master, layout and numbering fields, physical units and runtime bounds. Nested master/layout/numbering defaults reflect their actual decoders; margins and baseline grids require every listed field when supplied. Omitted configuration angles and bends preserve authored values rather than resetting them. Export DPI is 36–1200 (default 300); baseline grids use points, while page sizes and margins use millimeters.
+
+Add `expected_schema_fingerprint` to compare a previously observed contract. `schema_match: false` and `diagnostic: "schema_mismatch"` return the current contract for inspection without changing project state. The fingerprint hashes tool names, descriptions, annotations and nested schemas using sorted tool/key order; it is not a saved-project revision. `form://capabilities` returns the summary, and the advertised resource template `form://schema/{tool_name}` retrieves one complete live-app schema. Discovery needs no project and does not finish native text or change Undo.
+
+Through the bundled helper, fresh `form_status` and `form_capabilities` calls also return `mcp_connection`, comparing helper/app schema fingerprints and available packaged build identities. States distinguish schema mismatch, build mismatch, matching schemas, and absent app metadata. A match does **not** establish that the client's wrapper is current: `client_wrapper_status` remains `not_observable`. MCP initialization and `tools/list` report only the helper and any **previous** explicit app observation, marked accordingly; they never block on an app probe. No tool/resource change notifications are advertised or sent.
+
+The package includes `Contents/Resources/MCP-CATALOG.json` from its own helper's offline `--catalog` output and `LABBuild.json` with source revision, dirty-source flag, configuration and build identity. The executable digests explicitly describe bytes **before final package signing**, not hashes of the installed signed executables. Standard bundle signature verification remains the integrity check. Missing build metadata is reported as unavailable; it is never inferred from a version label.
+
+```sh
+build/LAB.app/Contents/MacOS/lab-mcp --catalog
+build/LAB.app/Contents/MacOS/lab-mcp --call form_capabilities '{"command":"schema","tool_names":["form_publication"]}'
+```
+
+If the live app and helper differ, use the matching ordinary app/helper installation and inspect again. If only a client declaration is narrow, reconnect or inspect a fresh client and verify its declarations; success is not assumed. Where the host supports resource reads, use the schema resource directly. `form_batch` is an allowlisted editing transaction, **not** a discovery bypass or a generic arbitrary-tool dispatcher.
+
 ## A first conversation
 
 > Create a warm orange table lamp, about 350 mm tall. Let me adjust the shade diameter, shade height, top opening, stem diameter, and base width. Put a sage version next to it for comparison.
@@ -72,7 +101,7 @@ Core-only operation reports `ui_available: false`, `active_target: null`, and on
 
 | Tools | Use |
 | --- | --- |
-| `form_status`, `form_get_context`, `form_list_projects`, `form_get_project` | Inspect the app, live native context, renderer diagnostics, and saved/current projects |
+| `form_status`, `form_get_context`, `form_capabilities`, `form_list_projects`, `form_get_project` | Inspect the app, live native context, compiled tool contract, renderer diagnostics, and saved/current projects |
 | `form_create_project`, `form_open_project` | Start blank, clock, cyanotype envelope, cosmetics carton, lamps, or forms studies; continue a saved project |
 | `form_paper` | Inspect/configure paper constructions, stable panels/folds/joins, annotations, independent inside sources, physical layout, linked views and exclusive SVG/PDF/packet export |
 | `form_list_recipes`, `form_list_materials` | Discover schemas, ranges, defaults, and material IDs |
@@ -104,7 +133,7 @@ Core-only operation reports `ui_available: false`, `active_target: null`, and on
 | `form_list_filaments`, `form_save_filament` | Read and edit reusable Studio filament/inventory profiles |
 | `form_list_printers`, `form_connect_printer` | Read metadata/status or connect using credentials already saved in Keychain |
 
-Read-only project, live context, and recipe resources are also exposed as `form://project`, `form://context`, and `form://recipes`. The `design_object` prompt supplies a starting workflow.
+Read-only project, live context, recipe, and capability resources are exposed as `form://project`, `form://context`, `form://recipes`, and `form://capabilities`; `form://schema/{tool_name}` retrieves a specific tool schema. The `design_object` prompt supplies a starting workflow.
 
 `form_boolean_artwork` defaults to live Union/Subtract/Intersect/Exclude groups; `operation: divide` creates editable regions. `mode` also accepts `update`, `flatten`, `release`, and `path` for a direct flat result with hidden source operands. These edits and `form_convert_to_paths` participate in atomic `form_batch` operations. See the [live boolean guide](live-booleans.md) for examples, compatibility constraints, and schema-5 persistence.
 

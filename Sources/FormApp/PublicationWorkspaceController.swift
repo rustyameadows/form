@@ -170,7 +170,7 @@ import FormGraphics
     guard let session,let project,let document=project.publications?.first(where:{$0.id==publicationID}),
       document.masters?.contains(where:{$0.sourceObjectID==sourceID})==true else{return false}
     projectID=project.id;self.publicationID=publicationID;frameRevision &+= 1
-    session.store?.showSurface(.artwork)
+    session.store?.showSurface(.artwork,ensureCanvasIfNeeded:false)
     session.activate(sourceID);session.objectWillChange.send();session.canvas?.synchronize()
     _=session.canvas?.fit(frameIDs:[sourceID]);return true
   }

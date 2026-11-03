@@ -270,6 +270,9 @@ extension StudioStore {
         "uncommitted_text_may_differ": session.editingText,
       ]
       if let sourceID = ref.objectID { canvas["canonical_artwork_query"] = ["object_id": sourceID.uuidString] }
+      if let sourceID=ref.objectID,let publication=publicationSelectionContext(objectID:sourceID,elementIDs:ref.elementIDs,project:project) {
+        canvas["publication"]=publication
+      }
       if let projection = frame.projection {
         canvas["physical_surface"] = ["kind": projection.physicalIdentity.kind.rawValue,
           "object_id": projection.constructionID.uuidString, "surface_id": projection.panelID as Any? ?? null,
@@ -303,5 +306,38 @@ extension StudioStore {
       result["shot"] = shotSelectionReference()?.contextJSON ?? null as Any
     }
     return result
+  }
+
+  /// Logical pages and Canvas artboards are separate identities. This is a
+  /// read-only relationship query and never opens the publication navigator.
+  private func publicationSelectionContext(objectID:UUID,elementIDs:[UUID],project:Project)->[String:Any]? {
+    let documents=(project.publications ?? []).filter{document in
+      document.pages.contains{$0.objectID==objectID} || document.masters?.contains{$0.sourceObjectID==objectID}==true
+    }
+    guard !documents.isEmpty else{return nil}
+    let current=artworkSession.publicationWorkspace.document
+    guard let document=documents.first(where:{$0.id==current?.id}) ?? (documents.count==1 ? documents.first:nil) else {
+      return ["ambiguous":true,"publication_ids":documents.prefix(64).map{$0.id.uuidString},
+        "publication_count":documents.count,"complete":documents.count<=64]
+    }
+    let page=document.pages.first{$0.objectID==objectID}
+    let masters=(document.masters ?? []).filter{$0.sourceObjectID==objectID}
+    let master=masters.count==1 ? masters.first:nil
+    let selected=Set(elementIDs)
+    let frames=(project.objects.first{$0.id==objectID}?.artwork?.elements ?? []).filter{selected.contains($0.id) && $0.storyFrame != nil}
+    let storyIDs=Array(Set(frames.compactMap{$0.storyFrame?.storyID.uuidString})).sorted()
+    return ["publication_id":document.id.uuidString,"name":document.name,
+      "publication_page_id":page?.id.uuidString as Any? ?? NSNull(),
+      "page_object_id":page?.objectID.uuidString as Any? ?? NSNull(),
+      "page_label":page.flatMap{document.pageLabel(for:$0.objectID)} as Any? ?? NSNull(),
+      "page_index":page.flatMap{value in document.pages.firstIndex{$0.id==value.id}}.map{$0+1} as Any? ?? NSNull(),
+      "master_id":master?.id.uuidString as Any? ?? NSNull(),
+      "master_ids":masters.prefix(64).map{$0.id.uuidString},"master_count":masters.count,"masters_complete":masters.count<=64,
+      "master_source_object_id":masters.isEmpty ? NSNull():objectID.uuidString as Any,
+      "selected_story_ids":Array(storyIDs.prefix(LABSelectionReference.contextIDLimit)),
+      "selected_story_count":storyIDs.count,
+      "selected_story_frame_ids":frames.prefix(LABSelectionReference.contextIDLimit).map{$0.id.uuidString},
+      "selected_story_frame_count":frames.count,"selection_complete":frames.count<=LABSelectionReference.contextIDLimit,
+      "query":["tool":"form_publication","command":"get","publication_id":document.id.uuidString]]
   }
 }
