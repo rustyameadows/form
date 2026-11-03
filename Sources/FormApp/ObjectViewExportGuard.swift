@@ -6,7 +6,12 @@ import Foundation
 enum ObjectViewExportGuard {
   static func validate(project: Project, object: ProductObject, elementIDs: [String]? = nil) throws {
     let owner = project.artworkOwner(object)
-    let documents = object.storedArtworks + (owner.id == object.id ? [] : owner.storedArtworks)
+    var documents = object.storedArtworks + (owner.id == object.id ? [] : owner.storedArtworks)
+    // The effective surface also contains live running furniture and its derived
+    // element IDs. Raw page documents alone omit those master placements.
+    if let effective = project.surfaceArtwork(object, keepingSwatchReferences: true) {
+      documents.append(effective)
+    }
     let selected = Set((elementIDs ?? []).compactMap(UUID.init(uuidString:)))
     for document in documents {
       var art = (try? project.resolvingComponents(in:document, keepingSwatchReferences:true)) ?? document

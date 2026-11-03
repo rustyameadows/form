@@ -16,7 +16,21 @@ extension ArtworkSession {
   var currentPublication:PublicationDocument? {
     guard let project=store?.project else{return nil}
     if let id=selectedTextStory?.publicationID {return project.publications?.first{$0.id==id}}
-    return project.publications?.first{$0.pages.contains{$0.objectID==objectID}}
+    func containsSource(_ document:PublicationDocument)->Bool {
+      document.pages.contains{$0.objectID==objectID} || document.masters?.contains{$0.sourceObjectID==objectID}==true
+    }
+    // A master can be reused by several documents. Keep the context of the
+    // explicit source-edit action rather than choosing the first consumer.
+    if let document=publicationWorkspace.document,containsSource(document) {return document}
+    return project.publications?.first(where:containsSource)
+  }
+  var isPublicationMasterSource:Bool {
+    guard let objectID else{return false}
+    return store?.project?.publications?.contains{document in document.masters?.contains{$0.sourceObjectID==objectID}==true}==true
+  }
+  var publicationStoryFrame:StoryFrameID? {
+    guard !isPublicationMasterSource,let object,let element=primary,element.kind=="text" else{return nil}
+    return .init(objectID:object.id,elementID:element.id)
   }
   @discardableResult func publicationEdit(_ label:String,_ body:(inout Project)throws->Void)->Bool {
     canvas?.finishText();guard let store else{return false}
@@ -67,18 +81,14 @@ private struct PublicationFrameOption:Identifiable {
 struct PublicationControls:View {
   @ObservedObject var session:ArtworkSession
   @State private var target=""
-  @State private var pagesOpen=false
   @State private var preflightOpen=false
   @State private var report:[String:Any]=[:]
   @State private var existingStory=""
   private var story:TextStory? {session.selectedTextStory}
   private var document:PublicationDocument? {session.currentPublication}
-  private var frame:StoryFrameID? {
-    guard let object=session.object,let element=session.primary,element.kind=="text" else{return nil}
-    return .init(objectID:object.id,elementID:element.id)
-  }
+  private var frame:StoryFrameID? {session.publicationStoryFrame}
   private var options:[PublicationFrameOption] {
-    (session.store?.project?.objects ?? []).filter{object in object.recipeID=="artboard" && !object.isCanvasWorkspace && !object.locked && object.artworkSourceID==nil && session.store?.project?.objects.filter({$0.designID==object.designID}).count==1}.flatMap{object in
+    (session.store?.project?.objects ?? []).filter{object in session.store?.project?.publications?.contains(where:{$0.masters?.contains(where:{$0.sourceObjectID==object.id})==true}) != true && object.recipeID=="artboard" && !object.isCanvasWorkspace && !object.locked && object.artworkSourceID==nil && session.store?.project?.objects.filter({$0.designID==object.designID}).count==1}.flatMap{object in
       (object.artwork?.elements ?? []).filter{$0.kind=="text" && $0.storyFrame==nil && object.artwork?.isLocked($0)==false}.map{
         PublicationFrameOption(frame:.init(objectID:object.id,elementID:$0.id),name:object.name+" · "+String($0.title.prefix(32)),hasText:!$0.text.isEmpty)
       }
@@ -171,63 +181,13 @@ struct PublicationControls:View {
             }
           }
           Divider()
-          if let document {
-            PublicationCommittedField(title:"Publication name",value:document.name,allowsEmpty:false) {name in settings{$0.name=name}}
-            HStack {
-              Button("\(document.pages.count) pages…") {pagesOpen=true}.accessibilityLabel("Publication pages")
-              Spacer()
-              Button("Add page",systemImage:"plus") {addPage()}.accessibilityLabel("Add publication page")
-            }
-            PublicationCommittedField(title:"Default language (BCP 47)",value:document.language ?? "",allowsEmpty:true) {value in settings{$0.language=value.isEmpty ? nil:value}}
-              .help("Inherited by linked stories without their own language override.")
-            Toggle("Baseline grid",isOn:Binding(get:{document.baselineGrid != nil},set:{enabled in settings{$0.baselineGrid=enabled ? .init():nil}})).inspectorToggle()
-            if let grid=document.baselineGrid {
-              ScalarArtworkField("Grid spacing",value:grid.spacing,unit:"pt") {value in settings{$0.baselineGrid?.spacing=min(200,max(4,value))}}
-              ScalarArtworkField("Grid origin",value:grid.origin,unit:"pt") {value in settings{$0.baselineGrid?.origin=value}}
-              if story != nil {
-                Toggle("Align paragraphs to grid",isOn:Binding(get:{session.inspectedTypography.alignToBaselineGrid==true},set:{enabled in session.typography{$0.alignToBaselineGrid=enabled}})).inspectorToggle()
-                  .help("Applies to selected paragraphs while editing, or the selected story otherwise.")
-              }
-            }
-            if let project=session.store?.project,document.pages.contains(where:{page in project.objects.first(where:{$0.id==page.objectID}).flatMap{project.surfaceArtwork($0)}?.requiresInkOutput==true}) {
-              ProductionInkExportControls(session:session,publicationID:document.id)
-            } else {
-            HStack {
-              Button("Preflight") {
-                if let project=session.store?.project {report=PublicationOutput.preflight(project,documentID:document.id,assets:session.assets);preflightOpen=true}
-              }.accessibilityLabel("Publication preflight")
-              Spacer()
-              Button("Export booklet PDF…") {session.exportPublication(document)}.accessibilityLabel("Export booklet PDF")
-            }
-            }
-          } else {Button("Create publication",systemImage:"book.closed") {createDocument()}}
+          Button("Open publication pages",systemImage:"book.pages") {session.publicationWorkspace.open(document?.id)}
+            .accessibilityIdentifier("publication-workspace-open")
+          if document==nil {Button("Create publication from these pages",systemImage:"book.closed"){createDocument()}}
         }.buttonStyle(.borderless).font(.system(size:10)).padding(.top,8)
       }
-      .popover(isPresented:$pagesOpen) {pageEditor.padding(18).frame(width:330)}
       .popover(isPresented:$preflightOpen) {preflight.padding(18).frame(width:360)}
-    }
-  }
-  @ViewBuilder private var pageEditor:some View {
-    if let document {
-      VStack(alignment:.leading,spacing:12) {
-        SectionLabel("PUBLICATION PAGES")
-        ForEach(Array(document.pages.enumerated()),id:\.element.id) {index,page in
-          HStack {
-            Text("\(index+1)").monospacedDigit().foregroundStyle(Palette.secondary)
-            Text(session.store?.project?.objects.first{$0.id==page.objectID}?.name ?? "Missing page").lineLimit(1)
-            Spacer()
-            Button {settings{$0.pages.swapAt(index,index-1)}} label:{Image(systemName:"arrow.up")}.accessibilityLabel("Move page \(index+1) earlier").disabled(index==0)
-            Button {settings{$0.pages.swapAt(index,index+1)}} label:{Image(systemName:"arrow.down")}.accessibilityLabel("Move page \(index+1) later").disabled(index+1==document.pages.count)
-            Button {session.activate(page.objectID);session.canvas?.revealStoryPage(page.objectID)} label:{Image(systemName:"arrow.up.right.square")}.accessibilityLabel("Open page \(index+1)")
-          }
-        }
-        Divider()
-        ScalarArtworkField("Top margin",value:document.margins.top,unit:"mm") {value in settings{$0.margins.top=max(0,value)}}
-        ScalarArtworkField("Bottom margin",value:document.margins.bottom,unit:"mm") {value in settings{$0.margins.bottom=max(0,value)}}
-        ScalarArtworkField("Left margin",value:document.margins.left,unit:"mm") {value in settings{$0.margins.left=max(0,value)}}
-        ScalarArtworkField("Right margin",value:document.margins.right,unit:"mm") {value in settings{$0.margins.right=max(0,value)}}
-        Text("Margins apply when adding new body frames. Page order also updates linked-story reading order.").font(.system(size:10)).foregroundStyle(Palette.secondary)
-      }.font(.system(size:11))
+      if let document {PublicationWorkspaceInspector(session:session,controller:session.publicationWorkspace,publicationID:document.id).id("publication-settings")}
     }
   }
   private var preflight:some View {
@@ -242,7 +202,7 @@ struct PublicationControls:View {
   }
 }
 
-private struct PublicationCommittedField:View {
+struct PublicationCommittedField:View {
   let title:String,value:String,allowsEmpty:Bool
   let onCommit:(String)->Void
   @State private var draft=""

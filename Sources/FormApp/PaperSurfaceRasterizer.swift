@@ -34,6 +34,7 @@ import simd
     let version: Int, rect: PaperBounds, netSize: Point2, profile: PaperSurfaceProfile
     let color: String, grain: PaperStock.Grain, artwork: Artwork?, finishes: [PaperFinishAssignment]
     let width: Int, height: Int, fontRevision: Int, assets: String
+    let resolvedArtworkRevision: String?
   }
   private static let cache: NSCache<NSString, Maps> = {
     let cache=NSCache<NSString,Maps>();cache.countLimit=80;cache.totalCostLimit=192*1024*1024;return cache
@@ -63,8 +64,14 @@ import simd
       else {height=max(1,pixelBudget/width)}
     }
     guard width*height<=16_000_000 else { throw FormError.invalid("Paper viewing maps exceed their bounded pixel allocation.") }
-    let key=Key(version:2,rect:rect,netSize:netSize,profile:profile,color:color,grain:grain,
-      artwork:artwork,finishes:finishes,width:width,height:height,fontRevision:GeometryFactory.fontRevision,assets:assets.path)
+    // StoryFrameReference intentionally omits runtime composition in saved JSON.
+    // Material cache identity must still include the resolved source characters,
+    // formatting and all frame geometry, just like ordinary artwork-image caches.
+    let context=try artwork?.renderCacheData()
+    let resolvedRevision=context.map{SHA256.hash(data:$0).map{String(format:"%02x",$0)}.joined()}
+    let key=Key(version:3,rect:rect,netSize:netSize,profile:profile,color:color,grain:grain,
+      artwork:artwork,finishes:finishes,width:width,height:height,fontRevision:GeometryFactory.fontRevision,assets:assets.path,
+      resolvedArtworkRevision:resolvedRevision)
     let revision=SHA256.hash(data:try JSONEncoder.form.encode(key)).map{String(format:"%02x",$0)}.joined()
     if let maps=cache.object(forKey:revision as NSString) { return maps }
     if let artwork {

@@ -63,7 +63,13 @@ public struct PublicationPage:Codable,Equatable,Identifiable,Sendable {
   public var objectID:UUID
   public var label:String?
   public var margins:PublicationMargins?
-  public init(objectID:UUID,label:String?=nil,margins:PublicationMargins?=nil) {self.objectID=objectID;self.label=label;self.margins=margins}
+  public var spreadID:UUID?
+  public var numberOverride:Int?
+  public var chapterTitle:String?
+  public var masterIDs:[UUID]?
+  public init(objectID:UUID,label:String?=nil,margins:PublicationMargins?=nil,spreadID:UUID?=nil,numberOverride:Int?=nil,chapterTitle:String?=nil,masterIDs:[UUID]?=nil) {
+    self.objectID=objectID;self.label=label;self.margins=margins;self.spreadID=spreadID;self.numberOverride=numberOverride;self.chapterTitle=chapterTitle;self.masterIDs=masterIDs
+  }
 }
 public struct PublicationDocument:Codable,Equatable,Identifiable,Sendable {
   public var id=UUID()
@@ -72,8 +78,11 @@ public struct PublicationDocument:Codable,Equatable,Identifiable,Sendable {
   public var margins:PublicationMargins
   public var baselineGrid:BaselineGrid?
   public var language:String?
-  public init(name:String="Publication",pages:[PublicationPage]=[],margins:PublicationMargins = .init(),baselineGrid:BaselineGrid?=nil,language:String?=nil) {
-    self.name=name;self.pages=pages;self.margins=margins;self.baselineGrid=baselineGrid;self.language=language
+  public var layout:PublicationLayout?
+  public var numbering:PublicationNumbering?
+  public var masters:[PublicationMaster]?
+  public init(name:String="Publication",pages:[PublicationPage]=[],margins:PublicationMargins = .init(),baselineGrid:BaselineGrid?=nil,language:String?=nil,layout:PublicationLayout?=nil,numbering:PublicationNumbering?=nil,masters:[PublicationMaster]?=nil) {
+    self.name=name;self.pages=pages;self.margins=margins;self.baselineGrid=baselineGrid;self.language=language;self.layout=layout;self.numbering=numbering;self.masters=masters
   }
 }
 
@@ -135,7 +144,7 @@ extension Project {
     return .init(story:story,frames:geometry,baselineGrid:document?.baselineGrid,language:story.language ?? document?.language)
   }
   public func resolvingTextStories(in artwork:Artwork,objectID:UUID)->Artwork {
-    var result=artwork
+    var result=resolvingPublicationFurniture(in:artwork,objectID:objectID)
     for i in result.elements.indices {
       guard var reference=result.elements[i].storyFrame,let resolved=resolvedTextStory(reference.storyID) else{continue}
       reference.resolved=resolved
@@ -155,6 +164,11 @@ extension Project {
         Set(document.pages.map(\.id)).count==document.pages.count,Set(document.pages.map(\.objectID)).count==document.pages.count else{
         throw FormError.invalid("Use a publication name, unique physical pages, finite margins, and a 4–200pt baseline grid.")
       }
+      if document.pages.isEmpty,objects.contains(where:{$0.sheetAssembly?.publicationID==document.id}) {
+        throw FormError.invalid("Remove the linked physical sheet assembly before removing every publication page. Its source cannot be empty.")
+      }
+      try document.validateLayout()
+      try validatePublicationMasters(document)
       try ParagraphLanguage.validate(document.language)
       for page in document.pages {
         guard let object=objects.first(where:{$0.id==page.objectID}),object.recipeID=="artboard",!object.isCanvasWorkspace,
@@ -198,5 +212,7 @@ extension Project {
         }
       }
     }}
+    try validateSheetAssemblyViewDependencies()
+    try validatePublicationSpreadViewDependencies()
   }
 }

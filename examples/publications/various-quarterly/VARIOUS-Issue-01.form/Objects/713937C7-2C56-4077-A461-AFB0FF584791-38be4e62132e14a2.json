@@ -1,0 +1,587 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 6141.6,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "F001BB85-E61D-51F4-A3C9-256CD28243C9",
+        "kind" : "text",
+        "name" : "signal_rooms_03-caption",
+        "text" : "Cut register\nOverlaps suggest more than one layer order.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 241
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "9AE84F23-AED6-52D7-9D0B-39E16C36071B",
+        "kind" : "text",
+        "name" : "signal_rooms_04-caption",
+        "text" : "Three speeds\nThree scales give information three different tempos.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 241
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11.25,
+        "height" : 126,
+        "id" : "84A95142-58FB-5565-BCC0-466FA31D5A0D",
+        "kind" : "text",
+        "name" : "artist_03-body-frame-2",
+        "storyFrame" : {
+          "storyID" : "0232BA9A-1DB0-48A2-90D8-1BAEF074F86B"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 28
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11.25,
+        "height" : 126,
+        "id" : "EA521C51-52AD-5A27-B886-3EE31C3701C5",
+        "kind" : "text",
+        "name" : "artist_03-body-frame-3",
+        "storyFrame" : {
+          "storyID" : "0232BA9A-1DB0-48A2-90D8-1BAEF074F86B"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 28
+      },
+      {
+        "color" : "#000000",
+        "contentSize" : {
+          "x" : 100,
+          "y" : 100
+        },
+        "fontSize" : 10,
+        "height" : 61,
+        "id" : "18816315-27D5-5D39-8285-E38EC6036F00",
+        "kind" : "group",
+        "name" : "signal_rooms_03-placed-vector",
+        "text" : "",
+        "width" : 61,
+        "x" : 30.475,
+        "y" : 176
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "117F5DDF-3F07-5929-8CAA-9912FD12A169",
+        "kind" : "path",
+        "name" : "signal_rooms_03-a",
+        "parentID" : "18816315-27D5-5D39-8285-E38EC6036F00",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 8,
+                    "y" : 17
+                  },
+                  "id" : "A4D654F2-6419-5B1A-AF09-6DDCF6D0AEE2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64,
+                    "y" : 17
+                  },
+                  "id" : "69561A60-5E71-542F-8C56-2D5D70911D5A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64,
+                    "y" : 39
+                  },
+                  "id" : "4ECA4EC9-7A50-5DA2-933A-4AF3BE6FFDB7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31,
+                    "y" : 39
+                  },
+                  "id" : "ADFE619E-6C75-5405-80A4-C398602BF924"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31,
+                    "y" : 87
+                  },
+                  "id" : "8B9B0296-09D8-52D6-898A-C1E2D7348034"
+                },
+                {
+                  "anchor" : {
+                    "x" : 8,
+                    "y" : 87
+                  },
+                  "id" : "AF77F9A5-6CE8-54BF-B3D7-1B9114C2DDDC"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "FDDF2056-7DD6-563A-B8A3-FBB900950D54",
+        "kind" : "path",
+        "name" : "signal_rooms_03-b",
+        "parentID" : "18816315-27D5-5D39-8285-E38EC6036F00",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 39,
+                    "y" : 8
+                  },
+                  "id" : "14372AA0-9F57-545B-A23E-DC592494565E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 91,
+                    "y" : 8
+                  },
+                  "id" : "2AF1BC59-32C2-55F2-85EA-E1CE1F8437D2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 91,
+                    "y" : 86
+                  },
+                  "id" : "F68AA2B0-A49D-5610-949B-81E64F8AB589"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 86
+                  },
+                  "id" : "22B6E42E-88C4-5720-905D-660CC3025B1D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 31
+                  },
+                  "id" : "974C280A-CB6F-5B6C-853F-982F83E62C26"
+                },
+                {
+                  "anchor" : {
+                    "x" : 39,
+                    "y" : 31
+                  },
+                  "id" : "43949ED2-E078-5BBA-BEDD-CC38EA34FA3F"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 16,
+        "height" : 20,
+        "id" : "7961D48D-E3B6-5A49-8C78-BD44ED6691BE",
+        "kind" : "text",
+        "name" : "signal_rooms_03-id",
+        "parentID" : "18816315-27D5-5D39-8285-E38EC6036F00",
+        "text" : "CUT / 03",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 18.56,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 32,
+        "x" : 40,
+        "y" : 62
+      },
+      {
+        "color" : "#000000",
+        "contentSize" : {
+          "x" : 100,
+          "y" : 100
+        },
+        "fontSize" : 10,
+        "height" : 61,
+        "id" : "33BECDE5-37E0-514F-A426-6FC80C16EA5B",
+        "kind" : "group",
+        "name" : "signal_rooms_04-placed-vector",
+        "text" : "",
+        "width" : 61,
+        "x" : 124.425,
+        "y" : 176
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 50,
+        "height" : 29,
+        "id" : "A3945F70-FCA8-5383-B19C-113562CD774E",
+        "kind" : "text",
+        "name" : "signal_rooms_040",
+        "parentID" : "33BECDE5-37E0-514F-A426-6FC80C16EA5B",
+        "rotation" : -8,
+        "text" : "NOW",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 57.99999999999999,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 91,
+        "x" : 7,
+        "y" : 8
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 50,
+        "height" : 29,
+        "id" : "98D64F93-18F1-52BD-BE77-DF717AED5292",
+        "kind" : "text",
+        "name" : "signal_rooms_041",
+        "parentID" : "33BECDE5-37E0-514F-A426-6FC80C16EA5B",
+        "rotation" : 0,
+        "text" : "SOON",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 57.99999999999999,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 91,
+        "x" : 7,
+        "y" : 34
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 50,
+        "height" : 29,
+        "id" : "6702D9CB-47B3-5F3B-AEB5-9CB61C38BCDB",
+        "kind" : "text",
+        "name" : "signal_rooms_042",
+        "parentID" : "33BECDE5-37E0-514F-A426-6FC80C16EA5B",
+        "rotation" : 8,
+        "text" : "LATER",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 57.99999999999999,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 91,
+        "x" : 7,
+        "y" : 60
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "BDCE11EB-4652-4E58-90A8-8F4031C4EBF2",
+  "id" : "713937C7-2C56-4077-A461-AFB0FF584791",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 23 / artist 03",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 6045.5999999999985,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

@@ -60,6 +60,8 @@ struct StudioImageAuthoringLayout {
           }
           Text("Captured "+capture.createdAt.formatted(date:.abbreviated,time:.shortened))
             .font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+        }else if controller.sceneInputRefreshPending {
+          ProgressView("Updating scene input…").controlSize(.small).font(InspectorStyle.captionFont)
         }else {
           Text("Capture a Studio scene to include its objects, materials and camera.")
             .font(InspectorStyle.labelFont).foregroundStyle(Palette.secondary)

@@ -25,6 +25,59 @@ import XCTest
     return (project, source.id, first.id, second.id)
   }
 
+  func testPublicationLinksExposeActualFacesAndFindHiddenCanonicalPagesOnlyOnExplicitAction()throws {
+    var project=Project(name:"Linked physical pages"),sources=[UUID]()
+    for number in 1...6 {
+      var page=try project.makeObject(recipeID:"artboard",parameters:["width":100,"depth":140])
+      page.artwork = .init(elements:[.init(kind:"text",x:8,y:8,width:80,height:15,text:"PAGE \(number)",fontSize:12)])
+      project.objects.append(page);sources.append(page.id)
+    }
+    let documentID=try PublicationCommands.createPublication(in:&project,name:"One canonical document",pages:sources)
+    var document=project.publications![0];document.layout = .init();try PublicationCommands.setPublication(in:&project,document:document)
+    let objectID=try SheetAssemblyCommands.create(in:&project,definition:.init(publicationID:documentID,openingDegrees:180,activeSpread:1))
+    let object=try XCTUnwrap(project.objects.first{$0.id==objectID}),resolved=try project.resolvedSheetAssembly(object)
+    let exposed=Set(resolved.leaves.flatMap{leaf in [leaf.frontVisible ? leaf.front?.sourceObjectID:nil,leaf.backVisible ? leaf.back?.sourceObjectID:nil].compactMap{$0}})
+    let links=LinkedInspectorRelationships.table(object,in:project)
+    XCTAssertEqual(Set(links.compactMap(\.sourceID)),exposed);XCTAssertEqual(Set(links.map(\.id)).count,links.count)
+    XCTAssertTrue(LinkedInspectorRelationships.hasPhysicalView(object,in:project))
+    let store=try makeStore(project);store.surfaceLayout = .split;store.splitDirection = .stacked
+    let tableSelection:Set<UUID>=[objectID];store.engine.selection=tableSelection
+    let hidden=try XCTUnwrap(sources.first{!exposed.contains($0)})
+    store.artworkSession.activate(hidden)
+    let backLinks=LinkedInspectorRelationships.canvas(store.artworkSession,in:project)
+    XCTAssertEqual(backLinks.map(\.objectID),[objectID]);XCTAssertEqual(backLinks.compactMap(\.sourceID),[hidden])
+    XCTAssertEqual(store.engine.selection,tableSelection);XCTAssertEqual(store.project,project)
+    let link=try XCTUnwrap(links.first),content=try XCTUnwrap(LinkedInspectorArtwork.content(link,in:project))
+    XCTAssertEqual(content.artwork,project.surfaceArtwork(project.objects.first{$0.id==link.sourceID}!))
+    XCTAssertTrue(LinkedInspectorRelationships.openCanvas(link,store:store))
+    XCTAssertEqual(store.artworkSession.objectID,link.sourceID);XCTAssertEqual(store.artworkSession.publicationWorkspace.publicationID,documentID)
+    XCTAssertEqual(store.engine.selection,tableSelection);XCTAssertEqual(store.project,project)
+    XCTAssertEqual(store.surfaceLayout,.split);XCTAssertEqual(store.splitDirection,.stacked);XCTAssertTrue(store.engine.undoStack.isEmpty)
+  }
+  func testEnclosureAssociationsHaveStableFaceIDsAndPreviewThePhysicalCropWithoutScaling()throws {
+    var project=Project(name:"Canonical cover crops")
+    var page=try project.makeObject(recipeID:"artboard",parameters:["width":60,"depth":80]);page.artwork = .init()
+    var cover=try project.makeObject(recipeID:"artboard",parameters:["width":120,"depth":80])
+    cover.artwork = .init(elements:[.init(kind:"rectangle",x:0,y:0,width:60,height:80,color:"#FF0000"),.init(kind:"rectangle",x:60,y:0,width:60,height:80,color:"#0000FF")])
+    project.objects=[page,cover]
+    let id=try PublicationCommands.createPublication(in:&project,name:"Cover crops",pages:[page.id])
+    let plane=SheetAssemblyPlane(id:"cover",name:"Cover",size:.init(.init(60),.init(80)),front:.init(sourceObjectID:cover.id,sourceOriginMM:.init(.init(60),.init(0))),back:.init(sourceObjectID:cover.id))
+    let objectID=try SheetAssemblyCommands.create(in:&project,definition:.init(publicationID:id,enclosure:[plane]))
+    let object=try XCTUnwrap(project.objects.first{$0.id==objectID}),before=project
+    let links=LinkedInspectorRelationships.table(object,in:project).filter{$0.sourceID==cover.id}
+    XCTAssertEqual(links.count,2);XCTAssertEqual(Set(links.map(\.id)).count,2)
+    for (title,color) in [("Front",NSColor.blue),("Back",NSColor.red)] {
+      let link=try XCTUnwrap(links.first{$0.title.hasSuffix(title)}),content=try XCTUnwrap(LinkedInspectorArtwork.content(link,in:project))
+      XCTAssertEqual(content.size,.init(60,80));XCTAssertEqual(content.sourceSize,.init(120,80))
+      let view=LinkedInspectorArtworkView();view.update(content,assets:FileManager.default.temporaryDirectory)
+      let image=try XCTUnwrap(view.renderedImage()),bitmap=try XCTUnwrap(NSBitmapImageRep(data:try XCTUnwrap(image.tiffRepresentation)))
+      let pixel=try XCTUnwrap(bitmap.colorAt(x:bitmap.pixelsWide/2,y:bitmap.pixelsHigh/2)?.usingColorSpace(.deviceRGB))
+      XCTAssertEqual(pixel.redComponent,color.redComponent,accuracy:0.03);XCTAssertEqual(pixel.blueComponent,color.blueComponent,accuracy:0.03)
+      XCTAssertTrue(LinkedInspectorRelationships.canOpenCanvas(link,in:project))
+    }
+    XCTAssertEqual(project,before)
+  }
+
   func testSharedPrimitiveSourceListsAllConsumersWithoutChangingSourceOrSelection() throws {
     let (project, source, first, second) = try linkedPrimitives(), store = try makeStore(project)
     store.artworkSession.activate(source)

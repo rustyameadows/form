@@ -1,0 +1,205 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "elements" : [
+
+    ],
+    "showGuides" : false,
+    "unit" : "mm"
+  },
+  "designID" : "06854052-AEC3-4F07-90CC-184F051290AC",
+  "id" : "852060E6-5CA6-457E-865C-C40EF87B89F6",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "fold_bureau_08_flat",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "hinges" : [
+        {
+          "angleDegrees" : "1*foldAngle",
+          "childPanelID" : "wall",
+          "end" : {
+            "x" : "65*scale",
+            "y" : "100*scale"
+          },
+          "id" : "wall-crease",
+          "parentPanelID" : "base",
+          "start" : {
+            "x" : "65*scale",
+            "y" : "0*scale"
+          }
+        },
+        {
+          "angleDegrees" : "-0.84*foldAngle",
+          "childPanelID" : "return",
+          "end" : {
+            "x" : "110*scale",
+            "y" : "100*scale"
+          },
+          "id" : "return-crease",
+          "parentPanelID" : "base",
+          "start" : {
+            "x" : "65*scale",
+            "y" : "100*scale"
+          }
+        }
+      ],
+      "joins" : [
+
+      ],
+      "name" : "fold_bureau_08 / actual flat parameter variant",
+      "panels" : [
+        {
+          "id" : "base",
+          "name" : "base",
+          "polygon" : [
+            {
+              "x" : "65*scale",
+              "y" : "0*scale"
+            },
+            {
+              "x" : "165*scale",
+              "y" : "0*scale"
+            },
+            {
+              "x" : "165*scale",
+              "y" : "32*scale"
+            },
+            {
+              "x" : "110*scale",
+              "y" : "32*scale"
+            },
+            {
+              "x" : "110*scale",
+              "y" : "100*scale"
+            },
+            {
+              "x" : "65*scale",
+              "y" : "100*scale"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "wall",
+          "name" : "wall",
+          "polygon" : [
+            {
+              "x" : "0*scale",
+              "y" : "0*scale"
+            },
+            {
+              "x" : "65*scale",
+              "y" : "0*scale"
+            },
+            {
+              "x" : "65*scale",
+              "y" : "100*scale"
+            },
+            {
+              "x" : "0*scale",
+              "y" : "100*scale"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "return",
+          "name" : "return",
+          "polygon" : [
+            {
+              "x" : "65*scale",
+              "y" : "100*scale"
+            },
+            {
+              "x" : "110*scale",
+              "y" : "100*scale"
+            },
+            {
+              "x" : "110*scale",
+              "y" : "165*scale"
+            },
+            {
+              "x" : "65*scale",
+              "y" : "165*scale"
+            }
+          ],
+          "role" : "side"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 1.5,
+          "minimum" : 0.65,
+          "name" : "scale",
+          "unit" : "×",
+          "value" : 1
+        },
+        {
+          "maximum" : 120,
+          "minimum" : 0,
+          "name" : "foldAngle",
+          "unit" : "°",
+          "value" : 0
+        }
+      ],
+      "rootPanelID" : "base",
+      "size" : {
+        "x" : "165*scale",
+        "y" : "165*scale"
+      },
+      "stockThickness" : "1.2*scale",
+      "version" : 1
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 2,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 1.2,
+      "height" : 165,
+      "width" : 165
+    },
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "kind" : "authored",
+    "openingPercent" : 0,
+    "stock" : {
+      "grain" : "unknown",
+      "gsm" : 300,
+      "name" : "Warm uncoated sculptural sheet",
+      "notes" : "Prototype assumptions; verify the chosen stock and crease tooling.",
+      "profile" : {
+        "color" : "#E7DDC7",
+        "opacity" : 1,
+        "roughness" : 0.94,
+        "texture" : "cotton",
+        "textureDepthMM" : 0.009,
+        "textureScaleMM" : 0.6
+      },
+      "thicknessMM" : 1.2,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "parameters" : {
+    "fold" : 100,
+    "foldAngle" : 0,
+    "opening" : 0,
+    "scale" : 1
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "construction-852060E6-5CA6-457E-865C-C40EF87B89F6",
+  "relationship" : "original",
+  "rotation" : 0
+}

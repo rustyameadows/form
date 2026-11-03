@@ -1,0 +1,25 @@
+{
+  "files": [
+    {
+      "bytes": 351340,
+      "file": "foreedge-before-native.png",
+      "sha256": "f1f00e8dd6647ca79d3cf23286fe2320cbc7b6e998c8da048b9e7a08f0a1352a",
+      "source": ".local/validation/publications/foreedge-production-final/production-still/before-native.png"
+    },
+    {
+      "bytes": 375239,
+      "file": "foreedge-after-still.png",
+      "sha256": "48db9fb65833a4c9aa7fded149391d5ab66d95d0c65a31c31f2af8ae0141caf7",
+      "source": ".local/validation/publications/foreedge-production-final/production-still/after-final.png"
+    },
+    {
+      "bytes": 350,
+      "file": "foreedge-still-diagnostics.json",
+      "sha256": "90fa20e87618409646681b2de6f1d2e1601c75d072159a1098c609fc2094c2ac",
+      "source": ".local/validation/publications/foreedge-production-final/production-still/diagnostics.json"
+    }
+  ],
+  "gate": "195 focused integration tests passed",
+  "scope": "Controlled native GPU renderer proof, not final VARIOUS magazine visual acceptance",
+  "test": "ForeedgeShadowDiagnosticsTests.testProductionStillSuppressesForeedgeAliasWithExactPixelsSourceAndCamera"
+}

@@ -11,6 +11,7 @@ struct CanvasFrame: Identifiable {
   var sourceReview:String? = nil
   var projection: CanvasSourceProjection? = nil
   var legacyDieline = false
+  var publicationSpread: CanvasPublicationSpread? = nil
   var id: UUID { projection?.id ?? object.id }
   var title: String { projection?.title ?? (object.name + (sourceReview == nil ? "":" · Registered source")) }
   var isWorkspace: Bool { object.isCanvasWorkspace }
@@ -79,6 +80,10 @@ enum ArtworkTool: String, CaseIterable {
   // One COW document snapshot, not a history of frame graphs. A revision-only
   // key misses direct project assignments and shared story/style dependencies.
   private var frameMemo:FrameMemo?
+  lazy var publicationWorkspace=PublicationWorkspaceController(session:self)
+  private func publicationFrames(_ values:[CanvasFrame])->[CanvasFrame] {
+    publicationWorkspace.layoutFrames(values)
+  }
   private(set) var frameBuildCount=0
   private var artworkGesture:(key:String,token:UUID)?
 
@@ -299,15 +304,15 @@ enum ArtworkTool: String, CaseIterable {
     }
     let inputs=FrameInputs(project:frameProject,objectID:frameObjectID,linkedTargetID:frameTargetID,
       dieline:dieline,editingComponent:componentReturn != nil)
-    if let memo=frameMemo,memo.inputs==inputs {return memo.frames}
+    if let memo=frameMemo,memo.inputs==inputs {return publicationFrames(memo.frames)}
     let values=buildFrames(project:project)
     frameBuildCount+=1;frameMemo = .init(inputs:inputs,frames:values)
-    return values
+    return publicationFrames(values)
   }
   private func buildFrames(project:Project)->[CanvasFrame] {
     let objects=project.objects
     let related = objects.filter { $0.isCanvasWorkspace } + objects.filter {object in
-      guard !object.isCanvasWorkspace,!PaperConstruction.isPaper(object),
+      guard object.sheetAssembly==nil,!object.isCanvasWorkspace,!PaperConstruction.isPaper(object),
         object.recipeID=="artboard" || project.isIndependentFlatArtworkSource(object) || project.isIndependentSewingSource(object) || object.artworkParameterBindings?.isEmpty == false || object.id==objectID else{return false}
       // Transferred component definitions are resources for their instances,
       // not additional artboards. Expose a source only while it is explicitly
@@ -435,6 +440,7 @@ enum ArtworkTool: String, CaseIterable {
     return result
   }
   func reconcile() {
+    publicationWorkspace.reconcile()
     if let maskEditing, !art.elements.contains(where: { $0.id == maskEditing.maskID }) { self.maskEditing = nil }
     if componentReturn != nil && object?.componentDefinition != true { componentReturn = nil }
     if let linkedTargetID, store?.project?.objects.contains(where: { $0.id == linkedTargetID }) != true {

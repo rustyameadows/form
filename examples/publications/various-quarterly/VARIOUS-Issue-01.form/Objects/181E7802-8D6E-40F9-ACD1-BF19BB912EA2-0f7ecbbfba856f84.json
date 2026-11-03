@@ -1,0 +1,473 @@
+{
+  "designID" : "ABD872C2-74AF-407F-A87E-FF95AF86CDE5",
+  "id" : "181E7802-8D6E-40F9-ACD1-BF19BB912EA2",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "VARIOUS / 13 folded parents / linked source",
+  "parameters" : {
+
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "sheet-source-90F0B88D-9E0D-4771-925C-2477AECBF49F",
+  "relationship" : "original",
+  "rotation" : 0,
+  "sheetAssembly" : {
+    "activeSpread" : 0,
+    "bendMM" : 0,
+    "binding" : {
+      "clinchLengthMM" : 2,
+      "count" : 2,
+      "crownLengthMM" : 12,
+      "edgeInsetMM" : 8,
+      "endMarginMM" : 50,
+      "flexWidthMM" : 10,
+      "positionsMM" : [
+        50,
+        229.4
+      ],
+      "style" : "saddleStitch",
+      "wireDiameterMM" : 0.45
+    },
+    "openingDegrees" : 0,
+    "parentSheets" : [
+      {
+        "backPageIDs" : [
+          "E96DAA52-8394-4064-A847-2F8ECB1B5B09",
+          "5328FEC8-1F0E-4B6A-9A14-E870A1AAC04E"
+        ],
+        "frontPageIDs" : [
+          "C08CEF93-1D67-4AC8-93C9-3FBFA2685552",
+          "17ABDE41-F991-403E-926B-61FE5429083C"
+        ],
+        "id" : "B099BD93-78F4-5ABD-9126-08FA24DE4ABF",
+        "printIntent" : "blackOnly",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 200,
+          "name" : "Outer sheet / uncoated ochre / 200 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#D9BA70",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.22,
+          "verified" : false
+        }
+      },
+      {
+        "backPageIDs" : [
+          "1604D417-3B0A-4F72-AA1B-B6BE773B29EF",
+          "B86D6724-7CFD-4C39-887B-03FBF7614096"
+        ],
+        "frontPageIDs" : [
+          "8AE81C45-989D-4F9D-9087-D145A7A4C1BB",
+          "C088FB6E-ABDC-4C5D-9148-8D1175EAB27E"
+        ],
+        "id" : "9EF584C7-981C-54CB-943B-B4A515EC7697",
+        "printIntent" : "color",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 100,
+          "name" : "White sheet / uncoated / 100 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#F5F2EA",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.1,
+          "verified" : false
+        }
+      },
+      {
+        "backPageIDs" : [
+          "8BF27B17-304E-4969-AA96-1ABDF69A2311",
+          "C56C5D20-CC54-4CB4-82A2-F9A2F30CAEDC"
+        ],
+        "frontPageIDs" : [
+          "FF2EF043-1D7E-47AB-B157-1A985C32C36C",
+          "656FAC77-797F-4774-A62E-CE4D4D8D2FAC"
+        ],
+        "id" : "FAB84944-7909-5896-9C25-C9135B61B4CF",
+        "printIntent" : "color",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 100,
+          "name" : "White sheet / uncoated / 100 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#F5F2EA",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.1,
+          "verified" : false
+        }
+      },
+      {
+        "backPageIDs" : [
+          "FDE1438C-F609-4B83-B8A7-BFA6C4257906",
+          "A579ED44-37B4-4AAF-8463-FA7E4296B20E"
+        ],
+        "frontPageIDs" : [
+          "F9B62038-8503-48C6-8D18-9710D61F4E52",
+          "E1A0DC02-1464-4B75-A871-E697E696359F"
+        ],
+        "id" : "7A461052-E969-5748-8106-8F44EEE93FD8",
+        "printIntent" : "color",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 100,
+          "name" : "White sheet / uncoated / 100 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#F5F2EA",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.1,
+          "verified" : false
+        }
+      },
+      {
+        "backPageIDs" : [
+          "CD9DA429-80E0-40E5-9ED5-690CBD4FA1E4",
+          "BBEE3CDC-4B5F-47F3-8EF5-B74C5B7D5A6A"
+        ],
+        "frontPageIDs" : [
+          "8452E236-986E-4103-ADD4-A1BC69106325",
+          "B9AAE448-BF74-47C7-AF3A-55A97C7B5405"
+        ],
+        "id" : "DF9AF048-9254-5A5A-8C22-25C07E11B12F",
+        "printIntent" : "blackOnly",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 110,
+          "name" : "Colored sheet / pale sage / 110 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#C9D6C3",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.12,
+          "verified" : false
+        }
+      },
+      {
+        "backPageIDs" : [
+          "3FBDBF1E-0A2F-4711-A06D-ACB2334686BD",
+          "AF95BF38-40AE-492D-A4CF-2867C16F84C2"
+        ],
+        "frontPageIDs" : [
+          "CBB253B8-5083-45C2-BFF3-E2EF5DA3E6B6",
+          "5213FFA8-0497-4C90-9CF4-3B70CF4F2B99"
+        ],
+        "id" : "FB6A93DF-13F3-535B-AC57-59A5FE05091C",
+        "printIntent" : "color",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 100,
+          "name" : "White sheet / uncoated / 100 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#F5F2EA",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.1,
+          "verified" : false
+        }
+      },
+      {
+        "backPageIDs" : [
+          "2B29EB9B-A792-4A76-8170-0F82BEFCBCAE",
+          "76BDBAFF-968D-452B-9DE7-A36598E3AD85"
+        ],
+        "frontPageIDs" : [
+          "571E6F4F-901F-498D-9432-BB346C569989",
+          "0CBEBE4E-53AA-446A-8F72-C26142CBCA2B"
+        ],
+        "id" : "1501925A-5255-530B-B426-6F50B8878BD0",
+        "printIntent" : "color",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 100,
+          "name" : "White sheet / uncoated / 100 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#F5F2EA",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.1,
+          "verified" : false
+        }
+      },
+      {
+        "backPageIDs" : [
+          "4E73C0BB-F71E-4A8B-AF09-1D3CBA003F29",
+          "751F32BC-C2AE-426C-8803-0FFABD523D84"
+        ],
+        "frontPageIDs" : [
+          "61C82EA8-FF0F-4F08-8BE6-8E1BFF8E51D4",
+          "EE48EA5E-9220-4DB6-A413-0444A6484880"
+        ],
+        "id" : "15A3C182-06B2-51F6-9F2C-CF29D9B7B013",
+        "printIntent" : "color",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 100,
+          "name" : "White sheet / uncoated / 100 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#F5F2EA",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.1,
+          "verified" : false
+        }
+      },
+      {
+        "backPageIDs" : [
+          "C8E6A924-57BB-45AB-A5BC-83AE82521EFB",
+          "AA6C6BC3-E083-459A-B164-4A3D0675429C"
+        ],
+        "frontPageIDs" : [
+          "E494F98F-B50B-4E1F-967B-5294B17BD3A2",
+          "DAC0CE0E-8F41-436F-A1DD-22E056F8CBC3"
+        ],
+        "id" : "AFCC1272-A327-5128-BD09-2038D92EE77F",
+        "printIntent" : "blackOnly",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 110,
+          "name" : "Colored sheet / powder blue / 110 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#CEDDE5",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.12,
+          "verified" : false
+        }
+      },
+      {
+        "backPageIDs" : [
+          "22DFA693-030B-4BDC-89A4-AD781ACC6EB8",
+          "6D53992F-C9C5-4680-B77C-AE529CE7F754"
+        ],
+        "frontPageIDs" : [
+          "61FC5E21-5A29-4155-9F37-A5CA37CBA1F9",
+          "1E739D43-61C1-4C87-9E23-B47535406C8E"
+        ],
+        "id" : "BAF4790E-409B-58F4-88AE-D92D45BBA317",
+        "printIntent" : "color",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 100,
+          "name" : "White sheet / uncoated / 100 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#F5F2EA",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.1,
+          "verified" : false
+        }
+      },
+      {
+        "backPageIDs" : [
+          "7071B09A-7FE4-40A6-85EE-375EB83A0649",
+          "63A1F544-2904-4C8F-A386-E4BE5726AA97"
+        ],
+        "frontPageIDs" : [
+          "B027D3C2-04F2-49D7-95FF-0C9AB50CD58E",
+          "E80DC536-2258-41F4-AD37-0CB54ED14F07"
+        ],
+        "id" : "8B30D285-3402-5361-939D-724BA123F48E",
+        "printIntent" : "color",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 100,
+          "name" : "White sheet / uncoated / 100 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#F5F2EA",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.1,
+          "verified" : false
+        }
+      },
+      {
+        "backPageIDs" : [
+          "8C770611-80C8-4E4B-BF7F-E64508754C67",
+          "888C7F8C-3817-487A-8503-20AFD1C3DBD3"
+        ],
+        "frontPageIDs" : [
+          "4C169205-21B1-4F22-89B1-C637D8B06BAA",
+          "238DDA4F-58C0-4FE8-B66C-A5D7F4755B85"
+        ],
+        "id" : "668B18EA-3753-540E-8958-CA6242E91E19",
+        "printIntent" : "color",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 100,
+          "name" : "White sheet / uncoated / 100 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#F5F2EA",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.1,
+          "verified" : false
+        }
+      },
+      {
+        "backPageIDs" : [
+          "316AA595-B15A-4B9A-A18D-C89F5B4D8B6B",
+          "27F25B8B-3BE3-43D4-9931-30CB370A363E"
+        ],
+        "frontPageIDs" : [
+          "FB9D15B1-59B1-4499-9E53-7F6E61192CAE",
+          "88758705-6C2B-4294-8BF0-1F84CA39C23D"
+        ],
+        "id" : "E0283CFE-B7B0-5A97-9910-848BED39AC6F",
+        "printIntent" : "blackOnly",
+        "sizeMM" : {
+          "x" : 431.8,
+          "y" : 279.4
+        },
+        "stock" : {
+          "grain" : "parallelHeight",
+          "gsm" : 110,
+          "name" : "Center sheet / warm yellow / 110 gsm",
+          "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+          "profile" : {
+            "color" : "#E6D394",
+            "opacity" : 1,
+            "roughness" : 0.96,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.009,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.12,
+          "verified" : false
+        }
+      }
+    ],
+    "publicationID" : "B0F0A20E-CE51-4E2E-8A4B-F4E37154FBB7",
+    "stock" : {
+      "grain" : "parallelHeight",
+      "gsm" : 100,
+      "name" : "White sheet / uncoated / 100 gsm",
+      "notes" : "Uncoated visual stock specification. Physical caliper, ink and bindery proof remain unverified.",
+      "profile" : {
+        "color" : "#F5F2EA",
+        "opacity" : 1,
+        "roughness" : 0.96,
+        "texture" : "cotton",
+        "textureDepthMM" : 0.009,
+        "textureScaleMM" : 0.75
+      },
+      "thicknessMM" : 0.1,
+      "verified" : false
+    },
+    "version" : 1
+  }
+}

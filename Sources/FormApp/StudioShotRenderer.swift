@@ -47,16 +47,17 @@ import LabRendering
   }
   static func rss()->Int64 {var r=rusage();getrusage(RUSAGE_SELF,&r);return Int64(r.ru_maxrss)}
   struct RenderResult {var image:NSImage;var framingWarnings:[[String:Any]]}
-  func render(project:Project,shot:StudioShot,assets:URL,preview:Bool,renderObjectIDs:Set<UUID>?=nil,textureLimit:Int?=nil)async throws->NSImage {
-    try await renderResult(project:project,shot:shot,assets:assets,preview:preview,renderObjectIDs:renderObjectIDs,textureLimit:textureLimit).image
+  func render(project:Project,shot:StudioShot,assets:URL,preview:Bool,renderObjectIDs:Set<UUID>?=nil,textureLimit:Int?=nil,sampling:SceneCaptureSampling?=nil)async throws->NSImage {
+    try await renderResult(project:project,shot:shot,assets:assets,preview:preview,renderObjectIDs:renderObjectIDs,textureLimit:textureLimit,sampling:sampling).image
   }
-  func renderResult(project:Project,shot:StudioShot,assets:URL,preview:Bool,renderObjectIDs:Set<UUID>?=nil,textureLimit:Int?=nil)async throws->RenderResult {
+  func renderResult(project:Project,shot:StudioShot,assets:URL,preview:Bool,renderObjectIDs:Set<UUID>?=nil,textureLimit:Int?=nil,sampling:SceneCaptureSampling?=nil)async throws->RenderResult {
     try shot.validate();let ids=try shot.visibility.resolved(in:project)
     // A capture owns this cached controller until the GPU has cloned/rendered
     // its complete composition, including any external-source preparation.
     // Waiting releases the UI actor; cancellation removes a queued preview.
     try await acquireCapture();defer{releaseCapture()}
     for object in project.objects where ids.contains(object.id) {
+      if object.sheetAssembly != nil {try SheetAssemblyRenderValidation.sources(object,project:project,assets:assets);continue}
       let artworks=PaperConstruction.isPaper(object) ? [project.paperArtwork(for:object,inside:false),project.paperArtwork(for:object,inside:true)].compactMap{$0}:[project.surfaceArtwork(object)].compactMap{$0}
       for art in artworks {try ArtworkRenderer.validateGlyphOutput(art,assets:assets)}
     }
@@ -65,12 +66,14 @@ import LabRendering
     let c=controller!;c.externalCapturePreparationCheckpoint=externalPreparationCheckpoint
     var copy=project;copy.camera=shot.camera;copy.camera.viewportAspect=shot.referenceAspect
     let visible=renderObjectIDs.map{ids.intersection($0)} ?? ids
+    let explicitObjects=renderObjectIDs ?? (shot.visibility.mode == .objects ? ids:nil)
     let fullSolids=try await SolidRecipeGeometry.prepareFullSources(project:copy,objectIDs:visible)
     // Only this isolated capture controller receives a cheap geometry/bounds pass.
     // Ordinary editing and thumbnail sampling retain their established limits.
     let baseLimit=max(64,min(preview ? 2048:256,textureLimit ?? (preview ? 2048:256)))
     c.sync(copy,selection:[],isolated:ids,showGrid:false,studio:true,preset:shot.surface,assets:assets,
-      textureLimit:baseLimit,renderObjectIDs:renderObjectIDs,solidSurfaces:fullSolids)
+      textureLimit:baseLimit,renderObjectIDs:explicitObjects,solidSurfaces:fullSolids)
+    try SheetAssemblyRenderValidation.scene(c.objectRoot,project:copy,objectIDs:visible)
     // sync intentionally restores a camera only on a new project. Explicit render
     // composition uses its own owner and never mutates the native editing scene.
     c.camera=copy.camera;c.updateCamera();c.applyShotLighting(shot.lighting,studio:true)
@@ -84,7 +87,8 @@ import LabRendering
         viewport:CGSize(width:shot.pixels.width,height:shot.pixels.height),objectIDs:visible,
         maximumEdge:max(64,min(SourceTextureSampling.maximumEdge,textureLimit ?? SourceTextureSampling.maximumEdge)))
       c.sync(copy,selection:[],isolated:ids,showGrid:false,studio:true,preset:shot.surface,assets:assets,
-        textureLimit:baseLimit,renderObjectIDs:renderObjectIDs,sourceSampling:plans,solidSurfaces:fullSolids)
+        textureLimit:baseLimit,renderObjectIDs:explicitObjects,sourceSampling:plans,solidSurfaces:fullSolids)
+      try SheetAssemblyRenderValidation.scene(c.objectRoot,project:copy,objectIDs:visible)
       lastSourceSampling=plans
     } else {lastSourceSampling=[:]}
     framingWarnings=[]
@@ -102,7 +106,7 @@ import LabRendering
     var width=shot.pixels.width,height=shot.pixels.height
     if preview {let scale=min(1,1600/Double(max(width,height)),sqrt(2_000_000/Double(width*height)));width=max(1,Int(Double(width)*scale));height=max(1,Int(Double(height)*scale))}
     let capturedWarnings=framingWarnings
-    let raw=try await c.snapshot(size:CGSize(width:width,height:height),camera:outputCamera)
+    let raw=try await c.snapshot(size:CGSize(width:width,height:height),camera:outputCamera,sampling:sampling ?? (preview ? .native:.still))
     // AppKit may attach a backing-scale representation to the snapshot. Return
     // one explicitly sized bitmap, independent of the test/app display scale.
     guard let source=raw.cgImage(forProposedRect:nil,context:nil,hints:nil),let context=CGContext(data:nil,width:width,height:height,bitsPerComponent:8,bytesPerRow:width*4,space:CGColorSpace(name:CGColorSpace.sRGB)!,bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue) else {throw FormError.invalid("Could not normalize Studio output pixels.")}

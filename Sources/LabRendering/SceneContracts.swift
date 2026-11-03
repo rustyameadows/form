@@ -144,6 +144,7 @@ public struct ScenePick: Sendable {public var objectID:UUID;public var component
 public struct SceneRendererDiagnostics: Sendable {
   public internal(set) var meshBuilds=0,materialBuilds=0,textureUploads=0,transformUpdates=0,frames=0,offscreenCaptures=0
   public internal(set) var componentCount=0,meshCacheBytes=0,textureCacheBytes=0
+  public internal(set) var lastCaptureSamples=0,lastCaptureAccumulatorBytes=0
   public internal(set) var lastFrameMilliseconds=0.0,lastCaptureMilliseconds=0.0
   public internal(set) var warnings:[String]=[]
   public init(){}

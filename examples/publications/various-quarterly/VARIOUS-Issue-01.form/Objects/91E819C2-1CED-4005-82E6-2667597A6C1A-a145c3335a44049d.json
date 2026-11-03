@@ -1,0 +1,290 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 3326.7000000000003,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "91639814-3CD1-54FD-8821-5ED7096F0C31",
+        "kind" : "text",
+        "name" : "fold_bureau_05-caption",
+        "text" : "Held corner\nOne tucked relation interrupts the open edges.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 109,
+        "x" : 18,
+        "y" : 184
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "F8FD250E-A7AF-57D9-A14A-F00216AABDCA",
+        "kind" : "text",
+        "name" : "fold_bureau_06-caption",
+        "text" : "Crease junction\nOffset study’s junction retains its neighboring planes.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 94
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "964C7A25-DE78-5699-9A2B-B6D723565530",
+        "kind" : "text",
+        "name" : "fold_bureau_07-caption",
+        "text" : "Edge register\nShelter fold’s edge stays connected to its underside.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 187
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 15,
+        "id" : "6B36E2E7-DB94-591C-834B-06EB2AB53181",
+        "kind" : "text",
+        "name" : "fold_bureau_08-caption",
+        "text" : "Flat / folded\nA held edge moves from line to space.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 254
+      },
+      {
+        "asset" : "116DCBB4-2205-46D1-9015-0A4D3B73428A.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 154,
+        "id" : "884991FC-43D6-4A93-9D46-720088C5407A",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.5662337662337662,
+          "x" : 0.2168831168831169,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / fold_bureau_05",
+        "text" : "",
+        "width" : 109,
+        "x" : 18,
+        "y" : 26
+      },
+      {
+        "asset" : "F389B555-4CEC-4057-98C1-2CE341D21010.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 64,
+        "id" : "18F87276-6AE0-4901-BFE9-7D8AB03DA332",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.73625,
+          "x" : 0.13187500000000002,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / fold_bureau_06",
+        "text" : "",
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 26
+      },
+      {
+        "asset" : "D9AF189F-7FF6-4AE5-B5F1-4AED1E1A241E.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 64,
+        "id" : "08E16E64-E52A-4B63-B9E6-CE779FC12266",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.73625,
+          "x" : 0.13187500000000002,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / fold_bureau_07",
+        "text" : "",
+        "width" : 58.9,
+        "x" : 139,
+        "y" : 119
+      },
+      {
+        "asset" : "B42E1D0C-38CB-4EEA-9FC3-86E2604E44CA.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 35,
+        "id" : "AD2389DB-33C1-40E3-9EE3-56C53FB5D939",
+        "kind" : "image",
+        "name" : "VARIOUS / fold_bureau_08",
+        "text" : "",
+        "width" : 63.01575393848462,
+        "x" : 76.4421230307577,
+        "y" : 216
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "3C80F2BF-0475-4560-A515-4D998A6698B3",
+  "id" : "91E819C2-1CED-4005-82E6-2667597A6C1A",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 12 / artist 01",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 3274.7000000000007,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

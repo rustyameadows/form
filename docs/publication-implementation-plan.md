@@ -1,8 +1,10 @@
 # Paragraph language, lists, and publication implementation plan
 
-Status: **Language and structured lists are integrated. Linked stories, ordered physical pages, baseline grids, native shared editing and multipage PDF are implemented and under packaged-app acceptance. Further production publishing remains open.** This plan extends the active [2D specification](2d-design-typography-vector-spec.md), sections 4.7, 10, and Phase 4, without changing its completion requirements. See the implemented [language guide](paragraph-language.md) and [list guide](paragraph-lists.md) for exact supported behavior and validation evidence.
+Status: **Language and structured lists are integrated. Linked stories, ordered physical pages, baseline grids, native shared editing, reader spreads/masters, physical sheet assemblies and publication PDF are implemented. Scoped packaged-app source/visual/output acceptance is complete for the 52-page VARIOUS issue; see its [recorded native results](../examples/publications/various-quarterly/VALIDATION.md). Broader production requirements remain tracked separately.** This plan extends the active [2D specification](2d-design-typography-vector-spec.md), sections 4.7, 10, and Phase 4, without changing its completion requirements. See the implemented [language guide](paragraph-language.md) and [list guide](paragraph-lists.md) for exact supported behavior and validation evidence.
 
 ## Existing implementation and the actual gaps
+
+The milestone descriptions below retain their original design framing. Current supported behavior and scoped acceptance evidence are recorded in the [publication guide](publications.md) and the linked native results above.
 
 FORM stores rich source text, reusable character/paragraph styles, UTF-16 source/display mappings, real font glyph choices, tabs, explicit language, hyphenation limits, writing direction, and structured paragraph lists. Ordinary text retains Core Text. Text requiring hyphenation or list markers uses cached TextKit composition in `ParagraphLayout`; its actual glyphs and generated markers feed native drawing, outlines, linked surfaces, and exports. The current paragraph renderer creates one unbounded-height text container per element and clips the visible line range to the frame. It does not share a text story across frames.
 

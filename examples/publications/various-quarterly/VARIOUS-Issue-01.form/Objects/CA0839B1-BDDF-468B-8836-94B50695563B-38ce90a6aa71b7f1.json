@@ -1,0 +1,5729 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 255.9,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10,
+        "height" : 10,
+        "id" : "8DC49BB7-0DF6-5FCF-9AA1-59706A30B485",
+        "kind" : "text",
+        "name" : "cover_inside_front-subtitle",
+        "text" : "A note on the work",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 13.5,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 25
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 30,
+        "height" : 40,
+        "id" : "679768BA-C511-58FD-89F4-81BF3A81070E",
+        "kind" : "text",
+        "name" : "cover_inside_front-title",
+        "text" : "An issue to move through",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 40.5,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 48
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11,
+        "height" : 52,
+        "id" : "B5CFC06B-744A-52E9-A9E6-BB8665AEFE98",
+        "kind" : "text",
+        "name" : "cover_inside_front-source-frame-0",
+        "storyFrame" : {
+          "storyID" : "BEC5AD81-4374-4BBB-8F30-864126EAA71E"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 207
+      },
+      {
+        "clipID" : "A01F051F-E909-51F6-B73A-9D5C78A995CD",
+        "color" : "#000000",
+        "contentSize" : {
+          "x" : 100,
+          "y" : 100
+        },
+        "fontSize" : 10,
+        "height" : 80,
+        "id" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "kind" : "group",
+        "name" : "cover_inside_front-placed-vector",
+        "text" : "",
+        "width" : 80,
+        "x" : 67.95,
+        "y" : 103
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 4
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "BEB95801-7AE6-5AF8-9D3B-A7DD92F9456B",
+        "kind" : "path",
+        "name" : "cover_inside_frontfold-blank",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 12,
+                    "y" : 30
+                  },
+                  "id" : "E5C363D9-C7BD-566A-BAED-6E93212A4A43"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 30
+                  },
+                  "id" : "5AD983DE-E055-5DC1-ACC2-1DF25F0FC592"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 14
+                  },
+                  "id" : "79F597B8-1CC7-58E9-82AB-080620A82E83"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 14
+                  },
+                  "id" : "6A8523DD-F06B-5A47-9FF3-A36532712E78"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 30
+                  },
+                  "id" : "868933FF-7E83-5697-B1A7-4ABFDF73EC5E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 88,
+                    "y" : 30
+                  },
+                  "id" : "8456C25E-B522-5563-AC34-A761D9F2BB2B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 88,
+                    "y" : 72
+                  },
+                  "id" : "C02E0C46-95E8-5B86-AE9C-2C090C037A8F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 72
+                  },
+                  "id" : "06DEA6B4-A958-5C64-B408-6E539964F447"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 88
+                  },
+                  "id" : "6AF9E823-AF58-52E6-A8C3-0CD898B715A2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 88
+                  },
+                  "id" : "7DDBE2A4-832D-52E4-A98E-03F24B929B48"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 72
+                  },
+                  "id" : "016132C6-95DD-5936-9CA3-D6C8F60B123B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 12,
+                    "y" : 72
+                  },
+                  "id" : "8959D76C-7BA3-5077-AFF4-44E0374DC722"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 4
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "0E352B87-DB83-58E3-8F37-BF117FFB8B28",
+        "kind" : "path",
+        "name" : "cover_inside_frontfold-crease-a",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 30
+                  },
+                  "id" : "15CEDF2D-8FCE-546E-A0A4-7013C74762CE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 72
+                  },
+                  "id" : "801B228A-6B63-5822-ABEB-62330372CB63"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "dash" : [
+            1.4,
+            1.4
+          ],
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 4
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "8B54C928-9C15-592B-9316-B78807750D0D",
+        "kind" : "path",
+        "name" : "cover_inside_frontfold-crease-b",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 30
+                  },
+                  "id" : "4A5E393A-3597-5FD4-8251-C66CFCEC7EF6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 72
+                  },
+                  "id" : "AAC7495C-6636-5A8C-9670-9912C6E8357A"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "dash" : [
+            1.4,
+            1.4
+          ],
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 4
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "3D08B810-183D-5E3B-8ECA-2D52DA161BE1",
+        "kind" : "path",
+        "name" : "cover_inside_frontfold-crease-c",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 30
+                  },
+                  "id" : "67163B51-7395-57C9-B88B-4A67A2F98AE9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 30
+                  },
+                  "id" : "7FABD22F-38E5-5911-A3D5-6FD0C7F01AEE"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "dash" : [
+            1.4,
+            1.4
+          ],
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 4
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "B511AD9A-8768-5E09-BEBD-B31C35EB34AF",
+        "kind" : "path",
+        "name" : "cover_inside_frontfold-crease-d",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 72
+                  },
+                  "id" : "F715E6F0-69F4-5EA6-B11C-349558976007"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 72
+                  },
+                  "id" : "42096347-1647-5FE7-92DA-B40B06179433"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "dash" : [
+            1.4,
+            1.4
+          ],
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 4
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "3B3AE54C-D2C7-555F-8A62-7A7F8E219AEF",
+        "kind" : "path",
+        "name" : "cover_inside_frontclay-wall",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 84,
+                    "y" : 50
+                  },
+                  "id" : "980363BE-C4FD-541C-9839-419D8766488F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 83.87061973511935,
+                    "y" : 53.57338545265399
+                  },
+                  "id" : "C693250E-AE22-5FA5-9B86-ACB87E43A3E3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 83.48346360241507,
+                    "y" : 57.119575284344144
+                  },
+                  "id" : "8E8761B6-A153-593B-A412-34FE123B64B7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82.84147809382833,
+                    "y" : 60.61158084920335
+                  },
+                  "id" : "D0D73348-0E00-584D-99C9-B7111F8D4C3D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 81.9495491067209,
+                    "y" : 64.02282587635241
+                  },
+                  "id" : "6C80E8D2-E04E-5BE4-BAE4-DC1D106CB436"
+                },
+                {
+                  "anchor" : {
+                    "x" : 80.81446475924609,
+                    "y" : 67.32734873136867
+                  },
+                  "id" : "A25E44B4-AD21-564A-9857-4230C486DA13"
+                },
+                {
+                  "anchor" : {
+                    "x" : 79.44486372867092,
+                    "y" : 70.5
+                  },
+                  "id" : "C4F5DFA3-B12A-5F51-8271-F7C73B418C07"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.85116950582572,
+                    "y" : 73.51663389039288
+                  },
+                  "id" : "4FBC6D61-F7F5-5664-ADD6-0A74382EC3F9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 76.04551106604525,
+                    "y" : 76.35429199714811
+                  },
+                  "id" : "482E9BAB-1347-532B-8B8F-1CBEC0851DC5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 74.04163056034261,
+                    "y" : 78.99137802864844
+                  },
+                  "id" : "2E641968-ED6A-58C1-B973-D6F297811FD3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 71.85477872934234,
+                    "y" : 81.4078221678781
+                  },
+                  "id" : "3DC20EBD-DAD6-572A-8FCC-27729BB7E017"
+                },
+                {
+                  "anchor" : {
+                    "x" : 69.50159883593557,
+                    "y" : 83.58523381584865
+                  },
+                  "id" : "B08ABBFC-B32D-510C-9E73-B0E32C401F2A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 67,
+                    "y" : 85.50704155516198
+                  },
+                  "id" : "232E62D6-E2B3-5E47-946E-E35BB8AAF241"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64.36902089918378,
+                    "y" : 87.15861926850265
+                  },
+                  "id" : "D32F724A-ADFF-5435-BEE0-65B53B07DCB7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.62868487307274,
+                    "y" : 88.52739745222223
+                  },
+                  "id" : "DDE2CFB1-BD11-565F-B6EB-800002743850"
+                },
+                {
+                  "anchor" : {
+                    "x" : 58.79984753348571,
+                    "y" : 89.60295887785179
+                  },
+                  "id" : "4320E9E7-4DB4-5566-A72C-CE6B8801EF1E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 55.90403804067564,
+                    "y" : 90.37711787350054
+                  },
+                  "id" : "EAB0B3D5-D994-5312-A9A7-574FD0F43FC1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 52.96329525342038,
+                    "y" : 90.84398262176157
+                  },
+                  "id" : "C91C4817-E5DF-516D-9DDC-EDC75822DF2E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 91
+                  },
+                  "id" : "CD7E9EDE-8890-55F8-BD62-D72B610783A4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 47.03670474657963,
+                    "y" : 90.84398262176157
+                  },
+                  "id" : "A8F68BED-1EAC-5B0C-90FE-4D2CCA2EA8C8"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44.09596195932437,
+                    "y" : 90.37711787350054
+                  },
+                  "id" : "BE543C45-070C-5579-99BA-3633C6126E11"
+                },
+                {
+                  "anchor" : {
+                    "x" : 41.20015246651429,
+                    "y" : 89.60295887785179
+                  },
+                  "id" : "850F9F03-5CEC-507B-AA98-7E4D04FAA189"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38.37131512692727,
+                    "y" : 88.52739745222225
+                  },
+                  "id" : "D52B8B3F-224E-54BA-BE65-2AE54772721D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 35.63097910081622,
+                    "y" : 87.15861926850266
+                  },
+                  "id" : "89D1381D-C0B3-5475-8CCD-1E30470B92EF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 33.00000000000001,
+                    "y" : 85.50704155516199
+                  },
+                  "id" : "4AA27819-C53F-5D68-AEBB-1DA8A9BCAD7F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30.49840116406443,
+                    "y" : 83.58523381584865
+                  },
+                  "id" : "CDE20500-8ED0-59A6-94A1-7E2206A4515B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 28.14522127065766,
+                    "y" : 81.4078221678781
+                  },
+                  "id" : "7253F41E-15A3-5FB7-9334-B791727A00C1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 25.958369439657385,
+                    "y" : 78.99137802864846
+                  },
+                  "id" : "0F784C0B-0239-5195-89A4-B2D4FC71A5FE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 23.95448893395475,
+                    "y" : 76.35429199714812
+                  },
+                  "id" : "01C55C07-331E-5D30-AA12-41F10FB084E1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22.148830494174277,
+                    "y" : 73.51663389039288
+                  },
+                  "id" : "78503DB2-96B7-5231-86BA-3159F99EBA55"
+                },
+                {
+                  "anchor" : {
+                    "x" : 20.55513627132909,
+                    "y" : 70.50000000000001
+                  },
+                  "id" : "67DBD057-DB57-5080-8218-03DD4A8E1E3E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 19.185535240753904,
+                    "y" : 67.32734873136869
+                  },
+                  "id" : "CA3F436D-F22F-5DC7-946F-C6A24A65E505"
+                },
+                {
+                  "anchor" : {
+                    "x" : 18.050450893279116,
+                    "y" : 64.02282587635243
+                  },
+                  "id" : "F9D69179-A2BF-52D6-A232-59783B699622"
+                },
+                {
+                  "anchor" : {
+                    "x" : 17.15852190617168,
+                    "y" : 60.61158084920334
+                  },
+                  "id" : "2B51DE01-B11E-5DFF-AED9-1108F61D24BA"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16.51653639758493,
+                    "y" : 57.119575284344144
+                  },
+                  "id" : "22D79A80-3040-5A65-8181-5E05CA8BC001"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16.129380264880652,
+                    "y" : 53.57338545265399
+                  },
+                  "id" : "F98E9915-2ECD-5EC8-83E6-DA27C91299F3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 50.00000000000001
+                  },
+                  "id" : "052031EE-86B3-5BAF-8452-CF5C46579DA9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16.129380264880652,
+                    "y" : 46.42661454734603
+                  },
+                  "id" : "6DDF6539-FE59-5F6B-B3FD-A4C3B510DDFD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16.51653639758492,
+                    "y" : 42.88042471565587
+                  },
+                  "id" : "9B54024C-55B2-5FFC-B8F4-59559F2DAEF5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 17.15852190617167,
+                    "y" : 39.388419150796665
+                  },
+                  "id" : "3D1849CC-D840-5D84-84F1-FC1B6BEC3F13"
+                },
+                {
+                  "anchor" : {
+                    "x" : 18.050450893279113,
+                    "y" : 35.977174123647586
+                  },
+                  "id" : "89D2138F-A7C2-56F3-9CE1-D59BF709A888"
+                },
+                {
+                  "anchor" : {
+                    "x" : 19.18553524075389,
+                    "y" : 32.67265126863134
+                  },
+                  "id" : "B6A3340B-CEC5-5647-930B-A463E7F619AB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 20.555136271329086,
+                    "y" : 29.499999999999996
+                  },
+                  "id" : "7733AECF-40CA-5117-BE75-82181C56D121"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22.14883049417427,
+                    "y" : 26.483366109607122
+                  },
+                  "id" : "EE79DAC1-79CF-52C4-9BA2-4D453E2D2CB3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 23.954488933954735,
+                    "y" : 23.645708002851904
+                  },
+                  "id" : "7E6C670C-0119-5AF9-9ACE-C4DA31E5760E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 25.95836943965738,
+                    "y" : 21.008621971351555
+                  },
+                  "id" : "5DC6D277-0928-5A8C-B027-F5C60C7CE43C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 28.145221270657657,
+                    "y" : 18.592177832121905
+                  },
+                  "id" : "1234CC4F-233D-535B-B6EF-7E3718BC5B3B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30.49840116406445,
+                    "y" : 16.414766184151325
+                  },
+                  "id" : "FB00DEC1-958B-5BB8-A458-9D28FBA0675D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32.999999999999986,
+                    "y" : 14.492958444838024
+                  },
+                  "id" : "479B4B87-BAF2-5CED-9938-B0DCC36F6B60"
+                },
+                {
+                  "anchor" : {
+                    "x" : 35.630979100816205,
+                    "y" : 12.84138073149736
+                  },
+                  "id" : "D2724017-E0A7-5117-8794-0574997C7444"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38.37131512692727,
+                    "y" : 11.472602547777754
+                  },
+                  "id" : "117E8538-9662-5DD0-8DD8-3F913CC62006"
+                },
+                {
+                  "anchor" : {
+                    "x" : 41.2001524665143,
+                    "y" : 10.397041122148202
+                  },
+                  "id" : "E61762D0-E284-5BE4-97E7-54FE26A7B4C1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44.09596195932437,
+                    "y" : 9.62288212649947
+                  },
+                  "id" : "646217AC-450A-5996-A2F9-4D34FE45343C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 47.036704746579616,
+                    "y" : 9.156017378238431
+                  },
+                  "id" : "1A8F1B68-760D-5698-BFBA-A55678EB56A2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 49.99999999999999,
+                    "y" : 9
+                  },
+                  "id" : "FB9C4DAE-8C9B-57D0-A4BF-D8A1BF8D66D2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 52.96329525342037,
+                    "y" : 9.156017378238431
+                  },
+                  "id" : "DCCD9C7F-B4E4-58A1-A5FA-DB8ADD3C2E09"
+                },
+                {
+                  "anchor" : {
+                    "x" : 55.904038040675616,
+                    "y" : 9.62288212649947
+                  },
+                  "id" : "3210BEBA-A953-54F0-AD43-7FADED929E09"
+                },
+                {
+                  "anchor" : {
+                    "x" : 58.79984753348569,
+                    "y" : 10.397041122148195
+                  },
+                  "id" : "60F3E82C-DEBE-513C-A638-632B5A7E2770"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.62868487307274,
+                    "y" : 11.472602547777761
+                  },
+                  "id" : "74DB1C08-13ED-5F63-8C37-4EF0CF49E8C7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64.36902089918377,
+                    "y" : 12.841380731497338
+                  },
+                  "id" : "95D85582-77DD-5218-8D50-9F10AAB7D87B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66.99999999999997,
+                    "y" : 14.492958444838003
+                  },
+                  "id" : "BB494C84-3A9F-57EA-890B-FE7D42B7AD08"
+                },
+                {
+                  "anchor" : {
+                    "x" : 69.50159883593557,
+                    "y" : 16.41476618415134
+                  },
+                  "id" : "CAB71B58-7802-5A69-8BD5-FEB3D4830ED1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 71.85477872934234,
+                    "y" : 18.592177832121898
+                  },
+                  "id" : "FBB8C38F-794F-5BBA-83A0-23A180CFB0B8"
+                },
+                {
+                  "anchor" : {
+                    "x" : 74.04163056034261,
+                    "y" : 21.008621971351545
+                  },
+                  "id" : "016BA4C0-0E0F-5D98-A9B9-14A8645423AB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 76.04551106604524,
+                    "y" : 23.645708002851876
+                  },
+                  "id" : "7A69C9AA-F171-5196-9A02-0D41DB4B1632"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.85116950582571,
+                    "y" : 26.483366109607093
+                  },
+                  "id" : "B935E243-7661-5FA0-9B79-5FA1C2830C5A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 79.44486372867092,
+                    "y" : 29.500000000000014
+                  },
+                  "id" : "0E2293EF-520C-5AD2-962C-69C41955113D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 80.81446475924609,
+                    "y" : 32.6726512686313
+                  },
+                  "id" : "D333A301-374D-5549-81B9-11CD608AEBD8"
+                },
+                {
+                  "anchor" : {
+                    "x" : 81.9495491067209,
+                    "y" : 35.977174123647586
+                  },
+                  "id" : "35267274-FA4A-563A-AEC4-B18EFAE2C62C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82.84147809382833,
+                    "y" : 39.38841915079665
+                  },
+                  "id" : "D6CDD01B-0B39-5B2E-A35E-5A83A6C9D8CB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 83.48346360241507,
+                    "y" : 42.880424715655856
+                  },
+                  "id" : "1C575DD4-098F-5271-93E6-9D85839D86CE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 83.87061973511935,
+                    "y" : 46.426614547346006
+                  },
+                  "id" : "1B8979C0-83D9-5ACE-B070-950F4503961E"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.7
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 4
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "9F99D927-F6C5-5431-8AC7-3B983DB3749A",
+        "kind" : "path",
+        "name" : "cover_inside_frontclay-void",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 50
+                  },
+                  "id" : "D7A992F9-426A-5E34-8EE5-34FFA8B80743"
+                },
+                {
+                  "anchor" : {
+                    "x" : 69.9238939618349,
+                    "y" : 52.35320505418677
+                  },
+                  "id" : "78A7FE50-0A68-50CC-B620-2729BDA10B24"
+                },
+                {
+                  "anchor" : {
+                    "x" : 69.69615506024417,
+                    "y" : 54.68850079700712
+                  },
+                  "id" : "B5ABD3CF-2EA5-57BB-9E98-BB1DD0DA5945"
+                },
+                {
+                  "anchor" : {
+                    "x" : 69.31851652578136,
+                    "y" : 56.98811421776806
+                  },
+                  "id" : "9C3D8ECF-A5F3-5A19-8694-D3480109F55F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68.79385241571816,
+                    "y" : 59.23454386979306
+                  },
+                  "id" : "908AD192-1D8C-58A6-A1BC-EFE0D2DD0EB7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68.126155740733,
+                    "y" : 61.41069306699889
+                  },
+                  "id" : "787B62D6-460D-535B-8078-CF23E8FBF8C2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 67.32050807568878,
+                    "y" : 63.5
+                  },
+                  "id" : "5D339FC8-1E13-51BB-B21F-0EA0E8066845"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66.38304088577983,
+                    "y" : 65.48656378147824
+                  },
+                  "id" : "9D00842E-7961-5C49-ADD4-EC07B99E0D12"
+                },
+                {
+                  "anchor" : {
+                    "x" : 65.32088886237956,
+                    "y" : 67.35526546153656
+                  },
+                  "id" : "31D5DCCD-53ED-5CB4-8A04-90EE5486B7E2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64.14213562373095,
+                    "y" : 69.09188309203678
+                  },
+                  "id" : "1CADEAB4-2473-5594-9CDB-873D4C164087"
+                },
+                {
+                  "anchor" : {
+                    "x" : 62.85575219373079,
+                    "y" : 70.6831999642124
+                  },
+                  "id" : "58882200-1811-568E-B632-26C8F7B2F0B5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.471528727020925,
+                    "y" : 72.11710519580278
+                  },
+                  "id" : "7D529A61-C3F6-5D67-8D4C-2AA63F214F84"
+                },
+                {
+                  "anchor" : {
+                    "x" : 60,
+                    "y" : 73.38268590217984
+                  },
+                  "id" : "064E24FD-4769-5614-A91A-32C22644ECCB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 58.45236523481399,
+                    "y" : 74.47031024998955
+                  },
+                  "id" : "624D457B-E7D2-5C8B-85BD-3636DA19CD46"
+                },
+                {
+                  "anchor" : {
+                    "x" : 56.84040286651338,
+                    "y" : 75.37170076121953
+                  },
+                  "id" : "9433897B-EC14-5C22-9070-A4E124CA1F52"
+                },
+                {
+                  "anchor" : {
+                    "x" : 55.17638090205042,
+                    "y" : 76.07999730980484
+                  },
+                  "id" : "430D15E6-A1B8-501A-B826-08BE37332C56"
+                },
+                {
+                  "anchor" : {
+                    "x" : 53.47296355333861,
+                    "y" : 76.58980933132962
+                  },
+                  "id" : "85BEDDBA-CDE9-57DC-9920-43B7EDF3F622"
+                },
+                {
+                  "anchor" : {
+                    "x" : 51.74311485495316,
+                    "y" : 76.89725684847713
+                  },
+                  "id" : "D6F58523-169D-595A-BCD5-37723839C35F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 77
+                  },
+                  "id" : "B0A832C6-4623-5082-B6A5-1A3C076C90D1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 48.25688514504684,
+                    "y" : 76.89725684847713
+                  },
+                  "id" : "E700C091-E926-5C42-9BEA-A3B46E3AB733"
+                },
+                {
+                  "anchor" : {
+                    "x" : 46.52703644666139,
+                    "y" : 76.58980933132962
+                  },
+                  "id" : "B09075FC-31FC-5779-92D2-6F28494EFF52"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44.82361909794958,
+                    "y" : 76.07999730980484
+                  },
+                  "id" : "2C130472-A033-5CFF-A3DD-CFC6F292F96F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 43.15959713348663,
+                    "y" : 75.37170076121953
+                  },
+                  "id" : "6CE71792-68EC-5F44-893A-C2FEA6B5A94A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 41.54763476518601,
+                    "y" : 74.47031024998955
+                  },
+                  "id" : "7DB05F66-0706-5E62-9D36-A70185F3262C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 40,
+                    "y" : 73.38268590217984
+                  },
+                  "id" : "5B08ECD8-D0EA-57FC-872E-F83371CD9EF7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38.528471272979075,
+                    "y" : 72.11710519580278
+                  },
+                  "id" : "589E3A7A-C2BA-5B82-9E53-4224DE62466A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 37.14424780626921,
+                    "y" : 70.6831999642124
+                  },
+                  "id" : "8CB5CDB4-3F71-5FE3-B759-448BAB01D04C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 35.85786437626905,
+                    "y" : 69.09188309203678
+                  },
+                  "id" : "57C7B3EE-2982-5E70-BF9B-94160AA9F16F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 34.67911113762044,
+                    "y" : 67.35526546153656
+                  },
+                  "id" : "760034B4-3DA3-5C2A-B0BE-75D5CAD737B9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 33.616959114220165,
+                    "y" : 65.48656378147824
+                  },
+                  "id" : "1F538BF9-E004-5B1E-951D-55D088600828"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32.67949192431123,
+                    "y" : 63.50000000000001
+                  },
+                  "id" : "0B5B634A-E1B6-5AA8-BF5C-C329130D16FB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31.873844259267003,
+                    "y" : 61.41069306699889
+                  },
+                  "id" : "9C52B17E-432D-512F-B088-7365FF4459A9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31.206147584281833,
+                    "y" : 59.23454386979306
+                  },
+                  "id" : "4ADA3CF1-B9DA-59FC-AF30-BCAA08896E25"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30.681483474218634,
+                    "y" : 56.98811421776806
+                  },
+                  "id" : "C93E86FA-2B5A-5325-8A81-DCF5F10277ED"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30.30384493975584,
+                    "y" : 54.688500797007116
+                  },
+                  "id" : "332E21C9-49A4-5ED0-A310-C83247B99BDE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30.07610603816509,
+                    "y" : 52.35320505418677
+                  },
+                  "id" : "C9283727-866D-5529-A00A-025527ED6F90"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30,
+                    "y" : 50
+                  },
+                  "id" : "CCB6C368-C6FC-5258-BA3E-E70E03EBF9DF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30.07610603816509,
+                    "y" : 47.646794945813234
+                  },
+                  "id" : "8C3177C3-799C-58F2-BBCD-4768938D20BE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30.303844939755837,
+                    "y" : 45.31149920299289
+                  },
+                  "id" : "C044FA83-EC07-5859-BB08-26872B7708FF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30.68148347421863,
+                    "y" : 43.01188578223195
+                  },
+                  "id" : "85ADB031-5C5D-54E6-B188-A9F0A72139ED"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31.20614758428183,
+                    "y" : 40.76545613020694
+                  },
+                  "id" : "606AE147-3D78-5623-BF27-B2F576412ED9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31.873844259266995,
+                    "y" : 38.589306933001126
+                  },
+                  "id" : "21C19CF4-4E1B-50ED-855D-0EAD11B13001"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32.67949192431123,
+                    "y" : 36.5
+                  },
+                  "id" : "3D64A121-FAF4-5E46-8ECB-3A4580298A47"
+                },
+                {
+                  "anchor" : {
+                    "x" : 33.61695911422016,
+                    "y" : 34.51343621852176
+                  },
+                  "id" : "940F372E-161D-52C6-BFA8-24533DB5737D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 34.67911113762043,
+                    "y" : 32.64473453846345
+                  },
+                  "id" : "7A50377D-95C0-577F-A0F4-CF3F8284785B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 35.85786437626905,
+                    "y" : 30.90811690796322
+                  },
+                  "id" : "9E065517-79B9-5577-9D48-0EA6BE2B91BB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 37.144247806269206,
+                    "y" : 29.316800035787598
+                  },
+                  "id" : "7C13FD75-540F-516E-B3D7-575B5F64BE74"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38.52847127297909,
+                    "y" : 27.882894804197214
+                  },
+                  "id" : "B0B9DC4A-4478-585E-8B67-CE730AD2EAF7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 39.99999999999999,
+                    "y" : 26.617314097820163
+                  },
+                  "id" : "5DB2AB77-A5CD-5DDA-B841-3345DA21C76B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 41.547634765186004,
+                    "y" : 25.52968975001046
+                  },
+                  "id" : "F282CA7C-2AD8-5C33-981E-EC5E5133E706"
+                },
+                {
+                  "anchor" : {
+                    "x" : 43.15959713348663,
+                    "y" : 24.62829923878047
+                  },
+                  "id" : "2399EE97-E26A-5CB4-BBED-8F8D9AF646A0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44.82361909794959,
+                    "y" : 23.920002690195155
+                  },
+                  "id" : "058E111C-ED53-5EC5-B115-6FA0997A1E01"
+                },
+                {
+                  "anchor" : {
+                    "x" : 46.52703644666139,
+                    "y" : 23.410190668670385
+                  },
+                  "id" : "2CAEE514-363C-5DC9-929C-8BAB62F78B4A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 48.25688514504684,
+                    "y" : 23.10274315152287
+                  },
+                  "id" : "7D3DB3A0-6217-5AFE-99C5-E498C2D1B3E6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 49.99999999999999,
+                    "y" : 23
+                  },
+                  "id" : "97BF699E-05FE-535D-B9E3-DD51920E9997"
+                },
+                {
+                  "anchor" : {
+                    "x" : 51.743114854953156,
+                    "y" : 23.10274315152287
+                  },
+                  "id" : "3D7EE67B-CFAC-5882-858C-23F5B7923801"
+                },
+                {
+                  "anchor" : {
+                    "x" : 53.4729635533386,
+                    "y" : 23.41019066867038
+                  },
+                  "id" : "0C0AD41C-2C4C-50C3-98AC-11BBA7F4E9DD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 55.176380902050404,
+                    "y" : 23.92000269019515
+                  },
+                  "id" : "5D8EF3CC-0D8D-50B3-91E8-4C215F49AA79"
+                },
+                {
+                  "anchor" : {
+                    "x" : 56.84040286651338,
+                    "y" : 24.628299238780475
+                  },
+                  "id" : "470DDB30-8E68-52F4-A9F7-0224F342DC7C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 58.452365234813975,
+                    "y" : 25.529689750010444
+                  },
+                  "id" : "BFEC3778-7034-5733-B3CE-CCBD48692339"
+                },
+                {
+                  "anchor" : {
+                    "x" : 59.999999999999986,
+                    "y" : 26.617314097820145
+                  },
+                  "id" : "3E7E427B-DC53-50AD-8C92-DFC1E9538B77"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.471528727020925,
+                    "y" : 27.88289480419722
+                  },
+                  "id" : "ADDAB5B2-A982-58B6-8492-FC64B06262DC"
+                },
+                {
+                  "anchor" : {
+                    "x" : 62.85575219373079,
+                    "y" : 29.31680003578759
+                  },
+                  "id" : "41C73CB3-3C55-5AFE-A002-036A33F95626"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64.14213562373095,
+                    "y" : 30.908116907963212
+                  },
+                  "id" : "A3CD3367-3A6A-5770-9973-ACF0246A6F1C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 65.32088886237956,
+                    "y" : 32.64473453846343
+                  },
+                  "id" : "C79B0DFC-477C-512E-93E7-4699E59488AD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66.38304088577983,
+                    "y" : 34.51343621852175
+                  },
+                  "id" : "D949CA2B-C629-50DF-A62A-C4BAAF464823"
+                },
+                {
+                  "anchor" : {
+                    "x" : 67.32050807568878,
+                    "y" : 36.50000000000001
+                  },
+                  "id" : "DA395E0E-C232-5D3D-839E-9D63AA7A6063"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68.126155740733,
+                    "y" : 38.5893069330011
+                  },
+                  "id" : "78A95146-A390-55EE-A85E-6FA0935F3986"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68.79385241571816,
+                    "y" : 40.76545613020695
+                  },
+                  "id" : "6548194B-98C2-550B-B625-5EE250067C87"
+                },
+                {
+                  "anchor" : {
+                    "x" : 69.31851652578136,
+                    "y" : 43.01188578223194
+                  },
+                  "id" : "46D5EB06-0086-57C2-9A54-2595BA17B342"
+                },
+                {
+                  "anchor" : {
+                    "x" : 69.69615506024417,
+                    "y" : 45.31149920299288
+                  },
+                  "id" : "839ED2C9-15E2-5619-B6BE-59F1FE21DF7F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 69.9238939618349,
+                    "y" : 47.64679494581323
+                  },
+                  "id" : "DCFE5FE6-F7BC-564F-8AB6-B69AFC0DCDB9"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.7
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 24,
+        "height" : 25,
+        "id" : "8A91DB41-2DD3-50D1-AEBD-9F836D6BE804",
+        "kind" : "text",
+        "name" : "cover_inside_frontprint-word",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "text" : "INTERVAL",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 27.839999999999996,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 90,
+        "x" : 8,
+        "y" : 12
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 7,
+        "id" : "E1C6D3B2-8BEE-5F77-A42B-D854F2CED5D0",
+        "kind" : "ellipse",
+        "name" : "cover_inside_frontprint-dot0",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "text" : "",
+        "width" : 7,
+        "x" : 12,
+        "y" : 52
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "E1A78B5F-BCFA-5CAF-8CE2-B49DA9980D71",
+        "kind" : "path",
+        "name" : "cover_inside_frontprint-axis0",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 15,
+                    "y" : 69
+                  },
+                  "id" : "C19907E7-B18E-54EE-99E0-52A765B05D61"
+                },
+                {
+                  "anchor" : {
+                    "x" : 15,
+                    "y" : 86
+                  },
+                  "id" : "D718F426-668A-52A2-AA42-51862B82E2DF"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 7,
+        "id" : "3570AC36-C81C-54C5-A516-0D009C3CD389",
+        "kind" : "ellipse",
+        "name" : "cover_inside_frontprint-dot1",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "text" : "",
+        "width" : 7,
+        "x" : 32,
+        "y" : 60
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "6257E684-4AB2-5F9B-8950-3CF26F218CA0",
+        "kind" : "path",
+        "name" : "cover_inside_frontprint-axis1",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 35,
+                    "y" : 69
+                  },
+                  "id" : "3B91B488-30FF-555E-9B08-7033F279B473"
+                },
+                {
+                  "anchor" : {
+                    "x" : 35,
+                    "y" : 86
+                  },
+                  "id" : "548C645C-9826-5BE7-980F-F0BC10162AC7"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 7,
+        "id" : "D0171625-A0F5-591A-923E-987F10663803",
+        "kind" : "ellipse",
+        "name" : "cover_inside_frontprint-dot2",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "text" : "",
+        "width" : 7,
+        "x" : 52,
+        "y" : 52
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "E67AD625-A338-5A03-A379-79068B654E21",
+        "kind" : "path",
+        "name" : "cover_inside_frontprint-axis2",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 55,
+                    "y" : 69
+                  },
+                  "id" : "8352C032-C180-51D6-B7CE-4B2397875F5B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 55,
+                    "y" : 86
+                  },
+                  "id" : "C4F32BF9-E055-5150-9D07-9FC74070B0FC"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 7,
+        "id" : "42095E5C-CFA2-5FCC-B763-90090667B89A",
+        "kind" : "ellipse",
+        "name" : "cover_inside_frontprint-dot3",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "text" : "",
+        "width" : 7,
+        "x" : 72,
+        "y" : 60
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "D3E9112D-8282-51A2-842C-45F69C88CFC4",
+        "kind" : "path",
+        "name" : "cover_inside_frontprint-axis3",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 75,
+                    "y" : 69
+                  },
+                  "id" : "C73B54CC-97E5-50AD-917B-1D6153D268DB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 75,
+                    "y" : 86
+                  },
+                  "id" : "6CC6FB58-5E04-55E4-BBF6-10D8EF141345"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "39D52557-C752-5D3A-954B-83D2A4867332",
+        "kind" : "path",
+        "name" : "cover_inside_frontlight-base",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 25,
+                    "y" : 84
+                  },
+                  "id" : "8BDBFA95-F9CC-5AC3-9338-F6EBC1BA4AC8"
+                },
+                {
+                  "anchor" : {
+                    "x" : 25,
+                    "y" : 88
+                  },
+                  "id" : "2D2D19AC-B365-5281-B888-266DFA44356A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72,
+                    "y" : 88
+                  },
+                  "id" : "CF1177DD-889D-5FEF-86A8-516D6EBCBCB7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72,
+                    "y" : 84
+                  },
+                  "id" : "2BF64B0F-F787-58BF-8F51-24D2AC4B2195"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "84C3A9A0-60FA-5D96-B94B-A329FFBBABA3",
+        "kind" : "path",
+        "name" : "cover_inside_frontlight-arm",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 34,
+                    "y" : 84
+                  },
+                  "id" : "9EF3524A-85C4-5E44-95BA-E5EBC9A76BEA"
+                },
+                {
+                  "anchor" : {
+                    "x" : 34,
+                    "y" : 32
+                  },
+                  "id" : "9B6CB8A6-58E3-50C2-83B5-80E14DAE876E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 39,
+                    "y" : 22
+                  },
+                  "id" : "E9210F18-A2A7-5CA0-9E4C-22142496D07A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 54,
+                    "y" : 15
+                  },
+                  "id" : "980172F4-6E72-505F-87EC-2A971C7B107F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 19
+                  },
+                  "id" : "50875519-3D0E-5C57-845E-F4A8B3A3DF44"
+                },
+                {
+                  "anchor" : {
+                    "x" : 80,
+                    "y" : 31
+                  },
+                  "id" : "9769C9B9-4221-5F4D-8D94-2500B3278808"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.9
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "1D70942D-DEC3-5D56-A691-ADABFCDE70CA",
+        "kind" : "path",
+        "name" : "cover_inside_frontlight-shade",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 63,
+                    "y" : 37
+                  },
+                  "id" : "8B93B675-86F2-5EBB-AF2F-A3BAD83DCE9B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 83,
+                    "y" : 37
+                  },
+                  "id" : "E089E32F-3C6D-5726-8B59-7FBC8B086956"
+                },
+                {
+                  "anchor" : {
+                    "x" : 89,
+                    "y" : 48
+                  },
+                  "id" : "E017D878-2D97-5827-87FE-581354858671"
+                },
+                {
+                  "anchor" : {
+                    "x" : 57,
+                    "y" : 48
+                  },
+                  "id" : "A3B9D900-40BF-5879-B8BB-D5A4154A9D1F"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.7
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "9168923D-73C9-5BDB-8C93-60D20246B051",
+        "kind" : "path",
+        "name" : "cover_inside_frontlight-beam0",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 62,
+                    "y" : 55
+                  },
+                  "id" : "55E1C256-6492-5726-BB26-591AEB821EDD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 55,
+                    "y" : 74
+                  },
+                  "id" : "04D0FAF2-C4D9-5391-81EB-C7187BFFB2ED"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.3
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "B17F2ECC-03FB-5219-9553-5BC026A651F6",
+        "kind" : "path",
+        "name" : "cover_inside_frontlight-beam1",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 69,
+                    "y" : 55
+                  },
+                  "id" : "767A8C91-6AFC-546F-90EE-ECC5F97944F3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66,
+                    "y" : 74
+                  },
+                  "id" : "8062ED68-CE15-5D85-8BCF-8B9ED433D273"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.3
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "795D51AA-2DF1-5A0F-8363-8EB173B9D6C8",
+        "kind" : "path",
+        "name" : "cover_inside_frontlight-beam2",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 76,
+                    "y" : 55
+                  },
+                  "id" : "64DD171A-D402-5BDC-926A-185EB05048C5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77,
+                    "y" : 74
+                  },
+                  "id" : "F7FDC645-5B20-5FC3-86C2-9B2AF3FE6044"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.3
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 35
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "3DA647F6-84B1-50F9-9D42-1F4B3691D890",
+        "kind" : "path",
+        "name" : "cover_inside_frontlight-beam3",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 83,
+                    "y" : 55
+                  },
+                  "id" : "A7F12147-902A-5AA4-BE97-C0A17F706A9B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 88,
+                    "y" : 74
+                  },
+                  "id" : "4F2FA35D-8CC7-5F03-9B9C-5CD547B98B3B"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.3
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "0D8C7BCA-040F-52BC-9AF6-B67C7A9BC479",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-warp0",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 10,
+                    "y" : 18
+                  },
+                  "id" : "C1D150F3-5555-5EB3-B1C9-AB365C211DC7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 12,
+                    "y" : 18.469303395120694
+                  },
+                  "id" : "FB34033B-BB7F-5B53-930A-16D703DF0752"
+                },
+                {
+                  "anchor" : {
+                    "x" : 14,
+                    "y" : 18.927050983124843
+                  },
+                  "id" : "A8B53ECA-E428-5C0F-B1B2-88A3EB3628ED"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 19.36197149921864
+                  },
+                  "id" : "A2928B8E-2856-50AC-8A46-017AA6FAEF46"
+                },
+                {
+                  "anchor" : {
+                    "x" : 18,
+                    "y" : 19.76335575687742
+                  },
+                  "id" : "5C45A172-F9E3-518B-BBCD-6808617CE957"
+                },
+                {
+                  "anchor" : {
+                    "x" : 20,
+                    "y" : 20.121320343559642
+                  },
+                  "id" : "6D47531A-B734-58B6-811F-83F630831A22"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22,
+                    "y" : 20.427050983124843
+                  },
+                  "id" : "8EFC72C0-EC61-52BC-AD97-7274DE43E8DE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 24,
+                    "y" : 20.673019572565103
+                  },
+                  "id" : "0B29BAED-C9C6-500E-AE2D-06BCD81AD959"
+                },
+                {
+                  "anchor" : {
+                    "x" : 26,
+                    "y" : 20.85316954888546
+                  },
+                  "id" : "F227FA39-0BD5-5AF6-9BB5-B5CBC6496B9B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 20.963065021785415
+                  },
+                  "id" : "0CB8E43E-804D-5FCA-8721-78419E77FFA8"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30,
+                    "y" : 21
+                  },
+                  "id" : "17B11FF7-1BF3-5E76-A7E5-0A3CA7A4322C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32,
+                    "y" : 20.96306502178541
+                  },
+                  "id" : "F6B507FC-AC12-5570-A13C-75AB9BF7BAB0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 34,
+                    "y" : 20.85316954888546
+                  },
+                  "id" : "3B6686A6-D6D7-56EA-93D5-CB48838734E4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 36,
+                    "y" : 20.673019572565103
+                  },
+                  "id" : "1194D333-90CA-54C6-AF4D-429EC6D52E2C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 20.427050983124843
+                  },
+                  "id" : "6C432C1C-B7D2-51F6-9908-B9ADAC6B1F19"
+                },
+                {
+                  "anchor" : {
+                    "x" : 40,
+                    "y" : 20.121320343559642
+                  },
+                  "id" : "807ED44D-8E87-5A34-9CC5-AF42740A3F5F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 42,
+                    "y" : 19.76335575687742
+                  },
+                  "id" : "D7EC793C-4D7E-54C1-91B6-7E7324AB240E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44,
+                    "y" : 19.36197149921864
+                  },
+                  "id" : "4A4F90FD-7ED2-5D44-B19A-ABA1F912A612"
+                },
+                {
+                  "anchor" : {
+                    "x" : 46,
+                    "y" : 18.927050983124843
+                  },
+                  "id" : "465A5519-78BF-5D03-B115-5D71F1A4B3E6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 48,
+                    "y" : 18.469303395120694
+                  },
+                  "id" : "A8D8DBC9-ECFB-5E35-A0AA-1B6994BD5E15"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 18
+                  },
+                  "id" : "5A07D5F6-6B3A-5C34-891C-B26FC3799BDE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 52,
+                    "y" : 17.530696604879306
+                  },
+                  "id" : "F9A8E043-601E-54B7-A68A-495805CF5976"
+                },
+                {
+                  "anchor" : {
+                    "x" : 54,
+                    "y" : 17.072949016875157
+                  },
+                  "id" : "A32B6793-9331-5398-8030-1B315095111B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 56,
+                    "y" : 16.63802850078136
+                  },
+                  "id" : "78E54483-41EC-5828-8E41-63FBB1F505B2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 58,
+                    "y" : 16.23664424312258
+                  },
+                  "id" : "0A87E37B-B87F-5922-BF94-2A1BC1D7E1BB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 60,
+                    "y" : 15.878679656440358
+                  },
+                  "id" : "09E07568-4F4C-5DEE-9200-913A770B0851"
+                },
+                {
+                  "anchor" : {
+                    "x" : 62,
+                    "y" : 15.572949016875159
+                  },
+                  "id" : "F01589E3-B32F-54DE-8E6C-E9359DFA7D0F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64,
+                    "y" : 15.326980427434897
+                  },
+                  "id" : "CA594B38-DF40-5F07-8AC2-7B77F6B9A228"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66,
+                    "y" : 15.146830451114539
+                  },
+                  "id" : "DBA2E6BD-09AD-559F-8C3D-2AA2E7F29545"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 15.036934978214587
+                  },
+                  "id" : "A0854AFF-9756-5AED-B552-8D86076048DE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 15
+                  },
+                  "id" : "A226A748-AAD5-5EC5-B2CE-A0CDF611FC5E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72,
+                    "y" : 15.036934978214587
+                  },
+                  "id" : "C031B58E-053D-57DA-B33A-C70314DA64B1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 74,
+                    "y" : 15.146830451114539
+                  },
+                  "id" : "DA72F5C8-B8E4-5856-B9DE-E1E9DCF92F2F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 76,
+                    "y" : 15.326980427434897
+                  },
+                  "id" : "05A2A22C-8AAE-5DD4-B92F-721CEE260CD8"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 15.572949016875157
+                  },
+                  "id" : "1C03B0CF-D06F-5F93-8C29-D4AD8918D109"
+                },
+                {
+                  "anchor" : {
+                    "x" : 80,
+                    "y" : 15.878679656440358
+                  },
+                  "id" : "89E4A112-06AA-538C-9BC9-9BAE6CE3A7C8"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82,
+                    "y" : 16.23664424312258
+                  },
+                  "id" : "F15DD0A6-0B78-5FC3-A260-145845BDDB6A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 84,
+                    "y" : 16.63802850078136
+                  },
+                  "id" : "B2C5E030-8B68-58CC-AC42-C6A88AE52E79"
+                },
+                {
+                  "anchor" : {
+                    "x" : 86,
+                    "y" : 17.072949016875157
+                  },
+                  "id" : "DC4723DF-93AF-5F66-952E-D37B57E75B11"
+                },
+                {
+                  "anchor" : {
+                    "x" : 88,
+                    "y" : 17.530696604879306
+                  },
+                  "id" : "252FFCB5-25C7-56A2-87B4-26D9B9748A42"
+                },
+                {
+                  "anchor" : {
+                    "x" : 90,
+                    "y" : 18
+                  },
+                  "id" : "39FAE8B1-4FA4-53C9-984E-B97FBE87D5C5"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.8
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "77AC615D-7E49-546D-8533-9503BDF38D75",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-warp1",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 10,
+                    "y" : 27.30489660233369
+                  },
+                  "id" : "2E1FB94F-EF68-5FB0-9B43-FF2DCECDE9E6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 12,
+                    "y" : 27.711414042067897
+                  },
+                  "id" : "A54E3CA1-F1B9-53F5-A614-82CFA6727904"
+                },
+                {
+                  "anchor" : {
+                    "x" : 14,
+                    "y" : 28.075790788228826
+                  },
+                  "id" : "72FE72E8-E810-5F94-B55C-31026672B7B1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 28.38905467602891
+                  },
+                  "id" : "2C53B56F-63EB-5D03-864A-C8934FDE4026"
+                },
+                {
+                  "anchor" : {
+                    "x" : 18,
+                    "y" : 28.643492108887266
+                  },
+                  "id" : "85AF2ACF-BE33-513A-AA27-64CD7C9886B0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 20,
+                    "y" : 28.832837992777502
+                  },
+                  "id" : "A57E76A1-5F83-55D4-A9EC-317A5955936A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22,
+                    "y" : 28.95243000363528
+                  },
+                  "id" : "FC833287-9061-5AC2-8B8B-7649F5364A86"
+                },
+                {
+                  "anchor" : {
+                    "x" : 24,
+                    "y" : 28.999323389250147
+                  },
+                  "id" : "A0AF206C-2F21-5F78-B04C-4FBA973BE564"
+                },
+                {
+                  "anchor" : {
+                    "x" : 26,
+                    "y" : 28.972363478838044
+                  },
+                  "id" : "EE4887B8-AE19-552F-8B3F-73432DF83392"
+                },
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 28.872214114868132
+                  },
+                  "id" : "79869C1A-71AC-5016-8D4D-47174119A6DA"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30,
+                    "y" : 28.70134130705803
+                  },
+                  "id" : "21368649-8897-51B0-AC31-53A3274D51EF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32,
+                    "y" : 28.46395251103036
+                  },
+                  "id" : "D5A63EC4-CCB5-5368-8E68-1C19CF58DE2F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 34,
+                    "y" : 28.16589302679157
+                  },
+                  "id" : "5BDD55B0-8E1B-5D21-8BCB-7002BDEF290E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 36,
+                    "y" : 27.81450206804633
+                  },
+                  "id" : "90CDC403-7B72-5440-952B-50B4F21FE5C0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 27.41843204639868
+                  },
+                  "id" : "DDC4700A-0CFF-5421-B40F-1B52E15C96B6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 40,
+                    "y" : 26.987435520262625
+                  },
+                  "id" : "6FEA8C12-3C17-5851-83A1-B9A363A7E4D7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 42,
+                    "y" : 26.5321250545071
+                  },
+                  "id" : "CBF6EA57-EEAE-5EC0-A0E0-C694E5BBD490"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44,
+                    "y" : 26.063711903887803
+                  },
+                  "id" : "170A42BE-CAE5-57A5-8D0C-DB53620DA850"
+                },
+                {
+                  "anchor" : {
+                    "x" : 46,
+                    "y" : 25.5937299547471
+                  },
+                  "id" : "855F2AF7-0C02-5C0D-9507-973FA13A4793"
+                },
+                {
+                  "anchor" : {
+                    "x" : 48,
+                    "y" : 25.133751722453503
+                  },
+                  "id" : "258B5C8B-0881-5DA3-9289-9C651A9D6955"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 24.69510339766631
+                  },
+                  "id" : "E06C76AD-0FA2-5ED9-A08F-9FFF5AE52EA6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 52,
+                    "y" : 24.288585957932103
+                  },
+                  "id" : "D48C8678-A672-56C6-AC6B-C9D963C2B26D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 54,
+                    "y" : 23.92420921177117
+                  },
+                  "id" : "D91CE5BA-DE9D-5B86-BDF0-A763B9824674"
+                },
+                {
+                  "anchor" : {
+                    "x" : 56,
+                    "y" : 23.610945323971094
+                  },
+                  "id" : "B743BC4E-6326-5641-A9B8-9669398BD6CB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 58,
+                    "y" : 23.356507891112734
+                  },
+                  "id" : "D9F79F14-02D1-5F45-A1EA-593D893A323B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 60,
+                    "y" : 23.167162007222498
+                  },
+                  "id" : "47067E07-9544-5FA9-AF12-F4C408770D4B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 62,
+                    "y" : 23.04756999636472
+                  },
+                  "id" : "D57AFDAA-3AEB-513D-A1FA-293B131C48D3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64,
+                    "y" : 23.000676610749853
+                  },
+                  "id" : "0315D92E-FBA2-5CCC-A5BC-1CF0171A39F1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66,
+                    "y" : 23.027636521161956
+                  },
+                  "id" : "B1C5138B-1F56-5B0A-9B5E-F863A809EE7D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 23.127785885131868
+                  },
+                  "id" : "42003866-C984-55B9-8350-BECD1F1B5259"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 23.29865869294197
+                  },
+                  "id" : "516C5BE3-B977-5DF6-A7BF-9C62ABE1C39C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72,
+                    "y" : 23.53604748896964
+                  },
+                  "id" : "0A3F25D0-A442-5B21-A20A-F20019DAED8A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 74,
+                    "y" : 23.83410697320843
+                  },
+                  "id" : "EC005FA3-33D8-55BD-899A-0A2AEE4DF244"
+                },
+                {
+                  "anchor" : {
+                    "x" : 76,
+                    "y" : 24.18549793195367
+                  },
+                  "id" : "6895F93D-B29A-5F3A-B9BB-E564B792CA9B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 24.58156795360132
+                  },
+                  "id" : "25A44E81-632C-5497-9207-F0392CBD22F7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 80,
+                    "y" : 25.012564479737375
+                  },
+                  "id" : "2AEE1970-5F06-59CB-A092-2995FD09C88C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82,
+                    "y" : 25.4678749454929
+                  },
+                  "id" : "1A449CCA-0757-559F-B7F3-472E834C7EE3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 84,
+                    "y" : 25.936288096112197
+                  },
+                  "id" : "3A0E362F-0FC8-5DA2-9873-B1E2E040FFE3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 86,
+                    "y" : 26.406270045252896
+                  },
+                  "id" : "413633FA-2053-5444-AA4E-D3AD11126703"
+                },
+                {
+                  "anchor" : {
+                    "x" : 88,
+                    "y" : 26.866248277546497
+                  },
+                  "id" : "0F75F3E7-072C-5BEC-B0D5-FFE1360454D4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 90,
+                    "y" : 27.30489660233369
+                  },
+                  "id" : "84EB9AF9-BFC6-571D-A72B-34039BCCDA36"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.8
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "39845B21-DF05-5C56-AC57-80B66665CF93",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-warp2",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 10,
+                    "y" : 36.34998072888245
+                  },
+                  "id" : "2D85530A-95CF-54E6-8897-9B61C68F62AD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 12,
+                    "y" : 36.612772235090745
+                  },
+                  "id" : "37C83565-96A6-51AD-AD33-E9722CFEA722"
+                },
+                {
+                  "anchor" : {
+                    "x" : 14,
+                    "y" : 36.81122861757721
+                  },
+                  "id" : "48269466-D372-58DA-9FA7-118CC91A37AD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 36.94046322156605
+                  },
+                  "id" : "0613C32C-59E7-5CCA-8E01-785BC2478216"
+                },
+                {
+                  "anchor" : {
+                    "x" : 18,
+                    "y" : 36.99729386220199
+                  },
+                  "id" : "42C6B684-7192-5D63-8C1C-5BFB4BCA7E59"
+                },
+                {
+                  "anchor" : {
+                    "x" : 20,
+                    "y" : 36.980321180502514
+                  },
+                  "id" : "25B0F1BC-02AF-574F-B4D7-69684D07F785"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22,
+                    "y" : 36.889963100220136
+                  },
+                  "id" : "4F73CBC7-800C-5661-A44C-910161E78186"
+                },
+                {
+                  "anchor" : {
+                    "x" : 24,
+                    "y" : 36.728444537172706
+                  },
+                  "id" : "B245B41B-532C-5B17-AC50-709841DFB673"
+                },
+                {
+                  "anchor" : {
+                    "x" : 26,
+                    "y" : 36.499742614431824
+                  },
+                  "id" : "1C97F871-CBB9-5CAA-B2E3-7ED4022B3560"
+                },
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 36.20948873235353
+                  },
+                  "id" : "8D70B87E-F126-5173-A216-D1480D23D271"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30,
+                    "y" : 35.86482990481199
+                  },
+                  "id" : "83C1122E-E47A-54D3-BBC9-986AB1D69B8E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32,
+                    "y" : 35.474252775998366
+                  },
+                  "id" : "8FDF7BD0-99BE-56DF-AFBF-227D0D7DEC10"
+                },
+                {
+                  "anchor" : {
+                    "x" : 34,
+                    "y" : 35.047374651075216
+                  },
+                  "id" : "B5DEC839-83FA-5FDE-8BA9-F2F67EDEA4C2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 36,
+                    "y" : 34.59470668620541
+                  },
+                  "id" : "51A43A9B-68D6-50C9-8633-0EE26E6C47AA"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 34.1273950690029
+                  },
+                  "id" : "13CCA98E-AF8D-5A38-8A4F-031C41D72EB4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 40,
+                    "y" : 33.65694656240154
+                  },
+                  "id" : "B03AB2E8-3E05-522C-B5CE-A32110A670F3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 42,
+                    "y" : 33.19494516996294
+                  },
+                  "id" : "3FC9B44C-3D61-55AE-A88F-E59094273AD4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44,
+                    "y" : 32.75276689926365
+                  },
+                  "id" : "CBCA6AAF-3DD7-58FB-A38C-5A8DDE60684E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 46,
+                    "y" : 32.34129964683383
+                  },
+                  "id" : "926FCFEE-8490-5189-9AD7-C34D98EC1E74"
+                },
+                {
+                  "anchor" : {
+                    "x" : 48,
+                    "y" : 31.970675102009828
+                  },
+                  "id" : "3383582F-E7EB-5DED-8910-9CD1E304AE49"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 31.65001927111755
+                  },
+                  "id" : "A7341669-2F64-5596-AC03-5EA096DFB609"
+                },
+                {
+                  "anchor" : {
+                    "x" : 52,
+                    "y" : 31.38722776490925
+                  },
+                  "id" : "564D6D99-B47E-57ED-8CA4-947D0DFDDCCF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 54,
+                    "y" : 31.18877138242279
+                  },
+                  "id" : "C5DB4BA9-6EE1-550C-8F57-90510F083074"
+                },
+                {
+                  "anchor" : {
+                    "x" : 56,
+                    "y" : 31.05953677843395
+                  },
+                  "id" : "A4A157A3-6C7C-5345-9422-3DBCD6CE5B2C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 58,
+                    "y" : 31.002706137798008
+                  },
+                  "id" : "530BF132-A144-5359-8B9C-5228493160DF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 60,
+                    "y" : 31.01967881949749
+                  },
+                  "id" : "1A93DAAB-8DBC-5C34-A5A5-C072EDCDB0B9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 62,
+                    "y" : 31.11003689977986
+                  },
+                  "id" : "BE6F72B6-F673-5404-B0DF-954F9CBE4D05"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64,
+                    "y" : 31.271555462827294
+                  },
+                  "id" : "A7EFA27B-CD76-5703-B67F-0B2E139932C5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66,
+                    "y" : 31.50025738556818
+                  },
+                  "id" : "618D3784-3332-5D5C-9D38-05199E3A1FA5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 31.790511267646476
+                  },
+                  "id" : "5CB11524-9831-5690-AD96-2AE6401E05E3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 32.13517009518801
+                  },
+                  "id" : "70B0552E-8A47-5A0E-865B-769E1B6C4A67"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72,
+                    "y" : 32.525747224001634
+                  },
+                  "id" : "C6AB1E22-F175-5B13-8F7A-9BB5ECD7112E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 74,
+                    "y" : 32.952625348924784
+                  },
+                  "id" : "BAC7C43F-7059-5EF3-844D-EA4B1BB23BDF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 76,
+                    "y" : 33.40529331379459
+                  },
+                  "id" : "BC6AE0BF-437C-5C19-B4CA-2A98E4275E24"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 33.872604930997106
+                  },
+                  "id" : "B535C20D-4D76-57F5-9D8F-E971B4A7C45C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 80,
+                    "y" : 34.34305343759846
+                  },
+                  "id" : "1A2814F2-9CAC-5C76-9DA0-7FA57C3DCEFB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82,
+                    "y" : 34.805054830037065
+                  },
+                  "id" : "B8585A83-3A4D-5937-B22F-6AD9250C41AA"
+                },
+                {
+                  "anchor" : {
+                    "x" : 84,
+                    "y" : 35.24723310073635
+                  },
+                  "id" : "973ECFFE-C38B-5DC0-BECC-28F3667ED7F5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 86,
+                    "y" : 35.65870035316617
+                  },
+                  "id" : "F0CD2CB6-B94E-5C4B-B9D8-01086F6402F5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 88,
+                    "y" : 36.02932489799017
+                  },
+                  "id" : "2291B736-A6F2-57BF-B513-FD4A355E3D04"
+                },
+                {
+                  "anchor" : {
+                    "x" : 90,
+                    "y" : 36.34998072888245
+                  },
+                  "id" : "11543F40-8DCD-5F51-9DB8-95B56EE78DC2"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.8
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "BAD1015B-DF04-5E68-AD45-EE07CBCA8C46",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-warp3",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 10,
+                    "y" : 44.92717007347998
+                  },
+                  "id" : "40C5B0CC-E334-5ACD-87FB-D56ABA1A07DF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 12,
+                    "y" : 44.99391233432208
+                  },
+                  "id" : "D7D39EA5-9BC9-5396-8D6E-EFFF9F23DC34"
+                },
+                {
+                  "anchor" : {
+                    "x" : 14,
+                    "y" : 44.986934537267814
+                  },
+                  "id" : "97B0FA23-C015-5D52-AF69-B58A43E79E33"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 44.90640849883862
+                  },
+                  "id" : "FDA77CD9-C93B-5BB5-AC64-523985C3B265"
+                },
+                {
+                  "anchor" : {
+                    "x" : 18,
+                    "y" : 44.75431703735123
+                  },
+                  "id" : "FEC72B75-C9FE-5EA2-ABDB-2451D1E37E54"
+                },
+                {
+                  "anchor" : {
+                    "x" : 20,
+                    "y" : 44.534405149350086
+                  },
+                  "id" : "C1E5B4C5-13A9-5358-9592-5AF10A1C26B1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22,
+                    "y" : 44.25208779536349
+                  },
+                  "id" : "0E44519B-AE18-564F-84EC-F63099457521"
+                },
+                {
+                  "anchor" : {
+                    "x" : 24,
+                    "y" : 43.91431656560416
+                  },
+                  "id" : "25EA541D-F41C-543C-8C98-5C08AAC5DCE5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 26,
+                    "y" : 43.52940850874723
+                  },
+                  "id" : "455EB905-FE7C-5D8A-A636-D91424DA4396"
+                },
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 43.106841338589106
+                  },
+                  "id" : "38C00363-BE3E-5422-9C13-C65F03C3D393"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30,
+                    "y" : 42.65702006127913
+                  },
+                  "id" : "4351AF84-A549-50A9-9DE7-FD2CD1C1AC7A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32,
+                    "y" : 42.19102076953588
+                  },
+                  "id" : "4212DBC9-8D58-503D-B2C6-E33D5C10833B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 34,
+                    "y" : 41.72031791248508
+                  },
+                  "id" : "E6785CFA-2880-5329-BD8F-5362BA9FE3F1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 36,
+                    "y" : 41.25650175664052
+                  },
+                  "id" : "A86B0402-EF99-5DF9-8FBC-1D55B157A76A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 40.810992995076674
+                  },
+                  "id" : "96A62247-7F98-5EF4-B782-EB42790AE4F5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 40,
+                    "y" : 40.394761532062056
+                  },
+                  "id" : "30C89B7C-1CF5-5349-AD34-A376539965B0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 42,
+                    "y" : 40.0180563676091
+                  },
+                  "id" : "8F816781-F519-53E3-A3F7-D80EA59CCCBC"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44,
+                    "y" : 39.690153233079414
+                  },
+                  "id" : "A83D2C05-1761-5AE0-A6A1-A49081606D60"
+                },
+                {
+                  "anchor" : {
+                    "x" : 46,
+                    "y" : 39.41912619189323
+                  },
+                  "id" : "2B04B0AB-4FAB-5A57-8F98-AA358B7D0427"
+                },
+                {
+                  "anchor" : {
+                    "x" : 48,
+                    "y" : 39.21164882929171
+                  },
+                  "id" : "3F258883-7C8E-5821-A36B-ED10B44365FD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 39.07282992652002
+                  },
+                  "id" : "A42989BC-92E9-5E89-9267-8582F712F847"
+                },
+                {
+                  "anchor" : {
+                    "x" : 52,
+                    "y" : 39.00608766567792
+                  },
+                  "id" : "F9775B40-E8F3-58D6-A80B-2BE4BFBE5687"
+                },
+                {
+                  "anchor" : {
+                    "x" : 54,
+                    "y" : 39.013065462732186
+                  },
+                  "id" : "CF419CD1-C713-5E84-A91C-C393AB077D8D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 56,
+                    "y" : 39.09359150116138
+                  },
+                  "id" : "4B329555-36EA-5355-A66D-ADC6668F4C03"
+                },
+                {
+                  "anchor" : {
+                    "x" : 58,
+                    "y" : 39.245682962648765
+                  },
+                  "id" : "D937991C-463E-55C2-9195-0960B578CCE3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 60,
+                    "y" : 39.465594850649914
+                  },
+                  "id" : "484CC29B-82AE-57D5-AF67-83745817F323"
+                },
+                {
+                  "anchor" : {
+                    "x" : 62,
+                    "y" : 39.74791220463651
+                  },
+                  "id" : "2DC13B72-4AA1-5EFD-96AE-C4776E1D9152"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64,
+                    "y" : 40.08568343439584
+                  },
+                  "id" : "919DF592-E093-5938-849D-1DB213972C86"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66,
+                    "y" : 40.47059149125277
+                  },
+                  "id" : "CA9023D8-09C6-5950-A966-72440F2850C8"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 40.893158661410894
+                  },
+                  "id" : "3C89E410-020F-573D-9357-93C5EDAC8257"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 41.34297993872087
+                  },
+                  "id" : "1C04FBD6-8B62-541B-88A8-F7CB028B2B99"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72,
+                    "y" : 41.80897923046412
+                  },
+                  "id" : "BA42F8D4-3B07-5532-873C-D3F08252A469"
+                },
+                {
+                  "anchor" : {
+                    "x" : 74,
+                    "y" : 42.27968208751492
+                  },
+                  "id" : "BA62C184-BBD9-5AF9-AA05-F934DDD12F7A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 76,
+                    "y" : 42.74349824335948
+                  },
+                  "id" : "87960A85-F415-51F7-B8AB-5EC2F47C029F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 43.189007004923326
+                  },
+                  "id" : "C8B19732-245D-5239-A2C6-E07E493C0FFE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 80,
+                    "y" : 43.605238467937944
+                  },
+                  "id" : "C8F51133-6FBA-55B3-88B1-76FF53D239F4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82,
+                    "y" : 43.981943632390895
+                  },
+                  "id" : "A635AB21-58A2-5EEB-B05A-A73B955F6C66"
+                },
+                {
+                  "anchor" : {
+                    "x" : 84,
+                    "y" : 44.309846766920586
+                  },
+                  "id" : "89F4BB26-88EB-5C53-A1A8-5C6C15F27203"
+                },
+                {
+                  "anchor" : {
+                    "x" : 86,
+                    "y" : 44.58087380810677
+                  },
+                  "id" : "C5D070E9-398F-5A25-BE6B-CC7FF02948E2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 88,
+                    "y" : 44.78835117070829
+                  },
+                  "id" : "733C344B-3723-5906-BEDD-2C4BC435CE33"
+                },
+                {
+                  "anchor" : {
+                    "x" : 90,
+                    "y" : 44.92717007347998
+                  },
+                  "id" : "783793D7-A0ED-506B-BCA3-64D0615158C9"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.8
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "10C14E77-C356-5B7F-A2FE-B9111C54D34F",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-warp4",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 10,
+                    "y" : 52.921542892634584
+                  },
+                  "id" : "CC7CC1F2-B69E-5B29-9603-814E3F170945"
+                },
+                {
+                  "anchor" : {
+                    "x" : 12,
+                    "y" : 52.778947137185774
+                  },
+                  "id" : "67D4D7CA-EC2B-54D9-8F25-C6F9B2FC9526"
+                },
+                {
+                  "anchor" : {
+                    "x" : 14,
+                    "y" : 52.56792448042267
+                  },
+                  "id" : "8525CFAC-3C29-5006-B89E-F990D5419AB9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 52.29367100049881
+                  },
+                  "id" : "CB2051CF-104B-558C-AEE4-36FDA4FA23C7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 18,
+                    "y" : 51.96293972828506
+                  },
+                  "id" : "35AE646F-3114-5E20-AE86-94B3955F4EDE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 20,
+                    "y" : 51.583874365337465
+                  },
+                  "id" : "08F98ED9-C2CF-53E1-AD22-884ECD922275"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22,
+                    "y" : 51.16580875893762
+                  },
+                  "id" : "DD7F6EE2-207C-5EF2-A97B-073727310438"
+                },
+                {
+                  "anchor" : {
+                    "x" : 24,
+                    "y" : 50.719037071795285
+                  },
+                  "id" : "99F6C7D7-8345-52EF-BF47-5BC3E76CB0E7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 26,
+                    "y" : 50.254560305598126
+                  },
+                  "id" : "37A8B452-52FA-5BF4-8DF9-AB4B4D804AEE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 49.78381541983992
+                  },
+                  "id" : "56CE80D6-51B5-5BD8-AE01-FBCE0517446E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30,
+                    "y" : 49.31839371592074
+                  },
+                  "id" : "E0B419B7-18C1-543A-824F-77B48A2A9788"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32,
+                    "y" : 48.86975542083716
+                  },
+                  "id" : "3CAE4B93-7F5F-59DF-9EC5-12ABB7B97C94"
+                },
+                {
+                  "anchor" : {
+                    "x" : 34,
+                    "y" : 48.44894749835927
+                  },
+                  "id" : "AFB145C2-E773-5091-AA64-2C484513FD59"
+                },
+                {
+                  "anchor" : {
+                    "x" : 36,
+                    "y" : 48.06633163611989
+                  },
+                  "id" : "6F565F51-EB78-5900-AAA5-F5D9E2D36CB3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 47.73132910647662
+                  },
+                  "id" : "4CCC3EB0-0637-5961-A3AF-F11F5396AB2A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 40,
+                    "y" : 47.45218878351891
+                  },
+                  "id" : "320C2E57-2727-53B8-AF1B-BA10F7787FAC"
+                },
+                {
+                  "anchor" : {
+                    "x" : 42,
+                    "y" : 47.235784028411615
+                  },
+                  "id" : "795EB41B-3764-5146-ABDC-2E79D159A1A3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44,
+                    "y" : 47.08744344443167
+                  },
+                  "id" : "D55D2F3C-03F4-54EA-96AB-33105DE523AF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 46,
+                    "y" : 47.010819669070834
+                  },
+                  "id" : "C9E50F23-D677-5005-98C9-7539149FF0CA"
+                },
+                {
+                  "anchor" : {
+                    "x" : 48,
+                    "y" : 47.00779943397823
+                  },
+                  "id" : "68BA4C32-8172-5FE6-8F7D-931B6D6FBE9C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 47.078457107365416
+                  },
+                  "id" : "9BA510A4-C119-5C1A-8C63-DF920B7B87B3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 52,
+                    "y" : 47.221052862814226
+                  },
+                  "id" : "2D1A6D61-4BC2-5A92-8290-B2DD0E15FB7E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 54,
+                    "y" : 47.43207551957734
+                  },
+                  "id" : "ED831E4E-7B63-5240-8F11-64640A974BC4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 56,
+                    "y" : 47.70632899950119
+                  },
+                  "id" : "E5E2B137-B56D-5688-9B7A-6828A9300200"
+                },
+                {
+                  "anchor" : {
+                    "x" : 58,
+                    "y" : 48.03706027171494
+                  },
+                  "id" : "B1E6F874-2466-5BEE-8450-17355E07E962"
+                },
+                {
+                  "anchor" : {
+                    "x" : 60,
+                    "y" : 48.416125634662535
+                  },
+                  "id" : "5EA8392C-A8FB-535F-8CA8-BB3ACF6BC174"
+                },
+                {
+                  "anchor" : {
+                    "x" : 62,
+                    "y" : 48.83419124106238
+                  },
+                  "id" : "9EE90B4C-8A59-5AED-A7A6-736524032B26"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64,
+                    "y" : 49.280962928204715
+                  },
+                  "id" : "C593A395-7129-5E36-A84C-1555FC8FE6B3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66,
+                    "y" : 49.745439694401874
+                  },
+                  "id" : "2E6E084E-5C7F-55B6-8523-2AC93B22502F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 50.21618458016008
+                  },
+                  "id" : "1D5C66A6-28D5-5BB8-AE9D-7A9E33F8EF09"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 50.68160628407926
+                  },
+                  "id" : "18305D32-F091-57ED-8E4B-134413581DDD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72,
+                    "y" : 51.13024457916284
+                  },
+                  "id" : "0627C945-9142-5882-AF75-D5773ED46E13"
+                },
+                {
+                  "anchor" : {
+                    "x" : 74,
+                    "y" : 51.55105250164073
+                  },
+                  "id" : "5C44617E-E8C0-5234-9975-F90643CB7A10"
+                },
+                {
+                  "anchor" : {
+                    "x" : 76,
+                    "y" : 51.93366836388011
+                  },
+                  "id" : "AD0D6849-EE14-51C3-8665-6402626BA516"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 52.26867089352338
+                  },
+                  "id" : "5CE6770B-C990-5E4B-AD35-39E8666792DB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 80,
+                    "y" : 52.54781121648109
+                  },
+                  "id" : "0F3A047C-0767-53CE-936D-54AB01DA4EA7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82,
+                    "y" : 52.764215971588385
+                  },
+                  "id" : "5F944122-BA6F-59FF-9FD1-A57F407E2DE6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 84,
+                    "y" : 52.91255655556833
+                  },
+                  "id" : "825C2954-6F06-58A8-A198-1B2B723DF55E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 86,
+                    "y" : 52.989180330929166
+                  },
+                  "id" : "77CFA343-9103-5F55-8996-98211BC6D1F2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 88,
+                    "y" : 52.99220056602177
+                  },
+                  "id" : "D81449F5-2C7B-5281-BDE5-697D63B0CEE7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 90,
+                    "y" : 52.921542892634584
+                  },
+                  "id" : "8883C6D8-E531-5099-9614-AFA53ACF51AA"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.8
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "E833B3E8-D732-5564-92E1-872469AF3A49",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-warp5",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 10,
+                    "y" : 60.334219590663764
+                  },
+                  "id" : "D9947077-E535-53D1-AD2D-E6D912D23884"
+                },
+                {
+                  "anchor" : {
+                    "x" : 12,
+                    "y" : 60.01067746021831
+                  },
+                  "id" : "3C74863B-EBBE-5F1E-8693-FB5430F1ECCA"
+                },
+                {
+                  "anchor" : {
+                    "x" : 14,
+                    "y" : 59.63762577764637
+                  },
+                  "id" : "A3A3058C-ECF1-5587-AEDF-55263E23F280"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 59.22425031346042
+                  },
+                  "id" : "E288F66F-186F-5AA8-8003-3D65444C2B87"
+                },
+                {
+                  "anchor" : {
+                    "x" : 18,
+                    "y" : 58.78072974350323
+                  },
+                  "id" : "57C28655-C520-5BDA-8ACF-3BA6F591C6B4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 20,
+                    "y" : 58.317985016167526
+                  },
+                  "id" : "45DA8845-FE2D-52B1-9326-17D573DF884C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22,
+                    "y" : 57.847410442402015
+                  },
+                  "id" : "00E2B1B6-330F-54E7-BF83-E2746113C6B7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 24,
+                    "y" : 57.380593129960275
+                  },
+                  "id" : "5095A5CF-1A32-50E2-8EBA-B9EC80C748B3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 26,
+                    "y" : 56.929027670352454
+                  },
+                  "id" : "18BF069A-A22D-5373-825A-A2EC5759E979"
+                },
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 56.503833103853935
+                  },
+                  "id" : "449E9412-8863-5DE8-93AB-0C789FEEE8FB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30,
+                    "y" : 56.11547913183178
+                  },
+                  "id" : "8471E982-9471-5BF8-A796-EA7342AD42CB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32,
+                    "y" : 55.77352831795011
+                  },
+                  "id" : "6E053377-A356-5898-A971-C97E6DBD8970"
+                },
+                {
+                  "anchor" : {
+                    "x" : 34,
+                    "y" : 55.48640062611638
+                  },
+                  "id" : "39865C88-DF2A-5333-9AB3-00D8848F6CB4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 36,
+                    "y" : 55.26116609302571
+                  },
+                  "id" : "BFA4206D-F33E-5F0C-9ED9-EC1A58B0B9E4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 55.10337074039335
+                  },
+                  "id" : "6F3661A0-924B-5A3D-A23C-F68236D0D405"
+                },
+                {
+                  "anchor" : {
+                    "x" : 40,
+                    "y" : 55.01690001349386
+                  },
+                  "id" : "CDDBD879-60BC-5DE8-AE44-A0BE0ECBFC1D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 42,
+                    "y" : 55.0038831086034
+                  },
+                  "id" : "F65B46B3-524C-54A9-870C-6630FFBFAB7B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44,
+                    "y" : 55.064640545120994
+                  },
+                  "id" : "C342E70E-25B3-5D15-B63D-7E218BAF0E8B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 46,
+                    "y" : 55.197676273317214
+                  },
+                  "id" : "BB4662CD-E8E9-523E-97B2-B9937EEFDAD1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 48,
+                    "y" : 55.3997145120436
+                  },
+                  "id" : "9C4AC718-DAA8-5D01-BA9E-D92106E3F559"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 55.665780409336236
+                  },
+                  "id" : "B9A967F1-1B24-56BE-8B92-BBEE369508DD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 52,
+                    "y" : 55.98932253978169
+                  },
+                  "id" : "6C562991-A751-5C32-94BA-2FEB8A91110C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 54,
+                    "y" : 56.36237422235363
+                  },
+                  "id" : "B8F1B66C-EFEF-5D3B-A669-76ED0267AFED"
+                },
+                {
+                  "anchor" : {
+                    "x" : 56,
+                    "y" : 56.77574968653958
+                  },
+                  "id" : "32891FFB-0EB4-583F-B5F1-EF93D1E8456F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 58,
+                    "y" : 57.21927025649677
+                  },
+                  "id" : "4999E8DC-4995-5DB7-A34E-E6AFEF4BD7B0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 60,
+                    "y" : 57.682014983832474
+                  },
+                  "id" : "0ABF7874-6D2F-5DFB-9A8B-F2A4F8B9304E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 62,
+                    "y" : 58.152589557597985
+                  },
+                  "id" : "C265403C-0DDC-5BDE-85BB-1C814F072C62"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64,
+                    "y" : 58.619406870039725
+                  },
+                  "id" : "0D29E1CC-EC71-5FF8-AE41-7B787FC260B7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66,
+                    "y" : 59.070972329647546
+                  },
+                  "id" : "73D350CA-62A5-5FC5-A58E-EDB61884634D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 59.496166896146065
+                  },
+                  "id" : "29BBBB97-3976-5DA9-B0AD-7E71DA2C3B6E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 59.88452086816822
+                  },
+                  "id" : "72201457-B5A3-5305-8C9D-C63FECF81CED"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72,
+                    "y" : 60.22647168204989
+                  },
+                  "id" : "D0177AB0-D16B-5DD6-897A-7A9693F7DF44"
+                },
+                {
+                  "anchor" : {
+                    "x" : 74,
+                    "y" : 60.51359937388362
+                  },
+                  "id" : "C609F189-89ED-5EA0-8F5A-97FF6525EA64"
+                },
+                {
+                  "anchor" : {
+                    "x" : 76,
+                    "y" : 60.73883390697429
+                  },
+                  "id" : "FA6EFF26-3998-57BA-A678-67D36A43890A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 60.89662925960665
+                  },
+                  "id" : "A4AABE38-2033-5E69-9E9B-B7E8C17A7238"
+                },
+                {
+                  "anchor" : {
+                    "x" : 80,
+                    "y" : 60.98309998650614
+                  },
+                  "id" : "BE40DC7D-0DBF-5DE3-9DDC-1FBC6D4401BF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82,
+                    "y" : 60.9961168913966
+                  },
+                  "id" : "6C01CE20-6F7C-546C-8CE9-3B1D31FD1703"
+                },
+                {
+                  "anchor" : {
+                    "x" : 84,
+                    "y" : 60.935359454879006
+                  },
+                  "id" : "D249FE3F-1214-57E2-A9C5-7A66AA780DF1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 86,
+                    "y" : 60.802323726682786
+                  },
+                  "id" : "B827D5C3-F337-5C5A-9285-D3EB98B67C18"
+                },
+                {
+                  "anchor" : {
+                    "x" : 88,
+                    "y" : 60.600285487956405
+                  },
+                  "id" : "D299E267-240A-56FC-9528-382E6FD716BE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 90,
+                    "y" : 60.334219590663764
+                  },
+                  "id" : "CA68EDF4-E05E-5995-AA9C-7E729A5159A4"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.8
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "6F733424-D7B5-5CB9-851C-92C373C58DBE",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-warp6",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 10,
+                    "y" : 67.28213964070149
+                  },
+                  "id" : "C4D3EB1B-5409-5EB6-B0C6-552FD9B481F1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 12,
+                    "y" : 66.84207024845306
+                  },
+                  "id" : "2D1DCEEF-8B30-51AD-9810-1D3012AB0C01"
+                },
+                {
+                  "anchor" : {
+                    "x" : 14,
+                    "y" : 66.38126629201678
+                  },
+                  "id" : "5BBCE8AE-25F6-5B43-AFF9-68C73635FD53"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 65.91107429412077
+                  },
+                  "id" : "1282F888-E5F3-576A-85CC-7EBBC87BDB88"
+                },
+                {
+                  "anchor" : {
+                    "x" : 18,
+                    "y" : 65.44307194223101
+                  },
+                  "id" : "7778D3D9-7BBC-5C28-91C6-D68D04164047"
+                },
+                {
+                  "anchor" : {
+                    "x" : 20,
+                    "y" : 64.98878300746178
+                  },
+                  "id" : "1B281174-0500-54F0-88EE-A7EEF445F008"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22,
+                    "y" : 64.55939359108561
+                  },
+                  "id" : "A8695508-6078-56A7-8F13-5857E05FCA7E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 24,
+                    "y" : 64.1654766855955
+                  },
+                  "id" : "878FA44F-F9E9-5671-AF67-22BD4FBC73D9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 26,
+                    "y" : 63.816731832539816
+                  },
+                  "id" : "895F76AA-4000-53F2-BF74-6017C1256772"
+                },
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 63.52174628761864
+                  },
+                  "id" : "03475DBB-0A8F-58BC-9D0E-4610B004550B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30,
+                    "y" : 63.287783573948815
+                  },
+                  "id" : "FD352588-3302-5264-8BC7-4C914AF49F33"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32,
+                    "y" : 63.12060463001862
+                  },
+                  "id" : "92A24B22-1AB9-5E51-9D7D-90A84D07CF63"
+                },
+                {
+                  "anchor" : {
+                    "x" : 34,
+                    "y" : 63.02432595626272
+                  },
+                  "id" : "30BF12E1-5F5F-5F77-BE31-1BFD9A4B7D75"
+                },
+                {
+                  "anchor" : {
+                    "x" : 36,
+                    "y" : 63.00131825315958
+                  },
+                  "id" : "215BF490-BBA1-549F-B1AA-EDCA93AF2F3D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 63.052148046717804
+                  },
+                  "id" : "D70BABE0-6AB3-5C97-B47F-300B70CAA281"
+                },
+                {
+                  "anchor" : {
+                    "x" : 40,
+                    "y" : 63.17556373872556
+                  },
+                  "id" : "4D817500-011F-58CA-A0E9-533795D3DE50"
+                },
+                {
+                  "anchor" : {
+                    "x" : 42,
+                    "y" : 63.36852642525242
+                  },
+                  "id" : "E1F445C0-B54C-547A-9BD2-71E0F2BBAFAE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44,
+                    "y" : 63.626284724549656
+                  },
+                  "id" : "A94A9F33-C726-5CE0-AA16-6E632F2708FF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 46,
+                    "y" : 63.94249177183782
+                  },
+                  "id" : "75B8FE28-7355-5C77-9451-28F809D031C6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 48,
+                    "y" : 64.30936150018165
+                  },
+                  "id" : "37308B45-4C49-58A7-8147-6603D7B6D15F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 64.71786035929851
+                  },
+                  "id" : "F0C7F4BF-9E07-536C-9BDD-E8D9F7DFD8FB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 52,
+                    "y" : 65.15792975154694
+                  },
+                  "id" : "94EE0CDA-642E-5120-B0AE-C1B46C6D4CB6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 54,
+                    "y" : 65.61873370798322
+                  },
+                  "id" : "3E4383B0-89E7-5EC1-8F03-22251C1E0AB4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 56,
+                    "y" : 66.08892570587923
+                  },
+                  "id" : "B9BD1263-B19B-538A-8339-997D210E12DF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 58,
+                    "y" : 66.55692805776899
+                  },
+                  "id" : "AC6D5117-2A51-54C4-B45D-ACC1E077B5C7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 60,
+                    "y" : 67.01121699253822
+                  },
+                  "id" : "56B82EA0-E6F7-59AE-BF4D-090769912D4A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 62,
+                    "y" : 67.44060640891439
+                  },
+                  "id" : "3D1840DE-9847-5452-BE3C-E532905A1822"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64,
+                    "y" : 67.8345233144045
+                  },
+                  "id" : "9611D82C-C403-5876-96B3-482A57657A70"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66,
+                    "y" : 68.18326816746018
+                  },
+                  "id" : "04D46E2E-F7B1-53A9-870D-ACE1EEB0A718"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 68.47825371238136
+                  },
+                  "id" : "37BB6607-8907-5E18-AC0E-7BA39D0DDCD0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 68.71221642605119
+                  },
+                  "id" : "19DD5197-37FF-5C70-8914-E7CC783C86D7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72,
+                    "y" : 68.87939536998138
+                  },
+                  "id" : "AA9137F9-254F-5B25-B9DC-287B139E6547"
+                },
+                {
+                  "anchor" : {
+                    "x" : 74,
+                    "y" : 68.97567404373729
+                  },
+                  "id" : "1F7D7A8D-4D28-5137-9AAF-3C591167DA5D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 76,
+                    "y" : 68.99868174684042
+                  },
+                  "id" : "69A00417-16C3-5D19-BA69-7F457257C44E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 68.9478519532822
+                  },
+                  "id" : "4C53F8E3-16ED-54F7-8CBD-41E176B4879A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 80,
+                    "y" : 68.82443626127444
+                  },
+                  "id" : "D463CFBA-79ED-570A-AD21-9087B69DEDF4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82,
+                    "y" : 68.63147357474757
+                  },
+                  "id" : "269D15D3-140E-562B-9C37-B37AF1E01304"
+                },
+                {
+                  "anchor" : {
+                    "x" : 84,
+                    "y" : 68.37371527545034
+                  },
+                  "id" : "88750E64-6631-511F-AE41-EB5BAE13F94F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 86,
+                    "y" : 68.05750822816218
+                  },
+                  "id" : "FBA45936-015A-5F51-AFBE-5528A006219C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 88,
+                    "y" : 67.69063849981835
+                  },
+                  "id" : "BB27A014-0BBD-505A-B67C-150C08801E32"
+                },
+                {
+                  "anchor" : {
+                    "x" : 90,
+                    "y" : 67.28213964070149
+                  },
+                  "id" : "ADBCAD63-5251-574B-BA9B-017378E489CF"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.8
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "9AB2BAF3-042B-50F1-A7E7-934FE71631B2",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-warp7",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 10,
+                    "y" : 73.97477825789855
+                  },
+                  "id" : "CA46104B-3DA0-5324-AA8E-7726D2DF5544"
+                },
+                {
+                  "anchor" : {
+                    "x" : 12,
+                    "y" : 73.5058019701756
+                  },
+                  "id" : "396DB78A-76BC-5B82-ADCD-33D517B0A4F1"
+                },
+                {
+                  "anchor" : {
+                    "x" : 14,
+                    "y" : 73.04899447809615
+                  },
+                  "id" : "A38FE5B1-938D-5111-BAD3-CA8A19C529DC"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 72.61560389817235
+                  },
+                  "id" : "95F744FF-A4A6-5943-86C5-49872483D829"
+                },
+                {
+                  "anchor" : {
+                    "x" : 18,
+                    "y" : 72.21630174482279
+                  },
+                  "id" : "AB9CAE76-F577-5134-81F3-1396603FFD4A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 20,
+                    "y" : 71.8609201622708
+                  },
+                  "id" : "7C072A05-7636-599E-AE94-1F69CCF86F0F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22,
+                    "y" : 71.55820982452268
+                  },
+                  "id" : "5E44763C-9BF0-5BFD-A304-4A93367CCB2D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 24,
+                    "y" : 71.31562446473178
+                  },
+                  "id" : "BBF40C9C-5CCC-5D90-A688-DB7631D78B10"
+                },
+                {
+                  "anchor" : {
+                    "x" : 26,
+                    "y" : 71.13913733955083
+                  },
+                  "id" : "FF525BB9-7957-5B8A-8E87-0559924513B7"
+                },
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 71.03309414772895
+                  },
+                  "id" : "025E16E8-784C-55E8-A7BE-4F0FD208BE9F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 30,
+                    "y" : 71.00010602458597
+                  },
+                  "id" : "9E2E1420-B042-5B54-803A-91755A52758E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 32,
+                    "y" : 71.040985247195
+                  },
+                  "id" : "AC9221A1-8789-5F09-BE18-5E2695B054BB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 34,
+                    "y" : 71.15472523342501
+                  },
+                  "id" : "85365391-A23A-59EC-8AC9-6C089C7427E0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 36,
+                    "y" : 71.33852532733366
+                  },
+                  "id" : "6E22D9BE-9C03-52C0-9BC0-40147C901274"
+                },
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 71.5878597606114
+                  },
+                  "id" : "9828C229-0F25-506A-A9D5-ABEDD8A7A06A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 40,
+                    "y" : 71.89658909201734
+                  },
+                  "id" : "D75A21E2-C8F9-5186-A809-49EB5E969E15"
+                },
+                {
+                  "anchor" : {
+                    "x" : 42,
+                    "y" : 72.2571113807984
+                  },
+                  "id" : "A2EA9778-BE03-56C6-ACBC-0968876997D9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44,
+                    "y" : 72.66054937169991
+                  },
+                  "id" : "A4DB7833-9B33-5AC5-989A-D403A5688735"
+                },
+                {
+                  "anchor" : {
+                    "x" : 46,
+                    "y" : 73.09696908245195
+                  },
+                  "id" : "D6DB1A6C-BF44-596B-8EA3-81290832D172"
+                },
+                {
+                  "anchor" : {
+                    "x" : 48,
+                    "y" : 73.55562441138179
+                  },
+                  "id" : "267553FF-12C7-5AB5-8548-84370EB78FA0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 74.02522174210145
+                  },
+                  "id" : "E2AA4D53-2533-520C-BD28-698DA55ACE7E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 52,
+                    "y" : 74.4941980298244
+                  },
+                  "id" : "AC2ADB9D-3353-5FE3-9F29-43475D2B4C0F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 54,
+                    "y" : 74.95100552190385
+                  },
+                  "id" : "45AD2D3A-CA6C-505F-ABB1-259970E5223D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 56,
+                    "y" : 75.38439610182765
+                  },
+                  "id" : "12F1FCFB-511F-5ECA-9B48-C2AC034AFB87"
+                },
+                {
+                  "anchor" : {
+                    "x" : 58,
+                    "y" : 75.78369825517721
+                  },
+                  "id" : "CB8C3B85-38BF-5ED1-8EB8-534A77D7894F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 60,
+                    "y" : 76.1390798377292
+                  },
+                  "id" : "7CBEC22F-0947-568B-B0FE-F10E80C83FF0"
+                },
+                {
+                  "anchor" : {
+                    "x" : 62,
+                    "y" : 76.44179017547732
+                  },
+                  "id" : "C9D87F99-5939-5DE5-BF11-832CB0477C56"
+                },
+                {
+                  "anchor" : {
+                    "x" : 64,
+                    "y" : 76.68437553526822
+                  },
+                  "id" : "01F19EB6-AB8F-5C3C-AB85-BBCDBE46CD8B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66,
+                    "y" : 76.86086266044917
+                  },
+                  "id" : "78B5067A-FAAA-51CD-981C-126E5A06D3B4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 76.96690585227105
+                  },
+                  "id" : "4D8D5ECF-3FBB-5BE8-B558-0A75A304F861"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 76.99989397541403
+                  },
+                  "id" : "19715E55-DCB8-52D3-AD9E-5AB497BB695B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72,
+                    "y" : 76.959014752805
+                  },
+                  "id" : "6FC43BC4-B650-570F-9FBA-68BD8E340F28"
+                },
+                {
+                  "anchor" : {
+                    "x" : 74,
+                    "y" : 76.84527476657499
+                  },
+                  "id" : "D77C0732-FEF7-555D-B376-2EA36EEAD546"
+                },
+                {
+                  "anchor" : {
+                    "x" : 76,
+                    "y" : 76.66147467266634
+                  },
+                  "id" : "763FADA6-0B69-572A-B5D8-527EA22AC9FF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 76.41214023938862
+                  },
+                  "id" : "EB9535D0-CF74-548D-8EE1-E51E7FDC3FB4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 80,
+                    "y" : 76.10341090798266
+                  },
+                  "id" : "BF84D611-9B05-564A-9E78-891FEB4CE01C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82,
+                    "y" : 75.7428886192016
+                  },
+                  "id" : "5440CFF7-BFF9-5CD1-B07E-7DEAADB8DF9A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 84,
+                    "y" : 75.33945062830009
+                  },
+                  "id" : "0D1C134A-7FB4-5014-A874-3E0FC38C5592"
+                },
+                {
+                  "anchor" : {
+                    "x" : 86,
+                    "y" : 74.90303091754805
+                  },
+                  "id" : "DCFA1A1E-FD41-59F0-A297-1951B76334F6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 88,
+                    "y" : 74.44437558861821
+                  },
+                  "id" : "6E3C8005-C6E9-56EF-A256-2D260BBA2D49"
+                },
+                {
+                  "anchor" : {
+                    "x" : 90,
+                    "y" : 73.97477825789855
+                  },
+                  "id" : "C1A05BD8-A051-5D5B-853A-76E5AB993C18"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.8
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "1DC33DDC-3521-5AC6-B9CC-FF6336D12EF2",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-weft0",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 18,
+                    "y" : 12
+                  },
+                  "id" : "ECEBD2D6-2251-5A4F-99C0-30E6C73247CF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 21,
+                    "y" : 87
+                  },
+                  "id" : "4580E519-E0BF-5A54-B1D4-AE8F6211781C"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "F185FFF5-73EB-59BA-97FA-2F2C7BAA2F93",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-weft1",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 12
+                  },
+                  "id" : "43BDC5FB-FBBD-55BA-8674-1DA77D8385F9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 31,
+                    "y" : 87
+                  },
+                  "id" : "9E400D53-433A-5E8B-ADA7-B1936C96DD5E"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "AACF6F2E-67E7-5C92-95C4-51AE4CA3223C",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-weft2",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 38,
+                    "y" : 12
+                  },
+                  "id" : "D5C0D14B-4446-59E4-8ACB-77103FB6C1AA"
+                },
+                {
+                  "anchor" : {
+                    "x" : 41,
+                    "y" : 87
+                  },
+                  "id" : "B7305D1F-5160-5F4C-BA3A-6220E7EE1189"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "EFEB5DED-D24E-5ACC-AE2A-2F5F29A56E91",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-weft3",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 48,
+                    "y" : 12
+                  },
+                  "id" : "46872988-5CBD-5074-A9D3-BE894960AD0F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 51,
+                    "y" : 87
+                  },
+                  "id" : "B0996BAD-7BED-5478-845D-83DE85D5D86A"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "D2A02992-D25E-512B-8B2A-699A1474B586",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-weft4",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 58,
+                    "y" : 12
+                  },
+                  "id" : "2EE4BA03-5FE9-53D6-8188-D0ADA396D501"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61,
+                    "y" : 87
+                  },
+                  "id" : "8A8EA958-A298-581C-A75D-4E7E2C669B00"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "4F20FBB3-1DF5-597A-89A6-1D4C12A9CB76",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-weft5",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 68,
+                    "y" : 12
+                  },
+                  "id" : "7AF2B52D-24B9-50F4-9ADB-0FC8A5E36822"
+                },
+                {
+                  "anchor" : {
+                    "x" : 71,
+                    "y" : 87
+                  },
+                  "id" : "4C90307E-D32C-5B01-97F2-2B807FDD3D92"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 5,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "02F8F68C-AB60-562A-942C-BD0BEDF9636A",
+        "kind" : "path",
+        "name" : "cover_inside_fronttextile-weft6",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 12
+                  },
+                  "id" : "5F7D0D0D-B224-5CBF-9FD4-67E8AD83109A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 81,
+                    "y" : 87
+                  },
+                  "id" : "FE4E8003-DCE5-501E-9E6D-53DCBCBE82A1"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "967696D1-D345-5B89-8C8D-369B111B7342",
+        "kind" : "path",
+        "name" : "cover_inside_frontmetal-rail0",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 75
+                  },
+                  "id" : "98B06050-500B-5AEC-829D-DF67AC2F3DAF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 30
+                  },
+                  "id" : "E9A2F411-CBBD-5241-8EC6-0228169DE06D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 30
+                  },
+                  "id" : "12BFE084-B5C0-5F7B-BFE4-1104E647D23A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 75
+                  },
+                  "id" : "1A54CFDC-B149-55DD-AC70-EEF71DC07D9B"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.9
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "FAA156AB-49CC-50DF-8460-89407956B445",
+        "kind" : "path",
+        "name" : "cover_inside_frontmetal-rail1",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 24,
+                    "y" : 62
+                  },
+                  "id" : "C2A81E29-BC7E-5BFB-BC59-1E6D79AC6EAD"
+                },
+                {
+                  "anchor" : {
+                    "x" : 24,
+                    "y" : 17
+                  },
+                  "id" : "0AA65824-39F5-5A46-BD4A-38659875C194"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 17
+                  },
+                  "id" : "08A66E0D-502D-58AC-B11B-D08FE2E95A3C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 62
+                  },
+                  "id" : "3C9755F7-2933-51AB-A964-1DF2C9505942"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.9
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 4,
+        "id" : "FD9FF28F-7318-5AB5-A024-6019E7BC7AA2",
+        "kind" : "ellipse",
+        "name" : "cover_inside_frontmetal-pin",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "stroke" : {
+          "color" : "#1A1919",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 4,
+        "x" : 68,
+        "y" : 34
+      },
+      {
+        "affine" : {
+          "a" : 0.43,
+          "b" : 0,
+          "c" : 0,
+          "d" : 0.27,
+          "tx" : 52,
+          "ty" : 66
+        },
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "6DF5A10F-1C85-5770-96F5-17B6A650B431",
+        "kind" : "path",
+        "name" : "cover_inside_frontmetal-fold",
+        "parentID" : "346D5E25-843F-5291-99FE-A1DF13378DAC",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 24
+                  },
+                  "id" : "9E63DEBF-8D84-53D9-A0EC-0CC8497E6BA4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 82
+                  },
+                  "id" : "1B0E087B-E9CE-5926-88D5-00576C7F7D55"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "dash" : [
+            1,
+            1.5
+          ],
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.35
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 10,
+        "height" : 80,
+        "id" : "A01F051F-E909-51F6-B73A-9D5C78A995CD",
+        "kind" : "rectangle",
+        "name" : "cover_inside_front-frame-mask",
+        "text" : "",
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 103
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "B175AE2D-891F-4DDB-8622-9AB77CEFCCA1",
+  "id" : "CA0839B1-BDDF-468B-8836-94B50695563B",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / Inside front cover / cover inside front",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 251.9,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

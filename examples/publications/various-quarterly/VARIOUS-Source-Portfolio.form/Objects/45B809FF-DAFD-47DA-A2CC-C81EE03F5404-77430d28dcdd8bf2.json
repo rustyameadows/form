@@ -1,0 +1,19 @@
+{
+  "color" : "#A7AEAC",
+  "designID" : "BABC0CA9-5EB5-444C-BE06-15904B9DFABE",
+  "id" : "45B809FF-DAFD-47DA-A2CC-C81EE03F5404",
+  "locked" : false,
+  "materialID" : "aluminum",
+  "name" : "index_works_04",
+  "parameters" : {
+    "scale" : 1
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "various_index_works_04",
+  "relationship" : "original",
+  "rotation" : 0
+}

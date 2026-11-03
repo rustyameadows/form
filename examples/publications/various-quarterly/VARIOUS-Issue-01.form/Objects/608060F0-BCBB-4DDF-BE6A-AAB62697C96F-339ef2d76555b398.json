@@ -1,0 +1,260 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 3070.8,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "3188F616-7384-54EC-8985-ED53542911E9",
+        "kind" : "text",
+        "name" : "fold_bureau_03-caption",
+        "text" : "Shelter fold\nAn upper plane gives the interval a roof.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 241
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "9DAA9936-A32D-5929-9EAA-3101420D4832",
+        "kind" : "text",
+        "name" : "fold_bureau_04-caption",
+        "text" : "Step fan\nRepeated direction changes become a spatial rhythm.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 241
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11.25,
+        "height" : 126,
+        "id" : "21F8F28C-4498-57CD-A419-0EABC49BC734",
+        "kind" : "text",
+        "name" : "artist_01-body-frame-2",
+        "storyFrame" : {
+          "storyID" : "B6DFD8A5-5286-4495-8EC7-20AF6DBD40AB"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 28
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11.25,
+        "height" : 126,
+        "id" : "1915115B-2859-5628-B232-73FF197B0827",
+        "kind" : "text",
+        "name" : "artist_01-body-frame-3",
+        "storyFrame" : {
+          "storyID" : "B6DFD8A5-5286-4495-8EC7-20AF6DBD40AB"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 28
+      },
+      {
+        "asset" : "8A60F8D9-E2A1-42CE-BB0F-814E56788F6C.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 61,
+        "id" : "377D2CC0-230A-4CF1-9F2D-C89369FD7EF1",
+        "imageCrop" : {
+          "height" : 0.8871436881908086,
+          "width" : 1,
+          "x" : 0,
+          "y" : 0.05642815590459571
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / fold_bureau_03",
+        "text" : "",
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 176
+      },
+      {
+        "asset" : "00AF8F48-10BE-49C1-ABB7-818D5D096949.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 61,
+        "id" : "44CB5952-DDE2-48FA-A82C-1990755F21D8",
+        "imageCrop" : {
+          "height" : 0.8871436881908086,
+          "width" : 1,
+          "x" : 0,
+          "y" : 0.05642815590459571
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / fold_bureau_04",
+        "text" : "",
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 176
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "97621AD4-E945-46F2-BE7B-4D3305BC581B",
+  "id" : "608060F0-BCBB-4DDF-BE6A-AAB62697C96F",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 11 / artist 01",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 3022.8000000000006,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

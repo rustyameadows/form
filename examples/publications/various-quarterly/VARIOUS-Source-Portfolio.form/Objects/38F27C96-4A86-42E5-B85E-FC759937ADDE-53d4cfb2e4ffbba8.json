@@ -1,0 +1,198 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "elements" : [
+      {
+        "color" : "#E9583C",
+        "fontSize" : 12,
+        "height" : 21,
+        "id" : "E1989FEB-66AB-5358-871B-1782ED7BE1C6",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_020",
+        "text" : "",
+        "width" : 21,
+        "x" : 10,
+        "y" : 20
+      },
+      {
+        "color" : "#235C8B",
+        "fontSize" : 12,
+        "height" : 20,
+        "id" : "25F8E0AD-9D3E-5EC5-9211-4EBDA5A0DC73",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_021",
+        "text" : "",
+        "width" : 20,
+        "x" : 20,
+        "y" : 34.89286239941719
+      },
+      {
+        "color" : "#E9583C",
+        "fontSize" : 12,
+        "height" : 19,
+        "id" : "BFCEBF6B-6376-5EC9-89FE-CEC6CC5442C6",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_022",
+        "text" : "",
+        "width" : 19,
+        "x" : 30,
+        "y" : 39.88086404396152
+      },
+      {
+        "color" : "#235C8B",
+        "fontSize" : 12,
+        "height" : 18,
+        "id" : "340B6DA7-B2AB-51DE-AD82-227ED04F788E",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_023",
+        "text" : "",
+        "width" : 18,
+        "x" : 40,
+        "y" : 31.64661299048163
+      },
+      {
+        "color" : "#E9583C",
+        "fontSize" : 12,
+        "height" : 17,
+        "id" : "97B3C9D9-6DE7-563B-8206-4A9101A51337",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_024",
+        "text" : "",
+        "width" : 17,
+        "x" : 50,
+        "y" : 15.666498392252398
+      },
+      {
+        "color" : "#235C8B",
+        "fontSize" : 12,
+        "height" : 16,
+        "id" : "4D6B79B6-7C53-5AFF-B3AA-0503FD1476B6",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_025",
+        "text" : "",
+        "width" : 16,
+        "x" : 60,
+        "y" : 2.568484551728236
+      },
+      {
+        "color" : "#E9583C",
+        "fontSize" : 12,
+        "height" : 15,
+        "id" : "498A9F63-6C14-50A1-8DA1-6FA7BDC5FA58",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_026",
+        "text" : "",
+        "width" : 15,
+        "x" : 70,
+        "y" : 1.0637244881478267
+      },
+      {
+        "color" : "#191D1D",
+        "fontSize" : 34,
+        "height" : 22,
+        "id" : "1FB62481-8A09-5081-B5F6-54613ACF3178",
+        "kind" : "text",
+        "name" : "signal_rooms_02-title",
+        "text" : "INTERVAL",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 39.44,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 89,
+        "x" : 8,
+        "y" : 66
+      },
+      {
+        "color" : "#191D1D",
+        "fontSize" : 6,
+        "height" : 8,
+        "id" : "797155B0-6A7A-5CEA-856E-C45B8E9A3D8C",
+        "kind" : "text",
+        "name" : "signal_rooms_02-note",
+        "text" : "AN ATLAS OF WAITING",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 6.959999999999999,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85,
+        "x" : 9,
+        "y" : 90
+      }
+    ],
+    "showGuides" : false,
+    "unit" : "mm"
+  },
+  "designID" : "E752A01A-D64D-4EA3-B64B-9D1BF0454C16",
+  "id" : "38F27C96-4A86-42E5-B85E-FC759937ADDE",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "signal_rooms_02 / editable graphic",
+  "parameters" : {
+    "depth" : 100,
+    "width" : 100
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

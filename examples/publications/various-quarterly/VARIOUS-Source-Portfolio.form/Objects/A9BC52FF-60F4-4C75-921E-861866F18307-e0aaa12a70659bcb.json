@@ -1,0 +1,638 @@
+{
+  "cadModel" : {
+    "assumptions" : [
+      "Original fictional studio design. Physical dimensions are authored millimeters."
+    ],
+    "features" : [
+      {
+        "id" : "78578775-CDCB-54B1-B0B8-46D835FC8812",
+        "name" : "Offset cup",
+        "operation" : {
+          "curves" : [
+            {
+              "control1" : {
+                "x" : "24*scale",
+                "y" : "18.77768149424698*scale"
+              },
+              "control2" : {
+                "x" : "8.77768149424698*scale",
+                "y" : "34*scale"
+              },
+              "end" : {
+                "x" : "-10*scale",
+                "y" : "34*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "24*scale",
+                "y" : "0*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-28.77768149424698*scale",
+                "y" : "34*scale"
+              },
+              "control2" : {
+                "x" : "-44*scale",
+                "y" : "18.77768149424698*scale"
+              },
+              "end" : {
+                "x" : "-44*scale",
+                "y" : "0*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-10*scale",
+                "y" : "34*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-44*scale",
+                "y" : "-18.77768149424698*scale"
+              },
+              "control2" : {
+                "x" : "-28.77768149424698*scale",
+                "y" : "-34*scale"
+              },
+              "end" : {
+                "x" : "-10*scale",
+                "y" : "-34*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-44*scale",
+                "y" : "0*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "8.77768149424698*scale",
+                "y" : "-34*scale"
+              },
+              "control2" : {
+                "x" : "24*scale",
+                "y" : "-18.77768149424698*scale"
+              },
+              "end" : {
+                "x" : "24*scale",
+                "y" : "0*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-10*scale",
+                "y" : "-34*scale"
+              }
+            }
+          ],
+          "inputs" : [
+
+          ],
+          "kind" : "curveProfile",
+          "plane" : {
+            "origin" : {
+              "x" : "0*scale",
+              "y" : "0*scale",
+              "z" : "0*scale"
+            },
+            "u" : {
+              "x" : 1,
+              "y" : 0,
+              "z" : 0
+            },
+            "v" : {
+              "x" : 0,
+              "y" : 0,
+              "z" : -1
+            }
+          },
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "657D535F-5E67-5E35-A318-4BEB51142057",
+        "name" : "Cup body",
+        "operation" : {
+          "direction" : {
+            "x" : 0,
+            "y" : 1,
+            "z" : 0
+          },
+          "inputs" : [
+            "78578775-CDCB-54B1-B0B8-46D835FC8812"
+          ],
+          "kind" : "extrude",
+          "values" : {
+            "distance" : "78*scale"
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "6FAB9FD7-66C5-579F-B082-4F041053033F",
+        "name" : "Offset cavity",
+        "operation" : {
+          "curves" : [
+            {
+              "control1" : {
+                "x" : "13*scale",
+                "y" : "14.911688245431426*scale"
+              },
+              "control2" : {
+                "x" : "0.9116882454314261*scale",
+                "y" : "27*scale"
+              },
+              "end" : {
+                "x" : "-14*scale",
+                "y" : "27*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "13*scale",
+                "y" : "0*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-28.911688245431428*scale",
+                "y" : "27*scale"
+              },
+              "control2" : {
+                "x" : "-41*scale",
+                "y" : "14.911688245431426*scale"
+              },
+              "end" : {
+                "x" : "-41*scale",
+                "y" : "0*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-14*scale",
+                "y" : "27*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-41*scale",
+                "y" : "-14.911688245431426*scale"
+              },
+              "control2" : {
+                "x" : "-28.911688245431428*scale",
+                "y" : "-27*scale"
+              },
+              "end" : {
+                "x" : "-14*scale",
+                "y" : "-27*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-41*scale",
+                "y" : "0*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "0.9116882454314261*scale",
+                "y" : "-27*scale"
+              },
+              "control2" : {
+                "x" : "13*scale",
+                "y" : "-14.911688245431426*scale"
+              },
+              "end" : {
+                "x" : "13*scale",
+                "y" : "0*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-14*scale",
+                "y" : "-27*scale"
+              }
+            }
+          ],
+          "inputs" : [
+
+          ],
+          "kind" : "curveProfile",
+          "plane" : {
+            "origin" : {
+              "x" : "0*scale",
+              "y" : "6*scale",
+              "z" : "0*scale"
+            },
+            "u" : {
+              "x" : 1,
+              "y" : 0,
+              "z" : 0
+            },
+            "v" : {
+              "x" : 0,
+              "y" : 0,
+              "z" : -1
+            }
+          },
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "CCCF871E-0E1B-52A9-89B7-C78BFA338087",
+        "name" : "Cup cavity tool",
+        "operation" : {
+          "direction" : {
+            "x" : 0,
+            "y" : 1,
+            "z" : 0
+          },
+          "inputs" : [
+            "6FAB9FD7-66C5-579F-B082-4F041053033F"
+          ],
+          "kind" : "extrude",
+          "values" : {
+            "distance" : "80*scale"
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "C0C09C51-C355-595E-9B78-5E1A1BFEB61D",
+        "name" : "Open cup",
+        "operation" : {
+          "inputs" : [
+            "657D535F-5E67-5E35-A318-4BEB51142057",
+            "CCCF871E-0E1B-52A9-89B7-C78BFA338087"
+          ],
+          "kind" : "subtract",
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "908C732E-E17F-5214-9CEC-EA61049D509A",
+        "name" : "Handle outer",
+        "operation" : {
+          "curves" : [
+            {
+              "control1" : {
+                "x" : "66*scale",
+                "y" : "55.254833995939045*scale"
+              },
+              "control2" : {
+                "x" : "55.254833995939045*scale",
+                "y" : "66*scale"
+              },
+              "end" : {
+                "x" : "42*scale",
+                "y" : "66*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "66*scale",
+                "y" : "42*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "28.745166004060955*scale",
+                "y" : "66*scale"
+              },
+              "control2" : {
+                "x" : "18*scale",
+                "y" : "55.254833995939045*scale"
+              },
+              "end" : {
+                "x" : "18*scale",
+                "y" : "42*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "42*scale",
+                "y" : "66*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "18*scale",
+                "y" : "28.745166004060955*scale"
+              },
+              "control2" : {
+                "x" : "28.745166004060955*scale",
+                "y" : "18*scale"
+              },
+              "end" : {
+                "x" : "42*scale",
+                "y" : "18*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "18*scale",
+                "y" : "42*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "55.254833995939045*scale",
+                "y" : "18*scale"
+              },
+              "control2" : {
+                "x" : "66*scale",
+                "y" : "28.745166004060955*scale"
+              },
+              "end" : {
+                "x" : "66*scale",
+                "y" : "42*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "42*scale",
+                "y" : "18*scale"
+              }
+            }
+          ],
+          "inputs" : [
+
+          ],
+          "kind" : "curveProfile",
+          "plane" : {
+            "origin" : {
+              "x" : "0*scale",
+              "y" : "0*scale",
+              "z" : "0*scale"
+            },
+            "u" : {
+              "x" : 1,
+              "y" : 0,
+              "z" : 0
+            },
+            "v" : {
+              "x" : 0,
+              "y" : 1,
+              "z" : 0
+            }
+          },
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "E471F8C5-A0F6-5523-816D-EC1061D04FD8",
+        "name" : "Handle body",
+        "operation" : {
+          "direction" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 1
+          },
+          "inputs" : [
+            "908C732E-E17F-5214-9CEC-EA61049D509A"
+          ],
+          "kind" : "extrude",
+          "values" : {
+            "distance" : "12*scale"
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "4D03EE19-2F9C-54A1-ABFB-AEF7982797D3",
+        "name" : "Handle opening",
+        "operation" : {
+          "curves" : [
+            {
+              "control1" : {
+                "x" : "58*scale",
+                "y" : "50.8365559972927*scale"
+              },
+              "control2" : {
+                "x" : "50.8365559972927*scale",
+                "y" : "58*scale"
+              },
+              "end" : {
+                "x" : "42*scale",
+                "y" : "58*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "58*scale",
+                "y" : "42*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "33.1634440027073*scale",
+                "y" : "58*scale"
+              },
+              "control2" : {
+                "x" : "26*scale",
+                "y" : "50.8365559972927*scale"
+              },
+              "end" : {
+                "x" : "26*scale",
+                "y" : "42*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "42*scale",
+                "y" : "58*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "26*scale",
+                "y" : "33.1634440027073*scale"
+              },
+              "control2" : {
+                "x" : "33.1634440027073*scale",
+                "y" : "26*scale"
+              },
+              "end" : {
+                "x" : "42*scale",
+                "y" : "26*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "26*scale",
+                "y" : "42*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "50.8365559972927*scale",
+                "y" : "26*scale"
+              },
+              "control2" : {
+                "x" : "58*scale",
+                "y" : "33.1634440027073*scale"
+              },
+              "end" : {
+                "x" : "58*scale",
+                "y" : "42*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "42*scale",
+                "y" : "26*scale"
+              }
+            }
+          ],
+          "inputs" : [
+
+          ],
+          "kind" : "curveProfile",
+          "plane" : {
+            "origin" : {
+              "x" : "0*scale",
+              "y" : "0*scale",
+              "z" : "-1*scale"
+            },
+            "u" : {
+              "x" : 1,
+              "y" : 0,
+              "z" : 0
+            },
+            "v" : {
+              "x" : 0,
+              "y" : 1,
+              "z" : 0
+            }
+          },
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "5FBD8884-DB1C-5E90-AA63-AB955C2ACD00",
+        "name" : "Handle tool",
+        "operation" : {
+          "direction" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 1
+          },
+          "inputs" : [
+            "4D03EE19-2F9C-54A1-ABFB-AEF7982797D3"
+          ],
+          "kind" : "extrude",
+          "values" : {
+            "distance" : "14*scale"
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "7F447DD6-3338-5A2E-BBDD-930F615E21DC",
+        "name" : "Handle void",
+        "operation" : {
+          "inputs" : [
+            "E471F8C5-A0F6-5523-816D-EC1061D04FD8",
+            "5FBD8884-DB1C-5E90-AA63-AB955C2ACD00"
+          ],
+          "kind" : "subtract",
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "0FC6F9D9-7A62-57C7-9CAB-1C0A538264EC",
+        "name" : "Joined cup handle",
+        "operation" : {
+          "inputs" : [
+            "C0C09C51-C355-595E-9B78-5E1A1BFEB61D",
+            "7F447DD6-3338-5A2E-BBDD-930F615E21DC"
+          ],
+          "kind" : "union",
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      }
+    ],
+    "id" : "CB12ED00-7745-5A77-98A2-C53E761185B6",
+    "name" : "matter_study_05",
+    "outputs" : [
+      "0FC6F9D9-7A62-57C7-9CAB-1C0A538264EC"
+    ],
+    "parameters" : [
+      {
+        "maximum" : 1.5,
+        "minimum" : 0.65,
+        "name" : "scale",
+        "unit" : "×",
+        "value" : 1
+      }
+    ],
+    "revision" : 0,
+    "unresolvedMeasurements" : [
+      "Digital appearance only; material and manufacturing samples not measured."
+    ],
+    "version" : 1
+  },
+  "cadRepresentation" : {
+    "components" : [
+      {
+        "brepAsset" : "cad-e9aa5b60c1d08e772f0a209c1247347782227b0e52068a1da906bfa6b2f2228d.brep",
+        "brepSHA256" : "e9aa5b60c1d08e772f0a209c1247347782227b0e52068a1da906bfa6b2f2228d",
+        "closed" : true,
+        "edgeCount" : 52,
+        "faceCount" : 21,
+        "featureFingerprint" : "cea5d1d2348448a6246a71c630ec577d0dba51d63b63e18a1a44276231e7e474",
+        "id" : "0FC6F9D9-7A62-57C7-9CAB-1C0A538264EC",
+        "maximum" : {
+          "x" : 66.0000001,
+          "y" : 78.0000001,
+          "z" : 34.0000001
+        },
+        "meshAsset" : "cad-cd18d3976a003983d580f57b5eddd754048e3aae73cebf85b231c1202f320fc6.mesh",
+        "meshSHA256" : "cd18d3976a003983d580f57b5eddd754048e3aae73cebf85b231c1202f320fc6",
+        "minimum" : {
+          "x" : -44.0000001,
+          "y" : -1e-07,
+          "z" : -34.0000001
+        },
+        "name" : "Joined cup handle",
+        "solidCount" : 1,
+        "triangleCount" : 15222,
+        "valid" : true,
+        "vertexCount" : 34,
+        "volumeMM3" : 129165.9012673521
+      }
+    ],
+    "definitionSHA256" : "c90c4ffea12330be0d2f6b0b8658a13d3aa0da2efd46237d4433e6d21719674f",
+    "editability" : "nativeFeatureModel",
+    "kernelVersion" : "8.0.1+form.gprop2",
+    "meshDeflectionMM" : 0.05,
+    "modelID" : "CB12ED00-7745-5A77-98A2-C53E761185B6"
+  },
+  "color" : "#BC775E",
+  "designID" : "9A4CCFCF-A96E-48FB-8EB2-D5AEB86990F1",
+  "id" : "A9BC52FF-60F4-4C75-921E-861866F18307",
+  "locked" : false,
+  "materialID" : "clay",
+  "name" : "matter_study_05",
+  "parameters" : {
+
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 1e-07,
+    "z" : 0
+  },
+  "recipeID" : "cadModel",
+  "relationship" : "original",
+  "rotation" : 0
+}

@@ -1,0 +1,495 @@
+{
+  "cadModel" : {
+    "assumptions" : [
+      "Original fictional studio design. Physical dimensions are authored millimeters."
+    ],
+    "features" : [
+      {
+        "id" : "2DDBA771-660B-5563-B317-0EB24A2D30B1",
+        "name" : "Double body",
+        "operation" : {
+          "curves" : [
+            {
+              "control1" : {
+                "x" : "72*scale",
+                "y" : "23.748244242724123*scale"
+              },
+              "control2" : {
+                "x" : "39.764501987817134*scale",
+                "y" : "43*scale"
+              },
+              "end" : {
+                "x" : "0*scale",
+                "y" : "43*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "72*scale",
+                "y" : "0*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-39.764501987817134*scale",
+                "y" : "43*scale"
+              },
+              "control2" : {
+                "x" : "-72*scale",
+                "y" : "23.748244242724123*scale"
+              },
+              "end" : {
+                "x" : "-72*scale",
+                "y" : "0*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "0*scale",
+                "y" : "43*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-72*scale",
+                "y" : "-23.748244242724123*scale"
+              },
+              "control2" : {
+                "x" : "-39.764501987817134*scale",
+                "y" : "-43*scale"
+              },
+              "end" : {
+                "x" : "0*scale",
+                "y" : "-43*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-72*scale",
+                "y" : "0*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "39.764501987817134*scale",
+                "y" : "-43*scale"
+              },
+              "control2" : {
+                "x" : "72*scale",
+                "y" : "-23.748244242724123*scale"
+              },
+              "end" : {
+                "x" : "72*scale",
+                "y" : "0*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "0*scale",
+                "y" : "-43*scale"
+              }
+            }
+          ],
+          "inputs" : [
+
+          ],
+          "kind" : "curveProfile",
+          "plane" : {
+            "origin" : {
+              "x" : "0*scale",
+              "y" : "0*scale",
+              "z" : "0*scale"
+            },
+            "u" : {
+              "x" : 1,
+              "y" : 0,
+              "z" : 0
+            },
+            "v" : {
+              "x" : 0,
+              "y" : 0,
+              "z" : -1
+            }
+          },
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "E33653B8-ED30-5C89-8444-E43C6F6BD41C",
+        "name" : "Ceramic wall",
+        "operation" : {
+          "direction" : {
+            "x" : 0,
+            "y" : 1,
+            "z" : 0
+          },
+          "inputs" : [
+            "2DDBA771-660B-5563-B317-0EB24A2D30B1"
+          ],
+          "kind" : "extrude",
+          "values" : {
+            "distance" : "83*scale"
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "ACE9A4DD-3853-5A6D-88AD-296D8BC3352C",
+        "name" : "Mouth 0",
+        "operation" : {
+          "curves" : [
+            {
+              "control1" : {
+                "x" : "-6*scale",
+                "y" : "13.80711874576984*scale"
+              },
+              "control2" : {
+                "x" : "-16.29745075389175*scale",
+                "y" : "25*scale"
+              },
+              "end" : {
+                "x" : "-29*scale",
+                "y" : "25*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-6*scale",
+                "y" : "0*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-41.70254924610825*scale",
+                "y" : "25*scale"
+              },
+              "control2" : {
+                "x" : "-52*scale",
+                "y" : "13.80711874576984*scale"
+              },
+              "end" : {
+                "x" : "-52*scale",
+                "y" : "0*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-29*scale",
+                "y" : "25*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-52*scale",
+                "y" : "-13.80711874576984*scale"
+              },
+              "control2" : {
+                "x" : "-41.70254924610825*scale",
+                "y" : "-25*scale"
+              },
+              "end" : {
+                "x" : "-29*scale",
+                "y" : "-25*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-52*scale",
+                "y" : "0*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-16.29745075389175*scale",
+                "y" : "-25*scale"
+              },
+              "control2" : {
+                "x" : "-6*scale",
+                "y" : "-13.80711874576984*scale"
+              },
+              "end" : {
+                "x" : "-6*scale",
+                "y" : "0*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-29*scale",
+                "y" : "-25*scale"
+              }
+            }
+          ],
+          "inputs" : [
+
+          ],
+          "kind" : "curveProfile",
+          "plane" : {
+            "origin" : {
+              "x" : "0*scale",
+              "y" : "6*scale",
+              "z" : "0*scale"
+            },
+            "u" : {
+              "x" : 1,
+              "y" : 0,
+              "z" : 0
+            },
+            "v" : {
+              "x" : 0,
+              "y" : 0,
+              "z" : -1
+            }
+          },
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "B5F778EC-3D98-5BD9-9D8C-ED3B5E61A3E1",
+        "name" : "Mouth tool 0",
+        "operation" : {
+          "direction" : {
+            "x" : 0,
+            "y" : 1,
+            "z" : 0
+          },
+          "inputs" : [
+            "ACE9A4DD-3853-5A6D-88AD-296D8BC3352C"
+          ],
+          "kind" : "extrude",
+          "values" : {
+            "distance" : "80*scale"
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "58C420E9-61C2-558F-A328-8291A550494C",
+        "name" : "Open mouth 0",
+        "operation" : {
+          "inputs" : [
+            "E33653B8-ED30-5C89-8444-E43C6F6BD41C",
+            "B5F778EC-3D98-5BD9-9D8C-ED3B5E61A3E1"
+          ],
+          "kind" : "subtract",
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "E41B87F7-5BE0-59E7-ADD9-A5A13401C455",
+        "name" : "Mouth 1",
+        "operation" : {
+          "curves" : [
+            {
+              "control1" : {
+                "x" : "52*scale",
+                "y" : "13.80711874576984*scale"
+              },
+              "control2" : {
+                "x" : "41.70254924610825*scale",
+                "y" : "25*scale"
+              },
+              "end" : {
+                "x" : "29*scale",
+                "y" : "25*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "52*scale",
+                "y" : "0*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "16.29745075389175*scale",
+                "y" : "25*scale"
+              },
+              "control2" : {
+                "x" : "6*scale",
+                "y" : "13.80711874576984*scale"
+              },
+              "end" : {
+                "x" : "6*scale",
+                "y" : "0*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "29*scale",
+                "y" : "25*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "6*scale",
+                "y" : "-13.80711874576984*scale"
+              },
+              "control2" : {
+                "x" : "16.29745075389175*scale",
+                "y" : "-25*scale"
+              },
+              "end" : {
+                "x" : "29*scale",
+                "y" : "-25*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "6*scale",
+                "y" : "0*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "41.70254924610825*scale",
+                "y" : "-25*scale"
+              },
+              "control2" : {
+                "x" : "52*scale",
+                "y" : "-13.80711874576984*scale"
+              },
+              "end" : {
+                "x" : "52*scale",
+                "y" : "0*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "29*scale",
+                "y" : "-25*scale"
+              }
+            }
+          ],
+          "inputs" : [
+
+          ],
+          "kind" : "curveProfile",
+          "plane" : {
+            "origin" : {
+              "x" : "0*scale",
+              "y" : "6*scale",
+              "z" : "0*scale"
+            },
+            "u" : {
+              "x" : 1,
+              "y" : 0,
+              "z" : 0
+            },
+            "v" : {
+              "x" : 0,
+              "y" : 0,
+              "z" : -1
+            }
+          },
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "9B0CF328-534C-5F38-BD64-6C9768B48582",
+        "name" : "Mouth tool 1",
+        "operation" : {
+          "direction" : {
+            "x" : 0,
+            "y" : 1,
+            "z" : 0
+          },
+          "inputs" : [
+            "E41B87F7-5BE0-59E7-ADD9-A5A13401C455"
+          ],
+          "kind" : "extrude",
+          "values" : {
+            "distance" : "80*scale"
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "165FD87E-FCC3-5B28-89ED-BF2AB3B6AD69",
+        "name" : "Open mouth 1",
+        "operation" : {
+          "inputs" : [
+            "58C420E9-61C2-558F-A328-8291A550494C",
+            "9B0CF328-534C-5F38-BD64-6C9768B48582"
+          ],
+          "kind" : "subtract",
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      }
+    ],
+    "id" : "1C8CF092-76FF-58ED-A03D-302908FE6366",
+    "name" : "matter_study_02",
+    "outputs" : [
+      "165FD87E-FCC3-5B28-89ED-BF2AB3B6AD69"
+    ],
+    "parameters" : [
+      {
+        "maximum" : 1.5,
+        "minimum" : 0.65,
+        "name" : "scale",
+        "unit" : "×",
+        "value" : 1
+      }
+    ],
+    "revision" : 0,
+    "unresolvedMeasurements" : [
+      "Digital appearance only; material and manufacturing samples not measured."
+    ],
+    "version" : 1
+  },
+  "cadRepresentation" : {
+    "components" : [
+      {
+        "brepAsset" : "cad-51c76b2518eebc9e5093b02baf362d0b6c9e09ab830243ee5a8891409c3c71b8.brep",
+        "brepSHA256" : "51c76b2518eebc9e5093b02baf362d0b6c9e09ab830243ee5a8891409c3c71b8",
+        "closed" : true,
+        "edgeCount" : 36,
+        "faceCount" : 16,
+        "featureFingerprint" : "d7ecba5c5206611a42bb1ef9596fe7b6925adceb044873eeca634723020c8ef1",
+        "id" : "165FD87E-FCC3-5B28-89ED-BF2AB3B6AD69",
+        "maximum" : {
+          "x" : 72.0000001,
+          "y" : 83.0000001,
+          "z" : 43.0000001
+        },
+        "meshAsset" : "cad-784e884ec84875b11ce450dcb3d58276109ae33a1b074deefa33aeb0f4a8ba38.mesh",
+        "meshSHA256" : "784e884ec84875b11ce450dcb3d58276109ae33a1b074deefa33aeb0f4a8ba38",
+        "minimum" : {
+          "x" : -72.0000001,
+          "y" : -1e-07,
+          "z" : -43.0000001
+        },
+        "name" : "Open mouth 1",
+        "solidCount" : 1,
+        "triangleCount" : 19642,
+        "valid" : true,
+        "vertexCount" : 24,
+        "volumeMM3" : 529248.9053237707
+      }
+    ],
+    "definitionSHA256" : "dce65f4f9b000031144ce11c0fe196232cab8879a53005c646a9e2d117729e08",
+    "editability" : "nativeFeatureModel",
+    "kernelVersion" : "8.0.1+form.gprop2",
+    "meshDeflectionMM" : 0.05,
+    "modelID" : "1C8CF092-76FF-58ED-A03D-302908FE6366"
+  },
+  "color" : "#BC775E",
+  "designID" : "478BD4A1-36F9-4E6E-9D52-D864C1221B76",
+  "id" : "476A266D-1FEF-4CB9-87A0-F33C2B016ED0",
+  "locked" : false,
+  "materialID" : "clay",
+  "name" : "matter_study_02",
+  "parameters" : {
+
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 1e-07,
+    "z" : 0
+  },
+  "recipeID" : "cadModel",
+  "relationship" : "original",
+  "rotation" : 0
+}

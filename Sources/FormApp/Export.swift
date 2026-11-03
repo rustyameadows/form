@@ -1,4 +1,5 @@
 import AppKit
+import LabRendering
 import FormCore
 import FormGraphics
 import UniformTypeIdentifiers
@@ -48,7 +49,7 @@ extension StudioStore {
     }
     synchronizeScene()
     let image:NSImage
-    if let scene {image=try await scene.snapshot(size:.init(width:3000,height:2000))}
+    if let scene {image=try await scene.snapshot(size:.init(width:3000,height:2000),sampling:.still)}
     else {image=try await TableSceneController.preview(project:project,size:.init(width:3000,height:2000),assets:assets,studio:true,preset:studioPreset)}
     try Task.checkCancellation()
     guard let data=image.pngData() else{throw FormError.invalid("Image rendering failed.")}

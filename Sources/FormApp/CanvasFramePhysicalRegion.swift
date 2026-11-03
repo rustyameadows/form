@@ -5,6 +5,7 @@ extension CanvasFrame {
   /// Shared material region for pointer picking and Find. A full-net proof's
   /// rectangular canvas also contains empty space between its physical panels.
   @MainActor var physicalMaterialClip: CGPath? {
+    if let spread=CanvasPublicationSpreads.clip(for:self) {return spread}
     guard let projection else { return nil }
     if !projection.isProof { return projection.clipPath.normalized(using: .evenOdd) }
     guard let net = try? PaperConstruction.definition(for: surfaceObject).net() else { return CGMutablePath() }

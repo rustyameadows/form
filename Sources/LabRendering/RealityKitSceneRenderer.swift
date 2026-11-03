@@ -155,8 +155,14 @@ import simd
     }.filter{$0.distanceMM>=camera.nearMM && $0.distanceMM<=camera.farMM}.sorted{$0.distanceMM<$1.distanceMM}
   }
   public func capture(width:Int,height:Int,transparent:Bool=false,camera override:SceneCameraPayload?=nil)async throws->CGImage {
-    guard width>0,height>0,width<=8192,height<=8192,Double(width)*Double(height)<=32_000_000 else{throw SceneRendererError.invalidCapture}
-    let token=epoch,started=CFAbsoluteTimeGetCurrent(),renderer=try RealityRenderer(),root=sceneRoot.clone(recursive:true)
+    try await capture(width:width,height:height,transparent:transparent,camera:override,sampling:.native)
+  }
+  public func capture(width:Int,height:Int,transparent:Bool=false,camera override:SceneCameraPayload?=nil,sampling:SceneCaptureSampling)async throws->CGImage {
+    try Task.checkCancellation()
+    _ = try SceneStillSampling.pixelCount(width:width,height:height)
+    let token=epoch,started=CFAbsoluteTimeGetCurrent(),captureCamera=override ?? camera,captureLighting=lighting
+    try captureCamera.validate()
+    let renderer=try RealityRenderer(),root=sceneRoot.clone(recursive:true)
     func removeAdornments(_ entity:Entity){for child in Array(entity.children){if child.name=="LAB selection" || child.name.hasSuffix("/paper.highlight"){child.removeFromParent()}else{removeAdornments(child)}}}
     removeAdornments(root)
     if let light=root.findEntity(named:"LAB environment") {
@@ -165,28 +171,54 @@ import simd
     }
     renderer.entities.append(root)
     guard let lens=root.findEntity(named:"LAB camera") else{throw SceneRendererError.invalidCamera}
-    if let override{try override.validate();applyCamera(override,to:lens)}
-    renderer.activeCamera=lens;renderer.cameraSettings.isToneMappingEnabled=lighting.toneMappingEnabled;renderer.cameraSettings.antialiasing = .multisample4X
-    renderer.cameraSettings.colorBackground = .color(color(transparent ? SIMD4(0,0,0,0):lighting.background).cgColor)
+    if let override{applyCamera(override,to:lens)}
+    renderer.activeCamera=lens;renderer.cameraSettings.isToneMappingEnabled=captureLighting.toneMappingEnabled;renderer.cameraSettings.antialiasing = .multisample4X
+    renderer.cameraSettings.colorBackground = .color(color(transparent ? SIMD4(0,0,0,0):captureLighting.background).cgColor)
     let descriptor=MTLTextureDescriptor.texture2DDescriptor(pixelFormat:.bgra8Unorm_srgb,width:width,height:height,mipmapped:false)
     descriptor.usage=[.renderTarget,.shaderRead];descriptor.storageMode=device.hasUnifiedMemory ? .shared:.managed
-    guard let texture=device.makeTexture(descriptor:descriptor) else{throw SceneRendererError.unavailableMetal}
+    guard let texture=device.makeTexture(descriptor:descriptor),let p3=CGColorSpace(name:CGColorSpace.displayP3),let srgb=CGColorSpace(name:CGColorSpace.sRGB),
+      let raw=CGContext(data:nil,width:width,height:height,bitsPerComponent:8,bytesPerRow:width*4,space:p3,bitmapInfo:CGBitmapInfo.byteOrder32Little.rawValue|CGImageAlphaInfo.premultipliedFirst.rawValue),
+      let rawBytes=raw.data,let normalized=CGContext(data:nil,width:width,height:height,bitsPerComponent:8,bytesPerRow:width*4,space:srgb,bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue) else{throw SceneRendererError.unavailableMetal}
+    normalized.setBlendMode(.copy)
     let output=try RealityRenderer.CameraOutput(.singleProjection(colorTexture:texture))
-    try await withCheckedThrowingContinuation { (continuation:CheckedContinuation<Void,Error>) in
-      do {try renderer.updateAndRender(deltaTime:1/60,cameraOutput:output,onComplete:{_ in continuation.resume()})}catch{continuation.resume(throwing:error)}
+    let accumulator:SceneStillPixelAccumulator?,offsets:[SIMD2<Float>]
+    switch sampling {
+    case .native:accumulator=nil;offsets=[.zero]
+    case .still:
+      accumulator=try SceneStillPixelAccumulator(width:width,height:height);offsets=SceneStillSampling.offsets
+      lens.components.remove(PerspectiveCameraComponent.self);lens.components.remove(OrthographicCameraComponent.self)
     }
+    for offset in offsets {
+      try Task.checkCancellation();guard token==epoch else{throw SceneRendererError.cancelled}
+      if accumulator != nil{lens.components.set(ProjectiveTransformCameraComponent(projectionMatrix:try SceneStillSampling.projection(camera:captureCamera,width:width,height:height,offset:offset)))}
+      try await withCheckedThrowingContinuation { (continuation:CheckedContinuation<Void,Error>) in
+        do {try renderer.updateAndRender(deltaTime:1/60,cameraOutput:output,onComplete:{_ in continuation.resume()})}catch{continuation.resume(throwing:error)}
+      }
+      try Task.checkCancellation();guard token==epoch else{throw SceneRendererError.cancelled}
+      if !device.hasUnifiedMemory {
+        guard let command=queue.makeCommandBuffer(),let blit=command.makeBlitCommandEncoder() else{throw SceneRendererError.unavailableMetal}
+        blit.synchronize(resource:texture);blit.endEncoding()
+        await withCheckedContinuation{(c:CheckedContinuation<Void,Never>) in command.addCompletedHandler{_ in c.resume()};command.commit()}
+      }
+      texture.getBytes(rawBytes,bytesPerRow:width*4,from:.init(origin:.init(x:0,y:0,z:0),size:.init(width:width,height:height,depth:1)),mipmapLevel:0)
+      // A fresh no-copy provider observes this frame's readback directly. The
+      // raw context owns these bytes until the capture ends; no frame history
+      // or CoreGraphics snapshot cache can retain an earlier sample here.
+      guard let provider=CGDataProvider(dataInfo:nil,data:UnsafeRawPointer(rawBytes),size:width*height*4,releaseData:{_,_,_ in}),
+        let source=CGImage(width:width,height:height,bitsPerComponent:8,bitsPerPixel:32,bytesPerRow:width*4,space:p3,bitmapInfo:[.byteOrder32Little,CGBitmapInfo(rawValue:CGImageAlphaInfo.premultipliedFirst.rawValue)],provider:provider,decode:nil,shouldInterpolate:true,intent:.defaultIntent) else{throw SceneRendererError.invalidCapture}
+      normalized.draw(source,in:.init(x:0,y:0,width:width,height:height))
+      if let accumulator {
+        guard let frame=normalized.makeImage() else{throw SceneRendererError.invalidCapture}
+        try await accumulator.append(.init(image:frame))
+      }
+    }
+    let outputImage:CGImage
+    if let accumulator {outputImage=try await accumulator.image().image}
+    else {guard let image=normalized.makeImage() else{throw SceneRendererError.invalidCapture};outputImage=image}
     try Task.checkCancellation();guard token==epoch else{throw SceneRendererError.cancelled}
-    if !device.hasUnifiedMemory,let command=queue.makeCommandBuffer(),let blit=command.makeBlitCommandEncoder(){
-      blit.synchronize(resource:texture);blit.endEncoding()
-      await withCheckedContinuation{(c:CheckedContinuation<Void,Never>) in command.addCompletedHandler{_ in c.resume()};command.commit()}
-    }
-    var bytes=[UInt8](repeating:0,count:width*height*4);texture.getBytes(&bytes,bytesPerRow:width*4,from:.init(origin:.init(x:0,y:0,z:0),size:.init(width:width,height:height,depth:1)),mipmapLevel:0)
-    let data=Data(bytes)
-    guard let provider=CGDataProvider(data:data as CFData),let image=CGImage(width:width,height:height,bitsPerComponent:8,bitsPerPixel:32,bytesPerRow:width*4,space:CGColorSpace(name:CGColorSpace.displayP3)!,bitmapInfo:[.byteOrder32Little,CGBitmapInfo(rawValue:CGImageAlphaInfo.premultipliedFirst.rawValue)],provider:provider,decode:nil,shouldInterpolate:true,intent:.defaultIntent) else{throw SceneRendererError.invalidCapture}
-    guard let normalized=CGContext(data:nil,width:width,height:height,bitsPerComponent:8,bytesPerRow:width*4,space:CGColorSpace(name:CGColorSpace.sRGB)!,bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue) else{throw SceneRendererError.invalidCapture}
-    normalized.draw(image,in:.init(x:0,y:0,width:width,height:height))
-    guard let outputImage=normalized.makeImage() else{throw SceneRendererError.invalidCapture}
-    diagnostics.offscreenCaptures+=1;diagnostics.lastCaptureMilliseconds=(CFAbsoluteTimeGetCurrent()-started)*1000;return outputImage
+    diagnostics.offscreenCaptures+=1;diagnostics.lastCaptureMilliseconds=(CFAbsoluteTimeGetCurrent()-started)*1000
+    diagnostics.lastCaptureSamples=offsets.count;diagnostics.lastCaptureAccumulatorBytes=accumulator?.byteCount ?? 0
+    return outputImage
   }
   /// A small procedural neutral studio provides continuous metal reflections.
   /// It contains no external imagery and is shared across all viewport instances.

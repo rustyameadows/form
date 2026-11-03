@@ -31,7 +31,33 @@ import simd
       guard !subject.isHidden, let name = subject.name, name.hasPrefix("object:"),
         let id = UUID(uuidString: String(name.dropFirst(7))), objectIDs.contains(id),
         let object = project.objects.first(where: { $0.id == id }) else { continue }
-      if PaperConstruction.isPaper(object) {
+      if object.sheetAssembly != nil {
+        for surface in try SheetAssemblyGeometry.surfaces(root:subject,object:object,project:project) {
+          guard let mesh=surface.node.geometry else{continue}
+          var demand=meshDemand(mesh,node:surface.node,slot:surface.inside ? 1:0,
+            width:surface.size.x,height:surface.size.y,camera:camera,viewport:viewport)
+          let vertices=mesh.sources(for:.vertex).first?.vectors ?? []
+          let normals=mesh.sources(for:.normal).first?.vectors ?? []
+          let origin=surface.node.convertPosition(.init(),to:nil).simd
+          let eye=SIMD3(camera.worldFromCameraMM.columns.3.x,camera.worldFromCameraMM.columns.3.y,camera.worldFromCameraMM.columns.3.z)
+          let orthographic=SIMD3(camera.worldFromCameraMM.columns.2.x,camera.worldFromCameraMM.columns.2.y,camera.worldFromCameraMM.columns.2.z)
+          let facing=mesh.elements[surface.inside ? 1:0].indices.contains { value in
+            let index=Int(value)
+            guard vertices.indices.contains(index),normals.indices.contains(index) else{return false}
+            let normal=surface.node.convertPosition(normals[index],to:nil).simd-origin
+            let position=surface.node.convertPosition(vertices[index],to:nil).simd*100
+            let direction:SIMD3<Double>
+            switch camera.projection {case .perspective:direction=eye-position;case .orthographic:direction=orthographic}
+            return simd_dot(normal,direction)>0
+          }
+          if !surface.visible {demand.weight=0}
+          else {
+            demand.weight *= surface.samplingWeight
+            if !facing {demand.weight *= surface.opacity<0.999 ? 0.25:0}
+          }
+          try add(id,surface:surface.key,width:surface.size.x,height:surface.size.y,demand:demand)
+        }
+      } else if PaperConstruction.isPaper(object) {
         let paper = try PaperConstruction.definition(for: object), net = try paper.net()
         for panel in net.panels {
           guard let node = subject.childNode(withName: PaperGeometry.panelPrefix + panel.id, recursively: true) else { continue }

@@ -1,0 +1,252 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "elements" : [
+      {
+        "affine" : {
+          "a" : 1.8,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1.8,
+          "tx" : -35,
+          "ty" : -24
+        },
+        "color" : "#E9583C",
+        "fontSize" : 12,
+        "height" : 86,
+        "id" : "7AF15141-29D9-522A-A39D-CC87B7E0DD6F",
+        "kind" : "rectangle",
+        "name" : "signal_rooms_06-field",
+        "text" : "",
+        "width" : 86,
+        "x" : 7,
+        "y" : 7
+      },
+      {
+        "affine" : {
+          "a" : 1.8,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1.8,
+          "tx" : -35,
+          "ty" : -24
+        },
+        "color" : "#F7F0E0",
+        "fontSize" : 45,
+        "height" : 23,
+        "id" : "D49F88F1-8340-539D-9BD4-B020AC01B7F2",
+        "kind" : "text",
+        "name" : "signal_rooms_060",
+        "text" : "SLOW",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 52.199999999999996,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 81,
+        "x" : 12,
+        "y" : 11
+      },
+      {
+        "affine" : {
+          "a" : 1.8,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1.8,
+          "tx" : -35,
+          "ty" : -24
+        },
+        "color" : "#F7F0E0",
+        "fontSize" : 45,
+        "height" : 23,
+        "id" : "0FD9ED9B-F871-5ADB-A3A9-BBAE6797505B",
+        "kind" : "text",
+        "name" : "signal_rooms_061",
+        "text" : "DOWN",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 52.199999999999996,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 81,
+        "x" : 12,
+        "y" : 31
+      },
+      {
+        "affine" : {
+          "a" : 1.8,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1.8,
+          "tx" : -35,
+          "ty" : -24
+        },
+        "color" : "#F7F0E0",
+        "fontSize" : 45,
+        "height" : 23,
+        "id" : "D507E621-4366-5329-B987-4EAB66775936",
+        "kind" : "text",
+        "name" : "signal_rooms_062",
+        "text" : "LOOK",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 52.199999999999996,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 81,
+        "x" : 12,
+        "y" : 51
+      },
+      {
+        "affine" : {
+          "a" : 1.8,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1.8,
+          "tx" : -35,
+          "ty" : -24
+        },
+        "color" : "#F7F0E0",
+        "fontSize" : 45,
+        "height" : 23,
+        "id" : "A6C1AEC1-4F3D-57F2-9460-001A609CD2AB",
+        "kind" : "text",
+        "name" : "signal_rooms_063",
+        "text" : "AGAIN",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 52.199999999999996,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 81,
+        "x" : 12,
+        "y" : 71
+      }
+    ],
+    "showGuides" : false,
+    "unit" : "mm"
+  },
+  "designID" : "637F59C4-C7E9-4FD5-B89D-4A9D3C8C088E",
+  "id" : "8B3FD30E-CF5F-4AC2-9AC8-F4AC772F53CD",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "signal_rooms_06 / editable graphic",
+  "parameters" : {
+    "depth" : 100,
+    "width" : 100
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

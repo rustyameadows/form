@@ -1,0 +1,2556 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 11003.7,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "C00CDE97-51EB-5206-A3F8-C88C7799389E",
+        "kind" : "text",
+        "name" : "index_works_02-caption",
+        "text" : "Open square\nOne gap interrupts a dependable metal outline.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 131
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11.25,
+        "height" : 88,
+        "id" : "B90DA6AA-3A32-5AEB-973F-661133E0D3DE",
+        "kind" : "text",
+        "name" : "artist_06-body-frame-0",
+        "storyFrame" : {
+          "storyID" : "F8F812AD-476B-434A-8E3D-0990A0CA93D6"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 164
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11.25,
+        "height" : 88,
+        "id" : "0CF4F9F9-BDE7-55C6-9F4D-3B2A0EFA6E3F",
+        "kind" : "text",
+        "name" : "artist_06-body-frame-1",
+        "storyFrame" : {
+          "storyID" : "F8F812AD-476B-434A-8E3D-0990A0CA93D6"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 164
+      },
+      {
+        "clipID" : "41F0297D-7B27-5ACB-B9A8-A7690A084E26",
+        "color" : "#000000",
+        "contentSize" : {
+          "x" : 100,
+          "y" : 100
+        },
+        "fontSize" : 10,
+        "height" : 105,
+        "id" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "kind" : "group",
+        "name" : "index_works_02-placed-vector",
+        "text" : "",
+        "width" : 105,
+        "x" : 55.45,
+        "y" : 22
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "72688371-B56D-5A95-A3C5-731F506C780E",
+        "kind" : "path",
+        "name" : "index_works_02/projection/0",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 22.387422075462208,
+                    "y" : 65.1147474662031
+                  },
+                  "id" : "6EF82A0D-C1CE-5194-88DE-48E07EFDA628"
+                },
+                {
+                  "anchor" : {
+                    "x" : 17.27664660480889,
+                    "y" : 68.44071265074875
+                  },
+                  "id" : "0C581319-54BF-59A0-A868-1796FDBD9584"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "D77676EA-9C00-540A-A6ED-CA20AE64F25B",
+        "kind" : "path",
+        "name" : "index_works_02/projection/1",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 22.387422075462208,
+                    "y" : 65.1147474662031
+                  },
+                  "id" : "410C1C64-05AF-56DA-BBB3-A6C65E2B9401"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22.387422075462208,
+                    "y" : 7
+                  },
+                  "id" : "F0F3E900-E530-59A9-BC11-92BB3F1640DB"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "420A9326-E903-532C-A42E-BF3AE17641E4",
+        "kind" : "path",
+        "name" : "index_works_02/projection/2",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 22.387422075462208,
+                    "y" : 65.1147474662031
+                  },
+                  "id" : "1AA575E2-E6FF-5194-9C8B-FFA8FFEBF11A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 27.634024798916894,
+                    "y" : 66.55468549657277
+                  },
+                  "id" : "D5FF62BF-7BAE-5B3D-8D18-7E33B0C092B8"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "AC5075E8-5726-5BEB-AE95-44BA39318827",
+        "kind" : "path",
+        "name" : "index_works_02/projection/3",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 17.27664660480889,
+                    "y" : 68.44071265074875
+                  },
+                  "id" : "6E72A24C-E433-5064-AE34-922003174C06"
+                },
+                {
+                  "anchor" : {
+                    "x" : 17.27664660480889,
+                    "y" : 10.325965184545652
+                  },
+                  "id" : "4011B42B-C016-5BA1-BF60-86AEB0017FE1"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "415C043B-DF4D-53FC-AB58-E6E16B7A9013",
+        "kind" : "path",
+        "name" : "index_works_02/projection/4",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 17.27664660480889,
+                    "y" : 68.44071265074875
+                  },
+                  "id" : "2D628765-9432-531A-A09B-C2BE1FF55092"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22.523249328263578,
+                    "y" : 69.88065068111842
+                  },
+                  "id" : "E23CD75C-503E-57D9-94A0-20342F4128BB"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "F9D984EE-FF0F-5A45-BECE-0136D32F2F98",
+        "kind" : "path",
+        "name" : "index_works_02/projection/5",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 22.387422075462208,
+                    "y" : 7
+                  },
+                  "id" : "1539B1CB-1C61-5798-A384-46210B169335"
+                },
+                {
+                  "anchor" : {
+                    "x" : 17.27664660480889,
+                    "y" : 10.325965184545652
+                  },
+                  "id" : "5EE427D4-9C21-506E-B353-8263F59330B6"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "416CBEBA-4D35-503A-816E-48B58028CB95",
+        "kind" : "path",
+        "name" : "index_works_02/projection/6",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 22.387422075462208,
+                    "y" : 7
+                  },
+                  "id" : "75D0C513-FF00-54C8-93B7-DCCC24DC1EAF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 27.634024798916894,
+                    "y" : 8.43993803036966
+                  },
+                  "id" : "8328F687-8062-5A5B-963D-12C4D4BD27E4"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "1275268E-D86A-501E-9EEE-0B5FFB35794B",
+        "kind" : "path",
+        "name" : "index_works_02/projection/7",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 17.27664660480889,
+                    "y" : 10.325965184545652
+                  },
+                  "id" : "7AB5E32A-C48E-585C-9339-B2C4040111F2"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22.523249328263578,
+                    "y" : 11.765903214915312
+                  },
+                  "id" : "D865BDDA-3147-518F-936A-8CA2377C1167"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "5A640AAD-AC50-5E6A-B02D-A664D42A8925",
+        "kind" : "path",
+        "name" : "index_works_02/projection/8",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 27.634024798916894,
+                    "y" : 66.55468549657277
+                  },
+                  "id" : "5732D3C4-43B4-5589-BEAF-52B811747306"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22.523249328263578,
+                    "y" : 69.88065068111842
+                  },
+                  "id" : "5B285E3B-67AF-5083-92FC-0EFD063D71F6"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "586A6B1E-F54E-5DF2-B43C-3838B8D0B088",
+        "kind" : "path",
+        "name" : "index_works_02/projection/9",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 27.634024798916894,
+                    "y" : 66.55468549657277
+                  },
+                  "id" : "C1B27E8B-7E2D-5F56-9364-8F29D064F1E9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 27.634024798916894,
+                    "y" : 8.43993803036966
+                  },
+                  "id" : "712E78A3-4968-542B-9DB8-03E12D16AE38"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "EE76D0EB-B049-52B5-BB5C-89D164ECFF37",
+        "kind" : "path",
+        "name" : "index_works_02/projection/10",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 22.523249328263578,
+                    "y" : 69.88065068111842
+                  },
+                  "id" : "CF933D69-3F41-5E73-AEFC-613CACDF15D6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22.523249328263578,
+                    "y" : 11.765903214915312
+                  },
+                  "id" : "EBA5AE3C-A0D9-5F54-B44B-DB6B7A45D4D8"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "E3F91D8B-12FD-58C5-9209-4277CF8EE0C2",
+        "kind" : "path",
+        "name" : "index_works_02/projection/11",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 27.634024798916894,
+                    "y" : 8.43993803036966
+                  },
+                  "id" : "0C7BBCB8-ED0C-5D07-8FE4-E6409B587007"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22.523249328263578,
+                    "y" : 11.765903214915312
+                  },
+                  "id" : "E06D84A2-2375-5052-8D62-4B03D021BF10"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "C83760C2-95AC-53B1-BEA3-DC1154893532",
+        "kind" : "path",
+        "name" : "index_works_02/projection/12",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 77.47675067173643,
+                    "y" : 80.23409678508467
+                  },
+                  "id" : "9D177ACC-25ED-594A-AF59-369F6AC50835"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72.3659752010831,
+                    "y" : 83.56006196963033
+                  },
+                  "id" : "3C6E10FA-7638-5438-A27D-54C2705FB97B"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "58555F62-40EA-58F0-B183-380D7C80C806",
+        "kind" : "path",
+        "name" : "index_works_02/projection/13",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 77.47675067173643,
+                    "y" : 80.23409678508467
+                  },
+                  "id" : "D26965EC-E975-5D2B-BAF1-B2EB55D8A1AB"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.47675067173643,
+                    "y" : 41.254692996777706
+                  },
+                  "id" : "7FE41170-599A-5C8B-964C-D2344822732C"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "77AB1720-A1EF-58F7-ADC2-FD710AC3910A",
+        "kind" : "path",
+        "name" : "index_works_02/projection/14",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 77.47675067173643,
+                    "y" : 80.23409678508467
+                  },
+                  "id" : "1D464CF7-5657-5D9B-BDEA-198BFDEB5BB3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82.72335339519111,
+                    "y" : 81.67403481545435
+                  },
+                  "id" : "A911BA2F-1FE6-5556-93EA-91A4471EFEEC"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "27016C24-1EFB-570F-966C-EA8C7C6BB76A",
+        "kind" : "path",
+        "name" : "index_works_02/projection/15",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 72.3659752010831,
+                    "y" : 83.56006196963033
+                  },
+                  "id" : "280FBB37-670A-58B7-85C2-7B388F01534F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72.3659752010831,
+                    "y" : 44.580658181323365
+                  },
+                  "id" : "270B5400-A550-5B50-9EE5-370A62DD6FAF"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "7DC17E27-21F1-5F14-8CE3-E8FCF8C66666",
+        "kind" : "path",
+        "name" : "index_works_02/projection/16",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 72.3659752010831,
+                    "y" : 83.56006196963033
+                  },
+                  "id" : "BB227334-E6A5-5A67-A49A-6EC820FBED87"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.61257792453779,
+                    "y" : 85
+                  },
+                  "id" : "FF9EA3FD-5D85-59B0-94ED-750AFD319787"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "D5060ED5-5F32-595A-AFAB-74C15AA073AC",
+        "kind" : "path",
+        "name" : "index_works_02/projection/17",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 77.47675067173643,
+                    "y" : 41.254692996777706
+                  },
+                  "id" : "61D36CAD-2B6A-5D08-A0BF-B516C7CB868F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 72.3659752010831,
+                    "y" : 44.580658181323365
+                  },
+                  "id" : "299D793E-E60A-571E-A4A7-0E753F491417"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "CB6EBB9B-F170-5280-94CA-B45AD3BD135D",
+        "kind" : "path",
+        "name" : "index_works_02/projection/18",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 77.47675067173643,
+                    "y" : 41.254692996777706
+                  },
+                  "id" : "95AC6C49-7CBE-50F0-8025-EF878D1FBB52"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82.72335339519111,
+                    "y" : 42.69463102714739
+                  },
+                  "id" : "45712B4E-C263-5336-B383-6C3B09374F98"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "7605A099-1FFA-5049-BD9F-03C144A602B0",
+        "kind" : "path",
+        "name" : "index_works_02/projection/19",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 72.3659752010831,
+                    "y" : 44.580658181323365
+                  },
+                  "id" : "0AD98806-D7A8-5043-A66C-1F320EA64522"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.61257792453779,
+                    "y" : 46.02059621169305
+                  },
+                  "id" : "1E4C2B85-67E4-5CBF-8332-32D766C65DEF"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "6C9C9E90-2308-5F04-A88E-575DF09F1BB9",
+        "kind" : "path",
+        "name" : "index_works_02/projection/20",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 82.72335339519111,
+                    "y" : 81.67403481545435
+                  },
+                  "id" : "13EAE6FA-3836-5D9F-A446-C8EF2E4FE77A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.61257792453779,
+                    "y" : 85
+                  },
+                  "id" : "6022A7D1-20E1-569D-B179-EA467A354ACD"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "F27E495B-52BB-589C-8677-08FD06F128B9",
+        "kind" : "path",
+        "name" : "index_works_02/projection/21",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 82.72335339519111,
+                    "y" : 81.67403481545435
+                  },
+                  "id" : "1120FF8C-1776-5D2B-BF1F-20056DB0DB5D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82.72335339519111,
+                    "y" : 42.69463102714739
+                  },
+                  "id" : "DB2E0A1C-1A26-5B31-8B37-6C1DFB334630"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "8FA6C5C3-11A8-5D27-B99F-827F36D7AA48",
+        "kind" : "path",
+        "name" : "index_works_02/projection/22",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 77.61257792453779,
+                    "y" : 85
+                  },
+                  "id" : "96645DF3-97EC-58F2-A512-0C3A4502D31A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.61257792453779,
+                    "y" : 46.02059621169305
+                  },
+                  "id" : "E8957ACE-C6BD-5C86-8E10-295CFE4817EA"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "7214EA47-AFEB-535B-A460-47A504AC557A",
+        "kind" : "path",
+        "name" : "index_works_02/projection/23",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 82.72335339519111,
+                    "y" : 42.69463102714739
+                  },
+                  "id" : "78DF0ED0-A818-5492-A9B7-F8063E5CA67E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.61257792453779,
+                    "y" : 46.02059621169305
+                  },
+                  "id" : "65BCFE93-942E-5EEF-B3CC-54282B20CC3B"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "1560CCC6-257A-57E6-8E2F-87DC2A772179",
+        "kind" : "path",
+        "name" : "index_works_02/projection/24",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 22.387422075462208,
+                    "y" : 65.1147474662031
+                  },
+                  "id" : "9F352681-AFA6-5E3A-A294-CB95290D1633"
+                },
+                {
+                  "anchor" : {
+                    "x" : 17.27664660480889,
+                    "y" : 68.44071265074875
+                  },
+                  "id" : "2EA29373-59AB-5173-9B06-0EA137400F25"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "553F2E02-5ECE-52EB-BEBC-C23F1C06C9D6",
+        "kind" : "path",
+        "name" : "index_works_02/projection/25",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 22.387422075462208,
+                    "y" : 65.1147474662031
+                  },
+                  "id" : "EEEB2175-0345-57C1-896D-D4336D958CDF"
+                },
+                {
+                  "anchor" : {
+                    "x" : 22.387422075462208,
+                    "y" : 59.445016006085716
+                  },
+                  "id" : "0304C8B6-9967-5211-8D2F-690EF19FA4EA"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "E367919D-6C3C-5523-AE6D-202AFF1DAA4B",
+        "kind" : "path",
+        "name" : "index_works_02/projection/26",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 22.387422075462208,
+                    "y" : 65.1147474662031
+                  },
+                  "id" : "EC7E0F50-6448-529B-82E6-917E8F3FA6E5"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82.72335339519111,
+                    "y" : 81.67403481545435
+                  },
+                  "id" : "0C022449-5183-5C6C-BC7E-90BF4971B3EE"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "AFDCE54E-0F91-5E17-9762-3ED99F5F5C6B",
+        "kind" : "path",
+        "name" : "index_works_02/projection/27",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 17.27664660480889,
+                    "y" : 68.44071265074875
+                  },
+                  "id" : "660D6E92-675C-5188-B276-846532368C50"
+                },
+                {
+                  "anchor" : {
+                    "x" : 17.27664660480889,
+                    "y" : 62.770981190631375
+                  },
+                  "id" : "8E15CAE4-4530-557F-8DB9-07D359B454FC"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "A9F80659-5EB9-5C98-94C7-02EB122F6CDA",
+        "kind" : "path",
+        "name" : "index_works_02/projection/28",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 17.27664660480889,
+                    "y" : 68.44071265074875
+                  },
+                  "id" : "5497C543-E6F1-55A6-8936-A6447D062A14"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.61257792453779,
+                    "y" : 85
+                  },
+                  "id" : "E95239FE-8FED-5662-84E7-0D4A451BF2BA"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "A5F37960-B916-561F-891E-C4CE1FAAE389",
+        "kind" : "path",
+        "name" : "index_works_02/projection/29",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 22.387422075462208,
+                    "y" : 59.445016006085716
+                  },
+                  "id" : "63F9B1F6-D1D8-5913-AC98-94048034E1C4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 17.27664660480889,
+                    "y" : 62.770981190631375
+                  },
+                  "id" : "9A2DF94D-0774-5485-B5B0-8FC22E529208"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "9E2BD008-B8FD-55B1-98E3-200CCA2CD9E6",
+        "kind" : "path",
+        "name" : "index_works_02/projection/30",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 22.387422075462208,
+                    "y" : 59.445016006085716
+                  },
+                  "id" : "DBD42D29-EEB7-54D8-BC11-F89076C56E4C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82.72335339519111,
+                    "y" : 76.00430335533697
+                  },
+                  "id" : "1E5D8544-A0E3-55FD-B5BE-EBE851FA3CD3"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "CF6C421C-F289-51C3-8E6C-8463426C6687",
+        "kind" : "path",
+        "name" : "index_works_02/projection/31",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 17.27664660480889,
+                    "y" : 62.770981190631375
+                  },
+                  "id" : "BB84D0EB-8586-56D6-A435-D0EDF6CF8F2D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.61257792453779,
+                    "y" : 79.33026853988262
+                  },
+                  "id" : "00F36A81-4E09-5674-AC3A-9042DFBA4C6E"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "274CC3F4-B052-57BA-960E-35A1152B2CD3",
+        "kind" : "path",
+        "name" : "index_works_02/projection/32",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 82.72335339519111,
+                    "y" : 81.67403481545435
+                  },
+                  "id" : "F45B432C-EC3C-5923-A9BE-415B9C36CF77"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.61257792453779,
+                    "y" : 85
+                  },
+                  "id" : "6EF26A49-9676-58BA-A7AC-99D37C1298A1"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "A8A6A62A-CE3A-5BCE-9F32-DD1A80E01C4E",
+        "kind" : "path",
+        "name" : "index_works_02/projection/33",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 82.72335339519111,
+                    "y" : 81.67403481545435
+                  },
+                  "id" : "AEC473D8-5D30-555C-9BF5-2876FA3F16C3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 82.72335339519111,
+                    "y" : 76.00430335533697
+                  },
+                  "id" : "2B793D8F-4849-58F2-B48D-821E6F4F8F8E"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "7A5E941B-BEE2-53DA-A485-FA0357A8DEBE",
+        "kind" : "path",
+        "name" : "index_works_02/projection/34",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 77.61257792453779,
+                    "y" : 85
+                  },
+                  "id" : "BAFD286F-CCC4-51EF-8685-DF394D068DD3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.61257792453779,
+                    "y" : 79.33026853988262
+                  },
+                  "id" : "0BA95038-349E-5AC1-B434-C5A1FF82A6B6"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "76F8A7C1-C886-57F3-BE2A-102DAF9A8ADC",
+        "kind" : "path",
+        "name" : "index_works_02/projection/35",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 82.72335339519111,
+                    "y" : 76.00430335533697
+                  },
+                  "id" : "77FB9A9E-5557-538E-A459-1DCAB90F9938"
+                },
+                {
+                  "anchor" : {
+                    "x" : 77.61257792453779,
+                    "y" : 79.33026853988262
+                  },
+                  "id" : "13116B38-7BBF-5D4B-BC6E-0D625EACB1AC"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "381DEC7D-BD71-5448-936E-3B9C40690DBE",
+        "kind" : "path",
+        "name" : "index_works_02/projection/36",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 25.010723437189554,
+                    "y" : 13.389700475302206
+                  },
+                  "id" : "B2AD9808-54EC-5B24-B147-CF92908ABB6C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 19.89994796653623,
+                    "y" : 16.71566565984785
+                  },
+                  "id" : "BDF803CF-FE0C-58EB-9825-C63CC0531BC8"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "38876E5D-6006-5CCA-BD81-02E4C410C6B1",
+        "kind" : "path",
+        "name" : "index_works_02/projection/37",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 25.010723437189554,
+                    "y" : 13.389700475302206
+                  },
+                  "id" : "1ACCBC93-B7A5-52EF-8133-A12EF2AC6B05"
+                },
+                {
+                  "anchor" : {
+                    "x" : 25.010723437189554,
+                    "y" : 7.71996901518483
+                  },
+                  "id" : "C596319E-ABB2-5B95-9F28-96EF14CA6F68"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "DEFA0120-2B34-5B11-B6D1-D90827FD4D01",
+        "kind" : "path",
+        "name" : "index_works_02/projection/38",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 25.010723437189554,
+                    "y" : 13.389700475302206
+                  },
+                  "id" : "C9A0143D-E971-5228-9D8A-46D6D4EF373B"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66.98354522482705,
+                    "y" : 24.909204718259595
+                  },
+                  "id" : "AFE9E67F-2277-570D-B746-53309EBDB455"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "CBFB4A16-DE58-5398-92F2-DF33C9BAF82A",
+        "kind" : "path",
+        "name" : "index_works_02/projection/39",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 19.89994796653623,
+                    "y" : 16.71566565984785
+                  },
+                  "id" : "2336DC68-3C7F-5746-8639-31EA9DCD702F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 19.89994796653623,
+                    "y" : 11.045934199730482
+                  },
+                  "id" : "8DA02C3F-5C50-58F3-B45B-C7D69F4EECAE"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "3DE89042-0111-5C96-9B5B-E945FF3F818B",
+        "kind" : "path",
+        "name" : "index_works_02/projection/40",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 19.89994796653623,
+                    "y" : 16.71566565984785
+                  },
+                  "id" : "63D3293B-AF5C-59DA-9240-DE98C10B8B5F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.87276975417373,
+                    "y" : 28.235169902805254
+                  },
+                  "id" : "1F3E5E98-34AC-538C-A758-67B35E67B00B"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "84CA9DDE-318C-5D2C-9FDB-F3AFF494008F",
+        "kind" : "path",
+        "name" : "index_works_02/projection/41",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 25.010723437189554,
+                    "y" : 7.71996901518483
+                  },
+                  "id" : "424947C2-E234-54BD-B67C-432EAF267DAA"
+                },
+                {
+                  "anchor" : {
+                    "x" : 19.89994796653623,
+                    "y" : 11.045934199730482
+                  },
+                  "id" : "29BA1342-8280-506C-B592-AEA1F4AD05D1"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "6537FA91-FFC7-53E5-AE5F-7A4128EC2B26",
+        "kind" : "path",
+        "name" : "index_works_02/projection/42",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 25.010723437189554,
+                    "y" : 7.71996901518483
+                  },
+                  "id" : "6179AA37-8707-55E7-B192-F988323D71D4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66.98354522482705,
+                    "y" : 19.239473258142226
+                  },
+                  "id" : "4701CF56-F50F-5E28-8504-F282F75814C6"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "8B607012-A73D-58C9-95BD-24A4104D52F0",
+        "kind" : "path",
+        "name" : "index_works_02/projection/43",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 19.89994796653623,
+                    "y" : 11.045934199730482
+                  },
+                  "id" : "BEDFDB86-7235-5807-8B60-1094CAB4A820"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.87276975417373,
+                    "y" : 22.565438442687878
+                  },
+                  "id" : "C6CDCDD9-557A-57AD-BA19-DCDAAE483BF5"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "5652E074-8B82-510A-9E25-E844EC22D1C1",
+        "kind" : "path",
+        "name" : "index_works_02/projection/44",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 66.98354522482705,
+                    "y" : 24.909204718259595
+                  },
+                  "id" : "5DBE7A4F-A390-5744-810D-B7435405554A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.87276975417373,
+                    "y" : 28.235169902805254
+                  },
+                  "id" : "820FA2BB-EE60-5FEE-B5DA-35303D18E3EE"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "975B8EBE-447D-53FF-942E-A947C8FC78C5",
+        "kind" : "path",
+        "name" : "index_works_02/projection/45",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 66.98354522482705,
+                    "y" : 24.909204718259595
+                  },
+                  "id" : "4F1179E5-1865-5B2C-8E7C-5625379B6C9E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 66.98354522482705,
+                    "y" : 19.239473258142226
+                  },
+                  "id" : "4E602EF5-D510-5F4F-A5F4-84924FE9CD2D"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "AC996064-0241-5E0E-98FF-EFDDC306933C",
+        "kind" : "path",
+        "name" : "index_works_02/projection/46",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 61.87276975417373,
+                    "y" : 28.235169902805254
+                  },
+                  "id" : "5B4BF367-F0FB-50F2-9968-247902A23FAE"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.87276975417373,
+                    "y" : 22.565438442687878
+                  },
+                  "id" : "7EF11105-ED03-5C38-B82E-FE9E287002CB"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillEnabled" : false,
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "2D9FD7DF-8692-5C4E-AA82-65268F95C661",
+        "kind" : "path",
+        "name" : "index_works_02/projection/47",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 66.98354522482705,
+                    "y" : 19.239473258142226
+                  },
+                  "id" : "96E19C14-44DE-5520-B139-90AE2E23717D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61.87276975417373,
+                    "y" : 22.565438442687878
+                  },
+                  "id" : "2353C5DF-7C64-568C-A6C1-DDBCB7BCC5E7"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#1A1919",
+          "join" : "round",
+          "swatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 10,
+        "height" : 6,
+        "id" : "13163B5F-B662-5A1C-A96C-E8D552660F0F",
+        "kind" : "text",
+        "name" : "index_works_02/projection-note",
+        "parentID" : "2B21BC81-71B5-55FE-A5E6-9C5445B4BF53",
+        "text" : "PARAMETER WIREFRAME / BEVELS OMITTED",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 11.6,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 90,
+        "x" : 8,
+        "y" : 94
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 10,
+        "height" : 105,
+        "id" : "41F0297D-7B27-5ACB-B9A8-A7690A084E26",
+        "kind" : "rectangle",
+        "name" : "index_works_02-frame-mask",
+        "text" : "",
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 22
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "BA316E2B-2C31-4DCF-B167-E99A5C13F8C2",
+  "id" : "F22044BF-17E8-4E04-8157-9608DA790C10",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 42 / artist 06",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 10831.699999999992,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

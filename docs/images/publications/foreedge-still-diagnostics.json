@@ -1,0 +1,15 @@
+{
+  "accumulator_bytes" : 51200000,
+  "after_p99_p01" : 0.011728486231758881,
+  "after_rms" : 0.00255824452612028,
+  "before_p99_p01" : 0.079508817295277701,
+  "before_rms" : 0.023053302446829568,
+  "caliper_mm" : 0.12,
+  "mesh_builds" : 9,
+  "output_pixels" : [
+    2000,
+    1600
+  ],
+  "samples" : 16,
+  "source_camera_geometry_unchanged" : true
+}

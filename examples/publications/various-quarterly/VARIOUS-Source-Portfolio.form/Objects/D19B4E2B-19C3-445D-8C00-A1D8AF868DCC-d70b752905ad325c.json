@@ -1,0 +1,352 @@
+{
+  "cadModel" : {
+    "assumptions" : [
+      "Original fictional studio design. Physical dimensions are authored millimeters."
+    ],
+    "features" : [
+      {
+        "id" : "6D870F39-AA47-55DE-BB17-C80EA83510B8",
+        "name" : "Window outer",
+        "operation" : {
+          "curves" : [
+            {
+              "control1" : {
+                "x" : "45*scale",
+                "y" : "99.79393923933999*scale"
+              },
+              "control2" : {
+                "x" : "24.85281374238571*scale",
+                "y" : "128*scale"
+              },
+              "end" : {
+                "x" : "0*scale",
+                "y" : "128*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "45*scale",
+                "y" : "65*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-24.85281374238571*scale",
+                "y" : "128*scale"
+              },
+              "control2" : {
+                "x" : "-45*scale",
+                "y" : "99.79393923933999*scale"
+              },
+              "end" : {
+                "x" : "-45*scale",
+                "y" : "65*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "0*scale",
+                "y" : "128*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-45*scale",
+                "y" : "30.20606076066001*scale"
+              },
+              "control2" : {
+                "x" : "-24.85281374238571*scale",
+                "y" : "2*scale"
+              },
+              "end" : {
+                "x" : "0*scale",
+                "y" : "2*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-45*scale",
+                "y" : "65*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "24.85281374238571*scale",
+                "y" : "2*scale"
+              },
+              "control2" : {
+                "x" : "45*scale",
+                "y" : "30.20606076066001*scale"
+              },
+              "end" : {
+                "x" : "45*scale",
+                "y" : "65*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "0*scale",
+                "y" : "2*scale"
+              }
+            }
+          ],
+          "inputs" : [
+
+          ],
+          "kind" : "curveProfile",
+          "plane" : {
+            "origin" : {
+              "x" : "0*scale",
+              "y" : "0*scale",
+              "z" : "0*scale"
+            },
+            "u" : {
+              "x" : 1,
+              "y" : 0,
+              "z" : 0
+            },
+            "v" : {
+              "x" : 0,
+              "y" : 1,
+              "z" : 0
+            }
+          },
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "DC94AC25-47FC-522A-9CC0-F33412A727E1",
+        "name" : "Window body",
+        "operation" : {
+          "direction" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 1
+          },
+          "inputs" : [
+            "6D870F39-AA47-55DE-BB17-C80EA83510B8"
+          ],
+          "kind" : "extrude",
+          "values" : {
+            "distance" : "30*scale"
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "C302947C-43C6-5DCA-838A-79308DABEE21",
+        "name" : "Window opening",
+        "operation" : {
+          "curves" : [
+            {
+              "control1" : {
+                "x" : "26*scale",
+                "y" : "88.19595949289334*scale"
+              },
+              "control2" : {
+                "x" : "14.359403495600633*scale",
+                "y" : "107*scale"
+              },
+              "end" : {
+                "x" : "0*scale",
+                "y" : "107*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "26*scale",
+                "y" : "65*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-14.359403495600633*scale",
+                "y" : "107*scale"
+              },
+              "control2" : {
+                "x" : "-26*scale",
+                "y" : "88.19595949289334*scale"
+              },
+              "end" : {
+                "x" : "-26*scale",
+                "y" : "65*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "0*scale",
+                "y" : "107*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "-26*scale",
+                "y" : "41.80404050710667*scale"
+              },
+              "control2" : {
+                "x" : "-14.359403495600633*scale",
+                "y" : "23*scale"
+              },
+              "end" : {
+                "x" : "0*scale",
+                "y" : "23*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "-26*scale",
+                "y" : "65*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "14.359403495600633*scale",
+                "y" : "23*scale"
+              },
+              "control2" : {
+                "x" : "26*scale",
+                "y" : "41.80404050710667*scale"
+              },
+              "end" : {
+                "x" : "26*scale",
+                "y" : "65*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "0*scale",
+                "y" : "23*scale"
+              }
+            }
+          ],
+          "inputs" : [
+
+          ],
+          "kind" : "curveProfile",
+          "plane" : {
+            "origin" : {
+              "x" : "0*scale",
+              "y" : "0*scale",
+              "z" : "-1*scale"
+            },
+            "u" : {
+              "x" : 1,
+              "y" : 0,
+              "z" : 0
+            },
+            "v" : {
+              "x" : 0,
+              "y" : 1,
+              "z" : 0
+            }
+          },
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "C2995570-5424-5CFC-B72D-EA7DAF244DB6",
+        "name" : "Window tool",
+        "operation" : {
+          "direction" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 1
+          },
+          "inputs" : [
+            "C302947C-43C6-5DCA-838A-79308DABEE21"
+          ],
+          "kind" : "extrude",
+          "values" : {
+            "distance" : "32*scale"
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "50E7926C-0A2B-5A6F-A070-82D50740BE51",
+        "name" : "Window void",
+        "operation" : {
+          "inputs" : [
+            "DC94AC25-47FC-522A-9CC0-F33412A727E1",
+            "C2995570-5424-5CFC-B72D-EA7DAF244DB6"
+          ],
+          "kind" : "subtract",
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      }
+    ],
+    "id" : "97CB9455-1E2B-5CF5-9921-658B0ED66F58",
+    "name" : "matter_study_01",
+    "outputs" : [
+      "50E7926C-0A2B-5A6F-A070-82D50740BE51"
+    ],
+    "parameters" : [
+      {
+        "maximum" : 1.5,
+        "minimum" : 0.65,
+        "name" : "scale",
+        "unit" : "×",
+        "value" : 1
+      }
+    ],
+    "revision" : 0,
+    "unresolvedMeasurements" : [
+      "Digital appearance only; material and manufacturing samples not measured."
+    ],
+    "version" : 1
+  },
+  "cadRepresentation" : {
+    "components" : [
+      {
+        "brepAsset" : "cad-a0aec3e310472973483f10e29d437e59cf5fbd7d2245b2c7278e45abda3617a3.brep",
+        "brepSHA256" : "a0aec3e310472973483f10e29d437e59cf5fbd7d2245b2c7278e45abda3617a3",
+        "closed" : true,
+        "edgeCount" : 24,
+        "faceCount" : 10,
+        "featureFingerprint" : "14e57798f72d268e064f0c01c5c15f93c9fd11ce76fba0de870d9eca29e9a226",
+        "id" : "50E7926C-0A2B-5A6F-A070-82D50740BE51",
+        "maximum" : {
+          "x" : 45.00000010000001,
+          "y" : 128.0000001,
+          "z" : 30.0000001
+        },
+        "meshAsset" : "cad-4554bc069fa910d613a077a653178c19acc69a24fc05001852fca0dcdabe1ec8.mesh",
+        "meshSHA256" : "4554bc069fa910d613a077a653178c19acc69a24fc05001852fca0dcdabe1ec8",
+        "minimum" : {
+          "x" : -45.00000010000001,
+          "y" : 1.9999998999999964,
+          "z" : -1e-07
+        },
+        "name" : "Window void",
+        "solidCount" : 1,
+        "triangleCount" : 5718,
+        "valid" : true,
+        "vertexCount" : 16,
+        "volumeMM3" : 164319.87827080593
+      }
+    ],
+    "definitionSHA256" : "dae8cc42b869786468fb9fad828cbcf44058831ddb30435ba26631970139bba7",
+    "editability" : "nativeFeatureModel",
+    "kernelVersion" : "8.0.1+form.gprop2",
+    "meshDeflectionMM" : 0.05,
+    "modelID" : "97CB9455-1E2B-5CF5-9921-658B0ED66F58"
+  },
+  "color" : "#BC775E",
+  "designID" : "8539B262-DDA3-4444-A058-1D0AFC0113C7",
+  "id" : "D19B4E2B-19C3-445D-8C00-A1D8AF868DCC",
+  "locked" : false,
+  "materialID" : "clay",
+  "name" : "matter_study_01",
+  "parameters" : {
+
+  },
+  "position" : {
+    "x" : 0,
+    "y" : -1.9999998999999964,
+    "z" : 0
+  },
+  "recipeID" : "cadModel",
+  "relationship" : "original",
+  "rotation" : 0
+}

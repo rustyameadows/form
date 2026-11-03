@@ -95,6 +95,9 @@ import SwiftUI
           .disabled(store.mode == .artwork ? store.artworkSession.selection.isEmpty : store.selected.isEmpty)
       }
       CommandGroup(after: .toolbar) {
+        Button("Publication Pages") {store.togglePublicationPages()}
+          .keyboardShortcut("p",modifiers:[.command,.shift]).disabled(store.project == nil || store.showingHome)
+        Divider()
         Button("Fit All Objects") {
           if store.mode == .artwork { store.artworkSession.fit() } else { store.scene?.fitAll() }
         }.keyboardShortcut("0")
