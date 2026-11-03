@@ -223,9 +223,9 @@ extension StudioStore {
       guard let value=raw as? NSNumber,CFGetTypeID(value)==CFBooleanGetTypeID() else{throw FormError.invalid("\(key) must be boolean.")};return value.boolValue
     }
     let inside=try boolean("inside",paperInside),split=try boolean("split",false)
-    var panel=paperSelectedPanelID
+    var panel=paperSelectionObjectID==object.id ? paperSelectedPanelID:nil
     if let raw=args["panel_id"] {guard let value=raw as? String,try PaperConstruction.definition(for:object).net().panels.contains(where:{$0.id==value}) else{throw FormError.invalid("Choose an identified panel in this construction.")};panel=value}
-    finishArtworkEditing();paperInside=inside;paperSelectedPanelID=panel;showPaper(representation,object:object,split:split)
+    finishArtworkEditing();if paperSelectionObjectID != object.id {paperSelectedFoldID=nil};paperInside=inside;paperSelectionObjectID=object.id;paperSelectedPanelID=panel;showPaper(representation,object:object,split:split)
     return ["representation":representation.rawValue,"inside":paperInside,"panel_id":paperSelectedPanelID as Any? ?? NSNull(),"layout":surfaceLayout.rawValue,"object_id":object.id.uuidString]
   }
 }

@@ -14,6 +14,8 @@ extension StudioStore {
     guard let object = project?.objects.first(where: { $0.id == objectID }),
       let net = try? PaperConstruction.definition(for: object).net(), net.panels.contains(where: { $0.id == panelID }) else { return }
     if primary?.id != objectID { select(objectID) }
+    if paperSelectionObjectID != objectID { paperSelectedFoldID = nil }
+    paperSelectionObjectID = objectID
     paperSelectedPanelID = panelID
     if let foldID=paperSelectedFoldID,net.folds.first(where:{$0.id==foldID})?.childPanelID != panelID {paperSelectedFoldID=nil}
     changed(save: false)

@@ -98,6 +98,8 @@ struct TableObjectNavigator:View {
       accessibilityLabel:"Navigate to "+item.title,identifier:"table-navigator-object-"+item.id.uuidString) {
       highlightedID=item.id
       _ = store.navigateToTableObject(item.id)
+    }.contextMenu {
+      SelectionReferenceMenuActions(store: store, reference: store.objectSelectionReference([item.id]))
     }
   }
   private func reconcileHighlight(_ rows:[TableNavigationItem]) {

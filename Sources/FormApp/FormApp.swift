@@ -17,6 +17,7 @@ import SwiftUI
     .windowStyle(.hiddenTitleBar)
     .defaultSize(width: 1440, height: 940)
     .commands { WorkspaceFindCommands(store: store) }
+    .commands { SelectionReferenceCommands(store: store) }
     .commands {
       CommandGroup(replacing:.appInfo){
         Button("About LAB"){

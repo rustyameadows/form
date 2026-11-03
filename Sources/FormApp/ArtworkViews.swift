@@ -139,7 +139,12 @@ struct ArtworkLayers: View {
                 Spacer()
               }.font(.system(size: 11)).padding(.horizontal, 14).padding(.vertical, 9).background(
                 activeFrame?.id == frame.id ? Color.white : .clear)
-            }.buttonStyle(.plain)
+            }.buttonStyle(.plain).contextMenu {
+              if let store = session.store {
+                SelectionReferenceMenuActions(store: store,
+                  reference: store.canvasSelectionReference(frameID: frame.id, elementIDs: []))
+              }
+            }
           }
           InspectorDivider().padding(.top, 12).padding(.horizontal, InspectorStyle.panelPadding)
           HStack {
@@ -147,6 +152,11 @@ struct ArtworkLayers: View {
             Spacer()
             if !session.selection.isEmpty {
               Menu {
+                if let store = session.store {
+                  SelectionReferenceMenuActions(store: store, reference: store.canvasSelectionReference(),
+                    multiple: session.selection.count > 1)
+                  Divider()
+                }
                 Button("Group") { session.execute("group") }
                 Button("Ungroup") { session.execute("ungroup") }
                 Button("Bring to front") { session.execute("reorder", ["mode": "front"]) }
@@ -243,6 +253,11 @@ struct ArtworkLayers: View {
                   session.navigateGroup(to: row.element.parentID, selection: [row.element.id])
                 }
               }.contextMenu {
+                if let store = session.store {
+                  SelectionReferenceMenuActions(store: store,
+                    reference: store.canvasSelectionReference(frameID: activeFrame?.id, elementIDs: [row.element.id]))
+                  Divider()
+                }
                 Button("Rename") { renaming = row.element.id }
                 Button("Edit inside group") {
                   session.enterGroup(row.element.id)

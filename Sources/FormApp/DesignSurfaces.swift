@@ -115,6 +115,7 @@ extension StudioStore {
   private var fractions: [DesignSurfaceSplitDirection: CGFloat] = [.sideBySide: 0.5, .stacked: 0.5]
   private var applyingLayout = false
   private var inputMonitor: Any?
+  private var keyWindowObservation:NSObjectProtocol?
   private var projectID: UUID?
 
   init(store: StudioStore) {
@@ -125,8 +126,14 @@ extension StudioStore {
       MainActor.assumeIsolated { self?.observeFocus(event) }
       return event
     }
+    keyWindowObservation=NotificationCenter.default.addObserver(forName:NSWindow.didBecomeKeyNotification,object:nil,queue:.main) { [weak self] notification in
+      MainActor.assumeIsolated {self?.observeWindowFocus(notification)}
+    }
   }
-  deinit { if let inputMonitor { NSEvent.removeMonitor(inputMonitor) } }
+  deinit {
+    if let inputMonitor { NSEvent.removeMonitor(inputMonitor) }
+    if let keyWindowObservation {NotificationCenter.default.removeObserver(keyWindowObservation)}
+  }
 
   private func host(_ content: AnyView) -> NSHostingView<AnyView> {
     let view = NSHostingView(rootView: content)
@@ -235,8 +242,22 @@ extension StudioStore {
     let length = splitView.isVertical ? splitView.bounds.width : splitView.bounds.height
     return length - splitView.dividerThickness - min(splitView.isVertical ? 360 : 220, length * 0.4)
   }
+  private func observeWindowFocus(_ notification:Notification) {
+    guard let store,store.project != nil,!store.showingHome,
+      let window=notification.object as? NSWindow,let mainView,mainView.window === window,
+      !mainView.isHiddenOrHasHiddenAncestor else{return}
+    let surfaces:[(NSView?,WorkspaceMode)]=[(canvasHost,.artwork),(tableHost,.table)]
+    let visible=surfaces.filter {host,_ in
+      guard let host else{return false}
+      return host.superview === mainView && !host.isHiddenOrHasHiddenAncestor
+    }
+    // Returning from the separate Canvas window to a single Table pane is an
+    // actual surface change. Returning from another app to a split workspace
+    // must retain the last LAB pane, even when its native responder is stale.
+    if visible.count==1 {store.activateDesignSurface(visible[0].1)}
+  }
   private func observeFocus(_ event: NSEvent) {
-    guard let window = event.window else { return }
+    guard let store,store.project != nil,!store.showingHome,let window = event.window else { return }
     for (host, surface) in [(canvasHost, WorkspaceMode.artwork), (tableHost, .table)] {
       guard let host, host.window === window, host.superview != nil, !host.isHiddenOrHasHiddenAncestor else { continue }
       if event.type == .keyDown {
@@ -246,9 +267,9 @@ extension StudioStore {
         var responder = window.firstResponder as? NSView
         if let editor = responder as? NSTextView, editor.isFieldEditor { responder = editor.delegate as? NSView }
         guard responder is NSTextView || responder is NSControl else { continue }
-        if let responder, responder === host || responder.isDescendant(of: host) { store?.activateDesignSurface(surface); return }
+        if let responder, responder === host || responder.isDescendant(of: host) { store.activateDesignSurface(surface); return }
       } else if host.visibleRect.contains(host.convert(event.locationInWindow, from: nil)) {
-        store?.activateDesignSurface(surface); return
+        store.activateDesignSurface(surface); return
       }
     }
   }
@@ -328,7 +349,8 @@ struct DesignSurfaceWorkspace: NSViewRepresentable {
   required init?(coder: NSCoder) { fatalError("init(coder:) is not supported") }
   func returnCanvasToMain() { hosts.returnDetached(self) }
   func windowDidBecomeKey(_ notification: Notification) {
-    guard let store, store.canvasWindowController === self else { return }
+    guard let store,store.project != nil,!store.showingHome,store.surfaceLayout == .detached,
+      store.canvasWindowController === self,notification.object as? NSWindow === window else { return }
     store.activateDesignSurface(.artwork)
   }
   func windowWillClose(_ notification: Notification) {
