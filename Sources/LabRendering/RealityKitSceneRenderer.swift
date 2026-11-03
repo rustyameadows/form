@@ -100,9 +100,19 @@ import simd
   /// The async generator is available for heavy imported meshes. A reset or newer
   /// revision prevents its late result from becoming the active component.
   public func upsertAsync(_ payload:SceneRenderablePayload)async throws {
+    try Task.checkCancellation()
     try payload.transform.validate();try payload.mesh.validate(materialCount:payload.materials.count)
     let token=epoch,request=UUID(),key=payload.mesh.id+"|"+payload.mesh.revision
     pendingRequests[payload.componentID]=request
+    // Reserve ownership before yielding: reset/remove/newer uploads can revoke
+    // this request even before its isolated SDK worker gets an actor turn.
+    let upload=Task { @MainActor in try await self.upload(payload,key:key,token:token,request:request) }
+    try await withTaskCancellationHandler(operation:{try await upload.value},onCancel:{upload.cancel()})
+    try Task.checkCancellation()
+  }
+  private func upload(_ payload:SceneRenderablePayload,key:String,token:UUID,request:UUID)async throws {
+    try Task.checkCancellation()
+    guard token==epoch,pendingRequests[payload.componentID]==request else{throw SceneRendererError.cancelled}
     if meshCache[key]==nil {
       let info=descriptor(payload.mesh)
       // Keep the SDK coroutine in its own task. Directly awaiting it from a
@@ -115,6 +125,7 @@ import simd
       let entry=MeshEntry(resource:resource,originMM:info.origin,low:info.low,high:info.high,cost:payload.mesh.approximateBytes)
       meshCache[key]=entry;meshOrder.append(key);diagnostics.meshCacheBytes+=entry.cost;diagnostics.meshBuilds+=1
     }
+    try Task.checkCancellation()
     guard token==epoch,pendingRequests[payload.componentID]==request else{throw SceneRendererError.cancelled}
     try upsert(payload);trimMeshes()
   }

@@ -10,18 +10,10 @@ import simd
     let camera=try camera(scene:scene,view:view,width:width,height:height)
     try Task.checkCancellation()
     let renderer=try RealityKitSceneRenderer()
-    // Give SDK-backed coroutines their own task lifetime instead of sharing
-    // this short-lived renderer's async allocation frame. Forward cancellation
-    // explicitly so a cancelled review cannot leave uploads or captures alive.
-    for payload in scene where payload.visible {
-      try Task.checkCancellation()
-      let upload=Task { @MainActor in try await renderer.upsertAsync(payload) }
-      try await withTaskCancellationHandler(operation:{try await upload.value},onCancel:{upload.cancel()})
-    }
+    for payload in scene where payload.visible {try await renderer.upsertAsync(payload)}
     try renderer.setCamera(camera)
     try renderer.setLighting(.init(keyIntensity:3200,fillIntensity:700))
-    let capture=Task { @MainActor in try await renderer.capture(width:width,height:height,transparent:transparent,sampling:.native) }
-    let pixels=try await withTaskCancellationHandler(operation:{try await capture.value},onCancel:{capture.cancel()})
+    let pixels=try await renderer.capture(width:width,height:height,transparent:transparent)
     try Task.checkCancellation()
     let bitmap=NSBitmapImageRep(cgImage:pixels);bitmap.size = .init(width:width,height:height)
     let image=NSImage(size:bitmap.size);image.addRepresentation(bitmap);return image
