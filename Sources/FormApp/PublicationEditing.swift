@@ -33,6 +33,7 @@ import SwiftUI
   private var finished=false
   private var publishing=false
   private var redirectingSelection=false
+  private var synchronizingSelection=false
   init(canvas:VectorCanvasView,session:ArtworkSession,context:ResolvedTextStory) {
     self.canvas=canvas;self.session=session;storyID=context.story.id;projectID=session.store?.project?.id
     annotationHistory=StoryAnnotationHistory(text:context.story.text,annotations:session.store?.project?.textStories?.first{$0.id==context.story.id}?.annotations)
@@ -147,10 +148,16 @@ import SwiftUI
   func textDidChange(_ notification:Notification) {
     guard !publishing,let text=notification.object as? CanvasTextView else{return}
     composition.ensureLayout()
-    guard !text.hasMarkedText() else{return}
+    guard !text.hasMarkedText() else {
+      textViewDidChangeSelection(notification)
+      return
+    }
     publish(text)
     refreshSourcePresentation()
     for other in views where other !== text {other.resetSourceTracking()}
+    // TextKit may announce the intermediate selection from inside endEditing.
+    // Reconcile the settled caret after the character/attribute edit instead.
+    textViewDidChangeSelection(notification)
   }
   func textView(_ textView:NSTextView,doCommandBy commandSelector:Selector)->Bool {
     guard commandSelector == #selector(NSResponder.cancelOperation(_:)),let canvas else{return false}
@@ -159,7 +166,9 @@ import SwiftUI
     return true
   }
   func textViewDidChangeSelection(_ notification:Notification) {
-    guard let text=notification.object as? CanvasTextView else{return}
+    guard let text=notification.object as? CanvasTextView,
+      !composition.storage.isProcessingEditing,!synchronizingSelection else{return}
+    synchronizingSelection=true;defer{synchronizingSelection=false}
     composition.ensureLayout()
     let range=text.selectedRange()
     if text === sourceTextView {sourceRevision &+= 1;refreshSourceHighlight()}
