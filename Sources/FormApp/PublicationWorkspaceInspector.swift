@@ -217,7 +217,7 @@ struct PublicationWorkspaceInspector:View {
         if stories.isEmpty {Text("Select a text frame to start a linked story, or add a chapter from the page rail.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)}
         ForEach(stories){story in
           let overset=project.resolvedTextStory(story.id).map{PublicationStoryLayout.composition($0).oversetRange.length} ?? 0
-          WorkspaceNavigationRow(title:story.name,subtitle:overset>0 ? "\(overset) overset source units":"\(story.frames.count) frames · \(story.text.count) characters",symbol:"text.alignleft",statusSymbols:overset>0 ? ["exclamationmark.triangle"]:[],accessibilityLabel:"Edit story "+story.name,identifier:"publication-story-"+story.id.uuidString){
+          WorkspaceNavigationRow(title:story.name,subtitle:overset>0 ? "Text extends beyond its frames":"\(story.frames.count) frames · \(StorySourceStatistics.words(story.text)) words",symbol:"text.alignleft",statusSymbols:overset>0 ? ["exclamationmark.triangle"]:[],accessibilityLabel:"Edit story "+story.name,identifier:"publication-story-"+story.id.uuidString){
             session.store?.showSurface(.artwork);controller.open(document.id);controller.openStory(story.id)
           }
         }

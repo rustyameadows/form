@@ -155,6 +155,20 @@ public enum PublicationLists {
 }
 
 public final class PublicationLayoutManager:NSLayoutManager {
+  /// Source-reading ink is local to this layout manager, never shared storage.
+  public var displayInkColor:NSColor? {
+    didSet {
+      let range=NSRange(location:0,length:textStorage?.length ?? 0)
+      for key:NSAttributedString.Key in [.foregroundColor,.underlineColor,.strikethroughColor] {removeTemporaryAttribute(key,forCharacterRange:range)}
+      refreshDisplayInk()
+      invalidateDisplay(forCharacterRange:range)
+    }
+  }
+  public func refreshDisplayInk() {
+    guard let displayInkColor else{return}
+    let range=NSRange(location:0,length:textStorage?.length ?? 0)
+    for key:NSAttributedString.Key in [.foregroundColor,.underlineColor,.strikethroughColor] {addTemporaryAttribute(key,value:displayInkColor,forCharacterRange:range)}
+  }
   private struct GeneratedFont {
     var glyph:CGGlyph,property:NSLayoutManager.GlyphProperty,font:NSFont
   }
@@ -198,7 +212,7 @@ public final class PublicationLayoutManager:NSLayoutManager {
     guard let context=NSGraphicsContext.current?.cgContext else{return}
     context.saveGState();context.translateBy(x:origin.x,y:origin.y)
     for ink in PublicationLists.ink(layout:self,glyphRange:glyphsToShow) {
-      context.setFillColor(FormColor.color(ink.color).cgColor);context.addPath(ink.path);context.fillPath()
+      context.setFillColor((displayInkColor ?? FormColor.color(ink.color)).cgColor);context.addPath(ink.path);context.fillPath()
     }
     context.restoreGState()
   }

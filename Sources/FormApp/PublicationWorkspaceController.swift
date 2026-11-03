@@ -30,6 +30,10 @@ import FormGraphics
     guard let document else{return []}
     return (project?.textStories ?? []).filter{$0.publicationID==document.id}
   }
+  var currentPageStories:[TextStory] {
+    guard let pageID=currentPageID else{return []}
+    return stories.filter{$0.frames.contains{$0.objectID==pageID}}
+  }
   var activeStory:TextStory? {
     guard let pageID=currentPageID else{return nil}
     let candidates=stories.filter{$0.frames.contains{$0.objectID==pageID}}
@@ -267,7 +271,9 @@ import FormGraphics
   }
   func openStory(_ id:UUID) {
     guard stories.contains(where:{$0.id==id}) else{return}
-    if let page=stories.first(where:{$0.id==id})?.frames.first?.objectID {focusPage(page)}
+    if let story=stories.first(where:{$0.id==id}),
+      let page=story.frames.first(where:{$0.objectID==currentPageID})?.objectID ?? story.frames.first?.objectID,
+      page != currentPageID {focusPage(page)}
     session?.canvas?.openStorySource(id)
   }
   func overset(_ id:UUID)->Int {

@@ -18,6 +18,7 @@ public struct TextStory:Codable,Equatable,Identifiable,Sendable {
   public var textStyle:TextStyleReference?
   public var paragraphStyle:TextStyleReference?
   public var textRuns:[TextSpan]?
+  public var annotations:[StoryAnnotation]?
   public var paintStack:[ArtworkPaintLayer]?
   public var glyphOverrides:[GlyphOverride]?
   public var listItems:[ParagraphListItem]?
@@ -36,10 +37,25 @@ public struct TextStory:Codable,Equatable,Identifiable,Sendable {
     e.id=id;e.name=name;e.typography=typography;e.fillSwatchID=fillSwatchID;e.textStyle=textStyle;e.paragraphStyle=paragraphStyle
     e.paintStack=paintStack;e.textRuns=textRuns;e.glyphOverrides=glyphOverrides;e.listItems=listItems;return e
   }
-  public mutating func setSource(_ e:ArtworkElement) {
+  public mutating func setSource(_ e:ArtworkElement,textEdit:StoryTextEdit?=nil) {
+    if let edit=textEdit,StoryAnnotations.validRange(edit.range,in:text),(text as NSString).replacingCharacters(in:edit.range,with:edit.text).utf16.elementsEqual(e.text.utf16) {
+      annotations=StoryAnnotations.replacing(annotations,in:text,range:edit.range,with:edit.text)
+    }else{annotations=StoryAnnotations.relocating(annotations,from:text,to:e.text)}
     text=e.text;typography=e.typography;fontSize=e.fontSize;color=e.color;fillSwatchID=e.fillSwatchID
     paintStack=e.paintStack;textStyle=e.textStyle;paragraphStyle=e.paragraphStyle;textRuns=e.textRuns;glyphOverrides=e.glyphOverrides;listItems=e.listItems
     normalizeFrameBehavior()
+  }
+  /// Source anchors and rich spans address exact UTF-16 code units. Swift's
+  /// canonical String equality would hide an NFC/NFD edit from document Undo
+  /// when no later anchor or explicit run happened to move.
+  public static func ==(lhs:TextStory,rhs:TextStory)->Bool {
+    guard lhs.id==rhs.id,lhs.name==rhs.name,lhs.text.utf16.elementsEqual(rhs.text.utf16),
+      lhs.typography==rhs.typography,lhs.fontSize==rhs.fontSize,lhs.color==rhs.color,
+      lhs.fillSwatchID==rhs.fillSwatchID,lhs.textStyle==rhs.textStyle,lhs.paragraphStyle==rhs.paragraphStyle,
+      lhs.textRuns==rhs.textRuns,lhs.annotations==rhs.annotations,lhs.paintStack==rhs.paintStack,
+      lhs.glyphOverrides==rhs.glyphOverrides,lhs.listItems==rhs.listItems,lhs.language==rhs.language,
+      lhs.publicationID==rhs.publicationID,lhs.frames==rhs.frames else{return false}
+    return true
   }
   private mutating func normalizeFrameBehavior() {
     if typography != nil {typography!.frameMode="area";typography!.verticalAlignment="top";typography!.inheritedLanguage=nil}
@@ -136,6 +152,8 @@ extension Project {
     guard var story=textStories?.first(where:{$0.id==id}) else{return nil}
     let source=resolvingSwatches(in:Artwork(elements:[story.sourceElement]),keepingReferences:true).elements[0]
     story.setSource(source)
+    // Notes/references belong to editorial UI, never print/layout source or its cache key.
+    story.annotations=nil
     let document=story.publicationID.flatMap{id in publications?.first{$0.id==id}}
     let geometry=story.frames.compactMap{frame -> StoryFrameGeometry? in
       guard let value=storyFrame(frame) else{return nil}
@@ -181,6 +199,7 @@ extension Project {
         throw FormError.invalid("Use a story name, up to 100,000 characters and 400 distinct linked frames.")
       }
       try ParagraphLanguage.validate(story.language)
+      try StoryAnnotations.validate(story.annotations,in:story.text)
       try validateArtwork(Artwork(elements:[story.sourceElement]),maxTextCharacters:100000)
       let document=story.publicationID.flatMap{id in documents.first{$0.id==id}}
       guard story.publicationID==nil || document != nil else{throw FormError.invalid("The story's publication does not exist.")}
