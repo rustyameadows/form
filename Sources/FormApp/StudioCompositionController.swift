@@ -66,6 +66,10 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
   func reconcile() {
     cancelStagePointer()
     guard let project=store?.project else{reset();return}
+    // The workspace's source task may precede this first adoption. Reset owns
+    // the cache too, so republish its source after reconciliation rather than
+    // depending on sibling SwiftUI appearance/task ordering.
+    defer{synchronizeThumbnailSource(project)}
     if owner != project.id {reset();owner=project.id;draft=scenes.first ?? .fromProject(project);baseline=draft;baselineWasSaved=scenes.contains{$0.id==draft?.id};sync();return}
     if !dirty,baselineWasSaved,!scenes.contains(where:{$0.id==baseline?.id}) {draft=scenes.first ?? .fromProject(project);baseline=draft;baselineWasSaved=scenes.contains{$0.id==draft?.id};undoDrafts=[];redoDrafts=[]}
     if !dirty,let id=draft?.id,let saved=scenes.first(where:{$0.id==id}),saved != baseline {draft=saved;baseline=saved}
@@ -77,8 +81,12 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
   /// recalled scene must already belong to this project when that happens.
   private func adoptProject() -> Bool {
     guard let project=store?.project else{reset();return false}
-    if owner != project.id {reset();owner=project.id}
+    if owner != project.id {reset();owner=project.id;synchronizeThumbnailSource(project)}
     return true
+  }
+  private func synchronizeThumbnailSource(_ project:Project) {
+    guard let store else{return}
+    thumbnails.synchronize(project:project,assets:store.repository.url(for:project.id).appendingPathComponent("Assets"))
   }
   func requestScene(_ id:UUID) {
     guard !busy,adoptProject(),scenes.contains(where:{$0.id==id}) else{return}
