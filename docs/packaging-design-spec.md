@@ -20,6 +20,8 @@ This specification supersedes the assumption in [Constructed goods vision](const
 
 ## Structural scope
 
+The [two-piece rigid box specification](two-piece-rigid-box-spec.md) details base/lid fit, board layouts, paper and fabric covering, optional lining, taped or stapled joints, and construction packets.
+
 | Capability | Constructions it enables | Required control |
 | --- | --- | --- |
 | Folded sheets | Cartons, sleeves, envelopes, mailers | Panels, creases, flaps, tabs, windows, slots, notches, perforations |
