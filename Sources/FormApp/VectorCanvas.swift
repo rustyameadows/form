@@ -176,6 +176,15 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
   var prepareSource:((NSAttributedString)->NSAttributedString)?
   var onBecomeActive:(()->Void)?
   var onCharacterPosition:((CharacterPosition)->Void)?
+  var sourceFormattingAction:((StorySourceFormat)->Void)?
+  var sourceFindAction:(()->Void)?
+  override func performKeyEquivalent(with event:NSEvent)->Bool {
+    let modifiers=event.modifierFlags.intersection([.command,.option,.control,.shift])
+    if modifiers == .command,event.charactersIgnoringModifiers?.lowercased()=="f",let find=sourceFindAction {find();return true}
+    if let action=sourceFormattingAction,modifiers == .command,
+      let format=["b":StorySourceFormat.bold,"i":.italic,"u":.underline][event.charactersIgnoringModifiers?.lowercased() ?? ""] {action(format);return true}
+    return super.performKeyEquivalent(with:event)
+  }
   override var undoManager:UndoManager? {sharedUndoManager ?? super.undoManager}
   var verticalOffset = 0.0
   var horizontalOffset = 0.0
@@ -2617,11 +2626,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     publicationEditor=editor;session.editingText=true;editor.focus(frame);needsDisplay=true
   }
   func showStorySource() {publicationEditor?.showOverflow()}
-  func openStorySource(_ id:UUID) {
-    if let publicationEditor,publicationEditor.storyID==id {publicationEditor.showOverflow();return}
+  func openStorySource(_ id:UUID,revealOverflow:Bool=false) {
+    if let publicationEditor,publicationEditor.storyID==id {publicationEditor.showSource(revealOverflow:revealOverflow);return}
     guard let session,let context=session.store?.project?.resolvedTextStory(id) else{return}
     finishText();let editor=PublicationEditingController(canvas:self,session:session,context:context)
-    publicationEditor=editor;session.editingText=true;editor.showOverflow()
+    publicationEditor=editor;session.editingText=true;editor.showSource(revealOverflow:revealOverflow)
   }
   func revealStoryPage(_ id:UUID) {
     synchronize()

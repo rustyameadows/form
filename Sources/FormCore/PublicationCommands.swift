@@ -68,6 +68,7 @@ public enum PublicationCommands {
       if !itemIDs.insert(item.id).inserted {item.id=UUID();itemIDs.insert(item.id)}
       items.append(item)
     }
+    story.annotations=StoryAnnotations.replacing(story.annotations,in:story.text,range:.init(location:story.text.utf16.count,length:0),with:separator+source.text)
     story.text += separator+source.text;story.textRuns=runs
     story.glyphOverrides=glyphs.isEmpty ? nil:glyphs;story.listItems=items.isEmpty ? nil:items
   }
@@ -106,7 +107,7 @@ public enum PublicationCommands {
   public static func ensureEditable(_ story:TextStory,in project:Project) throws {
     for id in story.frames {_ = try frame(id,in:project,allowLinked:true)}
   }
-  public static func setSource(in project:inout Project,storyID:UUID,source:ArtworkElement,language:String?=nil,replaceLanguage:Bool=false) throws {
+  public static func setSource(in project:inout Project,storyID:UUID,source:ArtworkElement,language:String?=nil,replaceLanguage:Bool=false,textEdit:StoryTextEdit?=nil) throws {
     guard source.kind=="text",source.storyFrame==nil else{throw FormError.invalid("A story source must be ordinary editable text, without a frame reference.")}
     var candidate=project
     guard let index=candidate.textStories?.firstIndex(where:{$0.id==storyID}) else{throw FormError.missing("Text story not found.")}
@@ -114,7 +115,11 @@ public enum PublicationCommands {
     var source=source;source.id=storyID
     let old=Artwork(elements:[candidate.textStories![index].sourceElement])
     let recorded=Artwork(elements:[source]).recordingTextStyleOverrides(from:old).elements[0]
-    candidate.textStories![index].setSource(recorded)
+    if let edit=textEdit {
+      let original=candidate.textStories![index].text
+      guard StoryAnnotations.validRange(edit.range,in:original),(original as NSString).replacingCharacters(in:edit.range,with:edit.text).utf16.elementsEqual(recorded.text.utf16) else{throw FormError.invalid("The declared story edit must match its source replacement.")}
+    }
+    candidate.textStories![index].setSource(recorded,textEdit:textEdit)
     if replaceLanguage {candidate.textStories![index].language=try language.map{try ParagraphLanguage.canonical($0)}}
     try candidate.validatePublications();project=candidate
   }

@@ -66,6 +66,6 @@ extension PublicationCommands {
   public static func replaceStoryText(in project:inout Project,storyID:UUID,range:NSRange,text:String)throws {
     guard let story=project.textStories?.first(where:{$0.id==storyID}) else{throw FormError.missing("Text story not found.")}
     let replacement=try PublicationTextEdits.replacing(story.sourceElement,range:range,with:text)
-    try setSource(in:&project,storyID:storyID,source:replacement)
+    try setSource(in:&project,storyID:storyID,source:replacement,textEdit:.init(range:range,text:text))
   }
 }

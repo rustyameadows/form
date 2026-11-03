@@ -95,6 +95,17 @@ extension OperationEngine {
           let id=try uuid("story_id")
           try PublicationCommands.replaceStoryText(in:&p,storyID:id,range:NSRange(location:integer("location"),length:integer("length")),text:text)
           result=["story_id":id.uuidString,"source":try jsonObject(p.textStories!.first{$0.id==id}!.sourceElement)]
+        case "annotation_upsert":
+          let id=try uuid("story_id")
+          guard var raw=arguments["annotation"] as? [String:Any],Set(raw.keys).isSubset(of:["id","location","length","kind","body"]) else{throw FormError.invalid("Provide a story annotation with id (optional), location, length, kind and body.")}
+          if raw["id"]==nil {raw["id"]=UUID().uuidString}
+          let annotation=try JSONDecoder.form.decode(StoryAnnotation.self,from:JSONSerialization.data(withJSONObject:raw))
+          try PublicationCommands.upsertAnnotation(in:&p,storyID:id,annotation:annotation)
+          result=["story_id":id.uuidString,"annotation":try jsonObject(annotation)]
+        case "annotation_remove":
+          let id=try uuid("story_id"),annotationID=try uuid("annotation_id")
+          try PublicationCommands.removeAnnotation(in:&p,storyID:id,annotationID:annotationID)
+          result=["story_id":id.uuidString,"annotation_id":annotationID.uuidString,"removed":true]
         case "publication":try PublicationCommands.assignStory(in:&p,storyID:uuid("story_id"),publicationID:arguments["publication_id"] is NSNull ? nil:uuid("publication_id"))
         case "delete":
           let id=try uuid("story_id")
@@ -102,7 +113,7 @@ extension OperationEngine {
           try PublicationCommands.ensureEditable(story,in:p)
           if !story.frames.isEmpty {try PublicationCommands.unlinkFrames(in:&p,frames:story.frames)}
           p.textStories?.removeAll{$0.id==id};result=["deleted":true]
-        default:throw FormError.invalid("Story commands: list/get/create/append/reorder/unlink/edit/replace_text/publication/delete/layout.")
+        default:throw FormError.invalid("Story commands: list/get/create/append/reorder/unlink/edit/replace_text/annotation_upsert/annotation_remove/publication/delete/layout.")
         }
       } else {
         switch command {

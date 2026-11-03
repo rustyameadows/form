@@ -421,7 +421,7 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
-  public static let maximumSchemaVersion=63
+  public static let maximumSchemaVersion=64
   public var schemaVersion = 1
   public var id: UUID = UUID()
   public var name: String
@@ -448,6 +448,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if textStories?.contains(where:{$0.annotations?.isEmpty==false})==true {return max(schemaVersion,64)}
     if objects.contains(where:{$0.sheetAssembly != nil}) || publications?.contains(where:{$0.requiresExtendedPublicationSchema}) == true {return max(schemaVersion,63)}
     if recipes.contains(where: { $0.solid != nil }) { return max(schemaVersion, 62) }
     if storedArtworks.contains(where: { $0.elements.contains(where: { $0.objectView != nil }) }) { return max(schemaVersion, 61) }
