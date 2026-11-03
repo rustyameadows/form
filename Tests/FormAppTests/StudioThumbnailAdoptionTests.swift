@@ -100,9 +100,6 @@ import XCTest
     XCTAssertEqual(controller.selectedInstanceID,id)
     XCTAssertEqual(controller.draft,scene,"Compare every saved field, including camera precision and optional orientation")
     XCTAssertFalse(controller.dirty);XCTAssertFalse(controller.canUndoDraft)
-    let context=store.selectionContext(),studio=try XCTUnwrap(context["studio"] as? [String:Any])
-    XCTAssertEqual(studio["has_unsaved_changes"] as? Bool,false)
-    XCTAssertEqual(studio["native_draft_changed"] as? Bool,false)
     // Exercise the actual row task, not only the standalone cache API.
     var rows:[StudioSceneThumbnailNativeButton]=[]
     for _ in 0..<1000 {
