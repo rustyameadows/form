@@ -7,6 +7,25 @@ import FormCore
     let tree=ArtworkRenderTree(art,assets:assets,production:true,excluding:[])
     for e in art.elements where e.kind=="text" && tree.requiredForOutput(e) { try GlyphEngine.validateOutput(e) }
   }
+  /// Required assets follow the same masks, hidden ancestors and production
+  /// visibility as actual drawing; callers can validate current portable bytes.
+  public static func requiredImageAssets(_ source:Artwork,assets:URL)throws->Set<String> {
+    let art=try BooleanGeometry.materialized(source)
+    let tree=ArtworkRenderTree(art,assets:assets,production:true,excluding:[])
+    var result=Set<String>()
+    for element in art.elements where tree.requiredForOutput(element) {
+      if element.kind=="image" {
+        guard let asset=element.asset else{throw FormError.invalid("An image has no project asset reference.")}
+        result.insert(asset)
+      }
+      let paints=element.paintLayers+(element.textRuns ?? []).flatMap{$0.paintStack ?? []}
+      for layer in paints where layer.enabled && layer.effectivePaint.opacity>0 && layer.paint.kind=="image" {
+        guard let asset=layer.paint.asset else{throw FormError.invalid("An image paint has no project asset reference.")}
+        result.insert(asset)
+      }
+    }
+    return result
+  }
   public static func validateAppearanceOutput(_ source: Artwork, assets: URL, pixelsPerMM: Double) throws {
     let art = try BooleanGeometry.materialized(source)
     let tree = ArtworkRenderTree(art, assets: assets, production: true, excluding: [])

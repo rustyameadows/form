@@ -208,7 +208,7 @@ struct StudioCompositionWorkspace:View {
       TextField("Instance name",text:Binding(get:{instance.name},set:{value in controller.changeInstance(id:instance.id){$0.name=value}})).textFieldStyle(InspectorTextFieldStyle())
       Toggle("Visible",isOn:Binding(get:{instance.visible},set:{value in controller.changeInstance(id:instance.id){$0.visible=value}})).inspectorToggle()
       if instance.prop==nil {
-        Picker("Product / variant",selection:Binding<UUID?>(get:{instance.sourceObjectID},set:{value in controller.changeInstance(id:instance.id){$0.sourceObjectID=value;$0.materialID=nil}})){
+        Picker("Product / variant",selection:Binding<UUID?>(get:{instance.sourceObjectID},set:{value in controller.changeInstance(id:instance.id){$0.sourceObjectID=value;$0.materialID=nil;$0.sheetPose=nil}})){
           if !controller.products.contains(where:{$0.id==instance.sourceObjectID}) {Text("Missing source · replace").tag(instance.sourceObjectID)}
           ForEach(controller.products){object in Text(object.name).tag(Optional(object.id))}
         }.inspectorPicker().accessibilityLabel("Studio instance product variant")
@@ -229,6 +229,9 @@ struct StudioCompositionWorkspace:View {
       }
       field("Rotation",value:instance.rotationDegrees,unit:"°"){value in controller.changeInstance(id:instance.id){$0.rotationDegrees=value}}
         .help("Yaw around the vertical Y axis")
+      if let project=store.project,let source=project.objects.first(where:{$0.id==instance.sourceObjectID}),source.sheetAssembly != nil {
+        StudioSheetPoseControls(controller:controller,instance:instance,source:source,project:project)
+      }
       HStack(spacing:6) {
         WorkspaceToolbarButton("Duplicate selected",symbol:"plus.square.on.square",help:"Add another linked instance of this product",showsTitle:true,identifier:"studio-duplicate-instance"){controller.duplicateInstance()}
         WorkspaceToolbarButton("Remove Studio instance",symbol:"trash",help:"Remove the selected instance from this scene",identifier:"studio-remove-instance"){controller.removeInstance()}

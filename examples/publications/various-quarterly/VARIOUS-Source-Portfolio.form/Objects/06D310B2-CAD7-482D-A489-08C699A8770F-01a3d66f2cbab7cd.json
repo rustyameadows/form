@@ -1,0 +1,255 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "elements" : [
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "72B52A41-D6BA-5E12-9012-AE8A15A50DDC",
+        "kind" : "path",
+        "name" : "editorial_process_12-rail0",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 75
+                  },
+                  "id" : "D60C3308-E12F-58EF-B7B6-53402277F2E6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 16,
+                    "y" : 30
+                  },
+                  "id" : "CAC22489-6B2F-5C27-852F-951E592F8752"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 30
+                  },
+                  "id" : "D69B94D0-152D-5C12-A8D7-F3C3CB5CDA3C"
+                },
+                {
+                  "anchor" : {
+                    "x" : 70,
+                    "y" : 75
+                  },
+                  "id" : "D6DF9B9F-7781-5F3C-8E68-266294EFCCD2"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#000000",
+          "join" : "round",
+          "width" : 0.9
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "D3F5C71F-345D-5AE7-8E43-C47BBB1995E1",
+        "kind" : "path",
+        "name" : "editorial_process_12-rail1",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : true,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 24,
+                    "y" : 62
+                  },
+                  "id" : "0FCDD0CF-8617-5EA2-ABCE-C32186854622"
+                },
+                {
+                  "anchor" : {
+                    "x" : 24,
+                    "y" : 17
+                  },
+                  "id" : "9A46B604-BD5B-5B39-A38A-C2C4C8B3676E"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 17
+                  },
+                  "id" : "CB78AC13-8D57-5414-9A69-E06F8429C1D6"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 62
+                  },
+                  "id" : "6433F662-B9A6-503F-B7D8-84C003C37457"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#000000",
+          "join" : "round",
+          "width" : 0.9
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 4,
+        "id" : "7C7FFB69-1818-5871-B161-DD95EFDDC707",
+        "kind" : "ellipse",
+        "name" : "editorial_process_12-pin",
+        "stroke" : {
+          "color" : "#000000",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 4,
+        "x" : 68,
+        "y" : 34
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "42CC8843-99AB-5847-B9DB-84DFF7E4D5C7",
+        "kind" : "path",
+        "name" : "editorial_process_12-fold",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 24
+                  },
+                  "id" : "ADDC2FE9-E4D2-5998-B3B7-34CA110D9640"
+                },
+                {
+                  "anchor" : {
+                    "x" : 28,
+                    "y" : 82
+                  },
+                  "id" : "5DCAE961-1C6E-59AD-9432-ACEE05961966"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#000000",
+          "dash" : [
+            1,
+            1.5
+          ],
+          "join" : "round",
+          "width" : 0.35
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#000000",
+        "fontSize" : 6,
+        "height" : 8,
+        "id" : "D32BE266-3D63-561F-8C6B-853F3F3F6F93",
+        "kind" : "text",
+        "name" : "editorial_process_12-id",
+        "text" : "METAL / 02",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 6.959999999999999,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85,
+        "x" : 10,
+        "y" : 91
+      }
+    ],
+    "showGuides" : false,
+    "unit" : "mm"
+  },
+  "designID" : "35DAF488-35BA-4187-A61D-7B5AD910D784",
+  "id" : "06D310B2-CAD7-482D-A489-08C699A8770F",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "editorial_process_12 / editable graphic",
+  "parameters" : {
+    "depth" : 100,
+    "width" : 100
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

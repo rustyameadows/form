@@ -1,0 +1,130 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : -511.8,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "926840F3-9061-591E-95C0-B3DCEB326D76",
+        "kind" : "text",
+        "name" : "master-verso-folio",
+        "text" : "{{page.number}}",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 14,
+        "x" : 18,
+        "y" : 268.4
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 7,
+        "height" : 6,
+        "id" : "2F647925-80B8-5CE4-B004-CCE0EBDC5C92",
+        "kind" : "text",
+        "name" : "master-verso-issue",
+        "text" : "VARIOUS / 01 — {{chapter.title}}",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 9.45,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 157.9,
+        "x" : 40,
+        "y" : 268.4
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "31274F6D-AC2B-4C2C-8D06-E226B671F2E0",
+  "id" : "36423940-1496-4D45-81E3-FFFB7726067E",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / Verso running furniture",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

@@ -1,0 +1,372 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 5885.7,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "512612A2-D8DD-50DE-8CA0-48270699F276",
+        "kind" : "text",
+        "name" : "signal_rooms_02-caption",
+        "text" : "Interval atlas\nSimple marks make their intervals the subject.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 131
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11.25,
+        "height" : 88,
+        "id" : "C0F80D7F-A154-5D18-9EAC-D12E27E8A019",
+        "kind" : "text",
+        "name" : "artist_03-body-frame-0",
+        "storyFrame" : {
+          "storyID" : "0232BA9A-1DB0-48A2-90D8-1BAEF074F86B"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 164
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11.25,
+        "height" : 88,
+        "id" : "CB257235-F648-5FC8-97CE-D0E47E5C11FE",
+        "kind" : "text",
+        "name" : "artist_03-body-frame-1",
+        "storyFrame" : {
+          "storyID" : "0232BA9A-1DB0-48A2-90D8-1BAEF074F86B"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 164
+      },
+      {
+        "color" : "#000000",
+        "contentSize" : {
+          "x" : 100,
+          "y" : 100
+        },
+        "fontSize" : 10,
+        "height" : 105,
+        "id" : "07CEE2F0-C190-50A8-A3C3-480F749B094B",
+        "kind" : "group",
+        "name" : "signal_rooms_02-placed-vector",
+        "text" : "",
+        "width" : 105,
+        "x" : 55.45,
+        "y" : 22
+      },
+      {
+        "color" : "#E9583C",
+        "fontSize" : 12,
+        "height" : 21,
+        "id" : "7DEBFB35-5EA2-52A2-BBAE-0AFC19CEA33F",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_020",
+        "parentID" : "07CEE2F0-C190-50A8-A3C3-480F749B094B",
+        "text" : "",
+        "width" : 21,
+        "x" : 10,
+        "y" : 20
+      },
+      {
+        "color" : "#235C8B",
+        "fontSize" : 12,
+        "height" : 20,
+        "id" : "DEBF4860-56C1-5982-8DCB-CB7FD982560A",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_021",
+        "parentID" : "07CEE2F0-C190-50A8-A3C3-480F749B094B",
+        "text" : "",
+        "width" : 20,
+        "x" : 20,
+        "y" : 34.89286239941719
+      },
+      {
+        "color" : "#E9583C",
+        "fontSize" : 12,
+        "height" : 19,
+        "id" : "53C3924F-07F3-55FE-BF8C-CA23359C479D",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_022",
+        "parentID" : "07CEE2F0-C190-50A8-A3C3-480F749B094B",
+        "text" : "",
+        "width" : 19,
+        "x" : 30,
+        "y" : 39.88086404396152
+      },
+      {
+        "color" : "#235C8B",
+        "fontSize" : 12,
+        "height" : 18,
+        "id" : "EF3E9CD3-796B-5EF2-8D3C-8286BA91CD9C",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_023",
+        "parentID" : "07CEE2F0-C190-50A8-A3C3-480F749B094B",
+        "text" : "",
+        "width" : 18,
+        "x" : 40,
+        "y" : 31.64661299048163
+      },
+      {
+        "color" : "#E9583C",
+        "fontSize" : 12,
+        "height" : 17,
+        "id" : "E10D5307-C308-5B47-A0D1-5AF19C76264D",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_024",
+        "parentID" : "07CEE2F0-C190-50A8-A3C3-480F749B094B",
+        "text" : "",
+        "width" : 17,
+        "x" : 50,
+        "y" : 15.666498392252398
+      },
+      {
+        "color" : "#235C8B",
+        "fontSize" : 12,
+        "height" : 16,
+        "id" : "781B36F4-0F85-576C-A4FE-F0F6004B5739",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_025",
+        "parentID" : "07CEE2F0-C190-50A8-A3C3-480F749B094B",
+        "text" : "",
+        "width" : 16,
+        "x" : 60,
+        "y" : 2.568484551728236
+      },
+      {
+        "color" : "#E9583C",
+        "fontSize" : 12,
+        "height" : 15,
+        "id" : "CC117F55-54FC-590E-83F2-1B6B75582807",
+        "kind" : "ellipse",
+        "name" : "signal_rooms_026",
+        "parentID" : "07CEE2F0-C190-50A8-A3C3-480F749B094B",
+        "text" : "",
+        "width" : 15,
+        "x" : 70,
+        "y" : 1.0637244881478267
+      },
+      {
+        "color" : "#191D1D",
+        "fontSize" : 34,
+        "height" : 22,
+        "id" : "281F6CE7-4D7F-55E8-BCB9-315B854B8CAF",
+        "kind" : "text",
+        "name" : "signal_rooms_02-title",
+        "parentID" : "07CEE2F0-C190-50A8-A3C3-480F749B094B",
+        "text" : "INTERVAL",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 39.44,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 89,
+        "x" : 8,
+        "y" : 66
+      },
+      {
+        "color" : "#191D1D",
+        "fontSize" : 6,
+        "height" : 8,
+        "id" : "E936FB72-3757-5DE7-AB1D-ACE74E42EBF3",
+        "kind" : "text",
+        "name" : "signal_rooms_02-note",
+        "parentID" : "07CEE2F0-C190-50A8-A3C3-480F749B094B",
+        "text" : "AN ATLAS OF WAITING",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Bold",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 6.959999999999999,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85,
+        "x" : 9,
+        "y" : 90
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "3A4BFC7E-028F-451C-865E-10C02C70430B",
+  "id" : "9151306C-FADA-4782-B7F5-325D8AA52894",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 22 / artist 03",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 5793.699999999999,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

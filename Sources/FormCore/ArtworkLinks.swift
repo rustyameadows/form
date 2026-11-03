@@ -2,6 +2,7 @@ import Foundation
 
 extension ProductObject {
   public var supportsArtworkFace: Bool {
+    if sheetAssembly != nil {return false}
     if PaperConstruction.isPaper(self){return true}
     if recipeID == "importedMesh" {return meshAsset?.parts.contains(where:{$0.uvSets.contains(0)}) == true}
     return !isCanvasWorkspace && recipeID != "bomberJacket" && !MerchandiseBlanks.garmentIDs.contains(recipeID) && (recipeID == "clock" || self["width"] > 0 && self["depth"] > 0)
@@ -33,7 +34,8 @@ extension Project {
     guard !object.isCanvasWorkspace else { return nil }
     let owner = artworkOwner(object)
     guard let stored = owner.artwork else { return nil }
-    let source=resolvingTextStories(in:stored,objectID:owner.id)
+    let owned=resolvingTextStories(in:stored,objectID:owner.id)
+    let source=resolvingPublicationSpreadArtwork(in:owned,objectID:owner.id)
     var art = (try? resolvingComponents(in: source, keepingSwatchReferences: true)) ?? source
     art.requiresInkOutput=hasUsedProductionInks(in:art)
     if !keepingSwatchReferences {art=resolvingSwatches(in:art)}
@@ -66,14 +68,23 @@ extension Project {
   }
   public mutating func setArtwork(_ artwork: Artwork, for objectID: UUID,
     recordingStyleOverrides: Bool = true) throws {
-    try validateArtwork(artwork)
     guard let object = objects.first(where: { $0.id == objectID }) else {
       throw FormError.missing("Object not found.")
     }
+    guard object.sheetAssembly==nil else{throw FormError.invalid("Edit this sheet assembly's original pages or cover sources on Canvas.")}
     guard object.patternAssembly==nil else {throw FormError.invalid("Edit the assembly's original pattern owner; its generated cloth is not a separate artwork source.")}
     let owner = artworkOwner(object)
+    var canonical = removingPublicationFurniture(
+      from:removingPublicationSpreadArtwork(from:artwork,objectID:owner.id),objectID:owner.id)
+    // Native/render composition is a view of the story, never saved frame data.
+    for index in canonical.elements.indices {
+      if var reference=canonical.elements[index].storyFrame {
+        reference.resolved=nil;reference.frame=nil;canonical.elements[index].storyFrame=reference
+      }
+    }
+    try validateArtwork(canonical)
     var artwork = recordingStyleOverrides
-      ? artwork.recordingTextStyleOverrides(from: owner.artwork) : artwork
+      ? canonical.recordingTextStyleOverrides(from: owner.artwork) : canonical
     artwork.requiresInkOutput=false
     if let bindings=owner.artworkParameterBindings,!bindings.isEmpty {
       try ArtworkParameterBindings.validateCanonical(bindings,source:artwork,parameters:artworkBindingParameters(for:owner))
@@ -151,6 +162,7 @@ extension Project {
     try validateGarmentBlocks()
     try validateStudioPresentation()
     try validatePublications()
+    try validateSheetAssemblies()
     try validateCanvasWorkspace()
     try validateTextiles()
     try validateTextStyles()

@@ -1,0 +1,408 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 12027.300000000001,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "7813C71B-8D6D-5E2C-BACD-8D01C55127F9",
+        "kind" : "text",
+        "name" : "various_back_04-caption",
+        "text" : "Return to the join\nThe assembled view checks the same connection.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 54.9,
+        "x" : 18,
+        "y" : 110
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "936B5A05-9BB6-5FFD-BBDF-DB2E4CB01382",
+        "kind" : "text",
+        "name" : "various_back_05-caption",
+        "text" : "Wide view\nThe complete silhouette establishes shared proportions.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 54.9,
+        "x" : 80.5,
+        "y" : 110
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "35CC9EE1-0543-5B4E-8872-7B3997D5615A",
+        "kind" : "text",
+        "name" : "various_back_06-caption",
+        "text" : "Working view\nA second view makes the relation legible.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 54.9,
+        "x" : 143,
+        "y" : 110
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 13,
+        "height" : 13,
+        "id" : "3BDF113E-C628-5D59-A963-DB010AB53000",
+        "kind" : "text",
+        "name" : "pocket_test-heading",
+        "text" : "The pocket test",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 17.55,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 137
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 10.75,
+        "height" : 97,
+        "id" : "5182CBF0-BCF2-58A1-A5F4-2C4AA8479F88",
+        "kind" : "text",
+        "name" : "various_back-pocket_test-frame-0",
+        "storyFrame" : {
+          "storyID" : "8A24FD8B-EC22-40B8-AC8E-73B3DE41628A"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 155
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 13,
+        "height" : 13,
+        "id" : "17066D69-EECE-56CC-A65F-5DC81CEC8CDC",
+        "kind" : "text",
+        "name" : "repair_room-heading",
+        "text" : "Room for a repair",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 17.55,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 137
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 10.75,
+        "height" : 97,
+        "id" : "2CADF319-984A-5341-8976-F7402478753C",
+        "kind" : "text",
+        "name" : "various_back-repair_room-frame-0",
+        "storyFrame" : {
+          "storyID" : "DC8C2F7E-CEE3-4E9F-8F2B-4E840A257186"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 155
+      },
+      {
+        "asset" : "2C9395BD-BE60-4AC8-97ED-C75DA57C1A30.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 84,
+        "id" : "71E0CA1A-C966-4DCA-9B0A-512038B1A37E",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.5228571428571429,
+          "x" : 0.23857142857142855,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / various_back_04",
+        "text" : "",
+        "width" : 54.9,
+        "x" : 18,
+        "y" : 22
+      },
+      {
+        "asset" : "80F4825C-CABA-4A56-884F-22399FE9CCC4.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 10,
+        "height" : 43.92,
+        "id" : "36BB17D7-F91D-584A-94A1-17B644F7EBA9",
+        "kind" : "image",
+        "name" : "various_back_05-placed-vector",
+        "text" : "",
+        "width" : 54.9,
+        "x" : 80.5,
+        "y" : 42.04
+      },
+      {
+        "asset" : "43F98765-D1CB-43AE-8BAF-FD6CB4DF1A0A.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 84,
+        "id" : "7BCA9130-DE34-4FE4-9081-1C753E0350D6",
+        "imageCrop" : {
+          "height" : 1,
+          "width" : 0.5228571428571429,
+          "x" : 0.23857142857142855,
+          "y" : 0
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / various_back_06",
+        "text" : "",
+        "width" : 54.9,
+        "x" : 143,
+        "y" : 22
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "A4EC3E22-6429-4311-BED4-7DA88376FC7A",
+  "id" : "FF2DFBBB-BE76-4C06-84A2-34092735F5F6",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 46 / various back",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 11839.29999999999,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

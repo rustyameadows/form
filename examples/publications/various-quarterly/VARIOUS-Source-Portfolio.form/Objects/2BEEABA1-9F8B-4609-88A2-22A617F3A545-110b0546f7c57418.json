@@ -1,0 +1,387 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "elements" : [
+      {
+        "color" : "#000000",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "C15AF6B8-01DD-559B-9FF6-F0D35185868C",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-anchor0",
+        "text" : "",
+        "width" : 6,
+        "x" : 77,
+        "y" : 47
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "256C676B-EA3C-5C40-A581-5757C8DDEA08",
+        "kind" : "path",
+        "name" : "cover_inside_back-spoke0",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 80,
+                    "y" : 50
+                  },
+                  "id" : "F1BE207F-6509-5571-BA02-7742EDA373BA"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 50
+                  },
+                  "id" : "6C64C162-34CB-578D-8C75-9F537428169D"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#000000",
+          "join" : "round",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#000000",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "90ACA03D-E263-59D6-83CD-D6F6D5BEF50B",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-anchor1",
+        "text" : "",
+        "width" : 6,
+        "x" : 62,
+        "y" : 72.98076211353316
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "25C11EE9-E8FF-575C-A506-69E003B3B40D",
+        "kind" : "path",
+        "name" : "cover_inside_back-spoke1",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 65,
+                    "y" : 75.98076211353316
+                  },
+                  "id" : "AD6FA195-2A4D-583E-AE1E-2E6BA975286A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 50
+                  },
+                  "id" : "BA57FFB4-244E-5E71-B795-EC64B4EC978E"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#000000",
+          "join" : "round",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#000000",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "03538591-B761-5C7A-B9FF-C0E8334132C6",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-anchor2",
+        "text" : "",
+        "width" : 6,
+        "x" : 32.00000000000001,
+        "y" : 72.98076211353316
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "0BE6C044-0542-51CB-91CA-E6EC6D8B9775",
+        "kind" : "path",
+        "name" : "cover_inside_back-spoke2",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 35.00000000000001,
+                    "y" : 75.98076211353316
+                  },
+                  "id" : "48636D86-7F51-51B8-A7F0-9EC53E212D5F"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 50
+                  },
+                  "id" : "0092BC0F-68FA-5889-A196-FAE12C04150D"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#000000",
+          "join" : "round",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#000000",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "6FAE306A-7585-582C-BC01-2C5AC80C6D26",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-anchor3",
+        "text" : "",
+        "width" : 6,
+        "x" : 17,
+        "y" : 47.00000000000001
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "30A9B57B-0562-5939-9A55-E53B97CA1FD8",
+        "kind" : "path",
+        "name" : "cover_inside_back-spoke3",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 20,
+                    "y" : 50.00000000000001
+                  },
+                  "id" : "C59C3594-11E4-5604-A890-8E8EE5A97D8A"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 50
+                  },
+                  "id" : "E2CEC5ED-2DC0-5954-A7ED-E1EADA3D55E1"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#000000",
+          "join" : "round",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#000000",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "BF7AD816-894B-5760-A104-BC928EF0BD19",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-anchor4",
+        "text" : "",
+        "width" : 6,
+        "x" : 31.999999999999986,
+        "y" : 21.019237886466847
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "12589571-495F-5AC8-9392-39DE240AEE08",
+        "kind" : "path",
+        "name" : "cover_inside_back-spoke4",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 34.999999999999986,
+                    "y" : 24.019237886466847
+                  },
+                  "id" : "F933FAAC-1BDA-5A30-A145-0373FD1A1C83"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 50
+                  },
+                  "id" : "78C12781-DC95-5DE1-B9AB-7F7DC33C448D"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#000000",
+          "join" : "round",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#000000",
+        "fontSize" : 12,
+        "height" : 6,
+        "id" : "6E15C7FE-F4B9-5A57-8808-8EDF418FA8A0",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-anchor5",
+        "text" : "",
+        "width" : 6,
+        "x" : 62,
+        "y" : 21.019237886466843
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "AC6D043B-FDB6-52E7-9159-C02EDD93303A",
+        "kind" : "path",
+        "name" : "cover_inside_back-spoke5",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 65,
+                    "y" : 24.019237886466843
+                  },
+                  "id" : "6A729029-8941-5F0C-9B1A-E37CE3CFB4BC"
+                },
+                {
+                  "anchor" : {
+                    "x" : 50,
+                    "y" : 50
+                  },
+                  "id" : "93B7D1E0-11D2-5E96-AB6F-1EC7524B9049"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#000000",
+          "join" : "round",
+          "width" : 0.5
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 22,
+        "id" : "1EA26B87-2EA7-54B9-AA20-20E912FB9ECB",
+        "kind" : "ellipse",
+        "name" : "cover_inside_back-center",
+        "stroke" : {
+          "color" : "#000000",
+          "width" : 1
+        },
+        "text" : "",
+        "width" : 22,
+        "x" : 39,
+        "y" : 39
+      }
+    ],
+    "showGuides" : false,
+    "unit" : "mm"
+  },
+  "designID" : "3F56DC56-EDF4-4B84-8EC6-40B6E96FF8DA",
+  "id" : "2BEEABA1-9F8B-4609-88A2-22A617F3A545",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "cover_inside_back / editable graphic",
+  "parameters" : {
+    "depth" : 100,
+    "width" : 100
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

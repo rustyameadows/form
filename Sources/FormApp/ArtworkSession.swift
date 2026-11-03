@@ -14,6 +14,7 @@ struct CanvasFrame: Identifiable {
   // Derived once for the source snapshot, shared by every readable paper face.
   var paperDefinition: PaperConstruction? = nil
   var paperNet: PaperNet? = nil
+  var publicationSpread: CanvasPublicationSpread? = nil
   var id: UUID { projection?.id ?? object.id }
   var title: String { projection?.title ?? (object.name + (sourceReview == nil ? "":" · Registered source")) }
   var isWorkspace: Bool { object.isCanvasWorkspace }
@@ -111,6 +112,10 @@ enum ArtworkTool: String, CaseIterable {
   private var memoProjectID: UUID?
   private(set) var paperGeometryBuildCount = 0
   private(set) var projectionBuildCount = 0
+  lazy var publicationWorkspace=PublicationWorkspaceController(session:self)
+  private func publicationFrames(_ values:[CanvasFrame])->[CanvasFrame] {
+    publicationWorkspace.layoutFrames(values)
+  }
   private(set) var frameBuildCount=0
   private var artworkGesture:(key:String,token:UUID)?
 
@@ -329,7 +334,7 @@ enum ArtworkTool: String, CaseIterable {
     }
     let request = FrameRequest(generation: store.engine.projectGeneration, objectID: objectID,
       linkedTargetID: linkedTargetID, dieline: dieline, editingComponent: componentReturn != nil)
-    if frameRequest == request, let memo = frameMemo { return memo.frames }
+    if frameRequest == request, let memo = frameMemo { return publicationFrames(memo.frames) }
     if memoProjectID != project.id {
       paperGeometryMemo.removeAll();projectionMemo.removeAll();editableProjectionMemo=nil
       memoProjectID=project.id
@@ -347,14 +352,14 @@ enum ArtworkTool: String, CaseIterable {
     }
     let inputs=FrameInputs(project:frameProject,objectID:frameObjectID,linkedTargetID:frameTargetID,
       dieline:dieline,editingComponent:componentReturn != nil)
-    if let memo=frameMemo,memo.inputs==inputs {frameRequest=request;return memo.frames}
+    if let memo=frameMemo,memo.inputs==inputs {frameRequest=request;return publicationFrames(memo.frames)}
     let values=buildFrames(project:project)
     frameBuildCount+=1;frameMemo = .init(inputs:inputs,frames:values);frameRequest=request
     let ids=Set(values.compactMap { $0.projection?.id })
     projectionMemo=projectionMemo.filter { ids.contains($0.key) }
     let paperIDs=Set(project.objects.filter { PaperConstruction.isPaper($0) }.map(\.id))
     paperGeometryMemo=paperGeometryMemo.filter { paperIDs.contains($0.key) }
-    return values
+    return publicationFrames(values)
   }
   private func paperGeometry(_ object:ProductObject)->PaperGeometryMemo? {
     let inputs=PaperGeometryInputs(recipeID:object.recipeID,parameters:object.parameters,
@@ -378,7 +383,7 @@ enum ArtworkTool: String, CaseIterable {
   private func buildFrames(project:Project)->[CanvasFrame] {
     let objects=project.objects
     let related = objects.filter { $0.isCanvasWorkspace } + objects.filter {object in
-      guard !object.isCanvasWorkspace,!PaperConstruction.isPaper(object),
+      guard object.sheetAssembly==nil,!object.isCanvasWorkspace,!PaperConstruction.isPaper(object),
         object.recipeID=="artboard" || project.isIndependentFlatArtworkSource(object) || project.isIndependentSewingSource(object) || object.artworkParameterBindings?.isEmpty == false || object.id==objectID else{return false}
       // Transferred component definitions are resources for their instances,
       // not additional artboards. Expose a source only while it is explicitly
@@ -508,6 +513,7 @@ enum ArtworkTool: String, CaseIterable {
     return result
   }
   func reconcile() {
+    publicationWorkspace.reconcile()
     if let maskEditing, !art.elements.contains(where: { $0.id == maskEditing.maskID }) { self.maskEditing = nil }
     if componentReturn != nil && object?.componentDefinition != true { componentReturn = nil }
     if let linkedTargetID, store?.project?.objects.contains(where: { $0.id == linkedTargetID }) != true {

@@ -4,3 +4,6 @@ Tests/FormCADKernelTests/Fixtures/*.step -whitespace
 Tests/FormCADKernelTests/Fixtures/*.brep -text -whitespace
 # Patch context includes upstream blank-line prefixes; preserve its exact bytes.
 scripts/patches/*.patch -text -whitespace
+# Authored native examples retain their exact project and CAD asset bytes.
+examples/publications/**/*.form/** linguist-generated=true
+examples/publications/**/*.form/Assets/*.brep binary

@@ -1,0 +1,130 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : -511.8,
+      "y" : 329.4
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 6,
+        "id" : "DE27C75C-0F08-5177-86B0-B336BAC324B1",
+        "kind" : "text",
+        "name" : "master-recto-folio",
+        "text" : "{{page.number}}",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 14,
+        "x" : 183.9,
+        "y" : 268.4
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 7,
+        "height" : 6,
+        "id" : "4CDBAFC2-BCF7-5439-BBEC-0F54F93D01EE",
+        "kind" : "text",
+        "name" : "master-recto-issue",
+        "text" : "VARIOUS / 01 — {{chapter.title}}",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 9.45,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 157.9,
+        "x" : 18,
+        "y" : 268.4
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "9B0D2048-E832-41D1-8C56-7B9DF23F1466",
+  "id" : "B2F69C71-64E8-4CD4-B572-CDC35C58BED8",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / Recto running furniture",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

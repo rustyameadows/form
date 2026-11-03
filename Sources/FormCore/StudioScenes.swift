@@ -13,11 +13,16 @@ public struct StudioInstance:Codable,Equatable,Identifiable,Sendable {
   public var positionMM:Vector3
   public var rotationDegrees:Double
   public var materialID:String?
+  public var sheetPose:StudioSheetPose?
   public var visible:Bool=true
   public init(name:String,sourceObjectID:UUID?=nil,prop:StudioProp?=nil,positionMM:Vector3 = .init(),rotationDegrees:Double=0){self.name=name;self.sourceObjectID=sourceObjectID;self.prop=prop;self.positionMM=positionMM;self.rotationDegrees=rotationDegrees}
   public func validate()throws {
     guard !name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty,name.count<=120,(sourceObjectID != nil) != (prop != nil),[positionMM.x,positionMM.y,positionMM.z,rotationDegrees].allSatisfy({$0.isFinite && abs($0)<=1_000_000}),materialID.map({!$0.isEmpty && $0.count<=200}) ?? true else{throw FormError.invalid("A Studio instance needs one product source or prop, a name and finite placement.")}
     if let prop {guard [prop.widthMM,prop.heightMM,prop.depthMM].allSatisfy({$0.isFinite && (5...10000).contains($0)}),prop.color.range(of:"^#[0-9a-fA-F]{6}$",options:.regularExpression) != nil else{throw FormError.invalid("Studio props need 5–10000 mm dimensions and a six-digit hex color.")}}
+    if let sheetPose {
+      guard sourceObjectID != nil else{throw FormError.invalid("A shelf prop cannot use publication pose controls.")}
+      try sheetPose.validate()
+    }
   }
 }
 public struct StudioMotion:Codable,Equatable,Sendable {
@@ -65,9 +70,17 @@ public struct StudioComposition:Codable,Equatable,Identifiable,Sendable {
     if motion.mode == .between {guard (motion.startCamera ?? camera).projection==motion.endCamera?.projection else{throw FormError.invalid("Motion endpoints must use the same camera projection.")}}
     for instance in instances {try instance.validate()}
   }
+  public func validateSourcePoses(in project:Project,previous:StudioComposition?=nil)throws {
+    for instance in instances {
+      if let pose=instance.sheetPose,let source=project.objects.first(where:{$0.id==instance.sourceObjectID}) {
+        let accepted=previous?.instances.first{$0.id==instance.id && $0.sourceObjectID==instance.sourceObjectID && $0.sheetPose==instance.sheetPose}
+        _ = try pose.applying(to:source,in:project,clampingSpread:accepted != nil)
+      }
+    }
+  }
   public static func fromProject(_ project:Project,name:String="Still life 01")->Self {
     var scene=Self(name:name,camera:project.camera)
-    scene.instances=project.objects.filter{$0.hasTablePresentation && $0.recipeID != "artboard" && $0.recipeID != "reference" && $0.textile?.attachment==nil && $0.clothAttachment==nil && $0.patternAssemblyAttachment==nil}.prefix(128).map{.init(name:$0.name,sourceObjectID:$0.id,positionMM:$0.position,rotationDegrees:$0.rotation)}
+    scene.instances=project.tablePresentationObjects.filter{($0.recipeID != "artboard" || $0.sheetAssembly != nil) && $0.recipeID != "reference" && $0.textile?.attachment==nil && $0.clothAttachment==nil && $0.patternAssemblyAttachment==nil}.prefix(128).map{.init(name:$0.name,sourceObjectID:$0.id,positionMM:$0.position,rotationDegrees:$0.rotation)}
     return scene
   }
   /// Resolve linked sources into ephemeral render objects, with deterministic IDs.
@@ -96,6 +109,7 @@ public struct StudioComposition:Codable,Equatable,Identifiable,Sendable {
         var object=original;object.id=map[original.id]!;object.groupID=nil
         if original.id==source.id {
           object.name=instance.name;object.position=instance.positionMM;object.rotation=instance.rotationDegrees
+          if let pose=instance.sheetPose {object=try pose.applying(to:object,in:project,clampingSpread:true)}
           if let material=instance.materialID {guard project.material(material).id==material else{throw FormError.missing("A scene material is missing.")};object.materialID=material;object.color=nil}
           // The source's world attachment does not constrain its independent presentation instance.
           object.textile?.attachment=nil;object.clothAttachment=nil;object.patternAssemblyAttachment=nil
@@ -140,9 +154,10 @@ public enum StudioSceneCommands {
       guard data.count<=2_097_152 else{throw FormError.invalid("Scene definitions are limited to 2 MiB.")}
       scene=try JSONDecoder.form.decode(StudioComposition.self,from:data)
       if let prior=scenes.first(where:{$0.id==scene.id}) {guard scene.revision==prior.revision else{throw FormError.invalid("The saved scene changed. Reload before saving this draft.")};if scene==prior{return try jsonObject(prior)};scene.revision+=1}
-    }else if command=="duplicate" {guard Set(a.keys).isSubset(of:["command","scene_id","name"]),a["name"]==nil || a["name"] is String else{throw FormError.invalid("Duplicate accepts scene_id and an optional name.")};scene=try existing();scene.id=UUID();scene.revision=1;scene.name=a["name"] as? String ?? scene.name+" copy";for i in scene.instances.indices{scene.instances[i].id=UUID()}}
+    }else if command=="duplicate" {guard Set(a.keys).isSubset(of:["command","scene_id","name"]),a["name"]==nil || a["name"] is String else{throw FormError.invalid("Duplicate accepts scene_id and an optional name.")};scene=try existing();scene.id=UUID();scene.revision=1;scene.name=a["name"] as? String ?? scene.name+" copy";for i in scene.instances.indices{let pose=try scene.instances[i].effectiveSheetPose(in:project);scene.instances[i].sheetPose=pose;scene.instances[i].id=UUID()}}
     else {throw FormError.invalid("Use list, get, create, save, duplicate or delete for Studio scenes.")}
-    try scene.validate();guard scenes.contains(where:{$0.id==scene.id}) || scenes.count<32 else{throw FormError.invalid("A project supports at most 32 Studio scenes.")}
+    try scene.validate();try scene.validateSourcePoses(in:project,previous:scenes.first{$0.id==scene.id})
+    guard scenes.contains(where:{$0.id==scene.id}) || scenes.count<32 else{throw FormError.invalid("A project supports at most 32 Studio scenes.")}
     try engine.edit("Saved Studio scene",source:source){p in var value=p.studioPresentation ?? .init();var items=value.scenes ?? [];if let i=items.firstIndex(where:{$0.id==scene.id}){items[i]=scene}else{items.append(scene)};value.scenes=items;p.studioPresentation=value}
     return try jsonObject(scene)
   }
@@ -157,6 +172,10 @@ public enum StudioSceneCommands {
     try camera(raw["camera"]);try fields(raw["pixels"],["width","height"]);try fields(raw["motion"],["mode","seconds","fps","orbitDegrees","startCamera","endCamera"])
     if let motion=raw["motion"] as? [String:Any]{try camera(motion["startCamera"]);try camera(motion["endCamera"])}
     guard let instances=raw["instances"] as? [[String:Any]],instances.count<=128 else{throw FormError.invalid("Use at most 128 scene instances.")}
-    for instance in instances {try fields(instance,["id","name","sourceObjectID","prop","positionMM","rotationDegrees","materialID","visible"]);try fields(instance["prop"],["widthMM","heightMM","depthMM","color"]);try fields(instance["positionMM"],["x","y","z"])}
+    for instance in instances {
+      try fields(instance,["id","name","sourceObjectID","prop","positionMM","rotationDegrees","materialID","visible","sheetPose"])
+      try fields(instance["prop"],["widthMM","heightMM","depthMM","color"]);try fields(instance["positionMM"],["x","y","z"])
+      try fields(instance["sheetPose"],["openingDegrees","activeSpread","bendMM","bindingStyle"])
+    }
   }
 }

@@ -1,0 +1,196 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 4862.1,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "E278318A-3428-5994-AD9E-66A522DC362E",
+        "kind" : "text",
+        "name" : "useful_gap_01-caption",
+        "text" : "Two edges\nThe edges turn; the interval remains constant.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 179.9,
+        "x" : 18,
+        "y" : 155
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11,
+        "height" : 67,
+        "id" : "BFBF5FEA-9E58-5536-9D93-4303279BEE6C",
+        "kind" : "text",
+        "name" : "style_01-body-frame-2",
+        "storyFrame" : {
+          "storyID" : "6C55C865-8E62-4916-B311-403B30BF4ACD"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 185
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11,
+        "height" : 67,
+        "id" : "AA6F9CAF-EF9A-565D-BF49-03D4254BA13C",
+        "kind" : "text",
+        "name" : "style_01-body-frame-3",
+        "storyFrame" : {
+          "storyID" : "6C55C865-8E62-4916-B311-403B30BF4ACD"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 185
+      },
+      {
+        "asset" : "7950861D-7774-4B0D-BD61-E035AE28F009.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 128,
+        "id" : "9AC50CFF-EE28-46C3-9314-C41920D4113B",
+        "imageCrop" : {
+          "height" : 0.9701869631126832,
+          "width" : 1,
+          "x" : 0,
+          "y" : 0.014906518443658423
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / useful_gap_01",
+        "text" : "",
+        "width" : 395.8,
+        "x" : 18,
+        "y" : 23
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "44D47A0B-1907-470A-BDD3-694501914D45",
+  "id" : "33B8BCA9-1573-4955-AF18-F017658BE94D",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 18 / style 01",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 4786.1,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

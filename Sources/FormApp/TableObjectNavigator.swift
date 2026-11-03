@@ -15,7 +15,7 @@ struct TableNavigationItem:Identifiable,Equatable {
 enum TableNavigationInventory {
   static func items(in project:Project?,query:String="",isolated:Set<UUID>=[])->[TableNavigationItem] {
     guard let project else{return []}
-    let objects=project.objects.filter(\.hasTablePresentation)
+    let objects=project.tablePresentationObjects
     let groups=Dictionary(grouping:objects.compactMap{object in object.groupID.map{($0,object.id)}},by:{$0.0})
     var ordinals:[UUID:Int]=[:]
     for object in objects {if let id=object.groupID,ordinals[id]==nil {ordinals[id]=ordinals.count+1}}

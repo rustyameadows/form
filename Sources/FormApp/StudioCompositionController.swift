@@ -32,6 +32,7 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
   private(set) var stageSyncCount=0
   var resolutionBuildCount:Int {resolutionCache.builds}
   private var owner:UUID?,baseline:StudioComposition?
+  private var inspectorDraftBaseline:StudioComposition?
   private var playback:Task<Void,Never>?,exportTask:Task<Void,Never>?,prepareTask:Task<Void,Never>?
   private var generation=0
   private var sceneSelectionGeneration=0
@@ -61,7 +62,7 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
   var canUndoDraft:Bool{!undoDrafts.isEmpty && !busy}
   var canRedoDraft:Bool{!redoDrafts.isEmpty && !busy}
   var selected:StudioInstance?{draft?.instances.first{$0.id==selectedInstanceID}}
-  var products:[ProductObject]{store?.project?.objects.filter{$0.hasTablePresentation && $0.recipeID != "reference"} ?? []}
+  var products:[ProductObject]{store?.project?.tablePresentationObjects.filter{$0.recipeID != "reference"} ?? []}
   func reconcile() {
     cancelStagePointer()
     guard let project=store?.project else{reset();return}
@@ -71,7 +72,7 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
     if let id=selectedInstanceID,draft?.instances.contains(where:{$0.id==id}) != true {selectedInstanceID=nil}
     sync()
   }
-  func reset(){cancelStagePointer();stop();exportTask?.cancel();prepareTask?.cancel();owner=nil;draft=nil;baseline=nil;selectedInstanceID=nil;pendingSceneID=nil;lastOutput=nil;error=nil;generation+=1;sceneSelectionGeneration+=1;renderer.clear();thumbnails.reset();resolutionCache.reset();stageInput=nil;appliedLighting=nil;undoDrafts=[];redoDrafts=[];baselineWasSaved=false;emptyBaseline=false;renderOwners=[:]}
+  func reset(){inspectorDraftBaseline=nil;cancelStagePointer();stop();exportTask?.cancel();prepareTask?.cancel();owner=nil;draft=nil;baseline=nil;selectedInstanceID=nil;pendingSceneID=nil;lastOutput=nil;error=nil;generation+=1;sceneSelectionGeneration+=1;renderer.clear();thumbnails.reset();resolutionCache.reset();stageInput=nil;appliedLighting=nil;undoDrafts=[];redoDrafts=[];baselineWasSaved=false;emptyBaseline=false;renderOwners=[:]}
   /// Selection may arrive before the workspace's onAppear reconciliation. The
   /// recalled scene must already belong to this project when that happens.
   private func adoptProject() -> Bool {
@@ -135,9 +136,20 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
   func change(_ body:(inout StudioComposition)->Void) {
     guard !busy else{return};cancelStagePointer();guard var value=draft else{return};stop();body(&value);guard value != draft else{return};rememberDraft();draft=value;time=0;error=nil;sync()
   }
-  private func rememberDraft(){if let draft {undoDrafts.append(draft);if undoDrafts.count>80{undoDrafts.removeFirst()};redoDrafts=[];store?.objectWillChange.send()}}
-  func undoDraft()->Bool {guard !busy else{return false};cancelStagePointer();guard let value=undoDrafts.popLast(),let draft else{return false};stop();redoDrafts.append(draft);self.draft=value;time=0;sync();return true}
-  func redoDraft()->Bool {guard !busy else{return false};cancelStagePointer();guard let value=redoDrafts.popLast(),let draft else{return false};stop();undoDrafts.append(draft);self.draft=value;time=0;sync();return true}
+  private func rememberDraft(){guard inspectorDraftBaseline==nil else{return};if let draft {appendDraftCheckpoint(draft)}}
+  private func appendDraftCheckpoint(_ value:StudioComposition){undoDrafts.append(value);if undoDrafts.count>80{undoDrafts.removeFirst()};redoDrafts=[];store?.objectWillChange.send()}
+  func inspectorEditing(_ editing:Bool) {
+    if editing {
+      guard !busy,inspectorDraftBaseline==nil else{return}
+      finishStageEditing();cancelStagePointer();stop();inspectorDraftBaseline=draft
+    }else{finishInspectorEditing()}
+  }
+  private func finishInspectorEditing() {
+    guard let before=inspectorDraftBaseline else{return};inspectorDraftBaseline=nil
+    if let draft,draft.id==before.id,draft != before {appendDraftCheckpoint(before)}
+  }
+  func undoDraft()->Bool {guard !busy else{return false};finishInspectorEditing();cancelStagePointer();guard let value=undoDrafts.popLast(),let draft else{return false};stop();redoDrafts.append(draft);self.draft=value;time=0;sync();return true}
+  func redoDraft()->Bool {guard !busy else{return false};finishInspectorEditing();cancelStagePointer();guard let value=redoDrafts.popLast(),let draft else{return false};stop();undoDrafts.append(draft);self.draft=value;time=0;sync();return true}
   func selectInstance(_ id:UUID?) {
     guard !busy,id==nil || draft?.instances.contains(where:{$0.id==id})==true else{return}
     finishStageEditing()
@@ -162,11 +174,17 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
     }
   }
   func addShelf(){change{scene in let prop=StudioInstance(name:"Shelf / riser",prop:.init(),positionMM:.init(0,0,0));scene.instances.append(prop);selectedInstanceID=prop.id}}
-  func duplicateInstance(){guard !busy else{return};finishStageEditing();cancelStagePointer();guard var instance=selected else{return};instance.id=UUID();instance.name+=" copy";instance.positionMM.x+=80;change{$0.instances.append(instance);selectedInstanceID=instance.id;selectionRequest &+= 1}}
+  func duplicateInstance(){
+    guard !busy else{return};finishStageEditing();cancelStagePointer();guard var instance=selected,let project=store?.project else{return}
+    do {instance.sheetPose=try instance.effectiveSheetPose(in:project)}catch{self.error=error.localizedDescription;return}
+    instance.id=UUID();instance.name+=" copy";instance.positionMM.x+=80
+    change{$0.instances.append(instance);selectedInstanceID=instance.id;selectionRequest &+= 1}
+  }
   func removeInstance(){guard let id=selectedInstanceID else{return};change{$0.instances.removeAll{$0.id==id}};selectedInstanceID=nil}
   func save() {
     cancelStagePointer()
     NSApp.keyWindow?.makeFirstResponder(nil)
+    finishInspectorEditing()
     do {
       guard let store,let draft else{return};try draft.validate()
       let result=try store.engine.call("form_studio_scene",arguments:["command":"save","scene":try jsonObject(draft)],source:"Studio")
@@ -207,6 +225,7 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
     if let view=stage.view {view.cancelPointerInteraction()} else {cancelPresentationInteraction()}
   }
   private func finishStageEditing() {
+    finishInspectorEditing()
     guard let view=stage.view,let window=view.window else{return}
     if let editor=window.firstResponder as? NSTextView,editor.isFieldEditor {
       editor.doCommand(by:#selector(NSResponder.insertNewline(_:)))

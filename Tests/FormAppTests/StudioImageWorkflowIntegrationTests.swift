@@ -257,4 +257,52 @@ import XCTest
     store.engine.undo();XCTAssertEqual(store.project?.objects,before.objects)
     XCTAssertEqual(try Data(contentsOf:original),data)
   }
+  func testRapidBackAndSceneEntriesSupersedePendingCaptureKeepSettingsAndNeverPublishOldInput()async throws {
+    let store=try fixture(),composition=store.studioComposition,images=store.studioImages
+    composition.save();let first=try XCTUnwrap(composition.draft)
+    var second=first;second.id=UUID();second.name="Intermediate scene";second.pixels = .init(width:411,height:273)
+    second.instances[0].id=UUID();second.instances[0].positionMM.x=27;second.camera.azimuth+=0.3
+    var third=first;third.id=UUID();third.name="Latest scene entry";third.pixels = .init(width:333,height:221)
+    third.instances[0].id=UUID();third.instances[0].positionMM.x = -19;third.instances[0].rotationDegrees=34;third.camera.elevation+=0.15
+    for scene in [second,third]{_ = try store.engine.call("form_studio_scene",arguments:["command":"save","scene":try jsonObject(scene)],source:"Race fixture")}
+    store.metadataRecordsChanged();composition.load(first.id)
+    images.prompt="Completed local result";await images.captureScene();await images.generate()
+    let prior=try XCTUnwrap(images.currentRun),priorCapture=try XCTUnwrap(images.capture),priorOutput=try XCTUnwrap(prior.outputAssetIDs.first)
+    let inputBytes=try Data(contentsOf:images.imageURL(assetID:priorCapture.inputAssetID)),outputBytes=try Data(contentsOf:images.imageURL(assetID:priorOutput))
+    let record=store.repository.root.appendingPathComponent("StudioAssets/GenerationRuns/"+prior.id.uuidString+".json"),recordBytes=try Data(contentsOf:record)
+    images.prompt="Keep the next prompt";images.style="Keep the custom style";images.options.model = .flare;images.options.quality = .draft;images.options.count=4
+    images.references=[.init(assetID:priorCapture.inputAssetID,role:.composition),.init(assetID:priorOutput,role:.style)]
+    let prompt=images.prompt,style=images.style,references=images.references
+    var expected=images.options;expected.outputPixels=third.pixels
+    let source=try XCTUnwrap(store.project),undo=store.engine.undoStack.count
+    store.createStudioStill()
+    for _ in 0..<400 {if images.isCapturing{break};await Task.yield()}
+    XCTAssertTrue(images.isCapturing);XCTAssertTrue(images.busy);XCTAssertNil(images.capture)
+    // Use the same Back and saved-scene load actions as the real interface.
+    // The intermediate entry remains queued while the latest entry supersedes it.
+    store.studioShowingImages=false;composition.load(second.id);store.createStudioStill()
+    store.studioShowingImages=false;composition.load(third.id);store.createStudioStill()
+    XCTAssertNil(images.capture)
+    let draft=composition.draft,camera=composition.stage.camera
+    var fresh:StudioGenerationCapture?
+    for _ in 0..<800 {
+      if let value=images.capture,value.sceneID==third.id,!images.busy {fresh=value;break}
+      try await Task.sleep(nanoseconds:10_000_000)
+    }
+    let captured=try XCTUnwrap(fresh,images.error ?? "The latest explicit entry did not publish its scene")
+    XCTAssertEqual(captured.sceneID,third.id);XCTAssertEqual(captured.scene.instances,third.instances);XCTAssertEqual(captured.scene.pixels,third.pixels)
+    XCTAssertEqual(captured.camera,camera);XCTAssertEqual(captured.width,333);XCTAssertEqual(captured.height,221)
+    XCTAssertEqual(try StudioGenerationPNG.pixelSize(of:Data(contentsOf:images.imageURL(assetID:captured.inputAssetID))),third.pixels)
+    try await settle()
+    XCTAssertEqual(images.capture?.id,captured.id,"An obsolete capture must never overwrite the latest input")
+    XCTAssertFalse(images.isCaptureStale);XCTAssertFalse(images.busy);XCTAssertTrue(store.studioShowingImages)
+    XCTAssertEqual(images.prompt,prompt);XCTAssertEqual(images.style,style);XCTAssertEqual(images.references,references);XCTAssertEqual(images.options,expected)
+    XCTAssertEqual(images.history.first{$0.id==prior.id},prior)
+    XCTAssertEqual(try Data(contentsOf:images.imageURL(assetID:priorCapture.inputAssetID)),inputBytes)
+    XCTAssertEqual(try Data(contentsOf:images.imageURL(assetID:priorOutput)),outputBytes);XCTAssertEqual(try Data(contentsOf:record),recordBytes)
+    let addedInputs=store.studioAssets.items.filter{$0.metadata.options?["purpose"]=="generation_input" && $0.id != priorCapture.inputAssetID}
+    XCTAssertEqual(addedInputs.count,1);XCTAssertEqual(addedInputs.first?.metadata.sceneID,third.id)
+    XCTAssertEqual(store.project,source);XCTAssertEqual(composition.draft,draft);XCTAssertEqual(composition.stage.camera,camera);XCTAssertEqual(store.engine.undoStack.count,undo)
+  }
+
 }

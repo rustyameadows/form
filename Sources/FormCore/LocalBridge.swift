@@ -60,6 +60,10 @@ public enum LocalBridgeClient {
   /// Native captures can prepare bounded high-resolution material atlases
   /// before the GPU publishes its image. Ordinary editing stays interactive.
   static func responseTimeoutSeconds(for name:String,arguments:[String:Any])->Int {
+    // Multipage composition may finish after the ordinary editing window.
+    // Keep the client connected until the bounded PDF/preflight result returns.
+    if name=="form_export_publication" {return 600}
+    if name=="form_publication",arguments["command"] as? String=="preflight" {return 180}
     guard name=="form_export" else{return 30}
     if arguments["format"] as? String=="mp4",arguments["scene_id"] as? String != nil{return 600}
     if arguments["format"] as? String=="png" {return 180}

@@ -38,7 +38,7 @@ import Foundation
     let surface: Artwork?, outside: Artwork?, inside: Artwork?
     let physical: [Artwork?]
     let materials: [FormCore.Material]
-    let fabric, recipe, merchandise, merchandiseMaterials: Data?
+    let fabric, recipe, merchandise, merchandiseMaterials, sheet: Data?
     let paperFontRevision: Int?
   }
   static func state(_ object: ProductObject, in project: Project) -> SourceState {
@@ -74,6 +74,7 @@ import Foundation
       recipe: project.recipe(object.recipeID).flatMap { try? encoder.encode($0) },
       merchandise: project.conformedMerchandiseSignature(object).flatMap { try? encoder.encode($0) },
       merchandiseMaterials: project.merchandiseMaterialDependencies(object).flatMap { try? encoder.encode($0) },
+      sheet: SheetAssemblyGeometry.sourceRevision(object,project:project).map{Data($0.utf8)},
       paperFontRevision: isPaper ? GeometryFactory.fontRevision : nil)
   }
 
@@ -228,20 +229,6 @@ import Foundation
   /// A view on its own source (or on a chain that leads back to it) has no
   /// stable fixed point. Preserve its last image instead of recapturing forever.
   static func hasCycle(from sourceID: UUID, project: Project) -> Bool {
-    var visiting = Set<UUID>(), visited = Set<UUID>()
-    func visit(_ id: UUID) -> Bool {
-      if visiting.contains(id) { return true }
-      if visited.contains(id) { return false }
-      guard let object = project.objects.first(where: {$0.id == id}) else { return false }
-      visiting.insert(id)
-      var artworks = [project.surfaceArtwork(object), project.paperArtwork(for:object,inside:false),
-                      project.paperArtwork(for:object,inside:true)].compactMap {$0}
-      artworks += (object.surfaceArtworkBindings ?? []).compactMap { project.physicalSurfaceArtwork($0) }
-      for element in artworks.flatMap(\.elements) {
-        if let view = element.objectView, view.linked, visit(view.sourceID) { return true }
-      }
-      visiting.remove(id); visited.insert(id); return false
-    }
-    return visit(sourceID)
+    project.artworkDependencyCycle(from:sourceID)
   }
 }

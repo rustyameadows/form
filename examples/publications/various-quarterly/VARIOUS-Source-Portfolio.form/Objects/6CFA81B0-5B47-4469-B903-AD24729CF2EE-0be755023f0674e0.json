@@ -1,0 +1,197 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "elements" : [
+
+    ],
+    "showGuides" : false,
+    "unit" : "mm"
+  },
+  "designID" : "6A6674F2-56A2-4391-86AF-84D46F53084D",
+  "id" : "6CFA81B0-5B47-4469-B903-AD24729CF2EE",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "fold_bureau_02",
+  "paperConstruction" : {
+    "annotations" : [
+
+    ],
+    "artworkReviewRequired" : false,
+    "authored" : {
+      "hinges" : [
+        {
+          "angleDegrees" : "1*foldAngle",
+          "childPanelID" : "back",
+          "end" : {
+            "x" : "100*scale",
+            "y" : "75*scale"
+          },
+          "id" : "back-crease",
+          "parentPanelID" : "base",
+          "start" : {
+            "x" : "0*scale",
+            "y" : "75*scale"
+          }
+        },
+        {
+          "angleDegrees" : "-1*foldAngle",
+          "childPanelID" : "wing",
+          "end" : {
+            "x" : "100*scale",
+            "y" : "75*scale"
+          },
+          "id" : "wing-crease",
+          "parentPanelID" : "base",
+          "start" : {
+            "x" : "100*scale",
+            "y" : "0*scale"
+          }
+        }
+      ],
+      "joins" : [
+
+      ],
+      "name" : "fold_bureau_02",
+      "panels" : [
+        {
+          "id" : "base",
+          "name" : "base",
+          "polygon" : [
+            {
+              "x" : "0*scale",
+              "y" : "0*scale"
+            },
+            {
+              "x" : "100*scale",
+              "y" : "0*scale"
+            },
+            {
+              "x" : "100*scale",
+              "y" : "75*scale"
+            },
+            {
+              "x" : "0*scale",
+              "y" : "75*scale"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "back",
+          "name" : "back",
+          "polygon" : [
+            {
+              "x" : "0*scale",
+              "y" : "75*scale"
+            },
+            {
+              "x" : "100*scale",
+              "y" : "75*scale"
+            },
+            {
+              "x" : "100*scale",
+              "y" : "160*scale"
+            },
+            {
+              "x" : "0*scale",
+              "y" : "160*scale"
+            }
+          ],
+          "role" : "side"
+        },
+        {
+          "id" : "wing",
+          "name" : "wing",
+          "polygon" : [
+            {
+              "x" : "100*scale",
+              "y" : "0*scale"
+            },
+            {
+              "x" : "148*scale",
+              "y" : "0*scale"
+            },
+            {
+              "x" : "148*scale",
+              "y" : "75*scale"
+            },
+            {
+              "x" : "100*scale",
+              "y" : "75*scale"
+            }
+          ],
+          "role" : "side"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 1.5,
+          "minimum" : 0.65,
+          "name" : "scale",
+          "unit" : "×",
+          "value" : 1
+        },
+        {
+          "maximum" : 120,
+          "minimum" : 30,
+          "name" : "foldAngle",
+          "unit" : "°",
+          "value" : 90
+        }
+      ],
+      "rootPanelID" : "base",
+      "size" : {
+        "x" : "148*scale",
+        "y" : "160*scale"
+      },
+      "stockThickness" : "1.2*scale",
+      "version" : 1
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 2,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 1.2,
+      "height" : 160,
+      "width" : 148
+    },
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "kind" : "authored",
+    "openingPercent" : 0,
+    "stock" : {
+      "grain" : "unknown",
+      "gsm" : 300,
+      "name" : "Warm uncoated sculptural sheet",
+      "notes" : "Prototype assumptions; verify the chosen stock and crease tooling.",
+      "profile" : {
+        "color" : "#E7DDC7",
+        "opacity" : 1,
+        "roughness" : 0.94,
+        "texture" : "cotton",
+        "textureDepthMM" : 0.009,
+        "textureScaleMM" : 0.6
+      },
+      "thicknessMM" : 1.2,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "parameters" : {
+    "fold" : 100,
+    "foldAngle" : 90,
+    "opening" : 0,
+    "scale" : 1
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 3.3306690738754696e-16,
+    "z" : 0
+  },
+  "recipeID" : "construction-6CFA81B0-5B47-4469-B903-AD24729CF2EE",
+  "relationship" : "original",
+  "rotation" : 0
+}

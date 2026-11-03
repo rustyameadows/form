@@ -1,0 +1,260 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "canvasPosition" : {
+      "x" : 8188.8,
+      "y" : 0
+    },
+    "elements" : [
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "6161CC79-47D5-58E1-B1F6-7C43C61D4A42",
+        "kind" : "text",
+        "name" : "common_current_03-caption",
+        "text" : "Counterweight\nThe offset shade answers a quieter base.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 241
+      },
+      {
+        "color" : "#1A1919",
+        "fillSwatchID" : "50043189-11DC-4C75-B52C-227802C1667E",
+        "fontSize" : 8,
+        "height" : 18,
+        "id" : "0762F3AC-BC2D-5662-9473-C05A3B26086E",
+        "kind" : "text",
+        "name" : "common_current_04-caption",
+        "text" : "Reading room\nThe loop keeps its center open.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "language" : "en",
+          "leading" : 10.8,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 4,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 241
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11.25,
+        "height" : 126,
+        "id" : "E2F76ECD-462F-5DDA-95BD-28B1ECE2C3E7",
+        "kind" : "text",
+        "name" : "artist_04-body-frame-2",
+        "storyFrame" : {
+          "storyID" : "3CD99516-B9AF-49DA-B60C-EA84E003F2E2"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 28
+      },
+      {
+        "color" : "#1A1919",
+        "fontSize" : 11.25,
+        "height" : 126,
+        "id" : "40217CBE-0A6C-5024-9232-899A3681715D",
+        "kind" : "text",
+        "name" : "artist_04-body-frame-3",
+        "storyFrame" : {
+          "storyID" : "3CD99516-B9AF-49DA-B60C-EA84E003F2E2"
+        },
+        "text" : "",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue-Medium",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 0,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 28
+      },
+      {
+        "asset" : "FED000B6-0E76-4C46-9D96-41CE7CE051B5.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 61,
+        "id" : "B491ECF1-AE63-460B-9927-648ED9CB6C47",
+        "imageCrop" : {
+          "height" : 0.8871436881908086,
+          "width" : 1,
+          "x" : 0,
+          "y" : 0.05642815590459571
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / common_current_03",
+        "text" : "",
+        "width" : 85.95,
+        "x" : 18,
+        "y" : 176
+      },
+      {
+        "asset" : "42D17580-C94D-4016-AAD7-63E6E8DA49B7.png",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 61,
+        "id" : "719AD427-0CBD-40BF-9B7C-7917E897751B",
+        "imageCrop" : {
+          "height" : 0.8871436881908086,
+          "width" : 1,
+          "x" : 0,
+          "y" : 0.05642815590459571
+        },
+        "kind" : "image",
+        "name" : "VARIOUS / common_current_04",
+        "text" : "",
+        "width" : 85.95,
+        "x" : 111.95,
+        "y" : 176
+      }
+    ],
+    "outputColorProfile" : {
+      "asset" : "icc-0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a.icc",
+      "model" : "CMYK",
+      "name" : "Generic CMYK",
+      "sha256" : "0c8a584b288a306eac9e1d3f1e68bc1b64331c717ceb051420e6257f17b3509a"
+    },
+    "safeInset" : 18,
+    "showGuides" : false,
+    "snapEnabled" : false,
+    "unit" : "mm"
+  },
+  "designID" : "8F39F4B9-26D4-4F70-B468-87319911617E",
+  "id" : "3513752B-216C-476B-9F2D-E80D02C1FF0E",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "VARIOUS / 31 / artist 04",
+  "parameters" : {
+    "depth" : 279.4,
+    "width" : 215.9
+  },
+  "position" : {
+    "x" : 8060.799999999996,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

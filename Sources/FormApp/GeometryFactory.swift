@@ -144,10 +144,12 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     let artworkData = canonical.artwork.flatMap { try? $0.renderCacheData() }
     canonical.artwork = nil
     canonical.paperConstruction=canonical.paperConstruction.map(PaperGeometry.geometryDefinition)
+    if canonical.sheetAssembly != nil {canonical.sheetAssembly!.openingDegrees=0}
     canonical.parameters = geometryParameters(object)
     var signature = (try? JSONEncoder.form.encode(canonical)) ?? Data()
     if let artworkData { signature.append(artworkData) }
     if let revision=PaperGeometry.sourceRevision(object,project:project){signature.append(Data(revision.utf8))}
+    if let revision=SheetAssemblyGeometry.sourceRevision(object,project:project){signature.append(Data(revision.utf8))}
     signature.append((try? JSONEncoder.form.encode(project.material(object.materialID).withoutFabricPattern)) ?? Data())
     if let pattern = try? project.resolvedFabricPattern(materialID: object.materialID) {
       signature.append((try? JSONEncoder.form.encode(pattern.renderDefinition)) ?? Data())
@@ -171,11 +173,15 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
       if object.recipeID == "clock" { updateClockHands(node, object: object) }
       if object.recipeID == "deskClock" {DeskClockGeometry.updateHands(node,object:object)}
       if PaperConstruction.isPaper(object){try? PaperGeometry.updatePose(node,object:object)}
+      if object.sheetAssembly != nil {try? SheetAssemblyGeometry.updatePose(node,object:object,project:project)}
       return node
     }
     let root = MeshNode()
     let mat = material(object, project: project)
     switch object.recipeID {
+    case _ where object.sheetAssembly != nil:
+      do{root.addChildNode(try SheetAssemblyGeometry.make(object,project:project,assets:assets,limit:textureLimit,sampling:sourceSampling))}
+      catch{root.name="sheet.invalid: "+error.localizedDescription;root.constructionFailure = .init(objectID:object.id,message:"Cannot construct \(object.name): \(error.localizedDescription)")}
     case _ where PaperConstruction.isPaper(object):
       do{root.addChildNode(try PaperGeometry.make(object,project:project,assets:assets,limit:textureLimit,sampling:sourceSampling))}
       catch{root.name="paper.invalid: "+error.localizedDescription}
@@ -468,7 +474,7 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
       meshBytes += geometry.sources.reduce(0){$0+$1.data.count}+geometry.elements.reduce(0){$0+$1.data.count}
     }
     countMesh(root);root.enumerateChildNodes{node,_ in countMesh(node)}
-    cache.setObject(root.clone(), forKey: cacheKey, cost: max(30_000, imageBytes+meshBytes))
+    if root.constructionFailure==nil {cache.setObject(root.clone(), forKey: cacheKey, cost: max(30_000, imageBytes+meshBytes))}
     return root
   }
   static func artworkPlane(

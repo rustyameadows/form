@@ -175,6 +175,10 @@ enum TableTool: String, CaseIterable {
     engine.onView = { [weak self] view, args in
       guard let self else { return [:] }
       try self.applyView(view, args)
+      if args["publication_id"] != nil {
+        let workspace=self.artworkSession.publicationWorkspace
+        return ["view":view,"publication_id":workspace.publicationID?.uuidString ?? "", "object_id":workspace.currentPageID?.uuidString ?? "", "navigator_visible":workspace.isVisible]
+      }
       return ["view": view]
     }
     engine.onExport = { [weak self] format, args in
@@ -352,6 +356,7 @@ enum TableTool: String, CaseIterable {
               }
               return
             }
+            if name=="form_set_view" {_ = try self.publicationViewRequest(args["view"] as? String ?? "",args)}
             let readOnly = (name=="form_studio_scene" && ["list","get"].contains(args["command"] as? String ?? "")) || (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
               (name == "form_paper" && PaperCommands.preservesDocumentDrafts(args)) ||
               (name == "form_construction" && ConstructionCommands.isReadOnly(args)) ||
@@ -373,7 +378,7 @@ enum TableTool: String, CaseIterable {
                 || (name == "form_color_profile" && ["list", "get"].contains(args["command"] as? String ?? "list"))
                 || (["form_textile_stock","form_production_job"].contains(name) && ["list","get"].contains(args["command"] as? String ?? "list"))
                 || (name == "form_story" && ["list","get","layout"].contains(args["command"] as? String ?? "list"))
-                || (name == "form_publication" && ["list","get","preflight"].contains(args["command"] as? String ?? "list"))
+                || (name == "form_publication" && ["list","get","preflight","spreads"].contains(args["command"] as? String ?? "list"))
             if !readOnly {
               try self.preflightCharacterPositionHandoff(name,args)
               try self.preflightPageSetupHandoff(name,args)
@@ -712,7 +717,41 @@ enum TableTool: String, CaseIterable {
     }
     changed(save: false)
   }
+  /// Validate the explicit publication navigation before a surface change or
+  /// native text-field handoff. No document or selection is changed here.
+  func publicationViewRequest(_ view:String,_ args:[String:Any])throws->(document:UUID,page:UUID)? {
+    guard let raw=args["publication_id"] else{return nil}
+    guard ["canvas","split","artwork","canvas_window"].contains(view) else{throw FormError.invalid("Publication navigation requires canvas, split, artwork or canvas_window.")}
+    guard let text=raw as? String,let id=UUID(uuidString:text) else{throw FormError.invalid("Provide a valid publication_id UUID.")}
+    guard let project,let document=project.publications?.first(where:{$0.id==id}) else{throw FormError.missing("Publication not found.")}
+    let target:UUID
+    if let value=args["object_id"] {
+      guard let text=value as? String,let page=UUID(uuidString:text),document.pages.contains(where:{$0.objectID==page}) else{throw FormError.invalid("object_id must identify an existing page in this publication.")}
+      target=page
+    }else if let current=artworkSession.objectID,document.pages.contains(where:{$0.objectID==current}) {target=current}
+    else if let first=document.pages.first?.objectID {target=first}
+    else{throw FormError.invalid("Add a physical page before opening this publication.")}
+    guard let object=project.objects.first(where:{$0.id==target}),project.editableArtwork(object) != nil else{throw FormError.invalid("The publication page has no editable artwork.")}
+    // Layer/node selectors retain their existing meanings, but invalid selectors
+    // must not open a different surface before reporting their error.
+    let artwork=project.surfaceArtwork(object) ?? project.editableArtwork(object)!
+    var selection=Set<UUID>()
+    if let raw=args["element_ids"] {
+      guard let names=raw as? [String] else{throw FormError.invalid("Provide an array of artwork element UUIDs.")}
+      let ids=Set(names.compactMap(UUID.init(uuidString:)))
+      guard ids.count==names.count,ids.isSubset(of:Set(artwork.elements.map(\.id))) else{throw FormError.invalid("Unknown artwork selection.")}
+      selection=ids
+    }
+    if let raw=args["node_ids"] {
+      guard let names=raw as? [String] else{throw FormError.invalid("Provide an array of path node UUIDs.")}
+      let ids=Set(names.compactMap(UUID.init(uuidString:)))
+      let available=Set(artwork.elements.filter{selection.contains($0.id)}.flatMap{$0.path?.contours.flatMap(\.nodes).map(\.id) ?? []})
+      guard ids.count==names.count,ids.isSubset(of:available) else{throw FormError.invalid("Unknown path node selection.")}
+    }
+    return(id,target)
+  }
   func applyView(_ view: String, _ args: [String: Any] = [:]) throws {
+    let publicationNavigation=try publicationViewRequest(view,args)
     if view == "studio",args["studio_command"] as? String == "recall" {
       guard Set(args.keys).isSubset(of: ["view", "studio_command", "shot_id"]) else {
         throw FormError.invalid("Recall accepts only a saved shot ID. Change output or subjects with an explicit update.")
@@ -729,6 +768,7 @@ enum TableTool: String, CaseIterable {
       else { throw FormError.missing("Object not found.") }
       if !["artwork", "canvas", "split", "canvas_window"].contains(view) { select(id) }
     }
+    if let publicationNavigation {artworkSession.activate(publicationNavigation.page)}
     switch view {
     case "home": home()
     case "form", "function", "fabricate":
@@ -736,11 +776,11 @@ enum TableTool: String, CaseIterable {
     case "table":
       showSurface(.table)
     case "canvas":
-      showSurface(.artwork)
+      showSurface(.artwork,ensureCanvasIfNeeded:publicationNavigation==nil)
     case "split":
-      showSplit()
+      showSplit(ensureCanvasIfNeeded:publicationNavigation==nil)
     case "canvas_window":
-      detachCanvas()
+      detachCanvas(ensureCanvasIfNeeded:publicationNavigation==nil)
     case "artwork":
       closeDetachedCanvas()
       surfaceLayout = .single
@@ -772,6 +812,7 @@ enum TableTool: String, CaseIterable {
     default: throw FormError.invalid("Unknown view.")
     }
     if ["artwork", "canvas", "split", "canvas_window"].contains(view) {
+      if let publicationNavigation {artworkSession.publicationWorkspace.open(publicationNavigation.document)}
       if let raw = args["object_id"] as? String, let id = UUID(uuidString:raw) {
         guard let object = project?.objects.first(where:{$0.id == id}), project?.editableArtwork(object) != nil
         else { throw FormError.invalid("The selected object has no editable artwork.") }

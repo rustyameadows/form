@@ -1,0 +1,210 @@
+{
+  "cadModel" : {
+    "assumptions" : [
+      "Original fictional studio design. Physical dimensions are authored millimeters."
+    ],
+    "features" : [
+      {
+        "id" : "B36C9055-6922-5F35-BA6A-35B1B6A78BE5",
+        "name" : "Bowl wall section",
+        "operation" : {
+          "curves" : [
+            {
+              "control1" : {
+                "x" : "53*scale",
+                "y" : "5*scale"
+              },
+              "control2" : {
+                "x" : "61*scale",
+                "y" : "22*scale"
+              },
+              "end" : {
+                "x" : "64*scale",
+                "y" : "41*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "39*scale",
+                "y" : "0*scale"
+              }
+            },
+            {
+              "end" : {
+                "x" : "59*scale",
+                "y" : "41*scale"
+              },
+              "kind" : "line",
+              "start" : {
+                "x" : "64*scale",
+                "y" : "41*scale"
+              }
+            },
+            {
+              "control1" : {
+                "x" : "57*scale",
+                "y" : "24*scale"
+              },
+              "control2" : {
+                "x" : "48*scale",
+                "y" : "9*scale"
+              },
+              "end" : {
+                "x" : "36*scale",
+                "y" : "6*scale"
+              },
+              "kind" : "cubicBezier",
+              "start" : {
+                "x" : "59*scale",
+                "y" : "41*scale"
+              }
+            },
+            {
+              "end" : {
+                "x" : "0*scale",
+                "y" : "6*scale"
+              },
+              "kind" : "line",
+              "start" : {
+                "x" : "36*scale",
+                "y" : "6*scale"
+              }
+            },
+            {
+              "end" : {
+                "x" : "0*scale",
+                "y" : "0*scale"
+              },
+              "kind" : "line",
+              "start" : {
+                "x" : "0*scale",
+                "y" : "6*scale"
+              }
+            },
+            {
+              "end" : {
+                "x" : "39*scale",
+                "y" : "0*scale"
+              },
+              "kind" : "line",
+              "start" : {
+                "x" : "0*scale",
+                "y" : "0*scale"
+              }
+            }
+          ],
+          "inputs" : [
+
+          ],
+          "kind" : "curveProfile",
+          "plane" : {
+            "origin" : {
+              "x" : "0*scale",
+              "y" : "0*scale",
+              "z" : "0*scale"
+            },
+            "u" : {
+              "x" : 1,
+              "y" : 0,
+              "z" : 0
+            },
+            "v" : {
+              "x" : 0,
+              "y" : 1,
+              "z" : 0
+            }
+          },
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      },
+      {
+        "id" : "202F66A2-16DE-5FA5-99CE-89B4053685C8",
+        "name" : "Revolved low aperture",
+        "operation" : {
+          "inputs" : [
+            "B36C9055-6922-5F35-BA6A-35B1B6A78BE5"
+          ],
+          "kind" : "revolve",
+          "values" : {
+
+          }
+        },
+        "suppressed" : false
+      }
+    ],
+    "id" : "3A2A1E91-240C-5FF7-B7C0-8871FD4AE90F",
+    "name" : "matter_study_03",
+    "outputs" : [
+      "202F66A2-16DE-5FA5-99CE-89B4053685C8"
+    ],
+    "parameters" : [
+      {
+        "maximum" : 1.5,
+        "minimum" : 0.65,
+        "name" : "scale",
+        "unit" : "×",
+        "value" : 1
+      }
+    ],
+    "revision" : 0,
+    "unresolvedMeasurements" : [
+      "Digital appearance only; material and manufacturing samples not measured."
+    ],
+    "version" : 1
+  },
+  "cadRepresentation" : {
+    "components" : [
+      {
+        "brepAsset" : "cad-e6a555aef480b0ebb5ced85de0657f74e4eaee2f0d4a61d8d78b304d5292a9d9.brep",
+        "brepSHA256" : "e6a555aef480b0ebb5ced85de0657f74e4eaee2f0d4a61d8d78b304d5292a9d9",
+        "closed" : true,
+        "edgeCount" : 6,
+        "faceCount" : 5,
+        "featureFingerprint" : "f533c4b6d5203421d8139c4f7f9974626a218e9c56bebe0cf01de8cb0b5966c1",
+        "id" : "202F66A2-16DE-5FA5-99CE-89B4053685C8",
+        "maximum" : {
+          "x" : 64.0000001,
+          "y" : 41.0000001,
+          "z" : 64.0000001
+        },
+        "meshAsset" : "cad-edee1856d28313e3066eb04685868aabccd657501671a73c2ca7cc0cb10ae5c3.mesh",
+        "meshSHA256" : "edee1856d28313e3066eb04685868aabccd657501671a73c2ca7cc0cb10ae5c3",
+        "minimum" : {
+          "x" : -64.0000001,
+          "y" : -1e-07,
+          "z" : -64.0000001
+        },
+        "name" : "Revolved low aperture",
+        "solidCount" : 1,
+        "triangleCount" : 11550,
+        "valid" : true,
+        "vertexCount" : 4,
+        "volumeMM3" : 109873.71761232283
+      }
+    ],
+    "definitionSHA256" : "d68e8b9ce76a6269f8e4ad18226a142e8e4e843eefed8c86d1ad4c3647ff0bd3",
+    "editability" : "nativeFeatureModel",
+    "kernelVersion" : "8.0.1+form.gprop2",
+    "meshDeflectionMM" : 0.05,
+    "modelID" : "3A2A1E91-240C-5FF7-B7C0-8871FD4AE90F"
+  },
+  "color" : "#BC775E",
+  "designID" : "05244143-5334-4E62-9D16-1CC9D9AFF830",
+  "id" : "FC7ACE46-85DF-4DDC-92E5-9BD199932DC5",
+  "locked" : false,
+  "materialID" : "clay",
+  "name" : "matter_study_03",
+  "parameters" : {
+
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 1e-07,
+    "z" : 0
+  },
+  "recipeID" : "cadModel",
+  "relationship" : "original",
+  "rotation" : 0
+}

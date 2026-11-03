@@ -1,0 +1,165 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "elements" : [
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "EB243FFE-3EB5-55A3-A86A-4CA713AB3FDA",
+        "kind" : "path",
+        "name" : "cover_back-return",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 15,
+                    "y" : 84
+                  },
+                  "id" : "5EE37A98-1BB3-5F78-B2F4-0B683447AF15"
+                },
+                {
+                  "anchor" : {
+                    "x" : 15,
+                    "y" : 22
+                  },
+                  "id" : "AA737557-4DD1-50AB-BBF5-CF1D0DC6499D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 22
+                  },
+                  "id" : "B728FA31-4CA6-531A-83D4-C2C6C032864D"
+                },
+                {
+                  "anchor" : {
+                    "x" : 78,
+                    "y" : 71
+                  },
+                  "id" : "593772A0-D253-5CF1-9507-8BD89E1DCED3"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44,
+                    "y" : 71
+                  },
+                  "id" : "56C69282-31FE-53EC-9CE5-3BA9CE2F9BA9"
+                },
+                {
+                  "anchor" : {
+                    "x" : 44,
+                    "y" : 49
+                  },
+                  "id" : "6E2ECAD1-6176-5EC8-B0F7-0DECBE7B5BD4"
+                },
+                {
+                  "anchor" : {
+                    "x" : 61,
+                    "y" : 49
+                  },
+                  "id" : "61E0097A-502F-5FB2-AF6E-6B47B684FBE5"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#000000",
+          "join" : "round",
+          "width" : 2
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "color" : "#000000",
+        "fontSize" : 12,
+        "height" : 7,
+        "id" : "6DEDCB11-AC6A-5FEF-A61C-D39FD3E24EEE",
+        "kind" : "ellipse",
+        "name" : "cover_back-point",
+        "text" : "",
+        "width" : 7,
+        "x" : 75,
+        "y" : 8
+      },
+      {
+        "color" : "#000000",
+        "fillEnabled" : false,
+        "fontSize" : 12,
+        "height" : 100,
+        "id" : "177350BC-5D3B-5098-B8A2-F32D0AC9DCE1",
+        "kind" : "path",
+        "name" : "cover_back-datum",
+        "path" : {
+          "contours" : [
+            {
+              "closed" : false,
+              "nodes" : [
+                {
+                  "anchor" : {
+                    "x" : 15,
+                    "y" : 92
+                  },
+                  "id" : "D4516088-6156-5D85-A3CE-EF39FD9A9D20"
+                },
+                {
+                  "anchor" : {
+                    "x" : 87,
+                    "y" : 92
+                  },
+                  "id" : "7F6302E6-2F96-5A47-948C-DCEFB57477BB"
+                }
+              ]
+            }
+          ],
+          "evenOdd" : false,
+          "height" : 100,
+          "width" : 100
+        },
+        "stroke" : {
+          "cap" : "round",
+          "color" : "#000000",
+          "join" : "round",
+          "width" : 0.45
+        },
+        "text" : "",
+        "width" : 100,
+        "x" : 0,
+        "y" : 0
+      }
+    ],
+    "showGuides" : false,
+    "unit" : "mm"
+  },
+  "designID" : "7029BF36-24F4-4894-ABE6-A64C9B7576D6",
+  "id" : "5192999D-2345-49CB-855C-FF27E293541A",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "cover_back / editable graphic",
+  "parameters" : {
+    "depth" : 100,
+    "width" : 100
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

@@ -19,12 +19,15 @@ import FormCore
   @Published private(set) var promptPresets:[StudioGenerationPromptPreset]=StudioGenerationPromptPreset.builtins
   @Published private(set) var busy=false
   @Published private(set) var isCapturing=false
+  @Published private(set) var sceneInputRefreshPending=false
   @Published private(set) var progress=0.0
   @Published private(set) var phase:StudioGenerationPhase = .idle
   @Published private(set) var error:String?
   private let renderer=StudioShotRenderer(),root:URL
   private let provider:any StudioImageGenerationProvider
   private var task:Task<Void,Never>?,generation=0,activeRunID:UUID?,owner:UUID?
+  private var sceneEntryGeneration=0
+  private var pendingSceneEntry:Int?
   private var stylesReadFailed=false
   private var promptObservation:AnyCancellable?
   private var lastScopeActive=false
@@ -67,7 +70,8 @@ import FormCore
   func clearError(){error=nil}
   func dismissError(){clearError()}
   func cancel() {
-    generation+=1;task?.cancel();task=nil
+    generation+=1;sceneEntryGeneration+=1;pendingSceneEntry=nil;sceneInputRefreshPending=false
+    task?.cancel();task=nil
     if let id=activeRunID {updateRun(id){$0.status = .cancelled;$0.completedAt=Self.now;$0.error="Local demo cancelled; no new results were delivered."}}
     activeRunID=nil;busy=false;isCapturing=false;progress=0;phase = .idle
   }
@@ -75,11 +79,19 @@ import FormCore
   /// Entering from Studio replaces only the scene input. The composing prompt,
   /// references, model and other generation settings belong to the user.
   func refreshSceneInputFromStudio() {
-    guard scopeIsActive,!busy else{return}
-    capture=nil
-    let token=generation
+    guard scopeIsActive else{return}
+    // A new input supersedes an unfinished capture. A provider job already owns
+    // its frozen input: let it finish into history, then capture the latest entry.
+    if busy && isCapturing{cancel()}
+    sceneEntryGeneration+=1;pendingSceneEntry=sceneEntryGeneration
+    capture=nil;sceneInputRefreshPending=true
+    resumePendingSceneInput()
+  }
+  private func resumePendingSceneInput() {
+    guard scopeIsActive,!busy,let entry=pendingSceneEntry else{return}
     Task { @MainActor [weak self] in
-      guard let self,self.generation==token,self.scopeIsActive else{return}
+      guard let self,self.scopeIsActive,!self.busy,self.sceneEntryGeneration==entry,self.pendingSceneEntry==entry else{return}
+      self.pendingSceneEntry=nil
       await self.captureScene()
     }
   }
@@ -111,7 +123,7 @@ import FormCore
     busy=true;isCapturing=true;phase = .capturing;progress=0.05;error=nil
     let work=Task { @MainActor [weak self] in
       guard let self else{return}
-      defer {if self.generation==token {self.busy=false;self.isCapturing=false;self.task=nil;self.phase = .idle}}
+      defer {if self.generation==token {self.busy=false;self.isCapturing=false;self.task=nil;self.phase = .idle;self.sceneInputRefreshPending=self.pendingSceneEntry != nil;self.resumePendingSceneInput()}}
       do {
         let frozen=try store.studioComposition.prepareForImageCapture()
         guard let project=store.project,project.id==projectID else{throw CancellationError()}
@@ -161,7 +173,7 @@ import FormCore
       let request=StudioGenerationRequest(inputPNG:input,prompt:run.prompt,style:run.style,references:run.references,options:run.options,context:run.capture.context)
       let work=Task { @MainActor [weak self] in
         guard let self else{return}
-        defer {if self.generation==token {self.busy=false;self.activeRunID=nil;self.task=nil;self.phase = .finished}}
+        defer {if self.generation==token {self.busy=false;self.activeRunID=nil;self.task=nil;self.phase = .finished;self.resumePendingSceneInput()}}
         do {
           await Task.yield();try self.check(token,projectID:capture.projectID);self.phase = .preparing;self.progress=0.05
           let images=try await self.provider.generate(request) { [weak self] value in

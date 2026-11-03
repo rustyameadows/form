@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "key": "room_accident_04",
+  "field": "caption",
+  "before": "One continuous image crosses two page crops.",
+  "after": "A folded view returns within a single page.",
+  "prior_editorial_sha256": "5f4c0c0db32a471c97ebd9cc5c3750db56b4701e6ca9bec2408d6a9895228163",
+  "revised_editorial_sha256": "60ce62fe230e958ed423ce764bc00ae4b5aae1331846e6b1817554bd3b185e53",
+  "reason": "The selected folded-object image occupies one page; body copy and the earlier genuine cross-gutter hero remain unchanged.",
+  "body_copy_unchanged": true,
+  "word_count_before": 6541,
+  "word_count_after": 6542
+}

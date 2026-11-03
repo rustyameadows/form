@@ -1,0 +1,13 @@
+{
+  "review_date": "2026-11-02",
+  "app_sha256": "d800f13e2349f519ba737b042bb48656e77858729f934a2bc1e0f0b5eab8d2c4",
+  "native_desktop_check": "passed",
+  "screenshot": "refinement-native-ui.png",
+  "screenshot_sha256": "3aa6d2452dc52b3e526817ea05c915c217bed8603d49cda3e1ed7a9c013e006e",
+  "canonical_source_sha256": "05a5c5d45d0ceabfa5544ed29cfbfebf40ba32ab8ddc40f6d6d490754a6e59dc",
+  "existing_magazine_source_unchanged": true,
+  "saved_studio_compositions_unchanged": true,
+  "regression_tests": 235,
+  "focused_final_ui_tests": 25,
+  "python_tests": 45
+}

@@ -135,9 +135,11 @@ private struct ArtworkInput: View {
 struct ArtworkInspector: View {
   @EnvironmentObject var store: StudioStore
   @ObservedObject var session: ArtworkSession
+  var publicationFocusRequest:UUID?=nil
   var e: ArtworkElement? { session.primary.map(session.colored) }
   var type: Typography { session.inspectedTypography }
   var body: some View {
+    ScrollViewReader { proxy in
     ScrollView {
       VStack(alignment: .leading, spacing: InspectorStyle.sectionSpacing) {
         if let object = session.object {
@@ -243,6 +245,11 @@ struct ArtworkInspector: View {
         }
       }.padding(InspectorStyle.panelPadding)
     }.inspectorSurface().background(Palette.paper).disabled(session.elements.contains { session.art.isLocked($0) })
+      .onChange(of:publicationFocusRequest,initial:true){_,request in
+        guard request != nil else{return}
+        DispatchQueue.main.async{proxy.scrollTo("publication-settings",anchor:.top)}
+      }
+    }
   }
   @ViewBuilder var transformControls: some View {
     if let b = session.selectionBounds {
