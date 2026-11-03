@@ -1,0 +1,130 @@
+{
+  "format_version": 1,
+  "frames": 216,
+  "input_sha256": "f1793a5cd18ddcaee962c5a5f5f36c2d62141cebb11001522fef661e732ac515",
+  "projected_elements": 166717,
+  "samples": [
+    {
+      "milliseconds": [
+        7.6205
+      ],
+      "stage": "native.synchronize-cold"
+    },
+    {
+      "milliseconds": [
+        2616.133083
+      ],
+      "stage": "native.overview-draw-cold"
+    },
+    {
+      "milliseconds": [
+        2750.617417,
+        2728.04125,
+        2744.483,
+        2788.871666,
+        2744.982125,
+        2731.478667
+      ],
+      "stage": "native.overview-draw-warm"
+    },
+    {
+      "milliseconds": [
+        55.257792
+      ],
+      "stage": "native.focused-draw-cold"
+    },
+    {
+      "milliseconds": [
+        13.520333,
+        13.312541,
+        13.39975,
+        13.021791,
+        12.661416,
+        13.091792
+      ],
+      "stage": "native.focused-draw-warm"
+    },
+    {
+      "milliseconds": [
+        0.088041,
+        0.098166,
+        0.100125,
+        0.051375,
+        0.05225,
+        0.113333
+      ],
+      "stage": "native.pan-handler"
+    },
+    {
+      "milliseconds": [
+        14.1635,
+        14.211042,
+        12.98525,
+        12.968042,
+        14.044375,
+        12.4965
+      ],
+      "stage": "native.pan-draw"
+    },
+    {
+      "milliseconds": [
+        0.052916,
+        0.045625,
+        0.045083,
+        0.045125,
+        0.044416,
+        0.054542
+      ],
+      "stage": "native.zoom-handler"
+    },
+    {
+      "milliseconds": [
+        14.819417,
+        14.556625,
+        14.448625,
+        14.416166,
+        14.662542,
+        15.297667
+      ],
+      "stage": "native.zoom-draw"
+    },
+    {
+      "milliseconds": [
+        38.235,
+        37.557334,
+        37.028166,
+        37.468958,
+        38.099042,
+        37.1915
+      ],
+      "stage": "native.frame-drag-handler"
+    },
+    {
+      "milliseconds": [
+        6.211709,
+        6.37425,
+        6.29775,
+        6.6325,
+        5.95775,
+        6.557041
+      ],
+      "stage": "native.frame-drag-synchronize"
+    },
+    {
+      "milliseconds": [
+        15.021166,
+        13.653792,
+        13.627709,
+        13.439667,
+        13.557958,
+        13.325541
+      ],
+      "stage": "native.frame-drag-draw"
+    }
+  ],
+  "source_unchanged": true,
+  "target_elements": 864,
+  "target_name": "DESERT NEIGHBORS \u00b7 Collection master sheet",
+  "iteration": "Prepared vectors before overview display cache; not main baseline",
+  "fingerprint_convention": "Legacy: relative path followed by file contents, without NUL separator. Final reports use a NUL separator."
+}

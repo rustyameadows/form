@@ -11,6 +11,9 @@ struct CanvasFrame: Identifiable {
   var sourceReview:String? = nil
   var projection: CanvasSourceProjection? = nil
   var legacyDieline = false
+  // Derived once for the source snapshot, shared by every readable paper face.
+  var paperDefinition: PaperConstruction? = nil
+  var paperNet: PaperNet? = nil
   var publicationSpread: CanvasPublicationSpread? = nil
   var id: UUID { projection?.id ?? object.id }
   var title: String { projection?.title ?? (object.name + (sourceReview == nil ? "":" · Registered source")) }
@@ -80,6 +83,35 @@ enum ArtworkTool: String, CaseIterable {
   // One COW document snapshot, not a history of frame graphs. A revision-only
   // key misses direct project assignments and shared story/style dependencies.
   private var frameMemo:FrameMemo?
+  private struct FrameRequest: Equatable {
+    let generation: UInt64
+    let objectID: UUID?
+    let linkedTargetID: UUID?
+    let dieline: Bool
+    let editingComponent: Bool
+  }
+  private var frameRequest: FrameRequest?
+  private struct PaperGeometryInputs: Equatable {
+    let recipeID: String
+    let parameters: [String: Double]
+    let construction: PaperConstruction?
+  }
+  private struct PaperGeometryMemo {
+    let inputs: PaperGeometryInputs
+    let definition: PaperConstruction
+    let net: PaperNet
+  }
+  private var paperGeometryMemo: [UUID: PaperGeometryMemo] = [:]
+  private struct ProjectionMemo {
+    let frame: PhysicalArtworkFrame
+    let source: Artwork
+    let displayed: Artwork
+  }
+  private var projectionMemo: [UUID: ProjectionMemo] = [:]
+  private var editableProjectionMemo: ProjectionMemo?
+  private var memoProjectID: UUID?
+  private(set) var paperGeometryBuildCount = 0
+  private(set) var projectionBuildCount = 0
   lazy var publicationWorkspace=PublicationWorkspaceController(session:self)
   private func publicationFrames(_ values:[CanvasFrame])->[CanvasFrame] {
     publicationWorkspace.layoutFrames(values)
@@ -142,7 +174,12 @@ enum ArtworkTool: String, CaseIterable {
   }
   var art: Artwork {
     let source = sourceArtwork
-    return activeProjection?.display(source) ?? source
+    guard let projection = activeProjection else { return source }
+    let frame = projection.physicalFrame
+    if let memo = editableProjectionMemo, memo.frame == frame, memo.source == source { return memo.displayed }
+    let displayed = frame.display(source)
+    editableProjectionMemo = .init(frame: frame, source: source, displayed: displayed)
+    return displayed
   }
   private static var blankInsideArtwork:Artwork {var value=Artwork(background:"#F7F5EF");value.backgroundOpacity=0;return value}
   var sourceArtwork: Artwork {
@@ -290,7 +327,18 @@ enum ArtworkTool: String, CaseIterable {
     return uses
   }
   var frames: [CanvasFrame] {
-    guard let project=store?.project else{frameMemo=nil;return []}
+    guard let store, let project=store.project else {
+      frameMemo=nil;frameRequest=nil;memoProjectID=nil
+      paperGeometryMemo.removeAll();projectionMemo.removeAll();editableProjectionMemo=nil
+      return []
+    }
+    let request = FrameRequest(generation: store.engine.projectGeneration, objectID: objectID,
+      linkedTargetID: linkedTargetID, dieline: dieline, editingComponent: componentReturn != nil)
+    if frameRequest == request, let memo = frameMemo { return publicationFrames(memo.frames) }
+    if memoProjectID != project.id {
+      paperGeometryMemo.removeAll();projectionMemo.removeAll();editableProjectionMemo=nil
+      memoProjectID=project.id
+    }
     // Table camera motion cannot alter canonical frame content or placement.
     // Keep every other document input exact, including shared resources.
     var frameProject=project;frameProject.camera = .init()
@@ -304,10 +352,33 @@ enum ArtworkTool: String, CaseIterable {
     }
     let inputs=FrameInputs(project:frameProject,objectID:frameObjectID,linkedTargetID:frameTargetID,
       dieline:dieline,editingComponent:componentReturn != nil)
-    if let memo=frameMemo,memo.inputs==inputs {return publicationFrames(memo.frames)}
+    if let memo=frameMemo,memo.inputs==inputs {frameRequest=request;return publicationFrames(memo.frames)}
     let values=buildFrames(project:project)
-    frameBuildCount+=1;frameMemo = .init(inputs:inputs,frames:values)
+    frameBuildCount+=1;frameMemo = .init(inputs:inputs,frames:values);frameRequest=request
+    let ids=Set(values.compactMap { $0.projection?.id })
+    projectionMemo=projectionMemo.filter { ids.contains($0.key) }
+    let paperIDs=Set(project.objects.filter { PaperConstruction.isPaper($0) }.map(\.id))
+    paperGeometryMemo=paperGeometryMemo.filter { paperIDs.contains($0.key) }
     return publicationFrames(values)
+  }
+  private func paperGeometry(_ object:ProductObject)->PaperGeometryMemo? {
+    let inputs=PaperGeometryInputs(recipeID:object.recipeID,parameters:object.parameters,
+      construction:object.paperConstruction)
+    if let memo=paperGeometryMemo[object.id],memo.inputs==inputs {return memo}
+    guard let definition=try? PaperConstruction.definition(for:object),let net=try? definition.net() else {
+      paperGeometryMemo.removeValue(forKey:object.id);return nil
+    }
+    let memo=PaperGeometryMemo(inputs:inputs,definition:definition,net:net)
+    paperGeometryMemo[object.id]=memo;paperGeometryBuildCount+=1
+    return memo
+  }
+  private func displayedArtwork(_ source:Artwork,projection:CanvasSourceProjection)->Artwork {
+    let id=projection.id,frame=projection.physicalFrame
+    if let memo=projectionMemo[id],memo.frame==frame,memo.source==source {return memo.displayed}
+    let displayed=frame.display(source)
+    projectionMemo[id] = .init(frame:frame,source:source,displayed:displayed)
+    projectionBuildCount+=1
+    return displayed
   }
   private func buildFrames(project:Project)->[CanvasFrame] {
     let objects=project.objects
@@ -324,7 +395,7 @@ enum ArtworkTool: String, CaseIterable {
       let uses=paperUses(of:object.id,in:project)
       let selected=uses.first{$0.object.id==linkedTargetID}
       if let owner=selected ?? (uses.count==1 ? uses.first:nil),
-        (try? PaperConstruction.definition(for:owner.object).net()) != nil {return false}
+        paperGeometry(owner.object) != nil {return false}
       return true
     }
     var x = 36.0
@@ -380,7 +451,8 @@ enum ArtworkTool: String, CaseIterable {
     }
     var constructionY = max(40, bottom + 70)
     for construction in objects where PaperConstruction.isPaper(construction) {
-      guard let definition=try? PaperConstruction.definition(for:construction),let net=try? definition.net() else{continue}
+      guard let geometry=paperGeometry(construction) else{continue}
+      let definition=geometry.definition,net=geometry.net
       for inside in [false,true] {
       let requiresSource=inside && definition.insideArtworkSourceID==nil
       let sourceID=inside ? definition.insideArtworkSourceID ?? construction.id:project.artworkOwner(construction).id
@@ -398,7 +470,8 @@ enum ArtworkTool: String, CaseIterable {
           ?? construction.canvasProjectionPositions?[projection.legacyKey] ?? fallback
         result.append(.init(object: source, surfaceObject: construction,
           rect: .init(x: origin.x, y: origin.y, width: projection.size.x, height: projection.size.y),
-          artwork: projection.display(artwork), projection: projection))
+          artwork: displayedArtwork(artwork,projection:projection), projection: projection,
+          paperDefinition:definition,paperNet:net))
         if !projection.isProof {
           panelRowHeight = max(panelRowHeight, projection.size.y)
           panelX += projection.size.x + 36

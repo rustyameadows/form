@@ -75,8 +75,10 @@ private final class StudioShotFrameProbe {var frames:[String:CGRect]=[:]}
     let s=try fixture(),before=s.project!,render=s.studioShots.renderer
     for projection in ["perspective","orthographic"] {for pixels in [StudioPixels(width:450,height:300),.init(width:300,height:450),.init(width:900,height:300)] {
       var shot=shot(s);shot.camera.projection=projection;shot.pixels=pixels
-      let small=try await render.render(project:before,shot:shot,assets:s.repository.url(for:before.id).appendingPathComponent("Assets"),preview:true)
-      let full=try await render.render(project:before,shot:shot,assets:s.repository.url(for:before.id).appendingPathComponent("Assets"),preview:false)
+      // Compare framing with the same sampling; final still antialiasing is
+      // covered separately by SceneStillSamplingTests' actual GPU assertions.
+      let small=try await render.render(project:before,shot:shot,assets:s.repository.url(for:before.id).appendingPathComponent("Assets"),preview:true,sampling:.native)
+      let full=try await render.render(project:before,shot:shot,assets:s.repository.url(for:before.id).appendingPathComponent("Assets"),preview:false,sampling:.native)
       XCTAssertEqual(small.pngData(),full.pngData());XCTAssertEqual(s.project,before)
     }}
     XCTAssertEqual(render.geometryBuilds,1);XCTAssertGreaterThan(render.maximumProcessRSSBytes,0);XCTAssertGreaterThan(render.maximumMilliseconds,0)
@@ -157,8 +159,14 @@ extension StudioShotEditingTests {
     try enter("512",placeholder:"Width",window:window,host:host)
     c.exportDestination={_ in s.repository.root.appendingPathComponent("Native.render")}
     try click("Export shot folder (PNG + record)",window:window,host:host)
-    for _ in 0..<200 where c.lastExport==nil && c.error==nil {try await Task.sleep(nanoseconds:10_000_000)}
-    XCTAssertNil(c.error);let url=try XCTUnwrap(c.lastExport),data=try Data(contentsOf:url),source=try XCTUnwrap(CGImageSourceCreateWithData(data as CFData,nil))
+    // The native action retains final 16-sample output (including the original
+    // 2000px height). Await completion under a monotonic bound instead of a two-second poll.
+    let exportDeadline=ProcessInfo.processInfo.systemUptime+30
+    while c.lastExport==nil && c.error==nil && ProcessInfo.processInfo.systemUptime<exportDeadline {
+      try await Task.sleep(nanoseconds:20_000_000)
+    }
+    XCTAssertNil(c.error)
+    let url=try XCTUnwrap(c.lastExport,"The actual native export must complete within 30 seconds; renderer diagnostics: \(c.diagnostics)"),data=try Data(contentsOf:url),source=try XCTUnwrap(CGImageSourceCreateWithData(data as CFData,nil))
     let props=CGImageSourceCopyPropertiesAtIndex(source,0,nil) as! [CFString:Any];XCTAssertEqual(props[kCGImagePropertyPixelWidth] as? Int,512)
     XCTAssertEqual(s.project,saved);XCTAssertEqual(s.engine.undoStack.count,count)
     if let path=ProcessInfo.processInfo.environment["FORM_STUDIO_PROOF_DIR"] {

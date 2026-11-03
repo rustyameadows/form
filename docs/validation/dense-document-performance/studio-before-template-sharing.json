@@ -1,0 +1,433 @@
+{
+  "format_version": 1,
+  "input_sha256": "6c57bf8831e61b6d011305ebd2ef946f90c85df99892e4a9d17d51c3c9f0c832",
+  "measured_instances": 105,
+  "measured_scenes": 8,
+  "metrics": {
+    "resolution_builds_after_return": 8,
+    "resolution_builds_cold": 8,
+    "stage_resolution_builds_after_return": 8,
+    "stage_resolution_builds_first_pass": 8,
+    "stage_syncs": 16,
+    "thumbnail_key_builds_after_reentry": 8,
+    "thumbnail_key_builds_first_pass": 8,
+    "thumbnail_renders_after_reentry": 8,
+    "thumbnail_renders_first_pass": 8
+  },
+  "samples": [
+    {
+      "milliseconds": 0.235917,
+      "scene_id": "B1D891E4-C422-45DB-9276-3BE7D9F27E74",
+      "scene_name": "01 \u00b7 The complete collection",
+      "stage": "resolution.cold"
+    },
+    {
+      "milliseconds": 0.060584,
+      "scene_id": "F39AB3AE-96CF-4F84-858C-F33DE46ECC62",
+      "scene_name": "02 \u00b7 Carton construction study",
+      "stage": "resolution.cold"
+    },
+    {
+      "milliseconds": 0.045708,
+      "scene_id": "CDA32F42-BDDD-4957-A48A-1492B344E926",
+      "scene_name": "03 \u00b7 Quail stitch study",
+      "stage": "resolution.cold"
+    },
+    {
+      "milliseconds": 0.062917,
+      "scene_id": "E6531C76-48F5-4D0D-81F6-2B16E56774B1",
+      "scene_name": "04 \u00b7 Blind box \u2014 front, back & reveal",
+      "stage": "resolution.cold"
+    },
+    {
+      "milliseconds": 0.156916,
+      "scene_id": "34777C99-1D0D-473A-8FAC-A83627CBD728",
+      "scene_name": "05 \u00b7 Retail display \u2014 24 blind boxes",
+      "stage": "resolution.cold"
+    },
+    {
+      "milliseconds": 0.056375,
+      "scene_id": "9923BABC-D0C6-4C74-BE38-012E5B50A395",
+      "scene_name": "06 \u00b7 Unboxing \u2014 patch in its carton",
+      "stage": "resolution.cold"
+    },
+    {
+      "milliseconds": 0.04375,
+      "scene_id": "F3648F0B-8D7C-4BAD-8279-8DF26B893742",
+      "scene_name": "07 \u00b7 Shipping carton \u2014 closed",
+      "stage": "resolution.cold"
+    },
+    {
+      "milliseconds": 0.291625,
+      "scene_id": "19149F77-009E-4EC2-B66D-D1E3FAB48F36",
+      "scene_name": "08 \u00b7 Capacity family \u2014 12 / 18 / 24",
+      "stage": "resolution.cold"
+    },
+    {
+      "milliseconds": 0.026125,
+      "scene_id": "B1D891E4-C422-45DB-9276-3BE7D9F27E74",
+      "scene_name": "01 \u00b7 The complete collection",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.013167,
+      "scene_id": "F39AB3AE-96CF-4F84-858C-F33DE46ECC62",
+      "scene_name": "02 \u00b7 Carton construction study",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.01125,
+      "scene_id": "CDA32F42-BDDD-4957-A48A-1492B344E926",
+      "scene_name": "03 \u00b7 Quail stitch study",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.014667,
+      "scene_id": "E6531C76-48F5-4D0D-81F6-2B16E56774B1",
+      "scene_name": "04 \u00b7 Blind box \u2014 front, back & reveal",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.037125,
+      "scene_id": "34777C99-1D0D-473A-8FAC-A83627CBD728",
+      "scene_name": "05 \u00b7 Retail display \u2014 24 blind boxes",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.01375,
+      "scene_id": "9923BABC-D0C6-4C74-BE38-012E5B50A395",
+      "scene_name": "06 \u00b7 Unboxing \u2014 patch in its carton",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.011125,
+      "scene_id": "F3648F0B-8D7C-4BAD-8279-8DF26B893742",
+      "scene_name": "07 \u00b7 Shipping carton \u2014 closed",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.0755,
+      "scene_id": "19149F77-009E-4EC2-B66D-D1E3FAB48F36",
+      "scene_name": "08 \u00b7 Capacity family \u2014 12 / 18 / 24",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.023708,
+      "scene_id": "B1D891E4-C422-45DB-9276-3BE7D9F27E74",
+      "scene_name": "01 \u00b7 The complete collection",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.012625,
+      "scene_id": "F39AB3AE-96CF-4F84-858C-F33DE46ECC62",
+      "scene_name": "02 \u00b7 Carton construction study",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.011209,
+      "scene_id": "CDA32F42-BDDD-4957-A48A-1492B344E926",
+      "scene_name": "03 \u00b7 Quail stitch study",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.01475,
+      "scene_id": "E6531C76-48F5-4D0D-81F6-2B16E56774B1",
+      "scene_name": "04 \u00b7 Blind box \u2014 front, back & reveal",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.0375,
+      "scene_id": "34777C99-1D0D-473A-8FAC-A83627CBD728",
+      "scene_name": "05 \u00b7 Retail display \u2014 24 blind boxes",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.013708,
+      "scene_id": "9923BABC-D0C6-4C74-BE38-012E5B50A395",
+      "scene_name": "06 \u00b7 Unboxing \u2014 patch in its carton",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.011334,
+      "scene_id": "F3648F0B-8D7C-4BAD-8279-8DF26B893742",
+      "scene_name": "07 \u00b7 Shipping carton \u2014 closed",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.073833,
+      "scene_id": "19149F77-009E-4EC2-B66D-D1E3FAB48F36",
+      "scene_name": "08 \u00b7 Capacity family \u2014 12 / 18 / 24",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.023541,
+      "scene_id": "B1D891E4-C422-45DB-9276-3BE7D9F27E74",
+      "scene_name": "01 \u00b7 The complete collection",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.0125,
+      "scene_id": "F39AB3AE-96CF-4F84-858C-F33DE46ECC62",
+      "scene_name": "02 \u00b7 Carton construction study",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.011125,
+      "scene_id": "CDA32F42-BDDD-4957-A48A-1492B344E926",
+      "scene_name": "03 \u00b7 Quail stitch study",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.014875,
+      "scene_id": "E6531C76-48F5-4D0D-81F6-2B16E56774B1",
+      "scene_name": "04 \u00b7 Blind box \u2014 front, back & reveal",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.037458,
+      "scene_id": "34777C99-1D0D-473A-8FAC-A83627CBD728",
+      "scene_name": "05 \u00b7 Retail display \u2014 24 blind boxes",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.01425,
+      "scene_id": "9923BABC-D0C6-4C74-BE38-012E5B50A395",
+      "scene_name": "06 \u00b7 Unboxing \u2014 patch in its carton",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.011459,
+      "scene_id": "F3648F0B-8D7C-4BAD-8279-8DF26B893742",
+      "scene_name": "07 \u00b7 Shipping carton \u2014 closed",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 0.072292,
+      "scene_id": "19149F77-009E-4EC2-B66D-D1E3FAB48F36",
+      "scene_name": "08 \u00b7 Capacity family \u2014 12 / 18 / 24",
+      "stage": "resolution.warm"
+    },
+    {
+      "milliseconds": 3840.917,
+      "scene_id": "B1D891E4-C422-45DB-9276-3BE7D9F27E74",
+      "scene_name": "01 \u00b7 The complete collection",
+      "stage": "stage.first-entry"
+    },
+    {
+      "milliseconds": 0.098208,
+      "scene_id": "B1D891E4-C422-45DB-9276-3BE7D9F27E74",
+      "scene_name": "01 \u00b7 The complete collection",
+      "stage": "stage.first-scene-switch"
+    },
+    {
+      "milliseconds": 4915.1405,
+      "scene_id": "F39AB3AE-96CF-4F84-858C-F33DE46ECC62",
+      "scene_name": "02 \u00b7 Carton construction study",
+      "stage": "stage.first-scene-switch"
+    },
+    {
+      "milliseconds": 320.601792,
+      "scene_id": "CDA32F42-BDDD-4957-A48A-1492B344E926",
+      "scene_name": "03 \u00b7 Quail stitch study",
+      "stage": "stage.first-scene-switch"
+    },
+    {
+      "milliseconds": 1467.073709,
+      "scene_id": "E6531C76-48F5-4D0D-81F6-2B16E56774B1",
+      "scene_name": "04 \u00b7 Blind box \u2014 front, back & reveal",
+      "stage": "stage.first-scene-switch"
+    },
+    {
+      "milliseconds": 10880.909125,
+      "scene_id": "34777C99-1D0D-473A-8FAC-A83627CBD728",
+      "scene_name": "05 \u00b7 Retail display \u2014 24 blind boxes",
+      "stage": "stage.first-scene-switch"
+    },
+    {
+      "milliseconds": 2119.702208,
+      "scene_id": "9923BABC-D0C6-4C74-BE38-012E5B50A395",
+      "scene_name": "06 \u00b7 Unboxing \u2014 patch in its carton",
+      "stage": "stage.first-scene-switch"
+    },
+    {
+      "milliseconds": 3048.030834,
+      "scene_id": "F3648F0B-8D7C-4BAD-8279-8DF26B893742",
+      "scene_name": "07 \u00b7 Shipping carton \u2014 closed",
+      "stage": "stage.first-scene-switch"
+    },
+    {
+      "milliseconds": 32511.641916,
+      "scene_id": "19149F77-009E-4EC2-B66D-D1E3FAB48F36",
+      "scene_name": "08 \u00b7 Capacity family \u2014 12 / 18 / 24",
+      "stage": "stage.first-scene-switch"
+    },
+    {
+      "milliseconds": 3902.607459,
+      "scene_id": "B1D891E4-C422-45DB-9276-3BE7D9F27E74",
+      "scene_name": "01 \u00b7 The complete collection",
+      "stage": "stage.return-to-scene"
+    },
+    {
+      "milliseconds": 1482.440709,
+      "scene_id": "F39AB3AE-96CF-4F84-858C-F33DE46ECC62",
+      "scene_name": "02 \u00b7 Carton construction study",
+      "stage": "stage.return-to-scene"
+    },
+    {
+      "milliseconds": 320.665333,
+      "scene_id": "CDA32F42-BDDD-4957-A48A-1492B344E926",
+      "scene_name": "03 \u00b7 Quail stitch study",
+      "stage": "stage.return-to-scene"
+    },
+    {
+      "milliseconds": 1492.40275,
+      "scene_id": "E6531C76-48F5-4D0D-81F6-2B16E56774B1",
+      "scene_name": "04 \u00b7 Blind box \u2014 front, back & reveal",
+      "stage": "stage.return-to-scene"
+    },
+    {
+      "milliseconds": 11036.945167,
+      "scene_id": "34777C99-1D0D-473A-8FAC-A83627CBD728",
+      "scene_name": "05 \u00b7 Retail display \u2014 24 blind boxes",
+      "stage": "stage.return-to-scene"
+    },
+    {
+      "milliseconds": 2352.534209,
+      "scene_id": "9923BABC-D0C6-4C74-BE38-012E5B50A395",
+      "scene_name": "06 \u00b7 Unboxing \u2014 patch in its carton",
+      "stage": "stage.return-to-scene"
+    },
+    {
+      "milliseconds": 3413.498375,
+      "scene_id": "F3648F0B-8D7C-4BAD-8279-8DF26B893742",
+      "scene_name": "07 \u00b7 Shipping carton \u2014 closed",
+      "stage": "stage.return-to-scene"
+    },
+    {
+      "milliseconds": 30432.189792,
+      "scene_id": "19149F77-009E-4EC2-B66D-D1E3FAB48F36",
+      "scene_name": "08 \u00b7 Capacity family \u2014 12 / 18 / 24",
+      "stage": "stage.return-to-scene"
+    },
+    {
+      "milliseconds": 0.845959,
+      "stage": "thumbnails.initial-source-and-keys"
+    },
+    {
+      "milliseconds": 5.884166,
+      "stage": "thumbnails.100-repeated-source-and-key-reads"
+    },
+    {
+      "milliseconds": 5.501875,
+      "stage": "thumbnails.100-repeated-source-and-key-reads"
+    },
+    {
+      "milliseconds": 5.5,
+      "stage": "thumbnails.100-repeated-source-and-key-reads"
+    },
+    {
+      "milliseconds": 1813.063916,
+      "scene_id": "B1D891E4-C422-45DB-9276-3BE7D9F27E74",
+      "scene_name": "01 \u00b7 The complete collection",
+      "stage": "thumbnails.native-first-capture"
+    },
+    {
+      "milliseconds": 4626.35525,
+      "scene_id": "F39AB3AE-96CF-4F84-858C-F33DE46ECC62",
+      "scene_name": "02 \u00b7 Carton construction study",
+      "stage": "thumbnails.native-first-capture"
+    },
+    {
+      "milliseconds": 152.237042,
+      "scene_id": "CDA32F42-BDDD-4957-A48A-1492B344E926",
+      "scene_name": "03 \u00b7 Quail stitch study",
+      "stage": "thumbnails.native-first-capture"
+    },
+    {
+      "milliseconds": 299.61675,
+      "scene_id": "E6531C76-48F5-4D0D-81F6-2B16E56774B1",
+      "scene_name": "04 \u00b7 Blind box \u2014 front, back & reveal",
+      "stage": "thumbnails.native-first-capture"
+    },
+    {
+      "milliseconds": 1651.039458,
+      "scene_id": "34777C99-1D0D-473A-8FAC-A83627CBD728",
+      "scene_name": "05 \u00b7 Retail display \u2014 24 blind boxes",
+      "stage": "thumbnails.native-first-capture"
+    },
+    {
+      "milliseconds": 1503.58075,
+      "scene_id": "9923BABC-D0C6-4C74-BE38-012E5B50A395",
+      "scene_name": "06 \u00b7 Unboxing \u2014 patch in its carton",
+      "stage": "thumbnails.native-first-capture"
+    },
+    {
+      "milliseconds": 3159.470625,
+      "scene_id": "F3648F0B-8D7C-4BAD-8279-8DF26B893742",
+      "scene_name": "07 \u00b7 Shipping carton \u2014 closed",
+      "stage": "thumbnails.native-first-capture"
+    },
+    {
+      "milliseconds": 13100.572875,
+      "scene_id": "19149F77-009E-4EC2-B66D-D1E3FAB48F36",
+      "scene_name": "08 \u00b7 Capacity family \u2014 12 / 18 / 24",
+      "stage": "thumbnails.native-first-capture"
+    },
+    {
+      "milliseconds": 0.301208,
+      "stage": "stage.workspace-reentry"
+    },
+    {
+      "milliseconds": 0.043125,
+      "scene_id": "B1D891E4-C422-45DB-9276-3BE7D9F27E74",
+      "scene_name": "01 \u00b7 The complete collection",
+      "stage": "thumbnails.cached-after-workspace-reentry"
+    },
+    {
+      "milliseconds": 0.016667,
+      "scene_id": "F39AB3AE-96CF-4F84-858C-F33DE46ECC62",
+      "scene_name": "02 \u00b7 Carton construction study",
+      "stage": "thumbnails.cached-after-workspace-reentry"
+    },
+    {
+      "milliseconds": 0.015208,
+      "scene_id": "CDA32F42-BDDD-4957-A48A-1492B344E926",
+      "scene_name": "03 \u00b7 Quail stitch study",
+      "stage": "thumbnails.cached-after-workspace-reentry"
+    },
+    {
+      "milliseconds": 0.015708,
+      "scene_id": "E6531C76-48F5-4D0D-81F6-2B16E56774B1",
+      "scene_name": "04 \u00b7 Blind box \u2014 front, back & reveal",
+      "stage": "thumbnails.cached-after-workspace-reentry"
+    },
+    {
+      "milliseconds": 0.0195,
+      "scene_id": "34777C99-1D0D-473A-8FAC-A83627CBD728",
+      "scene_name": "05 \u00b7 Retail display \u2014 24 blind boxes",
+      "stage": "thumbnails.cached-after-workspace-reentry"
+    },
+    {
+      "milliseconds": 0.015,
+      "scene_id": "9923BABC-D0C6-4C74-BE38-012E5B50A395",
+      "scene_name": "06 \u00b7 Unboxing \u2014 patch in its carton",
+      "stage": "thumbnails.cached-after-workspace-reentry"
+    },
+    {
+      "milliseconds": 0.013167,
+      "scene_id": "F3648F0B-8D7C-4BAD-8279-8DF26B893742",
+      "scene_name": "07 \u00b7 Shipping carton \u2014 closed",
+      "stage": "thumbnails.cached-after-workspace-reentry"
+    },
+    {
+      "milliseconds": 0.024541,
+      "scene_id": "19149F77-009E-4EC2-B66D-D1E3FAB48F36",
+      "scene_name": "08 \u00b7 Capacity family \u2014 12 / 18 / 24",
+      "stage": "thumbnails.cached-after-workspace-reentry"
+    }
+  ],
+  "saved_scenes": 8,
+  "source_unchanged": true,
+  "stored_elements": 13091,
+  "iteration": "Before measured paper template sharing; after thumbnail/resolution cache changes"
+}

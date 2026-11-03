@@ -5,7 +5,16 @@ import FormCADModel
 /// Used by both the native interface and the local agent bridge. Call from one serial executor.
 public final class OperationEngine {
   public let repository: ProjectRepository
-  public var project: Project?
+  /// Advances for every assignment, including direct replacements, Undo and
+  /// nested value edits. Derived UI caches can observe this without hashing a
+  /// document on each pointer event; it is runtime state, never persisted.
+  public private(set) var projectGeneration: UInt64 = 0
+  public var project: Project? {
+    didSet {
+      projectGeneration &+= 1
+      if project == nil || project?.id != oldValue?.id { validatedArtworkLinks = nil }
+    }
+  }
   public var selection: Set<UUID> = []
   public private(set) var undoStack: [Project] = []
   public private(set) var redoStack: [Project] = []
@@ -27,6 +36,11 @@ public final class OperationEngine {
   private var interactionSnapshot: (project: Project, undo: [Project], redo: [Project])?
   private var lastCoalesce: String?
   private var lastEdit = Date.distantPast
+  // A single exact COW snapshot of successfully validated content, never an
+  // assumption that externally assigned projects or gesture labels are valid.
+  private var validatedArtworkLinks: Project?
+  private(set) var artworkLinkValidationCount = 0
+  private(set) var placementValidationReuseCount = 0
   public init(repository: ProjectRepository) { self.repository = repository }
 
   public func open(_ id: UUID) throws {
@@ -51,8 +65,15 @@ public final class OperationEngine {
     try body(&value)
     try onPrepareProjectEdit?(before, &value)
     value.refreshLibrarySelections()
-    try value.validateArtworkLinks()
+    try CanvasPlacementValidation.validatePositions(in: value)
+    if let validatedArtworkLinks, CanvasPlacementValidation.sameContent(validatedArtworkLinks, value) {
+      placementValidationReuseCount += 1
+    } else {
+      artworkLinkValidationCount += 1
+      try value.validateArtworkLinks()
+    }
     value.schemaVersion = value.minimumSchemaVersion
+    validatedArtworkLinks = value
     guard before != value else { return }
     if coalescing == nil || coalescing != lastCoalesce
       || (interaction != coalescing && Date().timeIntervalSince(lastEdit) > 0.65)

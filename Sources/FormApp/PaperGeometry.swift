@@ -68,6 +68,10 @@ import simd
     let definition=try PaperConstruction.definition(for:object),net=try definition.net()
     let outside=artworkSources == nil ? resolvedArtwork(object,project:project,inside:false):artworkSources!.outside
     let inside=artworkSources == nil ? resolvedArtwork(object,project:project,inside:true):artworkSources!.inside
+    let outsideFinishes=(definition.finishes ?? []).filter{$0.side == .outside}
+    let insideFinishes=(definition.finishes ?? []).filter{$0.side == .inside}
+    let preparedOutside=try outside.map{try PaperSurfaceRasterizer.PreparedArtwork($0,finishes:outsideFinishes,assets:assets)}
+    let preparedInside=try inside.map{try PaperSurfaceRasterizer.PreparedArtwork($0,finishes:insideFinishes,assets:assets)}
     let root=MeshNode();root.name=constructionName
     let stock=definition.stock,plies=stock.plies ?? []
     let legacyColor=object.color ?? project.material(object.materialID).color
@@ -89,8 +93,8 @@ import simd
       }
       let outsideSampling=allocation(inside:false),insideSampling=allocation(inside:true)
       let before=PaperSurfaceRasterizer.builds
-      let front=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:frontProfile,color:frontColor,grain:stock.grain,artwork:outside,finishes:(definition.finishes ?? []).filter{$0.side == .outside},assets:assets,maximumEdge:outsideSampling?.maximumEdge ?? edge,pixelBudget:outsideSampling?.maximumPixels ?? share)
-      let back=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:backProfile,color:backColor,grain:stock.grain,artwork:inside,finishes:(definition.finishes ?? []).filter{$0.side == .inside},assets:assets,maximumEdge:insideSampling?.maximumEdge ?? edge,pixelBudget:insideSampling?.maximumPixels ?? share)
+      let front=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:frontProfile,color:frontColor,grain:stock.grain,artwork:outside,finishes:outsideFinishes,assets:assets,maximumEdge:outsideSampling?.maximumEdge ?? edge,pixelBudget:outsideSampling?.maximumPixels ?? share,preparedArtwork:preparedOutside)
+      let back=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:backProfile,color:backColor,grain:stock.grain,artwork:inside,finishes:insideFinishes,assets:assets,maximumEdge:insideSampling?.maximumEdge ?? edge,pixelBudget:insideSampling?.maximumPixels ?? share,preparedArtwork:preparedInside)
       textureBuilds+=PaperSurfaceRasterizer.builds-before
       var materials=[surfaceMaterial("Paper / outside",maps:front,netSize:net.size,opacity:frontProfile.opacity),surfaceMaterial("Paper / inside",maps:back,netSize:net.size,opacity:backProfile.opacity)]
       var mesh:MeshGeometry

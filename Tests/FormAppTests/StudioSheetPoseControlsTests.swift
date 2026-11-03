@@ -40,6 +40,8 @@ import XCTest
   func testDuplicateRetainsPoseThenCanChooseAnotherSpreadIndependently()throws {
     let(store,controller,id)=try fixture(),source=try XCTUnwrap(store.project)
     controller.changeInstance(id:id){$0.sheetPose = .init(openingDegrees:120,activeSpread:1)}
+    let cache=StudioCompositionResolutionCache()
+    _ = try cache.resolve(try XCTUnwrap(controller.draft),in:source)
     controller.duplicateInstance()
     let duplicate=try XCTUnwrap(controller.selectedInstanceID)
     XCTAssertNotEqual(duplicate,id)
@@ -48,6 +50,15 @@ import XCTest
     XCTAssertEqual(scene.instances.first{$0.id==id}?.sheetPose?.activeSpread,1)
     XCTAssertEqual(scene.instances.first{$0.id==duplicate}?.sheetPose?.activeSpread,3)
     let result=try scene.resolved(in:source)
+    let cached=try cache.resolve(scene,in:source)
+    XCTAssertEqual(cached.project,result.project);XCTAssertEqual(cached.visible,result.visible)
+    XCTAssertEqual(cache.builds,2,"Independent publication poses must invalidate the resolved scene cache")
+    var moved=scene;moved.instances[0].positionMM.x+=120;moved.instances[0].rotationDegrees=25
+    XCTAssertEqual(try cache.resolve(moved,in:source).project,try moved.resolved(in:source).project)
+    XCTAssertEqual(cache.builds,2,"Moving a posed book can reuse its resolved geometry")
+    moved.instances[0].sheetPose?.activeSpread=2
+    XCTAssertEqual(try cache.resolve(moved,in:source).project,try moved.resolved(in:source).project)
+    XCTAssertEqual(cache.builds,3,"Choosing another reader spread must rebuild its resolved sheets")
     XCTAssertEqual(result.visible,Set([id,duplicate]));XCTAssertEqual(store.project,source)
   }
   func testShrunkSourceKeepsSavedPoseWhileControlGetterAndDuplicateUseAvailableLeaf()throws {

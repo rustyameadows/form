@@ -4,51 +4,67 @@ import FormCore
 import SwiftUI
 
 /// Saved compositions render independently of the live stage and its draft.
-/// Only visible rows request work; one serial chain bounds native captures.
+/// The controller retains completed pixels across workspace transitions; only
+/// visible rows request work, and one serial chain bounds native captures.
 @MainActor final class StudioSceneThumbnailCache:ObservableObject {
-  private struct Source {let project:Project,assets:URL,identity:String}
-  private final class Request {
+  private struct Source {let project:Project,design:Project,assets:URL,identity:String,fontRevision:Int}
+  private struct Key {let scene:StudioComposition,identity:String,value:String}
+  @MainActor private final class Request {
     let scene:StudioComposition,task:Task<NSImage,Error>
     var readers=Set<UUID>()
     init(scene:StudioComposition,task:Task<NSImage,Error>){self.scene=scene;self.task=task}
   }
   @Published private(set) var revision=0
   private var source:Source?
+  private var keys:[UUID:Key]=[:]
   private var requests:[String:Request]=[:]
   private var tail:Task<Void,Never>?,tailID:UUID?
   private let images=NSCache<NSString,NSImage>()
   private let renderer=StudioShotRenderer()
   var renderCount:Int {renderer.renders}
+  private(set) var keyBuildCount=0
 
-  init(){images.countLimit=24;images.totalCostLimit=24*1024*1024}
+  init(){images.countLimit=32;images.totalCostLimit=32*1024*1024}
   func synchronize(project:Project?,assets:URL?) {
-    guard let project,let assets,let digest=try? project.studioDesignDigest() else{reset();return}
-    let identity=project.id.uuidString+":"+digest+":"+assets.standardizedFileURL.path+":fonts:\(GeometryFactory.fontRevision)"
-    if source?.identity != identity {
-      for request in requests.values {request.task.cancel()};requests.removeAll();images.removeAllObjects()
-    }else {
-      let scenes=Dictionary(uniqueKeysWithValues:(project.studioPresentation?.scenes ?? []).map{($0.id,$0)})
-      for key in Array(requests.keys) where scenes[requests[key]!.scene.id] != requests[key]!.scene {
-        requests.removeValue(forKey:key)?.task.cancel()
-      }
+    guard let project,let assets else{reset();return}
+    let design=StudioPreviewSource.thumbnailDesign(project),fontRevision=GeometryFactory.fontRevision
+    let changed=source?.design != design || source?.assets.standardizedFileURL != assets.standardizedFileURL || source?.fontRevision != fontRevision
+    let scenesChanged=source?.project.studioPresentation?.scenes != project.studioPresentation?.scenes
+    let identity=changed ? UUID().uuidString:source!.identity
+    if changed {cancelRequests();images.removeAllObjects();keys=[:]}
+    source = .init(project:project,design:design,assets:assets,identity:identity,fontRevision:fontRevision)
+    let scenes=Dictionary(uniqueKeysWithValues:(project.studioPresentation?.scenes ?? []).map{($0.id,$0)})
+    keys=keys.filter{scenes[$0.key] != nil}
+    for key in Array(requests.keys) {
+      guard let request=requests[key] else{continue}
+      if scenes[request.scene.id].map({self.key(for:$0)==key}) != true {requests.removeValue(forKey:key)?.task.cancel()}
     }
-    source = .init(project:project,assets:assets,identity:identity);revision &+= 1
+    if changed || scenesChanged {revision &+= 1}
   }
-  func reset() {
+  /// Stop work for vanished rows without throwing away already rendered pixels.
+  private func cancelRequests() {
     for request in requests.values {request.task.cancel()}
-    requests.removeAll();images.removeAllObjects();source=nil;revision &+= 1
+    requests.removeAll()
+  }
+  func suspend() {cancelRequests();renderer.clear()}
+  func reset() {
+    suspend();images.removeAllObjects();keys=[:];source=nil;revision &+= 1
   }
   func key(for scene:StudioComposition)->String {
+    let scene=StudioPreviewSource.thumbnail(scene),identity=source?.identity ?? "waiting"
+    if let key=keys[scene.id],key.identity==identity,key.scene==scene {return key.value}
     let definition=(try? JSONEncoder.form.encode(scene)) ?? Data(scene.id.uuidString.utf8)
-    var data=Data((source?.identity ?? "waiting").utf8);data.append(definition)
-    return SHA256.hash(data:data).map{String(format:"%02x",$0)}.joined()
+    var data=Data(identity.utf8);data.append(definition)
+    let value=SHA256.hash(data:data).map{String(format:"%02x",$0)}.joined()
+    keys[scene.id] = .init(scene:scene,identity:identity,value:value);keyBuildCount &+= 1
+    return value
   }
   static func pixels(for scene:StudioComposition)->StudioPixels {
     let scale=min(1,512/Double(max(scene.pixels.width,scene.pixels.height)))
     return .init(width:max(64,Int((Double(scene.pixels.width)*scale).rounded())),height:max(64,Int((Double(scene.pixels.height)*scale).rounded())))
   }
   func image(for scene:StudioComposition,preflight:@escaping(Project,StudioShot)throws->Void)async throws->NSImage {
-    try Task.checkCancellation()
+    try Task.checkCancellation();try scene.validate()
     guard let source else{throw CancellationError()}
     guard scene.instances.contains(where:{$0.visible}) else{throw FormError.invalid("Empty scene")}
     let key=key(for:scene),reader=UUID()
@@ -59,17 +75,18 @@ import SwiftUI
     if let existing=requests[key] {request=existing}
     else {
       let previous=tail,identity=source.identity
-      let task=Task { @MainActor [weak self] in
+      let task=Task(priority:.utility) { @MainActor [weak self] in
         if let previous {await previous.value}
-        try Task.checkCancellation()
-        guard let self,self.isCurrent(scene,identity:identity) else{throw CancellationError()}
+        // Give a scene recall/first layout priority over background row captures.
+        await Task.yield();try Task.checkCancellation()
+        guard let self,self.isCurrent(scene,identity:identity,key:key) else{throw CancellationError()}
         if !check.visibility.objectIDs.isEmpty {try preflight(source.project,check)}
         let resolved=try scene.resolved(in:source.project)
         var shot=scene.shot();shot.pixels=Self.pixels(for:scene)
         shot.visibility = .init(mode:.objects,objectIDs:resolved.visible.sorted{$0.uuidString<$1.uuidString})
         let image=try await self.renderer.render(project:resolved.project,shot:shot,assets:source.assets,preview:true,renderObjectIDs:resolved.visible,textureLimit:512)
         try Task.checkCancellation()
-        guard self.isCurrent(scene,identity:identity) else{throw CancellationError()}
+        guard self.isCurrent(scene,identity:identity,key:key) else{throw CancellationError()}
         self.images.setObject(image,forKey:key as NSString,cost:shot.pixels.width*shot.pixels.height*4)
         return image
       }
@@ -82,15 +99,17 @@ import SwiftUI
     }
     request.readers.insert(reader)
     return try await withTaskCancellationHandler(operation:{
-      defer{release(key,reader:reader)}
+      defer{release(key,request:request,reader:reader)}
       let image=try await request.task.value;try Task.checkCancellation();return image
-    },onCancel:{Task { @MainActor [weak self] in self?.release(key,reader:reader)}})
+    },onCancel:{Task { @MainActor [weak self] in self?.release(key,request:request,reader:reader)}})
   }
-  private func isCurrent(_ scene:StudioComposition,identity:String)->Bool {
-    source?.identity==identity && source?.project.studioPresentation?.scenes?.contains(scene)==true
+  private func isCurrent(_ scene:StudioComposition,identity:String,key:String)->Bool {
+    guard source?.identity==identity,let current=source?.project.studioPresentation?.scenes?.first(where:{$0.id==scene.id}) else{return false}
+    return self.key(for:current)==key
   }
-  private func release(_ key:String,reader:UUID) {
-    guard let request=requests[key] else{return}
+  private func release(_ key:String,request:Request,reader:UUID) {
+    // A cancelled old task must never release a replacement with the same key.
+    guard requests[key] === request else{return}
     request.readers.remove(reader)
     if request.readers.isEmpty {request.task.cancel();requests.removeValue(forKey:key)}
   }
