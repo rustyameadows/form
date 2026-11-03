@@ -24,16 +24,22 @@ struct PublicationOutputSettings {
   }
 }
 
+/// Present the completed report and its navigation ownership together. A separate
+/// Boolean can capture the previous report on the popover's first presentation.
+private struct PublicationPreflightPresentation:Identifiable {
+  let id=UUID()
+  let projectID:UUID
+  let publicationID:UUID
+  let report:[String:Any]
+}
+
 struct PublicationOutputControls:View {
   @ObservedObject var session:ArtworkSession
   @ObservedObject var controller:PublicationWorkspaceController
   let project:Project
   let document:PublicationDocument
   @State private var settings=PublicationOutputSettings()
-  @State private var preflightOpen=false
-  @State private var report:[String:Any]=[:]
-  @State private var reportProjectID:UUID?
-  @State private var reportPublicationID:UUID?
+  @State private var preflightPresentation:PublicationPreflightPresentation?
   private var editions:[ProductObject] {
     project.objects.filter{$0.sheetAssembly?.publicationID==document.id && $0.sheetAssembly?.parentSheets != nil}
   }
@@ -78,13 +84,14 @@ struct PublicationOutputControls:View {
         Button("Export PDF…",action:export).buttonStyle(InspectorActionStyle()).accessibilityIdentifier("publication-export-pdf")
       }
     }.font(InspectorStyle.labelFont)
-      .popover(isPresented:$preflightOpen){preflightView}
+      .popover(item:$preflightPresentation){presentation in preflightView(presentation)}
   }
-  private var preflightView:some View {
-    VStack(alignment:.leading,spacing:12) {
+  private func preflightView(_ presentation:PublicationPreflightPresentation)->some View {
+    let report=presentation.report
+    return VStack(alignment:.leading,spacing:12) {
       HStack {
         Text("Publication preflight").font(.system(size:15,weight:.semibold))
-        Spacer();AppCloseButton("Close preflight"){preflightOpen=false}
+        Spacer();AppCloseButton("Close preflight"){preflightPresentation=nil}
       }
       Text(report["can_export"] as? Bool==true ? "Ready to export":"Review before export")
         .font(InspectorStyle.labelFont)
@@ -102,10 +109,9 @@ struct PublicationOutputControls:View {
               Label(item["message"] as? String ?? "",systemImage:item["severity"] as? String=="error" ? "exclamationmark.triangle":"info.circle")
                 .font(InspectorStyle.labelFont).foregroundStyle(item["severity"] as? String=="error" ? Palette.accent:Palette.secondary)
                 .fixedSize(horizontal:false,vertical:true)
-              if let projectID=reportProjectID,let publicationID=reportPublicationID,
-                let target=PublicationPreflightTarget(issue:item,projectID:projectID,publicationID:publicationID) {
+              if let target=PublicationPreflightTarget(issue:item,projectID:presentation.projectID,publicationID:presentation.publicationID) {
                 Button(target.elementID==nil ? "Go to page":target.instanceElementID != nil ? "Go to source frame":"Go to frame") {
-                  if controller.focusPreflightIssue(target) {preflightOpen=false}
+                  if controller.focusPreflightIssue(target) {preflightPresentation=nil}
                   else {session.store?.error="The reported source is no longer available, or text composition is still active. Finish the edit and run preflight again."}
                 }.buttonStyle(.link).accessibilityIdentifier("publication-preflight-locate-\(index)")
                 if target.instanceElementID != nil {
@@ -121,12 +127,15 @@ struct PublicationOutputControls:View {
   }
   private func preflight() {
     guard let store=session.store,store.project?.id==project.id else{return}
-    reportProjectID=project.id;reportPublicationID=document.id
+    var report:[String:Any]
     do {
-      report=try store.publicationGraphicsCall("form_publication",settings.arguments(publicationID:document.id,preflight:true)) as? [String:Any] ?? [:]
+      guard let result=try store.publicationGraphicsCall("form_publication",settings.arguments(publicationID:document.id,preflight:true)) as? [String:Any] else {
+        throw FormError.invalid("The publication preflight report is unavailable.")
+      }
+      report=result
       report["uncommitted_text_may_differ"]=session.editingText
     }catch{report=["can_export":false,"issues":[["severity":"error","message":error.localizedDescription]]]}
-    preflightOpen=true
+    preflightPresentation = .init(projectID:project.id,publicationID:document.id,report:report)
   }
   private func export() {
     guard let store=session.store,store.project?.id==project.id else{return}
