@@ -60,6 +60,7 @@ struct ObjectInspector: View {
         ScrollView {
           VStack(alignment: .leading, spacing: InspectorStyle.sectionSpacing) {
             LinkedObjectInspectorModule(object: object, session: store.artworkSession)
+            if object.sheetAssembly==nil {SheetDimensionRelationships(session:store.artworkSession,objectID:object.id,projectID:project.id)}
             if object.librarySelection != nil { ObjectLibraryInspector(object: object); InspectorDivider() }
             if object.patternAssembly != nil {PatternAssemblyInspector(object:object);InspectorDivider()}
             if object.isFlexibleSurface {ClothInspector(controller:store.cloth.preview,object:object);InspectorDivider()}
@@ -235,6 +236,7 @@ struct ParameterControl: View {
     }
     return low...max(low, high)
   }
+  var isDerived:Bool {object.dimensionBindings?.contains(where:{$0.parameter==parameter.id}) == true}
   var isSolid:Bool {store.project?.recipe(object.recipeID)?.solid != nil}
   var value:Double {isSolid ? store.solids.value(for:object,parameter:parameter.id):object[parameter.id]}
   var binding: Binding<Double> {
@@ -245,6 +247,11 @@ struct ParameterControl: View {
   var body: some View {
     VStack(spacing: InspectorStyle.rowSpacing) {
       let projectID = store.project?.id
+      if isDerived {
+        InspectorRow(parameter.name) {
+          HStack(spacing:6) {Image(systemName:"link");Text((value/factor).formatted(.number.precision(.fractionLength(0...3)))+" "+displayedUnit).monospacedDigit()}.foregroundStyle(.secondary)
+        }.help("Derived from saved physical dimension sources; edit the source or its relationship.")
+      } else {
       if parameter.unit == "mm" {
         ArtworkUnitField(parameter.name, value: value, unit: displayedUnit == "in" ? .inches : .mm) { physical in
           try commit(physical, projectID: projectID)
@@ -264,6 +271,7 @@ struct ParameterControl: View {
               max(range.lowerBound, ($0 / parameter.step).rounded() * parameter.step))
           }), in: range, label: parameter.name, onEditingChanged: isSolid ? solidInteraction.changed:store.inspectorInteraction("parameter-\(object.id)-\(parameter.id)"),onEditingCancelled:isSolid ? solidInteraction.cancel:nil
       )
+      }
     }
   }
   private func solidInteraction()->(changed:(Bool)->Void,cancel:()->Void) {

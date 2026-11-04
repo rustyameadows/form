@@ -1,0 +1,2326 @@
+{
+  "three": {
+    "project_id": "DCF5F48D-BCBA-460B-B015-2D1A1D4E8BF2",
+    "object_id": "581FF12E-EB5C-48B8-8FF2-6BED575AEDB7",
+    "lining_object_id": "C20D23E9-0739-426C-ACBD-EA89658B21DA",
+    "physical_ids": [
+      "581FF12E-EB5C-48B8-8FF2-6BED575AEDB7",
+      "C20D23E9-0739-426C-ACBD-EA89658B21DA"
+    ],
+    "source_object_id": "BF904B16-1B89-45C6-9EAF-7A858DCE60E0",
+    "ordered_book_ids": [
+      "714E30E8-AD11-48DB-8CDB-62DC072095C2",
+      "C83A464C-4986-478A-9AB0-2D51CA02C702",
+      "084F8882-4747-4F41-8E6D-7BE49906D40F"
+    ],
+    "definition": {
+      "version": 3,
+      "name": "INTERVAL / Three collected volumes",
+      "parameters": [
+        {
+          "name": "innerWidth",
+          "value": 43.57001200106684,
+          "minimum": 0.01,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "innerHeight",
+          "value": 224.84,
+          "minimum": 0.01,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "innerDepth",
+          "value": 165.15433373776975,
+          "minimum": 0.01,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "board",
+          "value": 1.6,
+          "minimum": 0.5,
+          "maximum": 5.0,
+          "unit": "mm"
+        },
+        {
+          "name": "skin",
+          "value": 0.14,
+          "minimum": 0.14,
+          "maximum": 0.14,
+          "unit": "mm"
+        },
+        {
+          "name": "lining",
+          "value": 0.12,
+          "minimum": 0.01,
+          "maximum": 2.0,
+          "unit": "mm"
+        },
+        {
+          "name": "turnIn",
+          "value": 12.0,
+          "minimum": 2.0,
+          "maximum": 30.0,
+          "unit": "mm"
+        },
+        {
+          "name": "clearance",
+          "value": 1.8,
+          "minimum": 0.0,
+          "maximum": 20.0,
+          "unit": "mm"
+        },
+        {
+          "name": "volumeGap",
+          "value": 0.8,
+          "minimum": 0.0,
+          "maximum": 20.0,
+          "unit": "mm"
+        },
+        {
+          "name": "layoutGap",
+          "value": 10.0,
+          "minimum": 4.0,
+          "maximum": 100.0,
+          "unit": "mm"
+        },
+        {
+          "name": "volumeOffset0",
+          "value": 1.8,
+          "minimum": 0.0,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "volumeOffset1",
+          "value": 12.07000400035562,
+          "minimum": 0.0,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "volumeOffset2",
+          "value": 25.660008000711233,
+          "minimum": 0.0,
+          "maximum": 2000.0,
+          "unit": "mm"
+        }
+      ],
+      "derived": {
+        "margin": "board+turnIn+skin+2",
+        "outerCoreWidth": "innerWidth+2*(lining+skin+board)",
+        "sideHeight": "innerHeight+2*(lining-skin)",
+        "sideDepth": "innerDepth+lining-skin",
+        "baseDepth": "innerDepth+lining+skin+board",
+        "netWidth": "max(max(max(max(max(max(max(max(max(outerCoreWidth,outerCoreWidth),sideDepth),sideDepth),outerCoreWidth),innerWidth),innerWidth),innerDepth),innerDepth),innerWidth)+2*margin",
+        "netHeight": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+3*(innerHeight)+10*(2*margin+layoutGap)"
+      },
+      "size": {
+        "x": "netWidth",
+        "y": "netHeight"
+      },
+      "stockThickness": "board",
+      "panels": [
+        {
+          "id": "base",
+          "name": "Lower board",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "0+0*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+outerCoreWidth",
+              "y": "0+0*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+outerCoreWidth",
+              "y": "0+0*(2*margin+layoutGap)+margin+baseDepth"
+            },
+            {
+              "x": "margin",
+              "y": "0+0*(2*margin+layoutGap)+margin+baseDepth"
+            }
+          ],
+          "features": {
+            "wrap": {
+              "stock": {
+                "name": "Deep teal woven wrapping \u00b7 visual",
+                "thicknessMM": 0.14,
+                "gsm": 180,
+                "grain": "parallelHeight",
+                "verified": false,
+                "notes": "Project-authored visual construction assumption; no measured manufacturing tolerance is implied.",
+                "profile": {
+                  "texture": "linen",
+                  "color": "#263E43",
+                  "roughness": 0.78,
+                  "textureScaleMM": 0.65,
+                  "textureDepthMM": 0.018,
+                  "opacity": 1
+                }
+              },
+              "turnInMM": "min(turnIn,min(outerCoreWidth,baseDepth)/2-0.25)",
+              "cornerRadiusMM": 1.2
+            }
+          }
+        },
+        {
+          "id": "top",
+          "name": "Upper board",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "1*(baseDepth)+1*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+outerCoreWidth",
+              "y": "1*(baseDepth)+1*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+outerCoreWidth",
+              "y": "1*(baseDepth)+1*(2*margin+layoutGap)+margin+baseDepth"
+            },
+            {
+              "x": "margin",
+              "y": "1*(baseDepth)+1*(2*margin+layoutGap)+margin+baseDepth"
+            }
+          ],
+          "features": {
+            "wrap": {
+              "stock": {
+                "name": "Deep teal woven wrapping \u00b7 visual",
+                "thicknessMM": 0.14,
+                "gsm": 180,
+                "grain": "parallelHeight",
+                "verified": false,
+                "notes": "Project-authored visual construction assumption; no measured manufacturing tolerance is implied.",
+                "profile": {
+                  "texture": "linen",
+                  "color": "#263E43",
+                  "roughness": 0.78,
+                  "textureScaleMM": 0.65,
+                  "textureDepthMM": 0.018,
+                  "opacity": 1
+                }
+              },
+              "turnInMM": "min(turnIn,min(outerCoreWidth,baseDepth)/2-0.25)",
+              "cornerRadiusMM": 1.2
+            }
+          }
+        },
+        {
+          "id": "left",
+          "name": "Left board",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+2*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+sideDepth",
+              "y": "2*(baseDepth)+2*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+sideDepth",
+              "y": "2*(baseDepth)+2*(2*margin+layoutGap)+margin+sideHeight"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+2*(2*margin+layoutGap)+margin+sideHeight"
+            }
+          ],
+          "features": {
+            "wrap": {
+              "stock": {
+                "name": "Deep teal woven wrapping \u00b7 visual",
+                "thicknessMM": 0.14,
+                "gsm": 180,
+                "grain": "parallelHeight",
+                "verified": false,
+                "notes": "Project-authored visual construction assumption; no measured manufacturing tolerance is implied.",
+                "profile": {
+                  "texture": "linen",
+                  "color": "#263E43",
+                  "roughness": 0.78,
+                  "textureScaleMM": 0.65,
+                  "textureDepthMM": 0.018,
+                  "opacity": 1
+                }
+              },
+              "turnInMM": "min(turnIn,min(sideDepth,sideHeight)/2-0.25)",
+              "cornerRadiusMM": 1.2
+            }
+          }
+        },
+        {
+          "id": "right",
+          "name": "Right board",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+1*(sideHeight)+3*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+sideDepth",
+              "y": "2*(baseDepth)+1*(sideHeight)+3*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+sideDepth",
+              "y": "2*(baseDepth)+1*(sideHeight)+3*(2*margin+layoutGap)+margin+sideHeight"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+1*(sideHeight)+3*(2*margin+layoutGap)+margin+sideHeight"
+            }
+          ],
+          "features": {
+            "wrap": {
+              "stock": {
+                "name": "Deep teal woven wrapping \u00b7 visual",
+                "thicknessMM": 0.14,
+                "gsm": 180,
+                "grain": "parallelHeight",
+                "verified": false,
+                "notes": "Project-authored visual construction assumption; no measured manufacturing tolerance is implied.",
+                "profile": {
+                  "texture": "linen",
+                  "color": "#263E43",
+                  "roughness": 0.78,
+                  "textureScaleMM": 0.65,
+                  "textureDepthMM": 0.018,
+                  "opacity": 1
+                }
+              },
+              "turnInMM": "min(turnIn,min(sideDepth,sideHeight)/2-0.25)",
+              "cornerRadiusMM": 1.2
+            }
+          }
+        },
+        {
+          "id": "back",
+          "name": "Rear board",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+2*(sideHeight)+4*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+outerCoreWidth",
+              "y": "2*(baseDepth)+2*(sideHeight)+4*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+outerCoreWidth",
+              "y": "2*(baseDepth)+2*(sideHeight)+4*(2*margin+layoutGap)+margin+sideHeight"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+2*(sideHeight)+4*(2*margin+layoutGap)+margin+sideHeight"
+            }
+          ],
+          "features": {
+            "wrap": {
+              "stock": {
+                "name": "Deep teal woven wrapping \u00b7 visual",
+                "thicknessMM": 0.14,
+                "gsm": 180,
+                "grain": "parallelHeight",
+                "verified": false,
+                "notes": "Project-authored visual construction assumption; no measured manufacturing tolerance is implied.",
+                "profile": {
+                  "texture": "linen",
+                  "color": "#263E43",
+                  "roughness": 0.78,
+                  "textureScaleMM": 0.65,
+                  "textureDepthMM": 0.018,
+                  "opacity": 1
+                }
+              },
+              "turnInMM": "min(turnIn,min(outerCoreWidth,sideHeight)/2-0.25)",
+              "cornerRadiusMM": 1.2
+            }
+          }
+        }
+      ],
+      "hinges": [],
+      "joins": [],
+      "rootPanelID": "base",
+      "components": [
+        {
+          "id": "base",
+          "name": "Lower board",
+          "rootPanelID": "base",
+          "anchor": {
+            "x": "margin",
+            "y": "0+0*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "innerDepth/2",
+            "y": "-(lining+skin+board)",
+            "z": "-lining-skin-board/2"
+          },
+          "rotationDegrees": {
+            "x": 180.0,
+            "y": 0.0,
+            "z": 90.0
+          }
+        },
+        {
+          "id": "top",
+          "name": "Upper board",
+          "rootPanelID": "top",
+          "anchor": {
+            "x": "margin",
+            "y": "1*(baseDepth)+1*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "-innerDepth/2-lining-skin-board",
+            "y": "-(lining+skin+board)",
+            "z": "innerHeight+lining+skin+board/2"
+          },
+          "rotationDegrees": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 90.0
+          }
+        },
+        {
+          "id": "left",
+          "name": "Left board",
+          "rootPanelID": "left",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+2*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "-innerDepth/2-lining+skin",
+            "y": "-lining-skin-board/2",
+            "z": "innerHeight+lining-skin"
+          },
+          "rotationDegrees": {
+            "x": 90.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        {
+          "id": "right",
+          "name": "Right board",
+          "rootPanelID": "right",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+1*(sideHeight)+3*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "innerDepth/2",
+            "y": "innerWidth+lining+skin+board/2",
+            "z": "innerHeight+lining-skin"
+          },
+          "rotationDegrees": {
+            "x": 90.0,
+            "y": 0.0,
+            "z": 180.0
+          }
+        },
+        {
+          "id": "back",
+          "name": "Rear board",
+          "rootPanelID": "back",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+2*(sideHeight)+4*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "-innerDepth/2-lining-skin-board/2",
+            "y": "innerWidth+lining+skin+board",
+            "z": "innerHeight+lining-skin"
+          },
+          "rotationDegrees": {
+            "x": 90.00000000000001,
+            "y": 0.0,
+            "z": -90.00000000000001
+          }
+        }
+      ],
+      "interiors": [
+        {
+          "id": "fitted-run",
+          "name": "Declared finished lining cavity",
+          "componentID": "left",
+          "origin": {
+            "x": "lining-skin",
+            "y": "-innerHeight-lining+skin",
+            "z": "-lining-skin-board/2"
+          },
+          "size": {
+            "x": "innerWidth",
+            "y": "innerHeight",
+            "z": "innerDepth"
+          },
+          "rotationDegrees": {
+            "x": 0,
+            "y": 90,
+            "z": 0
+          },
+          "opening": {
+            "axis": "z",
+            "width": "innerWidth",
+            "height": "innerHeight",
+            "origin": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        }
+      ]
+    },
+    "lining_definition": {
+      "version": 3,
+      "name": "INTERVAL / Three collected volumes / actual paper lining",
+      "parameters": [
+        {
+          "name": "innerWidth",
+          "value": 43.57001200106684,
+          "minimum": 0.01,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "innerHeight",
+          "value": 224.84,
+          "minimum": 0.01,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "innerDepth",
+          "value": 165.15433373776975,
+          "minimum": 0.01,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "board",
+          "value": 1.6,
+          "minimum": 0.5,
+          "maximum": 5.0,
+          "unit": "mm"
+        },
+        {
+          "name": "skin",
+          "value": 0.14,
+          "minimum": 0.14,
+          "maximum": 0.14,
+          "unit": "mm"
+        },
+        {
+          "name": "lining",
+          "value": 0.12,
+          "minimum": 0.01,
+          "maximum": 2.0,
+          "unit": "mm"
+        },
+        {
+          "name": "turnIn",
+          "value": 12.0,
+          "minimum": 2.0,
+          "maximum": 30.0,
+          "unit": "mm"
+        },
+        {
+          "name": "clearance",
+          "value": 1.8,
+          "minimum": 0.0,
+          "maximum": 20.0,
+          "unit": "mm"
+        },
+        {
+          "name": "volumeGap",
+          "value": 0.8,
+          "minimum": 0.0,
+          "maximum": 20.0,
+          "unit": "mm"
+        },
+        {
+          "name": "layoutGap",
+          "value": 10.0,
+          "minimum": 4.0,
+          "maximum": 100.0,
+          "unit": "mm"
+        },
+        {
+          "name": "volumeOffset0",
+          "value": 1.8,
+          "minimum": 0.0,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "volumeOffset1",
+          "value": 12.07000400035562,
+          "minimum": 0.0,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "volumeOffset2",
+          "value": 25.660008000711233,
+          "minimum": 0.0,
+          "maximum": 2000.0,
+          "unit": "mm"
+        }
+      ],
+      "derived": {
+        "margin": "board+turnIn+skin+2",
+        "outerCoreWidth": "innerWidth+2*(lining+skin+board)",
+        "sideHeight": "innerHeight+2*(lining-skin)",
+        "sideDepth": "innerDepth+lining-skin",
+        "baseDepth": "innerDepth+lining+skin+board",
+        "netWidth": "max(max(max(max(max(max(max(max(max(outerCoreWidth,outerCoreWidth),sideDepth),sideDepth),outerCoreWidth),innerWidth),innerWidth),innerDepth),innerDepth),innerWidth)+2*margin",
+        "netHeight": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+3*(innerHeight)+10*(2*margin+layoutGap)"
+      },
+      "size": {
+        "x": "netWidth",
+        "y": "netHeight"
+      },
+      "stockThickness": "lining",
+      "panels": [
+        {
+          "id": "lining-base",
+          "name": "Lower lining",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+5*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerWidth",
+              "y": "2*(baseDepth)+3*(sideHeight)+5*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerWidth",
+              "y": "2*(baseDepth)+3*(sideHeight)+5*(2*margin+layoutGap)+margin+innerDepth"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+5*(2*margin+layoutGap)+margin+innerDepth"
+            }
+          ]
+        },
+        {
+          "id": "lining-top",
+          "name": "Upper lining",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+1*(innerDepth)+6*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerWidth",
+              "y": "2*(baseDepth)+3*(sideHeight)+1*(innerDepth)+6*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerWidth",
+              "y": "2*(baseDepth)+3*(sideHeight)+1*(innerDepth)+6*(2*margin+layoutGap)+margin+innerDepth"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+1*(innerDepth)+6*(2*margin+layoutGap)+margin+innerDepth"
+            }
+          ]
+        },
+        {
+          "id": "lining-left",
+          "name": "Left lining",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+7*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerDepth",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+7*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerDepth",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+7*(2*margin+layoutGap)+margin+innerHeight"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+7*(2*margin+layoutGap)+margin+innerHeight"
+            }
+          ]
+        },
+        {
+          "id": "lining-right",
+          "name": "Right lining",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+1*(innerHeight)+8*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerDepth",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+1*(innerHeight)+8*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerDepth",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+1*(innerHeight)+8*(2*margin+layoutGap)+margin+innerHeight"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+1*(innerHeight)+8*(2*margin+layoutGap)+margin+innerHeight"
+            }
+          ]
+        },
+        {
+          "id": "lining-back",
+          "name": "Rear lining",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+2*(innerHeight)+9*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerWidth",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+2*(innerHeight)+9*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerWidth",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+2*(innerHeight)+9*(2*margin+layoutGap)+margin+innerHeight"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+2*(innerHeight)+9*(2*margin+layoutGap)+margin+innerHeight"
+            }
+          ]
+        }
+      ],
+      "hinges": [],
+      "joins": [],
+      "rootPanelID": "lining-base",
+      "components": [
+        {
+          "id": "lining-base",
+          "name": "Lower lining",
+          "rootPanelID": "lining-base",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+3*(sideHeight)+5*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "-innerDepth/2",
+            "y": 0,
+            "z": "-lining/2"
+          },
+          "rotationDegrees": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 90.0
+          }
+        },
+        {
+          "id": "lining-top",
+          "name": "Upper lining",
+          "rootPanelID": "lining-top",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+3*(sideHeight)+1*(innerDepth)+6*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "innerDepth/2",
+            "y": 0,
+            "z": "innerHeight+lining/2"
+          },
+          "rotationDegrees": {
+            "x": 180.0,
+            "y": 0.0,
+            "z": 90.0
+          }
+        },
+        {
+          "id": "lining-left",
+          "name": "Left lining",
+          "rootPanelID": "lining-left",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+7*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "innerDepth/2",
+            "y": "-lining/2",
+            "z": "innerHeight"
+          },
+          "rotationDegrees": {
+            "x": 90.0,
+            "y": 0.0,
+            "z": 180.0
+          }
+        },
+        {
+          "id": "lining-right",
+          "name": "Right lining",
+          "rootPanelID": "lining-right",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+1*(innerHeight)+8*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "-innerDepth/2",
+            "y": "innerWidth+lining/2",
+            "z": "innerHeight"
+          },
+          "rotationDegrees": {
+            "x": 90.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        {
+          "id": "lining-back",
+          "name": "Rear lining",
+          "rootPanelID": "lining-back",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+2*(innerHeight)+9*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "-innerDepth/2-lining/2",
+            "y": 0,
+            "z": "innerHeight"
+          },
+          "rotationDegrees": {
+            "x": 90.0,
+            "y": 0.0,
+            "z": 90.0
+          }
+        }
+      ]
+    },
+    "dimension_bindings": [
+      {
+        "parameter": "innerWidth",
+        "expression": "t0+t1+t2+2*clearance+2*volumeGap",
+        "inputs": {
+          "t0": {
+            "sourceObjectID": "714E30E8-AD11-48DB-8CDB-62DC072095C2",
+            "measurement": "closedThickness"
+          },
+          "t1": {
+            "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+            "measurement": "closedThickness"
+          },
+          "t2": {
+            "sourceObjectID": "084F8882-4747-4F41-8E6D-7BE49906D40F",
+            "measurement": "closedThickness"
+          }
+        }
+      },
+      {
+        "parameter": "innerHeight",
+        "expression": "max(max(h0,h1),h2)+2*clearance",
+        "inputs": {
+          "h0": {
+            "sourceObjectID": "714E30E8-AD11-48DB-8CDB-62DC072095C2",
+            "measurement": "closedHeight"
+          },
+          "h1": {
+            "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+            "measurement": "closedHeight"
+          },
+          "h2": {
+            "sourceObjectID": "084F8882-4747-4F41-8E6D-7BE49906D40F",
+            "measurement": "closedHeight"
+          }
+        }
+      },
+      {
+        "parameter": "innerDepth",
+        "expression": "max(max(d0,d1),d2)+2*clearance",
+        "inputs": {
+          "d0": {
+            "sourceObjectID": "714E30E8-AD11-48DB-8CDB-62DC072095C2",
+            "measurement": "closedWidth"
+          },
+          "d1": {
+            "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+            "measurement": "closedWidth"
+          },
+          "d2": {
+            "sourceObjectID": "084F8882-4747-4F41-8E6D-7BE49906D40F",
+            "measurement": "closedWidth"
+          }
+        }
+      },
+      {
+        "parameter": "volumeOffset0",
+        "expression": "clearance+0*volumeGap",
+        "inputs": {}
+      },
+      {
+        "parameter": "volumeOffset1",
+        "expression": "clearance+t0+1*volumeGap",
+        "inputs": {
+          "t0": {
+            "sourceObjectID": "714E30E8-AD11-48DB-8CDB-62DC072095C2",
+            "measurement": "closedThickness"
+          }
+        }
+      },
+      {
+        "parameter": "volumeOffset2",
+        "expression": "clearance+t0+t1+2*volumeGap",
+        "inputs": {
+          "t0": {
+            "sourceObjectID": "714E30E8-AD11-48DB-8CDB-62DC072095C2",
+            "measurement": "closedThickness"
+          },
+          "t1": {
+            "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+            "measurement": "closedThickness"
+          }
+        }
+      }
+    ],
+    "artwork_recipe_id": "caseArtwork581ff12eeb5c48b88ff26bed575aedb7",
+    "artwork_regions": [
+      {
+        "id": "base",
+        "name": "Lower board / cap",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "0+0*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "(innerWidth+2*(lining+skin+board))",
+          "y": "(innerDepth+lining+skin+board)"
+        },
+        "anchors": [
+          {
+            "elementIDs": [
+              "CC0AB45B-B8AE-5B82-85E2-42163B2CBF7B"
+            ],
+            "horizontal": 0,
+            "vertical": 0
+          }
+        ]
+      },
+      {
+        "id": "top",
+        "name": "Upper board / cap",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "1*((innerDepth+lining+skin+board))+1*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "(innerWidth+2*(lining+skin+board))",
+          "y": "(innerDepth+lining+skin+board)"
+        },
+        "anchors": [
+          {
+            "elementIDs": [
+              "54E16ED2-D080-57B5-876E-579267CA8075"
+            ],
+            "horizontal": 0,
+            "vertical": 0
+          }
+        ]
+      },
+      {
+        "id": "left",
+        "name": "Left board / cap",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+2*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "(innerDepth+lining-skin)",
+          "y": "(innerHeight+2*(lining-skin))"
+        },
+        "anchors": [
+          {
+            "elementIDs": [
+              "81B17BDB-5D75-5EAC-A064-903D1B95E586"
+            ],
+            "horizontal": 0,
+            "vertical": 0
+          }
+        ]
+      },
+      {
+        "id": "right",
+        "name": "Right board / cap",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+1*((innerHeight+2*(lining-skin)))+3*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "(innerDepth+lining-skin)",
+          "y": "(innerHeight+2*(lining-skin))"
+        },
+        "anchors": [
+          {
+            "elementIDs": [
+              "5C41F054-EA78-5221-B197-8EA4A3FE218C"
+            ],
+            "horizontal": 0,
+            "vertical": 0
+          }
+        ]
+      },
+      {
+        "id": "back",
+        "name": "Rear board / cap",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+2*((innerHeight+2*(lining-skin)))+4*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "(innerWidth+2*(lining+skin+board))",
+          "y": "(innerHeight+2*(lining-skin))"
+        },
+        "anchors": [
+          {
+            "elementIDs": [
+              "4BA70590-F96C-5888-8639-7DC61EA82FBE"
+            ],
+            "horizontal": 0,
+            "vertical": 0
+          }
+        ]
+      },
+      {
+        "id": "lining-base",
+        "name": "Lower lining",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+3*((innerHeight+2*(lining-skin)))+5*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "innerWidth",
+          "y": "innerDepth"
+        }
+      },
+      {
+        "id": "lining-top",
+        "name": "Upper lining",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+3*((innerHeight+2*(lining-skin)))+1*(innerDepth)+6*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "innerWidth",
+          "y": "innerDepth"
+        }
+      },
+      {
+        "id": "lining-left",
+        "name": "Left lining",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+3*((innerHeight+2*(lining-skin)))+2*(innerDepth)+7*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "innerDepth",
+          "y": "innerHeight"
+        }
+      },
+      {
+        "id": "lining-right",
+        "name": "Right lining",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+3*((innerHeight+2*(lining-skin)))+2*(innerDepth)+1*(innerHeight)+8*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "innerDepth",
+          "y": "innerHeight"
+        }
+      },
+      {
+        "id": "lining-back",
+        "name": "Rear lining",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+3*((innerHeight+2*(lining-skin)))+2*(innerDepth)+2*(innerHeight)+9*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "innerWidth",
+          "y": "innerHeight"
+        }
+      }
+    ],
+    "parameters": {
+      "board": 1.6,
+      "clearance": 1.8,
+      "fold": 100,
+      "innerDepth": 165.15433373776975,
+      "innerHeight": 224.84,
+      "innerWidth": 43.57001200106684,
+      "layoutGap": 10,
+      "lining": 0.12,
+      "opening": 0,
+      "skin": 0.14,
+      "turnIn": 12,
+      "volumeGap": 0.8,
+      "volumeOffset0": 1.8,
+      "volumeOffset1": 12.07000400035562,
+      "volumeOffset2": 25.660008000711233
+    },
+    "interiors": [
+      {
+        "componentID": "left",
+        "id": "fitted-run",
+        "name": "Declared finished lining cavity",
+        "opening": {
+          "axis": "z",
+          "heightMM": 224.84,
+          "originMM": {
+            "x": 0,
+            "y": 0
+          },
+          "widthMM": 43.57001200106684
+        },
+        "origin": {
+          "x": -81.64716686888487,
+          "y": 1.8600000000000003,
+          "z": -112.42000000000004
+        },
+        "sizeMM": {
+          "x": 43.57001200106684,
+          "y": 224.84,
+          "z": 165.15433373776975
+        },
+        "uAxis": {
+          "x": 6.123233995736766e-17,
+          "y": 1,
+          "z": -6.123233995736766e-17
+        },
+        "vAxis": {
+          "x": 0,
+          "y": 6.123233995736766e-17,
+          "z": 1
+        },
+        "wAxis": {
+          "x": 1,
+          "y": -6.123233995736766e-17,
+          "z": 3.749399456654644e-33
+        }
+      }
+    ],
+    "interiorAxes": {
+      "stack": [
+        0,
+        1,
+        0
+      ],
+      "height": [
+        0,
+        0,
+        1
+      ],
+      "depth": [
+        1,
+        0,
+        0
+      ],
+      "open_side": "+X"
+    },
+    "volume_placements": [
+      {
+        "source_object_id": "714E30E8-AD11-48DB-8CDB-62DC072095C2",
+        "offset_parameter": "volumeOffset0",
+        "case_cavity_offset_mm": 1.8,
+        "position_mm": [
+          78.17682312617104,
+          6.495000000000013,
+          -0.0
+        ],
+        "rotation_degrees": 180,
+        "sheet_pose": {
+          "openingDegrees": 0,
+          "activeSpread": 0,
+          "bendMM": 0
+        },
+        "source_closed_bounds": {
+          "minimum_mm": [
+            -3.5303437427138356,
+            -2.695000000000013,
+            -108.12
+          ],
+          "maximum_mm": [
+            143.12,
+            6.775004000355606,
+            108.12
+          ]
+        }
+      },
+      {
+        "source_object_id": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "offset_parameter": "volumeOffset1",
+        "case_cavity_offset_mm": 12.07000400035562,
+        "position_mm": [
+          77.43576510913381,
+          16.765004000355635,
+          -0.0
+        ],
+        "rotation_degrees": 180,
+        "sheet_pose": {
+          "openingDegrees": 0,
+          "activeSpread": 0,
+          "bendMM": 0
+        },
+        "source_closed_bounds": {
+          "minimum_mm": [
+            -4.271401759751068,
+            -2.695000000000013,
+            -108.12
+          ],
+          "maximum_mm": [
+            143.12,
+            10.0950040003556,
+            108.12
+          ]
+        }
+      },
+      {
+        "source_object_id": "084F8882-4747-4F41-8E6D-7BE49906D40F",
+        "offset_parameter": "volumeOffset2",
+        "case_cavity_offset_mm": 25.660008000711233,
+        "position_mm": [
+          78.27283313111512,
+          30.355008000711248,
+          -0.0
+        ],
+        "rotation_degrees": 180,
+        "sheet_pose": {
+          "openingDegrees": 0,
+          "activeSpread": 0,
+          "bendMM": 0
+        },
+        "source_closed_bounds": {
+          "minimum_mm": [
+            -3.434333737769757,
+            -2.6950000000000136,
+            -110.62
+          ],
+          "maximum_mm": [
+            158.12,
+            13.415004000355594,
+            110.62
+          ]
+        }
+      }
+    ],
+    "plan_sha256": "aaac0557da6f4fa27d5494544495161f5c3e90bf39245823e4af58f870872f6c",
+    "manufacturing_verified": false,
+    "evidence_status": "Authored source only; caller must render/review fit, joints, wrap and foil in the ordinary app."
+  },
+  "single": {
+    "project_id": "DCF5F48D-BCBA-460B-B015-2D1A1D4E8BF2",
+    "object_id": "BC21F464-4051-481F-A31C-86C0212E43E3",
+    "lining_object_id": "693E86C3-67DE-4D46-A3E0-1A2A97703542",
+    "physical_ids": [
+      "BC21F464-4051-481F-A31C-86C0212E43E3",
+      "693E86C3-67DE-4D46-A3E0-1A2A97703542"
+    ],
+    "source_object_id": "9C491CF3-A1DC-4971-9880-40518D3948CE",
+    "ordered_book_ids": [
+      "C83A464C-4986-478A-9AB0-2D51CA02C702"
+    ],
+    "definition": {
+      "version": 3,
+      "name": "INTERVAL / Single volume case",
+      "parameters": [
+        {
+          "name": "innerWidth",
+          "value": 16.390004000355614,
+          "minimum": 0.01,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "innerHeight",
+          "value": 219.84,
+          "minimum": 0.01,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "innerDepth",
+          "value": 150.99140175975106,
+          "minimum": 0.01,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "board",
+          "value": 1.6,
+          "minimum": 0.5,
+          "maximum": 5.0,
+          "unit": "mm"
+        },
+        {
+          "name": "skin",
+          "value": 0.14,
+          "minimum": 0.14,
+          "maximum": 0.14,
+          "unit": "mm"
+        },
+        {
+          "name": "lining",
+          "value": 0.12,
+          "minimum": 0.01,
+          "maximum": 2.0,
+          "unit": "mm"
+        },
+        {
+          "name": "turnIn",
+          "value": 12.0,
+          "minimum": 2.0,
+          "maximum": 30.0,
+          "unit": "mm"
+        },
+        {
+          "name": "clearance",
+          "value": 1.8,
+          "minimum": 0.0,
+          "maximum": 20.0,
+          "unit": "mm"
+        },
+        {
+          "name": "volumeGap",
+          "value": 0.8,
+          "minimum": 0.0,
+          "maximum": 20.0,
+          "unit": "mm"
+        },
+        {
+          "name": "layoutGap",
+          "value": 10.0,
+          "minimum": 4.0,
+          "maximum": 100.0,
+          "unit": "mm"
+        },
+        {
+          "name": "volumeOffset0",
+          "value": 1.8,
+          "minimum": 0.0,
+          "maximum": 2000.0,
+          "unit": "mm"
+        }
+      ],
+      "derived": {
+        "margin": "board+turnIn+skin+2",
+        "outerCoreWidth": "innerWidth+2*(lining+skin+board)",
+        "sideHeight": "innerHeight+2*(lining-skin)",
+        "sideDepth": "innerDepth+lining-skin",
+        "baseDepth": "innerDepth+lining+skin+board",
+        "netWidth": "max(max(max(max(max(max(max(max(max(outerCoreWidth,outerCoreWidth),sideDepth),sideDepth),outerCoreWidth),innerWidth),innerWidth),innerDepth),innerDepth),innerWidth)+2*margin",
+        "netHeight": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+3*(innerHeight)+10*(2*margin+layoutGap)"
+      },
+      "size": {
+        "x": "netWidth",
+        "y": "netHeight"
+      },
+      "stockThickness": "board",
+      "panels": [
+        {
+          "id": "base",
+          "name": "Lower board",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "0+0*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+outerCoreWidth",
+              "y": "0+0*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+outerCoreWidth",
+              "y": "0+0*(2*margin+layoutGap)+margin+baseDepth"
+            },
+            {
+              "x": "margin",
+              "y": "0+0*(2*margin+layoutGap)+margin+baseDepth"
+            }
+          ],
+          "features": {
+            "wrap": {
+              "stock": {
+                "name": "Deep teal woven wrapping \u00b7 visual",
+                "thicknessMM": 0.14,
+                "gsm": 180,
+                "grain": "parallelHeight",
+                "verified": false,
+                "notes": "Project-authored visual construction assumption; no measured manufacturing tolerance is implied.",
+                "profile": {
+                  "texture": "linen",
+                  "color": "#263E43",
+                  "roughness": 0.78,
+                  "textureScaleMM": 0.65,
+                  "textureDepthMM": 0.018,
+                  "opacity": 1
+                }
+              },
+              "turnInMM": "min(turnIn,min(outerCoreWidth,baseDepth)/2-0.25)",
+              "cornerRadiusMM": 1.2
+            }
+          }
+        },
+        {
+          "id": "top",
+          "name": "Upper board",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "1*(baseDepth)+1*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+outerCoreWidth",
+              "y": "1*(baseDepth)+1*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+outerCoreWidth",
+              "y": "1*(baseDepth)+1*(2*margin+layoutGap)+margin+baseDepth"
+            },
+            {
+              "x": "margin",
+              "y": "1*(baseDepth)+1*(2*margin+layoutGap)+margin+baseDepth"
+            }
+          ],
+          "features": {
+            "wrap": {
+              "stock": {
+                "name": "Deep teal woven wrapping \u00b7 visual",
+                "thicknessMM": 0.14,
+                "gsm": 180,
+                "grain": "parallelHeight",
+                "verified": false,
+                "notes": "Project-authored visual construction assumption; no measured manufacturing tolerance is implied.",
+                "profile": {
+                  "texture": "linen",
+                  "color": "#263E43",
+                  "roughness": 0.78,
+                  "textureScaleMM": 0.65,
+                  "textureDepthMM": 0.018,
+                  "opacity": 1
+                }
+              },
+              "turnInMM": "min(turnIn,min(outerCoreWidth,baseDepth)/2-0.25)",
+              "cornerRadiusMM": 1.2
+            }
+          }
+        },
+        {
+          "id": "left",
+          "name": "Left board",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+2*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+sideDepth",
+              "y": "2*(baseDepth)+2*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+sideDepth",
+              "y": "2*(baseDepth)+2*(2*margin+layoutGap)+margin+sideHeight"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+2*(2*margin+layoutGap)+margin+sideHeight"
+            }
+          ],
+          "features": {
+            "wrap": {
+              "stock": {
+                "name": "Deep teal woven wrapping \u00b7 visual",
+                "thicknessMM": 0.14,
+                "gsm": 180,
+                "grain": "parallelHeight",
+                "verified": false,
+                "notes": "Project-authored visual construction assumption; no measured manufacturing tolerance is implied.",
+                "profile": {
+                  "texture": "linen",
+                  "color": "#263E43",
+                  "roughness": 0.78,
+                  "textureScaleMM": 0.65,
+                  "textureDepthMM": 0.018,
+                  "opacity": 1
+                }
+              },
+              "turnInMM": "min(turnIn,min(sideDepth,sideHeight)/2-0.25)",
+              "cornerRadiusMM": 1.2
+            }
+          }
+        },
+        {
+          "id": "right",
+          "name": "Right board",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+1*(sideHeight)+3*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+sideDepth",
+              "y": "2*(baseDepth)+1*(sideHeight)+3*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+sideDepth",
+              "y": "2*(baseDepth)+1*(sideHeight)+3*(2*margin+layoutGap)+margin+sideHeight"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+1*(sideHeight)+3*(2*margin+layoutGap)+margin+sideHeight"
+            }
+          ],
+          "features": {
+            "wrap": {
+              "stock": {
+                "name": "Deep teal woven wrapping \u00b7 visual",
+                "thicknessMM": 0.14,
+                "gsm": 180,
+                "grain": "parallelHeight",
+                "verified": false,
+                "notes": "Project-authored visual construction assumption; no measured manufacturing tolerance is implied.",
+                "profile": {
+                  "texture": "linen",
+                  "color": "#263E43",
+                  "roughness": 0.78,
+                  "textureScaleMM": 0.65,
+                  "textureDepthMM": 0.018,
+                  "opacity": 1
+                }
+              },
+              "turnInMM": "min(turnIn,min(sideDepth,sideHeight)/2-0.25)",
+              "cornerRadiusMM": 1.2
+            }
+          }
+        },
+        {
+          "id": "back",
+          "name": "Rear board",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+2*(sideHeight)+4*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+outerCoreWidth",
+              "y": "2*(baseDepth)+2*(sideHeight)+4*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+outerCoreWidth",
+              "y": "2*(baseDepth)+2*(sideHeight)+4*(2*margin+layoutGap)+margin+sideHeight"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+2*(sideHeight)+4*(2*margin+layoutGap)+margin+sideHeight"
+            }
+          ],
+          "features": {
+            "wrap": {
+              "stock": {
+                "name": "Deep teal woven wrapping \u00b7 visual",
+                "thicknessMM": 0.14,
+                "gsm": 180,
+                "grain": "parallelHeight",
+                "verified": false,
+                "notes": "Project-authored visual construction assumption; no measured manufacturing tolerance is implied.",
+                "profile": {
+                  "texture": "linen",
+                  "color": "#263E43",
+                  "roughness": 0.78,
+                  "textureScaleMM": 0.65,
+                  "textureDepthMM": 0.018,
+                  "opacity": 1
+                }
+              },
+              "turnInMM": "min(turnIn,min(outerCoreWidth,sideHeight)/2-0.25)",
+              "cornerRadiusMM": 1.2
+            }
+          }
+        }
+      ],
+      "hinges": [],
+      "joins": [],
+      "rootPanelID": "base",
+      "components": [
+        {
+          "id": "base",
+          "name": "Lower board",
+          "rootPanelID": "base",
+          "anchor": {
+            "x": "margin",
+            "y": "0+0*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "innerDepth/2",
+            "y": "-(lining+skin+board)",
+            "z": "-lining-skin-board/2"
+          },
+          "rotationDegrees": {
+            "x": 180.0,
+            "y": 0.0,
+            "z": 90.0
+          }
+        },
+        {
+          "id": "top",
+          "name": "Upper board",
+          "rootPanelID": "top",
+          "anchor": {
+            "x": "margin",
+            "y": "1*(baseDepth)+1*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "-innerDepth/2-lining-skin-board",
+            "y": "-(lining+skin+board)",
+            "z": "innerHeight+lining+skin+board/2"
+          },
+          "rotationDegrees": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 90.0
+          }
+        },
+        {
+          "id": "left",
+          "name": "Left board",
+          "rootPanelID": "left",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+2*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "-innerDepth/2-lining+skin",
+            "y": "-lining-skin-board/2",
+            "z": "innerHeight+lining-skin"
+          },
+          "rotationDegrees": {
+            "x": 90.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        {
+          "id": "right",
+          "name": "Right board",
+          "rootPanelID": "right",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+1*(sideHeight)+3*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "innerDepth/2",
+            "y": "innerWidth+lining+skin+board/2",
+            "z": "innerHeight+lining-skin"
+          },
+          "rotationDegrees": {
+            "x": 90.0,
+            "y": 0.0,
+            "z": 180.0
+          }
+        },
+        {
+          "id": "back",
+          "name": "Rear board",
+          "rootPanelID": "back",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+2*(sideHeight)+4*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "-innerDepth/2-lining-skin-board/2",
+            "y": "innerWidth+lining+skin+board",
+            "z": "innerHeight+lining-skin"
+          },
+          "rotationDegrees": {
+            "x": 90.00000000000001,
+            "y": 0.0,
+            "z": -90.00000000000001
+          }
+        }
+      ],
+      "interiors": [
+        {
+          "id": "fitted-run",
+          "name": "Declared finished lining cavity",
+          "componentID": "left",
+          "origin": {
+            "x": "lining-skin",
+            "y": "-innerHeight-lining+skin",
+            "z": "-lining-skin-board/2"
+          },
+          "size": {
+            "x": "innerWidth",
+            "y": "innerHeight",
+            "z": "innerDepth"
+          },
+          "rotationDegrees": {
+            "x": 0,
+            "y": 90,
+            "z": 0
+          },
+          "opening": {
+            "axis": "z",
+            "width": "innerWidth",
+            "height": "innerHeight",
+            "origin": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        }
+      ]
+    },
+    "lining_definition": {
+      "version": 3,
+      "name": "INTERVAL / Single volume case / actual paper lining",
+      "parameters": [
+        {
+          "name": "innerWidth",
+          "value": 16.390004000355614,
+          "minimum": 0.01,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "innerHeight",
+          "value": 219.84,
+          "minimum": 0.01,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "innerDepth",
+          "value": 150.99140175975106,
+          "minimum": 0.01,
+          "maximum": 2000.0,
+          "unit": "mm"
+        },
+        {
+          "name": "board",
+          "value": 1.6,
+          "minimum": 0.5,
+          "maximum": 5.0,
+          "unit": "mm"
+        },
+        {
+          "name": "skin",
+          "value": 0.14,
+          "minimum": 0.14,
+          "maximum": 0.14,
+          "unit": "mm"
+        },
+        {
+          "name": "lining",
+          "value": 0.12,
+          "minimum": 0.01,
+          "maximum": 2.0,
+          "unit": "mm"
+        },
+        {
+          "name": "turnIn",
+          "value": 12.0,
+          "minimum": 2.0,
+          "maximum": 30.0,
+          "unit": "mm"
+        },
+        {
+          "name": "clearance",
+          "value": 1.8,
+          "minimum": 0.0,
+          "maximum": 20.0,
+          "unit": "mm"
+        },
+        {
+          "name": "volumeGap",
+          "value": 0.8,
+          "minimum": 0.0,
+          "maximum": 20.0,
+          "unit": "mm"
+        },
+        {
+          "name": "layoutGap",
+          "value": 10.0,
+          "minimum": 4.0,
+          "maximum": 100.0,
+          "unit": "mm"
+        },
+        {
+          "name": "volumeOffset0",
+          "value": 1.8,
+          "minimum": 0.0,
+          "maximum": 2000.0,
+          "unit": "mm"
+        }
+      ],
+      "derived": {
+        "margin": "board+turnIn+skin+2",
+        "outerCoreWidth": "innerWidth+2*(lining+skin+board)",
+        "sideHeight": "innerHeight+2*(lining-skin)",
+        "sideDepth": "innerDepth+lining-skin",
+        "baseDepth": "innerDepth+lining+skin+board",
+        "netWidth": "max(max(max(max(max(max(max(max(max(outerCoreWidth,outerCoreWidth),sideDepth),sideDepth),outerCoreWidth),innerWidth),innerWidth),innerDepth),innerDepth),innerWidth)+2*margin",
+        "netHeight": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+3*(innerHeight)+10*(2*margin+layoutGap)"
+      },
+      "size": {
+        "x": "netWidth",
+        "y": "netHeight"
+      },
+      "stockThickness": "lining",
+      "panels": [
+        {
+          "id": "lining-base",
+          "name": "Lower lining",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+5*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerWidth",
+              "y": "2*(baseDepth)+3*(sideHeight)+5*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerWidth",
+              "y": "2*(baseDepth)+3*(sideHeight)+5*(2*margin+layoutGap)+margin+innerDepth"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+5*(2*margin+layoutGap)+margin+innerDepth"
+            }
+          ]
+        },
+        {
+          "id": "lining-top",
+          "name": "Upper lining",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+1*(innerDepth)+6*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerWidth",
+              "y": "2*(baseDepth)+3*(sideHeight)+1*(innerDepth)+6*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerWidth",
+              "y": "2*(baseDepth)+3*(sideHeight)+1*(innerDepth)+6*(2*margin+layoutGap)+margin+innerDepth"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+1*(innerDepth)+6*(2*margin+layoutGap)+margin+innerDepth"
+            }
+          ]
+        },
+        {
+          "id": "lining-left",
+          "name": "Left lining",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+7*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerDepth",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+7*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerDepth",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+7*(2*margin+layoutGap)+margin+innerHeight"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+7*(2*margin+layoutGap)+margin+innerHeight"
+            }
+          ]
+        },
+        {
+          "id": "lining-right",
+          "name": "Right lining",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+1*(innerHeight)+8*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerDepth",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+1*(innerHeight)+8*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerDepth",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+1*(innerHeight)+8*(2*margin+layoutGap)+margin+innerHeight"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+1*(innerHeight)+8*(2*margin+layoutGap)+margin+innerHeight"
+            }
+          ]
+        },
+        {
+          "id": "lining-back",
+          "name": "Rear lining",
+          "role": "body",
+          "polygon": [
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+2*(innerHeight)+9*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerWidth",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+2*(innerHeight)+9*(2*margin+layoutGap)+margin"
+            },
+            {
+              "x": "margin+innerWidth",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+2*(innerHeight)+9*(2*margin+layoutGap)+margin+innerHeight"
+            },
+            {
+              "x": "margin",
+              "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+2*(innerHeight)+9*(2*margin+layoutGap)+margin+innerHeight"
+            }
+          ]
+        }
+      ],
+      "hinges": [],
+      "joins": [],
+      "rootPanelID": "lining-base",
+      "components": [
+        {
+          "id": "lining-base",
+          "name": "Lower lining",
+          "rootPanelID": "lining-base",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+3*(sideHeight)+5*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "-innerDepth/2",
+            "y": 0,
+            "z": "-lining/2"
+          },
+          "rotationDegrees": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 90.0
+          }
+        },
+        {
+          "id": "lining-top",
+          "name": "Upper lining",
+          "rootPanelID": "lining-top",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+3*(sideHeight)+1*(innerDepth)+6*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "innerDepth/2",
+            "y": 0,
+            "z": "innerHeight+lining/2"
+          },
+          "rotationDegrees": {
+            "x": 180.0,
+            "y": 0.0,
+            "z": 90.0
+          }
+        },
+        {
+          "id": "lining-left",
+          "name": "Left lining",
+          "rootPanelID": "lining-left",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+7*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "innerDepth/2",
+            "y": "-lining/2",
+            "z": "innerHeight"
+          },
+          "rotationDegrees": {
+            "x": 90.0,
+            "y": 0.0,
+            "z": 180.0
+          }
+        },
+        {
+          "id": "lining-right",
+          "name": "Right lining",
+          "rootPanelID": "lining-right",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+1*(innerHeight)+8*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "-innerDepth/2",
+            "y": "innerWidth+lining/2",
+            "z": "innerHeight"
+          },
+          "rotationDegrees": {
+            "x": 90.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        {
+          "id": "lining-back",
+          "name": "Rear lining",
+          "rootPanelID": "lining-back",
+          "anchor": {
+            "x": "margin",
+            "y": "2*(baseDepth)+3*(sideHeight)+2*(innerDepth)+2*(innerHeight)+9*(2*margin+layoutGap)+margin"
+          },
+          "position": {
+            "x": "-innerDepth/2-lining/2",
+            "y": 0,
+            "z": "innerHeight"
+          },
+          "rotationDegrees": {
+            "x": 90.0,
+            "y": 0.0,
+            "z": 90.0
+          }
+        }
+      ]
+    },
+    "dimension_bindings": [
+      {
+        "parameter": "innerWidth",
+        "expression": "t0+2*clearance+0*volumeGap",
+        "inputs": {
+          "t0": {
+            "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+            "measurement": "closedThickness"
+          }
+        }
+      },
+      {
+        "parameter": "innerHeight",
+        "expression": "h0+2*clearance",
+        "inputs": {
+          "h0": {
+            "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+            "measurement": "closedHeight"
+          }
+        }
+      },
+      {
+        "parameter": "innerDepth",
+        "expression": "d0+2*clearance",
+        "inputs": {
+          "d0": {
+            "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+            "measurement": "closedWidth"
+          }
+        }
+      },
+      {
+        "parameter": "volumeOffset0",
+        "expression": "clearance+0*volumeGap",
+        "inputs": {}
+      }
+    ],
+    "artwork_recipe_id": "caseArtworkbc21f4644051481fa31c86c0212e43e3",
+    "artwork_regions": [
+      {
+        "id": "base",
+        "name": "Lower board / cap",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "0+0*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "(innerWidth+2*(lining+skin+board))",
+          "y": "(innerDepth+lining+skin+board)"
+        },
+        "anchors": [
+          {
+            "elementIDs": [
+              "9A2F1967-0F5F-5A36-88F7-494324EB16B9"
+            ],
+            "horizontal": 0,
+            "vertical": 0
+          }
+        ]
+      },
+      {
+        "id": "top",
+        "name": "Upper board / cap",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "1*((innerDepth+lining+skin+board))+1*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "(innerWidth+2*(lining+skin+board))",
+          "y": "(innerDepth+lining+skin+board)"
+        },
+        "anchors": [
+          {
+            "elementIDs": [
+              "641FAD04-4502-5EA7-B0C8-F311D6890ED8"
+            ],
+            "horizontal": 0,
+            "vertical": 0
+          }
+        ]
+      },
+      {
+        "id": "left",
+        "name": "Left board / cap",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+2*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "(innerDepth+lining-skin)",
+          "y": "(innerHeight+2*(lining-skin))"
+        },
+        "anchors": [
+          {
+            "elementIDs": [
+              "205E8086-5A6B-53A0-AE1F-E0615A1A614D"
+            ],
+            "horizontal": 0,
+            "vertical": 0
+          }
+        ]
+      },
+      {
+        "id": "right",
+        "name": "Right board / cap",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+1*((innerHeight+2*(lining-skin)))+3*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "(innerDepth+lining-skin)",
+          "y": "(innerHeight+2*(lining-skin))"
+        },
+        "anchors": [
+          {
+            "elementIDs": [
+              "BD091A4E-3CE2-54EB-A73B-4F38E921E868"
+            ],
+            "horizontal": 0,
+            "vertical": 0
+          }
+        ]
+      },
+      {
+        "id": "back",
+        "name": "Rear board / cap",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+2*((innerHeight+2*(lining-skin)))+4*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "(innerWidth+2*(lining+skin+board))",
+          "y": "(innerHeight+2*(lining-skin))"
+        },
+        "anchors": [
+          {
+            "elementIDs": [
+              "2E0CB792-A058-55C2-8D57-185707FE2DC9"
+            ],
+            "horizontal": 0,
+            "vertical": 0
+          }
+        ]
+      },
+      {
+        "id": "lining-base",
+        "name": "Lower lining",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+3*((innerHeight+2*(lining-skin)))+5*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "innerWidth",
+          "y": "innerDepth"
+        }
+      },
+      {
+        "id": "lining-top",
+        "name": "Upper lining",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+3*((innerHeight+2*(lining-skin)))+1*(innerDepth)+6*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "innerWidth",
+          "y": "innerDepth"
+        }
+      },
+      {
+        "id": "lining-left",
+        "name": "Left lining",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+3*((innerHeight+2*(lining-skin)))+2*(innerDepth)+7*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "innerDepth",
+          "y": "innerHeight"
+        }
+      },
+      {
+        "id": "lining-right",
+        "name": "Right lining",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+3*((innerHeight+2*(lining-skin)))+2*(innerDepth)+1*(innerHeight)+8*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "innerDepth",
+          "y": "innerHeight"
+        }
+      },
+      {
+        "id": "lining-back",
+        "name": "Rear lining",
+        "origin": {
+          "x": "(board+turnIn+skin+2)",
+          "y": "2*((innerDepth+lining+skin+board))+3*((innerHeight+2*(lining-skin)))+2*(innerDepth)+2*(innerHeight)+9*(2*(board+turnIn+skin+2)+layoutGap)+(board+turnIn+skin+2)"
+        },
+        "size": {
+          "x": "innerWidth",
+          "y": "innerHeight"
+        }
+      }
+    ],
+    "parameters": {
+      "board": 1.6,
+      "clearance": 1.8,
+      "fold": 100,
+      "innerDepth": 150.99140175975106,
+      "innerHeight": 219.84,
+      "innerWidth": 16.390004000355614,
+      "layoutGap": 10,
+      "lining": 0.12,
+      "opening": 0,
+      "skin": 0.14,
+      "turnIn": 12,
+      "volumeGap": 0.8,
+      "volumeOffset0": 1.8
+    },
+    "interiors": [
+      {
+        "componentID": "left",
+        "id": "fitted-run",
+        "name": "Declared finished lining cavity",
+        "opening": {
+          "axis": "z",
+          "heightMM": 219.84,
+          "originMM": {
+            "x": 0,
+            "y": 0
+          },
+          "widthMM": 16.390004000355614
+        },
+        "origin": {
+          "x": -74.56570087987554,
+          "y": 1.8599999999999999,
+          "z": -109.92000000000004
+        },
+        "sizeMM": {
+          "x": 16.390004000355614,
+          "y": 219.84,
+          "z": 150.99140175975106
+        },
+        "uAxis": {
+          "x": 6.123233995736766e-17,
+          "y": 1,
+          "z": -6.123233995736766e-17
+        },
+        "vAxis": {
+          "x": 0,
+          "y": 6.123233995736766e-17,
+          "z": 1
+        },
+        "wAxis": {
+          "x": 1,
+          "y": -6.123233995736766e-17,
+          "z": 3.749399456654644e-33
+        }
+      }
+    ],
+    "interiorAxes": {
+      "stack": [
+        0,
+        1,
+        0
+      ],
+      "height": [
+        0,
+        0,
+        1
+      ],
+      "depth": [
+        1,
+        0,
+        0
+      ],
+      "open_side": "+X"
+    },
+    "volume_placements": [
+      {
+        "source_object_id": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "offset_parameter": "volumeOffset0",
+        "case_cavity_offset_mm": 1.8,
+        "position_mm": [
+          70.35429912012447,
+          6.495000000000013,
+          -0.0
+        ],
+        "rotation_degrees": 180,
+        "sheet_pose": {
+          "openingDegrees": 0,
+          "activeSpread": 0,
+          "bendMM": 0
+        },
+        "source_closed_bounds": {
+          "minimum_mm": [
+            -4.271401759751068,
+            -2.695000000000013,
+            -108.12
+          ],
+          "maximum_mm": [
+            143.12,
+            10.0950040003556,
+            108.12
+          ]
+        }
+      }
+    ],
+    "plan_sha256": "647e4324b5a27453af7d7821e69bda24fdadabbc019de156eeca89f3fcd9ddc7",
+    "manufacturing_verified": false,
+    "evidence_status": "Authored source only; caller must render/review fit, joints, wrap and foil in the ordinary app."
+  }
+}

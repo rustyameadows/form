@@ -27,7 +27,8 @@ public struct PaperPanel:Codable,Equatable,Identifiable,Sendable {
   public var id:String,name:String,role:Role,polygon:[Point2],parentID:String?,foldID:String?
   public var artworkRotationDegrees:Double?
   public var cutouts:[PaperPanelCutout]?
-  public init(id:String,name:String,role:Role,polygon:[Point2],parentID:String?=nil,foldID:String?=nil,artworkRotationDegrees:Double?=nil,cutouts:[PaperPanelCutout]?=nil){self.id=id;self.name=name;self.role=role;self.polygon=polygon;self.parentID=parentID;self.foldID=foldID;self.artworkRotationDegrees=artworkRotationDegrees;self.cutouts=cutouts}
+  public var features:SheetPanelFeatures?
+  public init(id:String,name:String,role:Role,polygon:[Point2],parentID:String?=nil,foldID:String?=nil,artworkRotationDegrees:Double?=nil,cutouts:[PaperPanelCutout]?=nil,features:SheetPanelFeatures?=nil){self.id=id;self.name=name;self.role=role;self.polygon=polygon;self.parentID=parentID;self.foldID=foldID;self.artworkRotationDegrees=artworkRotationDegrees;self.cutouts=cutouts;self.features=features}
   public var bounds:PaperBounds{let xs=polygon.map(\.x),ys=polygon.map(\.y),x=xs.min() ?? 0,y=ys.min() ?? 0;return .init(x:x,y:y,width:(xs.max() ?? x)-x,height:(ys.max() ?? y)-y)}
 }
 public struct PaperFold:Codable,Equatable,Identifiable,Sendable {

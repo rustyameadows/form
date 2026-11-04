@@ -1,6 +1,6 @@
 import Foundation
 
-public enum SheetBindingStyle:String,Codable,CaseIterable,Sendable {case none,saddleStitch,sideStaple}
+public enum SheetBindingStyle:String,Codable,CaseIterable,Sendable {case none,saddleStitch,sideStaple,adhesive,sewn}
 public enum SheetParentPrintIntent:String,Codable,CaseIterable,Sendable {case color,blackOnly}
 
 /// Physical fasteners and the free margin's viewing flex, independent of artwork.
@@ -15,14 +15,16 @@ public struct SheetBindingDefinition:Codable,Equatable,Sendable {
   public var wireDiameterMM:Double
   public var clinchLengthMM:Double
   public var flexWidthMM:Double
+  public var adhesiveMM:Double?
+  public var sewingSwellMM:Double?
   public init(style:SheetBindingStyle = .none,count:Int=2,positionsMM:[Double]?=nil,
     endMarginMM:Double=45,edgeInsetMM:Double=7,crownLengthMM:Double=12,
-    wireDiameterMM:Double=0.45,clinchLengthMM:Double=2,flexWidthMM:Double=8) {
+    wireDiameterMM:Double=0.45,clinchLengthMM:Double=2,flexWidthMM:Double=8,adhesiveMM:Double?=nil,sewingSwellMM:Double?=nil) {
     self.style=style;self.count=count;self.positionsMM=positionsMM;self.endMarginMM=endMarginMM
     self.edgeInsetMM=edgeInsetMM;self.crownLengthMM=crownLengthMM;self.wireDiameterMM=wireDiameterMM
-    self.clinchLengthMM=clinchLengthMM;self.flexWidthMM=flexWidthMM
+    self.clinchLengthMM=clinchLengthMM;self.flexWidthMM=flexWidthMM;self.adhesiveMM=adhesiveMM;self.sewingSwellMM=sewingSwellMM
   }
-  private enum CodingKeys:String,CodingKey {case style,count,positionsMM,endMarginMM,edgeInsetMM,crownLengthMM,wireDiameterMM,clinchLengthMM,flexWidthMM}
+  private enum CodingKeys:String,CodingKey {case style,count,positionsMM,endMarginMM,edgeInsetMM,crownLengthMM,wireDiameterMM,clinchLengthMM,flexWidthMM,adhesiveMM,sewingSwellMM}
   public init(from decoder:Decoder)throws {
     let c=try decoder.container(keyedBy:CodingKeys.self)
     self.init(style:try c.decodeIfPresent(SheetBindingStyle.self,forKey:.style) ?? .none,
@@ -33,9 +35,15 @@ public struct SheetBindingDefinition:Codable,Equatable,Sendable {
       crownLengthMM:try c.decodeIfPresent(Double.self,forKey:.crownLengthMM) ?? 12,
       wireDiameterMM:try c.decodeIfPresent(Double.self,forKey:.wireDiameterMM) ?? 0.45,
       clinchLengthMM:try c.decodeIfPresent(Double.self,forKey:.clinchLengthMM) ?? 2,
-      flexWidthMM:try c.decodeIfPresent(Double.self,forKey:.flexWidthMM) ?? 8)
+      flexWidthMM:try c.decodeIfPresent(Double.self,forKey:.flexWidthMM) ?? 8,
+      adhesiveMM:try c.decodeIfPresent(Double.self,forKey:.adhesiveMM),sewingSwellMM:try c.decodeIfPresent(Double.self,forKey:.sewingSwellMM))
   }
+  public func validateAllowances()throws {
+    guard [adhesiveMM,sewingSwellMM].compactMap({$0}).allSatisfy({$0.isFinite && (0...20).contains($0)}) else {throw FormError.invalid("Binding allowances must be finite editable values from 0 to 20 mm; paper calipers remain separate.")}
+  }
+  public var allowanceMM:Double {(adhesiveMM ?? 0)+(sewingSwellMM ?? 0)}
   public func resolvedPositions(heightMM:Double)throws->[Double] {
+    try validateAllowances()
     guard (1...8).contains(count),heightMM.isFinite,heightMM>0,
       [endMarginMM,edgeInsetMM,crownLengthMM,wireDiameterMM,clinchLengthMM,flexWidthMM].allSatisfy(\.isFinite),
       (0...5000).contains(endMarginMM),(0.5...40).contains(edgeInsetMM),
@@ -113,30 +121,35 @@ extension Project {
       }
     }
     guard Set(assignments.keys)==Set(pages.keys) else{throw FormError.invalid("Declared parent sheets must cover every canonical publication page exactly once.")}
-    do {
-      var slots:[UUID?]=document.layout?.firstPageSide == .verso ? [nil]:[]
-      slots+=document.pages.map{Optional($0.id)}
-      while slots.count%4 != 0 {slots.append(nil)}
-      guard parents.count==slots.count/4 else{throw FormError.invalid("Folded parent-sheet count must match the complete nested page run.")}
-      for (index,parent) in parents.enumerated() {
-        guard parent.frontPageIDs==[slots[slots.count-1-index*2],slots[index*2]],
-          parent.backPageIDs==[slots[index*2+1],slots[slots.count-2-index*2]] else {
-          throw FormError.invalid("Folded parent sheets must follow the actual nested front/reverse page order, including declared blank slots.")
+    let groups=try sheetParentGroups(definition)
+    var slots:[UUID?]=document.layout?.firstPageSide == .verso ? [nil]:[]
+    slots+=document.pages.map{Optional($0.id)}
+    while slots.count%4 != 0 {slots.append(nil)}
+    guard parents.count==slots.count/4 else{throw FormError.invalid("Folded parent-sheet count must match the complete gathered page run.")}
+    var offset=0
+    for group in groups {
+      let end=offset+group.count*4
+      for (index,parent) in group.enumerated() {
+        guard parent.frontPageIDs==[slots[end-1-index*2],slots[offset+index*2]],
+          parent.backPageIDs==[slots[offset+index*2+1],slots[end-2-index*2]] else {
+          throw FormError.invalid("Each gathered signature must follow its own nested front/reverse page order, including declared blank slots.")
         }
       }
+      offset=end
     }
     return assignments
   }
-  func parentLeafDeclarations(_ definition:SheetAssemblyDefinition,document:PublicationDocument)->[(leaf:SheetAssemblyLeaf,parent:SheetAssemblyParentSheet)] {
-    let parents=definition.parentSheets ?? []
-    func leaf(_ parent:SheetAssemblyParentSheet,front:UUID?,back:UUID?)->(SheetAssemblyLeaf,SheetAssemblyParentSheet) {
+  func parentLeafDeclarations(_ definition:SheetAssemblyDefinition,document:PublicationDocument)throws->[(leaf:SheetAssemblyLeaf,parent:SheetAssemblyParentSheet,reversed:Bool)] {
+    func leaf(_ parent:SheetAssemblyParentSheet,front:UUID?,back:UUID?,reversed:Bool)->(SheetAssemblyLeaf,SheetAssemblyParentSheet,Bool) {
       let identity:UUID
       if let page=front ?? back {identity=ComponentCommands.derivedID(document.id,page)}
       else {identity=ComponentCommands.derivedID(parent.id,UUID(uuidString:"E57412D3-7D2F-4F34-A766-8118151941BD")!)}
-      return(.init(id:identity,frontPageID:front,backPageID:back),parent)
+      return(.init(id:identity,frontPageID:front,backPageID:back),parent,reversed)
     }
-    return parents.map{leaf($0,front:$0.frontPageIDs[1],back:$0.backPageIDs[0])}
-      + parents.reversed().map{leaf($0,front:$0.backPageIDs[1],back:$0.frontPageIDs[0])}
+    return try sheetParentGroups(definition).flatMap {parents in
+      parents.map{leaf($0,front:$0.frontPageIDs[1],back:$0.backPageIDs[0],reversed:false)}
+        + parents.reversed().map{leaf($0,front:$0.backPageIDs[1],back:$0.frontPageIDs[0],reversed:true)}
+    }
   }
   public func parentSheet(forPageObjectID objectID:UUID,in assembly:ProductObject)throws->SheetAssemblyParentSheet? {
     guard let definition=assembly.sheetAssembly,let document=publications?.first(where:{$0.id==definition.publicationID}),
@@ -150,7 +163,7 @@ extension SheetAssemblyCommands {
   /// Reimpose implicit physical parents in the same transaction as a reading-order
   /// edit. Parent identity, stock and printing intent belong to physical sheets;
   /// nullable slots express actual padding without adding logical source pages.
-  public static func reconcileParentSheets(in project:inout Project,publicationID:UUID)throws {
+  public static func reconcileParentSheets(in project:inout Project,publicationID:UUID,validateSourceCrops:Bool=true)throws {
     guard let document=project.publications?.first(where:{$0.id==publicationID}) else {
       throw FormError.invalid("Choose an existing publication before reconciling its physical sheets.")
     }
@@ -160,6 +173,7 @@ extension SheetAssemblyCommands {
         definition.publicationID==publicationID,definition.leaves==nil,
         let existing=definition.parentSheets,!existing.isEmpty else{continue}
       guard !document.pages.isEmpty else{throw FormError.invalid("A physical sheet assembly needs a nonempty publication.")}
+      let orderedExisting=try candidate.sheetParentGroups(definition).flatMap{$0}
       var slots:[UUID?]=document.layout?.firstPageSide == .verso ? [nil]:[]
       slots+=document.pages.map{Optional($0.id)}
       while slots.count%4 != 0{slots.append(nil)}
@@ -168,7 +182,7 @@ extension SheetAssemblyCommands {
         let front=[slots[slots.count-1-ordinal*2],slots[ordinal*2]]
         let back=[slots[ordinal*2+1],slots[slots.count-2-ordinal*2]]
         let parent:SheetAssemblyParentSheet
-        if existing.indices.contains(ordinal) {parent=existing[ordinal]}
+        if orderedExisting.indices.contains(ordinal) {parent=orderedExisting[ordinal]}
         else {
           guard let pageID=(front+back).compactMap({$0}).first,
             let page=document.pages.first(where:{$0.id==pageID}),
@@ -178,17 +192,53 @@ extension SheetAssemblyCommands {
           parent = .init(frontPageIDs:front,backPageIDs:back,stock:definition.stock,
             sizeMM:.init(source.artworkSize.x*2,source.artworkSize.y),printIntent:.color)
         }
-        var updated=parent;updated.frontPageIDs=front;updated.backPageIDs=back;parents.append(updated)
+        parents.append(parent)
+      }
+      if var signatures=definition.signatures {
+        let retained=Set(parents.map(\.id))
+        signatures=signatures.compactMap {signature in
+          var value=signature;value.parentSheetIDs=value.parentSheetIDs.filter{retained.contains($0)}
+          return value.parentSheetIDs.isEmpty ? nil:value
+        }
+        let assigned=Set(signatures.flatMap(\.parentSheetIDs)),added=parents.map(\.id).filter{!assigned.contains($0)}
+        if signatures.isEmpty {signatures=[.init(parentSheetIDs:added)]}
+        else {signatures[signatures.count-1].parentSheetIDs+=added}
+        definition.signatures=signatures
       }
       definition.parentSheets=parents
-      definition.activeSpread=min(definition.activeSpread,parents.count*2)
+      let groups=try candidate.sheetParentGroups(definition)
+      var offset=0
+      for group in groups {
+        let end=offset+group.count*4
+        for (ordinal,parent) in group.enumerated() {
+          let index=parents.firstIndex{$0.id==parent.id}!
+          parents[index].frontPageIDs=[slots[end-1-ordinal*2],slots[offset+ordinal*2]]
+          parents[index].backPageIDs=[slots[offset+ordinal*2+1],slots[end-2-ordinal*2]]
+        }
+        offset=end
+      }
+      definition.parentSheets=parents
+      definition.activeSpread=min(definition.activeSpread,parents.count*2+(definition.auxiliaryLeaves?.count ?? 0))
       candidate.objects[index].sheetAssembly=definition
     }
     // A generic multi-publication delete reconciles each updated run in turn.
     // Other publications may be temporarily between their list and parent edit.
     for object in candidate.objects where object.sheetAssembly?.publicationID==publicationID {
-      _ = try candidate.resolvedSheetAssembly(object)
+      _ = try candidate.resolvedSheetAssembly(object,validateSourceCrops:validateSourceCrops)
     }
     project=candidate
+  }
+}
+
+extension SheetBindingDefinition {
+  /// The shared physical margin used by both material deformation and dependent
+  /// dimensions. Narrow leaves retain the established 45% free-tail allowance.
+  public func effectiveFlexWidthMM(minimumLeafWidthMM:Double)throws->Double {
+    guard style == .adhesive || style == .sewn || style == .sideStaple else{return 0}
+    guard flexWidthMM.isFinite,flexWidthMM>0,minimumLeafWidthMM.isFinite,minimumLeafWidthMM>0 else {
+      throw FormError.invalid("A physical binding flex needs finite positive material width and a positive leaf extent.")
+    }
+    if style == .sideStaple {return flexWidthMM}
+    return min(minimumLeafWidthMM*0.45,max(0.01,flexWidthMM))
   }
 }

@@ -212,6 +212,8 @@ public struct ProductObject: Codable, Equatable, Identifiable, Sendable {
   public var relationship: String
   public var artwork: Artwork?
   public var artworkParameterBindings:[ArtworkParameterBinding]?
+  public var dimensionBindings:[PhysicalDimensionBinding]?
+  public var artworkRegions:[PhysicalArtworkRegion]?
   public var artworkSourceID: UUID?
   public var artworkFit: String?
   public var componentDefinition: Bool?
@@ -421,7 +423,7 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
-  public static let maximumSchemaVersion=64
+  public static let maximumSchemaVersion=65
   public var schemaVersion = 1
   public var id: UUID = UUID()
   public var name: String
@@ -448,98 +450,46 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
-    if textStories?.contains(where:{$0.annotations?.isEmpty==false})==true {return max(schemaVersion,64)}
-    if objects.contains(where:{$0.sheetAssembly != nil}) || publications?.contains(where:{$0.requiresExtendedPublicationSchema}) == true {return max(schemaVersion,63)}
-    if recipes.contains(where: { $0.solid != nil }) { return max(schemaVersion, 62) }
-    if storedArtworks.contains(where: { $0.elements.contains(where: { $0.objectView != nil }) }) { return max(schemaVersion, 61) }
-    if storedArtworks.contains(where: { $0.elements.contains(where: { $0.imageGeneration != nil }) }) { return max(schemaVersion, 60) }
-    if fontLibrary != nil {return max(schemaVersion,59)}
-    if (textStories ?? []).contains(where:{$0.paintStack != nil || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) || storedArtworks.contains(where:{$0.elements.contains(where:{$0.sourceMetadata != nil || $0.paintStack != nil || $0.effectStack != nil || $0.clipMode != nil || ["angular","diamond"].contains($0.gradient?.kind ?? "") || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) || $0.imports?.contains(where:{$0.elementIDs != nil || $0.format != nil}) == true}) {return max(schemaVersion,58)}
-    if objects.contains(where:{$0.paperTemplateReference != nil}) {return max(schemaVersion,57)}
-    if objects.contains(where:{$0.canvasSourceOnly != nil}) {return max(schemaVersion,57)}
-    if materials.contains(where:{$0.paperStock != nil}) {return max(schemaVersion,57)}
-    if objects.contains(where:{($0.paperConstruction?.authored?.version ?? 1)>=3 || $0.paperConstruction?.authored?.components != nil || $0.paperConstruction?.authored?.interiors != nil || $0.paperConstruction?.authored?.panels.contains(where:{$0.cutouts != nil}) == true}) {return max(schemaVersion,57)}
-    if objects.contains(where:{$0.paperConstruction?.stock.profile != nil || $0.paperConstruction?.stock.plies != nil || $0.paperConstruction?.finishes != nil}) {return max(schemaVersion,57)}
-    if objects.contains(where:{$0.artworkParameterBindings != nil}) {return max(schemaVersion,56)}
-    if objects.contains(where:{$0.physicalArtworkIntents != nil}) {return max(schemaVersion,56)}
-    if recipes.contains(where:{$0.requirements?.isEmpty == false}) || objects.contains(where:{$0.cadModel?.version ?? 1 > 1}) {return max(schemaVersion,55)}
-    if objects.contains(where:{$0.paperConstruction?.authored != nil || $0.canvasProjectionPositions != nil || $0.surfaceArtworkBindings != nil}) {return max(schemaVersion,55)}
-    if studioPresentation?.scenes?.isEmpty == false {return max(schemaVersion,54)}
-    if objects.contains(where:PaperConstruction.isPaper){return max(schemaVersion,53)}
-    if objects.contains(where:{$0.meshAsset != nil || $0.cadModel != nil || $0.cadRepresentation != nil}) {return max(schemaVersion,52)}
-    if objects.contains(where:{$0.librarySelection != nil || StarterTextiles.recipeIDs.contains($0.recipeID)}) {return max(schemaVersion,51)}
-    if objects.contains(where:{$0.recipeID=="deskClock"}) {return max(schemaVersion,50)}
-    if objects.contains(where:{$0.artwork?.safeInset != nil}) {return max(schemaVersion,49)}
-    if requiresCharacterPositionSchema {return max(schemaVersion,47)}
-    if collectionProduction.map({!$0.plans.isEmpty || !$0.captures.isEmpty}) == true {return max(schemaVersion,45)}
-    if studioPresentation?.shots.isEmpty == false {return max(schemaVersion,43)}
-    if requiresOpticalSizingSchema {return max(schemaVersion,42)}
-    if garmentBlocks?.isEmpty == false || objects.contains(where: { $0.artwork?.elements.contains(where: { $0.sewingPiece?.hasConstructionMetadata == true }) == true }) { return max(schemaVersion, 41) }
-    if objects.contains(where: { $0.artwork?.sewingTiles != nil }) { return max(schemaVersion, 40) }
-    if decorationPreparations?.isEmpty==false {return max(schemaVersion,38)}
-    if objects.contains(where:{$0.patternAssembly != nil || $0.patternAssemblyAttachment != nil || $0.cloth?.preparation != nil}) {return max(schemaVersion,36)}
-    if swatches?.contains(where:{$0.printInk != nil})==true {return max(schemaVersion,35)}
-    if objects.contains(where:{MerchandiseBlanks.recipeIDs.contains($0.recipeID) || $0.textile?.process == .directPrint || $0.textile?.attachment.map{[TextileAttachment.Zone.front,.leftSide,.rightSide].contains($0.zone)} == true}) {return max(schemaVersion,34)}
-    if objects.contains(where:{object in (object.artwork?.elements ?? []).contains(where:{e in
-      guard let piece=e.sewingPiece else{return false}
-      return SewingPatterns.needsGeneralGeometry(e) || piece.onFoldEdgeID != nil || piece.notches.contains(where:{$0.edgeID != nil})
-    }) || object.artwork?.sewingSeams?.contains(where:{$0.first.edgeID != nil || $0.second.edgeID != nil}) == true }) {return max(schemaVersion,32)}
-
-    if objects.contains(where:{$0.cloth != nil || $0.clothAttachment != nil}) {return max(schemaVersion,31)}
-    if objects.contains(where: { $0.artwork?.outputColorProfile != nil }) { return max(schemaVersion, 30) }
-    if productionJobs?.isEmpty==false || objects.contains(where:{$0.textile?.embroidery?.threads.contains(where:{$0.stock != nil})==true}) {return max(schemaVersion,29)}
-    if objects.contains(where:{$0.textile?.embroidery?.requiresSchemaTwentyEight == true}) {return max(schemaVersion,28)}
-    if objects.contains(where: { $0.artwork?.sewingLayout != nil }) { return max(schemaVersion, 27) }
-    if textStories?.isEmpty==false || publications?.isEmpty==false || objects.contains(where:{$0.artwork?.requiresSchemaTwentySix==true}) || textStyles?.contains(where:{$0.typography.alignToBaselineGrid != nil})==true {return max(schemaVersion,26)}
-    if objects.contains(where:{$0.textile?.embroidery != nil}) {return max(schemaVersion,25)}
-    if objects.contains(where: { $0.artwork?.elements.contains { $0.sewingPiece != nil } == true || $0.artwork?.sewingSeams?.isEmpty == false }) { return max(schemaVersion, 24) }
-    if objects.contains(where:{$0.artwork?.elements.contains{$0.listItems?.isEmpty == false} == true}) {return max(schemaVersion,23)}
-    return max(
-      schemaVersion,
-      objects.contains { $0.artwork?.requiresSchemaTwentyTwo == true }
-        ? 22
-        : materials.contains { $0.fabric?.pattern != nil }
-        ? 21
-        : objects.contains { $0.artwork?.requiresSchemaTwenty == true }
-        || textStyles?.contains { $0.typography.usesPublicationLanguage } == true
-        ? 20
-        : objects.contains { $0.isCanvasWorkspace }
-        ? 19
-        : objects.contains { $0.artwork?.requiresSchemaEighteen == true }
-        ? 18
-        : objects.contains { $0.textile != nil || TextileDesign.recipeIDs.contains($0.recipeID) } || materials.contains { $0.fabric != nil }
-        ? 17
-        : camera.orientation != nil
-        ? 16
-        : objects.contains { $0.artwork?.requiresSchemaFifteen == true }
-        ? 15
-        : textStyles?.contains { $0.typography.usesCustomTabs || $0.typography.hyphenation > 0 } == true
-        || objects.contains { $0.artwork?.requiresSchemaFourteen == true }
-        ? 14
-        : textStyles?.contains { $0.typography.kerningMode != nil } == true
-        || objects.contains { $0.artwork?.requiresSchemaThirteen == true }
-        ? 13
-        : textStyles?.isEmpty == false || objects.contains { $0.artwork?.referencedTextStyles.isEmpty == false }
-        ? 12
-        : objects.contains { $0.artwork?.requiresSchemaEleven == true }
-        ? 11
-        : objects.contains { $0.artwork?.requiresSchemaTen == true }
-        ? 10
-        : objects.contains { $0.artwork?.requiresSchemaNine == true }
-        ? 9
-        : objects.contains { $0.artwork?.requiresSchemaEight == true }
-        ? 8
-        : swatches?.isEmpty == false || objects.contains { $0.artwork?.referencedSwatches.isEmpty == false }
-        ? 7
-        : objects.contains { $0.componentDefinition == true || $0.artwork?.elements.contains { $0.component != nil } == true }
-        ? 6
-        : objects.contains { $0.artwork?.requiresSchemaFive == true }
-        ? 5
-        : objects.contains { $0.artwork?.requiresSchemaFour == true }
-          ? 4
-          : objects.contains {
-            $0.artworkSourceID != nil || $0.recipeID == "clock" || $0.artwork?.boundary != nil
-          } ? 3 : objects.contains { $0.artwork?.usesExtendedFormat == true } ? 2 : 1)
+    // The schema is monotonic. No supported feature can raise this floor.
+    if schemaVersion>=Self.maximumSchemaVersion {return schemaVersion}
+    var required=max(schemaVersion,requiredResourceSchemaVersion)
+    if required>=Self.maximumSchemaVersion {return required}
+    // ProductObject is a wide value. Read each row once rather than copying
+    // every row again for each historical schema predicate.
+    for object in objects {
+      required=max(required,object.requiredObjectSchemaVersion)
+      if required>=Self.maximumSchemaVersion {return required}
+    }
+    return required
+  }
+  private var requiredResourceSchemaVersion:Int {
+    if studioPresentation?.scenes?.contains(where:{$0.instances.contains(where:{$0.sheetPose?.bindingStyle == .adhesive || $0.sheetPose?.bindingStyle == .sewn})}) == true {return 65}
+    if textStories?.contains(where:{$0.annotations?.isEmpty==false})==true {return 64}
+    if publications?.contains(where:{$0.requiresExtendedPublicationSchema}) == true {return 63}
+    if recipes.contains(where:{$0.solid != nil}) {return 62}
+    if fontLibrary != nil {return 59}
+    if textStories?.contains(where:{$0.paintStack != nil || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) == true {return 58}
+    if materials.contains(where:{$0.paperStock != nil}) {return 57}
+    if recipes.contains(where:{$0.requirements?.isEmpty == false}) {return 55}
+    if studioPresentation?.scenes?.isEmpty == false {return 54}
+    if textStyles?.contains(where:{$0.typography.characterPosition != nil})==true || textStories?.contains(where:{$0.typography?.characterPosition != nil || $0.textRuns?.contains(where:{$0.typography.characterPosition != nil})==true})==true {return 47}
+    if collectionProduction.map({!$0.plans.isEmpty || !$0.captures.isEmpty}) == true {return 45}
+    if studioPresentation?.shots.isEmpty == false {return 43}
+    if textStyles?.contains(where:{$0.typography.opticalSizing != nil})==true || textStories?.contains(where:{$0.typography?.opticalSizing != nil || $0.textRuns?.contains(where:{$0.typography.opticalSizing != nil})==true})==true {return 42}
+    if garmentBlocks?.isEmpty == false {return 41}
+    if decorationPreparations?.isEmpty==false {return 38}
+    if swatches?.contains(where:{$0.printInk != nil})==true {return 35}
+    if productionJobs?.isEmpty==false {return 29}
+    if textStories?.isEmpty==false || publications?.isEmpty==false || textStyles?.contains(where:{$0.typography.alignToBaselineGrid != nil})==true {return 26}
+    if materials.contains(where:{$0.fabric?.pattern != nil}) {return 21}
+    if textStyles?.contains(where:{$0.typography.usesPublicationLanguage})==true {return 20}
+    if materials.contains(where:{$0.fabric != nil}) {return 17}
+    if camera.orientation != nil {return 16}
+    if textStyles?.contains(where:{$0.typography.usesCustomTabs || $0.typography.hyphenation>0})==true {return 14}
+    if textStyles?.contains(where:{$0.typography.kerningMode != nil})==true {return 13}
+    if textStyles?.isEmpty == false {return 12}
+    if swatches?.isEmpty == false {return 7}
+    return 1
   }
   public init(name: String, subtitle: String = "A new place to make things.") {
     self.name = name
@@ -569,6 +519,76 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
     if ClothDesign.recipeIDs.contains(recipeID) {object.cloth = try ClothDesign.definition(for:object)}
     if recipeID=="textilePrint" {object.artwork=MerchandiseBlanks.blankArtwork(width:object["width"],height:object["depth"])}
     return object
+  }
+}
+
+/// Each object's schema contribution retains the historical nil/empty and
+/// canonical-versus-detached artwork distinctions. This is only feature
+/// classification; document validation still runs through the editing engine.
+extension ProductObject {
+  fileprivate var requiredObjectSchemaVersion:Int {
+    let paper=paperConstruction
+    if dimensionBindings != nil || artworkRegions != nil || sheetAssembly?.requiresAdvancedStructureSchema == true || paper?.authored?.panels.contains(where:{$0.features != nil}) == true {return 65}
+    if sheetAssembly != nil {return 63}
+    // Only these high-version predicates historically include inside artwork,
+    // detached surface artwork and frozen story snapshots.
+    if artwork != nil || paper?.insideArtwork != nil || surfaceArtworkBindings?.isEmpty == false {
+      let documents=storedArtworks
+      if documents.contains(where:{$0.elements.contains(where:{$0.objectView != nil})}) {return 61}
+      if documents.contains(where:{$0.elements.contains(where:{$0.imageGeneration != nil})}) {return 60}
+      if documents.contains(where:{$0.elements.contains(where:{$0.sourceMetadata != nil || $0.paintStack != nil || $0.effectStack != nil || $0.clipMode != nil || ["angular","diamond"].contains($0.gradient?.kind ?? "") || $0.textRuns?.contains(where:{$0.paintStack != nil}) == true}) || $0.imports?.contains(where:{$0.elementIDs != nil || $0.format != nil}) == true}) {return 58}
+    }
+    if paperTemplateReference != nil || canvasSourceOnly != nil {return 57}
+    if (paper?.authored?.version ?? 1)>=3 || paper?.authored?.components != nil || paper?.authored?.interiors != nil || paper?.authored?.panels.contains(where:{$0.cutouts != nil}) == true {return 57}
+    if paper?.stock.profile != nil || paper?.stock.plies != nil || paper?.finishes != nil {return 57}
+    if artworkParameterBindings != nil || physicalArtworkIntents != nil {return 56}
+    if cadModel?.version ?? 1 > 1 {return 55}
+    if paper?.authored != nil || canvasProjectionPositions != nil || surfaceArtworkBindings != nil {return 55}
+    if PaperConstruction.isPaper(self) {return 53}
+    if meshAsset != nil || cadModel != nil || cadRepresentation != nil {return 52}
+    if librarySelection != nil || StarterTextiles.recipeIDs.contains(recipeID) {return 51}
+    if recipeID=="deskClock" {return 50}
+    let art=artwork
+    if art?.safeInset != nil {return 49}
+    if art?.requiresCharacterPositionSchema==true {return 47}
+    if art?.requiresSchemaFortyTwo==true {return 42}
+    if art?.elements.contains(where:{$0.sewingPiece?.hasConstructionMetadata == true}) == true {return 41}
+    if art?.sewingTiles != nil {return 40}
+    if patternAssembly != nil || patternAssemblyAttachment != nil || cloth?.preparation != nil {return 36}
+    if MerchandiseBlanks.recipeIDs.contains(recipeID) || textile?.process == .directPrint || textile?.attachment.map({[TextileAttachment.Zone.front,.leftSide,.rightSide].contains($0.zone)}) == true {return 34}
+    if art?.elements.contains(where:{element in
+      guard let piece=element.sewingPiece else{return false}
+      return SewingPatterns.needsGeneralGeometry(element) || piece.onFoldEdgeID != nil || piece.notches.contains(where:{$0.edgeID != nil})
+    }) == true || art?.sewingSeams?.contains(where:{$0.first.edgeID != nil || $0.second.edgeID != nil}) == true {return 32}
+    if cloth != nil || clothAttachment != nil {return 31}
+    if art?.outputColorProfile != nil {return 30}
+    if textile?.embroidery?.threads.contains(where:{$0.stock != nil})==true {return 29}
+    if textile?.embroidery?.requiresSchemaTwentyEight == true {return 28}
+    if art?.sewingLayout != nil {return 27}
+    if art?.requiresSchemaTwentySix==true {return 26}
+    if textile?.embroidery != nil {return 25}
+    if art?.elements.contains(where:{$0.sewingPiece != nil}) == true || art?.sewingSeams?.isEmpty == false {return 24}
+    if art?.elements.contains(where:{$0.listItems?.isEmpty == false}) == true {return 23}
+    if art?.requiresSchemaTwentyTwo == true {return 22}
+    if art?.requiresSchemaTwenty == true {return 20}
+    if isCanvasWorkspace {return 19}
+    if art?.requiresSchemaEighteen == true {return 18}
+    if textile != nil || TextileDesign.recipeIDs.contains(recipeID) {return 17}
+    if art?.requiresSchemaFifteen == true {return 15}
+    if art?.requiresSchemaFourteen == true {return 14}
+    if art?.requiresSchemaThirteen == true {return 13}
+    if art?.referencedTextStyles.isEmpty == false {return 12}
+    if art?.requiresSchemaEleven == true {return 11}
+    if art?.requiresSchemaTen == true {return 10}
+    if art?.requiresSchemaNine == true {return 9}
+    if art?.requiresSchemaEight == true {return 8}
+    if art?.referencedSwatches.isEmpty == false {return 7}
+    if componentDefinition == true || art?.elements.contains(where:{$0.component != nil}) == true {return 6}
+    if art?.requiresSchemaFive == true {return 5}
+    if art?.requiresSchemaFour == true {return 4}
+    if artworkSourceID != nil || recipeID=="clock" || art?.boundary != nil {return 3}
+    if art?.usesExtendedFormat == true {return 2}
+    return 1
   }
 }
 

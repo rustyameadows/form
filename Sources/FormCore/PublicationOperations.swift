@@ -5,6 +5,12 @@ extension OperationEngine {
   func publicationCall(_ name:String,_ arguments:[String:Any],source:String) throws -> Any {
     guard let current=project else{throw FormError.missing("Open a project first.")}
     let command=arguments["command"] as? String ?? "list"
+    if let raw=arguments["canvas_source_only"] {
+      guard name=="form_publication",command=="create_pages",let value=raw as? NSNumber,
+        CFGetTypeID(value)==CFBooleanGetTypeID() else {
+        throw FormError.invalid("canvas_source_only is a Boolean option for form_publication create_pages only.")
+      }
+    }
     if name=="form_publication",command=="sheet_assembly_inspect" {
       guard Set(arguments.keys).isSubset(of:["command","object_id","offset","limit"]),
         let raw=arguments["object_id"] as? String,let id=UUID(uuidString:raw),
@@ -148,8 +154,16 @@ extension OperationEngine {
         case "create_pages":
           let id=try uuid("publication_id")
           let ids=try PublicationCommands.addPages(in:&p,publicationID:id,count:integer("count"),width:scalar("width",default:160),height:scalar("height",default:210),
-            storyID:arguments["story_id"] == nil ? nil:uuid("story_id"),columns:integer("columns",default:1),gutter:scalar("gutter",default:8),at:arguments["index"] == nil ? nil:integer("index"))
+            storyID:arguments["story_id"] == nil ? nil:uuid("story_id"),columns:integer("columns",default:1),gutter:scalar("gutter",default:8),at:arguments["index"] == nil ? nil:integer("index"),canvasSourceOnly:arguments["canvas_source_only"] as? Bool ?? false)
           result=["publication_id":id.uuidString,"page_ids":ids.map(\.uuidString)]
+        case "resize_pages":
+          guard Set(arguments.keys).isSubset(of:["command","publication_id","width","height"]),
+            arguments["width"] != nil,arguments["height"] != nil else {
+            throw FormError.invalid("resize_pages needs publication_id, width and height for the whole document, without individual page selectors.")
+          }
+          let id=try uuid("publication_id"),width=try scalar("width",default:0),height=try scalar("height",default:0)
+          try PublicationCommands.resizePages(in:&p,publicationID:id,width:width,height:height)
+          result=["publication_id":id.uuidString,"page_ids":p.publications!.first{$0.id==id}!.pages.map{$0.objectID.uuidString},"width":width,"height":height]
         case "insert":
           guard let raw=arguments["page_ids"] as? [String] else{throw FormError.invalid("Provide ordered page_ids.")}
           _ = try parseUUIDs(raw)
@@ -185,7 +199,8 @@ extension OperationEngine {
             else if let values=value as? [String:Any] {position=try JSONDecoder.form.decode(Vector3.self,from:JSONSerialization.data(withJSONObject:values))}
             else{throw FormError.invalid("Position needs three finite millimeter coordinates.")}
           }else{position = .init()}
-          let id=try SheetAssemblyCommands.create(in:&p,definition:definition,name:arguments["name"] as? String ?? "Sheet assembly",position:position)
+          if let value=arguments["recipe_id"],!(value is String) {throw FormError.invalid("Choose a project-owned control recipe ID.")}
+          let id=try SheetAssemblyCommands.create(in:&p,definition:definition,name:arguments["name"] as? String ?? "Sheet assembly",position:position,recipeID:arguments["recipe_id"] as? String)
           result=["object_id":id.uuidString,"definition":try jsonObject(definition)]
         case "sheet_assembly_configure":
           let id=try uuid("object_id")
@@ -208,7 +223,7 @@ extension OperationEngine {
           p.publications?.removeAll{$0.id==id}
           for i in p.textStories?.indices ?? 0..<0 where p.textStories![i].publicationID==id {p.textStories![i].publicationID=nil}
           result=["deleted":true]
-        default:throw FormError.invalid("Publication commands: list/get/spreads/create/settings/reorder/add_page/create_pages/insert/remove/duplicate/page_settings/sheet_assembly_create/sheet_assembly_configure/sheet_assembly_inspect/delete/preflight.")
+        default:throw FormError.invalid("Publication commands: list/get/spreads/create/settings/reorder/add_page/create_pages/resize_pages/insert/remove/duplicate/page_settings/sheet_assembly_create/sheet_assembly_configure/sheet_assembly_inspect/delete/preflight.")
         }
       }
     }

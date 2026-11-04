@@ -22,18 +22,26 @@ private func withAddress<T>(
     }
   }
 }
-private func readMessage(_ fd: Int32) throws -> Data {
+// Internal so framing can be verified against real socket pairs independently
+// of JSON decoding. Both client and server use this one bounded reader.
+func readMessage(_ fd: Int32) throws -> Data {
   var result = Data()
   var buffer = [UInt8](repeating: 0, count: 16384)
-  while result.count <= maximumMessageBytes {
+  while true {
     let count = Darwin.read(fd, &buffer, buffer.count)
     if count == 0 { break }
     if count < 0 {
       if errno == EINTR { continue }
       throw FormError.invalid("Local bridge read failed.")
     }
-    result.append(contentsOf: buffer.prefix(count))
-    if let end = result.firstIndex(of: 10) { return result.prefix(upTo: end) }
+    // Previous chunks have already been searched. Rescanning the growing
+    // message makes multi-megabyte project snapshots quadratic to receive.
+    let end=buffer[..<count].firstIndex(of:10),length=end ?? count
+    guard length<=maximumMessageBytes-result.count else {
+      throw FormError.invalid("Empty or oversized bridge message.")
+    }
+    result.append(contentsOf:buffer.prefix(length))
+    if end != nil {return result}
   }
   guard !result.isEmpty, result.count <= maximumMessageBytes else {
     throw FormError.invalid("Empty or oversized bridge message.")
@@ -63,7 +71,10 @@ public enum LocalBridgeClient {
     // Multipage composition may finish after the ordinary editing window.
     // Keep the client connected until the bounded PDF/preflight result returns.
     if name=="form_export_publication" {return 600}
-    if name=="form_publication",arguments["command"] as? String=="preflight" {return 180}
+    if name=="form_publication",let command=arguments["command"] as? String,["preflight","create_pages"].contains(command) {return 180}
+    // Opening a large saved document also prepares its initial native views.
+    // A completed open must not look like a failed edit to the MCP caller.
+    if name=="form_open_project",let id=arguments["project_id"] as? String,UUID(uuidString:id) != nil {return 180}
     guard name=="form_export" else{return 30}
     if arguments["format"] as? String=="mp4",arguments["scene_id"] as? String != nil{return 600}
     if arguments["format"] as? String=="png" {return 180}

@@ -1,4 +1,5 @@
 import Foundation
+import FormCADModel
 
 public enum PaperRecipes {
   private static func parameters(_ source:PaperConstruction)->[Parameter]{[
@@ -29,15 +30,62 @@ extension Project {
         try recipe.validate(object.parameters)
       }
       _ = try source.net()
+      try validatePaperPanelFeatures(object,source:source)
       if object.artworkSourceID != nil,object.artworkFit != "actual"{throw FormError.invalid("Paper construction artwork must remain registered at actual size.")}
       if let id=source.insideArtworkSourceID{guard id != object.id,let inside=objects.first(where:{$0.id==id}),isIndependentFlatArtworkSource(inside),!inside.isCanvasWorkspace,inside.artworkSourceID==nil,inside.artwork != nil else{throw FormError.invalid("Paper inside artwork must reference an independent artwork sheet. Detach it before removing its source.")}}
     }
   }
 }
 extension PaperConstructionEngine {
+  /// Compare actual cut geometry and physical print registration, excluding
+  /// stock appearance/metadata. Material color or texture does not move ink;
+  /// caliper, turn-ins, insets and source crops can change its required extent.
+  private static func artworkRegistrationPanels(_ source:PaperConstruction,net:PaperNet)throws->[PaperPanel] {
+    let variables=try (source.authored?.resolvedValues() ?? [:]).merging(["fold":100,"opening":0]){_,new in new}
+    func number(_ value:CADScalar)throws->CADScalar {.init(try CADExpression.evaluate(value.expression,variables:variables))}
+    func point(_ value:CADExpressionPoint2)throws->CADExpressionPoint2 {.init(try number(value.x),try number(value.y))}
+    func material(_ stock:PaperStock,thickness:CADScalar?=nil)throws->PaperStock {
+      .init(thicknessMM:try thickness.map{try CADExpression.evaluate($0.expression,variables:variables)} ?? stock.resolvedThicknessMM)
+    }
+    return try net.panels.map{panel in
+      var panel=panel;panel.name=""
+      var features=panel.features ?? .init()
+      features.outline=nil;features.cutouts=nil // Already resolved in the net.
+      features.stockThickness=try features.stockThickness.map(number) ?? .init(source.stock.resolvedThicknessMM)
+      if var wrap=features.wrap {
+        wrap.stock=try material(wrap.stock,thickness:wrap.stockThickness);wrap.stockThickness=nil
+        wrap.turnInMM=try number(wrap.turnInMM);wrap.cornerRadiusMM=try number(wrap.cornerRadiusMM);features.wrap=wrap
+      }
+      if var flex=features.flex {
+        flex.widthMM=try number(flex.widthMM);flex.angleDegrees=try number(flex.angleDegrees)
+        if var curve=flex.curve {curve.points=try curve.points.map(point);flex.curve=curve}
+        features.flex=flex
+      }
+      if features.recesses != nil {
+        for index in features.recesses!.indices {
+          var recess=features.recesses![index]
+          recess.origin=try point(recess.origin);recess.size=try point(recess.size)
+          recess.depthMM=try number(recess.depthMM);recess.cornerRadiusMM=try number(recess.cornerRadiusMM)
+          if var insert=recess.insert {
+            insert.stock=try material(insert.stock)
+            if let origin=insert.face?.sourceOriginMM {insert.face!.sourceOriginMM=try point(origin)}
+            recess.insert=insert
+          }
+          features.recesses![index]=recess
+        }
+      }
+      panel.features=features;return panel
+    }
+  }
   public static func synchronized(_ object:ProductObject,previous:ProductObject?)throws->ProductObject {
     var object=object,source=try definition(for:object)
-    if let previous,PaperConstruction.isPaper(previous){let old=try definition(for:previous);if try old.net().panels != source.net().panels,object.artwork != nil || object.artworkSourceID != nil || source.insideArtwork != nil || source.insideArtworkSourceID != nil{source.artworkReviewRequired=true;if source.artworkReferenceSize==nil{source.artworkReferenceSize=try old.net().size}}}
+    if let previous,PaperConstruction.isPaper(previous),object.artwork != nil || object.artworkSourceID != nil || source.insideArtwork != nil || source.insideArtworkSourceID != nil {
+      let old=try definition(for:previous),oldNet=try old.net(),net=try source.net()
+      if try oldNet.size != net.size || artworkRegistrationPanels(old,net:oldNet) != artworkRegistrationPanels(source,net:net) {
+        source.artworkReviewRequired=true
+        if source.artworkReferenceSize==nil{source.artworkReferenceSize=oldNet.size}
+      }
+    }
     object.paperConstruction=source;return object
   }
 }

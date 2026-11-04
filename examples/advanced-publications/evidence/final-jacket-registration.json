@@ -1,0 +1,25 @@
+{
+  "object_id": "D08116E7-D7EA-4552-8D12-9954A32A3461",
+  "position_mm": [
+    69.75429912012447,
+    -2.9949999999999997,
+    0.0
+  ],
+  "normalization_compensation_mm": [
+    69.75429912012447,
+    -2.9949999999999997,
+    0.0
+  ],
+  "desired_component_anchor_mm": [
+    -5.271401759751058,
+    -2.9949999999999997,
+    108.62
+  ],
+  "inspected_component_anchor_mm": [
+    -75.02570087987553,
+    0,
+    108.62
+  ],
+  "inspection_revision": "05141e59119d88ce7286018bac6645648b73f8e02e5c28079c2861fb7c24babc",
+  "note": "Exact compensation of the native generic closed-bounds normalization; refresh from inspection after changing bound trim/calipers. No canonical artwork or physical dimensions change."
+}

@@ -432,6 +432,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var lastFitDiagnostics: [String: Any]?
   private let sewingGuides = CanvasSewingGuideCache()
   private let physicalArtworkGuides = CanvasPhysicalArtworkGuideCache()
+  private let physicalSourceStocks = CanvasPhysicalSourceStockCache()
   private let preparedArtwork = CanvasPreparedArtworkCache()
   private let overviewArtwork = CanvasOverviewRasterCache()
   private var lastDrawnFrames = 0, lastDrawnElements = 0, lastCulledElements = 0
@@ -1042,6 +1043,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         let paperNet = f.projection?.panelID == nil
           ? f.paperNet ?? paper.flatMap { try? $0.net() } : nil
         let sewing = sewingGuides.overlay(frameID: f.id, source: f.artwork)
+        let stockRegions=physicalSourceStocks.regions(for:f,store:session.store)
         let face = paper.flatMap { paper in session.store?.project.map {
           PaperGeometry.faceAppearance(for:f.surfaceObject,stock:paper.stock,project:$0,inside:f.projection?.inside == true)
         } }
@@ -1071,6 +1073,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
             target.setFillColor(FormColor.color(face.resolvedColor).withAlphaComponent(face.profile.opacity).cgColor)
             target.fill(CGRect(origin:.zero,size:f.rect.size))
           }
+          CanvasPhysicalSourceStockCache.draw(stockRegions,in:target)
           // Overview pixels retain their own compact backing; do not evict
           // close-up prepared vector trees while visiting hundreds of frames.
           let renderer = preparingOverview
@@ -1086,7 +1089,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           }
         }
         let presentation = CanvasOverviewRasterCache.Presentation(size: f.rect.size, projection: f.projection,
-          paperNet: paperNet, paperColor: face?.resolvedColor, paperOpacity: face?.profile.opacity)
+          paperNet: paperNet, paperColor: face?.resolvedColor, paperOpacity: face?.profile.opacity,sourceStockRegions:stockRegions)
         let lookupStart = CFAbsoluteTimeGetCurrent()
         let image = unbounded ? nil : overviewArtwork.image(frameID: f.id, source: f.artwork,
           assets: assets, excluding: excluded, presentation: presentation, zoom: drawingZoom,
@@ -1100,6 +1103,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           drawArtwork(in: context, preparingOverview: false)
         }
         lastFrameContentMS += (CFAbsoluteTimeGetCurrent()-contentStart)*1000
+        drawConstructionRegions(f,context:context,scale:scale)
         if let guideReport {
           drawPhysicalArtworkGuides(f,report:guideReport,context:context,scale:scale,active:f.id==activeID)
         }

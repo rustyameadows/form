@@ -24,24 +24,46 @@ import simd
     var frontSamplingWeight:Double,backSamplingWeight:Double
     var bendMM:Double,stackOffsetMM:Double
     var sideFlex:SheetSideFlexProfile?
+    var parentName:String? = nil
+    var polygon:[Point2]? = nil,cutouts:[PaperPanelCutout] = []
+    var localPosition:SIMD3<Double> = .zero,localRotation:SIMD3<Double> = .zero
+    var panelFlex:ResolvedSheetPanelFlex? = nil
+    var frontMapping:Affine2? = nil
+    var leafFlexAngle:Double? = nil,leafFlexWidth:Double=0,leafFlexRise:Double=0
+    var reverseArtwork:Bool=false
   }
   private static func parts(_ source:ResolvedSheetAssembly)throws->[Part] {
     try source.leaves.map { leaf in
+      let pasted=leaf.attachment?.planeID != nil && leaf.attachment?.widthMM==0
       let flex:SheetSideFlexProfile?
-      if let binding=source.binding?.definition,binding.style == .sideStaple,source.openingDegrees != 0 {
+      if !pasted,let binding=source.binding?.definition,binding.style == .sideStaple,source.openingDegrees != 0 {
         flex=try SheetSideFlexProfile(binding:binding,leaf:leaf,stackThicknessMM:source.stackThicknessMM,
           openingDegrees:source.openingDegrees,bendMM:source.bendMM)
       }else{flex=nil}
+      let bonded=source.binding?.definition.style == .adhesive || source.binding?.definition.style == .sewn
+      let hinge=source.openingDegrees != 0 && !pasted && (bonded || leaf.attachment != nil)
+      let width=min(leaf.size.x*0.45,max(0.01,leaf.attachment?.widthMM ?? (bonded ? source.bindingFlexWidth:source.binding?.definition.flexWidthMM ?? 8)))
       return Part(key:"leaf:"+leaf.id.uuidString,name:leafName(leaf.id),size:leaf.size,stock:leaf.stock,
         front:leaf.front,back:leaf.back,finishes:leaf.finishes,frontVisible:leaf.frontVisible,
         backVisible:leaf.backVisible,frontSamplingWeight:leaf.frontSamplingWeight,backSamplingWeight:leaf.backSamplingWeight,
-        bendMM:source.openingDegrees==0 ? 0:(leaf.turned ? -source.bendMM:source.bendMM),
-        stackOffsetMM:leaf.stackOffsetMM,sideFlex:flex)
-    } + source.enclosure.map { plane in
-      Part(key:"enclosure:"+plane.id,name:planeName(plane.id),size:plane.size,stock:plane.stock,
-        front:plane.front,back:plane.back,finishes:plane.finishes,frontVisible:true,backVisible:true,
-        frontSamplingWeight:1,backSamplingWeight:1,bendMM:0,stackOffsetMM:0,sideFlex:nil)
+        bendMM:source.openingDegrees==0 || hinge || pasted ? 0:(leaf.turned ? -source.bendMM:source.bendMM),
+        stackOffsetMM:leaf.stackOffsetMM,sideFlex:flex,
+        leafFlexAngle:hinge ? (leaf.turned ? source.openingDegrees:0):nil,leafFlexWidth:width,
+        leafFlexRise:hinge ? (leaf.turned ? -source.bendMM:source.bendMM):0)
+    } + source.enclosure.flatMap { plane in
+      try SheetPanelLayerGeometry.layers(plane).map { layer in
+        Part(key:plane.features == nil ? "enclosure:"+plane.id:"enclosure:"+plane.id+":"+layer.id,name:plane.features == nil ? planeName(plane.id):planeName(plane.id)+":"+layer.id,
+          size:layer.size,stock:layer.stock,front:layer.front,back:layer.back,finishes:layer.finishes,
+          frontVisible:true,backVisible:true,frontSamplingWeight:layer.front == nil || layer.reverseArtwork ? 0.02:1,
+          backSamplingWeight:layer.back == nil && !layer.reverseArtwork ? 0.02:1,bendMM:0,stackOffsetMM:0,sideFlex:nil,
+          parentName:plane.features == nil ? nil:planeName(plane.id),polygon:layer.polygon,cutouts:layer.cutouts,
+          localPosition:layer.position,localRotation:layer.rotation,panelFlex:plane.features?.flex,frontMapping:layer.frontMapping,reverseArtwork:layer.reverseArtwork)
+      }
     }
+  }
+  private static func sourcePanelSize(_ part:Part,source:ResolvedSheetAssembly)->Point2 {
+    guard let parent=part.parentName,let plane=source.enclosure.first(where:{planeName($0.id)==parent}) else{return part.size}
+    return plane.size
   }
   /// Source identities exclude continuous pose but include logical visibility,
   /// physical dimensions/crops, stock, finishes, fonts and each story only once.
@@ -49,7 +71,7 @@ import simd
     guard var definition=object.sheetAssembly,let resolved=try? project.resolvedSheetAssembly(object) else{return nil}
     guard let resolvedParts=try? parts(resolved) else{return nil}
     let closed=definition.openingDegrees==0
-    if definition.binding?.style != .sideStaple {definition.openingDegrees=0}
+    if definition.binding?.style != .sideStaple && definition.binding?.style != .adhesive && definition.binding?.style != .sewn && definition.auxiliaryLeaves?.contains(where:{$0.attachment != nil}) != true {definition.openingDegrees=0}
     var data=(try? JSONEncoder.form.encode(definition)) ?? Data()
     var stories=[UUID:ResolvedTextStory]()
     struct Shape:Encodable {var key:String,size:Point2,stock:PaperStock,front:ResolvedSheetAssemblyFace?,back:ResolvedSheetAssemblyFace?,frontVisible:Bool,backVisible:Bool}
@@ -57,6 +79,7 @@ import simd
       data.append((try? JSONEncoder.form.encode(Shape(key:part.key,size:part.size,stock:part.stock,
         front:part.front,back:part.back,frontVisible:part.frontVisible,backVisible:part.backVisible))) ?? Data())
     }
+    data.append((try? JSONEncoder.form.encode(resolved.enclosure.map(\.features))) ?? Data())
     for id in resolved.sourceObjectIDs.sorted(by:{$0.uuidString<$1.uuidString}) {
       guard let source=project.objects.first(where:{$0.id==id}) else{continue}
       data.append(Data(id.uuidString.utf8))
@@ -72,7 +95,7 @@ import simd
   }
   static func surfaces(root:MeshNode,object:ProductObject,project:Project)throws->[Surface] {
     let resolved=try project.resolvedSheetAssembly(object)
-    return try parts(resolved).flatMap { part -> [Surface] in
+    let faces=try parts(resolved).flatMap { part -> [Surface] in
       guard let wrapper=root.childNode(withName:part.name,recursively:true),
         let node=wrapper.childNode(withName:PaperGeometry.panelPrefix+"face",recursively:true) else{return []}
       return [false,true].map { inside in
@@ -80,6 +103,10 @@ import simd
           visible:inside ? part.backVisible:part.frontVisible,opacity:part.stock.sheetFaceOpacity(inside:inside),
           samplingWeight:inside ? part.backSamplingWeight:part.frontSamplingWeight)
       }
+    }
+    return faces + SheetEdgeArtworkGeometry.sources(resolved).compactMap { source in
+      guard let node=root.childNode(withName:SheetEdgeArtworkGeometry.displayPrefix+source.edge,recursively:true) else{return nil}
+      return Surface(key:source.key,node:node,size:source.size,inside:false,visible:true,opacity:1,samplingWeight:1)
     }
   }
   static func make(_ object:ProductObject,project:Project,assets:URL,limit:Int,
@@ -89,19 +116,28 @@ import simd
     let editingEdge=min(2048,max(128,limit))
     let edge=sampling?.raster.maximumEdge ?? editingEdge
     let total=sampling?.raster.maximumPixels ?? min(SourceTextureSampling.maximumPixels,editingEdge*editingEdge)
-    let keys=Set(all.flatMap{[surfaceKey($0.key,inside:false),surfaceKey($0.key,inside:true)]})
+    let edgeSources=SheetEdgeArtworkGeometry.sources(resolved)
+    let keys=Set(all.flatMap{[surfaceKey($0.key,inside:false),surfaceKey($0.key,inside:true)]}+edgeSources.map(\.key))
     let explicit=sampling?.surfaces.filter{keys.contains($0.key)} ?? [:]
     let used=explicit.values.reduce(0){$0+$1.maximumPixels}
     guard total>0,total<=SourceTextureSampling.maximumPixels,used<=total else {
       throw FormError.invalid("Sheet material sources exceed the shared capture allocation.")
     }
-    let targets=all.flatMap { part in [false,true].compactMap { inside -> SourceTextureSamplingTarget? in
+    var targets=all.flatMap { part in [false,true].compactMap { inside -> SourceTextureSamplingTarget? in
       let key=surfaceKey(part.key,inside:inside)
       guard explicit[key]==nil else{return nil}
       return SourceTextureSamplingTarget(id:key,sourceWidth:part.size.x,sourceHeight:part.size.y,
         projectedEdgePixels:Double(edge),visibleWeight:part.size.x*part.size.y*(inside ? part.backSamplingWeight:part.frontSamplingWeight))
     }}
+    targets += edgeSources.filter{explicit[$0.key]==nil}.map{.init(id:$0.key,sourceWidth:$0.size.x,sourceHeight:$0.size.y,
+      projectedEdgePixels:Double(edge),visibleWeight:$0.size.x*$0.size.y)}
     let fallback:[String:SourceTextureRasterPlan]=try targets.isEmpty ? [:]:SourceTextureSampling.allocate(targets,maximumEdge:edge,pixelBudget:total-used)
+    var edgeMaterials=[String:MeshMaterial](),bodyDepths=[UUID:Double](),bodyDepth=0.0
+    for leaf in resolved.leaves where leaf.auxiliaryID==nil {bodyDepths[leaf.id]=bodyDepth;bodyDepth+=leaf.stock.resolvedThicknessMM}
+    for source in edgeSources {
+      let plan=explicit[source.key] ?? fallback[source.key] ?? .init(maximumEdge:8,maximumPixels:64)
+      edgeMaterials[source.edge]=try SheetEdgeArtworkGeometry.material(source,project:project,assets:assets,plan:plan)
+    }
     for part in all {
       let frontKey=surfaceKey(part.key,inside:false),backKey=surfaceKey(part.key,inside:true)
       let front=sampling?.surfaces[frontKey] ?? fallback[frontKey] ?? .init(maximumEdge:8,maximumPixels:64)
@@ -110,34 +146,63 @@ import simd
         maximumPixels:min(SourceTextureSampling.maximumPixels,front.maximumPixels+back.maximumPixels)),
         surfaces:[SourceTextureSamplingPlan.paperFace("face",inside:false):front,
           SourceTextureSamplingPlan.paperFace("face",inside:true):back],isFinalCapture:sampling?.isFinalCapture ?? false)
-      let outside=part.frontVisible ? prepared(part.front,size:part.size,inside:false,project:project):nil
-      let inside=part.backVisible ? prepared(part.back,size:part.size,inside:true,project:project):nil
+      var outside=part.frontVisible ? prepared(part.front,size:part.size,inside:false,project:project):nil
+      if let mapping=part.frontMapping,let artwork=outside {outside=transformed(artwork,by:mapping)}
+      var inside=part.backVisible ? prepared(part.back,size:part.size,inside:true,project:project):nil
+      if part.reverseArtwork {swap(&outside,&inside)}
       let sourceID=part.front?.sourceObjectID ?? stableID(part.key)
       var virtual=ProductObject(name:part.name,recipeID:object.recipeID,parameters:[:],materialID:object.materialID)
       virtual.id=sourceID;virtual.color=object.color
       virtual.artwork=outside ?? Artwork(background:"#FFFFFF",elements:[])
       if outside==nil{virtual.artwork?.backgroundOpacity=0}
+      let polygon=part.polygon ?? SheetPanelLayerGeometry.rectangle(part.size)
       let shape=PlanarConstructionDefinition(name:"Linked sheet face",size:.init(CADScalar(part.size.x),CADScalar(part.size.y)),
         stockThickness:CADScalar(part.stock.resolvedThicknessMM),
-        panels:[.init(id:"face",name:"Physical sheet",polygon:[.init(0,0),.init(CADScalar(part.size.x),0),
-          .init(CADScalar(part.size.x),CADScalar(part.size.y)),.init(0,CADScalar(part.size.y))])],rootPanelID:"face")
+        panels:[.init(id:"face",name:"Physical sheet",polygon:polygon.map{.init(CADScalar($0.x),CADScalar($0.y))},
+          cutouts:part.cutouts.map{.init(id:$0.id,polygon:$0.polygon.map{.init(CADScalar($0.x),CADScalar($0.y))},kind:$0.kind)})],rootPanelID:"face")
       var paper=PaperConstruction(kind:.authored,dimensions:.init(width:part.size.x,height:part.size.y,depth:part.stock.resolvedThicknessMM),
         stock:part.stock,foldPercent:0,insideArtwork:inside)
       paper.authored=shape
-      paper.finishes=finishAssignments(part,project:project)
+      paper.finishes=finishAssignments(part,project:project).map { original in
+        var finish=original;if part.reverseArtwork {finish.side=finish.side == .outside ? .inside:.outside};return finish
+      }
       virtual.paperConstruction=paper
       let wrapper=try PaperGeometry.make(virtual,project:project,assets:assets,limit:min(2048,max(128,limit)),sampling:plan,artworkSources:.init(outside:outside,inside:inside))
       wrapper.name=part.name
       if let node=wrapper.childNode(withName:PaperGeometry.panelPrefix+"face",recursively:true) {
         node.transform = .init()
-        if let profile=part.sideFlex,let mesh=node.geometry {
-          node.geometry=try sideFlexed(mesh,profile:profile,final:sampling?.isFinalCapture == true)
-        }else if part.bendMM != 0,let mesh=node.geometry {
-          node.geometry=try bent(mesh,widthMM:part.size.x,riseMM:part.bendMM,
-            normalOffsetMM:part.stackOffsetMM,segments:sampling?.isFinalCapture == true ? 64:32)
+        func deformed(_ mesh:MeshGeometry)throws->MeshGeometry {
+          if let angle=part.leafFlexAngle {return try SheetPanelFlexGeometry.make(mesh,size:part.size,edge:"left",widthMM:part.leafFlexWidth,
+            angleDegrees:angle,final:sampling?.isFinalCapture == true,tailRiseMM:part.leafFlexRise)}
+          if let profile=part.sideFlex {return try sideFlexed(mesh,profile:profile,final:sampling?.isFinalCapture == true)}
+          if part.bendMM != 0 {return try bent(mesh,widthMM:part.size.x,riseMM:part.bendMM,
+            normalOffsetMM:part.stackOffsetMM,segments:sampling?.isFinalCapture == true ? 64:32)}
+          return mesh
+        }
+        if let mesh=node.geometry {
+          if part.key.hasPrefix("leaf:"),let id=UUID(uuidString:String(part.key.dropFirst(5))),let depth=bodyDepths[id] {
+            for source in edgeSources {
+              guard let material=edgeMaterials[source.edge],let registered=try SheetEdgeArtworkGeometry.register(mesh,size:part.size,
+                thickness:part.stock.resolvedThicknessMM,depthOffset:depth,totalDepth:resolved.textBlockThickness,edge:source.edge,material:material) else{continue}
+              let template=MeshNode(geometry:try deformed(registered));template.name=SheetEdgeArtworkGeometry.templatePrefix+source.edge
+              template.isHidden=true;wrapper.addChildNode(template)
+            }
+          }
+          node.geometry=try deformed(mesh)
         }
       }
-      root.addChildNode(wrapper)
+      wrapper.position = .init(part.localPosition/100)
+      wrapper.eulerAngles = .init(part.localRotation)
+      if let flex=part.panelFlex,let node=wrapper.childNode(withName:PaperGeometry.panelPrefix+"face",recursively:true),let mesh=node.geometry {
+        let posed=SheetPanelMeshTransform.apply(mesh,matrix:wrapper.transform.raw)
+        node.geometry=try SheetPanelFlexGeometry.make(posed,size:sourcePanelSize(part,source:resolved),edge:flex.edge.rawValue,
+          widthMM:flex.widthMM,angleDegrees:flex.angleDegrees,final:sampling?.isFinalCapture == true,curve:flex.curve)
+        wrapper.transform = .init()
+      }
+      if let parentName=part.parentName {
+        let parent=root.childNode(withName:parentName,recursively:false) ?? {let node=MeshNode();node.name=parentName;root.addChildNode(node);return node}()
+        parent.addChildNode(wrapper)
+      }else{root.addChildNode(wrapper)}
     }
     try updatePose(root,object:object,project:project)
     return root
@@ -148,6 +213,18 @@ import simd
     for leaf in source.leaves {
       guard let wrapper=root.childNode(withName:leafName(leaf.id),recursively:true) else{continue}
       let theta=leaf.turned ? angle:0,offset=leaf.stackOffsetMM
+      if let attachment=leaf.attachment,let planeID=attachment.planeID,attachment.widthMM==0,
+        let plane=source.enclosure.first(where:{$0.id==planeID}),let parent=root.childNode(withName:planeName(planeID),recursively:true) {
+        parent.addChildNode(wrapper);wrapper.eulerAngles = .init()
+        let turnIn=plane.features?.wrap?.stock.resolvedThicknessMM ?? 0
+        wrapper.position = .init((plane.size.x-leaf.size.x)/200,-(plane.size.y-leaf.size.y)/200,
+          -(plane.stock.resolvedThicknessMM/2+turnIn+leaf.stock.resolvedThicknessMM/2)/100)
+        continue
+      }
+      if source.openingDegrees != 0 && (source.binding?.definition.style == .adhesive || source.binding?.definition.style == .sewn || leaf.attachment != nil) {
+        wrapper.eulerAngles = .init(-.pi/2,0,0)
+        wrapper.position = .init(-offset*sin(theta)/100,((leaf.turned ? base:0)+offset*cos(theta))/100,-leaf.size.y/200);continue
+      }
       if source.binding?.definition.style == .sideStaple,source.openingDegrees != 0 {
         wrapper.eulerAngles = .init(-.pi/2,0,0)
         wrapper.position = .init(0,0,-leaf.size.y/200)
@@ -159,12 +236,13 @@ import simd
         ((leaf.turned ? base:0)+(bent ? 0:offset*cos(theta)))/100,-leaf.size.y/200)
     }
     root.childNode(withName:SheetBindingGeometry.name,recursively:false)?.removeFromParentNode()
-    if let binding=try SheetBindingGeometry.make(source) {root.addChildNode(binding)}
+    if let binding=try SheetBindingGeometry.make(source,leafRoot:root) {root.addChildNode(binding)}
     for plane in source.enclosure {
       guard let node=root.childNode(withName:planeName(plane.id),recursively:true) else{continue}
       node.eulerAngles = .init(plane.rotationDegrees.x * .pi/180,plane.rotationDegrees.y * .pi/180,plane.rotationDegrees.z * .pi/180)
       node.position = .init(plane.positionMM.x/100,plane.positionMM.y/100,plane.positionMM.z/100)
     }
+    SheetEdgeArtworkGeometry.updatePose(root)
   }
   static func prepared(_ face:ResolvedSheetAssemblyFace?,size:Point2,inside:Bool,project:Project)->Artwork? {
     guard let face,let owner=project.objects.first(where:{$0.id==face.sourceObjectID}),
@@ -182,6 +260,16 @@ import simd
       artwork.boundary=boundary
     }
     return artwork
+  }
+  static func transformed(_ original:Artwork,by transform:Affine2)->Artwork {
+    var artwork=original
+    for index in artwork.elements.indices where artwork.elements[index].parentID==nil {
+      artwork.elements[index].affine=transform.followed(by:artwork.elements[index].affine ?? .init())
+    }
+    if var boundary=artwork.boundary {
+      for index in boundary.contours.indices {boundary.contours[index].nodes=boundary.contours[index].nodes.map{PathCommands.transformed($0,by:transform)}}
+      artwork.boundary=boundary
+    };return artwork
   }
   private static func finishAssignments(_ part:Part,project:Project)->[PaperFinishAssignment] {
     var result=part.finishes

@@ -1,0 +1,290 @@
+{
+  "hardcover-partial": {
+    "camera": {
+      "azimuth": 0.55,
+      "distance": 6.2,
+      "elevation": 0.8,
+      "projection": "perspective",
+      "target": {
+        "x": 0.25,
+        "y": 0.25,
+        "z": 0
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "6A78E04D-4B54-40F8-B864-9483B906B0F6",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 34,
+          "bendMM": 4,
+          "openingDegrees": 95
+        },
+        "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Review03 / hardcover-partial",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 2,
+    "surface": "Daylight"
+  },
+  "hardcover-spread": {
+    "camera": {
+      "azimuth": 0.55,
+      "distance": 7.4,
+      "elevation": 1.05,
+      "projection": "perspective",
+      "target": {
+        "x": -0.15,
+        "y": 0.03,
+        "z": 0
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "709DD283-85A5-4159-B86E-448CBCD31EEF",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 34,
+          "bendMM": 4,
+          "openingDegrees": 180
+        },
+        "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Review03 / hardcover-spread",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 2,
+    "surface": "Daylight"
+  },
+  "hardcover-closed": {
+    "camera": {
+      "azimuth": 0.55,
+      "distance": 4.6,
+      "elevation": 0.8,
+      "projection": "perspective",
+      "target": {
+        "x": 0.7,
+        "y": 0.04,
+        "z": 0
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "A1D77472-412E-4141-B1EB-9E2CAE4E71D5",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 34,
+          "bendMM": 0,
+          "openingDegrees": 0
+        },
+        "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Review03 / hardcover-closed",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 2,
+    "surface": "Daylight"
+  },
+  "softcover-closed": {
+    "camera": {
+      "azimuth": 0.55,
+      "distance": 4.6,
+      "elevation": 0.8,
+      "projection": "perspective",
+      "target": {
+        "x": 0.7,
+        "y": 0.04,
+        "z": 0
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "6375F9F9-018F-4D79-9154-C99869A6A13C",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 26,
+          "bendMM": 0,
+          "openingDegrees": 0
+        },
+        "sourceObjectID": "78C4C742-3D71-48EB-8A22-75B60E00AB52",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Review03 / softcover-closed",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 1,
+    "surface": "Daylight"
+  },
+  "softcover-partial": {
+    "camera": {
+      "azimuth": 0.55,
+      "distance": 6.2,
+      "elevation": 0.8,
+      "projection": "perspective",
+      "target": {
+        "x": 0.25,
+        "y": 0.25,
+        "z": 0
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "A9B5F1D4-85C1-44AD-9C2C-5BDBF71C214E",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 26,
+          "bendMM": 4,
+          "openingDegrees": 95
+        },
+        "sourceObjectID": "78C4C742-3D71-48EB-8A22-75B60E00AB52",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Review03 / softcover-partial",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 1,
+    "surface": "Daylight"
+  },
+  "softcover-spread": {
+    "camera": {
+      "azimuth": 0.55,
+      "distance": 7.4,
+      "elevation": 1.05,
+      "projection": "perspective",
+      "target": {
+        "x": -0.15,
+        "y": 0.03,
+        "z": 0
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "58DC4939-C9DC-4E92-A279-33A77AC7D10C",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 26,
+          "bendMM": 4,
+          "openingDegrees": 180
+        },
+        "sourceObjectID": "78C4C742-3D71-48EB-8A22-75B60E00AB52",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Review03 / softcover-spread",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 1,
+    "surface": "Daylight"
+  }
+}

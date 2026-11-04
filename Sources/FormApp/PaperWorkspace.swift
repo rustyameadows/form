@@ -172,6 +172,7 @@ struct PaperEnvironmentControls: View {
     ScrollView {
       VStack(alignment:.leading,spacing:InspectorStyle.sectionSpacing) {
         LinkedObjectInspectorModule(object: object, session: store.artworkSession)
+        if let project=store.project {SheetDimensionRelationships(session:store.artworkSession,objectID:object.id,projectID:project.id)}
         if let definition {
           if store.environment == .form { appearance(definition) }
           else if store.environment == .function { construction(definition) }
@@ -217,11 +218,15 @@ struct PaperEnvironmentControls: View {
         if let authored = d.authored {
           ForEach(authored.parameters, id: \.name) { parameter in
             let value = draft?.authored?.parameters.first(where: { $0.name == parameter.name })?.value ?? parameter.value
-            if parameter.unit == "mm" {
-              ArtworkUnitField(parameter.name, value: value, unit: store.project?.unit == "in" ? .inches : .mm) { updateDraft(parameter.name, $0) }
-            } else {
-              ScalarArtworkField(parameter.name, value: value, unit: parameter.unit) { updateDraft(parameter.name, $0) }
-            }
+            let derived=object.dimensionBindings?.contains(where:{$0.parameter==parameter.name}) == true
+            VStack(alignment:.leading,spacing:3) {
+              if parameter.unit == "mm" {
+                ArtworkUnitField(parameter.name, value: value, unit: store.project?.unit == "in" ? .inches : .mm) { updateDraft(parameter.name, $0) }
+              } else {
+                ScalarArtworkField(parameter.name, value: value, unit: parameter.unit) { updateDraft(parameter.name, $0) }
+              }
+              if derived {Label("Linked dimension source",systemImage:"link").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)}
+            }.disabled(derived)
           }
         } else {
         field("Internal width",get:{draft!.dimensions.width},set:{draft!.dimensions.width=$0})

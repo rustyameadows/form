@@ -1,0 +1,386 @@
+{
+  "hardcover-edges": {
+    "camera": {
+      "azimuth": 1.15,
+      "distance": 1.7,
+      "elevation": 0.19,
+      "projection": "perspective",
+      "target": {
+        "x": 1.1,
+        "y": 0.05,
+        "z": 0.58
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "02DE7495-F065-4C91-BC7E-B420A7561186",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 0,
+          "bendMM": 0,
+          "openingDegrees": 0
+        },
+        "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Physical detail / hardcover-edges",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 1,
+    "surface": "Daylight"
+  },
+  "hardcover-hinge": {
+    "camera": {
+      "azimuth": 0.8,
+      "distance": 1.55,
+      "elevation": 0.3,
+      "projection": "perspective",
+      "target": {
+        "x": -0.04,
+        "y": 0.1,
+        "z": 0.86
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "364A02F6-6BF0-4EB9-805B-F097B91E6FB2",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 34,
+          "bendMM": 4,
+          "openingDegrees": 95
+        },
+        "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Physical detail / hardcover-hinge",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 1,
+    "surface": "Daylight"
+  },
+  "hardcover-inset": {
+    "camera": {
+      "azimuth": 0.4,
+      "distance": 1.85,
+      "elevation": 0.48,
+      "projection": "perspective",
+      "target": {
+        "x": 0.72,
+        "y": 0.11,
+        "z": 0.23
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "C65A862D-74F9-4442-BA9A-6D26FA21B11A",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 0,
+          "bendMM": 0,
+          "openingDegrees": 0
+        },
+        "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Physical detail / hardcover-inset",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 1,
+    "surface": "Daylight"
+  },
+  "hardcover-underside": {
+    "camera": {
+      "azimuth": -0.8,
+      "distance": 4,
+      "elevation": -0.45,
+      "projection": "perspective",
+      "target": {
+        "x": 0.15,
+        "y": 2.05,
+        "z": 0
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "0DB32B20-5369-4FDC-BF04-77FF3274C7DB",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 200,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 34,
+          "bendMM": 4,
+          "openingDegrees": 95
+        },
+        "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Physical detail / hardcover-underside",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 1,
+    "surface": "Daylight"
+  },
+  "hardcover-corner": {
+    "camera": {
+      "azimuth": 0.55,
+      "distance": 1.15,
+      "elevation": 0.3,
+      "projection": "perspective",
+      "target": {
+        "x": 1.18,
+        "y": 0.11,
+        "z": 0.78
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "454745B3-E4C8-434F-875C-48936412E6BE",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 0,
+          "bendMM": 0,
+          "openingDegrees": 0
+        },
+        "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Physical detail / hardcover-corner",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 1,
+    "surface": "Daylight"
+  },
+  "softcover-spine-flaps": {
+    "camera": {
+      "azimuth": -1.2,
+      "distance": 2.7,
+      "elevation": 0.28,
+      "projection": "perspective",
+      "target": {
+        "x": 0.35,
+        "y": 0.18,
+        "z": 0
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "C6D3110C-69AB-4365-A8EC-CC142A24F495",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 26,
+          "bendMM": 4,
+          "openingDegrees": 95
+        },
+        "sourceObjectID": "78C4C742-3D71-48EB-8A22-75B60E00AB52",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Physical detail / softcover-spine-flaps",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 1,
+    "surface": "Daylight"
+  },
+  "softcover-underside": {
+    "camera": {
+      "azimuth": 0.55,
+      "distance": 4,
+      "elevation": -0.42,
+      "projection": "perspective",
+      "target": {
+        "x": -0.15,
+        "y": 2.03,
+        "z": 0
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "A9279550-F8B1-49A7-B8D1-774E3FEBE858",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 200,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 26,
+          "bendMM": 4,
+          "openingDegrees": 180
+        },
+        "sourceObjectID": "78C4C742-3D71-48EB-8A22-75B60E00AB52",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Physical detail / softcover-underside",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 1,
+    "surface": "Daylight"
+  },
+  "192-page-open": {
+    "camera": {
+      "azimuth": 0.55,
+      "distance": 6.3,
+      "elevation": 0.85,
+      "projection": "perspective",
+      "target": {
+        "x": 0.05,
+        "y": 0.25,
+        "z": 0
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "601ACE72-3FED-44CE-9BA0-33DED66D56AC",
+    "instances": [
+      {
+        "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name": "Sewn hardcover",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sheetPose": {
+          "activeSpread": 74,
+          "bendMM": 5,
+          "openingDegrees": 135
+        },
+        "sourceObjectID": "084F8882-4747-4F41-8E6D-7BE49906D40F",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Physical detail / 192-page-open",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 1,
+    "surface": "Daylight"
+  }
+}

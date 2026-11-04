@@ -1,0 +1,77 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1000,
+  "png_sha256" : "3c37c850022d133c3a300fcfad011e0d9620d9d5759e7b6060033a13ea27ff7c",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:07D7FFAD-5A22-45F9-846B-BA526F25DA9F.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "font:HelveticaNeue",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : -1.25,
+      "distance" : 3.6000000000000001,
+      "elevation" : 0.25,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 0.65000000000000002,
+        "y" : 0.040000000000000001,
+        "z" : 0
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "149148D9-2685-481E-85D1-2E056D67326D",
+    "instances" : [
+      {
+        "id" : "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name" : "Sewn hardcover",
+        "positionMM" : {
+          "x" : 0,
+          "y" : 0,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sheetPose" : {
+          "activeSpread" : 0,
+          "bendMM" : 0,
+          "openingDegrees" : 0
+        },
+        "sourceObjectID" : "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "Proof \/ spine-low",
+    "pixels" : {
+      "height" : 1000,
+      "width" : 1500
+    },
+    "revision" : 1,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "cde8196992e904fe46cec154828572fdb345334ed917cc8829f2561b9ef19e50",
+  "source_project_id" : "DCF5F48D-BCBA-460B-B015-2D1A1D4E8BF2",
+  "width" : 1500
+}

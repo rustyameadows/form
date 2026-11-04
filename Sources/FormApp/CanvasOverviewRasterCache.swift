@@ -11,6 +11,7 @@ import FormGraphics
     var paperNet: PaperNet? = nil
     var paperColor: String? = nil
     var paperOpacity: Double? = nil
+    var sourceStockRegions:[CanvasPhysicalSourceStockRegion] = []
   }
   private struct Entry {
     var source: Artwork

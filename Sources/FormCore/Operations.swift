@@ -66,6 +66,7 @@ public final class OperationEngine {
     guard var value = project else { throw FormError.missing("Open or create a project first.") }
     let before = value
     try body(&value)
+    try value.reconcilePhysicalDimensions(previous:before)
     try onPrepareProjectEdit?(before, &value)
     value.refreshLibrarySelections()
     try CanvasPlacementValidation.validatePositions(in: value)
@@ -197,6 +198,17 @@ public final class OperationEngine {
     func requireProject() throws -> Project {
       guard let project else { throw FormError.missing("Open or create a project first.") }
       return project
+    }
+    func artworkReplacement(_ arguments:[String:Any]) throws -> (UUID,Artwork) {
+      guard let rawID=arguments["object_id"] as? String,!rawID.isEmpty else{throw FormError.invalid("'object_id' is required.")}
+      guard let id=UUID(uuidString:rawID) else{throw FormError.invalid("Invalid object_id.")}
+      guard let data=arguments["artwork"] else{throw FormError.invalid("artwork is required.")}
+      let artwork=try JSONDecoder().decode(Artwork.self,from:JSONSerialization.data(withJSONObject:data))
+      try validateArtwork(artwork)
+      for element in artwork.elements where element.kind=="image" {
+        guard let asset=element.asset,FileManager.default.fileExists(atPath:try repository.assetURL(asset,in:requireProject().id).path) else{throw FormError.missing("Artwork image asset not found. Import the image into this project first.")}
+      }
+      return(id,artwork)
     }
     switch name {
     case "form_studio_scene":return try StudioSceneCommands.call(engine:self,arguments:a,source:source)
@@ -622,14 +634,17 @@ public final class OperationEngine {
           let recipe = p.recipe(p.objects[index].recipeID)
         else { throw FormError.missing("Object not found.") }
         if p.objects[index].patternAssembly != nil, !params.isEmpty || a["material_id"] != nil || a["color"] != nil || a["fabric_pattern"] != nil {throw FormError.invalid("Edit original pattern geometry and per-panel fabric snapshots through form_cloth configure. The assembly has no independent parametric solid or global finish.")}
-        if p.objects[index].locked,(!params.isEmpty && p.objects[index].artworkParameterBindings?.isEmpty == false || a["artwork_parameter_bindings"] != nil) {
+        if p.objects[index].locked,(!params.isEmpty && p.objects[index].artworkParameterBindings?.isEmpty == false || a["artwork_parameter_bindings"] != nil || a["dimension_bindings"] != nil || a["artwork_regions"] != nil) {
           throw FormError.invalid("Unlock the canonical artwork source before editing its parameters or bindings.")
         }
+        if !Set(params.keys).isDisjoint(with:Set((p.objects[index].dimensionBindings ?? []).map(\.parameter))),a["dimension_bindings"] == nil {throw FormError.invalid("Change dimension sources or explicitly replace/remove their bindings before editing derived controls.")}
         let merged = p.objects[index].parameters.merging(params) { _, new in new }
         try recipe.validate(merged)
         let oldCloth=p.objects[index].cloth
         if oldCloth != nil,!params.isEmpty,p.objects[index].locked {throw FormError.invalid("Unlock the cloth source before rebuilding its mesh.")}
         p.objects[index].parameters = merged
+        if let raw=a["dimension_bindings"] {p.objects[index].dimensionBindings=try PhysicalDimensionToolSchema.decodeBindings(raw)}
+        if let raw=a["artwork_regions"] {p.objects[index].artworkRegions=try PhysicalDimensionToolSchema.decodeRegions(raw)}
         if let raw=a["artwork_parameter_bindings"] {p.objects[index].artworkParameterBindings=try ArtworkParameterBindings.decode(raw)}
         if !params.isEmpty,ClothDesign.recipeIDs.contains(p.objects[index].recipeID) {
           let rebuilt=try ClothDesign.definition(for:p.objects[index],settings:oldCloth?.settings)
@@ -663,6 +678,10 @@ public final class OperationEngine {
           p.objects[index].rotation = rotation
         }
         if let locked = a["locked"] as? Bool { p.objects[index].locked = locked }
+        if let raw=a["canvas_source_only"] {
+          guard !p.objects[index].locked,p.isIndependentFlatArtworkSource(p.objects[index]),raw is NSNull || raw is Bool else{throw FormError.invalid("Only an unlocked independent canonical artwork source can change its Canvas-only role.")}
+          p.objects[index].canvasSourceOnly=raw as? Bool
+        }
         if let raw = a["textile"] {
           if raw is NSNull {
             guard !p.objects[index].locked || p.objects[index].textile?.embroidery==nil else {throw FormError.invalid("Unlock this decoration before removing its embroidery program.")}
@@ -804,20 +823,7 @@ public final class OperationEngine {
       }
       return ["group_id": group.uuidString]
     case "form_set_artwork":
-      let id = try objectID()
-      guard let data = a["artwork"] else { throw FormError.invalid("artwork is required.") }
-      let artwork = try JSONDecoder().decode(
-        Artwork.self, from: JSONSerialization.data(withJSONObject: data))
-      try validateArtwork(artwork)
-      for element in artwork.elements where element.kind == "image" {
-        guard let asset = element.asset,
-          FileManager.default.fileExists(
-            atPath: try repository.assetURL(asset, in: requireProject().id).path)
-        else {
-          throw FormError.missing(
-            "Artwork image asset not found. Import the image into this project first.")
-        }
-      }
+      let (id,artwork)=try artworkReplacement(a)
       try edit(
         "Edited artwork", source: source, coalescing: source == "Studio" ? "artwork-\(id)" : nil
       ) { p in
@@ -842,7 +848,9 @@ public final class OperationEngine {
         if let i=p.recipes.firstIndex(where:{$0.id==recipe.id}) {
           guard a["replace"] as? Bool == true else{throw FormError.invalid("Recipe ID already exists. Use replace:true to edit its project-owned definition.")}
           for j in p.objects.indices where p.objects[j].recipeID==recipe.id {
-            let values=recipe.defaults.merging(p.objects[j].parameters){_,new in new};try recipe.validate(values);p.objects[j].parameters=values
+            let declared=Set(recipe.parameters.map(\.id))
+            let retained=p.objects[j].parameters.filter{declared.contains($0.key)}
+            let values=recipe.defaults.merging(retained){_,new in new};try recipe.validate(values);p.objects[j].parameters=values
           }
           p.recipes[i]=recipe
         }else{
@@ -911,6 +919,17 @@ public final class OperationEngine {
         operation["name"] as? String != "form_color_profile"
           || ["set", "clear"].contains((operation["arguments"] as? [String: Any])?["command"] as? String ?? "list")
       }) else { throw FormError.invalid("Color-profile batches accept set or clear commands only.") }
+      // A multi-page artwork replacement is one coherent document edit.
+      // Decode/asset-check every input first, apply canonical ownership/style/
+      // story rules in order, then reconcile and prepare dependent views once.
+      // Other operation mixtures retain their established sequential semantics.
+      if operations.allSatisfy({$0["name"] as? String == "form_set_artwork"}) {
+        let replacements=try operations.map{try artworkReplacement($0["arguments"] as? [String:Any] ?? [:])}
+        try edit("Edited \(replacements.count) artwork sheets",source:source) {candidate in
+          for (id,artwork) in replacements {try candidate.setArtwork(artwork,for:id)}
+        }
+        return ["results":replacements.map{["updated":$0.0.uuidString]}]
+      }
       let original = project
       let oldUndo = undoStack
       let oldRedo = redoStack

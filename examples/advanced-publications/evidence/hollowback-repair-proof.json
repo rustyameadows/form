@@ -1,0 +1,61 @@
+{
+  "artwork": {
+    "before_artwork_sha256": "f7683c1d34cc2c422ef31aa7ceac274f48c157da752e7f48f3c69806f00e8b1e",
+    "after_artwork_sha256": "4ac78ac2aa2050833f03d552d9b2678f60c2ce7bebf52fa0548378c218c91d8d",
+    "content_style_topology_sha256": "92f0ecd4d3ade50336ee79c4ba42fea351345fe7ea5765cc85a652cf26594951",
+    "translated_elements": [
+      {
+        "id": "53A4ED9E-CA97-5088-B448-A20FB643534B",
+        "dx": -6.5,
+        "dy": 0.0
+      },
+      {
+        "id": "E3937041-8606-52EC-8904-53519EF81596",
+        "dx": -6.5,
+        "dy": 0.0
+      },
+      {
+        "id": "35CDE0BB-CB6C-5792-A396-ECE45528C2ED",
+        "dx": -6.5,
+        "dy": 0.0
+      },
+      {
+        "id": "8634DC29-5C42-5ED1-BA4F-953C29D25B20",
+        "dx": -15.5,
+        "dy": 0.0
+      },
+      {
+        "id": "2A272B01-453E-5304-A209-06C5768BC6A7",
+        "dx": -15.5,
+        "dy": 0.0
+      },
+      {
+        "id": "5034C9DC-10C7-5649-A276-163230A9E993",
+        "dx": -15.5,
+        "dy": 0.0
+      },
+      {
+        "id": "0226A9D8-537E-527B-B3D4-970FEEDE5BFD",
+        "dx": -15.5,
+        "dy": 0.0
+      },
+      {
+        "id": "3B6899DE-BCBE-5883-A905-A6C1490ED54E",
+        "dx": -11.0,
+        "dy": 0.0
+      }
+    ]
+  },
+  "physical_feature_adjustments": [
+    {
+      "panel_id": "front-board",
+      "recess_id": "inset-seat",
+      "field": "origin.x",
+      "before": "((width+2*overhangMM)-insetWidthMM)/2",
+      "after": "(casePanelWidth-insetWidthMM)/2",
+      "reason": "Keep the existing photo seat centered on the corrected constant-size physical board; photo source/crop/stock/depth are retained."
+    }
+  ],
+  "undo_exact": true,
+  "redo_exact": true
+}
