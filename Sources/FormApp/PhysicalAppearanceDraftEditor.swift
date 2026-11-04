@@ -56,7 +56,11 @@ struct PhysicalAppearanceDraftControls:View {
       ForEach(appearance.textures.keys.filter{PhysicalTextureChannel(rawValue:$0) != nil}.sorted(),id:\.self) {key in
         HStack {Button(label(PhysicalTextureChannel(rawValue:key)!)){channel=PhysicalTextureChannel(rawValue:key)!};Text(appearance.textures[key]!.asset).font(.caption).lineLimit(1).truncationMode(.middle);Spacer();Button("Remove"){appearance.textures.removeValue(forKey:key)}}
       }
-      if appearance.textures[channel.rawValue] != nil {mappingControls}
+      if let texture=appearance.textures[channel.rawValue],let project=store.project {
+        PhysicalTexturePreview(texture:texture,channelName:label(channel),
+          assets:store.repository.url(for:project.id).appendingPathComponent("Assets"))
+        mappingControls
+      }
       Text("Color maps retain their color space. Roughness, normals and height maps use data values. Repeat size is physical millimeters.").font(.caption).foregroundStyle(Palette.secondary)
     }
   }
@@ -125,6 +129,7 @@ struct PhysicalAppearanceDraftEditor:View {
   @Environment(\.dismiss) private var dismiss
   let title:String
   let subtitle:String
+  let usesInheritedAppearance:Bool
   let initialRoughness:Double?
   let showsRoughness:Bool
   let supportsDisplacement:Bool
@@ -135,7 +140,7 @@ struct PhysicalAppearanceDraftEditor:View {
   init(title:String,subtitle:String,appearance:PhysicalAppearance?,fallback:PhysicalAppearance = .init(),
        roughness:Double? = nil,showsRoughness:Bool = false,supportsDisplacement:Bool = true,
        onApply:@escaping(PhysicalAppearance?,Double?)throws->Void) {
-    self.title=title;self.subtitle=subtitle;initialRoughness=roughness;self.showsRoughness=showsRoughness
+    self.title=title;self.subtitle=subtitle;usesInheritedAppearance=appearance == nil;initialRoughness=roughness;self.showsRoughness=showsRoughness
     self.supportsDisplacement=supportsDisplacement;self.onApply=onApply
     _appearance=State(initialValue:appearance ?? fallback);_roughness=State(initialValue:roughness ?? 0.5)
   }
@@ -143,6 +148,8 @@ struct PhysicalAppearanceDraftEditor:View {
     VStack(alignment:.leading,spacing:14) {
       Text(title).font(.title2)
       Text(subtitle).foregroundStyle(Palette.secondary)
+      Text(usesInheritedAppearance ? "Editing inherited appearance. Apply creates an override for this surface.":"This surface has its own appearance. Use inherited appearance to clear this override.")
+        .font(.caption).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       ScrollView {
         VStack(alignment:.leading,spacing:16) {
           if showsRoughness {
@@ -189,7 +196,7 @@ struct PhysicalAppearanceDraftEditor:View {
 /// Captures only the optical field being edited. Apply resolves the live paper
 /// again so unrelated caliper, construction, process or artwork edits survive.
 @MainActor struct PaperPhysicalAppearanceDraft:Identifiable {
-  enum Scope:Equatable {case stock,ply(UUID),finish(UUID)}
+  enum Scope:Equatable {case stock,ply(UUID),stockEdge,plyEdge(UUID),finish(UUID)}
   let id=UUID()
   let projectID:UUID,objectID:UUID
   let scope:Scope
@@ -205,10 +212,15 @@ struct PhysicalAppearanceDraftEditor:View {
     inheritedProfile=PaperGeometry.faceAppearance(for:untinted,stock:unlayered,project:project,inside:false).profile
     switch scope {
     case .stock:appearance=paper.stock.profile?.appearance;name="Stock · "+paper.stock.name;fallback=inheritedProfile.appearance ?? .init()
+    case .stockEdge:appearance=paper.stock.profile?.edgeAppearance;name="Cut edge · "+paper.stock.name;fallback = .init()
     case .ply(let id):
       guard let ply=paper.stock.plies?.first(where:{$0.id==id}) else {throw FormError.missing("Paper ply missing.")}
       appearance=ply.profile?.appearance;name="Ply · "+ply.name
       fallback=inheritedProfile.appearance ?? .init()
+    case .plyEdge(let id):
+      guard let ply=paper.stock.plies?.first(where:{$0.id==id}) else {throw FormError.missing("Paper ply missing.")}
+      appearance=ply.profile?.edgeAppearance;name="Ply cut edge · "+ply.name
+      fallback=paper.stock.profile?.edgeAppearance ?? .init()
     case .finish(let id):
       guard let finish=paper.finishes?.first(where:{$0.id==id}) else {throw FormError.missing("Paper finish missing.")}
       appearance=finish.appearance;name="Finish · "+finish.name
@@ -226,18 +238,21 @@ struct PhysicalAppearanceDraftEditor:View {
     var stock=try PaperConstruction.definition(for:object).stock
     var arguments:[String:Any]=["object_id":objectID.uuidString]
     switch scope {
-    case .stock:
-      var profile=stock.profile ?? current.inheritedProfile;profile.appearance=value;stock.profile=profile
+    case .stock,.stockEdge:
+      let edge=scope == .stockEdge,key=edge ? "edgeAppearance":"appearance"
+      var profile=stock.profile ?? current.inheritedProfile
+      if edge,stock.profile==nil {profile.appearance=nil}
+      if edge {profile.edgeAppearance=value}else{profile.appearance=value};stock.profile=profile
       var encoded=try jsonObject(stock) as! [String:Any],profileJSON=try jsonObject(profile) as! [String:Any]
       // configure merges stock profiles; an omitted optional field would retain
       // the previous appearance instead of clearing the local override.
-      profileJSON["appearance"]=try value.map{try jsonObject($0)} ?? NSNull();encoded["profile"]=profileJSON
+      profileJSON[key]=try value.map{try jsonObject($0)} ?? NSNull();encoded["profile"]=profileJSON
       arguments["command"]="configure";arguments["stock"]=encoded
-    case .ply(let id):
+    case .ply(let id),.plyEdge(let id):
       guard let index=stock.plies?.firstIndex(where:{$0.id==id}) else {throw FormError.missing("Paper ply missing.")}
       var profile=stock.plies![index].profile ?? current.inheritedProfile
-      if stock.plies![index].profile==nil {profile.color=nil}
-      profile.appearance=value;stock.plies![index].profile=profile
+      if stock.plies![index].profile==nil {profile.color=nil;profile.edgeAppearance=nil;if case .plyEdge=scope {profile.appearance=nil}}
+      if case .plyEdge=scope {profile.edgeAppearance=value}else{profile.appearance=value};stock.plies![index].profile=profile
       arguments["command"]="configure";arguments["stock"]=try jsonObject(stock)
     case .finish(let id):
       arguments["command"]="set_finish"

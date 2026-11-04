@@ -89,6 +89,7 @@ public enum MaterialCommands {
   private static func validateFields(_ raw:[String:Any])throws {
     guard JSONSerialization.isValidJSONObject(raw) else {throw FormError.invalid("Material edits require finite JSON values.")}
     if let appearance=raw["appearance"] {try validateAppearanceFields(appearance)}
+    if let stock=raw["paperStock"],!(stock is NSNull) {_ = try PaperAppearanceCommands.stock(stock,previous:.init())}
     if let back=raw["backSurface"],!(back is NSNull) {
       guard let value=back as? [String:Any],Set(value.keys).isSubset(of:["color","roughness","metallic","appearance"]),["color","roughness","metallic"].allSatisfy({value[$0] != nil}) else {throw FormError.invalid("A reverse surface needs color, roughness and metallic, with an optional physical appearance.")}
       if let appearance=value["appearance"] {try validateAppearanceFields(appearance)}

@@ -23,7 +23,12 @@ struct CyclesRenderModeControl:View {
         Button {if preview.isPaused {preview.resume()}else{preview.pause()}}label:{Image(systemName:preview.isPaused ? "play.fill":"pause.fill")}
           .buttonStyle(.plain).help(preview.isPaused ? "Resume rendering":"Pause rendering")
       }
-    }.sheet(isPresented:$showingSettings) {CyclesSettingsEditor(settings:settings,apply:change)}
+    }.sheet(isPresented:$showingSettings) {
+      CyclesSettingsEditor(settings:settings,preset:{
+        guard let source=preview.source else {throw FormError.invalid("The lighting scene is no longer available. Reopen rendering settings.")}
+        return source.cyclesLightingPreset()
+      },apply:change)
+    }
   }
 }
 
@@ -31,8 +36,10 @@ private struct CyclesSettingsEditor:View {
   @EnvironmentObject var store:StudioStore
   @Environment(\.dismiss) var dismiss
   @State var settings:CyclesRenderSettings
+  var preset:()throws->CyclesLightingPreset
   var apply:(CyclesRenderSettings)->Void
   @State private var error:String?
+  @State private var lightingConversion=CyclesLightingConversionDraft()
   var body:some View {
     VStack(alignment:.leading,spacing:14) {
       Text("Rendering").font(.title2)
@@ -68,7 +75,15 @@ private struct CyclesSettingsEditor:View {
             }
           }
           Section("Area lights") {
-            if settings.areaLights==nil {Text("Uses the current Studio lighting preset.").foregroundStyle(.secondary)}
+            if settings.areaLights==nil {
+              Text("Current scene preset").foregroundStyle(.secondary)
+              Button("Make current lights editable"){makeEditable()}
+                .accessibilityIdentifier("cycles-make-lights-editable")
+              Text("Copies the current lights and ambient response. Apply saves your editable lighting.")
+                .font(.caption).foregroundStyle(.secondary)
+            } else {
+              Text("Editable lights · \(settings.areaLights?.count ?? 0)").foregroundStyle(.secondary)
+            }
             ForEach(Array((settings.areaLights ?? []).enumerated()),id:\.element.id) {index,_ in
               VStack(alignment:.leading) {
                 HStack{Text("Light \(index+1)").font(.headline);Spacer();Button("Remove"){settings.areaLights?.remove(at:index)}}
@@ -83,13 +98,22 @@ private struct CyclesSettingsEditor:View {
                 Picker("Shape",selection:lightValue(index,\.shape)) {Text("Rectangle").tag(PhysicalAreaLight.Shape.rectangle);Text("Disk").tag(PhysicalAreaLight.Shape.disk)}
               }.padding(.vertical,5)
             }
-            HStack{Button("Add area light"){if settings.areaLights==nil {settings.areaLights=[]};settings.areaLights?.append(.init())};Button("Use preset"){settings.areaLights=nil}}
+            HStack {
+              Button("Add area light"){makeEditable(addLight:true)}.accessibilityIdentifier("cycles-add-area-light")
+              Button("Use scene preset"){settings=lightingConversion.usePreset(settings);error=nil}
+                .help("Return to the scene preset. Within this draft, restore the environment from before conversion.")
+            }
           }
         }.formStyle(.grouped)
       }
       if let error {Text(error).font(.caption).foregroundStyle(.red)}
       HStack{Spacer();Button("Cancel"){dismiss()};Button("Apply"){NSApp.keyWindow?.makeFirstResponder(nil);do{try settings.validate();apply(settings);dismiss()}catch{self.error=error.localizedDescription}}.keyboardShortcut(.defaultAction)}
     }.padding(20).frame(width:540,height:690)
+  }
+  private func makeEditable(addLight:Bool=false) {
+    do {
+      settings=try lightingConversion.makeEditable(settings,using:preset(),addingLight:addLight);error=nil
+    } catch {self.error=error.localizedDescription}
   }
   private func lightValue<T>(_ index:Int,_ key:WritableKeyPath<PhysicalAreaLight,T>)->Binding<T> {
     Binding(get:{let lights=settings.areaLights ?? [];return (lights.indices.contains(index) ? lights[index]:PhysicalAreaLight())[keyPath:key]},set:{value in guard settings.areaLights?.indices.contains(index)==true else{return};settings.areaLights?[index][keyPath:key]=value})

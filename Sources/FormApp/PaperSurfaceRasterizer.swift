@@ -111,12 +111,15 @@ import simd
     let prepared:PreparedArtwork?
     if let preparedArtwork,preparedArtwork.matches(artwork,finishes:finishes,assets:assets) {prepared=preparedArtwork}
     else {prepared=try artwork.map{try PreparedArtwork($0,finishes:finishes,assets:assets)}}
-    let key=Key(version:5,rect:rect,netSize:netSize,profile:profile,color:color,grain:grain,
+    // Cut-edge optics cannot change either printed face. Sharing these maps is
+    // also important for editable stock variants in the bounded Table snapshot.
+    var faceProfile=profile;faceProfile.edgeAppearance=nil
+    let key=Key(version:5,rect:rect,netSize:netSize,profile:faceProfile,color:color,grain:grain,
       artworkRevision:prepared?.revision,finishes:finishes,width:width,height:height,fontRevision:GeometryFactory.fontRevision,assets:assets.path)
     let revision=SHA256.hash(data:try JSONEncoder.form.encode(key)).map{String(format:"%02x",$0)}.joined()
     if let maps=cache.object(forKey:revision as NSString) { return maps }
     let count=width*height,dx=rect.width/Double(width),dy=rect.height/Double(height)
-    let field=try stockField(rect:rect,profile:profile,color:color,grain:grain,width:width,height:height)
+    let field=try stockField(rect:rect,profile:faceProfile,color:color,grain:grain,width:width,height:height)
     var heights=field.heights,rgba=field.color,rough=field.roughness,metal=[UInt8](repeating:255,count:count*4)
     func hasPhysicalDetail(_ appearance:PhysicalAppearance?)->Bool {
       ["normal","bump","displacement"].contains{appearance?.textures[$0] != nil}
@@ -186,7 +189,13 @@ import simd
         // A physically sized shoulder avoids a single-texel vertical wall in
         // the normal field while the separate ink/foil mask remains crisp.
         if relief != 0 {
-          let smoothed=blur(coverage,width:width,height:height,radius:min(6,max(1,Int((0.035/max(dx,dy)).rounded()))))
+          let smoothed: [Float]
+          if let radius=finish.shoulderRadiusMM {
+            smoothed=reliefShoulder(coverage,width:width,height:height,dx:dx,dy:dy,radiusMM:radius)
+          } else {
+            // Absent fields retain byte-for-byte legacy appearance.
+            smoothed=blur(coverage,width:width,height:height,radius:min(6,max(1,Int((0.035/max(dx,dy)).rounded()))))
+          }
           for i in 0..<count { finishHeights[i]+=Float(relief)*smoothed[i] }
         }
         priorFoil = priorFoil || paintsConductor
@@ -349,6 +358,42 @@ import simd
     case .vellum:value=noise(x*2,y*2)*0.1
     }
     return value*profile.textureDepthMM
+  }
+  /// Two continuous box filters make a smooth tent shoulder with a footprint
+  /// of ±radiusMM in each physical axis. Fractional texels and independent
+  /// dx/dy keep the width stable across rectangular and higher-quality rasters.
+  /// Prefix integrals keep cost linear even for a large radius on a tiny panel.
+  static func reliefShoulder(_ values:[Float],width:Int,height:Int,dx:Double,dy:Double,radiusMM:Double)->[Float] {
+    guard radiusMM>0 else{return values}
+    func axis(_ input:[Float],horizontal:Bool,radius:Double)->[Float] {
+      let length=horizontal ? width:height,lines=horizontal ? height:width
+      // A box wholly inside its current texel integrates that texel exactly.
+      // Avoid subtracting nearly equal prefix sums for sub-texel radii.
+      guard length>1,radius>0.5 else{return input}
+      var output=input,prefix=[Double](repeating:0,count:length+1)
+      for line in 0..<lines {
+        func index(_ offset:Int)->Int {horizontal ? line*width+offset:offset*width+line}
+        prefix[0]=0
+        for offset in 0..<length {prefix[offset+1]=prefix[offset]+Double(input[index(offset)])}
+        func integral(_ position:Double)->Double {
+          if position<=0 {return position*Double(input[index(0)])}
+          if position>=Double(length) {return prefix[length]+(position-Double(length))*Double(input[index(length-1)])}
+          let cell=Int(position)
+          return prefix[cell]+(position-Double(cell))*Double(input[index(cell)])
+        }
+        for offset in 0..<length {
+          let center=Double(offset)+0.5
+          output[index(offset)]=Float((integral(center+radius)-integral(center-radius))/(2*radius))
+        }
+      }
+      return output
+    }
+    var result=values
+    for _ in 0..<2 {
+      result=axis(result,horizontal:true,radius:radiusMM/(2*dx))
+      result=axis(result,horizontal:false,radius:radiusMM/(2*dy))
+    }
+    return result
   }
   private static func blur(_ values:[Float],width:Int,height:Int,radius:Int)->[Float] {
     var horizontal=values,result=values

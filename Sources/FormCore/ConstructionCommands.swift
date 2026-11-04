@@ -219,7 +219,7 @@ public enum ConstructionCommands {
   private static func point(_ raw:Any,label:String)throws {
     _ = try object(raw,allowed:["x","y"],label:label)
   }
-  private static func validateDefinitionJSON(_ raw:[String:Any])throws {
+  static func validateDefinitionJSON(_ raw:[String:Any])throws {
     let definition=try object(raw,allowed:["version","name","parameters","derived","size","stockThickness","panels","hinges","joins","rootPanelID","requirements","connections","solidChecks","components","interiors"],label:"construction definition")
     if let raw=definition["size"]{try point(raw,label:"construction size")}
     if let raw=definition["parameters"] {for value in try objects(raw,label:"construction parameters") {

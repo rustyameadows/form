@@ -91,6 +91,10 @@ public final class MeshTorus:MeshPrimitive {
 public final class MeshShape:MeshPrimitive {
   public let path:NSBezierPath,extrusionDepth:Double
   public var chamferRadius=0.0 {didSet{invalidate()}}
+  /// Opt-in side chart in scaled model units: contour arc length × depth.
+  /// Caps and the default legacy UV mapping are unchanged. Each closed contour
+  /// has its own seam; side vertices already split at corners and cap joins.
+  public var sideTextureCoordinateScale:Double? {didSet{invalidate()}}
   public private(set) var diagnostic:String?
   public init(path:NSBezierPath,extrusionDepth:Double){self.path=path.copy() as! NSBezierPath;self.extrusionDepth=extrusionDepth;super.init()}
   public override func buffers()->([MeshGeometrySource],[MeshGeometryElement]) {
@@ -140,8 +144,10 @@ public final class MeshShape:MeshPrimitive {
         for j in 1...6 {let t=Double(j)/6 * .pi/2;sections.append((bevel*(1-cos(t)),z1-bevel+bevel*sin(t),sin(t),cos(t)))}
       }else{sections=[(0,z0,0,1),(0,z1,0,1)]}
       for (j,ring) in group.enumerated(){let sign=(area(ring)>0 ? 1.0:-1.0)*(j==0 ? 1:-1),profiles=sections.map{inset(ring,$0.offset,j>0)}
+        var arc=[Double](repeating:0,count:ring.count+1)
+        for i in ring.indices {let next=(i+1)%ring.count;arc[i+1]=arc[i]+hypot(ring[next].x-ring[i].x,ring[next].y-ring[i].y)}
         for k in 0..<sections.count-1 {for i in ring.indices {let next=(i+1)%ring.count,a=ring[i],b=ring[next],delta=SIMD2<Double>(Double(b.x-a.x),Double(b.y-a.y)),length=simd_length(delta);if length<=1e-12{continue};let normal=SIMD2(sign*delta.y/length,-sign*delta.x/length),start=Int32(p.count),lo=sections[k],hi=sections[k+1]
-          for (q,section) in [(profiles[k][i],lo),(profiles[k][next],lo),(profiles[k+1][next],hi),(profiles[k+1][i],hi)] {p.append(.init(Double(q.x),Double(q.y),section.z));n.append(.init(normal.x*section.xy,normal.y*section.xy,section.nz));uv.append(coordinate(q))}
+          for (corner,pair) in [(profiles[k][i],lo),(profiles[k][next],lo),(profiles[k+1][next],hi),(profiles[k+1][i],hi)].enumerated() {let (q,section)=pair;p.append(.init(Double(q.x),Double(q.y),section.z));n.append(.init(normal.x*section.xy,normal.y*section.xy,section.nz));if let scale=sideTextureCoordinateScale,scale.isFinite,scale>0 {uv.append(.init(x:arc[i+(corner==1 || corner==2 ? 1:0)]*scale,y:(section.z-z0)*scale))}else{uv.append(coordinate(q))}}
           idx += sign>0 ? [start,start+1,start+2,start,start+2,start+3]:[start,start+2,start+1,start,start+3,start+2]
         }}
       }

@@ -50,10 +50,16 @@ extension PaperAppearanceCommands {
     let object = (args["object_id"] as? String).flatMap(UUID.init(uuidString:)).flatMap { id in engine.project?.objects.first { $0.id == id } }
     if args["object_id"] != nil,object == nil {throw FormError.missing("Choose an existing physical paper object UUID.")}
     if command == "apply_stock" {
+      let library=try PaperStockTextureAssets.loadLibrary(from:engine.repository.root)
       guard let object, let id = args["material_id"] as? String,
-        let material = StudioLibrary.load(from: engine.repository.root).materials.first(where: { $0.id == id && $0.paperStock != nil })
+        let material = library.materials.first(where: { $0.id == id && $0.paperStock != nil })
           ?? engine.project?.materials.first(where: { $0.id == id && $0.paperStock != nil }) else { throw FormError.missing("Choose a saved paper-stock material and physical paper object.") }
-      try engine.edit("Applied paper stock material", source: source) { project in try project.applyPaperStockMaterial(material, to: object.id) }
+      let assets=try PaperStockTextureAssets.application(material,projectID:engine.project!.id,repository:engine.repository,
+        fromLibrary:library.materials.contains(where:{$0.id==id && $0.paperStock != nil}))
+      try engine.edit("Applied paper stock material", source: source) { project in
+        try project.applyPaperStockMaterial(assets.material,to:object.id)
+        try assets.publish()
+      }
       let updated = engine.project!.objects.first { $0.id == object.id }!
       var result = try jsonObject(PaperAppearance.inspect(project: engine.project!, object: updated)) as! [String: Any]
       result["material_id"] = updated.materialID
@@ -75,11 +81,17 @@ extension PaperAppearanceCommands {
     let color = stock.plies?.last?.color ?? stock.profile?.color ?? object?.color ?? object.flatMap { engine.project?.material($0.materialID).color } ?? "#F7F5EF"
     var material = Material(id, name, "Paper", color, roughness: stock.plies?.last?.profile?.roughness ?? stock.profile?.roughness ?? 0.94, thickness: stock.resolvedThicknessMM)
     material.paperStock = stock
-    var library = StudioLibrary.load(from: engine.repository.root)
+    var library = try PaperStockTextureAssets.loadLibrary(from: engine.repository.root)
     if let index = library.materials.firstIndex(where: { $0.id == id }) {
       guard library.materials[index].paperStock != nil else { throw FormError.invalid("Choose a new material_id; this existing material is not a reusable paper-stock record.") }
-      library.materials[index] = material
-    } else { library.materials.append(material) }
+    }
+    let sources=(engine.project.map{[engine.repository.url(for:$0.id).appendingPathComponent("Assets",isDirectory:true)]} ?? []) +
+      [PaperStockTextureAssets.libraryDirectory(in:engine.repository.root)]
+    let assets=try PaperStockTextureAssets.prepare(material,sources:sources,destination:PaperStockTextureAssets.libraryDirectory(in:engine.repository.root))
+    material=assets.material
+    if let index=library.materials.firstIndex(where:{$0.id==id}) {library.materials[index]=material}
+    else {library.materials.append(material)}
+    try assets.publish()
     try library.save(to: engine.repository.root)
     return ["material": try jsonObject(material), "library_saved": true, "project_changed": false, "manufacturing_verified": false]
   }

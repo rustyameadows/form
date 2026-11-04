@@ -55,6 +55,19 @@ the requested encoding through Cycles' built-ins (`__builtin_srgb`,
 environment nodes use these identities. Supported channels are baseColor, roughness,
 metallic, normal, emission, alpha, bump, displacement, anisotropy, sheen, coat,
 transmission, diffuseTransmission, subsurface and sheenTint.
+Mesh anisotropy follows the authored UV0 tangent by default. When an anisotropy
+strength texture is present, that descriptor owns the direction: its UV0/UV1
+selection and inverse affine mapping define the physical horizontal axis.
+Rotated mappings use deduplicated derived UV charts so upstream MikkTSpace
+retains rectangular/skewed chart metrics and recomputes displaced tangents.
+Their extra UV/tangent/sign attributes share a 128 MiB per-job budget; exceeding
+it fails explicitly. Only mappings used by each mesh allocate those attributes.
+`anisotropyRotation` is an additional turn about the surface normal relative to
+that axis. Signed scale is preserved; mirrored repeats reverse the axis by 180
+degrees, which leaves this unoriented microfacet response unchanged. Without a
+usable UV tangent, untextured legacy meshes use projected object X, then object Y
+at its pole, independently of triangle order. Curves retain their longitudinal
+geometry tangent; their anisotropy strength textures do not redirect that axis.
 `artwork` is a separate alpha-over color layer, preserving substrate shading;
 `normalDetail` combines a second tangent normal with the original normal before
 the bump node. `normalStrength` controls that detail map when present; otherwise

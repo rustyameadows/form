@@ -83,6 +83,7 @@ struct PaperAppearanceControls: View {
       }
       slider("Roughness", value: profile.roughness, key: stockKey) { value in attempt { try updateProfile { $0.roughness = value } } }
       Button("Physical stock appearance…"){editAppearance(.stock)}.accessibilityIdentifier("paper-stock-physical-appearance")
+      Button("Cut-edge appearance…"){editAppearance(.stockEdge)}.accessibilityIdentifier("paper-stock-edge-appearance")
       ArtworkUnitField("Texture scale", value: profile.textureScaleMM, unit: unit) { value in try updateProfile { $0.textureScaleMM = value } }
       ArtworkUnitField("Texture depth", value: profile.textureDepthMM, unit: unit) { value in try updateProfile { $0.textureDepthMM = value } }
       slider("Opacity", value: profile.opacity, key: stockKey) { value in attempt { try updateProfile { $0.opacity = value } } }
@@ -98,6 +99,7 @@ struct PaperAppearanceControls: View {
             if let index = value.plies?.firstIndex(where: { $0.id == ply.id }) { value.plies![index].color = NSColor(color).hexString }
           } } }), supportsOpacity: false, targetID: "paper-ply-\(object.id)-\(ply.id)", onEditingChanged: store.inspectorInteraction(stockKey))
           Button("Physical ply appearance…"){editAppearance(.ply(ply.id))}.accessibilityIdentifier("paper-ply-physical-appearance-"+ply.id.uuidString)
+          Button("Ply cut-edge appearance…"){editAppearance(.plyEdge(ply.id))}.accessibilityIdentifier("paper-ply-edge-appearance-"+ply.id.uuidString)
         }.padding(10).background(Palette.surface, in: RoundedRectangle(cornerRadius: InspectorStyle.moduleRadius))
       }
       Button("Add bonded ply") { attempt { try updateStock { value in
@@ -139,6 +141,16 @@ struct PaperAppearanceControls: View {
       }
       if [.emboss, .screenPrint, .foil].contains(finish.kind) {
         ArtworkUnitField("Raised height", value: finish.heightMM, unit: unit) { try changeFinish(finish, ["heightMM": $0]) }
+      }
+      if finish.depthMM>0 || finish.heightMM>0 {
+        Toggle("Custom relief shoulder",isOn:Binding(get:{finish.shoulderRadiusMM != nil},set:{enabled in
+          finishChange(finish,["shoulderRadiusMM":enabled ? 0.035:NSNull()])
+        })).inspectorToggle().accessibilityIdentifier("paper-finish-custom-shoulder-"+finish.id.uuidString)
+        if let radius=finish.shoulderRadiusMM {
+          ArtworkUnitField("Shoulder radius",value:radius,unit:unit) {try changeFinish(finish,["shoulderRadiusMM":$0])}
+          Text("Softens the relief edge on each side of the artwork boundary. Ink and foil coverage stay at the artwork edge.")
+            .font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
+        }
       }
       InspectorColorPicker("Finish color", selection: Binding(get: { Color(nsColor: NSColor(hex: finish.color ?? "#B68C45")) }, set: { finishChange(finish, ["color": NSColor($0).hexString]) }), supportsOpacity: false,
         targetID: "paper-finish-color-\(object.id)-\(finish.id)", onEditingChanged: store.inspectorInteraction(finishKey))

@@ -71,6 +71,7 @@ import XCTest
         sanitized.stock.plies![index].profile=nil
       case .finish:
         XCTAssertEqual(result.finishes![0].appearance,optics);sanitized.finishes![0].appearance=nil
+      case .stockEdge,.plyEdge:XCTFail("This test covers face scopes; edge scopes have separate preservation coverage.")
       }
       XCTAssertEqual(sanitized,paper);XCTAssertEqual(store.engine.undoStack.count,1)
       store.engine.undo();XCTAssertEqual(store.project,original)
@@ -105,6 +106,32 @@ import XCTest
     let before=store.project!
     XCTAssertThrowsError(try target.apply(.init(),to:store))
     XCTAssertEqual(store.project,before);XCTAssertTrue(store.engine.undoStack.isEmpty)
+  }
+  func testCutEdgeDraftScopesPreserveFacesAndUndoAndClearToStockFallback()throws {
+    let store=try fixture();var face=PhysicalAppearance(),edge=PhysicalAppearance(),override=PhysicalAppearance()
+    face.coat=0.64;edge.sheen=0.31;override.sheen=0.77
+    store.engine.project!.objects[0].paperConstruction!.stock.profile!.appearance=face
+    store.engine.project!.objects[0].paperConstruction!.stock.profile!.edgeAppearance=edge
+    let original=store.project!,id=original.objects[0].paperConstruction!.stock.plies![1].id
+    for scope:PaperPhysicalAppearanceDraft.Scope in [.stockEdge,.plyEdge(id)] {
+      let target=try PaperPhysicalAppearanceDraft(project:store.project!,object:store.project!.objects[0],scope:scope)
+      if case .plyEdge=scope {XCTAssertEqual(target.fallback,edge)}
+      try target.apply(override,to:store)
+      let paper=store.project!.objects[0].paperConstruction!
+      XCTAssertEqual(paper.stock.profile!.appearance,face)
+      XCTAssertEqual(paper.finishes,original.objects[0].paperConstruction!.finishes)
+      XCTAssertEqual(store.project!.objects[0].parameters,original.objects[0].parameters)
+      if case .plyEdge=scope {
+        XCTAssertEqual(paper.stock.plies![1].profile?.edgeAppearance,override)
+        XCTAssertNil(paper.stock.plies![1].profile?.appearance,"Editing an edge must not freeze the inherited face optics.")
+      }else{XCTAssertEqual(paper.stock.profile?.edgeAppearance,override)}
+      XCTAssertEqual(store.engine.undoStack.count,1);store.engine.undo();XCTAssertEqual(store.project,original)
+    }
+    let clear=try PaperPhysicalAppearanceDraft(project:store.project!,object:store.project!.objects[0],scope:.stockEdge)
+    try clear.apply(nil,to:store)
+    XCTAssertNil(store.project!.objects[0].paperConstruction!.stock.profile?.edgeAppearance)
+    XCTAssertEqual(store.project!.objects[0].paperConstruction!.stock.profile?.appearance,face)
+    store.engine.undo();XCTAssertEqual(store.project,original)
   }
   func testTextureReplacementPreservesMappingUntilApplyAndOneUndoRestoresSource()throws {
     let store=try fixture()

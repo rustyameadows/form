@@ -749,9 +749,14 @@ public final class OperationEngine {
           if !params.isEmpty,p.objects[i].locked{throw FormError.invalid("Unlock linked paper constructions before changing their dimensions.")}
           p.objects[i]=try PaperConstructionEngine.synchronized(p.objects[i],previous:previousPaperObjects.first{$0.id==p.objects[i].id})
         }
-        if let materialID=a["material_id"] as? String,PaperConstruction.isPaper(p.objects[index]),
-          let material=p.materials.first(where:{$0.id==materialID}) ?? StudioLibrary.load(from:repository.root).materials.first(where:{$0.id==materialID}),material.paperStock != nil {
-          try p.applyPaperStockMaterial(material,to:id)
+        if let materialID=a["material_id"] as? String,PaperConstruction.isPaper(p.objects[index]) {
+          let local=p.materials.first(where:{$0.id==materialID}) ?? Material.presets.first(where:{$0.id==materialID})
+          let selected=try local ?? PaperStockTextureAssets.loadLibrary(from:repository.root).materials.first(where:{$0.id==materialID})
+          if let material=selected,material.paperStock != nil {
+            let assets=try PaperStockTextureAssets.application(material,projectID:p.id,repository:repository,fromLibrary:local==nil)
+            try p.applyPaperStockMaterial(assets.material,to:id)
+            try assets.publish()
+          }
         }
       }
       return try jsonObject(requireProject().objects.first { $0.id == id }!)

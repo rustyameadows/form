@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "generator": "scripts/prepare_cycles_paper_edges.py",
+  "generator_sha256": "b187d166f46b698d897c442e229050a0d54f0697327bed7eba378a0a067c448a",
+  "assets": [
+    {
+      "file": "estimated-cotton-cut-edge-normal.png",
+      "channel": "normal",
+      "sha256": "1637f68257613179ff2a6139b162f633bf84a39437517f5f7e4dae9a6fbdf70a",
+      "color_space": "data",
+      "license": "CC0-1.0",
+      "origin": "Original analytic project-authoring data, dedicated to CC0; no manufacturer photograph pixels used."
+    },
+    {
+      "file": "estimated-cotton-cut-edge-baseColor.png",
+      "channel": "baseColor",
+      "sha256": "e7fccbc0e7b059d7d48f4f01087f52d737649961fe2fc40f80fb07c9adef1920",
+      "color_space": "srgb",
+      "license": "CC0-1.0",
+      "origin": "Original analytic project-authoring data, dedicated to CC0; no manufacturer photograph pixels used."
+    },
+    {
+      "file": "estimated-cotton-cut-edge-roughness.png",
+      "channel": "roughness",
+      "sha256": "af3ed688d57094c33ce0891c8e7a07a765e810611fab96c4c09c10c2e46f94f0",
+      "color_space": "data",
+      "license": "CC0-1.0",
+      "origin": "Original analytic project-authoring data, dedicated to CC0; no manufacturer photograph pixels used."
+    }
+  ],
+  "width": 1024,
+  "height": 256,
+  "physical_repeat_mm": [
+    8.0,
+    2.0
+  ],
+  "seed": 64129,
+  "estimated_fiber_half_length_mm": [
+    0.1,
+    0.42
+  ],
+  "estimated_fiber_gaussian_radius_mm": [
+    0.009,
+    0.022
+  ],
+  "estimated_signed_height_mm": [
+    -0.0015392059251757273,
+    0.003772278419572026
+  ],
+  "rms_height_mm": 0.0005242958920306538,
+  "maximum_slope": 0.18955811812433407,
+  "notes": "Analytic artist estimate, not measured fiber data or a manufacturer texture. Normal shading only; no silhouette displacement. Color modulation is bounded to 0.976\u20131.0 linear multiplier and roughness to 0.98\u20131.0 multiplier.",
+  "mapping": "UV0 physical millimeters: U contour arc length, V from back to front through the stock/ply caliper. Repeat remains 8\u00d72 mm for both 0.5 and1.0 mm sheets.",
+  "reference_links": [
+    {
+      "url": "https://www.gmund.com/shop/media/pdf/instructions/Gmund_Cotton_Printing_Tips_engl.pdf",
+      "evidence": "manufacturerSpecification",
+      "notes": "600/610gsm approximate1mm caliper. Does not establish microscopic fiber dimensions."
+    },
+    {
+      "url": "https://www.gmund.com/shop/en_int/collections/gmund-cotton.html",
+      "evidence": "photograph",
+      "notes": "Manufacturer real-product reference; linked only. No measured cut-edge micrograph is claimed."
+    }
+  ],
+  "proposed_normal_strengths": [
+    0.25,
+    0.5
+  ],
+  "visual_acceptance": "pending actual LAB before/after render review"
+}

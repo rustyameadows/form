@@ -80,41 +80,9 @@ extension TableSceneController {
     for index in renderables.indices where adapter.nodes[renderables[index].componentID] === floorNode {
       renderables[index].transform.translationMM.y=0
     }
-    func light(position:SIMD3<Double>,target:SIMD3<Double>,color:SIMD3<Float>,power:Double,size:SIMD2<Double>)->SceneAreaLight {
-      let direction=simd_normalize(position-target),up:SIMD3<Double>=abs(direction.y)>0.999 ? .init(0,0,1):.init(0,1,0)
-      return .init(transform:SceneCameraPayload.looking(from:position,at:target,up:up).worldFromCameraMM,
-        color:color,power:power,sizeMM:size)
-    }
-    let lights:[SceneAreaLight]
-    if let authored=settings.areaLights {
-      lights=authored.map{l in var result=light(position:.init(l.positionMM.x,l.positionMM.y,l.positionMM.z),
-        target:.init(l.targetMM.x,l.targetMM.y,l.targetMM.z),color:LabCyclesRuntime.color(l.color),power:l.powerWatts,size:.init(l.sizeMM.x,l.sizeMM.y));result.shape=l.shape == .disk ? .disk:.rectangle;return result}
-    } else {
-      // Legacy viewport intensities are visual units, not measured radiant
-      // watts. A neutral-card Cycles calibration keeps all three presets below
-      // clipping while preserving their relative power, placement and color.
-      var presetLights=[SceneAreaLight]()
-      if !keyLight.isHidden,let source=keyLight.light {
-        var transform=keyLight.worldTransform.raw
-        transform.columns.3.x*=100;transform.columns.3.y*=100;transform.columns.3.z*=100
-        let color=GeometryPayloadAdapter.color(source.color)
-        presetLights.append(.init(transform:transform,color:LabCyclesRuntime.linear(.init(color.x,color.y,color.z)),
-          power:max(0,source.intensity)*8.25/850,sizeMM:.init(500,500)))
-      }
-      if let fill=scene.rootNode.childNodes.first(where:{$0.light?.type == .omni}),!fill.isHidden,let source=fill.light {
-        let t=fill.worldTransform.raw.columns.3,color=GeometryPayloadAdapter.color(source.color)
-        presetLights.append(light(position:.init(t.x*100,t.y*100,t.z*100),target:.zero,
-          color:LabCyclesRuntime.linear(.init(color.x,color.y,color.z)),power:max(0,source.intensity)*2.75/100,size:.init(700,700)))
-      }
-      lights=presetLights
-    }
-    var environment=SceneRenderEnvironment(color:LabCyclesRuntime.color(settings.environmentColor),strength:settings.environmentStrength,
-      rotationDegrees:settings.environmentRotationDegrees)
-    if settings.areaLights==nil,let ambient=scene.rootNode.childNodes.first(where:{$0.light?.type == .ambient}),let source=ambient.light {
-      let color=GeometryPayloadAdapter.color(source.color)
-      environment.color *= LabCyclesRuntime.linear(.init(color.x,color.y,color.z))
-      environment.strength *= ambient.isHidden ? 0:max(0,source.intensity)/400
-    }
+    let lighting=cyclesLightingPreset().resolve(settings)
+    let lights=lighting.lights
+    var environment=lighting.environment
     if let texture=settings.environmentTexture {
       let url=try texture.verifiedURL(in:assets)
       guard let source=CGImageSourceCreateWithURL(url as CFURL,nil),let image=CGImageSourceCreateImageAtIndex(source,0,nil) else{throw FormError.invalid("The environment image cannot be decoded.")}

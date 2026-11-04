@@ -426,7 +426,7 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
-  public static let maximumSchemaVersion=66
+  public static let maximumSchemaVersion=67
   public var schemaVersion = 1
   public var renderSettings:CyclesRenderSettings?
   public var id: UUID = UUID()
@@ -467,6 +467,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
     return required
   }
   private var requiredResourceSchemaVersion:Int {
+    if materials.contains(where:{$0.paperStock?.usesCutEdgeAppearance == true}) {return 67}
     if renderSettings != nil || materials.contains(where:{$0.usesPhysicalAppearance}) || studioPresentation?.shots.contains(where:{$0.renderSettings != nil}) == true || studioPresentation?.scenes?.contains(where:{$0.renderSettings != nil}) == true {return 66}
     if studioPresentation?.scenes?.contains(where:{$0.instances.contains(where:{$0.sheetPose?.bindingStyle == .adhesive || $0.sheetPose?.bindingStyle == .sewn})}) == true {return 65}
     if textStories?.contains(where:{$0.annotations?.isEmpty==false})==true {return 64}
@@ -532,6 +533,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
 /// classification; document validation still runs through the editing engine.
 extension ProductObject {
   fileprivate var requiredObjectSchemaVersion:Int {
+    if usesPaperMateriality {return 67}
     if usesPhysicalAppearance {return 66}
     let paper=paperConstruction
     if dimensionBindings != nil || artworkRegions != nil || sheetAssembly?.requiresAdvancedStructureSchema == true || paper?.authored?.panels.contains(where:{$0.features != nil}) == true {return 65}

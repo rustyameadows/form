@@ -13,6 +13,9 @@ public struct PaperSurfaceProfile: Codable, Equatable, Sendable {
   public var opacity: Double
   /// A local stock profile overrides the material's complete appearance record.
   public var appearance: PhysicalAppearance?
+  /// Independent cut-wall optics. Nil retains the legacy edge response; a ply
+  /// without an override inherits only its stock's edge appearance.
+  public var edgeAppearance: PhysicalAppearance?
   public init(texture: Texture = .smooth, color: String? = nil, roughness: Double = 0.9,
     textureScaleMM: Double = 0.8, textureDepthMM: Double = 0.015, opacity: Double = 1) {
     self.texture = texture; self.color = color; self.roughness = roughness
@@ -20,6 +23,10 @@ public struct PaperSurfaceProfile: Codable, Equatable, Sendable {
   }
   public func validate() throws {
     try appearance?.validate()
+    try edgeAppearance?.validate()
+    guard edgeAppearance?.textures.values.contains(where:{$0.uvIndex != 0}) != true else {
+      throw FormError.invalid("Paper cut edges provide UV0 only: boundary arc length and caliper in millimeters.")
+    }
     if let color { try validateColor(color) }
     guard roughness.isFinite, (0...1).contains(roughness), textureScaleMM.isFinite,
       (0.05...100).contains(textureScaleMM), textureDepthMM.isFinite,
@@ -63,6 +70,10 @@ public struct PaperFinishAssignment: Codable, Equatable, Identifiable, Sendable 
   public var color: String?
   public var depthMM: Double
   public var heightMM: Double
+  /// Rendered relief transition radius on each side of the artwork boundary.
+  /// Nil preserves the legacy shoulder. This does not widen printed/foil masks
+  /// or change the declared impression depth, raised height, or tooling intent.
+  public var shoulderRadiusMM: Double?
   public var roughness: Double?
   public var metallic: Double?
   public var opacity: Double
@@ -79,6 +90,11 @@ public struct PaperFinishAssignment: Codable, Equatable, Identifiable, Sendable 
   public func validate() throws {
     if let color { try validateColor(color) }
     try appearance?.validate()
+    if let shoulderRadiusMM {
+      guard shoulderRadiusMM.isFinite,(0...2).contains(shoulderRadiusMM) else {
+        throw FormError.invalid("A finish shoulder radius must be 0–2 mm; null retains the legacy transition.")
+      }
+    }
     guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, name.utf8.count <= 256,
       !elementIDs.isEmpty, elementIDs.count <= 5000, Set(elementIDs).count == elementIDs.count,
       depthMM.isFinite, (0...2).contains(depthMM), heightMM.isFinite, (0...2).contains(heightMM),

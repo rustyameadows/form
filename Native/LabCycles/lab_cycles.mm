@@ -440,6 +440,59 @@ static ShaderOutput *mapped_normal(ShaderGraph *graph,ShaderOutput *color,NSDict
   result=vector_math(graph,result,NODE_VECTOR_MATH_NORMALIZE);
   return result;
 }
+struct AnisotropyUVMapping {ustring name;int uv_index;double sx,sy,angle;};
+static std::vector<AnisotropyUVMapping> anisotropy_uv_mappings;
+static size_t anisotropy_attribute_bytes=0;
+static ustring anisotropy_uv_name(NSDictionary *mapping) {
+  int uv_index=bounded(mapping,@"uvIndex",0,0,1);
+  NSArray *scale=json_list(mapping,@"scale");
+  double sx=component(scale,0,1),sy=component(scale,1,1),angle=std::remainder(number(mapping,@"rotationDegrees",0),180.0);
+  if(std::abs(sx)<1e-12 || std::abs(sy)<1e-12)
+    throw std::runtime_error("Anisotropy direction requires nonzero texture scales");
+  if(std::abs(angle)<1e-10)return ustring(uv_index==0?"UVMap":"UVMap1");
+  double maximum=std::max(std::abs(sx),std::abs(sy));sx/=maximum;sy/=maximum;
+  // A common scale, translation and repeat parity cannot change the unoriented
+  // microfacet axis. Deduplicate those variants before allocating UV attributes.
+  for(const auto &entry:anisotropy_uv_mappings)
+    if(entry.uv_index==uv_index && entry.sx==sx && entry.sy==sy && entry.angle==angle)return entry.name;
+  ustring name(("LABAnisotropyUV"+std::to_string(anisotropy_uv_mappings.size())).c_str());
+  anisotropy_uv_mappings.push_back({name,uv_index,sx,sy,angle});return name;
+}
+static ShaderOutput *mesh_anisotropy_tangent(ShaderGraph *graph,NSDictionary *mapping) {
+  // Geometry.Tangent uses generated radial coordinates, or a triangle edge if
+  // those are absent. Explicitly request the authored chart's MikkTSpace tangent.
+  // A rotated texture needs its full mapped UV chart: rotating an orthonormal
+  // tangent frame alone loses the physical metric of rectangular/skewed charts.
+  ustring uv_name=anisotropy_uv_name(mapping);
+  auto tangent_node=graph->create_node<TangentNode>();
+  tangent_node->set_direction_type(NODE_TANGENT_UVMAP);
+  tangent_node->set_attribute(uv_name);
+  auto tangent=tangent_node->output("Tangent");
+  auto geometry=graph->create_node<GeometryNode>();auto normal=geometry->output("Normal");
+  auto projected_axis=[&](float3 axis) {
+    auto transform=graph->create_node<VectorTransformNode>();
+    transform->set_transform_type(NODE_VECTOR_TRANSFORM_TYPE_VECTOR);
+    transform->set_convert_from(NODE_VECTOR_TRANSFORM_CONVERT_SPACE_OBJECT);
+    transform->set_convert_to(NODE_VECTOR_TRANSFORM_CONVERT_SPACE_WORLD);
+    transform->set_vector(axis);
+    auto value=transform->output("Vector");
+    return vector_math(graph,value,NODE_VECTOR_MATH_SUBTRACT,
+      vector_scale(graph,normal,vector_math(graph,value,NODE_VECTOR_MATH_DOT_PRODUCT,normal)));
+  };
+  auto nonzero=[&](ShaderOutput *value) {
+    // Packed vertex normals have finite precision, including at exact poles.
+    return math_output(graph,vector_math(graph,value,NODE_VECTOR_MATH_DOT_PRODUCT,value),NODE_MATH_GREATER_THAN,1e-8f);
+  };
+  auto choose=[&](ShaderOutput *a,ShaderOutput *b,ShaderOutput *use_a) {
+    auto use_b=math_output(graph,math_output(graph,use_a,NODE_MATH_MULTIPLY,-1),NODE_MATH_ADD,1);
+    return vector_math(graph,vector_scale(graph,a,use_a),NODE_VECTOR_MATH_ADD,vector_scale(graph,b,use_b));
+  };
+  // Old untextured assets may have no UVs. Use projected object X (then Y at
+  // its pole), rather than silently returning to a triangle-dependent basis.
+  auto axis_x=projected_axis(make_float3(1,0,0));
+  auto fallback=choose(axis_x,projected_axis(make_float3(0,1,0)),nonzero(axis_x));
+  return vector_math(graph,choose(tangent,fallback,nonzero(tangent)),NODE_VECTOR_MATH_NORMALIZE);
+}
 static ShaderOutput *material_closure(ShaderGraph *graph,NSDictionary *d,ShaderOutput *&displacement_output,bool curve_shader) {
   auto p=graph->create_node<PrincipledBsdfNode>();
   p->set_base_color(color(d,@"baseColor"));
@@ -466,6 +519,8 @@ static ShaderOutput *material_closure(ShaderGraph *graph,NSDictionary *d,ShaderO
   ShaderOutput *surface=p->output("BSDF");
   double diffuse=bounded(d,@"diffuseTransmission",0,0,1);
   NSDictionary *textures=value(d,@"textures") ?: @{};
+  if(!curve_shader && (number(d,@"anisotropy",0)>0 || textures[@"anisotropy"]))
+    graph->connect(mesh_anisotropy_tangent(graph,textures[@"anisotropy"] ?: @{}),p->input("Tangent"));
   float normal_strength=bounded(d,@"normalStrength",1,0,10);
   MixClosureNode *diffuse_mix=nullptr;
   TranslucentBsdfNode *translucent=nullptr;
@@ -718,9 +773,10 @@ static void mesh(Scene *scene,NSDictionary *d,const std::vector<Shader*> &materi
   if(d[@"materialIndices"])data.materials=binary<uint32_t>(d[@"materialIndices"],1);
   else data.materials.resize(triangles,0);
   if(data.materials.size()!=triangles)throw std::runtime_error("Material index count mismatch");
-  bool displaced=false;
+  bool displaced=false;std::vector<Shader*> used_materials;std::vector<bool> seen_material(materials.size(),false);
   for(auto index:data.materials) {
     if(index>=materials.size())throw std::runtime_error("Material index out of bounds");
+    if(!seen_material[index]){seen_material[index]=true;used_materials.push_back(materials[index]);}
     displaced|=materials[index]->get_displacement_method()!=DISPLACE_BUMP;
   }
   if(displaced)subdivide_displacement(data,d);
@@ -743,6 +799,28 @@ static void mesh(Scene *scene,NSDictionary *d,const std::vector<Shader*> &materi
   if(!data.uvs1.empty()) {
     auto attr=m->attributes.add(ustring("UVMap1"),TypeFloat2,ATTR_ELEMENT_CORNER);auto out=attr->data_for_write<float2>();
     for(size_t i=0;i<data.indices.size();i++)out[i]=make_float2(data.uvs1[data.indices[i]*2],data.uvs1[data.indices[i]*2+1]);
+  }
+  for(const auto &mapping:anisotropy_uv_mappings) {
+    bool used=false;
+    for(auto shader:used_materials)if(shader->attributes.find(mapping.name)){used=true;break;}
+    const auto &uvs=mapping.uv_index==0?data.uvs:data.uvs1;
+    if(!used || uvs.empty())continue;
+    // Account for FLOAT2 corners plus Cycles' FLOAT3 tangent and FLOAT sign.
+    constexpr size_t limit=128*1024*1024,bytes_per_corner=6*sizeof(float);
+    if(data.indices.size()>(limit-anisotropy_attribute_bytes)/bytes_per_corner)
+      throw std::runtime_error("Anisotropic direction attributes exceed 128 MiB; reduce mesh resolution or share texture mappings.");
+    anisotropy_attribute_bytes+=data.indices.size()*bytes_per_corner;
+    auto attr=m->attributes.add(mapping.name,TypeFloat2,ATTR_ELEMENT_CORNER);auto out=attr->data_for_write<float2>();
+    double angle=mapping.angle*M_PI/180,c=std::cos(angle),s=std::sin(angle);
+    for(size_t i=0;i<data.indices.size();i++) {
+      if((i&16383)==0 && interrupted)throw std::runtime_error("Render cancelled");
+      // Translation and positive common scale do not affect tangent direction.
+      // Removing them keeps derived coordinates numerically well conditioned.
+      double u=(double(uvs[data.indices[i]*2])-uvs[0])*mapping.sx;
+      double v=(double(uvs[data.indices[i]*2+1])-uvs[1])*mapping.sy;
+      out[i]=make_float2(c*u-s*v,s*u+c*v);
+      if(!std::isfinite(out[i].x) || !std::isfinite(out[i].y))throw std::runtime_error("Anisotropy UV mapping is nonfinite");
+    }
   }
   if(!data.colors.empty()) {
     auto attr=m->attributes.add(ustring("LABColor"),TypeRGBA,ATTR_ELEMENT_VERTEX);auto out=attr->data_for_write<float4>();

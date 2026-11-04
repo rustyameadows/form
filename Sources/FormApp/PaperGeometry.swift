@@ -120,11 +120,11 @@ import simd
       materials[1].physicalAppearance=backProfile.appearance?.meshAppearance(assets:assets,surfaceSizeMM:net.size)
       var mesh:MeshGeometry
       if plies.isEmpty {
-        materials.append(edgeMaterial("Paper / cut fiber edge",color:object.color ?? defaultProfile.color ?? legacyColor,roughness:defaultProfile.roughness))
-        mesh=try panelMesh(panel,netSize:net.size,thicknessMM:stock.resolvedThicknessMM)
+        materials.append(edgeMaterial("Paper / cut fiber edge",color:object.color ?? defaultProfile.color ?? legacyColor,roughness:defaultProfile.roughness,appearance:defaultProfile.edgeAppearance,assets:assets))
+        mesh=try panelMesh(panel,netSize:net.size,thicknessMM:stock.resolvedThicknessMM,physicalEdgeUV:defaultProfile.edgeAppearance != nil)
       } else {
-        materials+=plies.map{edgeMaterial("Paper / ply / "+$0.name,color:$0.color,roughness:$0.profile?.roughness ?? defaultProfile.roughness)}
-        mesh=try bondedPanelMesh(panel,netSize:net.size,plies:plies)
+        materials+=plies.map{edgeMaterial("Paper / ply / "+$0.name,color:$0.color,roughness:$0.profile?.roughness ?? defaultProfile.roughness,appearance:$0.profile?.edgeAppearance ?? defaultProfile.edgeAppearance,assets:assets)}
+        mesh=try bondedPanelMesh(panel,netSize:net.size,plies:plies,inheritedEdge:defaultProfile.edgeAppearance)
       }
       if sampling?.isFinalCapture == true {
         let budget=min(PaperReliefGeometry.maximumTrianglesPerFace,
@@ -161,17 +161,19 @@ import simd
     material.physicalValidationIssue=maps.physicalLayerOverflow ? "A physical paper face supports up to 16 enabled finish layers. Disable or combine finishes before rendering.":nil
     material.writesToDepthBuffer=opacity>=0.999;return material
   }
-  private static func edgeMaterial(_ name:String,color:String,roughness:Double)->MeshMaterial {
-    let material=MeshMaterial();material.name=name;material.lightingModel = .physicallyBased;material.diffuse.contents=FormColor.color(color);material.roughness.contents=max(0.9,roughness);material.metalness.contents=0.0;return material
+  private static func edgeMaterial(_ name:String,color:String,roughness:Double,appearance:PhysicalAppearance?,assets:URL)->MeshMaterial {
+    let material=MeshMaterial();material.name=name;material.lightingModel = .physicallyBased;material.diffuse.contents=FormColor.color(color);material.roughness.contents=max(0.9,roughness);material.metalness.contents=0.0
+    material.physicalAppearance=appearance?.meshAppearance(assets:assets,surfaceSizeMM:.init(1,1));return material
   }
-  private static func bondedPanelMesh(_ panel:PaperPanel,netSize:Point2,plies:[PaperPly])throws->MeshGeometry {
+  private static func bondedPanelMesh(_ panel:PaperPanel,netSize:Point2,plies:[PaperPly],inheritedEdge:PhysicalAppearance?)throws->MeshGeometry {
     let thickness=plies.reduce(0){$0+$1.thicknessMM}
-    return try physicalMesh(panel,netSize:netSize,thicknessMM:thickness,kind:"bonded-ply-panel",channels:["outside:+z","inside:-z"]+plies.map{"ply:\($0.thicknessMM)"}){
+    return try physicalMesh(panel,netSize:netSize,thicknessMM:thickness,kind:"bonded-ply-panel",channels:["outside:+z","inside:-z"]+plies.map{"ply:\($0.thicknessMM)"+(($0.profile?.edgeAppearance ?? inheritedEdge) == nil ? "":":edge-mm-uv")}){
       var vertices=[MeshVector3](),normals=[MeshVector3](),uv=[CGPoint](),slots=[[UInt32]](repeating:[],count:2+plies.count),z = -thickness/2
       for (index,ply) in plies.enumerated() {
         // Internal bonds have no facing caps and no chamfered air groove.
         // Consecutive edge bands meet at the same physical cross section.
-        let source=try physicalMesh(panel,netSize:netSize,thicknessMM:ply.thicknessMM,kind:"bonded-ply-slab",channels:["outside:+z","inside:-z","cut-edge"]){try buildPanelMesh(panel,netSize:netSize,thicknessMM:ply.thicknessMM,beveled:false)}
+        let edgeUV=(ply.profile?.edgeAppearance ?? inheritedEdge) != nil
+        let source=try physicalMesh(panel,netSize:netSize,thicknessMM:ply.thicknessMM,kind:"bonded-ply-slab",channels:["outside:+z","inside:-z",edgeUV ? "cut-edge-mm-uv":"cut-edge"]){try buildPanelMesh(panel,netSize:netSize,thicknessMM:ply.thicknessMM,beveled:false,physicalEdgeUV:edgeUV)}
         let offset=UInt32(vertices.count),center=(z+ply.thicknessMM/2)/100
         vertices+=(source.sources(for:.vertex).first?.vectors ?? []).map{.init($0.x,$0.y,$0.z+center)}
         normals+=source.sources(for:.normal).first?.vectors ?? [];uv+=source.sources(for:.texcoord).first?.points ?? []
@@ -200,17 +202,18 @@ import simd
     while let value=current {if let name=value.name,name.hasPrefix(panelPrefix){return String(name.dropFirst(panelPrefix.count))};current=value.parent}
     return nil
   }
-  static func panelMesh(_ panel:PaperPanel,netSize:Point2,thicknessMM:Double)throws->MeshGeometry {
+  static func panelMesh(_ panel:PaperPanel,netSize:Point2,thicknessMM:Double,physicalEdgeUV:Bool=false)throws->MeshGeometry {
     guard (3...128).contains(panel.polygon.count),panel.polygon.allSatisfy({$0.x.isFinite && $0.y.isFinite}),netSize.x.isFinite,netSize.y.isFinite,netSize.x>0,netSize.y>0,thicknessMM.isFinite,thicknessMM>0 else{throw FormError.invalid("Paper panels require a polygon, physical net and positive caliper.")}
-    return try physicalMesh(panel,netSize:netSize,thicknessMM:thicknessMM,kind:"beveled-panel",channels:["outside:+z","inside:-z","bevel-and-cut-edge"]){try buildPanelMesh(panel,netSize:netSize,thicknessMM:thicknessMM)}
+    return try physicalMesh(panel,netSize:netSize,thicknessMM:thicknessMM,kind:"beveled-panel",channels:["outside:+z","inside:-z",physicalEdgeUV ? "bevel-and-cut-edge-mm-uv":"bevel-and-cut-edge"]){try buildPanelMesh(panel,netSize:netSize,thicknessMM:thicknessMM,physicalEdgeUV:physicalEdgeUV)}
   }
-  private static func buildPanelMesh(_ panel:PaperPanel,netSize:Point2,thicknessMM:Double,beveled:Bool=true)throws->MeshGeometry {
+  private static func buildPanelMesh(_ panel:PaperPanel,netSize:Point2,thicknessMM:Double,beveled:Bool=true,physicalEdgeUV:Bool=false)throws->MeshGeometry {
     let path=NSBezierPath();path.windingRule = .evenOdd
     for ring in [panel.polygon]+(panel.cutouts ?? []).map(\.polygon) {
       guard ring.count>=3 else{continue};path.move(to:.init(x:ring[0].x/100,y:-ring[0].y/100))
       for p in ring.dropFirst(){path.line(to:.init(x:p.x/100,y:-p.y/100))};path.close()
     }
-    let shape=MeshShape(path:path,extrusionDepth:thicknessMM/100);shape.chamferRadius=beveled ? min(thicknessMM*0.22,0.06)/100:0;shape.prepare()
+    let shape=MeshShape(path:path,extrusionDepth:thicknessMM/100);shape.chamferRadius=beveled ? min(thicknessMM*0.22,0.06)/100:0
+    if physicalEdgeUV {shape.sideTextureCoordinateScale=100};shape.prepare()
     let vertices=shape.sources(for:.vertex).first?.vectors ?? [],normals=shape.sources(for:.normal).first?.vectors ?? []
     guard !vertices.isEmpty,vertices.count==normals.count,shape.diagnostic==nil else{throw FormError.invalid(shape.diagnostic ?? "Paper panel geometry could not be prepared.")}
     var slots=[[UInt32]](repeating:[],count:3)
@@ -222,7 +225,10 @@ import simd
         slots[slot]+=triangle
       }
     }
-    let uv=vertices.map{CGPoint(x:$0.x*100/netSize.x,y:-$0.y*100/netSize.y)}
+    var uv=vertices.map{CGPoint(x:$0.x*100/netSize.x,y:-$0.y*100/netSize.y)}
+    if physicalEdgeUV,let side=shape.sources(for:.texcoord).first?.points,side.count==uv.count {
+      for index in Set(slots[2]) {uv[Int(index)]=side[Int(index)]}
+    }
     return MeshGeometry(sources:[.init(vertices:vertices),.init(normals:normals),.init(textureCoordinates:uv)],elements:slots.map{.init(indices:$0,primitiveType:.triangles)})
   }
   private static func highlight(_ panel:PaperPanel,netSize:Point2,thicknessMM:Double)throws->MeshNode {

@@ -85,14 +85,25 @@ final class MCPCapabilityTests: XCTestCase {
     var stock=try dictionary(jsonObject(PaperStock()))
     stock["profile"] = try jsonObject(PaperSurfaceProfile())
     var profile=try dictionary(stock["profile"])
-    for channel in PhysicalTextureChannel.allCases {
-      profile["appearance"]=["textures":[channel.rawValue:texture]];stock["profile"]=profile
-      XCTAssertNoThrow(try PublicationPhysicalToolSchema.validateFields(stock,schema:PublicationPhysicalToolSchema.stock,path:"stock"))
-    }
     let invalidMaps:[[String:Any]]=[["unknownChannel":texture],["normal":texture.merging(["typo":1]){_,new in new}],["normal":["asset":"surface.png"]]]
-    for invalid in invalidMaps {
-      profile["appearance"]=["textures":invalid];stock["profile"]=profile
-      XCTAssertThrowsError(try PublicationPhysicalToolSchema.validateFields(stock,schema:PublicationPhysicalToolSchema.stock,path:"stock"))
+    let advertisedProfile=try dictionary(dictionary(PublicationPhysicalToolSchema.stock["properties"])["profile"])
+    let advertised=try dictionary(advertisedProfile["properties"])
+    func constraints(_ value:Any)->Any {
+      if let object=value as? [String:Any] {return object.filter{$0.key != "description"}.mapValues(constraints)}
+      if let array=value as? [Any] {return array.map(constraints)}
+      return value
+    }
+    for field in ["appearance","edgeAppearance"] {
+      XCTAssertEqual(try json(constraints(try XCTUnwrap(advertised[field]))),try json(constraints(PhysicalAppearance.toolSchema)),"Compaction must retain every bound, default, required field and dictionary constraint.")
+      for channel in PhysicalTextureChannel.allCases {
+        profile[field]=["textures":[channel.rawValue:texture]];stock["profile"]=profile
+        XCTAssertNoThrow(try PublicationPhysicalToolSchema.validateFields(stock,schema:PublicationPhysicalToolSchema.stock,path:"stock"))
+      }
+      for invalid in invalidMaps {
+        profile[field]=["textures":invalid];stock["profile"]=profile
+        XCTAssertThrowsError(try PublicationPhysicalToolSchema.validateFields(stock,schema:PublicationPhysicalToolSchema.stock,path:"stock"))
+      }
+      profile.removeValue(forKey:field)
     }
   }
 
