@@ -313,14 +313,26 @@ import simd
     cacheMaterial(m,key:cacheKey);return m
   }
   private func cacheMaterial(_ material:any RealityKit.Material,key:String){materialCache[key]=material;touch(key,in:&materialOrder);while materialOrder.count>512{materialCache.removeValue(forKey:materialOrder.removeFirst())}}
-  private func texture(_ value:SceneTexturePayload,semantic:TextureResource.Semantic)throws->MaterialParameters.Texture {
+  func texture(_ value:SceneTexturePayload,semantic:TextureResource.Semantic)throws->MaterialParameters.Texture {
     guard value.image.width<=8192,value.image.height<=8192,value.image.width*value.image.height<=16_000_000,!value.revision.isEmpty else{throw SceneRendererError.invalidTexture("Textures need an immutable revision and at most 16 MP / 8192 pixels per edge.")}
     guard value.uvIndex==0 else{throw SceneRendererError.invalidTexture("The current procedural renderer supports UV0. Bake the requested UV set explicitly; its source remains retained.")}
-    let key=value.revision+"|"+String(describing:semantic)
+    try value.sampling.validate()
+    let useMipmaps=value.sampling.mip != .none
+    let key=value.revision+"|"+String(describing:semantic)+"|mipmaps:\(useMipmaps)"
     let resource:TextureResource
-    if let cached=textureCache[key]{resource=cached;touch(key,in:&textureOrder)}else{resource=try TextureResource(image:try orientedTextureImage(value.image,semantic:semantic),withName:nil,options:.init(semantic:semantic));textureCache[key]=resource;textureOrder.append(key);let cost=value.image.width*value.image.height*4;textureCosts[key]=cost;diagnostics.textureCacheBytes+=cost;diagnostics.textureUploads+=1;trimTextures()}
-    var output=MaterialParameters.Texture(resource);output.uvIndex=value.uvIndex
-    output.sampler.modify {d in d.sAddressMode=address(value.wrapS);d.tAddressMode=address(value.wrapT);d.minFilter = .linear;d.magFilter = .linear;d.mipFilter = .linear}
+    if let cached=textureCache[key]{resource=cached;touch(key,in:&textureOrder)}else {
+      resource=try TextureResource(image:try orientedTextureImage(value.image,semantic:semantic),withName:nil,options:.init(semantic:semantic,mipmapsMode:useMipmaps ? .allocateAndGenerateAll:.none))
+      textureCache[key]=resource;textureOrder.append(key)
+      let cost=(0..<resource.mipmapLevelCount).reduce(0){$0+max(1,value.image.width>>$1)*max(1,value.image.height>>$1)*4}
+      textureCosts[key]=cost;diagnostics.textureCacheBytes+=cost;diagnostics.textureUploads+=1;trimTextures()
+    }
+    let descriptor=MTLSamplerDescriptor()
+    descriptor.sAddressMode=address(value.wrapS);descriptor.tAddressMode=address(value.wrapT)
+    descriptor.minFilter=value.sampling.minification == .linear ? .linear:.nearest
+    descriptor.magFilter=value.sampling.magnification == .linear ? .linear:.nearest
+    switch value.sampling.mip {case .none:descriptor.mipFilter = .notMipmapped;case .nearest:descriptor.mipFilter = .nearest;case .linear:descriptor.mipFilter = .linear}
+    descriptor.maxAnisotropy=Int(value.sampling.maximumAnisotropy.rounded())
+    var output=MaterialParameters.Texture(resource,sampler:.init(descriptor));output.uvIndex=value.uvIndex
     switch value.channel {
     case .rgba:break
     case .red:output.swizzle = .init(red:.red,green:.red,blue:.red,alpha:.one)

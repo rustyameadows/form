@@ -74,7 +74,8 @@ import Foundation
       recipe: project.recipe(object.recipeID).flatMap { try? encoder.encode($0) },
       merchandise: project.conformedMerchandiseSignature(object).flatMap { try? encoder.encode($0) },
       merchandiseMaterials: project.merchandiseMaterialDependencies(object).flatMap { try? encoder.encode($0) },
-      sheet: SheetAssemblyGeometry.sourceRevision(object,project:project).map{Data($0.utf8)},
+      sheet: (SheetAssemblyGeometry.sourceRevision(object,project:project)
+        ?? PaperGeometry.sourceRevision(object,project:project)).map{Data($0.utf8)},
       paperFontRevision: isPaper ? GeometryFactory.fontRevision : nil)
   }
 

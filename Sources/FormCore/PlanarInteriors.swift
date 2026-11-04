@@ -69,13 +69,14 @@ public struct PaperContentsFitResult:Codable,Equatable,Sendable {
 }
 
 extension PlanarConstructionDefinition {
-  func validateComponentsAndInteriors(resolvedPanels:[PaperPanel])throws {
+  func validateComponentsAndInteriors(resolvedPanels:[PaperPanel],context:PlanarAssemblySourceContext)throws {
     let components=components ?? [],interiors=interiors ?? []
-    guard components.count<=32,Set(components.map(\.id)).count==components.count,
+    guard components.count<=(version>=4 ? 128:32),Set(components.map(\.id)).count==components.count,
       interiors.count<=64,Set(interiors.map(\.id)).count==interiors.count else {
       throw FormError.invalid("Keep at most 32 uniquely identified components and 64 interiors.")
     }
-    let values=try resolvedValues()
+    let values=context.values
+    func number(_ scalar:CADScalar)throws->Double {try CADExpression.evaluate(scalar.expression,variables:values)}
     for component in components {
       guard !component.id.isEmpty,component.id.utf8.count<=128,!component.name.isEmpty,component.name.utf8.count<=160,
         let panel=resolvedPanels.first(where:{$0.id==component.rootPanelID}) else {throw FormError.invalid("Each construction component needs a bounded identity and an existing root panel.")}
@@ -83,12 +84,12 @@ extension PlanarConstructionDefinition {
       guard panel.containsMaterial(a) else {throw FormError.invalid("Component '\(component.id)' anchor must lie on its root panel's remaining material.")}
       // Reject invalid formulas at both endpoints; a specific intermediate pose
       // is independently checked when resolved, without changing source geometry.
-      for fold in [0.0,100] {for opening in [0.0,100] {
-        let pose=values.merging(["fold":fold,"opening":opening]){_,new in new}
+      for sample in context.endpointValues {
+        let pose=sample.values
         _ = try PaperRigidMatrix.vector(component.position,values:pose)
         let r=try PaperRigidMatrix.vector(component.rotationDegrees,values:pose)
         guard [r.x,r.y,r.z].allSatisfy({abs($0)<=3600}) else {throw FormError.invalid("Component rotations must remain within ±3600 degrees.")}
-      }}
+      }
     }
     for interior in interiors {
       guard !interior.id.isEmpty,interior.id.utf8.count<=128,!interior.name.isEmpty,interior.name.utf8.count<=160,
@@ -137,7 +138,8 @@ extension PaperConstructionEngine {
     try validate(source)
     guard let definition=source.authored,let interiors=definition.interiors,!interiors.isEmpty else{return []}
     let frames=Dictionary(uniqueKeysWithValues:try resolvedComponents(source).map{($0.id,$0.localToWorld)}),values=try definition.resolvedValues()
-    return try interiors.map {d in
+    let activeIDs=Set(try definition.activeComponents().map(\.id))
+    return try interiors.filter{definition.version<4 || activeIDs.contains($0.componentID)}.map {d in
       guard let component=frames[d.componentID] else {throw FormError.invalid("Interior '\(d.id)' has no resolved component frame.")}
       let local=try definition.resolvedInteriorLocal(d,values:values)
       let m=PaperRigidMatrix.multiply(component,PaperRigidMatrix.multiply(PaperRigidMatrix.translation(local.origin.x,local.origin.y,local.origin.z),PaperRigidMatrix.rotation(local.rotation.x,local.rotation.y,local.rotation.z)))

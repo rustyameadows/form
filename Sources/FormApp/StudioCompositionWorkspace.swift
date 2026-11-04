@@ -232,6 +232,9 @@ struct StudioCompositionWorkspace:View {
       if let project=store.project,let source=project.objects.first(where:{$0.id==instance.sourceObjectID}),source.sheetAssembly != nil {
         StudioSheetPoseControls(controller:controller,instance:instance,source:source,project:project)
       }
+      if let project=store.project,let source=project.objects.first(where:{$0.id==instance.sourceObjectID}),PaperConstruction.isPaper(source) {
+        StudioPaperPoseControls(controller:controller,instance:instance,source:source)
+      }
       HStack(spacing:6) {
         WorkspaceToolbarButton("Duplicate selected",symbol:"plus.square.on.square",help:"Add another linked instance of this product",showsTitle:true,identifier:"studio-duplicate-instance"){controller.duplicateInstance()}
         WorkspaceToolbarButton("Remove Studio instance",symbol:"trash",help:"Remove the selected instance from this scene",identifier:"studio-remove-instance"){controller.removeInstance()}

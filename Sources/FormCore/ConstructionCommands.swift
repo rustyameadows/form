@@ -6,23 +6,29 @@ import FormCADModel
 /// Agent-authored planar geometry uses the same parameters, source edits and physical artwork as other recipes.
 public enum ConstructionCommands {
   public static func isReadOnly(_ args:[String:Any])->Bool {
-    ["capabilities","inspect","validate_cases"].contains(args["command"] as? String ?? "inspect")
+    ["capabilities","starters","inspect","validate_cases"].contains(args["command"] as? String ?? "inspect")
   }
   public static func call(engine:OperationEngine,arguments args:[String:Any],source:String)throws->Any {
     if let raw=args["command"],!(raw is String){throw FormError.invalid("Construction command must be a string.")}
     let command=args["command"] as? String ?? "inspect"
     let fields:[String:Set<String>]=[
-      "capabilities":[],"create":["definition","name","position","material_id"],
+      "capabilities":[],"starters":["starter_id"],"add_starter":["starter_id","starter","name","position"],
+      "adopt_parts":["object_id","expected_revision","definition"],"create_part_artwork":["object_id","component_id","side","expected_revision"],
+      "create":["definition","name","position","material_id"],
       "convert":["object_id","expected_revision"],
       "inspect":["object_id"],"configure":["object_id","definition","expected_revision"],
       "parameter":["object_id","values","expected_revision"],"validate_cases":["object_id","cases","extrema"]]
     guard let allowed=fields[command],Set(args.keys).isSubset(of:allowed.union(["command"])) else{throw FormError.invalid("Unknown construction command or argument.")}
     if command=="capabilities" {
       return ["units":"mm","commands":fields.keys.sorted(),"source":"PlanarConstructionDefinition",
-        "definition_fields":["version","name","parameters","derived","size","stockThickness","panels","hinges","joins","rootPanelID","requirements","connections","solidChecks","components","interiors"],
+        "definition_fields":["version","name","parameters","derived","size","stockThickness","panels","hinges","joins","rootPanelID","requirements","connections","solidChecks","components","interiors","groups","jointAttachments","controls","production"],
         "definition_required_fields":["version","name","parameters","size","stockThickness","panels","hinges","joins","rootPanelID"],
-        "definition_optional_fields":["requirements","derived","connections","solidChecks","components","interiors"],
-        "source_versions":[1,2,3],
+        "definition_optional_fields":["requirements","derived","connections","solidChecks","components","interiors","groups","jointAttachments","controls","production"],
+        "source_versions":[1,2,3,4],
+        "definition_schema":ConstructionToolSchema.definition,"starter_schema":ConstructionToolSchema.starter,
+        "part_assemblies":"Version4 cut pieces own independent stock, front/back canonical artwork and finishes, enabled conditions, quantities and parent-frame groups. Source-authored controls and production metadata drive native editing and files. Closed assembly bounds use actual material and joint wire; opening/explosion are independent presentation poses.",
+        "starter_commands":"starters lists bounded catalog metadata; starter_id returns the complete source. add_starter requires exactly one starter_id or inline starter; creates fresh owner/artwork/layer IDs atomically. adopt_parts explicitly upgrades existing independent roots while retaining identities; create_part_artwork creates one transparent physically bound source. Both require expected_revision.",
+        "v4_limits":["panels":256,"components":128,"parameters":128,"groups":64,"attachments":256],
         "components":"Explicit independent hinge-tree roots share parameters and canonical flat sheet coordinates; authored assembled anchor/XYZ Euler poses use millimeters and may reference fold/opening percentages.",
         "cutouts":"Stable panel cutouts remove finite material; window, slot and perforation kinds preserve technical identity. All rings share the 2048-vertex bound.",
         "interiors":"Named declared component-local volumes and optional rectangular opening cross-sections; actual referenced contents are checked through form_paper preflight, not inferred from flat net bounds.",
@@ -41,9 +47,9 @@ public enum ConstructionCommands {
         "panel_required_fields":["id","name","role","polygon"],
         "panel_optional_fields":["artworkRotationDegrees","cutouts","features"],
         "panel_roles":["body","side","glue","tuck","dust","bottomClosure"],
-        "component_fields":["id","name","rootPanelID","anchor","position","rotationDegrees"],
+        "component_fields":["id","name","rootPanelID","anchor","position","rotationDegrees","groupID","stock","stockThickness","quantity","purpose","front","back","enabled","finishes"],
         "component_required_fields":["id","name","rootPanelID","anchor","position","rotationDegrees"],
-        "component_optional_fields":[String](),
+        "component_optional_fields":["groupID","stock","stockThickness","quantity","purpose","front","back","enabled","finishes"],
         "cutout_fields":["id","polygon","kind"],
         "cutout_required_fields":["id","polygon","kind"],
         "cutout_optional_fields":[String](),
@@ -73,6 +79,17 @@ public enum ConstructionCommands {
         "legacy_examples":["envelope":try jsonObject(ConstructionExamples.legacyDefinition(PaperConstructionEngine.defaults(recipeID:"paperEnvelope"))),
           "carton":try jsonObject(ConstructionExamples.legacyDefinition(PaperConstructionEngine.defaults(recipeID:"tuckCarton")))]] as [String:Any]
     }
+    if command=="starters" {
+      let entries=try ConstructionStarterCatalog.bundled().starters
+      if let raw=args["starter_id"] {
+        guard let identifier=raw as? String,let starter=entries.first(where:{$0.id==identifier}) else{throw FormError.missing("Choose an existing construction starter_id.")}
+        return try jsonObject(starter)
+      }
+      return ["starters":entries.map {starter -> [String:Any] in
+        ["id":starter.id,"name":starter.name,"summary":starter.summary,"symbol":starter.symbol,"source_version":starter.definition.version,
+         "declared_parts":starter.definition.components?.count ?? 1,"artwork_sources":starter.artworkSources.count]
+      }]
+    }
     guard let project=engine.project else{throw FormError.missing("Open a project before authoring a construction.")}
     func decodeDefinition()throws->PlanarConstructionDefinition {
       guard let raw=args["definition"] as? [String:Any],JSONSerialization.isValidJSONObject(raw) else{throw FormError.invalid("Provide a complete construction definition.")}
@@ -81,6 +98,26 @@ public enum ConstructionCommands {
       try validateDefinitionJSON(raw)
       let definition=try JSONDecoder().decode(PlanarConstructionDefinition.self,from:bytes)
       _ = try definition.net();return definition
+    }
+    if command=="add_starter" {
+      guard (args["starter_id"] != nil) != (args["starter"] != nil) else{throw FormError.invalid("Provide exactly one starter_id or complete inline starter.")}
+      var starter:ConstructionStarter
+      if let raw=args["starter"] {
+        guard JSONSerialization.isValidJSONObject(raw) else{throw FormError.invalid("Provide a complete JSON construction starter.")}
+        starter=try ConstructionStarterCatalog.decode(JSONSerialization.data(withJSONObject:raw))
+      } else {
+        guard let identifier=args["starter_id"] as? String,
+          let entry=try ConstructionStarterCatalog.bundled().starters.first(where:{$0.id==identifier}) else{throw FormError.missing("Choose an existing construction starter_id.")}
+        starter=entry
+      }
+      if let raw=args["name"] {guard let name=raw as? String,!name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty,name.utf8.count<=160 else{throw FormError.invalid("Use a nonempty construction name of at most160 bytes.")};starter.name=name}
+      let position=try constructionPosition(args["position"])
+      var result:ConstructionStarterImportResult?
+      try engine.edit("Added \(starter.name)",source:source){p in result=try p.importConstructionStarter(starter,position:position)}
+      guard let result,let object=engine.project?.objects.first(where:{$0.id==result.objectID}) else{throw FormError.invalid("The construction starter could not be published.")}
+      engine.selection=[result.objectID]
+      var report=try inspection(object);report["starter_id"]=result.starterID;report["artwork_source_ids"]=result.artworkSourceIDs.map(\.uuidString)
+      return report
     }
     if command=="create" {
       let definition=try decodeDefinition(),id=UUID(),recipe=recipe(definition,id:"construction-"+id.uuidString)
@@ -99,6 +136,20 @@ public enum ConstructionCommands {
     }
     guard let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),
       let object=project.objects.first(where:{$0.id==id}) else{throw FormError.missing("Choose an existing construction object.")}
+    if command=="adopt_parts" || command=="create_part_artwork" {
+      guard let expected=args["expected_revision"] as? String,!expected.isEmpty else{throw FormError.invalid("Inspect the construction and provide expected_revision before editing independent sources.")}
+      if command=="adopt_parts" {
+        let candidate=args["definition"] == nil ? nil:try decodeDefinition()
+        try engine.edit("Adopted independent construction parts",source:source){p in try p.adoptIndependentConstructionParts(objectID:id,expectedRevision:expected,definition:candidate)}
+        return try inspection(engine.project!.objects.first{$0.id==id}!)
+      }
+      guard let componentID=args["component_id"] as? String,let raw=args["side"] as? String,
+        let side=PaperFinishAssignment.Side(rawValue:raw) else{throw FormError.invalid("Choose a component_id and side: outside or inside.")}
+      var artworkID:UUID?
+      try engine.edit("Created cut-piece artwork",source:source){p in artworkID=try p.createConstructionPartArtwork(objectID:id,componentID:componentID,side:side,expectedRevision:expected)}
+      var report=try inspection(engine.project!.objects.first{$0.id==id}!);report["artwork_source_id"]=artworkID?.uuidString
+      return report
+    }
     if object.artworkParameterBindings?.isEmpty == false {
       if command=="inspect" {return ["object_id":id.uuidString,"source_kind":"canonical_artwork_parameters",
         "source_revision":try ArtworkConstructionValidationRequest.revision(in:project,objectID:id),
@@ -158,7 +209,7 @@ public enum ConstructionCommands {
     if command=="configure" {next=try decodeDefinition()}
     else {
       let values=try numeric(args["values"])
-      for key in ["fold","opening"] {if let value=values[key] {
+      for key in (definition.version>=4 ? ["fold","opening","explosion"]:["fold","opening"]) {if let value=values[key] {
         guard (0...100).contains(value) else{throw FormError.invalid("Construction pose controls must be 0–100%.")}
         poseValues[key]=value
       }}
@@ -172,11 +223,13 @@ public enum ConstructionCommands {
         let previous=p.objects[i]
         var settings=previous.paperConstruction ?? nextPaper
         settings.kind = .authored;settings.authored=next
-        settings.dimensions=nextPaper.dimensions;settings.stock.thicknessMM=nextPaper.stock.thicknessMM
+        settings.dimensions=nextPaper.dimensions;settings.stock=try PlanarConstructionDefinition.resizedStock(settings.stock,thickness:nextPaper.stock.thicknessMM)
         settings.foldPercent=poseValues["fold"] ?? previous.paperConstruction?.foldPercent ?? 100
         settings.openingPercent=poseValues["opening"] ?? previous.paperConstruction?.openingPercent ?? 0
+        if next.version>=4 {settings.explosionPercent=poseValues["explosion"] ?? previous.paperConstruction?.explosionPercent ?? 0}
         settings.insideArtworkSourceID=previous.paperConstruction?.insideArtworkSourceID;settings.insideArtwork=previous.paperConstruction?.insideArtwork
         settings.annotations=previous.paperConstruction?.annotations ?? []
+        try validateAssembly(settings)
         p.objects[i].paperConstruction=settings
         p.objects[i].parameters=PaperConstructionEngine.parameters(settings)
         p.objects[i]=try PaperConstructionEngine.synchronized(p.objects[i],previous:previous)
@@ -200,6 +253,16 @@ public enum ConstructionCommands {
         .init(id:"review-volume",name:"Declared open review volume",componentID:"first",origin:.init(0,0,"stock/2"),
           size:.init("width","height","depth-stock"),opening:.init(axis:.z,width:"width",height:"height"))])
   }
+  private static func constructionPosition(_ raw:Any?)throws->Vector3 {
+    guard let raw else{return .init()}
+    guard let numbers=raw as? [NSNumber],numbers.count==3,
+      numbers.allSatisfy({CFGetTypeID($0) != CFBooleanGetTypeID() && $0.doubleValue.isFinite && abs($0.doubleValue)<=100000}) else{throw FormError.invalid("Construction position must be three finite millimeter values.")}
+    return .init(numbers[0].doubleValue,numbers[1].doubleValue,numbers[2].doubleValue)
+  }
+  private static func validateAssembly(_ source:PaperConstruction)throws {
+    guard (source.authored?.version ?? 0)>=4 else{return}
+    _=try source.resolvedPanels();_=try PlanarAssemblyEnvelope.resolve(source)
+  }
   private static func numeric(_ value:Any?,allowEmpty:Bool=false)throws->[String:Double] {
     guard let map=value as? [String:Any],allowEmpty || !map.isEmpty else{throw FormError.invalid("Provide a numeric parameter map; edits require at least one parameter.")}
     var result:[String:Double]=[:]
@@ -219,55 +282,7 @@ public enum ConstructionCommands {
   private static func point(_ raw:Any,label:String)throws {
     _ = try object(raw,allowed:["x","y"],label:label)
   }
-  private static func validateDefinitionJSON(_ raw:[String:Any])throws {
-    let definition=try object(raw,allowed:["version","name","parameters","derived","size","stockThickness","panels","hinges","joins","rootPanelID","requirements","connections","solidChecks","components","interiors"],label:"construction definition")
-    if let raw=definition["size"]{try point(raw,label:"construction size")}
-    if let raw=definition["parameters"] {for value in try objects(raw,label:"construction parameters") {
-      _ = try object(value,allowed:["name","value","minimum","maximum","unit"],label:"construction parameter")
-    }}
-    if let raw=definition["panels"] {for value in try objects(raw,label:"construction panels") {
-      let panel=try object(value,allowed:["id","name","role","polygon","artworkRotationDegrees","cutouts","features"],label:"construction panel")
-      if let raw=panel["polygon"] {for value in try objects(raw,label:"panel polygon") {try point(value,label:"panel polygon point")}}
-      if let raw=panel["features"],!(raw is NSNull) {try PublicationPhysicalToolSchema.validateFields(raw,schema:PublicationPhysicalToolSchema.panelFeatures,path:"construction panel.features")}
-      if let raw=panel["cutouts"],!(raw is NSNull) {for value in try objects(raw,label:"panel cutouts") {
-        let cutout=try object(value,allowed:["id","polygon","kind"],label:"panel cutout")
-        if let raw=cutout["polygon"] {for p in try objects(raw,label:"cutout polygon") {try point(p,label:"cutout point")}}
-      }}
-    }}
-    func point3(_ value:Any,_ label:String)throws {_ = try object(value,allowed:["x","y","z"],label:label)}
-    if let raw=definition["components"],!(raw is NSNull) {for value in try objects(raw,label:"construction components") {
-      let component=try object(value,allowed:["id","name","rootPanelID","anchor","position","rotationDegrees"],label:"construction component")
-      if let p=component["anchor"] {try point(p,label:"component anchor")}
-      if let p=component["position"] {try point3(p,"component position")}
-      if let p=component["rotationDegrees"] {try point3(p,"component rotation")}
-    }}
-    if let raw=definition["interiors"],!(raw is NSNull) {for value in try objects(raw,label:"construction interiors") {
-      let interior=try object(value,allowed:["id","name","componentID","origin","size","rotationDegrees","opening"],label:"construction interior")
-      for key in ["origin","size","rotationDegrees"] {if let p=interior[key],!(p is NSNull) {try point3(p,"interior \(key)")}}
-      if let raw=interior["opening"],!(raw is NSNull) {
-        let opening=try object(raw,allowed:["axis","width","height","origin"],label:"interior opening")
-        if let p=opening["origin"],!(p is NSNull) {try point(p,label:"opening origin")}
-      }
-    }}
-    if let raw=definition["hinges"] {for value in try objects(raw,label:"construction hinges") {
-      let hinge=try object(value,allowed:["id","parentPanelID","childPanelID","start","end","angleDegrees","layerOffsetMM","opensWithTop"],label:"construction hinge")
-      if let raw=hinge["start"]{try point(raw,label:"hinge start")};if let raw=hinge["end"]{try point(raw,label:"hinge end")}
-    }}
-    if let raw=definition["joins"] {for value in try objects(raw,label:"construction joins") {
-      _ = try object(value,allowed:["id","name","firstPanelID","secondPanelID","kind","overlapMM","notes"],label:"construction join")
-    }}
-    if let raw=definition["requirements"],!(raw is NSNull) {for value in try objects(raw,label:"construction requirements") {
-      _ = try object(value,allowed:["id","lhs","relation","rhs","message","tolerance"],label:"construction requirement")
-    }}
-    if let raw=definition["solidChecks"],!(raw is NSNull) {for value in try objects(raw,label:"construction solid checks") {
-      _ = try object(value,allowed:["id","firstPanelID","secondPanelID","metric","relation","value","message","tolerance"],label:"construction solid check")
-    }}
-    if let raw=definition["connections"],!(raw is NSNull) {for value in try objects(raw,label:"construction connections") {
-      let connection=try object(value,allowed:["id","firstPanelID","secondPanelID","firstPoint","secondPoint","maximumGapMM"],label:"construction connection")
-      if let raw=connection["firstPoint"]{try point(raw,label:"first connection point")}
-      if let raw=connection["secondPoint"]{try point(raw,label:"second connection point")}
-    }}
-  }
+  private static func validateDefinitionJSON(_ raw:[String:Any])throws {try ConstructionToolSchema.validateDefinition(raw)}
   public static func validationRequest(project:Project,arguments args:[String:Any]) throws -> PlanarConstructionValidationRequest {
     guard args["command"] as? String == "validate_cases",Set(args.keys).isSubset(of:["command","object_id","cases","extrema"]),
       let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),
@@ -279,7 +294,7 @@ public enum ConstructionCommands {
     let cases=try parameterCases(arguments:args,defaults:definition.values,
       parameters:definition.parameters.map{($0.name,$0.minimum,$0.maximum)})
     return .init(projectID:project.id,objectID:id,sourceRevision:try revision(definition),
-      definition:definition,fold:source.foldPercent,opening:source.openingPercent,cases:cases)
+      definition:definition,fold:source.foldPercent,opening:source.openingPercent,explosion:source.explosionPercent ?? 0,cases:cases)
   }
   static func parameterCases(arguments args:[String:Any],defaults:[String:Double],parameters:[(String,Double,Double)])throws->[PlanarParameterCase] {
     var cases=[PlanarParameterCase(name:"default",values:defaults)]
@@ -315,9 +330,10 @@ public enum ConstructionCommands {
   public static func validationSourceIsCurrent(_ request:PlanarConstructionValidationRequest,in project:Project?) -> Bool {
     guard let project,project.id==request.projectID,let object=project.objects.first(where:{$0.id==request.objectID}),
       let source=try? PaperConstruction.definition(for:object) else{return false}
-    return source.authored==request.definition && source.foldPercent==request.fold && source.openingPercent==request.opening
+    return source.authored==request.definition && source.foldPercent==request.fold && source.openingPercent==request.opening && (source.explosionPercent ?? 0)==request.explosion
   }
   private static func recipe(_ d:PlanarConstructionDefinition,id:String)->Recipe {
+    if d.version>=4 {return ConstructionSourceEditing.recipe(d,id:id)}
     let parameters=d.parameters.map{Parameter($0.name,$0.name,$0.value,$0.minimum...$0.maximum,unit:$0.unit,step:0.1)}
       + [Parameter("fold","Fold",100,0...100,unit:"%",step:1),Parameter("opening","Opening",0,0...100,unit:"%",step:1)]
     let names=Set(d.parameters.map(\.name))
@@ -333,7 +349,7 @@ public enum ConstructionCommands {
     let net=try d.net()
     var source=PaperConstruction(kind:.authored,dimensions:.init(width:d.values["width"] ?? net.size.x,
       height:d.values["height"] ?? net.size.y,depth:d.values["depth"] ?? 1),stock:.init(thicknessMM:try d.number(d.stockThickness)))
-    source.authored=d;return source
+    source.authored=d;if d.version>=4 {source.explosionPercent=0};try validateAssembly(source);return source
   }
   private static func revision(_ d:PlanarConstructionDefinition)throws->String {
     let encoder=JSONEncoder();encoder.outputFormatting=[.sortedKeys]
@@ -361,12 +377,31 @@ public enum ConstructionCommands {
   private static func inspection(_ object:ProductObject)throws->[String:Any] {
     let source=try PaperConstruction.definition(for:object),d=source.authored!
     let poses=try source.resolvedPanels(),connections=try d.connectionMeasurements(poses:poses)
-    return ["object_id":object.id.uuidString,"revision":try revision(d),"definition":try jsonObject(d),
+    var report:[String:Any] = ["object_id":object.id.uuidString,"revision":try revision(d),"definition":try jsonObject(d),
       "net":try jsonObject(source.net()),"poses":try jsonObject(poses),"parameters":object.parameters,
       "connection_checks":try jsonObject(connections),"connections_passed":connections.allSatisfy(\.passed),
       "components":try jsonObject(PaperConstructionEngine.resolvedComponents(source)),
       "interiors":try jsonObject(PaperConstructionEngine.resolvedInteriors(source)),
       "solid_checks_status":d.solidChecks?.isEmpty == false ? "not_evaluated":"not_declared"]
+    if d.version>=4 {
+      let context=try PlanarAssemblySourceContext(d,fallbackStock:source.stock)
+      let members=context.ownership,active=context.enabledIDs,values=context.values
+      report["stock"]=try jsonObject(source.stock);report["groups"]=try jsonObject(d.groups ?? [])
+      report["parts"]=try (d.components ?? []).map {component -> [String:Any] in
+        var item:[String:Any] = ["id":component.id,"name":component.name,"root_panel_id":component.rootPanelID,
+          "panel_ids":members[component.id] ?? [],"enabled":active.contains(component.id),"quantity":component.quantity ?? 1,
+          "stock":try jsonObject(context.stocks[component.id]!),"flat_bounds":try jsonObject(context.bounds[component.id]!)]
+        if let group=component.groupID {item["group_id"]=group}
+        if let face=component.front {item["front"]=try jsonObject(face)}
+        if let face=component.back {item["back"]=try jsonObject(face)}
+        return item
+      }
+      report["resolved_dimensions"]=values
+      report["closed_envelope"]=try jsonObject(PlanarAssemblyEnvelope.resolve(source))
+      let attachments=try d.resolveJointAttachments(stock:source.stock,foldPercent:100,openingPercent:0,explosionPercent:0,validateEngagement:true)
+      report["joint_review"]=["adhesive_plans":attachments.adhesives.count,"tape_plans":attachments.tapes.count,"wire_fasteners":attachments.staples.count,"pose":"closed"]
+    }
+    return report
   }
   public static func solidCheckExample()->PlanarConstructionDefinition {
     .init(name:"Declared stock contact",parameters:[.init("width",40,10...100),.init("height",50,10...100),

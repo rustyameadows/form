@@ -815,7 +815,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
       pen = []
       penID = nil
     }
-    if !fitted, !frames.isEmpty {
+    if !frames.isEmpty, !fitted || session.pendingCanvasFrameFocus != nil {
       DispatchQueue.main.async { [weak self] in self?.fitWhenReady() }
     }
     if publicationEditor==nil {
@@ -879,9 +879,14 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     if let observer = windowFocusObservation { NotificationCenter.default.removeObserver(observer) }
   }
   func fitWhenReady() {
-    guard !growingCanvas, !navigatingViewport, !fitted, !frames.isEmpty, window != nil, let scroll = enclosingScrollView,
+    guard !growingCanvas, !navigatingViewport, !frames.isEmpty, window != nil, !isHiddenOrHasHiddenAncestor, let scroll = enclosingScrollView,
       scroll.contentSize.width > 100, scroll.contentSize.height > 100
     else { return }
+    if let request=session?.pendingCanvasFrameFocus,request.projectID==session?.store?.project?.id {
+      if fit(frameIDs:request.frameIDs) {session?.completeCanvasFrameFocus(request)}
+      return
+    }
+    guard !fitted else{return}
     fitted = true
     fit(all: true)
   }
@@ -1045,7 +1050,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         let sewing = sewingGuides.overlay(frameID: f.id, source: f.artwork)
         let stockRegions=physicalSourceStocks.regions(for:f,store:session.store)
         let face = paper.flatMap { paper in session.store?.project.map {
-          PaperGeometry.faceAppearance(for:f.surfaceObject,stock:paper.stock,project:$0,inside:f.projection?.inside == true)
+          PaperGeometry.faceAppearance(for:f.surfaceObject,stock:f.physicalStock ?? paper.stock,project:$0,inside:f.projection?.inside == true)
         } }
         let drawingArtwork:Artwork
         if f.publicationSpread != nil,let project=session.store?.project {

@@ -19,7 +19,8 @@ import FormGeometry
   }
   static func panelSources(_ object:ProductObject,project:Project,assets:URL)throws {
     guard PaperConstruction.isPaper(object),let definition=try? PaperConstruction.definition(for:object) else{return}
-    let faces=definition.authored?.panels.flatMap{$0.features?.recesses?.compactMap{$0.insert?.face} ?? []} ?? []
+    let faces=(definition.authored?.panels.flatMap{$0.features?.recesses?.compactMap{$0.insert?.face} ?? []} ?? [])
+      + (try definition.authored?.activeComponents().flatMap{[$0.front,$0.back].compactMap{$0}} ?? [])
     try validate(faces.map{.init(sourceObjectID:$0.sourceObjectID,sourceSide:$0.sourceSide)},object:object,project:project,assets:assets)
   }
   private static func validate(_ faces:[ResolvedSheetAssemblyFace],object:ProductObject,project:Project,assets:URL)throws {

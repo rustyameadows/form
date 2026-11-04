@@ -225,6 +225,7 @@ extension StudioStore {
     let paperNet = paperObject.flatMap { try? PaperConstruction.definition(for: $0).net() }
     let panel = paperSelectedPanelID.flatMap { id in paperNet?.panels.contains(where: { $0.id == id }) == true ? id : nil }
     let fold = paperSelectedFoldID.flatMap { id in paperNet?.folds.contains(where: { $0.id == id }) == true ? id : nil }
+    let constructionTarget=constructionTableTarget.flatMap{target in tableObjects.count==1 && tableObjects.first?.id==target.ownerID ? target:nil}
     result["table"] = [
       "active": physicalEnvironment || (environment == .form && mode == .table) || (inStudio && studioSubview == "shots"),
       "selected_object_ids": Array(tableIDs.prefix(idLimit)),
@@ -238,6 +239,7 @@ extension StudioStore {
       "paper_object_id": paperObject?.id.uuidString as Any? ?? null,
       "selected_panel_id": panel as Any? ?? null,
       "selected_fold_id": fold as Any? ?? null,
+      "construction_target": constructionTarget?.metadata() as Any? ?? null,
       "paper_side": paperObject == nil ? null as Any : paperInside ? "inside" : "outside",
     ] as [String: Any]
     if let ref = canvasSelectionReference(), let frameID = ref.frameID,
@@ -276,10 +278,12 @@ extension StudioStore {
       if let projection = frame.projection {
         canvas["physical_surface"] = ["kind": projection.physicalIdentity.kind.rawValue,
           "object_id": projection.constructionID.uuidString, "surface_id": projection.panelID as Any? ?? null,
+          "component_id": projection.componentID as Any? ?? null,
           "side": projection.inside ? "inside" : "outside", "source_to_view": (try? jsonObject(projection.sourceToLocal)) ?? null] as [String: Any]
         if ref.sourceAvailable == true, PaperConstruction.isPaper(frame.surfaceObject) {
           var physical: [String: Any] = ["side": projection.inside ? "inside" : "outside"]
           if let id = projection.panelID { physical["surface_id"] = id }
+          if let id=projection.componentID {physical["component_id"]=id}
           canvas["view_artwork_query"] = ["object_id": projection.constructionID.uuidString, "physical_frame": physical]
         }
       }

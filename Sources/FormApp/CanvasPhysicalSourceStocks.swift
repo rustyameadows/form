@@ -109,22 +109,27 @@ struct CanvasPhysicalSourceStockRegion:Equatable {
       let owner=project.artworkOwner(consumer)
       let insideOwner=paper.insideArtworkSourceID.flatMap{id in project.objects.first{$0.id==id}}.map{project.artworkOwner($0)}
       let base=(try? paper.authored?.resolvedValues()) ?? [:]
-      let variables=base.merging(["fold":paper.foldPercent,"opening":paper.openingPercent]){_,new in new}
+      let variables=base.merging(["fold":paper.foldPercent,"opening":paper.openingPercent,"explosion":paper.explosionPercent ?? 0]){_,new in new}
       for panel in net.panels {
         let bounds=panel.bounds,size=Point2(bounds.width,bounds.height)
-        let physical=try? panel.features?.resolved(size:size,stock:paper.stock,variables:variables,face:{declaration,_ in
+        let panelStock=(try? panel.resolvedStock(fallback:paper.stock)) ?? paper.stock
+        let physical=try? panel.features?.resolved(size:size,stock:panelStock,variables:variables,face:{declaration,_ in
           guard let declaration else{return nil}
           let origin=try declaration.sourceOriginMM.map{Point2(
             try CADExpression.evaluate($0.x.expression,variables:variables),try CADExpression.evaluate($0.y.expression,variables:variables))} ?? .init()
           return .init(sourceObjectID:declaration.sourceObjectID,sourceSide:declaration.sourceSide,originMM:origin)
         })
-        let core=physical?.0 ?? paper.stock
-        if let wrap=physical?.1.wrap {
+        let core=physical?.0 ?? panelStock
+        if let front=panel.front {
+          appendFace(front,size:size,stock:physical?.1.wrap?.stock ?? core,consumer:consumer,inside:false,
+            margin:physical?.1.wrap.map{core.resolvedThicknessMM+$0.turnInMM} ?? 0)
+        }else if let wrap=physical?.1.wrap {
           let margin=core.resolvedThicknessMM+wrap.turnInMM
           append(owner.id,rect:CGRect(x:bounds.x,y:bounds.y,width:bounds.width,height:bounds.height).insetBy(dx:-margin,dy:-margin),
             stock:wrap.stock,consumer:consumer,inside:false)
         }else{append(owner.id,rect:.init(x:bounds.x,y:bounds.y,width:bounds.width,height:bounds.height),stock:core,consumer:consumer,inside:false)}
-        if let insideOwner {append(insideOwner.id,rect:.init(x:bounds.x,y:bounds.y,width:bounds.width,height:bounds.height),stock:core,consumer:consumer,inside:true)}
+        if let back=panel.back {appendFace(back,size:size,stock:core,consumer:consumer,inside:true)}
+        else if let insideOwner {append(insideOwner.id,rect:.init(x:bounds.x,y:bounds.y,width:bounds.width,height:bounds.height),stock:core,consumer:consumer,inside:true)}
         for recess in physical?.1.recesses ?? [] {
           if let insert=recess.insert {appendFace(insert.face,size:recess.size,stock:insert.stock,consumer:consumer,inside:false)}
         }

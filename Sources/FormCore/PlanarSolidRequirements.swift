@@ -35,7 +35,7 @@ public struct PlanarSolidRequirement: Codable, Equatable, Identifiable, Sendable
       throw FormError.invalid("Solid check '\(id)' requires a finite nonnegative expected measurement no greater than 1e12.")
     }
   }
-  public func measurement(_ measured: Double, values: [String:Double], stockThicknessMM: Double) throws -> PlanarSolidMeasurement {
+  public func measurement(_ measured: Double, values: [String:Double], stockThicknessMM: Double,firstStockThicknessMM:Double?=nil,secondStockThicknessMM:Double?=nil) throws -> PlanarSolidMeasurement {
     let expected=try CADExpression.evaluate(value.expression,variables:values)
     var passed=true,error:String?
     do {try comparison.validateResolved(lhs:measured,rhs:expected,parameterValues:values)}
@@ -43,7 +43,7 @@ public struct PlanarSolidRequirement: Codable, Equatable, Identifiable, Sendable
     return .init(id:id,firstPanelID:firstPanelID,secondPanelID:secondPanelID,metric:metric,
       units:metric == .clearance ? "mm":"mm3",measured:measured,required:expected,
       relation:relation,tolerance:tolerance,message:message,stockThicknessMM:stockThicknessMM,
-      passed:passed,error:error)
+      passed:passed,error:error,firstStockThicknessMM:firstStockThicknessMM,secondStockThicknessMM:secondStockThicknessMM)
   }
 }
 
@@ -61,4 +61,5 @@ public struct PlanarSolidMeasurement: Codable, Equatable, Sendable {
   public var stockThicknessMM: Double
   public var passed: Bool
   public var error: String?
+  public var firstStockThicknessMM:Double?=nil,secondStockThicknessMM:Double?=nil
 }

@@ -4,6 +4,17 @@ import FormCADModel
 import FormCADModeling
 
 final class CADAgentValidationTests: XCTestCase {
+  func testLargeDerivedGraphResolvesOutOfOrderSharedDependenciesAndRejectsDisconnectedCycle()throws {
+    var expressions=[String:CADScalar]()
+    // Lexical order opposes dependency order; every node also shares a root.
+    for index in 0..<256 {
+      expressions[String(format:"value%03d",index)]=CADScalar(index==255 ? "seed+1":String(format:"value%03d+seed",index+1))
+    }
+    let values=try CADDerivedExpressions.resolve(expressions,variables:["seed":2])
+    XCTAssertEqual(values["value000"],513);XCTAssertEqual(values["value255"],3)
+    expressions["value200"]="value199+1"
+    XCTAssertThrowsError(try CADDerivedExpressions.resolve(expressions,variables:["seed":2]))
+  }
   func testSharedDerivedExpressionsResolveDependenciesAndRejectUnknownCyclesAndDomains() throws {
     let values=try CADDerivedExpressions.resolve(["size":"sqrt(area)","area":"width*width","offset":"sin(pi/2)*size"],variables:["width":12])
     XCTAssertEqual(values["offset"],12)

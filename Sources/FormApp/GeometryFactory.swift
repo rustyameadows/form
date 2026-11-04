@@ -12,7 +12,7 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     object.textile?.embroidery != nil ? artwork.embroideryRenderDefinition:artwork.renderDefinition
   }
   static func geometryParameters(_ object: ProductObject) -> [String: Double] {
-    if PaperConstruction.isPaper(object) {return object.parameters.filter{!["fold","foldPercent","opening","openingPercent"].contains($0.key)}}
+    if PaperConstruction.isPaper(object) {return object.parameters.filter{!["fold","foldPercent","opening","openingPercent","explosion","explosionPercent"].contains($0.key)}}
     return ["clock","deskClock"].contains(object.recipeID)
       ? object.parameters.filter { !["hour", "minute", "hands"].contains($0.key) }
       : object.parameters

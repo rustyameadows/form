@@ -55,11 +55,25 @@ extension Project {
     }
     return false
   }
-  private func physicalDimension(_ reference:PhysicalDimensionReference,measurements:inout [UUID:SheetAssemblyMeasurements])throws->Double {
+  private func physicalDimension(_ reference:PhysicalDimensionReference,measurements:inout [UUID:SheetAssemblyMeasurements],authoredValues:inout [UUID:[String:Double]])throws->Double {
     guard let source=objects.first(where:{$0.id==reference.sourceObjectID}) else{throw FormError.invalid("A dimension source is missing. Repair its relationships before removing it.")}
     if reference.measurement == .parameter {
-      guard let key=reference.parameter,let value=source.parameters[key],value.isFinite else{throw FormError.invalid("A dimension reference needs an existing numeric source parameter.")}
-      return value
+      guard let key=reference.parameter else{throw FormError.invalid("A dimension reference needs an existing numeric source parameter or authored dimension.")}
+      if let value=source.parameters[key],value.isFinite {return value}
+      // Authored named dimensions use the same saved expression authority as
+      // their part geometry. Referencing an alias avoids duplicating its cut
+      // formula in each canonical artwork source's dimension relationship.
+      if PaperConstruction.isPaper(source),var definition=source.paperConstruction?.authored,definition.derived?[key] != nil {
+        let values:[String:Double]
+        if let cached=authoredValues[source.id] {values=cached}else {
+          for index in definition.parameters.indices {
+            if let value=source.parameters[definition.parameters[index].name] {definition.parameters[index].value=value}
+          }
+          values=try definition.resolvedValues();authoredValues[source.id]=values
+        }
+        if let value=values[key],value.isFinite{return value}
+      }
+      throw FormError.invalid("The dimension source has no numeric parameter or authored dimension named '\(key)'.")
     }
     guard reference.parameter==nil else{throw FormError.invalid("Only parameter measurements accept a parameter key.")}
     if source.sheetAssembly != nil {
@@ -80,12 +94,21 @@ extension Project {
     } else {
       if [.closedWidth,.closedHeight,.closedThickness].contains(reference.measurement),PaperConstruction.isPaper(source) {
         var paper=try PaperConstruction.definition(for:source);paper.openingPercent=0
+        if paper.explosionPercent != nil {paper.explosionPercent=0}
+        if paper.authored?.version ?? 0 >= 4 {
+          let size=try PlanarAssemblyEnvelope.resolve(paper).sizeMM
+          switch reference.measurement {
+          case .closedWidth:return size.x
+          case .closedHeight:return size.y
+          default:return size.z
+          }
+        }
         let net=try paper.net(),poses=try paper.resolvedPanels(foldPercent:100)
         var low=Vector3(.infinity,.infinity,.infinity),high=Vector3(-.infinity,-.infinity,-.infinity)
         let values=try (paper.authored?.resolvedValues() ?? [:]).merging(["fold":100,"opening":0]){_,new in new}
         for panel in net.panels {
           guard let matrix=poses.first(where:{$0.panelID==panel.id})?.flatToWorld else{continue}
-          for point in try panel.physicalBoundarySamples(stock:paper.stock,variables:values,worldMatrix:matrix) {
+          for point in try panel.physicalBoundarySamples(stock:try panel.resolvedStock(fallback:paper.stock),variables:values,worldMatrix:matrix) {
             let p=PaperRigidMatrix.point(matrix,point)
             low = .init(min(low.x,p.x),min(low.y,p.y),min(low.z,p.z));high = .init(max(high.x,p.x),max(high.y,p.y),max(high.z,p.z))
           }
@@ -162,13 +185,13 @@ extension Project {
     // Resolve all values into the transaction's candidate, never the open project.
     let order=try physicalDimensionOrder()
     let indices=Dictionary(uniqueKeysWithValues:objects.indices.map{(objects[$0].id,$0)})
-    var measurements=[UUID:SheetAssemblyMeasurements]()
+    var measurements=[UUID:SheetAssemblyMeasurements](),authoredValues=[UUID:[String:Double]]()
     for id in order {
       guard let index=indices[id],!((objects[index].dimensionBindings?.isEmpty ?? true) && (objects[index].artworkRegions?.isEmpty ?? true)) else{continue}
       var parameters=objects[index].parameters
       for binding in objects[index].dimensionBindings ?? [] {
         var variables=parameters
-        for (name,reference) in binding.inputs {variables[name]=try physicalDimension(reference,measurements:&measurements)}
+        for (name,reference) in binding.inputs {variables[name]=try physicalDimension(reference,measurements:&measurements,authoredValues:&authoredValues)}
         let value=try CADExpression.evaluate(binding.expression,variables:variables)
         guard value.isFinite else{throw FormError.invalid("Derived dimensions must be finite.")}
         parameters[binding.parameter]=value
@@ -178,6 +201,7 @@ extension Project {
         try recipe(objects[index].recipeID)?.validate(parameters)
         let previousObject=objects[index]
         objects[index].parameters=parameters
+        authoredValues.removeValue(forKey:id)
         if PaperConstruction.isPaper(objects[index]) {objects[index]=try PaperConstructionEngine.synchronized(objects[index],previous:previousObject)}
       }
       let now=objects[index],old=previous.objects.first{$0.id==id}

@@ -28,7 +28,11 @@ public struct PaperPanel:Codable,Equatable,Identifiable,Sendable {
   public var artworkRotationDegrees:Double?
   public var cutouts:[PaperPanelCutout]?
   public var features:SheetPanelFeatures?
-  public init(id:String,name:String,role:Role,polygon:[Point2],parentID:String?=nil,foldID:String?=nil,artworkRotationDegrees:Double?=nil,cutouts:[PaperPanelCutout]?=nil,features:SheetPanelFeatures?=nil){self.id=id;self.name=name;self.role=role;self.polygon=polygon;self.parentID=parentID;self.foldID=foldID;self.artworkRotationDegrees=artworkRotationDegrees;self.cutouts=cutouts;self.features=features}
+  /// A resolved cut-piece owner and material override. Nil retains historical stock inheritance.
+  public var componentID:String?,stock:PaperStock?,stockThicknessMM:Double?
+  public var front:ResolvedSheetAssemblyFace?,back:ResolvedSheetAssemblyFace?
+  public var finishes:[PaperFinishAssignment]?
+  public init(id:String,name:String,role:Role,polygon:[Point2],parentID:String?=nil,foldID:String?=nil,artworkRotationDegrees:Double?=nil,cutouts:[PaperPanelCutout]?=nil,features:SheetPanelFeatures?=nil,componentID:String?=nil,stock:PaperStock?=nil,stockThicknessMM:Double?=nil,front:ResolvedSheetAssemblyFace?=nil,back:ResolvedSheetAssemblyFace?=nil,finishes:[PaperFinishAssignment]?=nil){self.id=id;self.name=name;self.role=role;self.polygon=polygon;self.parentID=parentID;self.foldID=foldID;self.artworkRotationDegrees=artworkRotationDegrees;self.cutouts=cutouts;self.features=features;self.componentID=componentID;self.stock=stock;self.stockThicknessMM=stockThicknessMM;self.front=front;self.back=back;self.finishes=finishes}
   public var bounds:PaperBounds{let xs=polygon.map(\.x),ys=polygon.map(\.y),x=xs.min() ?? 0,y=ys.min() ?? 0;return .init(x:x,y:y,width:(xs.max() ?? x)-x,height:(ys.max() ?? y)-y)}
 }
 public struct PaperFold:Codable,Equatable,Identifiable,Sendable {
@@ -86,8 +90,9 @@ public struct PaperConstruction:Codable,Equatable,Sendable {
   public var kind:Kind,dimensions:PaperDimensions,stock:PaperStock,clearanceMM:Double,glueTabMM:Double,topFlapMM:Double,bottomFlapMM:Double,cornerRadiusMM:Double,foldPercent:Double,openingPercent:Double
   public var insideArtworkSourceID:UUID?,insideArtwork:Artwork?,annotations:[PaperAnnotation],artworkReviewRequired:Bool,artworkReferenceSize:Point2?
   public var finishes:[PaperFinishAssignment]?
-  public init(kind:Kind,dimensions:PaperDimensions,stock:PaperStock = .init(),clearanceMM:Double=2,glueTabMM:Double=16,topFlapMM:Double=38,bottomFlapMM:Double=30,cornerRadiusMM:Double=4,foldPercent:Double=100,openingPercent:Double=0,insideArtworkSourceID:UUID?=nil,insideArtwork:Artwork?=nil,annotations:[PaperAnnotation]=[],artworkReviewRequired:Bool=false,artworkReferenceSize:Point2?=nil){self.kind=kind;self.dimensions=dimensions;self.stock=stock;self.clearanceMM=clearanceMM;self.glueTabMM=glueTabMM;self.topFlapMM=topFlapMM;self.bottomFlapMM=bottomFlapMM;self.cornerRadiusMM=cornerRadiusMM;self.foldPercent=foldPercent;self.openingPercent=openingPercent;self.insideArtworkSourceID=insideArtworkSourceID;self.insideArtwork=insideArtwork;self.annotations=annotations;self.artworkReviewRequired=artworkReviewRequired;self.artworkReferenceSize=artworkReferenceSize}
-  enum CodingKeys:String,CodingKey{case version,kind,authored,dimensions,stock,clearanceMM,glueTabMM,topFlapMM,bottomFlapMM,cornerRadiusMM,foldPercent,openingPercent,insideArtworkSourceID,insideArtwork,annotations,artworkReviewRequired,artworkReferenceSize,finishes}
+  public var explosionPercent:Double?
+  public init(kind:Kind,dimensions:PaperDimensions,stock:PaperStock = .init(),clearanceMM:Double=2,glueTabMM:Double=16,topFlapMM:Double=38,bottomFlapMM:Double=30,cornerRadiusMM:Double=4,foldPercent:Double=100,openingPercent:Double=0,insideArtworkSourceID:UUID?=nil,insideArtwork:Artwork?=nil,annotations:[PaperAnnotation]=[],artworkReviewRequired:Bool=false,artworkReferenceSize:Point2?=nil,explosionPercent:Double?=nil){self.kind=kind;self.dimensions=dimensions;self.stock=stock;self.clearanceMM=clearanceMM;self.glueTabMM=glueTabMM;self.topFlapMM=topFlapMM;self.bottomFlapMM=bottomFlapMM;self.cornerRadiusMM=cornerRadiusMM;self.foldPercent=foldPercent;self.openingPercent=openingPercent;self.insideArtworkSourceID=insideArtworkSourceID;self.insideArtwork=insideArtwork;self.annotations=annotations;self.artworkReviewRequired=artworkReviewRequired;self.artworkReferenceSize=artworkReferenceSize;self.explosionPercent=explosionPercent}
+  enum CodingKeys:String,CodingKey{case version,kind,authored,dimensions,stock,clearanceMM,glueTabMM,topFlapMM,bottomFlapMM,cornerRadiusMM,foldPercent,openingPercent,insideArtworkSourceID,insideArtwork,annotations,artworkReviewRequired,artworkReferenceSize,finishes,explosionPercent}
   public init(from decoder:Decoder)throws {
     let c=try decoder.container(keyedBy:CodingKeys.self)
     version=try c.decodeIfPresent(Int.self,forKey:.version) ?? 1
@@ -108,6 +113,7 @@ public struct PaperConstruction:Codable,Equatable,Sendable {
     artworkReviewRequired=try c.decodeIfPresent(Bool.self,forKey:.artworkReviewRequired) ?? false
     artworkReferenceSize=try c.decodeIfPresent(Point2.self,forKey:.artworkReferenceSize)
     finishes=try c.decodeIfPresent([PaperFinishAssignment].self,forKey:.finishes)
+    explosionPercent=try c.decodeIfPresent(Double.self,forKey:.explosionPercent)
   }
   public static let recipeIDs:Set<String>=["paperEnvelope","tuckCarton"]
   public static func isPaper(_ object:ProductObject)->Bool{object.paperConstruction != nil || recipeIDs.contains(object.recipeID)}
