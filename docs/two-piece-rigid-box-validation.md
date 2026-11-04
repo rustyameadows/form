@@ -7,6 +7,7 @@ This records completed validation against the [separate-board specification](two
 ## Implementation and regression checks
 
 - **311 tests passed, zero failures** in the final completed regression run recorded at `/private/tmp/lab-rigid-tenth-tests.log`.
+- A later **43-test publication/cache regression run passed**, covering dense physical frames, publication layout/spreads, navigation and first-mount linked-pattern focus (`/private/tmp/lab-rigid-publication-cache-tests.log`).
 - Coverage includes independent stocks and parent groups, saved optional pieces, derived dimensions, actual tape contact, staple receiving paths/access, physical wire envelopes, canonical front/reverse artwork, native candidate editing, conservative legacy adoption, independent Studio poses, production-guide acceptance, material layouts and shared texture sampling.
 - The final review found and repaired clinch self-intersection, production guides accepted before their export-time failure, and double-counting a physical tape strip referenced by multiple joints. Clinch tests include a supported through-stack route, excessive overlapping tips, an insufficient physical bend and separated tips at different receiving heights.
 - Application changes remain generic. Named construction geometry, option sets, artwork and manufacturing assumptions are data in [the CASK / COLLECT study](../examples/two-piece-rigid-boxes/README.md) and the bundled construction starter. No project-name geometry branch was added to Swift.
@@ -27,6 +28,10 @@ The single ordinary LAB app was used for these operations:
 Local evidence includes `native-undo-redo-proof.json`, `native-applied-artwork-proof.json`, `native-round06-before-apply.json`, `native-round06-applied-project.json`, `native-round06-reinforcement-inspection.json` and `native-round06-artwork-position-proof.json` under `.local/validation/rigid-boxes/`. Native screenshots include the staged construction preview and separate section window in that directory's `evidence/` folder.
 
 Earlier automation timeouts are retained in the evidence; they are not reported as completed isolated responsiveness benchmarks. Tool-call wall time includes automation overhead.
+
+While the Mac was locked, a live cover-caliper edit was accepted, but the following project-read and Undo responses timed out. LAB remained running. A later authoritative read proved that Undo had already completed and the **entire project exactly matched its pre-edit snapshot**; no duplicate Undo was issued. Profiling identified repeated copying/hashing of all 1,189 cached Canvas frames through the hidden inspector's publication-layout lens, despite this project having no publications. The lens now preserves its original array when no facing-page layout applies. A dense storage-reuse regression and the 43-test run cover the correction; native latency must still be retested after installing the rebuilt candidate.
+
+The app subsequently passed eight **read-only geometry cases** for covering caliper, lining/caliper, a relocated wall-band seam, tape width, staple count/crown/end spacing, lid depth, locked overlap and finished-outside dimensions. These exercised 60–70 active faces and retained the accepted project exactly. They establish candidate geometry validation, rather than completion of the pending accepted-edit performance retest.
 
 ## Editable configurations and physical source checks
 

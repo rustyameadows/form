@@ -20,9 +20,14 @@ struct CanvasPublicationSubstrate: Equatable {
   /// View geometry only: never rewrite source placement when opening, closing,
   /// navigating or reopening a publication. The rail owns no layout state.
   static func applying(to frames:[CanvasFrame],project:Project)->[CanvasFrame] {
+    let documents=(project.publications ?? []).filter{$0.layout?.facingPages==true && !$0.pages.isEmpty}
+    // Cached Canvas reads also serve inspector bindings while Table is active.
+    // Without a facing publication, preserve the original COW array instead of
+    // copying every large frame and recomputing every projection's stable ID.
+    guard !documents.isEmpty else{return frames}
     let canonical=Dictionary(frames.filter{$0.projection==nil}.map{($0.object.id,$0)},uniquingKeysWith:{first,_ in first})
     var replacement=[UUID:CanvasFrame]()
-    for document in project.publications ?? [] where document.layout?.facingPages==true {
+    for document in documents {
       let sources=document.pages.compactMap{canonical[$0.objectID]}
       guard let anchorX=sources.map(\.rect.minX).min(),let anchorY=sources.map(\.rect.minY).min() else{continue}
       let x=Double(anchorX);var y=Double(anchorY)
@@ -39,6 +44,7 @@ struct CanvasPublicationSubstrate: Equatable {
         y += geometry.sizeMM.y+44
       }
     }
+    guard !replacement.isEmpty else{return frames}
     var emitted=Set<UUID>(),result=[CanvasFrame]()
     for original in frames {
       guard let frame=replacement[original.id],let spread=frame.publicationSpread else{result.append(original);continue}
