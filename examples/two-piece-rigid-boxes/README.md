@@ -1,8 +1,12 @@
 # CASK / COLLECT: two-piece separate-board study
 
+Open [CASK-Construction-Lab.form](CASK-Construction-Lab.form) in the ordinary LAB app. This portable native project contains the seven materially distinct construction checkpoints, the adopted original study, their canonical artwork, reference images and 23 saved scenes. Unreferenced intermediate object snapshots are excluded; current saved objects and assets are byte-identical to the native package.
+
+[validation.json](validation.json) records completed tests, native operations, source identities and preservation checks. Final native verification of the signed handoff build remains pending while the Mac is locked; the [acceptance record](../../docs/two-piece-rigid-box-validation.md) lists the remaining gates. Images under `proofs/iterations/` retain actual app failures and revisions, including the later connected corner before the final weave refinement.
+
 This is editable project/library data. There is no box generator, named category or project-specific geometry in application code. `generate_starter.py` emits the bundled portable `constructionStarter` using generic planar cut pieces, per-piece material/face mappings, parent groups and anchored board-joint attachments.
 
-The native **Add object → Construction starters** flow and public `form_construction` `add_starter` command import the same source. The bundled ID is `two-piece-setup`. Import creates the physical assembly and five canonical covering/lining/insert artwork sources as one undoable action. Source identities are remapped for each import. Standalone parameter variants also resize the owner fallback stock to the resolved root caliper, preserving any bonded ply ratios; independently stocked piece declarations remain separate.
+The native **Add object → Constructions** flow and public `form_construction` `add_starter` command import the same source. The bundled ID is `two-piece-setup`. Import creates the physical assembly and five canonical covering/lining/insert artwork sources as one undoable action. Source identities are remapped for each import. Standalone parameter variants also resize the owner fallback stock to the resolved root caliper, preserving any bonded ply ratios; independently stocked piece declarations remain separate.
 
 Run the deterministic authoring and independent source checks:
 

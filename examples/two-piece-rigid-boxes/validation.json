@@ -1,0 +1,360 @@
+{
+  "version": 1,
+  "status": "final-native-acceptance-pending",
+  "codeCommit": "2dd611b95529f3a357a68720cde476f81454aa13",
+  "pullRequest": "https://github.com/rustyameadows/form/pull/37",
+  "tests": [
+    {
+      "suite": "Construction, Canvas, renderer, paper/publication/fabric compatibility",
+      "executed": 311,
+      "failures": 0
+    },
+    {
+      "suite": "Final construction packets, including narrow PDF/SVG identities",
+      "executed": 18,
+      "failures": 0
+    },
+    {
+      "suite": "Reproducible starter authoring",
+      "executed": 2,
+      "failures": 0
+    }
+  ],
+  "package": {
+    "projectID": "1B0E5651-717B-4F24-9FEC-EA555F4E0B11",
+    "objectCount": 45,
+    "sceneCount": 23,
+    "manifestSHA256": "a55da028b8735af7ce20d9776f01397ba8a908e7254e3b0f9cf43b7488ba9e65",
+    "files": {
+      "Preview.png": "6d32ffd017d1b45b6cc972b5523da3ae936fdc18f1bb66d48941a50704c466a1",
+      "Manifest.json": "a55da028b8735af7ce20d9776f01397ba8a908e7254e3b0f9cf43b7488ba9e65",
+      "Objects/F6CD3F8B-36EC-4813-9D5C-73BD609A5C94-fa4ba695701ff640.json": "fa4ba695701ff640433d306586262ae5098d8c71aad33d7aabba801b50703d6f",
+      "Objects/120CCE33-02C4-4556-9604-58DB6EF733EC-9f34f52f25da9940.json": "9f34f52f25da9940b7acf501c170a9209fa8bfc8da639554b64914602f3e5db2",
+      "Objects/8D1D4D1B-DD10-4F36-983F-C38B2EE69576-40a614d726572165.json": "40a614d726572165e3cbfbe89ebfb3e4720d8f5a31d9a5f060bd4bf8708907a0",
+      "Objects/AFDC355F-7943-4363-B7CF-9B3CD062B88B-6e1f5bd9bde639fd.json": "6e1f5bd9bde639fde295747c01ef8fdc79d261bb5818cb15e41394a602da1704",
+      "Objects/CEE3F454-2D08-4A6E-A34E-9AF8C8050083-3ba8fe7e4e65ff04.json": "3ba8fe7e4e65ff04938c74b248621c28bff85737a843430d95673eec5729ded2",
+      "Objects/A4F2C6F4-63B3-4980-9D0D-0620FABB8F09-96e507ce1b9327c7.json": "96e507ce1b9327c76548120aa85da84fa5b625fa8e46d29512f2d30c747427b7",
+      "Objects/F3181F05-D3BA-4661-98FF-F0F8BFAB869A-41155016070cdc6b.json": "41155016070cdc6b0d2698b391bd438722878366fae9668b36b1d9fcff98e8c3",
+      "Objects/6A499C78-AAED-410E-B0C5-DAAAFDB02AB0-11b69499653b5243.json": "11b69499653b52439ed85804d917cf9a1147b2882e7d18047276d9c79edc5c19",
+      "Objects/43E8A1A7-4CAE-4383-A5C8-E9442B27C5A4-ac8f8ab36bbd7a8d.json": "ac8f8ab36bbd7a8dc9025b73620be9973f91c87998f2da1b006082595fcf5c21",
+      "Objects/D98CCE27-7833-4E75-99F4-286659539E34-a259cc0cab57d216.json": "a259cc0cab57d216b0d50996ccb23876de561ebb1f83de4b1d63e0fba10222b8",
+      "Objects/68FC1F53-D48A-4B2F-8610-02BB3EE1466A-4e61b5852c17442d.json": "4e61b5852c17442de1a25965ddbdb403a51ebb9a972ebbdb62f4d6792ea507d7",
+      "Objects/D4D678D7-0CBD-46C2-8E05-495A9A17DF02-180716d434702c58.json": "180716d434702c58e98c17b7d8d2911b11df02ac0d7f949bf7704b4f68757f2a",
+      "Objects/84095303-B9CE-41A5-9B80-673F92399943-eb838c0035e95b6f.json": "eb838c0035e95b6f170f62014bee4dbb7a454720658e2b4cf3e39a15bce1f1e7",
+      "Objects/7D36AECB-DC3B-4E44-AB4B-A7B1D520243C-39bca4a53aa35948.json": "39bca4a53aa35948a8bc0d1fe5112f41ec05b0b10e6891b01e1ad0440de13677",
+      "Objects/CA1064D8-E08A-4ED6-B192-2E2B300BC923-6fe01a788b0d5879.json": "6fe01a788b0d58793db472d6180121e7550317fd72d93df65143b35210afb9bd",
+      "Objects/3C3508E0-EFBC-4D65-9802-77F954D1E70C-6b591de1db480156.json": "6b591de1db480156e609bd3a4210c0d239920e6851b2802f4ed7c08376546dea",
+      "Objects/771F6CFE-96C0-428E-8E03-DCE4E0FB9300-ec9d738f80c5bb02.json": "ec9d738f80c5bb02e0e3449a0cb7167f5ccc658d62a47f34c6b70f5fca4bd218",
+      "Objects/29975CD4-0A1D-47C8-9E78-8526A922CF1C-78c6e7bd16cc07af.json": "78c6e7bd16cc07af6d95eabfb6b209de6cf20f3656b5ed2074c020dab270bbbe",
+      "Objects/9CDE9C8E-61C7-4070-973A-8A6275617FD0-42b7a33a9cccd888.json": "42b7a33a9cccd8883d03369778f86e756395f050b8274325249c4abcb0db75a8",
+      "Objects/4F9387B6-DD48-41A8-933D-9B4297EC4F28-14c6c214d4ab75dc.json": "14c6c214d4ab75dcbd9afe081f35306158f9bf82fc6ab53c6f07bfbd26b1e87d",
+      "Objects/F9B9494C-7734-4EF3-889D-170677EE28FF-59e3c01aa711e00c.json": "59e3c01aa711e00c49530e62476ad505b317590233d5994b278789f0b5695c19",
+      "Objects/E1D9DDAB-C242-45B1-8AE2-2FE1B996E3AF-87403e084eb3929e.json": "87403e084eb3929e75d33c16ec9e5581c0d36fd9fb835702c4e33080ed8e3bc9",
+      "Objects/2897F316-D8AB-485D-810D-4ABAC077100F-1e758841fd2567fe.json": "1e758841fd2567fe841932f9517a2d3b615aa98ee970c89ab7c9c337ed4876ad",
+      "Objects/9E65EDFC-66A2-42B9-871A-FD2E1D4EF367-a8f846ff7c71a06a.json": "a8f846ff7c71a06a8d6a79c403c7b73db7c8da0842b3c58db92cdffbbe42dc1d",
+      "Objects/66577922-FE8D-44E1-9210-A2F91ED00F62-2e664612ff416de9.json": "2e664612ff416de9114d716b2969945922f061991a133687ee598c188167b848",
+      "Objects/9E6CA4A8-82DE-4567-B199-AA76BF7194D3-63ff6201babbfb36.json": "63ff6201babbfb36d557be456ea8c40031c1b1a1fa8de66b7f0000640f9eb9ea",
+      "Objects/D5800F3B-F057-4A8B-BAAF-4DB892324167-454f456f117449e7.json": "454f456f117449e794abbe8a440f7d92c1f65c7b4e841e6f08750f2b6ab74ecd",
+      "Objects/457B1B5E-1548-480F-A7C2-FDDF554FC0CA-46cf60c6a035909d.json": "46cf60c6a035909d602ef2a6c437f0aa583920409127b93b171f40350172a62b",
+      "Objects/A6F202F1-8495-4AAE-97D4-E59FF35F5A7B-6812a52efa9b36a8.json": "6812a52efa9b36a8d7ce95ceef35de96ec9d1078af816f8ebacbc775a2e3a1d8",
+      "Objects/73E7AB21-F70E-4E46-8403-B6A7078DFEFB-4fb9f42bf7c633f2.json": "4fb9f42bf7c633f21d3cbf06f497eed14941dba7df25a286a053ace630aae1a5",
+      "Objects/564A0392-C66F-4613-A549-DA91EB87FBA5-ec0f0a6d5cbf5619.json": "ec0f0a6d5cbf561910ee2dcf2cd2446e457aaec4812aad9ed1bd7431cf5cad86",
+      "Objects/E11D0F16-A699-479A-8FFD-D268DD0FB94E-b84611419ccac1de.json": "b84611419ccac1de4f67e3ab098eaf589f50588e07b820edb65def40d1d7069a",
+      "Objects/6603AF1D-C877-489E-BE88-162663772A2D-e2a99458711d800e.json": "e2a99458711d800e82880f795b1a041edac3177bda0147b361182bebb39590f7",
+      "Objects/C33C0BC9-051D-4148-A196-6AA9ECF88010-c82e2a7d1ba2af91.json": "c82e2a7d1ba2af917c6a8c9bba3bd45928b7c1c6e9b785d077f58fd072503ea8",
+      "Objects/A1B5EDE2-33F6-431A-B7F2-D4CE04394B4A-053a509a9cb1087d.json": "053a509a9cb1087df12ca7016b094e01670bb0f631c579f0dd0e2091b9d2b2bf",
+      "Objects/A4E5530D-5E87-4442-B4ED-AAB9E572CA24-182290d44325f94c.json": "182290d44325f94c45c0413c1cb2281ce849ff3e709b9a6a208726955cd3fba2",
+      "Objects/20B9FBC4-3167-4A4D-8CC6-DCFB1A48094B-4bf9ad877890d314.json": "4bf9ad877890d3149e35ed5e1b78793e3e11e6da647edfec3fd8156cd1ff6f39",
+      "Objects/D422EE9E-57F0-4398-88B7-B3625283D0A6-9ca745f06eaa2f16.json": "9ca745f06eaa2f1675529e6a64f88e9c13cb5ad88cb7b4df85d1e2002d16ce4f",
+      "Objects/541C25F1-73F0-464D-B0AF-97E193301F61-dea7d36f87280ef4.json": "dea7d36f87280ef41329d9830bdac5c2ccec3f2a58bd57547ccfc49823c6f81b",
+      "Objects/EA57CDD3-CCB5-4151-BEE3-303784171383-cd626141c4596a01.json": "cd626141c4596a011730195f5e0ab1e124349c79f989242cade153cad54158fd",
+      "Objects/0E606FAC-7E7D-4083-8CCE-4F7078701264-0c357ddd40de470d.json": "0c357ddd40de470d88d9aafb65109bf5f4e259c324a8fa2799890d1dca8393ff",
+      "Objects/D7EF2BED-9332-43AB-AC14-D6EA0D55E5F2-39069d710e5712ec.json": "39069d710e5712ec544a0878b11384f9ac6ab89c0f0e71c2c9c574ddb2d04f54",
+      "Objects/9578E97A-18B4-43CC-864C-FEDFE6ACF5CF-06bb504d9cf6e69a.json": "06bb504d9cf6e69a3c13c1b4803efc47e9613cca762976a397be5b430baf134f",
+      "Objects/5F858672-6F85-4553-8E3D-316F02F0D59C-d2ee6930d3089689.json": "d2ee6930d308968905d08a601e54e38d0076b5c745e723b9135898e69dc6bb81",
+      "Objects/9AF96E1E-C438-4E2E-91F6-DD367727C5C3-d791646ee31e403f.json": "d791646ee31e403f1f6ef26831ca2c3938ec6952e30c011f90cb21ef4d683de8",
+      "Assets/41271BBD-85E8-46F9-99BB-FE107546BD0D.jpg": "5c702a0fbbdad03977886acc7684e5a796b8ff389e747db0203dffd59f8da217",
+      "Assets/F75E2DC0-EC68-466E-9E31-63BB92D16124.jpg": "70d3cf2eaa00a4db6fe4280a11b6f797506fdf23eda8546ef72fda57c749459e"
+    },
+    "bytes": 5992596,
+    "prunedUnreferencedObjectSnapshots": true,
+    "livePackageUnchanged": true
+  },
+  "legacyAdoption": {
+    "ownerID": "9AF96E1E-C438-4E2E-91F6-DD367727C5C3",
+    "stablePanelIDs": [
+      "base-floor",
+      "base-front",
+      "base-back",
+      "base-left",
+      "base-right",
+      "lid-floor",
+      "lid-front",
+      "lid-back",
+      "lid-left",
+      "lid-right",
+      "insert"
+    ],
+    "stableComponentIDs": [
+      "base-floor",
+      "base-front",
+      "base-back",
+      "base-left",
+      "base-right",
+      "lid-floor",
+      "lid-front",
+      "lid-back",
+      "lid-left",
+      "lid-right",
+      "insert"
+    ],
+    "outsideArtworkSHA256": "7aef8ab57051f8eb89ed0e2f60dcca4999f50c692ce7a3d5b353420898ddf52b",
+    "insideSourceID": "F9B9494C-7734-4EF3-889D-170677EE28FF",
+    "scenesSHA256": "73a45158585378ff2255a27d3d63d924fa5e832b4dcfc50fb28fecbbe98f3ea6",
+    "stockPreserved": true,
+    "posesPreserved": true,
+    "originalClearanceMeaningPreserved": true,
+    "newAssumptionsExplicit": true,
+    "projectID": "1B0E5651-717B-4F24-9FEC-EA555F4E0B11",
+    "legacySourceSHA256": "8b7d638b53cef7170cfeea6ef12bbe6508a0b9eaeae96cc5c5ed3479b057cf5b",
+    "initialObjectCount": 42,
+    "staleRevisionRejected": true,
+    "undoRedoPassed": true,
+    "reopenPassed": true,
+    "exactChecksPassed": true,
+    "resumedExistingAdoption": true,
+    "selectionAndUndoResetOnReopen": "Expected public open semantics; persisted cameras/scenes remain unchanged."
+  },
+  "invalidEdits": [
+    {
+      "id": "locked-overlap-exceeds-lid-depth",
+      "rejected": true,
+      "acceptedProjectPreserved": true,
+      "error": "form_construction: Requirement 'seating-no-negative-headspace': Locked lid overlap exceeds the available lid interior depth. Reduce overlap or increase lid depth. (-44.349999999999994 >= 0.0).\n ",
+      "durationSeconds": 0.7463406250000002
+    },
+    {
+      "id": "lid-skirt-reaches-base-floor",
+      "rejected": true,
+      "acceptedProjectPreserved": true,
+      "error": "form_construction: Requirement 'lid-not-floor-contact': The lid skirt reaches the base floor. Reduce lid depth / overlap, or increase base height. (-22.65 > 2.0).\n ",
+      "durationSeconds": 0.7367944590000004
+    },
+    {
+      "id": "unsupported-inset-floor-staples",
+      "rejected": true,
+      "acceptedProjectPreserved": true,
+      "error": "form_construction: Requirement 'b-supported-staple-route': Base staples require floor beneath walls; the inset-floor arrangement has no accepted receiving route. (1.0 == 0.0).\n ",
+      "durationSeconds": 0.7317697499999998
+    },
+    {
+      "id": "insufficient-receiving-depth",
+      "rejected": true,
+      "acceptedProjectPreserved": true,
+      "error": "form_construction: Requirement 'b-buried-leg': Base staple legs must engage at least 2 mm of wall after passing through the floor. (-0.175 >= 2.0).\n ",
+      "durationSeconds": 0.7454765000000005
+    },
+    {
+      "id": "wire-exceeds-receiving-edge-clearance",
+      "rejected": true,
+      "acceptedProjectPreserved": true,
+      "error": "form_construction: Requirement 'b-wire-edge': Base wall caliper is insufficient for the configured wire plus receiving-edge clearance. (0.4 >= 0.85).\n ",
+      "durationSeconds": 0.7472659580000007
+    },
+    {
+      "id": "overlapping-staple-spacing",
+      "rejected": true,
+      "acceptedProjectPreserved": true,
+      "error": "form_construction: Requirement 'b-floor-n-spacing': Base seam is too short for the selected staple count / crown / end margins. (19.400000000000006 >= 76.75).\n ",
+      "durationSeconds": 0.7579379169999996
+    },
+    {
+      "id": "actual-short-leg-override",
+      "rejected": true,
+      "acceptedProjectPreserved": true,
+      "error": "[{'text': \"Staple 'b-floor-n/wire' has insufficient receiving depth or an unsupported gap between its joined boards.\", 'type': 'text'}]",
+      "durationSeconds": 1.031548625000001
+    }
+  ],
+  "existingProjectPreservation": {
+    "filesChecked": 2084,
+    "preExistingProjects": 10,
+    "changedFiles": []
+  },
+  "nativeArtworkPlacement": {
+    "sourceID": "9E65EDFC-66A2-42B9-871A-FD2E1D4EF367",
+    "elementID": "6C3A88B7-9E2D-482B-90E5-267D1EDFDD16",
+    "before": {
+      "color": "#243F39",
+      "fontSize": 32,
+      "height": 17,
+      "id": "6C3A88B7-9E2D-482B-90E5-267D1EDFDD16",
+      "kind": "text",
+      "name": "title",
+      "text": "CASK",
+      "typography": {
+        "alignment": "left",
+        "baseline": 0,
+        "caseTreatment": "original",
+        "direction": "natural",
+        "features": {},
+        "firstLineIndent": 0,
+        "fontName": "HelveticaNeue",
+        "frameMode": "area",
+        "horizontalScale": 100,
+        "hyphenation": 0,
+        "leading": 38.4,
+        "leftIndent": 0,
+        "ligatures": 1,
+        "pairKerning": {},
+        "paragraphAfter": 0,
+        "paragraphBefore": 0,
+        "rightIndent": 0,
+        "strikethrough": false,
+        "tracking": 0,
+        "underline": false,
+        "variations": {},
+        "verticalAlignment": "top",
+        "wordSpacing": 0
+      },
+      "width": 112,
+      "x": 79.60000000000001,
+      "y": 101.89999999999999
+    },
+    "after": {
+      "affine": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0.9999999999999716,
+        "ty": 0
+      },
+      "color": "#243F39",
+      "fontSize": 32,
+      "height": 17,
+      "id": "6C3A88B7-9E2D-482B-90E5-267D1EDFDD16",
+      "kind": "text",
+      "name": "title",
+      "text": "CASK",
+      "typography": {
+        "alignment": "left",
+        "baseline": 0,
+        "caseTreatment": "original",
+        "direction": "natural",
+        "features": {},
+        "firstLineIndent": 0,
+        "fontName": "HelveticaNeue",
+        "frameMode": "area",
+        "horizontalScale": 100,
+        "hyphenation": 0,
+        "leading": 38.4,
+        "leftIndent": 0,
+        "ligatures": 1,
+        "pairKerning": {},
+        "paragraphAfter": 0,
+        "paragraphBefore": 0,
+        "rightIndent": 0,
+        "strikethrough": false,
+        "tracking": 0,
+        "underline": false,
+        "variations": {},
+        "verticalAlignment": "top",
+        "wordSpacing": 0
+      },
+      "width": 112,
+      "x": 79.60000000000001,
+      "y": 101.89999999999999
+    },
+    "effectiveMoveMM": 1,
+    "fontSizeUnchanged": true
+  },
+  "sourceResourceSHA256": "e9fed7ac88ee890b7afe39d9c77978d74462d5b11178fcf8b678c29f0726f9e4",
+  "nativePaperPacketAudit": {
+    "passed": true,
+    "packets": [
+      {
+        "packet": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/LAB-paper-4C2AC526",
+        "passed": true,
+        "checks": {
+          "manifest": 135,
+          "source": 43,
+          "quantities": 43,
+          "source_contours": 20,
+          "stocks": 43,
+          "registration": 149,
+          "guides": 110,
+          "svg_scale": 27,
+          "svg_contours": 43,
+          "layouts": 90,
+          "contour_spacing": 17,
+          "attachments": 161,
+          "assembly_order": 26,
+          "pdf_scale": 26,
+          "pdf_paths": 40
+        },
+        "summary": {
+          "svg_count": 55,
+          "finish_mask_count": 2,
+          "material_batches": 3,
+          "material_pages": 3,
+          "staples": 0,
+          "tape_cuts": 8,
+          "tape_contact_records": 8,
+          "assembly_steps": 5,
+          "pattern_pdf_pages": 20,
+          "assembly_pdf_pages": 11,
+          "piece_count": 20,
+          "physical_cut_count": 20,
+          "source_digest": "637b880e5df68cf9c443acd33e9e955543728c958a71584d0f5e3ff6caa4b499",
+          "files": 67,
+          "bytes": 2315107
+        },
+        "errors": [],
+        "limits": [
+          "Read-only artifact/source audit; visual PDF and actual app render review remain separate.",
+          "Prototype stock/allowance declarations are not physical fabrication validation.",
+          "Independent PDF path interpreter covers the emitted CoreGraphics straight cut/proof contract, not arbitrary third-party PDFs."
+        ]
+      }
+    ]
+  },
+  "visualIterations": [
+    {
+      "path": "proofs/iterations/paper-closed.png",
+      "source": "round01-paper-closed.render/round01-paper-closed.png",
+      "sha256": "3aaed73ff45d021ba56a677ed83c2a77a8517fbd68538fdbe367ee08bb92e6a5"
+    },
+    {
+      "path": "proofs/iterations/exploded-before-grounding.png",
+      "source": "round01-paper-exploded.render/round01-paper-exploded.png",
+      "sha256": "9a13e6e18b39121bdbb1317746a7ce529da3abbf065a2077ee4454da445a0210"
+    },
+    {
+      "path": "proofs/iterations/exploded-grounded-and-framed.png",
+      "source": "round03-paper-exploded.render/round03-paper-exploded.png",
+      "sha256": "d22d5169b8c342965d153e52614d3a5d8f8771336af5f46a7d5dd0d60e1789cb"
+    },
+    {
+      "path": "proofs/iterations/cloth-corner-before-bridge.png",
+      "source": "round05-cloth-corner.render/round05-cloth-corner.png",
+      "sha256": "84475e4179d9a76763c59eef9efc10b08a14a14b37b1832177056289a6939bdc"
+    },
+    {
+      "path": "proofs/iterations/cloth-corner-connected-before-weave-refinement.png",
+      "source": "round06-cloth-corner.render/round06-cloth-corner.png",
+      "sha256": "8f8309e5d72f15a672b68de5358eae18c53ee2b6ba03e31c9af2fd06f5aeadfb"
+    },
+    {
+      "path": "proofs/iterations/native-section-review.png",
+      "source": "evidence/native-round06-section-review.png",
+      "sha256": "cd6bd0757694342a6da553b6e15676bd62791f04b6db391b42dc409d3957a0c8"
+    }
+  ],
+  "outstanding": [
+    "Final signed app install and native linked-piece navigation check after Mac unlock",
+    "Round07 weave/sampler and all-family render review",
+    "Fresh final packets for all seven configurations, source freshness and independent visual/material audit",
+    "Final restart/reopen and portable project refresh"
+  ]
+}
