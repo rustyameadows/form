@@ -37,7 +37,7 @@
     },
     {
       "canvasWorkspace" : false,
-      "file" : "F6CD3F8B-36EC-4813-9D5C-73BD609A5C94-fa4ba695701ff640.json",
+      "file" : "F6CD3F8B-36EC-4813-9D5C-73BD609A5C94-c09b474bf6e107a3.json",
       "id" : "F6CD3F8B-36EC-4813-9D5C-73BD609A5C94"
     },
     {
@@ -72,7 +72,7 @@
     },
     {
       "canvasWorkspace" : false,
-      "file" : "541C25F1-73F0-464D-B0AF-97E193301F61-dea7d36f87280ef4.json",
+      "file" : "541C25F1-73F0-464D-B0AF-97E193301F61-1d230843673efb5e.json",
       "id" : "541C25F1-73F0-464D-B0AF-97E193301F61"
     },
     {
@@ -107,7 +107,7 @@
     },
     {
       "canvasWorkspace" : false,
-      "file" : "9CDE9C8E-61C7-4070-973A-8A6275617FD0-42b7a33a9cccd888.json",
+      "file" : "9CDE9C8E-61C7-4070-973A-8A6275617FD0-67cce84a8ac7c307.json",
       "id" : "9CDE9C8E-61C7-4070-973A-8A6275617FD0"
     },
     {
@@ -142,7 +142,7 @@
     },
     {
       "canvasWorkspace" : false,
-      "file" : "D422EE9E-57F0-4398-88B7-B3625283D0A6-9ca745f06eaa2f16.json",
+      "file" : "D422EE9E-57F0-4398-88B7-B3625283D0A6-0dc6acd1a1909f69.json",
       "id" : "D422EE9E-57F0-4398-88B7-B3625283D0A6"
     },
     {
@@ -177,7 +177,7 @@
     },
     {
       "canvasWorkspace" : false,
-      "file" : "A1B5EDE2-33F6-431A-B7F2-D4CE04394B4A-053a509a9cb1087d.json",
+      "file" : "A1B5EDE2-33F6-431A-B7F2-D4CE04394B4A-4a829baf843f85cb.json",
       "id" : "A1B5EDE2-33F6-431A-B7F2-D4CE04394B4A"
     },
     {
@@ -212,7 +212,7 @@
     },
     {
       "canvasWorkspace" : false,
-      "file" : "7D36AECB-DC3B-4E44-AB4B-A7B1D520243C-39bca4a53aa35948.json",
+      "file" : "7D36AECB-DC3B-4E44-AB4B-A7B1D520243C-d7b745ae22a36fc3.json",
       "id" : "7D36AECB-DC3B-4E44-AB4B-A7B1D520243C"
     },
     {
@@ -265,20 +265,20 @@
   ],
   "project" : {
     "camera" : {
-      "azimuth" : 0.5702343397422975,
-      "distance" : 5.824881535901197,
-      "elevation" : 0.20688690800541434,
+      "azimuth" : 0.905318659015316,
+      "distance" : 24.777080653900185,
+      "elevation" : 0.3964849038655387,
       "orientation" : {
-        "w" : 0.9544990029696082,
-        "x" : -0.09909036651383933,
-        "y" : 0.27976636321160325,
-        "z" : 0.029043667287900095
+        "w" : 0.8816739750896582,
+        "x" : -0.17711147677430325,
+        "y" : 0.428792576387262,
+        "z" : 0.08613624602686427
       },
       "projection" : "perspective",
       "target" : {
-        "x" : 1.8582961446846626,
-        "y" : 0.7516299628588368,
-        "z" : -0.548981174933753
+        "x" : 3.9960795268151843,
+        "y" : -2.029949391126814,
+        "z" : 4.103502217677385
       },
       "viewportAspect" : 1.587651598676957
     },
@@ -877,6 +877,222 @@
         "id" : "D921398F-F774-4E98-B125-619A4131F408",
         "source" : "Codex",
         "text" : "Added decision"
+      },
+      {
+        "date" : "2026-11-04T18:20:30Z",
+        "id" : "AF232834-B075-43C7-8507-D8F2F4691057",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:20:47Z",
+        "id" : "6EE24C7A-F07D-460F-8595-A235326D2451",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:21:03Z",
+        "id" : "449C1485-79CB-4490-8C28-FA774632FE91",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:21:18Z",
+        "id" : "39CC3E01-51EE-45A4-B161-BCACFDF1573C",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:21:32Z",
+        "id" : "EACA6B8A-37A8-4AB8-8DF9-804A428154E9",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:21:49Z",
+        "id" : "3450A05C-E8EE-46AC-A787-3775F061FB61",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:26:51Z",
+        "id" : "8A06798C-C4DA-4B9D-807A-9AFDB161BDC0",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:26:57Z",
+        "id" : "5ED2DA3E-44DA-4D8D-A682-DA148E3F0467",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:27:12Z",
+        "id" : "68B750A8-C466-44C2-84FD-EDE4590160A7",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:27:19Z",
+        "id" : "AA9EFDC6-DA42-494C-AE89-5D9FA5BBE287",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:27:34Z",
+        "id" : "6DEB3828-8065-48EC-A2F6-E519C352A7EA",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:27:49Z",
+        "id" : "851A28B0-BD4C-48D7-BC74-CA63C7A47CB8",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:28:05Z",
+        "id" : "3BF4DA89-8BBE-4980-8A79-604C2881073E",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:28:21Z",
+        "id" : "CFC2643D-BC57-405F-92E9-760150EB9FA8",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:28:37Z",
+        "id" : "E3ECA5F2-5AE7-4471-B237-D1B746C02075",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:28:50Z",
+        "id" : "1F10D317-A9C0-4483-BC0E-311E2EA2FA2F",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:29:05Z",
+        "id" : "BCA781BD-287D-495C-9B61-B986D428EF9C",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:29:20Z",
+        "id" : "483F992E-BB1D-4004-8A5C-5C93E3D612C9",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:29:36Z",
+        "id" : "D12FF731-82CE-4434-A236-0D674CB27352",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:29:52Z",
+        "id" : "49648A7D-64DC-402F-B729-97C944CC8397",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:30:08Z",
+        "id" : "6034D650-19A3-4CB0-AC4A-47D633FB8B3B",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:30:23Z",
+        "id" : "796FCE8C-DDFC-4BEB-9AC7-4CF94EAC786B",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:31:57Z",
+        "id" : "66FC815C-4A48-47DC-BD14-823F302888B4",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:32:05Z",
+        "id" : "8D0F27DF-B3E0-4481-840D-9D01B568D316",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T18:33:12Z",
+        "id" : "6A8A12AD-B8AF-440C-9254-C3C0527B5EE5",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-11-04T18:33:27Z",
+        "id" : "6C5330FA-3BF4-49E2-88C6-A6B8D3EC3105",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-11-04T18:33:44Z",
+        "id" : "4ACF67F6-E9AB-4242-A3F6-291CB0574968",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-11-04T18:33:58Z",
+        "id" : "5E27EEEE-D290-4ED6-AF47-0AE3B46E604B",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-11-04T18:34:15Z",
+        "id" : "A76DE977-8D0F-4000-9842-5D2DA0751C46",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-11-04T18:34:32Z",
+        "id" : "69BD29AF-F0B4-4EDA-BAAB-F1C0C10D2810",
+        "source" : "Codex",
+        "text" : "Changed paper construction"
+      },
+      {
+        "date" : "2026-11-04T19:04:55Z",
+        "id" : "9D9BDDE1-3160-41DF-84D2-FE5A5E75DB18",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T19:05:00Z",
+        "id" : "3B6E3948-AD1D-4EE5-82B4-E35A4A7ACD4E",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T19:05:11Z",
+        "id" : "91B21DA2-8240-4B06-B7A7-CA6C041F9F37",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T19:05:15Z",
+        "id" : "8CDD8D68-C6FC-4C2B-90AF-730FD1F97A94",
+        "source" : "Codex",
+        "text" : "Saved Studio scene"
+      },
+      {
+        "date" : "2026-11-04T19:29:02Z",
+        "id" : "6A9B9BEE-92DA-4025-8829-0802472EEF66",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
+      },
+      {
+        "date" : "2026-11-04T19:29:07Z",
+        "id" : "F55BEFF5-2219-4B77-A5C0-267A98DAB437",
+        "source" : "Codex",
+        "text" : "Deleted Studio scene"
       }
     ],
     "id" : "1B0E5651-717B-4F24-9FEC-EA555F4E0B11",
@@ -10045,7 +10261,7 @@
           "id" : "548B12E4-BBC4-4E00-B0CF-806221D644D6",
           "instances" : [
             {
-              "id" : "23C91B0D-3A77-4ACF-8816-E807A319D4BA",
+              "id" : "EF9D67FA-1AFF-4574-9E6E-A0061B8B37D4",
               "name" : "02 / Paper · lined base · lid top lining",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10073,17 +10289,17 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 2,
+          "revision" : 3,
           "surface" : "Daylight"
         },
         {
           "camera" : {
             "azimuth" : 0.58,
-            "distance" : 7.376610872351509,
+            "distance" : 7.376610872351518,
             "elevation" : 0.7,
             "projection" : "perspective",
             "target" : {
-              "x" : 1.181000000000006,
+              "x" : 1.1810000000000038,
               "y" : 0.2878999999999998,
               "z" : -0.0010000000000024302
             },
@@ -10092,7 +10308,7 @@
           "id" : "37F4B126-4C5B-4EB7-81D8-1DA9EFD9CD5B",
           "instances" : [
             {
-              "id" : "38BF0FB7-0CF1-4B5E-A6A1-1B9C56D20039",
+              "id" : "54841D2E-E7FF-4167-AA30-83B5C67F5CD5",
               "name" : "02 / Paper · lined base · lid top lining",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10120,13 +10336,13 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 2,
+          "revision" : 3,
           "surface" : "Daylight"
         },
         {
           "camera" : {
             "azimuth" : 0.58,
-            "distance" : 4.058444224857235,
+            "distance" : 4.058444224857234,
             "elevation" : 0.7,
             "projection" : "perspective",
             "target" : {
@@ -10139,7 +10355,7 @@
           "id" : "015E8F8D-D73E-49F0-BA1D-EC989219136B",
           "instances" : [
             {
-              "id" : "C22DB234-7D55-4874-BA43-D1E85B2A0880",
+              "id" : "073C8E48-8F37-4EE4-95A5-27829990DAC8",
               "name" : "03 / Backed spruce cloth · ivory lining",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10167,17 +10383,17 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 2,
+          "revision" : 3,
           "surface" : "Daylight"
         },
         {
           "camera" : {
             "azimuth" : 0.58,
-            "distance" : 7.413350759715514,
+            "distance" : 7.413350759715511,
             "elevation" : 0.7,
             "projection" : "perspective",
             "target" : {
-              "x" : 1.1878000000000002,
+              "x" : 1.1878000000000009,
               "y" : 0.28730000000000017,
               "z" : 1.4210854715202004e-16
             },
@@ -10186,7 +10402,7 @@
           "id" : "DBBF4168-A306-4C0B-853D-040787E80FA4",
           "instances" : [
             {
-              "id" : "F830C5C1-8F42-48F3-9E9E-1F14335A62B2",
+              "id" : "E7B95DBD-BBD7-4D3F-B815-2EA6D26F5031",
               "name" : "03 / Backed spruce cloth · ivory lining",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10214,7 +10430,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 2,
+          "revision" : 3,
           "surface" : "Daylight"
         },
         {
@@ -10233,7 +10449,7 @@
           "id" : "D464413F-7652-4BC8-A290-8EBD5AAEF5AD",
           "instances" : [
             {
-              "id" : "7227E82B-DF03-480D-BE49-F66FB5769BD7",
+              "id" : "2050A76B-D311-4E93-A590-5DB79693574A",
               "name" : "04A / Bare board · actual through-floor staples",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10261,7 +10477,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 2,
+          "revision" : 3,
           "surface" : "Daylight"
         },
         {
@@ -10280,7 +10496,7 @@
           "id" : "F95B3E1D-C5AB-4CE2-9322-4F99A3063EE4",
           "instances" : [
             {
-              "id" : "D629D1D1-707A-4A02-ACE3-6ACA852B89F3",
+              "id" : "88BF8857-1D9D-4F92-A35A-71544255EC1E",
               "name" : "04A / Bare board · actual through-floor staples",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10308,7 +10524,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 2,
+          "revision" : 3,
           "surface" : "Daylight"
         },
         {
@@ -10327,7 +10543,7 @@
           "id" : "CEAEFBEB-8488-4C04-8FAB-D812C71BDD43",
           "instances" : [
             {
-              "id" : "DD6FFFC9-7FF5-4907-9663-BEF73A7D0C99",
+              "id" : "15D47409-3865-40B5-8106-FF884E2A0072",
               "name" : "04B / Covered crowns · real slotted backing",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10355,7 +10571,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 2,
+          "revision" : 3,
           "surface" : "Daylight"
         },
         {
@@ -10374,7 +10590,7 @@
           "id" : "A0FA254F-208D-498F-82E6-BF029E8EB4AC",
           "instances" : [
             {
-              "id" : "2B07892E-3BB0-4D6D-B2AB-7317695869A1",
+              "id" : "030CED90-95BE-4AA2-9B13-B07B60FF09E7",
               "name" : "04B / Covered crowns · real slotted backing",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10402,7 +10618,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 2,
+          "revision" : 3,
           "surface" : "Daylight"
         },
         {
@@ -10421,7 +10637,7 @@
           "id" : "15604E32-B512-4FFD-8E6C-60E578A5414A",
           "instances" : [
             {
-              "id" : "9152EB1F-CC09-4849-8833-334571F77C83",
+              "id" : "C6C80864-74BA-4414-B222-375785EEA96F",
               "name" : "05 / Oat base · cloth lid · shallow overlap",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10449,7 +10665,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 2,
+          "revision" : 3,
           "surface" : "Daylight"
         },
         {
@@ -10468,7 +10684,7 @@
           "id" : "3C7CBA9D-9C60-45D4-85E3-9E0145125339",
           "instances" : [
             {
-              "id" : "2B61FE58-F589-4F0E-9810-238BC1628682",
+              "id" : "DB134135-AA84-40F2-B00A-37025B461594",
               "name" : "05 / Oat base · cloth lid · shallow overlap",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10496,13 +10712,13 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 2,
+          "revision" : 3,
           "surface" : "Daylight"
         },
         {
           "camera" : {
             "azimuth" : 0.58,
-            "distance" : 4.8830068947927,
+            "distance" : 4.883006894792707,
             "elevation" : 0.7,
             "projection" : "perspective",
             "target" : {
@@ -10515,7 +10731,7 @@
           "id" : "53830905-D9FE-4A05-A444-C91D2C98DD49",
           "instances" : [
             {
-              "id" : "6AFB8F11-81C8-4D87-A2C9-D0772B3B80A2",
+              "id" : "A831F857-40BB-4E0B-8EE8-60E5F93E5963",
               "name" : "06 / Independent board stocks · deeper lid",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10543,17 +10759,17 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 2,
+          "revision" : 3,
           "surface" : "Daylight"
         },
         {
           "camera" : {
             "azimuth" : 0.58,
-            "distance" : 8.815086532001342,
+            "distance" : 8.815086532001352,
             "elevation" : 0.7,
             "projection" : "perspective",
             "target" : {
-              "x" : 1.3819,
+              "x" : 1.3818999999999995,
               "y" : 0.4063000000000012,
               "z" : 7.815970093361102e-16
             },
@@ -10562,7 +10778,7 @@
           "id" : "4CE024B1-F01C-47FD-8D5E-B3DA5DB1FC86",
           "instances" : [
             {
-              "id" : "CD45146E-BC17-4268-A8B3-6559B99FF4D8",
+              "id" : "4E4234DF-661D-422D-A861-A9124EC600C4",
               "name" : "06 / Independent board stocks · deeper lid",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10590,7 +10806,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 2,
+          "revision" : 3,
           "surface" : "Daylight"
         },
         {
@@ -10609,7 +10825,7 @@
           "id" : "B3D6F9D4-B1CB-4CEE-8E3C-3A7BF2C2FAC5",
           "instances" : [
             {
-              "id" : "7465598D-64D7-4FE9-9301-6C09292F7047",
+              "id" : "2DF0192A-A299-42CD-9D12-C4129CA7D301",
               "name" : "03-fabric-contrasting-lining",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10637,7 +10853,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 3,
+          "revision" : 4,
           "surface" : "Daylight"
         },
         {
@@ -10656,7 +10872,7 @@
           "id" : "CF623A61-CE82-4AEA-B1D9-65D8E0167A37",
           "instances" : [
             {
-              "id" : "1C0C57BD-C10B-43DE-AFE8-A2DE87DFE511",
+              "id" : "86B66218-D651-498C-AB14-F2E06931FAEC",
               "name" : "03-fabric-contrasting-lining",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10684,7 +10900,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 3,
+          "revision" : 4,
           "surface" : "Daylight"
         },
         {
@@ -10703,7 +10919,7 @@
           "id" : "69180496-6338-43AB-9F85-0CA5F8F46A4A",
           "instances" : [
             {
-              "id" : "FE88A837-7AB7-4B79-8F7D-67BA296E822D",
+              "id" : "EEF9859B-C3F9-4CE1-899A-4A0BD81E66D8",
               "name" : "03-fabric-contrasting-lining",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10731,7 +10947,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 3,
+          "revision" : 4,
           "surface" : "Daylight"
         },
         {
@@ -10750,7 +10966,7 @@
           "id" : "CD7FD805-1C27-49AB-B9B4-114184BE60FA",
           "instances" : [
             {
-              "id" : "B02D3C54-D9CE-462C-A6A3-6259130D9AF9",
+              "id" : "9386D835-F065-4C90-AB3B-99DE6935C241",
               "name" : "04a-board-staples-uncovered",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10778,7 +10994,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 3,
+          "revision" : 4,
           "surface" : "Daylight"
         },
         {
@@ -10797,7 +11013,7 @@
           "id" : "4C1D0F06-611A-4EEB-928C-8B011F2968E2",
           "instances" : [
             {
-              "id" : "16B1D384-FBA6-450E-A467-C431CE75001A",
+              "id" : "A2031A9F-E3B8-4326-B43D-C95ED35A9DED",
               "name" : "04b-board-staples-covered",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10825,7 +11041,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 3,
+          "revision" : 4,
           "surface" : "Daylight"
         },
         {
@@ -10844,7 +11060,7 @@
           "id" : "FBE23430-EFAB-4359-803B-FF105B80CFD5",
           "instances" : [
             {
-              "id" : "03F43549-9C86-4498-835C-0C98F35B8AED",
+              "id" : "712DD59E-7A2B-4A02-B87A-6D6C132E86C4",
               "name" : "01-paper-tape-unlined",
               "paperPose" : {
                 "explosionPercent" : 0,
@@ -10872,7 +11088,7 @@
             "height" : 1000,
             "width" : 1500
           },
-          "revision" : 3,
+          "revision" : 4,
           "surface" : "Daylight"
         },
         {
@@ -10937,6 +11153,243 @@
           },
           "revision" : 1,
           "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.58,
+            "distance" : 4.03926274191098,
+            "elevation" : 0.7,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 7.105427357601002e-17,
+              "y" : 0.2985000000000001,
+              "z" : 7.105427357601002e-17
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "AB525E3F-9D7A-4CBA-8144-5AF860FA4995",
+          "instances" : [
+            {
+              "id" : "22497A86-816D-42A4-B5E4-746F56F146D6",
+              "name" : "01 / Oat paper · taped · unlined",
+              "paperPose" : {
+                "explosionPercent" : 0,
+                "openingPercent" : 0
+              },
+              "positionMM" : {
+                "x" : 0,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "0E606FAC-7E7D-4083-8CCE-4F7078701264",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "01-paper-tape-unlined / closed",
+          "pixels" : {
+            "height" : 1000,
+            "width" : 1500
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.58,
+            "distance" : 7.3874862199238285,
+            "elevation" : 0.7,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 1.1829999999999998,
+              "y" : 0.28675000000000267,
+              "z" : -1.0658141036401502e-15
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "584EEEB2-834B-431D-8EBE-24AAFB76DD60",
+          "instances" : [
+            {
+              "id" : "9B376578-DF8D-4106-81FD-DA32C24599A1",
+              "name" : "01 / Oat paper · taped · unlined",
+              "paperPose" : {
+                "explosionPercent" : 0,
+                "openingPercent" : 100
+              },
+              "positionMM" : {
+                "x" : 0,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "0E606FAC-7E7D-4083-8CCE-4F7078701264",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "01-paper-tape-unlined / removed",
+          "pixels" : {
+            "height" : 1000,
+            "width" : 1500
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
+        },
+        {
+          "camera" : {
+            "azimuth" : 0.3,
+            "distance" : 30.35793157272589,
+            "elevation" : 0.92,
+            "projection" : "perspective",
+            "target" : {
+              "x" : 6.664150000000001,
+              "y" : 0.4162000000000001,
+              "z" : 4.459949999999999
+            },
+            "viewportAspect" : 1.5
+          },
+          "id" : "CF749A51-0F49-426A-9333-BABC8A8523E7",
+          "instances" : [
+            {
+              "id" : "6E1C5F74-58B6-42A7-A536-C59D7210D000",
+              "name" : "01 / Oat paper · taped · unlined",
+              "paperPose" : {
+                "explosionPercent" : 0,
+                "openingPercent" : 0
+              },
+              "positionMM" : {
+                "x" : 0,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "0E606FAC-7E7D-4083-8CCE-4F7078701264",
+              "visible" : true
+            },
+            {
+              "id" : "D82D093E-A465-4A8E-906E-927CCDD5C194",
+              "name" : "02 / Paper · lined base · lid top lining",
+              "paperPose" : {
+                "explosionPercent" : 0,
+                "openingPercent" : 100
+              },
+              "positionMM" : {
+                "x" : 560,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "F6CD3F8B-36EC-4813-9D5C-73BD609A5C94",
+              "visible" : true
+            },
+            {
+              "id" : "8187C40C-8C55-4982-89F3-F6884D188C4D",
+              "name" : "03 / Backed spruce cloth · ivory lining",
+              "paperPose" : {
+                "explosionPercent" : 0,
+                "openingPercent" : 0
+              },
+              "positionMM" : {
+                "x" : 1120,
+                "y" : 0,
+                "z" : 0
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "541C25F1-73F0-464D-B0AF-97E193301F61",
+              "visible" : true
+            },
+            {
+              "id" : "A1B01E5F-E1D8-44F4-8042-6D750E755F73",
+              "name" : "04A / Bare board · actual through-floor staples",
+              "paperPose" : {
+                "explosionPercent" : 0,
+                "openingPercent" : 100
+              },
+              "positionMM" : {
+                "x" : 0,
+                "y" : 0,
+                "z" : 440
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "9CDE9C8E-61C7-4070-973A-8A6275617FD0",
+              "visible" : true
+            },
+            {
+              "id" : "D333333E-5A66-4069-A6E3-2DEAFBE780BB",
+              "name" : "04B / Covered crowns · real slotted backing",
+              "paperPose" : {
+                "explosionPercent" : 0,
+                "openingPercent" : 0
+              },
+              "positionMM" : {
+                "x" : 560,
+                "y" : 0,
+                "z" : 440
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "D422EE9E-57F0-4398-88B7-B3625283D0A6",
+              "visible" : true
+            },
+            {
+              "id" : "01E8BA67-DE0C-45CB-802F-B7D793879F4B",
+              "name" : "05 / Oat base · cloth lid · shallow overlap",
+              "paperPose" : {
+                "explosionPercent" : 0,
+                "openingPercent" : 100
+              },
+              "positionMM" : {
+                "x" : 1120,
+                "y" : 0,
+                "z" : 440
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "A1B5EDE2-33F6-431A-B7F2-D4CE04394B4A",
+              "visible" : true
+            },
+            {
+              "id" : "F059D6A0-DDBA-4017-8D6B-E46B066688A4",
+              "name" : "06 / Independent board stocks · deeper lid",
+              "paperPose" : {
+                "explosionPercent" : 0,
+                "openingPercent" : 0
+              },
+              "positionMM" : {
+                "x" : 0,
+                "y" : 0,
+                "z" : 880
+              },
+              "rotationDegrees" : 0,
+              "sourceObjectID" : "7D36AECB-DC3B-4E44-AB4B-A7B1D520243C",
+              "visible" : true
+            }
+          ],
+          "lighting" : "soft-side-v1",
+          "motion" : {
+            "fps" : 24,
+            "mode" : "orbit",
+            "orbitDegrees" : 45,
+            "seconds" : 6
+          },
+          "name" : "CASK / Seven construction checkpoints",
+          "pixels" : {
+            "height" : 1200,
+            "width" : 1800
+          },
+          "revision" : 2,
+          "surface" : "Daylight"
         }
       ],
       "shots" : [
@@ -10945,6 +11398,6 @@
     },
     "subtitle" : "A new place to make things.",
     "unit" : "mm",
-    "updatedAt" : "2026-11-04T08:27:34Z"
+    "updatedAt" : "2026-11-04T19:29:07Z"
   }
 }

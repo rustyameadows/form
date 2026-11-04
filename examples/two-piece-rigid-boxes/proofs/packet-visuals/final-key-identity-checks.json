@@ -1,0 +1,83 @@
+[
+  {
+    "packet": "round08-01-paper-tape-unlined-packet",
+    "source_digest": "525532d828a81921ece569859c70ff542094ee51562958a511dcc179c88dc081",
+    "physical_pages": 3,
+    "annotation_pages": 0,
+    "PDF_page_count": 3,
+    "classified_pages": 3,
+    "placement_count": 20,
+    "missing_full_PDF_identities": [],
+    "key_companions": []
+  },
+  {
+    "packet": "round08-02-paper-independent-lining-packet",
+    "source_digest": "d69d2f5f1e108bdd8bec39fb5b3ac9ab960e680a9d5d63971ce95a150c29000f",
+    "physical_pages": 4,
+    "annotation_pages": 0,
+    "PDF_page_count": 4,
+    "classified_pages": 4,
+    "placement_count": 27,
+    "missing_full_PDF_identities": [],
+    "key_companions": []
+  },
+  {
+    "packet": "round08-03-fabric-contrasting-lining-packet",
+    "source_digest": "b18fa62dd92388c4c5bfb44f88fddc57604b53550dda55c208aa6151bf9fd11f",
+    "physical_pages": 4,
+    "annotation_pages": 0,
+    "PDF_page_count": 4,
+    "classified_pages": 4,
+    "placement_count": 30,
+    "missing_full_PDF_identities": [],
+    "key_companions": []
+  },
+  {
+    "packet": "round08-04a-board-staples-uncovered-packet",
+    "source_digest": "022e13dfaa15e1a5d1e58adbb54509d01efd2ae8fcd6438a967b3fe2bb903052",
+    "physical_pages": 1,
+    "annotation_pages": 0,
+    "PDF_page_count": 1,
+    "classified_pages": 1,
+    "placement_count": 10,
+    "missing_full_PDF_identities": [],
+    "key_companions": []
+  },
+  {
+    "packet": "round08-04b-board-staples-covered-packet",
+    "source_digest": "498de2f1eb5e3dc670933a279bc9ee5734bb9c5c5a8145dcbf58cc5f3c521363",
+    "physical_pages": 5,
+    "annotation_pages": 0,
+    "PDF_page_count": 5,
+    "classified_pages": 5,
+    "placement_count": 32,
+    "missing_full_PDF_identities": [],
+    "key_companions": []
+  },
+  {
+    "packet": "round08-05-mixed-partial-overlap-packet",
+    "source_digest": "3249b5991f0277140b02f3ef394c64398ae828021b8a902bf077c94bdf4ff7d2",
+    "physical_pages": 6,
+    "annotation_pages": 1,
+    "PDF_page_count": 7,
+    "classified_pages": 7,
+    "placement_count": 27,
+    "missing_full_PDF_identities": [],
+    "key_companions": [
+      "Layouts/seating-4ce7fe66c503-353a5ebd/sheet-001-label-key-001.svg"
+    ]
+  },
+  {
+    "packet": "round08-06-independent-deep-lid-packet",
+    "source_digest": "04ce4e30fe45f80b0b9fd51f6fbb470d1eea7ea2bea1c5e97eef3e435810d350",
+    "physical_pages": 7,
+    "annotation_pages": 1,
+    "PDF_page_count": 8,
+    "classified_pages": 8,
+    "placement_count": 18,
+    "missing_full_PDF_identities": [],
+    "key_companions": [
+      "Layouts/lining-d7204ba0b6d0-65117cd5/sheet-001-label-key-001.svg"
+    ]
+  }
+]

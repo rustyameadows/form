@@ -1,0 +1,41 @@
+{
+  "executed": 323,
+  "failures": 0,
+  "skipped": 0,
+  "durationSeconds": 103.203,
+  "logSHA256": "342cdfa38ed4abc923775c4ecc3b5f0c9e2f7c8c1df00a7e64996c7c7d2ca2c1",
+  "baseCommit": "0598ad43fa3173dcfd6ba366ba3d64b833e8a89e",
+  "sourceFiles": {
+    "Sources/FormApp/ArtworkSession.swift": "a9c037f09e05f2ef1372ce237173235e37188834774c15c0c51fcd0fe2835ac9",
+    "Sources/FormApp/CanvasConstructionPieces.swift": "32a66b189eef625e3a284f1c5ed6cd98e8b0699e960047dd2b8de653b8019dc6",
+    "Sources/FormApp/CanvasConstructionTechnicalGuides.swift": "88f659a5a21ebe01b66e4f57058692accb31e9d1bded23cd60c9a4da65bdc065",
+    "Sources/FormApp/ConstructionPacketOutput.swift": "1fdd84cf828f20f63ccf6405d56eb040d28113706f6b72fc9139040a7befbbae",
+    "Sources/FormApp/ConstructionPacketPDF.swift": "555ef7ea565ee9de7721c1cc13f89422fc6fde6900e714509b97eb0af051d5bf",
+    "Sources/FormApp/LinkedObjectInspectorModule.swift": "5f53a72926bf3cfc810e22529ab191e4cd7d3f55ddf51771448293c88d06bf2a",
+    "Sources/FormApp/PaperWorkspace.swift": "97baf2fa53e4dcbb75afefe0f44822911ca3e47270bc26f6b658e6154b025729",
+    "Sources/FormApp/VectorCanvas.swift": "44aac84c649c8681db3db221f1c8a3d4ef7bf2747204147d1f4f7c302ad2c35c",
+    "Sources/FormCore/ConstructionArtworkProjection.swift": "a8e9db03bb0e0891388d15a7487dafcaf67cda1ab917987d38c89b7bf3057412",
+    "Sources/FormCore/ConstructionArtworkTechnicalGuides.swift": "5062181467478f69d80ba1e7ad8cae27a8fb024319c07240a9ac573f549c3475",
+    "Sources/FormCore/ConstructionPacketDrawing.swift": "ed5301a07bf88a74cddb2056446d6d1c771758b8d621521597a434aa0ca1daf9",
+    "Sources/LabRendering/RealityKitSceneRenderer.swift": "cbf21b70805e120527039bbfb9ff8ab711d23e911d20481cc15762cfc92a3b28",
+    "Sources/LabRendering/SceneShadowFitting.swift": "777366622de08d75bcea99a8193532444b6157f03554ec51b7e2d64b0b94e97e",
+    "Tests/FormAppTests/CanvasConstructionTechnicalGuideTests.swift": "8872f958b315e34cd3d610ec416d7c7eba28ca25a2d56a97fdce22279b45643a",
+    "Tests/FormAppTests/ConstructionPacketOutputTests.swift": "75e93c3a81626137e6d92097bee0c3163632d46b85a61bb5d8793a8ce7eecd57",
+    "Tests/FormCoreTests/ConstructionArtworkTechnicalGuideTests.swift": "e062c9449bfb4e00bb952d4e5ef5dd3d54be144fdb676abaae7c0317aa720550",
+    "Tests/LabRenderingTests/SceneShadowFittingTests.swift": "34f2826b5a614dea1f8681b93921114acbe6f59cf073f085e2bfd2d93459e7de"
+  },
+  "actualGPUShadowComparison": {
+    "cover_caliper_mm": 0.24,
+    "light_direction": [
+      6,
+      -12,
+      -7
+    ],
+    "maximum_unoccluded_face_difference": 0,
+    "normal_map_used": false,
+    "output_folder": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/shadow-regression",
+    "sample_count": 25,
+    "source_gap_mm": 0.04
+  },
+  "testedCodeCommit": "04da88a656ca3967fc88cd1366a46a941b4e92be"
+}

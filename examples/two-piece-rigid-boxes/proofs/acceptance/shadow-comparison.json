@@ -1,0 +1,13 @@
+{
+  "cover_caliper_mm" : 0.23999999999999999,
+  "light_direction" : [
+    6,
+    -12,
+    -7
+  ],
+  "maximum_unoccluded_face_difference" : 0,
+  "normal_map_used" : false,
+  "output_folder" : "\/Users\/rustymeadows\/.codex\/worktrees\/solid-render-quality\/form\/.local\/validation\/rigid-boxes\/shadow-regression",
+  "sample_count" : 25,
+  "source_gap_mm" : 0.040000000000000001
+}

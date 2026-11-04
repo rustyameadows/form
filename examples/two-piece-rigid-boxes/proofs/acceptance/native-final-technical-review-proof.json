@@ -1,0 +1,9 @@
+{
+  "wrapFrontSeamTurnInVisible": true,
+  "bareFloorReverseCrownAndEntryMarksVisible": true,
+  "artworkAndPhysicalObjectsPreserved": true,
+  "allSavedScenesPreserved": true,
+  "wrapFocusMagnification": 1.01,
+  "reverseFloorMagnification": 1.42,
+  "guideGlyphsAreInterfaceOnly": true
+}

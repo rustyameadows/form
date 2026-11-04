@@ -1,0 +1,31 @@
+{
+  "target": {
+    "attachment_id": "b-floor-n/staples",
+    "component_id": null,
+    "fastener_definition_id": "b-floor-n/wire",
+    "fastener_instance_id": null,
+    "joint_id": "b-floor-n",
+    "kind": "fastener",
+    "object_id": "9CDE9C8E-61C7-4070-973A-8A6275617FD0",
+    "panel_ids": [
+      "b-floor",
+      "b-n"
+    ]
+  },
+  "objectsScenesHistoryUnchanged": true,
+  "canvas": {
+    "component_id": "l-cross-p",
+    "kind": "net",
+    "object_id": "0E606FAC-7E7D-4083-8CCE-4F7078701264",
+    "side": "outside",
+    "source_to_view": {
+      "a": 1,
+      "b": 0,
+      "c": 0,
+      "d": 1,
+      "tx": 0,
+      "ty": 0
+    },
+    "surface_id": null
+  }
+}

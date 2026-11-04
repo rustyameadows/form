@@ -1,0 +1,88 @@
+[
+  {
+    "annotation_only": false,
+    "batch_id": "board-83b9e6c11a03",
+    "height_mm": 1000,
+    "page": 1,
+    "role": "actualSizeStock",
+    "sheet_index": 0,
+    "width_mm": 700
+  },
+  {
+    "annotation_only": false,
+    "batch_id": "covering-ce1f28ef80a2",
+    "height_mm": 668.56,
+    "page": 2,
+    "role": "actualSizeStock",
+    "sheet_index": 0,
+    "width_mm": 1400
+  },
+  {
+    "annotation_only": false,
+    "batch_id": "covering-d40dacb1f4a0",
+    "height_mm": 693.92,
+    "page": 3,
+    "role": "actualSizeStock",
+    "sheet_index": 0,
+    "width_mm": 1400
+  },
+  {
+    "annotation_only": false,
+    "batch_id": "lining-d7204ba0b6d0",
+    "height_mm": 1000,
+    "page": 4,
+    "role": "actualSizeStock",
+    "sheet_index": 0,
+    "width_mm": 700
+  },
+  {
+    "annotation_only": false,
+    "batch_id": "seating-4ce7fe66c503",
+    "height_mm": 1000,
+    "page": 5,
+    "role": "actualSizeStock",
+    "sheet_index": 0,
+    "width_mm": 700
+  },
+  {
+    "annotation_only": true,
+    "batch_id": "seating-4ce7fe66c503",
+    "entries": [
+      {
+        "copy": 1,
+        "key": 1,
+        "piece_id": "overlap-stop-e"
+      },
+      {
+        "copy": 1,
+        "key": 2,
+        "piece_id": "overlap-stop-n"
+      },
+      {
+        "copy": 1,
+        "key": 3,
+        "piece_id": "overlap-stop-s"
+      },
+      {
+        "copy": 1,
+        "key": 4,
+        "piece_id": "overlap-stop-w"
+      }
+    ],
+    "height_mm": 297,
+    "key_page_index": 0,
+    "page": 6,
+    "role": "labelKey",
+    "sheet_index": 0,
+    "width_mm": 210
+  },
+  {
+    "annotation_only": false,
+    "batch_id": "tape-c9837fcd56fd",
+    "height_mm": 190.56,
+    "page": 7,
+    "role": "actualSizeStock",
+    "sheet_index": 0,
+    "width_mm": 500
+  }
+]

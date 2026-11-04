@@ -1,0 +1,51 @@
+[
+  {
+    "id": "locked-overlap-exceeds-lid-depth",
+    "rejected": true,
+    "acceptedProjectPreserved": true,
+    "error": "form_construction: Requirement 'seating-no-negative-headspace': Locked lid overlap exceeds the available lid interior depth. Reduce overlap or increase lid depth. (-44.349999999999994 >= 0.0).\n ",
+    "durationSeconds": 0.7463406250000002
+  },
+  {
+    "id": "lid-skirt-reaches-base-floor",
+    "rejected": true,
+    "acceptedProjectPreserved": true,
+    "error": "form_construction: Requirement 'lid-not-floor-contact': The lid skirt reaches the base floor. Reduce lid depth / overlap, or increase base height. (-22.65 > 2.0).\n ",
+    "durationSeconds": 0.7367944590000004
+  },
+  {
+    "id": "unsupported-inset-floor-staples",
+    "rejected": true,
+    "acceptedProjectPreserved": true,
+    "error": "form_construction: Requirement 'b-supported-staple-route': Base staples require floor beneath walls; the inset-floor arrangement has no accepted receiving route. (1.0 == 0.0).\n ",
+    "durationSeconds": 0.7317697499999998
+  },
+  {
+    "id": "insufficient-receiving-depth",
+    "rejected": true,
+    "acceptedProjectPreserved": true,
+    "error": "form_construction: Requirement 'b-buried-leg': Base staple legs must engage at least 2 mm of wall after passing through the floor. (-0.175 >= 2.0).\n ",
+    "durationSeconds": 0.7454765000000005
+  },
+  {
+    "id": "wire-exceeds-receiving-edge-clearance",
+    "rejected": true,
+    "acceptedProjectPreserved": true,
+    "error": "form_construction: Requirement 'b-wire-edge': Base wall caliper is insufficient for the configured wire plus receiving-edge clearance. (0.4 >= 0.85).\n ",
+    "durationSeconds": 0.7472659580000007
+  },
+  {
+    "id": "overlapping-staple-spacing",
+    "rejected": true,
+    "acceptedProjectPreserved": true,
+    "error": "form_construction: Requirement 'b-floor-n-spacing': Base seam is too short for the selected staple count / crown / end margins. (19.400000000000006 >= 76.75).\n ",
+    "durationSeconds": 0.7579379169999996
+  },
+  {
+    "id": "actual-short-leg-override",
+    "rejected": true,
+    "acceptedProjectPreserved": true,
+    "error": "[{'text': \"Staple 'b-floor-n/wire' has insufficient receiving depth or an unsupported gap between its joined boards.\", 'type': 'text'}]",
+    "durationSeconds": 1.031548625000001
+  }
+]

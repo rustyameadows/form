@@ -1,0 +1,5313 @@
+[
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -97.20000000000005,
+          0,
+          6.123233995736766e-17,
+          1,
+          1.4000000000000177,
+          0,
+          -1,
+          6.123233995736766e-17,
+          -72.29999999999995,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-floor"
+      }
+    ],
+    "bounds" : {
+      "height" : 134.4,
+      "width" : 184.4,
+      "x" : 5,
+      "y" : 5
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 184.4,
+          "y" : 134.4
+        },
+        {
+          "x" : 0,
+          "y" : 134.4
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 184.4,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "b-floor",
+    "name" : "Base floor / top",
+    "panelIDs" : [
+      "b-floor"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "b-floor",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -801.1200000000001,
+          0,
+          1,
+          0,
+          62.350000000000016,
+          0,
+          0,
+          1,
+          66.10000000000014,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-n"
+      }
+    ],
+    "bounds" : {
+      "height" : 54.949999999999996,
+      "width" : 184.39999999999998,
+      "x" : 708.9200000000001,
+      "y" : 5
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 184.4,
+          "y" : 54.95
+        },
+        {
+          "x" : 0,
+          "y" : 54.95
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 184.4,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "b-n",
+    "name" : "Base Front wall",
+    "panelIDs" : [
+      "b-n"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "b-n",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          0,
+          1,
+          91.19999999999996,
+          0,
+          1,
+          0,
+          62.350000000000016,
+          -1,
+          0,
+          6.123233995736766e-17,
+          1477.9400000000003,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-e"
+      }
+    ],
+    "bounds" : {
+      "height" : 54.949999999999996,
+      "width" : 130.4000000000001,
+      "x" : 1412.8400000000001,
+      "y" : 5
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 130.4,
+          "y" : 54.95
+        },
+        {
+          "x" : 0,
+          "y" : 54.95
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 130.4,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "b-e",
+    "name" : "Base Right wall",
+    "panelIDs" : [
+      "b-e"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "b-e",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          -1,
+          0,
+          1.2246467991473532e-16,
+          2208.96,
+          0,
+          1,
+          0,
+          62.350000000000016,
+          -1.2246467991473532e-16,
+          0,
+          -1,
+          -66.2999999999997,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-s"
+      }
+    ],
+    "bounds" : {
+      "height" : 54.949999999999996,
+      "width" : 184.4000000000001,
+      "x" : 2116.76,
+      "y" : 5
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 184.4,
+          "y" : 54.95
+        },
+        {
+          "x" : 0,
+          "y" : 54.95
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 184.4,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "b-s",
+    "name" : "Base Back wall",
+    "panelIDs" : [
+      "b-s"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "b-s",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          0,
+          -1,
+          -91.20000000000022,
+          0,
+          1,
+          0,
+          62.350000000000016,
+          1,
+          0,
+          6.123233995736766e-17,
+          -2885.98,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-w"
+      }
+    ],
+    "bounds" : {
+      "height" : 54.949999999999996,
+      "width" : 130.4000000000001,
+      "x" : 2820.6800000000003,
+      "y" : 5
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 130.4,
+          "y" : 54.95
+        },
+        {
+          "x" : 0,
+          "y" : 54.95
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 130.4,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "b-w",
+    "name" : "Base Left wall",
+    "panelIDs" : [
+      "b-w"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "b-w",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -3619.88,
+          0,
+          6.123233995736766e-17,
+          -1,
+          73.99000000000004,
+          0,
+          1,
+          6.123233995736766e-17,
+          75.3800000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-floor"
+      }
+    ],
+    "bounds" : {
+      "height" : 140.76,
+      "width" : 190.55999999999995,
+      "x" : 3524.6000000000004,
+      "y" : 5
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 190.56,
+          "y" : 140.76
+        },
+        {
+          "x" : 0,
+          "y" : 140.76
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 190.56,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+
+    ],
+    "id" : "l-floor",
+    "name" : "Lid floor / top",
+    "panelIDs" : [
+      "l-floor"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "l-floor",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -100.27999999999997,
+          0,
+          -1,
+          -1.2246467991473532e-16,
+          -270.07,
+          0,
+          1.2246467991473532e-16,
+          -1,
+          -69.37999999999998,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-n"
+      }
+    ],
+    "bounds" : {
+      "height" : 26.160000000000025,
+      "width" : 190.56,
+      "x" : 5,
+      "y" : 316.90000000000003
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 190.56,
+          "y" : 26.16
+        },
+        {
+          "x" : 0,
+          "y" : 26.16
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 190.56,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+
+    ],
+    "id" : "l-n",
+    "name" : "Lid Front wall",
+    "panelIDs" : [
+      "l-n"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "l-n",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          0,
+          1,
+          94.27999999999993,
+          1.2246467991473532e-16,
+          -1,
+          -7.498798913309288e-33,
+          -270.0700000000001,
+          1,
+          1.2246467991473532e-16,
+          -6.123233995736766e-17,
+          -777.3000000000001,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-e"
+      }
+    ],
+    "bounds" : {
+      "height" : 26.160000000000025,
+      "width" : 136.76,
+      "x" : 708.9200000000001,
+      "y" : 316.90000000000003
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 136.76,
+          "y" : 26.16
+        },
+        {
+          "x" : 0,
+          "y" : 26.16
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 136.76,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+
+    ],
+    "id" : "l-e",
+    "name" : "Lid Right wall",
+    "panelIDs" : [
+      "l-e"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "l-e",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          -1,
+          0,
+          1.2246467991473532e-16,
+          1508.1200000000001,
+          1.4997597826618576e-32,
+          -1,
+          1.2246467991473532e-16,
+          -270.07,
+          1.2246467991473532e-16,
+          1.2246467991473532e-16,
+          1,
+          69.37999999999995,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-s"
+      }
+    ],
+    "bounds" : {
+      "height" : 26.160000000000025,
+      "width" : 190.55999999999995,
+      "x" : 1412.8400000000001,
+      "y" : 316.90000000000003
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 190.56,
+          "y" : 26.16
+        },
+        {
+          "x" : 0,
+          "y" : 26.16
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 190.56,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+
+    ],
+    "id" : "l-s",
+    "name" : "Lid Back wall",
+    "panelIDs" : [
+      "l-s"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "l-s",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          0,
+          -1,
+          -94.28000000000013,
+          -1.2246467991473532e-16,
+          -1,
+          -7.498798913309288e-33,
+          -270.06999999999977,
+          -1,
+          1.2246467991473532e-16,
+          -6.123233995736766e-17,
+          2185.1400000000003,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-w"
+      }
+    ],
+    "bounds" : {
+      "height" : 26.160000000000025,
+      "width" : 136.76000000000022,
+      "x" : 2116.76,
+      "y" : 316.90000000000003
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 136.76,
+          "y" : 26.16
+        },
+        {
+          "x" : 0,
+          "y" : 26.16
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 136.76,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+
+    ],
+    "id" : "l-w",
+    "name" : "Lid Left wall",
+    "panelIDs" : [
+      "l-w"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "l-w",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -3565.2208,
+          0,
+          1,
+          0,
+          386.61000000000007,
+          0,
+          0,
+          1,
+          67.22000000000003,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -3565.2208,
+          0,
+          6.123233995736766e-17,
+          1,
+          57.47000000000001,
+          0,
+          -1,
+          6.123233995736766e-17,
+          -261.92,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/n rim traversal"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -3565.2208,
+          0,
+          -1,
+          1.2246467991473532e-16,
+          -269.43,
+          0,
+          -1.2246467991473532e-16,
+          -1,
+          64.98000000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/n inside turn-in"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -3565.2208,
+          0,
+          6.123233995736766e-17,
+          -1,
+          0.08000000000002427,
+          0,
+          1,
+          6.123233995736766e-17,
+          453.75000000000006,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/n bottom turn-under"
+      },
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          0,
+          1,
+          92.32000000000016,
+          0,
+          1,
+          0,
+          386.61000000000007,
+          -1,
+          0,
+          6.123233995736766e-17,
+          3724.7608000000005,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/e outer wall"
+      },
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          -1,
+          6.123233995736766e-17,
+          -236.81999999999988,
+          0,
+          6.123233995736766e-17,
+          1,
+          57.47000000000001,
+          -1,
+          -6.123233995736766e-17,
+          3.749399456654644e-33,
+          3724.7608000000005,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/e rim traversal"
+      },
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          -1.2246467991473532e-16,
+          -1,
+          90.08000000000015,
+          0,
+          -1,
+          1.2246467991473532e-16,
+          -269.43,
+          -1,
+          -7.498798913309288e-33,
+          -6.123233995736766e-17,
+          3724.7608000000005,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/e inside turn-in"
+      },
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          1,
+          6.123233995736766e-17,
+          478.8500000000002,
+          0,
+          6.123233995736766e-17,
+          -1,
+          0.08000000000002427,
+          -1,
+          6.123233995736766e-17,
+          3.749399456654644e-33,
+          3724.7608000000005,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/e bottom turn-under"
+      },
+      {
+        "flatToWorld" : [
+          -1,
+          0,
+          1.2246467991473532e-16,
+          3884.500800000001,
+          0,
+          1,
+          0,
+          386.61000000000007,
+          -1.2246467991473532e-16,
+          0,
+          -1,
+          -67.41999999999916,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/s outer wall"
+      },
+      {
+        "flatToWorld" : [
+          -1,
+          -1.2246467991473532e-16,
+          7.498798913309288e-33,
+          3884.500800000001,
+          0,
+          6.123233995736766e-17,
+          1,
+          57.47000000000001,
+          -1.2246467991473532e-16,
+          1,
+          -6.123233995736766e-17,
+          261.7200000000009,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/s rim traversal"
+      },
+      {
+        "flatToWorld" : [
+          -1,
+          -1.4997597826618576e-32,
+          -1.2246467991473532e-16,
+          3884.500800000001,
+          0,
+          -1,
+          1.2246467991473532e-16,
+          -269.43,
+          -1.2246467991473532e-16,
+          1.2246467991473532e-16,
+          1,
+          -65.17999999999915,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/s inside turn-in"
+      },
+      {
+        "flatToWorld" : [
+          -1,
+          1.2246467991473532e-16,
+          7.498798913309288e-33,
+          3884.500800000001,
+          0,
+          6.123233995736766e-17,
+          -1,
+          0.08000000000002427,
+          -1.2246467991473532e-16,
+          -1,
+          -6.123233995736766e-17,
+          -453.9499999999992,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/s bottom turn-under"
+      },
+      {
+        "flatToWorld" : [
+          -1.8369701987210297e-16,
+          0,
+          -1,
+          -92.31999999999834,
+          0,
+          1,
+          0,
+          386.61000000000007,
+          1,
+          0,
+          -1.8369701987210297e-16,
+          -4044.2408,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/w outer wall"
+      },
+      {
+        "flatToWorld" : [
+          -1.8369701987210297e-16,
+          1,
+          -6.123233995736766e-17,
+          236.8200000000017,
+          0,
+          6.123233995736766e-17,
+          1,
+          57.47000000000001,
+          1,
+          1.8369701987210297e-16,
+          -1.1248198369963932e-32,
+          -4044.2408,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/w rim traversal"
+      },
+      {
+        "flatToWorld" : [
+          -1.8369701987210297e-16,
+          1.2246467991473532e-16,
+          1,
+          -90.07999999999834,
+          0,
+          -1,
+          1.2246467991473532e-16,
+          -269.43,
+          1,
+          2.2496396739927864e-32,
+          1.8369701987210297e-16,
+          -4044.2408,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/w inside turn-in"
+      },
+      {
+        "flatToWorld" : [
+          -1.8369701987210297e-16,
+          -1,
+          -6.123233995736766e-17,
+          -478.8499999999984,
+          0,
+          6.123233995736766e-17,
+          -1,
+          0.08000000000002427,
+          1,
+          -1.8369701987210297e-16,
+          -1.1248198369963932e-32,
+          -4044.2408,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/w bottom turn-under"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          -2.4492935982947064e-16,
+          -4203.7808,
+          0,
+          1,
+          0,
+          386.61000000000007,
+          2.4492935982947064e-16,
+          0,
+          1,
+          67.2199999999998,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/nTail outer wall"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          2.4492935982947064e-16,
+          -1.4997597826618576e-32,
+          -4203.7808,
+          0,
+          6.123233995736766e-17,
+          1,
+          57.47000000000001,
+          2.4492935982947064e-16,
+          -1,
+          6.123233995736766e-17,
+          -261.92000000000024,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/nTail rim traversal"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          2.999519565323715e-32,
+          2.4492935982947064e-16,
+          -4203.7808,
+          0,
+          -1,
+          1.2246467991473532e-16,
+          -269.43,
+          2.4492935982947064e-16,
+          -1.2246467991473532e-16,
+          -1,
+          64.97999999999979,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/nTail inside turn-in"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          -2.4492935982947064e-16,
+          -1.4997597826618576e-32,
+          -4203.7808,
+          0,
+          6.123233995736766e-17,
+          -1,
+          0.08000000000002427,
+          2.4492935982947064e-16,
+          1,
+          6.123233995736766e-17,
+          453.74999999999983,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/nTail bottom turn-under"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          -2.4492935982947064e-16,
+          -4203.7808,
+          0,
+          1,
+          0,
+          386.61000000000007,
+          2.4492935982947064e-16,
+          0,
+          1,
+          67.4199999999998,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-band-p/Visible seam overlap"
+      }
+    ],
+    "bounds" : {
+      "height" : 79.63,
+      "width" : 648.5600000000004,
+      "x" : 3524.6000000000004,
+      "y" : 316.90000000000003
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 628.56,
+          "y" : 79.63
+        },
+        {
+          "x" : 596.861,
+          "y" : 79.63
+        },
+        {
+          "x" : 586.861,
+          "y" : 69.63
+        },
+        {
+          "x" : 576.861,
+          "y" : 79.63
+        },
+        {
+          "x" : 462.221,
+          "y" : 79.63
+        },
+        {
+          "x" : 452.221,
+          "y" : 69.63
+        },
+        {
+          "x" : 442.221,
+          "y" : 79.63
+        },
+        {
+          "x" : 277.581,
+          "y" : 79.63
+        },
+        {
+          "x" : 267.581,
+          "y" : 69.63
+        },
+        {
+          "x" : 257.581,
+          "y" : 79.63
+        },
+        {
+          "x" : 142.941,
+          "y" : 79.63
+        },
+        {
+          "x" : 132.941,
+          "y" : 69.63
+        },
+        {
+          "x" : 122.941,
+          "y" : 79.63
+        },
+        {
+          "x" : 10,
+          "y" : 79.63
+        },
+        {
+          "x" : 0,
+          "y" : 69.63
+        },
+        {
+          "x" : 0,
+          "y" : 12.24
+        },
+        {
+          "x" : 2.24,
+          "y" : 10
+        },
+        {
+          "x" : 2.24,
+          "y" : 0
+        },
+        {
+          "x" : 130.701,
+          "y" : 0
+        },
+        {
+          "x" : 130.701,
+          "y" : 10
+        },
+        {
+          "x" : 132.941,
+          "y" : 12.24
+        },
+        {
+          "x" : 135.181,
+          "y" : 10
+        },
+        {
+          "x" : 135.181,
+          "y" : 0
+        },
+        {
+          "x" : 265.341,
+          "y" : 0
+        },
+        {
+          "x" : 265.341,
+          "y" : 10
+        },
+        {
+          "x" : 267.581,
+          "y" : 12.24
+        },
+        {
+          "x" : 269.821,
+          "y" : 10
+        },
+        {
+          "x" : 269.821,
+          "y" : 0
+        },
+        {
+          "x" : 449.981,
+          "y" : 0
+        },
+        {
+          "x" : 449.981,
+          "y" : 10
+        },
+        {
+          "x" : 452.221,
+          "y" : 12.24
+        },
+        {
+          "x" : 454.461,
+          "y" : 10
+        },
+        {
+          "x" : 454.461,
+          "y" : 0
+        },
+        {
+          "x" : 584.621,
+          "y" : 0
+        },
+        {
+          "x" : 584.621,
+          "y" : 10
+        },
+        {
+          "x" : 586.861,
+          "y" : 12.24
+        },
+        {
+          "x" : 589.101,
+          "y" : 10
+        },
+        {
+          "x" : 589.101,
+          "y" : 0
+        },
+        {
+          "x" : 636.32,
+          "y" : 0
+        },
+        {
+          "x" : 636.32,
+          "y" : 10
+        },
+        {
+          "x" : 638.56,
+          "y" : 12.24
+        },
+        {
+          "x" : 638.56,
+          "y" : 14.24
+        },
+        {
+          "x" : 648.56,
+          "y" : 14.24
+        },
+        {
+          "x" : 648.56,
+          "y" : 67.63
+        },
+        {
+          "x" : 638.56,
+          "y" : 67.63
+        },
+        {
+          "x" : 638.56,
+          "y" : 69.63
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "front" : {
+      "sourceObjectID" : "4F9387B6-DD48-41A8-933D-9B4297EC4F28",
+      "sourceOriginMM" : {
+        "x" : "0.0",
+        "y" : "0.0"
+      },
+      "sourceSide" : "outside"
+    },
+    "groupID" : "base",
+    "guides" : [
+      {
+        "closed" : false,
+        "id" : "b-band-p/n rim traversal/bend",
+        "label" : "b-band-p/n rim traversal/bend",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 12.240000000000009
+          },
+          {
+            "x" : 132.94079999999985,
+            "y" : 12.240000000000009
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/n inside turn-in/bend",
+        "label" : "b-band-p/n inside turn-in/bend",
+        "points" : [
+          {
+            "x" : 2.2399999999997817,
+            "y" : 10
+          },
+          {
+            "x" : 130.70080000000007,
+            "y" : 10
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/n bottom turn-under/bend",
+        "label" : "b-band-p/n bottom turn-under/bend",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 69.63
+          },
+          {
+            "x" : 132.94079999999985,
+            "y" : 69.63
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/e outer wall/bend",
+        "label" : "b-band-p/e outer wall/bend",
+        "points" : [
+          {
+            "x" : 132.94079999999985,
+            "y" : 12.240000000000009
+          },
+          {
+            "x" : 132.94079999999985,
+            "y" : 69.63
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/e rim traversal/bend",
+        "label" : "b-band-p/e rim traversal/bend",
+        "points" : [
+          {
+            "x" : 132.94079999999985,
+            "y" : 12.240000000000009
+          },
+          {
+            "x" : 267.5808000000002,
+            "y" : 12.240000000000009
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/e inside turn-in/bend",
+        "label" : "b-band-p/e inside turn-in/bend",
+        "points" : [
+          {
+            "x" : 135.1808000000001,
+            "y" : 10
+          },
+          {
+            "x" : 265.34079999999994,
+            "y" : 10
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/e bottom turn-under/bend",
+        "label" : "b-band-p/e bottom turn-under/bend",
+        "points" : [
+          {
+            "x" : 132.94079999999985,
+            "y" : 69.63
+          },
+          {
+            "x" : 267.5808000000002,
+            "y" : 69.63
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/s outer wall/bend",
+        "label" : "b-band-p/s outer wall/bend",
+        "points" : [
+          {
+            "x" : 267.5808000000002,
+            "y" : 12.240000000000009
+          },
+          {
+            "x" : 267.5808000000002,
+            "y" : 69.63
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/s rim traversal/bend",
+        "label" : "b-band-p/s rim traversal/bend",
+        "points" : [
+          {
+            "x" : 267.5808000000002,
+            "y" : 12.240000000000009
+          },
+          {
+            "x" : 452.22080000000005,
+            "y" : 12.240000000000009
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/s inside turn-in/bend",
+        "label" : "b-band-p/s inside turn-in/bend",
+        "points" : [
+          {
+            "x" : 269.82079999999996,
+            "y" : 10
+          },
+          {
+            "x" : 449.9808000000003,
+            "y" : 10
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/s bottom turn-under/bend",
+        "label" : "b-band-p/s bottom turn-under/bend",
+        "points" : [
+          {
+            "x" : 267.5808000000002,
+            "y" : 69.63
+          },
+          {
+            "x" : 452.22080000000005,
+            "y" : 69.63
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/w outer wall/bend",
+        "label" : "b-band-p/w outer wall/bend",
+        "points" : [
+          {
+            "x" : 452.22080000000005,
+            "y" : 12.240000000000009
+          },
+          {
+            "x" : 452.22080000000005,
+            "y" : 69.63
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/w rim traversal/bend",
+        "label" : "b-band-p/w rim traversal/bend",
+        "points" : [
+          {
+            "x" : 452.22080000000005,
+            "y" : 12.240000000000009
+          },
+          {
+            "x" : 586.8608000000004,
+            "y" : 12.240000000000009
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/w inside turn-in/bend",
+        "label" : "b-band-p/w inside turn-in/bend",
+        "points" : [
+          {
+            "x" : 454.46079999999984,
+            "y" : 10
+          },
+          {
+            "x" : 584.6207999999997,
+            "y" : 10
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/w bottom turn-under/bend",
+        "label" : "b-band-p/w bottom turn-under/bend",
+        "points" : [
+          {
+            "x" : 452.22080000000005,
+            "y" : 69.63
+          },
+          {
+            "x" : 586.8608000000004,
+            "y" : 69.63
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/nTail outer wall/bend",
+        "label" : "b-band-p/nTail outer wall/bend",
+        "points" : [
+          {
+            "x" : 586.8608000000004,
+            "y" : 12.240000000000009
+          },
+          {
+            "x" : 586.8608000000004,
+            "y" : 69.63
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/nTail rim traversal/bend",
+        "label" : "b-band-p/nTail rim traversal/bend",
+        "points" : [
+          {
+            "x" : 586.8608000000004,
+            "y" : 12.240000000000009
+          },
+          {
+            "x" : 638.5600000000004,
+            "y" : 12.240000000000009
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/nTail inside turn-in/bend",
+        "label" : "b-band-p/nTail inside turn-in/bend",
+        "points" : [
+          {
+            "x" : 589.1008000000002,
+            "y" : 10
+          },
+          {
+            "x" : 636.3199999999997,
+            "y" : 10
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/nTail bottom turn-under/bend",
+        "label" : "b-band-p/nTail bottom turn-under/bend",
+        "points" : [
+          {
+            "x" : 586.8608000000004,
+            "y" : 69.63
+          },
+          {
+            "x" : 638.5600000000004,
+            "y" : 69.63
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/Visible seam overlap/bend",
+        "label" : "b-band-p/Visible seam overlap/bend",
+        "points" : [
+          {
+            "x" : 638.5600000000004,
+            "y" : 14.240000000000009
+          },
+          {
+            "x" : 638.5600000000004,
+            "y" : 67.63
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/n rim traversal/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 12.24
+          },
+          {
+            "x" : 132.9408,
+            "y" : 12.24
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/n inside turn-in/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 2.24,
+            "y" : 10
+          },
+          {
+            "x" : 130.7008,
+            "y" : 10
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/n bottom turn-under/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 69.63
+          },
+          {
+            "x" : 132.9408,
+            "y" : 69.63
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/e outer wall/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 132.9408,
+            "y" : 12.24
+          },
+          {
+            "x" : 132.9408,
+            "y" : 69.63
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/e rim traversal/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 132.9408,
+            "y" : 12.24
+          },
+          {
+            "x" : 267.5808,
+            "y" : 12.24
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/e inside turn-in/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 135.1808,
+            "y" : 10
+          },
+          {
+            "x" : 265.3408,
+            "y" : 10
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/e bottom turn-under/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 132.9408,
+            "y" : 69.63
+          },
+          {
+            "x" : 267.5808,
+            "y" : 69.63
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/s outer wall/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 267.5808,
+            "y" : 12.24
+          },
+          {
+            "x" : 267.5808,
+            "y" : 69.63
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/s rim traversal/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 267.5808,
+            "y" : 12.24
+          },
+          {
+            "x" : 452.22080000000005,
+            "y" : 12.24
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/s inside turn-in/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 269.8208,
+            "y" : 10
+          },
+          {
+            "x" : 449.98080000000004,
+            "y" : 10
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/s bottom turn-under/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 267.5808,
+            "y" : 69.63
+          },
+          {
+            "x" : 452.22080000000005,
+            "y" : 69.63
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/w outer wall/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 452.22080000000005,
+            "y" : 12.24
+          },
+          {
+            "x" : 452.22080000000005,
+            "y" : 69.63
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/w rim traversal/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 452.22080000000005,
+            "y" : 12.24
+          },
+          {
+            "x" : 586.8608,
+            "y" : 12.24
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/w inside turn-in/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 454.46080000000006,
+            "y" : 10
+          },
+          {
+            "x" : 584.6208,
+            "y" : 10
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/w bottom turn-under/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 452.22080000000005,
+            "y" : 69.63
+          },
+          {
+            "x" : 586.8608,
+            "y" : 69.63
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/nTail outer wall/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 586.8608,
+            "y" : 12.24
+          },
+          {
+            "x" : 586.8608,
+            "y" : 69.63
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/nTail rim traversal/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 586.8608,
+            "y" : 12.24
+          },
+          {
+            "x" : 638.5600000000001,
+            "y" : 12.24
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/nTail inside turn-in/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 589.1008,
+            "y" : 10
+          },
+          {
+            "x" : 636.32,
+            "y" : 10
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/nTail bottom turn-under/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 586.8608,
+            "y" : 69.63
+          },
+          {
+            "x" : 638.5600000000001,
+            "y" : 69.63
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "b-band-p/Visible seam overlap/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 638.5600000000001,
+            "y" : 14.24
+          },
+          {
+            "x" : 638.5600000000001,
+            "y" : 67.63
+          }
+        ],
+        "role" : "seam"
+      }
+    ],
+    "id" : "b-band-p",
+    "name" : "Base paper wall band",
+    "panelIDs" : [
+      "b-band-p",
+      "b-band-p/n rim traversal",
+      "b-band-p/n inside turn-in",
+      "b-band-p/n bottom turn-under",
+      "b-band-p/e outer wall",
+      "b-band-p/e rim traversal",
+      "b-band-p/e inside turn-in",
+      "b-band-p/e bottom turn-under",
+      "b-band-p/s outer wall",
+      "b-band-p/s rim traversal",
+      "b-band-p/s inside turn-in",
+      "b-band-p/s bottom turn-under",
+      "b-band-p/w outer wall",
+      "b-band-p/w rim traversal",
+      "b-band-p/w inside turn-in",
+      "b-band-p/w bottom turn-under",
+      "b-band-p/nTail outer wall",
+      "b-band-p/nTail rim traversal",
+      "b-band-p/nTail inside turn-in",
+      "b-band-p/nTail bottom turn-under",
+      "b-band-p/Visible seam overlap"
+    ],
+    "purpose" : "covering",
+    "quantity" : 1,
+    "rootPanelID" : "b-band-p",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 130,
+      "name" : "Uncoated oat covering paper",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#E7DFCE",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.16,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -97.31999999999994,
+          0,
+          6.123233995736766e-17,
+          -1,
+          0.2800000000000559,
+          0,
+          1,
+          6.123233995736766e-17,
+          696.0200000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-patch-p"
+      }
+    ],
+    "bounds" : {
+      "height" : 134.64,
+      "width" : 184.64000000000001,
+      "x" : 5,
+      "y" : 628.8000000000001
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 184.64,
+          "y" : 134.64
+        },
+        {
+          "x" : 0,
+          "y" : 134.64
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 184.64,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "front" : {
+      "sourceObjectID" : "4F9387B6-DD48-41A8-933D-9B4297EC4F28",
+      "sourceOriginMM" : {
+        "x" : "bcapX",
+        "y" : "bcapY"
+      },
+      "sourceSide" : "outside"
+    },
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "b-patch-p",
+    "name" : "Base exterior paper face patch",
+    "panelIDs" : [
+      "b-patch-p"
+    ],
+    "purpose" : "covering",
+    "quantity" : 1,
+    "rootPanelID" : "b-patch-p",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 130,
+      "name" : "Uncoated oat covering paper",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#E7DFCE",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.16,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -1454.8336000000002,
+          0,
+          -1,
+          -1.2246467991473532e-16,
+          -910.35,
+          0,
+          1.2246467991473532e-16,
+          -1,
+          -70.53999999999982,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -1454.8336000000002,
+          0,
+          6.123233995736766e-17,
+          -1,
+          46.670000000000115,
+          0,
+          1,
+          6.123233995736766e-17,
+          886.4800000000001,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/n rim traversal"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -1454.8336000000002,
+          0,
+          1,
+          0,
+          1001.37,
+          0,
+          0,
+          1,
+          -68.21999999999991,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/n inside turn-in"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -1454.8336000000002,
+          0,
+          -1.8369701987210297e-16,
+          1,
+          75.42999999999988,
+          0,
+          -1,
+          -1.8369701987210297e-16,
+          -1056.32,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/n bottom turn-under"
+      },
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          0,
+          1,
+          95.44000000000005,
+          1.2246467991473532e-16,
+          -1,
+          -7.498798913309288e-33,
+          -910.3500000000003,
+          1,
+          1.2246467991473532e-16,
+          -6.123233995736766e-17,
+          -1620.8136,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/e outer wall"
+      },
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          -1,
+          6.123233995736766e-17,
+          -861.58,
+          1.2246467991473532e-16,
+          -6.123233995736765e-17,
+          -1,
+          46.669999999999774,
+          1,
+          6.123233995736767e-17,
+          1.2246467991473532e-16,
+          -1620.8136,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/e rim traversal"
+      },
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          -1.2246467991473532e-16,
+          -1,
+          93.11999999999978,
+          1.2246467991473532e-16,
+          1,
+          -1.224646799147353e-16,
+          1001.3699999999999,
+          1,
+          -1.2246467991473532e-16,
+          6.123233995736769e-17,
+          -1620.8136000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/e inside turn-in"
+      },
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          1,
+          6.123233995736766e-17,
+          1081.2200000000003,
+          1.2246467991473532e-16,
+          -6.123233995736767e-17,
+          1,
+          75.42999999999977,
+          1,
+          -6.123233995736765e-17,
+          -1.2246467991473532e-16,
+          -1620.8136000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/e bottom turn-under"
+      },
+      {
+        "flatToWorld" : [
+          -1,
+          0,
+          1.2246467991473532e-16,
+          1786.7936000000002,
+          1.4997597826618576e-32,
+          -1,
+          1.2246467991473532e-16,
+          -910.35,
+          1.2246467991473532e-16,
+          1.2246467991473532e-16,
+          1,
+          70.54000000000019,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/s outer wall"
+      },
+      {
+        "flatToWorld" : [
+          -1,
+          -1.2246467991473532e-16,
+          7.498798913309288e-33,
+          1786.7936,
+          1.4997597826618576e-32,
+          -1.8369701987210297e-16,
+          -1,
+          46.66999999999989,
+          1.2246467991473532e-16,
+          -1,
+          1.8369701987210297e-16,
+          -886.48,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/s rim traversal"
+      },
+      {
+        "flatToWorld" : [
+          -1,
+          -1.4997597826618576e-32,
+          -1.2246467991473532e-16,
+          1786.7936000000002,
+          1.4997597826618576e-32,
+          1,
+          -2.4492935982947064e-16,
+          1001.3700000000001,
+          1.2246467991473532e-16,
+          -2.4492935982947064e-16,
+          -1,
+          68.21999999999969,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/s inside turn-in"
+      },
+      {
+        "flatToWorld" : [
+          -1,
+          1.2246467991473532e-16,
+          7.498798913309288e-33,
+          1786.7936000000004,
+          1.4997597826618576e-32,
+          6.123233995736766e-17,
+          1,
+          75.4300000000001,
+          1.2246467991473532e-16,
+          1,
+          -6.123233995736766e-17,
+          1056.3200000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/s bottom turn-under"
+      },
+      {
+        "flatToWorld" : [
+          -1.8369701987210297e-16,
+          0,
+          -1,
+          -95.43999999999937,
+          -1.2246467991473532e-16,
+          -1,
+          2.2496396739927864e-32,
+          -910.3499999999998,
+          -1,
+          1.2246467991473532e-16,
+          1.8369701987210297e-16,
+          1952.7736000000004,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/w outer wall"
+      },
+      {
+        "flatToWorld" : [
+          -1.8369701987210297e-16,
+          1,
+          -6.123233995736766e-17,
+          861.5800000000007,
+          -1.2246467991473532e-16,
+          -6.123233995736769e-17,
+          -1,
+          46.67000000000023,
+          -1,
+          -1.8369701987210297e-16,
+          1.2246467991473532e-16,
+          1952.7736000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/w rim traversal"
+      },
+      {
+        "flatToWorld" : [
+          -1.8369701987210297e-16,
+          1.2246467991473532e-16,
+          1,
+          -93.1199999999991,
+          -1.2246467991473532e-16,
+          1,
+          -1.2246467991473535e-16,
+          1001.3700000000003,
+          -1,
+          -1.2246467991473532e-16,
+          -1.8369701987210297e-16,
+          1952.7736000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/w inside turn-in"
+      },
+      {
+        "flatToWorld" : [
+          -1.8369701987210297e-16,
+          -1,
+          -6.123233995736766e-17,
+          -1081.2199999999993,
+          -1.2246467991473532e-16,
+          -6.123233995736764e-17,
+          1,
+          75.43000000000022,
+          -1,
+          1.8369701987210297e-16,
+          -1.2246467991473532e-16,
+          1952.7736000000004,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/w bottom turn-under"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          -2.4492935982947064e-16,
+          -2118.7536,
+          -2.999519565323715e-32,
+          -1,
+          -1.2246467991473532e-16,
+          -910.35,
+          -2.4492935982947064e-16,
+          1.2246467991473532e-16,
+          -1,
+          -70.53999999999905,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/nTail outer wall"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          2.4492935982947064e-16,
+          -1.4997597826618576e-32,
+          -2118.7535999999996,
+          -2.999519565323715e-32,
+          6.123233995736766e-17,
+          -1,
+          46.670000000000115,
+          -2.4492935982947064e-16,
+          1,
+          6.123233995736766e-17,
+          886.4800000000009,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/nTail rim traversal"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          2.999519565323715e-32,
+          2.4492935982947064e-16,
+          -2118.7536,
+          -2.999519565323715e-32,
+          1,
+          0,
+          1001.37,
+          -2.4492935982947064e-16,
+          0,
+          1,
+          -68.21999999999912,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/nTail inside turn-in"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          -2.4492935982947064e-16,
+          -1.4997597826618576e-32,
+          -2118.7536000000005,
+          -2.999519565323715e-32,
+          -1.8369701987210297e-16,
+          1,
+          75.42999999999988,
+          -2.4492935982947064e-16,
+          -1,
+          -1.8369701987210297e-16,
+          -1056.3199999999993,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/nTail bottom turn-under"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          -2.4492935982947064e-16,
+          -2118.7536,
+          -2.999519565323715e-32,
+          -1,
+          -1.2246467991473532e-16,
+          -910.35,
+          -2.4492935982947064e-16,
+          1.2246467991473532e-16,
+          -1,
+          -70.81999999999906,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-band-c/Visible seam overlap"
+      }
+    ],
+    "bounds" : {
+      "height" : 59.08000000000004,
+      "width" : 673.9200000000001,
+      "x" : 1412.8400000000001,
+      "y" : 940.7
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 649.92,
+          "y" : 59.08
+        },
+        {
+          "x" : 624.474,
+          "y" : 59.08
+        },
+        {
+          "x" : 610.474,
+          "y" : 45.08
+        },
+        {
+          "x" : 596.474,
+          "y" : 59.08
+        },
+        {
+          "x" : 483.394,
+          "y" : 59.08
+        },
+        {
+          "x" : 469.394,
+          "y" : 45.08
+        },
+        {
+          "x" : 455.394,
+          "y" : 59.08
+        },
+        {
+          "x" : 292.514,
+          "y" : 59.08
+        },
+        {
+          "x" : 278.514,
+          "y" : 45.08
+        },
+        {
+          "x" : 264.514,
+          "y" : 59.08
+        },
+        {
+          "x" : 151.434,
+          "y" : 59.08
+        },
+        {
+          "x" : 137.434,
+          "y" : 45.08
+        },
+        {
+          "x" : 123.434,
+          "y" : 59.08
+        },
+        {
+          "x" : 14,
+          "y" : 59.08
+        },
+        {
+          "x" : 0,
+          "y" : 45.08
+        },
+        {
+          "x" : 0,
+          "y" : 16.32
+        },
+        {
+          "x" : 2.32,
+          "y" : 14
+        },
+        {
+          "x" : 2.32,
+          "y" : 0
+        },
+        {
+          "x" : 135.114,
+          "y" : 0
+        },
+        {
+          "x" : 135.114,
+          "y" : 14
+        },
+        {
+          "x" : 137.434,
+          "y" : 16.32
+        },
+        {
+          "x" : 139.754,
+          "y" : 14
+        },
+        {
+          "x" : 139.754,
+          "y" : 0
+        },
+        {
+          "x" : 276.194,
+          "y" : 0
+        },
+        {
+          "x" : 276.194,
+          "y" : 14
+        },
+        {
+          "x" : 278.514,
+          "y" : 16.32
+        },
+        {
+          "x" : 280.834,
+          "y" : 14
+        },
+        {
+          "x" : 280.834,
+          "y" : 0
+        },
+        {
+          "x" : 467.074,
+          "y" : 0
+        },
+        {
+          "x" : 467.074,
+          "y" : 14
+        },
+        {
+          "x" : 469.394,
+          "y" : 16.32
+        },
+        {
+          "x" : 471.714,
+          "y" : 14
+        },
+        {
+          "x" : 471.714,
+          "y" : 0
+        },
+        {
+          "x" : 608.154,
+          "y" : 0
+        },
+        {
+          "x" : 608.154,
+          "y" : 14
+        },
+        {
+          "x" : 610.474,
+          "y" : 16.32
+        },
+        {
+          "x" : 612.794,
+          "y" : 14
+        },
+        {
+          "x" : 612.794,
+          "y" : 0
+        },
+        {
+          "x" : 661.6,
+          "y" : 0
+        },
+        {
+          "x" : 661.6,
+          "y" : 14
+        },
+        {
+          "x" : 663.92,
+          "y" : 16.32
+        },
+        {
+          "x" : 663.92,
+          "y" : 18.32
+        },
+        {
+          "x" : 673.92,
+          "y" : 18.32
+        },
+        {
+          "x" : 673.92,
+          "y" : 43.08
+        },
+        {
+          "x" : 663.92,
+          "y" : 43.08
+        },
+        {
+          "x" : 663.92,
+          "y" : 45.08
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "front" : {
+      "sourceObjectID" : "20B9FBC4-3167-4A4D-8CC6-DCFB1A48094B",
+      "sourceOriginMM" : {
+        "x" : "0.0",
+        "y" : "0.0"
+      },
+      "sourceSide" : "outside"
+    },
+    "groupID" : "lid",
+    "guides" : [
+      {
+        "closed" : false,
+        "id" : "l-band-c/n rim traversal/bend",
+        "label" : "l-band-c/n rim traversal/bend",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 16.32000000000005
+          },
+          {
+            "x" : 137.43360000000007,
+            "y" : 16.32000000000005
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/n inside turn-in/bend",
+        "label" : "l-band-c/n inside turn-in/bend",
+        "points" : [
+          {
+            "x" : 2.3199999999999363,
+            "y" : 14
+          },
+          {
+            "x" : 135.11360000000013,
+            "y" : 14
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/n bottom turn-under/bend",
+        "label" : "l-band-c/n bottom turn-under/bend",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 45.08000000000004
+          },
+          {
+            "x" : 137.43360000000007,
+            "y" : 45.08000000000004
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/e outer wall/bend",
+        "label" : "l-band-c/e outer wall/bend",
+        "points" : [
+          {
+            "x" : 137.43360000000007,
+            "y" : 16.32000000000005
+          },
+          {
+            "x" : 137.43360000000007,
+            "y" : 45.08000000000004
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/e rim traversal/bend",
+        "label" : "l-band-c/e rim traversal/bend",
+        "points" : [
+          {
+            "x" : 137.43360000000007,
+            "y" : 16.32000000000005
+          },
+          {
+            "x" : 278.5136,
+            "y" : 16.32000000000005
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/e inside turn-in/bend",
+        "label" : "l-band-c/e inside turn-in/bend",
+        "points" : [
+          {
+            "x" : 139.7536,
+            "y" : 14
+          },
+          {
+            "x" : 276.19360000000006,
+            "y" : 14
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/e bottom turn-under/bend",
+        "label" : "l-band-c/e bottom turn-under/bend",
+        "points" : [
+          {
+            "x" : 137.43360000000007,
+            "y" : 45.08000000000004
+          },
+          {
+            "x" : 278.5136,
+            "y" : 45.08000000000004
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/s outer wall/bend",
+        "label" : "l-band-c/s outer wall/bend",
+        "points" : [
+          {
+            "x" : 278.5136,
+            "y" : 16.32000000000005
+          },
+          {
+            "x" : 278.5136,
+            "y" : 45.08000000000004
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/s rim traversal/bend",
+        "label" : "l-band-c/s rim traversal/bend",
+        "points" : [
+          {
+            "x" : 278.5136,
+            "y" : 16.32000000000005
+          },
+          {
+            "x" : 469.3935999999999,
+            "y" : 16.32000000000005
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/s inside turn-in/bend",
+        "label" : "l-band-c/s inside turn-in/bend",
+        "points" : [
+          {
+            "x" : 280.83359999999993,
+            "y" : 14
+          },
+          {
+            "x" : 467.07359999999994,
+            "y" : 14
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/s bottom turn-under/bend",
+        "label" : "l-band-c/s bottom turn-under/bend",
+        "points" : [
+          {
+            "x" : 278.5136,
+            "y" : 45.08000000000004
+          },
+          {
+            "x" : 469.3935999999999,
+            "y" : 45.08000000000004
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/w outer wall/bend",
+        "label" : "l-band-c/w outer wall/bend",
+        "points" : [
+          {
+            "x" : 469.3935999999999,
+            "y" : 16.32000000000005
+          },
+          {
+            "x" : 469.3935999999999,
+            "y" : 45.08000000000004
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/w rim traversal/bend",
+        "label" : "l-band-c/w rim traversal/bend",
+        "points" : [
+          {
+            "x" : 469.3935999999999,
+            "y" : 16.32000000000005
+          },
+          {
+            "x" : 610.4736,
+            "y" : 16.32000000000005
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/w inside turn-in/bend",
+        "label" : "l-band-c/w inside turn-in/bend",
+        "points" : [
+          {
+            "x" : 471.71360000000004,
+            "y" : 14
+          },
+          {
+            "x" : 608.1536000000001,
+            "y" : 14
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/w bottom turn-under/bend",
+        "label" : "l-band-c/w bottom turn-under/bend",
+        "points" : [
+          {
+            "x" : 469.3935999999999,
+            "y" : 45.08000000000004
+          },
+          {
+            "x" : 610.4736,
+            "y" : 45.08000000000004
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/nTail outer wall/bend",
+        "label" : "l-band-c/nTail outer wall/bend",
+        "points" : [
+          {
+            "x" : 610.4736,
+            "y" : 16.32000000000005
+          },
+          {
+            "x" : 610.4736,
+            "y" : 45.08000000000004
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/nTail rim traversal/bend",
+        "label" : "l-band-c/nTail rim traversal/bend",
+        "points" : [
+          {
+            "x" : 610.4736,
+            "y" : 16.32000000000005
+          },
+          {
+            "x" : 663.9200000000001,
+            "y" : 16.32000000000005
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/nTail inside turn-in/bend",
+        "label" : "l-band-c/nTail inside turn-in/bend",
+        "points" : [
+          {
+            "x" : 612.7936,
+            "y" : 14
+          },
+          {
+            "x" : 661.5999999999999,
+            "y" : 14
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/nTail bottom turn-under/bend",
+        "label" : "l-band-c/nTail bottom turn-under/bend",
+        "points" : [
+          {
+            "x" : 610.4736,
+            "y" : 45.08000000000004
+          },
+          {
+            "x" : 663.9200000000001,
+            "y" : 45.08000000000004
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/Visible seam overlap/bend",
+        "label" : "l-band-c/Visible seam overlap/bend",
+        "points" : [
+          {
+            "x" : 663.9200000000001,
+            "y" : 18.32000000000005
+          },
+          {
+            "x" : 663.9200000000001,
+            "y" : 43.08000000000004
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/n rim traversal/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 16.32
+          },
+          {
+            "x" : 137.4336,
+            "y" : 16.32
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/n inside turn-in/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 2.3200000000000003,
+            "y" : 14
+          },
+          {
+            "x" : 135.11360000000002,
+            "y" : 14
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/n bottom turn-under/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 45.08
+          },
+          {
+            "x" : 137.4336,
+            "y" : 45.08
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/e outer wall/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 137.4336,
+            "y" : 16.32
+          },
+          {
+            "x" : 137.4336,
+            "y" : 45.08
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/e rim traversal/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 137.4336,
+            "y" : 16.32
+          },
+          {
+            "x" : 278.5136,
+            "y" : 16.32
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/e inside turn-in/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 139.7536,
+            "y" : 14
+          },
+          {
+            "x" : 276.1936,
+            "y" : 14
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/e bottom turn-under/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 137.4336,
+            "y" : 45.08
+          },
+          {
+            "x" : 278.5136,
+            "y" : 45.08
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/s outer wall/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 278.5136,
+            "y" : 16.32
+          },
+          {
+            "x" : 278.5136,
+            "y" : 45.08
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/s rim traversal/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 278.5136,
+            "y" : 16.32
+          },
+          {
+            "x" : 469.3936,
+            "y" : 16.32
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/s inside turn-in/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 280.8336,
+            "y" : 14
+          },
+          {
+            "x" : 467.0736,
+            "y" : 14
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/s bottom turn-under/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 278.5136,
+            "y" : 45.08
+          },
+          {
+            "x" : 469.3936,
+            "y" : 45.08
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/w outer wall/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 469.3936,
+            "y" : 16.32
+          },
+          {
+            "x" : 469.3936,
+            "y" : 45.08
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/w rim traversal/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 469.3936,
+            "y" : 16.32
+          },
+          {
+            "x" : 610.4736,
+            "y" : 16.32
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/w inside turn-in/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 471.7136,
+            "y" : 14
+          },
+          {
+            "x" : 608.1536,
+            "y" : 14
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/w bottom turn-under/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 469.3936,
+            "y" : 45.08
+          },
+          {
+            "x" : 610.4736,
+            "y" : 45.08
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/nTail outer wall/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 610.4736,
+            "y" : 16.32
+          },
+          {
+            "x" : 610.4736,
+            "y" : 45.08
+          }
+        ],
+        "role" : "seam"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/nTail rim traversal/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 610.4736,
+            "y" : 16.32
+          },
+          {
+            "x" : 663.9200000000001,
+            "y" : 16.32
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/nTail inside turn-in/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 612.7936000000001,
+            "y" : 14
+          },
+          {
+            "x" : 661.6,
+            "y" : 14
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/nTail bottom turn-under/bend/guide",
+        "label" : "Turn in",
+        "points" : [
+          {
+            "x" : 610.4736,
+            "y" : 45.08
+          },
+          {
+            "x" : 663.9200000000001,
+            "y" : 45.08
+          }
+        ],
+        "role" : "turnIn"
+      },
+      {
+        "closed" : false,
+        "id" : "l-band-c/Visible seam overlap/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 663.9200000000001,
+            "y" : 18.32
+          },
+          {
+            "x" : 663.9200000000001,
+            "y" : 43.08
+          }
+        ],
+        "role" : "seam"
+      }
+    ],
+    "id" : "l-band-c",
+    "name" : "Lid fabric wall band",
+    "panelIDs" : [
+      "l-band-c",
+      "l-band-c/n rim traversal",
+      "l-band-c/n inside turn-in",
+      "l-band-c/n bottom turn-under",
+      "l-band-c/e outer wall",
+      "l-band-c/e rim traversal",
+      "l-band-c/e inside turn-in",
+      "l-band-c/e bottom turn-under",
+      "l-band-c/s outer wall",
+      "l-band-c/s rim traversal",
+      "l-band-c/s inside turn-in",
+      "l-band-c/s bottom turn-under",
+      "l-band-c/w outer wall",
+      "l-band-c/w rim traversal",
+      "l-band-c/w inside turn-in",
+      "l-band-c/w bottom turn-under",
+      "l-band-c/nTail outer wall",
+      "l-band-c/nTail rim traversal",
+      "l-band-c/nTail inside turn-in",
+      "l-band-c/nTail bottom turn-under",
+      "l-band-c/Visible seam overlap"
+    ],
+    "purpose" : "covering",
+    "quantity" : 1,
+    "rootPanelID" : "l-band-c",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Paper-backed deep spruce bookcloth",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "plies" : [
+        {
+          "color" : "#D8CDB6",
+          "id" : "AAF2AD7D-E791-4BF1-ACD7-428D9982DB74",
+          "name" : "Paper backing",
+          "profile" : {
+            "color" : "#D8CDB6",
+            "opacity" : 1,
+            "roughness" : 0.9,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.012,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.08
+        },
+        {
+          "color" : "#244747",
+          "id" : "96252DAA-A96C-4AE2-BBC7-6029197B33F9",
+          "name" : "Woven face",
+          "profile" : {
+            "color" : "#244747",
+            "opacity" : 1,
+            "roughness" : 0.9,
+            "texture" : "linen",
+            "textureDepthMM" : 0.035,
+            "textureScaleMM" : 0.9
+          },
+          "thicknessMM" : 0.16
+        }
+      ],
+      "profile" : {
+        "color" : "#244747",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "linen",
+        "textureDepthMM" : 0.035,
+        "textureScaleMM" : 1
+      },
+      "thicknessMM" : 0.24,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -2212.2000000000003,
+          0,
+          -1.8369701987210297e-16,
+          1,
+          75.14999999999984,
+          0,
+          -1,
+          -1.8369701987210297e-16,
+          -1011.2399999999999,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-patch-c"
+      }
+    ],
+    "bounds" : {
+      "height" : 141.07999999999993,
+      "width" : 190.8800000000001,
+      "x" : 2116.76,
+      "y" : 940.7
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 190.88,
+          "y" : 141.08
+        },
+        {
+          "x" : 0,
+          "y" : 141.08
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 190.88,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+      {
+        "color" : "#B89C61",
+        "depthMM" : 0,
+        "elementIDs" : [
+          "60E7A45D-C1AB-4A54-8DEC-80A88468B775"
+        ],
+        "enabled" : true,
+        "heightMM" : 0.015,
+        "id" : "F2535EC6-EF24-4642-9F07-547C4E4F3763",
+        "kind" : "foil",
+        "metallic" : 0.88,
+        "name" : "Satin champagne foil title",
+        "opacity" : 1,
+        "roughness" : 0.26,
+        "side" : "outside"
+      },
+      {
+        "color" : "#E1D5B9",
+        "depthMM" : 0,
+        "elementIDs" : [
+          "4D691810-FCFB-47BD-B54D-33C2523175C1"
+        ],
+        "enabled" : true,
+        "heightMM" : 0.08,
+        "id" : "4A79FDD5-F49A-4B0C-88A4-404C7C1632CB",
+        "kind" : "emboss",
+        "metallic" : 0,
+        "name" : "Blind raised collection seal",
+        "opacity" : 1,
+        "roughness" : 0.7,
+        "side" : "outside"
+      }
+    ],
+    "front" : {
+      "sourceObjectID" : "20B9FBC4-3167-4A4D-8CC6-DCFB1A48094B",
+      "sourceOriginMM" : {
+        "x" : "lcapX",
+        "y" : "lcapY"
+      },
+      "sourceSide" : "outside"
+    },
+    "groupID" : "lid",
+    "guides" : [
+
+    ],
+    "id" : "l-patch-c",
+    "name" : "Lid exterior fabric face patch",
+    "panelIDs" : [
+      "l-patch-c"
+    ],
+    "purpose" : "covering",
+    "quantity" : 1,
+    "rootPanelID" : "l-patch-c",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Paper-backed deep spruce bookcloth",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "plies" : [
+        {
+          "color" : "#D8CDB6",
+          "id" : "AAF2AD7D-E791-4BF1-ACD7-428D9982DB74",
+          "name" : "Paper backing",
+          "profile" : {
+            "color" : "#D8CDB6",
+            "opacity" : 1,
+            "roughness" : 0.9,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.012,
+            "textureScaleMM" : 0.75
+          },
+          "thicknessMM" : 0.08
+        },
+        {
+          "color" : "#244747",
+          "id" : "96252DAA-A96C-4AE2-BBC7-6029197B33F9",
+          "name" : "Woven face",
+          "profile" : {
+            "color" : "#244747",
+            "opacity" : 1,
+            "roughness" : 0.9,
+            "texture" : "linen",
+            "textureDepthMM" : 0.035,
+            "textureScaleMM" : 0.9
+          },
+          "thicknessMM" : 0.16
+        }
+      ],
+      "profile" : {
+        "color" : "#244747",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "linen",
+        "textureDepthMM" : 0.035,
+        "textureScaleMM" : 1
+      },
+      "thicknessMM" : 0.24,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -2206.3900000000003,
+          0,
+          6.123233995736766e-17,
+          -1,
+          72.8850000000001,
+          0,
+          1,
+          6.123233995736766e-17,
+          1317.3300000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-liner-floor"
+      }
+    ],
+    "bounds" : {
+      "height" : 129.46000000000004,
+      "width" : 179.26000000000022,
+      "x" : 2116.76,
+      "y" : 1252.6000000000001
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 179.26,
+          "y" : 129.46
+        },
+        {
+          "x" : 0,
+          "y" : 129.46
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 179.26,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "front" : {
+      "sourceObjectID" : "8D1D4D1B-DD10-4F36-983F-C38B2EE69576",
+      "sourceOriginMM" : {
+        "x" : "2*(llinerW+llinerD)+20",
+        "y" : "0.0"
+      },
+      "sourceSide" : "outside"
+    },
+    "groupID" : "lid",
+    "guides" : [
+
+    ],
+    "id" : "l-liner-floor",
+    "name" : "Lid floor / top lining",
+    "panelIDs" : [
+      "l-liner-floor"
+    ],
+    "purpose" : "lining",
+    "quantity" : 1,
+    "rootPanelID" : "l-liner-floor",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 120,
+      "name" : "Warm ivory lining paper",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#F1E5CA",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "cotton",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.15,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -1495.0400000000002,
+          0,
+          6.123233995736766e-17,
+          1,
+          2.490000000000113,
+          0,
+          -1,
+          6.123233995736766e-17,
+          -1502.9900000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-tape-n"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -1495.0400000000002,
+          0,
+          -1,
+          1.2246467991473532e-16,
+          -1565.51,
+          0,
+          -1.2246467991473532e-16,
+          -1,
+          65.00999999999999,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-tape-n/Wall contact"
+      }
+    ],
+    "bounds" : {
+      "height" : 7,
+      "width" : 164.4000000000001,
+      "x" : 1412.8400000000001,
+      "y" : 1564.5000000000002
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 164.4,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 3.5
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 164.4,
+          "y" : 0
+        },
+        {
+          "x" : 164.4,
+          "y" : 3.5
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+      {
+        "closed" : false,
+        "id" : "b-tape-n/Wall contact/bend",
+        "label" : "b-tape-n/Wall contact/bend",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 164.4000000000001,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      },
+      {
+        "closed" : false,
+        "id" : "b-tape-n/Wall contact/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 164.4,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      }
+    ],
+    "id" : "b-tape-n",
+    "name" : "Base N inside seam tape",
+    "panelIDs" : [
+      "b-tape-n",
+      "b-tape-n/Wall contact"
+    ],
+    "purpose" : "tape",
+    "quantity" : 1,
+    "rootPanelID" : "b-tape-n",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          -1,
+          6.123233995736766e-17,
+          -1477.8900000000006,
+          0,
+          6.123233995736766e-17,
+          1,
+          2.490000000000113,
+          -1,
+          -6.123233995736766e-17,
+          3.749399456654644e-33,
+          2173.86,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-tape-e"
+      },
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          -1.2246467991473532e-16,
+          -1,
+          90.10999999999967,
+          0,
+          -1,
+          1.2246467991473532e-16,
+          -1565.51,
+          -1,
+          -7.498798913309288e-33,
+          -6.123233995736766e-17,
+          2173.86,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-tape-e/Wall contact"
+      }
+    ],
+    "bounds" : {
+      "height" : 7,
+      "width" : 114.40000000000009,
+      "x" : 2116.76,
+      "y" : 1564.5000000000002
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 114.4,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 3.5
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 114.4,
+          "y" : 0
+        },
+        {
+          "x" : 114.4,
+          "y" : 3.5
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+      {
+        "closed" : false,
+        "id" : "b-tape-e/Wall contact/bend",
+        "label" : "b-tape-e/Wall contact/bend",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 114.40000000000009,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      },
+      {
+        "closed" : false,
+        "id" : "b-tape-e/Wall contact/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 114.4,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      }
+    ],
+    "id" : "b-tape-e",
+    "name" : "Base E inside seam tape",
+    "panelIDs" : [
+      "b-tape-e",
+      "b-tape-e/Wall contact"
+    ],
+    "purpose" : "tape",
+    "quantity" : 1,
+    "rootPanelID" : "b-tape-e",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          -1,
+          -1.2246467991473532e-16,
+          7.498798913309288e-33,
+          2902.88,
+          0,
+          6.123233995736766e-17,
+          1,
+          2.490000000000113,
+          -1.2246467991473532e-16,
+          1,
+          -6.123233995736766e-17,
+          1502.7900000000009,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-tape-s"
+      },
+      {
+        "flatToWorld" : [
+          -1,
+          -1.4997597826618576e-32,
+          -1.2246467991473532e-16,
+          2902.88,
+          0,
+          -1,
+          1.2246467991473532e-16,
+          -1565.51,
+          -1.2246467991473532e-16,
+          1.2246467991473532e-16,
+          1,
+          -65.20999999999935,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-tape-s/Wall contact"
+      }
+    ],
+    "bounds" : {
+      "height" : 7,
+      "width" : 164.4000000000001,
+      "x" : 2820.6800000000003,
+      "y" : 1564.5000000000002
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 164.4,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 3.5
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 164.4,
+          "y" : 0
+        },
+        {
+          "x" : 164.4,
+          "y" : 3.5
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+      {
+        "closed" : false,
+        "id" : "b-tape-s/Wall contact/bend",
+        "label" : "b-tape-s/Wall contact/bend",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 164.4000000000001,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      },
+      {
+        "closed" : false,
+        "id" : "b-tape-s/Wall contact/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 164.4,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      }
+    ],
+    "id" : "b-tape-s",
+    "name" : "Base S inside seam tape",
+    "panelIDs" : [
+      "b-tape-s",
+      "b-tape-s/Wall contact"
+    ],
+    "purpose" : "tape",
+    "quantity" : 1,
+    "rootPanelID" : "b-tape-s",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          1,
+          -6.123233995736766e-17,
+          1477.89,
+          0,
+          6.123233995736766e-17,
+          1,
+          2.490000000000113,
+          1,
+          -6.123233995736766e-17,
+          3.749399456654644e-33,
+          -3581.9,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-tape-w"
+      },
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          1.2246467991473532e-16,
+          1,
+          -90.11000000000013,
+          0,
+          -1,
+          1.2246467991473532e-16,
+          -1565.51,
+          1,
+          -7.498798913309288e-33,
+          -6.123233995736766e-17,
+          -3581.9,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-tape-w/Wall contact"
+      }
+    ],
+    "bounds" : {
+      "height" : 7,
+      "width" : 114.40000000000009,
+      "x" : 3524.6000000000004,
+      "y" : 1564.5000000000002
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 114.4,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 3.5
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 114.4,
+          "y" : 0
+        },
+        {
+          "x" : 114.4,
+          "y" : 3.5
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+      {
+        "closed" : false,
+        "id" : "b-tape-w/Wall contact/bend",
+        "label" : "b-tape-w/Wall contact/bend",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 114.40000000000009,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      },
+      {
+        "closed" : false,
+        "id" : "b-tape-w/Wall contact/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 114.4,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      }
+    ],
+    "id" : "b-tape-w",
+    "name" : "Base W inside seam tape",
+    "panelIDs" : [
+      "b-tape-w",
+      "b-tape-w/Wall contact"
+    ],
+    "purpose" : "tape",
+    "quantity" : 1,
+    "rootPanelID" : "b-tape-w",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -90.27999999999997,
+          0,
+          6.123233995736766e-17,
+          -1,
+          72.90000000000013,
+          0,
+          1,
+          6.123233995736766e-17,
+          1811.6100000000001,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-tape-n"
+      },
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -90.27999999999997,
+          0,
+          1,
+          0,
+          1952.8000000000002,
+          0,
+          0,
+          1,
+          -68.28999999999996,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-tape-n/Wall contact"
+      }
+    ],
+    "bounds" : {
+      "height" : 7,
+      "width" : 170.56,
+      "x" : 5,
+      "y" : 1876.4
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 170.56,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 3.5
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 170.56,
+          "y" : 0
+        },
+        {
+          "x" : 170.56,
+          "y" : 3.5
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+      {
+        "closed" : false,
+        "id" : "l-tape-n/Wall contact/bend",
+        "label" : "l-tape-n/Wall contact/bend",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 170.56,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      },
+      {
+        "closed" : false,
+        "id" : "l-tape-n/Wall contact/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 170.56,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      }
+    ],
+    "id" : "l-tape-n",
+    "name" : "Lid N inside seam tape",
+    "panelIDs" : [
+      "l-tape-n",
+      "l-tape-n/Wall contact"
+    ],
+    "purpose" : "tape",
+    "quantity" : 1,
+    "rootPanelID" : "l-tape-n",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          -1,
+          6.123233995736766e-17,
+          -1786.71,
+          1.2246467991473532e-16,
+          -6.123233995736765e-17,
+          -1,
+          72.89999999999982,
+          1,
+          6.123233995736767e-17,
+          1.2246467991473532e-16,
+          -769.2999999999998,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-tape-e"
+      },
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          -1.2246467991473532e-16,
+          -1,
+          93.1899999999996,
+          1.2246467991473532e-16,
+          1,
+          -1.224646799147353e-16,
+          1952.8000000000002,
+          1,
+          -1.2246467991473532e-16,
+          6.123233995736769e-17,
+          -769.3000000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-tape-e/Wall contact"
+      }
+    ],
+    "bounds" : {
+      "height" : 7,
+      "width" : 120.75999999999999,
+      "x" : 708.9200000000001,
+      "y" : 1876.4
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 120.76,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 3.5
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 120.76,
+          "y" : 0
+        },
+        {
+          "x" : 120.76,
+          "y" : 3.5
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+      {
+        "closed" : false,
+        "id" : "l-tape-e/Wall contact/bend",
+        "label" : "l-tape-e/Wall contact/bend",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 120.75999999999999,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      },
+      {
+        "closed" : false,
+        "id" : "l-tape-e/Wall contact/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 120.75999999999999,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      }
+    ],
+    "id" : "l-tape-e",
+    "name" : "Lid E inside seam tape",
+    "panelIDs" : [
+      "l-tape-e",
+      "l-tape-e/Wall contact"
+    ],
+    "purpose" : "tape",
+    "quantity" : 1,
+    "rootPanelID" : "l-tape-e",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          -1,
+          -1.2246467991473532e-16,
+          7.498798913309288e-33,
+          1498.12,
+          1.4997597826618576e-32,
+          -1.8369701987210297e-16,
+          -1,
+          72.8999999999997,
+          1.2246467991473532e-16,
+          -1,
+          1.8369701987210297e-16,
+          -1811.6100000000004,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-tape-s"
+      },
+      {
+        "flatToWorld" : [
+          -1,
+          -1.4997597826618576e-32,
+          -1.2246467991473532e-16,
+          1498.1200000000001,
+          1.4997597826618576e-32,
+          1,
+          -2.4492935982947064e-16,
+          1952.8000000000004,
+          1.2246467991473532e-16,
+          -2.4492935982947064e-16,
+          -1,
+          68.28999999999905,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-tape-s/Wall contact"
+      }
+    ],
+    "bounds" : {
+      "height" : 7,
+      "width" : 170.55999999999995,
+      "x" : 1412.8400000000001,
+      "y" : 1876.4
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 170.56,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 3.5
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 170.56,
+          "y" : 0
+        },
+        {
+          "x" : 170.56,
+          "y" : 3.5
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+      {
+        "closed" : false,
+        "id" : "l-tape-s/Wall contact/bend",
+        "label" : "l-tape-s/Wall contact/bend",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 170.55999999999995,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      },
+      {
+        "closed" : false,
+        "id" : "l-tape-s/Wall contact/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 170.56,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      }
+    ],
+    "id" : "l-tape-s",
+    "name" : "Lid S inside seam tape",
+    "panelIDs" : [
+      "l-tape-s",
+      "l-tape-s/Wall contact"
+    ],
+    "purpose" : "tape",
+    "quantity" : 1,
+    "rootPanelID" : "l-tape-s",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          1,
+          -6.123233995736766e-17,
+          1786.7099999999998,
+          -1.2246467991473532e-16,
+          -6.123233995736765e-17,
+          -1,
+          72.90000000000018,
+          -1,
+          6.123233995736767e-17,
+          1.2246467991473532e-16,
+          2177.1400000000003,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-tape-w"
+      },
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          1.2246467991473532e-16,
+          1,
+          -93.18999999999983,
+          -1.2246467991473532e-16,
+          1,
+          -1.224646799147353e-16,
+          1952.8000000000006,
+          -1,
+          -1.2246467991473532e-16,
+          6.123233995736769e-17,
+          2177.14,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-tape-w/Wall contact"
+      }
+    ],
+    "bounds" : {
+      "height" : 7,
+      "width" : 120.76000000000022,
+      "x" : 2116.76,
+      "y" : 1876.4
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 120.76,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 7
+        },
+        {
+          "x" : 0,
+          "y" : 3.5
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 120.76,
+          "y" : 0
+        },
+        {
+          "x" : 120.76,
+          "y" : 3.5
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+      {
+        "closed" : false,
+        "id" : "l-tape-w/Wall contact/bend",
+        "label" : "l-tape-w/Wall contact/bend",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 120.76000000000022,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      },
+      {
+        "closed" : false,
+        "id" : "l-tape-w/Wall contact/bend/guide",
+        "label" : "Fold / no score implied",
+        "points" : [
+          {
+            "x" : 0,
+            "y" : 3.5
+          },
+          {
+            "x" : 120.75999999999999,
+            "y" : 3.5
+          }
+        ],
+        "role" : "fold"
+      }
+    ],
+    "id" : "l-tape-w",
+    "name" : "Lid W inside seam tape",
+    "panelIDs" : [
+      "l-tape-w",
+      "l-tape-w/Wall contact"
+    ],
+    "purpose" : "tape",
+    "quantity" : 1,
+    "rootPanelID" : "l-tape-w",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -716.9200000000001,
+          0,
+          6.123233995736766e-17,
+          1,
+          46.05000000000015,
+          0,
+          -1,
+          6.123233995736766e-17,
+          -2120.8,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "overlap-stop-n"
+      }
+    ],
+    "bounds" : {
+      "height" : 4.039999999999964,
+      "width" : 16,
+      "x" : 708.9200000000001,
+      "y" : 2188.3
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 16,
+          "y" : 4.04
+        },
+        {
+          "x" : 0,
+          "y" : 4.04
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 16,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "overlap-stop-n",
+    "name" : "Exterior overlap stop N",
+    "panelIDs" : [
+      "overlap-stop-n"
+    ],
+    "purpose" : "seating",
+    "quantity" : 1,
+    "rootPanelID" : "overlap-stop-n",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 1,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -2024.3600000000001,
+          0,
+          6.123233995736766e-17,
+          1,
+          46.05000000000015,
+          0,
+          -1,
+          6.123233995736766e-17,
+          -2196.3,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "overlap-stop-e"
+      }
+    ],
+    "bounds" : {
+      "height" : 16,
+      "width" : 4.039999999999964,
+      "x" : 2116.76,
+      "y" : 2188.3
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 4.04,
+          "y" : 16
+        },
+        {
+          "x" : 0,
+          "y" : 16
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 4.04,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "overlap-stop-e",
+    "name" : "Exterior overlap stop E",
+    "panelIDs" : [
+      "overlap-stop-e"
+    ],
+    "purpose" : "seating",
+    "quantity" : 1,
+    "rootPanelID" : "overlap-stop-e",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 1,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -3532.6000000000004,
+          0,
+          6.123233995736766e-17,
+          1,
+          46.05000000000015,
+          0,
+          -1,
+          6.123233995736766e-17,
+          -2259.84,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "overlap-stop-s"
+      }
+    ],
+    "bounds" : {
+      "height" : 4.039999999999964,
+      "width" : 16,
+      "x" : 3524.6000000000004,
+      "y" : 2188.3
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 16,
+          "y" : 4.04
+        },
+        {
+          "x" : 0,
+          "y" : 4.04
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 16,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "overlap-stop-s",
+    "name" : "Exterior overlap stop S",
+    "panelIDs" : [
+      "overlap-stop-s"
+    ],
+    "purpose" : "seating",
+    "quantity" : 1,
+    "rootPanelID" : "overlap-stop-s",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 1,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -805.3600000000001,
+          0,
+          6.123233995736766e-17,
+          1,
+          46.050000000000175,
+          0,
+          -1,
+          6.123233995736766e-17,
+          -2508.2000000000003,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "overlap-stop-w"
+      }
+    ],
+    "bounds" : {
+      "height" : 16,
+      "width" : 4.039999999999964,
+      "x" : 708.9200000000001,
+      "y" : 2500.2000000000003
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 4.04,
+          "y" : 16
+        },
+        {
+          "x" : 0,
+          "y" : 16
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 4.04,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "overlap-stop-w",
+    "name" : "Exterior overlap stop W",
+    "panelIDs" : [
+      "overlap-stop-w"
+    ],
+    "purpose" : "seating",
+    "quantity" : 1,
+    "rootPanelID" : "overlap-stop-w",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 1,
+      "verified" : false
+    }
+  }
+]

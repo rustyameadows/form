@@ -1,0 +1,680 @@
+{
+  "review_date_utc": "2026-11-04T19:57:10.216169+00:00",
+  "actual_app_visual_review": true,
+  "application_build_commit": "04da88a",
+  "counts": {
+    "whole_views": 14,
+    "detail_views": 6,
+    "overview_views": 1
+  },
+  "images": [
+    {
+      "view": "01-paper-tape-unlined-closed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-01-paper-tape-unlined-closed.render/round09-01-paper-tape-unlined-closed.png",
+      "sha256": "874e6b3df2dcc4c0e9deac10294adb796815730bc9700fe71f2891de4131ae84",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 4.03926274191098,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 7.105427357601002e-17,
+          "y": 0.2985000000000001,
+          "z": 7.105427357601002e-17
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Cream paper exterior; intentionally unlined board interiors and distinct tape seams remain coherent. Closed lid seating and complete cover art remain visible.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "01-paper-tape-unlined-removed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-01-paper-tape-unlined-removed.render/round09-01-paper-tape-unlined-removed.png",
+      "sha256": "c894dd7a03161f6a3c020e56435e0f73dcecbb977fbeb9b0d7379d6a4f8ca73a",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 7.3874862199238285,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.1829999999999998,
+          "y": 0.28675000000000267,
+          "z": -1.0658141036401502e-15
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Cream paper exterior; intentionally unlined board interiors and distinct tape seams remain coherent. Both independent halves remain visible, with coherent wall-to-floor interior shadows.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "02-paper-independent-lining-closed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-02-paper-independent-lining-closed.render/round09-02-paper-independent-lining-closed.png",
+      "sha256": "b6173ae36ac6cd42f520efc02db755edd0126933dc4d8e21c67bc24db1542ecf",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 4.036935095737768,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 7.105427357601002e-17,
+          "y": 0.2996500000000002,
+          "z": 7.105427357601002e-17
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Cream paper wrap and independent lighter liners remain mapped, with liners below the turned rim. Closed lid seating and complete cover art remain visible.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "02-paper-independent-lining-removed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-02-paper-independent-lining-removed.render/round09-02-paper-independent-lining-removed.png",
+      "sha256": "070f0f666670a815c1b5e070eade22c1522cf1575f0a5ec446c28d81aeab9070",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 7.376610872351518,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.1810000000000038,
+          "y": 0.2878999999999998,
+          "z": -0.0010000000000024302
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Cream paper wrap and independent lighter liners remain mapped, with liners below the turned rim. Both independent halves remain visible, with coherent wall-to-floor interior shadows.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "03-fabric-contrasting-lining-closed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-03-fabric-contrasting-lining-closed.render/round09-03-fabric-contrasting-lining-closed.png",
+      "sha256": "8d924727a640e4382c1ae5dea823c463350d5d5e22dabae9d2399f72a002fb83",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 4.058444224857234,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.2994500000000001,
+          "z": 0
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Dark spruce cloth exterior, ivory liner, upright foil graphic and physically distinct lid/base remain coherent. Closed lid seating and complete cover art remain visible.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "03-fabric-contrasting-lining-removed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-03-fabric-contrasting-lining-removed.render/round09-03-fabric-contrasting-lining-removed.png",
+      "sha256": "32b06519218f07a1f84b4c6323a36fb4604cdd091200cfa4ccd69dfc160e08eb",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 7.413350759715511,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.1878000000000009,
+          "y": 0.28730000000000017,
+          "z": 1.4210854715202004e-16
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Dark spruce cloth exterior, ivory liner, upright foil graphic and physically distinct lid/base remain coherent. Both independent halves remain visible, with coherent wall-to-floor interior shadows.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "04a-board-staples-uncovered-closed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-04a-board-staples-uncovered-closed.render/round09-04a-board-staples-uncovered-closed.png",
+      "sha256": "439154a01f94836c912f2ed5cfeb7a553634bc26108920f5b6d5efbe09fa8648",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 3.9904078576380244,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 3.552713678800501e-16,
+          "y": 0.2985000000000001,
+          "z": 0
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Bare board construction remains uncovered; metallic crowns remain visible rather than replaced with a graphic. Closed lid seating and complete cover art remain visible.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "04a-board-staples-uncovered-removed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-04a-board-staples-uncovered-removed.render/round09-04a-board-staples-uncovered-removed.png",
+      "sha256": "12ae5c4923f121773f7acb117b4fad598efac3c531db3876e75408819bb4e454",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 7.322671323476064,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.1709999999999996,
+          "y": 0.28850000000000003,
+          "z": 2.842170943040401e-16
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Bare board construction remains uncovered; metallic crowns remain visible rather than replaced with a graphic. Both independent halves remain visible, with coherent wall-to-floor interior shadows.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "04b-board-staples-covered-closed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-04b-board-staples-covered-closed.render/round09-04b-board-staples-covered-closed.png",
+      "sha256": "4fa50fbd5923a732d4e3028dca8396a9a9aaf728e33f615ae21e407d9bb1181f",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 4.0422086470862455,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 7.105427357601002e-17,
+          "y": 0.30215000000000014,
+          "z": 7.105427357601002e-17
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Covering and lining hide the same underlying fasteners; no exposed crown or gray-board wall regression. Closed lid seating and complete cover art remain visible.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "04b-board-staples-covered-removed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-04b-board-staples-covered-removed.render/round09-04b-board-staples-covered-removed.png",
+      "sha256": "7a2b512d93f603779185b2744e8686b5a675d4aa0691985f4d8179fb78111923",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 7.388289686878987,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.1829999999999998,
+          "y": 0.2886500000000037,
+          "z": -1.0658141036401502e-15
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Covering and lining hide the same underlying fasteners; no exposed crown or gray-board wall regression. Both independent halves remain visible, with coherent wall-to-floor interior shadows.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "05-mixed-partial-overlap-closed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-05-mixed-partial-overlap-closed.render/round09-05-mixed-partial-overlap-closed.png",
+      "sha256": "2be6bbc21a7e55288abd508819e98b8c0608fcb6d8abf7e338e1fa64c4f92ead",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 4.148123860561539,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.37775000000000036,
+          "z": 0
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Cloth lid/paper base and shallow overlap remain distinct; authored band seam, patch edge and small stop ledges remain visible. Closed lid seating and complete cover art remain visible.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "05-mixed-partial-overlap-removed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-05-mixed-partial-overlap-removed.render/round09-05-mixed-partial-overlap-removed.png",
+      "sha256": "13d36d0fd6f6fe63f285438b4590d691a2f085a3e1b7c446ac36934c24a62562",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 7.448712321612459,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.1604000000000008,
+          "y": 0.2877499999999999,
+          "z": 0
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Cloth lid/paper base and shallow overlap remain distinct; authored band seam, patch edge and small stop ledges remain visible. Both independent halves remain visible, with coherent wall-to-floor interior shadows.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "06-independent-deep-lid-closed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-06-independent-deep-lid-closed.render/round09-06-independent-deep-lid-closed.png",
+      "sha256": "2d1de9b5d296e0e632b1a7ac30f0bccf781fd2ba84acf478a4e53515c1c6dda2",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 4.883006894792707,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.4162000000000002,
+          "z": -7.105427357601002e-17
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Larger footprint, tall cloth base and independently deep paper lid retain their distinct proportions and liner mapping. Closed lid seating and complete cover art remain visible.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "06-independent-deep-lid-removed",
+      "category": "whole",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-06-independent-deep-lid-removed.render/round09-06-independent-deep-lid-removed.png",
+      "sha256": "2380d6add051102ecd7c03c3cef34f1a80921c36144422a713dec22932924ea9",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 8.815086532001352,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.3818999999999995,
+          "y": 0.4063000000000012,
+          "z": 7.815970093361102e-16
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "Larger footprint, tall cloth base and independently deep paper lid retain their distinct proportions and liner mapping. Both independent halves remain visible, with coherent wall-to-floor interior shadows.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "bare-staple-underside",
+      "category": "detail",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-bare-staple-underside.render/round09-bare-staple-underside.png",
+      "sha256": "747a7ea7d5f41a92ca55510768113635d1c6834bd05c93bfead4ee82174dfca0",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.2,
+        "distance": 1.3,
+        "elevation": -0.6,
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 1.11,
+          "z": 0.6
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": true,
+      "capture_framing_warnings": [
+        {
+          "bounds_extend_outside_frame_or_clip_range": true,
+          "object_id": "9386D835-F065-4C90-AB3B-99DE6935C241"
+        }
+      ],
+      "finding": "Actual metallic fastener segments remain present at board seams against a coherent board underside.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "closed-rim",
+      "category": "detail",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-closed-rim.render/round09-closed-rim.png",
+      "sha256": "4a90b781eb797a3c284e995d03921900d862bda4934470bb4cdf1b573d817ec1",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.18,
+        "distance": 1.8,
+        "elevation": 0.12,
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.45,
+          "z": 0.68
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": true,
+      "capture_framing_warnings": [
+        {
+          "bounds_extend_outside_frame_or_clip_range": true,
+          "object_id": "712DD59E-7A2B-4A02-B87A-6D6C132E86C4"
+        }
+      ],
+      "finding": "Consistent lid/base clearance and continuous paper wall texture are retained at a grazing angle.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "cloth-corner",
+      "category": "detail",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-cloth-corner.render/round09-cloth-corner.png",
+      "sha256": "e300ba774b2256080dfd81f3f5d9bece78fa78126f3f067865fab0638b0b4992",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 0.85,
+        "elevation": 0.45,
+        "projection": "perspective",
+        "target": {
+          "x": 0.92,
+          "y": 0.49,
+          "z": 0.67
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": true,
+      "capture_framing_warnings": [
+        {
+          "bounds_extend_outside_frame_or_clip_range": true,
+          "object_id": "2DF0192A-A299-42CD-9D12-C4129CA7D301"
+        }
+      ],
+      "finding": "Fine orthogonal yarn texture remains visible without the prior large diagonal waves; corner coverage and fine source-authored seam are retained.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "cloth-inside-corner",
+      "category": "detail",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-cloth-inside-corner.render/round09-cloth-inside-corner.png",
+      "sha256": "1cbb6974dafbd6de435a2cd061c5360c5b047d00c31a22250042e6933d730aef",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 1,
+        "elevation": 0.95,
+        "projection": "perspective",
+        "target": {
+          "x": 0.85,
+          "y": 0.45,
+          "z": 0.6
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": true,
+      "capture_framing_warnings": [
+        {
+          "bounds_extend_outside_frame_or_clip_range": true,
+          "object_id": "EEF9859B-C3F9-4CE1-899A-4A0BD81E66D8"
+        }
+      ],
+      "finding": "Cloth turn-in, rim coverage and ivory liner remain distinct; wall texture is coherent and the prior false large triangle is absent.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "cloth-title",
+      "category": "detail",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-cloth-title.render/round09-cloth-title.png",
+      "sha256": "f72deb0c14f959395091291e704b1488582558d3c97c69be4fb1def412d6a175",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.15,
+        "distance": 1.7,
+        "elevation": 1.25,
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.6,
+          "z": 0
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": true,
+      "capture_framing_warnings": [
+        {
+          "bounds_extend_outside_frame_or_clip_range": true,
+          "object_id": "86B66218-D651-498C-AB14-F2E06931FAEC"
+        }
+      ],
+      "finding": "Upright CASK foil, small supporting text and fine rule retain registration and readability on textured cloth.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "covered-wall",
+      "category": "detail",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-covered-wall.render/round09-covered-wall.png",
+      "sha256": "65e777228af6ea0cc0d50a89d73cbccb8786e0a94ac26d7f72f06dfda4284606",
+      "width": 1500,
+      "height": 1000,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.1,
+        "distance": 1.7,
+        "elevation": 0.2,
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.4,
+          "z": 0.66
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": true,
+      "capture_framing_warnings": [
+        {
+          "bounds_extend_outside_frame_or_clip_range": true,
+          "object_id": "A2031A9F-E3B8-4326-B43D-C95ED35A9DED"
+        }
+      ],
+      "finding": "Laid-paper ribs remain resolved; covering and interior liner remain separate and no false flat triangular cap shading appears.",
+      "new_visual_blocker_found": false
+    },
+    {
+      "view": "seven-checkpoints",
+      "category": "overview",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round09-seven-checkpoints.render/round09-seven-checkpoints.png",
+      "sha256": "40aaf91868e72172d7c4adcd5798207deb171bf7f19a82ee80005ccdbfbf7535",
+      "width": 1800,
+      "height": 1200,
+      "png_hash_matches_capture_record": true,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.3,
+        "distance": 30.35793157272589,
+        "elevation": 0.92,
+        "projection": "perspective",
+        "target": {
+          "x": 6.664150000000001,
+          "y": 0.4162000000000001,
+          "z": 4.459949999999999
+        },
+        "viewportAspect": 1.5
+      },
+      "camera_matches_round07": true,
+      "lighting": "soft-side-v1",
+      "source_design_sha256": "de094991be48d121b12e3772f1eb1da39c35416fc60d5c17ece98aa41b6ffbf6",
+      "intentional_detail_crop": false,
+      "capture_framing_warnings": [],
+      "finding": "All seven source-authored construction/material configurations are visible together; distinct family proportions and ground contact shadows remain coherent.",
+      "new_visual_blocker_found": false
+    }
+  ],
+  "native_shadow_comparison": {
+    "before": {
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/evidence/native-round07-cloth-triangle-defect.png",
+      "sha256": "8ba62c6f01bea9bb6dbcd5777d83e2ef5bc65269898aedeaccc327056675bbf4"
+    },
+    "after": {
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/evidence/native-final-classic-shadow-fixed.png",
+      "sha256": "6fd3f660880b18706cce2d9d5f75359d7a68e8c90a8e4a76c356c820bf33e92b"
+    },
+    "finding": "At the retained native Table classic-lighting camera, the huge false flat bright triangle on the outside cloth wall is gone. The actual ground contact/cast shadow is retained."
+  },
+  "findings": [
+    "Reviewed all 21 final ordinary-app RealityKit renders: seven closed/removed pairs, six close-ups and the shared overview.",
+    "All seven material/construction configurations retain coherent silhouette, proportions, independent lid/base coverage, correct source graphics and distinct materials.",
+    "Ground cast shadows remain in the final views; open wall-to-floor shadows are physically coherent. The prior flat diagonal shading defect did not recur on outside wall caps.",
+    "Cloth retains visible yarn relief and paper retains laid ribs; the sampler changes did not replace them with flat appearance.",
+    "No new visual blocker observed across the final whole/detail/overview views."
+  ],
+  "new_visual_blocker_found": false,
+  "prior_evidence_preserved": [
+    "packet-audit/round07-material-review.json",
+    "packet-audit/round07-whole-material-review.json",
+    "evidence/native-round07-cloth-triangle-defect.png"
+  ],
+  "limits": [
+    "Close-ups intentionally crop whole-object bounds; whole-object framing is checked by the 14 separate whole views.",
+    "Visual/render and independent packet checks do not establish physical adhesive strength, stapler access or fabrication tolerance; those require prototype manufacture.",
+    "Round08 PDF visual review is recorded separately by the native-workflow reviewer."
+  ]
+}

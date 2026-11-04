@@ -1,8 +1,10 @@
 # CASK / COLLECT: two-piece separate-board study
 
-Open [CASK-Construction-Lab.form](CASK-Construction-Lab.form) in the ordinary LAB app. This portable native project contains the seven materially distinct construction checkpoints, the adopted original study, their canonical artwork, reference images and 23 saved scenes. Unreferenced intermediate object snapshots are excluded; current saved objects and assets are byte-identical to the native package.
+Open [CASK-Construction-Lab.form](CASK-Construction-Lab.form) in the ordinary LAB app. This portable native project contains seven materially distinct construction checkpoints, the adopted original study, their canonical artwork, reference images and 26 saved scenes. Its 45 objects include eight physical assemblies and their artwork/reference sources. Unreferenced intermediate snapshots are excluded; current objects and assets are byte-identical to the verified native package.
 
-[validation.json](validation.json) records completed tests, native operations, source identities and preservation checks. Final native verification of the signed handoff build remains pending while the Mac is locked; the [acceptance record](../../docs/two-piece-rigid-box-validation.md) lists the remaining gates. Images under `proofs/iterations/` retain actual app failures and revisions, including the later connected corner before the final weave refinement.
+[validation.json](validation.json) and the [acceptance record](../../docs/two-piece-rigid-box-validation.md) record completed native operations, 323 passing regressions, actual parameter/Undo checks and preservation. The final ordinary app was restarted and reviewed visibly. All 21 final renders were inspected, and all seven construction packets passed 8,875 independent source/artifact checks plus PDF/SVG visual review.
+
+[Construction packets](construction-packets/) contain actual-size cut files, cover/liner patterns, material schedules/layouts, registered artwork/finish masks and assembly/section PDFs for every checkpoint. Tiny-piece identities use numeric keys and separate annotation pages; stock sheets and cuts retain their physical size. [Final app renders and screenshots](proofs/final/), [packet visual proofs](proofs/packet-visuals/) and [acceptance records](proofs/acceptance/) accompany them. Images under `proofs/iterations/` retain actual failures and revisions, including the native Classic-light shadow defect before its repair.
 
 This is editable project/library data. There is no box generator, named category or project-specific geometry in application code. `generate_starter.py` emits the bundled portable `constructionStarter` using generic planar cut pieces, per-piece material/face mappings, parent groups and anchored board-joint attachments.
 
@@ -14,7 +16,10 @@ Run the deterministic authoring and independent source checks:
 python3 examples/two-piece-rigid-boxes/generate_starter.py
 python3 examples/two-piece-rigid-boxes/verify_geometry.py
 python3 examples/two-piece-rigid-boxes/test_starter_authoring.py
+python3 examples/two-piece-rigid-boxes/verify_packets.py
 ```
+
+The packet verifier uses only Python's standard library. It reads the supplied packets without opening LAB and writes [its report](proofs/packet-audit.json) outside them. It independently checks source expressions, physical contours, stocks/quantities, actual PDF cut paths and scale, layout spacing, artwork registration, attachment schedules, assembly dependencies and complete label identities. Source coordinates use the engine's documented 0.001 mm cut lattice; damaged-packet controls retain coverage beyond that lattice.
 
 `variants.json` records parameter deltas and measured dimensions for the six acceptance families. Stapled construction has separate bare and covered checkpoints. Use `--check` to validate without writing, or `--snapshots` to emit full `variants/` working snapshots. The generator and parameter deltas are their authority; full snapshots are unnecessary for normal regeneration. From Python, `variant_starter(id)` returns a complete portable source and `add_variant(call, id, position)` performs one public MCP edit through the caller's ordinary LAB app. Neither importing the module nor building its data opens LAB, changes a project, renders, exports or sends hardware commands.
 

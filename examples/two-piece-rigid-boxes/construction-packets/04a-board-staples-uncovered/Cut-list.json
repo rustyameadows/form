@@ -1,0 +1,812 @@
+[
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -97.00000000000007,
+          0,
+          6.123233995736766e-17,
+          1,
+          1.0000000000000084,
+          0,
+          -1,
+          6.123233995736766e-17,
+          -71.99999999999999,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-floor"
+      }
+    ],
+    "bounds" : {
+      "height" : 134,
+      "width" : 184,
+      "x" : 5,
+      "y" : 5
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 184,
+          "y" : 134
+        },
+        {
+          "x" : 0,
+          "y" : 134
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 184,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "b-floor",
+    "name" : "Base floor / top",
+    "panelIDs" : [
+      "b-floor"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "b-floor",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -795.0800000000002,
+          0,
+          1,
+          0,
+          62.00000000000001,
+          0,
+          0,
+          1,
+          66.00000000000001,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-n"
+      }
+    ],
+    "bounds" : {
+      "height" : 55,
+      "width" : 184,
+      "x" : 703.08,
+      "y" : 5
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 184,
+          "y" : 55
+        },
+        {
+          "x" : 0,
+          "y" : 55
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 184,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "b-n",
+    "name" : "Base Front wall",
+    "panelIDs" : [
+      "b-n"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "b-n",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          0,
+          1,
+          90.99999999999984,
+          0,
+          1,
+          0,
+          62.00000000000001,
+          -1,
+          0,
+          6.123233995736766e-17,
+          1466.16,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-e"
+      }
+    ],
+    "bounds" : {
+      "height" : 55,
+      "width" : 130,
+      "x" : 1401.16,
+      "y" : 5
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 130,
+          "y" : 55
+        },
+        {
+          "x" : 0,
+          "y" : 55
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 130,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "b-e",
+    "name" : "Base Right wall",
+    "panelIDs" : [
+      "b-e"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "b-e",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          -1,
+          0,
+          1.2246467991473532e-16,
+          2191.2400000000002,
+          0,
+          1,
+          0,
+          62.00000000000001,
+          -1.2246467991473532e-16,
+          0,
+          -1,
+          -65.99999999999973,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-s"
+      }
+    ],
+    "bounds" : {
+      "height" : 55,
+      "width" : 184,
+      "x" : 2099.2400000000002,
+      "y" : 5
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 184,
+          "y" : 55
+        },
+        {
+          "x" : 0,
+          "y" : 55
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 184,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "b-s",
+    "name" : "Base Back wall",
+    "panelIDs" : [
+      "b-s"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "b-s",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          0,
+          -1,
+          -91.00000000000024,
+          0,
+          1,
+          0,
+          62.00000000000001,
+          1,
+          0,
+          6.123233995736766e-17,
+          -2862.32,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "b-w"
+      }
+    ],
+    "bounds" : {
+      "height" : 55,
+      "width" : 130,
+      "x" : 2797.32,
+      "y" : 5
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 130,
+          "y" : 55
+        },
+        {
+          "x" : 0,
+          "y" : 55
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 130,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "base",
+    "guides" : [
+
+    ],
+    "id" : "b-w",
+    "name" : "Base Left wall",
+    "panelIDs" : [
+      "b-w"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "b-w",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -3590,
+          0,
+          6.123233995736766e-17,
+          -1,
+          58.000000000000014,
+          0,
+          1,
+          6.123233995736766e-17,
+          74.59999999999992,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-floor"
+      }
+    ],
+    "bounds" : {
+      "height" : 139.2,
+      "width" : 189.19999999999982,
+      "x" : 3495.4,
+      "y" : 5
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 189.2,
+          "y" : 139.2
+        },
+        {
+          "x" : 0,
+          "y" : 139.2
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 189.2,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+
+    ],
+    "id" : "l-floor",
+    "name" : "Lid floor / top",
+    "panelIDs" : [
+      "l-floor"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "l-floor",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          1,
+          0,
+          0,
+          -99.59999999999998,
+          0,
+          -1,
+          -1.2246467991473532e-16,
+          -284.95,
+          0,
+          1.2246467991473532e-16,
+          -1,
+          -68.59999999999985,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-n"
+      }
+    ],
+    "bounds" : {
+      "height" : 24.649999999999977,
+      "width" : 189.2,
+      "x" : 5,
+      "y" : 317.3
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 189.2,
+          "y" : 24.65
+        },
+        {
+          "x" : 0,
+          "y" : 24.65
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 189.2,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+
+    ],
+    "id" : "l-n",
+    "name" : "Lid Front wall",
+    "panelIDs" : [
+      "l-n"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "l-n",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          0,
+          1,
+          93.5999999999998,
+          1.2246467991473532e-16,
+          -1,
+          -7.498798913309288e-33,
+          -284.9500000000001,
+          1,
+          1.2246467991473532e-16,
+          -6.123233995736766e-17,
+          -770.68,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-e"
+      }
+    ],
+    "bounds" : {
+      "height" : 24.649999999999977,
+      "width" : 135.19999999999993,
+      "x" : 703.08,
+      "y" : 317.3
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 135.2,
+          "y" : 24.65
+        },
+        {
+          "x" : 0,
+          "y" : 24.65
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 135.2,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+
+    ],
+    "id" : "l-e",
+    "name" : "Lid Right wall",
+    "panelIDs" : [
+      "l-e"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "l-e",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          -1,
+          0,
+          1.2246467991473532e-16,
+          1495.7600000000002,
+          1.4997597826618576e-32,
+          -1,
+          1.2246467991473532e-16,
+          -284.95,
+          1.2246467991473532e-16,
+          1.2246467991473532e-16,
+          1,
+          68.59999999999991,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-s"
+      }
+    ],
+    "bounds" : {
+      "height" : 24.649999999999977,
+      "width" : 189.20000000000005,
+      "x" : 1401.16,
+      "y" : 317.3
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 189.2,
+          "y" : 24.65
+        },
+        {
+          "x" : 0,
+          "y" : 24.65
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 189.2,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+
+    ],
+    "id" : "l-s",
+    "name" : "Lid Back wall",
+    "panelIDs" : [
+      "l-s"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "l-s",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  },
+  {
+    "assembledPanels" : [
+      {
+        "flatToWorld" : [
+          6.123233995736766e-17,
+          0,
+          -1,
+          -93.6000000000002,
+          -1.2246467991473532e-16,
+          -1,
+          -7.498798913309288e-33,
+          -284.9499999999997,
+          -1,
+          1.2246467991473532e-16,
+          -6.123233995736766e-17,
+          2166.84,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID" : "l-w"
+      }
+    ],
+    "bounds" : {
+      "height" : 24.649999999999977,
+      "width" : 135.19999999999982,
+      "x" : 2099.2400000000002,
+      "y" : 317.3
+    },
+    "cutContours" : [
+      [
+        {
+          "x" : 135.2,
+          "y" : 24.65
+        },
+        {
+          "x" : 0,
+          "y" : 24.65
+        },
+        {
+          "x" : 0,
+          "y" : 0
+        },
+        {
+          "x" : 135.2,
+          "y" : 0
+        }
+      ]
+    ],
+    "finishes" : [
+
+    ],
+    "groupID" : "lid",
+    "guides" : [
+
+    ],
+    "id" : "l-w",
+    "name" : "Lid Left wall",
+    "panelIDs" : [
+      "l-w"
+    ],
+    "purpose" : "board",
+    "quantity" : 1,
+    "rootPanelID" : "l-w",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "name" : "Recycled greyboard",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#AEA58F",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "recycled",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 2,
+      "verified" : false
+    }
+  }
+]

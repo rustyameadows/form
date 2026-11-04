@@ -1,0 +1,9 @@
+{
+  "removedSceneIDs": [
+    "16581443-2EFE-4376-B7D3-933279312D03",
+    "1B4ACB5A-239A-4767-8DD9-21AE2F73006E"
+  ],
+  "curatedSceneCount": 26,
+  "physicalObjectsAndCameraPreserved": true,
+  "originalScenesRetainedIn": "native-table-lighting-probe.json"
+}

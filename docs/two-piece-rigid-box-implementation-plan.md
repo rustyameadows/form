@@ -1,5 +1,7 @@
 # Two-piece rigid setup box implementation plan
 
+Completed November 4, 2026. The [acceptance record](two-piece-rigid-box-validation.md) documents native operation, final render/file review and the editable [CASK study](../examples/two-piece-rigid-boxes/README.md). Implementation is in [PR #37](https://github.com/rustyameadows/form/pull/37).
+
 Implement [the complete separate-board specification](two-piece-rigid-box-spec.md) on the existing authored planar construction system. The source defines the box, option sets, materials, artwork, patterns, joints and scenes. Application code provides reusable part assemblies, joints, covering, layout and export operations.
 
 ## Construction and references
