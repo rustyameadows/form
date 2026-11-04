@@ -29,7 +29,8 @@ import FormCore
       "last_build_ms": lastMilliseconds, "cache_limit_bytes": 64_000_000,
       "maximum_pixels": maximumPixels, "last_error": lastError ?? ""]
   }
-  public static func invalidateFonts() { cache.removeAllObjects();NativeEffectCompositor.invalidateFonts();ArtworkMaskRenderer.invalidateFonts();ArtworkRenderer.invalidatePreparedFonts() }
+  public static func invalidateFonts() {invalidateResources()}
+  public static func invalidateResources() {cache.removeAllObjects();NativeEffectCompositor.invalidateFonts();ArtworkMaskRenderer.invalidateFonts();ArtworkRenderer.invalidatePreparedFonts()}
   public static func blend(_ name: String?) -> CGBlendMode {
     switch name {
     case "multiply": return .multiply

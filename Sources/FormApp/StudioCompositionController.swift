@@ -242,6 +242,9 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
   }
   func sync() {
     guard let store,let project=store.project,let draft else{return}
+    var rendering=draft.renderSettings ?? CyclesRenderSettings()
+    if draft.renderSettings==nil {rendering.renderer = .realtime}
+    stage.cyclesSettingsOverride=rendering
     let assets=store.repository.url(for:project.id).appendingPathComponent("Assets")
     do {try draft.validate()} catch {
       prepareTask?.cancel();prepareTask=nil;generation+=1;stageInput=nil;renderOwners=[:]
@@ -316,6 +319,7 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
     if forceLighting || appliedLighting != draft.lighting {
       stage.applyShotLighting(draft.lighting,studio:true);appliedLighting=draft.lighting
     }
+    stage.cyclesPreview.sceneChanged()
   }
   func exportDialog(video:Bool) {
     NSApp.keyWindow?.makeFirstResponder(nil)
@@ -355,6 +359,9 @@ enum StudioCompositionTool:String,CaseIterable {case orbit,move,lift,rotate}
     guard !path.hasPrefix(root+"/") || path.hasPrefix(exports+"/") else{throw FormError.invalid("Export into this project's Exports folder or an independent destination.")}
     let assets=store.repository.url(for:project.id).appendingPathComponent("Assets"),digest=try project.studioDesignDigest()
     let stillCurrent:()->Bool = {[weak store] in store?.project?.id==project.id && (try? store?.project?.studioDesignDigest())==digest}
+    if !video,scene.renderSettings?.renderer == .cycles {
+      return try await store.cycles.renderScene(scene,to:destination,progress:{[weak self] value in self?.progress=value})
+    }
     return try await StudioSceneMedia.export(project:project,scene:scene,assets:assets,renderer:renderer,to:destination,video:video,isCurrent:stillCurrent,progress:{[weak self] value in self?.progress=value})
   }
 }

@@ -93,11 +93,14 @@ enum CADSceneAdapter {
     prepared.renderables.map{value in var value=value;value.transform=placement(object);if let component=object.cadRepresentation?.components.first(where:{value.componentID.hasSuffix($0.id.uuidString)}){let partColor=object.cadModel?.importedAssemblies?.flatMap(\.nodes).first{$0.outputFeatureID==component.id}?.linearRGBA;value.materials=(prepared.materialColors[value.componentID] ?? [nil]).enumerated().map{material(for:component,object:object,materials:materials,faceColor:$0.element,partColor:partColor,slot:$0.offset)}};return value}
   }
   private nonisolated static func material(for component:CADComponentRepresentation,object:ProductObject,materials:[FormCore.Material],faceColor:SIMD4<Float>?=nil,partColor:[Double]?=nil,slot:Int=0)->SceneMaterialPayload {
-    let material=materials.first{$0.id==(component.materialID ?? object.materialID)} ?? FormCore.Material.presets[1]
+    let material=selectedMaterial(for:component,object:object,materials:materials)
     let sourceColor=faceColor ?? partColor.map{SIMD4<Float>(Float($0[0]),Float($0[1]),Float($0[2]),Float($0[3]))}
     let explicit=component.color ?? object.color,color:SIMD4<Float>,encoding:SceneColorEncoding
     if let explicit{color=rgba(explicit);encoding = .srgb}else if let sourceColor{color=sourceColor;encoding = .linearSRGB}else{color=rgba(material.color);encoding = .srgb}
     return .init(id:"cad-material:\(component.id):\(slot)",revision:"\(color):\(material.roughness):\(material.metallic):\(encoding)",baseColor:color,colorEncoding:encoding,metallic:Float(material.metallic),roughness:Float(material.roughness),alphaMode:color.w<1 ? .blend:.opaque)
+  }
+  nonisolated static func selectedMaterial(for component:CADComponentRepresentation,object:ProductObject,materials:[FormCore.Material])->FormCore.Material {
+    materials.first{$0.id==(component.materialID ?? object.materialID)} ?? FormCore.Material.presets[1]
   }
   private nonisolated static func partitionDigest(_ groups:[[UInt32]])->String {
     var hash=SHA256();for group in groups{var count=UInt64(group.count).littleEndian;withUnsafeBytes(of:&count){hash.update(bufferPointer:$0)};group.withUnsafeBytes{hash.update(bufferPointer:$0)}};return hash.finalize().map{String(format:"%02x",$0)}.joined()

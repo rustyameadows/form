@@ -36,7 +36,8 @@ struct StudioShotsPanel:View {
       if controller.busy {ProgressView().controlSize(.small)}
       if let image=controller.preview {Image(nsImage:image).resizable().aspectRatio(contentMode:.fit).frame(maxHeight:150).accessibilityLabel("Complete Studio output preview")}
       if let error=controller.error {Text(error).font(.system(size:10)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
-      Button("Export shot folder (PNG + record)"){controller.exportDialog()}.font(.system(size:11,weight:.semibold)).accessibilityLabel("Export shot folder PNG and record").anchorPreference(key:StudioShotControlAnchors.self,value:.bounds){["export":$0]}
+      Button(controller.renderSettings?.renderer == .cycles ? "Export shot (PNG + EXR + record)":"Export shot folder (PNG + record)"){controller.exportDialog()}.disabled(controller.exporting).font(.system(size:11,weight:.semibold)).accessibilityLabel("Export shot folder PNG and record").anchorPreference(key:StudioShotControlAnchors.self,value:.bounds){["export":$0]}
+      if controller.exporting {HStack{ProgressView(value:controller.exportProgress);Text("\(Int(controller.exportProgress*100))%").font(.caption.monospacedDigit());Button("Cancel"){controller.cancelExport()}}}
       if let path=controller.lastExport {Text(path.lastPathComponent).font(.system(size:10)).textSelection(.enabled)}
     }.onReceive(NotificationCenter.default.publisher(for:NSControl.textDidEndEditingNotification)){_ in
       DispatchQueue.main.async {controller.reconcile()}

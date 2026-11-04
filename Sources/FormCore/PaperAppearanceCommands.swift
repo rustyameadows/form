@@ -5,15 +5,16 @@ import Foundation
 public enum PaperAppearanceCommands {
   public static let names: Set<String> = ["appearance", "stock_presets", "set_finish", "remove_finish", "save_stock", "apply_stock"]
   public static let readOnlyNames: Set<String> = ["appearance", "stock_presets"]
-  private static let profileKeys: Set<String> = ["texture", "color", "roughness", "textureScaleMM", "textureDepthMM", "opacity"]
+  private static let profileKeys: Set<String> = ["texture", "color", "roughness", "textureScaleMM", "textureDepthMM", "opacity", "appearance"]
   private static let plyKeys: Set<String> = ["id", "name", "color", "thicknessMM", "profile", "gsm"]
   private static let stockKeys: Set<String> = ["name", "vendor", "gsm", "thicknessMM", "grain", "sheetSizeMM", "verified", "notes", "profile", "plies"]
-  private static let finishKeys: Set<String> = ["id", "name", "kind", "side", "elementIDs", "color", "depthMM", "heightMM", "roughness", "metallic", "opacity", "enabled"]
+  private static let finishKeys: Set<String> = ["id", "name", "kind", "side", "elementIDs", "color", "depthMM", "heightMM", "roughness", "metallic", "opacity", "enabled", "appearance"]
 
   private static func fields(_ value: Any, allowed: Set<String>, label: String) throws -> [String: Any] {
     guard let fields = value as? [String: Any], Set(fields.keys).isSubset(of: allowed) else {
       throw FormError.invalid("Unknown or invalid \(label) fields.")
     }
+    if let appearance=fields["appearance"] {try MaterialCommands.validateAppearanceFields(appearance)}
     return fields
   }
   private static func decode<T: Decodable>(_ value: Any, _ type: T.Type) throws -> T {

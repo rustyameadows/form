@@ -89,6 +89,39 @@ final class SceneContractTests:XCTestCase {
     XCTAssertEqual(try XCTUnwrap(source.dataProvider?.data) as Data,Data(bytes))
     XCTAssertThrowsError(try SceneTextureProcessing.normalMap(source,strength:.nan))
   }
+  @MainActor func testFourKImportedTextureSupportsFastUploadAndNormalStrength()async throws {
+    guard MTLCreateSystemDefaultDevice() != nil else{throw XCTSkip("A Metal device is required for actual 4K texture upload.")}
+    _=NSApplication.shared
+    let context=try XCTUnwrap(CGContext(data:nil,width:4096,height:4096,bitsPerComponent:8,bytesPerRow:4096*4,
+      space:CGColorSpace(name:CGColorSpace.sRGB)!,bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue))
+    context.setFillColor(CGColor(red:0.75,green:0.5,blue:0.9,alpha:1));context.fill(CGRect(x:0,y:0,width:4096,height:4096))
+    let source=try XCTUnwrap(context.makeImage()),flat=try SceneTextureProcessing.normalMap(source,strength:0)
+    XCTAssertEqual(flat.width,4096);XCTAssertEqual(flat.height,4096)
+    let bytes=try XCTUnwrap(flat.dataProvider?.data) as Data
+    XCTAssertEqual(Array(bytes.prefix(4)),[128,128,255,255]);XCTAssertEqual(Array(bytes.suffix(4)),[128,128,255,255])
+    let renderer=try RealityKitSceneRenderer()
+    defer {renderer.reset()}
+    var material=SceneMaterialPayload(id:"four-k",baseColor:.init(repeating:1),unlit:true)
+    material.baseColorTexture = .init(image:flat,revision:"four-k-flat-normal",encoding:.srgb)
+    try renderer.upsert(.init(componentID:"surface",objectID:UUID(),mesh:mesh(),materials:[material]))
+    try renderer.setCamera(.looking(from:.init(0,0,300),at:.zero,projection:.orthographic(verticalSpanMM:180)))
+    let image=try await renderer.capture(width:160,height:120,transparent:true)
+    let color=try XCTUnwrap(NSBitmapImageRep(cgImage:image).colorAt(x:80,y:60)?.usingColorSpace(.sRGB))
+    XCTAssertGreaterThan(color.blueComponent,0.95);XCTAssertEqual(renderer.diagnostics.textureUploads,1)
+    // Fast uses RealityKit's photographic display curve. Compare the maximum
+    // supported texture with an identical small texture instead of assuming
+    // that its display pixel is the original encoded channel value.
+    let small=try XCTUnwrap(flat.cropping(to:CGRect(x:0,y:0,width:2,height:2)))
+    material.revision="small-reference"
+    material.baseColorTexture = .init(image:small,revision:"small-flat-normal",encoding:.srgb)
+    try renderer.setMaterials([material],componentID:"surface")
+    let referenceImage=try await renderer.capture(width:160,height:120,transparent:true)
+    let reference=try XCTUnwrap(NSBitmapImageRep(cgImage:referenceImage).colorAt(x:80,y:60)?.usingColorSpace(.sRGB))
+    XCTAssertEqual(color.redComponent,reference.redComponent,accuracy:1/255)
+    XCTAssertEqual(color.greenComponent,reference.greenComponent,accuracy:1/255)
+    XCTAssertEqual(color.blueComponent,reference.blueComponent,accuracy:1/255)
+    XCTAssertEqual(renderer.diagnostics.textureUploads,2)
+  }
   @MainActor func testLinearImportedColorFactorsAreNotInterpretedAsEncodedSRGB()async throws {
     guard MTLCreateSystemDefaultDevice() != nil else{throw XCTSkip("A Metal device is required.")}
     _=NSApplication.shared;let r=try RealityKitSceneRenderer()

@@ -8,7 +8,8 @@ extension PaperAppearanceCommands {
       "roughness": ["type": "number", "minimum": 0, "maximum": 1],
       "textureScaleMM": ["type": "number", "minimum": 0.05, "maximum": 100],
       "textureDepthMM": ["type": "number", "minimum": 0, "maximum": 0.5],
-      "opacity": ["type": "number", "minimum": 0, "maximum": 1]]]
+      "opacity": ["type": "number", "minimum": 0, "maximum": 1],
+      "appearance": PhysicalAppearance.toolSchema]]
   }
   static var stockSchema: [String: Any] {
     ["type": "object", "additionalProperties": false,
@@ -38,6 +39,7 @@ extension PaperAppearanceCommands {
         "heightMM": ["type": "number", "minimum": 0, "maximum": 2],
         "roughness": ["type": ["number", "null"], "minimum": 0, "maximum": 1],
         "metallic": ["type": ["number", "null"], "minimum": 0, "maximum": 1],
-        "opacity": ["type": "number", "minimum": 0, "maximum": 1], "enabled": ["type": "boolean"]]]
+        "opacity": ["type": "number", "minimum": 0, "maximum": 1], "enabled": ["type": "boolean"],
+        "appearance": PhysicalAppearance.toolSchema]]
   }
 }

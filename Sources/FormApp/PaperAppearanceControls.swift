@@ -9,6 +9,7 @@ struct PaperAppearanceControls: View {
   @State private var side: PaperFinishAssignment.Side = .outside
   @State private var kind: PaperFinishAssignment.Kind = .letterpress
   @State private var targets = Set<UUID>()
+  @State private var appearanceDraft:PaperPhysicalAppearanceDraft?
   private var current: ProductObject? { store.project?.objects.first { $0.id == object.id } }
   private var paper: PaperConstruction? { current.flatMap { try? PaperConstruction.definition(for: $0) } }
   private var unit: PhysicalUnit { PhysicalUnit(rawValue: store.project?.unit ?? "mm") ?? .mm }
@@ -33,6 +34,11 @@ struct PaperAppearanceControls: View {
     }.disabled(current?.locked != false)
       .onChange(of: object.id) { _, _ in targets = [] }
       .accessibilityElement(children: .contain).accessibilityLabel("Paper stock and finishes")
+      .sheet(item:$appearanceDraft) {draft in
+        PhysicalAppearanceDraftEditor(title:"Physical appearance",subtitle:draft.name,appearance:draft.appearance,fallback:draft.fallback) {value,_ in
+          try draft.apply(value,to:store)
+        }.environmentObject(store)
+      }
   }
   private func stockControls(_ stock: PaperStock) -> some View {
     VStack(alignment: .leading, spacing: 10) {
@@ -70,6 +76,7 @@ struct PaperAppearanceControls: View {
         }}.accessibilityLabel("Clear paper color override")
       }
       slider("Roughness", value: profile.roughness, key: stockKey) { value in attempt { try updateProfile { $0.roughness = value } } }
+      Button("Physical stock appearance…"){editAppearance(.stock)}.accessibilityIdentifier("paper-stock-physical-appearance")
       ArtworkUnitField("Texture scale", value: profile.textureScaleMM, unit: unit) { value in try updateProfile { $0.textureScaleMM = value } }
       ArtworkUnitField("Texture depth", value: profile.textureDepthMM, unit: unit) { value in try updateProfile { $0.textureDepthMM = value } }
       slider("Opacity", value: profile.opacity, key: stockKey) { value in attempt { try updateProfile { $0.opacity = value } } }
@@ -84,6 +91,7 @@ struct PaperAppearanceControls: View {
           InspectorColorPicker("Ply color", selection: Binding(get: { Color(nsColor: NSColor(hex: ply.color)) }, set: { color in attempt { try updateStock { value in
             if let index = value.plies?.firstIndex(where: { $0.id == ply.id }) { value.plies![index].color = NSColor(color).hexString }
           } } }), supportsOpacity: false, targetID: "paper-ply-\(object.id)-\(ply.id)", onEditingChanged: store.inspectorInteraction(stockKey))
+          Button("Physical ply appearance…"){editAppearance(.ply(ply.id))}.accessibilityIdentifier("paper-ply-physical-appearance-"+ply.id.uuidString)
         }.padding(10).background(Palette.surface, in: RoundedRectangle(cornerRadius: InspectorStyle.moduleRadius))
       }
       Button("Add bonded ply") { attempt { try updateStock { value in
@@ -131,6 +139,7 @@ struct PaperAppearanceControls: View {
       slider("Finish roughness", value: finish.roughness ?? (finish.kind == .foil ? 0.2 : 0.8), key: finishKey) { finishChange(finish, ["roughness": $0]) }
       slider("Metallic", value: finish.metallic ?? (finish.kind == .foil ? 1 : 0), key: finishKey) { finishChange(finish, ["metallic": $0]) }
       slider("Finish opacity", value: finish.opacity, key: finishKey) { finishChange(finish, ["opacity": $0]) }
+      Button("Physical finish appearance…"){editAppearance(.finish(finish.id))}.accessibilityIdentifier("paper-finish-physical-appearance-"+finish.id.uuidString)
     }.padding(10).background(Palette.surface, in: RoundedRectangle(cornerRadius: InspectorStyle.moduleRadius))
   }
   private func targetMenu(side: PaperFinishAssignment.Side, selected: Set<UUID>, set: @escaping (Set<UUID>) -> Void) -> some View {
@@ -159,6 +168,12 @@ struct PaperAppearanceControls: View {
   }
   private func updateProfile(_ edit: (inout PaperSurfaceProfile) -> Void) throws {
     try updateStock { stock in var profile = stock.profile ?? .init(); edit(&profile); stock.profile = profile }
+  }
+  private func editAppearance(_ scope:PaperPhysicalAppearanceDraft.Scope) {
+    attempt {
+      guard let project=store.project,let current else {throw FormError.missing("Paper target missing.")}
+      appearanceDraft=try .init(project:project,object:current,scope:scope)
+    }
   }
   private func updateStock(_ edit: (inout PaperStock) throws -> Void) throws {
     guard let paper else { throw FormError.missing("Paper construction missing.") }

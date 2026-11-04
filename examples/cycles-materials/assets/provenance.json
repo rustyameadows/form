@@ -1,0 +1,210 @@
+[
+  {
+    "file": "Paper001_1K-JPG_Color.jpg",
+    "sha256": "e8db6f5b91f7882f4711ab5b2dc5c2e91f822d4f80a7d0081991532cf5cd9b9a",
+    "license": "CC0-1.0",
+    "source": "https://ambientcg.com/view?id=Paper001",
+    "license_url": "https://docs.ambientcg.com/license/",
+    "physical_repeat_mm": null,
+    "notes": "Approximation, not a photographed or measured Gmund material; 20 mm scale is an estimate."
+  },
+  {
+    "file": "Paper001_1K-JPG_Displacement.jpg",
+    "sha256": "b84db2a627401482fc471ea4df8038ca7da34b2b05e096c12c3728fa311ae8e2",
+    "license": "CC0-1.0",
+    "source": "https://ambientcg.com/view?id=Paper001",
+    "license_url": "https://docs.ambientcg.com/license/",
+    "physical_repeat_mm": null,
+    "notes": "Approximation, not a photographed or measured Gmund material; 20 mm scale is an estimate."
+  },
+  {
+    "file": "Paper001_1K-JPG_NormalGL.jpg",
+    "sha256": "ae083d9d11e13f686d1de0b5ba30518c3ecac6ec5ec06c2016462c9eb197c0dd",
+    "license": "CC0-1.0",
+    "source": "https://ambientcg.com/view?id=Paper001",
+    "license_url": "https://docs.ambientcg.com/license/",
+    "physical_repeat_mm": null,
+    "notes": "Approximation, not a photographed or measured Gmund material; 20 mm scale is an estimate."
+  },
+  {
+    "file": "Paper001_1K-JPG_Roughness.jpg",
+    "sha256": "28bcbbc7648ff0f99a47417b272bf98ae130126f74e8e5de640b7c2defd4e855",
+    "license": "CC0-1.0",
+    "source": "https://ambientcg.com/view?id=Paper001",
+    "license_url": "https://docs.ambientcg.com/license/",
+    "physical_repeat_mm": null,
+    "notes": "Approximation, not a photographed or measured Gmund material; 20 mm scale is an estimate."
+  },
+  {
+    "file": "fabric_pattern_07_nor_gl_4k.jpg",
+    "sha256": "7f6b2eb24d31fa6d5106196562d5274a2f427f5480010b88b00fbdfecb9780b4",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/fabric_pattern_07",
+    "license_url": "https://polyhaven.com/license",
+    "physical_repeat_mm": 400,
+    "notes": "Different fabric from Essex; renderer website previews excluded. Normal and roughness maps only."
+  },
+  {
+    "file": "fabric_pattern_07_rough_4k.jpg",
+    "sha256": "50344efa7f6e783a2a42ccae3ea5c0ec2ca6323860cdf92c6d1ce21b2be3028c",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/fabric_pattern_07",
+    "license_url": "https://polyhaven.com/license",
+    "physical_repeat_mm": 400,
+    "notes": "Different fabric from Essex; renderer website previews excluded. Normal and roughness maps only."
+  },
+  {
+    "file": "rough_linen_nor_gl_4k.jpg",
+    "sha256": "1a591b2acd7e61f3511e483a731c5f18847cce36ec501d669b853b30c203d422",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/rough_linen",
+    "license_url": "https://polyhaven.com/license",
+    "download_url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rough_linen/rough_linen_nor_gl_4k.jpg",
+    "source_md5": "b5e671bbe0c658edc84c25f973a3577d",
+    "physical_repeat_mm": [
+      270.7081392676629,
+      271.29998803138733
+    ],
+    "notes": "Different textile from the manufacturer acceptance reference. Published scan dimensions in millimeters; using normal/roughness only. Optical assignments remain artist estimates. Scan photography by colormass; processing by Rico Cilliers."
+  },
+  {
+    "file": "rough_linen_rough_4k.jpg",
+    "sha256": "f94c35b6ddf1560783d3cd450810ebe4452a49028d562ce140b3e253b2bbf0b3",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/rough_linen",
+    "license_url": "https://polyhaven.com/license",
+    "download_url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rough_linen/rough_linen_rough_4k.jpg",
+    "source_md5": "a24abb488923d12f67a34d4e32101efa",
+    "physical_repeat_mm": [
+      270.7081392676629,
+      271.29998803138733
+    ],
+    "notes": "Different textile from the manufacturer acceptance reference. Published scan dimensions in millimeters; using normal/roughness only. Optical assignments remain artist estimates. Scan photography by colormass; processing by Rico Cilliers."
+  },
+  {
+    "file": "cotton_jersey_nor_gl_4k.jpg",
+    "sha256": "98240ba273d337cf2f133ca4f45166b90f1bc90889f9b7977c7ad198bab1da3c",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/cotton_jersey",
+    "license_url": "https://polyhaven.com/license",
+    "download_url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/cotton_jersey/cotton_jersey_nor_gl_4k.jpg",
+    "source_md5": "10065e7f87dc6e2af177dbe985cff1b6",
+    "physical_repeat_mm": [
+      263.6027473872483,
+      263.7999951839447
+    ],
+    "notes": "Different textile from the manufacturer acceptance reference. Published scan dimensions in millimeters; using normal/roughness only. Optical assignments remain artist estimates. Scan photography by colormass; processing by Rico Cilliers."
+  },
+  {
+    "file": "cotton_jersey_rough_4k.jpg",
+    "sha256": "688efa923b2fd0eeb5b325f69b1c48949cd643d738eb25dbc79ac461b70c3a8a",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/cotton_jersey",
+    "license_url": "https://polyhaven.com/license",
+    "download_url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/cotton_jersey/cotton_jersey_rough_4k.jpg",
+    "source_md5": "0c6797470a57831b2c3fb3794d3adf9f",
+    "physical_repeat_mm": [
+      263.6027473872483,
+      263.7999951839447
+    ],
+    "notes": "Different textile from the manufacturer acceptance reference. Published scan dimensions in millimeters; using normal/roughness only. Optical assignments remain artist estimates. Scan photography by colormass; processing by Rico Cilliers."
+  },
+  {
+    "file": "rough_linen_nor_gl_2k.jpg",
+    "sha256": "c5733ad50cfe0f90c546f3d4076590c1c78a4fd1a83c967cc9c92dc8175b99e6",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/rough_linen",
+    "license_url": "https://polyhaven.com/license",
+    "download_url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rough_linen/rough_linen_nor_gl_2k.jpg",
+    "source_md5": "facad45539d3011e197bd87562ba1679",
+    "physical_repeat_mm": [
+      270.7081392676629,
+      271.29998803138733
+    ],
+    "notes": "Official 2K maps retain complete non-square scan within the bounded 16 MP import limit. Different textile from manufacturer acceptance reference; source scale in millimeters, optical assignments are estimates. Photography by colormass; processing by Rico Cilliers."
+  },
+  {
+    "file": "rough_linen_rough_2k.jpg",
+    "sha256": "48400d48fa203882bf5d984d5beb2f95edb1550309924601c018f2c4f3f80731",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/rough_linen",
+    "license_url": "https://polyhaven.com/license",
+    "download_url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rough_linen/rough_linen_rough_2k.jpg",
+    "source_md5": "fb70674c782d6bead54c8baaae2b77db",
+    "physical_repeat_mm": [
+      270.7081392676629,
+      271.29998803138733
+    ],
+    "notes": "Official 2K maps retain complete non-square scan within the bounded 16 MP import limit. Different textile from manufacturer acceptance reference; source scale in millimeters, optical assignments are estimates. Photography by colormass; processing by Rico Cilliers."
+  },
+  {
+    "file": "cotton_jersey_nor_gl_2k.jpg",
+    "sha256": "ce2ff297a75638492fb46dae98e628e41e08f604634d04301184751695843b71",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/cotton_jersey",
+    "license_url": "https://polyhaven.com/license",
+    "download_url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cotton_jersey/cotton_jersey_nor_gl_2k.jpg",
+    "source_md5": "6252598a3fdc5d229ed9aa50e77be587",
+    "physical_repeat_mm": [
+      263.6027473872483,
+      263.7999951839447
+    ],
+    "notes": "Official 2K maps retain complete non-square scan within the bounded 16 MP import limit. Different textile from manufacturer acceptance reference; source scale in millimeters, optical assignments are estimates. Photography by colormass; processing by Rico Cilliers."
+  },
+  {
+    "file": "cotton_jersey_rough_2k.jpg",
+    "sha256": "46cb4da6f20afe9f244bf8aa6338f49266edda9177ac6807d6e2d780d7de4432",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/cotton_jersey",
+    "license_url": "https://polyhaven.com/license",
+    "download_url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cotton_jersey/cotton_jersey_rough_2k.jpg",
+    "source_md5": "e157b42a81932afa6a3f9386e446df47",
+    "physical_repeat_mm": [
+      263.6027473872483,
+      263.7999951839447
+    ],
+    "notes": "Official 2K maps retain complete non-square scan within the bounded 16 MP import limit. Different textile from manufacturer acceptance reference; source scale in millimeters, optical assignments are estimates. Photography by colormass; processing by Rico Cilliers."
+  },
+  {
+    "file": "crepe_satin_nor_gl_2k.png",
+    "sha256": "94611aec46b248353571e16ff955fe4b2ecd20973844faaa889f9fc9d6ecbefa",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/crepe_satin",
+    "license_url": "https://polyhaven.com/license",
+    "download_url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/crepe_satin/crepe_satin_nor_gl_2k.png",
+    "source_md5": "3d47330e21b6478098ed93c9d861e7ea",
+    "physical_repeat_mm": [
+      263.19942218838304,
+      267.8999900817871
+    ],
+    "notes": "Official lossless 2K data map, photography by colormass and processing by Rico Cilliers. A different satin donor from the Dharma silk acceptance reference; only texture structure is borrowed, with manufacturer fiber/specification and artist-estimated optical assignments recorded separately."
+  },
+  {
+    "file": "crepe_satin_rough_2k.png",
+    "sha256": "0139c3e88e2fe6015b409b32db77887e583e15db0519d26c5bf2584abc9a5456",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/crepe_satin",
+    "license_url": "https://polyhaven.com/license",
+    "download_url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/crepe_satin/crepe_satin_rough_2k.png",
+    "source_md5": "8045ba8c84e5e8951a635b93f7c29102",
+    "physical_repeat_mm": [
+      263.19942218838304,
+      267.8999900817871
+    ],
+    "notes": "Official lossless 2K data map, photography by colormass and processing by Rico Cilliers. A different satin donor from the Dharma silk acceptance reference; only texture structure is borrowed, with manufacturer fiber/specification and artist-estimated optical assignments recorded separately."
+  },
+  {
+    "file": "crepe_satin_anisotropy_strength_2k.png",
+    "sha256": "bfe6c2f4a6bee55ac913c04606e885dfb6bd1a7bcd2b94c64df80ba14b1c8e33",
+    "license": "CC0-1.0",
+    "source": "https://polyhaven.com/a/crepe_satin",
+    "license_url": "https://polyhaven.com/license",
+    "download_url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/2k/crepe_satin/crepe_satin_anisotropy_strength_2k.png",
+    "source_md5": "84eb8e5f23e2e10d036d6925d3ebc995",
+    "physical_repeat_mm": [
+      263.19942218838304,
+      267.8999900817871
+    ],
+    "notes": "Official lossless 2K data map, photography by colormass and processing by Rico Cilliers. A different satin donor from the Dharma silk acceptance reference; only texture structure is borrowed, with manufacturer fiber/specification and artist-estimated optical assignments recorded separately."
+  }
+]

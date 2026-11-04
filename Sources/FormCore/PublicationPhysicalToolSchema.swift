@@ -120,14 +120,20 @@ public enum PublicationPhysicalToolSchema {
       guard types.contains("null") else { throw FormError.invalid("\(path) cannot be null.") }; return
     }
     if types.contains("object") {
-      guard let object = raw as? [String: Any], let properties = schema["properties"] as? [String: Any],
-        Set(object.keys).isSubset(of: Set(properties.keys)) else { throw FormError.invalid("Unknown or malformed \(path) field.") }
+      let declared=schema["properties"] as? [String:Any],additional=schema["additionalProperties"] as? [String:Any]
+      guard let object=raw as? [String:Any],declared != nil || additional != nil,
+        object.count <= (schema["maxProperties"] as? Int ?? Int.max) else {throw FormError.invalid("Unknown, malformed or excessive \(path) fields.")}
+      let properties=declared ?? [:]
+      if let names=(schema["propertyNames"] as? [String:Any])?["enum"] as? [String],!Set(object.keys).isSubset(of:Set(names)) {
+        throw FormError.invalid("Unknown \(path) dictionary key.")
+      }
+      guard additional != nil || Set(object.keys).isSubset(of:Set(properties.keys)) else {throw FormError.invalid("Unknown \(path) field.")}
       let required = schema["required"] as? [String] ?? []
       guard Set(required).isSubset(of: Set(object.keys)) else {
         throw FormError.invalid("\(path) is missing required fields: \(Set(required).subtracting(object.keys).sorted().joined(separator: ", ")).")
       }
       for (key, value) in object {
-        if let child = properties[key] as? [String: Any] { try validateFields(value, schema: child, path: path + "." + key) }
+        if let child=(properties[key] as? [String:Any]) ?? additional {try validateFields(value,schema:child,path:path+"."+key)}
       }
     } else if types.contains("array") {
       guard let values = raw as? [Any], values.count <= (schema["maxItems"] as? Int ?? 5000) else { throw FormError.invalid("Invalid or excessive \(path) entries.") }

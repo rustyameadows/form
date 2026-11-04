@@ -90,6 +90,7 @@ enum TableTool: String, CaseIterable {
   @Published var isolated: Set<UUID> = []
   lazy var studioShots = StudioShotController(store:self)
   lazy var studioComposition = StudioCompositionController(store:self)
+  lazy var cycles = CyclesAppCoordinator(store:self)
   @Published var studioShowingShots=false
   @Published var studioShowingImages=false
   @Published var showingAssets=false
@@ -319,6 +320,14 @@ enum TableTool: String, CaseIterable {
               }
               return
             }
+            if name == "form_render" {
+              if ["start","configure"].contains(args["command"] as? String ?? "") {self.finishArtworkEditing();try self.engine.flush()}
+              Task { @MainActor [weak self] in
+                guard let self else{completion(.failure(FormError.missing("LAB is closing.")));return}
+                do {completion(.success(try await self.cycles.call(args)))}catch{completion(.failure(error))}
+              }
+              return
+            }
             if name == "form_cloth" {completion(.success(try self.bridgeClothCall(args)));return}
             if name == "form_model_asset" || name == "form_cad" {
               // Coordinators own field handoff and the single guarded publication.
@@ -357,7 +366,7 @@ enum TableTool: String, CaseIterable {
               return
             }
             if name=="form_set_view" {_ = try self.publicationViewRequest(args["view"] as? String ?? "",args)}
-            let readOnly = (name=="form_studio_scene" && ["list","get","pose_get"].contains(args["command"] as? String ?? "")) || (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
+            let readOnly = (name=="form_material" && ["list","get","import_texture"].contains(args["command"] as? String ?? "list")) || (name=="form_studio_scene" && ["list","get","pose_get"].contains(args["command"] as? String ?? "")) || (name=="form_export_artwork" && args["page_output"] != nil) || (name == "form_set_view" && StudioShotCommands.isInspection(args)) || (name == "form_export" && args["shot_id"] != nil) ||
               (name == "form_paper" && PaperCommands.preservesDocumentDrafts(args)) ||
               (name == "form_construction" && ConstructionCommands.isReadOnly(args)) ||
               (name == "form_surface" && PhysicalSurfaceCommands.isReadOnly(args)) ||
@@ -380,6 +389,7 @@ enum TableTool: String, CaseIterable {
                 || (name == "form_story" && ["list","get","layout"].contains(args["command"] as? String ?? "list"))
                 || (name == "form_publication" && ["list","get","preflight","spreads","sheet_assembly_inspect"].contains(args["command"] as? String ?? "list"))
             if !readOnly {
+              if name=="form_open_project" {try self.engine.preflightProjectOpen(args)}
               try self.preflightStudioPoseHandoff(name,args)
               try self.preflightCharacterPositionHandoff(name,args)
               try self.preflightPageSetupHandoff(name,args)

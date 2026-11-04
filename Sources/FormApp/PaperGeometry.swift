@@ -59,6 +59,7 @@ import simd
     let plies=stock.plies ?? [],ply=inside ? plies.first:plies.last
     let inherited=stock.profile ?? PaperSurfaceProfile(texture:.cotton,roughness:0.95,textureScaleMM:0.8,textureDepthMM:0.008)
     var profile=ply?.profile ?? inherited
+    if profile.appearance == nil {profile.appearance=stock.profile?.appearance ?? project.material(object.materialID).appearance}
     if !plies.isEmpty {profile.color=ply?.profile?.color}
     if let color=object.color {profile.color=color}
     return .init(profile:profile,color:object.color ?? ply?.color ?? project.material(object.materialID).color)
@@ -97,6 +98,8 @@ import simd
       let back=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:backProfile,color:backColor,grain:stock.grain,artwork:inside,finishes:insideFinishes,assets:assets,maximumEdge:insideSampling?.maximumEdge ?? edge,pixelBudget:insideSampling?.maximumPixels ?? share,preparedArtwork:preparedInside)
       textureBuilds+=PaperSurfaceRasterizer.builds-before
       var materials=[surfaceMaterial("Paper / outside",maps:front,netSize:net.size,opacity:frontProfile.opacity),surfaceMaterial("Paper / inside",maps:back,netSize:net.size,opacity:backProfile.opacity)]
+      materials[0].physicalAppearance=frontProfile.appearance?.meshAppearance(assets:assets,surfaceSizeMM:net.size)
+      materials[1].physicalAppearance=backProfile.appearance?.meshAppearance(assets:assets,surfaceSizeMM:net.size)
       var mesh:MeshGeometry
       if plies.isEmpty {
         materials.append(edgeMaterial("Paper / cut fiber edge",color:object.color ?? defaultProfile.color ?? legacyColor,roughness:defaultProfile.roughness))
@@ -107,7 +110,7 @@ import simd
       }
       if sampling?.isFinalCapture == true {
         let budget=min(PaperReliefGeometry.maximumTrianglesPerFace,
-          max(128,96_000/max(1,net.panels.count*2)))
+          max(128,400_000/max(1,net.panels.count*2)))
         mesh=try PaperReliefGeometry.make(base:mesh,front:front,back:back,panel:panel,
           thicknessMM:stock.resolvedThicknessMM,triangleBudget:budget)
       }
@@ -133,6 +136,11 @@ import simd
       textureProperties.setObject(TextureProperty(property),forKey:key,cost:max(1,Int(image.size.width*image.size.height*4)));return property
     }
     material.diffuse=property(maps.color);material.normal=property(maps.normal);material.roughness=property(maps.roughness);material.metalness=property(maps.metallic)
+    material.physicalBaseColor=property(maps.substrate);material.physicalNormal=property(maps.physicalNormal)
+    material.physicalRoughness=property(maps.physicalRoughness);material.physicalMetalness=property(maps.physicalMetallic)
+    if let artwork=maps.artwork {material.artwork=property(artwork)}
+    material.physicalLayers=maps.physicalLayers.map{.init(mask:property($0.mask),appearance:$0.appearance?.meshAppearance(surfaceSizeMM:netSize),roughness:$0.roughness,metallic:$0.metallic)}
+    material.physicalValidationIssue=maps.physicalLayerOverflow ? "A physical paper face supports up to 16 enabled finish layers. Disable or combine finishes before rendering.":nil
     material.writesToDepthBuffer=opacity>=0.999;return material
   }
   private static func edgeMaterial(_ name:String,color:String,roughness:Double)->MeshMaterial {

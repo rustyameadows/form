@@ -6,7 +6,7 @@ import simd
 /// are linear data: their embedded display profile must not gamma-correct XYZ.
 public enum SceneTextureProcessing {
   public static func normalMap(_ source:CGImage,strength:Float)throws->CGImage {
-    guard strength.isFinite,abs(strength)<=1000,source.width<=8192,source.height<=8192,source.width*source.height<=16_000_000 else{throw SceneRendererError.invalidTexture("Normal-map strength must be finite and within ±1000, with at most 16 MP / 8192 pixels per edge.")}
+    guard strength.isFinite,abs(strength)<=1000,source.width<=8192,source.height<=8192,source.width*source.height<=16_777_216 else{throw SceneRendererError.invalidTexture("Normal-map strength must be finite and within ±1000, with at most 16 MP / 8192 pixels per edge.")}
     let space=CGColorSpace(name:CGColorSpace.linearSRGB)!
     guard let raw=source.copy(colorSpace:space) else{throw SceneRendererError.invalidTexture("Normal-map strength needs a readable RGB data image.")}
     var pixels=[UInt8](repeating:0,count:source.width*source.height*4)

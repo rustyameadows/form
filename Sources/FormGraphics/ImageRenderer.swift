@@ -38,6 +38,9 @@ public struct ImageAssetInfo: Codable, Sendable {
       "cache_limit_bytes": 64_000_000, "last_build_ms": lastMS]
   }
   public static func invalidate(_ url: URL) { infoCache.removeObject(forKey:url.path as NSString) }
+  /// Explicit capture preparation supplies a new content generation. Existing
+  /// live images remain immutable; future decodes cannot reuse old file bytes.
+  public static func invalidateResources() {infoCache.removeAllObjects();cache.removeAllObjects()}
   public static func info(_ url: URL) throws -> ImageAssetInfo {
     if let cached = infoCache.object(forKey: url.path as NSString) { return cached.value }
     guard let source = CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache: false] as CFDictionary),

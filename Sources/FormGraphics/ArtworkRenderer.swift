@@ -2,6 +2,9 @@ import AppKit
 import FormCore
 
 @MainActor public enum ArtworkRenderer {
+  public static func invalidateImageResources() {
+    images.removeAllObjects();ImageRenderer.invalidateResources();AppearanceRenderer.invalidateResources()
+  }
   public static func validateGlyphOutput(_ source: Artwork, assets: URL) throws {
     let art=try BooleanGeometry.materialized(source)
     let tree=ArtworkRenderTree(art,assets:assets,production:true,excluding:[])

@@ -9,6 +9,12 @@ import simd
 @MainActor enum PaperSurfaceRasterizer {
   final class Maps: NSObject {
     let color: NSImage, normal: NSImage, roughness: NSImage, metallic: NSImage
+    /// Separate substrate and premultiplied source paint let physical texture
+    /// replacements retain canonical linked artwork and its exact alpha.
+    let substrate: NSImage, artwork: NSImage?, physicalNormal: NSImage
+    let physicalRoughness:NSImage,physicalMetallic:NSImage
+    let physicalLayers: [PhysicalLayer]
+    let physicalLayerOverflow:Bool
     let width: Int, height: Int
     let rectMM: PaperBounds
     let revision: String
@@ -16,11 +22,14 @@ import simd
     /// by bounded final-view geometry; editable artwork remains authoritative.
     let finishReliefMM: [Float]?
     let reliefRevision: String?
-    var cost: Int { width * height * (finishReliefMM == nil ? 16:20) }
+    var cost: Int { width * height * (28+(artwork == nil ? 0:4)+physicalLayers.count*4+(finishReliefMM == nil ? 0:4)) }
     init(color: NSImage, normal: NSImage, roughness: NSImage, metallic: NSImage,
       width: Int, height: Int, rectMM: PaperBounds, revision: String,
-      finishReliefMM: [Float]? = nil) {
+      finishReliefMM: [Float]? = nil,substrate:NSImage,artwork:NSImage?,physicalNormal:NSImage,physicalRoughness:NSImage,physicalMetallic:NSImage,physicalLayers:[PhysicalLayer],physicalLayerOverflow:Bool) {
       self.color=color;self.normal=normal;self.roughness=roughness;self.metallic=metallic
+      self.substrate=substrate;self.artwork=artwork;self.physicalNormal=physicalNormal;self.physicalLayers=physicalLayers
+      self.physicalRoughness=physicalRoughness;self.physicalMetallic=physicalMetallic
+      self.physicalLayerOverflow=physicalLayerOverflow
       self.width=width;self.height=height;self.rectMM=rectMM;self.revision=revision
       self.finishReliefMM=finishReliefMM
       if let finishReliefMM {
@@ -30,6 +39,7 @@ import simd
       }else{self.reliefRevision=nil}
     }
   }
+  struct PhysicalLayer {let mask:NSImage;let appearance:PhysicalAppearance?;let roughness:Double,metallic:Double}
   private struct Key: Encodable {
     let version: Int, rect: PaperBounds, netSize: Point2, profile: PaperSurfaceProfile
     let color: String, grain: PaperStock.Grain, artworkRevision: String?, finishes: [PaperFinishAssignment]
@@ -101,19 +111,25 @@ import simd
     let prepared:PreparedArtwork?
     if let preparedArtwork,preparedArtwork.matches(artwork,finishes:finishes,assets:assets) {prepared=preparedArtwork}
     else {prepared=try artwork.map{try PreparedArtwork($0,finishes:finishes,assets:assets)}}
-    let key=Key(version:3,rect:rect,netSize:netSize,profile:profile,color:color,grain:grain,
+    let key=Key(version:5,rect:rect,netSize:netSize,profile:profile,color:color,grain:grain,
       artworkRevision:prepared?.revision,finishes:finishes,width:width,height:height,fontRevision:GeometryFactory.fontRevision,assets:assets.path)
     let revision=SHA256.hash(data:try JSONEncoder.form.encode(key)).map{String(format:"%02x",$0)}.joined()
     if let maps=cache.object(forKey:revision as NSString) { return maps }
     let count=width*height,dx=rect.width/Double(width),dy=rect.height/Double(height)
     let field=try stockField(rect:rect,profile:profile,color:color,grain:grain,width:width,height:height)
     var heights=field.heights,rgba=field.color,rough=field.roughness,metal=[UInt8](repeating:255,count:count*4)
+    func hasPhysicalDetail(_ appearance:PhysicalAppearance?)->Bool {
+      ["normal","bump","displacement"].contains{appearance?.textures[$0] != nil}
+    }
+    var physicalHeights=hasPhysicalDetail(profile.appearance) ? [Float](repeating:0,count:count):field.heights
+    var paintPixels:[UInt8]?,physicalLayers=[PhysicalLayer](),physicalLayerOverflow=false
     var finishHeights=[Float](repeating:0,count:count)
     for i in 0..<count {for c in 0..<3{metal[i*4+c]=0}}
     var hasRelief=false,hasFinish=false
     if let prepared {
       let (printArt,inkArt)=try prepared.printSources()
       let pixels=try raster(inkArt,rect:rect,netSize:netSize,width:width,height:height,assets:assets)
+      paintPixels=pixels
       for i in 0..<count { let j=i*4,a=Double(pixels[j+3])/255
         for c in 0..<3 { rgba[j+c]=UInt8(min(255,Int((Double(pixels[j+c])+Double(field.color[j+c])*(1-a)).rounded()))) }
       }
@@ -124,7 +140,7 @@ import simd
         hasFinish=true
         let maskPixels=try raster(selected,rect:rect,netSize:netSize,width:width,height:height,assets:assets)
         let ink=finish.color.flatMap { FormColor.color($0).usingColorSpace(.sRGB) }
-        let paintsConductor=finish.kind == .foil,restoresInk=priorFoil && isInk(finish.kind)
+        let paintsConductor=finish.kind == .foil,restoresInk=priorFoil && isInk(finish.kind),replacesDetail=hasPhysicalDetail(finish.appearance)
         let sourcePaint=paintsConductor ? printArt:inkArt
         let originalPixels=(paintsConductor || restoresInk) && ink==nil ? try raster(selectedArtwork(sourcePaint,elementIDs:Set(finish.elementIDs)),rect:rect,netSize:netSize,width:width,height:height,assets:assets):nil
         let targetR=finish.roughness ?? (finish.kind == .foil ? 0.18:finish.kind == .screenPrint ? 0.55:0.85)
@@ -139,16 +155,33 @@ import simd
           if paintsConductor || restoresInk {
             if let ink {
               let values=[ink.redComponent,ink.greenComponent,ink.blueComponent]
-              for c in 0..<3 {rgba[j+c]=byte(Double(rgba[j+c])/255*(1-a)+values[c]*a)}
+              for c in 0..<3 {
+                rgba[j+c]=byte(Double(rgba[j+c])/255*(1-a)+values[c]*a)
+                paintPixels![j+c]=byte(Double(paintPixels![j+c])/255*(1-a)+values[c]*a)
+              }
             } else if let originalPixels {
               let alpha=max(1,Double(originalPixels[j+3]))
-              for c in 0..<3 {rgba[j+c]=byte(Double(rgba[j+c])/255*(1-a)+Double(originalPixels[j+c])/alpha*a)}
+              for c in 0..<3 {
+                rgba[j+c]=byte(Double(rgba[j+c])/255*(1-a)+Double(originalPixels[j+c])/alpha*a)
+                paintPixels![j+c]=byte(Double(paintPixels![j+c])/255*(1-a)+Double(originalPixels[j+c])/alpha*a)
+              }
             }
+            paintPixels![j+3]=byte(Double(paintPixels![j+3])/255*(1-a)+a)
           }
+          if replacesDetail {physicalHeights[i] *= Float(1-a)}
           for c in 0..<3 {
             rough[j+c]=byte(Double(rough[j+c])/255*(1-a)+targetR*a)
             metal[j+c]=byte(Double(metal[j+c])/255*(1-a)+targetM*a)
           }
+        }
+        if physicalLayers.count<16 {
+          var mask=[UInt8](repeating:255,count:count*4)
+          for i in 0..<count {for c in 0..<3 {mask[i*4+c]=byte(Double(coverage[i]))}}
+          physicalLayers.append(.init(mask:try image(mask,width:width,height:height,linear:true),appearance:finish.appearance,roughness:targetR,metallic:targetM))
+        } else {
+          // Preserve all authored finishes in Fast without allocating unbounded
+          // closure masks. Physical export rejects this explicit overflow.
+          physicalLayerOverflow=true
         }
         // A physically sized shoulder avoids a single-texel vertical wall in
         // the normal field while the separate ink/foil mask remains crisp.
@@ -159,14 +192,18 @@ import simd
         priorFoil = priorFoil || paintsConductor
       }
     }
-    if hasRelief {for i in 0..<count {heights[i]+=finishHeights[i]}}
+    if hasRelief {for i in 0..<count {heights[i]+=finishHeights[i];physicalHeights[i]+=finishHeights[i]}}
     let normalImage=try hasRelief ? image(normals(heights,width:width,height:height,dx:dx,dy:dy),width:width,height:height,linear:true):field.normal
+    let physicalNormal=try physicalHeights==heights ? normalImage:image(normals(physicalHeights,width:width,height:height,dx:dx,dy:dy),width:width,height:height,linear:true)
     if blackMap==nil {blackMap=try image([0,0,0,255],width:1,height:1,linear:true)}
     let maps=try Maps(color:image(rgba,width:width,height:height,linear:false),normal:normalImage,
       roughness:hasFinish ? image(rough,width:width,height:height,linear:true):field.roughnessImage,
       metallic:hasFinish ? image(metal,width:width,height:height,linear:true):blackMap!,
       width:width,height:height,rectMM:rect,revision:revision,
-      finishReliefMM:hasRelief ? finishHeights:nil)
+      finishReliefMM:hasRelief ? finishHeights:nil,
+      substrate:image(field.color,width:width,height:height,linear:false),
+      artwork:paintPixels.map{try image($0,width:width,height:height,linear:false,alpha:true)},
+      physicalNormal:physicalNormal,physicalRoughness:field.roughnessImage,physicalMetallic:blackMap!,physicalLayers:physicalLayers,physicalLayerOverflow:physicalLayerOverflow)
     builds+=1;cache.setObject(maps,forKey:revision as NSString,cost:maps.cost);return maps
   }
   private static func stockField(rect:PaperBounds,profile:PaperSurfaceProfile,color:String,grain:PaperStock.Grain,width:Int,height:Int)throws->StockField {
@@ -283,10 +320,10 @@ import simd
     }
     guard succeeded else { throw FormError.invalid("Paper artwork viewing pixels could not be allocated.") };return pixels
   }
-  private static func image(_ bytes:[UInt8],width:Int,height:Int,linear:Bool)throws->NSImage {
+  private static func image(_ bytes:[UInt8],width:Int,height:Int,linear:Bool,alpha:Bool=false)throws->NSImage {
     guard let provider=CGDataProvider(data:Data(bytes) as CFData),let cg=CGImage(width:width,height:height,bitsPerComponent:8,bitsPerPixel:32,
       bytesPerRow:width*4,space:CGColorSpace(name:linear ? CGColorSpace.linearSRGB:CGColorSpace.sRGB)!,
-      bitmapInfo:.init(rawValue:CGImageAlphaInfo.noneSkipLast.rawValue),provider:provider,decode:nil,shouldInterpolate:true,intent:.defaultIntent)
+      bitmapInfo:.init(rawValue:(alpha ? CGImageAlphaInfo.premultipliedLast:CGImageAlphaInfo.noneSkipLast).rawValue),provider:provider,decode:nil,shouldInterpolate:true,intent:.defaultIntent)
     else { throw FormError.invalid("Paper viewing map could not be published.") }
     return NSImage(cgImage:cg,size:.init(width:width,height:height))
   }

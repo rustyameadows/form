@@ -45,6 +45,9 @@ public struct Material: Codable, Equatable, Identifiable, Sendable {
   public var thickness: Double
   public var fabric: FabricProfile?
   public var paperStock: PaperStock?
+  public var appearance: PhysicalAppearance?
+  public var backSurface: MaterialSurfaceResponse?
+  public var references: [MaterialReference]?
   public init(
     _ id: String, _ name: String, _ category: String, _ color: String, roughness: Double = 0.65,
     metallic: Double = 0, thickness: Double = 0.3
@@ -421,8 +424,9 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
-  public static let maximumSchemaVersion=63
+  public static let maximumSchemaVersion=64
   public var schemaVersion = 1
+  public var renderSettings:CyclesRenderSettings?
   public var id: UUID = UUID()
   public var name: String
   public var subtitle: String
@@ -448,6 +452,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
   public var garmentBlocks:[GarmentBlock]?
   public var collectionProduction:CollectionProduction?
   public var minimumSchemaVersion: Int {
+    if renderSettings != nil || materials.contains(where:{$0.usesPhysicalAppearance}) || objects.contains(where:{$0.usesPhysicalAppearance}) || studioPresentation?.shots.contains(where:{$0.renderSettings != nil}) == true || studioPresentation?.scenes?.contains(where:{$0.renderSettings != nil}) == true {return max(schemaVersion,64)}
     if objects.contains(where:{$0.sheetAssembly != nil}) || publications?.contains(where:{$0.requiresExtendedPublicationSchema}) == true {return max(schemaVersion,63)}
     if recipes.contains(where: { $0.solid != nil }) { return max(schemaVersion, 62) }
     if storedArtworks.contains(where: { $0.elements.contains(where: { $0.objectView != nil }) }) { return max(schemaVersion, 61) }

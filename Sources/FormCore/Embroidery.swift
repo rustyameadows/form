@@ -6,7 +6,15 @@ public struct EmbroideryThread:Codable,Equatable,Sendable {
   public var brand:String?
   public var catalog:String?
   public var stock:StudioThread?
+  public var appearance:PhysicalAppearance?
+  /// Optical estimate only; unrelated to manufacturing thread weight or diameter.
+  public var roughness:Double?
   public init(name:String,color:String) {self.name=name;self.color=color}
+  public var resolvedAppearance:PhysicalAppearance {
+    if let appearance {return appearance}
+    var value=PhysicalAppearance();value.sheen=0.35;value.sheenRoughness=0.55;value.anisotropy=0.25
+    return value
+  }
 }
 
 /// Explicit opt-in process intent, without inferred fabric compensation.
@@ -120,6 +128,8 @@ public struct EmbroideryDesign:Codable,Equatable,Sendable {
       (1...100000).contains(maximumStitches),(1...32).contains(threads.count),(1...128).contains(regions.count),
       Set(regions.map(\.id)).count==regions.count else {throw FormError.invalid("Embroidery needs a 20–500 mm hoop, at least 0.5 mm clearance, 1–32 threads, 1–128 regions, and at most 100000 stitches.")}
     for thread in threads {
+      try thread.appearance?.validate()
+      if let roughness=thread.roughness {guard roughness.isFinite,(0...1).contains(roughness) else {throw FormError.invalid("Thread optical roughness must be from 0 to 1.")}}
       try validateColor(thread.color)
       if let stock=thread.stock {try stock.validate();guard stock.color.uppercased()==thread.color.uppercased() else {throw FormError.invalid("Assigned stock color differs from the thread. Reassign or unlink its portable stock snapshot before recoloring.")}}
       guard !thread.name.isEmpty,thread.name.count<=160,(thread.brand?.count ?? 0)<=160,(thread.catalog?.count ?? 0)<=160 else {throw FormError.invalid("Use bounded thread names and catalog references.")}

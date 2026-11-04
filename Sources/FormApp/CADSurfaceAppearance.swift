@@ -16,10 +16,22 @@ import LabRendering
   }()
   private(set) static var textureBuilds=0
 
-  static func apply(_ prepared:CADSceneAdapter.Prepared,object:ProductObject,project:Project,assets:URL,materials:[FormCore.Material])throws->[SceneRenderablePayload] {
+  static func apply(_ prepared:CADSceneAdapter.Prepared,object:ProductObject,project:Project,assets:URL,materials:[FormCore.Material],physical:Bool = false)throws->[SceneRenderablePayload] {
     var scene=CADSceneAdapter.renderables(prepared,for:object,materials:materials)
-    guard let bindings=object.surfaceArtworkBindings,!bindings.isEmpty else{return scene}
     let surfaces=object.cadRepresentation?.resolvedSurfaces ?? []
+    for index in scene.indices where physical {
+      guard let component=object.cadRepresentation?.components.first(where:{scene[index].componentID.hasSuffix($0.id.uuidString)}),
+        let appearance=CADSceneAdapter.selectedMaterial(for:component,object:object,materials:materials).appearance else{continue}
+      let revision=CADSceneAdapter.digest(try CADSceneAdapter.canonicalData(appearance))
+      let slots=prepared.surfaceSlots[scene[index].componentID] ?? [:]
+      for slot in scene[index].materials.indices {
+        let surface=slots[slot].flatMap{id in surfaces.first{$0.id==id}}
+        let size=surface.map{Point2($0.width,$0.height)}
+        scene[index].materials[slot].physicalAppearance=try PhysicalSceneAppearance.resolve(appearance,assets:assets,surfaceSizeMM:size)
+        scene[index].materials[slot].revision+="/physical/"+revision+"/"+String(describing:size)
+      }
+    }
+    guard let bindings=object.surfaceArtworkBindings,!bindings.isEmpty else{return scene}
     let maximumEdge=min(2048,Int(sqrt(Double(64*1024*1024/max(1,bindings.count))/4)))
     for index in scene.indices {
       try Task.checkCancellation()
@@ -32,7 +44,7 @@ import LabRendering
         let artData=try artwork.renderCacheData()
         var signature=artData
         signature.append(try CADSceneAdapter.canonicalData(surface))
-        signature.append(Data("\(assets.path)|\(binding.widthMM)|\(binding.heightMM)|\(original.baseColor)|\(original.colorEncoding)|edge:\(maximumEdge)|font:\(GeometryFactory.fontRevision)".utf8))
+        signature.append(Data("\(assets.path)|\(binding.widthMM)|\(binding.heightMM)|\(original.baseColor)|\(original.colorEncoding)|edge:\(maximumEdge)|font:\(GeometryFactory.fontRevision)|physical:\(physical)".utf8))
         let revision=CADSceneAdapter.digest(signature),image:CGImage
         if let value=cache.object(forKey:revision as NSString){image=value.image}
         else {
@@ -43,8 +55,10 @@ import LabRendering
             if original.colorEncoding == .srgb{return CGFloat(value)}
             let v=Double(value);return CGFloat(v<=0.0031308 ? v*12.92:1.055*pow(v,1/2.4)-0.055)
           }
-          context.setFillColor(red:srgb(original.baseColor.x),green:srgb(original.baseColor.y),blue:srgb(original.baseColor.z),alpha:CGFloat(original.baseColor.w))
-          context.fill(.init(x:0,y:0,width:Double(width),height:Double(height)))
+          if !physical {
+            context.setFillColor(red:srgb(original.baseColor.x),green:srgb(original.baseColor.y),blue:srgb(original.baseColor.z),alpha:CGFloat(original.baseColor.w))
+            context.fill(.init(x:0,y:0,width:Double(width),height:Double(height)))
+          }
           context.saveGState()
           let boundary=CGMutablePath()
           if let first=surface.boundary.first {
@@ -65,9 +79,13 @@ import LabRendering
         }
         var material=original
         material.id+="/surface/"+surfaceID;material.revision+="/artwork/"+revision
-        material.baseColor = .init(1,1,1,1);material.colorEncoding = .srgb
-        material.baseColorTexture = .init(image:image,revision:revision,wrapS:.clamp,wrapT:.clamp)
-        material.alphaMode = .blend
+        if physical {
+          material.artworkTexture = .init(image:image,revision:revision,wrapS:.clamp,wrapT:.clamp,encoding:.srgb)
+        } else {
+          material.baseColor = .init(1,1,1,1);material.colorEncoding = .srgb
+          material.baseColorTexture = .init(image:image,revision:revision,wrapS:.clamp,wrapT:.clamp)
+          material.alphaMode = .blend
+        }
         scene[index].materials[slot]=material
       }
     }

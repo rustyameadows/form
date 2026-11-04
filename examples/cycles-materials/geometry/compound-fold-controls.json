@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "status": "selected for candidate3 project-data comparison after corrected baseline review",
+  "purpose": "Project-authored compound drape alternatives for reference review after the unchanged corrected optical render. No application recipe or fixture is added.",
+  "scope": "Only the satin study uses these compound-fold controls. Woven and knit retain their original analytic fold equations with an independent denser-sampling revision.",
+  "physical_inputs": {
+    "width_mm": 140,
+    "depth_mm": 110,
+    "gsm": 84.6,
+    "caliper_mm": 0.18,
+    "evidence": "Fiber/momme are manufacturer declarations and areal mass is derived. Caliper, fold dimensions and shape controls are estimates. The rest mesh is authored; it is not a calibrated cloth simulation."
+  },
+  "sampling": {
+    "body_columns": 64,
+    "turn_columns": 32,
+    "rows": 40
+  },
+  "variants": [
+    {
+      "name": "Asymmetric broad fold with narrow tucked valley",
+      "edge_wave_mm": 1.6,
+      "edge_wave_phase": 0.3,
+      "turn_start_u": 0.82,
+      "turn_drift_u": 0.018,
+      "turn_angle_degrees": 196,
+      "folds": [
+        {
+          "center_u": 0.33,
+          "drift_u": 0.23,
+          "width_u": 0.19,
+          "height_mm": 35,
+          "along_depth_variation": 0.25
+        },
+        {
+          "center_u": 0.62,
+          "drift_u": -0.12,
+          "width_u": 0.075,
+          "height_mm": 14,
+          "along_depth_variation": 0.4
+        },
+        {
+          "center_u": 0.52,
+          "drift_u": 0.12,
+          "width_u": 0.04,
+          "height_mm": -7,
+          "along_depth_variation": 0.15
+        }
+      ]
+    },
+    {
+      "name": "Gathered diagonal fold with deeper turnback",
+      "edge_wave_mm": 2.4,
+      "edge_wave_phase": -0.4,
+      "turn_start_u": 0.79,
+      "turn_drift_u": -0.022,
+      "turn_angle_degrees": 208,
+      "folds": [
+        {
+          "center_u": 0.3,
+          "drift_u": -0.2,
+          "width_u": 0.145,
+          "height_mm": 42,
+          "along_depth_variation": 0.35
+        },
+        {
+          "center_u": 0.59,
+          "drift_u": 0.14,
+          "width_u": 0.065,
+          "height_mm": 21,
+          "along_depth_variation": 0.25
+        },
+        {
+          "center_u": 0.49,
+          "drift_u": -0.09,
+          "width_u": 0.035,
+          "height_mm": -9,
+          "along_depth_variation": 0.3
+        }
+      ]
+    }
+  ],
+  "review_conditions": [
+    "Do not apply before reviewing the first corrected-color and original-2K-satin-map render with the old geometry.",
+    "Keep the same material records, optical coefficients, caliper, lights and saved camera for a controlled geometry comparison.",
+    "The diagonal ridge, narrower valley and asymmetric edge should create broad soft highlight bands interrupted by local tuck curvature; only actual LAB renders can establish this.",
+    "A prepared mesh, finite masses or offline projection is not visual acceptance."
+  ]
+}

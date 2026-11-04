@@ -9,6 +9,8 @@ public final class OperationEngine {
   /// nested value edits. Derived UI caches can observe this without hashing a
   /// document on each pointer event; it is runtime state, never persisted.
   public private(set) var projectGeneration: UInt64 = 0
+  private let projectReadSession=UUID().uuidString
+  private var projectReadRevision:String {projectReadSession+":"+String(projectGeneration)}
   public var project: Project? {
     didSet {
       projectGeneration &+= 1
@@ -45,6 +47,19 @@ public final class OperationEngine {
   private(set) var artworkLinkValidationCount = 0
   private(set) var placementValidationReuseCount = 0
   public init(repository: ProjectRepository) { self.repository = repository }
+
+  /// Native bridges call this before committing pending fields. Invalid scope
+  /// or response size must not turn a rejected open into a document edit.
+  public func preflightProjectOpen(_ arguments:[String:Any])throws {_ = try projectOpenReadRequest(arguments)}
+  private func projectOpenReadRequest(_ arguments:[String:Any])throws->(UUID,ProjectReadCommands.Request) {
+    guard let value=arguments["project_id"] as? String,let id=UUID(uuidString:value) else{throw FormError.invalid("Provide a valid project_id.")}
+    var readArguments=arguments;readArguments.removeValue(forKey:"project_id")
+    let request=try ProjectReadCommands.Request(readArguments,opening:true)
+    let target:Project
+    if let current=project,current.id==id {target=current} else {target=try repository.load(id)}
+    _=try ProjectReadCommands.response(project:target,revision:projectReadRevision,request:request)
+    return (id,request)
+  }
 
   public func open(_ id: UUID) throws {
     onProjectWillChange?()
@@ -199,6 +214,7 @@ public final class OperationEngine {
       return project
     }
     switch name {
+    case "form_material":return try MaterialCommands.call(engine:self,arguments:a,source:source)
     case "form_studio_scene":return try StudioSceneCommands.call(engine:self,arguments:a,source:source)
     case "form_paper":return try PaperCommands.call(engine:self,arguments:a,source:source)
     case "form_construction":return try ConstructionCommands.call(engine:self,arguments:a,source:source)
@@ -239,12 +255,13 @@ public final class OperationEngine {
       onProjectDidChange?()
       return try jsonObject(new)
     case "form_open_project":
-      guard let id = UUID(uuidString: try string("project_id")) else {
-        throw FormError.invalid("Invalid project_id.")
-      }
+      let (id,request)=try projectOpenReadRequest(a)
+      // Validate selection and response size before opening changes selection,
+      // Undo or the current document. The native open/flush path is unchanged.
       try open(id)
-      return try jsonObject(requireProject())
-    case "form_get_project": return try jsonObject(requireProject())
+      return try ProjectReadCommands.response(project:requireProject(),revision:projectReadRevision,request:request)
+    case "form_get_project":
+      return try ProjectReadCommands.response(project:requireProject(),revision:projectReadRevision,request:ProjectReadCommands.Request(a))
     case "form_textile_zones": return try requireProject().textileZoneReport(objectID:objectID())
     case "form_get_artwork":
       let id = try objectID()

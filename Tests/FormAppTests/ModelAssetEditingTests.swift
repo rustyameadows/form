@@ -107,6 +107,29 @@ import XCTest
     XCTAssertEqual(composite.components.first?.mesh.revision,next.components.first?.mesh.revision);XCTAssertNotEqual(composite.components.first?.material.revision,next.components.first?.material.revision)
   }
 
+  func testPhysicalImportedAppearancePreservesIndependentUVsAndArtworkLayer()async throws {
+    let(store,_,file)=try fixture(textured:true),job=try await ready(store,file)
+    var document=try XCTUnwrap(job.document),reference=try XCTUnwrap(job.reference)
+    for i in document.meshes[0].primitives.indices {document.meshes[0].primitives[i].uv1=document.meshes[0].primitives[i].uv0.map{.init(1-$0.u,$0.v)}}
+    document.materials[0].normalTexture?.texCoord=1
+    document.materials[0].normalTexture?.scale = .init(2,3)
+    document.materials[0].normalTexture?.offset = .init(0.1,0.2)
+    let prepared=try MeshAssetSceneAdapter.prepare(document:document,reference:reference)
+    let fast=try MeshAssetSceneAdapter.appearance(prepared,reference:reference)
+    XCTAssertNil(fast.components[0].material.normalTexture)
+    reference.artworkBindings=[.init(materialIndex:0)]
+    let physical=try MeshAssetSceneAdapter.appearance(prepared,reference:reference,artwork:prepared.images[0],artworkRevision:"print-1",physical:true)
+    let material=physical.components[0].material
+    XCTAssertEqual(material.normalTexture?.uvIndex,1)
+    XCTAssertEqual(material.normalTexture?.scale,.init(2,3))
+    XCTAssertEqual(try XCTUnwrap(material.normalTexture?.offset.x),0.1,accuracy:1e-6)
+    XCTAssertEqual(try XCTUnwrap(material.normalTexture?.offset.y),0.2,accuracy:1e-6)
+    XCTAssertEqual(physical.components[0].mesh.uvs1.count,physical.components[0].mesh.positionsMM.count)
+    XCTAssertEqual(material.baseColorTexture?.revision,prepared.imageRevisions[0])
+    XCTAssertEqual(material.artworkTexture?.revision,"print-1")
+    XCTAssertEqual(physical.components[0].mesh.positionsMM,fast.components[0].mesh.positionsMM)
+  }
+
   func testResizedUVSourceDetachesAndDuplicatesWithoutInventingPhysicalCalibration()async throws {
     let(store,root,file)=try fixture(),job=try await ready(store,file),object=try await publish(store,job),source=store.project!.objects.first!
     _=try store.modelAssets.call(["command":"artwork","object_id":object.id.uuidString,"material_index":0,"source_object_id":source.id.uuidString])

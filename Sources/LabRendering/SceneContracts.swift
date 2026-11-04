@@ -42,17 +42,30 @@ public struct SceneMeshPayload: Sendable {
 }
 public enum SceneTextureWrap: String, Sendable { case repeatMode, clamp, mirror }
 public enum SceneTextureChannel: String, Sendable { case rgba, red, green, blue, alpha }
+public enum SceneTextureEncoding: String, Sendable { case srgb, linear, data }
 /// CGImage pixels are immutable. Decoding/import budgets belong to the asset
 /// service; the renderer additionally enforces a 16 MP / 8192 edge upload cap.
 public struct SceneTexturePayload: @unchecked Sendable {
   public var image: CGImage
+  private var verifiedSource:SceneTextureSource?
+  /// Changing a payload's image revokes its original content identity.
+  var verifiedContentSHA256:String? {verifiedSource.flatMap{$0.image === image ? $0.sha256:nil}}
   public var revision: String
   public var uvIndex: Int
   public var wrapS: SceneTextureWrap
   public var wrapT: SceneTextureWrap
   public var channel: SceneTextureChannel
-  public init(image: CGImage, revision: String, uvIndex: Int = 0, wrapS: SceneTextureWrap = .repeatMode, wrapT: SceneTextureWrap = .repeatMode, channel: SceneTextureChannel = .rgba) {
+  public var encoding: SceneTextureEncoding?
+  public var scale: SIMD2<Double> = .init(1,1)
+  public var offset: SIMD2<Double> = .zero
+  public var rotationDegrees: Double = 0
+  public init(image: CGImage, revision: String, uvIndex: Int = 0, wrapS: SceneTextureWrap = .repeatMode, wrapT: SceneTextureWrap = .repeatMode, channel: SceneTextureChannel = .rgba, encoding: SceneTextureEncoding? = nil) {
     self.image=image; self.revision=revision; self.uvIndex=uvIndex; self.wrapS=wrapS; self.wrapT=wrapT; self.channel=channel
+    self.encoding=encoding
+  }
+  public init(source:SceneTextureSource,uvIndex:Int=0,wrapS:SceneTextureWrap = .repeatMode,wrapT:SceneTextureWrap = .repeatMode,channel:SceneTextureChannel = .rgba,encoding:SceneTextureEncoding?=nil) {
+    self.init(image:source.image,revision:source.sha256,uvIndex:uvIndex,wrapS:wrapS,wrapT:wrapT,channel:channel,encoding:encoding)
+    verifiedSource=source
   }
 }
 public enum SceneColorEncoding: String, Sendable { case srgb, linearSRGB }
@@ -79,6 +92,10 @@ public struct SceneMaterialPayload: Sendable {
   public var metallicTexture: SceneTexturePayload?
   public var roughnessTexture: SceneTexturePayload?
   public var ambientOcclusionTexture: SceneTexturePayload?
+  public var physicalAppearance: ScenePhysicalAppearance?
+  /// Transparent printable artwork composited over the physical substrate.
+  public var artworkTexture: SceneTexturePayload?
+  public var physicalLayers:[ScenePhysicalMaterialLayer] = []
   public init(id: String, revision: String = "1", baseColor: SIMD4<Float> = .init(1,1,1,1), colorEncoding: SceneColorEncoding = .srgb, emissiveColor: SIMD3<Float> = .zero, emissiveIntensity: Float = 1, emissiveTexture: SceneTexturePayload? = nil, metallic: Float = 0, roughness: Float = 0.6, doubleSided: Bool = false, readsDepth: Bool = true, writesDepth: Bool = true, unlit: Bool = false, alphaMode: SceneAlphaMode = .opaque, alphaCutoff: Float = 0.5, normalScale: Float = 1, baseColorTexture: SceneTexturePayload? = nil, normalTexture: SceneTexturePayload? = nil, metallicTexture: SceneTexturePayload? = nil, roughnessTexture: SceneTexturePayload? = nil, ambientOcclusionTexture: SceneTexturePayload? = nil) {
     self.id=id; self.revision=revision; self.baseColor=baseColor; self.colorEncoding=colorEncoding; self.emissiveColor=emissiveColor; self.emissiveIntensity=emissiveIntensity; self.emissiveTexture=emissiveTexture; self.metallic=metallic; self.roughness=roughness; self.doubleSided=doubleSided; self.readsDepth=readsDepth; self.writesDepth=writesDepth; self.unlit=unlit; self.alphaMode=alphaMode; self.alphaCutoff=alphaCutoff; self.normalScale=normalScale; self.baseColorTexture=baseColorTexture; self.normalTexture=normalTexture; self.metallicTexture=metallicTexture; self.roughnessTexture=roughnessTexture; self.ambientOcclusionTexture=ambientOcclusionTexture
   }

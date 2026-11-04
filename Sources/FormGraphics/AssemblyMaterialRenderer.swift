@@ -25,16 +25,23 @@ import FormCore
   }
   public static func material(panel:PatternAssemblyPanel,source:Artwork,project:Project,assets:URL,fontRevision:Int,textureLimit:Int = maximumTextureEdge,sampling:SourceTextureRasterPlan?=nil)throws -> MeshMaterial {
     let image=try texture(panel:panel,source:source,project:project,assets:assets,fontRevision:fontRevision,textureLimit:textureLimit,sampling:sampling)
-    let material=MeshMaterial();material.name="Assembly fabric / \(panel.material.id) / \(panel.id.key)";material.lightingModel = .physicallyBased;material.roughness.contents=panel.material.roughness;material.metalness.contents=panel.material.metallic;material.diffuse.contents=image;material.isDoubleSided=true;return material
+    let material=MeshMaterial();material.name="Assembly fabric / \(panel.material.id) / \(panel.id.key)";material.lightingModel = .physicallyBased;material.roughness.contents=panel.material.roughness;material.metalness.contents=panel.material.metallic;material.diffuse.contents=image;material.isDoubleSided=true
+    material.physicalAppearance=panel.material.appearance?.meshAppearance(assets:assets,surfaceSizeMM:panel.materialSizeMm)
+    panel.material.bindClothPhysical(to:material,assets:assets,surfaceSizeMM:panel.materialSizeMm)
+    if material.physicalAppearance != nil {
+      material.physicalBaseColor.contents=FormColor.color(panel.material.color)
+      material.artwork.contents=try texture(panel:panel,source:source,project:project,assets:assets,fontRevision:fontRevision,textureLimit:textureLimit,sampling:sampling,overlayOnly:true)
+    }
+    return material
   }
-  public static func texture(panel:PatternAssemblyPanel,source:Artwork,project:Project,assets:URL,fontRevision:Int,textureLimit:Int = maximumTextureEdge,sampling:SourceTextureRasterPlan?=nil)throws -> NSImage {
+  public static func texture(panel:PatternAssemblyPanel,source:Artwork,project:Project,assets:URL,fontRevision:Int,textureLimit:Int = maximumTextureEdge,sampling:SourceTextureRasterPlan?=nil,overlayOnly:Bool=false)throws -> NSImage {
     let owner=project.objects.first(where:{$0.artwork?.elements.contains(where:{$0.id==panel.id.elementID})==true})
     let art=try resolvedDecoration(source,project:project,sourceObjectID:owner?.id),width=panel.materialSizeMm.x,height=panel.materialSizeMm.y,limit=min(maximumTextureEdge,max(64,textureLimit))
     guard width.isFinite,height.isFinite,(1...2000).contains(width),(1...2000).contains(height) else {throw FormError.invalid("Assembly material dimensions exceed their physical raster budget.")}
     var snapshot=project;snapshot.materials.removeAll{$0.id==panel.material.id};snapshot.materials.append(panel.material)
     var repeatDesign=try snapshot.resolvedFabricPattern(materialID:panel.material.id)
     if repeatDesign != nil {repeatDesign!.pattern.offset.x-=panel.textureOriginMm.x;repeatDesign!.pattern.offset.y-=panel.textureOriginMm.y}
-    var data=try JSONEncoder.form.encode(panel.material);if let sampling {data.append(try JSONEncoder.form.encode(sampling))};data.append(try art.renderCacheData())
+    var data=Data("overlay:\(overlayOnly)".utf8);data.append(try JSONEncoder.form.encode(panel.material));if let sampling {data.append(try JSONEncoder.form.encode(sampling))};data.append(try art.renderCacheData())
     if let repeatDesign {data.append(try JSONEncoder.form.encode(repeatDesign.renderDefinition))}
     data.append(Data("\(width),\(height),\(panel.sourceOriginMm.x),\(panel.sourceOriginMm.y),\(panel.textureOriginMm.x),\(panel.textureOriginMm.y),\(fontRevision),\(limit),\(assets.path)".utf8))
     let key=SHA256.hash(data:data).map{String(format:"%02x",$0)}.joined() as NSString
@@ -45,9 +52,9 @@ import FormCore
     guard let context=CGContext(data:nil,width:w,height:h,bitsPerComponent:8,bytesPerRow:0,space:CGColorSpace(name:CGColorSpace.sRGB)!,bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue) else {throw FormError.invalid("The bounded assembly material image could not be allocated.")}
     NSGraphicsContext.saveGraphicsState();NSGraphicsContext.current=NSGraphicsContext(cgContext:context,flipped:true)
     context.translateBy(x:0,y:Double(h));context.scaleBy(x:density,y:-density)
-    context.setFillColor(FormColor.color(panel.material.color).cgColor);context.fill(.init(x:0,y:0,width:width,height:height))
+    if !overlayOnly {context.setFillColor(FormColor.color(panel.material.color).cgColor);context.fill(.init(x:0,y:0,width:width,height:height))}
     // A bounded millimeter weave cue is appearance only, never constitutive data.
-    if panel.material.fabric?.structure == .woven {
+    if !overlayOnly && panel.material.appearance == nil && panel.material.fabric?.structure == .woven {
       context.setStrokeColor(FormColor.color(panel.material.color).blended(withFraction:0.12,of:.white)!.cgColor);context.setLineWidth(0.16)
       for x in stride(from:0.0,through:width,by:1.2) {context.move(to:.init(x:x,y:0));context.addLine(to:.init(x:x,y:height))}
       for y in stride(from:0.0,through:height,by:1.2) {context.move(to:.init(x:0,y:y));context.addLine(to:.init(x:width,y:y))};context.strokePath()

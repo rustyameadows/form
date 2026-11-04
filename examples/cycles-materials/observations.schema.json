@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Explicit LAB material render reviews",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "rounds"],
+  "properties": {
+    "version": {"const": 1},
+    "project_id": {"type": ["string", "null"]},
+    "rounds": {
+      "type": "array", "maxItems": 1000,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["case_id", "view", "attempt", "outcome", "source_png_sha256", "reviewer", "variant_indices", "reference_urls", "observations", "discrepancies", "next_change"],
+        "properties": {
+          "case_id": {"type": "string", "maxLength": 100},
+          "view": {"enum": ["whole", "close", "grazing"]},
+          "attempt": {"type": "integer", "minimum": 1},
+          "outcome": {"enum": ["pending", "needs_changes", "accepted", "failed"]},
+          "source_png_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+          "reviewer": {"type": "string", "maxLength": 200},
+          "reviewed_at": {"type": "string", "maxLength": 100},
+          "variant_indices": {"type": "array", "uniqueItems": true, "maxItems": 2, "items": {"type": "integer", "minimum": 0, "maximum": 1}},
+          "reference_urls": {"type": "array", "maxItems": 20, "items": {"type": "string", "format": "uri", "maxLength": 4096}},
+          "observations": {"type": "array", "maxItems": 40, "items": {"type": "string", "minLength": 1, "maxLength": 4000}},
+          "discrepancies": {"type": "array", "maxItems": 40, "items": {"type": "string", "minLength": 1, "maxLength": 4000}},
+          "next_change": {"type": "string", "maxLength": 4000}
+        }
+      }
+    }
+  },
+  "description": "A pending template is not a review. Accepted/needs_changes entries require a named reviewer, exact inspected PNG hash, at least one observation, reviewed source URLs and variant indices. Accepted entries cannot retain discrepancies or a next change. A case is accepted only when its latest whole/close/grazing attempts each have valid accepted reviews and together cover variants 0 and 1. These semantic checks are enforced by report_cycles_materials.py. Never fill observations from assumptions or renderer success alone."
+}
