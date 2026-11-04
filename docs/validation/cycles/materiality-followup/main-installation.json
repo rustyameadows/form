@@ -1,0 +1,260 @@
+{
+  "status": "passed; installed and visually replayed",
+  "installed": {
+    "installed_at": "2026-11-04T21:47:43.984448+00:00",
+    "ordinary": "build/LAB.app",
+    "rollback": "build/LAB.app.previous-main-integration-20261104-134743",
+    "exact_candidate_moved": true,
+    "files": {
+      "Contents/MacOS/LAB": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+      "Contents/MacOS/lab-mcp": "baab5866d3a608926969c7e8f23e335dd11f2643cdaf97afc42269ce0d57ad6c",
+      "Contents/MacOS/form-mcp": "30e490cf7c8403f8ae6a9ba610f2764ed70dc948134b41b87fc0f51810a2cb35",
+      "Contents/Helpers/lab-cycles-render": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+      "Contents/Resources/LABBuild.json": "bed3c10f65923ecf54978a4fb3ad9239a801d11c87cde24f77ae4b636a040d8e",
+      "Contents/Resources/ThirdPartyNotices/Cycles/LAB-CYCLES-PROVENANCE.json": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+      "Contents/Resources/ThirdPartyNotices/Cycles/BUNDLED-LIBRARIES.json": "08552b83927df8907f85639d8c672eb58494b9f29055bb6340466561ac444b96",
+      "Contents/Resources/Cycles/LAB-sRGB-v1.json": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94"
+    },
+    "codesign": "verified",
+    "full_bundle_closure_unchanged": true,
+    "gates": {
+      "path": ".local/cycles-materiality-followup/main-integration/gate-report.json",
+      "sha256": "2f3cbde3964c8ccd9c68a349966acddd52ccfb8d5b494b4bf3f19adf721607f1"
+    },
+    "source_revision": "20f27b83a2c5dc485aeb0527cb5d09e8deb9f56f",
+    "prior_installation_preserved": true
+  },
+  "candidate_identity": {
+    "recorded_at": "2026-11-04T21:46:20.020541+00:00",
+    "bundle": ".local/cycles-materiality-followup/main-integration/relocated/LAB.app",
+    "built_at": ".local/cycles-materiality-followup/main-integration/candidate/LAB.app",
+    "relocated_unchanged": true,
+    "files": {
+      "Contents/MacOS/LAB": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+      "Contents/MacOS/lab-mcp": "baab5866d3a608926969c7e8f23e335dd11f2643cdaf97afc42269ce0d57ad6c",
+      "Contents/MacOS/form-mcp": "30e490cf7c8403f8ae6a9ba610f2764ed70dc948134b41b87fc0f51810a2cb35",
+      "Contents/Helpers/lab-cycles-render": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+      "Contents/Resources/LABBuild.json": "bed3c10f65923ecf54978a4fb3ad9239a801d11c87cde24f77ae4b636a040d8e",
+      "Contents/Resources/ThirdPartyNotices/Cycles/LAB-CYCLES-PROVENANCE.json": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+      "Contents/Resources/ThirdPartyNotices/Cycles/BUNDLED-LIBRARIES.json": "08552b83927df8907f85639d8c672eb58494b9f29055bb6340466561ac444b96",
+      "Contents/Resources/Cycles/LAB-sRGB-v1.json": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94"
+    },
+    "build": {
+      "app_pre_package_signing_sha256": "d54bb9aa2f4c3ea589522ff01c8a3dc77b6fa2096e507b5f3ac04494ede0889b",
+      "build_id": "sha256:776c9939c975af8f58fe5b937731d98554776fb66dd3e771066ec3c37058c5d8",
+      "configuration": "release",
+      "format_version": 1,
+      "helper_pre_package_signing_sha256": "c1b5cbb15fee2e104ae6114619742c5eb54df02be2211cbb1918570d892032f1",
+      "schema_fingerprint": "sha256:174f2d4bd50c87daeb7f79ea0450fb797a9ab77008ecbeb5f5b631c1b0539206",
+      "source_dirty": false,
+      "source_revision": "20f27b83a2c5dc485aeb0527cb5d09e8deb9f56f"
+    },
+    "source_manifest_sha256": "38b5b95dac2a7f3d4bbf70750008cb9005385ebacd0b8d9557704460a48f50f1",
+    "bundle_closure": {
+      "path": ".local/cycles-materiality-followup/main-integration/bundle-closure.json",
+      "sha256": "e9dbb42a52dae10f15ad2f3dbcb3ed576b367080849065ef716c35ad8cbdcd6e"
+    },
+    "full_signature_before_gates": true
+  },
+  "offline_gate_checkpoint": {
+    "status": "passed",
+    "recorded_at": "2026-11-04T21:47:04.008511+00:00",
+    "checks": [
+      {
+        "device": "cpu",
+        "status": "passed",
+        "bundle": {
+          "path": ".local/cycles-materiality-followup/main-integration/offline-cpu/bundle-report.json",
+          "sha256": "ca8c286310eeb0c74ddcf7258a457ddd3c00ca898eeec1330f6e3b09a79f7d20"
+        },
+        "render": {
+          "path": ".local/cycles-materiality-followup/main-integration/offline-cpu/report.json",
+          "sha256": "36eb1fde6a42024cd33ebc025391400aadf6c7891983fe0c4ef66e72e09f665c"
+        }
+      },
+      {
+        "device": "metal",
+        "status": "passed",
+        "bundle": {
+          "path": ".local/cycles-materiality-followup/main-integration/offline-metal/bundle-report.json",
+          "sha256": "c1f00199451fa5ab1cd5f5514fc09fabae8ac2356ff864ca7ee460c950737d78"
+        },
+        "render": {
+          "path": ".local/cycles-materiality-followup/main-integration/offline-metal/report.json",
+          "sha256": "475267439292c01ddca2614e64f5a461b322fb28c81930b4f83871300bf24ef3"
+        }
+      }
+    ],
+    "candidate_identity": {
+      "path": ".local/cycles-materiality-followup/main-integration/candidate-identity.json",
+      "sha256": "a293e63a1d0ac380a9b21a10ea98a11caa1cfc23f763808f3bf2b7cbaa4d7419"
+    },
+    "bundle_closure": {
+      "path": ".local/cycles-materiality-followup/main-integration/bundle-closure.json",
+      "sha256": "e9dbb42a52dae10f15ad2f3dbcb3ed576b367080849065ef716c35ad8cbdcd6e"
+    },
+    "source_validation": {
+      "path": ".local/cycles-materiality-followup/main-integration/source-validation-after-gates.json",
+      "sha256": "164ecbc9d78a02c56163eec14d2e4c32c2085e19da25bd34da1fa3374bb8f2f7"
+    },
+    "full_signature_after_gates": true,
+    "full_bundle_closure_unchanged": true,
+    "exact_identity_unchanged": true,
+    "source_unchanged": true,
+    "application_launched": false,
+    "installed": false
+  },
+  "offline_bundle_gates": {
+    "cpu": {
+      "bundle": ".local/cycles-materiality-followup/main-integration/relocated/LAB.app",
+      "fullApplication": true,
+      "runtimeFiles": 317,
+      "bundledLibraries": 20,
+      "device": "cpu",
+      "runtimeUnchanged": true,
+      "cacheDirectory": ".local/cycles-materiality-followup/main-integration/offline-cpu/cache",
+      "cleanEnvironment": true,
+      "externalRuntimeDependencies": false,
+      "deniedDevelopmentPaths": [
+        ".local/cycles",
+        ".local/engines",
+        ".build",
+        "/opt/homebrew",
+        "/Applications/Xcode.app",
+        "/Library/Developer"
+      ],
+      "deniedReadProbes": [
+        {
+          "path": ".local/cycles/source/LICENSE",
+          "readDenied": true
+        },
+        {
+          "path": ".local/cycles/build/CMakeCache.txt",
+          "readDenied": true
+        },
+        {
+          "path": ".local/cycles/source/lib/macos_arm64/deps.md",
+          "readDenied": true
+        },
+        {
+          "path": ".local/engines/cycles-3eb35f85996b/lab-cycles-render",
+          "readDenied": true
+        },
+        {
+          "path": ".build/workspace-state.json",
+          "readDenied": true
+        },
+        {
+          "path": "/opt/homebrew/bin/brew",
+          "readDenied": true
+        },
+        {
+          "path": "/Applications/Xcode.app/Contents/Info.plist",
+          "readDenied": true
+        }
+      ],
+      "networkDenied": true,
+      "helperSandboxProfile": ".local/cycles-materiality-followup/main-integration/offline-cpu.sb"
+    },
+    "metal": {
+      "bundle": ".local/cycles-materiality-followup/main-integration/relocated/LAB.app",
+      "fullApplication": true,
+      "runtimeFiles": 317,
+      "bundledLibraries": 20,
+      "device": "metal",
+      "runtimeUnchanged": true,
+      "cacheDirectory": ".local/cycles-materiality-followup/main-integration/offline-metal/cache",
+      "cleanEnvironment": true,
+      "externalRuntimeDependencies": false,
+      "deniedDevelopmentPaths": [
+        ".local/cycles",
+        ".local/engines",
+        ".build",
+        "/opt/homebrew",
+        "/Applications/Xcode.app",
+        "/Library/Developer"
+      ],
+      "deniedReadProbes": [
+        {
+          "path": ".local/cycles/source/LICENSE",
+          "readDenied": true
+        },
+        {
+          "path": ".local/cycles/build/CMakeCache.txt",
+          "readDenied": true
+        },
+        {
+          "path": ".local/cycles/source/lib/macos_arm64/deps.md",
+          "readDenied": true
+        },
+        {
+          "path": ".local/engines/cycles-3eb35f85996b/lab-cycles-render",
+          "readDenied": true
+        },
+        {
+          "path": ".build/workspace-state.json",
+          "readDenied": true
+        },
+        {
+          "path": "/opt/homebrew/bin/brew",
+          "readDenied": true
+        },
+        {
+          "path": "/Applications/Xcode.app/Contents/Info.plist",
+          "readDenied": true
+        }
+      ],
+      "networkDenied": true,
+      "helperSandboxProfile": ".local/cycles-materiality-followup/main-integration/offline-metal.sb"
+    }
+  },
+  "catalog_compaction": {
+    "recorded_at": "2026-11-04T21:44:54.097810+00:00",
+    "status": "passed",
+    "raw_pretty_bytes": 1642856,
+    "compact_bytes": 452650,
+    "limit_bytes": 1048576,
+    "tool_count": 71,
+    "complete_parsed_catalog_equal": true,
+    "fingerprint_unchanged": "sha256:174f2d4bd50c87daeb7f79ea0450fb797a9ab77008ecbeb5f5b631c1b0539206",
+    "failed_build_log": ".local/cycles-materiality-followup/main-integration/candidate-build-attempt-1.log",
+    "failed_build_log_sha256": "94c087a3bc4b099335acd1bc892cd63c60eff572da00c263ce4918344f2d41cc",
+    "package_script_sha256": "449961009cd8a9b77502fcb1c3366cbb7813c9967585152497afc4a010650f5a",
+    "packaging_tests": {
+      "command": "python3 -m unittest discover -s scripts -p 'test_package_mcp.py' -v",
+      "passed": 5,
+      "failed": 0
+    },
+    "native_source_changed": false,
+    "cycles_client_tests": {
+      "command": "python3 -m unittest discover -s scripts -p 'test_*cycles*.py' -v",
+      "passed": 38,
+      "failed": 0,
+      "log": ".local/cycles-materiality-followup/main-integration/python-clients-after-catalog-fix.log",
+      "log_sha256": "93731552b17ae74c6ec3b46219824ff80f93934b64f9864d285ead3e231c5fd8"
+    },
+    "total_python_tests": 43,
+    "native_source_manifest_files": 1155,
+    "native_source_manifest_exact": true
+  },
+  "source_regression": "main-integration.json",
+  "post_launch_original_preservation": {
+    "exact_fields": {
+      "objects": true,
+      "materials": true,
+      "recipes": true,
+      "notes": true,
+      "camera": true,
+      "studioPresentation": true,
+      "renderSettings": true,
+      "publications": true,
+      "textStories": true,
+      "fontLibrary": true,
+      "textStyles": true
+    },
+    "canvas_context_restored": true,
+    "private_values_omitted": true
+  },
+  "visual_replays": "main-replays.json",
+  "native_verification": "main-native.json"
+}

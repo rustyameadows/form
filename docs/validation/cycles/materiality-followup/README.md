@@ -1,10 +1,10 @@
 # Physical materiality follow-up
 
-The paper-and-finishes update is installed in the single ordinary LAB app from
-clean source `2477730`. The exact signed bundle passed CPU and Metal renders
-after relocation, with network and development-library reads denied and fresh
-shader caches. [Installation evidence](installation.json) records the binary
-identities and rollback location.
+The paper-and-finishes study below was reviewed on clean source `2477730`.
+[Its installation evidence](installation.json) retains that exact binary identity.
+The current app also integrates the independent-stock construction work from
+`main`; its final build, installation and unchanged-shot checks are recorded
+separately below.
 
 The native appearance editor shows the source map, encoding and physical repeat
 size. Cancel preserves the definition; Apply changes only the intended edge
@@ -15,10 +15,11 @@ two edited comparison objects save/reopen unchanged; the 39-object Table finishe
 on Metal and resumes after zoom. [Native interaction evidence](native-interactions.json)
 includes unaltered app screenshots and exact readback comparisons.
 
-The final 40-object study also finishes its native Table preview at 64 samples
-on Metal. Its unchanged transfer limit is 1 GiB; the final snapshot uses
-1,050,532,212 bytes, leaving 23,209,612 bytes of headroom. See
-[final native and budget evidence](final-study.json).
+The 40-object study completed its native Table preview at 64 samples on Metal
+before integration. [That native and budget evidence](final-study.json) retains
+its preceding build identity. The current integrated transfer measurement is
+1,067,292,452 bytes of the unchanged 1 GiB limit, with 6,449,372 bytes remaining;
+no textures were downsampled. See [current regression evidence](main-integration.json).
 
 ## Paper and finish visual review
 
@@ -153,7 +154,8 @@ object has changed. All **38 Python checks** pass after those additions:
 python3 -m unittest discover -s scripts -p 'test_*cycles*.py' -v
 ```
 
-The native source is unchanged from the full release suite above. Authoring
+The source used for these captures remained unchanged from that release suite.
+The later main integration has its own source-stable verification below. Authoring
 commands default to dry-run; `--apply` performs generic MCP edits. For example,
 with the delivered local study state:
 
@@ -168,3 +170,68 @@ live object no longer matches its recorded definition. Revisions require
 `--revision-from` and the complete `--expected-object-sha256`; prior definitions
 and reused camera slots are archived before mutation. The final study already
 uses all 64 shot slots, so new variants must explicitly reuse suitable slots.
+
+## Current construction integration
+
+The final merged release suite executed **2,744 tests: 2,741 passed, 3 optional
+performance fixtures skipped, and zero failed**. All 1,155 source files remained
+unchanged. The 28 focused integration checks also passed.
+[The complete record](main-integration.json) includes actual CPU/Metal helper
+coverage, full-Table preparation, command/environment details, source/log hashes
+and the retained first failed run.
+
+The merge preserves independent component stocks/finishes, texture sampling,
+Studio assembly poses and both prior rendering contracts. Construction and paper
+poses keep schema 66, Cycles fields use 67, and cut edges/shoulders use 68. Older
+local Cycles projects decode without losing their source and upgrade their
+minimum schema on save. Disabled components still contribute saved material
+requirements.
+
+The first merged run exposed an invalid compatibility fixture and a physical
+render-identity regression. The fixture now registers its actual authored
+recipe and valid finish artwork. The production fix removes detached Canvas
+placement only from the derived paper hash; moving artwork in the editor no
+longer refreshes physical views, while real ink/finish edits still do. Both the
+original regression and warm/rebuilt-cache checks pass.
+
+## Final installed app
+
+The ordinary app is now the exact signed candidate built from `20f27b83`, with
+its preceding installation retained for rollback. Relocated CPU and Metal
+renders passed with a cold cache, network denied and development paths
+unavailable. The full bundle stayed unchanged and its signature verified before
+and after the gates. [Installation evidence](main-installation.json) records
+the binary, source, dependency and display-transform identities.
+
+Packaging initially stopped because the authoritative offline MCP catalog's
+pretty-printed JSON exceeded its existing 1 MiB limit. Compact serialization
+retains all 71 tools and every parsed value, reducing 1,642,856 bytes to 452,650;
+the schema fingerprint is unchanged. The limit still applies to real oversized
+catalogs. All **43 Python checks** pass (38 Cycles clients and 5 packaging checks).
+No native source changed after the final release suite.
+
+```sh
+python3 -m unittest discover -s scripts -p 'test_*cycles*.py' -v
+python3 -m unittest discover -s scripts -p 'test_package_mcp.py' -v
+```
+
+Five existing controls were replayed without changing objects, materials,
+cameras, lights or settings: cut-edge macro, blind shoulder, whole card, linen
+macro and linen grazing. Each finished at **3000 × 2000 and 512 actual samples**,
+with PNG/EXR hashes and installed runtime identities verified. The paper edge
+and softer rim remain visible, the complete card retains its tooth and caliper,
+and linen's weave follows its smooth folds without a new visible discontinuity.
+[The replay record](main-replays.json) retains all five results and specific
+review notes. Two unchanged final-app outputs are available here:
+[paper edge](main-edge-macro.png) and [linen grazing](main-linen-grazing.png).
+These are qualitative integration checks, not pixel-identical output claims or
+renewed reference acceptance of all eight cases. Linen remains simplified cloth;
+fiber silhouettes and contact flattening remain follow-on work.
+
+The current app's **40-object Table preview completed at 64 samples on Metal**.
+Native Command-S followed by reopening preserved all eleven compared study
+fields, including complete objects, materials, shots and camera. The original
+project was then restored with all eleven protected fields and its Canvas
+artboard unchanged. [Native evidence](main-native.json) includes the unaltered
+[Table screenshot](main-table-rendered.png). Historical controls and failed
+iterations above retain their original source and runtime identities.

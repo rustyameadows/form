@@ -16,8 +16,15 @@ cut-edge appearance/finish shoulders require schema 68. Earlier local Cycles
 schema-64/66/67 projects still decode; their minimum version is recomputed on
 save, including stock and finish fields on independent construction components.
 
-The paper-and-finishes implementation was installed from `2477730` and reviewed
-in the ordinary app. [Follow-up comparisons and verification](validation/cycles/materiality-followup/README.md)
+The ordinary app is installed from clean source `20f27b83`, integrating current
+main and the paper-and-finishes follow-up. Its [final installation record](validation/cycles/materiality-followup/main-installation.json)
+covers relocated signed-bundle CPU/Metal rendering with network and development
+paths denied. The integrated release suite passed 2,741 tests with zero failures
+and three optional skips; all 43 Python checks passed. Five saved controls and
+the 40-object native Table were replayed on that exact installed build, and
+native save/reopen plus original-project restoration passed.
+
+The paper-and-finishes visual iteration was reviewed on `2477730`. [Follow-up comparisons and verification](validation/cycles/materiality-followup/README.md)
 record the subsequent 27 paper captures, editable study, native controls and
 actual runtime identity. The candidate-6 records below identify the preceding
 eight-case release. They are historical evidence for that binary, not a claim
@@ -28,7 +35,11 @@ The [committed validation snapshot](validation/cycles/README.md) provides portab
 test counts, executable identities and evidence hashes for code review, without
 user-project contents or workstation-specific paths.
 
-The single ordinary [LAB app](../build/LAB.app) has since received the follow-up.
+## Historical eight-case delivery
+
+The following candidate-6 records describe the preceding eight-case review.
+The single ordinary [LAB app](../build/LAB.app) now runs the integrated follow-up
+identified above.
 The [candidate-6 delivery record](../.local/cycles-app-validation/final-delivery.json)
 is its historical aggregate; the
 [portable material review](</Users/rustymeadows/Library/Application Support/FORM/2E2A5127-DAEA-4130-AB9E-76D2AC68F6B6.form/Exports/material-review/index.html>)
@@ -606,7 +617,7 @@ and camera after each installation or authoring session.
 
 Evidence is specific to the recorded binary and source hashes. A native helper
 pass does not accept a newer application bundle or establish reference fidelity.
-Candidate 6 is installed at the single ordinary `build/LAB.app` path. Its
+Candidate 6 was installed at the single ordinary `build/LAB.app` path. Its
 [test matrix](../.local/cycles-app-validation/candidate6-test-matrix.json) records
 the final-source 2,441-test full release regression (three optional performance
 fixture skips, zero failures), plus focused checks. All 1,023 source files matched
