@@ -74,6 +74,9 @@ import simd
 
   static func geometryDefinition(_ value:PaperConstruction)->PaperConstruction {
     var copy=value
+    // Detached artwork retains its editor placement in the document, but that
+    // placement cannot alter owner or linked-component physical source identity.
+    copy.insideArtwork?.canvasPosition=nil
     if value.authored?.panels.contains(where:{$0.features != nil}) != true {
       copy.foldPercent=0;copy.openingPercent=0
       if copy.explosionPercent != nil {copy.explosionPercent=0}

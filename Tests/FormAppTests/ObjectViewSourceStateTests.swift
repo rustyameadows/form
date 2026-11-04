@@ -1,6 +1,7 @@
 import AppKit
 import Foundation
 import FormCore
+import FormCADModel
 import XCTest
 @testable import FormApp
 
@@ -162,6 +163,64 @@ import XCTest
     XCTAssertEqual(detachedSignature, LinkedObjectViewRenderer.state(detached.objects[0], in: detached))
     detached.objects[0].surfaceArtworkBindings?[0].artwork?.elements[0].width = 25
     XCTAssertNotEqual(detachedSignature, LinkedObjectViewRenderer.state(detached.objects[0], in: detached))
+  }
+
+  func testPaperSourceRevisionExcludesDetachedCanvasPlacementWithWarmAndMissedCaches()throws {
+    var project=Project(name:"Detached physical source identity")
+    var paper=try project.makeObject(recipeID:"tuckCarton")
+    paper.paperConstruction!.insideArtwork=artwork()
+    paper.surfaceArtworkBindings=[.init(surfaceID:"physical",sourceObjectID:UUID(),widthMM:60,heightMM:40)]
+    paper.surfaceArtworkBindings![0].sourceObjectID=nil
+    paper.surfaceArtworkBindings![0].artwork=artwork();project.objects=[paper]
+    func revision(_ object:ProductObject)throws->String {
+      try XCTUnwrap(PaperGeometry.sourceRevision(object,project:project))
+    }
+    let baseline=try revision(paper),original=paper,validations=PaperGeometry.sourceValidations
+    paper.paperConstruction!.insideArtwork!.canvasPosition = .init(900,600)
+    XCTAssertEqual(try revision(paper),baseline)
+    XCTAssertEqual(PaperGeometry.sourceValidations,validations,"A warmed physical source ignores inside Canvas placement.")
+    // This separate raw field changes the accepted-source lookup key. The
+    // canonical identity must remain correct even after the source is rebuilt.
+    paper.surfaceArtworkBindings![0].artwork!.canvasPosition = .init(-200,700)
+    XCTAssertEqual(try revision(paper),baseline)
+    XCTAssertGreaterThan(PaperGeometry.sourceValidations,validations)
+    let placed=paper
+    paper.paperConstruction!.insideArtwork!.elements[0].color="#254DC7"
+    XCTAssertNotEqual(try revision(paper),baseline,"Inside ink still changes physical source identity.")
+    paper=placed
+    paper.paperConstruction!.finishes=[.init(name:"Inside impression",kind:.letterpress,side:.inside,
+      elementIDs:[paper.paperConstruction!.insideArtwork!.elements[0].id],depthMM:0.08)]
+    XCTAssertNotEqual(try revision(paper),baseline,"A finish change cannot be normalized away with Canvas metadata.")
+    XCTAssertTrue(project.objects[0]==original,"Computing a derived identity must not change the saved source.")
+  }
+
+  func testComponentLinkedPaperRevisionIgnoresSourceCanvasPlacementButTracksInkAndFinishes()throws {
+    var project=Project(name:"Linked cut-piece source identity")
+    var source=try project.makeObject(recipeID:"tuckCarton")
+    source.paperConstruction!.insideArtwork=artwork()
+    source.surfaceArtworkBindings=[.init(surfaceID:"physical",sourceObjectID:UUID(),widthMM:60,heightMM:40)]
+    source.surfaceArtworkBindings![0].sourceObjectID=nil;source.surfaceArtworkBindings![0].artwork=artwork()
+    let definition=PlanarConstructionDefinition(name:"Canonical inside crop",size:.init(20,20),stockThickness:1,
+      panels:[.init(id:"face",name:"Face",polygon:[.init(0,0),.init(20,0),.init(20,20),.init(0,20)])],rootPanelID:"face",
+      components:[.init(id:"piece",name:"Piece",rootPanelID:"face",anchor:.init(0,0),position:.init(0,0.5,0),
+        rotationDegrees:.init(-90,0,0),stock:.init(thicknessMM:1),front:.init(sourceObjectID:source.id,sourceSide:.inside))])
+    var owner=ProductObject(name:"Linked physical owner",recipeID:"box",parameters:[:],materialID:"paper")
+    var construction=PaperConstruction(kind:.authored,dimensions:.init(width:20,height:20,depth:1),stock:.init(thicknessMM:1))
+    construction.authored=definition;owner.paperConstruction=construction;project.objects=[owner,source]
+    func revision()throws->String {try XCTUnwrap(PaperGeometry.sourceRevision(owner,project:project))}
+    let baseline=try revision(),before=project
+    project.objects[1].paperConstruction!.insideArtwork!.canvasPosition = .init(800,500)
+    XCTAssertEqual(try revision(),baseline)
+    project.objects[1].surfaceArtworkBindings![0].artwork!.canvasPosition = .init(-300,800)
+    XCTAssertEqual(try revision(),baseline,"Rebuilding a referenced source must not introduce detached Canvas placement into its owner hash.")
+    let placed=project
+    project.objects[1].paperConstruction!.insideArtwork!.elements[0].color="#254DC7"
+    XCTAssertNotEqual(try revision(),baseline)
+    project=placed
+    project.objects[1].paperConstruction!.finishes=[.init(name:"Inside finish",kind:.flatInk,side:.inside,
+      elementIDs:[source.paperConstruction!.insideArtwork!.elements[0].id],roughness:0.4)]
+    XCTAssertNotEqual(try revision(),baseline,"Referenced physical finish declarations remain dependencies.")
+    XCTAssertTrue(before.objects[0]==owner);XCTAssertTrue(before.objects[1]==source)
   }
 
   func testGeometryPaintAndMaterialEditsStillMarkLinkedRasterPending() throws {

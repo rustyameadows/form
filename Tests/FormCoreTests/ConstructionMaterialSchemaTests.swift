@@ -13,10 +13,11 @@ final class ConstructionMaterialSchemaTests:XCTestCase {
     definition.version=4
     var paper=PaperConstruction(kind:.authored,dimensions:.init(width:100,height:60,depth:0.5),stock:.init(thicknessMM:0.5))
     paper.authored=definition
-    var object=ProductObject(name:"Construction source",recipeID:"box",parameters:["width":100,"height":60,"depth":0.5])
+    let recipe=ConstructionSourceEditing.recipe(definition,id:"schema-construction")
+    var object=ProductObject(name:"Construction source",recipeID:recipe.id,parameters:recipe.defaults)
     object.paperConstruction=paper
     var result=Project(name:"Construction and optical schema")
-    result.objects=[object]
+    result.objects=[object];result.recipes=[recipe]
     result.createdAt=Date(timeIntervalSince1970:1_700_000_000);result.updatedAt=result.createdAt
     return result
   }
@@ -33,9 +34,9 @@ final class ConstructionMaterialSchemaTests:XCTestCase {
     return stock
   }
   func testDisabledComponentsAndFinishesRetainEveryOpticalSchemaContribution()throws {
-    var physicalFinish=PaperFinishAssignment(name:"Retained optical finish",kind:.foil,elementIDs:[],enabled:false)
+    var physicalFinish=PaperFinishAssignment(name:"Retained optical finish",kind:.foil,elementIDs:[UUID()],enabled:false)
     physicalFinish.appearance=PhysicalAppearance()
-    var shoulder=PaperFinishAssignment(name:"Retained shoulder",kind:.emboss,elementIDs:[],enabled:false)
+    var shoulder=PaperFinishAssignment(name:"Retained shoulder",kind:.emboss,elementIDs:[UUID()],enabled:false)
     shoulder.shoulderRadiusMM=0 // Explicit sharp is authored, unlike nil.
     let cases:[(String,PaperStock?,[PaperFinishAssignment]?,Int)]=[
       ("piece face",stock(edge:false),nil,67),
@@ -89,12 +90,15 @@ final class ConstructionMaterialSchemaTests:XCTestCase {
       var prior=project(component:component);prior.schemaVersion=oldVersion;prior.renderSettings=CyclesRenderSettings()
       prior.camera.azimuth=0.71;prior.camera.distance=3.4
       if withEdges {
-        var finish=PaperFinishAssignment(name:"Retained impression",kind:.letterpress,elementIDs:[],depthMM:0.12)
+        let mark=ArtworkElement(kind:"rectangle",x:52,y:2,width:4,height:4,color:"#17283A")
+        prior.objects[0].artwork = .init(elements:[mark])
+        var finish=PaperFinishAssignment(name:"Retained impression",kind:.letterpress,elementIDs:[mark.id],depthMM:0.12)
         finish.shoulderRadiusMM=0.16;prior.objects[0].paperConstruction?.authored?.components?[1].finishes=[finish]
       }
       let decoded=try JSONDecoder.form.decode(Project.self,from:JSONEncoder.form.encode(prior))
       XCTAssertEqual(decoded,prior);XCTAssertEqual(decoded.schemaVersion,oldVersion)
       XCTAssertEqual(decoded.minimumSchemaVersion,expectedVersion)
+      XCTAssertNoThrow(try decoded.validateArtworkLinks(),"The compatibility fixture must remain a valid authored construction.")
       try repository.save(decoded)
       var expected=prior;expected.schemaVersion=expectedVersion
       XCTAssertEqual(try repository.load(prior.id),expected)
