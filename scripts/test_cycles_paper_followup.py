@@ -5,11 +5,28 @@ import unittest
 from pathlib import Path
 from types import SimpleNamespace
 
-from author_cycles_paper_followup import PaperFollowup, deboss_patches, edge_macro_shot, edge_patch, finish_patch_states, parse_reuse_views, require_exact_owner, selected_views, shoulder_patches, translated_shot
+from author_cycles_paper_followup import PaperFollowup, deboss_patches, edge_macro_shot, edge_raking_shot, edge_patch, finish_patch_states, next_candidate_position, parse_reuse_views, require_exact_owner, selected_views, shoulder_patches, translated_shot
 from prepare_cycles_paper_edges import field
 
 
 class PaperFollowupPlanTests(unittest.TestCase):
+    def test_raking_pair_keeps_camera_target_color_and_power(self):
+        source=dict(camera=dict(distance=.15,target=dict(x=0,y=.005,z=.35)),renderSettings=dict(environmentStrength=.12,
+            areaLights=[dict(positionMM=dict(x=-40,y=60,z=105),targetMM=dict(x=0,y=.5,z=35),sizeMM=dict(x=80,y=50),powerWatts=.04,color='#FFFFFF')]))
+        before=copy.deepcopy(source);changed=edge_raking_shot(source);light=changed['renderSettings']['areaLights'][0]
+        self.assertEqual(changed['camera'],source['camera']);self.assertEqual(source,before)
+        self.assertEqual(light['positionMM'],dict(x=-60,y=60.5,z=55))
+        self.assertEqual(light['targetMM'],dict(x=0,y=.5,z=35));self.assertEqual(light['powerWatts'],.04)
+        self.assertEqual(light['color'],'#FFFFFF');self.assertEqual(light['sizeMM'],dict(x=20,y=12))
+        self.assertEqual(changed['renderSettings']['environmentStrength'],.03)
+
+    def test_revision_aliases_do_not_expand_physical_comparison_layout(self):
+        records={key:dict(object_id=owner) for key,owner in [('edge.25','a'),('thin','b'),('shoulder.08','c')]}
+        expected=next_candidate_position([0,0,1000],records)
+        records.update({'edge1':dict(object_id='a'),'shoulder.16':dict(object_id='c')})
+        self.assertEqual(next_candidate_position([0,0,1000],records),expected)
+        self.assertEqual(expected,[510,0,1000])
+
     def test_view_subsets_and_slot_aliases_reject_ambiguous_input(self):
         self.assertEqual(selected_views('shoulder',['blind-relief','letterpress']),('letterpress','blind-relief'))
         self.assertEqual(parse_reuse_views(['new/blind=old/blind']),{'new/blind':'old/blind'})

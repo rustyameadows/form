@@ -1,0 +1,78 @@
+{
+  "status": "passed",
+  "scope": "Final 40-object native Table preview and separate full-scene transfer budget check; image quality is reviewed separately in paper-visual-review.json.",
+  "installed_source_revision": "2477730f99777ee9f9092c9245e6c836ba290f15",
+  "native_table": {
+    "displayed_object_count": 40,
+    "mode": "Rendered",
+    "completion": "Complete",
+    "samples": 64,
+    "device": "metal",
+    "screenshot": "native-table40-rendered.png",
+    "screenshot_sha256": "39b273a56f6ef41f3731d174df3b55478de0c96e5f4c7f678ecbe654df2b755c",
+    "accessibility_evidence": {
+      "path": ".local/cycles-materiality-followup/native-table40-complete.ax.txt",
+      "sha256": "024c7778f1620988162a55acd76416b9402a508760305d7924918000139839a1"
+    },
+    "returned_to_fast": true,
+    "limitations": "Single completed-preview screenshot and accessibility observation, not a continuous video or persisted snapshot hash."
+  },
+  "transfer_budget": {
+    "status": "passed",
+    "exit_code": 0,
+    "elapsed_seconds": 15.52,
+    "source_files": 1085,
+    "source_unchanged": true,
+    "project_manifest_unchanged": true,
+    "project_manifest_sha256": "62d26ce51c95172d1f19be3f7972a3724f9f8d3b6751fdba93641305a1e56673",
+    "source_manifest_sha256": "e2d4f54d45b23f7e94fe1c45ecc8942f9e80927c719b13020b7127be50ac78c0",
+    "log_sha256": "a3cba03a30438e9fed73e8fa3c3f9868920a60b34b451e52ca858c1b6ad618c1",
+    "completed_at": "2026-11-04T20:35:58.988748+00:00",
+    "command": [
+      "swift",
+      "test",
+      "--skip-build",
+      "--disable-sandbox",
+      "--cache-path",
+      "/Users/rustymeadows/dev/form/.build/cache",
+      "--config-path",
+      "/Users/rustymeadows/dev/form/.build/config",
+      "--security-path",
+      "/Users/rustymeadows/dev/form/.build/security",
+      "-c",
+      "release",
+      "--filter",
+      "CyclesScenePreparationTests/testOptionalProjectTableTextureTransferBudget"
+    ],
+    "physicalObjects": 40,
+    "uniqueTextures": 81,
+    "textureReferences": 220,
+    "decodedTextureBytes": 1036734156,
+    "geometryBytes": 13798056,
+    "totalBudgetBytes": 1050532212,
+    "transferBudgetBytes": 1073741824,
+    "manifestSHA256": "62d26ce51c95172d1f19be3f7972a3724f9f8d3b6751fdba93641305a1e56673",
+    "captured_manifest_matches": true
+  },
+  "original_project_preservation": {
+    "exact_fields": {
+      "objects": true,
+      "materials": true,
+      "recipes": true,
+      "notes": true,
+      "camera": true,
+      "studioPresentation": true,
+      "renderSettings": true,
+      "publications": true,
+      "textStories": true,
+      "fontLibrary": true,
+      "textStyles": true
+    },
+    "canvas_context_restored": true,
+    "private_values_omitted": true
+  },
+  "paper_attempts": 27,
+  "satin_sanity_controls": 1,
+  "saved_shots": 64,
+  "comparison_copies": 4
+}

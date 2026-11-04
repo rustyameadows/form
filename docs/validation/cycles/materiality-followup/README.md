@@ -1,4 +1,78 @@
-# Physical materiality follow-up: authored anisotropy direction
+# Physical materiality follow-up
+
+The paper-and-finishes update is installed in the single ordinary LAB app from
+clean source `2477730`. The exact signed bundle passed CPU and Metal renders
+after relocation, with network and development-library reads denied and fresh
+shader caches. [Installation evidence](installation.json) records the binary
+identities and rollback location.
+
+The native appearance editor shows the source map, encoding and physical repeat
+size. Cancel preserves the definition; Apply changes only the intended edge
+strength, and one Undo/Redo restores the exact before/after definition. The
+shoulder control changes only its radius. Converting preset lights retains the
+two original lights and ambient response, and Undo restores the preset. The
+two edited comparison objects save/reopen unchanged; the 39-object Table finishes at 64 samples
+on Metal and resumes after zoom. [Native interaction evidence](native-interactions.json)
+includes unaltered app screenshots and exact readback comparisons.
+
+The final 40-object study also finishes its native Table preview at 64 samples
+on Metal. Its unchanged transfer limit is 1 GiB; the final snapshot uses
+1,050,532,212 bytes, leaving 23,209,612 bytes of headroom. See
+[final native and budget evidence](final-study.json).
+
+## Paper and finish visual review
+
+This pass retained **27 actual paper renders**, including failed and inconclusive
+iterations, plus one unchanged satin control. The study contains four new
+physical comparison copies and 64 saved views. The original specimens remain
+unchanged. Current values, immutable before definitions, camera/light settings,
+PNG/scene-linear EXR exports and render records live in the ordinary project's
+`Exports/paper-materiality` and `Exports/Cycles-*.render` directories.
+[The portable review manifest](paper-visual-review.json) identifies every attempt
+and its artifact hashes. All images below are unchanged LAB outputs.
+
+| Comparison | Before | Selected revision |
+| --- | --- | --- |
+| Cut-edge macro, same camera/light | ![](paper-edge-before.png) | ![](paper-edge-after.png) |
+| Cut-edge raking light | ![](paper-raking-before.png) | ![](paper-raking-after.png) |
+| Blind relief, same camera/light | ![](paper-shoulder-before.png) | ![](paper-shoulder-after.png) |
+
+The initial edge normal strength of 0.25 was too quiet under broad light. A true
+macro confirmed the weakness; increasing it to 1 reveals short, layered fiber
+modulation while preserving the face tooth and straight caliper silhouette.
+The 8 × 2 mm maps use independent edge coordinates and zero displacement. At
+[whole-card distance](paper-whole-after.png), the detail remains restrained.
+The first whole-card captures clipped a corner: they remain recorded as failures.
+Increasing only camera distance by 25% produced the accepted framing.
+
+The first 0.08 mm finish shoulder gave only a modest improvement. At 0.16 mm,
+the blind rim is visibly broader and softer while ink coverage stays crisp.
+Letterpress depth and blind relief magnitude remain 0.12 mm; smooth foil remains
+0.02 mm high. A negative companion reverses the positive rim's highlight/shadow
+at the same view. Reversing the key light reverses both consistently. The
+[whole positive/negative comparison](paper-emboss-deboss.png) preserves stock
+caliper, artwork and foil. These controls change construction and material
+response rather than painting a dark outline.
+
+Reference review used the original [Gmund Cotton stock](https://www.gmund.com/shop/en_int/gmund-cotton-max-white.html),
+[printing guide](https://www.gmund.com/shop/media/pdf/instructions/Gmund_Cotton_Printing_Tips_engl.pdf),
+[letterpress](https://www.gmund.com/en_int/printing-techniques/letterpress/),
+[blind embossing](https://www.gmund.com/en_int/printing-techniques/blind-embossing/)
+and [foil](https://www.gmund.com/en_int/printing-techniques/hot-foil-stamping/)
+references. Manufacturer photographs stay linked/private. The guide describes
+600 gsm stock as approximately 1 mm thick; the 300 gsm / 0.5 mm variant is an
+authored estimate. Edge maps, optical parameters and finish dimensions are
+artist estimates, not measured scans or pressure/compression simulations.
+The edge detail changes shading, not frayed-fiber silhouette. The reference's
+depressed circle motivated the deboss companion; this is a construction study,
+not a duplicate of the manufacturer's card graphics.
+
+The unchanged satin-front shot confirms the installed mesh shader path still
+renders its directional highlight. It does not renew visual acceptance of all
+eight cases. Cloth folds and thread contact/filament work remain explicit
+follow-on items in the [to-do list](../../../cycles-materiality-followup.md).
+
+## Authored anisotropy direction
 
 The native helper now binds mesh anisotropy to the authored UV chart. Previously,
 the implicit Cycles tangent used generated coordinates and ignored UV direction.
@@ -48,8 +122,8 @@ passed on CPU and Metal; their reports are retained alongside the main reports.
 Raw scenes, EXRs and event streams are under `.local/cycles/validation-anisotropy-*`.
 
 This is direction correctness evidence, not a measured BRDF match. The ordinary
-LAB application was not replaced for these checks. Anisotropic highlights change
-intentionally, so final paper/finish review in the updated app remains separate.
+LAB application was not replaced for these helper checks. The installed-app
+paper review above and its runtime identities are recorded separately.
 
 ## Paper, finishes and lighting regression
 
@@ -70,6 +144,27 @@ python3 scripts/prepare_cycles_paper_edges.py \
   --output .local/cycles-materiality-followup/reproduced-edge-assets
 ```
 
-These maps are authored estimates, not measured manufacturer data. This is an
-engineering checkpoint: building and verifying the updated app bundle, installed
-native-control checks, and visible paper/finish acceptance remain pending.
+These maps are authored estimates, not measured manufacturer data. Subsequent
+client safeguards preserve immutable before definitions when comparison copies
+or camera slots are explicitly reused, and reject historical labels whose live
+object has changed. All **38 Python checks** pass after those additions:
+
+```sh
+python3 -m unittest discover -s scripts -p 'test_*cycles*.py' -v
+```
+
+The native source is unchanged from the full release suite above. Authoring
+commands default to dry-run; `--apply` performs generic MCP edits. For example,
+with the delivered local study state:
+
+```sh
+python3 scripts/author_cycles_paper_followup.py --stage edge-review --normal-strength 1
+python3 scripts/author_cycles_paper_followup.py --stage final \
+  --control shoulder-0.16/blind-relief
+```
+
+Add `--apply` only to author/capture. Final-stage capture refuses a control whose
+live object no longer matches its recorded definition. Revisions require
+`--revision-from` and the complete `--expected-object-sha256`; prior definitions
+and reused camera slots are archived before mutation. The final study already
+uses all 64 shot slots, so new variants must explicitly reuse suitable slots.

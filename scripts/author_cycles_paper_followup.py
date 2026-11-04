@@ -56,6 +56,17 @@ def edge_macro_shot(source):
     return result
 
 
+def edge_raking_shot(source):
+    result=copy.deepcopy(source);settings=result['renderSettings']
+    if len(settings['areaLights'])!=1:raise ValueError('The matched raking control requires the single recorded key light')
+    light=settings['areaLights'][0]
+    for axis,offset in zip(('x','y','z'),(-60,60,20)):
+        light['positionMM'][axis]=light['targetMM'][axis]+offset
+    light['sizeMM']=dict(x=20,y=12)
+    settings['environmentStrength']=.03
+    return result
+
+
 def edge_patch(textures,strength):
     if not 0<=strength<=2:raise ValueError('Bounded edge normal strength required')
     response=copy.deepcopy(EDGE_RESPONSE)
@@ -112,11 +123,18 @@ def selected_views(stage,requested):
     available=dict(baseline=('single1mm','single0.5mm','letterpress','blind-relief','foil-highlight'),
         edge=('single1mm','single0.5mm'),
         **{'edge-macro':('baseline1mm','edge-0.25-1mm')},
+        **{'edge-review':('baseline-whole','candidate-whole','baseline-raking','candidate-raking')},
         shoulder=('letterpress','blind-relief','foil-highlight'),
         deboss=('blind-relief','positive-changed-light','negative-changed-light','whole-pair'),final=())[stage]
     if requested and (len(set(requested))!=len(requested) or not set(requested)<=set(available)):
         raise ValueError('Views must be unique members of: '+', '.join(available))
     return tuple(v for v in available if not requested or v in requested)
+
+
+def next_candidate_position(origin,candidates):
+    # Revision aliases retain history but do not occupy another physical slot.
+    count=len({record['object_id'] for record in candidates.values()})
+    return [origin[0]+170*count,origin[1],origin[2]]
 
 
 class PaperFollowup(CurvedAttachment):
@@ -252,7 +270,7 @@ class PaperFollowup(CurvedAttachment):
             self.review['layout_origin_mm']=[0,0,max(o['position']['z'] for o in inventory)+1000]
             self.save()
         origin=self.review['layout_origin_mm']
-        planned=[origin[0]+170*len(self.review['candidates']),origin[1],origin[2]]
+        planned=next_candidate_position(origin,self.review['candidates'])
         current=self.full_object(existing[0]['id']) if existing else self.call('form_duplicate_object',dict(object_id=source['id'],mode='iteration',name=name))
         if current.get('parentIterationID')!=source['id'] or current.get('designID')==source.get('designID'):
             raise RuntimeError('Comparison specimen is not an independent source iteration')
@@ -401,6 +419,34 @@ class PaperFollowup(CurvedAttachment):
                 for label,subject in [('baseline1mm',source),('edge-0.25-1mm',owner)]:
                     if not self.wants_view(label):continue
                     self.capture('edge-macro/'+label,macro,source,subject)
+            if self.args.stage=='edge-review':
+                source=cotton[0];key='edge-'+format(self.args.normal_strength,'.3g')+'/single1mm'
+                record=self.review['candidates'].get(key)
+                if record is None:raise RuntimeError('The selected edge comparison copy must already exist')
+                owner=self.full_object(record['object_id'])
+                previous=next((a for a in reversed(self.review['attempts']) if a['label']==key and a['state']=='completed'),None)
+                if previous is None or 'authored_object' not in previous:raise RuntimeError('Edge review requires the complete current comparison archive')
+                require_exact_owner(owner,previous['authored_object'])
+                macro_record=self.review['shots']['edge-macro/baseline1mm']
+                macro=self.call('form_set_view',dict(view='studio',studio_command='get',shot_id=macro_record['id']))
+                if macro!=macro_record['definition']:raise RuntimeError('Baseline macro changed after the matched control')
+                raking=edge_raking_shot(macro)
+                whole_id=next(a['shot_id'] for a in reversed(self.state['cases']['cotton']['render_attempts']) if a.get('view')=='whole' and a.get('state')=='completed')
+                whole=self.call('form_set_view',dict(view='studio',studio_command='get',shot_id=whole_id))
+                oldcenter=[sum(o['position'][axis] for o in cotton)/2 for axis in ('x','y','z')]
+                delta=[source['position'][axis]-center for axis,center in zip(('x','y','z'),oldcenter)]
+                whole=translated_shot(whole,delta,source['id'],self.args.samples,self.args.width,self.args.height)
+                width=source['parameters']['width'];span=abs(cotton[1]['position']['x']-source['position']['x'])+width
+                # A simple width ratio clipped the near corner at this
+                # oblique view; retain that failed capture and give the full
+                # diagonal silhouette25% more camera distance.
+                whole['camera']['distance']*=1.25*width/span
+                prefix='edge-review-'+format(self.args.normal_strength,'.3g')
+                for view,template in [('whole',whole),('raking',raking)]:
+                    for kind,subject in [('baseline',source),('candidate',owner)]:
+                        label=kind+'-'+view
+                        if self.wants_view(label):self.capture(prefix+'/'+label,template,source,subject)
+                self.call('form_add_note',dict(kind='decision',text='Paper edge whole and changed-light comparison: '+source['id']+' is the unchanged1 mm source, '+owner['id']+' is the exact recorded strength'+str(self.args.normal_strength)+' comparison. Whole views recenter the original cotton whole camera/light from the two-stock midpoint onto one100 mm specimen and scale camera distance by1.25×100/290; both owners use the same relative camera and light. The first100/290 whole captures clipped the near corner and are retained as failed framing evidence. Raking views retain the recorded edge-macro camera/target/angles and change only the one area key and environment: key center offset(-60,+60,+20) mm from the front-wall midpoint, rectangle20×12 mm, original power0.04 W and color preserved; environment.12→.03. The light aims at the wall midpoint, with oblique incidence from above/side. All maps,8×2 mm repeat,caliper,face and edge response remain unchanged. This is an authored qualitative light control, not a calibrated photometric measurement.'))
             if self.args.stage in ('baseline','shoulder'):
                 stage='baseline' if self.args.stage=='baseline' else 'shoulder-'+format(self.args.shoulder_radius_mm,'.3g')
                 owner=finished if self.args.stage=='baseline' else self.candidate(stage+'/finished',finished)
@@ -488,7 +534,7 @@ class PaperFollowup(CurvedAttachment):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--apply',action='store_true')
-    parser.add_argument('--stage',choices=('baseline','edge','edge-macro','shoulder','deboss','final'),default='baseline')
+    parser.add_argument('--stage',choices=('baseline','edge','edge-macro','edge-review','shoulder','deboss','final'),default='baseline')
     parser.add_argument('--normal-strength',type=float,default=.25)
     parser.add_argument('--shoulder-radius-mm',type=float,default=.08)
     parser.add_argument('--control',action='append',help='Exact reviewed control label to recapture in final stage')
@@ -500,7 +546,7 @@ def main():
     parser.add_argument('--source-state',type=Path,default=ROOT/'.local/cycles-materials/state.json')
     parser.add_argument('--output',type=Path,default=ROOT/'.local/cycles-materiality-followup')
     parser.add_argument('--samples',type=int);parser.add_argument('--width',type=int);parser.add_argument('--height',type=int)
-    args=parser.parse_args();final=args.stage in ('final','edge-macro')
+    args=parser.parse_args();final=args.stage in ('final','edge-macro','edge-review')
     try:
         args.view=list(selected_views(args.stage,args.view));args.reuse_views=parse_reuse_views(args.reuse_view)
     except ValueError as error:parser.error(str(error))

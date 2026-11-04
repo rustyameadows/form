@@ -1,5 +1,5 @@
 {
-  "status": "installed; native interaction passed; further visual comparisons in progress",
+  "status": "installed; native interactions and scoped paper/finish visual review passed",
   "installed": {
     "installed_at": "2026-11-04T19:36:50.950243+00:00",
     "ordinary": "/Users/rustymeadows/dev/form/build/LAB.app",
@@ -165,5 +165,7 @@
     "offline-metal.log": "de8285c84823224bc7e3aa2d55378a67ebf5a11177f92b2f95a66a109b446c24",
     "install_verified.py": "582a6b643e48c38cc484c349c815b0268fb29fd0a6675544c466ead39e9948e3"
   },
-  "native_interaction_evidence": "native-interactions.json"
+  "native_interaction_evidence": "native-interactions.json",
+  "final_study_evidence": "final-study.json",
+  "visual_review_evidence": "paper-visual-review.json"
 }

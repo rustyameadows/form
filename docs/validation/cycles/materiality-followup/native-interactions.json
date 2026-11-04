@@ -210,7 +210,7 @@
       }
     }
   },
-  "visual_material_acceptance": "Separate reference-led rendered comparisons remain in progress.",
+  "visual_material_acceptance": "Completed separately in paper-visual-review.json; this record retains its earlier 39-object native checks.",
   "screenshots": {
     "native-edge-texture.png": {
       "sha256": "a0e42c29acfb3ff86320d638dff0fb68564efe646a8f95aac81eeba2bafa6389",
