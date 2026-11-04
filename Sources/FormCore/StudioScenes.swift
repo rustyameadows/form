@@ -68,10 +68,11 @@ public struct StudioComposition:Codable,Equatable,Identifiable,Sendable {
   public var pixels=StudioPixels()
   public var lighting="soft-side-v1",surface="Daylight"
   public var motion=StudioMotion()
+  public var renderSettings:CyclesRenderSettings?
   public init(name:String,camera:CameraState){self.name=name;self.camera=camera}
   public func validate()throws {
     guard !name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty,name.count<=80,(1...1_000_000).contains(revision),instances.count<=128,Set(instances.map(\.id)).count==instances.count else{throw FormError.invalid("Use a named scene with at most 128 uniquely identified instances.")}
-    var shot=StudioShot(name:name,camera:camera,referenceAspect:pixels.aspect);shot.pixels=pixels;shot.lighting=lighting;shot.surface=surface;try shot.validate();try motion.validate()
+    var shot=StudioShot(name:name,camera:camera,referenceAspect:pixels.aspect);shot.pixels=pixels;shot.lighting=lighting;shot.surface=surface;shot.renderSettings=renderSettings;try shot.validate();try motion.validate()
     if motion.mode == .between {guard (motion.startCamera ?? camera).projection==motion.endCamera?.projection else{throw FormError.invalid("Motion endpoints must use the same camera projection.")}}
     for instance in instances {try instance.validate()}
   }
@@ -137,7 +138,7 @@ public struct StudioComposition:Codable,Equatable,Identifiable,Sendable {
     return UUID(uuid:(b[0],b[1],b[2],b[3],b[4],b[5],b[6],b[7],b[8],b[9],b[10],b[11],b[12],b[13],b[14],b[15]))
   }
   public func shot(camera:CameraState?=nil)->StudioShot {
-    var shot=StudioShot(name:name,camera:camera ?? self.camera,referenceAspect:pixels.aspect);shot.pixels=pixels;shot.lighting=lighting;shot.surface=surface;return shot
+    var shot=StudioShot(name:name,camera:camera ?? self.camera,referenceAspect:pixels.aspect);shot.pixels=pixels;shot.lighting=lighting;shot.surface=surface;shot.renderSettings=renderSettings;return shot
   }
 }
 
@@ -158,7 +159,7 @@ public enum StudioSceneCommands {
     var scene:StudioComposition
     if command=="create" {guard Set(a.keys).isSubset(of:["command","name"]),a["name"]==nil || a["name"] is String else{throw FormError.invalid("Create accepts a scene name.")};scene = .fromProject(project,name:a["name"] as? String ?? "Still life \(scenes.count+1)")}
     else if command=="save" {
-      guard a.count==2,let raw=a["scene"] as? [String:Any],Set(raw.keys).isSubset(of:["id","name","revision","instances","camera","pixels","lighting","surface","motion"]) else{throw FormError.invalid("Save requires a complete Studio composition.")}
+      guard a.count==2,let raw=a["scene"] as? [String:Any],Set(raw.keys).isSubset(of:["id","name","revision","instances","camera","pixels","lighting","surface","motion","renderSettings"]) else{throw FormError.invalid("Save requires a complete Studio composition.")}
       try validateFields(raw)
       let data=try JSONSerialization.data(withJSONObject:raw)
       guard data.count<=2_097_152 else{throw FormError.invalid("Scene definitions are limited to 2 MiB.")}
@@ -172,6 +173,7 @@ public enum StudioSceneCommands {
     return try jsonObject(scene)
   }
   private static func validateFields(_ raw:[String:Any])throws {
+    if let settings=raw["renderSettings"] {try CyclesRenderSettings.validateFields(settings)}
     func fields(_ raw:Any?,_ allowed:Set<String>)throws {
       guard let raw else{return}
       if raw is NSNull{return}

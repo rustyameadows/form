@@ -10,6 +10,7 @@ struct MeshAssetPreparedComponent:Sendable {
   var id:String,name:String,materialIndex:Int
   var sourceMesh:SceneMeshPayload
   var artworkMesh:SceneMeshPayload
+  var physicalMesh:SceneMeshPayload
   var sourceUV:MeshTextureBinding?
   var sourceTransform:SceneTransformPayload
 }
@@ -42,7 +43,7 @@ enum MeshAssetSceneAdapter {
       guard let source=CGImageSourceCreateWithData(image.data as CFData,[kCGImageSourceShouldCache:false] as CFDictionary),let cg=CGImageSourceCreateImageAtIndex(source,0,[kCGImageSourceShouldCacheImmediately:true] as CFDictionary),cg.width==image.width,cg.height==image.height else{throw MeshAssetError.invalid("Texture decoding failed after metadata validation.")}
       images.append(cg)
     }
-    var shared:[String:(SceneMeshPayload,SceneMeshPayload)]=[:]
+    var shared:[String:(SceneMeshPayload,SceneMeshPayload,SceneMeshPayload)]=[:]
     var output:[MeshAssetPreparedComponent]=[],warnings:[String]=[],cost=images.reduce(0){$0+$1.bytesPerRow*$1.height}
     for node in document.nodes where node.inSelectedScene {
       guard let meshIndex=node.meshIndex else{continue}
@@ -53,12 +54,16 @@ enum MeshAssetSceneAdapter {
         guard document.materials.indices.contains(index) else{throw MeshAssetError.invalid("Renderable primitive has no resolved material slot.")}
         let m=document.materials[index],choice=m.baseColorTexture ?? m.normalTexture ?? m.metallicRoughnessTexture ?? m.emissiveTexture ?? m.occlusionTexture
         let id=node.id+"/"+p.id,meshKey=reference.normalizedSHA256+"/"+(sourceTransform==nil ? id:p.id)
-        if let cached=shared[meshKey] {output.append(.init(id:id,name:node.name,materialIndex:index,sourceMesh:cached.0,artworkMesh:cached.1,sourceUV:choice,sourceTransform:sourceTransform ?? .init()));continue}
+        if let cached=shared[meshKey] {output.append(.init(id:id,name:node.name,materialIndex:index,sourceMesh:cached.0,artworkMesh:cached.1,physicalMesh:cached.2,sourceUV:choice,sourceTransform:sourceTransform ?? .init()));continue}
         let sourceUV=try mappedUVs(p,using:choice),add=sourceTransform==nil ? offset:.init()
         let positions=p.positionsMM.map{SIMD3<Double>($0.x+add.x,$0.y+add.y,$0.z+add.z)},normals=p.normals.map(\.simd)
         let tangent=choice==nil || isIdentity(choice!) && choice!.texCoord==0 ? p.tangents.map{SIMD4<Float>($0.x,$0.y,$0.z,$0.w)}:[]
         let mesh=SceneMeshPayload(id:meshKey,revision:reference.geometryRevision+"/source",positionsMM:positions,normals:normals,uvs:sourceUV,tangents:tangent.isEmpty && !sourceUV.isEmpty ? tangents(positions:positions,normals:normals,uvs:sourceUV,indices:p.indices):tangent,colors:p.colors.map{SIMD4($0.r,$0.g,$0.b,$0.a)},parts:[.init(triangleIndices:p.indices,semanticID:p.id)])
         var artwork=mesh
+        var physical=mesh
+        physical.id+="/physical";physical.revision=reference.geometryRevision+"/physical"
+        physical.uvs=p.uv0.map(\.simd);physical.uvs1=p.uv1.map(\.simd)
+        physical.tangents=p.tangents.map{SIMD4<Float>($0.x,$0.y,$0.z,$0.w)}
         if !p.uv0.isEmpty,choice != nil && (!isIdentity(choice!) || choice!.texCoord != 0) {
           artwork.id+="/artwork-uv0";artwork.revision=reference.geometryRevision+"/artwork-uv0";artwork.uvs=p.uv0.map(\.simd);artwork.tangents=tangents(positions:positions,normals:normals,uvs:artwork.uvs,indices:p.indices)
           cost+=artwork.uvs.count*MemoryLayout<SIMD2<Float>>.stride+artwork.tangents.count*MemoryLayout<SIMD4<Float>>.stride
@@ -67,7 +72,8 @@ enum MeshAssetSceneAdapter {
         for (channel,binding) in [("normal",m.normalTexture),("metallic/roughness",m.metallicRoughnessTexture),("emissive",m.emissiveTexture),("occlusion",m.occlusionTexture)] {
           if let binding,!sameMapping(binding,choice) {warnings.append("\(node.name): \(channel) uses a different UV mapping from base appearance and is omitted from this renderer; source mappings are retained.")}
         }
-        cost+=mesh.approximateBytes;shared[meshKey]=(mesh,artwork);output.append(.init(id:id,name:node.name,materialIndex:index,sourceMesh:mesh,artworkMesh:artwork,sourceUV:choice,sourceTransform:sourceTransform ?? .init()))
+        cost+=mesh.approximateBytes+(physical.uvs.count+physical.uvs1.count)*MemoryLayout<SIMD2<Float>>.stride
+        shared[meshKey]=(mesh,artwork,physical);output.append(.init(id:id,name:node.name,materialIndex:index,sourceMesh:mesh,artworkMesh:artwork,physicalMesh:physical,sourceUV:choice,sourceTransform:sourceTransform ?? .init()))
       }
     }
     return .init(components:output,materials:document.materials,textures:document.textures,images:images,imageRevisions:document.images.map(\.sha256),gltfLinearFactors:reference.format=="glb" || reference.format=="gltf",warnings:Array(Set(warnings)).sorted(),approximateBytes:cost)
@@ -100,8 +106,8 @@ enum MeshAssetSceneAdapter {
     }
     return positions.indices.map {i in let n=SIMD3<Double>(normals[i]),raw=first[i]-n*simd_dot(n,first[i]);let t=simd_length_squared(raw)>1e-20 ? simd_normalize(raw):simd_normalize(abs(n.y)<0.9 ? simd_cross(n,SIMD3(0,1,0)):simd_cross(n,SIMD3(1,0,0)));return .init(Float(t.x),Float(t.y),Float(t.z),simd_dot(simd_cross(n,t),second[i])<0 ? -1:1)}
   }
-  static func appearance(_ prepared:MeshAssetPreparedScene,reference:MeshAssetReference,artwork:CGImage?=nil,artworkRevision:String="none")throws->MeshAssetSceneAppearance {
-    try reference.validate();var components:[MeshAssetSceneAppearance.Component]=[],warnings=prepared.warnings,cost=0,composites:[Int:CGImage]=[:],recolors:[Int:CGImage]=[:]
+  static func appearance(_ prepared:MeshAssetPreparedScene,reference:MeshAssetReference,artwork:CGImage?=nil,artworkRevision:String="none",physical:Bool = false)throws->MeshAssetSceneAppearance {
+    try reference.validate();var components:[MeshAssetSceneAppearance.Component]=[],warnings=physical ? []:prepared.warnings,cost=0,composites:[Int:CGImage]=[:],recolors:[Int:CGImage]=[:]
     for component in prepared.components {
       if Task.isCancelled {throw CancellationError()}
       let slot=component.materialIndex,source=prepared.materials[slot],override=reference.materialOverrides.first{$0.materialIndex==slot}
@@ -111,14 +117,16 @@ enum MeshAssetSceneAdapter {
       let binding=reference.artworkBindings.first{$0.materialIndex==slot && ($0.primitiveIDs.isEmpty || $0.primitiveIDs.contains(component.id))},applyArtwork=binding != nil && artwork != nil
       let activeMapping=applyArtwork ? identityUV:component.sourceUV
       func texture(_ binding:MeshTextureBinding?,_ channel:SceneTextureChannel = .rgba)throws->SceneTexturePayload? {
-        guard let binding,sameMapping(binding,activeMapping) else{return nil}
+        guard let binding,physical || sameMapping(binding,activeMapping) else{return nil}
         let texture=prepared.textures[binding.textureIndex]
         func wrap(_ value:Int)->SceneTextureWrap {value==33071 ? .clamp:value==33648 ? .mirror:.repeatMode}
-        return .init(image:prepared.images[texture.imageIndex],revision:prepared.imageRevisions[texture.imageIndex],uvIndex:0,wrapS:wrap(texture.wrapS),wrapT:wrap(texture.wrapT),channel:channel)
+        var result=SceneTexturePayload(image:prepared.images[texture.imageIndex],revision:prepared.imageRevisions[texture.imageIndex],uvIndex:physical ? binding.texCoord:0,wrapS:wrap(texture.wrapS),wrapT:wrap(texture.wrapT),channel:channel)
+        if physical {result.scale = .init(Double(binding.scale.u),Double(binding.scale.v));result.offset = .init(Double(binding.offset.u),Double(binding.offset.v));result.rotationDegrees=binding.rotation*180 / .pi}
+        return result
       }
       let originalMode:SceneAlphaMode=source.alphaMode=="MASK" ? .mask:source.alphaMode=="BLEND" ? .blend:.opaque
       let encoder=JSONEncoder();encoder.outputFormatting=[.sortedKeys]
-      let slotRevision=MeshAssetHash.sha256(try encoder.encode(override)),revision=slotRevision+"/"+(applyArtwork ? "uv:"+artworkRevision:"source")
+      let slotRevision=MeshAssetHash.sha256(try encoder.encode(override)),revision=slotRevision+"/"+(applyArtwork ? "uv:"+artworkRevision:"source")+(physical ? "/physical":"")
       var material=SceneMaterialPayload(id:reference.normalizedSHA256+"/slot-\(slot)",revision:revision,baseColor:factor,colorEncoding:prepared.gltfLinearFactors ? .linearSRGB:.srgb,emissiveColor:.init(Float(source.emissive[0]),Float(source.emissive[1]),Float(source.emissive[2])),emissiveTexture:try texture(source.emissiveTexture),metallic:Float(override?.metallic ?? source.metallic),roughness:Float(override?.roughness ?? source.roughness),doubleSided:source.doubleSided,unlit:source.unlit,alphaMode:factor.w<1 ? .blend:originalMode,alphaCutoff:Float(source.alphaCutoff),normalScale:Float(source.normalTexture?.strength ?? 1),baseColorTexture:try texture(source.baseColorTexture),normalTexture:try texture(source.normalTexture),metallicTexture:try texture(source.metallicRoughnessTexture,.blue),roughnessTexture:try texture(source.metallicRoughnessTexture,.green),ambientOcclusionTexture:try texture(source.occlusionTexture,.red))
       var recoloredBase:CGImage?
       if let hex=override?.colorHex,let binding=source.baseColorTexture {
@@ -129,7 +137,9 @@ enum MeshAssetSceneAdapter {
         // Chosen color is the replacement surface color; original texture luminance supplies detail.
         material.baseColor = .init(1,1,1,factor.w)
       }
-      if applyArtwork,let artwork {
+      if physical,applyArtwork,let artwork {
+        material.artworkTexture = .init(image:artwork,revision:artworkRevision,wrapS:.clamp,wrapT:.clamp,encoding:.srgb)
+      } else if applyArtwork,let artwork {
         let image:CGImage
         if let cached=composites[slot] {image=cached}else {image=try composite(artwork:artwork,source:source,prepared:prepared,factor:material.baseColor,baseImage:recoloredBase);composites[slot]=image;cost+=image.bytesPerRow*image.height}
         let revision=material.revision+"/uv-composite"
@@ -137,7 +147,7 @@ enum MeshAssetSceneAdapter {
         for (channel,value) in [("normal",source.normalTexture),("metallic/roughness",source.metallicRoughnessTexture),("emissive",source.emissiveTexture),("occlusion",source.occlusionTexture)] {if let value,!sameMapping(value,identityUV) {warnings.append("\(component.name): \(channel) map is omitted while artwork uses original UV0; independent source mappings remain retained.")}}
       }
       guard cost<=64*1024*1024 else{throw MeshAssetError.limit("Derived colorway/UV display textures exceed the 64 MiB appearance budget. Map fewer slots or use smaller artwork.")}
-      components.append(.init(id:component.id,mesh:applyArtwork ? component.artworkMesh:component.sourceMesh,material:material,sourceTransform:component.sourceTransform))
+      components.append(.init(id:component.id,mesh:physical ? component.physicalMesh:applyArtwork ? component.artworkMesh:component.sourceMesh,material:material,sourceTransform:component.sourceTransform))
     }
     return .init(components:components,warnings:Array(Set(warnings)).sorted(),approximateBytes:cost)
   }

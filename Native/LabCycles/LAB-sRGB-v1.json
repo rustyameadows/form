@@ -1,0 +1,55 @@
+{
+  "id": "LAB-sRGB-v1",
+  "version": 1,
+  "role": "documentation of the compiled display transform",
+  "loadedByRenderer": false,
+  "implementation": "lab_cycles.mm::write_image",
+  "workingSpace": {
+    "name": "scene-linear sRGB",
+    "whitePointXY": [0.3127, 0.3290],
+    "primariesXY": {
+      "red": [0.640, 0.330],
+      "green": [0.300, 0.600],
+      "blue": [0.150, 0.060]
+    },
+    "alpha": "premultiplied"
+  },
+  "png": {
+    "channels": "RGBA",
+    "bitsPerChannel": 8,
+    "alpha": "straight",
+    "exposureEVRange": [-20, 20],
+    "operations": [
+      "Clamp alpha to [0,1].",
+      "Clamp negative linear RGB to zero.",
+      "Divide RGB by alpha when alpha > 0.000001; otherwise set RGB to zero.",
+      "Multiply RGB by 2^exposureEV.",
+      "Apply the per-channel sRGB transfer function below.",
+      "Clamp encoded RGB to [0,1].",
+      "Quantize each RGBA channel with floor(channel*255 + 0.5)."
+    ],
+    "transfer": {
+      "linearThreshold": 0.0031308,
+      "linearSlope": 12.92,
+      "powerScale": 1.055,
+      "powerExponent": "1/2.4",
+      "powerOffset": -0.055
+    },
+    "toneMapping": "none",
+    "imageOutputAttributes": {"oiio:UnassociatedAlpha": 1},
+    "sameTransformForPreviewAndFinal": true
+  },
+  "exr": {
+    "channels": "RGBA",
+    "bitsPerChannel": 32,
+    "encoding": "scene-linear sRGB",
+    "alpha": "premultiplied",
+    "appliesDisplayExposure": false,
+    "clampsHDR": false
+  },
+  "ocio": {
+    "externalConfigurationUsed": false,
+    "inputTextureBuiltins": {"srgb": "__builtin_srgb", "linear": "scene_linear", "data": "data"},
+    "note": "OpenColorIO is a bundled dependency. LAB-sRGB-v1 is implemented directly in the helper, not evaluated from an OCIO configuration or from this companion document."
+  }
+}

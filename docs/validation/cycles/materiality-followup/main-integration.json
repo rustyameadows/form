@@ -1,0 +1,343 @@
+{
+  "status": "merged_main_engineering_regression_passed",
+  "validated_commit": "a703321ecb4f78943423d6f294dddfb4e2d267b2",
+  "integrated_main_commit": "27f102f4dab66821a4da6c7ed7a187f289eeaa19",
+  "completed_at": "2026-11-04T21:36:13.493148+00:00",
+  "scope": "Release regression after integrating independent-stock construction and Studio paper poses with bundled Cycles, physical materials, cut-edge response and finish shoulders. This record does not establish post-merge app installation or visual replay.",
+  "source": {
+    "files": 1155,
+    "unchanged": true,
+    "manifest": {
+      "path": ".local/cycles-materiality-followup/main-integration/source-manifest.json",
+      "sha256": "38b5b95dac2a7f3d4bbf70750008cb9005385ebacd0b8d9557704460a48f50f1"
+    },
+    "focused_and_full_manifest_identical": true
+  },
+  "release_regression": {
+    "status": "passed",
+    "exit_code": 0,
+    "elapsed_seconds": 337.7,
+    "source_files": 1155,
+    "source_unchanged": true,
+    "source_manifest_sha256": "38b5b95dac2a7f3d4bbf70750008cb9005385ebacd0b8d9557704460a48f50f1",
+    "log_sha256": "0c5786d0f3e29fa42b584c6139f72a26a4de13a7b09170af697c28fd0275a12e",
+    "completed_at": "2026-11-04T21:36:13.493148+00:00",
+    "actual_renderer_helpers_enabled": true,
+    "actual_project_diagnostics_enabled": true,
+    "executed": 2744,
+    "passed": 2741,
+    "failed": 0,
+    "skipped": 3,
+    "targets": {
+      "LabRenderingTests": {
+        "executed": 61,
+        "passed": 61,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormMeshAssetsTests": {
+        "executed": 24,
+        "passed": 24,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormGeometryTests": {
+        "executed": 10,
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormCoreTests": {
+        "executed": 1325,
+        "passed": 1325,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormCADModelingTests": {
+        "executed": 29,
+        "passed": 29,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormCADKernelTests": {
+        "executed": 12,
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormAppTests": {
+        "executed": 1283,
+        "passed": 1280,
+        "failed": 0,
+        "skipped": 3
+      }
+    },
+    "count_basis": "Seven XCTest target summaries; counts include three explicit optional skips.",
+    "same_binaries_as_focused_run": true,
+    "command": "swift test --skip-build --disable-sandbox -c release",
+    "runner": {
+      "path": ".local/cycles-materiality-followup/main-integration/run.py",
+      "sha256": "d9f2c4074871c29182f3ad0ce19327a411852e02bbd89bd16e05dd611c92af07"
+    },
+    "record": {
+      "path": ".local/cycles-materiality-followup/main-integration/regression.json",
+      "sha256": "708de3baa161e8d3f5370202418b055abea3aa4f9b7d18fe0115418b9dc215bf"
+    },
+    "log": {
+      "path": ".local/cycles-materiality-followup/main-integration/regression.log",
+      "sha256": "0c5786d0f3e29fa42b584c6139f72a26a4de13a7b09170af697c28fd0275a12e"
+    },
+    "optional_skips": [
+      "DenseCanvasInteractionPerformanceTests.testExternalNativeCanvasDrawPanZoomAndFrameDrag",
+      "DenseDocumentPerformanceTests.testReadOnlyExternalDocumentStages",
+      "DenseStudioPerformanceTests.testExternalStudioSceneSwitchingAndThumbnailReentry"
+    ],
+    "skip_reason": "FORM_DENSE_PROJECT_PATH was not set for the separate optional dense-document performance fixture. The actual material-study Table and attached-program diagnostics were enabled and passed."
+  },
+  "focused_fix_verification": {
+    "status": "passed",
+    "exit_code": 0,
+    "elapsed_seconds": 291.82,
+    "source_files": 1155,
+    "source_unchanged": true,
+    "source_manifest_sha256": "38b5b95dac2a7f3d4bbf70750008cb9005385ebacd0b8d9557704460a48f50f1",
+    "log_sha256": "fd3630dee5d063c0ce3cd35dff22d8dd5ff2ff0536d83a344f948b966bb75fd2",
+    "completed_at": "2026-11-04T21:30:15.033326+00:00",
+    "actual_renderer_helpers_enabled": true,
+    "actual_project_diagnostics_enabled": true,
+    "executed": 28,
+    "passed": 28,
+    "failed": 0,
+    "skipped": 0,
+    "targets": {
+      "LabRenderingTests": {
+        "executed": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormMeshAssetsTests": {
+        "executed": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormGeometryTests": {
+        "executed": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormCoreTests": {
+        "executed": 11,
+        "passed": 11,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormCADModelingTests": {
+        "executed": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormCADKernelTests": {
+        "executed": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormAppTests": {
+        "executed": 17,
+        "passed": 17,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "filter": [
+      "ConstructionMaterialSchemaTests",
+      "ObjectViewSourceStateTests",
+      "RenderingBridgeTests",
+      "ConstructionPartCommandsTests"
+    ],
+    "log": {
+      "path": ".local/cycles-materiality-followup/main-integration/focused/regression.log",
+      "sha256": "fd3630dee5d063c0ce3cd35dff22d8dd5ff2ff0536d83a344f948b966bb75fd2"
+    },
+    "record": {
+      "path": ".local/cycles-materiality-followup/main-integration/focused/regression.json",
+      "sha256": "ecaeed126c97364936c1468661cb7e06a2d8e2e38ea31101cdd0cff3afeea4e5"
+    },
+    "source_manifest": {
+      "path": ".local/cycles-materiality-followup/main-integration/focused/source-manifest.json",
+      "sha256": "38b5b95dac2a7f3d4bbf70750008cb9005385ebacd0b8d9557704460a48f50f1"
+    },
+    "verified_source_files": {
+      "Sources/FormApp/PaperGeometry.swift": "14b55d667285d8a14046a7298bb28b909c22d681f391916c50d6da771c6cd9c6",
+      "Tests/FormAppTests/ObjectViewSourceStateTests.swift": "e7c84ee58fe22810533656ca6d51827b3961c3f93513f50d189659ab83f2b362",
+      "Tests/FormCoreTests/ConstructionMaterialSchemaTests.swift": "4a4a1db3da2cd4cb0c13031a6eadbe2f9040e3ad7284d4408723a5a6400d5d1a",
+      "Tests/FormAppTests/RenderingBridgeTests.swift": "43b4d04f22e6d31e88ae087e03857407d80ddbc1332456ae557f13e49af64c3d"
+    }
+  },
+  "real_engine_fixtures": {
+    "enabled_environment": [
+      "LAB_CYCLES_TEST_HELPER",
+      "LAB_CYCLES_TEST_CURVE_UV_HELPER",
+      "LAB_CYCLES_TEST_INIT_FAILURE_HELPER"
+    ],
+    "cpu_helper_sha256": "d0b5cccb0dbf1f160be3267b4d9c5c5f8e3d7eaef48d59b91a82d623ec66e53b",
+    "metal_initialization_failure_helper_sha256": "245d1e61d630b53fff7468f8880b34dde9d5e59639e29b5ed1fc4ec9b2783159",
+    "passed_tests": [
+      "CyclesRenderTests.testActualMetalInitializationFailureRetriesAutoOnceAndPreservesExplicitChoice",
+      "CyclesRenderTests.testBundledCyclesProducesRealProgressiveSurfaceAndCurvePixels",
+      "CyclesRenderTests.testBundledCyclesArtworkAlphaOverPreservesPrintedColor",
+      "CyclesRenderTests.testBundledCyclesIntegerAndFloatingTexturesKeepTheSameTopRow",
+      "CyclesRenderTests.testBundledCyclesDeclaredSRGBMatchesAcrossPrecisionAndEmbeddedProfiles",
+      "CurveTextureTests.testNativeCurveTextureRepeatsAlongPhysicalLengthAndUsesUV1",
+      "SceneSurfaceShellTests.testNativeRendererShowsIndependentReverseAndCutEdge"
+    ],
+    "coverage": "Actual CPU rendering checks progressive frames, curve UVs, artwork alpha composition, declared texture encoding, precision/row order and independent reverse/cut edges. The isolated Metal fixture deliberately fails kernel initialization and verifies one Auto-to-CPU retry plus explicit-Metal failure. Successful relocated CPU/Metal app gates and installed replay are separate evidence."
+  },
+  "actual_project_diagnostics": {
+    "full_table": {
+      "capturedAt": "2026-11-04T21:33:18Z",
+      "physicalObjects": 40,
+      "renderables": 41,
+      "curves": 9,
+      "triangles": 145370,
+      "textureReferences": 220,
+      "uniqueTextures": 83,
+      "decodedTextureBytes": 1053494396,
+      "geometryBytes": 13798056,
+      "totalBudgetBytes": 1067292452,
+      "transferBudgetBytes": 1073741824,
+      "downsampled": false,
+      "manifestSHA256": "641bb6a8a48793b99b989aa329b084eb981944e7b49094c07035259f0afe2bdd",
+      "snapshotRevision": "8941a1d912852f9fe92eb7e3a3838395321f65cecf176c4a85a69399e7134073",
+      "sourceDesignDigest": "bc1e1e917fc8ab7f4c2cb0f944b12610f0beb29e395029e23c4e8407ffbd5ce8",
+      "remainingBudgetBytes": 6449372,
+      "evidence": {
+        "path": ".local/cycles-materiality-followup/main-integration/full-table.json",
+        "sha256": "469365d7ee0a336e2dc2fb87205c89f7f91579a8c4ba1a4ac1d6f1711cb39e6d"
+      }
+    },
+    "attached_program": {
+      "commands": 1547,
+      "sourceStrands": 1214,
+      "completedStrands": 1214,
+      "sourceKeys": 21786,
+      "outputKeys": 21786,
+      "work": 1461529,
+      "maximumWork": 16000000,
+      "elapsedSeconds": 0.14832794666290283,
+      "geometrySHA256": "2631869f953cc8e06203219956aae685c8facbff70bd380ddc054c41cf80bcad",
+      "programDigest": "5e1583f3dc78e1ea92c4e771e950a92f8b06bf42c69a3b86b997c02ce80dcba8",
+      "programFileSHA256": "c7e10176239548a9f5d4bfda5274fb5ca771caf4948c0a624026985445ad209c",
+      "manifestSHA256": "641bb6a8a48793b99b989aa329b084eb981944e7b49094c07035259f0afe2bdd",
+      "evidence": {
+        "path": ".local/cycles-materiality-followup/main-integration/attached-program.json",
+        "sha256": "d56e030bf2890b970efeac5e7b5ca3ec518241568c8b45a05865dad935415dde"
+      }
+    },
+    "privacy": "Project identities, original paths and texture inventories omitted; retained diagnostic digests identify the exact captured source."
+  },
+  "retained_first_attempt": {
+    "status": "failed",
+    "exit_code": 1,
+    "elapsed_seconds": 939.32,
+    "source_files": 1155,
+    "source_unchanged": true,
+    "source_manifest_sha256": "1d3b27845b2a1501b11de2f955f029134a75fe8112766d1207cfe5d0b3b28053",
+    "log_sha256": "337a4308eeba78d9be9424abdfb0a34d366f8ed5f62da73d5e56a75a05b5f9f0",
+    "completed_at": "2026-11-04T21:22:52.818784+00:00",
+    "actual_renderer_helpers_enabled": true,
+    "actual_project_diagnostics_enabled": true,
+    "executed": 2742,
+    "passed": 2737,
+    "failed": 2,
+    "skipped": 3,
+    "targets": {
+      "LabRenderingTests": {
+        "executed": 61,
+        "passed": 61,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormMeshAssetsTests": {
+        "executed": 24,
+        "passed": 24,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormGeometryTests": {
+        "executed": 10,
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormCoreTests": {
+        "executed": 1325,
+        "passed": 1324,
+        "failed": 1,
+        "skipped": 0
+      },
+      "FormCADModelingTests": {
+        "executed": 29,
+        "passed": 29,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormCADKernelTests": {
+        "executed": 12,
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0
+      },
+      "FormAppTests": {
+        "executed": 1281,
+        "passed": 1277,
+        "failed": 1,
+        "skipped": 3
+      }
+    },
+    "record": {
+      "path": ".local/cycles-materiality-followup/main-integration/attempt-1/regression.json",
+      "sha256": "3583a7658dc703184706966c54b6309aa10920c7fc46e122148e80b245169b1a"
+    },
+    "log": {
+      "path": ".local/cycles-materiality-followup/main-integration/attempt-1/regression.log",
+      "sha256": "337a4308eeba78d9be9424abdfb0a34d366f8ed5f62da73d5e56a75a05b5f9f0"
+    },
+    "source_manifest": {
+      "path": ".local/cycles-materiality-followup/main-integration/attempt-1/source-manifest.json",
+      "sha256": "1d3b27845b2a1501b11de2f955f029134a75fe8112766d1207cfe5d0b3b28053"
+    },
+    "resolved_failures": [
+      {
+        "test": "ConstructionMaterialSchemaTests.testEarlierCycles66AndPaper67DecodeAndResaveWithoutLosingSource",
+        "classification": "test_fixture",
+        "cause": "The fixture did not use the construction recipe defaults and referenced a finish target that was not present in its authored artwork. Strict artwork-link validation correctly rejected it.",
+        "fix": "Use ConstructionSourceEditing.recipe and its defaults, include the recipe and a real artwork mark, and explicitly validate artwork links before save.",
+        "path": "Tests/FormCoreTests/ConstructionMaterialSchemaTests.swift",
+        "production_schema_validation_unchanged": true
+      },
+      {
+        "test": "ObjectViewSourceStateTests.testLinkedOutsideInsideAndPhysicalArtworkPlacementIsExcludedFromSourceIdentity",
+        "classification": "production_cache_identity",
+        "cause": "The merged physical source revision included detached inside-artwork canvas placement, so an editor-only move invalidated linked physical source identity.",
+        "fix": "Canonicalize insideArtwork.canvasPosition to nil on the copied geometry definition; retain authored document placement. Warm-cache and cache-miss tests also prove ink and finish changes still invalidate owner and linked-component revisions.",
+        "path": "Sources/FormApp/PaperGeometry.swift",
+        "tests_path": "Tests/FormAppTests/ObjectViewSourceStateTests.swift",
+        "regression_tests": [
+          "testPaperSourceRevisionExcludesDetachedCanvasPlacementWithWarmAndMissedCaches",
+          "testComponentLinkedPaperRevisionIgnoresSourceCanvasPlacementButTracksInkAndFinishes"
+        ]
+      }
+    ]
+  },
+  "post_regression_delivery": {
+    "status": "passed; installed, visually replayed and native save/reopen verified",
+    "installation_record": "main-installation.json",
+    "replay_record": "main-replays.json",
+    "native_record": "main-native.json"
+  }
+}

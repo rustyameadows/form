@@ -31,6 +31,32 @@ final class ConstructionPartCommandsTests:XCTestCase {
     engine.undo();XCTAssertEqual(engine.project!.objects,before.objects);XCTAssertEqual(engine.project!.recipes,before.recipes)
     engine.redo();XCTAssertEqual(engine.project?.objects.first?.id,id)
   }
+  func testPartStockOpticsAndFinishShouldersSurviveStrictImportAndUndo()throws {
+    let engine=try engine(),before=engine.project!
+    var starter=try fixture(),edge=PhysicalAppearance()
+    edge.sheen=0.18
+    starter.definition.components![0].stock!.profile!.edgeAppearance=edge
+    let elementID=try XCTUnwrap(starter.artworkSources.first?.artwork.elements.first?.id)
+    var finish=PaperFinishAssignment(name:"Raised ink",kind:.emboss,elementIDs:[elementID])
+    finish.heightMM=0.12;finish.shoulderRadiusMM=0.16
+    starter.definition.components![0].finishes=[finish]
+    let raw=try XCTUnwrap(jsonObject(starter) as? [String:Any])
+    var invalid=raw,definition=try XCTUnwrap(raw["definition"] as? [String:Any])
+    var parts=try XCTUnwrap(definition["components"] as? [[String:Any]])
+    var stock=try XCTUnwrap(parts[0]["stock"] as? [String:Any]),profile=try XCTUnwrap(stock["profile"] as? [String:Any])
+    profile["edgeAppearance"]=["unknownOptics":1];stock["profile"]=profile;parts[0]["stock"]=stock
+    definition["components"]=parts;invalid["definition"]=definition
+    XCTAssertThrowsError(try engine.call("form_construction",arguments:["command":"add_starter","starter":invalid]))
+    XCTAssertEqual(engine.project,before);XCTAssertTrue(engine.undoStack.isEmpty)
+    _ = try engine.call("form_construction",arguments:["command":"add_starter","starter":raw])
+    let part=try XCTUnwrap(engine.project!.objects.first?.paperConstruction?.authored?.components?.first)
+    XCTAssertEqual(part.stock?.profile?.edgeAppearance,edge)
+    XCTAssertEqual(part.finishes?.first?.shoulderRadiusMM,0.16)
+    XCTAssertEqual(part.finishes?.first?.heightMM,0.12)
+    let accepted=engine.project!
+    engine.undo();XCTAssertEqual(engine.project!.objects,before.objects)
+    engine.redo();XCTAssertEqual(engine.project!.objects,accepted.objects)
+  }
   func testUnknownNestedV4FieldsRejectBeforePublication()throws {
     let engine=try engine(),before=engine.project!,raw=try XCTUnwrap(jsonObject(fixture().definition) as? [String:Any])
     var invalid=[[String:Any]]()

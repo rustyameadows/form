@@ -14,6 +14,8 @@ struct EmbroideryEditor:View {
   @State private var dirty=true
   @State private var showJumps=true
   @State private var through=0.0
+  private struct ThreadAppearanceDraft:Identifiable {let index:Int,thread:EmbroideryThread;var id:Int {index}}
+  @State private var appearanceDraft:ThreadAppearanceDraft?
   init(object:ProductObject,project:Project) {
     objectID=object.id
     _draft=State(initialValue:object.textile?.embroidery ?? (try? EmbroideryDigitizer.defaultDesign(object:object,project:project)) ?? .init(threads:[.init(name:"Thread 1",color:"#E8E1CD")],regions:[]))
@@ -74,6 +76,8 @@ struct EmbroideryEditor:View {
                   if draft.threads[index].stock != nil {Divider();Button("Unlink stock snapshot") {draft.threads[index].stock=nil}}
                 }
                 InspectorColorPicker("Color",selection:Binding(get:{Color(nsColor:NSColor(hex:draft.threads[index].color))},set:{draft.threads[index].color=NSColor($0).hexString}),supportsOpacity:false).disabled(draft.threads[index].stock != nil)
+                WorkspaceToolbarButton("Physical thread appearance…",symbol:"slider.horizontal.3",showsTitle:true,
+                  identifier:"thread-physical-appearance-\(index)") {appearanceDraft = .init(index:index,thread:draft.threads[index])}
                 HStack {
                   TextField("Brand",text:Binding(get:{draft.threads[index].brand ?? ""},set:{draft.threads[index].brand=$0.isEmpty ? nil:$0}))
                   TextField("Catalog",text:Binding(get:{draft.threads[index].catalog ?? ""},set:{draft.threads[index].catalog=$0.isEmpty ? nil:$0}))
@@ -96,10 +100,21 @@ struct EmbroideryEditor:View {
       if !error.isEmpty {Text(error).font(.system(size:11)).foregroundStyle(Palette.ink).fixedSize(horizontal:false,vertical:true)}
       HStack {
         Button("Remove digitizing settings") {remove()}.disabled(object?.textile?.embroidery==nil)
-        Spacer();Button("Save embroidery") {_ = apply()}.buttonStyle(.borderedProminent).tint(Palette.ink).keyboardShortcut(.defaultAction)
+        Spacer();CanvasGenerationActionButton(title:"Save embroidery",enabled:true,action:{_ = apply()},
+          identifier:"embroidery-save",prominent:false,keyEquivalent:"\r")
       }
     }.padding(26).frame(width:1080,height:780).background(Palette.paper)
       .onAppear {rebuild()}.onChange(of:draft) {_,value in dirty=program?.design != value}
+      .sheet(item:$appearanceDraft) {target in
+        PhysicalAppearanceDraftEditor(title:"Thread appearance",subtitle:target.thread.name,
+          appearance:target.thread.appearance,fallback:target.thread.resolvedAppearance,
+          roughness:target.thread.roughness,showsRoughness:true,supportsDisplacement:false) {value,roughness in
+          guard draft.threads.indices.contains(target.index),draft.threads[target.index]==target.thread else {
+            throw FormError.invalid("This thread changed while the appearance editor was open. Cancel and reopen it.")
+          }
+          draft.threads[target.index].appearance=value;draft.threads[target.index].roughness=roughness
+        }.environmentObject(store)
+      }
   }
   private func number(_ label:String,_ binding:Binding<Double>)->some View {
     HStack {Text(label);Spacer();TextField(label,value:binding,format:.number.precision(.fractionLength(0...2)))

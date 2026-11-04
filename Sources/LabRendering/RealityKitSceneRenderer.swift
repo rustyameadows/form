@@ -334,7 +334,7 @@ import simd
   }
   private func cacheMaterial(_ material:any RealityKit.Material,key:String){materialCache[key]=material;touch(key,in:&materialOrder);while materialOrder.count>512{materialCache.removeValue(forKey:materialOrder.removeFirst())}}
   func texture(_ value:SceneTexturePayload,semantic:TextureResource.Semantic)throws->MaterialParameters.Texture {
-    guard value.image.width<=8192,value.image.height<=8192,value.image.width*value.image.height<=16_000_000,!value.revision.isEmpty else{throw SceneRendererError.invalidTexture("Textures need an immutable revision and at most 16 MP / 8192 pixels per edge.")}
+    guard value.image.width<=8192,value.image.height<=8192,value.image.width*value.image.height<=16_777_216,!value.revision.isEmpty else{throw SceneRendererError.invalidTexture("Textures need an immutable revision and at most 16 MP / 8192 pixels per edge.")}
     guard value.uvIndex==0 else{throw SceneRendererError.invalidTexture("The current procedural renderer supports UV0. Bake the requested UV set explicitly; its source remains retained.")}
     try value.sampling.validate()
     let useMipmaps=value.sampling.mip != .none

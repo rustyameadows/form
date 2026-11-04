@@ -11,6 +11,7 @@ if [ -f "$lab_sdk_cpp_headers/type_traits" ]; then
 fi
 unset lab_sdk_cpp_headers
 python3 scripts/occt-patches.py verify "${LAB_OCCT_ROOT:-$PWD/.local/engines/occt-8.0.1-form-gprop2}"
+python3 scripts/package-cycles.py --verify "${LAB_CYCLES_ROOT:-$PWD/.local/engines/cycles-3eb35f85996b}"
 app_path="${LAB_BUILD_APP_PATH:-$PWD/build/LAB.app}"
 legacy_path="$PWD/build/FORM.app"
 # Never replace a live executable. Custom candidate builds leave the installed app alone.
@@ -40,6 +41,7 @@ cp Sources/CFormMesher/LICENSE "$bundle/Contents/Resources/ThirdPartyNotices/Ear
 cp Sources/CFormFigmaCompression/LICENSE "$bundle/Contents/Resources/ThirdPartyNotices/Zstd-BSD.txt"
 cp Resources/ThirdPartyNotices/FigmaClipboardReferences.txt "$bundle/Contents/Resources/ThirdPartyNotices/FigmaClipboardReferences.txt"
 python3 scripts/package-occt.py "$bundle" "${LAB_OCCT_ROOT:-$PWD/.local/engines/occt-8.0.1-form-gprop2}"
+python3 scripts/package-cycles.py "$bundle" "${LAB_CYCLES_ROOT:-$PWD/.local/engines/cycles-3eb35f85996b}"
 python3 scripts/package-mcp.py "$bundle" "$configuration"
 swift Resources/Icon.swift "$stage/LAB.iconset"
 iconutil -c icns "$stage/LAB.iconset" -o "$bundle/Contents/Resources/LAB.icns"

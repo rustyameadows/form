@@ -45,6 +45,9 @@ public struct Material: Codable, Equatable, Identifiable, Sendable {
   public var thickness: Double
   public var fabric: FabricProfile?
   public var paperStock: PaperStock?
+  public var appearance: PhysicalAppearance?
+  public var backSurface: MaterialSurfaceResponse?
+  public var references: [MaterialReference]?
   public init(
     _ id: String, _ name: String, _ category: String, _ color: String, roughness: Double = 0.65,
     metallic: Double = 0, thickness: Double = 0.3
@@ -423,8 +426,9 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
-  public static let maximumSchemaVersion=66
+  public static let maximumSchemaVersion=68
   public var schemaVersion = 1
+  public var renderSettings:CyclesRenderSettings?
   public var id: UUID = UUID()
   public var name: String
   public var subtitle: String
@@ -463,6 +467,8 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
     return required
   }
   private var requiredResourceSchemaVersion:Int {
+    if materials.contains(where:{$0.paperStock?.usesCutEdgeAppearance == true}) {return 68}
+    if renderSettings != nil || materials.contains(where:{$0.usesPhysicalAppearance}) || studioPresentation?.shots.contains(where:{$0.renderSettings != nil}) == true || studioPresentation?.scenes?.contains(where:{$0.renderSettings != nil}) == true {return 67}
     if studioPresentation?.scenes?.contains(where:{$0.instances.contains(where:{$0.paperPose != nil})}) == true {return 66}
     if studioPresentation?.scenes?.contains(where:{$0.instances.contains(where:{$0.sheetPose?.bindingStyle == .adhesive || $0.sheetPose?.bindingStyle == .sewn})}) == true {return 65}
     if textStories?.contains(where:{$0.annotations?.isEmpty==false})==true {return 64}
@@ -528,6 +534,8 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
 /// classification; document validation still runs through the editing engine.
 extension ProductObject {
   fileprivate var requiredObjectSchemaVersion:Int {
+    if usesPaperMateriality {return 68}
+    if usesPhysicalAppearance {return 67}
     let paper=paperConstruction
     if (paper?.authored?.version ?? 0)>=4 || paper?.explosionPercent != nil {return 66}
     if dimensionBindings != nil || artworkRegions != nil || sheetAssembly?.requiresAdvancedStructureSchema == true || paper?.authored?.panels.contains(where:{$0.features != nil}) == true {return 65}

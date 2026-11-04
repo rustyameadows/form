@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Explicit LAB optical diagnostic reviews",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "rounds"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "project_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "rounds": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "view",
+          "attempt",
+          "outcome",
+          "source_png_sha256",
+          "reviewer",
+          "observations",
+          "discrepancies",
+          "next_change",
+          "diagnostic"
+        ],
+        "properties": {
+          "view": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "attempt": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "outcome": {
+            "enum": [
+              "pending",
+              "passed",
+              "needs_changes",
+              "failed"
+            ]
+          },
+          "source_png_sha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "reviewer": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "reviewed_at": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "observations": {
+            "type": "array",
+            "maxItems": 40,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
+          },
+          "discrepancies": {
+            "type": "array",
+            "maxItems": 40,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
+          },
+          "next_change": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "diagnostic": {
+            "type": "string",
+            "maxLength": 100
+          }
+        }
+      }
+    }
+  },
+  "description": "Passed and needs_changes decisions require explicit actual observations and an exact completed LAB PNG hash. Passed optical controls do not accept manufacturer-reference material cases. A changed camera or lighting control must be reviewed as such. Never infer a visual result from render success."
+}

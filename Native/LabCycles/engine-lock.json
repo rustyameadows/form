@@ -1,0 +1,10 @@
+{
+  "source_url": "https://github.com/blender/cycles.git",
+  "source_commit": "3eb35f85996baa6c1b2e19bf297b22745c85e321",
+  "dependency_url": "https://projects.blender.org/blender/lib-macos_arm64.git",
+  "dependency_commit": "7d74150064b3263092281b269c6b62b891001fcb",
+  "architecture": "arm64",
+  "deployment_target": "15.0",
+  "protocol_version": 1,
+  "display_transform": "LAB-sRGB-v1"
+}

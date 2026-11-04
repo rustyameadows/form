@@ -39,7 +39,10 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     return false
   }
   private(set) static var fontRevision = 0
-  static func invalidateFontResources() {
+  static func invalidateFontResources() {invalidateRenderingResources()}
+  /// This existing generation is part of all dependent artwork/material keys.
+  /// Fonts and explicit capture asset changes share the same invalidation.
+  static func invalidateRenderingResources() {
     cache.removeAllObjects()
     artworkImages.removeAllObjects()
     EmbroiderySurface.invalidate()
@@ -56,13 +59,14 @@ private func mm(_ value:Double)->CGFloat {CGFloat(value/100)}
     let preset = project.material(object.materialID)
     let result = MeshMaterial()
     result.lightingModel = .physicallyBased
-    if ["Wood", "Paper", "Fabric"].contains(preset.category) {
+    if preset.appearance == nil && ["Wood", "Paper", "Fabric"].contains(preset.category) {
       result.diffuse.contents = surfaceImage(preset.category, color: object.color ?? preset.color)
     } else {
       result.diffuse.contents = NSColor(hex: object.color ?? preset.color)
     }
     result.roughness.contents = preset.roughness
     result.metalness.contents = preset.metallic
+    result.physicalAppearance=preset.appearance?.meshAppearance(surfaceSizeMM:object.artworkSize)
     return result
   }
   private static func surfaceImage(_ category: String, color: String) -> NSImage {

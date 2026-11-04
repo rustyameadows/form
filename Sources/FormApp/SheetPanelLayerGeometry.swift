@@ -56,6 +56,7 @@ import simd
           var value=stock(plane.stock,thickness:low-high);value.plies=nil;value.name=ply.name
           value.gsm=ply.gsm ?? plane.stock.gsm
           var profile=ply.profile ?? plane.stock.profile ?? PaperSurfaceProfile()
+          if profile.edgeAppearance == nil {profile.edgeAppearance=plane.stock.profile?.edgeAppearance}
           profile.color=ply.profile?.color ?? ply.color;value.profile=profile;return value
         };depth=end
       };return stock(plane.stock,thickness:low-high)

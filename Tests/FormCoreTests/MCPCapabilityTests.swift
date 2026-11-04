@@ -75,6 +75,38 @@ final class MCPCapabilityTests: XCTestCase {
     XCTAssertLessThan(try json(result).count, MCPCapabilities.maximumResponseBytes)
   }
 
+  func testNestedPhysicalDictionaryStaysExactAndRejectsUnknownFields()throws {
+    let properties=try dictionary(PhysicalAppearance.toolSchema["properties"]),textures=try dictionary(properties["textures"])
+    XCTAssertEqual(try dictionary(textures["propertyNames"])["enum"] as? [String],PhysicalTextureChannel.allCases.map(\.rawValue))
+    XCTAssertEqual(textures["maxProperties"] as? Int,PhysicalTextureChannel.allCases.count)
+    let descriptor=try dictionary(textures["additionalProperties"])
+    XCTAssertEqual(descriptor["required"] as? [String],["asset","sha256"])
+    let texture:[String:Any]=["asset":"surface.png","sha256":String(repeating:"a",count:64),"colorSpace":"data"]
+    var stock=try dictionary(jsonObject(PaperStock()))
+    stock["profile"] = try jsonObject(PaperSurfaceProfile())
+    var profile=try dictionary(stock["profile"])
+    let invalidMaps:[[String:Any]]=[["unknownChannel":texture],["normal":texture.merging(["typo":1]){_,new in new}],["normal":["asset":"surface.png"]]]
+    let advertisedProfile=try dictionary(dictionary(PublicationPhysicalToolSchema.stock["properties"])["profile"])
+    let advertised=try dictionary(advertisedProfile["properties"])
+    func constraints(_ value:Any)->Any {
+      if let object=value as? [String:Any] {return object.filter{$0.key != "description"}.mapValues(constraints)}
+      if let array=value as? [Any] {return array.map(constraints)}
+      return value
+    }
+    for field in ["appearance","edgeAppearance"] {
+      XCTAssertEqual(try json(constraints(try XCTUnwrap(advertised[field]))),try json(constraints(PhysicalAppearance.toolSchema)),"Compaction must retain every bound, default, required field and dictionary constraint.")
+      for channel in PhysicalTextureChannel.allCases {
+        profile[field]=["textures":[channel.rawValue:texture]];stock["profile"]=profile
+        XCTAssertNoThrow(try PublicationPhysicalToolSchema.validateFields(stock,schema:PublicationPhysicalToolSchema.stock,path:"stock"))
+      }
+      for invalid in invalidMaps {
+        profile[field]=["textures":invalid];stock["profile"]=profile
+        XCTAssertThrowsError(try PublicationPhysicalToolSchema.validateFields(stock,schema:PublicationPhysicalToolSchema.stock,path:"stock"))
+      }
+      profile.removeValue(forKey:field)
+    }
+  }
+
   func testInvalidDiscoveryArgumentsRejectWithoutTruncationOrUnknownFallback() throws {
     let invalid: [[String: Any]] = [
       ["command": "schema", "tool_names": []],

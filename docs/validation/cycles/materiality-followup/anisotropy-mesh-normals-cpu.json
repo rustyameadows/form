@@ -1,0 +1,50 @@
+{
+  "device": "cpu",
+  "helperSHA256": "d0b5cccb0dbf1f160be3267b4d9c5c5f8e3d7eaef48d59b91a82d623ec66e53b",
+  "comparisons": {
+    "uv0-rotation90": {
+      "maximumByteError": 0,
+      "checkedChannels": 6912
+    },
+    "uv0-negative-scale": {
+      "maximumByteError": 0,
+      "checkedChannels": 6912
+    },
+    "uv0-nonuniform-rotation": {
+      "maximumByteError": 0,
+      "checkedChannels": 6912
+    },
+    "uv0-mirrored-repeat": {
+      "maximumByteError": 0,
+      "checkedChannels": 324
+    },
+    "uv1-rotation90": {
+      "maximumByteError": 0,
+      "checkedChannels": 6912
+    },
+    "uv1-negative-scale": {
+      "maximumByteError": 0,
+      "checkedChannels": 6912
+    },
+    "uv1-nonuniform-rotation": {
+      "maximumByteError": 0,
+      "checkedChannels": 6912
+    },
+    "uv1-mirrored-repeat": {
+      "maximumByteError": 0,
+      "checkedChannels": 324
+    },
+    "reversed-UV1-basis": {
+      "maximumByteError": 0,
+      "checkedChannels": 6912
+    },
+    "UV1-vertical-basis": {
+      "maximumByteError": 0,
+      "checkedChannels": 6912
+    }
+  },
+  "failures": [],
+  "uv0ReferenceMeanDifference": 49.87934027777778,
+  "uv1ReferenceMeanDifference": 49.87934027777778,
+  "status": "passed"
+}

@@ -1,0 +1,291 @@
+{
+  "status": "passed",
+  "scope": "Read-only comparison of native-interaction captures from the installed ordinary LAB. Complete selected objects or renderSettings were compared; uncaptured project sections are not claimed to be checked here.",
+  "build": {
+    "source_revision": "2477730f99777ee9f9092c9245e6c836ba290f15",
+    "build_id": "sha256:a6be976d90a2f1d2fe006a4226c373deda2d723a96a508981eab347ea6bbbb66",
+    "installed_at": "2026-11-04T19:36:50.950243+00:00",
+    "signed_files_sha256": {
+      "Contents/MacOS/LAB": "8f6b0599bb4943883a05631ff4ef47dffa1789698e9361b463e03ac1434b5624",
+      "Contents/MacOS/lab-mcp": "c15b826765553f7d4936734dbf8410303f74725e10efdb776dad3b479ebeee37",
+      "Contents/Helpers/lab-cycles-render": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+      "Contents/Resources/LABBuild.json": "70625a6eb0ffa78387386d9ccde9196d7bfc808d096b381c44f97fe7aa762f5d",
+      "Contents/Resources/ThirdPartyNotices/Cycles/LAB-CYCLES-PROVENANCE.json": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa"
+    },
+    "installation_evidence": {
+      "path": ".local/cycles-materiality-followup/installed.json",
+      "sha256": "dfba6d1d07a815084537861613fbd35a05a92451a141d158227e926a70155e16"
+    },
+    "candidate_evidence": {
+      "path": ".local/cycles-materiality-followup/candidate-identity.json",
+      "sha256": "fd8303c6963206fed27b67ee5785a04baeb8ac4939f4ea34a32eae66be1bda44"
+    }
+  },
+  "interactions": {
+    "edge": {
+      "section": "objects",
+      "complete_section_captures": true,
+      "same_project_and_camera": true,
+      "only_apply_deltas": [
+        {
+          "path": "/0/paperConstruction/stock/profile/edgeAppearance/normalStrength",
+          "operation": "replace",
+          "before": 0.25,
+          "after": 0.5
+        }
+      ],
+      "other_captured_fields_unchanged": true,
+      "states": {
+        "before": {
+          "evidence": {
+            "path": ".local/cycles-materiality-followup/native-edge-before.json",
+            "sha256": "8932ceb413ff7b1ecff62037aa93f65bcbc8e9818102dad3870eba640d50b212"
+          },
+          "canonical_section_sha256": "87f3c28cc9d13b508f0f8ca2d681412b3ca2473e58c4e56bc84dc676d8b01f5b",
+          "equals_before": true,
+          "equals_applied": false
+        },
+        "cancel": {
+          "evidence": {
+            "path": ".local/cycles-materiality-followup/native-edge-cancel.json",
+            "sha256": "8932ceb413ff7b1ecff62037aa93f65bcbc8e9818102dad3870eba640d50b212"
+          },
+          "canonical_section_sha256": "87f3c28cc9d13b508f0f8ca2d681412b3ca2473e58c4e56bc84dc676d8b01f5b",
+          "equals_before": true,
+          "equals_applied": false
+        },
+        "apply": {
+          "evidence": {
+            "path": ".local/cycles-materiality-followup/native-edge-apply.json",
+            "sha256": "6427b27636c44075338bc503ca83cc09e56242d613ea2ef8b4c79a636f10beb5"
+          },
+          "canonical_section_sha256": "7b14a8d3d30aabc0a7ac854bea442491c8345b0a8f6c734f4a8dd05aa0db4921",
+          "equals_before": false,
+          "equals_applied": true
+        },
+        "undo": {
+          "evidence": {
+            "path": ".local/cycles-materiality-followup/native-edge-undo.json",
+            "sha256": "84e8d9b7e8790efb2cf8920a0d6997f351bd93426db552cffd0d1acf4ca1ed44"
+          },
+          "canonical_section_sha256": "87f3c28cc9d13b508f0f8ca2d681412b3ca2473e58c4e56bc84dc676d8b01f5b",
+          "equals_before": true,
+          "equals_applied": false
+        },
+        "redo": {
+          "evidence": {
+            "path": ".local/cycles-materiality-followup/native-edge-redo.json",
+            "sha256": "fc0416c046e7f55414cbf3ac20e02e1861e78e4002a9889b6d2af9b8554f3359"
+          },
+          "canonical_section_sha256": "7b14a8d3d30aabc0a7ac854bea442491c8345b0a8f6c734f4a8dd05aa0db4921",
+          "equals_before": false,
+          "equals_applied": true
+        }
+      }
+    },
+    "shoulder": {
+      "section": "objects",
+      "complete_section_captures": true,
+      "same_project_and_camera": true,
+      "only_apply_deltas": [
+        {
+          "path": "/0/paperConstruction/finishes/0/shoulderRadiusMM",
+          "operation": "replace",
+          "before": 0.08,
+          "after": 0.16
+        }
+      ],
+      "other_captured_fields_unchanged": true,
+      "states": {
+        "before": {
+          "evidence": {
+            "path": ".local/cycles-materiality-followup/native-shoulder-before.json",
+            "sha256": "9a6844b7b8938c39d629c4305ddd5821b5f790c3304540740ec18f42a3aa3a62"
+          },
+          "canonical_section_sha256": "19a6fbc68466e1cbb788b159e0e1b525f70c05e68a940280a0a8b4a6ded4ec5a",
+          "equals_before": true,
+          "equals_applied": false
+        },
+        "apply": {
+          "evidence": {
+            "path": ".local/cycles-materiality-followup/native-shoulder-apply.json",
+            "sha256": "83db6b5df5fde9a3f92cb2462e299bbca64a64812fe678d311f51372a36e3261"
+          },
+          "canonical_section_sha256": "5801019f578f5fc3c0068c482a029bc9aaf4747cb3d83dc7a71d0be81bf18128",
+          "equals_before": false,
+          "equals_applied": true
+        },
+        "undo": {
+          "evidence": {
+            "path": ".local/cycles-materiality-followup/native-shoulder-undo.json",
+            "sha256": "b952b6c5d95a6a7c03ab0af7865f21d2877ac7a6b69e536503a1c8e45be4ed4a"
+          },
+          "canonical_section_sha256": "19a6fbc68466e1cbb788b159e0e1b525f70c05e68a940280a0a8b4a6ded4ec5a",
+          "equals_before": true,
+          "equals_applied": false
+        }
+      }
+    },
+    "lights": {
+      "section": "renderSettings",
+      "complete_section_captures": true,
+      "same_project_and_camera": true,
+      "only_apply_deltas": [
+        {
+          "path": "/areaLights",
+          "operation": "add",
+          "after": [
+            {
+              "color": "#FFFFFF",
+              "positionMM": {
+                "x": -600,
+                "y": 1200,
+                "z": 700
+              },
+              "powerWatts": 7.764705882352941,
+              "shape": "rectangle",
+              "sizeMM": {
+                "x": 500,
+                "y": 500
+              },
+              "targetMM": {
+                "x": -560.3508839726946,
+                "y": 1120.7017679453893,
+                "z": 653.7426979681437
+              }
+            },
+            {
+              "color": "#FFFFFF",
+              "positionMM": {
+                "x": 800,
+                "y": 700,
+                "z": -500
+              },
+              "powerWatts": 2.75,
+              "shape": "rectangle",
+              "sizeMM": {
+                "x": 700,
+                "y": 700
+              },
+              "targetMM": {
+                "x": 731.8994775393002,
+                "y": 640.4120428468876,
+                "z": -457.43717346206256
+              }
+            }
+          ],
+          "exact_value_sha256": "9518a24f15e5fc5c02366294ebbddb6886691408c494b5d45888606efa157abe",
+          "omitted_fields": "Opaque light IDs omitted from public values; exact list including IDs covered by hash."
+        }
+      ],
+      "other_captured_fields_unchanged": true,
+      "states": {
+        "before": {
+          "evidence": {
+            "path": ".local/cycles-materiality-followup/native-lights-before.json",
+            "sha256": "ffa831a1fa26d6fc6636871b9b13461e452c102310b7b7b2544730e6e3f106e2"
+          },
+          "canonical_section_sha256": "e80c6b4912ba592e58a919d9b0da5aa804140e15392c31b032553c678398286a",
+          "equals_before": true,
+          "equals_applied": false
+        },
+        "apply": {
+          "evidence": {
+            "path": ".local/cycles-materiality-followup/native-lights-apply.json",
+            "sha256": "a8672b07aee9a3954508fc624b94ea95f3f9855cbc28440448476178f754d0bb"
+          },
+          "canonical_section_sha256": "354f5045596476ead1c9bf33de493259867fac5f8c294fe0126f0b14c9225b2f",
+          "equals_before": false,
+          "equals_applied": true
+        },
+        "undo": {
+          "evidence": {
+            "path": ".local/cycles-materiality-followup/native-lights-undo.json",
+            "sha256": "ced4a01c0232418040364a87512fa936a89e7d280e72177923fcc4102479aff7"
+          },
+          "canonical_section_sha256": "e80c6b4912ba592e58a919d9b0da5aa804140e15392c31b032553c678398286a",
+          "equals_before": true,
+          "equals_applied": false
+        }
+      }
+    }
+  },
+  "visual_material_acceptance": "Completed separately in paper-visual-review.json; this record retains its earlier 39-object native checks.",
+  "screenshots": {
+    "native-edge-texture.png": {
+      "sha256": "a0e42c29acfb3ff86320d638dff0fb68564efe646a8f95aac81eeba2bafa6389",
+      "source_evidence": {
+        "path": ".local/cycles-materiality-followup/native-edge-texture.png",
+        "sha256": "a0e42c29acfb3ff86320d638dff0fb68564efe646a8f95aac81eeba2bafa6389"
+      },
+      "unaltered_copy": true
+    },
+    "native-lights-converted.png": {
+      "sha256": "8fcf528ee0619428b5a1851250b6365c3512cfe4399d7c324c622c46b98dd097",
+      "source_evidence": {
+        "path": ".local/cycles-materiality-followup/native-lights-converted.png",
+        "sha256": "8fcf528ee0619428b5a1851250b6365c3512cfe4399d7c324c622c46b98dd097"
+      },
+      "unaltered_copy": true
+    },
+    "native-table-rendered.png": {
+      "path": "docs/validation/cycles/materiality-followup/native-table-rendered.png",
+      "sha256": "896e979d5250a8e5916edd793b3dd1f72a4c688c8c5f130f2d068c60cc071dea",
+      "source_evidence": {
+        "path": ".local/cycles-materiality-followup/native-table-rendered.png",
+        "sha256": "896e979d5250a8e5916edd793b3dd1f72a4c688c8c5f130f2d068c60cc071dea"
+      },
+      "unaltered_copy": true
+    }
+  },
+  "save_and_reopen": {
+    "status": "passed",
+    "selected_objects": 2,
+    "complete_object_arrays_exactly_equal": true,
+    "before": {
+      "path": ".local/cycles-materiality-followup/native-pre-reopen.json",
+      "sha256": "3f89712afffa1e4d4db7888405e30290db3ecf7655874fc626be646ffb150d5a"
+    },
+    "after": {
+      "path": ".local/cycles-materiality-followup/native-post-reopen.json",
+      "sha256": "9d9e634f757f05f50d76e58938392d90689c876847990a8835235ec86ea82058"
+    },
+    "canonical_objects_sha256": "79d7e560aefd65c3ad75d0da589dc5ba373d07ccb36d7450b113170b3349928f",
+    "scope": "Two complete comparison object records, including paper definitions, persisted unchanged across save/reopen."
+  },
+  "original_project_preservation": {
+    "status": "passed",
+    "same_project_identity": true,
+    "field_count": 11,
+    "exact_fields": {
+      "objects": true,
+      "materials": true,
+      "recipes": true,
+      "notes": true,
+      "camera": true,
+      "studioPresentation": true,
+      "renderSettings": true,
+      "publications": true,
+      "textStories": true,
+      "fontLibrary": true,
+      "textStyles": true
+    },
+    "scope": "Private project values and identifiers are intentionally omitted. Equality was checked directly against retained original-project.json and native-checks-original.json; no private JSON or screenshots copied. Front-cover canvas restoration was observed by the root operator, not inferred from these document fields."
+  },
+  "native_table_preview": {
+    "status": "observed_pass",
+    "observed_by": "root operator during the ordinary installed app session",
+    "first_completion": {
+      "sample": 64,
+      "device": "metal"
+    },
+    "zoom_cycle": "Zoom restarted Preparing and then completed again at 64 samples on Metal.",
+    "second_completion": {
+      "sample": 64,
+      "device": "metal"
+    },
+    "screenshot": "native-table-rendered.png",
+    "limitations": "No progress video or persisted scene hash was captured for this UI observation. Screenshot hashes identify the evidence image, not a renderer scene or execution trace.",
+    "displayed_object_count": 39
+  }
+}

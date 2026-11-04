@@ -45,8 +45,17 @@ public final class MeshMaterial:NSObject,NSCopying {
   public var diffuse=MeshMaterialProperty(),normal=MeshMaterialProperty(),roughness=MeshMaterialProperty(),metalness=MeshMaterialProperty(),emission=MeshMaterialProperty(),transparent=MeshMaterialProperty()
   public var isDoubleSided=false,readsFromDepthBuffer=true,writesToDepthBuffer=true
   public var transparency=1.0
+  public var physicalAppearance:MeshPhysicalAppearance?
+  public var physicalBaseColor=MeshMaterialProperty(),artwork=MeshMaterialProperty(),physicalNormal=MeshMaterialProperty(),physicalRoughness=MeshMaterialProperty(),physicalMetalness=MeshMaterialProperty()
+  public var physicalLayers:[MeshPhysicalMaterialLayer]=[]
+  /// A bounded physical representation may reject export while Fast stays usable.
+  public var physicalValidationIssue:String?
+  /// Optional viewing shell for open material surfaces; source/fabrication
+  /// geometry stays on its authored center surface. Length is millimeters.
+  public var physicalThicknessMM:Double=0
+  public var physicalBackMaterial:MeshMaterial?
   public override init(){super.init()}
-  public func copy(with zone:NSZone?=nil)->Any {let m=MeshMaterial();m.name=name;m.lightingModel=lightingModel;m.transparencyMode=transparencyMode;m.diffuse=diffuse.clone();m.normal=normal.clone();m.roughness=roughness.clone();m.metalness=metalness.clone();m.emission=emission.clone();m.transparent=transparent.clone();m.isDoubleSided=isDoubleSided;m.readsFromDepthBuffer=readsFromDepthBuffer;m.writesToDepthBuffer=writesToDepthBuffer;m.transparency=transparency;return m}
+  public func copy(with zone:NSZone?=nil)->Any {let m=MeshMaterial();m.name=name;m.lightingModel=lightingModel;m.transparencyMode=transparencyMode;m.diffuse=diffuse.clone();m.normal=normal.clone();m.roughness=roughness.clone();m.metalness=metalness.clone();m.emission=emission.clone();m.transparent=transparent.clone();m.isDoubleSided=isDoubleSided;m.readsFromDepthBuffer=readsFromDepthBuffer;m.writesToDepthBuffer=writesToDepthBuffer;m.transparency=transparency;m.physicalAppearance=physicalAppearance;m.physicalBaseColor=physicalBaseColor.clone();m.artwork=artwork.clone();m.physicalNormal=physicalNormal.clone();m.physicalRoughness=physicalRoughness.clone();m.physicalMetalness=physicalMetalness.clone();m.physicalLayers=physicalLayers.map{.init(mask:$0.mask.clone(),appearance:$0.appearance,roughness:$0.roughness,metallic:$0.metallic)};m.physicalValidationIssue=physicalValidationIssue;m.physicalThicknessMM=physicalThicknessMM;m.physicalBackMaterial=physicalBackMaterial?.copy() as? MeshMaterial;return m}
 }
 public final class MeshGeometrySource:NSObject {
   public enum Semantic {case vertex,normal,texcoord}

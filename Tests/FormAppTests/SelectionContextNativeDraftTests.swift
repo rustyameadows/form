@@ -150,6 +150,8 @@ import XCTest
     }.value
     let value = try XCTUnwrap(result)
     let inspections:[(String,[String:Any])]=[
+      ("form_get_project",["view":"summary"]),
+      ("form_get_project",["view":"scoped","sections":["objects"],"object_ids":[frame.id.uuidString]]),
       ("form_capabilities",["command":"schema","tool_names":["form_publication"]]),
       ("form_publication",["command":"preflight","publication_id":publication.uuidString]),
       ("form_publication",["command":"sheet_assembly_inspect","object_id":physical.uuidString]),
@@ -159,6 +161,14 @@ import XCTest
         try LocalBridgeClient.call(name,arguments:arguments,socketPath:socket)
       }.value
       XCTAssertNotNil(inspected as? [String:Any],"Native read-only route must accept \(name) without ending marked text")
+    }
+    for arguments:[String:Any] in [
+      ["project_id":project.id.uuidString,"view":"scoped","sections":["objects"],"object_ids":[UUID().uuidString]],
+      ["project_id":project.id.uuidString,"view":"invalid"]] {
+      do {
+        _=try await Task.detached {try LocalBridgeClient.call("form_open_project",arguments:arguments,socketPath:socket)}.value
+        XCTFail("An invalid open projection must preserve the mounted marked-text draft before field commits")
+      }catch{}
     }
     let navigation=try XCTUnwrap(PublicationPreflightTarget(issue:["object_id":frame.id.uuidString,"element_id":element.id.uuidString],
       projectID:project.id,publicationID:publication))

@@ -39,11 +39,12 @@ public struct StudioShot:Codable,Equatable,Identifiable,Sendable {
   public var surface:String = "Daylight"
   public var visibility=StudioVisibility()
   public var pixels=StudioPixels()
+  public var renderSettings:CyclesRenderSettings?
   public init(name:String,camera:CameraState,referenceAspect:Double) {self.name=name;self.camera=camera;self.referenceAspect=referenceAspect}
   public func validate()throws {
     guard !name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty,name.count<=80,(1...1_000_000).contains(revision),[camera.azimuth,camera.elevation,camera.distance,camera.target.x,camera.target.y,camera.target.z,referenceAspect].allSatisfy(\.isFinite),camera.distance>0,camera.distance<=1_000_000,[camera.target.x,camera.target.y,camera.target.z].allSatisfy({abs($0)<=1_000_000}),camera.viewportAspect.map({$0.isFinite && $0>0}) ?? true,(0.125...8).contains(referenceAspect),["perspective","orthographic"].contains(camera.projection),camera.orientation == nil || camera.orientation?.quaternion != nil else {throw FormError.invalid("A Studio shot requires a name, finite saved camera and supported reference frame.")}
     guard Self.lightingIDs.contains(lighting),Self.surfaces.contains(surface) else {throw FormError.invalid("Unknown Studio lighting or surface preset version.")}
-    try pixels.validate();try visibility.validate()
+    try pixels.validate();try visibility.validate();try renderSettings?.validate()
   }
   public static let lightingIDs=["classic-v1","soft-side-v1","rim-v1"]
   public static let surfaces=["Daylight","Warm paper","Graphite"]
@@ -57,6 +58,7 @@ public struct StudioPresentation:Codable,Equatable,Sendable {
 }
 extension Project {
   public func validateStudioPresentation()throws {
+    try renderSettings?.validate()
     guard let value=studioPresentation else{return}
     guard value.shots.count<=64,Set(value.shots.map(\.id)).count==value.shots.count else {throw FormError.invalid("A project supports at most 64 uniquely identified Studio shots.")}
     for shot in value.shots {try shot.validate()}
@@ -67,7 +69,7 @@ extension Project {
   }
   /// Committed design identity deliberately excludes navigation, history and shot metadata.
   public func studioDesignDigest()throws->String {
-    var source=self;source.camera = .init();source.studioPresentation=nil;source.collectionProduction=nil;source.history=[]
+    var source=self;source.camera = .init();source.studioPresentation=nil;source.renderSettings=nil;source.collectionProduction=nil;source.history=[]
     source.createdAt=Date(timeIntervalSince1970:0);source.updatedAt=source.createdAt;source.schemaVersion=1
     return SHA256.hash(data:try JSONEncoder.form.encode(source)).map{String(format:"%02x",$0)}.joined()
   }
@@ -83,7 +85,7 @@ public enum StudioShotCommands {
     return try jsonObject(shot(in:project,id:args["shot_id"]))
   }
   public static func apply(_ project:inout Project,args:[String:Any])throws->StudioShot? {
-    let known:Set<String>=["view","studio_command","shot_id","name","camera","reference_aspect","lighting","surface","visibility","width","height"]
+    let known:Set<String>=["view","studio_command","shot_id","name","camera","reference_aspect","lighting","surface","visibility","width","height","render_settings"]
     guard Set(args.keys).isSubset(of:known),let command=args["studio_command"] as? String,["capture","update","rename","delete"].contains(command) else {throw FormError.invalid("Unknown Studio shot operation or argument.")}
     if command == "delete",!Set(args.keys).isSubset(of:["view","studio_command","shot_id"]) {throw FormError.invalid("Delete accepts shot_id only.")}
     if command == "capture",args["shot_id"] != nil {throw FormError.invalid("Capture creates a new shot ID.")}
@@ -100,6 +102,7 @@ public enum StudioShotCommands {
     if let raw=args["name"] {guard let name=raw as? String else{throw FormError.invalid("Shot name must be text.")};shot.name=name.trimmingCharacters(in:.whitespacesAndNewlines)}
     if command == "rename" {guard args["name"] != nil,Set(args.keys).isSubset(of:["view","studio_command","shot_id","name"]) else {throw FormError.invalid("Rename needs a name only.")}}
     if command != "rename" {
+      if let raw=args["render_settings"] {try CyclesRenderSettings.validateFields(raw);shot.renderSettings=raw is NSNull ? nil:try JSONDecoder.form.decode(CyclesRenderSettings.self,from:JSONSerialization.data(withJSONObject:raw))}
       if let raw=args["camera"] {
         guard let object=raw as? [String:Any],Set(object.keys).isSubset(of:["azimuth","elevation","orientation","distance","target","projection","viewportAspect"]) else{throw FormError.invalid("Unknown saved camera argument.")}
         shot.camera=try JSONDecoder.form.decode(CameraState.self,from:JSONSerialization.data(withJSONObject:raw))

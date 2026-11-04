@@ -1,0 +1,67 @@
+{
+  "status": "passed",
+  "recorded_at": "2026-11-04T21:59:57.124062+00:00",
+  "source_revision": "20f27b83a2c5dc485aeb0527cb5d09e8deb9f56f",
+  "installation": "main-installation.json",
+  "native_table": {
+    "table_object_count": 40,
+    "target": "whole Table scene at existing saved camera",
+    "navigation_or_geometry_changed": false,
+    "observed_sequence": [
+      "Fast",
+      "Rendered",
+      "Preparing \u00b7 0/64",
+      "Complete \u00b7 64 \u00b7 metal",
+      "Fast"
+    ],
+    "samples": 64,
+    "device": "metal",
+    "screenshot": {
+      "path": "main-table-rendered.png",
+      "sha256": "7f882c20af49ad7ed3f71ba8da2a8c0fcb46e57c52d7c1a92a96a0ba47bab87f"
+    },
+    "accessibility_record": {
+      "path": ".local/cycles-materiality-followup/main-integration/native-table.ax.txt",
+      "sha256": "024c7778f1620988162a55acd76416b9402a508760305d7924918000139839a1"
+    },
+    "scope": "Runtime completion check; macro/whole visual acceptance is in the separate render records."
+  },
+  "native_save_reopen": {
+    "action": "Native Command-S, open original project, reopen study via bounded MCP, compare exact definitions",
+    "schema_before": 68,
+    "schema_after": 68,
+    "all_document_object_records": 45,
+    "table_object_count": 40,
+    "exact_fields": {
+      "objects": true,
+      "materials": true,
+      "recipes": true,
+      "notes": true,
+      "camera": true,
+      "studioPresentation": true,
+      "renderSettings": true,
+      "publications": true,
+      "textStories": true,
+      "fontLibrary": true,
+      "textStyles": true
+    }
+  },
+  "original_restoration": {
+    "exact_fields": {
+      "objects": true,
+      "materials": true,
+      "recipes": true,
+      "notes": true,
+      "camera": true,
+      "studioPresentation": true,
+      "renderSettings": true,
+      "publications": true,
+      "textStories": true,
+      "fontLibrary": true,
+      "textStyles": true
+    },
+    "canvas_active": true,
+    "original_artboard_restored": true,
+    "private_values_omitted": true
+  }
+}

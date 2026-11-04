@@ -601,6 +601,10 @@ struct CameraControls: View {
       }.disabled(store.selected.isEmpty)
       WorkspaceToolbarButton("Toggle 100 mm grid", symbol: "grid", isSelected: store.showGrid,
         value: store.showGrid ? "Shown" : "Hidden") { store.showGrid.toggle() }
+      if let scene=store.scene {
+        WorkspaceToolbarDivider()
+        CyclesRenderModeControl(preview:scene.cyclesPreview,settings:scene.cyclesSettings,change:store.setTableRenderSettings)
+      }
     }
   }
 }

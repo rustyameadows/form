@@ -1,0 +1,276 @@
+{
+  "device": "cpu",
+  "helperSHA256": "245d1e61d630b53fff7468f8880b34dde9d5e59639e29b5ed1fc4ec9b2783159",
+  "comparisons": {
+    "cyclic-triangle-order": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "other-diagonal": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "rotated-UV0": {
+      "maximumByteError": 109,
+      "meanByteError": 44.17230902777778,
+      "checkedChannels": 6912
+    },
+    "UV1-selection": {
+      "maximumByteError": 109,
+      "meanByteError": 44.17230902777778,
+      "checkedChannels": 6912
+    },
+    "texture-rotation90": {
+      "maximumByteError": 109,
+      "meanByteError": 44.17230902777778,
+      "checkedChannels": 6912
+    },
+    "nonuniform-texture-rotation": {
+      "maximumByteError": 107,
+      "meanByteError": 43.96571180555556,
+      "checkedChannels": 6912
+    },
+    "negative-texture-scale": {
+      "maximumByteError": 104,
+      "meanByteError": 41.54600694444444,
+      "checkedChannels": 6912
+    },
+    "mirrored-UV-chart": {
+      "maximumByteError": 104,
+      "meanByteError": 41.54600694444444,
+      "checkedChannels": 6912
+    },
+    "mirrored-repeats": {
+      "maximumByteError": 107,
+      "meanByteError": 43.96571180555556,
+      "checkedChannels": 6912
+    },
+    "rectangular-UV-metric": {
+      "maximumByteError": 107,
+      "meanByteError": 43.96571180555556,
+      "checkedChannels": 6912
+    },
+    "skewed-UV-metric": {
+      "maximumByteError": 87,
+      "meanByteError": 38.153645833333336,
+      "checkedChannels": 6912
+    },
+    "UV1-and-texture-rotation": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "no-UV-fallback": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "no-UV-triangle-order": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "no-UV-object-X-pole": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "legacy-isotropic-no-UV": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "curve-keeps-longitudinal-axis": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 576
+    }
+  },
+  "renders": {
+    "uv0-reference": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "quarter-turn-reference": {
+      "pngSHA256": "0750eb747a39358d53c72b039894dcb0e402bf1fe6d397f9465652fcb307da6e",
+      "maximumByte": 81,
+      "clippedChannels": 0
+    },
+    "cyclic-triangle-order": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "other-diagonal": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "rotated-UV0": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "UV1-selection": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "texture-rotation90": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "negative-angle-reference": {
+      "pngSHA256": "46218b7c2d1bb24c87b0d6d9c1f83ffd83e58ea186a3050c10f6578902406d3c",
+      "maximumByte": 65,
+      "clippedChannels": 0
+    },
+    "positive-angle-reference": {
+      "pngSHA256": "086db414af85b84fec0893c161a963d2a1fc3a208e8157abe7ca73740303837c",
+      "maximumByte": 135,
+      "clippedChannels": 0
+    },
+    "nonuniform-texture-rotation": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "negative-texture-scale": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "mirrored-UV-chart": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "mirrored-repeats": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "rectangular-UV-metric": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "skew-angle-reference": {
+      "pngSHA256": "fd2fa40542eaecb6394707223c16f7c7ce794bb6121882f54f1ce8838f0daf69",
+      "maximumByte": 89,
+      "clippedChannels": 0
+    },
+    "skewed-UV-metric": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "UV1-and-texture-rotation": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "no-UV-fallback": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "no-UV-triangle-order": {
+      "pngSHA256": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+      "maximumByte": 173,
+      "clippedChannels": 0
+    },
+    "no-UV-object-X-pole": {
+      "pngSHA256": "9058497ffafc1d9030c6ddd9fbedd4b1e6fab9e616556105318426234d675946",
+      "maximumByte": 176,
+      "clippedChannels": 0
+    },
+    "object-X-pole-reference": {
+      "pngSHA256": "9058497ffafc1d9030c6ddd9fbedd4b1e6fab9e616556105318426234d675946",
+      "maximumByte": 176,
+      "clippedChannels": 0
+    },
+    "isotropic-reference": {
+      "pngSHA256": "d8e6f1418134232e7baab25068b8be2d9a0d95ea874c8e19103a2c6f7379e0fa",
+      "maximumByte": 141,
+      "clippedChannels": 0
+    },
+    "legacy-isotropic-no-UV": {
+      "pngSHA256": "d8e6f1418134232e7baab25068b8be2d9a0d95ea874c8e19103a2c6f7379e0fa",
+      "maximumByte": 141,
+      "clippedChannels": 0
+    },
+    "curve-reference": {
+      "pngSHA256": "8fe3d62355dcb5a2413e1ad60532982d6cf6a7cd1a64458745220b550a2b2146",
+      "maximumByte": 135,
+      "clippedChannels": 0
+    },
+    "curve-mapped-strength": {
+      "pngSHA256": "8fe3d62355dcb5a2413e1ad60532982d6cf6a7cd1a64458745220b550a2b2146",
+      "maximumByte": 135,
+      "clippedChannels": 0
+    }
+  },
+  "failures": [
+    {
+      "case": "rotated-UV0",
+      "maximumByteError": 109,
+      "meanByteError": 44.17230902777778,
+      "checkedChannels": 6912
+    },
+    {
+      "case": "UV1-selection",
+      "maximumByteError": 109,
+      "meanByteError": 44.17230902777778,
+      "checkedChannels": 6912
+    },
+    {
+      "case": "texture-rotation90",
+      "maximumByteError": 109,
+      "meanByteError": 44.17230902777778,
+      "checkedChannels": 6912
+    },
+    {
+      "case": "nonuniform-texture-rotation",
+      "maximumByteError": 107,
+      "meanByteError": 43.96571180555556,
+      "checkedChannels": 6912
+    },
+    {
+      "case": "negative-texture-scale",
+      "maximumByteError": 104,
+      "meanByteError": 41.54600694444444,
+      "checkedChannels": 6912
+    },
+    {
+      "case": "mirrored-UV-chart",
+      "maximumByteError": 104,
+      "meanByteError": 41.54600694444444,
+      "checkedChannels": 6912
+    },
+    {
+      "case": "mirrored-repeats",
+      "maximumByteError": 107,
+      "meanByteError": 43.96571180555556,
+      "checkedChannels": 6912
+    },
+    {
+      "case": "rectangular-UV-metric",
+      "maximumByteError": 107,
+      "meanByteError": 43.96571180555556,
+      "checkedChannels": 6912
+    },
+    {
+      "case": "skewed-UV-metric",
+      "maximumByteError": 87,
+      "meanByteError": 38.153645833333336,
+      "checkedChannels": 6912
+    }
+  ],
+  "quarterTurnMeanDifference": 44.17230902777778,
+  "status": "failed"
+}

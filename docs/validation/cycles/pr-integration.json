@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "status": "passed",
+  "completed_at": "2026-11-04T06:54:06.133205+00:00",
+  "implementation_commit": "ddaf689e2dd22ec4649e54373782ff832e07c035",
+  "integrated_main_commit": "25369d595bed424c2e6f6eb93fb04283b5012e75",
+  "persistence_schema": 66,
+  "tests": 2594,
+  "failures": 0,
+  "skipped": 4,
+  "suites": [
+    {
+      "suite": "LabRenderingTests.xctest",
+      "status": "passed",
+      "tests": 57,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "FormMeshAssetsTests.xctest",
+      "status": "passed",
+      "tests": 24,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "FormGeometryTests.xctest",
+      "status": "passed",
+      "tests": 10,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "FormCoreTests.xctest",
+      "status": "passed",
+      "tests": 1234,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "FormCADModelingTests.xctest",
+      "status": "passed",
+      "tests": 28,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "FormCADKernelTests.xctest",
+      "status": "passed",
+      "tests": 12,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "FormAppTests.xctest",
+      "status": "passed",
+      "tests": 1229,
+      "failures": 0,
+      "skipped": 4
+    }
+  ],
+  "python_checks": 28,
+  "source_files": 1075,
+  "source_manifest_sha256": "bba34ba45072f0ce1a325d8b5d66e13b9d2ddd7fe4970551749bfd23c7d6f7cd",
+  "regression_log_sha256": "4b32fe7c531180f3751e61946b707b89b2420764c694b396b261c8b85171eb86",
+  "source_unchanged_during_tests": true,
+  "real_cpu_metal_helpers_enabled": true,
+  "real_metal_failure_fixture_enabled": true,
+  "actual_saved_attached_program_and_full_table_preparation_enabled": true,
+  "focused_merge_coverage": [
+    "Upstream schema64 story annotations and65 advanced publications retain their meanings",
+    "Physical resource and object features require schema66",
+    "Earlier Cycles schema64 sources decode and save as66 without changing source fields",
+    "Nested wrapping, insert, enclosure and auxiliary stock optics classify and validate",
+    "Bounded MCP capability and strict physical dictionary schemas remain compatible"
+  ],
+  "limitations": [
+    "The full run recorded four skips. Its saved-needle diagnostic passed the focused follow-up, leaving three optional external-project performance fixtures unrun.",
+    "These checks validate PR integration. The earlier signed candidate6 installation and visual corpus retain their original recorded source identity; the ordinary app was not replaced by the PR test run."
+  ],
+  "followup": {
+    "test": "CyclesEmbroideryTests.testOptionalSavedNeedleProgramLocalClearanceDiagnostic",
+    "tests": 1,
+    "failures": 0,
+    "skipped": 0,
+    "reason": "The full run omitted LAB_EMBROIDERY_PROGRAM; a focused no-rebuild follow-up supplied the existing saved program.",
+    "log_sha256": "bc167c1e2b1ca8e8f27525f1795f245275d2840b1bc517c46e720c0939bdaf45",
+    "diagnostic_sha256": "5f89e743ceb4a953732d76bb8eb6c4c582561a6be3c720782e9073fd531e332b"
+  },
+  "remaining_unrun_optional_fixtures": 3
+}

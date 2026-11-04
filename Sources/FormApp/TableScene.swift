@@ -1,10 +1,12 @@
 import AppKit
+import Combine
 import simd
 import CryptoKit
 import FormCore
 import FormGraphics
 import Metal
 import FormGeometry
+import struct FormMeshAssets.MeshImportLimits
 import LabRendering
 import SwiftUI
 
@@ -105,15 +107,42 @@ private struct RenderSignature: Equatable {
   var extraRenderables:[SceneRenderablePayload]=[]
   private var captureSource:Project?
   private var captureAssets:URL?
+  var pathTracingSource:(Project,URL)? {guard let source=captureSource,let assets=captureAssets else{return nil};return (source,assets)}
+  var cyclesSettingsOverride:CyclesRenderSettings?
+  var cyclesSettings:CyclesRenderSettings {
+    if let value=cyclesSettingsOverride ?? captureSource?.renderSettings {return value}
+    var value=CyclesRenderSettings();value.renderer = .realtime;return value
+  }
+  lazy var cyclesPreview=CyclesViewportController(source:self)
+  // Rebuilt on scene changes, never on ordinary pointer navigation.
+  var cyclesContentKey:String?
   private var captureVisibility=Set<UUID>()
   private var captureObjectIDs:Set<UUID>?
   private var externalCaptureRevision:String?
+  private var cyclesExternalCache:(key:String,payloads:[SceneRenderablePayload])?
   var externalCapturePreparationCheckpoint:(()async->Void)?
+  /// A preparation boundary for deterministic source/running-cloth tests.
+  var externalPayloadPreparationCheckpoint:(()async->Void)?
   func prepareExternalForCapture(project:Project,assets:URL)async throws {
     let objects=project.objects.filter{$0.hasTablePresentation && (captureObjectIDs?.contains($0.id) ?? true) && ($0.meshAsset != nil || $0.cadRepresentation != nil)}
     guard !objects.isEmpty else{return}
     let revision=try project.studioDesignDigest()+"/"+assets.path+"/"+(captureObjectIDs?.map(\.uuidString).sorted().joined(separator:",") ?? "all")
     if externalCaptureRevision==revision {return}
+    let payloads=try await prepareExternalPayloads(project:project,assets:assets,physical:false)
+    if let checkpoint=externalCapturePreparationCheckpoint {await checkpoint()}
+    try Task.checkCancellation()
+    guard projectID==project.id,(try captureSource?.studioDesignDigest()) == (try project.studioDesignDigest()) else{throw FormError.invalid("The model changed while preparing its render. Capture again from the current source.")}
+    extraRenderables=payloads
+    for index in extraRenderables.indices {extraRenderables[index].visible=captureVisibility.isEmpty || captureVisibility.contains(extraRenderables[index].objectID)}
+    externalCaptureRevision=revision;renderScene()
+  }
+  func prepareExternalPayloads(project:Project,assets:URL,physical:Bool)async throws->[SceneRenderablePayload] {
+    let objects=project.objects.filter{$0.hasTablePresentation && (captureObjectIDs?.contains($0.id) ?? true) && ($0.meshAsset != nil || $0.cadRepresentation != nil)}
+    guard !objects.isEmpty else{return []}
+    let key=try project.studioDesignDigest()+"/"+assets.path+"/"+(captureObjectIDs?.map(\.uuidString).sorted().joined(separator:",") ?? "all")
+    let visibility=captureVisibility,cached=physical ? cyclesExternalCache:nil
+    if let checkpoint=externalPayloadPreparationCheckpoint {await checkpoint()}
+    try Task.checkCancellation()
     var artwork:[UUID:CGImage]=[:],artRevisions:[UUID:String]=[:]
     for object in objects where object.meshAsset != nil {
       if let art=project.surfaceArtwork(object) {
@@ -123,30 +152,80 @@ private struct RenderSignature: Equatable {
     }
     let images=artwork,revisions=artRevisions,materials=project.materials+FormCore.Material.presets
     let worker=Task.detached(priority:.userInitiated) {
+      // Payload caching must not bypass immutable-source validation. File
+      // metadata alone cannot distinguish same-size replacements/restores.
+      let fingerprint=try Self.externalSourceFingerprint(objects:objects,materials:materials,assets:assets,physical:physical)
+      let verifiedKey=key+"/"+fingerprint
+      if let cached,cached.key==verifiedKey {return (verifiedKey,cached.payloads)}
       var output=[SceneRenderablePayload]()
       for object in objects {
         try Task.checkCancellation()
         if let reference=object.meshAsset {
           let document=try ModelAssetCoordinator.readAsset(reference,assets:assets)
           let scene=try MeshAssetSceneAdapter.prepare(document:document,reference:reference)
-          let appearance=try MeshAssetSceneAdapter.appearance(scene,reference:reference,artwork:images[object.id],artworkRevision:revisions[object.id] ?? "none")
+          let appearance=try MeshAssetSceneAdapter.appearance(scene,reference:reference,artwork:images[object.id],artworkRevision:revisions[object.id] ?? "none",physical:physical)
           output+=MeshAssetSceneAdapter.renderables(appearance,objectID:object.id,positionMM:.init(object.position.x,object.position.y,object.position.z),yawDegrees:object.rotation,scalePercent:object["scalePercent"])
         } else {
           let prepared=try CADSceneAdapter.prepare(for:object,assets:assets)
-          output+=try await CADSurfaceAppearance.apply(prepared,object:object,project:project,assets:assets,materials:materials)
+          output+=try await CADSurfaceAppearance.apply(prepared,object:object,project:project,assets:assets,materials:materials,physical:physical)
         }
       }
-      return output
+      guard fingerprint == (try Self.externalSourceFingerprint(objects:objects,materials:materials,assets:assets,physical:physical)) else {
+        throw FormError.invalid("An external render source changed during preparation. Restore or reimport its source.")
+      }
+      return (verifiedKey,output)
     }
-    let payloads=try await withTaskCancellationHandler(operation:{try await worker.value},onCancel:{worker.cancel()})
-    if let checkpoint=externalCapturePreparationCheckpoint {await checkpoint()}
+    let (verifiedKey,payloads)=try await withTaskCancellationHandler(operation:{try await worker.value},onCancel:{worker.cancel()})
     try Task.checkCancellation()
-    guard projectID==project.id,(try captureSource?.studioDesignDigest()) == (try project.studioDesignDigest()) else{throw FormError.invalid("The model changed while preparing its render. Capture again from the current source.")}
-    extraRenderables=payloads
-    for index in extraRenderables.indices {extraRenderables[index].visible=captureVisibility.isEmpty || captureVisibility.contains(extraRenderables[index].objectID)}
-    externalCaptureRevision=revision;renderScene()
+    if physical {cyclesExternalCache=(verifiedKey,payloads)}
+    let visible=physical ? visibility:captureVisibility
+    return payloads.map {source in var value=source;value.visible=visible.isEmpty || visible.contains(value.objectID);return value}
+  }
+  private nonisolated static func externalSourceFingerprint(objects:[ProductObject],materials:[FormCore.Material],assets:URL,physical:Bool)throws->String {
+    var sources:[String:(sha256:String,limit:Int)]=[:]
+    func add(_ name:String,_ sha256:String,_ limit:Int)throws {
+      if let old=sources[name],old.sha256 != sha256 {throw FormError.invalid("Conflicting immutable render source hashes for \(name).")}
+      sources[name]=(sha256,min(sources[name]?.limit ?? limit,limit))
+    }
+    for object in objects {
+      if let reference=object.meshAsset {
+        try reference.validate()
+        try add(reference.sourceAsset,reference.sourceSHA256,MeshImportLimits().sourceBytes)
+        try add(reference.normalizedAsset,reference.normalizedSHA256,ModelAssetCoordinator.normalizedByteLimit)
+      } else if let representation=object.cadRepresentation {
+        for component in representation.components {
+          try add(component.brepAsset,component.brepSHA256,256*1024*1024)
+          try add(component.meshAsset,component.meshSHA256,256*1024*1024)
+          if physical,let appearance=CADSceneAdapter.selectedMaterial(for:component,object:object,materials:materials).appearance {
+            for texture in appearance.textures.values {try texture.validate();try add(texture.asset,texture.sha256,256*1024*1024)}
+          }
+        }
+      }
+    }
+    let root=assets.standardizedFileURL.resolvingSymlinksInPath()
+    var fingerprint=SHA256()
+    for name in sources.keys.sorted() {
+      try Task.checkCancellation()
+      guard !name.isEmpty,name==URL(fileURLWithPath:name).lastPathComponent,!name.contains("\\"),name != ".",name != ".." else {throw FormError.invalid("Invalid external render asset path.")}
+      let url=root.appendingPathComponent(name),resolved=url.resolvingSymlinksInPath(),source=sources[name]!
+      let values=try url.resourceValues(forKeys:[.isRegularFileKey,.isSymbolicLinkKey,.fileSizeKey])
+      guard resolved.deletingLastPathComponent()==root,values.isRegularFile==true,values.isSymbolicLink != true,
+        let size=values.fileSize,size>0,size<=source.limit else {throw FormError.invalid("External render source \(name) is missing or exceeds its byte budget.")}
+      let handle=try FileHandle(forReadingFrom:url);defer{try? handle.close()}
+      var digest=SHA256(),count=0
+      while let data=try handle.read(upToCount:65536),!data.isEmpty {
+        try Task.checkCancellation();count+=data.count
+        guard count<=source.limit else {throw FormError.invalid("External render source \(name) exceeds its byte budget.")}
+        digest.update(data:data)
+      }
+      let actual=digest.finalize().map{String(format:"%02x",$0)}.joined()
+      guard count==size,actual==source.sha256 else {throw FormError.invalid("External render source \(name) SHA-256 changed. Restore or reimport its source.")}
+      fingerprint.update(data:Data((name+":"+actual+"\n").utf8))
+    }
+    return fingerprint.finalize().map{String(format:"%02x",$0)}.joined()
   }
   func renderScene() {
+    cyclesContentKey=nil
     guard let renderer else{return}
     let payloads=adapter.renderables(scene:scene)+extraRenderables
     var live=Set<String>()
@@ -160,6 +239,7 @@ private struct RenderSignature: Equatable {
   }
   func updateRenderCamera() {
     do {try renderer?.setCamera(cameraPayload())}catch{rendererIssue=error.localizedDescription}
+    cyclesPreview.sceneChanged()
   }
   func updateRenderLighting() {
     let c=GeometryPayloadAdapter.color(scene.background.contents)
@@ -168,6 +248,7 @@ private struct RenderSignature: Equatable {
     let ambient=scene.rootNode.childNodes.first{$0.light?.type == .ambient}?.light?.intensity ?? 400
     let fill=scene.rootNode.childNodes.first{$0.light?.type == .omni}?.light?.intensity ?? 100
     do {try renderer?.setLighting(.init(background:c,keyDirection:.init(Float(-q.x),Float(-q.y),Float(-q.z)),keyColor:.init(key.x,key.y,key.z),keyIntensity:Float(keyLight.light?.intensity ?? 800)*3.75,fillIntensity:Float(ambient+fill)*1.2,shadows:keyLight.light?.castsShadow ?? true))} catch {rendererIssue=error.localizedDescription}
+    cyclesPreview.sceneChanged()
   }
   func cameraPayload(size:CGSize?=nil)->SceneCameraPayload {
     let lens=cameraNode.camera ?? MeshCamera();var matrix=cameraNode.worldTransform.raw
@@ -294,7 +375,7 @@ private struct RenderSignature: Equatable {
       selectionNodes = []
       lastSelection = []
       projectID = project.id
-      adapter.clear();renderer?.reset();renderedComponents=[];extraRenderables=[]
+      adapter.clear();renderer?.reset();renderedComponents=[];extraRenderables=[];cyclesExternalCache=nil
       camera = project.camera
       updateCamera()
     }
@@ -824,6 +905,10 @@ private struct RenderSignature: Equatable {
       project, selection: store.engine.selection, isolated: store.isolated,
       showGrid: store.showGrid, studio: store.mode == .studio, preset: store.studioPreset,
       assets: store.repository.url(for: project.id).appendingPathComponent("Assets"))
+    if store.mode == .studio && store.studioShowingShots {
+      var legacy=CyclesRenderSettings();legacy.renderer = .realtime
+      view.controller?.cyclesSettingsOverride=store.studioShots.renderSettings ?? legacy
+    } else {view.controller?.cyclesSettingsOverride=nil}
     view.controller?.applyShotLighting(store.studioShots.lighting,studio:store.mode == .studio)
   }
 }
@@ -844,6 +929,9 @@ private struct RenderSignature: Equatable {
 }
 
 @MainActor final class TableSceneView:NSView {
+  private let cyclesImage=NSImageView()
+  private var cyclesObservation:AnyCancellable?
+  private var cyclesVisibilityRefreshPending=false
   weak var presentationInteraction:TablePresentationInteraction? {didSet{installPresentationOverlay()}}
   private lazy var presentationOverlay:StudioTransformGizmoOverlay = {
     let overlay=StudioTransformGizmoOverlay(frame:bounds);overlay.tableView=self;overlay.autoresizingMask=[.width,.height];overlay.wantsLayer=true;overlay.layer?.backgroundColor=NSColor.clear.cgColor
@@ -854,7 +942,38 @@ private struct RenderSignature: Equatable {
     subviews.forEach{$0.removeFromSuperview()}
     if let viewport=controller?.renderer?.nativeView {viewport.frame=bounds;viewport.autoresizingMask=[.width,.height];addSubview(viewport)}
     else {let label=NSTextField(labelWithString:controller?.rendererIssue ?? "3D renderer unavailable");label.frame=bounds.insetBy(dx:24,dy:24);label.autoresizingMask=[.width,.height];addSubview(label)}
+    cyclesImage.frame=bounds;cyclesImage.autoresizingMask=[.width,.height];cyclesImage.imageScaling = .scaleAxesIndependently
+    cyclesImage.isHidden=true;addSubview(cyclesImage)
+    cyclesObservation=controller?.cyclesPreview.$image.sink { [weak self] image in
+      self?.cyclesImage.image=image;self?.cyclesImage.isHidden=image==nil
+    }
     installPresentationOverlay()
+  }
+  override func viewDidMoveToWindow() {
+    super.viewDidMoveToWindow()
+    // SwiftUI can mount a replacement before detaching the previous view. Only
+    // the controller's current presentation surface may suspend its renderer.
+    guard let controller,controller.view === self else{return}
+    if window==nil {controller.cyclesPreview.suspend()} else {refreshCyclesAfterVisibilityChange()}
+  }
+  override func viewDidHide() {
+    super.viewDidHide()
+    guard let controller,controller.view === self else{return}
+    controller.cyclesPreview.sceneChanged()
+  }
+  override func viewDidUnhide() {
+    super.viewDidUnhide();refreshCyclesAfterVisibilityChange()
+  }
+  private func refreshCyclesAfterVisibilityChange() {
+    guard !cyclesVisibilityRefreshPending else{return}
+    cyclesVisibilityRefreshPending=true
+    DispatchQueue.main.async { [weak self] in
+      guard let self else{return};self.cyclesVisibilityRefreshPending=false
+      guard self.window != nil,let controller=self.controller,controller.view === self else{return}
+      // Visibility and bounds can still be transitional inside AppKit's attach
+      // notification. The next main turn sees the completed presentation.
+      controller.cyclesPreview.sceneChanged()
+    }
   }
   private func installPresentationOverlay() {
     guard presentationInteraction != nil else{presentationOverlay.removeFromSuperview();return}

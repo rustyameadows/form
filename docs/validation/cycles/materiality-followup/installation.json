@@ -1,0 +1,171 @@
+{
+  "status": "installed; native interactions and scoped paper/finish visual review passed",
+  "installed": {
+    "installed_at": "2026-11-04T19:36:50.950243+00:00",
+    "ordinary": "/Users/rustymeadows/dev/form/build/LAB.app",
+    "rollback": "/Users/rustymeadows/dev/form/build/LAB.app.previous-20261104-113650",
+    "exact_candidate_moved": true,
+    "files": {
+      "Contents/MacOS/LAB": "8f6b0599bb4943883a05631ff4ef47dffa1789698e9361b463e03ac1434b5624",
+      "Contents/MacOS/lab-mcp": "c15b826765553f7d4936734dbf8410303f74725e10efdb776dad3b479ebeee37",
+      "Contents/Helpers/lab-cycles-render": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+      "Contents/Resources/LABBuild.json": "70625a6eb0ffa78387386d9ccde9196d7bfc808d096b381c44f97fe7aa762f5d",
+      "Contents/Resources/ThirdPartyNotices/Cycles/LAB-CYCLES-PROVENANCE.json": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa"
+    },
+    "codesign": "verified",
+    "gates": [
+      "offline-cpu/bundle-report.json",
+      "offline-metal/bundle-report.json"
+    ]
+  },
+  "candidate_identity": {
+    "recorded_at": "2026-11-04T19:34:07.199783+00:00",
+    "bundle": "/Users/rustymeadows/dev/form/.local/cycles-materiality-followup/relocated/LAB.app",
+    "built_at": "/Users/rustymeadows/dev/form/.local/cycles-materiality-followup/candidate/LAB.app",
+    "relocated_unchanged": true,
+    "files": {
+      "Contents/MacOS/LAB": "8f6b0599bb4943883a05631ff4ef47dffa1789698e9361b463e03ac1434b5624",
+      "Contents/MacOS/lab-mcp": "c15b826765553f7d4936734dbf8410303f74725e10efdb776dad3b479ebeee37",
+      "Contents/Helpers/lab-cycles-render": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+      "Contents/Resources/LABBuild.json": "70625a6eb0ffa78387386d9ccde9196d7bfc808d096b381c44f97fe7aa762f5d",
+      "Contents/Resources/ThirdPartyNotices/Cycles/LAB-CYCLES-PROVENANCE.json": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa"
+    },
+    "build": {
+      "app_pre_package_signing_sha256": "d7f6f20358fe1e635005315b4efbd7d404afcbedfc669a9b6297fcbec2169b52",
+      "build_id": "sha256:a6be976d90a2f1d2fe006a4226c373deda2d723a96a508981eab347ea6bbbb66",
+      "configuration": "release",
+      "format_version": 1,
+      "helper_pre_package_signing_sha256": "c04e2f7e600764a5ab27084f3916e306b15c3737c0a5cfbc1f345bb985d8fb62",
+      "schema_fingerprint": "sha256:12100662518fe9073c9bb41b1ebd9fdd4587c8fcfdcc7d467363cc6583370a98",
+      "source_dirty": false,
+      "source_revision": "2477730f99777ee9f9092c9245e6c836ba290f15"
+    },
+    "source_manifest_sha256": "e2d4f54d45b23f7e94fe1c45ecc8942f9e80927c719b13020b7127be50ac78c0"
+  },
+  "gates": {
+    "cpu": {
+      "bundle": "/Users/rustymeadows/dev/form/.local/cycles-materiality-followup/relocated/LAB.app",
+      "fullApplication": true,
+      "runtimeFiles": 317,
+      "bundledLibraries": 20,
+      "device": "cpu",
+      "runtimeUnchanged": true,
+      "cacheDirectory": "/Users/rustymeadows/dev/form/.local/cycles-materiality-followup/offline-cpu/cache",
+      "cleanEnvironment": true,
+      "externalRuntimeDependencies": false,
+      "deniedDevelopmentPaths": [
+        "/Users/rustymeadows/dev/form/.local/cycles",
+        "/Users/rustymeadows/dev/form/.local/engines",
+        "/Users/rustymeadows/dev/form/.build",
+        "/opt/homebrew",
+        "/Applications/Xcode.app",
+        "/Library/Developer"
+      ],
+      "deniedReadProbes": [
+        {
+          "path": "/Users/rustymeadows/dev/form/.local/cycles/source/LICENSE",
+          "readDenied": true
+        },
+        {
+          "path": "/Users/rustymeadows/dev/form/.local/cycles/build/CMakeCache.txt",
+          "readDenied": true
+        },
+        {
+          "path": "/Users/rustymeadows/dev/form/.local/cycles/source/lib/macos_arm64/deps.md",
+          "readDenied": true
+        },
+        {
+          "path": "/Users/rustymeadows/dev/form/.local/engines/cycles-3eb35f85996b/lab-cycles-render",
+          "readDenied": true
+        },
+        {
+          "path": "/Users/rustymeadows/dev/form/.build/workspace-state.json",
+          "readDenied": true
+        },
+        {
+          "path": "/opt/homebrew/bin/brew",
+          "readDenied": true
+        },
+        {
+          "path": "/Applications/Xcode.app/Contents/Info.plist",
+          "readDenied": true
+        }
+      ],
+      "networkDenied": true,
+      "helperSandboxProfile": "/Users/rustymeadows/dev/form/.local/cycles-materiality-followup/offline-cpu.sb"
+    },
+    "metal": {
+      "bundle": "/Users/rustymeadows/dev/form/.local/cycles-materiality-followup/relocated/LAB.app",
+      "fullApplication": true,
+      "runtimeFiles": 317,
+      "bundledLibraries": 20,
+      "device": "metal",
+      "runtimeUnchanged": true,
+      "cacheDirectory": "/Users/rustymeadows/dev/form/.local/cycles-materiality-followup/offline-metal/cache",
+      "cleanEnvironment": true,
+      "externalRuntimeDependencies": false,
+      "deniedDevelopmentPaths": [
+        "/Users/rustymeadows/dev/form/.local/cycles",
+        "/Users/rustymeadows/dev/form/.local/engines",
+        "/Users/rustymeadows/dev/form/.build",
+        "/opt/homebrew",
+        "/Applications/Xcode.app",
+        "/Library/Developer"
+      ],
+      "deniedReadProbes": [
+        {
+          "path": "/Users/rustymeadows/dev/form/.local/cycles/source/LICENSE",
+          "readDenied": true
+        },
+        {
+          "path": "/Users/rustymeadows/dev/form/.local/cycles/build/CMakeCache.txt",
+          "readDenied": true
+        },
+        {
+          "path": "/Users/rustymeadows/dev/form/.local/cycles/source/lib/macos_arm64/deps.md",
+          "readDenied": true
+        },
+        {
+          "path": "/Users/rustymeadows/dev/form/.local/engines/cycles-3eb35f85996b/lab-cycles-render",
+          "readDenied": true
+        },
+        {
+          "path": "/Users/rustymeadows/dev/form/.build/workspace-state.json",
+          "readDenied": true
+        },
+        {
+          "path": "/opt/homebrew/bin/brew",
+          "readDenied": true
+        },
+        {
+          "path": "/Applications/Xcode.app/Contents/Info.plist",
+          "readDenied": true
+        }
+      ],
+      "networkDenied": true,
+      "helperSandboxProfile": "/Users/rustymeadows/dev/form/.local/cycles-materiality-followup/offline-metal.sb"
+    }
+  },
+  "original_project_preservation": {
+    "objects": true,
+    "materials": true,
+    "recipes": true,
+    "notes": true,
+    "camera": true,
+    "studioPresentation": true,
+    "renderSettings": true,
+    "publications": true,
+    "textStories": true,
+    "fontLibrary": true,
+    "textStyles": true
+  },
+  "artifacts": {
+    "candidate-build.log": "36cc3392f552ccd3c38c3359d9328750c9f3cd834371c079f9273f3af77b7ac5",
+    "offline-cpu.log": "5e3fa9863255afd718cbafa77037b3a3fb49be72f527ebecc8dc6e6390b71d49",
+    "offline-metal.log": "de8285c84823224bc7e3aa2d55378a67ebf5a11177f92b2f95a66a109b446c24",
+    "install_verified.py": "582a6b643e48c38cc484c349c815b0268fb29fd0a6675544c466ead39e9948e3"
+  },
+  "native_interaction_evidence": "native-interactions.json",
+  "final_study_evidence": "final-study.json",
+  "visual_review_evidence": "paper-visual-review.json"
+}

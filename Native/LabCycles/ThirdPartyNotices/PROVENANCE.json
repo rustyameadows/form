@@ -1,0 +1,5 @@
+{
+  "url": "https://raw.githubusercontent.com/blender/blender/main/release/license/license.md",
+  "sha256": "8e95c341a29695beb0a08d078ec8e5b8a2d91ea006eef18a6d52e04153920c93",
+  "description": "Upstream complete dependency license reference. Actual bundled runtime libraries are enumerated separately in BUNDLED-LIBRARIES.json and LAB-CYCLES-PROVENANCE.json. LAB does not include Blender application code."
+}

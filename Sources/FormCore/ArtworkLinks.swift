@@ -143,6 +143,7 @@ extension Project {
   public func validateArtworkLinks() throws {
     try fontLibrary?.validate()
     try validatePaperMaterialSnapshots()
+    try validatePhysicalMaterials()
     try validatePhysicalDimensions()
     try validateArtworkParameterBindings()
     try validatePhysicalSurfaceBindings()

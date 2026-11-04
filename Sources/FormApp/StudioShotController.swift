@@ -14,10 +14,14 @@ import ImageIO
   @Published var height="2000" {didSet{if oldValue != height {invalidatePreview()}}}
   @Published var lighting="classic-v1" {didSet{if oldValue != lighting {invalidatePreview()}}}
   @Published var visibilityMode="project" {didSet{if oldValue != visibilityMode {invalidatePreview()}}}
+  @Published var renderSettings:CyclesRenderSettings? {didSet{if oldValue != renderSettings {invalidatePreview()}}}
   @Published private(set) var preview:NSImage?
   @Published private(set) var error:String?
   @Published private(set) var busy=false
   @Published private(set) var lastExport:URL?
+  @Published private(set) var exporting=false
+  @Published private(set) var exportProgress=0.0
+  private var exportTask:Task<Void,Never>?
   var exportDestination:((StudioShot)->URL?)?
   let renderer=StudioShotRenderer()
   private var projectID:UUID?
@@ -59,6 +63,7 @@ import ImageIO
         if width==String(old.pixels.width) {width=String(saved.pixels.width)}
         if height==String(old.pixels.height) {height=String(saved.pixels.height)}
         if lighting==old.lighting {lighting=saved.lighting}
+        if renderSettings==old.renderSettings {renderSettings=saved.renderSettings}
         if visibilityMode=="saved" || (visibilityMode=="project" && old.visibility.mode == .project) {visibilityMode=saved.visibility.mode == .project ? "project":"saved"}
         if store?.studioPreset==old.surface {store?.studioPreset=saved.surface}
       }
@@ -69,8 +74,9 @@ import ImageIO
     editingID=shot.id;loadedDefinition=shot
     name=shot.name;width=String(shot.pixels.width);height=String(shot.pixels.height)
     lighting=shot.lighting;visibilityMode=shot.visibility.mode == .project ? "project":"saved"
+    renderSettings=shot.renderSettings
   }
-  func reset(){generation+=1;previewTask?.cancel();previewTask=nil;editingID=nil;loadedDefinition=nil;reviewingID=nil;referenceAspect=nil;preview=nil;cache=[:];order=[];cacheShotIDs=[:];cacheBytes=0;busy=false;renderer.clear();draftID=UUID();projectID=nil;lastExport=nil;error=nil;name="Untitled shot";width="3000";height="2000";lighting="classic-v1";visibilityMode="project"}
+  func reset(){exportTask?.cancel();generation+=1;previewTask?.cancel();previewTask=nil;editingID=nil;loadedDefinition=nil;reviewingID=nil;referenceAspect=nil;preview=nil;cache=[:];order=[];cacheShotIDs=[:];cacheBytes=0;busy=false;renderer.clear();draftID=UUID();projectID=nil;lastExport=nil;error=nil;renderSettings=nil;name="Untitled shot";width="3000";height="2000";lighting="classic-v1";visibilityMode="project"}
   func invalidatePreview(){generation+=1;previewTask?.cancel();preview=nil;previewSourceDigest=nil;busy=false}
   func leaveReview(){generation+=1;previewTask?.cancel();editingID=nil;loadedDefinition=nil;reviewingID=nil;referenceAspect=nil;preview=nil;busy=false}
   func pixels()throws->StudioPixels {
@@ -95,7 +101,7 @@ import ImageIO
     if let id=editingID,let saved=shots.first(where:{$0.id==id}) {s.id=id;s.revision=saved.revision;s.visibility=saved.visibility}
     if visibilityMode == "project" {s.visibility = .init()}
     else if visibilityMode == "selection" {s.visibility=StudioVisibility(mode:.objects,objectIDs:store.engine.selection.filter{id in project.objects.contains{$0.id==id && $0.hasTablePresentation}}.sorted{$0.uuidString<$1.uuidString})}
-    s.lighting=lighting;s.surface=store.studioPreset;s.pixels=try pixels();try s.validate();try runtimePreflight(project,s);return s
+    s.renderSettings=renderSettings;s.lighting=lighting;s.surface=store.studioPreset;s.pixels=try pixels();try s.validate();try runtimePreflight(project,s);return s
   }
   func recall(_ id:UUID)throws {
     guard let store,let project=store.project,let shot=shots.first(where:{$0.id==id}) else{throw FormError.missing("Saved shot not found.")}
@@ -115,6 +121,7 @@ import ImageIO
   func save(capture:Bool)throws {
     NSApp.keyWindow?.makeFirstResponder(nil);reconcile();let shot=try draft()
     var args:[String:Any]=["view":"studio","studio_command":capture ? "capture":"update","name":shot.name,"camera":try jsonObject(shot.camera),"reference_aspect":shot.referenceAspect,"lighting":shot.lighting,"surface":shot.surface,"visibility":try jsonObject(shot.visibility),"width":shot.pixels.width,"height":shot.pixels.height]
+    if let settings=shot.renderSettings {args["render_settings"]=try jsonObject(settings)}
     if !capture {guard let id=editingID else{throw FormError.invalid("Select a saved shot before updating it.")};args["shot_id"]=id.uuidString}
     let result=try store!.engine.call("form_set_view",arguments:args,source:"Studio")
     if let value=result as? [String:Any],let saved=try? StudioShotCommands.shot(in:store!.project!,id:value["id"]) {selectDefinition(saved)}
@@ -140,11 +147,18 @@ import ImageIO
         await Task.yield();guard let self else{return}
         guard !Task.isCancelled,self.generation==token,self.store?.project?.id==project.id,(try? self.store?.project?.studioDesignDigest()) == (try? project.studioDesignDigest()) else{self.staleResults+=1;if self.generation==token {self.busy=false};return}
         do {
-          let image=try await self.renderer.render(project:project,shot:shot,assets:assets,preview:true)
+          let image:NSImage
+          if shot.renderSettings?.renderer == .cycles {
+            image=try await self.renderer.cyclesPreview(project:project,shot:shot,assets:assets) { [weak self] image in
+              guard let self,self.generation==token,self.store?.project?.id==project.id,
+                (try? self.store?.project?.studioDesignDigest()) == (try? project.studioDesignDigest()) else{return}
+              self.preview=image
+            }
+          } else {image=try await self.renderer.render(project:project,shot:shot,assets:assets,preview:true)}
           await Task.yield()
           guard !Task.isCancelled,self.generation==token,self.store?.project?.id==project.id,try self.store?.project?.studioDesignDigest()==project.studioDesignDigest() else{self.staleResults+=1;if self.generation==token {self.busy=false};return}
           self.preview=image;self.previewSourceDigest=try project.studioDesignDigest();self.busy=false;self.put(image,key:key,shotID:shot.id)
-        } catch {if self.generation==token{self.error=error.localizedDescription;self.busy=false}}
+        } catch {if self.generation==token{self.error=error.localizedDescription;self.preview=nil;self.busy=false}}
       }
     }catch{self.error=error.localizedDescription;busy=false}
   }
@@ -154,7 +168,9 @@ import ImageIO
     while order.count>8 || cacheBytes>32*1024*1024 {let key=order.removeFirst();cache.removeValue(forKey:key);cacheShotIDs.removeValue(forKey:key);recountCache()}
   }
   func export(_ shot:StudioShot,to url:URL)async throws->URL {
+    invalidatePreview()
     guard let store,let project=store.project else{throw FormError.missing("Open a project first.")};try shot.validate();try runtimePreflight(project,shot)
+    if shot.renderSettings?.renderer == .cycles {let output=try await store.cycles.renderShot(shot,to:url,progress:{[weak self] in self?.exportProgress=$0});lastExport=output;return output}
     guard url.pathExtension=="render",FileManager.default.fileExists(atPath:url.deletingLastPathComponent().path),!FileManager.default.fileExists(atPath:url.path) else{throw FormError.invalid("Choose a new .render folder in an existing parent. Existing destinations are never overwritten.")}
     let assets=store.repository.url(for:project.id).appendingPathComponent("Assets"),resources=try StudioShotRenderer.resources(project:project,assets:assets)
     let rendered=try await renderer.renderResult(project:project,shot:shot,assets:assets,preview:false)
@@ -164,14 +180,23 @@ import ImageIO
   }
   func exportDialog(){
     do {
+      guard !exporting else{return}
       NSApp.keyWindow?.makeFirstResponder(nil);let shot=try draft()
       let destination:URL?
       if let exportDestination {destination=exportDestination(shot)}
       else {
-        let panel=NSSavePanel();panel.nameFieldStringValue=shot.name+".render";panel.title="Export shot folder (PNG + record)";panel.message="Choose a new .render folder. It contains the named PNG and its source record; existing folders are never overwritten.";panel.canCreateDirectories=true
+        let panel=NSSavePanel();panel.nameFieldStringValue=shot.name+".render";panel.title=shot.renderSettings?.renderer == .cycles ? "Export shot (PNG + EXR + record)":"Export shot (PNG + record)";panel.message="Choose a new .render folder for the image and its source record. Existing folders are never overwritten.";panel.canCreateDirectories=true
         destination=panel.runModal() == .OK ? panel.url:nil
       }
-      if let destination {Task {do{let image=try await export(shot,to:destination);store?.toast("Shot PNG: \(image.lastPathComponent)")}catch{self.error=error.localizedDescription}}}
+      if let destination {
+        exporting=true;exportProgress=0;error=nil
+        exportTask=Task { [weak self] in
+          guard let self else{return};defer{self.exporting=false;self.exportTask=nil}
+          do{let image=try await self.export(shot,to:destination);self.exportProgress=1;self.store?.toast("Shot: \(image.lastPathComponent)")}
+          catch{self.error=Task.isCancelled ? "Export cancelled.":error.localizedDescription}
+        }
+      }
     } catch {self.error=error.localizedDescription}
   }
+  func cancelExport(){exportTask?.cancel()}
 }

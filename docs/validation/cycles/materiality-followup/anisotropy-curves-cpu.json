@@ -1,0 +1,16 @@
+{
+  "device": "cpu",
+  "alongRedPixels": 77,
+  "alongGreenPixels": 78,
+  "circumferenceBlueDifference": 104,
+  "uv1SwappedPixels": 156,
+  "rotationMaximumByteError": 0,
+  "normalMeanByteDifference": 44.093529411764706,
+  "detailMeanByteDifference": 32.7135294117647,
+  "disabledNormalMaximumByteError": 0,
+  "disabledDetailMaximumByteError": 0,
+  "normalReversedUV1MaximumByteError": 0,
+  "normalReflectedScaleMaximumByteError": 0,
+  "normalTextureRotationMaximumByteError": 0,
+  "normalMirroredRepeatMaximumByteError": 0
+}

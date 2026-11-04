@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "purpose": "Project-authored diagnostic for physical backing and stitch contact across one curved cloth panel; not a new application model or a manufacturer-calibrated drape.",
+  "measurement_status": "The bend radius, rest shape and 0.5 mm patch thickness are authored diagnostic parameters. Parent 0.4 mm caliper and thread diameter remain optical/construction estimates from the existing material corpus, not new measurements.",
+  "parent": {
+    "name": "Cloth / curved attachment control",
+    "material_case": "woven",
+    "material_variant": 0,
+    "width_mm": 160,
+    "depth_mm": 120,
+    "radius_mm": 80,
+    "caliper_mm": 0.4,
+    "gsm": 189.9,
+    "columns": 64,
+    "rows": 32,
+    "position_mm": [2300, 0, 500]
+  },
+  "patch": {
+    "name": "Embroidery / curved cloth attachment control",
+    "source_case": "thread-matte",
+    "source_variant": 1,
+    "width_mm": 80,
+    "depth_mm": 60,
+    "caliper_mm": 0.5,
+    "anchor_uv": [0.5, 0.5],
+    "panel": 0,
+    "rotation_degrees": 20,
+    "offset_rule": "half parent physical caliper + half patch caliper"
+  },
+  "review": [
+    "The complete rotated patch footprint remains inside a single parent panel.",
+    "The patch backing bends with the parent arch, with its underside touching the parent's physical front across the perimeter and center.",
+    "Needle ends intersect the actual patch top across the bend; arch midpoints remain raised and crossing order remains visible.",
+    "The source stitch geometry, spacing, color, diameter and thread appearance are copied from the existing editable matte fill/underlay case.",
+    "The main eight material cases remain unchanged. This is extra editable project data.",
+    "Fast preview retains rigid placement; physical Cycles derives conforming backing, artwork and stitches from one frozen parent frame. Compare actual Cycles output for this control."
+  ]
+}

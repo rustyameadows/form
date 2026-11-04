@@ -32,6 +32,46 @@ import simd
     store.engine.undo();XCTAssertTrue(try XCTUnwrap(store.project).objects.isEmpty)
     XCTAssertTrue(FileManager.default.fileExists(atPath:assets.appendingPathComponent(object.cadRepresentation!.components[0].brepAsset).path))
   }
+  func testCADPhysicalMaterialChangesDoNotRebuildExactGeometry()async throws {
+    let store=try fixture();defer{store.cad.reset();store.engine.project=nil}
+    let box=CADFeatureNode(name:"Solid",operation:.init(.box,values:["width":40,"height":20,"depth":30]))
+    let definition=CADModelDefinition(name:"Material carrier",features:[box],outputs:[box.id])
+    let job=try store.cad.begin(definition);store.cad.preview(job);try await settled(job)
+    try store.cad.commit(job);try await settled(job)
+    var stock=FormCore.Material("optical","Optical surface","Generic","#445566")
+    var appearance=PhysicalAppearance();appearance.coat=0.8;appearance.anisotropy=0.45;stock.appearance=appearance
+    try store.engine.edit("Material appearance") {project in project.materials.append(stock);project.objects[0].materialID=stock.id}
+    let project=try XCTUnwrap(store.project),object=project.objects[0],assets=store.repository.url(for:project.id).appendingPathComponent("Assets"),prepared=try CADSceneAdapter.prepare(for:object,assets:assets)
+    let physical=try CADSurfaceAppearance.apply(prepared,object:object,project:project,assets:assets,materials:project.materials,physical:true)
+    XCTAssertEqual(physical[0].materials[0].physicalAppearance?.coat,0.8)
+    XCTAssertEqual(physical[0].materials[0].physicalAppearance?.anisotropy,0.45)
+    XCTAssertEqual(physical.map{$0.mesh.revision},prepared.renderables.map{$0.mesh.revision})
+    let fast=try CADSurfaceAppearance.apply(prepared,object:object,project:project,assets:assets,materials:project.materials)
+    XCTAssertNil(fast[0].materials[0].physicalAppearance)
+  }
+  func testWarmCyclesCADCacheRevalidatesExactAndDerivedSources()async throws {
+    _=NSApplication.shared
+    let store=try fixture();defer{store.cad.reset();store.engine.project=nil}
+    let box=CADFeatureNode(name:"Solid",operation:.init(.box,values:["width":40,"height":20,"depth":30]))
+    let job=try store.cad.begin(.init(name:"External cache contract",features:[box],outputs:[box.id]))
+    store.cad.preview(job);try await settled(job);try store.cad.commit(job);try await settled(job)
+    let project=try XCTUnwrap(store.project),component=try XCTUnwrap(project.objects.first?.cadRepresentation?.components.first)
+    let assets=store.repository.url(for:project.id).appendingPathComponent("Assets"),scene=TableSceneController()
+    scene.sync(project,selection:[],isolated:[],showGrid:false,studio:false,preset:"Paper",assets:assets)
+    let first=try await scene.cyclesSnapshot(settings:.init())
+    for name in [component.brepAsset,component.meshAsset] {
+      let url=assets.appendingPathComponent(name),original=try Data(contentsOf:url)
+      var replacement=original;replacement[replacement.startIndex]^=1;try replacement.write(to:url)
+      do {_ = try await scene.cyclesSnapshot(settings:.init());XCTFail("Warm CAD payload reused a changed source: \(name)")}
+      catch {XCTAssertTrue(error.localizedDescription.contains("SHA-256"))}
+      try original.write(to:url)
+      let restored=try await scene.cyclesSnapshot(settings:.init());XCTAssertEqual(restored.revision,first.revision)
+      try FileManager.default.removeItem(at:url)
+      do {_ = try await scene.cyclesSnapshot(settings:.init());XCTFail("Warm CAD payload reused a deleted source: \(name)")}
+      catch {XCTAssertFalse(error.localizedDescription.isEmpty)}
+      try original.write(to:url)
+    }
+  }
   func testDesignChangeAndUnpreviewedDraftCannotCommit()async throws {
     let store=try fixture();defer{store.cad.reset();store.engine.project=nil}
     let job=try store.cad.begin(CADModelExamples.enclosure());store.cad.preview(job);try await settled(job);XCTAssertEqual(job.state,"ready",job.issue ?? "")

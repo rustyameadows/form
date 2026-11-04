@@ -330,6 +330,7 @@ struct CanvasGenerationActionButton:NSViewRepresentable {
   let title:String,enabled:Bool,action:()->Void
   var identifier="canvas-generation-submit"
   var prominent=true
+  var keyEquivalent=""
   func makeCoordinator()->Coordinator {Coordinator(action)}
   func makeNSView(context:Context)->NSButton {
     let button=NSButton(title:title,target:context.coordinator,action:#selector(Coordinator.press))
@@ -340,7 +341,9 @@ struct CanvasGenerationActionButton:NSViewRepresentable {
   }
   func updateNSView(_ view:NSButton,context:Context) {
     context.coordinator.action=action;view.title=title;view.isEnabled=enabled;view.setAccessibilityLabel(title)
+    view.keyEquivalent=keyEquivalent;view.keyEquivalentModifierMask=[]
   }
+  static func dismantleNSView(_ view:NSButton,coordinator:Coordinator){view.target=nil;view.action=nil;coordinator.action={}}
   func sizeThatFits(_ proposal:ProposedViewSize,nsView:NSButton,context:Context)->CGSize? {
     .init(width:prominent ? proposal.width ?? 300 : nsView.intrinsicContentSize.width,height:prominent ? 34:20)
   }

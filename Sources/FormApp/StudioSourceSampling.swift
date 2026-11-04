@@ -14,7 +14,8 @@ import simd
     let target: SourceTextureSamplingTarget
   }
   static func plans(controller: TableSceneController, project: Project,
-    camera: SceneCameraPayload, viewport: CGSize, objectIDs: Set<UUID>, maximumEdge: Int
+    camera: SceneCameraPayload, viewport: CGSize, objectIDs: Set<UUID>, maximumEdge: Int,
+    includeIndirectSurfaces: Bool = false
   ) throws -> [UUID: SourceTextureSamplingPlan] {
     var entries = [Entry]()
     func add(_ id: UUID, surface: String?, width: Double, height: Double,
@@ -25,7 +26,11 @@ import simd
       let key = id.uuidString + "/" + (surface ?? "artwork")
       entries.append(.init(objectID: id, surface: surface,
         target: .init(id: key, sourceWidth: width, sourceHeight: height,
-          projectedEdgePixels: demand.edge, visibleWeight: demand.weight)))
+          // Rays can reach surfaces outside the camera through reflection,
+          // transmission and indirect illumination. Camera demand is a boost,
+          // never permission to erase their source artwork.
+          projectedEdgePixels: includeIndirectSurfaces ? max(256,demand.edge):demand.edge,
+          visibleWeight: includeIndirectSurfaces ? max(0.1,demand.weight):demand.weight)))
     }
     for subject in controller.objectRoot.childNodes {
       guard !subject.isHidden, let name = subject.name, name.hasPrefix("object:"),
@@ -53,7 +58,7 @@ import simd
           if !surface.visible {demand.weight=0}
           else {
             demand.weight *= surface.samplingWeight
-            if !facing {demand.weight *= surface.opacity<0.999 ? 0.25:0}
+            if !facing && !includeIndirectSurfaces {demand.weight *= surface.opacity<0.999 ? 0.25:0}
           }
           try add(id,surface:surface.key,width:surface.size.x,height:surface.size.y,demand:demand)
         }
@@ -81,7 +86,7 @@ import simd
             let facing = simd_dot(tip-base,direction) > 0
             let opacity = PaperGeometry.faceAppearance(for: object,stock: stock,project: project,inside: inside).profile.opacity
             var demand = quadDemand(world: world,width: rect.width,height: rect.height,camera: camera,viewport: viewport)
-            if !facing { demand.weight *= opacity < 0.999 ? 0.25 : 0 }
+            if !facing && !includeIndirectSurfaces { demand.weight *= opacity < 0.999 ? 0.25 : 0 }
             try add(id,surface: SourceTextureSamplingPlan.paperFace(panel.id,inside: inside),
               width: rect.width,height: rect.height,demand: demand)
           }

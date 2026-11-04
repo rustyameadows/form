@@ -30,8 +30,27 @@ public enum PublicationPhysicalToolSchema {
     "description": "Existing CAD scalar: finite number or bounded expression in source parameters and assembly dimensions; physical lengths are millimeters."] }
   private static var point: [String: Any] { object(["x": expression, "y": expression], required: ["x", "y"]) }
   private static var vector: [String: Any] { object(["x": expression, "y": expression, "z": expression], required: ["x", "y", "z"]) }
+  /// A complete assembly repeats stock/ply optics many times. Keep every
+  /// validation keyword, but summarize repeated prose so both complete recovery
+  /// tool schemas still fit the legacy 128 KiB status response budget.
+  private static func compactAppearance(_ schema:[String:Any],edge:Bool=false)->[String:Any] {
+    func constraints(_ value:Any)->Any {
+      if let object=value as? [String:Any] {return object.filter{$0.key != "description"}.mapValues(constraints)}
+      if let array=value as? [Any] {return array.map(constraints)}
+      return value
+    }
+    var result=constraints(schema) as! [String:Any]
+    result["description"]="Optional visual optics; null inherits. Imported asset. scaleMM: 0.001–100000 mm. Scalar/normal/height maps: data; sheenTint: sRGB hex." +
+      (edge ? " UV0 cut walls: U=contour arc mm, V=ply caliper mm; nil ply inherits stock edge, never faces.":"")
+    return result
+  }
   private static var profile: [String: Any] {
     var value = PaperAppearanceCommands.profileSchema
+    var properties=value["properties"] as! [String:Any]
+    for key in ["appearance","edgeAppearance"] {
+      properties[key]=compactAppearance(properties[key] as! [String:Any],edge:key=="edgeAppearance")
+    }
+    value["properties"]=properties
     value["required"] = ["texture", "roughness", "textureScaleMM", "textureDepthMM", "opacity"]
     return value
   }
@@ -72,6 +91,8 @@ public enum PublicationPhysicalToolSchema {
   }
   private static var finishes: [String: Any] {
     var item = PaperAppearanceCommands.finishSchema
+    var properties=item["properties"] as! [String:Any]
+    properties["appearance"]=compactAppearance(properties["appearance"] as! [String:Any]);item["properties"]=properties
     item["required"] = ["id", "name", "kind", "side", "elementIDs", "depthMM", "heightMM", "opacity", "enabled"]
     return array(item, maximum: 128, nullable: true)
   }
@@ -150,6 +171,10 @@ public enum PublicationPhysicalToolSchema {
       }
       let properties = schema["properties"] as? [String: Any] ?? [:]
       let additional = schema["additionalProperties"] as? [String: Any]
+      if let names = (schema["propertyNames"] as? [String: Any])?["enum"] as? [String],
+        !Set(object.keys).isSubset(of: Set(names)) {
+        throw FormError.invalid("Unknown \(path) dictionary key.")
+      }
       guard additional != nil || Set(object.keys).isSubset(of: Set(properties.keys)) else {
         throw FormError.invalid("Unknown or malformed \(path) field.")
       }

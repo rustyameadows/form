@@ -1,0 +1,462 @@
+{
+  "version": 1,
+  "project_name": "LAB / Physical material references",
+  "scope": "Eight reusable project-authored material studies. Manufacturer photographs are linked, not redistributed. Optical parameters, fixture shapes and unmeasured calipers are estimates until reviewed against the linked photographs; successful rendering is not acceptance.",
+  "cases": [
+    {
+      "id": "cotton",
+      "title": "Cotton / stock calipers",
+      "family": "paper",
+      "color": "#F0EEE4",
+      "thickness_mm": 1.0,
+      "gsm": 600,
+      "specification": "Gmund Cotton Max White: pure cotton; 600 g/m\u00b2. The manufacturer's printing guide describes approximately 1 mm thickness at 600 g/m\u00b2. This is a published approximate caliper, not a measurement of this sample.",
+      "source_url": "https://www.gmund.com/shop/en_int/gmund-cotton-max-white.html",
+      "spec_url": "https://www.gmund.com/shop/media/pdf/instructions/Gmund_Cotton_Printing_Tips_engl.pdf",
+      "photo_url": "https://www.gmund.com/shop/media/catalog/product/cache/f504a4899c90866bb4d25e58fd9cd8dc/g/m/gmund_papier_cotton_max_white_flat_4740.jpg",
+      "roughness": 0.85,
+      "appearance": {
+        "ior": 1.47,
+        "diffuseTransmission": 0.04,
+        "subsurface": 0.08,
+        "subsurfaceRadiusMM": {
+          "x": 0.12,
+          "y": 0.08,
+          "z": 0.05
+        }
+      },
+      "texture_family": "paper",
+      "geometry_variants": [
+        "single 600 gsm sheet, published approximate 1.0 mm",
+        "three offset 300 gsm study sheets, estimated 0.5 mm each"
+      ],
+      "review": [
+        "matte diffuse body",
+        "subtle irregular fibers at close view",
+        "approximately 1 mm edge",
+        "soft contact shadows without plastic highlights",
+        "0.5 mm estimated sheet edge is visibly thinner than the 1.0 mm sheet; stacking must not conceal individual calipers"
+      ],
+      "photograph_review": {
+        "reviewed_utc": "2026-11-03",
+        "method": "Original manufacturer/supplier pixels inspected; PDFs rasterized privately. No copyrighted photograph redistributed.",
+        "silhouette": "Source is a flat face crop; there is no edge or sheet silhouette to infer. Use the published approximate caliper separately.",
+        "surface": "Fine irregular nondirectional tooth with shallow soft shadows; no regular woven grid or large fibers. White has small low-contrast mottling.",
+        "optical": "Broad diffuse response, no tight specular streak in this illumination.",
+        "unknown": "Photo has no metric ruler, back face, or controlled light. Absolute tooth amplitude/spacing and BRDF cannot be measured."
+      },
+      "variant_overrides": [
+        {
+          "variant_label": "Cotton / 600 gsm / 1.0 mm approximate",
+          "material_variant": "cotton-600"
+        },
+        {
+          "variant_label": "Cotton / 300 gsm study / 0.5 mm estimate",
+          "material_variant": "cotton-300-estimated",
+          "gsm": 300,
+          "thickness_mm": 0.5,
+          "estimate_notes": "The 300 gsm / 0.5 mm thinner-stock variant is an authored comparison assumption, not a measured sample or a manufacturer caliper claim. The Gmund source offers a 300 gsm grade; this study assigns 0.5 mm to test an explicit caliper change. Three independent sheets retain 0.5 mm each."
+        }
+      ]
+    },
+    {
+      "id": "finished-cotton",
+      "title": "Cotton / ink, impression and foil",
+      "family": "paper",
+      "color": "#F0EEE4",
+      "thickness_mm": 1.0,
+      "gsm": 600,
+      "specification": "Same published cotton stock as the plain case. Letterpress, blind relief and foil geometry are authored studies; impression depth 0.12 mm and foil height 0.02 mm are explicit unmeasured design choices.",
+      "source_url": "https://www.gmund.com/en_int/printing-techniques/letterpress/",
+      "spec_url": "https://www.gmund.com/shop/media/pdf/instructions/Gmund_Cotton_Printing_Tips_engl.pdf",
+      "photo_url": "https://www.gmund.com/en_int/wp-content/uploads/sites/9/bis-images/9977/gmund-papier-drucktechnik-letterpress-buchdruck-druckmuster-mobile-500x9999.jpg",
+      "extra_sources": [
+        "https://www.gmund.com/en_int/printing-techniques/blind-embossing/",
+        "https://www.gmund.com/en_int/printing-techniques/hot-foil-stamping/"
+      ],
+      "roughness": 0.85,
+      "appearance": {
+        "ior": 1.47,
+        "subsurface": 0.06,
+        "subsurfaceRadiusMM": {
+          "x": 0.12,
+          "y": 0.08,
+          "z": 0.05
+        }
+      },
+      "texture_family": "paper",
+      "geometry_variants": [
+        "impression 0.12 mm",
+        "impression 0.24 mm"
+      ],
+      "review": [
+        "ink stays registered over stock texture",
+        "compressed shoulders cast directional shadows",
+        "blind source does not print as black",
+        "foil highlights remain inside the source mask"
+      ],
+      "additional_photo_urls": [
+        "https://www.gmund.com/en_int/wp-content/uploads/sites/9/bis-images/9965/gmund-papier-drucktechnik-anwendung-heissfolie-visitenkarte-mobile-600x9999.jpg"
+      ],
+      "photograph_review": {
+        "reviewed_utc": "2026-11-03",
+        "method": "Original manufacturer/supplier pixels inspected; PDFs rasterized privately. No copyrighted photograph redistributed.",
+        "silhouette": "Additional Gmund photograph shows four separate thin cards at oblique angles above a gray background. Card corners are lightly rounded; material edges are finite.",
+        "surface": "Letterpress source shows fine black outlined printed curves and flat blue/orange regions with subtle stock texture. Additional card photo shows circular blind depressions with light upper rims and shaded lower shoulders.",
+        "optical": "Orange and pink circular foil regions have bright localized glints and darker saturated portions, distinct from the matte white stock. Finishing boundaries stay crisp.",
+        "unknown": "Photographed foil cards are an application example, not a measured Gmund Cotton sample. No exact card caliper, impression depth or metallic BRDF is supplied."
+      },
+      "finish_appearance_overrides": {
+        "foil": {
+          "normalStrength": 0,
+          "bumpStrength": 0
+        }
+      },
+      "estimate_notes": "The foil film suppresses inherited paper donor micro-normal and bump detail only inside its existing artwork mask (normalStrength=0, bumpStrength=0). This is an artist estimate after the previous final highlight showed excessive hammered/glitter-like grain compared with the linked smooth Gmund foil field. Stock tooth, caliper, relief geometry, foil roughness0.17, metallic1, coat0.25 and coat roughness0.08 remain unchanged."
+    },
+    {
+      "id": "vellum",
+      "title": "Vellum / overlapping sheets",
+      "family": "paper",
+      "color": "#F4F4F4",
+      "thickness_mm": 0.09398,
+      "gsm": 113,
+      "specification": "Neenah CLEARFOLD 113 g/m\u00b2: 3.7 point caliper = 0.09398 mm; published opacity 28. Opacity is a paper test result, not shader alpha or transmission. The Printswell photograph is a related 40 bond vellum, not the identical Neenah stock.",
+      "source_url": "https://printswell.freshdesk.com/support/solutions/articles/156000384219-translucent-vellum-paper",
+      "spec_url": "https://www.neenahpaper.com/-/media/files/storefront/stocklist-guides/clearfold_slg.pdf",
+      "photo_url": "https://s3.amazonaws.com/cdn.freshdesk.com/data/helpdesk/attachments/production/156033992243/original/yvSCut9mFPQyZxnt6mXYNZh9kfHNqojOjQ.jpg?1782149766=",
+      "roughness": 0.46,
+      "appearance": {
+        "ior": 1.47,
+        "diffuseTransmission": 0.72,
+        "subsurface": 0.15,
+        "subsurfaceRadiusMM": {
+          "x": 0.2,
+          "y": 0.15,
+          "z": 0.12
+        }
+      },
+      "geometry_variants": [
+        "one overlay",
+        "two spaced overlays"
+      ],
+      "review": [
+        "underlying graphic partly visible",
+        "overlap becomes denser",
+        "transmitted light remains soft",
+        "physical edge is not a glass slab"
+      ],
+      "photograph_review": {
+        "reviewed_utc": "2026-11-03",
+        "method": "Original manufacturer/supplier pixels inspected; PDFs rasterized privately. No copyrighted photograph redistributed.",
+        "silhouette": "Loose translucent rectangular overlay above a printed invitation; edges are slight and a top eyelet holds the layers.",
+        "surface": "Underlying photograph and border remain visible with reduced contrast; the overlay has a pale milky cast. Black foreground lettering stays relatively crisp.",
+        "optical": "Diffusive transmission washes underlying dark colors. This is neither opaque paper nor clear glass.",
+        "unknown": "Photograph uses related Printswell 40 bond vellum, not the exact CLEARFOLD113gsm stock. Layer gap, lighting, and measured transmission are unknown."
+      },
+      "estimate_notes": "Neutral #F4F4F4 base tint is an artist estimate chosen after direct comparison with the related supplier vellum photograph, not a measured CLEARFOLD color. Earlier #F4F2E9 outputs are retained because they showed an excessive yellow-olive cast. Transmission, scattering radii, roughness, caliper, geometry and lighting are held unchanged for the controlled tint comparison."
+    },
+    {
+      "id": "woven",
+      "title": "Woven / linen-cotton",
+      "family": "cloth",
+      "color": "#E4D5BC",
+      "thickness_mm": 0.4,
+      "gsm": 189.9,
+      "specification": "Robert Kaufman Essex Yarn Dyed E064-843: 55% linen / 45% cotton; 5.6 oz/yd\u00b2 (derived 189.9 g/m\u00b2); width 43 inches. 0.4 mm caliper is an estimate. Poly Haven rough_linen is a different CC0 scanned fabric used for estimated normal/roughness response, not a scan of Essex. Current map extent is the published 270.708 \u00d7 271.300 mm donor scan; normal strength 0.3 is an optical estimate. The current official 4K donor sources were imported using native max_dimension 4096, yielding 4087 \u00d7 4096 pixel assets within the existing 16 MP output budget. Original source and returned derived hashes are retained separately; the published physical repeat is preserved. The saved analytic drape uses 96 by 40 cells with its original dimensions, UV orientation and fold equation. Geometry sampling is distinct from the donor texture resolution and estimated optical values.",
+      "source_url": "https://www.robertkaufman.com/fabrics/essex_yarn_dyed/E064-843/",
+      "spec_url": "https://www.robertkaufman.com/fabrics/essex_yarn_dyed/E064-843/",
+      "photo_url": "https://www.robertkaufman.com/assets/fabric/detail/E064-843.jpg",
+      "roughness": 0.73,
+      "appearance": {
+        "ior": 1.5,
+        "sheen": 0.3,
+        "sheenRoughness": 0.65,
+        "anisotropy": 0.15,
+        "diffuseTransmission": 0.05,
+        "normalStrength": 0.3
+      },
+      "texture_family": "woven",
+      "geometry_variants": [
+        "shallow broad drape with 0 degree weave mapping",
+        "deep returned-edge drape with 90 degree weave and tangent rotation"
+      ],
+      "review": [
+        "interlaced structure at close view",
+        "broad matte folds",
+        "small grazing sheen",
+        "texture does not swim across the drape",
+        "90 degree material orientation changes the mapped weave and directional reflection while physical repeat size and mesh UVs stay fixed"
+      ],
+      "photograph_review": {
+        "reviewed_utc": "2026-11-03",
+        "method": "Original manufacturer/supplier pixels inspected; PDFs rasterized privately. No copyrighted photograph redistributed.",
+        "silhouette": "Manufacturer image is a flat fabric close-up with no drape or edge evidence. Authored folds are test geometry rather than a literal silhouette match.",
+        "surface": "Fine orthogonal interlacing with subtly irregular yarn widths and tiny tan/cream color variations; very small dark interstices.",
+        "optical": "Mostly matte body, low contrast at individual intersections, no satin-like extended streaks.",
+        "unknown": "The image has no scale ruler. Physical texture repeat is a donor-map assumption and must be visually compared rather than called a measured Essex scan."
+      },
+      "variant_overrides": [
+        {
+          "variant_label": "Woven / 0 degree weave",
+          "material_variant": "woven-0"
+        },
+        {
+          "variant_label": "Woven / 90 degree weave",
+          "material_variant": "woven-90",
+          "texture_rotation_degrees": 90,
+          "appearance": {
+            "anisotropyRotation": 0.25
+          },
+          "estimate_notes": "This authored material variant rotates the donor normal/roughness texture mapping 90 degrees and the anisotropic tangent by one quarter turn. Mesh UVs, surface dimensions and the published 270.708 \u00d7 271.300 mm donor repeat are unchanged. This is a material orientation test, not a distinct manufacturer product or measured BRDF."
+        }
+      ],
+      "texture_repeat_mm": [
+        270.7081392676629,
+        271.29998803138733
+      ],
+      "texture_asset_prefix": "rough_linen",
+      "texture_files": {
+        "normal": "rough_linen_nor_gl_4k.jpg",
+        "roughness": "rough_linen_rough_4k.jpg"
+      },
+      "texture_import_max_dimension": 4096,
+      "mesh_resolution": {
+        "columns": 96,
+        "rows": 40
+      }
+    },
+    {
+      "id": "satin",
+      "title": "Satin / silk charmeuse",
+      "family": "cloth",
+      "color": "#ECEAE5",
+      "thickness_mm": 0.18,
+      "gsm": 84.6,
+      "specification": "Dharma Charmeuse: 100% crepe-back silk satin, 19.5 momme (the page's mm notation is not millimeters); approximate derived mass 84.6 g/m\u00b2. Thickness, optical coefficients and fold dimensions are estimates. Satin and textured crepe back are distinct faces. Poly Haven crepe_satin normal/roughness/anisotropy maps are a different CC0 satin donor at its published 263.199 \u00d7 267.900 mm extent, not a scan of Dharma silk. The white base color and stated optical estimates are retained. The current project-authored rest shape has compound diagonal folds, a tucked valley and a turnback. Normal strength 0.15 is an optical estimate that subordinates donor grain. The published donor repeat and 0.18 mm estimated caliper are preserved.",
+      "source_url": "https://www.dharmatrading.com/products/charmeuse-19-5mm",
+      "spec_url": "https://www.dharmatrading.com/products/charmeuse-19-5mm",
+      "photo_url": "https://www.dharmatrading.com/cdn/shop/files/cbss19-50.jpg?v=1772039269&width=1080",
+      "roughness": 0.24,
+      "appearance": {
+        "ior": 1.54,
+        "sheen": 0.22,
+        "sheenRoughness": 0.3,
+        "anisotropy": 0.8,
+        "anisotropyRotation": 0.0,
+        "diffuseTransmission": 0.07,
+        "normalStrength": 0.15
+      },
+      "geometry_variants": [
+        "broad rolling fold",
+        "narrower gathered fold"
+      ],
+      "review": [
+        "long directional highlight",
+        "highlight changes with viewing direction",
+        "smooth drape silhouette",
+        "soft textile response without metallic mirror color",
+        "distinct rougher crepe reverse on returned edge",
+        "finite 0.18 mm estimated caliper at fold boundary",
+        "whole-fold family includes a compound broad bend and narrower tucked valley, with smooth thin-cloth transitions rather than only a uniform barrel",
+        "broad pearlescent highlight bands retain soft shoulders, local narrow rims and dark troughs without clipped white rails",
+        "macro detail is fine and subordinate to the smooth satin response; map upload alone does not establish textile fidelity"
+      ],
+      "back_surface": {
+        "color": "#E9E7E1",
+        "roughness": 0.7,
+        "metallic": 0,
+        "appearance": {
+          "ior": 1.54,
+          "sheen": 0.16,
+          "sheenRoughness": 0.7,
+          "anisotropy": 0.12,
+          "diffuseTransmission": 0.07
+        }
+      },
+      "photograph_review": {
+        "reviewed_utc": "2026-11-03",
+        "method": "Original manufacturer/supplier pixels inspected; PDFs rasterized privately. No copyrighted photograph redistributed.",
+        "silhouette": "Draped white silk has broad curved folds interspersed with narrower tucked valleys, one large oblique central fold and small curled return edges.",
+        "surface": "Fine surface texture is subdued at whole-fabric scale; folds remain smooth and continuous rather than faceted.",
+        "optical": "Pearlescent broad light bands transition to narrower bright fold rims and darker troughs. Highlights follow local fold direction.",
+        "unknown": "Photograph does not clearly isolate the crepe back; a rougher reverse is supported by the product description, not a measured reverse-side photograph."
+      },
+      "texture_family": "satin",
+      "texture_asset_prefix": "crepe_satin",
+      "texture_repeat_mm": [
+        263.19942218838304,
+        267.8999900817871
+      ],
+      "texture_files": {
+        "normal": "crepe_satin_nor_gl_2k.png",
+        "roughness": "crepe_satin_rough_2k.png",
+        "anisotropy": "crepe_satin_anisotropy_strength_2k.png"
+      },
+      "mesh_controls_file": "geometry/compound-fold-controls.json"
+    },
+    {
+      "id": "knit",
+      "title": "Jersey / organic cotton",
+      "family": "cloth",
+      "color": "#E6E5DC",
+      "thickness_mm": 0.65,
+      "gsm": 190,
+      "specification": "Organic Cotton Plus Jersey SKU 15734-03 60: 100% organic cotton, 190 g/m\u00b2; declared stretch 25% crosswise / 20% lengthwise. The rest shape is authored, not a calibrated mechanics simulation. 0.65 mm caliper is estimated. Poly Haven cotton_jersey is a different CC0 scanned fabric, with normal/roughness maps applied at its published 263.603 \u00d7 263.800 mm extent. Normal strength 1 preserves the donor normal field amplitude for a controlled comparison with the earlier 0.35 estimate; all optical response assignments remain estimates. The current official 4K donor sources were imported using native max_dimension 4096, yielding 4093 \u00d7 4096 pixel assets within the existing 16 MP output budget. Original source and returned derived hashes are retained separately; the published physical repeat is preserved. The saved analytic drape uses 96 by 40 cells with its original dimensions, UV orientation and fold equation. Geometry sampling is distinct from the donor texture resolution and estimated optical values.",
+      "source_url": "https://organiccottonplus.com/products/jersey-61",
+      "spec_url": "https://organiccottonplus.com/products/jersey-61",
+      "photo_url": "https://organiccottonplus.com/cdn/shop/products/15734-0360.png?v=1754925576&width=1200",
+      "roughness": 0.85,
+      "appearance": {
+        "ior": 1.47,
+        "sheen": 0.45,
+        "sheenRoughness": 0.8,
+        "diffuseTransmission": 0.08,
+        "normalStrength": 1
+      },
+      "texture_family": "knit",
+      "geometry_variants": [
+        "relaxed folds",
+        "stretched-width source shape"
+      ],
+      "review": [
+        "visible loop courses and wales",
+        "soft rounded folds",
+        "matte center with grazing fuzz",
+        "variant actually changes width and loop spacing"
+      ],
+      "photograph_review": {
+        "reviewed_utc": "2026-11-03",
+        "method": "Original manufacturer/supplier pixels inspected; PDFs rasterized privately. No copyrighted photograph redistributed.",
+        "silhouette": "Soft broad vertical folds with irregular shallow creases; rounded fold ridges and narrow draped valleys.",
+        "surface": "Warm off-white face with tiny darker flecks and faint fine directional structure, not a chunky rope knit.",
+        "optical": "Very broad matte gradients and little sharp specular contrast. Knit should remain visibly less lustrous than satin under a shared key light.",
+        "unknown": "Loop spacing and caliper cannot be read from this unscaled image. Procedural loop field and rest shape remain explicit estimates."
+      },
+      "texture_asset_prefix": "cotton_jersey",
+      "texture_repeat_mm": [
+        263.6027473872483,
+        263.7999951839447
+      ],
+      "texture_files": {
+        "normal": "cotton_jersey_nor_gl_4k.jpg",
+        "roughness": "cotton_jersey_rough_4k.jpg"
+      },
+      "texture_import_max_dimension": 4096,
+      "mesh_resolution": {
+        "columns": 96,
+        "rows": 40
+      }
+    },
+    {
+      "id": "thread-matte",
+      "title": "Thread / matte polyester",
+      "family": "thread",
+      "color": "#A14E3C",
+      "thickness_mm": 0.22,
+      "gsm": 190,
+      "specification": "Madeira Frosted Matt 40: polyester; dtex 90 x 2; current product page stitch spacing 0.35\u20130.40 mm (flyer gives approximately 0.3\u20130.4 mm). Render diameter 0.22 mm is an estimate, not inferred from linear mass. The current authored visual comparison uses 0.24 mm satin/fill spacing, matching the lustrous program exactly; editable 0.40 mm baselines are retained. This denser comparison is an artist choice outside the stated manufacturer recommendation, not a measured optimum.",
+      "source_url": "https://www.madeira.co.uk/embroidery-threads/frosted-matt/",
+      "spec_url": "https://www.madeira.co.uk/wp-content/uploads/2024/05/TDS_FrostedMatt40.pdf",
+      "photo_url": "https://www.madeira.co.uk/wp-content/uploads/2022/02/FrostedMatt40_30_flyer.pdf",
+      "roughness": 0.8,
+      "appearance": {
+        "ior": 1.5,
+        "sheen": 0.05,
+        "sheenRoughness": 0.9,
+        "anisotropy": 0.05
+      },
+      "stitch_spacing_mm": 0.24,
+      "geometry_variants": [
+        "running and satin",
+        "fill with underlay and real crossing"
+      ],
+      "review": [
+        "independent rounded strands",
+        "distinct strand entry points and crossing shadows",
+        "no thread across jumps",
+        "low directional highlight relative to lustrous case",
+        "paired matte/lustrous source stitch positions, radius, methods, underlay and tie settings match exactly",
+        "matte remains visibly less directional than lustrous under identical relative camera and highlight light, while rounded strands retain shading",
+        "fill/underlay stays close to the substrate with clearance localized around crossings; no tall ladder of inflated arches"
+      ],
+      "photo_pages": [
+        3,
+        5
+      ],
+      "photograph_review": {
+        "reviewed_utc": "2026-11-03",
+        "method": "Original manufacturer/supplier pixels inspected; PDFs rasterized privately. No copyrighted photograph redistributed.",
+        "silhouette": "Brochure page3 shows raised crossed neon stitches over coarse dark cloth. Page5 shows a pink satin-stitched figure with white rectangular glasses, visibly above a black woven backing.",
+        "surface": "Individual short strands and needle turns remain legible, including uneven satin-column edges and crossing order. Thread is not a printed continuous stripe.",
+        "optical": "Pink and white strands keep broad mostly uniform color, with small rounded highlights rather than bright longitudinal streaks.",
+        "unknown": "FrostedMatt40 page3 spacing0.3\u20130.4mm is a manufacturer recommendation, not a physical diameter. Page5 weight is not labeled, so use only qualitative response/strand evidence."
+      },
+      "comparison_spacing_note": "Both matte and lustrous active specimens use identical 0.24 mm satin/fill spacing, source shapes, methods, underlay, 0.22 mm estimated diameter and tie settings. Separate editable 0.40 mm baseline iterations and actual before/after needle programs are retained. Running spacing remains 0.40 mm. The denser spacing is an authored visual comparison outside the manufacturer recommendation, not a calibrated sew-out setting.",
+      "thread_process": {
+        "threadDiameter": 0.22,
+        "tieIn": true,
+        "tieOff": true,
+        "tieLength": 0.7,
+        "tieRepeats": 1
+      },
+      "comparison_tie_note": "Both active appearances use one 0.7 mm backtracking repeat (two stitches per tie), with tie-in and tie-off enabled. The previous two-repeat definitions, exported needle commands, and rendered evidence remain retained. Every non-tie command is unchanged. Compact raised knots are accepted for the authored noncompressing round-strand model; this is not calibrated tie mechanics or a validated sew-out."
+    },
+    {
+      "id": "thread-lustrous",
+      "title": "Thread / lustrous viscose",
+      "family": "thread",
+      "color": "#A14E3C",
+      "thickness_mm": 0.22,
+      "gsm": 190,
+      "specification": "Madeira Classic 40: 100% viscose, dtex 135 x 2, published stitch spacing 0.4 mm. Render diameter 0.22 mm and optical values are estimates. Identical color and baseline geometry to matte sample isolate the material response. The current authored visual comparison uses 0.24 mm satin/fill spacing, matching the matte program exactly; editable 0.40 mm baselines are retained. This denser comparison is an artist choice outside the stated manufacturer recommendation, not a measured optimum.",
+      "source_url": "https://www.madeira.co.uk/embroidery-threads/classic/",
+      "spec_url": "https://www.madeira.com/fileadmin/user_upload/Downloads/Flyer/Classic_Flyer_EN_WEB.pdf",
+      "photo_url": "https://www.madeira.co.uk/wp-content/uploads/2019/09/Classic_40-e1568129731171-800x800.jpg",
+      "roughness": 0.3,
+      "appearance": {
+        "ior": 1.54,
+        "sheen": 0.65,
+        "sheenRoughness": 0.25,
+        "anisotropy": 0.8
+      },
+      "stitch_spacing_mm": 0.24,
+      "geometry_variants": [
+        "running and satin",
+        "fill with underlay and real crossing"
+      ],
+      "review": [
+        "bright strand highlights follow stitch direction",
+        "satin column edges retain individual strands",
+        "actual crossing order stays visible",
+        "same scene as matte case for comparison",
+        "paired matte/lustrous source stitch positions, radius, methods, underlay and tie settings match exactly",
+        "narrow strand-aligned flashes and adjacent darker valleys are visibly distinct from the matte case under the same light",
+        "fill/underlay stays close to the substrate with clearance localized around crossings; no tall ladder of inflated arches"
+      ],
+      "additional_photo_urls": [
+        "https://www.madeira.co.uk/wp-content/uploads/2020/01/Classic40_03.jpg"
+      ],
+      "photograph_review": {
+        "reviewed_utc": "2026-11-03",
+        "method": "Original manufacturer/supplier pixels inspected; PDFs rasterized privately. No copyrighted photograph redistributed.",
+        "silhouette": "Classic40 flower/bee embroidery contains raised satin borders, curved stems, fill patches and overlapping design regions on a white woven backing.",
+        "surface": "Stitch direction is clear in red petals and green stems; strand ends make a scalloped border rather than a perfect painted outline.",
+        "optical": "The pink circular body has bright narrow strand-aligned flashes with darker valleys. The supplementary spool photo shows a continuous bright band across aligned wound threads.",
+        "unknown": "Photographs use uncontrolled lighting and different colors from the paired authoring studies; material coefficients remain estimates. No cross-sectional diameter is provided."
+      },
+      "comparison_spacing_note": "Both matte and lustrous active specimens use identical 0.24 mm satin/fill spacing, source shapes, methods, underlay, 0.22 mm estimated diameter and tie settings. Separate editable 0.40 mm baseline iterations and actual before/after needle programs are retained. Running spacing remains 0.40 mm. The denser spacing is an authored visual comparison outside the manufacturer recommendation, not a calibrated sew-out setting.",
+      "thread_process": {
+        "threadDiameter": 0.22,
+        "tieIn": true,
+        "tieOff": true,
+        "tieLength": 0.7,
+        "tieRepeats": 1
+      },
+      "comparison_tie_note": "Both active appearances use one 0.7 mm backtracking repeat (two stitches per tie), with tie-in and tie-off enabled. The previous two-repeat definitions, exported needle commands, and rendered evidence remain retained. Every non-tie command is unchanged. Compact raised knots are accepted for the authored noncompressing round-strand model; this is not calibrated tie mechanics or a validated sew-out."
+    }
+  ],
+  "review_notices": [
+    "Historical candidate2 renders predate a correction to bundled Cycles sRGB texture decoding. Their color-texture, artwork and backing contrast cannot establish final material fidelity. Raw normal/roughness data remains diagnostic evidence. Affected current views must be rendered again with the corrected helper before acceptance; earlier failures and observations stay visible."
+  ]
+}

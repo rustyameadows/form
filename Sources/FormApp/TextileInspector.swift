@@ -93,6 +93,7 @@ struct TextileInspector: View {
       Picker("Fabric",selection:Binding(get:{object.materialID},set:{store.update(object,["material_id":$0])})) {
         ForEach(store.materials.filter{$0.fabric != nil}) {material in Text(material.name).tag(material.id)}
       }
+      MaterialAppearanceControls(materialID:object.materialID).disabled(object.locked)
       if let fabric=project.material(object.materialID).fabric {
         Text([fabric.composition,fabric.weightGSM.map{String(format:"%.0f GSM",$0)},fabric.usableWidth.map{String(format:"%.0f mm usable width",$0)}].compactMap{$0}.joined(separator:" · "))
           .font(.system(size:10)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)

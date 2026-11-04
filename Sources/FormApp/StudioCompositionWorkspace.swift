@@ -24,6 +24,9 @@ struct StudioCompositionWorkspace:View {
             HStack(alignment:.top) {
               Text(controller.draft?.name ?? "Studio").font(.system(size:16,weight:.semibold)).lineLimit(1).truncationMode(.tail)
               Spacer(minLength:0)
+              CyclesRenderModeControl(preview:controller.stage.cyclesPreview,settings:controller.stage.cyclesSettings) {settings in
+                controller.change{$0.renderSettings=settings}
+              }
               Toggle("Guides",isOn:$guides).inspectorToggle().font(.system(size:10))
             }.padding(.horizontal,18).padding(.vertical,12)
             stage.frame(minHeight:260,maxHeight:.infinity)
@@ -37,7 +40,7 @@ struct StudioCompositionWorkspace:View {
     }.task(id:"\(store.project?.id.uuidString ?? "none"):\(store.revision):\(GeometryFactory.fontRevision)") {
       let project=store.project
       thumbnails.synchronize(project:project,assets:project.map{store.repository.url(for:$0.id).appendingPathComponent("Assets")})
-    }.onDisappear{thumbnails.suspend()}.onAppear{controller.reconcile()}.onChange(of:store.project?.id){_,_ in controller.reconcile()}.onChange(of:store.revision){_,_ in controller.reconcile()}.onChange(of:store.environment){_,value in if value != .studio {controller.stop()}}
+    }.onDisappear{thumbnails.suspend();controller.stage.cyclesPreview.sceneChanged()}.onAppear{controller.reconcile()}.onChange(of:store.project?.id){_,_ in controller.reconcile()}.onChange(of:store.revision){_,_ in controller.reconcile()}.onChange(of:store.environment){_,value in if value != .studio {controller.stop()}}
       .confirmationDialog("Save changes to \(controller.draft?.name ?? "this scene")?",isPresented:Binding(
         get:{controller.pendingSceneID != nil},set:{if !$0 {controller.cancelSceneSelection()}})) {
           if let id=controller.pendingSceneID {

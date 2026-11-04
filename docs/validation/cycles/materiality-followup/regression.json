@@ -1,0 +1,226 @@
+{
+  "status": "engineering_regression_passed",
+  "completed_at": "2026-11-04T19:24:06.494120+00:00",
+  "release_regression": {
+    "status": "passed",
+    "exit_code": 0,
+    "elapsed_seconds": 663.79,
+    "source_files": 1085,
+    "source_unchanged": true,
+    "source_manifest_sha256": "e2d4f54d45b23f7e94fe1c45ecc8942f9e80927c719b13020b7127be50ac78c0",
+    "log_sha256": "cd1ad54eb5ee9ab3418783d5f8c2c03ee6ff25079eaa3d944dfbc7515b495a78",
+    "completed_at": "2026-11-04T19:24:06.494120+00:00",
+    "actual_renderer_helpers_enabled": true,
+    "actual_project_diagnostics_enabled": true,
+    "executed": 2624,
+    "passed": 2621,
+    "skipped": 3,
+    "failed": 0,
+    "count_basis": "Seven XCTest target summaries; interleaved per-case console lines are not the count authority.",
+    "targets": {
+      "LabRenderingTests": 57,
+      "FormMeshAssetsTests": 24,
+      "FormGeometryTests": 10,
+      "FormCoreTests": 1250,
+      "FormCADModelingTests": 28,
+      "FormCADKernelTests": 12,
+      "FormAppTests": 1243
+    },
+    "optional_skips": [
+      "DenseCanvasInteractionPerformanceTests.testExternalNativeCanvasDrawPanZoomAndFrameDrag",
+      "DenseDocumentPerformanceTests.testReadOnlyExternalDocumentStages",
+      "DenseStudioPerformanceTests.testExternalStudioSceneSwitchingAndThumbnailReentry"
+    ],
+    "runner": {
+      "path": ".local/cycles-materiality-followup/regression-2/run.py",
+      "sha256": "998781aa1c4889c60b41ef2b2bc5b1a7338615fd230c4fd4f9301ec0d8f17c1c"
+    },
+    "record": {
+      "path": ".local/cycles-materiality-followup/regression-2/regression.json",
+      "sha256": "01d19d7e0cfaa8f62a2829c1e1b541e25724bc77705cc3ffa5092948f5464685"
+    },
+    "source_manifest": {
+      "path": ".local/cycles-materiality-followup/regression-2/source-manifest.json",
+      "sha256": "e2d4f54d45b23f7e94fe1c45ecc8942f9e80927c719b13020b7127be50ac78c0"
+    },
+    "log": {
+      "path": ".local/cycles-materiality-followup/regression-2/regression.log",
+      "sha256": "cd1ad54eb5ee9ab3418783d5f8c2c03ee6ff25079eaa3d944dfbc7515b495a78"
+    }
+  },
+  "helper_identities": {
+    "runtime": {
+      "path": ".local/engines/cycles-3eb35f85996b/lab-cycles-render",
+      "sha256": "d0b5cccb0dbf1f160be3267b4d9c5c5f8e3d7eaef48d59b91a82d623ec66e53b"
+    },
+    "intentional_metal_initialization_failure_fixture": {
+      "path": ".local/cycles/validation-metal-initialization-color-v3/intentional-failure/LAB.app/Contents/Helpers/lab-cycles-render",
+      "sha256": "245d1e61d630b53fff7468f8880b34dde9d5e59639e29b5ed1fc4ec9b2783159"
+    }
+  },
+  "actual_project_diagnostics": {
+    "attached_program": {
+      "evidence": {
+        "path": ".local/cycles-materiality-followup/regression-2/attached-program.json",
+        "sha256": "b09c86fa3445f7e525ce867e00212931fb2dba70e10a42a4c5e32bbe8059139f"
+      },
+      "commands": 1547,
+      "sourceStrands": 1214,
+      "completedStrands": 1214,
+      "sourceKeys": 21786,
+      "outputKeys": 21786,
+      "work": 1461529,
+      "maximumWork": 16000000,
+      "elapsedSeconds": 0.13545501232147217,
+      "geometrySHA256": "2631869f953cc8e06203219956aae685c8facbff70bd380ddc054c41cf80bcad",
+      "programDigest": "5e1583f3dc78e1ea92c4e771e950a92f8b06bf42c69a3b86b997c02ce80dcba8",
+      "programFileSHA256": "c7e10176239548a9f5d4bfda5274fb5ca771caf4948c0a624026985445ad209c",
+      "manifestSHA256": "58342c6c684dc121c5b32df23ea7fc268fde8354bc7d9f4083dd3862e953d39c"
+    },
+    "full_table": {
+      "evidence": {
+        "path": ".local/cycles-materiality-followup/regression-2/full-table.json",
+        "sha256": "122b7d9853956a582383c86b82430c8f48f4296e9c4c3712abbd738341b51b2c"
+      },
+      "physicalObjects": 36,
+      "renderables": 37,
+      "curves": 9,
+      "triangles": 144938,
+      "textureReferences": 164,
+      "uniqueTextures": 63,
+      "decodedTextureBytes": 907886628,
+      "geometryBytes": 13765224,
+      "totalBudgetBytes": 921651852,
+      "transferBudgetBytes": 1073741824,
+      "downsampled": false,
+      "snapshotRevision": "c44fb4ba54e8632beb3aae330e69d69baa38baafa301b7b1ed9989ec3fdb0636",
+      "sourceDesignDigest": "c0bfbb4bfd9a9d43e40e4b78190d691fe684ac0bbcff8695eeb18bfbd4624d74",
+      "manifestSHA256": "58342c6c684dc121c5b32df23ea7fc268fde8354bc7d9f4083dd3862e953d39c"
+    },
+    "privacy": "Project identities, filesystem paths and texture inventories omitted; local evidence retains the complete diagnostics."
+  },
+  "python_clients": {
+    "status": "passed",
+    "tests": 30,
+    "failures": 0,
+    "evidence": {
+      "path": ".local/cycles-materiality-followup/python-clients-2.log",
+      "sha256": "a2277d540b21692851db8efaf12b011dc7ab2cbe9026e13070b5fb5e3ae2b557"
+    }
+  },
+  "asset_reproduction": {
+    "status": "byte_exact",
+    "proof": {
+      "path": ".local/cycles-materiality-followup/asset-reproduction.json",
+      "sha256": "5d3b52f41ab330a6c51b65cded3649b3c8f3b0f72309019f3cc728d2a958c66c"
+    },
+    "generator": {
+      "path": "scripts/prepare_cycles_paper_edges.py",
+      "sha256": "b187d166f46b698d897c442e229050a0d54f0697327bed7eba378a0a067c448a"
+    },
+    "command": "python3 scripts/prepare_cycles_paper_edges.py --output .local/cycles-materiality-followup/reproduced-edge-assets",
+    "assets": {
+      "provenance.json": {
+        "sha256": "d6bc14fdf231ca2084111b068e9c7426a26f150f57cbfdacc377b8e7d70b1021",
+        "byte_exact": true
+      },
+      "estimated-cotton-cut-edge-baseColor.png": {
+        "sha256": "e7fccbc0e7b059d7d48f4f01087f52d737649961fe2fc40f80fb07c9adef1920",
+        "byte_exact": true
+      },
+      "estimated-cotton-cut-edge-roughness.png": {
+        "sha256": "af3ed688d57094c33ce0891c8e7a07a765e810611fab96c4c09c10c2e46f94f0",
+        "byte_exact": true
+      },
+      "estimated-cotton-cut-edge-normal.png": {
+        "sha256": "1637f68257613179ff2a6139b162f633bf84a39437517f5f7e4dae9a6fbdf70a",
+        "byte_exact": true
+      }
+    },
+    "interpretation": "Original analytic estimates, not measured manufacturer maps. New installed-app visual acceptance remains pending."
+  },
+  "retained_attempts": {
+    "checkpoint": {
+      "path": ".local/cycles-materiality-followup/validation-checkpoint.json",
+      "sha256": "c789c2bc5d7c7660c5b27a10e1b38833aabb43c343d118c5896909bdb53a2114"
+    },
+    "attempts": [
+      {
+        "log": "lighting-tests.log",
+        "sha256": "a3b9861ca980111d23f7199098c4382ec2592183967c6e880ccf89700b0658f4",
+        "xctest_case_outcomes": {
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        },
+        "status": "focused_pass"
+      },
+      {
+        "log": "regression/regression.log",
+        "sha256": "0f08fa5fbf29d6d148445fcd21eb00673b6915da41c370fda374ce2b80f6d54e",
+        "xctest_case_outcomes": {
+          "passed": 2604,
+          "failed": 6,
+          "skipped": 3
+        },
+        "runner_record": "regression/regression.json",
+        "runner_record_sha256": "d39ae4cc991ec1f6e882a5a990c888a2b8c2873bcdcd2a94a60461d82eb43243",
+        "status": "failed",
+        "exit_code": 1,
+        "source_unchanged": true,
+        "source_files": 1083
+      },
+      {
+        "log": "focused-2/regression.log",
+        "sha256": "815034437a9d38c42636a309cd382fbbf698b907e7be16afc596d859dc24efd8",
+        "xctest_case_outcomes": {
+          "passed": 0,
+          "failed": 0,
+          "skipped": 0
+        },
+        "runner_record": "focused-2/regression.json",
+        "runner_record_sha256": "999b8f3a94a2466d9f01a9a9f819132486fccc84e675602696d9be91717fb930",
+        "status": "failed",
+        "exit_code": 1,
+        "source_unchanged": true,
+        "source_files": 1085
+      },
+      {
+        "log": "focused-3/regression.log",
+        "sha256": "aeb7b6ed1138ac798f506372d4cd5d8e7ecdfc33c39215808b2d7899a933d8e7",
+        "xctest_case_outcomes": {
+          "passed": 76,
+          "failed": 1,
+          "skipped": 0
+        },
+        "runner_record": "focused-3/regression.json",
+        "runner_record_sha256": "57d097200e58f5ae5c53e88857a00b2536fe507b5f174e52682c2db991c9d7d0",
+        "status": "failed",
+        "exit_code": 1,
+        "source_unchanged": false,
+        "source_files": 1085
+      }
+    ],
+    "notes": [
+      "Initial full regression: four cut-edge fixture failures, recovery schema overflow, and nested persistence date-precision fixture assertion. All corrected and covered by the final source-stable run.",
+      "focused-2: compiler rejected a multiline string concatenation; no tests executed. Corrected before the final run.",
+      "focused-3: transitional compiled-source mismatch in the built-in stock picker test; source changed during the run. Not a release gate.",
+      "All failed logs remain retained; the final source-stable regression supersedes their pending engineering status."
+    ]
+  },
+  "recovery_schema": {
+    "evidence": {
+      "path": ".local/cycles-materiality-followup/recovery-schema-check.json",
+      "sha256": "4ed91588e24d45e27d93b1ed5e469d4d8a3f5dc2ef0264a381bff2618fe592d7"
+    },
+    "recovery_bytes": 129886,
+    "limit_bytes": 131072,
+    "validation_bounds_preserved": true,
+    "final_suite_capability_tests": "passed"
+  },
+  "pending_gates": [
+    "Build and verify the updated complete app bundle.",
+    "Install and inspect the ordinary updated LAB native controls.",
+    "Perform reference-led visible paper and finish review in the updated app."
+  ]
+}

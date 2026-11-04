@@ -1,0 +1,1008 @@
+{
+  "format_version": 1,
+  "status": "passed_qualitative_integration_preservation",
+  "scope": "Five unchanged saved-shot replays after integration with main. This is qualitative preservation of reviewed controls, not renewed full reference acceptance or a pixel-identical comparison.",
+  "installed_source_revision": "20f27b83a2c5dc485aeb0527cb5d09e8deb9f56f",
+  "installed_source_clean": true,
+  "historical_evidence": {
+    "file": "paper-visual-review.json",
+    "sha256": "7b8054119c4f2898f73b4263b4484f3f8113a19a9d0cc3eeed8e7d6d62e1924d",
+    "unchanged": true,
+    "source_revision": "2477730f99777ee9f9092c9245e6c836ba290f15"
+  },
+  "review": {
+    "method": "Root assistant directly inspected all five actual LAB PNGs and explicitly accepted qualitative integration preservation.",
+    "human_user_signoff_claimed": false
+  },
+  "verification": {
+    "source": "Completed integration replay record; offline PNG/EXR/render-record/source-archive hashes reverified",
+    "saved_shots_unchanged": true,
+    "selected_source_objects_unchanged": true,
+    "material_definitions_unchanged": true,
+    "original_project_protected_field_count": 11,
+    "original_project_all_fields_exact": true,
+    "private_original_identity_omitted": true
+  },
+  "limitations": [
+    "Linen remains a simplified smooth cloth study. No new fiber, frayed-edge or contact-flattening fidelity is claimed.",
+    "Paper edge modulation remains analytic normal shading with a straight silhouette. The 0.16 mm shoulder and relief dimensions remain authored estimates.",
+    "These outputs are not pixel-identical to the historical renders; review concerns visible preservation under the integrated renderer and texture sampling changes.",
+    "The eight-case corpus was not fully re-reviewed in these five spot checks.",
+    "Project-relative artifacts refer to the portable study package. Only the two listed unaltered PNGs are included here; private original-project identifiers and absolute paths are omitted."
+  ],
+  "build_identity": {
+    "files": {
+      "app_executable": {
+        "path": "Contents/MacOS/LAB",
+        "sha256": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+        "size_bytes": 80516160
+      },
+      "lab_mcp": {
+        "path": "Contents/MacOS/lab-mcp",
+        "sha256": "baab5866d3a608926969c7e8f23e335dd11f2643cdaf97afc42269ce0d57ad6c",
+        "size_bytes": 22761712
+      },
+      "renderer_helper": {
+        "path": "Contents/Helpers/lab-cycles-render",
+        "sha256": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+        "size_bytes": 6483376
+      },
+      "engine_provenance": {
+        "path": "Contents/Resources/ThirdPartyNotices/Cycles/LAB-CYCLES-PROVENANCE.json",
+        "sha256": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+        "size_bytes": 34944
+      }
+    },
+    "engine": {
+      "source_url": "https://github.com/blender/cycles.git",
+      "source_commit": "3eb35f85996baa6c1b2e19bf297b22745c85e321",
+      "source_archive_sha256": "63dec4548262979df046a9c678b239e2761153366f99075f5d629e76b308a6db",
+      "dependency_commit": "7d74150064b3263092281b269c6b62b891001fcb",
+      "display_transform": "LAB-sRGB-v1",
+      "protocol_version": 1
+    }
+  },
+  "runtime_provenance": {
+    "application": {
+      "executable": {
+        "sha256": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+        "size_bytes": 80516160
+      },
+      "packaged_build": {
+        "metadata": {
+          "app_pre_package_signing_sha256": "d54bb9aa2f4c3ea589522ff01c8a3dc77b6fa2096e507b5f3ac04494ede0889b",
+          "build_id": "sha256:776c9939c975af8f58fe5b937731d98554776fb66dd3e771066ec3c37058c5d8",
+          "configuration": "release",
+          "format_version": 1,
+          "helper_pre_package_signing_sha256": "c1b5cbb15fee2e104ae6114619742c5eb54df02be2211cbb1918570d892032f1",
+          "schema_fingerprint": "sha256:174f2d4bd50c87daeb7f79ea0450fb797a9ab77008ecbeb5f5b631c1b0539206",
+          "source_dirty": false,
+          "source_revision": "20f27b83a2c5dc485aeb0527cb5d09e8deb9f56f"
+        },
+        "sha256": "bed3c10f65923ecf54978a4fb3ad9239a801d11c87cde24f77ae4b636a040d8e",
+        "size_bytes": 545,
+        "status": "available"
+      }
+    },
+    "renderer": {
+      "display_transform": {
+        "id": "LAB-sRGB-v1",
+        "sha256": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94",
+        "size_bytes": 1763,
+        "status": "available"
+      },
+      "engine_provenance": {
+        "dependency_commit": "7d74150064b3263092281b269c6b62b891001fcb",
+        "protocol_version": 1,
+        "sha256": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+        "size_bytes": 34944,
+        "source_commit": "3eb35f85996baa6c1b2e19bf297b22745c85e321",
+        "status": "available"
+      },
+      "helper": {
+        "sha256": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+        "size_bytes": 6483376
+      }
+    },
+    "version": 1
+  },
+  "attempts": [
+    {
+      "label": "edge-macro",
+      "job_id": "5E60249B-0B74-45CE-9AC7-BC85297E7B43",
+      "status": "accepted_qualitative_integration_preservation",
+      "observations": "Short layered cut-wall modulation and finite caliper are retained, with fine face grain and a straight silhouette.",
+      "files": {
+        "png": {
+          "project_file": "Exports/Cycles-5E60249B-0B74-45CE-9AC7-BC85297E7B43.render/Cycles-5E60249B-0B74-45CE-9AC7-BC85297E7B43.png",
+          "sha256": "6510f87409dea473b51ca360be720684a17fe8e395f2e4aeb006a35d7d4468d5",
+          "size_bytes": 1515936,
+          "verified": true
+        },
+        "exr": {
+          "project_file": "Exports/Cycles-5E60249B-0B74-45CE-9AC7-BC85297E7B43.render/Cycles-5E60249B-0B74-45CE-9AC7-BC85297E7B43.exr",
+          "sha256": "8836c93d7b4deafad160021eb7015e962021fee3d7f9e58709c7bbbde1289daa",
+          "size_bytes": 15028622,
+          "verified": true
+        },
+        "record": {
+          "project_file": "Exports/Cycles-5E60249B-0B74-45CE-9AC7-BC85297E7B43.render/render.json",
+          "sha256": "8d1288aac66577f24633bda141411ecd4db6c092ac3be34507347de1e8fb7d31",
+          "size_bytes": 10050,
+          "verified": true
+        }
+      },
+      "source_archive": {
+        "project_file": "Exports/Cycles-5E60249B-0B74-45CE-9AC7-BC85297E7B43.render/replay-source.json",
+        "sha256": "0663b6d54791128a206cc9dd3bd16e4b114e6c70f886a0a4667c687c43fd8cf9",
+        "verified": true
+      },
+      "prior_output": {
+        "job_id": "193363AB-3301-4938-802C-4CA11649392A",
+        "png_sha256": "a6e79a371c143e572dd6af4ff1a20ade6f45f7cd52bb67d5df99142f33b4f341",
+        "record_sha256": "74d2d0ffa46c9ca29810f7fc4dd02e686d6ec4fc9ca2c69f7de3847b1101b457"
+      },
+      "renderer": {
+        "name": "Cycles",
+        "device": "metal",
+        "fallback_reason": null,
+        "actual_samples": 512,
+        "sample_budget": 512,
+        "pixels": {
+          "width": 3000,
+          "height": 2000
+        },
+        "settings": {
+          "areaLights": [
+            {
+              "color": "#FFFFFF",
+              "id": "9809B6A5-CD72-532C-AB0D-EB6817796D8D",
+              "positionMM": {
+                "x": -40,
+                "y": 60,
+                "z": 2135
+              },
+              "powerWatts": 0.04,
+              "shape": "rectangle",
+              "sizeMM": {
+                "x": 80,
+                "y": 50
+              },
+              "targetMM": {
+                "x": 0,
+                "y": 0.5,
+                "z": 2065
+              }
+            }
+          ],
+          "denoise": true,
+          "depthOfField": false,
+          "device": "automatic",
+          "displacementDicingRate": 2,
+          "displacementMaxSubdivisions": 10,
+          "displacementMaxTriangles": 2000000,
+          "environmentColor": "#FFFFFF",
+          "environmentRotationDegrees": 0,
+          "environmentStrength": 0.12,
+          "exposure": 0,
+          "focusDistanceMM": 1000,
+          "fStop": 5.6,
+          "maxBounces": 12,
+          "noiseThreshold": 0.01,
+          "previewSamples": 64,
+          "renderer": "cycles",
+          "samples": 512
+        },
+        "denoiser": "OpenImageDenoise 2.5.0",
+        "display_transform": "LAB-sRGB-v1",
+        "exr_encoding": "scene-linear sRGB, premultiplied alpha"
+      },
+      "saved_shot": {
+        "camera": {
+          "azimuth": 0.25,
+          "distance": 0.15,
+          "elevation": 0.16,
+          "projection": "perspective",
+          "target": {
+            "x": 0,
+            "y": 0.005,
+            "z": 20.650000000000002
+          }
+        },
+        "surface": "Graphite",
+        "lighting": "soft-side-v1",
+        "reference_aspect": 1.3333333333333333,
+        "canonical_sha256": "9ddd6d2eef6989f9d7b36171930b151ff6a93600870f4b8019c4fb581c1025b0",
+        "visibility_mode": "objects",
+        "visible_object_count": 1
+      },
+      "runtime_provenance": {
+        "application": {
+          "executable": {
+            "sha256": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+            "size_bytes": 80516160
+          },
+          "packaged_build": {
+            "metadata": {
+              "app_pre_package_signing_sha256": "d54bb9aa2f4c3ea589522ff01c8a3dc77b6fa2096e507b5f3ac04494ede0889b",
+              "build_id": "sha256:776c9939c975af8f58fe5b937731d98554776fb66dd3e771066ec3c37058c5d8",
+              "configuration": "release",
+              "format_version": 1,
+              "helper_pre_package_signing_sha256": "c1b5cbb15fee2e104ae6114619742c5eb54df02be2211cbb1918570d892032f1",
+              "schema_fingerprint": "sha256:174f2d4bd50c87daeb7f79ea0450fb797a9ab77008ecbeb5f5b631c1b0539206",
+              "source_dirty": false,
+              "source_revision": "20f27b83a2c5dc485aeb0527cb5d09e8deb9f56f"
+            },
+            "sha256": "bed3c10f65923ecf54978a4fb3ad9239a801d11c87cde24f77ae4b636a040d8e",
+            "size_bytes": 545,
+            "status": "available"
+          }
+        },
+        "renderer": {
+          "display_transform": {
+            "id": "LAB-sRGB-v1",
+            "sha256": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94",
+            "size_bytes": 1763,
+            "status": "available"
+          },
+          "engine_provenance": {
+            "dependency_commit": "7d74150064b3263092281b269c6b62b891001fcb",
+            "protocol_version": 1,
+            "sha256": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+            "size_bytes": 34944,
+            "source_commit": "3eb35f85996baa6c1b2e19bf297b22745c85e321",
+            "status": "available"
+          },
+          "helper": {
+            "sha256": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+            "size_bytes": 6483376
+          }
+        },
+        "version": 1
+      },
+      "runtime_verification": {
+        "status": "passed",
+        "app_sha256": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+        "helper_sha256": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+        "packaged_build_id": "sha256:776c9939c975af8f58fe5b937731d98554776fb66dd3e771066ec3c37058c5d8",
+        "engine_provenance_sha256": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+        "display_transform_sha256": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94"
+      },
+      "preservation": {
+        "saved_shot_unchanged": true,
+        "selected_source_objects_unchanged": true,
+        "material_definitions_unchanged": true
+      },
+      "comparison": {
+        "method": "Direct qualitative image review, not pixel identity",
+        "png_pixel_identity_claimed": false,
+        "png_bytes_equal_prior": false
+      },
+      "published_png": {
+        "file": "main-edge-macro.png",
+        "sha256": "6510f87409dea473b51ca360be720684a17fe8e395f2e4aeb006a35d7d4468d5",
+        "size_bytes": 1515936,
+        "unaltered_copy": true,
+        "job_id": "5E60249B-0B74-45CE-9AC7-BC85297E7B43"
+      }
+    },
+    {
+      "label": "blind-shoulder",
+      "job_id": "B399F070-D647-4E62-8E54-178F3236CA75",
+      "status": "accepted_qualitative_integration_preservation",
+      "observations": "The soft 0.16 mm circular relief rim, continuous face grain and crisp ink are retained.",
+      "files": {
+        "png": {
+          "project_file": "Exports/Cycles-B399F070-D647-4E62-8E54-178F3236CA75.render/Cycles-B399F070-D647-4E62-8E54-178F3236CA75.png",
+          "sha256": "7a6254eed435f3f698f5a37a1bd1a3d2ad48179d7fb119c5fd0217365d28a055",
+          "size_bytes": 10472067,
+          "verified": true
+        },
+        "exr": {
+          "project_file": "Exports/Cycles-B399F070-D647-4E62-8E54-178F3236CA75.render/Cycles-B399F070-D647-4E62-8E54-178F3236CA75.exr",
+          "sha256": "3321ba6ea32b956b8e9334c30dbae11ee78239f0b013127aec4829ebcfd8ca2e",
+          "size_bytes": 58400464,
+          "verified": true
+        },
+        "record": {
+          "project_file": "Exports/Cycles-B399F070-D647-4E62-8E54-178F3236CA75.render/render.json",
+          "sha256": "05d0663b465e832c8f324fe585e66a6514a6d2020b25938a4e0ff4eb0e9fe5e8",
+          "size_bytes": 10084,
+          "verified": true
+        }
+      },
+      "source_archive": {
+        "project_file": "Exports/Cycles-B399F070-D647-4E62-8E54-178F3236CA75.render/replay-source.json",
+        "sha256": "b0eb1b0920148f2cad4884108113e708405c5450a1f3449378add2990b22ccd3",
+        "verified": true
+      },
+      "prior_output": {
+        "job_id": "29FAC2B8-E0CF-4A7E-8FE9-198D28005987",
+        "png_sha256": "1f8e6504cde8b7dd7e0da3b5eb57ea63f1b5322cf94001d16637e489551a52d3",
+        "record_sha256": "1ccbd1131fd08d277408e106c93c816ef11212989fbbbce18e7861880ca2d997"
+      },
+      "renderer": {
+        "name": "Cycles",
+        "device": "metal",
+        "fallback_reason": null,
+        "actual_samples": 512,
+        "sample_budget": 512,
+        "pixels": {
+          "width": 3000,
+          "height": 2000
+        },
+        "settings": {
+          "areaLights": [
+            {
+              "color": "#FFFFFF",
+              "id": "7A8B28BD-6E7F-5217-A193-51A32540F8E0",
+              "positionMM": {
+                "x": 296,
+                "y": 90,
+                "z": 2082
+              },
+              "powerWatts": 0.1,
+              "shape": "rectangle",
+              "sizeMM": {
+                "x": 100,
+                "y": 60
+              },
+              "targetMM": {
+                "x": 366,
+                "y": 1,
+                "z": 2037
+              }
+            }
+          ],
+          "denoise": true,
+          "depthOfField": false,
+          "device": "automatic",
+          "displacementDicingRate": 2,
+          "displacementMaxSubdivisions": 10,
+          "displacementMaxTriangles": 2000000,
+          "environmentColor": "#FFFFFF",
+          "environmentRotationDegrees": 0,
+          "environmentStrength": 0.16,
+          "exposure": 0,
+          "focusDistanceMM": 1000,
+          "fStop": 5.6,
+          "maxBounces": 12,
+          "noiseThreshold": 0.01,
+          "previewSamples": 64,
+          "renderer": "cycles",
+          "samples": 512
+        },
+        "denoiser": "OpenImageDenoise 2.5.0",
+        "display_transform": "LAB-sRGB-v1",
+        "exr_encoding": "scene-linear sRGB, premultiplied alpha"
+      },
+      "saved_shot": {
+        "camera": {
+          "azimuth": 0.25,
+          "distance": 0.48,
+          "elevation": 0.65,
+          "projection": "perspective",
+          "target": {
+            "x": 3.6599999999999997,
+            "y": 0.01,
+            "z": 20.37
+          }
+        },
+        "surface": "Graphite",
+        "lighting": "soft-side-v1",
+        "reference_aspect": 1.3333333333333333,
+        "canonical_sha256": "47e4b7b1184e434bf917c648757a9953e2506661e485f6f71f381595ca16823e",
+        "visibility_mode": "objects",
+        "visible_object_count": 1
+      },
+      "runtime_provenance": {
+        "application": {
+          "executable": {
+            "sha256": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+            "size_bytes": 80516160
+          },
+          "packaged_build": {
+            "metadata": {
+              "app_pre_package_signing_sha256": "d54bb9aa2f4c3ea589522ff01c8a3dc77b6fa2096e507b5f3ac04494ede0889b",
+              "build_id": "sha256:776c9939c975af8f58fe5b937731d98554776fb66dd3e771066ec3c37058c5d8",
+              "configuration": "release",
+              "format_version": 1,
+              "helper_pre_package_signing_sha256": "c1b5cbb15fee2e104ae6114619742c5eb54df02be2211cbb1918570d892032f1",
+              "schema_fingerprint": "sha256:174f2d4bd50c87daeb7f79ea0450fb797a9ab77008ecbeb5f5b631c1b0539206",
+              "source_dirty": false,
+              "source_revision": "20f27b83a2c5dc485aeb0527cb5d09e8deb9f56f"
+            },
+            "sha256": "bed3c10f65923ecf54978a4fb3ad9239a801d11c87cde24f77ae4b636a040d8e",
+            "size_bytes": 545,
+            "status": "available"
+          }
+        },
+        "renderer": {
+          "display_transform": {
+            "id": "LAB-sRGB-v1",
+            "sha256": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94",
+            "size_bytes": 1763,
+            "status": "available"
+          },
+          "engine_provenance": {
+            "dependency_commit": "7d74150064b3263092281b269c6b62b891001fcb",
+            "protocol_version": 1,
+            "sha256": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+            "size_bytes": 34944,
+            "source_commit": "3eb35f85996baa6c1b2e19bf297b22745c85e321",
+            "status": "available"
+          },
+          "helper": {
+            "sha256": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+            "size_bytes": 6483376
+          }
+        },
+        "version": 1
+      },
+      "runtime_verification": {
+        "status": "passed",
+        "app_sha256": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+        "helper_sha256": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+        "packaged_build_id": "sha256:776c9939c975af8f58fe5b937731d98554776fb66dd3e771066ec3c37058c5d8",
+        "engine_provenance_sha256": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+        "display_transform_sha256": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94"
+      },
+      "preservation": {
+        "saved_shot_unchanged": true,
+        "selected_source_objects_unchanged": true,
+        "material_definitions_unchanged": true
+      },
+      "comparison": {
+        "method": "Direct qualitative image review, not pixel identity",
+        "png_pixel_identity_claimed": false,
+        "png_bytes_equal_prior": false
+      }
+    },
+    {
+      "label": "whole-edge",
+      "job_id": "373F799D-B820-4D9C-903E-2BE72564FADC",
+      "status": "accepted_qualitative_integration_preservation",
+      "observations": "All four corners remain in frame. Readable crisp artwork, subtle tooth and finite caliper are retained.",
+      "files": {
+        "png": {
+          "project_file": "Exports/Cycles-373F799D-B820-4D9C-903E-2BE72564FADC.render/Cycles-373F799D-B820-4D9C-903E-2BE72564FADC.png",
+          "sha256": "cf4f4477b3ec485662c4421426e1d5d260c74deaea2d7fb1c85b0c64ffbef889",
+          "size_bytes": 2662599,
+          "verified": true
+        },
+        "exr": {
+          "project_file": "Exports/Cycles-373F799D-B820-4D9C-903E-2BE72564FADC.render/Cycles-373F799D-B820-4D9C-903E-2BE72564FADC.exr",
+          "sha256": "75fafd57cb460ac5890d353f1a904a452ea4b174db643d44efa06382143d2cbb",
+          "size_bytes": 21279805,
+          "verified": true
+        },
+        "record": {
+          "project_file": "Exports/Cycles-373F799D-B820-4D9C-903E-2BE72564FADC.render/render.json",
+          "sha256": "0d17177e05aecc72ddc5f0a660d0dce348df25a930c6c85435c551341867f85d",
+          "size_bytes": 10099,
+          "verified": true
+        }
+      },
+      "source_archive": {
+        "project_file": "Exports/Cycles-373F799D-B820-4D9C-903E-2BE72564FADC.render/replay-source.json",
+        "sha256": "eccfdbcea0017908f9743ce732bd468c6af87521dffd41f87c60c141841a46b7",
+        "verified": true
+      },
+      "prior_output": {
+        "job_id": "D41E14F7-2366-468D-BB80-92AA1F0F10CA",
+        "png_sha256": "c4111529ff8f88a666c61ae4eadfe25bbf4cb23c04a04ff82eabb1a43010aec1",
+        "record_sha256": "680dc16c2bb26415199791bbedeb28947e0f23e2c3c3004dc5d6111bac2c6673"
+      },
+      "renderer": {
+        "name": "Cycles",
+        "device": "metal",
+        "fallback_reason": null,
+        "actual_samples": 512,
+        "sample_budget": 512,
+        "pixels": {
+          "width": 3000,
+          "height": 2000
+        },
+        "settings": {
+          "areaLights": [
+            {
+              "color": "#FFFFFF",
+              "id": "0EEDB1F0-7E6E-568B-B62C-532EE4C591E4",
+              "positionMM": {
+                "x": 0,
+                "y": 352,
+                "z": 2210
+              },
+              "powerWatts": 1.4,
+              "shape": "rectangle",
+              "sizeMM": {
+                "x": 350,
+                "y": 250
+              },
+              "targetMM": {
+                "x": 0,
+                "y": 2,
+                "z": 2030
+              }
+            }
+          ],
+          "denoise": true,
+          "depthOfField": false,
+          "device": "automatic",
+          "displacementDicingRate": 2,
+          "displacementMaxSubdivisions": 10,
+          "displacementMaxTriangles": 2000000,
+          "environmentColor": "#FFFFFF",
+          "environmentRotationDegrees": 0,
+          "environmentStrength": 0.18,
+          "exposure": 0,
+          "focusDistanceMM": 1000,
+          "fStop": 5.6,
+          "maxBounces": 12,
+          "noiseThreshold": 0.01,
+          "previewSamples": 64,
+          "renderer": "cycles",
+          "samples": 512
+        },
+        "denoiser": "OpenImageDenoise 2.5.0",
+        "display_transform": "LAB-sRGB-v1",
+        "exr_encoding": "scene-linear sRGB, premultiplied alpha"
+      },
+      "saved_shot": {
+        "camera": {
+          "azimuth": 0.65,
+          "distance": 1.7241379310344827,
+          "elevation": 0.68,
+          "projection": "perspective",
+          "target": {
+            "x": 0,
+            "y": 0.02,
+            "z": 20.3
+          }
+        },
+        "surface": "Graphite",
+        "lighting": "soft-side-v1",
+        "reference_aspect": 1.3333333333333333,
+        "canonical_sha256": "45069b36936817c0e5193d1f6cf3cc13bfec614bb1f745f05a838116e114c078",
+        "visibility_mode": "objects",
+        "visible_object_count": 1
+      },
+      "runtime_provenance": {
+        "application": {
+          "executable": {
+            "sha256": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+            "size_bytes": 80516160
+          },
+          "packaged_build": {
+            "metadata": {
+              "app_pre_package_signing_sha256": "d54bb9aa2f4c3ea589522ff01c8a3dc77b6fa2096e507b5f3ac04494ede0889b",
+              "build_id": "sha256:776c9939c975af8f58fe5b937731d98554776fb66dd3e771066ec3c37058c5d8",
+              "configuration": "release",
+              "format_version": 1,
+              "helper_pre_package_signing_sha256": "c1b5cbb15fee2e104ae6114619742c5eb54df02be2211cbb1918570d892032f1",
+              "schema_fingerprint": "sha256:174f2d4bd50c87daeb7f79ea0450fb797a9ab77008ecbeb5f5b631c1b0539206",
+              "source_dirty": false,
+              "source_revision": "20f27b83a2c5dc485aeb0527cb5d09e8deb9f56f"
+            },
+            "sha256": "bed3c10f65923ecf54978a4fb3ad9239a801d11c87cde24f77ae4b636a040d8e",
+            "size_bytes": 545,
+            "status": "available"
+          }
+        },
+        "renderer": {
+          "display_transform": {
+            "id": "LAB-sRGB-v1",
+            "sha256": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94",
+            "size_bytes": 1763,
+            "status": "available"
+          },
+          "engine_provenance": {
+            "dependency_commit": "7d74150064b3263092281b269c6b62b891001fcb",
+            "protocol_version": 1,
+            "sha256": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+            "size_bytes": 34944,
+            "source_commit": "3eb35f85996baa6c1b2e19bf297b22745c85e321",
+            "status": "available"
+          },
+          "helper": {
+            "sha256": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+            "size_bytes": 6483376
+          }
+        },
+        "version": 1
+      },
+      "runtime_verification": {
+        "status": "passed",
+        "app_sha256": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+        "helper_sha256": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+        "packaged_build_id": "sha256:776c9939c975af8f58fe5b937731d98554776fb66dd3e771066ec3c37058c5d8",
+        "engine_provenance_sha256": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+        "display_transform_sha256": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94"
+      },
+      "preservation": {
+        "saved_shot_unchanged": true,
+        "selected_source_objects_unchanged": true,
+        "material_definitions_unchanged": true
+      },
+      "comparison": {
+        "method": "Direct qualitative image review, not pixel identity",
+        "png_pixel_identity_claimed": false,
+        "png_bytes_equal_prior": false
+      }
+    },
+    {
+      "label": "linen-macro",
+      "job_id": "1464182B-AF02-4B02-BE73-A89219455A33",
+      "status": "accepted_qualitative_integration_preservation",
+      "observations": "Fine interlace follows the smooth fold with restrained sheen; no new visible discontinuity was found.",
+      "files": {
+        "png": {
+          "project_file": "Exports/Cycles-1464182B-AF02-4B02-BE73-A89219455A33.render/Cycles-1464182B-AF02-4B02-BE73-A89219455A33.png",
+          "sha256": "ffa7ab3f038e078aebadabbde847d10f5194ad841ba78029c863cc6c17b6c1ec",
+          "size_bytes": 4367932,
+          "verified": true
+        },
+        "exr": {
+          "project_file": "Exports/Cycles-1464182B-AF02-4B02-BE73-A89219455A33.render/Cycles-1464182B-AF02-4B02-BE73-A89219455A33.exr",
+          "sha256": "14039a3ad334a301fbf2167242e5de7f956cf84bb915faefd254fdb041f3a276",
+          "size_bytes": 46938481,
+          "verified": true
+        },
+        "record": {
+          "project_file": "Exports/Cycles-1464182B-AF02-4B02-BE73-A89219455A33.render/render.json",
+          "sha256": "f6d2b04f54f625c1843c4f623b875a6a8b031da2b65c3584bdcec1521b066785",
+          "size_bytes": 10056,
+          "verified": true
+        }
+      },
+      "source_archive": {
+        "project_file": "Exports/Cycles-1464182B-AF02-4B02-BE73-A89219455A33.render/replay-source.json",
+        "sha256": "67aa24601cce10d653ceca6972a30cdee3c84b0f7d3240dc197be74790b1c83d",
+        "verified": true
+      },
+      "prior_output": {
+        "job_id": "94DB082B-576B-469C-A508-DDDFDCCE12A0",
+        "png_sha256": "926421ec721630e62c5c625da57f9c2d902790272356d1c4281290dc1fb1f39d",
+        "record_sha256": "e61ca080f82dc124c23fe76d38f1fe27b385176e58ca787f17562a87f89dbda6"
+      },
+      "renderer": {
+        "name": "Cycles",
+        "device": "metal",
+        "fallback_reason": null,
+        "actual_samples": 512,
+        "sample_budget": 512,
+        "pixels": {
+          "width": 3000,
+          "height": 2000
+        },
+        "settings": {
+          "areaLights": [
+            {
+              "color": "#FFFFFF",
+              "id": "CC03D482-25FC-5633-8C83-772CE771BEB6",
+              "positionMM": {
+                "x": 400,
+                "y": 208,
+                "z": 360
+              },
+              "powerWatts": 0.48,
+              "shape": "rectangle",
+              "sizeMM": {
+                "x": 80,
+                "y": 60
+              },
+              "targetMM": {
+                "x": 500,
+                "y": 28,
+                "z": 260
+              }
+            }
+          ],
+          "denoise": true,
+          "depthOfField": false,
+          "device": "automatic",
+          "displacementDicingRate": 2,
+          "displacementMaxSubdivisions": 10,
+          "displacementMaxTriangles": 2000000,
+          "environmentColor": "#FFFFFF",
+          "environmentRotationDegrees": 0,
+          "environmentStrength": 0.12,
+          "exposure": 0,
+          "focusDistanceMM": 1000,
+          "fStop": 5.6,
+          "maxBounces": 12,
+          "noiseThreshold": 0.01,
+          "previewSamples": 64,
+          "renderer": "cycles",
+          "samples": 512
+        },
+        "denoiser": "OpenImageDenoise 2.5.0",
+        "display_transform": "LAB-sRGB-v1",
+        "exr_encoding": "scene-linear sRGB, premultiplied alpha"
+      },
+      "saved_shot": {
+        "camera": {
+          "azimuth": 0.25,
+          "distance": 0.65,
+          "elevation": 1.05,
+          "projection": "perspective",
+          "target": {
+            "x": 5,
+            "y": 0.28,
+            "z": 2.6
+          }
+        },
+        "surface": "Daylight",
+        "lighting": "soft-side-v1",
+        "reference_aspect": 1.3333333333333333,
+        "canonical_sha256": "a8efd782aee58a2f922fefa54b798d9c2c5a7657a08dd0e1949a9343f7d06544",
+        "visibility_mode": "objects",
+        "visible_object_count": 1
+      },
+      "runtime_provenance": {
+        "application": {
+          "executable": {
+            "sha256": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+            "size_bytes": 80516160
+          },
+          "packaged_build": {
+            "metadata": {
+              "app_pre_package_signing_sha256": "d54bb9aa2f4c3ea589522ff01c8a3dc77b6fa2096e507b5f3ac04494ede0889b",
+              "build_id": "sha256:776c9939c975af8f58fe5b937731d98554776fb66dd3e771066ec3c37058c5d8",
+              "configuration": "release",
+              "format_version": 1,
+              "helper_pre_package_signing_sha256": "c1b5cbb15fee2e104ae6114619742c5eb54df02be2211cbb1918570d892032f1",
+              "schema_fingerprint": "sha256:174f2d4bd50c87daeb7f79ea0450fb797a9ab77008ecbeb5f5b631c1b0539206",
+              "source_dirty": false,
+              "source_revision": "20f27b83a2c5dc485aeb0527cb5d09e8deb9f56f"
+            },
+            "sha256": "bed3c10f65923ecf54978a4fb3ad9239a801d11c87cde24f77ae4b636a040d8e",
+            "size_bytes": 545,
+            "status": "available"
+          }
+        },
+        "renderer": {
+          "display_transform": {
+            "id": "LAB-sRGB-v1",
+            "sha256": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94",
+            "size_bytes": 1763,
+            "status": "available"
+          },
+          "engine_provenance": {
+            "dependency_commit": "7d74150064b3263092281b269c6b62b891001fcb",
+            "protocol_version": 1,
+            "sha256": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+            "size_bytes": 34944,
+            "source_commit": "3eb35f85996baa6c1b2e19bf297b22745c85e321",
+            "status": "available"
+          },
+          "helper": {
+            "sha256": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+            "size_bytes": 6483376
+          }
+        },
+        "version": 1
+      },
+      "runtime_verification": {
+        "status": "passed",
+        "app_sha256": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+        "helper_sha256": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+        "packaged_build_id": "sha256:776c9939c975af8f58fe5b937731d98554776fb66dd3e771066ec3c37058c5d8",
+        "engine_provenance_sha256": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+        "display_transform_sha256": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94"
+      },
+      "preservation": {
+        "saved_shot_unchanged": true,
+        "selected_source_objects_unchanged": true,
+        "material_definitions_unchanged": true
+      },
+      "comparison": {
+        "method": "Direct qualitative image review, not pixel identity",
+        "png_pixel_identity_claimed": false,
+        "png_bytes_equal_prior": false
+      }
+    },
+    {
+      "label": "linen-grazing",
+      "job_id": "86443507-B2EF-4B98-9A66-A11E2088D2BD",
+      "status": "accepted_qualitative_integration_preservation",
+      "observations": "The whole smooth folds and weave direction are retained, with continuous response at grazing light.",
+      "files": {
+        "png": {
+          "project_file": "Exports/Cycles-86443507-B2EF-4B98-9A66-A11E2088D2BD.render/Cycles-86443507-B2EF-4B98-9A66-A11E2088D2BD.png",
+          "sha256": "20cf8a901f0f924d60784dd172d98bc31c57afd48b029197984e10bb594b1ec0",
+          "size_bytes": 1761546,
+          "verified": true
+        },
+        "exr": {
+          "project_file": "Exports/Cycles-86443507-B2EF-4B98-9A66-A11E2088D2BD.render/Cycles-86443507-B2EF-4B98-9A66-A11E2088D2BD.exr",
+          "sha256": "3960bef888a48019a43aff111b8459d170a9ba098bde97b6595c712557f53d26",
+          "size_bytes": 19583176,
+          "verified": true
+        },
+        "record": {
+          "project_file": "Exports/Cycles-86443507-B2EF-4B98-9A66-A11E2088D2BD.render/render.json",
+          "sha256": "7218fc4afa2aae58d35113028ae620ee01a5772bf2a796449e38a3766f689470",
+          "size_bytes": 10094,
+          "verified": true
+        }
+      },
+      "source_archive": {
+        "project_file": "Exports/Cycles-86443507-B2EF-4B98-9A66-A11E2088D2BD.render/replay-source.json",
+        "sha256": "dfa8979b9db919811501a836beedf4bc690a43c2e1092d3605eb36d4f4d24d25",
+        "verified": true
+      },
+      "prior_output": {
+        "job_id": "E29D3B19-58F5-43E4-B973-6866D5402B36",
+        "png_sha256": "e8b49d92a78b645ad54a25bd99a59518cee64b1f2defbc0e1b839f8075abde7c",
+        "record_sha256": "dce857ce01f9580368377b9ab1a43854a86b9615e4af1e39e6e90f0f823e3000"
+      },
+      "renderer": {
+        "name": "Cycles",
+        "device": "metal",
+        "fallback_reason": null,
+        "actual_samples": 512,
+        "sample_budget": 512,
+        "pixels": {
+          "width": 3000,
+          "height": 2000
+        },
+        "settings": {
+          "areaLights": [
+            {
+              "color": "#FFFFFF",
+              "id": "D63C94C9-7907-5ED9-8E86-660F6D3E7FD6",
+              "positionMM": {
+                "x": 790,
+                "y": 125,
+                "z": 400
+              },
+              "powerWatts": 0.25,
+              "shape": "rectangle",
+              "sizeMM": {
+                "x": 180,
+                "y": 120
+              },
+              "targetMM": {
+                "x": 690,
+                "y": 35,
+                "z": 260
+              }
+            }
+          ],
+          "denoise": true,
+          "depthOfField": false,
+          "device": "automatic",
+          "displacementDicingRate": 2,
+          "displacementMaxSubdivisions": 10,
+          "displacementMaxTriangles": 2000000,
+          "environmentColor": "#FFFFFF",
+          "environmentRotationDegrees": 0,
+          "environmentStrength": 0.18,
+          "exposure": 0,
+          "focusDistanceMM": 1000,
+          "fStop": 5.6,
+          "maxBounces": 12,
+          "noiseThreshold": 0.01,
+          "previewSamples": 64,
+          "renderer": "cycles",
+          "samples": 512
+        },
+        "denoiser": "OpenImageDenoise 2.5.0",
+        "display_transform": "LAB-sRGB-v1",
+        "exr_encoding": "scene-linear sRGB, premultiplied alpha"
+      },
+      "saved_shot": {
+        "camera": {
+          "azimuth": 0.9,
+          "distance": 2.5,
+          "elevation": 0.28,
+          "projection": "perspective",
+          "target": {
+            "x": 6.9,
+            "y": 0.35,
+            "z": 2.6
+          }
+        },
+        "surface": "Daylight",
+        "lighting": "soft-side-v1",
+        "reference_aspect": 1.3333333333333333,
+        "canonical_sha256": "7cd95f3fda0ebcf178b723683b57ef94cf8b05a7602f30785a1f46d17f3fbcc5",
+        "visibility_mode": "objects",
+        "visible_object_count": 1
+      },
+      "runtime_provenance": {
+        "application": {
+          "executable": {
+            "sha256": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+            "size_bytes": 80516160
+          },
+          "packaged_build": {
+            "metadata": {
+              "app_pre_package_signing_sha256": "d54bb9aa2f4c3ea589522ff01c8a3dc77b6fa2096e507b5f3ac04494ede0889b",
+              "build_id": "sha256:776c9939c975af8f58fe5b937731d98554776fb66dd3e771066ec3c37058c5d8",
+              "configuration": "release",
+              "format_version": 1,
+              "helper_pre_package_signing_sha256": "c1b5cbb15fee2e104ae6114619742c5eb54df02be2211cbb1918570d892032f1",
+              "schema_fingerprint": "sha256:174f2d4bd50c87daeb7f79ea0450fb797a9ab77008ecbeb5f5b631c1b0539206",
+              "source_dirty": false,
+              "source_revision": "20f27b83a2c5dc485aeb0527cb5d09e8deb9f56f"
+            },
+            "sha256": "bed3c10f65923ecf54978a4fb3ad9239a801d11c87cde24f77ae4b636a040d8e",
+            "size_bytes": 545,
+            "status": "available"
+          }
+        },
+        "renderer": {
+          "display_transform": {
+            "id": "LAB-sRGB-v1",
+            "sha256": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94",
+            "size_bytes": 1763,
+            "status": "available"
+          },
+          "engine_provenance": {
+            "dependency_commit": "7d74150064b3263092281b269c6b62b891001fcb",
+            "protocol_version": 1,
+            "sha256": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+            "size_bytes": 34944,
+            "source_commit": "3eb35f85996baa6c1b2e19bf297b22745c85e321",
+            "status": "available"
+          },
+          "helper": {
+            "sha256": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+            "size_bytes": 6483376
+          }
+        },
+        "version": 1
+      },
+      "runtime_verification": {
+        "status": "passed",
+        "app_sha256": "0f90228a14bd0dd68c566cc4404a818602b8dc5751c4900b3bc1fe8a294efee9",
+        "helper_sha256": "35a2647b261028b9c369fa0ee548b9db3b554228f09b51dcdddd20b77c2643c4",
+        "packaged_build_id": "sha256:776c9939c975af8f58fe5b937731d98554776fb66dd3e771066ec3c37058c5d8",
+        "engine_provenance_sha256": "1314ee20f8f087d4fad203d65c69185de3d3c613e7368921b2fe2a929461a4fa",
+        "display_transform_sha256": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94"
+      },
+      "preservation": {
+        "saved_shot_unchanged": true,
+        "selected_source_objects_unchanged": true,
+        "material_definitions_unchanged": true
+      },
+      "comparison": {
+        "method": "Direct qualitative image review, not pixel identity",
+        "png_pixel_identity_claimed": false,
+        "png_bytes_equal_prior": false
+      },
+      "published_png": {
+        "file": "main-linen-grazing.png",
+        "sha256": "20cf8a901f0f924d60784dd172d98bc31c57afd48b029197984e10bb594b1ec0",
+        "size_bytes": 1761546,
+        "unaltered_copy": true,
+        "job_id": "86443507-B2EF-4B98-9A66-A11E2088D2BD"
+      }
+    }
+  ],
+  "selected_pngs": [
+    {
+      "file": "main-edge-macro.png",
+      "sha256": "6510f87409dea473b51ca360be720684a17fe8e395f2e4aeb006a35d7d4468d5",
+      "size_bytes": 1515936,
+      "unaltered_copy": true,
+      "job_id": "5E60249B-0B74-45CE-9AC7-BC85297E7B43"
+    },
+    {
+      "file": "main-linen-grazing.png",
+      "sha256": "20cf8a901f0f924d60784dd172d98bc31c57afd48b029197984e10bb594b1ec0",
+      "size_bytes": 1761546,
+      "unaltered_copy": true,
+      "job_id": "86443507-B2EF-4B98-9A66-A11E2088D2BD"
+    }
+  ],
+  "summary": {
+    "replays": 5,
+    "completed": 5,
+    "accepted_qualitative_controls": 5,
+    "unaltered_public_pngs": 2,
+    "public_png_bytes": 3277482
+  }
+}

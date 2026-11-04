@@ -8,7 +8,9 @@ extension PaperAppearanceCommands {
       "roughness": ["type": "number", "minimum": 0, "maximum": 1],
       "textureScaleMM": ["type": "number", "minimum": 0.05, "maximum": 100],
       "textureDepthMM": ["type": "number", "minimum": 0, "maximum": 0.5],
-      "opacity": ["type": "number", "minimum": 0, "maximum": 1]]]
+      "opacity": ["type": "number", "minimum": 0, "maximum": 1],
+      "appearance": PhysicalAppearance.toolSchema,
+      "edgeAppearance": PhysicalAppearance.toolSchema.merging(["description":"Independent cut-wall optics, including bevels and holes. UV0 uses boundary arc length U and through-caliper V in millimeters; scaleMM sets the repeat. Each contour starts U at zero. A ply with no edgeAppearance inherits its stock edgeAppearance; face optics and finishes never inherit onto cut walls."]){_,new in new}]]
   }
   static var stockSchema: [String: Any] {
     ["type": "object", "additionalProperties": false,
@@ -36,8 +38,11 @@ extension PaperAppearanceCommands {
         "elementIDs": ["type": "array", "minItems": 1, "maxItems": 5000, "uniqueItems": true, "items": ["type": "string", "format": "uuid"]],
         "color": ["type": ["string", "null"]], "depthMM": ["type": "number", "minimum": 0, "maximum": 2],
         "heightMM": ["type": "number", "minimum": 0, "maximum": 2],
+        "shoulderRadiusMM": ["type": ["number", "null"], "minimum": 0, "maximum": 2,
+          "description": "Rendered relief smoothing radius on each side of an artwork edge, in millimeters. Zero is sharp; null retains the legacy transition. Does not expand ink/foil coverage or change manufacturing depth/height."],
         "roughness": ["type": ["number", "null"], "minimum": 0, "maximum": 1],
         "metallic": ["type": ["number", "null"], "minimum": 0, "maximum": 1],
-        "opacity": ["type": "number", "minimum": 0, "maximum": 1], "enabled": ["type": "boolean"]]]
+        "opacity": ["type": "number", "minimum": 0, "maximum": 1], "enabled": ["type": "boolean"],
+        "appearance": PhysicalAppearance.toolSchema]]
   }
 }

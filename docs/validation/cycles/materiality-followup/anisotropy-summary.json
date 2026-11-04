@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "oldHelperSHA256": "245d1e61d630b53fff7468f8880b34dde9d5e59639e29b5ed1fc4ec9b2783159",
+  "newHelperSHA256": "d0b5cccb0dbf1f160be3267b4d9c5c5f8e3d7eaef48d59b91a82d623ec66e53b",
+  "sourceSHA256": "7092114adcc81dc4e6fd491a2bc7d34e4046ace999136263bea5ac7c418d83dc",
+  "verifierSHA256": "79364a6fb2394daef08869c954806328ddd7b6c49782c54fe3816ccc0aaffd08",
+  "before": {
+    "status": "failed",
+    "failedComparisons": 9,
+    "comparisons": 17,
+    "note": "Generated-coordinate tangent ignored authored UV direction. Triangle-order comparisons already passed."
+  },
+  "after": {
+    "cpu": {
+      "status": "passed",
+      "comparisons": 17,
+      "maximumComparisonByteError": 0,
+      "maximumRenderedByte": 187,
+      "clippedChannels": 0
+    },
+    "metal": {
+      "status": "passed",
+      "comparisons": 17,
+      "maximumComparisonByteError": 0,
+      "maximumRenderedByte": 187,
+      "clippedChannels": 0
+    }
+  },
+  "legacyPixelComparisons": {
+    "isotropic-reference": {
+      "maximumByteError": 0,
+      "checkedChannels": 32768
+    },
+    "curve-reference": {
+      "maximumByteError": 0,
+      "checkedChannels": 32768
+    }
+  },
+  "regressions": {
+    "mesh-normals-cpu": {
+      "report": "anisotropy-mesh-normals-cpu.json",
+      "exitCode": 0
+    },
+    "mesh-normals-metal": {
+      "report": "anisotropy-mesh-normals-metal.json",
+      "exitCode": 0
+    },
+    "curves-cpu": {
+      "report": "anisotropy-curves-cpu.json",
+      "exitCode": 0
+    },
+    "curves-metal": {
+      "report": "anisotropy-curves-metal.json",
+      "exitCode": 0
+    }
+  },
+  "images": {
+    "before-uv0.png": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+    "before-uv90.png": "71618b56f72be6f6e3f891751cd96b7a61dae8bc89766a2fa4b743b9c86b9d0f",
+    "before-quarter-reference.png": "0750eb747a39358d53c72b039894dcb0e402bf1fe6d397f9465652fcb307da6e",
+    "after-uv0.png": "6165c89ca5b53ac83f053b61271155133a4a9407a4d6a99bba447a045b6a61a7",
+    "after-uv90.png": "41f19b59cd062f0abdd0265392f8bda8d559469c975ab1e7315cf1aba7b808b8",
+    "after-quarter-reference.png": "41f19b59cd062f0abdd0265392f8bda8d559469c975ab1e7315cf1aba7b808b8"
+  },
+  "limitations": [
+    "These are isolated mathematical direction checks, not a measured material BRDF match.",
+    "The ordinary installed LAB app was not replaced or exercised for this helper-only verification.",
+    "Anisotropic material highlights intentionally change; final app paper/finish review remains separate."
+  ]
+}

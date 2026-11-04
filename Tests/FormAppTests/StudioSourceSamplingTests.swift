@@ -49,6 +49,15 @@ import XCTest
     let outside=SourceTextureSamplingPlan.paperFace("sheet",inside:false),inside=SourceTextureSamplingPlan.paperFace("sheet",inside:true)
     XCTAssertGreaterThan(try XCTUnwrap(f.surfaces[outside]).maximumPixels,try XCTUnwrap(f.surfaces[inside]).maximumPixels)
     XCTAssertGreaterThan(try XCTUnwrap(r.surfaces[inside]).maximumPixels,try XCTUnwrap(r.surfaces[outside]).maximumPixels)
+    let indirect=try StudioSourceSampling.plans(controller:controller,project:project,camera:camera(span:24),
+      viewport:.init(width:4096,height:1024),objectIDs:[object.id],maximumEdge:8192,includeIndirectSurfaces:true)
+    XCTAssertGreaterThan(try XCTUnwrap(indirect[object.id]?.surfaces[inside]).maximumPixels,try XCTUnwrap(f.surfaces[inside]).maximumPixels,
+      "Reverse artwork remains available to transmission and indirect rays.")
+    owner.position.x=1000
+    let offscreen=try StudioSourceSampling.plans(controller:controller,project:project,camera:camera(span:24),
+      viewport:.init(width:4096,height:1024),objectIDs:[object.id],maximumEdge:8192,includeIndirectSurfaces:true)
+    XCTAssertGreaterThan(try XCTUnwrap(offscreen[object.id]?.surfaces[outside]).maximumPixels,1,
+      "Moving artwork outside the camera must not remove it from reflections.")
     XCTAssertTrue(f.isFinalCapture);XCTAssertEqual(project,before)
   }
   func testFullResolutionPaperSourceRetainsFineRulesAndLetteringBeyond2048() throws {

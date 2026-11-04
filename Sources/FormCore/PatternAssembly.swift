@@ -62,6 +62,10 @@ public struct PatternAssemblyDefinition:Codable,Equatable,Sendable {
       maximumEdgeMm.isFinite,(4...100).contains(maximumEdgeMm),boundaryToleranceMm.isFinite,(0.005...0.05).contains(boundaryToleranceMm),(3...ClothMesh.maximumVertices).contains(maximumVertices),(1000...AssemblyMesher.maximumOperations).contains(maximumMeshingOperations),colliders.count<=16 else {throw FormError.invalid("Assembly supports 1–8 distinct piece copies, up to 128 seams/pins, declared 4–100 mm spacing and bounded meshing work.")}
     for panel in panels {
       try panel.pose.validate();try validateColor(panel.material.color);try panel.material.fabric?.validate()
+      try panel.material.appearance?.validate()
+      try panel.material.backSurface?.validate()
+      guard (panel.material.references?.count ?? 0)<=64 else {throw FormError.invalid("An assembly material supports up to 64 reference sources.")}
+      for reference in panel.material.references ?? [] {try reference.validate()}
       guard (1...100).contains(panel.panel.copy),panel.material.category=="Fabric",!panel.material.id.isEmpty,panel.material.id.utf8.count<=160,panel.material.name.utf8.count<=300,panel.material.roughness.isFinite,(0...1).contains(panel.material.roughness),panel.material.metallic.isFinite,(0...1).contains(panel.material.metallic),panel.material.thickness.isFinite,(0...100).contains(panel.material.thickness),panel.densityGSM.isFinite,(10...5000).contains(panel.densityGSM),panel.textureOriginMm.x.isFinite,panel.textureOriginMm.y.isFinite,max(abs(panel.textureOriginMm.x),abs(panel.textureOriginMm.y))<=100000 else {throw FormError.invalid("Each assembly panel needs a declared fabric snapshot, positive 10–5000 GSM mass and finite physical texture origin.")}
     }
     let ids=Set(panels.map(\.panel))

@@ -95,6 +95,7 @@ struct ObjectInspector: View {
               }
               Text(project.material(object.materialID).name).font(
                 .system(size: 12, weight: .medium))
+              MaterialAppearanceControls(materialID:object.materialID).disabled(object.locked)
               LazyVGrid(
                 columns: Array(repeating: GridItem(.flexible(), spacing: 7), count: 6), spacing: 8
               ) {

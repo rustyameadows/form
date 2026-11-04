@@ -1,0 +1,205 @@
+{
+  "version": 1,
+  "status": "passed",
+  "validated_at": "2026-11-04T03:29:26.306361+00:00",
+  "scope": "Sanitized reviewer snapshot of completed local validation; no user-project contents or absolute workstation paths included.",
+  "platform": {
+    "architecture": "arm64",
+    "minimum_macos": "15.0",
+    "signing": "local ad-hoc",
+    "devices": [
+      "cpu",
+      "metal"
+    ]
+  },
+  "pinned_engine": {
+    "source_url": "https://github.com/blender/cycles.git",
+    "source_commit": "3eb35f85996baa6c1b2e19bf297b22745c85e321",
+    "dependency_url": "https://projects.blender.org/blender/lib-macos_arm64.git",
+    "dependency_commit": "7d74150064b3263092281b269c6b62b891001fcb",
+    "architecture": "arm64",
+    "deployment_target": "15.0",
+    "protocol_version": 1,
+    "display_transform": "LAB-sRGB-v1"
+  },
+  "installed_executables": {
+    "app_executable": {
+      "relative_path": "Contents/MacOS/LAB",
+      "sha256": "4a9d3cbbdc383b820add9d40d592b690a6e1c77ea335989745ae692c17d3bbf5"
+    },
+    "render_helper": {
+      "relative_path": "Contents/Helpers/lab-cycles-render",
+      "sha256": "245d1e61d630b53fff7468f8880b34dde9d5e59639e29b5ed1fc4ec9b2783159"
+    },
+    "mcp_helper": {
+      "relative_path": "Contents/MacOS/lab-mcp",
+      "sha256": "f0c6b676aa39dc56c38b3fce4ce94a62c191d52858330c3da2801639a644d94d"
+    }
+  },
+  "build_metadata": {
+    "relative_path": "Contents/Resources/LABBuild.json",
+    "sha256": "0724f84619b9c8f6b183da9391c280e2eb2d7f4d40b6d90cae1fb667fa8abaaa"
+  },
+  "engine_provenance": {
+    "relative_path": "Contents/Resources/ThirdPartyNotices/Cycles/LAB-CYCLES-PROVENANCE.json",
+    "sha256": "ced30017da98d70e0a0d32720751a1b9b77238b266e862c4ceb69c02f043549d"
+  },
+  "display_transform": {
+    "relative_path": "Contents/Resources/Cycles/LAB-sRGB-v1.json",
+    "sha256": "849bf8d7fd6a686ffe3170ab0cb3c8fa8d9f80eee58231abb2863d7b712abd94"
+  },
+  "source": {
+    "files": 1023,
+    "source_manifest_sha256": "57fb5d5d8071a847e120e668926f2c416270aac960b880e8650a66c84ee8e757",
+    "matched_after_testing_packaging_and_final_audit": true
+  },
+  "regression": {
+    "tests": 2441,
+    "failures": 0,
+    "skipped": 3,
+    "suites": [
+      {
+        "suite": "LabRenderingTests.xctest",
+        "status": "passed",
+        "tests": 57,
+        "skipped": 0,
+        "failures": 0
+      },
+      {
+        "suite": "FormMeshAssetsTests.xctest",
+        "status": "passed",
+        "tests": 24,
+        "skipped": 0,
+        "failures": 0
+      },
+      {
+        "suite": "FormGeometryTests.xctest",
+        "status": "passed",
+        "tests": 10,
+        "skipped": 0,
+        "failures": 0
+      },
+      {
+        "suite": "FormCoreTests.xctest",
+        "status": "passed",
+        "tests": 1133,
+        "skipped": 0,
+        "failures": 0
+      },
+      {
+        "suite": "FormCADModelingTests.xctest",
+        "status": "passed",
+        "tests": 28,
+        "skipped": 0,
+        "failures": 0
+      },
+      {
+        "suite": "FormCADKernelTests.xctest",
+        "status": "passed",
+        "tests": 12,
+        "skipped": 0,
+        "failures": 0
+      },
+      {
+        "suite": "FormAppTests.xctest",
+        "status": "passed",
+        "tests": 1177,
+        "skipped": 3,
+        "failures": 0
+      }
+    ],
+    "real_native_helper_enabled": true,
+    "real_curve_uv_helper_enabled": true,
+    "real_metal_initialization_failure_fixture_enabled": true,
+    "actual_attached_program_enabled": true,
+    "actual_full_table_preparation_enabled": true,
+    "skip_notes": [
+      "Three optional external-project performance fixtures were not supplied."
+    ]
+  },
+  "python_checks": {
+    "tests": 28,
+    "failures": 0
+  },
+  "bundle_gates": {
+    "devices": [
+      "cpu",
+      "metal"
+    ],
+    "complete_bundle": true,
+    "network_denied": true,
+    "development_read_denial_probes": 7,
+    "runtime_files_unchanged": 317,
+    "bundled_libraries": 20,
+    "signatures_before_and_after": true
+  },
+  "installed_lifecycle": {
+    "status": "passed",
+    "checks": [
+      "preparation cancellation",
+      "sampled helper crash and denoised recovery",
+      "destination preservation",
+      "source/project invalidation",
+      "missing-asset rejection",
+      "exact runtime/export identities"
+    ]
+  },
+  "native_ui": {
+    "status": "passed",
+    "complete_table_objects": 36,
+    "table_preview_samples": 64,
+    "device": "metal",
+    "checks": [
+      "orbit and reprepare/complete",
+      "pause/resume",
+      "saved Studio scene rendered"
+    ]
+  },
+  "material_review": {
+    "accepted_cases": 8,
+    "current_outputs": 41,
+    "main_views": 24,
+    "additional_controls": 17,
+    "pixels": [
+      3000,
+      2000
+    ],
+    "sample_budget": 512,
+    "adaptive_threshold": 0.01,
+    "actual_samples": {
+      "224": 1,
+      "512": 40
+    },
+    "accepted_review_coverage_exact": true,
+    "retained_main_attempts": 131,
+    "explicit_main_reviews": 97,
+    "retained_control_attempts": 67,
+    "explicit_control_reviews": 67
+  },
+  "project_preservation": {
+    "protected_fields_equal": 11,
+    "user_project_contents_included": false
+  },
+  "local_evidence_sha256": {
+    "final-delivery.json": "4f96b249d27cab4ca2197a4ca2d01270c0d9c2a25b6c53299f29d23eac366a9d",
+    "final-delivery-engineering.json": "7ada48f19b3cdf58ea31e83b8bb7618f33e3befd0c0626c712977d1a133b030b",
+    "regression-round8.json": "513e51f625c1024177e006beed2336f8b83a4062e944b608dd34cdfdab2659df",
+    "regression-round8.log": "56d774eb72070beefa18e4ac9f36fe22a5c0860368143bb86e873f827919d5ed",
+    "candidate6-provenance/identity.json": "50d7b3c4947a50f494e05d34966afb94290fdc23a1fa6a99671c207ef4faf008",
+    "candidate6-provenance/gate-report.json": "2941bb5026ac8f78c7d8db5a70106bb2ee9072f03b43e613b659e2c3be785ac4",
+    "native-round6/report.json": "1df1c762e021c344ccb8487f7782514514b4fbdc4bd590f1a086aa5f2ca9b736",
+    "lifecycle-round6/report.json": "ce9b39006f7f8ee569df9ac2fa3d6a46d9ef0c6c64772237f6f64f9d4a68861d",
+    "final-review-coverage.json": "95a8bebc8ef12933a811cb487566d70794932673ab5f0535734647398c06ee81",
+    "python-round8.json": "7ed9436944f43b5b867ffed65685c62c13298b36ece46f202457a0c55fb17e15",
+    "material-review/root-final-review.json": "8c15b8a0cb47e7a27c3138baa71e59b53e9558a5b800a92386952067347ef770",
+    "material-review/root-final-control-review.json": "ec89319c7dbad6138cf652eef811f95fa3455e36168461a96ee391771cd35a48",
+    "material-review/final-current-runtime-verification.json": "41dd8d0e57f75a531314003a023625637ec60f55ac20ebf899581f903571ac04"
+  },
+  "limitations": [
+    "Three optional external-project performance fixtures were not supplied.",
+    "Empty LAB caches do not imply empty Apple system compiler caches.",
+    "Ad-hoc signed Apple Silicon build; Developer ID notarization and Intel distribution are not claimed.",
+    "Material acceptance covers documented authored studies and estimates, not measured manufacturer BRDFs, calibrated cloth mechanics or validated sew-outs.",
+    "The full local validation reports and render artifacts remain in the project/workspace; this committed snapshot intentionally omits private project content and workstation paths."
+  ]
+}

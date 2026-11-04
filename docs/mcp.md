@@ -50,6 +50,49 @@ build/LAB.app/Contents/MacOS/lab-mcp --call form_capabilities '{"command":"schem
 
 If the live app and helper differ, use the matching ordinary app/helper installation and inspect again. If only a client declaration is narrow, reconnect or inspect a fresh client and verify its declarations; success is not assumed. Where the host supports resource reads, use the schema resource directly. `form_batch` is an allowlisted editing transaction, **not** a discovery bypass or a generic arbitrary-tool dispatcher.
 
+## Bounded project reads
+
+The default `form_get_project {}` and `form_open_project {"project_id":"…"}` retain
+the complete Project wire shape when it fits the existing 8 MiB local bridge.
+Oversized full responses fail with scope guidance before transport. Open requests
+also validate the target scope and response budget before switching the active
+project or clearing selection and Undo.
+
+Use `form_open_project {"project_id":"…","view":"summary"}` for large documents.
+`form_get_project {"view":"summary"}` returns an explicit partial envelope with
+`project` identity, camera and optional `conversationReference`, an opaque
+`revision`, section counts, and `sections.objects` containing lightweight object
+identity, parameters, material and placement. Object summaries have
+`details_complete:false` and name their `available_detail_fields`; they contain
+no dense cloth, artwork or other domain records.
+
+Use scoped reads for complete selected records, for example:
+
+```json
+{"view":"scoped","sections":["objects"],"object_ids":["OBJECT_UUID"],"expected_revision":"REVISION"}
+```
+
+A scoped read accepts 1–8 declared top-level sections. Arrays page independently;
+`offset` defaults to 0 and `limit` to 64, with a maximum of 128 records per section.
+The shared 4 MiB response budget can shorten a page, but never cuts a record.
+Each `pages.SECTION` reports `offset`, `limit`, actual `returned`, `total`,
+`has_more`, and `next_offset` (integer or null). `complete` is true only when the
+entire selected section appears in this response: the last page of a multi-page
+read still has `complete:false` even though `has_more:false`. Scalar sections are
+whole values with `complete:true,kind:"scalar"`. A record or scalar selection
+that cannot fit produces an explicit error; request fewer sections or use its
+existing domain-specific read operation.
+
+For multi-page assembly, request one array section at a time and follow its
+`next_offset`, carrying the same `expected_revision` on every subsequent read.
+An edit, Undo, reopen or new engine session invalidates the token; restart the
+assembly rather than combining generations. `object_ids` are exact UUIDs,
+missing IDs reject, and filtered records retain project order. The response
+includes `object_count`, `selected_object_count`, `omitted_sections` and
+`response_complete:false`, so a projection cannot be mistaken for a full Project.
+Open does not accept `expected_revision`; start a guarded read sequence using
+the revision returned by the successful open.
+
 ## A first conversation
 
 > Create a warm orange table lamp, about 350 mm tall. Let me adjust the shade diameter, shade height, top opening, stem diameter, and base width. Put a sage version next to it for comparison.
