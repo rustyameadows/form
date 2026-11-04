@@ -1,0 +1,221 @@
+{
+  "device": "metal",
+  "helperSHA256": "d0b5cccb0dbf1f160be3267b4d9c5c5f8e3d7eaef48d59b91a82d623ec66e53b",
+  "comparisons": {
+    "cyclic-triangle-order": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "other-diagonal": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "rotated-UV0": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "UV1-selection": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "texture-rotation90": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "nonuniform-texture-rotation": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "negative-texture-scale": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "mirrored-UV-chart": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "mirrored-repeats": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "rectangular-UV-metric": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "skewed-UV-metric": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "UV1-and-texture-rotation": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "no-UV-fallback": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "no-UV-triangle-order": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "no-UV-object-X-pole": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "legacy-isotropic-no-UV": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 6912
+    },
+    "curve-keeps-longitudinal-axis": {
+      "maximumByteError": 0,
+      "meanByteError": 0.0,
+      "checkedChannels": 576
+    }
+  },
+  "renders": {
+    "uv0-reference": {
+      "pngSHA256": "6165c89ca5b53ac83f053b61271155133a4a9407a4d6a99bba447a045b6a61a7",
+      "maximumByte": 176,
+      "clippedChannels": 0
+    },
+    "quarter-turn-reference": {
+      "pngSHA256": "41f19b59cd062f0abdd0265392f8bda8d559469c975ab1e7315cf1aba7b808b8",
+      "maximumByte": 70,
+      "clippedChannels": 0
+    },
+    "cyclic-triangle-order": {
+      "pngSHA256": "6165c89ca5b53ac83f053b61271155133a4a9407a4d6a99bba447a045b6a61a7",
+      "maximumByte": 176,
+      "clippedChannels": 0
+    },
+    "other-diagonal": {
+      "pngSHA256": "6165c89ca5b53ac83f053b61271155133a4a9407a4d6a99bba447a045b6a61a7",
+      "maximumByte": 176,
+      "clippedChannels": 0
+    },
+    "rotated-UV0": {
+      "pngSHA256": "41f19b59cd062f0abdd0265392f8bda8d559469c975ab1e7315cf1aba7b808b8",
+      "maximumByte": 70,
+      "clippedChannels": 0
+    },
+    "UV1-selection": {
+      "pngSHA256": "41f19b59cd062f0abdd0265392f8bda8d559469c975ab1e7315cf1aba7b808b8",
+      "maximumByte": 70,
+      "clippedChannels": 0
+    },
+    "texture-rotation90": {
+      "pngSHA256": "41f19b59cd062f0abdd0265392f8bda8d559469c975ab1e7315cf1aba7b808b8",
+      "maximumByte": 70,
+      "clippedChannels": 0
+    },
+    "negative-angle-reference": {
+      "pngSHA256": "6248acd9bb204986ec67409b0092c99643b6cbf92c09620afdd0f9dcee3ce9c0",
+      "maximumByte": 141,
+      "clippedChannels": 0
+    },
+    "positive-angle-reference": {
+      "pngSHA256": "90a7a8ebb29d15429b1ecc7d04e625c55bf798be0647d260e152d523629f1965",
+      "maximumByte": 66,
+      "clippedChannels": 0
+    },
+    "nonuniform-texture-rotation": {
+      "pngSHA256": "6248acd9bb204986ec67409b0092c99643b6cbf92c09620afdd0f9dcee3ce9c0",
+      "maximumByte": 141,
+      "clippedChannels": 0
+    },
+    "negative-texture-scale": {
+      "pngSHA256": "90a7a8ebb29d15429b1ecc7d04e625c55bf798be0647d260e152d523629f1965",
+      "maximumByte": 66,
+      "clippedChannels": 0
+    },
+    "mirrored-UV-chart": {
+      "pngSHA256": "90a7a8ebb29d15429b1ecc7d04e625c55bf798be0647d260e152d523629f1965",
+      "maximumByte": 66,
+      "clippedChannels": 0
+    },
+    "mirrored-repeats": {
+      "pngSHA256": "6248acd9bb204986ec67409b0092c99643b6cbf92c09620afdd0f9dcee3ce9c0",
+      "maximumByte": 141,
+      "clippedChannels": 0
+    },
+    "rectangular-UV-metric": {
+      "pngSHA256": "6248acd9bb204986ec67409b0092c99643b6cbf92c09620afdd0f9dcee3ce9c0",
+      "maximumByte": 141,
+      "clippedChannels": 0
+    },
+    "skew-angle-reference": {
+      "pngSHA256": "289f883c7e6b5789ac6bdde9f75130de6969d6a38037e6c77114d6bc76dd9c53",
+      "maximumByte": 187,
+      "clippedChannels": 0
+    },
+    "skewed-UV-metric": {
+      "pngSHA256": "289f883c7e6b5789ac6bdde9f75130de6969d6a38037e6c77114d6bc76dd9c53",
+      "maximumByte": 187,
+      "clippedChannels": 0
+    },
+    "UV1-and-texture-rotation": {
+      "pngSHA256": "6165c89ca5b53ac83f053b61271155133a4a9407a4d6a99bba447a045b6a61a7",
+      "maximumByte": 176,
+      "clippedChannels": 0
+    },
+    "no-UV-fallback": {
+      "pngSHA256": "6165c89ca5b53ac83f053b61271155133a4a9407a4d6a99bba447a045b6a61a7",
+      "maximumByte": 176,
+      "clippedChannels": 0
+    },
+    "no-UV-triangle-order": {
+      "pngSHA256": "6165c89ca5b53ac83f053b61271155133a4a9407a4d6a99bba447a045b6a61a7",
+      "maximumByte": 176,
+      "clippedChannels": 0
+    },
+    "no-UV-object-X-pole": {
+      "pngSHA256": "83a5e7bb7e7fb2cca718e09daaba7e895aba51440cdbc76a139520cf5b49c067",
+      "maximumByte": 176,
+      "clippedChannels": 0
+    },
+    "object-X-pole-reference": {
+      "pngSHA256": "83a5e7bb7e7fb2cca718e09daaba7e895aba51440cdbc76a139520cf5b49c067",
+      "maximumByte": 176,
+      "clippedChannels": 0
+    },
+    "isotropic-reference": {
+      "pngSHA256": "d8e6f1418134232e7baab25068b8be2d9a0d95ea874c8e19103a2c6f7379e0fa",
+      "maximumByte": 141,
+      "clippedChannels": 0
+    },
+    "legacy-isotropic-no-UV": {
+      "pngSHA256": "d8e6f1418134232e7baab25068b8be2d9a0d95ea874c8e19103a2c6f7379e0fa",
+      "maximumByte": 141,
+      "clippedChannels": 0
+    },
+    "curve-reference": {
+      "pngSHA256": "aaed2afe8419b4a0bf8144a33b0a946887073c03b06e963896d07fab8ae7a5d6",
+      "maximumByte": 135,
+      "clippedChannels": 0
+    },
+    "curve-mapped-strength": {
+      "pngSHA256": "aaed2afe8419b4a0bf8144a33b0a946887073c03b06e963896d07fab8ae7a5d6",
+      "maximumByte": 135,
+      "clippedChannels": 0
+    }
+  },
+  "failures": [],
+  "quarterTurnMeanDifference": 11.52907986111111,
+  "status": "passed"
+}
