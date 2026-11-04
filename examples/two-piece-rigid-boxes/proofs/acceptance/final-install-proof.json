@@ -1,0 +1,14 @@
+{
+  "codeCommit": "04da88a",
+  "binarySHA256": "dabaa5cf9727fba5dfe9c3f414b18734e902d4951b17da11e5859018cf8a6a14",
+  "ordinaryPath": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/build/LAB.app",
+  "oldOrdinaryRetained": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/build/LAB-rigid-before-final-review.app",
+  "verifiedNoLiveExecutableMapping": true,
+  "signatureVerified": true,
+  "secondAppLaunched": false,
+  "nativeHomeOpenPassed": true,
+  "entireProjectPreservedAfterRestart": true,
+  "objectCount": 45,
+  "sceneCount": 26,
+  "classicNativeTriangleRemovedAtPreservedCamera": true
+}

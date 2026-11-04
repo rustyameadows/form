@@ -43,6 +43,18 @@ public struct SceneMeshPayload: Sendable {
 public enum SceneTextureWrap: String, Sendable { case repeatMode, clamp, mirror }
 public enum SceneTextureChannel: String, Sendable { case rgba, red, green, blue, alpha }
 public enum SceneTextureEncoding: String, Sendable { case srgb, linear, data }
+public enum SceneTextureFilter:String,Sendable {case none,nearest,linear}
+public struct SceneTextureSampling:Sendable {
+  public var minification:SceneTextureFilter,magnification:SceneTextureFilter,mip:SceneTextureFilter
+  public var maximumAnisotropy:Double
+  public init(minification:SceneTextureFilter = .linear,magnification:SceneTextureFilter = .linear,mip:SceneTextureFilter = .linear,maximumAnisotropy:Double=1) {
+    self.minification=minification;self.magnification=magnification;self.mip=mip;self.maximumAnisotropy=maximumAnisotropy
+  }
+  public var revision:String {"\(minification.rawValue):\(magnification.rawValue):\(mip.rawValue):\(maximumAnisotropy)"}
+  public func validate()throws {
+    guard maximumAnisotropy.isFinite,(1...16).contains(maximumAnisotropy) else{throw SceneRendererError.invalidTexture("Texture anisotropy must be finite and between 1 and 16.")}
+  }
+}
 /// CGImage pixels are immutable. Decoding/import budgets belong to the asset
 /// service; the renderer additionally enforces a 16 MP / 8192 edge upload cap.
 public struct SceneTexturePayload: @unchecked Sendable {
@@ -55,16 +67,17 @@ public struct SceneTexturePayload: @unchecked Sendable {
   public var wrapS: SceneTextureWrap
   public var wrapT: SceneTextureWrap
   public var channel: SceneTextureChannel
+  public var sampling:SceneTextureSampling
   public var encoding: SceneTextureEncoding?
   public var scale: SIMD2<Double> = .init(1,1)
   public var offset: SIMD2<Double> = .zero
   public var rotationDegrees: Double = 0
-  public init(image: CGImage, revision: String, uvIndex: Int = 0, wrapS: SceneTextureWrap = .repeatMode, wrapT: SceneTextureWrap = .repeatMode, channel: SceneTextureChannel = .rgba, encoding: SceneTextureEncoding? = nil) {
+  public init(image: CGImage, revision: String, uvIndex: Int = 0, wrapS: SceneTextureWrap = .repeatMode, wrapT: SceneTextureWrap = .repeatMode, channel: SceneTextureChannel = .rgba, encoding: SceneTextureEncoding? = nil, sampling:SceneTextureSampling = .init()) {
     self.image=image; self.revision=revision; self.uvIndex=uvIndex; self.wrapS=wrapS; self.wrapT=wrapT; self.channel=channel
-    self.encoding=encoding
+    self.encoding=encoding;self.sampling=sampling
   }
-  public init(source:SceneTextureSource,uvIndex:Int=0,wrapS:SceneTextureWrap = .repeatMode,wrapT:SceneTextureWrap = .repeatMode,channel:SceneTextureChannel = .rgba,encoding:SceneTextureEncoding?=nil) {
-    self.init(image:source.image,revision:source.sha256,uvIndex:uvIndex,wrapS:wrapS,wrapT:wrapT,channel:channel,encoding:encoding)
+  public init(source:SceneTextureSource,uvIndex:Int=0,wrapS:SceneTextureWrap = .repeatMode,wrapT:SceneTextureWrap = .repeatMode,channel:SceneTextureChannel = .rgba,encoding:SceneTextureEncoding?=nil,sampling:SceneTextureSampling = .init()) {
+    self.init(image:source.image,revision:source.sha256,uvIndex:uvIndex,wrapS:wrapS,wrapT:wrapT,channel:channel,encoding:encoding,sampling:sampling)
     verifiedSource=source
   }
 }

@@ -9,23 +9,28 @@ acceptance depends on the separate visible reference reviews, not those gates.
 
 ## Current installation and reproduction
 
-The PR integrates the newer publication work on `main`. Persisted Cycles and
-physical-appearance fields now require schema 66; schemas 64 and 65 retain their
-upstream story/publication meanings. Earlier local Cycles schema-64 projects still
-decode and acquire the newer minimum version when saved by this branch.
-The installed candidate 6 and its visual/native evidence below identify the
-validated implementation before that integration. Their source hashes are
-historical evidence for that installed binary, not a claim that newer PR sources
-are identical. PR integration checks are recorded in
+The PR integrates publication and independent-stock construction work from
+`main`. Schemas 64–66 retain their upstream story/publication/construction
+meanings. Persisted Cycles appearance/render fields require schema 67, and
+cut-edge appearance/finish shoulders require schema 68. Earlier local Cycles
+schema-64/66/67 projects still decode; their minimum version is recomputed on
+save, including stock and finish fields on independent construction components.
+
+The paper-and-finishes implementation was installed from `2477730` and reviewed
+in the ordinary app. [Follow-up comparisons and verification](validation/cycles/materiality-followup/README.md)
+record the subsequent 27 paper captures, editable study, native controls and
+actual runtime identity. The candidate-6 records below identify the preceding
+eight-case release. They are historical evidence for that binary, not a claim
+that later PR sources are identical. Integration checks are recorded in
 [the reviewer validation snapshot](validation/cycles/README.md).
 
 The [committed validation snapshot](validation/cycles/README.md) provides portable
 test counts, executable identities and evidence hashes for code review, without
 user-project contents or workstation-specific paths.
 
-Candidate 6 is installed as the single ordinary [LAB app](../build/LAB.app).
-The [current delivery record](../.local/cycles-app-validation/final-delivery.json)
-is the final aggregate; the
+The single ordinary [LAB app](../build/LAB.app) has since received the follow-up.
+The [candidate-6 delivery record](../.local/cycles-app-validation/final-delivery.json)
+is its historical aggregate; the
 [portable material review](</Users/rustymeadows/Library/Application Support/FORM/2E2A5127-DAEA-4130-AB9E-76D2AC68F6B6.form/Exports/material-review/index.html>)
 and [optical-control report](</Users/rustymeadows/Library/Application Support/FORM/2E2A5127-DAEA-4130-AB9E-76D2AC68F6B6.form/Exports/material-review/optics.html>)
 live inside the study project at `Exports/material-review/`. Their copied image

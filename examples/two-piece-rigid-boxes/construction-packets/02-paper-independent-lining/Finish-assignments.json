@@ -1,0 +1,48 @@
+[
+  {
+    "assignment" : {
+      "color" : "#B89C61",
+      "depthMM" : 0,
+      "elementIDs" : [
+        "A65DAAA7-11AF-4B1B-8382-D075CD61228F"
+      ],
+      "enabled" : true,
+      "heightMM" : 0.014999999999999999,
+      "id" : "A28ABA6C-5894-4549-9EFF-422720839169",
+      "kind" : "foil",
+      "metallic" : 0.88,
+      "name" : "Satin champagne foil title",
+      "opacity" : 1,
+      "roughness" : 0.26000000000000001,
+      "side" : "outside"
+    },
+    "file" : "Pieces\/l-cross-p-b6527d9f\/finish-front-a28aba6c-5894-4549-9eff-422720839169.svg",
+    "manufacturing_tooling_verified" : false,
+    "piece_id" : "l-cross-p",
+    "registered_coordinates" : "piece-local actual millimeters",
+    "side" : "front"
+  },
+  {
+    "assignment" : {
+      "color" : "#E1D5B9",
+      "depthMM" : 0,
+      "elementIDs" : [
+        "44823B49-F9B6-4491-B0AF-3AFF7CD2715D"
+      ],
+      "enabled" : true,
+      "heightMM" : 0.080000000000000002,
+      "id" : "5C2E0C85-FF0C-4619-AAB7-EE4113AFDBE2",
+      "kind" : "emboss",
+      "metallic" : 0,
+      "name" : "Blind raised collection seal",
+      "opacity" : 1,
+      "roughness" : 0.69999999999999996,
+      "side" : "outside"
+    },
+    "file" : "Pieces\/l-cross-p-b6527d9f\/finish-front-5c2e0c85-ff0c-4619-aab7-ee4113afdbe2.svg",
+    "manufacturing_tooling_verified" : false,
+    "piece_id" : "l-cross-p",
+    "registered_coordinates" : "piece-local actual millimeters",
+    "side" : "front"
+  }
+]

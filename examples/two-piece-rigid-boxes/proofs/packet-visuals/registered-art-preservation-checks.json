@@ -1,0 +1,37 @@
+[
+  {
+    "packet": "round08-01-paper-tape-unlined-packet",
+    "registered_print_and_mask_files": 25,
+    "changed_from_visually_reviewed_round06": []
+  },
+  {
+    "packet": "round08-02-paper-independent-lining-packet",
+    "registered_print_and_mask_files": 33,
+    "changed_from_visually_reviewed_round06": []
+  },
+  {
+    "packet": "round08-03-fabric-contrasting-lining-packet",
+    "registered_print_and_mask_files": 36,
+    "changed_from_visually_reviewed_round06": []
+  },
+  {
+    "packet": "round08-04a-board-staples-uncovered-packet",
+    "registered_print_and_mask_files": 11,
+    "changed_from_visually_reviewed_round06": []
+  },
+  {
+    "packet": "round08-04b-board-staples-covered-packet",
+    "registered_print_and_mask_files": 39,
+    "changed_from_visually_reviewed_round06": []
+  },
+  {
+    "packet": "round08-05-mixed-partial-overlap-packet",
+    "registered_print_and_mask_files": 35,
+    "changed_from_visually_reviewed_round06": []
+  },
+  {
+    "packet": "round08-06-independent-deep-lid-packet",
+    "registered_print_and_mask_files": 27,
+    "changed_from_visually_reviewed_round06": []
+  }
+]

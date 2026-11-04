@@ -15,6 +15,9 @@ struct CanvasFrame: Identifiable {
   var paperDefinition: PaperConstruction? = nil
   var paperNet: PaperNet? = nil
   var publicationSpread: CanvasPublicationSpread? = nil
+  var physicalStock:PaperStock? = nil
+  // Interface-only paths already mapped into this physical frame.
+  var constructionTechnicalPaths:[ConstructionArtworkTechnicalPath] = []
   var id: UUID { projection?.id ?? object.id }
   var title: String { projection?.title ?? (object.name + (sourceReview == nil ? "":" · Registered source")) }
   var isWorkspace: Bool { object.isCanvasWorkspace }
@@ -126,6 +129,22 @@ enum ArtworkTool: String, CaseIterable {
   @Published var objectID: UUID? {didSet{if objectID != oldValue {cancelArtworkTransfer();projectionFrameID=nil}}}
   @Published var projectionFrameID: UUID? {didSet{if projectionFrameID != oldValue {cancelArtworkTransfer()}}}
   @Published var linkedTargetID: UUID?
+  struct CanvasFrameFocus:Equatable {
+    let projectID:UUID
+    let frameIDs:Set<UUID>
+  }
+  /// Explicit navigation can precede the Canvas's first native layout. Retain
+  /// only that one request; ordinary selection and layout never request a fit.
+  @Published private(set) var pendingCanvasFrameFocus:CanvasFrameFocus?
+  @discardableResult func requestCanvasFrameFocus(_ ids:Set<UUID>)->Bool {
+    guard let projectID=store?.project?.id,!ids.isEmpty,
+      ids.isSubset(of:Set(frames.map(\.id))) else{return false}
+    pendingCanvasFrameFocus = .init(projectID:projectID,frameIDs:ids)
+    return true
+  }
+  func completeCanvasFrameFocus(_ request:CanvasFrameFocus) {
+    if pendingCanvasFrameFocus==request {pendingCanvasFrameFocus=nil}
+  }
   @Published var selection = Set<UUID>() {
     didSet {
       if let croppingImageID, selection != [croppingImageID] { self.croppingImageID = nil }
@@ -167,10 +186,16 @@ enum ArtworkTool: String, CaseIterable {
     return object?.isCanvasWorkspace == true ? nil : object
   }
   var paperContext: ProductObject? {
-    guard let physical = physicalObject, PaperConstruction.isPaper(physical),
-      objectID == physical.id || objectID == physical.paperConstruction?.insideArtworkSourceID
-        || objectID == store?.project?.artworkOwner(physical).id else { return nil }
-    return physical
+    guard let physical=physicalObject,PaperConstruction.isPaper(physical),let project=store?.project else{return nil}
+    if objectID==physical.id || objectID==physical.paperConstruction?.insideArtworkSourceID || objectID==project.artworkOwner(physical).id {return physical}
+    // Explicit component faces can own an independent canonical sheet. Resolve
+    // that relationship directly, without asking for frames while building them.
+    for component in physical.paperConstruction?.authored?.components ?? [] {
+      for face in [component.front,component.back].compactMap({$0}) {
+        if canonicalPieceSourceID(face,in:project)==objectID {return physical}
+      }
+    }
+    return nil
   }
   var art: Artwork {
     let source = sourceArtwork
@@ -185,7 +210,7 @@ enum ArtworkTool: String, CaseIterable {
   var sourceArtwork: Artwork {
     if let projection=activeProjection,let project=store?.project {
       if projection.requiresInsideSource {
-        return project.objects.first{$0.id==projection.constructionID}?.paperConstruction?.insideArtwork ?? Self.blankInsideArtwork
+        return project.objects.first{$0.id==projection.sourceID}?.paperConstruction?.insideArtwork ?? Self.blankInsideArtwork
       }
       if let source=project.objects.first(where:{$0.id==projection.sourceID}) {return project.editableArtwork(source) ?? .init(background:"#FFFFFF")}
     }
@@ -323,8 +348,17 @@ enum ArtworkTool: String, CaseIterable {
     for object in project.objects where PaperConstruction.isPaper(object) {
       if object.paperConstruction?.insideArtworkSourceID==sourceID {uses.append((object,true))}
       if object.id != sourceID && project.artworkOwner(object).id==sourceID {uses.append((object,false))}
+      for component in object.paperConstruction?.authored?.components ?? [] {
+        if component.front.flatMap({canonicalPieceSourceID($0,in:project)})==sourceID,!uses.contains(where:{$0.0.id==object.id && !$0.1}) {uses.append((object,false))}
+        if component.back.flatMap({canonicalPieceSourceID($0,in:project)})==sourceID,!uses.contains(where:{$0.0.id==object.id && $0.1}) {uses.append((object,true))}
+      }
     }
     return uses
+  }
+  private func canonicalPieceSourceID(_ face:SheetAssemblyFace,in project:Project)->UUID? {
+    guard let source=project.objects.first(where:{$0.id==face.sourceObjectID}) else{return nil}
+    if face.sourceSide == .inside,PaperConstruction.isPaper(source) {return source.paperConstruction?.insideArtworkSourceID ?? source.id}
+    return project.artworkOwner(source).id
   }
   var frames: [CanvasFrame] {
     guard let store, let project=store.project else {
@@ -453,6 +487,11 @@ enum ArtworkTool: String, CaseIterable {
     for construction in objects where PaperConstruction.isPaper(construction) {
       guard let geometry=paperGeometry(construction) else{continue}
       let definition=geometry.definition,net=geometry.net
+      if definition.authored?.version ?? 0 >= 4 {
+        let pieces=CanvasConstructionPieces.frames(object:construction,paper:definition,net:net,project:project,startY:constructionY)
+        result+=pieces;constructionY=(pieces.map(\.rect.maxY).max() ?? constructionY)+90
+        continue
+      }
       for inside in [false,true] {
       let requiresSource=inside && definition.insideArtworkSourceID==nil
       let sourceID=inside ? definition.insideArtworkSourceID ?? construction.id:project.artworkOwner(construction).id
@@ -513,6 +552,8 @@ enum ArtworkTool: String, CaseIterable {
     return result
   }
   func reconcile() {
+    if let request=pendingCanvasFrameFocus,
+      request.projectID != store?.project?.id || request.frameIDs.isDisjoint(with:Set(frames.map(\.id))) {pendingCanvasFrameFocus=nil}
     publicationWorkspace.reconcile()
     if let maskEditing, !art.elements.contains(where: { $0.id == maskEditing.maskID }) { self.maskEditing = nil }
     if componentReturn != nil && object?.componentDefinition != true { componentReturn = nil }
@@ -540,12 +581,14 @@ enum ArtworkTool: String, CaseIterable {
     if scopeID != nil && !art.elements.contains(where: { $0.id == scopeID }) { scopeID = nil }
   }
   func activate(_ id: UUID) {
+    pendingCanvasFrameFocus=nil
     if let project=store?.project {
       if let paper=project.objects.first(where:{$0.id==id}),PaperConstruction.isPaper(paper) {
         let source=project.artworkOwner(paper).id
         canvas?.finishText();cancelArtworkTransfer()
         store?.paperInside=false;objectID=source;projectionFrameID=nil;linkedTargetID=paper.id
-        if let proof=frames.first(where:{$0.projection?.constructionID==paper.id && $0.projection?.sourceID==source && $0.projection?.isProof==true}) {activate(proof.id)}
+        if let proof=frames.first(where:{$0.projection?.constructionID==paper.id && $0.projection?.isProof==true && $0.projection?.inside==false
+          && ((paper.paperConstruction?.authored?.version ?? 0)>=4 || $0.projection?.sourceID==source)}) {activate(proof.id)}
         return
       }
       let uses=paperUses(of:id,in:project)
@@ -636,7 +679,7 @@ enum ArtworkTool: String, CaseIterable {
       do {
         try validateArtwork(value)
         try store.engine.edit("Edited artwork",coalescing:gestureKey ?? "artwork-\(object.id)") {project in
-          let sourceID=try PaperCommands.ensureInside(in:&project,objectID:projection.constructionID)
+          let sourceID=try PaperCommands.ensureInside(in:&project,objectID:projection.sourceID)
           try project.setArtwork(value,for:sourceID)
         }
         if let current=frames.first(where:{$0.id==projection.id})?.projection {adoptProjectionSource(current)}

@@ -69,52 +69,11 @@ public enum SewingLayoutGeometry {
     let d = geometry.grainDirection, aligned = normalizedAngle(90 - atan2(d.y, d.x) * 180 / Double.pi)
     return layout.grain == .directional ? [aligned] : [aligned, normalizedAngle(aligned + 180)]
   }
-  static func aabbDistance(_ a: Rect2, _ b: Rect2) -> Double {
-    let dx = max(0, max(a.x - b.maxX, b.x - a.maxX)), dy = max(0, max(a.y - b.maxY, b.y - a.maxY))
-    return hypot(dx, dy)
-  }
-  private static func pointSegmentDistance(_ p: Point2, _ a: Point2, _ b: Point2) -> Double {
-    let d = subtract(b, a), length = dot(d, d)
-    if length <= 1e-20 { return hypot(p.x - a.x, p.y - a.y) }
-    let t = max(0, min(1, dot(subtract(p, a), d) / length))
-    return hypot(p.x - a.x - t * d.x, p.y - a.y - t * d.y)
-  }
-  private static func intersects(_ a: Point2, _ b: Point2, _ c: Point2, _ d: Point2) -> Bool {
-    let ab = subtract(b, a), cd = subtract(d, c)
-    let ac = subtract(c, a), ad = subtract(d, a), ca = subtract(a, c), cb = subtract(b, c)
-    let u = cross(ab, ac), v = cross(ab, ad), w = cross(cd, ca), z = cross(cd, cb)
-    if ((u > epsilon && v < -epsilon) || (u < -epsilon && v > epsilon)) &&
-      ((w > epsilon && z < -epsilon) || (w < -epsilon && z > epsilon)) { return true }
-    return abs(u) <= epsilon && pointSegmentDistance(c, a, b) <= epsilon
-      || abs(v) <= epsilon && pointSegmentDistance(d, a, b) <= epsilon
-      || abs(w) <= epsilon && pointSegmentDistance(a, c, d) <= epsilon
-      || abs(z) <= epsilon && pointSegmentDistance(b, c, d) <= epsilon
-  }
-  private static func contains(_ point: Point2, polygon: [Point2]) -> Bool {
-    var inside = false
-    for index in polygon.indices {
-      let a = polygon[index], b = polygon[(index + 1) % polygon.count]
-      if (a.y > point.y) != (b.y > point.y), point.x < (b.x - a.x) * (point.y - a.y) / (b.y - a.y) + a.x { inside.toggle() }
-    }
-    return inside
-  }
-  /// Exact simple-polygon intersection/containment and Euclidean segment separation. Bounds are
-  /// only an early-out: diagonal empty corners and real V-notch cutouts remain usable geometry.
+  /// Sewing and independently cut assemblies use the same exact material
+  /// contour kernel. Fold/quantity/source semantics remain with SewingLayouts.
   public static func separation(_ a: SewingLayoutResolvedPlacement, _ b: SewingLayoutResolvedPlacement,
     required: Double, comparisons: inout Int) throws -> (overlaps: Bool, distance: Double) {
-    let broad = aabbDistance(a.bounds, b.bounds)
-    if broad + epsilon >= required { return (false, broad) }
-    var distance = Double.infinity
-    for ap in a.materialContours {for bp in b.materialContours {
-      for i in ap.indices { for j in bp.indices {
-        comparisons += 1
-        guard comparisons <= SewingLayoutLimits.maximumSegmentComparisons else { throw FormError.invalid("Cutting layout exceeded its exact collision-check budget. Reduce the piece count or simplify the contours.") }
-        let p=ap[i],q=ap[(i+1)%ap.count],r=bp[j],s=bp[(j+1)%bp.count]
-        if intersects(p,q,r,s){return (true,0)}
-        distance=min(distance,pointSegmentDistance(p,r,s),pointSegmentDistance(q,r,s),pointSegmentDistance(r,p,q),pointSegmentDistance(s,p,q))
-      }}
-    }}
-    if containsMaterial(a.contour[0],contours:b.materialContours) || containsMaterial(b.contour[0],contours:a.materialContours) {return (true,0)}
-    return (false, distance)
+    try MaterialContourGeometry.separation(a.materialContours,b.materialContours,required:required,
+      comparisons:&comparisons,maximumComparisons:SewingLayoutLimits.maximumSegmentComparisons)
   }
 }

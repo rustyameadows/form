@@ -58,6 +58,7 @@ enum TableTool: String, CaseIterable {
   var paperSelectionObjectID: UUID?
   @Published var paperSelectedPanelID: String?
   @Published var paperSelectedFoldID: String?
+  @Published var constructionTableTarget:ConstructionTableTarget?
   @Published var paperShowingArtwork = true
   @Published var paperShowingGuides = true
   @Published var paperSheetWidth = 700.0
@@ -68,6 +69,7 @@ enum TableTool: String, CaseIterable {
   @Published var paperBleedMM = 3.0
   var canvasWindowController: CanvasWindowController?
   weak var utilityWindows: StudioUtilityWindows?
+  let constructionDrawingReview=ConstructionDrawingReviewPresenter()
   @Published var projects: [ProjectSummary] = []
   @Published var notice: String?
   @Published var error: String?
@@ -255,6 +257,7 @@ enum TableTool: String, CaseIterable {
       self?.paperSelectionObjectID = nil
       self?.paperSelectedPanelID = nil
       self?.paperSelectedFoldID = nil
+      self?.constructionTableTarget = nil
       self?.paperRepresentation = .panels
       self?.studioReturnSurface = nil
       self?.fabricationReview = nil
@@ -417,6 +420,7 @@ enum TableTool: String, CaseIterable {
               status["environment"] = self.environment.rawValue
               status["paper_workspace"] = ["representation": self.paperRepresentation.rawValue,
                 "inside": self.paperInside,"selected_panel_id":self.paperSelectedPanelID as Any? ?? NSNull(),"selected_fold_id":self.paperSelectedFoldID as Any? ?? NSNull(),
+                "selection_owner_id":self.paperSelectionObjectID?.uuidString as Any? ?? NSNull(),"construction_target":self.constructionTableTarget?.metadata() as Any? ?? NSNull(),
                 "sheet_size_mm":[self.paperSheetWidth,self.paperSheetHeight],"quantity":self.paperQuantity,"bleed_mm":self.paperBleedMM]
               status["primary_environments"] = ProjectEnvironment.primary.map(\.rawValue)
               status["studio_access"] = "secondary_icon_and_menu"

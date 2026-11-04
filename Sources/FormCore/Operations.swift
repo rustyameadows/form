@@ -282,7 +282,7 @@ public final class OperationEngine {
       }
       let context=try a["physical_frame"].map{try PhysicalArtworkFrameContext.resolve(in:project!,objectID:id,raw:$0)}
       let owner=context.flatMap{value in project!.objects.first{$0.id==value.sourceObjectID}} ?? object
-      let art=project!.editableArtwork(owner) ?? Artwork(background:"#FFFFFF")
+      let art=context?.canonicalArtwork(in:project!) ?? project!.editableArtwork(owner) ?? Artwork(background:"#FFFFFF")
       let resolved=a["resolved"] as? Bool == true ? try project!.resolvingComponents(in:art):art
       return try jsonObject(context?.frame.display(resolved) ?? resolved)
     case "form_component":
@@ -474,7 +474,8 @@ public final class OperationEngine {
         "Artwork: \(command)", source: source,
         coalescing: source == "Studio" && interaction == "artwork-\(id)" ? "artwork-\(id)" : nil
       ) { p in
-        guard let object = p.objects.first(where: { $0.id == id }) else {
+        let editID=try context?.prepareEditingSource(in:&p) ?? id
+        guard let object = p.objects.first(where: { $0.id == editID }) else {
           throw FormError.missing("Object not found.")
         }
         if ["font","optical","character_position","paragraph","glyph","origin","transform","language","production","list","pattern_piece","seam_pair","pattern_template","cut_layout","pattern_tiles"].contains(command), p.artworkOwner(object).locked { throw FormError.invalid("Unlock the artwork object before editing it.") }
@@ -483,7 +484,7 @@ public final class OperationEngine {
         }
         let original=p.editableArtwork(object) ?? Artwork(background:"#FFFFFF")
         var art=original
-        if try PublicationCommands.editText(in:&p,objectID:id,ids:ids,command:command,arguments:a,prepareGlyph:onPrepareGlyph,prepareParagraphs:onPrepareParagraphs,prepareOptical:onPrepareOptical) {selected=ids;return}
+        if try PublicationCommands.editText(in:&p,objectID:editID,ids:ids,command:command,arguments:a,prepareGlyph:onPrepareGlyph,prepareParagraphs:onPrepareParagraphs,prepareOptical:onPrepareOptical) {selected=ids;return}
         if let context {art=context.frame.display(original)}
         selected = try ArtworkCommands.apply(command, to: &art, ids: ids, arguments: a)
         if command=="optical" {try onPrepareOptical?(art,ids,a)}
@@ -501,7 +502,7 @@ public final class OperationEngine {
           try onPrepareParagraphs?(&art,targets)
         }
         let canonical=try context.map{try $0.frame.source(from:art,original:original)} ?? art
-        try p.setArtwork(canonical,for:id)
+        try p.setArtwork(canonical,for:editID)
       }
       return ["selected_elements": selected.map(\.uuidString)]
     case "form_edit_path":
@@ -535,7 +536,8 @@ public final class OperationEngine {
         "Path: \(operation)", source: source,
         coalescing: source == "Studio" && interaction == "artwork-\(id)" ? "artwork-\(id)" : nil
       ) { p in
-        guard let object = p.objects.first(where: { $0.id == id }),
+        let editID=try context?.prepareEditingSource(in:&p) ?? id
+        guard let object = p.objects.first(where: { $0.id == editID }),
           let original = p.editableArtwork(object)
         else {
           throw FormError.missing("Path element not found.")
@@ -549,7 +551,7 @@ public final class OperationEngine {
         selectedNodes = result.nodes
         selectedElements = result.elements
         let canonical=try context.map{try $0.frame.source(from:art,original:original)} ?? art
-        try p.setArtwork(canonical,for:id)
+        try p.setArtwork(canonical,for:editID)
       }
       return [
         "selected_nodes": selectedNodes.map(\.uuidString),

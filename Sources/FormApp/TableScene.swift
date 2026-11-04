@@ -66,7 +66,7 @@ private struct RenderSignature: Equatable {
     embroideryIssues[object.id]=status.issue;embroideryDigests[object.id]=status.digest
   }
   private var fingerprints: [UUID: RenderSignature] = [:]
-  private struct PaperPoseState:Equatable {let fold:Double;let opening:Double}
+  private struct PaperPoseState:Equatable {let fold:Double;let opening:Double;let explosion:Double}
   private var paperPoseStates:[UUID:PaperPoseState]=[:]
   private var sheetPoseStates:[UUID:Double]=[:]
   private var geometryBounds: [UUID: (min: MeshVector3, max: MeshVector3)] = [:]
@@ -463,6 +463,7 @@ private struct RenderSignature: Equatable {
         node.name = "object:\(object.id.uuidString)"
         nodes[object.id] = node
         sheetPoseStates.removeValue(forKey:object.id)
+        paperPoseStates.removeValue(forKey:object.id)
         geometryBounds[object.id] = clothSurfaces[object.id]?.geometricBounds ?? physicalBounds(of:node)
         objectRoot.addChildNode(node)
         fingerprints[object.id] = fingerprint
@@ -484,10 +485,17 @@ private struct RenderSignature: Equatable {
       }
       if object.recipeID == "clock" { GeometryFactory.updateClockHands(node, object: object) }
       if object.recipeID == "deskClock" {DeskClockGeometry.updateHands(node,object:object)}
-      if PaperConstruction.isPaper(object),let paper=try? PaperConstruction.definition(for:object) {
-        let highlighted=(!studio && selection.contains(object.id) && store?.primary?.id==object.id) ? store?.paperSelectedPanelID:nil
-        try? PaperGeometry.updatePose(node,object:object,selectedPanelID:highlighted)
-        let pose=PaperPoseState(fold:paper.foldPercent,opening:paper.openingPercent)
+      if PaperConstruction.isPaper(object),let paper=try? PaperGeometry.renderDefinition(for:object) {
+        let selectedOwner = !studio && selection.contains(object.id) && store?.primary?.id==object.id && store?.paperSelectionObjectID==object.id
+        let highlighted=selectedOwner ? store?.paperSelectedPanelID:nil
+        let target:ConstructionTableTarget?
+        if selectedOwner,let value=store?.constructionTableTarget,value.ownerID==object.id,let source=try? PaperGeometry.renderSource(for:object) {
+          target=try? ConstructionTableSelection.resolve(object:object,source:source,jointID:value.jointID,attachmentID:value.attachmentID,componentID:value.componentID,
+            fastenerDefinitionID:value.fastenerDefinitionID,fastenerInstanceID:value.fastenerInstanceID)
+        }else{target=nil}
+        try? PaperGeometry.updatePose(node,object:object,selectedPanelID:highlighted,
+          selectedPanelIDs:target.map{Set($0.panelIDs)},selectedFastenerID:target?.fastenerInstanceID,selectedFastenerDefinitionID:target?.fastenerDefinitionID)
+        let pose=PaperPoseState(fold:paper.foldPercent,opening:paper.openingPercent,explosion:paper.explosionPercent ?? 0)
         if paperPoseStates[object.id] != pose {
           geometryBounds[object.id]=physicalBounds(of:node);geometryChanged=true;paperPoseStates[object.id]=pose
         }
@@ -801,6 +809,14 @@ private struct RenderSignature: Equatable {
   func paperPanelID(at point:NSPoint)->String? {
     guard let hit=view?.sceneHits(point).first else{return nil}
     return PaperGeometry.panelID(from:hit.node)
+  }
+  func constructionTarget(from node:MeshNode,objectID:UUID)->ConstructionTableTarget? {
+    guard let object=captureSource?.objects.first(where:{$0.id==objectID}),PaperConstruction.isPaper(object),let source=try? PaperGeometry.renderSource(for:object) else{return nil}
+    return try? ConstructionTableSelection.hit(node:node,object:object,source:source)
+  }
+  func constructionTarget(at point:NSPoint)->ConstructionTableTarget? {
+    guard let hit=view?.sceneHits(point).first else{return nil}
+    return constructionTarget(from:hit.node,objectID:hit.objectID)
   }
   func objectID(at point:NSPoint)->UUID? {
     guard let view else{return nil}
@@ -1157,8 +1173,11 @@ private struct RenderSignature: Equatable {
       if action != .move {
         store.selectOnTable(objectID, extending:event.modifierFlags.contains(.shift))
       } else if objectID != nil { store.tableInspectorVisible = true }
-      if !event.modifierFlags.contains(.shift),let objectID,let panelID=controller.paperPanelID(at:point) {
-        store.selectPaperPanel(objectID:objectID,panelID:panelID)
+      if !event.modifierFlags.contains(.shift),let objectID {
+        if let target=controller.constructionTarget(at:point),target.ownerID==objectID {
+          store.selectConstructionTarget(objectID:objectID,jointID:target.jointID,attachmentID:target.attachmentID,componentID:target.componentID,
+            fastenerDefinitionID:target.fastenerDefinitionID,fastenerInstanceID:target.fastenerInstanceID)
+        } else if let panelID=controller.paperPanelID(at:point) {store.selectPaperPanel(objectID:objectID,panelID:panelID)}
       }
       if event.clickCount == 2 { controller.focusSelection() }
     }

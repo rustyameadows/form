@@ -1,0 +1,53 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "bleed" : 0,
+    "elements" : [
+      {
+        "asset" : "41271BBD-85E8-46F9-99BB-FE107546BD0D.jpg",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 112.5,
+        "id" : "1181F290-99B3-4839-8CC7-43D98C6BF801",
+        "kind" : "image",
+        "name" : "two-piece-open-reference.jpg",
+        "text" : "",
+        "width" : 135,
+        "x" : 10,
+        "y" : 15
+      },
+      {
+        "asset" : "F75E2DC0-EC68-466E-9E31-63BB92D16124.jpg",
+        "color" : "#FFFFFF",
+        "fontSize" : 14,
+        "height" : 135,
+        "id" : "63646867-4926-4913-A646-FFEFE98C3A8C",
+        "kind" : "image",
+        "name" : "fabric-corners-reference.jpg",
+        "text" : "",
+        "width" : 135,
+        "x" : 175,
+        "y" : 15
+      }
+    ],
+    "unit" : "mm"
+  },
+  "canvasSourceOnly" : true,
+  "designID" : "13C2DD44-F155-42D2-8809-20F3BC4B3C74",
+  "id" : "2897F316-D8AB-485D-810D-4ABAC077100F",
+  "locked" : false,
+  "materialID" : "chalk",
+  "name" : "CASK / Construction references",
+  "parameters" : {
+    "depth" : 220,
+    "width" : 330
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "artboard",
+  "relationship" : "original",
+  "rotation" : 0
+}

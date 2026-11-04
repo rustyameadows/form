@@ -20,8 +20,8 @@ final class PhysicalSchemaIntegrationTests:XCTestCase {
     project.objects=[structural];XCTAssertEqual(project.minimumSchemaVersion,65)
     var physical=object("Physical source")
     physical.paperConstruction = .init(kind:.envelope,dimensions:.init(width:100,height:140,depth:10),stock:physicalStock())
-    project.objects.append(physical);XCTAssertEqual(project.minimumSchemaVersion,66)
-    project.objects.reverse();XCTAssertEqual(project.minimumSchemaVersion,66)
+    project.objects.append(physical);XCTAssertEqual(project.minimumSchemaVersion,67)
+    project.objects.reverse();XCTAssertEqual(project.minimumSchemaVersion,67)
     project.objects.removeAll{$0.id==physical.id};XCTAssertEqual(project.minimumSchemaVersion,65)
 
     let resourceEdits:[(String,(inout Project)->Void)]=[
@@ -31,9 +31,9 @@ final class PhysicalSchemaIntegrationTests:XCTestCase {
       ("Saved scene",{var scene=StudioComposition(name:"Saved arrangement",camera:.init());scene.renderSettings=CyclesRenderSettings();$0.studioPresentation = .init();$0.studioPresentation!.scenes=[scene]})]
     for (label,edit) in resourceEdits {
       var candidate=project;edit(&candidate)
-      XCTAssertEqual(candidate.minimumSchemaVersion,66,label)
+      XCTAssertEqual(candidate.minimumSchemaVersion,67,label)
       let decoded=try JSONDecoder.form.decode(Project.self,from:JSONEncoder.form.encode(candidate))
-      XCTAssertEqual(decoded.minimumSchemaVersion,66,label)
+      XCTAssertEqual(decoded.minimumSchemaVersion,67,label)
       XCTAssertEqual(decoded.objects,project.objects,label)
     }
     project.objects=[];XCTAssertEqual(project.minimumSchemaVersion,64)
@@ -61,9 +61,9 @@ final class PhysicalSchemaIntegrationTests:XCTestCase {
       ("enclosure wrapping",enclosureObject(wrapping)),("enclosure insert",enclosureObject(insert)),("auxiliary stock",auxiliary)]
     for (label,source) in cases {
       var project=Project(name:"Nested physical stock");project.objects=[source]
-      XCTAssertEqual(project.minimumSchemaVersion,66,label)
+      XCTAssertEqual(project.minimumSchemaVersion,67,label)
       let decoded=try JSONDecoder.form.decode(Project.self,from:JSONEncoder.form.encode(project))
-      XCTAssertEqual(decoded.minimumSchemaVersion,66,label);XCTAssertEqual(decoded.objects,[source],label)
+      XCTAssertEqual(decoded.minimumSchemaVersion,67,label);XCTAssertEqual(decoded.objects,[source],label)
     }
     var plain=Project(name:"Legacy advanced construction");plain.objects=[panelObject(.init(wrap:.init(stock:.init(thicknessMM:0.1))))]
     XCTAssertEqual(plain.minimumSchemaVersion,65,"A wrapping declaration without physical optics remains upstream schema65.")
@@ -72,18 +72,18 @@ final class PhysicalSchemaIntegrationTests:XCTestCase {
     auxiliary.sheetAssembly!.auxiliaryLeaves![0].stock.profile=nil;plain.objects=[auxiliary]
     XCTAssertEqual(plain.minimumSchemaVersion,65)
   }
-  func testPreMergeCyclesSchema64StillDecodesAndSavesAt66WithoutChangingSourceFields()throws {
+  func testPreMergeCyclesSchema64StillDecodesAndSavesAt67WithoutChangingSourceFields()throws {
     var prior=Project(name:"Earlier Cycles source")
     prior.schemaVersion=64;prior.renderSettings=CyclesRenderSettings()
     var material=Material("surface","Surface","Paper","#EFEDE9");material.appearance=PhysicalAppearance();prior.materials=[material]
     prior.camera.azimuth=0.71;prior.camera.distance=3.4;prior.objects=[object()]
     prior.createdAt=Date(timeIntervalSince1970:1_700_000_000);prior.updatedAt=prior.createdAt
     let decoded=try JSONDecoder.form.decode(Project.self,from:JSONEncoder.form.encode(prior))
-    XCTAssertEqual(decoded,prior);XCTAssertEqual(decoded.schemaVersion,64);XCTAssertEqual(decoded.minimumSchemaVersion,66)
+    XCTAssertEqual(decoded,prior);XCTAssertEqual(decoded.schemaVersion,64);XCTAssertEqual(decoded.minimumSchemaVersion,67)
     let root=FileManager.default.temporaryDirectory.appendingPathComponent("physical-schema-"+UUID().uuidString)
     addTeardownBlock {try? FileManager.default.removeItem(at:root)}
     let repository=try ProjectRepository(root:root);try repository.save(decoded)
-    var expected=decoded;expected.schemaVersion=66
+    var expected=decoded;expected.schemaVersion=67
     XCTAssertEqual(try repository.load(decoded.id),expected)
     XCTAssertEqual(decoded,prior,"Saving raises persisted metadata without mutating the caller's source value.")
   }

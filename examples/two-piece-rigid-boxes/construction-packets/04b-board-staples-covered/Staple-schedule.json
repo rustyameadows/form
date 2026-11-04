@@ -1,0 +1,4346 @@
+[
+  {
+    "crownDirection" : {
+      "x" : 1,
+      "y" : 0,
+      "z" : 0
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "b-floor-n/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : 1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "b-floor",
+    "entrySide" : "inside",
+    "id" : "b-floor-n/wire:0",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 23,
+      "y" : 138.4
+    },
+    "instanceIndex" : 0,
+    "jointID" : "b-floor-n",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-n",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "b-n"
+        }
+      ],
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-n",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "b-n"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : -78.20000000000044,
+        "y" : 8.375,
+        "z" : 66.1999999999999
+      },
+      {
+        "x" : -78.20000000000044,
+        "y" : 0.3749999999999998,
+        "z" : 66.1999999999999
+      },
+      {
+        "x" : -70.20000000000044,
+        "y" : 0.3749999999999998,
+        "z" : 66.1999999999999
+      },
+      {
+        "x" : -70.20000000000044,
+        "y" : 8.375,
+        "z" : 66.1999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "b-n",
+        "edgeIndex" : 2,
+        "panelID" : "b-n",
+        "panelPointMM" : {
+          "x" : 722.6800000000001,
+          "y" : -59.98,
+          "z" : -8.526512829121202e-14
+        },
+        "pointMM" : {
+          "x" : -78.2000000000005,
+          "y" : 2.5500000000000114,
+          "z" : 66.1999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-n",
+        "edgeIndex" : 2,
+        "panelID" : "b-n",
+        "panelPointMM" : {
+          "x" : 730.6800000000001,
+          "y" : -59.98,
+          "z" : -8.526512829121202e-14
+        },
+        "pointMM" : {
+          "x" : -70.2000000000005,
+          "y" : 2.5500000000000114,
+          "z" : 66.1999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "b-n",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "b-n",
+        "edgeIndex" : 0,
+        "panelID" : "b-n",
+        "panelPointMM" : {
+          "x" : 722.6800000000001,
+          "y" : -5,
+          "z" : -8.526512829121202e-14
+        },
+        "pointMM" : {
+          "x" : -78.2000000000005,
+          "y" : 57.53000000000001,
+          "z" : 66.1999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-n",
+        "edgeIndex" : 0,
+        "panelID" : "b-n",
+        "panelPointMM" : {
+          "x" : 730.6800000000001,
+          "y" : -5,
+          "z" : -8.526512829121202e-14
+        },
+        "pointMM" : {
+          "x" : -70.2000000000005,
+          "y" : 57.53000000000001,
+          "z" : 66.1999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 23,
+      "y" : 138.4
+    },
+    "spacingDirection" : {
+      "x" : 1,
+      "y" : 0,
+      "z" : 0
+    },
+    "spacingMM" : 74.2,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 1,
+      "y" : 0,
+      "z" : 0
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "b-floor-n/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : 1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "b-floor",
+    "entrySide" : "inside",
+    "id" : "b-floor-n/wire:1",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 97.2,
+      "y" : 138.4
+    },
+    "instanceIndex" : 1,
+    "jointID" : "b-floor-n",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-n",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "b-n"
+        }
+      ],
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-n",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "b-n"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : -4.0000000000004405,
+        "y" : 8.375,
+        "z" : 66.1999999999999
+      },
+      {
+        "x" : -4.0000000000004405,
+        "y" : 0.3749999999999998,
+        "z" : 66.1999999999999
+      },
+      {
+        "x" : 3.9999999999995595,
+        "y" : 0.3749999999999998,
+        "z" : 66.1999999999999
+      },
+      {
+        "x" : 3.9999999999995595,
+        "y" : 8.375,
+        "z" : 66.1999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "b-n",
+        "edgeIndex" : 2,
+        "panelID" : "b-n",
+        "panelPointMM" : {
+          "x" : 796.8800000000001,
+          "y" : -59.98,
+          "z" : -8.526512829121202e-14
+        },
+        "pointMM" : {
+          "x" : -4.000000000000455,
+          "y" : 2.5500000000000114,
+          "z" : 66.1999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-n",
+        "edgeIndex" : 2,
+        "panelID" : "b-n",
+        "panelPointMM" : {
+          "x" : 804.8800000000001,
+          "y" : -59.98,
+          "z" : -8.526512829121202e-14
+        },
+        "pointMM" : {
+          "x" : 3.9999999999995453,
+          "y" : 2.5500000000000114,
+          "z" : 66.1999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "b-n",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "b-n",
+        "edgeIndex" : 0,
+        "panelID" : "b-n",
+        "panelPointMM" : {
+          "x" : 796.8800000000001,
+          "y" : -5,
+          "z" : -8.526512829121202e-14
+        },
+        "pointMM" : {
+          "x" : -4.000000000000455,
+          "y" : 57.53000000000001,
+          "z" : 66.1999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-n",
+        "edgeIndex" : 0,
+        "panelID" : "b-n",
+        "panelPointMM" : {
+          "x" : 804.8800000000001,
+          "y" : -5,
+          "z" : -8.526512829121202e-14
+        },
+        "pointMM" : {
+          "x" : 3.9999999999995453,
+          "y" : 57.53000000000001,
+          "z" : 66.1999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 23,
+      "y" : 138.4
+    },
+    "spacingDirection" : {
+      "x" : 1,
+      "y" : 0,
+      "z" : 0
+    },
+    "spacingMM" : 74.2,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 1,
+      "y" : 0,
+      "z" : 0
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "b-floor-n/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : 1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "b-floor",
+    "entrySide" : "inside",
+    "id" : "b-floor-n/wire:2",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 171.4,
+      "y" : 138.4
+    },
+    "instanceIndex" : 2,
+    "jointID" : "b-floor-n",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-n",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "b-n"
+        }
+      ],
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-n",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "b-n"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : 70.19999999999956,
+        "y" : 8.375,
+        "z" : 66.1999999999999
+      },
+      {
+        "x" : 70.19999999999956,
+        "y" : 0.3749999999999998,
+        "z" : 66.1999999999999
+      },
+      {
+        "x" : 78.19999999999956,
+        "y" : 0.3749999999999998,
+        "z" : 66.1999999999999
+      },
+      {
+        "x" : 78.19999999999956,
+        "y" : 8.375,
+        "z" : 66.1999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "b-n",
+        "edgeIndex" : 2,
+        "panelID" : "b-n",
+        "panelPointMM" : {
+          "x" : 871.0800000000002,
+          "y" : -59.98,
+          "z" : -8.526512829121202e-14
+        },
+        "pointMM" : {
+          "x" : 70.19999999999959,
+          "y" : 2.5500000000000114,
+          "z" : 66.1999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-n",
+        "edgeIndex" : 2,
+        "panelID" : "b-n",
+        "panelPointMM" : {
+          "x" : 879.0800000000002,
+          "y" : -59.98,
+          "z" : -8.526512829121202e-14
+        },
+        "pointMM" : {
+          "x" : 78.19999999999959,
+          "y" : 2.5500000000000114,
+          "z" : 66.1999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "b-n",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "b-n",
+        "edgeIndex" : 0,
+        "panelID" : "b-n",
+        "panelPointMM" : {
+          "x" : 871.0800000000002,
+          "y" : -5,
+          "z" : -8.526512829121202e-14
+        },
+        "pointMM" : {
+          "x" : 70.19999999999959,
+          "y" : 57.53000000000001,
+          "z" : 66.1999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-n",
+        "edgeIndex" : 0,
+        "panelID" : "b-n",
+        "panelPointMM" : {
+          "x" : 879.0800000000002,
+          "y" : -5,
+          "z" : -8.526512829121202e-14
+        },
+        "pointMM" : {
+          "x" : 78.19999999999959,
+          "y" : 57.53000000000001,
+          "z" : 66.1999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 23,
+      "y" : 138.4
+    },
+    "spacingDirection" : {
+      "x" : 1,
+      "y" : 0,
+      "z" : 0
+    },
+    "spacingMM" : 74.2,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 0,
+      "y" : 6.123233995736766e-17,
+      "z" : -1
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "b-floor-e/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : 1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "b-floor",
+    "entrySide" : "inside",
+    "id" : "b-floor-e/wire:0",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 188.4,
+      "y" : 119.4
+    },
+    "instanceIndex" : 0,
+    "jointID" : "b-floor-e",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-e",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "b-e"
+        }
+      ],
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-e",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "b-e"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : 91.19999999999956,
+        "y" : 8.375,
+        "z" : 51.1999999999999
+      },
+      {
+        "x" : 91.19999999999956,
+        "y" : 0.37500000000000067,
+        "z" : 51.1999999999999
+      },
+      {
+        "x" : 91.19999999999956,
+        "y" : 0.3750000000000011,
+        "z" : 43.1999999999999
+      },
+      {
+        "x" : 91.19999999999956,
+        "y" : 8.375000000000002,
+        "z" : 43.1999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "b-e",
+        "edgeIndex" : 2,
+        "panelID" : "b-e",
+        "panelPointMM" : {
+          "x" : 1426.3600000000004,
+          "y" : -59.98,
+          "z" : -8.733936042159096e-14
+        },
+        "pointMM" : {
+          "x" : 91.19999999999956,
+          "y" : 2.5500000000000114,
+          "z" : 51.19999999999982
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-e",
+        "edgeIndex" : 2,
+        "panelID" : "b-e",
+        "panelPointMM" : {
+          "x" : 1434.3600000000004,
+          "y" : -59.98,
+          "z" : -8.78292191412499e-14
+        },
+        "pointMM" : {
+          "x" : 91.19999999999956,
+          "y" : 2.5500000000000114,
+          "z" : 43.19999999999982
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "b-e",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "b-e",
+        "edgeIndex" : 0,
+        "panelID" : "b-e",
+        "panelPointMM" : {
+          "x" : 1426.3600000000004,
+          "y" : -5,
+          "z" : -8.733936042159096e-14
+        },
+        "pointMM" : {
+          "x" : 91.19999999999956,
+          "y" : 57.53000000000001,
+          "z" : 51.19999999999982
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-e",
+        "edgeIndex" : 0,
+        "panelID" : "b-e",
+        "panelPointMM" : {
+          "x" : 1434.3600000000004,
+          "y" : -5,
+          "z" : -8.78292191412499e-14
+        },
+        "pointMM" : {
+          "x" : 91.19999999999956,
+          "y" : 57.53000000000001,
+          "z" : 43.19999999999982
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 188.4,
+      "y" : 119.4
+    },
+    "spacingDirection" : {
+      "x" : 0,
+      "y" : 6.123233995736766e-17,
+      "z" : -1
+    },
+    "spacingMM" : 47.2,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 0,
+      "y" : 6.123233995736766e-17,
+      "z" : -1
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "b-floor-e/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : 1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "b-floor",
+    "entrySide" : "inside",
+    "id" : "b-floor-e/wire:1",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 188.4,
+      "y" : 72.2
+    },
+    "instanceIndex" : 1,
+    "jointID" : "b-floor-e",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-e",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-e"
+        }
+      ],
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-e",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-e"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : 91.19999999999956,
+        "y" : 8.375000000000004,
+        "z" : 3.9999999999999005
+      },
+      {
+        "x" : 91.19999999999956,
+        "y" : 0.37500000000000355,
+        "z" : 3.9999999999999005
+      },
+      {
+        "x" : 91.19999999999956,
+        "y" : 0.375000000000004,
+        "z" : -4.0000000000000995
+      },
+      {
+        "x" : 91.19999999999956,
+        "y" : 8.375000000000004,
+        "z" : -4.0000000000000995
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "b-e",
+        "edgeIndex" : 2,
+        "panelID" : "b-e",
+        "panelPointMM" : {
+          "x" : 1473.5600000000002,
+          "y" : -59.980000000000004,
+          "z" : -9.02295268675787e-14
+        },
+        "pointMM" : {
+          "x" : 91.19999999999956,
+          "y" : 2.5500000000000043,
+          "z" : 4
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-e",
+        "edgeIndex" : 2,
+        "panelID" : "b-e",
+        "panelPointMM" : {
+          "x" : 1481.5600000000002,
+          "y" : -59.98,
+          "z" : -9.071938558723764e-14
+        },
+        "pointMM" : {
+          "x" : 91.19999999999956,
+          "y" : 2.5500000000000114,
+          "z" : -4
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "b-e",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "b-e",
+        "edgeIndex" : 0,
+        "panelID" : "b-e",
+        "panelPointMM" : {
+          "x" : 1473.5600000000002,
+          "y" : -5,
+          "z" : -9.02295268675787e-14
+        },
+        "pointMM" : {
+          "x" : 91.19999999999956,
+          "y" : 57.53000000000001,
+          "z" : 4
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-e",
+        "edgeIndex" : 0,
+        "panelID" : "b-e",
+        "panelPointMM" : {
+          "x" : 1481.5600000000002,
+          "y" : -5,
+          "z" : -9.071938558723764e-14
+        },
+        "pointMM" : {
+          "x" : 91.19999999999956,
+          "y" : 57.53000000000001,
+          "z" : -4
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 188.4,
+      "y" : 119.4
+    },
+    "spacingDirection" : {
+      "x" : 0,
+      "y" : 6.123233995736766e-17,
+      "z" : -1
+    },
+    "spacingMM" : 47.2,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 0,
+      "y" : 6.123233995736766e-17,
+      "z" : -1
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "b-floor-e/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : 1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "b-floor",
+    "entrySide" : "inside",
+    "id" : "b-floor-e/wire:2",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 188.4,
+      "y" : 25
+    },
+    "instanceIndex" : 2,
+    "jointID" : "b-floor-e",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-e",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-e"
+        }
+      ],
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-e",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-e"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : 91.19999999999956,
+        "y" : 8.375000000000007,
+        "z" : -43.2000000000001
+      },
+      {
+        "x" : 91.19999999999956,
+        "y" : 0.37500000000000644,
+        "z" : -43.2000000000001
+      },
+      {
+        "x" : 91.19999999999956,
+        "y" : 0.3750000000000069,
+        "z" : -51.2000000000001
+      },
+      {
+        "x" : 91.19999999999956,
+        "y" : 8.375000000000007,
+        "z" : -51.2000000000001
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "b-e",
+        "edgeIndex" : 2,
+        "panelID" : "b-e",
+        "panelPointMM" : {
+          "x" : 1520.7600000000002,
+          "y" : -59.98,
+          "z" : -9.311969331356645e-14
+        },
+        "pointMM" : {
+          "x" : 91.19999999999956,
+          "y" : 2.5500000000000114,
+          "z" : -43.200000000000045
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-e",
+        "edgeIndex" : 2,
+        "panelID" : "b-e",
+        "panelPointMM" : {
+          "x" : 1528.7600000000002,
+          "y" : -59.98,
+          "z" : -9.360955203322539e-14
+        },
+        "pointMM" : {
+          "x" : 91.19999999999956,
+          "y" : 2.5500000000000114,
+          "z" : -51.200000000000045
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "b-e",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "b-e",
+        "edgeIndex" : 0,
+        "panelID" : "b-e",
+        "panelPointMM" : {
+          "x" : 1520.7600000000002,
+          "y" : -5,
+          "z" : -9.311969331356645e-14
+        },
+        "pointMM" : {
+          "x" : 91.19999999999956,
+          "y" : 57.53000000000001,
+          "z" : -43.200000000000045
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-e",
+        "edgeIndex" : 0,
+        "panelID" : "b-e",
+        "panelPointMM" : {
+          "x" : 1528.7600000000002,
+          "y" : -5,
+          "z" : -9.360955203322539e-14
+        },
+        "pointMM" : {
+          "x" : 91.19999999999956,
+          "y" : 57.53000000000001,
+          "z" : -51.200000000000045
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 188.4,
+      "y" : 119.4
+    },
+    "spacingDirection" : {
+      "x" : 0,
+      "y" : 6.123233995736766e-17,
+      "z" : -1
+    },
+    "spacingMM" : 47.2,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : -1,
+      "y" : 0,
+      "z" : 0
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "b-floor-s/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : 1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "b-floor",
+    "entrySide" : "inside",
+    "id" : "b-floor-s/wire:0",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 171.4,
+      "y" : 6
+    },
+    "instanceIndex" : 0,
+    "jointID" : "b-floor-s",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-s",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-s"
+        }
+      ],
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-s",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-s"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : 78.19999999999956,
+        "y" : 8.375000000000007,
+        "z" : -66.2000000000001
+      },
+      {
+        "x" : 78.19999999999956,
+        "y" : 0.37500000000000777,
+        "z" : -66.2000000000001
+      },
+      {
+        "x" : 70.19999999999956,
+        "y" : 0.37500000000000777,
+        "z" : -66.2000000000001
+      },
+      {
+        "x" : 70.19999999999956,
+        "y" : 8.375000000000007,
+        "z" : -66.2000000000001
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "b-s",
+        "edgeIndex" : 2,
+        "panelID" : "b-s",
+        "panelPointMM" : {
+          "x" : 2130.04,
+          "y" : -59.98,
+          "z" : -5.059281931946771e-15
+        },
+        "pointMM" : {
+          "x" : 78.19999999999936,
+          "y" : 2.5500000000000114,
+          "z" : -66.2000000000001
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-s",
+        "edgeIndex" : 2,
+        "panelID" : "b-s",
+        "panelPointMM" : {
+          "x" : 2138.04,
+          "y" : -59.98,
+          "z" : -6.038999371264652e-15
+        },
+        "pointMM" : {
+          "x" : 70.19999999999936,
+          "y" : 2.5500000000000114,
+          "z" : -66.2000000000001
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "b-s",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "b-s",
+        "edgeIndex" : 0,
+        "panelID" : "b-s",
+        "panelPointMM" : {
+          "x" : 2130.04,
+          "y" : -5,
+          "z" : -5.059281931946771e-15
+        },
+        "pointMM" : {
+          "x" : 78.19999999999936,
+          "y" : 57.53000000000001,
+          "z" : -66.2000000000001
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-s",
+        "edgeIndex" : 0,
+        "panelID" : "b-s",
+        "panelPointMM" : {
+          "x" : 2138.04,
+          "y" : -5,
+          "z" : -6.038999371264652e-15
+        },
+        "pointMM" : {
+          "x" : 70.19999999999936,
+          "y" : 57.53000000000001,
+          "z" : -66.2000000000001
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 171.4,
+      "y" : 6
+    },
+    "spacingDirection" : {
+      "x" : -1,
+      "y" : 0,
+      "z" : 0
+    },
+    "spacingMM" : 74.2,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : -1,
+      "y" : 0,
+      "z" : 0
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "b-floor-s/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : 1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "b-floor",
+    "entrySide" : "inside",
+    "id" : "b-floor-s/wire:1",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 97.2,
+      "y" : 6
+    },
+    "instanceIndex" : 1,
+    "jointID" : "b-floor-s",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-s",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-s"
+        }
+      ],
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-s",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-s"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : 3.9999999999995595,
+        "y" : 8.375000000000007,
+        "z" : -66.2000000000001
+      },
+      {
+        "x" : 3.9999999999995595,
+        "y" : 0.37500000000000777,
+        "z" : -66.2000000000001
+      },
+      {
+        "x" : -4.0000000000004405,
+        "y" : 0.37500000000000777,
+        "z" : -66.2000000000001
+      },
+      {
+        "x" : -4.0000000000004405,
+        "y" : 8.375000000000007,
+        "z" : -66.2000000000001
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "b-s",
+        "edgeIndex" : 2,
+        "panelID" : "b-s",
+        "panelPointMM" : {
+          "x" : 2204.24,
+          "y" : -59.98,
+          "z" : -1.4146161181620114e-14
+        },
+        "pointMM" : {
+          "x" : 3.9999999999995453,
+          "y" : 2.5500000000000114,
+          "z" : -66.2000000000001
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-s",
+        "edgeIndex" : 2,
+        "panelID" : "b-s",
+        "panelPointMM" : {
+          "x" : 2212.24,
+          "y" : -59.98,
+          "z" : -1.5125878620937995e-14
+        },
+        "pointMM" : {
+          "x" : -4.000000000000455,
+          "y" : 2.5500000000000114,
+          "z" : -66.2000000000001
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "b-s",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "b-s",
+        "edgeIndex" : 0,
+        "panelID" : "b-s",
+        "panelPointMM" : {
+          "x" : 2204.24,
+          "y" : -5,
+          "z" : -1.4146161181620114e-14
+        },
+        "pointMM" : {
+          "x" : 3.9999999999995453,
+          "y" : 57.53000000000001,
+          "z" : -66.2000000000001
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-s",
+        "edgeIndex" : 0,
+        "panelID" : "b-s",
+        "panelPointMM" : {
+          "x" : 2212.24,
+          "y" : -5,
+          "z" : -1.5125878620937995e-14
+        },
+        "pointMM" : {
+          "x" : -4.000000000000455,
+          "y" : 57.53000000000001,
+          "z" : -66.2000000000001
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 171.4,
+      "y" : 6
+    },
+    "spacingDirection" : {
+      "x" : -1,
+      "y" : 0,
+      "z" : 0
+    },
+    "spacingMM" : 74.2,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : -1,
+      "y" : 0,
+      "z" : 0
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "b-floor-s/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : 1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "b-floor",
+    "entrySide" : "inside",
+    "id" : "b-floor-s/wire:2",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 23,
+      "y" : 6
+    },
+    "instanceIndex" : 2,
+    "jointID" : "b-floor-s",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-s",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-s"
+        }
+      ],
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-s",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-s"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : -70.20000000000044,
+        "y" : 8.375000000000007,
+        "z" : -66.2000000000001
+      },
+      {
+        "x" : -70.20000000000044,
+        "y" : 0.37500000000000777,
+        "z" : -66.2000000000001
+      },
+      {
+        "x" : -78.20000000000044,
+        "y" : 0.37500000000000777,
+        "z" : -66.2000000000001
+      },
+      {
+        "x" : -78.20000000000044,
+        "y" : 8.375000000000007,
+        "z" : -66.2000000000001
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "b-s",
+        "edgeIndex" : 2,
+        "panelID" : "b-s",
+        "panelPointMM" : {
+          "x" : 2278.4399999999996,
+          "y" : -59.98,
+          "z" : -2.3233040431293406e-14
+        },
+        "pointMM" : {
+          "x" : -70.20000000000027,
+          "y" : 2.5500000000000114,
+          "z" : -66.2000000000001
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-s",
+        "edgeIndex" : 2,
+        "panelID" : "b-s",
+        "panelPointMM" : {
+          "x" : 2286.4399999999996,
+          "y" : -59.98,
+          "z" : -2.4212757870611287e-14
+        },
+        "pointMM" : {
+          "x" : -78.20000000000027,
+          "y" : 2.5500000000000114,
+          "z" : -66.2000000000001
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "b-s",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "b-s",
+        "edgeIndex" : 0,
+        "panelID" : "b-s",
+        "panelPointMM" : {
+          "x" : 2278.4399999999996,
+          "y" : -5,
+          "z" : -2.3233040431293406e-14
+        },
+        "pointMM" : {
+          "x" : -70.20000000000027,
+          "y" : 57.53000000000001,
+          "z" : -66.2000000000001
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-s",
+        "edgeIndex" : 0,
+        "panelID" : "b-s",
+        "panelPointMM" : {
+          "x" : 2286.4399999999996,
+          "y" : -5,
+          "z" : -2.4212757870611287e-14
+        },
+        "pointMM" : {
+          "x" : -78.20000000000027,
+          "y" : 57.53000000000001,
+          "z" : -66.2000000000001
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 171.4,
+      "y" : 6
+    },
+    "spacingDirection" : {
+      "x" : -1,
+      "y" : 0,
+      "z" : 0
+    },
+    "spacingMM" : 74.2,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 0,
+      "y" : -6.123233995736766e-17,
+      "z" : 1
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "b-floor-w/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : 1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "b-floor",
+    "entrySide" : "inside",
+    "id" : "b-floor-w/wire:0",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 6,
+      "y" : 25
+    },
+    "instanceIndex" : 0,
+    "jointID" : "b-floor-w",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-w",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-w"
+        }
+      ],
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-w",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-w"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : -91.20000000000044,
+        "y" : 8.375000000000007,
+        "z" : -51.2000000000001
+      },
+      {
+        "x" : -91.20000000000044,
+        "y" : 0.3750000000000069,
+        "z" : -51.2000000000001
+      },
+      {
+        "x" : -91.20000000000044,
+        "y" : 0.37500000000000644,
+        "z" : -43.2000000000001
+      },
+      {
+        "x" : -91.20000000000044,
+        "y" : 8.375000000000007,
+        "z" : -43.2000000000001
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "b-w",
+        "edgeIndex" : 2,
+        "panelID" : "b-w",
+        "panelPointMM" : {
+          "x" : 2833.72,
+          "y" : -59.98,
+          "z" : 2.985049801567823e-15
+        },
+        "pointMM" : {
+          "x" : -91.20000000000044,
+          "y" : 2.5500000000000114,
+          "z" : -51.20000000000027
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-w",
+        "edgeIndex" : 2,
+        "panelID" : "b-w",
+        "panelPointMM" : {
+          "x" : 2841.72,
+          "y" : -59.98,
+          "z" : 3.4749085212267637e-15
+        },
+        "pointMM" : {
+          "x" : -91.20000000000044,
+          "y" : 2.5500000000000114,
+          "z" : -43.20000000000027
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "b-w",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "b-w",
+        "edgeIndex" : 0,
+        "panelID" : "b-w",
+        "panelPointMM" : {
+          "x" : 2833.72,
+          "y" : -5,
+          "z" : 2.985049801567823e-15
+        },
+        "pointMM" : {
+          "x" : -91.20000000000044,
+          "y" : 57.53000000000001,
+          "z" : -51.20000000000027
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-w",
+        "edgeIndex" : 0,
+        "panelID" : "b-w",
+        "panelPointMM" : {
+          "x" : 2841.72,
+          "y" : -5,
+          "z" : 3.4749085212267637e-15
+        },
+        "pointMM" : {
+          "x" : -91.20000000000044,
+          "y" : 57.53000000000001,
+          "z" : -43.20000000000027
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 6,
+      "y" : 25
+    },
+    "spacingDirection" : {
+      "x" : 0,
+      "y" : -6.123233995736766e-17,
+      "z" : 1
+    },
+    "spacingMM" : 47.2,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 0,
+      "y" : -6.123233995736766e-17,
+      "z" : 1
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "b-floor-w/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : 1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "b-floor",
+    "entrySide" : "inside",
+    "id" : "b-floor-w/wire:1",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 6,
+      "y" : 72.2
+    },
+    "instanceIndex" : 1,
+    "jointID" : "b-floor-w",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-w",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-w"
+        }
+      ],
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-w",
+          "entryMM" : 2.1750000000000043,
+          "exitMM" : 8,
+          "panelID" : "b-w"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : -91.20000000000044,
+        "y" : 8.375000000000004,
+        "z" : -4.0000000000000995
+      },
+      {
+        "x" : -91.20000000000044,
+        "y" : 0.375000000000004,
+        "z" : -4.0000000000000995
+      },
+      {
+        "x" : -91.20000000000044,
+        "y" : 0.37500000000000355,
+        "z" : 3.9999999999999005
+      },
+      {
+        "x" : -91.20000000000044,
+        "y" : 8.375000000000004,
+        "z" : 3.9999999999999005
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "b-w",
+        "edgeIndex" : 2,
+        "panelID" : "b-w",
+        "panelPointMM" : {
+          "x" : 2880.92,
+          "y" : -59.98,
+          "z" : 5.875216247555608e-15
+        },
+        "pointMM" : {
+          "x" : -91.20000000000044,
+          "y" : 2.5500000000000114,
+          "z" : -4
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-w",
+        "edgeIndex" : 2,
+        "panelID" : "b-w",
+        "panelPointMM" : {
+          "x" : 2888.92,
+          "y" : -59.980000000000004,
+          "z" : 6.3650749672145485e-15
+        },
+        "pointMM" : {
+          "x" : -91.20000000000044,
+          "y" : 2.5500000000000043,
+          "z" : 4
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "b-w",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "b-w",
+        "edgeIndex" : 0,
+        "panelID" : "b-w",
+        "panelPointMM" : {
+          "x" : 2880.92,
+          "y" : -5,
+          "z" : 5.875216247555608e-15
+        },
+        "pointMM" : {
+          "x" : -91.20000000000044,
+          "y" : 57.53000000000001,
+          "z" : -4
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-w",
+        "edgeIndex" : 0,
+        "panelID" : "b-w",
+        "panelPointMM" : {
+          "x" : 2888.92,
+          "y" : -5,
+          "z" : 6.3650749672145485e-15
+        },
+        "pointMM" : {
+          "x" : -91.20000000000044,
+          "y" : 57.53000000000001,
+          "z" : 4
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 6,
+      "y" : 25
+    },
+    "spacingDirection" : {
+      "x" : 0,
+      "y" : -6.123233995736766e-17,
+      "z" : 1
+    },
+    "spacingMM" : 47.2,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 0,
+      "y" : -6.123233995736766e-17,
+      "z" : 1
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "b-floor-w/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : 1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "b-floor",
+    "entrySide" : "inside",
+    "id" : "b-floor-w/wire:2",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 6,
+      "y" : 119.4
+    },
+    "instanceIndex" : 2,
+    "jointID" : "b-floor-w",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-w",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "b-w"
+        }
+      ],
+      [
+        {
+          "componentID" : "b-floor",
+          "entryMM" : 0.17500000000000004,
+          "exitMM" : 2.175,
+          "panelID" : "b-floor"
+        },
+        {
+          "componentID" : "b-w",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "b-w"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : -91.20000000000044,
+        "y" : 8.375000000000002,
+        "z" : 43.1999999999999
+      },
+      {
+        "x" : -91.20000000000044,
+        "y" : 0.3750000000000011,
+        "z" : 43.1999999999999
+      },
+      {
+        "x" : -91.20000000000044,
+        "y" : 0.37500000000000067,
+        "z" : 51.1999999999999
+      },
+      {
+        "x" : -91.20000000000044,
+        "y" : 8.375,
+        "z" : 51.1999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "b-w",
+        "edgeIndex" : 2,
+        "panelID" : "b-w",
+        "panelPointMM" : {
+          "x" : 2928.12,
+          "y" : -59.98,
+          "z" : 8.765382693543342e-15
+        },
+        "pointMM" : {
+          "x" : -91.20000000000044,
+          "y" : 2.5500000000000114,
+          "z" : 43.19999999999982
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-w",
+        "edgeIndex" : 2,
+        "panelID" : "b-w",
+        "panelPointMM" : {
+          "x" : 2936.12,
+          "y" : -59.98,
+          "z" : 9.255241413202283e-15
+        },
+        "pointMM" : {
+          "x" : -91.20000000000044,
+          "y" : 2.5500000000000114,
+          "z" : 51.19999999999982
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "b-w",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "b-w",
+        "edgeIndex" : 0,
+        "panelID" : "b-w",
+        "panelPointMM" : {
+          "x" : 2928.12,
+          "y" : -5,
+          "z" : 8.765382693543342e-15
+        },
+        "pointMM" : {
+          "x" : -91.20000000000044,
+          "y" : 57.53000000000001,
+          "z" : 43.19999999999982
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "b-w",
+        "edgeIndex" : 0,
+        "panelID" : "b-w",
+        "panelPointMM" : {
+          "x" : 2936.12,
+          "y" : -5,
+          "z" : 9.255241413202283e-15
+        },
+        "pointMM" : {
+          "x" : -91.20000000000044,
+          "y" : 57.53000000000001,
+          "z" : 51.19999999999982
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 6,
+      "y" : 25
+    },
+    "spacingDirection" : {
+      "x" : 0,
+      "y" : -6.123233995736766e-17,
+      "z" : 1
+    },
+    "spacingMM" : 47.2,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 1,
+      "y" : 0,
+      "z" : 0
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "l-floor-n/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : -1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "l-floor",
+    "entrySide" : "inside",
+    "id" : "l-floor-n/wire:0",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 3541.4000000000005,
+      "y" : 144.39999999999998
+    },
+    "instanceIndex" : 0,
+    "jointID" : "l-floor-n",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17499999999999893,
+          "exitMM" : 2.174999999999999,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-n",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-n"
+        }
+      ],
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17499999999999893,
+          "exitMM" : 2.174999999999999,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-n",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-n"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : -81.40000000000055,
+        "y" : 52.05500000000001,
+        "z" : -69.19999999999999
+      },
+      {
+        "x" : -81.40000000000055,
+        "y" : 60.05500000000001,
+        "z" : -69.19999999999999
+      },
+      {
+        "x" : -73.40000000000055,
+        "y" : 60.05500000000001,
+        "z" : -69.19999999999999
+      },
+      {
+        "x" : -73.40000000000055,
+        "y" : 52.05500000000001,
+        "z" : -69.19999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "l-n",
+        "edgeIndex" : 2,
+        "panelID" : "l-n",
+        "panelPointMM" : {
+          "x" : 18.999999999999943,
+          "y" : -345.91,
+          "z" : -1.2762688572051812e-13
+        },
+        "pointMM" : {
+          "x" : -81.40000000000055,
+          "y" : 57.879999999999995,
+          "z" : -69.19999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-n",
+        "edgeIndex" : 2,
+        "panelID" : "l-n",
+        "panelPointMM" : {
+          "x" : 26.999999999999943,
+          "y" : -345.91,
+          "z" : -1.2762688572051812e-13
+        },
+        "pointMM" : {
+          "x" : -73.40000000000055,
+          "y" : 57.879999999999995,
+          "z" : -69.19999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "l-n",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "l-n",
+        "edgeIndex" : 0,
+        "panelID" : "l-n",
+        "panelPointMM" : {
+          "x" : 18.999999999999943,
+          "y" : -317.66,
+          "z" : -1.2416725851292684e-13
+        },
+        "pointMM" : {
+          "x" : -81.40000000000055,
+          "y" : 29.629999999999995,
+          "z" : -69.19999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-n",
+        "edgeIndex" : 0,
+        "panelID" : "l-n",
+        "panelPointMM" : {
+          "x" : 26.999999999999943,
+          "y" : -317.66,
+          "z" : -1.2416725851292684e-13
+        },
+        "pointMM" : {
+          "x" : -73.40000000000055,
+          "y" : 29.629999999999995,
+          "z" : -69.19999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 3541.4000000000005,
+      "y" : 144.39999999999998
+    },
+    "spacingDirection" : {
+      "x" : 1,
+      "y" : 0,
+      "z" : 0
+    },
+    "spacingMM" : 77.4,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 1,
+      "y" : 0,
+      "z" : 0
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "l-floor-n/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : -1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "l-floor",
+    "entrySide" : "inside",
+    "id" : "l-floor-n/wire:1",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 3618.8000000000006,
+      "y" : 144.39999999999998
+    },
+    "instanceIndex" : 1,
+    "jointID" : "l-floor-n",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17499999999999893,
+          "exitMM" : 2.174999999999999,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-n",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-n"
+        }
+      ],
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17499999999999893,
+          "exitMM" : 2.174999999999999,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-n",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-n"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : -4.000000000000455,
+        "y" : 52.05500000000001,
+        "z" : -69.19999999999999
+      },
+      {
+        "x" : -4.000000000000455,
+        "y" : 60.05500000000001,
+        "z" : -69.19999999999999
+      },
+      {
+        "x" : 3.9999999999995453,
+        "y" : 60.05500000000001,
+        "z" : -69.19999999999999
+      },
+      {
+        "x" : 3.9999999999995453,
+        "y" : 52.05500000000001,
+        "z" : -69.19999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "l-n",
+        "edgeIndex" : 2,
+        "panelID" : "l-n",
+        "panelPointMM" : {
+          "x" : 96.39999999999995,
+          "y" : -345.91,
+          "z" : -1.2762688572051812e-13
+        },
+        "pointMM" : {
+          "x" : -4.00000000000054,
+          "y" : 57.879999999999995,
+          "z" : -69.19999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-n",
+        "edgeIndex" : 2,
+        "panelID" : "l-n",
+        "panelPointMM" : {
+          "x" : 104.39999999999995,
+          "y" : -345.91,
+          "z" : -1.2762688572051812e-13
+        },
+        "pointMM" : {
+          "x" : 3.99999999999946,
+          "y" : 57.879999999999995,
+          "z" : -69.19999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "l-n",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "l-n",
+        "edgeIndex" : 0,
+        "panelID" : "l-n",
+        "panelPointMM" : {
+          "x" : 96.39999999999995,
+          "y" : -317.66,
+          "z" : -1.2416725851292684e-13
+        },
+        "pointMM" : {
+          "x" : -4.00000000000054,
+          "y" : 29.629999999999995,
+          "z" : -69.19999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-n",
+        "edgeIndex" : 0,
+        "panelID" : "l-n",
+        "panelPointMM" : {
+          "x" : 104.39999999999995,
+          "y" : -317.66,
+          "z" : -1.2416725851292684e-13
+        },
+        "pointMM" : {
+          "x" : 3.99999999999946,
+          "y" : 29.629999999999995,
+          "z" : -69.19999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 3541.4000000000005,
+      "y" : 144.39999999999998
+    },
+    "spacingDirection" : {
+      "x" : 1,
+      "y" : 0,
+      "z" : 0
+    },
+    "spacingMM" : 77.4,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 1,
+      "y" : 0,
+      "z" : 0
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "l-floor-n/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : -1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "l-floor",
+    "entrySide" : "inside",
+    "id" : "l-floor-n/wire:2",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 3696.2000000000007,
+      "y" : 144.39999999999998
+    },
+    "instanceIndex" : 2,
+    "jointID" : "l-floor-n",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17499999999999893,
+          "exitMM" : 2.174999999999999,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-n",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-n"
+        }
+      ],
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17499999999999893,
+          "exitMM" : 2.174999999999999,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-n",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-n"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : 73.39999999999964,
+        "y" : 52.05500000000001,
+        "z" : -69.19999999999999
+      },
+      {
+        "x" : 73.39999999999964,
+        "y" : 60.05500000000001,
+        "z" : -69.19999999999999
+      },
+      {
+        "x" : 81.39999999999964,
+        "y" : 60.05500000000001,
+        "z" : -69.19999999999999
+      },
+      {
+        "x" : 81.39999999999964,
+        "y" : 52.05500000000001,
+        "z" : -69.19999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "l-n",
+        "edgeIndex" : 2,
+        "panelID" : "l-n",
+        "panelPointMM" : {
+          "x" : 173.79999999999995,
+          "y" : -345.91,
+          "z" : -1.2762688572051812e-13
+        },
+        "pointMM" : {
+          "x" : 73.39999999999947,
+          "y" : 57.879999999999995,
+          "z" : -69.19999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-n",
+        "edgeIndex" : 2,
+        "panelID" : "l-n",
+        "panelPointMM" : {
+          "x" : 181.79999999999995,
+          "y" : -345.91,
+          "z" : -1.2762688572051812e-13
+        },
+        "pointMM" : {
+          "x" : 81.39999999999947,
+          "y" : 57.879999999999995,
+          "z" : -69.19999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "l-n",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "l-n",
+        "edgeIndex" : 0,
+        "panelID" : "l-n",
+        "panelPointMM" : {
+          "x" : 173.79999999999995,
+          "y" : -317.66,
+          "z" : -1.2416725851292684e-13
+        },
+        "pointMM" : {
+          "x" : 73.39999999999947,
+          "y" : 29.629999999999995,
+          "z" : -69.19999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-n",
+        "edgeIndex" : 0,
+        "panelID" : "l-n",
+        "panelPointMM" : {
+          "x" : 181.79999999999995,
+          "y" : -317.66,
+          "z" : -1.2416725851292684e-13
+        },
+        "pointMM" : {
+          "x" : 81.39999999999947,
+          "y" : 29.629999999999995,
+          "z" : -69.19999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 3541.4000000000005,
+      "y" : 144.39999999999998
+    },
+    "spacingDirection" : {
+      "x" : 1,
+      "y" : 0,
+      "z" : 0
+    },
+    "spacingMM" : 77.4,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 0,
+      "y" : 6.123233995736766e-17,
+      "z" : 1
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "l-floor-e/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : -1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "l-floor",
+    "entrySide" : "inside",
+    "id" : "l-floor-e/wire:0",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 3713.2000000000007,
+      "y" : 125.39999999999998
+    },
+    "instanceIndex" : 0,
+    "jointID" : "l-floor-e",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17499999999999805,
+          "exitMM" : 2.174999999999998,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-e",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-e"
+        }
+      ],
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17499999999999738,
+          "exitMM" : 2.174999999999997,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-e",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-e"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : 94.39999999999964,
+        "y" : 52.05500000000001,
+        "z" : -54.19999999999999
+      },
+      {
+        "x" : 94.39999999999964,
+        "y" : 60.05500000000001,
+        "z" : -54.19999999999999
+      },
+      {
+        "x" : 94.39999999999964,
+        "y" : 60.05500000000001,
+        "z" : -46.19999999999999
+      },
+      {
+        "x" : 94.39999999999964,
+        "y" : 52.05500000000001,
+        "z" : -46.19999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "l-e",
+        "edgeIndex" : 2,
+        "panelID" : "l-e",
+        "panelPointMM" : {
+          "x" : 722.6800000000003,
+          "y" : -345.91,
+          "z" : -4.425138744039048e-14
+        },
+        "pointMM" : {
+          "x" : 94.39999999999964,
+          "y" : 57.879999999999995,
+          "z" : -54.19999999999993
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-e",
+        "edgeIndex" : 2,
+        "panelID" : "l-e",
+        "panelPointMM" : {
+          "x" : 730.6800000000003,
+          "y" : -345.91,
+          "z" : -4.474124616004942e-14
+        },
+        "pointMM" : {
+          "x" : 94.39999999999964,
+          "y" : 57.879999999999995,
+          "z" : -46.19999999999993
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "l-e",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "l-e",
+        "edgeIndex" : 0,
+        "panelID" : "l-e",
+        "panelPointMM" : {
+          "x" : 722.6800000000003,
+          "y" : -317.66,
+          "z" : -4.425138744039048e-14
+        },
+        "pointMM" : {
+          "x" : 94.39999999999964,
+          "y" : 29.629999999999995,
+          "z" : -54.19999999999993
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-e",
+        "edgeIndex" : 0,
+        "panelID" : "l-e",
+        "panelPointMM" : {
+          "x" : 730.6800000000003,
+          "y" : -317.66,
+          "z" : -4.474124616004942e-14
+        },
+        "pointMM" : {
+          "x" : 94.39999999999964,
+          "y" : 29.629999999999995,
+          "z" : -46.19999999999993
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 3713.2000000000007,
+      "y" : 125.39999999999998
+    },
+    "spacingDirection" : {
+      "x" : 0,
+      "y" : 6.123233995736766e-17,
+      "z" : 1
+    },
+    "spacingMM" : 50.19999999999999,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 0,
+      "y" : 6.123233995736766e-17,
+      "z" : 1
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "l-floor-e/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : -1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "l-floor",
+    "entrySide" : "inside",
+    "id" : "l-floor-e/wire:1",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 3713.2000000000007,
+      "y" : 75.19999999999999
+    },
+    "instanceIndex" : 1,
+    "jointID" : "l-floor-e",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17500000000000204,
+          "exitMM" : 2.175000000000002,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-e",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-e"
+        }
+      ],
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.1750000000000016,
+          "exitMM" : 2.1750000000000016,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-e",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-e"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : 94.39999999999964,
+        "y" : 52.055000000000014,
+        "z" : -4
+      },
+      {
+        "x" : 94.39999999999964,
+        "y" : 60.055000000000014,
+        "z" : -4
+      },
+      {
+        "x" : 94.39999999999964,
+        "y" : 60.055000000000014,
+        "z" : 4
+      },
+      {
+        "x" : 94.39999999999964,
+        "y" : 52.055000000000014,
+        "z" : 4
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "l-e",
+        "edgeIndex" : 2,
+        "panelID" : "l-e",
+        "panelPointMM" : {
+          "x" : 772.8800000000002,
+          "y" : -345.91,
+          "z" : -4.732525090625033e-14
+        },
+        "pointMM" : {
+          "x" : 94.39999999999964,
+          "y" : 57.879999999999995,
+          "z" : -4
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-e",
+        "edgeIndex" : 2,
+        "panelID" : "l-e",
+        "panelPointMM" : {
+          "x" : 780.8800000000002,
+          "y" : -345.91,
+          "z" : -4.7815109625909274e-14
+        },
+        "pointMM" : {
+          "x" : 94.39999999999964,
+          "y" : 57.879999999999995,
+          "z" : 4
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "l-e",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "l-e",
+        "edgeIndex" : 0,
+        "panelID" : "l-e",
+        "panelPointMM" : {
+          "x" : 772.8800000000002,
+          "y" : -317.66,
+          "z" : -4.732525090625033e-14
+        },
+        "pointMM" : {
+          "x" : 94.39999999999964,
+          "y" : 29.629999999999995,
+          "z" : -4
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-e",
+        "edgeIndex" : 0,
+        "panelID" : "l-e",
+        "panelPointMM" : {
+          "x" : 780.8800000000002,
+          "y" : -317.66,
+          "z" : -4.7815109625909274e-14
+        },
+        "pointMM" : {
+          "x" : 94.39999999999964,
+          "y" : 29.629999999999995,
+          "z" : 4
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 3713.2000000000007,
+      "y" : 125.39999999999998
+    },
+    "spacingDirection" : {
+      "x" : 0,
+      "y" : 6.123233995736766e-17,
+      "z" : 1
+    },
+    "spacingMM" : 50.19999999999999,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 0,
+      "y" : 6.123233995736766e-17,
+      "z" : 1
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "l-floor-e/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : -1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "l-floor",
+    "entrySide" : "inside",
+    "id" : "l-floor-e/wire:2",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 3713.2000000000007,
+      "y" : 25
+    },
+    "instanceIndex" : 2,
+    "jointID" : "l-floor-e",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17499999999999893,
+          "exitMM" : 2.174999999999999,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-e",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-e"
+        }
+      ],
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.1749999999999985,
+          "exitMM" : 2.1749999999999985,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-e",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-e"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : 94.39999999999964,
+        "y" : 52.055000000000014,
+        "z" : 46.19999999999999
+      },
+      {
+        "x" : 94.39999999999964,
+        "y" : 60.055000000000014,
+        "z" : 46.19999999999999
+      },
+      {
+        "x" : 94.39999999999964,
+        "y" : 60.055000000000014,
+        "z" : 54.19999999999999
+      },
+      {
+        "x" : 94.39999999999964,
+        "y" : 52.055000000000014,
+        "z" : 54.19999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "l-e",
+        "edgeIndex" : 2,
+        "panelID" : "l-e",
+        "panelPointMM" : {
+          "x" : 823.0800000000002,
+          "y" : -345.91,
+          "z" : -5.039911437211018e-14
+        },
+        "pointMM" : {
+          "x" : 94.39999999999964,
+          "y" : 57.879999999999995,
+          "z" : 46.19999999999993
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-e",
+        "edgeIndex" : 2,
+        "panelID" : "l-e",
+        "panelPointMM" : {
+          "x" : 831.0800000000002,
+          "y" : -345.91,
+          "z" : -5.0888973091769123e-14
+        },
+        "pointMM" : {
+          "x" : 94.39999999999964,
+          "y" : 57.879999999999995,
+          "z" : 54.19999999999993
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "l-e",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "l-e",
+        "edgeIndex" : 0,
+        "panelID" : "l-e",
+        "panelPointMM" : {
+          "x" : 823.0800000000002,
+          "y" : -317.66,
+          "z" : -5.039911437211018e-14
+        },
+        "pointMM" : {
+          "x" : 94.39999999999964,
+          "y" : 29.629999999999995,
+          "z" : 46.19999999999993
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-e",
+        "edgeIndex" : 0,
+        "panelID" : "l-e",
+        "panelPointMM" : {
+          "x" : 831.0800000000002,
+          "y" : -317.66,
+          "z" : -5.0888973091769123e-14
+        },
+        "pointMM" : {
+          "x" : 94.39999999999964,
+          "y" : 29.629999999999995,
+          "z" : 54.19999999999993
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 3713.2000000000007,
+      "y" : 125.39999999999998
+    },
+    "spacingDirection" : {
+      "x" : 0,
+      "y" : 6.123233995736766e-17,
+      "z" : 1
+    },
+    "spacingMM" : 50.19999999999999,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : -1,
+      "y" : 0,
+      "z" : 0
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "l-floor-s/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : -1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "l-floor",
+    "entrySide" : "inside",
+    "id" : "l-floor-s/wire:0",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 3696.2000000000007,
+      "y" : 6
+    },
+    "instanceIndex" : 0,
+    "jointID" : "l-floor-s",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.1749999999999976,
+          "exitMM" : 2.1749999999999976,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-s",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-s"
+        }
+      ],
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.1749999999999976,
+          "exitMM" : 2.1749999999999976,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-s",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-s"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : 81.39999999999964,
+        "y" : 52.055000000000014,
+        "z" : 69.19999999999999
+      },
+      {
+        "x" : 81.39999999999964,
+        "y" : 60.055000000000014,
+        "z" : 69.19999999999999
+      },
+      {
+        "x" : 73.39999999999964,
+        "y" : 60.055000000000014,
+        "z" : 69.19999999999999
+      },
+      {
+        "x" : 73.39999999999964,
+        "y" : 52.055000000000014,
+        "z" : 69.19999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "l-s",
+        "edgeIndex" : 2,
+        "panelID" : "l-s",
+        "panelPointMM" : {
+          "x" : 1426.3600000000001,
+          "y" : -345.91,
+          "z" : 9.791583738144243e-15
+        },
+        "pointMM" : {
+          "x" : 81.39999999999964,
+          "y" : 57.879999999999995,
+          "z" : 69.19999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-s",
+        "edgeIndex" : 2,
+        "panelID" : "l-s",
+        "panelPointMM" : {
+          "x" : 1434.3600000000001,
+          "y" : -345.91,
+          "z" : 8.811866298826362e-15
+        },
+        "pointMM" : {
+          "x" : 73.39999999999964,
+          "y" : 57.879999999999995,
+          "z" : 69.19999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "l-s",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "l-s",
+        "edgeIndex" : 0,
+        "panelID" : "l-s",
+        "panelPointMM" : {
+          "x" : 1426.3600000000001,
+          "y" : -317.66,
+          "z" : 6.331956530552969e-15
+        },
+        "pointMM" : {
+          "x" : 81.39999999999964,
+          "y" : 29.629999999999995,
+          "z" : 69.19999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-s",
+        "edgeIndex" : 0,
+        "panelID" : "l-s",
+        "panelPointMM" : {
+          "x" : 1434.3600000000001,
+          "y" : -317.66,
+          "z" : 5.352239091235088e-15
+        },
+        "pointMM" : {
+          "x" : 73.39999999999964,
+          "y" : 29.629999999999995,
+          "z" : 69.19999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 3696.2000000000007,
+      "y" : 6
+    },
+    "spacingDirection" : {
+      "x" : -1,
+      "y" : 0,
+      "z" : 0
+    },
+    "spacingMM" : 77.4,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : -1,
+      "y" : 0,
+      "z" : 0
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "l-floor-s/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : -1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "l-floor",
+    "entrySide" : "inside",
+    "id" : "l-floor-s/wire:1",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 3618.8000000000006,
+      "y" : 6
+    },
+    "instanceIndex" : 1,
+    "jointID" : "l-floor-s",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.1749999999999976,
+          "exitMM" : 2.1749999999999976,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-s",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-s"
+        }
+      ],
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.1749999999999976,
+          "exitMM" : 2.1749999999999976,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-s",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-s"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : 3.9999999999995453,
+        "y" : 52.055000000000014,
+        "z" : 69.19999999999999
+      },
+      {
+        "x" : 3.9999999999995453,
+        "y" : 60.055000000000014,
+        "z" : 69.19999999999999
+      },
+      {
+        "x" : -4.000000000000455,
+        "y" : 60.055000000000014,
+        "z" : 69.19999999999999
+      },
+      {
+        "x" : -4.000000000000455,
+        "y" : 52.055000000000014,
+        "z" : 69.19999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "l-s",
+        "edgeIndex" : 2,
+        "panelID" : "l-s",
+        "panelPointMM" : {
+          "x" : 1503.7600000000002,
+          "y" : -345.91,
+          "z" : 3.1281751274372753e-16
+        },
+        "pointMM" : {
+          "x" : 3.9999999999995453,
+          "y" : 57.879999999999995,
+          "z" : 69.19999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-s",
+        "edgeIndex" : 2,
+        "panelID" : "l-s",
+        "panelPointMM" : {
+          "x" : 1511.7600000000002,
+          "y" : -345.91,
+          "z" : -6.668999265741537e-16
+        },
+        "pointMM" : {
+          "x" : -4.000000000000455,
+          "y" : 57.879999999999995,
+          "z" : 69.19999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "l-s",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "l-s",
+        "edgeIndex" : 0,
+        "panelID" : "l-s",
+        "panelPointMM" : {
+          "x" : 1503.7600000000002,
+          "y" : -317.66,
+          "z" : -3.1468096948475467e-15
+        },
+        "pointMM" : {
+          "x" : 3.9999999999995453,
+          "y" : 29.629999999999995,
+          "z" : 69.19999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-s",
+        "edgeIndex" : 0,
+        "panelID" : "l-s",
+        "panelPointMM" : {
+          "x" : 1511.7600000000002,
+          "y" : -317.66,
+          "z" : -4.126527134165428e-15
+        },
+        "pointMM" : {
+          "x" : -4.000000000000455,
+          "y" : 29.629999999999995,
+          "z" : 69.19999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 3696.2000000000007,
+      "y" : 6
+    },
+    "spacingDirection" : {
+      "x" : -1,
+      "y" : 0,
+      "z" : 0
+    },
+    "spacingMM" : 77.4,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : -1,
+      "y" : 0,
+      "z" : 0
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "l-floor-s/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : -1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "l-floor",
+    "entrySide" : "inside",
+    "id" : "l-floor-s/wire:2",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 3541.4000000000005,
+      "y" : 6
+    },
+    "instanceIndex" : 2,
+    "jointID" : "l-floor-s",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.1749999999999976,
+          "exitMM" : 2.1749999999999976,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-s",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-s"
+        }
+      ],
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.1749999999999976,
+          "exitMM" : 2.1749999999999976,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-s",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-s"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : -73.40000000000055,
+        "y" : 52.055000000000014,
+        "z" : 69.19999999999999
+      },
+      {
+        "x" : -73.40000000000055,
+        "y" : 60.055000000000014,
+        "z" : 69.19999999999999
+      },
+      {
+        "x" : -81.40000000000055,
+        "y" : 60.055000000000014,
+        "z" : 69.19999999999999
+      },
+      {
+        "x" : -81.40000000000055,
+        "y" : 52.055000000000014,
+        "z" : 69.19999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "l-s",
+        "edgeIndex" : 2,
+        "panelID" : "l-s",
+        "panelPointMM" : {
+          "x" : 1581.16,
+          "y" : -345.91,
+          "z" : -9.165948712656788e-15
+        },
+        "pointMM" : {
+          "x" : -73.40000000000032,
+          "y" : 57.879999999999995,
+          "z" : 69.19999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-s",
+        "edgeIndex" : 2,
+        "panelID" : "l-s",
+        "panelPointMM" : {
+          "x" : 1589.16,
+          "y" : -345.91,
+          "z" : -1.014566615197467e-14
+        },
+        "pointMM" : {
+          "x" : -81.40000000000032,
+          "y" : 57.879999999999995,
+          "z" : 69.19999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "l-s",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "l-s",
+        "edgeIndex" : 0,
+        "panelID" : "l-s",
+        "panelPointMM" : {
+          "x" : 1581.16,
+          "y" : -317.66,
+          "z" : -1.2625575920248062e-14
+        },
+        "pointMM" : {
+          "x" : -73.40000000000032,
+          "y" : 29.629999999999995,
+          "z" : 69.19999999999999
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-s",
+        "edgeIndex" : 0,
+        "panelID" : "l-s",
+        "panelPointMM" : {
+          "x" : 1589.16,
+          "y" : -317.66,
+          "z" : -1.3605293359565944e-14
+        },
+        "pointMM" : {
+          "x" : -81.40000000000032,
+          "y" : 29.629999999999995,
+          "z" : 69.19999999999999
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 3696.2000000000007,
+      "y" : 6
+    },
+    "spacingDirection" : {
+      "x" : -1,
+      "y" : 0,
+      "z" : 0
+    },
+    "spacingMM" : 77.4,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 0,
+      "y" : -6.123233995736766e-17,
+      "z" : -1
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "l-floor-w/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : -1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "l-floor",
+    "entrySide" : "inside",
+    "id" : "l-floor-w/wire:0",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 3524.4000000000005,
+      "y" : 25
+    },
+    "instanceIndex" : 0,
+    "jointID" : "l-floor-w",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.1749999999999985,
+          "exitMM" : 2.1749999999999985,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-w",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-w"
+        }
+      ],
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17499999999999893,
+          "exitMM" : 2.174999999999999,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-w",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-w"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : -94.40000000000055,
+        "y" : 52.055000000000014,
+        "z" : 54.19999999999999
+      },
+      {
+        "x" : -94.40000000000055,
+        "y" : 60.055000000000014,
+        "z" : 54.19999999999999
+      },
+      {
+        "x" : -94.40000000000055,
+        "y" : 60.055000000000014,
+        "z" : 46.19999999999999
+      },
+      {
+        "x" : -94.40000000000055,
+        "y" : 52.055000000000014,
+        "z" : 46.19999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "l-w",
+        "edgeIndex" : 2,
+        "panelID" : "l-w",
+        "panelPointMM" : {
+          "x" : 2130.04,
+          "y" : -345.91,
+          "z" : 1.3042733340279142e-13
+        },
+        "pointMM" : {
+          "x" : -94.40000000000055,
+          "y" : 57.879999999999995,
+          "z" : 54.19999999999982
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-w",
+        "edgeIndex" : 2,
+        "panelID" : "l-w",
+        "panelPointMM" : {
+          "x" : 2138.04,
+          "y" : -345.91,
+          "z" : 1.3091719212245036e-13
+        },
+        "pointMM" : {
+          "x" : -94.40000000000055,
+          "y" : 57.879999999999995,
+          "z" : 46.19999999999982
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "l-w",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "l-w",
+        "edgeIndex" : 0,
+        "panelID" : "l-w",
+        "panelPointMM" : {
+          "x" : 2130.04,
+          "y" : -317.66,
+          "z" : 1.3042733340279142e-13
+        },
+        "pointMM" : {
+          "x" : -94.40000000000055,
+          "y" : 29.629999999999995,
+          "z" : 54.19999999999982
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-w",
+        "edgeIndex" : 0,
+        "panelID" : "l-w",
+        "panelPointMM" : {
+          "x" : 2138.04,
+          "y" : -317.66,
+          "z" : 1.3091719212245036e-13
+        },
+        "pointMM" : {
+          "x" : -94.40000000000055,
+          "y" : 29.629999999999995,
+          "z" : 46.19999999999982
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 3524.4000000000005,
+      "y" : 25
+    },
+    "spacingDirection" : {
+      "x" : 0,
+      "y" : -6.123233995736766e-17,
+      "z" : -1
+    },
+    "spacingMM" : 50.19999999999999,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 0,
+      "y" : -6.123233995736766e-17,
+      "z" : -1
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "l-floor-w/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : -1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "l-floor",
+    "entrySide" : "inside",
+    "id" : "l-floor-w/wire:1",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 3524.4000000000005,
+      "y" : 75.19999999999999
+    },
+    "instanceIndex" : 1,
+    "jointID" : "l-floor-w",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.1750000000000016,
+          "exitMM" : 2.1750000000000016,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-w",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-w"
+        }
+      ],
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17500000000000204,
+          "exitMM" : 2.175000000000002,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-w",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-w"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : -94.40000000000055,
+        "y" : 52.055000000000014,
+        "z" : 4
+      },
+      {
+        "x" : -94.40000000000055,
+        "y" : 60.055000000000014,
+        "z" : 4
+      },
+      {
+        "x" : -94.40000000000055,
+        "y" : 60.055000000000014,
+        "z" : -4
+      },
+      {
+        "x" : -94.40000000000055,
+        "y" : 52.055000000000014,
+        "z" : -4
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "l-w",
+        "edgeIndex" : 2,
+        "panelID" : "l-w",
+        "panelPointMM" : {
+          "x" : 2180.24,
+          "y" : -345.91,
+          "z" : 1.3350119686865124e-13
+        },
+        "pointMM" : {
+          "x" : -94.40000000000055,
+          "y" : 57.879999999999995,
+          "z" : 4
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-w",
+        "edgeIndex" : 2,
+        "panelID" : "l-w",
+        "panelPointMM" : {
+          "x" : 2188.24,
+          "y" : -345.91,
+          "z" : 1.3399105558831018e-13
+        },
+        "pointMM" : {
+          "x" : -94.40000000000055,
+          "y" : 57.879999999999995,
+          "z" : -4
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "l-w",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "l-w",
+        "edgeIndex" : 0,
+        "panelID" : "l-w",
+        "panelPointMM" : {
+          "x" : 2180.24,
+          "y" : -317.66,
+          "z" : 1.3350119686865124e-13
+        },
+        "pointMM" : {
+          "x" : -94.40000000000055,
+          "y" : 29.629999999999995,
+          "z" : 4
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-w",
+        "edgeIndex" : 0,
+        "panelID" : "l-w",
+        "panelPointMM" : {
+          "x" : 2188.24,
+          "y" : -317.66,
+          "z" : 1.3399105558831018e-13
+        },
+        "pointMM" : {
+          "x" : -94.40000000000055,
+          "y" : 29.629999999999995,
+          "z" : -4
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 3524.4000000000005,
+      "y" : 25
+    },
+    "spacingDirection" : {
+      "x" : 0,
+      "y" : -6.123233995736766e-17,
+      "z" : -1
+    },
+    "spacingMM" : 50.19999999999999,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  },
+  {
+    "crownDirection" : {
+      "x" : 0,
+      "y" : -6.123233995736766e-17,
+      "z" : -1
+    },
+    "crownWidthMM" : 8,
+    "definitionCount" : 3,
+    "definitionID" : "l-floor-w/wire",
+    "driveDirection" : {
+      "x" : 0,
+      "y" : -1,
+      "z" : 6.123233995736766e-17
+    },
+    "endMarginMM" : 0.1,
+    "engagementFrame" : "closedInstalledAssembly",
+    "entryPanelID" : "l-floor",
+    "entrySide" : "inside",
+    "id" : "l-floor-w/wire:2",
+    "installation" : {
+      "order" : 1,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w"
+      ],
+      "stage" : "Bare board underside into wall bottom edge, before tape / covering / lining"
+    },
+    "instanceAnchorMM" : {
+      "x" : 3524.4000000000005,
+      "y" : 125.39999999999998
+    },
+    "instanceIndex" : 2,
+    "jointID" : "l-floor-w",
+    "layerComponentIDs" : [
+
+    ],
+    "legLengthMM" : 8,
+    "legMaterialIntervals" : [
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17499999999999738,
+          "exitMM" : 2.174999999999997,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-w",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-w"
+        }
+      ],
+      [
+        {
+          "componentID" : "l-floor",
+          "entryMM" : 0.17499999999999805,
+          "exitMM" : 2.174999999999998,
+          "panelID" : "l-floor"
+        },
+        {
+          "componentID" : "l-w",
+          "entryMM" : 2.1750000000000114,
+          "exitMM" : 8,
+          "panelID" : "l-w"
+        }
+      ]
+    ],
+    "maximumJointGapMM" : 0.2,
+    "minimumEdgeDistanceMM" : 0.15,
+    "minimumReceivingDepthMM" : 2,
+    "pointsMM" : [
+      {
+        "x" : -94.40000000000055,
+        "y" : 52.05500000000001,
+        "z" : -46.19999999999999
+      },
+      {
+        "x" : -94.40000000000055,
+        "y" : 60.05500000000001,
+        "z" : -46.19999999999999
+      },
+      {
+        "x" : -94.40000000000055,
+        "y" : 60.05500000000001,
+        "z" : -54.19999999999999
+      },
+      {
+        "x" : -94.40000000000055,
+        "y" : 52.05500000000001,
+        "z" : -54.19999999999999
+      }
+    ],
+    "receivingEntryBoundaries" : [
+      {
+        "componentID" : "l-w",
+        "edgeIndex" : 2,
+        "panelID" : "l-w",
+        "panelPointMM" : {
+          "x" : 2230.4399999999996,
+          "y" : -345.91,
+          "z" : 1.365750603345111e-13
+        },
+        "pointMM" : {
+          "x" : -94.40000000000055,
+          "y" : 57.879999999999995,
+          "z" : -46.19999999999982
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-w",
+        "edgeIndex" : 2,
+        "panelID" : "l-w",
+        "panelPointMM" : {
+          "x" : 2238.4399999999996,
+          "y" : -345.91,
+          "z" : 1.3706491905417003e-13
+        },
+        "pointMM" : {
+          "x" : -94.40000000000055,
+          "y" : 57.879999999999995,
+          "z" : -54.19999999999982
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "receivingPanelID" : "l-w",
+    "receivingThroughExitBoundaries" : [
+      {
+        "componentID" : "l-w",
+        "edgeIndex" : 0,
+        "panelID" : "l-w",
+        "panelPointMM" : {
+          "x" : 2230.4399999999996,
+          "y" : -317.66,
+          "z" : 1.365750603345111e-13
+        },
+        "pointMM" : {
+          "x" : -94.40000000000055,
+          "y" : 29.629999999999995,
+          "z" : -46.19999999999982
+        },
+        "surface" : "cutEdge"
+      },
+      {
+        "componentID" : "l-w",
+        "edgeIndex" : 0,
+        "panelID" : "l-w",
+        "panelPointMM" : {
+          "x" : 2238.4399999999996,
+          "y" : -317.66,
+          "z" : 1.3706491905417003e-13
+        },
+        "pointMM" : {
+          "x" : -94.40000000000055,
+          "y" : 29.629999999999995,
+          "z" : -54.19999999999982
+        },
+        "surface" : "cutEdge"
+      }
+    ],
+    "sourceAnchorMM" : {
+      "x" : 3524.4000000000005,
+      "y" : 25
+    },
+    "spacingDirection" : {
+      "x" : 0,
+      "y" : -6.123233995736766e-17,
+      "z" : -1
+    },
+    "spacingMM" : 50.19999999999999,
+    "termination" : "buried",
+    "tool" : "Declared narrow-nose board-edge stitcher; physical trial required",
+    "toolAccessMM" : 24,
+    "toolClearanceMM" : 0.5,
+    "wireDepthMM" : 0.35,
+    "wireWidthMM" : 0.35
+  }
+]

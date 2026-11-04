@@ -2,6 +2,8 @@ import AppKit
 import CryptoKit
 import ImageIO
 import FormGeometry
+import FormCore
+import FormCADModel
 import LabRendering
 import simd
 import XCTest
@@ -79,6 +81,7 @@ import XCTest
     var colorMap=matrix_identity_double4x4;colorMap[0,0] = -2;colorMap[1,1]=3;colorMap[3,0]=0.25
     var normalMap=matrix_identity_double4x4;normalMap[0,0]=0;normalMap[0,1]=4;normalMap[1,0] = -5;normalMap[1,1]=0;normalMap[3,1]=0.1
     material.diffuse.contentsTransform = .init(colorMap);material.normal.contentsTransform = .init(normalMap)
+    material.diffuse.minificationFilter = .nearest;material.normal.maxAnisotropy=8
     node.geometry!.materials=[material]
     let payload=try XCTUnwrap(adapter.pathTracingRenderables(scene:scene,assets:FileManager.default.temporaryDirectory).first)
     XCTAssertEqual(payload.materials.first?.physicalAppearance?.normalStrength,0.35)
@@ -90,9 +93,78 @@ import XCTest
     XCTAssertEqual(point(color).x,-0.15,accuracy:1e-8);XCTAssertEqual(point(color).y,0.9,accuracy:1e-8)
     XCTAssertEqual(point(normal).x,-1.5,accuracy:1e-8);XCTAssertEqual(point(normal).y,0.9,accuracy:1e-8)
     XCTAssertEqual(color.encoding,.srgb);XCTAssertEqual(normal.encoding,.data)
+    XCTAssertEqual(color.sampling.minification,.nearest);XCTAssertEqual(normal.sampling.maximumAnisotropy,8)
     XCTAssertEqual(material.diffuse.contentsTransform.raw,colorMap)
     var shear=colorMap;shear[1,0]=0.5;material.diffuse.contentsTransform = .init(shear)
     XCTAssertThrowsError(try adapter.pathTracingRenderables(scene:scene,assets:FileManager.default.temporaryDirectory))
+  }
+  func testIndependentPieceOpticsCalipersAndStudioPoseReachPhysicalSnapshot()async throws {
+    _=NSApplication.shared
+    func panel(_ id:String,_ x:Double)->PlanarPanelDefinition {
+      .init(id:id,name:id,polygon:[.init(CADScalar(x),0),.init(CADScalar(x+20),0),.init(CADScalar(x+20),20),.init(CADScalar(x),20)])
+    }
+    func stock(_ thickness:Double,_ color:String,_ coat:Double,_ edge:Double)->PaperStock {
+      var profile=PaperSurfaceProfile(texture:.smooth,color:color,textureDepthMM:0)
+      profile.appearance=PhysicalAppearance();profile.appearance?.coat=coat
+      profile.edgeAppearance=PhysicalAppearance();profile.edgeAppearance?.sheen=edge
+      return .init(thicknessMM:thickness,profile:profile)
+    }
+    let definition=PlanarConstructionDefinition(name:"Independent optical surfaces",size:.init(50,20),stockThickness:2,
+      panels:[panel("first",0),panel("second",30)],rootPanelID:"first",components:[
+        .init(id:"thick",name:"Thick",rootPanelID:"first",anchor:.init(0,0),position:.init(0,1,0),rotationDegrees:.init(-90,0,0),groupID:"frame",stock:stock(2,"#AA3322",0.2,0.3)),
+        .init(id:"thin",name:"Thin",rootPanelID:"second",anchor:.init(30,0),position:.init(30,0.2,0),rotationDegrees:.init(-90,0,0),groupID:"frame",stock:stock(0.4,"#2233AA",0.7,0.6))],
+      groups:[.init(id:"frame",name:"Pose frame",position:.init("opening/2","explosion/3",0))])
+    var owner=ProductObject(name:"Independent source",recipeID:"box",parameters:[:],materialID:"paper")
+    var paper=PaperConstruction(kind:.authored,dimensions:.init(width:50,height:20,depth:2),stock:.init(thicknessMM:2),explosionPercent:0)
+    paper.authored=definition;owner.paperConstruction=paper
+    var project=Project(name:"Physical bridge integration");project.objects=[owner]
+    let before=project,controller=TableSceneController(),assets=FileManager.default.temporaryDirectory
+    controller.sync(project,selection:[],isolated:[],showGrid:false,studio:false,preset:"Paper",assets:assets)
+    let original=try await controller.cyclesSnapshot(settings:.init())
+    func face(_ snapshot:SceneSnapshot,_ id:String,_ ownerID:UUID)throws->SceneRenderablePayload {
+      try XCTUnwrap(snapshot.renderables.first{$0.objectID==ownerID && $0.componentID.hasSuffix("/paper.panel:"+id)})
+    }
+    let first=try face(original,"first",owner.id),second=try face(original,"second",owner.id)
+    XCTAssertEqual(first.materials[0].physicalAppearance?.coat,0.2)
+    XCTAssertEqual(second.materials[0].physicalAppearance?.coat,0.7)
+    XCTAssertEqual(first.materials[2].physicalAppearance?.sheen,0.3)
+    XCTAssertEqual(second.materials[2].physicalAppearance?.sheen,0.6)
+    for (payload,caliper) in [(first,2.0),(second,0.4)] {
+      XCTAssertEqual(payload.mesh.positionsMM.map(\.z).max()!-payload.mesh.positionsMM.map(\.z).min()!,caliper,accuracy:1e-8)
+      XCTAssertEqual(payload.materials[0].baseColorTexture?.encoding,.srgb)
+      XCTAssertEqual(payload.materials[0].normalTexture?.encoding,.data)
+      XCTAssertEqual(payload.materials[0].normalTexture?.sampling.maximumAnisotropy,8)
+    }
+    var composition=StudioComposition(name:"Independent presentation",camera:project.camera)
+    var instance=StudioInstance(name:"Posed source",sourceObjectID:owner.id,positionMM:.init(100,0,0))
+    instance.paperPose = .init(openingPercent:40,explosionPercent:60);composition.instances=[instance]
+    let derived=try composition.resolved(in:project)
+    controller.sync(derived.project,selection:[],isolated:derived.visible,showGrid:false,studio:true,preset:"Paper",assets:assets,renderObjectIDs:derived.visible)
+    let posed=try await controller.cyclesSnapshot(settings:.init())
+    let result=try face(posed,"first",instance.id)
+    XCTAssertEqual(result.transform.translationMM.x-first.transform.translationMM.x,120,accuracy:1e-8)
+    XCTAssertEqual(result.transform.translationMM.y-first.transform.translationMM.y,20,accuracy:1e-8)
+    XCTAssertEqual(result.mesh.positionsMM,first.mesh.positionsMM)
+    XCTAssertEqual(result.materials[0].physicalAppearance?.coat,0.2)
+    XCTAssertFalse(posed.renderables.contains{$0.objectID==owner.id},"Studio lookup-only originals must not duplicate the physical instance.")
+    XCTAssertTrue(project==before,"A scene pose must preserve its authored source document.")
+  }
+  func testSamplerOnlyEditsReachRendererAndInvalidateMaterialsWithoutRebuildingPhysicalMesh()throws {
+    let scene=MeshScene(),adapter=GeometryPayloadAdapter(),owner=MeshNode(),material=MeshMaterial()
+    owner.name="object:"+UUID().uuidString
+    let plane=MeshNode(geometry:MeshPlane(width:1,height:1));plane.geometry!.materials=[material];owner.addChildNode(plane);scene.rootNode.addChildNode(owner)
+    let image=NSImage(size:.init(width:2,height:2));image.lockFocus();NSColor.red.setFill();NSRect(x:0,y:0,width:2,height:2).fill();image.unlockFocus()
+    material.diffuse.contents=image;material.diffuse.minificationFilter = .nearest;material.diffuse.magnificationFilter = .nearest;material.diffuse.mipFilter = .none;material.diffuse.maxAnisotropy=4
+    material.normal.contents=image;material.normal.maxAnisotropy=8
+    let before=try XCTUnwrap(adapter.renderables(scene:scene).first),texture=try XCTUnwrap(before.materials[0].baseColorTexture)
+    XCTAssertEqual(texture.sampling.minification,.nearest);XCTAssertEqual(texture.sampling.magnification,.nearest);XCTAssertEqual(texture.sampling.mip,.none);XCTAssertEqual(texture.sampling.maximumAnisotropy,4)
+    XCTAssertEqual(before.materials[0].normalTexture?.sampling.maximumAnisotropy,8)
+    material.diffuse.minificationFilter = .linear;material.diffuse.magnificationFilter = .linear;material.diffuse.mipFilter = .linear;material.diffuse.maxAnisotropy=16
+    let after=try XCTUnwrap(adapter.renderables(scene:scene).first)
+    XCTAssertEqual(after.mesh.id,before.mesh.id);XCTAssertEqual(after.mesh.revision,before.mesh.revision)
+    XCTAssertEqual(after.materials[0].baseColorTexture?.revision,texture.revision)
+    XCTAssertNotEqual(after.materials[0].revision,before.materials[0].revision,"A sampler-only edit must not retain a cached material with old filtering.")
+    XCTAssertEqual(after.materials[0].baseColorTexture?.sampling.maximumAnisotropy,16)
   }
   func testDeletingUnrelatedObjectsAndChangingAppearanceKeepSemanticComponentsAndMeshResources()throws {
     let scene=MeshScene(),adapter=GeometryPayloadAdapter(),firstID=UUID(),survivorID=UUID()

@@ -18,7 +18,7 @@ final class PaperCutEdgeTests:XCTestCase {
     try configure(engine,["profile":["appearance":["coat":0.6],"edgeAppearance":["sheen":0.3,"ior":1.46]]])
     let changed=engine.project!,stock=changed.objects[0].paperConstruction!.stock
     XCTAssertEqual(stock.profile?.appearance?.coat,0.6);XCTAssertEqual(stock.profile?.edgeAppearance?.sheen,0.3)
-    XCTAssertEqual(changed.minimumSchemaVersion,67);XCTAssertEqual(engine.undoStack.count,1)
+    XCTAssertEqual(changed.minimumSchemaVersion,68);XCTAssertEqual(engine.undoStack.count,1)
     XCTAssertEqual(changed.objects[0].parameters,before.objects[0].parameters)
     try engine.flush();XCTAssertEqual(try engine.repository.load(changed.id).objects,changed.objects)
     engine.undo();XCTAssertEqual(engine.project,before);engine.redo();XCTAssertEqual(engine.project,changed)
@@ -57,7 +57,7 @@ final class PaperCutEdgeTests:XCTestCase {
     XCTAssertEqual(engine.project,beforeSave)
     XCTAssertEqual(StudioLibrary.load(from:engine.repository.root).materials.first{$0.id==saved.id},saved)
     XCTAssertEqual(try JSONDecoder.form.decode(Material.self,from:JSONEncoder.form.encode(saved)),saved)
-    XCTAssertEqual(engine.project!.minimumSchemaVersion,67)
+    XCTAssertEqual(engine.project!.minimumSchemaVersion,68)
   }
   func testMaterialCreationRejectsUnknownNestedEdgeFields()throws {
     let engine=try fixture(),before=engine.project!
@@ -67,7 +67,7 @@ final class PaperCutEdgeTests:XCTestCase {
     var stock=PaperStock();stock.profile=PaperSurfaceProfile();stock.profile!.edgeAppearance=PhysicalAppearance();stock.profile!.edgeAppearance!.sheen=0.4
     raw["paperStock"]=try jsonObject(stock);raw["category"]="Paper";raw["thickness"]=stock.resolvedThicknessMM
     _ = try engine.call("form_material",arguments:["command":"create","material":raw])
-    XCTAssertEqual(engine.project!.materials.last?.paperStock,stock);XCTAssertEqual(engine.project!.minimumSchemaVersion,67)
+    XCTAssertEqual(engine.project!.materials.last?.paperStock,stock);XCTAssertEqual(engine.project!.minimumSchemaVersion,68)
   }
   func testCompletePaperDefinitionUsesStrictNestedConstructionAppearanceValidation()throws {
     let engine=try fixture()

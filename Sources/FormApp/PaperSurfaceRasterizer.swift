@@ -53,7 +53,7 @@ import simd
     init(heights:[Float],color:[UInt8],roughness:[UInt8],normal:NSImage,roughnessImage:NSImage){self.heights=heights;self.color=color;self.roughness=roughness;self.normal=normal;self.roughnessImage=roughnessImage}
     var cost:Int{heights.count*20}
   }
-  private struct StockKey:Encodable {let rect:PaperBounds,profile:PaperSurfaceProfile,color:String,grain:PaperStock.Grain,width:Int,height:Int}
+  private struct StockKey:Encodable {let version:Int,rect:PaperBounds,profile:PaperSurfaceProfile,color:String,grain:PaperStock.Grain,width:Int,height:Int}
   private static let stockCache:NSCache<NSString,StockField>={let value=NSCache<NSString,StockField>();value.totalCostLimit=128*1024*1024;value.countLimit=80;return value}()
   private static let glyphCache:NSCache<NSString,NSObject>={let value=NSCache<NSString,NSObject>();value.countLimit=128;return value}()
   private static var blackMap:NSImage?
@@ -114,7 +114,7 @@ import simd
     // Cut-edge optics cannot change either printed face. Sharing these maps is
     // also important for editable stock variants in the bounded Table snapshot.
     var faceProfile=profile;faceProfile.edgeAppearance=nil
-    let key=Key(version:5,rect:rect,netSize:netSize,profile:faceProfile,color:color,grain:grain,
+    let key=Key(version:6,rect:rect,netSize:netSize,profile:faceProfile,color:color,grain:grain,
       artworkRevision:prepared?.revision,finishes:finishes,width:width,height:height,fontRevision:GeometryFactory.fontRevision,assets:assets.path)
     let revision=SHA256.hash(data:try JSONEncoder.form.encode(key)).map{String(format:"%02x",$0)}.joined()
     if let maps=cache.object(forKey:revision as NSString) { return maps }
@@ -216,16 +216,18 @@ import simd
     builds+=1;cache.setObject(maps,forKey:revision as NSString,cost:maps.cost);return maps
   }
   private static func stockField(rect:PaperBounds,profile:PaperSurfaceProfile,color:String,grain:PaperStock.Grain,width:Int,height:Int)throws->StockField {
-    let key=SHA256.hash(data:try JSONEncoder.form.encode(StockKey(rect:rect,profile:profile,color:color,grain:grain,width:width,height:height))).map{String(format:"%02x",$0)}.joined() as NSString
+    let key=SHA256.hash(data:try JSONEncoder.form.encode(StockKey(version:3,rect:rect,profile:profile,color:color,grain:grain,width:width,height:height))).map{String(format:"%02x",$0)}.joined() as NSString
     if let field=stockCache.object(forKey:key){return field}
     let count=width*height,dx=rect.width/Double(width),dy=rect.height/Double(height)
+    let sampler=ToothSampler(profile:profile,grain:grain,footprintMM:.init(dx,dy))
+    let fleckGain=frequencyGain(dx/0.14*0.5)*frequencyGain(dy/0.38*0.5)
     let base=FormColor.color(profile.color ?? color).usingColorSpace(.sRGB) ?? .white
     var heights=[Float](repeating:0,count:count),stock=[UInt8](repeating:255,count:count*4),rough=stock
     for y in 0..<height {for x in 0..<width {
-      let i=y*width+x,px=rect.x+(Double(x)+0.5)*dx,py=rect.y+(Double(y)+0.5)*dy,tooth=toothHeight(x:px,y:py,profile:profile,grain:grain)
+      let i=y*width+x,px=rect.x+(Double(x)+0.5)*dx,py=rect.y+(Double(y)+0.5)*dy,tooth=sampler.height(x:px,y:py)
       heights[i]=Float(tooth)
       let texture=profile.textureDepthMM>0 ? tooth/profile.textureDepthMM:0
-      let fleck=profile.texture == .recycled ? max(0,noise(px/0.14,py/0.38)-0.2)*0.13:0
+      let fleck=profile.texture == .recycled ? max(0,noise(px/0.14,py/0.38)-0.2)*0.13*fleckGain:0
       let shade=max(0.75,min(1.02,1+texture*0.035-fleck)),j=i*4
       stock[j]=byte(base.redComponent*shade);stock[j+1]=byte(base.greenComponent*shade);stock[j+2]=byte(base.blueComponent*shade)
       let r=byte(profile.roughness+texture*0.04);for c in 0..<3{rough[j+c]=r}
@@ -343,21 +345,58 @@ import simd
     let a=hash(ix,iy)*(1-u)+hash(ix+1,iy)*u,b=hash(ix,iy+1)*(1-u)+hash(ix+1,iy+1)*u
     return a*(1-v)+b*v
   }
-  static func toothHeight(x:Double,y:Double,profile:PaperSurfaceProfile,grain:PaperStock.Grain)->Double {
-    let s=profile.textureScaleMM
-    let x=x/s,y=y/s
-    let directional=grain == .parallelHeight ? noise(x*3,y*0.7):grain == .parallelWidth ? noise(x*0.7,y*3):noise(x,y)
-    let value:Double
-    switch profile.texture {
-    case .smooth:value=noise(x*5,y*5)*0.08
-    case .coated:value=noise(x*7,y*7)*0.025
-    case .cotton:value=directional*0.65+noise(x*4,y*4)*0.25+noise(x*12,y*12)*0.1
-    case .laid:value=sin((grain == .parallelHeight ? x:y)*2 * .pi)*0.34+directional*0.18
-    case .linen:value=(sin(x*2 * .pi)*sin(y*2 * .pi))*0.32+directional*0.2
-    case .recycled:value=directional*0.65+noise(x*9,y*9)*0.28
-    case .vellum:value=noise(x*2,y*2)*0.1
+  /// A box integral preserves physical tooth size; a smooth Nyquist cutoff
+  /// prevents unresolved threads/laid lines becoming large false bands. The
+  /// weights are prepared once per face, rather than supersampling each texel.
+  private static func frequencyGain(_ cyclesPerPixel:Double)->Double {
+    let f=abs(cyclesPerPixel)
+    guard f.isFinite,f<0.5 else{return 0}
+    guard f>1e-12 else{return 1}
+    let phase=Double.pi*f,t=max(0,(f-0.25)/0.25),cutoff=1-t*t*(3-2*t)
+    return sin(phase)/phase*cutoff
+  }
+  @MainActor private struct ToothSampler {
+    private struct Term {let x:Double,y:Double,amplitude:Double}
+    private let scale:Double,depth:Double,terms:[Term],laid:Double,linenX:Double,linenY:Double,laidAlongX:Bool
+    init(profile:PaperSurfaceProfile,grain:PaperStock.Grain,footprintMM:Point2) {
+      let s=profile.textureScaleMM,alongX=grain == .parallelHeight
+      scale=s;depth=profile.textureDepthMM;laidAlongX=alongX
+      let dx=abs(footprintMM.x)/s,dy=abs(footprintMM.y)/s
+      let direction:Term=grain == .parallelHeight ? .init(x:3,y:0.7,amplitude:1):grain == .parallelWidth ? .init(x:0.7,y:3,amplitude:1):.init(x:1,y:1,amplitude:1)
+      var raw:[Term],laidAmplitude=0.0,linenAmplitude=0.0
+      switch profile.texture {
+      case .smooth:raw=[.init(x:5,y:5,amplitude:0.08)]
+      case .coated:raw=[.init(x:7,y:7,amplitude:0.025)]
+      case .cotton:raw=[.init(x:direction.x,y:direction.y,amplitude:0.65),.init(x:4,y:4,amplitude:0.25),.init(x:12,y:12,amplitude:0.1)]
+      case .laid:raw=[.init(x:direction.x,y:direction.y,amplitude:0.18)];laidAmplitude=0.34
+      case .linen:raw=[.init(x:direction.x,y:direction.y,amplitude:0.2)];linenAmplitude=0.32
+      case .recycled:raw=[.init(x:direction.x,y:direction.y,amplitude:0.65),.init(x:9,y:9,amplitude:0.28)]
+      case .vellum:raw=[.init(x:2,y:2,amplitude:0.1)]
+      }
+      // Interpolated lattice noise has its principal bandwidth below half a
+      // cycle per cell. Remove octaves the physical allocation cannot resolve.
+      terms=raw.compactMap{term -> Term? in
+        let weight=PaperSurfaceRasterizer.frequencyGain(dx*term.x*0.5)*PaperSurfaceRasterizer.frequencyGain(dy*term.y*0.5)*term.amplitude
+        return weight>1e-12 ? .init(x:term.x,y:term.y,amplitude:weight):nil
+      }
+      laid=laidAmplitude*PaperSurfaceRasterizer.frequencyGain(alongX ? dx:dy)
+      // Independent warp/weft profiles preserve the same period, peak height
+      // and RMS depth without the two diagonal waves of sin(x)*sin(y).
+      linenX=linenAmplitude*0.5*PaperSurfaceRasterizer.frequencyGain(dx)
+      linenY=linenAmplitude*0.5*PaperSurfaceRasterizer.frequencyGain(dy)
     }
-    return value*profile.textureDepthMM
+    func height(x:Double,y:Double)->Double {
+      let x=x/scale,y=y/scale
+      var value=0.0
+      for term in terms {value+=PaperSurfaceRasterizer.noise(x*term.x,y*term.y)*term.amplitude}
+      if laid != 0 {value+=sin((laidAlongX ? x:y)*2 * .pi)*laid}
+      if linenX != 0 {value+=sin(x*2 * .pi)*linenX}
+      if linenY != 0 {value+=sin(y*2 * .pi)*linenY}
+      return value*depth
+    }
+  }
+  static func toothHeight(x:Double,y:Double,profile:PaperSurfaceProfile,grain:PaperStock.Grain,footprintMM:Point2 = .init(0,0))->Double {
+    ToothSampler(profile:profile,grain:grain,footprintMM:footprintMM).height(x:x,y:y)
   }
   /// Two continuous box filters make a smooth tent shoulder with a footprint
   /// of ±radiusMM in each physical axis. Fractional texels and independent

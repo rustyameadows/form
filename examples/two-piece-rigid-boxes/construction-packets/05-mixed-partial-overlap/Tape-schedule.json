@@ -1,0 +1,1058 @@
+[
+  {
+    "bondThicknessMM" : 0.03,
+    "componentID" : "b-tape-n",
+    "endOffsetEndMM" : 0,
+    "endOffsetStartMM" : 0,
+    "firstTarget" : {
+      "componentID" : "b-floor",
+      "coordinatesMM" : [
+        {
+          "x" : 15.25,
+          "y" : 134.06
+        },
+        {
+          "x" : 179.15,
+          "y" : 134.06
+        },
+        {
+          "x" : 179.15,
+          "y" : 137.06
+        },
+        {
+          "x" : 15.25,
+          "y" : 137.06
+        }
+      ],
+      "panelID" : "b-floor",
+      "pointsMM" : [
+        {
+          "x" : -81.95000000000005,
+          "y" : 2.4000000000000092,
+          "z" : 61.76000000000005
+        },
+        {
+          "x" : 81.94999999999996,
+          "y" : 2.4000000000000092,
+          "z" : 61.76000000000005
+        },
+        {
+          "x" : 81.94999999999996,
+          "y" : 2.4000000000000092,
+          "z" : 64.76000000000005
+        },
+        {
+          "x" : -81.95000000000005,
+          "y" : 2.4000000000000092,
+          "z" : 64.76000000000005
+        }
+      ],
+      "side" : "outside"
+    },
+    "id" : "b-floor-n/tape",
+    "installation" : {
+      "order" : 2,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w",
+        "b-tape-n"
+      ],
+      "stage" : "Inside tape after board fastening; before cover and lining"
+    },
+    "jointID" : "b-floor-n",
+    "lengthAxis" : "x",
+    "lengthMM" : 164.4,
+    "overlapMM" : 0,
+    "quantity" : 1,
+    "secondTarget" : {
+      "componentID" : "b-n",
+      "coordinatesMM" : [
+        {
+          "x" : 719.1700000000001,
+          "y" : 56.61
+        },
+        {
+          "x" : 883.07,
+          "y" : 56.61
+        },
+        {
+          "x" : 883.07,
+          "y" : 59.61
+        },
+        {
+          "x" : 719.1700000000001,
+          "y" : 59.61
+        }
+      ],
+      "panelID" : "b-n",
+      "pointsMM" : [
+        {
+          "x" : -81.95000000000005,
+          "y" : 5.740000000000016,
+          "z" : 65.10000000000014
+        },
+        {
+          "x" : 81.94999999999993,
+          "y" : 5.740000000000016,
+          "z" : 65.10000000000014
+        },
+        {
+          "x" : 81.94999999999993,
+          "y" : 2.740000000000016,
+          "z" : 65.10000000000014
+        },
+        {
+          "x" : -81.95000000000005,
+          "y" : 2.740000000000016,
+          "z" : 65.10000000000014
+        }
+      ],
+      "side" : "inside"
+    },
+    "side" : "inside",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    },
+    "widthMM" : 7
+  },
+  {
+    "bondThicknessMM" : 0.03,
+    "componentID" : "b-tape-e",
+    "endOffsetEndMM" : 0,
+    "endOffsetStartMM" : 0,
+    "firstTarget" : {
+      "componentID" : "b-floor",
+      "coordinatesMM" : [
+        {
+          "x" : 184.06,
+          "y" : 15.25
+        },
+        {
+          "x" : 187.06,
+          "y" : 15.25
+        },
+        {
+          "x" : 187.06,
+          "y" : 129.15
+        },
+        {
+          "x" : 184.06,
+          "y" : 129.15
+        }
+      ],
+      "panelID" : "b-floor",
+      "pointsMM" : [
+        {
+          "x" : 86.85999999999996,
+          "y" : 2.400000000000017,
+          "z" : -57.049999999999955
+        },
+        {
+          "x" : 89.85999999999996,
+          "y" : 2.400000000000017,
+          "z" : -57.049999999999955
+        },
+        {
+          "x" : 89.85999999999996,
+          "y" : 2.4000000000000097,
+          "z" : 56.85000000000005
+        },
+        {
+          "x" : 86.85999999999996,
+          "y" : 2.4000000000000097,
+          "z" : 56.85000000000005
+        }
+      ],
+      "side" : "outside"
+    },
+    "id" : "b-floor-e/tape",
+    "installation" : {
+      "order" : 2,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w",
+        "b-tape-e"
+      ],
+      "stage" : "Inside tape after board fastening; before cover and lining"
+    },
+    "jointID" : "b-floor-e",
+    "lengthAxis" : "x",
+    "lengthMM" : 114.4,
+    "overlapMM" : 0,
+    "quantity" : 1,
+    "secondTarget" : {
+      "componentID" : "b-e",
+      "coordinatesMM" : [
+        {
+          "x" : 1421.0900000000001,
+          "y" : 56.61
+        },
+        {
+          "x" : 1534.9900000000002,
+          "y" : 56.61
+        },
+        {
+          "x" : 1534.9900000000002,
+          "y" : 59.61
+        },
+        {
+          "x" : 1421.0900000000001,
+          "y" : 59.61
+        }
+      ],
+      "panelID" : "b-e",
+      "pointsMM" : [
+        {
+          "x" : 90.20000000000005,
+          "y" : 5.740000000000016,
+          "z" : 56.850000000000136
+        },
+        {
+          "x" : 90.20000000000006,
+          "y" : 5.740000000000016,
+          "z" : -57.049999999999955
+        },
+        {
+          "x" : 90.20000000000006,
+          "y" : 2.740000000000016,
+          "z" : -57.049999999999955
+        },
+        {
+          "x" : 90.20000000000005,
+          "y" : 2.740000000000016,
+          "z" : 56.850000000000136
+        }
+      ],
+      "side" : "inside"
+    },
+    "side" : "inside",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    },
+    "widthMM" : 7
+  },
+  {
+    "bondThicknessMM" : 0.03,
+    "componentID" : "b-tape-s",
+    "endOffsetEndMM" : 0,
+    "endOffsetStartMM" : 0,
+    "firstTarget" : {
+      "componentID" : "b-floor",
+      "coordinatesMM" : [
+        {
+          "x" : 15.25,
+          "y" : 7.340000000000003
+        },
+        {
+          "x" : 179.15,
+          "y" : 7.340000000000003
+        },
+        {
+          "x" : 179.15,
+          "y" : 10.340000000000003
+        },
+        {
+          "x" : 15.25,
+          "y" : 10.340000000000003
+        }
+      ],
+      "panelID" : "b-floor",
+      "pointsMM" : [
+        {
+          "x" : -81.95000000000005,
+          "y" : 2.4000000000000172,
+          "z" : -64.95999999999995
+        },
+        {
+          "x" : 81.94999999999996,
+          "y" : 2.4000000000000172,
+          "z" : -64.95999999999995
+        },
+        {
+          "x" : 81.94999999999996,
+          "y" : 2.4000000000000172,
+          "z" : -61.95999999999995
+        },
+        {
+          "x" : -81.95000000000005,
+          "y" : 2.4000000000000172,
+          "z" : -61.95999999999995
+        }
+      ],
+      "side" : "outside"
+    },
+    "id" : "b-floor-s/tape",
+    "installation" : {
+      "order" : 2,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w",
+        "b-tape-s"
+      ],
+      "stage" : "Inside tape after board fastening; before cover and lining"
+    },
+    "jointID" : "b-floor-s",
+    "lengthAxis" : "x",
+    "lengthMM" : 164.4,
+    "overlapMM" : 0,
+    "quantity" : 1,
+    "secondTarget" : {
+      "componentID" : "b-s",
+      "coordinatesMM" : [
+        {
+          "x" : 2127.01,
+          "y" : 56.61
+        },
+        {
+          "x" : 2290.9100000000003,
+          "y" : 56.61
+        },
+        {
+          "x" : 2290.9100000000003,
+          "y" : 59.61
+        },
+        {
+          "x" : 2127.01,
+          "y" : 59.61
+        }
+      ],
+      "panelID" : "b-s",
+      "pointsMM" : [
+        {
+          "x" : 81.94999999999982,
+          "y" : 5.740000000000016,
+          "z" : -65.29999999999995
+        },
+        {
+          "x" : -81.95000000000027,
+          "y" : 5.740000000000016,
+          "z" : -65.29999999999998
+        },
+        {
+          "x" : -81.95000000000027,
+          "y" : 2.740000000000016,
+          "z" : -65.29999999999998
+        },
+        {
+          "x" : 81.94999999999982,
+          "y" : 2.740000000000016,
+          "z" : -65.29999999999995
+        }
+      ],
+      "side" : "inside"
+    },
+    "side" : "inside",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    },
+    "widthMM" : 7
+  },
+  {
+    "bondThicknessMM" : 0.03,
+    "componentID" : "b-tape-w",
+    "endOffsetEndMM" : 0,
+    "endOffsetStartMM" : 0,
+    "firstTarget" : {
+      "componentID" : "b-floor",
+      "coordinatesMM" : [
+        {
+          "x" : 7.340000000000003,
+          "y" : 15.25
+        },
+        {
+          "x" : 10.340000000000003,
+          "y" : 15.25
+        },
+        {
+          "x" : 10.340000000000003,
+          "y" : 129.15
+        },
+        {
+          "x" : 7.340000000000003,
+          "y" : 129.15
+        }
+      ],
+      "panelID" : "b-floor",
+      "pointsMM" : [
+        {
+          "x" : -89.86000000000004,
+          "y" : 2.400000000000017,
+          "z" : -57.049999999999955
+        },
+        {
+          "x" : -86.86000000000004,
+          "y" : 2.400000000000017,
+          "z" : -57.049999999999955
+        },
+        {
+          "x" : -86.86000000000004,
+          "y" : 2.4000000000000097,
+          "z" : 56.85000000000005
+        },
+        {
+          "x" : -89.86000000000004,
+          "y" : 2.4000000000000097,
+          "z" : 56.85000000000005
+        }
+      ],
+      "side" : "outside"
+    },
+    "id" : "b-floor-w/tape",
+    "installation" : {
+      "order" : 2,
+      "presentComponentIDs" : [
+        "b-floor",
+        "b-n",
+        "b-e",
+        "b-s",
+        "b-w",
+        "b-tape-w"
+      ],
+      "stage" : "Inside tape after board fastening; before cover and lining"
+    },
+    "jointID" : "b-floor-w",
+    "lengthAxis" : "x",
+    "lengthMM" : 114.4,
+    "overlapMM" : 0,
+    "quantity" : 1,
+    "secondTarget" : {
+      "componentID" : "b-w",
+      "coordinatesMM" : [
+        {
+          "x" : 2828.9300000000003,
+          "y" : 56.61
+        },
+        {
+          "x" : 2942.8300000000004,
+          "y" : 56.61
+        },
+        {
+          "x" : 2942.8300000000004,
+          "y" : 59.61
+        },
+        {
+          "x" : 2828.9300000000003,
+          "y" : 59.61
+        }
+      ],
+      "panelID" : "b-w",
+      "pointsMM" : [
+        {
+          "x" : -90.20000000000005,
+          "y" : 5.740000000000016,
+          "z" : -57.04999999999973
+        },
+        {
+          "x" : -90.20000000000003,
+          "y" : 5.740000000000016,
+          "z" : 56.850000000000364
+        },
+        {
+          "x" : -90.20000000000003,
+          "y" : 2.740000000000016,
+          "z" : 56.850000000000364
+        },
+        {
+          "x" : -90.20000000000005,
+          "y" : 2.740000000000016,
+          "z" : -57.04999999999973
+        }
+      ],
+      "side" : "inside"
+    },
+    "side" : "inside",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    },
+    "widthMM" : 7
+  },
+  {
+    "bondThicknessMM" : 0.03,
+    "componentID" : "l-tape-n",
+    "endOffsetEndMM" : 0,
+    "endOffsetStartMM" : 0,
+    "firstTarget" : {
+      "componentID" : "l-floor",
+      "coordinatesMM" : [
+        {
+          "x" : 3534.8500000000004,
+          "y" : 140.42
+        },
+        {
+          "x" : 3704.9100000000003,
+          "y" : 140.42
+        },
+        {
+          "x" : 3704.9100000000003,
+          "y" : 143.42
+        },
+        {
+          "x" : 3534.8500000000004,
+          "y" : 143.42
+        }
+      ],
+      "panelID" : "l-floor",
+      "pointsMM" : [
+        {
+          "x" : -85.02999999999975,
+          "y" : 72.99000000000002,
+          "z" : -65.0399999999998
+        },
+        {
+          "x" : 85.0300000000002,
+          "y" : 72.99000000000002,
+          "z" : -65.0399999999998
+        },
+        {
+          "x" : 85.0300000000002,
+          "y" : 72.99000000000002,
+          "z" : -68.0399999999998
+        },
+        {
+          "x" : -85.02999999999975,
+          "y" : 72.99000000000002,
+          "z" : -68.0399999999998
+        }
+      ],
+      "side" : "outside"
+    },
+    "id" : "l-floor-n/tape",
+    "installation" : {
+      "order" : 2,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w",
+        "l-tape-n"
+      ],
+      "stage" : "Inside tape after board fastening; before cover and lining"
+    },
+    "jointID" : "l-floor-n",
+    "lengthAxis" : "x",
+    "lengthMM" : 170.56,
+    "overlapMM" : 0,
+    "quantity" : 1,
+    "secondTarget" : {
+      "componentID" : "l-n",
+      "coordinatesMM" : [
+        {
+          "x" : 15.25,
+          "y" : 339.72
+        },
+        {
+          "x" : 185.31,
+          "y" : 339.72
+        },
+        {
+          "x" : 185.31,
+          "y" : 342.72
+        },
+        {
+          "x" : 15.25,
+          "y" : 342.72
+        }
+      ],
+      "panelID" : "l-n",
+      "pointsMM" : [
+        {
+          "x" : -85.02999999999997,
+          "y" : 69.65000000000003,
+          "z" : -68.38000000000002
+        },
+        {
+          "x" : 85.03000000000003,
+          "y" : 69.65000000000003,
+          "z" : -68.38000000000002
+        },
+        {
+          "x" : 85.03000000000003,
+          "y" : 72.65000000000003,
+          "z" : -68.38000000000002
+        },
+        {
+          "x" : -85.02999999999997,
+          "y" : 72.65000000000003,
+          "z" : -68.38000000000002
+        }
+      ],
+      "side" : "inside"
+    },
+    "side" : "inside",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    },
+    "widthMM" : 7
+  },
+  {
+    "bondThicknessMM" : 0.03,
+    "componentID" : "l-tape-e",
+    "endOffsetEndMM" : 0,
+    "endOffsetStartMM" : 0,
+    "firstTarget" : {
+      "componentID" : "l-floor",
+      "coordinatesMM" : [
+        {
+          "x" : 3709.82,
+          "y" : 15.25
+        },
+        {
+          "x" : 3712.82,
+          "y" : 15.25
+        },
+        {
+          "x" : 3712.82,
+          "y" : 135.51
+        },
+        {
+          "x" : 3709.82,
+          "y" : 135.51
+        }
+      ],
+      "panelID" : "l-floor",
+      "pointsMM" : [
+        {
+          "x" : 89.94000000000005,
+          "y" : 72.99000000000004,
+          "z" : 60.130000000000194
+        },
+        {
+          "x" : 92.94000000000005,
+          "y" : 72.99000000000004,
+          "z" : 60.130000000000194
+        },
+        {
+          "x" : 92.94000000000005,
+          "y" : 72.99000000000002,
+          "z" : -60.1299999999998
+        },
+        {
+          "x" : 89.94000000000005,
+          "y" : 72.99000000000002,
+          "z" : -60.1299999999998
+        }
+      ],
+      "side" : "outside"
+    },
+    "id" : "l-floor-e/tape",
+    "installation" : {
+      "order" : 2,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w",
+        "l-tape-e"
+      ],
+      "stage" : "Inside tape after board fastening; before cover and lining"
+    },
+    "jointID" : "l-floor-e",
+    "lengthAxis" : "x",
+    "lengthMM" : 120.75999999999999,
+    "overlapMM" : 0,
+    "quantity" : 1,
+    "secondTarget" : {
+      "componentID" : "l-e",
+      "coordinatesMM" : [
+        {
+          "x" : 717.1700000000001,
+          "y" : 339.72
+        },
+        {
+          "x" : 837.4300000000001,
+          "y" : 339.72
+        },
+        {
+          "x" : 837.4300000000001,
+          "y" : 342.72
+        },
+        {
+          "x" : 717.1700000000001,
+          "y" : 342.72
+        }
+      ],
+      "panelID" : "l-e",
+      "pointsMM" : [
+        {
+          "x" : 93.27999999999997,
+          "y" : 69.65000000000003,
+          "z" : -60.129999999999995
+        },
+        {
+          "x" : 93.27999999999999,
+          "y" : 69.65000000000003,
+          "z" : 60.129999999999995
+        },
+        {
+          "x" : 93.27999999999999,
+          "y" : 72.65000000000003,
+          "z" : 60.129999999999995
+        },
+        {
+          "x" : 93.27999999999997,
+          "y" : 72.65000000000003,
+          "z" : -60.129999999999995
+        }
+      ],
+      "side" : "inside"
+    },
+    "side" : "inside",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    },
+    "widthMM" : 7
+  },
+  {
+    "bondThicknessMM" : 0.03,
+    "componentID" : "l-tape-s",
+    "endOffsetEndMM" : 0,
+    "endOffsetStartMM" : 0,
+    "firstTarget" : {
+      "componentID" : "l-floor",
+      "coordinatesMM" : [
+        {
+          "x" : 3534.8500000000004,
+          "y" : 7.340000000000003
+        },
+        {
+          "x" : 3704.9100000000003,
+          "y" : 7.340000000000003
+        },
+        {
+          "x" : 3704.9100000000003,
+          "y" : 10.340000000000003
+        },
+        {
+          "x" : 3534.8500000000004,
+          "y" : 10.340000000000003
+        }
+      ],
+      "panelID" : "l-floor",
+      "pointsMM" : [
+        {
+          "x" : -85.02999999999975,
+          "y" : 72.99000000000004,
+          "z" : 68.04000000000019
+        },
+        {
+          "x" : 85.0300000000002,
+          "y" : 72.99000000000004,
+          "z" : 68.04000000000019
+        },
+        {
+          "x" : 85.0300000000002,
+          "y" : 72.99000000000004,
+          "z" : 65.04000000000019
+        },
+        {
+          "x" : -85.02999999999975,
+          "y" : 72.99000000000004,
+          "z" : 65.04000000000019
+        }
+      ],
+      "side" : "outside"
+    },
+    "id" : "l-floor-s/tape",
+    "installation" : {
+      "order" : 2,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w",
+        "l-tape-s"
+      ],
+      "stage" : "Inside tape after board fastening; before cover and lining"
+    },
+    "jointID" : "l-floor-s",
+    "lengthAxis" : "x",
+    "lengthMM" : 170.56,
+    "overlapMM" : 0,
+    "quantity" : 1,
+    "secondTarget" : {
+      "componentID" : "l-s",
+      "coordinatesMM" : [
+        {
+          "x" : 1423.0900000000001,
+          "y" : 339.72
+        },
+        {
+          "x" : 1593.15,
+          "y" : 339.72
+        },
+        {
+          "x" : 1593.15,
+          "y" : 342.72
+        },
+        {
+          "x" : 1423.0900000000001,
+          "y" : 342.72
+        }
+      ],
+      "panelID" : "l-s",
+      "pointsMM" : [
+        {
+          "x" : 85.02999999999997,
+          "y" : 69.65000000000003,
+          "z" : 68.38000000000008
+        },
+        {
+          "x" : -85.02999999999997,
+          "y" : 69.65000000000003,
+          "z" : 68.38000000000011
+        },
+        {
+          "x" : -85.02999999999997,
+          "y" : 72.65000000000003,
+          "z" : 68.38000000000011
+        },
+        {
+          "x" : 85.02999999999997,
+          "y" : 72.65000000000003,
+          "z" : 68.38000000000008
+        }
+      ],
+      "side" : "inside"
+    },
+    "side" : "inside",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    },
+    "widthMM" : 7
+  },
+  {
+    "bondThicknessMM" : 0.03,
+    "componentID" : "l-tape-w",
+    "endOffsetEndMM" : 0,
+    "endOffsetStartMM" : 0,
+    "firstTarget" : {
+      "componentID" : "l-floor",
+      "coordinatesMM" : [
+        {
+          "x" : 3526.9400000000005,
+          "y" : 15.25
+        },
+        {
+          "x" : 3529.9400000000005,
+          "y" : 15.25
+        },
+        {
+          "x" : 3529.9400000000005,
+          "y" : 135.51
+        },
+        {
+          "x" : 3526.9400000000005,
+          "y" : 135.51
+        }
+      ],
+      "panelID" : "l-floor",
+      "pointsMM" : [
+        {
+          "x" : -92.9399999999996,
+          "y" : 72.99000000000004,
+          "z" : 60.130000000000194
+        },
+        {
+          "x" : -89.9399999999996,
+          "y" : 72.99000000000004,
+          "z" : 60.130000000000194
+        },
+        {
+          "x" : -89.9399999999996,
+          "y" : 72.99000000000002,
+          "z" : -60.1299999999998
+        },
+        {
+          "x" : -92.9399999999996,
+          "y" : 72.99000000000002,
+          "z" : -60.1299999999998
+        }
+      ],
+      "side" : "outside"
+    },
+    "id" : "l-floor-w/tape",
+    "installation" : {
+      "order" : 2,
+      "presentComponentIDs" : [
+        "l-floor",
+        "l-n",
+        "l-e",
+        "l-s",
+        "l-w",
+        "l-tape-w"
+      ],
+      "stage" : "Inside tape after board fastening; before cover and lining"
+    },
+    "jointID" : "l-floor-w",
+    "lengthAxis" : "x",
+    "lengthMM" : 120.75999999999999,
+    "overlapMM" : 0,
+    "quantity" : 1,
+    "secondTarget" : {
+      "componentID" : "l-w",
+      "coordinatesMM" : [
+        {
+          "x" : 2125.01,
+          "y" : 339.72
+        },
+        {
+          "x" : 2245.2700000000004,
+          "y" : 339.72
+        },
+        {
+          "x" : 2245.2700000000004,
+          "y" : 342.72
+        },
+        {
+          "x" : 2125.01,
+          "y" : 342.72
+        }
+      ],
+      "panelID" : "l-w",
+      "pointsMM" : [
+        {
+          "x" : -93.28,
+          "y" : 69.64999999999998,
+          "z" : 60.13000000000011
+        },
+        {
+          "x" : -93.27999999999999,
+          "y" : 69.64999999999998,
+          "z" : -60.13000000000011
+        },
+        {
+          "x" : -93.27999999999999,
+          "y" : 72.64999999999998,
+          "z" : -60.13000000000011
+        },
+        {
+          "x" : -93.28,
+          "y" : 72.64999999999998,
+          "z" : 60.13000000000011
+        }
+      ],
+      "side" : "inside"
+    },
+    "side" : "inside",
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 100,
+      "name" : "Gummed kozo reinforcement tape",
+      "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+      "profile" : {
+        "color" : "#CDBA91",
+        "opacity" : 1,
+        "roughness" : 0.9,
+        "texture" : "laid",
+        "textureDepthMM" : 0.012,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 0.12,
+      "verified" : false
+    },
+    "widthMM" : 7
+  }
+]

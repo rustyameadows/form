@@ -134,7 +134,7 @@ struct SheetPanelControls:View {
   }
 }
 
-private struct SheetPolygonControls:View {
+struct SheetPolygonControls:View {
   @Binding var points:[CADExpressionPoint2]
   let parameters:[String]
   var body:some View {
@@ -179,7 +179,7 @@ private struct SheetRecessControls:View {
   }
 }
 
-private struct SheetPanelFinishControls:View {
+struct SheetPanelFinishControls:View {
   @ObservedObject var session:ArtworkSession
   @Binding var panel:SheetAssemblyPlane
   var onEditingChanged:(Bool)->Void

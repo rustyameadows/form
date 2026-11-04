@@ -17,6 +17,7 @@ extension ProductObject {
     if patternAssembly?.panels.contains(where:{$0.material.paperStock?.usesCutEdgeAppearance == true}) == true {return true}
     if let paper=paperConstruction,
        paper.stock.usesCutEdgeAppearance || paper.finishes?.contains(where:{$0.shoulderRadiusMM != nil}) == true ||
+       paper.authored?.components?.contains(where:{$0.stock?.usesCutEdgeAppearance == true || $0.finishes?.contains(where:{$0.shoulderRadiusMM != nil}) == true}) == true ||
        paper.authored?.panels.contains(where:{$0.features?.usesCutEdgeAppearance == true}) == true {return true}
     guard let sheet=sheetAssembly else{return false}
     return sheet.stock.usesCutEdgeAppearance ||

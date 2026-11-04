@@ -14,6 +14,7 @@ public struct StudioInstance:Codable,Equatable,Identifiable,Sendable {
   public var rotationDegrees:Double
   public var materialID:String?
   public var sheetPose:StudioSheetPose?
+  public var paperPose:StudioPaperPose?
   public var visible:Bool=true
   public init(name:String,sourceObjectID:UUID?=nil,prop:StudioProp?=nil,positionMM:Vector3 = .init(),rotationDegrees:Double=0){self.name=name;self.sourceObjectID=sourceObjectID;self.prop=prop;self.positionMM=positionMM;self.rotationDegrees=rotationDegrees}
   public func validate()throws {
@@ -22,6 +23,10 @@ public struct StudioInstance:Codable,Equatable,Identifiable,Sendable {
     if let sheetPose {
       guard sourceObjectID != nil else{throw FormError.invalid("A shelf prop cannot use publication pose controls.")}
       try sheetPose.validate()
+    }
+    if let paperPose {
+      guard sourceObjectID != nil,sheetPose==nil else{throw FormError.invalid("A planar instance pose needs a planar product source and cannot also have a publication pose.")}
+      try paperPose.validate()
     }
   }
 }
@@ -73,6 +78,7 @@ public struct StudioComposition:Codable,Equatable,Identifiable,Sendable {
   }
   public func validateSourcePoses(in project:Project,previous:StudioComposition?=nil)throws {
     for instance in instances {
+      if let pose=instance.paperPose,let source=project.objects.first(where:{$0.id==instance.sourceObjectID}) {_ = try pose.applying(to:source)}
       if let pose=instance.sheetPose,let source=project.objects.first(where:{$0.id==instance.sourceObjectID}) {
         let accepted=previous?.instances.first{$0.id==instance.id && $0.sourceObjectID==instance.sourceObjectID && $0.sheetPose==instance.sheetPose}
         _ = try pose.applying(to:source,in:project,clampingSpread:accepted != nil)
@@ -111,6 +117,7 @@ public struct StudioComposition:Codable,Equatable,Identifiable,Sendable {
         if original.id==source.id {
           object.name=instance.name;object.position=instance.positionMM;object.rotation=instance.rotationDegrees
           if let pose=instance.sheetPose {object=try pose.applying(to:object,in:project,clampingSpread:true)}
+          if let pose=instance.paperPose {object=try pose.applying(to:object)}
           if let material=instance.materialID {guard project.material(material).id==material else{throw FormError.missing("A scene material is missing.")};object.materialID=material;object.color=nil}
           // The source's world attachment does not constrain its independent presentation instance.
           object.textile?.attachment=nil;object.clothAttachment=nil;object.patternAssemblyAttachment=nil
@@ -178,9 +185,10 @@ public enum StudioSceneCommands {
     if let motion=raw["motion"] as? [String:Any]{try camera(motion["startCamera"]);try camera(motion["endCamera"])}
     guard let instances=raw["instances"] as? [[String:Any]],instances.count<=128 else{throw FormError.invalid("Use at most 128 scene instances.")}
     for instance in instances {
-      try fields(instance,["id","name","sourceObjectID","prop","positionMM","rotationDegrees","materialID","visible","sheetPose"])
+      try fields(instance,["id","name","sourceObjectID","prop","positionMM","rotationDegrees","materialID","visible","sheetPose","paperPose"])
       try fields(instance["prop"],["widthMM","heightMM","depthMM","color"]);try fields(instance["positionMM"],["x","y","z"])
       try fields(instance["sheetPose"],["openingDegrees","activeSpread","bendMM","bindingStyle"])
+      try fields(instance["paperPose"],["foldPercent","openingPercent","explosionPercent"])
     }
   }
 }

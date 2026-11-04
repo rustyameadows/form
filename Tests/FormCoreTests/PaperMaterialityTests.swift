@@ -24,7 +24,7 @@ final class PaperMaterialityTests:XCTestCase {
     let before=try XCTUnwrap(engine.project),undoCount=engine.undoStack.count
     try update(["id":legacy.id.uuidString,"shoulderRadiusMM":0.18])
     let edited=try XCTUnwrap(engine.project)
-    XCTAssertEqual(edited.minimumSchemaVersion,67)
+    XCTAssertEqual(edited.minimumSchemaVersion,68)
     XCTAssertEqual(edited.objects[0].paperConstruction?.finishes?.first?.shoulderRadiusMM,0.18)
     XCTAssertEqual(edited.objects[0].paperConstruction?.finishes?.first?.depthMM,0.12)
     XCTAssertEqual(edited.objects[0].parameters,before.objects[0].parameters)
@@ -35,7 +35,7 @@ final class PaperMaterialityTests:XCTestCase {
     engine.redo();XCTAssertEqual(engine.project,edited)
     try engine.flush()
     let reopened=try engine.repository.load(project.id)
-    XCTAssertEqual(reopened.schemaVersion,67);XCTAssertEqual(reopened.objects,edited.objects)
+    XCTAssertEqual(reopened.schemaVersion,68);XCTAssertEqual(reopened.objects,edited.objects)
     for invalid in [-0.001,2.001] {
       let retained=engine.project
       XCTAssertThrowsError(try update(["id":legacy.id.uuidString,"shoulderRadiusMM":invalid]))
@@ -60,15 +60,15 @@ final class PaperMaterialityTests:XCTestCase {
     var insert=object();insert.sheetAssembly = .init(publicationID:UUID(),enclosure:[.init(id:"cover",name:"Cover",size:.init(100,140),features:.init(recesses:[.init(id:"inset",origin:.init(10,10),size:.init(20,20),depthMM:0.2,insert:.init(stock:edge))]))])
     for source in [leaf,enclosure,wrap,insert] {
       var project=Project(name:"Nested optical controls");project.objects=[source]
-      XCTAssertEqual(project.minimumSchemaVersion,67)
+      XCTAssertEqual(project.minimumSchemaVersion,68)
       let decoded=try JSONDecoder.form.decode(Project.self,from:JSONEncoder.form.encode(project))
-      XCTAssertEqual(decoded.objects,project.objects);XCTAssertEqual(decoded.minimumSchemaVersion,67)
+      XCTAssertEqual(decoded.objects,project.objects);XCTAssertEqual(decoded.minimumSchemaVersion,68)
     }
     var material=Material("stock","Stock","Paper","#FFFFFF");material.paperStock=edge
     var resource=Project(name:"Saved edge stock");resource.materials=[material]
-    XCTAssertEqual(resource.minimumSchemaVersion,67)
+    XCTAssertEqual(resource.minimumSchemaVersion,68)
     resource.materials[0].paperStock?.profile?.edgeAppearance=nil
     XCTAssertEqual(resource.minimumSchemaVersion,57)
-    resource.renderSettings = .init();XCTAssertEqual(resource.minimumSchemaVersion,66)
+    resource.renderSettings = .init();XCTAssertEqual(resource.minimumSchemaVersion,67)
   }
 }

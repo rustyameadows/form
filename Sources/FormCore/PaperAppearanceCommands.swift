@@ -61,11 +61,8 @@ public enum PaperAppearanceCommands {
   /// Whole-definition configuration must not silently discard a misspelled
   /// appearance field, even though Codable is permissive for older projects.
   public static func validateDefinitionFields(_ value: Any) throws {
-    let definition = try fields(value, allowed: ["version", "kind", "authored", "dimensions", "stock", "clearanceMM", "glueTabMM", "topFlapMM", "bottomFlapMM", "cornerRadiusMM", "foldPercent", "openingPercent", "insideArtworkSourceID", "insideArtwork", "annotations", "artworkReviewRequired", "artworkReferenceSize", "finishes"], label: "paper definition")
-    if let raw=definition["authored"],!(raw is NSNull) {
-      guard let authored=raw as? [String:Any] else{throw FormError.invalid("An authored paper source must be a construction definition.")}
-      try ConstructionCommands.validateDefinitionJSON(authored)
-    }
+    let definition = try fields(value, allowed: ["version", "kind", "authored", "dimensions", "stock", "clearanceMM", "glueTabMM", "topFlapMM", "bottomFlapMM", "cornerRadiusMM", "foldPercent", "openingPercent", "explosionPercent", "insideArtworkSourceID", "insideArtwork", "annotations", "artworkReviewRequired", "artworkReferenceSize", "finishes"], label: "paper definition")
+    if let authored=definition["authored"],!(authored is NSNull) {try ConstructionToolSchema.validateDefinition(authored)}
     if let raw = definition["stock"] {
       let stock = try fields(raw, allowed: stockKeys, label: "paper stock")
       if let raw = stock["profile"], !(raw is NSNull) { _ = try fields(raw, allowed: profileKeys, label: "paper profile") }

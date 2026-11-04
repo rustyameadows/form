@@ -1,0 +1,300 @@
+[
+  {
+    "id": "01-paper-tape-unlined",
+    "name": "01 / Oat paper · taped · unlined",
+    "values": {},
+    "measurements": {
+      "usable": [
+        180.0,
+        130.0,
+        55.0
+      ],
+      "finishedOutside": [
+        185.20000000000002,
+        134.79999999999998,
+        57.35
+      ],
+      "lidClear": [
+        186.4,
+        135.99999999999997
+      ],
+      "overlap": 25.650000000000002,
+      "headspace": 0.0,
+      "ownerStockTotalMM": 2,
+      "activePieces": 20,
+      "atlas": [
+        4222.08,
+        2807.1000000000004
+      ],
+      "contactChecks": {
+        "adhesive": 18,
+        "tape": 8,
+        "staples": 0
+      }
+    }
+  },
+  {
+    "id": "02-paper-independent-lining",
+    "name": "02 / Paper · lined base · lid top lining",
+    "values": {
+      "bLining": 3,
+      "lLining": 1,
+      "bPattern": 1,
+      "lPattern": 0
+    },
+    "measurements": {
+      "usable": [
+        180.0,
+        130.0,
+        55.0
+      ],
+      "finishedOutside": [
+        184.8,
+        135.0,
+        57.58
+      ],
+      "lidClear": [
+        186.0,
+        136.2
+      ],
+      "overlap": 25.650000000000002,
+      "headspace": 0.0,
+      "ownerStockTotalMM": 2,
+      "activePieces": 27,
+      "atlas": [
+        4219.68,
+        2807.6400000000003
+      ],
+      "contactChecks": {
+        "adhesive": 25,
+        "tape": 8,
+        "staples": 0
+      }
+    }
+  },
+  {
+    "id": "03-fabric-contrasting-lining",
+    "name": "03 / Backed spruce cloth · ivory lining",
+    "values": {
+      "covering": 2,
+      "lining": 3,
+      "pattern": 0,
+      "bTurnN": 12,
+      "bTurnE": 12,
+      "bTurnS": 12,
+      "bTurnW": 12,
+      "lTurnN": 8,
+      "lTurnE": 8,
+      "lTurnS": 8,
+      "lTurnW": 8,
+      "lidDepth": 32
+    },
+    "measurements": {
+      "usable": [
+        180.0,
+        130.0,
+        55.0
+      ],
+      "finishedOutside": [
+        185.68,
+        135.12,
+        57.46
+      ],
+      "lidClear": [
+        186.88,
+        136.32
+      ],
+      "overlap": 29.57,
+      "headspace": 0.0,
+      "ownerStockTotalMM": 2,
+      "activePieces": 30,
+      "atlas": [
+        4235.52,
+        2843.6400000000003
+      ],
+      "contactChecks": {
+        "adhesive": 28,
+        "tape": 8,
+        "staples": 0
+      }
+    }
+  },
+  {
+    "id": "04a-board-staples-uncovered",
+    "name": "04A / Bare board · actual through-floor staples",
+    "values": {
+      "jointMethod": 2,
+      "covering": 0,
+      "lining": 0,
+      "lidDepth": 27
+    },
+    "measurements": {
+      "usable": [
+        180.0,
+        130.0,
+        55.0
+      ],
+      "finishedOutside": [
+        184.0,
+        134.0,
+        57.35
+      ],
+      "lidClear": [
+        185.2,
+        135.2
+      ],
+      "overlap": 24.65,
+      "headspace": 0.0,
+      "ownerStockTotalMM": 2,
+      "activePieces": 10,
+      "atlas": [
+        4188.4800000000005,
+        2810.7000000000003
+      ],
+      "contactChecks": {
+        "adhesive": 8,
+        "tape": 0,
+        "staples": 0
+      }
+    }
+  },
+  {
+    "id": "04b-board-staples-covered",
+    "name": "04B / Covered crowns · real slotted backing",
+    "values": {
+      "jointMethod": 3,
+      "covering": 1,
+      "lining": 3,
+      "lidDepth": 31,
+      "lTurnN": 8,
+      "lTurnE": 8,
+      "lTurnS": 8,
+      "lTurnW": 8
+    },
+    "measurements": {
+      "usable": [
+        180.0,
+        130.0,
+        55.0
+      ],
+      "finishedOutside": [
+        185.20000000000002,
+        134.79999999999998,
+        57.73
+      ],
+      "lidClear": [
+        186.4,
+        135.99999999999997
+      ],
+      "overlap": 28.3,
+      "headspace": 0.0,
+      "ownerStockTotalMM": 2,
+      "activePieces": 32,
+      "atlas": [
+        4222.08,
+        2813.94
+      ],
+      "contactChecks": {
+        "adhesive": 28,
+        "tape": 8,
+        "staples": 0
+      }
+    }
+  },
+  {
+    "id": "05-mixed-partial-overlap",
+    "name": "05 / Oat base · cloth lid · shallow overlap",
+    "values": {
+      "bCover": 1,
+      "lCover": 2,
+      "bLining": 0,
+      "lLining": 1,
+      "seatingMode": 1,
+      "lidOverlap": 11,
+      "lidDepth": 29,
+      "bPattern": 1,
+      "lPattern": 1
+    },
+    "measurements": {
+      "usable": [
+        180.0,
+        130.0,
+        55.0
+      ],
+      "finishedOutside": [
+        192.88000000000002,
+        143.08,
+        57.55
+      ],
+      "lidClear": [
+        186.0,
+        136.2
+      ],
+      "overlap": 11.0,
+      "headspace": 15.290000000000003,
+      "ownerStockTotalMM": 2,
+      "activePieces": 27,
+      "atlas": [
+        4223.52,
+        2807.1000000000004
+      ],
+      "contactChecks": {
+        "adhesive": 21,
+        "tape": 8,
+        "staples": 0
+      }
+    }
+  },
+  {
+    "id": "06-independent-deep-lid",
+    "name": "06 / Independent board stocks · deeper lid",
+    "values": {
+      "width": 220,
+      "depth": 155,
+      "height": 78,
+      "linkedBoards": 0,
+      "bFloorMM": 2.8,
+      "bWallMM": 2.1,
+      "lFloorMM": 1.6,
+      "lWallMM": 1.3,
+      "lidDepth": 48,
+      "runningClearance": 0.85,
+      "bCover": 2,
+      "lCover": 1,
+      "bLining": 1,
+      "lLining": 3,
+      "bFloorArrangement": 1,
+      "bWallSpan": 1,
+      "jointMethod": 0
+    },
+    "measurements": {
+      "usable": [
+        220.0,
+        155.0,
+        78.0
+      ],
+      "finishedOutside": [
+        225.88,
+        160.32,
+        81.26
+      ],
+      "lidClear": [
+        227.57999999999998,
+        162.01999999999998
+      ],
+      "overlap": 46.019999999999996,
+      "headspace": 0.0,
+      "ownerStockTotalMM": 2.8,
+      "activePieces": 18,
+      "atlas": [
+        4994.88,
+        3464.64
+      ],
+      "contactChecks": {
+        "adhesive": 24,
+        "tape": 0,
+        "staples": 0
+      }
+    }
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "actual_app_material_review": true,
+  "images": [
+    {
+      "view": "cloth-corner",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-cloth-corner.render/round07-cloth-corner.png",
+      "sha256": "2dec7acfe6ecf5516edb7a70fb48aff13c2f32aaf0b75606c356bfed9118f240",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera_matches_round06": true
+    },
+    {
+      "view": "cloth-inside-corner",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-cloth-inside-corner.render/round07-cloth-inside-corner.png",
+      "sha256": "9da718c87c700f6c93ef226793278ac29e096e989f011b9b9616a592ab5bec89",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera_matches_round06": true
+    },
+    {
+      "view": "cloth-title",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-cloth-title.render/round07-cloth-title.png",
+      "sha256": "91f6cc51342a5e2c513d33c1f415203c7e67ac862ba88d05a07b55d8947c6dd9",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera_matches_round06": true
+    },
+    {
+      "view": "covered-wall",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-covered-wall.render/round07-covered-wall.png",
+      "sha256": "742dfb3643ee6c95c015448d2be88038771f10d0050d2d8681c4ffac64f62406",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera_matches_round06": true
+    },
+    {
+      "view": "closed-rim",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-closed-rim.render/round07-closed-rim.png",
+      "sha256": "00abaf3bb031bb341f8dca6e4baacbc7ad469e63e0e762bbcd52230b32aae8c7",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera_matches_round06": true
+    },
+    {
+      "view": "bare-staple-underside",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-bare-staple-underside.render/round07-bare-staple-underside.png",
+      "sha256": "4feed0c4df1973d7771a6e1fd8e0e2bbee8e5f0642ce946cfc2de3d2b12091ee",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera_matches_round06": true
+    }
+  ],
+  "findings": [
+    "Matching cloth-corner front face now shows orthogonal fine yarn/crosshatch detail; strong round05/06 diagonal-wave shading removed.",
+    "Material depth remains visible in cloth inside-corner and title close-ups.",
+    "CASK foil, small type and fine rule remain registered and readable.",
+    "Laid-paper horizontal ribs remain resolved in covered-wall and closed-rim views.",
+    "Bare underside retains actual metallic staple crowns at board seams."
+  ],
+  "new_visual_blocker_found": false,
+  "limits": [
+    "Review of six actual app material/detail views; overall family and physical packet checks remain separate."
+  ]
+}

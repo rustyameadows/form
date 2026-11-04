@@ -67,10 +67,26 @@ public struct PhysicalArtworkFrameContext: Sendable {
   public let physicalObjectID: UUID
   public let sourceObjectID: UUID
   public let frame: PhysicalArtworkFrame
+  public let requiresInsideSource:Bool
+  public func canonicalArtwork(in project:Project)->Artwork? {
+    guard let object=project.objects.first(where:{$0.id==sourceObjectID}) else{return nil}
+    return requiresInsideSource ? project.paperArtwork(for:object,inside:true):project.editableArtwork(object)
+  }
+  /// Embedded reverse artwork is migrated only as part of the actual source
+  /// edit, retaining the original canonical contents in that same Undo.
+  public func prepareEditingSource(in project:inout Project)throws->UUID {
+    guard let physical=project.objects.first(where:{$0.id==physicalObjectID}),!physical.locked,
+      let source=project.objects.first(where:{$0.id==sourceObjectID}),!project.artworkOwner(source).locked else{throw FormError.invalid("Unlock the construction and its artwork source before editing a physical frame.")}
+    if requiresInsideSource {
+      guard project.paperArtwork(for:source,inside:true) != nil else{throw FormError.missing("Create the cut-piece reverse artwork source before editing this physical frame.")}
+      return try PaperCommands.ensureInside(in:&project,objectID:sourceObjectID)
+    }
+    return sourceObjectID
+  }
   public static func resolve(in project:Project,objectID:UUID,raw:Any) throws -> Self {
-    guard let options=raw as? [String:Any],Set(options.keys).isSubset(of:["surface_id","side"]),
+    guard let options=raw as? [String:Any],Set(options.keys).isSubset(of:["surface_id","component_id","side"]),
       let physical=project.objects.first(where:{$0.id==objectID}),PaperConstruction.isPaper(physical) else {
-      throw FormError.invalid("physical_frame needs an existing construction object and only surface_id/side fields.")
+      throw FormError.invalid("physical_frame needs an existing construction object and only surface_id/component_id/side fields.")
     }
     let side:String
     if let raw=options["side"] {guard let value=raw as? String,["outside","inside"].contains(value) else{throw FormError.invalid("Physical frame side must be outside or inside.")};side=value}
@@ -79,6 +95,16 @@ public struct PhysicalArtworkFrameContext: Sendable {
     if let raw=options["surface_id"] {guard let value=raw as? String,!value.isEmpty else{throw FormError.invalid("surface_id must name an existing panel.")};panelID=value}
     else{panelID=nil}
     let construction=try PaperConstruction.definition(for:physical)
+    if (construction.authored?.version ?? 0)>=4 {
+      let componentID:String?
+      if let raw=options["component_id"] {guard let value=raw as? String,!value.isEmpty else{throw FormError.invalid("component_id must name an existing cut piece.")};componentID=value}else{componentID=nil}
+      let projection=try ConstructionArtworkProjection.resolve(in:project,object:physical,paper:construction,net:construction.net(),componentID:componentID,panelID:panelID,inside:side=="inside")
+      if projection.requiresInsideSource,projection.artwork(in:project)==nil {
+        throw FormError.missing("This cut-piece side has no artwork. Use form_construction create_part_artwork with component_id '\(projection.componentID)' and side '\(side)' before editing it.")
+      }
+      return .init(physicalObjectID:objectID,sourceObjectID:projection.sourceObjectID,frame:projection.frame,requiresInsideSource:projection.requiresInsideSource)
+    }
+    guard options["component_id"]==nil else{throw FormError.invalid("component_id requires a version-four independent cut-piece source.")}
     let sourceID:UUID
     if side=="inside" {
       guard let id=construction.insideArtworkSourceID,project.objects.contains(where:{$0.id==id}) else {
@@ -87,6 +113,6 @@ public struct PhysicalArtworkFrameContext: Sendable {
       sourceID=id
     } else {sourceID=project.artworkOwner(physical).id}
     return .init(physicalObjectID:objectID,sourceObjectID:sourceID,
-      frame:try .paper(net:construction.net(),panelID:panelID,inside:side=="inside"))
+      frame:try .paper(net:construction.net(),panelID:panelID,inside:side=="inside"),requiresInsideSource:false)
   }
 }

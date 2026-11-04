@@ -13,14 +13,14 @@ final class PhysicalAppearanceTests:XCTestCase {
     let decoded=try JSONDecoder.form.decode(Project.self,from:JSONEncoder.form.encode(before))
     XCTAssertEqual(try JSONEncoder.form.encode(decoded),try JSONEncoder.form.encode(before));XCTAssertNil(decoded.renderSettings)
     XCTAssertTrue(decoded.materials.allSatisfy{$0.appearance==nil && $0.references==nil})
-    XCTAssertLessThan(decoded.minimumSchemaVersion,66)
+    XCTAssertLessThan(decoded.minimumSchemaVersion,67)
     let partial=try JSONDecoder.form.decode(PhysicalAppearance.self,from:Data("{\"sheen\":0.7}".utf8))
     try partial.validate();XCTAssertEqual(partial.sheen,0.7);XCTAssertEqual(partial.ior,1.5);XCTAssertEqual(partial.normalStrength,1)
   }
   func testMaterialEditIsPortableUndoableAndRejectsInvalidAtomically()throws {
     let engine=try fixture(),before=engine.project!
     _ = try engine.call("form_material",arguments:["command":"create","material":["id":"woven-test","name":"Woven surface","color":"#AA9988","appearance":["sheen":0.5,"anisotropy":0.4,"normalStrength":0.35],"references":[["title":"Declared material","url":"https://example.com/material","evidence":"manufacturerSpecification"]]]])
-    XCTAssertEqual(engine.undoStack.count,1);XCTAssertEqual(engine.project?.minimumSchemaVersion,66)
+    XCTAssertEqual(engine.undoStack.count,1);XCTAssertEqual(engine.project?.minimumSchemaVersion,67)
     let created=engine.project!
     XCTAssertEqual(created.materials.first{$0.id=="woven-test"}?.appearance?.normalStrength,0.35)
     XCTAssertThrowsError(try engine.call("form_material",arguments:["command":"update","material_id":"woven-test","patch":["appearance":["normalStrength":10.1]]]))
@@ -58,7 +58,7 @@ final class PhysicalAppearanceTests:XCTestCase {
     var changed=design;changed.threads[0].roughness=0.18
     _ = try engine.call("form_update_object",arguments:["object_id":object.id.uuidString,"embroidery":try jsonObject(changed)])
     let saved=try XCTUnwrap(engine.project),updated=try XCTUnwrap(saved.objects.first)
-    XCTAssertEqual(saved.minimumSchemaVersion,66);XCTAssertEqual(engine.undoStack.count,1)
+    XCTAssertEqual(saved.minimumSchemaVersion,67);XCTAssertEqual(engine.undoStack.count,1)
     XCTAssertEqual(updated.parameters,object.parameters);XCTAssertEqual(updated.artwork,object.artwork)
     XCTAssertEqual(updated.textile?.embroidery?.regions,design.regions);XCTAssertEqual(updated.textile?.embroidery?.process,design.process)
     try engine.flush();XCTAssertEqual(try engine.repository.load(saved.id).objects.first?.textile?.embroidery?.threads[0].roughness,0.18)
@@ -73,7 +73,7 @@ final class PhysicalAppearanceTests:XCTestCase {
     let engine=try fixture()
     _ = try engine.call("form_material",arguments:["command":"create","material":["id":"two-sides","name":"Independently finished cloth","color":"#EEEEEE","thickness":0.2,"backSurface":["color":"#DDDCDC","roughness":0.8,"metallic":0,"appearance":["sheen":0.15]]]])
     let before=engine.project!,material=try XCTUnwrap(before.materials.first{$0.id=="two-sides"})
-    XCTAssertNil(material.appearance);XCTAssertEqual(material.backSurface?.roughness,0.8);XCTAssertEqual(before.minimumSchemaVersion,66)
+    XCTAssertNil(material.appearance);XCTAssertEqual(material.backSurface?.roughness,0.8);XCTAssertEqual(before.minimumSchemaVersion,67)
     try engine.flush();XCTAssertEqual(try engine.repository.load(before.id).materials,before.materials)
     let invalid:[[String:Any]]=[["color":"#FFFFFF","roughness":-1,"metallic":0],["color":"#FFFFFF","roughness":0.5],["color":"#FFFFFF","roughness":0.5,"metallic":0,"typo":1],["color":"#FFFFFF","roughness":0.5,"metallic":0,"appearance":["sheeen":0.2]]]
     for bad in invalid {
@@ -93,7 +93,7 @@ final class PhysicalAppearanceTests:XCTestCase {
     _ = try engine.call("form_paper",arguments:["command":"configure","object_id":object.id.uuidString,"stock":["profile":["appearance":["diffuseTransmission":0.4]]]])
     let stock=try XCTUnwrap(engine.project?.objects.first?.paperConstruction?.stock)
     XCTAssertEqual(stock.resolvedThicknessMM,thickness);XCTAssertEqual(stock.profile?.appearance?.diffuseTransmission,0.4)
-    XCTAssertEqual(engine.project?.minimumSchemaVersion,66);engine.undo();XCTAssertEqual(engine.project,project)
+    XCTAssertEqual(engine.project?.minimumSchemaVersion,67);engine.undo();XCTAssertEqual(engine.project,project)
   }
   func testRenderSettingsRoundTripAndPhysicalLightingValidation()throws {
     let engine=try fixture();let before=engine.project!
@@ -101,7 +101,7 @@ final class PhysicalAppearanceTests:XCTestCase {
     XCTAssertEqual(settings.samples,512);XCTAssertEqual(settings.previewSamples,64);try settings.validate()
     XCTAssertEqual(settings.displacementDicingRate,2);XCTAssertEqual(settings.displacementMaxTriangles,2_000_000);XCTAssertEqual(settings.displacementMaxSubdivisions,10)
     try engine.edit("Render settings"){$0.renderSettings=settings}
-    XCTAssertEqual(engine.project?.minimumSchemaVersion,66)
+    XCTAssertEqual(engine.project?.minimumSchemaVersion,67)
     try engine.flush();XCTAssertEqual(try engine.repository.load(before.id).renderSettings,settings)
     XCTAssertEqual(try engine.project!.studioDesignDigest(),try before.studioDesignDigest())
     settings.areaLights![0].targetMM=settings.areaLights![0].positionMM;XCTAssertThrowsError(try settings.validate())
@@ -117,15 +117,15 @@ final class PhysicalAppearanceTests:XCTestCase {
     material.appearance=PhysicalAppearance()
     var definition=PatternAssemblyDefinition(sourceObjectID:UUID(),panels:[.init(panel:.init(elementID:UUID(),copy:1),pose:.init(),material:material,densityGSM:200)],seamIDs:[])
     try definition.validateDeclarations();object.patternAssembly=definition;project.objects=[object]
-    XCTAssertEqual(project.minimumSchemaVersion,66)
+    XCTAssertEqual(project.minimumSchemaVersion,67)
     definition.panels[0].material.appearance!.ior = .nan
     XCTAssertThrowsError(try definition.validateDeclarations())
     object.patternAssembly=nil
     var stock=PaperStock();stock.profile=PaperSurfaceProfile();stock.profile!.appearance=PhysicalAppearance()
     object.sheetAssembly = .init(publicationID:UUID(),stock:stock);project.objects=[object]
-    XCTAssertEqual(project.minimumSchemaVersion,66)
+    XCTAssertEqual(project.minimumSchemaVersion,67)
     object.sheetAssembly!.stock.profile=nil
     object.sheetAssembly!.parentSheets=[.init(frontPageIDs:[nil,nil],backPageIDs:[nil,nil],stock:stock,sizeMM:.init(100,100),printIntent:.color)]
-    project.objects=[object];XCTAssertEqual(project.minimumSchemaVersion,66)
+    project.objects=[object];XCTAssertEqual(project.minimumSchemaVersion,67)
   }
 }

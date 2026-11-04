@@ -1,0 +1,225 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "elements" : [
+      {
+        "color" : "#243F39",
+        "fontSize" : 7,
+        "height" : 7,
+        "id" : "4EEB7781-C57E-4DAC-A8EB-5554EB6861D1",
+        "kind" : "text",
+        "name" : "label",
+        "text" : "COLLECT / KEEP / RETURN",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 8.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 100,
+        "x" : 647.2,
+        "y" : 14
+      },
+      {
+        "color" : "#243F39",
+        "fontSize" : 6,
+        "height" : 5,
+        "id" : "C5364858-C419-4297-97D9-D1A1F51F4A58",
+        "kind" : "text",
+        "name" : "serial",
+        "text" : "CASK   —   FIELD ARCHIVE 01",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 7.199999999999999,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 100,
+        "x" : 647.2,
+        "y" : 105.10000000000001
+      }
+    ],
+    "unit" : "mm"
+  },
+  "artworkRegions" : [
+    {
+      "anchors" : [
+        {
+          "elementIDs" : [
+            "4EEB7781-C57E-4DAC-A8EB-5554EB6861D1",
+            "C5364858-C419-4297-97D9-D1A1F51F4A58"
+          ],
+          "horizontal" : 0,
+          "vertical" : 0
+        }
+      ],
+      "id" : "b-lining-floor",
+      "name" : "Base interior floor / top",
+      "origin" : {
+        "x" : "2*(blinerW+blinerD)+20",
+        "y" : "0.0"
+      },
+      "size" : {
+        "x" : "blineFloorW",
+        "y" : "blineFloorD"
+      }
+    }
+  ],
+  "canvasSourceOnly" : true,
+  "designID" : "E04CE0DA-ACB9-435E-90E4-40B8EDF62D93",
+  "dimensionBindings" : [
+    {
+      "expression" : "2*(sourceValue2+sourceValue1)+20+sourceValue0",
+      "inputs" : {
+        "sourceValue0" : {
+          "measurement" : "parameter",
+          "parameter" : "blineFloorW",
+          "sourceObjectID" : "0E606FAC-7E7D-4083-8CCE-4F7078701264"
+        },
+        "sourceValue1" : {
+          "measurement" : "parameter",
+          "parameter" : "blinerD",
+          "sourceObjectID" : "0E606FAC-7E7D-4083-8CCE-4F7078701264"
+        },
+        "sourceValue2" : {
+          "measurement" : "parameter",
+          "parameter" : "blinerW",
+          "sourceObjectID" : "0E606FAC-7E7D-4083-8CCE-4F7078701264"
+        }
+      },
+      "parameter" : "width"
+    },
+    {
+      "expression" : "max(sourceValue1,sourceValue0)",
+      "inputs" : {
+        "sourceValue0" : {
+          "measurement" : "parameter",
+          "parameter" : "blineFloorD",
+          "sourceObjectID" : "0E606FAC-7E7D-4083-8CCE-4F7078701264"
+        },
+        "sourceValue1" : {
+          "measurement" : "parameter",
+          "parameter" : "blinerH",
+          "sourceObjectID" : "0E606FAC-7E7D-4083-8CCE-4F7078701264"
+        }
+      },
+      "parameter" : "depth"
+    },
+    {
+      "expression" : "sourceValue0",
+      "inputs" : {
+        "sourceValue0" : {
+          "measurement" : "parameter",
+          "parameter" : "blineFloorD",
+          "sourceObjectID" : "0E606FAC-7E7D-4083-8CCE-4F7078701264"
+        }
+      },
+      "parameter" : "blineFloorD"
+    },
+    {
+      "expression" : "sourceValue0",
+      "inputs" : {
+        "sourceValue0" : {
+          "measurement" : "parameter",
+          "parameter" : "blineFloorW",
+          "sourceObjectID" : "0E606FAC-7E7D-4083-8CCE-4F7078701264"
+        }
+      },
+      "parameter" : "blineFloorW"
+    },
+    {
+      "expression" : "sourceValue0",
+      "inputs" : {
+        "sourceValue0" : {
+          "measurement" : "parameter",
+          "parameter" : "blinerD",
+          "sourceObjectID" : "0E606FAC-7E7D-4083-8CCE-4F7078701264"
+        }
+      },
+      "parameter" : "blinerD"
+    },
+    {
+      "expression" : "sourceValue0",
+      "inputs" : {
+        "sourceValue0" : {
+          "measurement" : "parameter",
+          "parameter" : "blinerW",
+          "sourceObjectID" : "0E606FAC-7E7D-4083-8CCE-4F7078701264"
+        }
+      },
+      "parameter" : "blinerW"
+    }
+  ],
+  "id" : "66577922-FE8D-44E1-9210-A2F91ED00F62",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "Base lining · canonical artwork",
+  "parameters" : {
+    "blineFloorD" : 123.10000000000001,
+    "blineFloorW" : 173.1,
+    "blinerD" : 128.8,
+    "blinerW" : 178.8,
+    "depth" : 123.10000000000001,
+    "width" : 808.3000000000001
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "construction-source-66577922-FE8D-44E1-9210-A2F91ED00F62",
+  "relationship" : "original",
+  "rotation" : 0
+}

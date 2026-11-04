@@ -1,0 +1,309 @@
+{
+  "actual_app_whole_case_review": true,
+  "images": [
+    {
+      "view": "round07-01-paper-tape-unlined-closed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-01-paper-tape-unlined-closed.render/round07-01-paper-tape-unlined-closed.png",
+      "sha256": "efcf615366b6b6fd6dd9661357b46199fc34a2650282ee9608d04f4fdb35fc99",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 4.03926274191098,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 7.105427357601002e-17,
+          "y": 0.2985000000000001,
+          "z": 7.105427357601002e-17
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-01-paper-tape-unlined-removed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-01-paper-tape-unlined-removed.render/round07-01-paper-tape-unlined-removed.png",
+      "sha256": "b66e492c0a330939f692d36e7cd89ddc099d577399fa93315169fd10703c3986",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 7.3874862199238285,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.1829999999999998,
+          "y": 0.28675000000000267,
+          "z": -1.0658141036401502e-15
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-02-paper-independent-lining-closed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-02-paper-independent-lining-closed.render/round07-02-paper-independent-lining-closed.png",
+      "sha256": "b93be5b67386e31951b7398a8235c7df9a12519ed9718f32f0c66da92976c297",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 4.036935095737768,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 7.105427357601002e-17,
+          "y": 0.2996500000000002,
+          "z": 7.105427357601002e-17
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-02-paper-independent-lining-removed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-02-paper-independent-lining-removed.render/round07-02-paper-independent-lining-removed.png",
+      "sha256": "ffa5f9e29fba0c7137372a288e92de77dcddab789623a067acb448f61844f9a2",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 7.376610872351518,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.1810000000000038,
+          "y": 0.2878999999999998,
+          "z": -0.0010000000000024302
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-03-fabric-contrasting-lining-closed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-03-fabric-contrasting-lining-closed.render/round07-03-fabric-contrasting-lining-closed.png",
+      "sha256": "7741f59d4cc7fcfdce4d8457b61d6370572982623c153f37d9b01893ae727c7b",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 4.058444224857234,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.2994500000000001,
+          "z": 0
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-03-fabric-contrasting-lining-removed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-03-fabric-contrasting-lining-removed.render/round07-03-fabric-contrasting-lining-removed.png",
+      "sha256": "791f7b667a229085a3db5a252a1655d9dbd0f8f86f2e14b81a2f61aafa01f7fb",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 7.413350759715511,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.1878000000000009,
+          "y": 0.28730000000000017,
+          "z": 1.4210854715202004e-16
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-04a-board-staples-uncovered-closed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-04a-board-staples-uncovered-closed.render/round07-04a-board-staples-uncovered-closed.png",
+      "sha256": "495739eefb27cd5c26db053e542d6db0e65cb702e180da93d50f17f3336b073b",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 3.9904078576380244,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 3.552713678800501e-16,
+          "y": 0.2985000000000001,
+          "z": 0
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-04a-board-staples-uncovered-removed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-04a-board-staples-uncovered-removed.render/round07-04a-board-staples-uncovered-removed.png",
+      "sha256": "d00e6a445d1b23f82d00468c00c2fbe14e3aee36de064bf44b595e31b6615a5f",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 7.322671323476064,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.1709999999999996,
+          "y": 0.28850000000000003,
+          "z": 2.842170943040401e-16
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-04b-board-staples-covered-closed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-04b-board-staples-covered-closed.render/round07-04b-board-staples-covered-closed.png",
+      "sha256": "807e1b524a09f4e4602482085805adde07e2b09a1917e70925ceb5f4782e344a",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 4.0422086470862455,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 7.105427357601002e-17,
+          "y": 0.30215000000000014,
+          "z": 7.105427357601002e-17
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-04b-board-staples-covered-removed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-04b-board-staples-covered-removed.render/round07-04b-board-staples-covered-removed.png",
+      "sha256": "906e07a1a73e54059ae30ed0b7b2b04ba22f8d4f9b407bf52cec2d6aecbd93ee",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 7.388289686878987,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.1829999999999998,
+          "y": 0.2886500000000037,
+          "z": -1.0658141036401502e-15
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-05-mixed-partial-overlap-closed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-05-mixed-partial-overlap-closed.render/round07-05-mixed-partial-overlap-closed.png",
+      "sha256": "ddb637209b2cd292d1c9321ad7c1343a7424fd9da506488ed3dbe15b741be03a",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 4.148123860561539,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.37775000000000036,
+          "z": 0
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-05-mixed-partial-overlap-removed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-05-mixed-partial-overlap-removed.render/round07-05-mixed-partial-overlap-removed.png",
+      "sha256": "68c079f500d60ff2fc82db55f0f2b07187c2ccc1c505b731465b83bdc4dc67a3",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 7.448712321612459,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.1604000000000008,
+          "y": 0.2877499999999999,
+          "z": 0
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-06-independent-deep-lid-closed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-06-independent-deep-lid-closed.render/round07-06-independent-deep-lid-closed.png",
+      "sha256": "c59348bec9a1d6912d101e1adc83127a3717c61c3083dd5ebe031535434ababd",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 4.883006894792707,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 0,
+          "y": 0.4162000000000002,
+          "z": -7.105427357601002e-17
+        },
+        "viewportAspect": 1.5
+      }
+    },
+    {
+      "view": "round07-06-independent-deep-lid-removed",
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/round07-06-independent-deep-lid-removed.render/round07-06-independent-deep-lid-removed.png",
+      "sha256": "8b2338b59dd4c1caab9ec3d7fd1a4dd634110874fda48372eddf34f070eacd56",
+      "width": 1500,
+      "height": 1000,
+      "renderer": "RealityKit",
+      "camera": {
+        "azimuth": 0.58,
+        "distance": 8.815086532001352,
+        "elevation": 0.7,
+        "projection": "perspective",
+        "target": {
+          "x": 1.3818999999999995,
+          "y": 0.4063000000000012,
+          "z": 7.815970093361102e-16
+        },
+        "viewportAspect": 1.5
+      }
+    }
+  ],
+  "retained_references": [
+    {
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/references/fabric-corners-reference.jpg",
+      "sha256": "70d3cf2eaa00a4db6fe4280a11b6f797506fdf23eda8546ef72fda57c749459e"
+    },
+    {
+      "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/rigid-boxes/references/two-piece-open-reference.jpg",
+      "sha256": "5c702a0fbbdad03977886acc7684e5a796b8ff389e747db0203dffd59f8da217"
+    }
+  ],
+  "findings_by_case": {
+    "01-paper-tape-unlined": "Complete shallow removable lid and taller base; continuous covering/turn-in rims; intentionally unlined board interiors with real seam tape. Upright registered cover graphics/foil.",
+    "02-paper-independent-lining": "Same coherent base/lid family with independent pale floor and lid-top linings; wall-band seam visible as authored; lining remains below the turned rim.",
+    "03-fabric-contrasting-lining": "Dark cloth exterior, covered rims and contrasting pale linings; readable cover foil/art; no broad diagonal-wave artifact in the final whole view. Detailed weave verified separately.",
+    "04a-board-staples-uncovered": "Intentionally bare board geometry, with exposed crowns visible along closed lid edges and no printed cover art. Removed pieces retain complete trays and buried leg termination is not faked as exposed interior wire.",
+    "04b-board-staples-covered": "Covering/lining hides crowns without losing the underlying physical fastened construction; continuous rims and correctly registered cover artwork.",
+    "05-mixed-partial-overlap": "Contrasting cloth lid/paper base, deliberately shallow overlap, source-authored wall-band/face-patch seams and small physical overlap-stop ledges. Both halves remain coherent with lid removed.",
+    "06-independent-deep-lid": "Larger format with visibly deeper independently stocked paper lid and cloth base; closed seam/proportions remain coherent and both interiors retain complete lining sources."
+  },
+  "acceptance": "No new whole-model visual blocker observed across these14 closed/removed renders; structural coverage and material/art distinctions agree with the authored configurations and retained references.",
+  "limits": [
+    "Visual review does not establish manufactured bond strength, staple tool suitability, stock samples or sliding feel.",
+    "Final construction packet label-key proofs and technical Canvas overlays are checked separately."
+  ]
+}

@@ -1,0 +1,479 @@
+{
+  "application" : "LAB",
+  "assembly_instructions" : "Assembly-order.json",
+  "assumptions" : [
+    "Original CASK \/ COLLECT project-authored example, using generic independently stocked cut-piece hinge trees. Every separate board is one actual piece; covering hinges are physical folds, not board scores.",
+    "Material appearance, dry adhesive layers, calipers, backed-fabric ply ratio, turn-in allowances and wire tool access are declared prototype assumptions. Stock\/vendor strength, moisture, compression and sliding force require physical samples.",
+    "Finished usable space is bounded by the largest actual inward local tape \/ lining \/ turn-in buildup. Liners deliberately stop short of tape and turn-ins; they do not silently stack through those pieces.",
+    "Lid clear span is derived from the base finished side envelope over the overlap region plus twice the per-side running clearance. Exterior seating ledges below that region do not enlarge the sliding opening.",
+    "Cross-wrap neutral-line edge allowance is board caliper plus two bond layers and one covering caliper. The two side faces carry corner tabs and therefore double build; front\/back carry one layer. Band mode has one front seam overlap; its asymmetric finished envelope shifts the closed lid centre. All local buildups remain actual geometry.",
+    "Band-and-patch mode applies the exterior face patch first, then overlaps bottom turn-under flaps. The central patch is locally recessed by one covering\/bond layer; no imaginary air layer flattens it.",
+    "Staple route accepted here: separate floor below walls, driven from floor underside into vertical wall bottom edges. Buried termination is intentional. Inset floor plus staples rejects rather than reinterpreting the receiving route.",
+    "Wire crown buildup is retained. Covered stapled halves contain a real slotted leveling backing with thickness equal to the wire depth. Four retained vent\/clearance slots support per-seam method switching.",
+    "A lid is one coherent parent group. Closed, raised, fully removed and exploded views share the same accepted dimensions and canonical artwork. Presentation does not change fit or cutting files.",
+    "Seating is physical: zero axial space is actual ceiling\/rim contact; positive top-seat space creates rim shims; locked overlap creates exterior stop ledges. Conflicting locked depth\/headspace rejects.",
+    "Finish relief adds up to 0.08 mm above the lid exterior cap. The lid finished skirt-depth control excludes this local decorative peak; exact physical envelope reports it separately.",
+    "All production cut channels are actual-size nominal design geometry. No kerf or blade compensation is silently applied. Technical guides and staple placement marks are not cutting or punching commands.",
+    "Repacking stock changes material sheet placement only. It never changes canonical artwork, finish-mask IDs, source dimensions, source anchors, folded geometry or saved options."
+  ],
+  "declared_kerf_mm" : 0,
+  "files" : [
+    {
+      "bytes" : 42028,
+      "path" : "Actual-size-pattern-proofs.pdf",
+      "role" : "proof",
+      "sha256" : "2f250d10eccbda7914a90d5cb4e1f03a2ea383fe6d608cbd6d975c978a42085c"
+    },
+    {
+      "bytes" : 53144,
+      "path" : "Adhesive-regions.json",
+      "role" : "specification",
+      "sha256" : "f87c764664ce99906d16e4abe5a033b0bb7a884dd7d166057f5cf811ca6fb17b"
+    },
+    {
+      "bytes" : 109205,
+      "path" : "Assembly-and-sections.pdf",
+      "role" : "instructions",
+      "sha256" : "92114fc96ddc4cbb87e1c217f0884cd65e64c4a001191684022dbded5939ee64"
+    },
+    {
+      "bytes" : 3524,
+      "path" : "Assembly-order.json",
+      "role" : "specification",
+      "sha256" : "b9e9110b18f49d5e7a200786476197347304fbebd6841f2235c6fdc1c78137de"
+    },
+    {
+      "bytes" : 88664,
+      "path" : "Cut-list.json",
+      "role" : "specification",
+      "sha256" : "202d473cad0861b6b44b5a939ee55602a24ccf99038824945a5a591dcbffc747"
+    },
+    {
+      "bytes" : 117151,
+      "path" : "Drawings\/closed-c3eefb58.svg",
+      "role" : "assemblyReference",
+      "sha256" : "f763b13065dbf7f359bbd076abb17d02a9558a0bfb8874cca668852fefd308a3"
+    },
+    {
+      "bytes" : 126665,
+      "path" : "Drawings\/exploded-f31aa992.svg",
+      "role" : "assemblyReference",
+      "sha256" : "5a78a24d3c28d3a3b643bd48c00fa6f008c7025fd6dace6d49834eb6d76f6003"
+    },
+    {
+      "bytes" : 117225,
+      "path" : "Drawings\/raised-d9325e09.svg",
+      "role" : "assemblyReference",
+      "sha256" : "150eebcaec94f0791d50ebf0117bdb85d5d8915b83d987c4dd5d27e1d8c6d4e9"
+    },
+    {
+      "bytes" : 115994,
+      "path" : "Drawings\/removed-e1f79758.svg",
+      "role" : "assemblyReference",
+      "sha256" : "b440f55d597dae05f72a15204f214bb3c26d7cb6611eebd85e977c32324d49a8"
+    },
+    {
+      "bytes" : 8979,
+      "path" : "Drawings\/section-x-abeae58f.svg",
+      "role" : "assemblyReference",
+      "sha256" : "485f1fc96fb9a8a9350784b3b7bc83fe191d696bac843cf4d8a5bebd8335a04d"
+    },
+    {
+      "bytes" : 9130,
+      "path" : "Drawings\/section-z-2134645f.svg",
+      "role" : "assemblyReference",
+      "sha256" : "c54940b815ff5011f3f428da804a3b4523b84d7ec887022a07a5e2e516d80011"
+    },
+    {
+      "bytes" : 1447,
+      "path" : "Finish-assignments.json",
+      "role" : "specification",
+      "sha256" : "e1b1e9d150ff62c62c6de9842bdeb9429f7321917d9bd72931321a3013642228"
+    },
+    {
+      "bytes" : 7612,
+      "path" : "Layouts\/board-83b9e6c11a03-41cc7422\/sheet-001-front-artwork.svg",
+      "role" : "printArtworkLayout",
+      "sha256" : "9777c5c5d2391156c03c44673658bf34506649668db5f7f42dfc26a875dfc175"
+    },
+    {
+      "bytes" : 4830,
+      "path" : "Layouts\/board-83b9e6c11a03-41cc7422\/sheet-001-nominal-cut.svg",
+      "role" : "nominalCutLayout",
+      "sha256" : "6fcad802efcc826593df23cf4851f49ccd8b779dbea77f7e14229bd4b337074d"
+    },
+    {
+      "bytes" : 95281,
+      "path" : "Layouts\/covering-ce1f28ef80a2-37162dbf\/sheet-001-front-artwork.svg",
+      "role" : "printArtworkLayout",
+      "sha256" : "6d88765c8448abb2742ecd877e4b781059a90b95234be56c165b4efefd7ac0d8"
+    },
+    {
+      "bytes" : 3252,
+      "path" : "Layouts\/covering-ce1f28ef80a2-37162dbf\/sheet-001-nominal-cut.svg",
+      "role" : "nominalCutLayout",
+      "sha256" : "b793d747d39cda7dd6ff0a66439f8cecb9f778b6bd9edc80a7cda16a5172086d"
+    },
+    {
+      "bytes" : 6378,
+      "path" : "Layouts\/tape-c9837fcd56fd-217fe7d7\/sheet-001-front-artwork.svg",
+      "role" : "printArtworkLayout",
+      "sha256" : "5e4e2ea1350982cdf22eccf639ae2b5dbc984431ae269994c59e7b2e593a248e"
+    },
+    {
+      "bytes" : 4813,
+      "path" : "Layouts\/tape-c9837fcd56fd-217fe7d7\/sheet-001-nominal-cut.svg",
+      "role" : "nominalCutLayout",
+      "sha256" : "be7309dc6a794319e36a6bc0f5245fd561b819df511b593b04d71286c6c4d487"
+    },
+    {
+      "bytes" : 16200,
+      "path" : "Material-layout-proofs.pdf",
+      "role" : "proof",
+      "sha256" : "84df04a79b3cb221c750c225ff689123b6fe5533d5bc8d116db22d2be145fd3d"
+    },
+    {
+      "bytes" : 16460,
+      "path" : "Material-layouts.json",
+      "role" : "specification",
+      "sha256" : "11eebbe0451b8076e0a52b79cdc1a1c7718b073e5a2097af874518dbea6a5b54"
+    },
+    {
+      "bytes" : 21123,
+      "path" : "Nominal-parts.svg",
+      "role" : "nominalCut",
+      "sha256" : "c8d73fe9ebe88c7bf52be5a8582df103b3bb4243cee44e02b3cb1d826aa29676"
+    },
+    {
+      "bytes" : 49979,
+      "path" : "Pieces\/b-cross-p-87466300\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "6417a2e48fce73443771a2e22ee32bc1a22346f9c1bc920b410c0022f29d1118"
+    },
+    {
+      "bytes" : 8958,
+      "path" : "Pieces\/b-cross-p-87466300\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "129b17746656169ef99e1f6c91ea5a85b2d43fba3b550c5a129b3695a2e7b46f"
+    },
+    {
+      "bytes" : 967,
+      "path" : "Pieces\/b-e-32daee00\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "6485a0b8d7635f35735ea38cbc97a22f4665976ae3bb531433cd64813f82929e"
+    },
+    {
+      "bytes" : 1403,
+      "path" : "Pieces\/b-e-32daee00\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "f5c6adde9cbabe36cf7b1784a651d67460dbcdda40c70eb8b1f6a79469823c6b"
+    },
+    {
+      "bytes" : 870,
+      "path" : "Pieces\/b-floor-b632e1c5\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "5b23d33cf150ec046fb02bea3c0ebe635d6a60a558fd4bc4e5d001680c04c6a5"
+    },
+    {
+      "bytes" : 1148,
+      "path" : "Pieces\/b-floor-b632e1c5\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "e13c6ac49990e3653739152fbe9d686e891b5efa01e82a9e9c28e6a93f2dca89"
+    },
+    {
+      "bytes" : 971,
+      "path" : "Pieces\/b-n-d741a31c\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "14fd7f5b8c9968adf4fed9541eea8f9e65a9f5da81a3afbe9f7fe3a2acb48227"
+    },
+    {
+      "bytes" : 1414,
+      "path" : "Pieces\/b-n-d741a31c\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "0b6cd98d46d841759b18062014c4392488aa5cb578dd3d65b4ba636b6236c509"
+    },
+    {
+      "bytes" : 966,
+      "path" : "Pieces\/b-s-e6f61e81\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "5e36838d401e1381ce6188bd705e75262b3ed111604d36015a0fa0cd17259fb4"
+    },
+    {
+      "bytes" : 1401,
+      "path" : "Pieces\/b-s-e6f61e81\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "3554a10de9b4e6cbdb93e99aa811604a3ae7d4406dc19c1f0b2b9c9a14a211f7"
+    },
+    {
+      "bytes" : 935,
+      "path" : "Pieces\/b-tape-e-eedcf606\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "0eacb6b279aa6e2da44900a63c8644f8594c64ec9885edb0e47def18bb65afa6"
+    },
+    {
+      "bytes" : 1404,
+      "path" : "Pieces\/b-tape-e-eedcf606\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "2bf6b61e9de3ceaa93f5b8f317b94f41f734dd52c6667a0a7a796c43e940a67a"
+    },
+    {
+      "bytes" : 931,
+      "path" : "Pieces\/b-tape-n-63630583\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "2d7cfefff85f80a60d4c56ac52d8519e707e4fe9f7b3b0741f731aeb4c10cc30"
+    },
+    {
+      "bytes" : 1393,
+      "path" : "Pieces\/b-tape-n-63630583\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "68e7350fed8b7e26dba104d991b7e408469f094bf3aada364633a15a0d1c2502"
+    },
+    {
+      "bytes" : 931,
+      "path" : "Pieces\/b-tape-s-65125b6d\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "cf3c705a9a38ba6ce87e1d433a77cb47c42cc178c8105f1a8358d8b85c120a82"
+    },
+    {
+      "bytes" : 1393,
+      "path" : "Pieces\/b-tape-s-65125b6d\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "3cd7590b51c5e049138660ac0b960b5b4062310beac5267ae8e7c23213cac20f"
+    },
+    {
+      "bytes" : 935,
+      "path" : "Pieces\/b-tape-w-a06047e6\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "21db93d730433244073e0f696c1e376d9942107def5729b75f1dc3eacea92bea"
+    },
+    {
+      "bytes" : 1404,
+      "path" : "Pieces\/b-tape-w-a06047e6\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "43c1ad900e0cc4cb06f44343ead202fac0edacf2d140da6fb2f0689768e50988"
+    },
+    {
+      "bytes" : 966,
+      "path" : "Pieces\/b-w-54e7b391\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "2862fe886f75c8785cf052c6429ee65c79ce5f26882e0af2d2dfc782da7cc98b"
+    },
+    {
+      "bytes" : 1401,
+      "path" : "Pieces\/b-w-54e7b391\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "6251c3f1e9a28387b46a85d43f995f32052c5e64ff6fe47d5d9ca49f93cd62e1"
+    },
+    {
+      "bytes" : 2014,
+      "path" : "Pieces\/l-cross-p-b6527d9f\/finish-front-1d40ed0b-d3bb-4281-804a-f477feb76aa4.svg",
+      "role" : "finishMask",
+      "sha256" : "dca194817c71a9872ebe707f8b0acf56806df92e9f5cadf1508c8dce542c9b5a"
+    },
+    {
+      "bytes" : 5339,
+      "path" : "Pieces\/l-cross-p-b6527d9f\/finish-front-7e576337-80d6-48de-8d08-ce8426a42ab2.svg",
+      "role" : "finishMask",
+      "sha256" : "0e82beda76582099b4342bc538e66e379c6e3e2463b6ae438fabdee63da0cba2"
+    },
+    {
+      "bytes" : 45244,
+      "path" : "Pieces\/l-cross-p-b6527d9f\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "87264f25f1fe24526a17ad52f8b79a154299e4c6f127837359f64e64efebe424"
+    },
+    {
+      "bytes" : 9172,
+      "path" : "Pieces\/l-cross-p-b6527d9f\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "2d551f04ef44880157aec92ca7cf550186fc45cc13883b99ec4bd1a30cf675c6"
+    },
+    {
+      "bytes" : 968,
+      "path" : "Pieces\/l-e-931a03fc\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "81bfc37d16ad6ce491127f44fa8a5e5af4a1362a51d89843ec905c792c1bda2f"
+    },
+    {
+      "bytes" : 1410,
+      "path" : "Pieces\/l-e-931a03fc\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "9b8a17d8d4dee765d407d5d4da05eed002e1239dd0cc03f1ead519e1364ee844"
+    },
+    {
+      "bytes" : 973,
+      "path" : "Pieces\/l-floor-54f22a45\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "fee586c6cf129db6798533fbf764f1c53c452d5f47ea1e44e7680f1faa0e9b13"
+    },
+    {
+      "bytes" : 1432,
+      "path" : "Pieces\/l-floor-54f22a45\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "ca54db796189ee7b2c7a99e4b86d7d329c0b071b697cf3acb1e4b0f2b6dc2a75"
+    },
+    {
+      "bytes" : 916,
+      "path" : "Pieces\/l-n-72d0c56e\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "d0cdcdef1e0a59a61d0c848866a0339c11c0e8f470224a22b7c699405b60e014"
+    },
+    {
+      "bytes" : 1267,
+      "path" : "Pieces\/l-n-72d0c56e\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "f790dd48a786c990f8b90909757f20cc3f4817a26895783062bb0fd6a7ccd006"
+    },
+    {
+      "bytes" : 967,
+      "path" : "Pieces\/l-s-81c31dc0\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "af66e4b1cfc0efb6a7505497e3cf122f700b709e6ad5639ccb3128414f54d0f3"
+    },
+    {
+      "bytes" : 1408,
+      "path" : "Pieces\/l-s-81c31dc0\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "4a5c00955da99b59ee52af2a53572f2640e9d5183ad1ea1dd91617a1590daa11"
+    },
+    {
+      "bytes" : 934,
+      "path" : "Pieces\/l-tape-e-8d1c74be\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "23219cf20dc752ef93cb78861b649e4a9f3776d2cfbc8e6eb628e8fee874e6f5"
+    },
+    {
+      "bytes" : 1416,
+      "path" : "Pieces\/l-tape-e-8d1c74be\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "41040924591ce39592d79ceac850b68236017d52457d99077eb43fc1e5fdfd46"
+    },
+    {
+      "bytes" : 882,
+      "path" : "Pieces\/l-tape-n-e147c295\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "31fbd8b27c89469367b778ffa97521cda21c13d2fc92c26dfd81045f5fe71133"
+    },
+    {
+      "bytes" : 1260,
+      "path" : "Pieces\/l-tape-n-e147c295\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "1864eae399d17004a49d6c4eb6155c1e914795625a1586dcdd074f2d8ccc16ce"
+    },
+    {
+      "bytes" : 934,
+      "path" : "Pieces\/l-tape-s-8ab306f4\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "c2502b2f8409de25582fa00efd6a47d9528f0c93534659516c52305fae616691"
+    },
+    {
+      "bytes" : 1403,
+      "path" : "Pieces\/l-tape-s-8ab306f4\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "2d95bac38c410108e5ebb3b56280069371a2ebfe72b5aaf42c14d7f3ab1e9de2"
+    },
+    {
+      "bytes" : 934,
+      "path" : "Pieces\/l-tape-w-c3a8d9a6\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "f5d21c33ca4c3fcc5e98bea4b67659e03e86a95ca0df092c290ea6f16a0627fa"
+    },
+    {
+      "bytes" : 1414,
+      "path" : "Pieces\/l-tape-w-c3a8d9a6\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "12f9176d001e8e3d216e05212ebf1a45ebba538b5b9d59a6376aefec5e6271db"
+    },
+    {
+      "bytes" : 963,
+      "path" : "Pieces\/l-w-6f7b1da6\/front-artwork.svg",
+      "role" : "printArtwork",
+      "sha256" : "dd7675de75d5132c60e6a1734ef26671ca11b786d0298b222d60466f33f11ce7"
+    },
+    {
+      "bytes" : 1397,
+      "path" : "Pieces\/l-w-6f7b1da6\/nominal-cut.svg",
+      "role" : "nominalCut",
+      "sha256" : "51535c64016dc82fcfb0e652cf600cab6378890babbb855772560d64a70079cc"
+    },
+    {
+      "bytes" : 224404,
+      "path" : "Preflight.json",
+      "role" : "specification",
+      "sha256" : "50cd4f8b7f83e105b17e95818bc9e9794265428d5669c2a4e2be8e170efb99f8"
+    },
+    {
+      "bytes" : 940303,
+      "path" : "Source.json",
+      "role" : "editableSource",
+      "sha256" : "525532d828a81921ece569859c70ff542094ee51562958a511dcc179c88dc081"
+    },
+    {
+      "bytes" : 4,
+      "path" : "Staple-schedule.json",
+      "role" : "specification",
+      "sha256" : "ace810d7e2cbb4f8c40ce09dc8e191ae466adb4e1a7d49c59f2215b411d38b05"
+    },
+    {
+      "bytes" : 24558,
+      "path" : "Tape-schedule.json",
+      "role" : "specification",
+      "sha256" : "edd69cc319cc9f77e9cb35de0ea79399c48a67a806f90a6639304a091074e838"
+    }
+  ],
+  "font_revision" : 0,
+  "inventory_deducted" : false,
+  "kind" : "independentPlanarConstruction",
+  "layout_label_keys_are_annotation_only" : true,
+  "machine_contacted" : false,
+  "material_layout_pdf_pages" : [
+    {
+      "annotation_only" : false,
+      "batch_id" : "board-83b9e6c11a03",
+      "height_mm" : 1000,
+      "page" : 1,
+      "role" : "actualSizeStock",
+      "sheet_index" : 0,
+      "width_mm" : 700
+    },
+    {
+      "annotation_only" : false,
+      "batch_id" : "covering-ce1f28ef80a2",
+      "height_mm" : 343.5,
+      "page" : 2,
+      "role" : "actualSizeStock",
+      "sheet_index" : 0,
+      "width_mm" : 1400
+    },
+    {
+      "annotation_only" : false,
+      "batch_id" : "tape-c9837fcd56fd",
+      "height_mm" : 190.80000000000001,
+      "page" : 3,
+      "role" : "actualSizeStock",
+      "sheet_index" : 0,
+      "width_mm" : 500
+    }
+  ],
+  "nominal_geometry" : true,
+  "object_id" : "0E606FAC-7E7D-4083-8CCE-4F7078701264",
+  "packet_version" : 1,
+  "physical_cut_count" : 20,
+  "physical_production_verified" : false,
+  "piece_coordinate_system" : "Cut contours and guides are piece-local actual millimeters. Cut-list bounds x\/y identify the original canonical net origin, not a sheet placement.",
+  "print_bleed_mm" : 0,
+  "process_notes" : "Nominal design packet; physical print bleed, cutter compensation and stapler adjustment require explicit production settings. No machine commands are issued.",
+  "production_quantity" : 1,
+  "project_id" : "1B0E5651-717B-4F24-9FEC-EA555F4E0B11",
+  "registration_marks_enabled" : true,
+  "reverse_face_registration" : "Independent reverse sources remain readable; their cut contour is reflected across the whole piece. Registered paper-inside sources keep their canonical atlas. Layout positions are logical references; no press-specific duplex feed\/mirroring is inferred.",
+  "sheet_repacking_changes_canonical_artwork" : false,
+  "source_digest" : "525532d828a81921ece569859c70ff542094ee51562958a511dcc179c88dc081",
+  "source_material_color_is_printed" : false,
+  "source_snapshot" : "Source.json",
+  "technical_labels_enabled" : true,
+  "tool_compensation_applied" : false,
+  "total_staple_count" : 0,
+  "total_tape_cut_count" : 8,
+  "units" : "mm"
+}

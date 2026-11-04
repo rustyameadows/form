@@ -16,22 +16,23 @@ public struct PlanarConstructionValidationRequest: Sendable {
   public let definition: PlanarConstructionDefinition
   public let fold: Double
   public let opening: Double
+  public let explosion: Double
   public let cases: [PlanarParameterCase]
   public var requiresExactSolids: Bool {definition.solidChecks?.isEmpty == false}
 
   public init(projectID:UUID,objectID:UUID,sourceRevision:String,
-    definition:PlanarConstructionDefinition,fold:Double,opening:Double,cases:[PlanarParameterCase]) {
+    definition:PlanarConstructionDefinition,fold:Double,opening:Double,explosion:Double=0,cases:[PlanarParameterCase]) {
     self.projectID=projectID;self.objectID=objectID;self.sourceRevision=sourceRevision
-    self.definition=definition;self.fold=fold;self.opening=opening;self.cases=cases
+    self.definition=definition;self.fold=fold;self.opening=opening;self.explosion=explosion;self.cases=cases
   }
   public func prepare(_ item:PlanarParameterCase) -> PlanarPreparedValidationCase {
     var candidate=definition
     var result=PlanarConstructionCaseResult(name:item.name,
-      values:definition.values.merging(["fold":fold,"opening":opening]){_,new in new}.merging(item.values){_,new in new},passed:false)
+      values:caseValues(item),passed:false)
     do {
-      let requestedFold=item.values["fold"] ?? fold,requestedOpening=item.values["opening"] ?? opening
-      guard requestedFold.isFinite,requestedOpening.isFinite,(0...100).contains(requestedFold),
-        (0...100).contains(requestedOpening) else{throw FormError.invalid("Construction pose controls must be 0–100%.")}
+      let requestedFold=item.values["fold"] ?? fold,requestedOpening=item.values["opening"] ?? opening,requestedExplosion=item.values["explosion"] ?? explosion
+      guard requestedFold.isFinite,requestedOpening.isFinite,requestedExplosion.isFinite,(0...100).contains(requestedFold),
+        (0...100).contains(requestedOpening),(0...100).contains(requestedExplosion) else{throw FormError.invalid("Construction pose controls must be 0–100%.")}
       try candidate.setParameters(item.values)
       let net=try candidate.net(),stock=try candidate.number(candidate.stockThickness)
       var paper=PaperConstruction(kind:.authored,
@@ -39,8 +40,12 @@ public struct PlanarConstructionValidationRequest: Sendable {
           height:candidate.values["height"] ?? net.size.y,depth:candidate.values["depth"] ?? 1),
         stock:.init(thicknessMM:stock))
       paper.authored=candidate;paper.foldPercent=requestedFold;paper.openingPercent=requestedOpening
+      if candidate.version>=4 {
+        paper.explosionPercent=requestedExplosion
+        _=try candidate.resolveJointAttachments(stock:paper.stock,validateEngagement:true)
+      }
       let poses=try paper.resolvedPanels(),connections=try candidate.connectionMeasurements(poses:poses)
-      result.values=candidate.values.merging(["fold":requestedFold,"opening":requestedOpening]){_,new in new}
+      result.values=candidate.values.merging(candidate.version>=4 ? ["fold":requestedFold,"opening":requestedOpening,"explosion":requestedExplosion]:["fold":requestedFold,"opening":requestedOpening]){_,new in new}
       result.passed=connections.allSatisfy(\.passed);result.sizeMM=[net.size.x,net.size.y]
       result.panels=net.panels.count;result.folds=net.folds.count;result.resolvedPanels=poses.count
       result.poses=poses;result.connectionChecks=connections;result.outcome=result.passed ? .passed:.failed
@@ -54,7 +59,7 @@ public struct PlanarConstructionValidationRequest: Sendable {
     }
   }
   public func caseValues(_ item:PlanarParameterCase) -> [String:Double] {
-    definition.values.merging(["fold":fold,"opening":opening]){_,new in new}.merging(item.values){_,new in new}
+    definition.values.merging(definition.version>=4 ? ["fold":fold,"opening":opening,"explosion":explosion]:["fold":fold,"opening":opening]){_,new in new}.merging(item.values){_,new in new}
   }
   public func interrupted(_ reason:ParameterValidationInterruption,completed:[PlanarConstructionCaseResult],
     active:PlanarConstructionCaseResult?=nil,durationMS:Double) -> PlanarConstructionValidationInterrupted {
@@ -101,7 +106,7 @@ public struct PlanarConstructionValidationRequest: Sendable {
     interruption:ParameterValidationInterruption?=nil) -> PlanarConstructionValidationReport {
     .init(sourceRevision:sourceRevision,passed:interruption==nil && results.count==cases.count && results.allSatisfy(\.passed),
       cases:results,elapsedMS:durationMS,
-      solidModel:requiresExactSolids ? "Sharp centered nominal-stock slabs; existing panel polygons at (x,-y), z=±stock/2, transformed by the reported resolved poses. Only explicitly declared pairs/conditions are checked.":nil,
+      solidModel:requiresExactSolids ? (definition.version>=4 ? "Sharp centered slabs using each panel's resolved core caliper, transformed by the reported resolved poses. Only declared pairs and conditions are checked. Covering, finish relief and wire geometry are excluded from these nominal core checks.":"Sharp centered nominal-stock slabs; existing panel polygons at (x,-y), z=±stock/2, transformed by the reported resolved poses. Only explicitly declared pairs/conditions are checked."):nil,
       interruption:interruption)
   }
 

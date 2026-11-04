@@ -86,6 +86,7 @@ struct SheetStockControls:View {
           ArtworkUnitField("Texture depth",value:profile.textureDepthMM,unit:.mm){amount in update{SheetStockControlEditing.setSurface(in:&$0){$0.textureDepthMM=amount}}}
         }.padding(.top,8)
       }.font(InspectorStyle.labelFont)
+      SheetBondedStockControls(stock:$stock,targetID:targetID,caliperIsDerived:caliperIsDerived,onEditingChanged:onEditingChanged)
       Text("Material color, not printed ink.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
     }.accessibilityElement(children:.contain).accessibilityLabel("Material stock")
   }

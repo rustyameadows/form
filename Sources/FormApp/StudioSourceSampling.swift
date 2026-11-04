@@ -66,9 +66,10 @@ import simd
         let paper = try PaperConstruction.definition(for: object), net = try paper.net()
         for panel in net.panels {
           guard let node = subject.childNode(withName: PaperGeometry.panelPrefix + panel.id, recursively: true) else { continue }
+          let stock=try panel.resolvedStock(fallback:paper.stock)
           let rect = panel.bounds
           for inside in [false, true] {
-            let z = (inside ? -1.0 : 1.0) * paper.stock.resolvedThicknessMM / 200
+            let z = (inside ? -1.0 : 1.0) * stock.resolvedThicknessMM / 200
             let local: [MeshVector3] = [.init(rect.x/100,-rect.y/100,z),
               .init((rect.x+rect.width)/100,-rect.y/100,z),
               .init((rect.x+rect.width)/100,-(rect.y+rect.height)/100,z),
@@ -83,7 +84,7 @@ import simd
             case .orthographic: direction = SIMD3(camera.worldFromCameraMM.columns.2.x,camera.worldFromCameraMM.columns.2.y,camera.worldFromCameraMM.columns.2.z)
             }
             let facing = simd_dot(tip-base,direction) > 0
-            let opacity = PaperGeometry.faceAppearance(for: object,stock: paper.stock,project: project,inside: inside).profile.opacity
+            let opacity = PaperGeometry.faceAppearance(for: object,stock: stock,project: project,inside: inside).profile.opacity
             var demand = quadDemand(world: world,width: rect.width,height: rect.height,camera: camera,viewport: viewport)
             if !facing && !includeIndirectSurfaces { demand.weight *= opacity < 0.999 ? 0.25 : 0 }
             try add(id,surface: SourceTextureSamplingPlan.paperFace(panel.id,inside: inside),

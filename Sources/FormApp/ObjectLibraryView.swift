@@ -44,17 +44,18 @@ struct ObjectLibraryView: View {
       HStack {
         VStack(alignment:.leading, spacing:5) {
           Text(replacement == nil ? "Object library" : "Change blank").font(.system(size: 27, weight: .semibold))
-          Text("\(ObjectLibrary.starters.count) editable starters · 211 form references").font(.system(size:12)).foregroundStyle(.secondary)
+          Text("Editable sources · \(ObjectLibrary.catalog.references.count) form references").font(.system(size:12)).foregroundStyle(.secondary)
         }
         Spacer()
         AppCloseButton("Close", keyEquivalent: "\u{1b}") { dismiss() }.keyboardShortcut(.cancelAction)
       }.padding(22)
       HStack {
-        Picker("Browse", selection:$mode) { Text("Starters").tag("Starters"); Text("Reference catalog").tag("Reference catalog"); Text("Work examples").tag("Work examples") }.pickerStyle(.segmented).frame(width:420)
+        Picker("Browse", selection:$mode) { Text("Starters").tag("Starters"); Text("Constructions").tag("Constructions"); Text("Reference catalog").tag("Reference catalog"); Text("Work examples").tag("Work examples") }.pickerStyle(.segmented).frame(width:560)
         Spacer()
         TextField("Search forms, products, materials…",text:$query).textFieldStyle(.roundedBorder).frame(width:280)
       }.padding(.horizontal,22).padding(.bottom,12)
-      if mode == "Work examples" { examples }
+      if mode == "Constructions" {ConstructionStarterBrowser(query:query){dismiss()}}
+      else if mode == "Work examples" { examples }
       else {
         HStack {
           Picker("Domain",selection:$domain) {
