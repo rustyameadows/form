@@ -156,7 +156,7 @@ struct PaperWorkspaceView: View {
   private var visibilityControls:some View {
     HStack(spacing:10) {
       Toggle("Artwork",isOn:$store.paperShowingArtwork)
-      Toggle("Guides",isOn:$store.paperShowingGuides)
+      Toggle("Guides",isOn:$store.paperShowingGuides).help("View-only cuts, seams, turn-ins, adhesive exclusions and fastener placement. These review marks are excluded from printing.")
     }.toggleStyle(.checkbox).font(.system(size:10)).fixedSize()
   }
 }

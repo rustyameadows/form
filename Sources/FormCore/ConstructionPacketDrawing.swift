@@ -7,6 +7,17 @@ public struct ConstructionMaterialLayoutLabel:Equatable,Sendable {
   public let size:Point2
   public let fontSize:Double
 }
+public struct ConstructionMaterialPlacementLabel:Sendable {
+  public let pieceID:String,copy:Int,text:String,key:Int?
+  public let frame:ConstructionMaterialLayoutLabel
+}
+public struct ConstructionMaterialLabelKeyEntry:Sendable {
+  public let key:Int,pieceID:String,copy:Int,lines:[String]
+}
+public struct ConstructionMaterialLayoutAnnotations:Sendable {
+  public let placements:[ConstructionMaterialPlacementLabel]
+  public let keyPages:[[ConstructionMaterialLabelKeyEntry]]
+}
 
 public enum ConstructionPacketDrawing {
   public static func xml(_ value:String)->String {value.replacingOccurrences(of:"&",with:"&amp;").replacingOccurrences(of:"<",with:"&lt;").replacingOccurrences(of:">",with:"&gt;").replacingOccurrences(of:"\"",with:"&quot;")}
@@ -17,17 +28,67 @@ public enum ConstructionPacketDrawing {
   public static func header(width:Double,height:Double,title:String,viewBox:String?=nil)->String {
     "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"\(width)mm\" height=\"\(height)mm\" viewBox=\"\(viewBox ?? "0 0 \(width) \(height)")\"><title>\(xml(title))</title>"
   }
-  private static func annotation(_ label:String,x:Double,y:Double,fontSize:Double=3)->String {
-    "<text x=\"\(x)\" y=\"\(y)\" font-family=\"Helvetica,Arial,sans-serif\" font-size=\"\(fontSize)\" fill=\"#303636\">\(xml(label))</text>"
+  private static func annotation(_ label:String,x:Double,y:Double,fontSize:Double=3,monospaced:Bool=false)->String {
+    "<text x=\"\(x)\" y=\"\(y)\" font-family=\"\(monospaced ? "Courier,monospace":"Helvetica,Arial,sans-serif")\" font-size=\"\(fontSize)\" fill=\"#303636\">\(xml(label))</text>"
   }
   /// Thin material strips need their identity along the long axis, rather
   /// than silently losing their label because a horizontal box cannot fit.
   public static func materialLayoutLabel(in bounds:PaperBounds)->ConstructionMaterialLayoutLabel {
     let rotated=(bounds.width<20 || bounds.height<12) && bounds.height>bounds.width
     let width=rotated ? bounds.height:bounds.width,height=rotated ? bounds.width:bounds.height
-    let inset=min(2,max(0.25,height*0.15)),font=2.6
+    let inset=min(2,max(0.2,height*0.1)),font=2.6
     return .init(origin:.init(bounds.x+inset,rotated ? bounds.y+bounds.height-inset:bounds.y+inset),
-      rotationDegrees:rotated ? -90:0,size:.init(max(0.1,width-inset*2),max(font*1.6,height-inset*2)),fontSize:font)
+      rotationDegrees:rotated ? -90:0,size:.init(max(0.1,width-inset*2),max(font*1.2,height-inset*2)),fontSize:font)
+  }
+  public static let materialKeyPageSize=Point2(210,297)
+  public static let materialKeyFontSize=2.8
+  public static let materialKeyLineHeight=4.5
+  private static func labelWidth(_ text:String,font:Double)->Double {
+    text.unicodeScalars.reduce(0){$0+font*($1.isASCII ? 0.65:1.1)}
+  }
+  private static func keyLines(_ text:String)->[String] {
+    var result=[String](),line=""
+    for character in text {
+      if !line.isEmpty,labelWidth(line+String(character),font:materialKeyFontSize)>180 {result.append(line);line="    "}
+      line.append(character)
+    }
+    if !line.isEmpty {result.append(line)}
+    return result
+  }
+  /// Keys are local to one explicitly identified stock sheet. Full identities
+  /// move to readable annotation-only pages instead of shrinking or clipping.
+  public static func materialLayoutAnnotations(_ batch:ConstructionMaterialBatch,sheetIndex:Int)->ConstructionMaterialLayoutAnnotations {
+    var placements=[ConstructionMaterialPlacementLabel](),entries=[ConstructionMaterialLabelKeyEntry]()
+    for (index,placement) in batch.placements.filter({$0.sheetIndex==sheetIndex}).enumerated() {
+      let frame=materialLayoutLabel(in:placement.bounds),identity="\(placement.pieceID) / copy \(placement.copy)"
+      let key=labelWidth(identity,font:frame.fontSize)>frame.size.x ? index+1:nil
+      placements.append(.init(pieceID:placement.pieceID,copy:placement.copy,text:key.map(String.init) ?? identity,key:key,frame:frame))
+      if let key {entries.append(.init(key:key,pieceID:placement.pieceID,copy:placement.copy,lines:keyLines("\(key)  "+identity)))}
+    }
+    var pages=[[ConstructionMaterialLabelKeyEntry]](),page=[ConstructionMaterialLabelKeyEntry](),lines=0
+    for entry in entries {
+      if !page.isEmpty,lines+entry.lines.count+1>48 {pages.append(page);page=[];lines=0}
+      page.append(entry);lines+=entry.lines.count+1
+    }
+    if !page.isEmpty {pages.append(page)}
+    return .init(placements:placements,keyPages:pages)
+  }
+  public static func layoutLabelKeySVGs(_ batch:ConstructionMaterialBatch,sheetIndex:Int)->[String] {
+    let plan=materialLayoutAnnotations(batch,sheetIndex:sheetIndex)
+    return plan.keyPages.enumerated().map {index,entries in
+      var output=header(width:materialKeyPageSize.x,height:materialKeyPageSize.y,title:"Placement key / annotation only / \(batch.id) / sheet \(sheetIndex+1)")
+      output+="<metadata>role=labelKey; annotationOnly=true; nominalCutSheet=false; batchID=\(xml(batch.id)); sheetIndex=\(sheetIndex); keyPage=\(index+1)</metadata>"
+      output+=annotation("Placement key / annotation only",x:15,y:17,fontSize:5)
+      output+=annotation("Batch \(batch.id) / sheet \(sheetIndex+1) / key page \(index+1) of \(plan.keyPages.count)",x:15,y:28,fontSize:2.8)
+      output+=annotation("Full identities for numbered stock-layout labels. This page is not a cutting sheet.",x:15,y:39,fontSize:2.6)
+      var y=56.0
+      for entry in entries {
+        output+="<g data-role=\"label-key-entry\" data-key=\"\(entry.key)\" data-piece-id=\"\(xml(entry.pieceID))\" data-copy=\"\(entry.copy)\">"
+        for line in entry.lines {output+=annotation(line,x:15,y:y,fontSize:materialKeyFontSize,monospaced:true);y+=materialKeyLineHeight}
+        y+=materialKeyLineHeight;output+="</g>"
+      }
+      return output+"</svg>"
+    }
   }
   public static func pieceSVG(_ piece:ResolvedConstructionPiece,labels:Bool=true,registrationMarks:Bool=false)->String {
     let margin=registrationMarks ? 5.0:0,w=piece.bounds.width,h=piece.bounds.height
@@ -52,14 +113,16 @@ public enum ConstructionPacketDrawing {
     output+="<metadata>\(xml("formatID=\(batch.format.id); stockDigest=\(batch.stockDigest); nominal=true; toolCompensationApplied=false; layoutDoesNotMoveCanonicalArtwork=true"))</metadata>"
     output+="<g id=\"stock-guide\" data-role=\"guide\" fill=\"none\" stroke=\"#999999\" stroke-width=\"0.15\"><rect x=\"0\" y=\"0\" width=\"\(width)\" height=\"\(height)\"/></g>"
     let byID=Dictionary(uniqueKeysWithValues:pieces.map{($0.id,$0)})
+    let annotations=labels ? materialLayoutAnnotations(batch,sheetIndex:sheetIndex).placements:[]
+    let labelsByPiece=Dictionary(grouping:annotations,by:\.pieceID).mapValues{Dictionary(uniqueKeysWithValues:$0.map{($0.copy,$0)})}
     for placement in batch.placements where placement.sheetIndex==sheetIndex {
       guard let piece=byID[placement.pieceID] else{continue}
       let contours=piece.cutContours.map{$0.map(placement.transform.apply)}
       output+="<g data-piece-id=\"\(xml(piece.id))\" data-copy=\"\(placement.copy)\" data-rotation=\"\(placement.rotationDegrees)\" fill=\"none\" stroke=\"#222222\" stroke-width=\"0.18\"><path d=\"\(contours.map{path($0)}.joined(separator:" "))\"/></g>"
-      if labels {
-        let label=materialLayoutLabel(in:placement.bounds)
-        output+="<g data-role=\"placement-label\" data-piece-id=\"\(xml(piece.id))\" data-copy=\"\(placement.copy)\" transform=\"translate(\(label.origin.x) \(label.origin.y)) rotate(\(label.rotationDegrees))\">"
-        output+=annotation("\(piece.id) / copy \(placement.copy)",x:0,y:label.fontSize,fontSize:label.fontSize)+"</g>"
+      if let annotation=labelsByPiece[placement.pieceID]?[placement.copy] {
+        let label=annotation.frame,key=annotation.key.map{" data-key=\"\($0)\""} ?? ""
+        output+="<g data-role=\"placement-label\" data-piece-id=\"\(xml(piece.id))\" data-copy=\"\(placement.copy)\"\(key) transform=\"translate(\(label.origin.x) \(label.origin.y)) rotate(\(label.rotationDegrees))\">"
+        output+=self.annotation(annotation.text,x:0,y:label.fontSize,fontSize:label.fontSize,monospaced:true)+"</g>"
       }
     }
     return output+"</svg>"

@@ -98,6 +98,11 @@ import FormCADModel
         for index in 0..<batch.sheetCount {
           let prefix="Layouts/"+fileID(batch.id)+String(format:"/sheet-%03d",index+1)
           try files.add(prefix+"-nominal-cut.svg",Data(ConstructionPacketDrawing.layoutSVG(batch,sheetIndex:index,pieces:model.pieces,labels:model.production.labels).utf8),role:"nominalCutLayout")
+          if model.production.labels {
+            for (keyIndex,svg) in ConstructionPacketDrawing.layoutLabelKeySVGs(batch,sheetIndex:index).enumerated() {
+              try files.add(prefix+String(format:"-label-key-%03d.svg",keyIndex+1),Data(svg.utf8),role:"layoutLabelKey")
+            }
+          }
           for inside in [false,true] {
             let label=inside ? "reverse":"front"
             if let svg=try layoutArtwork(batch,sheetIndex:index,pieces:model.pieces,nets:pieceNets,artwork:printByPiece,inside:inside,assets:assets,bleed:model.production.bleedMM) {
@@ -118,6 +123,7 @@ import FormCADModel
         "source_digest":model.sourceDigest,"source_snapshot":"Source.json","units":"mm","nominal_geometry":true,"tool_compensation_applied":false,"font_revision":GeometryFactory.fontRevision,
         "declared_kerf_mm":model.production.declaredKerfMM as Any? ?? NSNull(),"production_quantity":model.production.quantity,"print_bleed_mm":model.production.bleedMM,
         "technical_labels_enabled":model.production.labels,"registration_marks_enabled":model.production.registrationMarks,
+        "material_layout_pdf_pages":ConstructionPacketPDF.materialLayoutPageIndex(model),"layout_label_keys_are_annotation_only":true,
         "assembly_instructions":"Assembly-order.json","physical_cut_count":model.pieces.reduce(0){$0+$1.quantity*model.production.quantity},
         "total_staple_count":model.attachments.staples.count*model.production.quantity,"total_tape_cut_count":model.physicalTapeCutCount,
         "files":descriptions,"assumptions":model.production.assumptions,"process_notes":model.production.processNotes,

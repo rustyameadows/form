@@ -222,6 +222,7 @@ struct LinkedInspectorArtworkContent: Equatable {
   var hiddenRoles: Set<ArtworkProductionRole> = []
   var sourceOrigin: Point2 = .init()
   var sourceSize: Point2? = nil
+  var constructionTechnicalPaths:[ConstructionArtworkTechnicalPath] = []
 }
 
 @MainActor enum LinkedInspectorArtwork {
@@ -243,7 +244,9 @@ struct LinkedInspectorArtworkContent: Equatable {
       let text=project.resolvingTextStories(in:raw,objectID:descriptor.sourceObjectID)
       let art=(try? project.resolvingComponents(in:text)) ?? text
       let color=PaperGeometry.faceAppearance(for:object,stock:descriptor.stock,project:project,inside:inside).resolvedColor
-      return .init(artwork:descriptor.frame.display(art),size:local.size,net:local,stockColor:color,guides:guides,hiddenRoles:hiddenRoles)
+      let technical=guides ? (try? CanvasConstructionTechnicalGuides.paths(source.definition,net:source.net)) ?? []:[]
+      return .init(artwork:descriptor.frame.display(art),size:local.size,net:local,stockColor:color,guides:guides,hiddenRoles:hiddenRoles,
+        constructionTechnicalPaths:descriptor.technicalPaths(technical))
     }
     if case .paper(let inside) = link.kind {
       guard let net = try? PaperConstruction.definition(for: object).net(),
@@ -305,6 +308,11 @@ struct LinkedInspectorArtworkContent: Equatable {
       PaperOutput.drawNet(net, artwork: art, assets: assets, context: context,
         guides: content.guides, lineWidth: max(0.18, 2 / density), stockColor: content.stockColor)
       context.restoreGState()
+      if content.guides,!content.constructionTechnicalPaths.isEmpty {
+        context.saveGState();context.addPath(PaperOutput.clipPath(net));context.clip(using:.evenOdd)
+        PaperOutput.drawConstructionReview(content.constructionTechnicalPaths,context:context,scale:density)
+        context.restoreGState()
+      }
     } else {
       context.saveGState()
       if !content.boundary.isEmpty { context.addPath(PaperOutput.path(content.boundary)); context.clip() }

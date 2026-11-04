@@ -16,6 +16,8 @@ struct CanvasFrame: Identifiable {
   var paperNet: PaperNet? = nil
   var publicationSpread: CanvasPublicationSpread? = nil
   var physicalStock:PaperStock? = nil
+  // Interface-only paths already mapped into this physical frame.
+  var constructionTechnicalPaths:[ConstructionArtworkTechnicalPath] = []
   var id: UUID { projection?.id ?? object.id }
   var title: String { projection?.title ?? (object.name + (sourceReview == nil ? "":" · Registered source")) }
   var isWorkspace: Bool { object.isCanvasWorkspace }

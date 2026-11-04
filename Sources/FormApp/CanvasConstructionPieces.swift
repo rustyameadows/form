@@ -7,6 +7,9 @@ import FormCore
 @MainActor enum CanvasConstructionPieces {
   static func frames(object:ProductObject,paper:PaperConstruction,net:PaperNet,project:Project,startY:Double)->[CanvasFrame] {
     guard let descriptors=try? ConstructionArtworkProjection.resolveAll(in:project,object:object,paper:paper,net:net) else{return []}
+    let technical:[ConstructionArtworkTechnicalPath],technicalReview:String?
+    do{technical=try CanvasConstructionTechnicalGuides.paths(paper,net:net);technicalReview=nil}
+    catch{technical=[];technicalReview="Construction guides need review: "+error.localizedDescription}
     var result=[CanvasFrame](),y=startY,x=36.0,rowHeight=0.0,group:String?
     var artworkSources=[String:Artwork]()
     for descriptor in descriptors {
@@ -32,7 +35,8 @@ import FormCore
       let position=object.canvasProjectionPositions?[projection.key] ?? .init(x,y)
       result.append(.init(object:source,surfaceObject:object,
         rect:.init(x:position.x,y:position.y,width:projection.size.x,height:projection.size.y),artwork:projection.display(art),
-        projection:projection,paperDefinition:paper,paperNet:descriptor.sourceNet,physicalStock:descriptor.stock))
+        sourceReview:technicalReview,projection:projection,paperDefinition:paper,paperNet:descriptor.sourceNet,physicalStock:descriptor.stock,
+        constructionTechnicalPaths:descriptor.technicalPaths(technical)))
       rowHeight=max(rowHeight,projection.size.y);x+=projection.size.x+42
       if x>1600 {x=36;y+=rowHeight+56;rowHeight=0}
     }

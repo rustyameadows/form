@@ -1121,6 +1121,17 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
             interfaceCutColor:f.role == .construction ? frameColor:nil)
           context.restoreGState()
         }
+        if !f.constructionTechnicalPaths.isEmpty,session.store?.paperShowingGuides == true {
+          context.saveGState()
+          if let projection=f.projection {
+            if projection.isProof,let net=f.paperNet {
+              var matrix=CGAffineTransform(a:projection.sourceToLocal.a,b:projection.sourceToLocal.b,c:projection.sourceToLocal.c,d:projection.sourceToLocal.d,tx:projection.sourceToLocal.tx,ty:projection.sourceToLocal.ty)
+              if let boundary=PaperOutput.clipPath(net).copy(using:&matrix){context.addPath(boundary);context.clip(using:.evenOdd)}
+            }else{context.addPath(projection.clipPath);context.clip(using:.evenOdd)}
+          }
+          PaperOutput.drawConstructionReview(f.constructionTechnicalPaths,context:context,scale:scale)
+          context.restoreGState()
+        }
         if let sewing {
           context.saveGState()
           if let projection = f.projection, !projection.isProof {

@@ -16,6 +16,8 @@ public struct ConstructionArtworkProjection:Sendable {
   /// True only while the canonical paper reverse is still embedded (or absent).
   public let requiresInsideSource:Bool
   public let frame:PhysicalArtworkFrame
+  /// The same whole-piece crop/reflection authority used by ink and technical review.
+  public let canonicalToSource:Affine2
   public let sourceNet:PaperNet
   public let stock:PaperStock
   public let title:String
@@ -62,13 +64,34 @@ public struct ConstructionArtworkProjection:Sendable {
     let source=try mapping(in:project,object:object,paper:paper,net:net,component:component,inside:inside,context:context)
     return try panelID.map{try source.upright(panelID:$0,objectName:object.name,component:component,project:project)} ?? source
   }
+  /// Technical paths stay outside Artwork. Side and physical ownership are
+  /// filtered before the exact same crop/upright transform maps them locally.
+  public func technicalPaths(_ canonical:[ConstructionArtworkTechnicalPath])->[ConstructionArtworkTechnicalPath] {
+    canonical.compactMap {path in
+      guard path.componentID==componentID,path.side.map({($0 == .inside)==inside}) ?? true,
+        panelID==nil || path.panelID==nil || path.panelID==panelID else{return nil}
+      var local=path
+      func point(_ p:Point2)->Point2 {frame.sourceToLocal.apply(canonicalToSource.apply(p))}
+      local.points=path.points.map(point);local.holes=path.holes.map{$0.map(point)}
+      if panelID != nil {
+        let points=local.points+local.holes.flatMap{$0},padding=2.0
+        guard let minX=points.map(\.x).min(),let maxX=points.map(\.x).max(),
+          let minY=points.map(\.y).min(),let maxY=points.map(\.y).max(),
+          maxX>=(-padding),maxY>=(-padding),minX<=frame.size.x+padding,minY<=frame.size.y+padding else{return nil}
+      }
+      return local
+    }
+  }
   private static func mapping(in project:Project,object:ProductObject,paper:PaperConstruction,net:PaperNet,
     component:PlanarComponentDefinition,inside:Bool,context:PlanarAssemblySourceContext)throws->Self {
     guard let bounds=context.bounds[component.id],let stock=context.stocks[component.id] else{throw FormError.missing("The selected cut piece has no physical source bounds.")}
     let resolved=try source(in:project,object:object,paper:paper,component:component,inside:inside,context:context)
     let sourceID=resolved.sourceID,origin=resolved.origin,requiresInside=resolved.requiresInside,independentBack=resolved.independentBack
     let ids=Set(context.ownership[component.id] ?? []),dx=origin.x-bounds.x,dy=origin.y-bounds.y
-    func point(_ p:Point2)->Point2 {.init(independentBack ? origin.x+bounds.width-(p.x-bounds.x):p.x+dx,p.y+dy)}
+    let canonicalToSource=independentBack
+      ? Affine2(a:-1,b:0,c:0,d:1,tx:origin.x+bounds.width+bounds.x,ty:dy)
+      : Affine2.translation(dx,dy)
+    func point(_ p:Point2)->Point2 {canonicalToSource.apply(p)}
     var sourceNet=net
     sourceNet.panels=net.panels.filter{ids.contains($0.id)}.map {panel in
       var panel=panel;panel.polygon=panel.polygon.map(point)
@@ -81,7 +104,7 @@ public struct ConstructionArtworkProjection:Sendable {
     var transform=Affine2.translation(-origin.x,-origin.y)
     if inside && !independentBack {transform=Affine2(a:-1,b:0,c:0,d:1,tx:bounds.width,ty:0).followed(by:transform)}
     return .init(componentID:component.id,panelID:nil,inside:inside,sourceObjectID:sourceID,requiresInsideSource:requiresInside,
-      frame:.init(size:.init(bounds.width,bounds.height),sourceToLocal:transform),sourceNet:sourceNet,stock:stock,
+      frame:.init(size:.init(bounds.width,bounds.height),sourceToLocal:transform),canonicalToSource:canonicalToSource,sourceNet:sourceNet,stock:stock,
       title:object.name+" · "+component.name+" · "+(inside ? "Reverse":"Front")+" pattern")
   }
   private static func source(in project:Project,object:ProductObject,paper:PaperConstruction,component:PlanarComponentDefinition,
@@ -109,7 +132,7 @@ public struct ConstructionArtworkProjection:Sendable {
     let declaration=inside ? component.back:component.front
     let registeredReverse=inside && (declaration==nil || (declaration?.sourceSide == .inside && project.objects.first(where:{$0.id==declaration?.sourceObjectID}).map(PaperConstruction.isPaper)==true))
     return .init(componentID:componentID,panelID:panelID,inside:inside,sourceObjectID:sourceObjectID,requiresInsideSource:requiresInsideSource,
-      frame:try .paper(net:sourceNet,panelID:panelID,inside:registeredReverse),sourceNet:sourceNet,stock:stock,
+      frame:try .paper(net:sourceNet,panelID:panelID,inside:registeredReverse),canonicalToSource:canonicalToSource,sourceNet:sourceNet,stock:stock,
       title:objectName+" · "+panel.name+" · "+(inside ? "Reverse":"Front"))
   }
 }

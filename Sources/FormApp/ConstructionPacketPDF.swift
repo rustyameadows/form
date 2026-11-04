@@ -65,22 +65,59 @@ import FormGraphics
       for batch in model.layouts.batches {for index in 0..<batch.sheetCount {
         pages+=1;guard pages<=256 else{throw FormError.invalid("Material proof exceeds 256 pages; split its production scope.")}
         let height=batch.format.surface == .roll ? batch.usedLengthMM:batch.format.lengthMM
+        let annotations=model.production.labels ? ConstructionPacketDrawing.materialLayoutAnnotations(batch,sheetIndex:index):nil
+        let labelsByPiece=Dictionary(grouping:annotations?.placements ?? [],by:\.pieceID).mapValues{Dictionary(uniqueKeysWithValues:$0.map{($0.copy,$0)})}
         try page(context,width:batch.format.widthMM,height:height) {context in
           context.setStrokeColor(NSColor.black.cgColor);context.setLineWidth(0.18)
           for placement in batch.placements where placement.sheetIndex==index {
             guard let piece=byID[placement.pieceID] else{continue}
             for contour in piece.cutContours {line(contour.map(placement.transform.apply),closed:true,context:context)};context.strokePath()
-            if model.production.labels {
-              let label=ConstructionPacketDrawing.materialLayoutLabel(in:placement.bounds)
+            if let annotation=labelsByPiece[placement.pieceID]?[placement.copy] {
+              let label=annotation.frame
               context.saveGState();context.translateBy(x:label.origin.x,y:label.origin.y);context.rotate(by:label.rotationDegrees * .pi/180)
-              text("\(piece.id) / copy \(placement.copy)",x:0,y:0,width:label.size.x,height:label.size.y,size:label.fontSize)
+              text(annotation.text,x:0,y:0,width:label.size.x,height:label.size.y,size:label.fontSize,monospaced:true)
               context.restoreGState()
             }
           }
           if model.production.labels {text(batch.stock.name+" / \(amount(batch.stock.resolvedThicknessMM)) mm / sheet \(index+1) / 1:1",x:batch.format.marginMM,y:2,width:batch.format.widthMM-batch.format.marginMM*2,height:5,size:2.5)}
         }
+        for (keyIndex,entries) in (annotations?.keyPages ?? []).enumerated() {
+          pages+=1;guard pages<=256 else{throw FormError.invalid("Material proof and annotation keys exceed256 pages; split its production scope.")}
+          let size=ConstructionPacketDrawing.materialKeyPageSize
+          try page(context,width:size.x,height:size.y) {_ in
+            text("Placement key / annotation only",x:15,y:12,width:180,height:8,size:5,bold:true)
+            text("Batch \(batch.id) / sheet \(index+1) / key page \(keyIndex+1) of \(annotations?.keyPages.count ?? 0)",x:15,y:23,width:180,height:9,size:2.8)
+            text("Full identities for numbered stock-layout labels. This page is not a cutting sheet.",x:15,y:34,width:180,height:10,size:2.6)
+            var y=52.0
+            for entry in entries {
+              for line in entry.lines {
+                text(line,x:15,y:y,width:180,height:ConstructionPacketDrawing.materialKeyLineHeight,size:ConstructionPacketDrawing.materialKeyFontSize,monospaced:true)
+                y+=ConstructionPacketDrawing.materialKeyLineHeight
+              }
+              y+=ConstructionPacketDrawing.materialKeyLineHeight
+            }
+          }
+        }
       }}
     }
+  }
+  /// Explicit page roles keep review keys from being mistaken for physical
+  /// stock sheets by packet consumers and scale/quantity verification.
+  static func materialLayoutPageIndex(_ model:ConstructionPacketModel)->[[String:Any]] {
+    var result=[[String:Any]]()
+    for batch in model.layouts.batches {for index in 0..<batch.sheetCount {
+      result.append(["page":result.count+1,"role":"actualSizeStock","batch_id":batch.id,"sheet_index":index,
+        "width_mm":batch.format.widthMM,"height_mm":batch.format.surface == .roll ? batch.usedLengthMM:batch.format.lengthMM,"annotation_only":false])
+      if model.production.labels {
+        let annotations=ConstructionPacketDrawing.materialLayoutAnnotations(batch,sheetIndex:index)
+        for (keyIndex,entries) in annotations.keyPages.enumerated() {
+          result.append(["page":result.count+1,"role":"labelKey","batch_id":batch.id,"sheet_index":index,"key_page_index":keyIndex,
+            "width_mm":ConstructionPacketDrawing.materialKeyPageSize.x,"height_mm":ConstructionPacketDrawing.materialKeyPageSize.y,"annotation_only":true,
+            "entries":entries.map{["key":$0.key,"piece_id":$0.pieceID,"copy":$0.copy] as [String:Any]}])
+        }
+      }
+    }}
+    return result
   }
   static func assembly(_ model:ConstructionPacketModel)throws->Data {
     try make(model.name+" / assembly and section reference") {context in

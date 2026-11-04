@@ -121,4 +121,65 @@ import XCTest
     project.objects[try XCTUnwrap(project.objects.firstIndex{$0.id==id})].paperConstruction!.authored!.production!.labels=true
     XCTAssertEqual(try JSONEncoder.form.encode(project),before)
   }
+  func testTinyPlacementKeysRetainReadableFullIdentityInSeparatePDFAndSVGWithExactStockPages()throws {
+    let(store,id,root,_)=try fixture();defer{release(store,root)}
+    var project=try XCTUnwrap(store.project),owner=try XCTUnwrap(project.objects.first{$0.id==id})
+    owner.paperConstruction!.authored!.panels[0].polygon=[.init(0,0),.init(16,0),.init(16,4),.init(0,4)]
+    owner.paperConstruction!.authored!.panels[1].polygon=[.init(70,0),.init(74,0),.init(74,16),.init(70,16)]
+    owner.paperConstruction!.authored!.production!.guides=[]
+    owner.paperConstruction!.authored!.production!.materials[0].allowRotation=false
+    owner.paperConstruction!.authored!.production!.materials[0].widthMM=250
+    owner.paperConstruction!.authored!.production!.materials[0].lengthMM=400
+    owner.paperConstruction!.authored!.production!.quantity=2
+    for index in owner.paperConstruction!.authored!.components!.indices {
+      owner.paperConstruction!.authored!.components![index].front=nil
+      owner.paperConstruction!.authored!.components![index].finishes=nil
+    }
+    let ownerIndex=try XCTUnwrap(project.objects.firstIndex{$0.id==id});project.objects[ownerIndex]=owner;store.engine.project=project
+    let model=try ConstructionPacketModel(project:project,object:owner),pages=ConstructionPacketPDF.materialLayoutPageIndex(model)
+    XCTAssertTrue(model.isValid,model.issues.map(\.message).joined(separator:"\n"))
+    XCTAssertEqual(pages.compactMap{$0["role"] as? String},["actualSizeStock","labelKey","actualSizeStock","labelKey"])
+    let destination=store.repository.url(for:project.id).appendingPathComponent("Exports/tiny-placement-keys")
+    _=try ConstructionPacketOutput.export(store:store,objectID:id,arguments:["format":"packet","path":destination.path])
+    let document=try XCTUnwrap(PDFDocument(url:destination.appendingPathComponent("Material-layout-proofs.pdf")))
+    XCTAssertEqual(document.pageCount,pages.count)
+    let contents=(document.string ?? "").replacingOccurrences(of:"\n",with:" ")
+    XCTAssertTrue(contents.contains("This page is not a cutting sheet."))
+    for descriptor in pages {
+      let page=try XCTUnwrap(document.page(at:try XCTUnwrap(descriptor["page"] as? Int)-1)),bounds=page.bounds(for:.mediaBox)
+      XCTAssertEqual(bounds.width,try XCTUnwrap(descriptor["width_mm"] as? Double)*72/25.4,accuracy:0.02)
+      XCTAssertEqual(bounds.height,try XCTUnwrap(descriptor["height_mm"] as? Double)*72/25.4,accuracy:0.02)
+    }
+    for batch in model.layouts.batches {
+      let plan=ConstructionPacketDrawing.materialLayoutAnnotations(batch,sheetIndex:0)
+      XCTAssertTrue(plan.placements.allSatisfy{$0.key != nil});XCTAssertEqual(plan.keyPages.count,1)
+      let stockSVG=ConstructionPacketDrawing.layoutSVG(batch,sheetIndex:0,pieces:model.pieces)
+      let keys=ConstructionPacketDrawing.layoutLabelKeySVGs(batch,sheetIndex:0).joined()
+      XCTAssertTrue(stockSVG.contains("width=\"250.0mm\""));XCTAssertTrue(stockSVG.contains("height=\"400.0mm\""))
+      for annotation in plan.placements {
+        let identity="\(annotation.pieceID) / copy \(annotation.copy)",key=try XCTUnwrap(annotation.key)
+        XCTAssertTrue(contents.contains(identity));XCTAssertTrue(keys.contains(identity))
+        XCTAssertTrue(stockSVG.contains("data-key=\"\(key)\""));XCTAssertFalse(stockSVG.contains(identity),"Tiny stock placements must show a key instead of an overflowing full label.")
+        XCTAssertTrue(keys.contains("data-role=\"label-key-entry\" data-key=\"\(key)\""))
+      }
+    }
+    let manifest=try XCTUnwrap(JSONSerialization.jsonObject(with:Data(contentsOf:destination.appendingPathComponent("Manifest.json"))) as? [String:Any])
+    let index=try XCTUnwrap(manifest["material_layout_pdf_pages"] as? [[String:Any]])
+    XCTAssertEqual(index.compactMap{$0["role"] as? String},pages.compactMap{$0["role"] as? String})
+    let files=try XCTUnwrap(manifest["files"] as? [[String:Any]]),companions=files.filter{$0["role"] as? String=="layoutLabelKey"}
+    XCTAssertEqual(companions.count,2)
+    for file in companions {
+      let path=try XCTUnwrap(file["path"] as? String),data=try Data(contentsOf:destination.appendingPathComponent(path))
+      XCTAssertEqual(ConstructionMaterialLayouts.digest(data),file["sha256"] as? String)
+    }
+    owner.paperConstruction!.authored!.production!.labels=false;project.objects[ownerIndex]=owner;store.engine.project=project
+    let silent=try ConstructionPacketModel(project:project,object:owner)
+    XCTAssertEqual(silent.layouts.batches,model.layouts.batches)
+    XCTAssertTrue(ConstructionPacketPDF.materialLayoutPageIndex(silent).allSatisfy{$0["role"] as? String=="actualSizeStock"})
+    let silentDestination=store.repository.url(for:project.id).appendingPathComponent("Exports/tiny-without-labels")
+    let result=try XCTUnwrap(ConstructionPacketOutput.export(store:store,objectID:id,arguments:["format":"packet","path":silentDestination.path]) as? [String:Any])
+    XCTAssertFalse((result["files"] as? [String] ?? []).contains{$0.contains("label-key")})
+    let silentPDF=try XCTUnwrap(PDFDocument(url:silentDestination.appendingPathComponent("Material-layout-proofs.pdf")))
+    XCTAssertEqual(silentPDF.pageCount,2);XCTAssertFalse((silentPDF.string ?? "").contains(" / copy "))
+  }
 }
