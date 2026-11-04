@@ -9,11 +9,11 @@ This pass starts from PR #36 at `7c377931`. The user selected **Paper and finish
 - [x] Add independent paper cut-edge appearance with physical edge coordinates, per-stock/per-ply control, legacy decoding, strict MCP editing, and unchanged fabrication geometry.
 - [x] Add a physical relief shoulder radius for letterpress, embossing and foil, separate from crisp artwork coverage and manufacturing depth/height. Preserve the legacy transition when the field is absent.
 - [ ] Author restrained paper edge fibers and compare materially different finish shoulders in the editable study through ordinary LAB tools. Retain previous definitions and failed trials.
-- [ ] Preserve the current Studio lighting when converting a preset into editable area lights or adding a light. Verify native controls, persistence, and Undo.
-- [ ] Show the selected texture map, its dimensions/encoding and physical repeat size in the native appearance editor; identify local versus inherited surface appearance.
+- [x] Preserve the current Studio lighting when converting a preset into editable area lights or adding a light. Verify native controls, persistence, and Undo.
+- [x] Show the selected texture map, its dimensions/encoding and physical repeat size in the native appearance editor; identify local versus inherited surface appearance.
 - [x] Make saved paper stocks portable across projects by preserving and verifying their face, back, ply and cut-edge texture files. Preserve existing project material identities and ordinary built-in material selection.
 - [ ] Capture matched whole, macro, and changed-light LAB comparisons. Record discrepancies honestly; do not substitute test results for visual review.
-- [ ] Build, validate, and install the verified candidate in the single ordinary LAB location with a rollback. Restore the user's original project and camera.
+- [x] Build, validate, and install the verified candidate in the single ordinary LAB location with a rollback. Restore the user's original project and camera.
 - [ ] Run focused contracts and regressions, publish reproducible evidence, commit, and push to [PR #36](https://github.com/rustyameadows/form/pull/36).
 
 ## Follow-on work to evaluate separately
@@ -24,4 +24,4 @@ This pass starts from PR #36 at `7c377931`. The user selected **Paper and finish
 
 The follow-on items are open work, not claims of completed fidelity. Manufacturer photographs stay linked/private when redistribution rights are unavailable. New derived assets must record their licenses, physical repeat size, and estimated rather than measured parameters.
 
-Current engineering gate: 2,621 release tests passed, zero failed; three optional external-project performance tests skipped. All 30 Python checks passed, and the edge assets reproduced byte-for-byte. Installed native interaction and visual acceptance remain pending.
+Current engineering gate: 2,621 release tests passed, zero failed; three optional external-project performance tests skipped. The edge assets reproduced byte-for-byte. The exact signed candidate at `2477730` passed relocated CPU/Metal checks with development paths and network denied, and is installed in the ordinary app with a rollback. Native material edits, Cancel, Undo/Redo, lighting conversion, save/reopen, and the 39-object Metal Table preview passed; the original project's 11 protected fields and Canvas selection were restored. See [native evidence](validation/cycles/materiality-followup/native-interactions.json). The further paper/finish visual comparisons remain in progress.
