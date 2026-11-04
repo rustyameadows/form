@@ -316,7 +316,7 @@
         "test": "ConstructionMaterialSchemaTests.testEarlierCycles66AndPaper67DecodeAndResaveWithoutLosingSource",
         "classification": "test_fixture",
         "cause": "The fixture did not use the construction recipe defaults and referenced a finish target that was not present in its authored artwork. Strict artwork-link validation correctly rejected it.",
-        "fix": "Use PaperConstructionEngine.recipe and its defaults, include the recipe and a real artwork mark, and explicitly validate artwork links before save.",
+        "fix": "Use ConstructionSourceEditing.recipe and its defaults, include the recipe and a real artwork mark, and explicitly validate artwork links before save.",
         "path": "Tests/FormCoreTests/ConstructionMaterialSchemaTests.swift",
         "production_schema_validation_unchanged": true
       },

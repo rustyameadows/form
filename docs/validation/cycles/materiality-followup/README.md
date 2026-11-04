@@ -198,7 +198,7 @@ original regression and warm/rebuilt-cache checks pass.
 
 The ordinary app is now the exact signed candidate built from `20f27b83`, with
 its preceding installation retained for rollback. Relocated CPU and Metal
-renders passed with a cold cache, network denied and development paths
+renders passed with fresh LAB shader caches, network denied and development paths
 unavailable. The full bundle stayed unchanged and its signature verified before
 and after the gates. [Installation evidence](main-installation.json) records
 the binary, source, dependency and display-transform identities.
