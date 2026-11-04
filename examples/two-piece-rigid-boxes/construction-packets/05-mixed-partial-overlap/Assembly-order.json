@@ -1,0 +1,155 @@
+[
+  {
+    "after" : [
+
+    ],
+    "componentIDs" : [
+      "b-floor",
+      "b-n",
+      "b-e",
+      "b-s",
+      "b-w",
+      "l-floor",
+      "l-n",
+      "l-e",
+      "l-s",
+      "l-w",
+      "overlap-stop-n",
+      "overlap-stop-e",
+      "overlap-stop-s",
+      "overlap-stop-w"
+    ],
+    "id" : "cut",
+    "instructions" : "Cut separate boards, selected backing and physical seating parts at their nominal contours. Grain and all quantities come from each piece. No score or groove is implied on independent boards. Retain printed source registration.",
+    "jointIDs" : [
+
+    ],
+    "title" : "Cut independent stock"
+  },
+  {
+    "after" : [
+      "cut"
+    ],
+    "componentIDs" : [
+      "b-floor",
+      "b-n",
+      "b-e",
+      "b-s",
+      "b-w",
+      "l-floor",
+      "l-n",
+      "l-e",
+      "l-s",
+      "l-w"
+    ],
+    "id" : "boards",
+    "instructions" : "Dry assemble the selected floor and spanning-wall arrangement. Apply only the declared board glue regions. Where selected, drive the configured staples from the bare floor underside into the actual wall bottom edges. Inspect receiving depth and both leg paths. Do not substitute a carton or publication stapler. Tool settings require a physical sample.",
+    "jointIDs" : [
+      "b-floor-n",
+      "b-floor-e",
+      "b-floor-s",
+      "b-floor-w",
+      "l-floor-n",
+      "l-floor-e",
+      "l-floor-s",
+      "l-floor-w"
+    ],
+    "title" : "Assemble supported board joints"
+  },
+  {
+    "after" : [
+      "boards"
+    ],
+    "componentIDs" : [
+      "b-tape-n",
+      "b-tape-e",
+      "b-tape-s",
+      "b-tape-w",
+      "l-tape-n",
+      "l-tape-e",
+      "l-tape-s",
+      "l-tape-w"
+    ],
+    "id" : "tape",
+    "instructions" : "Apply each selected strip across the two scheduled floor/wall contact regions. Fold the physical strip; use its own length, width, caliper and effective bond. Tape remains visible when the interior is unlined.",
+    "jointIDs" : [
+
+    ],
+    "title" : "Apply actual inside seam tape"
+  },
+  {
+    "after" : [
+      "boards",
+      "tape"
+    ],
+    "componentIDs" : [
+      "b-band-p",
+      "b-patch-p"
+    ],
+    "id" : "b-cover-p-band",
+    "instructions" : "After the selected tape and any crown-leveling backing: Apply the separate exterior face patch first. Wrap the continuous five-segment wall band around the four boards; the front face is split at the adjustable seam position. Retain its physical overlapping seam flap, turn rim strips and inner flaps in, then overlap the bottom flaps over the face-patch border. The local recessed centre remains physical. Use this piece’s own stock/caliper, orientation, corner relief and adhesive assumption.",
+    "jointIDs" : [
+      "b-band-p-bond-n",
+      "b-band-p-bond-e",
+      "b-band-p-bond-s",
+      "b-band-p-bond-w",
+      "b-band-p-bond-front-tail",
+      "b-patch-p-cap-bond-board"
+    ],
+    "title" : "Base · paper · wall band and face patch"
+  },
+  {
+    "after" : [
+      "boards",
+      "tape"
+    ],
+    "componentIDs" : [
+      "l-band-c",
+      "l-patch-c"
+    ],
+    "id" : "l-cover-c-band",
+    "instructions" : "After the selected tape and any crown-leveling backing: Apply the separate exterior face patch first. Wrap the continuous five-segment wall band around the four boards; the front face is split at the adjustable seam position. Retain its physical overlapping seam flap, turn rim strips and inner flaps in, then overlap the bottom flaps over the face-patch border. The local recessed centre remains physical. Use this piece’s own stock/caliper, orientation, corner relief and adhesive assumption.",
+    "jointIDs" : [
+      "l-band-c-bond-n",
+      "l-band-c-bond-e",
+      "l-band-c-bond-s",
+      "l-band-c-bond-w",
+      "l-band-c-bond-front-tail",
+      "l-patch-c-cap-bond-board"
+    ],
+    "title" : "Lid · backed fabric · wall band and face patch"
+  },
+  {
+    "after" : [
+      "boards",
+      "tape",
+      "l-cover-c-band"
+    ],
+    "componentIDs" : [
+      "l-liner-floor"
+    ],
+    "id" : "l-line-floor",
+    "instructions" : "After this half’s selected covering: apply the declared adhesive regions and independent floor lining pieces. Respect their actual tape setback, turn-in setback, caliper and face orientation. No omitted lining is implied by this step.",
+    "jointIDs" : [
+      "l-liner-floor-bond"
+    ],
+    "title" : "Lid · floor / top liner"
+  },
+  {
+    "after" : [
+      "boards"
+    ],
+    "componentIDs" : [
+      "overlap-stop-n",
+      "overlap-stop-e",
+      "overlap-stop-s",
+      "overlap-stop-w"
+    ],
+    "id" : "overlap-stops",
+    "instructions" : "Bond the four dimensioned ledges on the finished base exterior below the sliding region. The lowest lid rim seats on their upper faces. Review overlap and reveal in the closed section.",
+    "jointIDs" : [
+
+    ],
+    "title" : "Locked overlap · physical stop ledges"
+  }
+]

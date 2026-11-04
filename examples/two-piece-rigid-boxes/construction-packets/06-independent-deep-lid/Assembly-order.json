@@ -1,0 +1,142 @@
+[
+  {
+    "after" : [
+
+    ],
+    "componentIDs" : [
+      "b-floor",
+      "b-n",
+      "b-e",
+      "b-s",
+      "b-w",
+      "l-floor",
+      "l-n",
+      "l-e",
+      "l-s",
+      "l-w"
+    ],
+    "id" : "cut",
+    "instructions" : "Cut separate boards, selected backing and physical seating parts at their nominal contours. Grain and all quantities come from each piece. No score or groove is implied on independent boards. Retain printed source registration.",
+    "jointIDs" : [
+
+    ],
+    "title" : "Cut independent stock"
+  },
+  {
+    "after" : [
+      "cut"
+    ],
+    "componentIDs" : [
+      "b-floor",
+      "b-n",
+      "b-e",
+      "b-s",
+      "b-w",
+      "l-floor",
+      "l-n",
+      "l-e",
+      "l-s",
+      "l-w"
+    ],
+    "id" : "boards",
+    "instructions" : "Dry assemble the selected floor and spanning-wall arrangement. Apply only the declared board glue regions. Where selected, drive the configured staples from the bare floor underside into the actual wall bottom edges. Inspect receiving depth and both leg paths. Do not substitute a carton or publication stapler. Tool settings require a physical sample.",
+    "jointIDs" : [
+      "b-floor-n",
+      "b-floor-e",
+      "b-floor-s",
+      "b-floor-w",
+      "l-floor-n",
+      "l-floor-e",
+      "l-floor-s",
+      "l-floor-w"
+    ],
+    "title" : "Assemble supported board joints"
+  },
+  {
+    "after" : [
+      "boards"
+    ],
+    "componentIDs" : [
+      "b-cross-c"
+    ],
+    "id" : "b-cover-c-cross",
+    "instructions" : "After the selected tape and any crown-leveling backing: Apply the declared exterior-face and side adhesive regions. Fold four outer wings, then the four relieved corner tabs, the actual caliper traversals and the independent edge turn-ins. Keep the corner tabs beneath the adjacent side covering; they remain real local double layers. Use this piece’s own stock/caliper, orientation, corner relief and adhesive assumption.",
+    "jointIDs" : [
+      "b-cross-c-bond-n",
+      "b-cross-c-bond-e",
+      "b-cross-c-bond-s",
+      "b-cross-c-bond-w",
+      "b-cross-c-cap-bond-board"
+    ],
+    "title" : "Base · backed fabric · complete cross wrap"
+  },
+  {
+    "after" : [
+      "boards",
+      "b-cover-c-cross"
+    ],
+    "componentIDs" : [
+      "b-liner-floor"
+    ],
+    "id" : "b-line-floor",
+    "instructions" : "After this half’s selected covering: apply the declared adhesive regions and independent floor lining pieces. Respect their actual tape setback, turn-in setback, caliper and face orientation. No omitted lining is implied by this step.",
+    "jointIDs" : [
+      "b-liner-floor-bond"
+    ],
+    "title" : "Base · floor / top liner"
+  },
+  {
+    "after" : [
+      "boards"
+    ],
+    "componentIDs" : [
+      "l-cross-p"
+    ],
+    "id" : "l-cover-p-cross",
+    "instructions" : "After the selected tape and any crown-leveling backing: Apply the declared exterior-face and side adhesive regions. Fold four outer wings, then the four relieved corner tabs, the actual caliper traversals and the independent edge turn-ins. Keep the corner tabs beneath the adjacent side covering; they remain real local double layers. Use this piece’s own stock/caliper, orientation, corner relief and adhesive assumption.",
+    "jointIDs" : [
+      "l-cross-p-bond-n",
+      "l-cross-p-bond-e",
+      "l-cross-p-bond-s",
+      "l-cross-p-bond-w",
+      "l-cross-p-cap-bond-board"
+    ],
+    "title" : "Lid · paper · complete cross wrap"
+  },
+  {
+    "after" : [
+      "boards",
+      "l-cover-p-cross"
+    ],
+    "componentIDs" : [
+      "l-liner-floor"
+    ],
+    "id" : "l-line-floor",
+    "instructions" : "After this half’s selected covering: apply the declared adhesive regions and independent floor lining pieces. Respect their actual tape setback, turn-in setback, caliper and face orientation. No omitted lining is implied by this step.",
+    "jointIDs" : [
+      "l-liner-floor-bond"
+    ],
+    "title" : "Lid · floor / top liner"
+  },
+  {
+    "after" : [
+      "boards",
+      "l-cover-p-cross"
+    ],
+    "componentIDs" : [
+      "l-liner-n",
+      "l-liner-e",
+      "l-liner-s",
+      "l-liner-w"
+    ],
+    "id" : "l-line-walls",
+    "instructions" : "After this half’s selected covering: apply the declared adhesive regions and independent walls lining pieces. Respect their actual tape setback, turn-in setback, caliper and face orientation. No omitted lining is implied by this step.",
+    "jointIDs" : [
+      "l-liner-n-bond",
+      "l-liner-e-bond",
+      "l-liner-s-bond",
+      "l-liner-w-bond"
+    ],
+    "title" : "Lid · wall liners"
+  }
+]

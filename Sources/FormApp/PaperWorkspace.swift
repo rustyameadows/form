@@ -16,6 +16,7 @@ extension StudioStore {
     if primary?.id != objectID { select(objectID) }
     if paperSelectionObjectID != objectID { paperSelectedFoldID = nil }
     paperSelectionObjectID = objectID
+    constructionTableTarget = nil
     paperSelectedPanelID = panelID
     if let foldID=paperSelectedFoldID,net.folds.first(where:{$0.id==foldID})?.childPanelID != panelID {paperSelectedFoldID=nil}
     changed(save: false)
@@ -155,7 +156,7 @@ struct PaperWorkspaceView: View {
   private var visibilityControls:some View {
     HStack(spacing:10) {
       Toggle("Artwork",isOn:$store.paperShowingArtwork)
-      Toggle("Guides",isOn:$store.paperShowingGuides)
+      Toggle("Guides",isOn:$store.paperShowingGuides).help("View-only cuts, seams, turn-ins, adhesive exclusions and fastener placement. These review marks are excluded from printing.")
     }.toggleStyle(.checkbox).font(.system(size:10)).fixedSize()
   }
 }
@@ -169,9 +170,14 @@ struct PaperEnvironmentControls: View {
   @State private var note = ""
   private var definition: PaperConstruction? { try? .definition(for:object) }
   var body: some View {
+    if PartAssemblyInspector.applies(to:object) {PartAssemblyInspector(object:object).id((store.project?.id.uuidString ?? "")+object.id.uuidString)}
+    else {legacyControls}
+  }
+  private var legacyControls:some View {
     ScrollView {
       VStack(alignment:.leading,spacing:InspectorStyle.sectionSpacing) {
         LinkedObjectInspectorModule(object: object, session: store.artworkSession)
+        if let source=definition?.authored,source.version<4,source.components?.isEmpty==false {PartAssemblyAdoptionControls(object:object).id((store.project?.id.uuidString ?? "")+object.id.uuidString)}
         if let project=store.project {SheetDimensionRelationships(session:store.artworkSession,objectID:object.id,projectID:project.id)}
         if let definition {
           if store.environment == .form { appearance(definition) }

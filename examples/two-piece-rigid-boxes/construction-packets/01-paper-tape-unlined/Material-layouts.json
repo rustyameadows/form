@@ -1,0 +1,639 @@
+{
+  "batches" : [
+    {
+      "candidateChecks" : 110,
+      "cutAreaMM2" : 102920.83999999998,
+      "format" : {
+        "allowRotation" : true,
+        "componentIDs" : [
+          "b-floor",
+          "b-n",
+          "b-e",
+          "b-s",
+          "b-w",
+          "l-floor",
+          "l-n",
+          "l-e",
+          "l-s",
+          "l-w"
+        ],
+        "grain" : "bidirectional",
+        "id" : "board",
+        "lengthMM" : 1000,
+        "marginMM" : 10,
+        "name" : "Board stock",
+        "spacingMM" : 3,
+        "surface" : "sheet",
+        "wasteAllowanceFraction" : 0.08,
+        "widthMM" : 700
+      },
+      "id" : "board-83b9e6c11a03",
+      "placements" : [
+        {
+          "bounds" : {
+            "height" : 190.8,
+            "width" : 140.4,
+            "x" : 10,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 10,
+            "y" : 10
+          },
+          "pieceID" : "l-floor",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 10,
+            "ty" : 200.8
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 184.4,
+            "width" : 134.4,
+            "x" : 153.4,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 153.4,
+            "y" : 10
+          },
+          "pieceID" : "b-floor",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 153.4,
+            "ty" : 194.4
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 184.4,
+            "width" : 54.94999999999999,
+            "x" : 290.8,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 290.8,
+            "y" : 10
+          },
+          "pieceID" : "b-n",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 290.8,
+            "ty" : 194.4
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 184.4,
+            "width" : 54.950000000000045,
+            "x" : 348.75,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 348.75,
+            "y" : 10
+          },
+          "pieceID" : "b-s",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 348.75,
+            "ty" : 194.4
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 130.4,
+            "width" : 54.94999999999999,
+            "x" : 406.70000000000005,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 406.70000000000005,
+            "y" : 10
+          },
+          "pieceID" : "b-e",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 406.70000000000005,
+            "ty" : 140.4
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 130.4,
+            "width" : 54.94999999999999,
+            "x" : 464.65000000000003,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 464.65000000000003,
+            "y" : 10
+          },
+          "pieceID" : "b-w",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 464.65000000000003,
+            "ty" : 140.4
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 190.8,
+            "width" : 25.600000000000023,
+            "x" : 522.6,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 522.6,
+            "y" : 10
+          },
+          "pieceID" : "l-n",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 522.6,
+            "ty" : 200.8
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 190.8,
+            "width" : 25.600000000000023,
+            "x" : 551.2,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 551.2,
+            "y" : 10
+          },
+          "pieceID" : "l-s",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 551.2,
+            "ty" : 200.8
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 136.4,
+            "width" : 25.600000000000023,
+            "x" : 579.8000000000001,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 579.8000000000001,
+            "y" : 10
+          },
+          "pieceID" : "l-e",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 579.8000000000001,
+            "ty" : 146.4
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 136.4,
+            "width" : 25.600000000000023,
+            "x" : 608.4000000000001,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 608.4000000000001,
+            "y" : 10
+          },
+          "pieceID" : "l-w",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 608.4000000000001,
+            "ty" : 146.4
+          }
+        }
+      ],
+      "sheetCount" : 1,
+      "stock" : {
+        "grain" : "parallelWidth",
+        "name" : "Recycled greyboard",
+        "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+        "profile" : {
+          "color" : "#AEA58F",
+          "opacity" : 1,
+          "roughness" : 0.9,
+          "texture" : "recycled",
+          "textureDepthMM" : 0.012,
+          "textureScaleMM" : 0.8
+        },
+        "thicknessMM" : 2,
+        "verified" : false
+      },
+      "stockAreaMM2" : 700000,
+      "stockDigest" : "83b9e6c11a0356185db9e295b7ae093515f8f2aa03432f233374cd05b81a9346",
+      "usedLengthMM" : 210.8
+    },
+    {
+      "candidateChecks" : 3,
+      "cutAreaMM2" : 124361.60800000002,
+      "format" : {
+        "allowRotation" : true,
+        "componentIDs" : [
+          "b-cross-p",
+          "b-band-p",
+          "b-patch-p",
+          "b-cross-c",
+          "b-band-c",
+          "b-patch-c",
+          "l-cross-p",
+          "l-band-p",
+          "l-patch-p",
+          "l-cross-c",
+          "l-band-c",
+          "l-patch-c"
+        ],
+        "grain" : "directional",
+        "id" : "covering",
+        "lengthMM" : 2000,
+        "marginMM" : 10,
+        "name" : "Covering stock / paper and fabric partitioned by actual stock",
+        "spacingMM" : 3,
+        "surface" : "roll",
+        "wasteAllowanceFraction" : 0.08,
+        "widthMM" : 1400
+      },
+      "id" : "covering-ce1f28ef80a2",
+      "placements" : [
+        {
+          "bounds" : {
+            "height" : 323.5,
+            "width" : 273.5,
+            "x" : 10,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 10,
+            "y" : 10
+          },
+          "pieceID" : "b-cross-p",
+          "rotationDegrees" : 90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : 1,
+            "c" : -1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 283.5,
+            "ty" : 9.999999999999996
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 271.2,
+            "width" : 220.8,
+            "x" : 286.5,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 286.5,
+            "y" : 10
+          },
+          "pieceID" : "l-cross-p",
+          "rotationDegrees" : 90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : 1,
+            "c" : -1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 507.3,
+            "ty" : 9.999999999999998
+          }
+        }
+      ],
+      "sheetCount" : 1,
+      "stock" : {
+        "grain" : "parallelWidth",
+        "gsm" : 130,
+        "name" : "Uncoated oat covering paper",
+        "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+        "profile" : {
+          "color" : "#E7DFCE",
+          "opacity" : 1,
+          "roughness" : 0.9,
+          "texture" : "laid",
+          "textureDepthMM" : 0.012,
+          "textureScaleMM" : 0.8
+        },
+        "thicknessMM" : 0.16,
+        "verified" : false
+      },
+      "stockAreaMM2" : 480900,
+      "stockDigest" : "ce1f28ef80a2037fcf84c52d5a506d167eaa4a9a757fa42dbec5e4ce7d6ae022",
+      "usedLengthMM" : 343.5
+    },
+    {
+      "candidateChecks" : 36,
+      "cutAreaMM2" : 7980.000000000001,
+      "format" : {
+        "allowRotation" : true,
+        "componentIDs" : [
+          "b-tape-n",
+          "b-tape-e",
+          "b-tape-s",
+          "b-tape-w",
+          "l-tape-n",
+          "l-tape-e",
+          "l-tape-s",
+          "l-tape-w"
+        ],
+        "grain" : "directional",
+        "id" : "tape",
+        "lengthMM" : 2000,
+        "marginMM" : 10,
+        "name" : "Reinforcement tape master stock",
+        "spacingMM" : 3,
+        "surface" : "roll",
+        "wasteAllowanceFraction" : 0.08,
+        "widthMM" : 500
+      },
+      "id" : "tape-c9837fcd56fd",
+      "placements" : [
+        {
+          "bounds" : {
+            "height" : 170.8,
+            "width" : 7.000000000000011,
+            "x" : 10,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 10,
+            "y" : 10
+          },
+          "pieceID" : "l-tape-n",
+          "rotationDegrees" : 90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : 1,
+            "c" : -1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 17,
+            "ty" : 10
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 170.8,
+            "width" : 7.000000000000011,
+            "x" : 20.00000000000001,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 20.00000000000001,
+            "y" : 10
+          },
+          "pieceID" : "l-tape-s",
+          "rotationDegrees" : 90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : 1,
+            "c" : -1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 27.00000000000001,
+            "ty" : 10
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 164.4,
+            "width" : 7.000000000000007,
+            "x" : 30.00000000000002,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 30.00000000000002,
+            "y" : 10
+          },
+          "pieceID" : "b-tape-n",
+          "rotationDegrees" : 90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : 1,
+            "c" : -1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 37.00000000000002,
+            "ty" : 10
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 164.4,
+            "width" : 7.000000000000007,
+            "x" : 40.00000000000003,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 40.00000000000003,
+            "y" : 10
+          },
+          "pieceID" : "b-tape-s",
+          "rotationDegrees" : 90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : 1,
+            "c" : -1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 47.00000000000003,
+            "ty" : 10
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 120.4,
+            "width" : 7.000000000000007,
+            "x" : 50.000000000000036,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 50.000000000000036,
+            "y" : 10
+          },
+          "pieceID" : "l-tape-e",
+          "rotationDegrees" : 90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : 1,
+            "c" : -1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 57.000000000000036,
+            "ty" : 10
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 120.4,
+            "width" : 7.000000000000014,
+            "x" : 60.00000000000004,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 60.00000000000004,
+            "y" : 10
+          },
+          "pieceID" : "l-tape-w",
+          "rotationDegrees" : 90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : 1,
+            "c" : -1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 67.00000000000004,
+            "ty" : 10
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 114.4,
+            "width" : 7,
+            "x" : 70.00000000000006,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 70.00000000000006,
+            "y" : 10
+          },
+          "pieceID" : "b-tape-e",
+          "rotationDegrees" : 90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : 1,
+            "c" : -1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 77.00000000000006,
+            "ty" : 10
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 114.4,
+            "width" : 7,
+            "x" : 80.00000000000006,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 80.00000000000006,
+            "y" : 10
+          },
+          "pieceID" : "b-tape-w",
+          "rotationDegrees" : 90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : 1,
+            "c" : -1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 87.00000000000006,
+            "ty" : 10
+          }
+        }
+      ],
+      "sheetCount" : 1,
+      "stock" : {
+        "grain" : "parallelWidth",
+        "gsm" : 100,
+        "name" : "Gummed kozo reinforcement tape",
+        "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+        "profile" : {
+          "color" : "#CDBA91",
+          "opacity" : 1,
+          "roughness" : 0.9,
+          "texture" : "laid",
+          "textureDepthMM" : 0.012,
+          "textureScaleMM" : 0.8
+        },
+        "thicknessMM" : 0.12,
+        "verified" : false
+      },
+      "stockAreaMM2" : 95400,
+      "stockDigest" : "c9837fcd56fd58418b06c8229be40cdf855a8cb443795de5f629cdc34de5f238",
+      "usedLengthMM" : 190.8
+    }
+  ],
+  "issues" : [
+
+  ]
+}

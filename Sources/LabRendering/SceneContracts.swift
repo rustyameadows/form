@@ -42,6 +42,18 @@ public struct SceneMeshPayload: Sendable {
 }
 public enum SceneTextureWrap: String, Sendable { case repeatMode, clamp, mirror }
 public enum SceneTextureChannel: String, Sendable { case rgba, red, green, blue, alpha }
+public enum SceneTextureFilter:String,Sendable {case none,nearest,linear}
+public struct SceneTextureSampling:Sendable {
+  public var minification:SceneTextureFilter,magnification:SceneTextureFilter,mip:SceneTextureFilter
+  public var maximumAnisotropy:Double
+  public init(minification:SceneTextureFilter = .linear,magnification:SceneTextureFilter = .linear,mip:SceneTextureFilter = .linear,maximumAnisotropy:Double=1) {
+    self.minification=minification;self.magnification=magnification;self.mip=mip;self.maximumAnisotropy=maximumAnisotropy
+  }
+  public var revision:String {"\(minification.rawValue):\(magnification.rawValue):\(mip.rawValue):\(maximumAnisotropy)"}
+  public func validate()throws {
+    guard maximumAnisotropy.isFinite,(1...16).contains(maximumAnisotropy) else{throw SceneRendererError.invalidTexture("Texture anisotropy must be finite and between 1 and 16.")}
+  }
+}
 /// CGImage pixels are immutable. Decoding/import budgets belong to the asset
 /// service; the renderer additionally enforces a 16 MP / 8192 edge upload cap.
 public struct SceneTexturePayload: @unchecked Sendable {
@@ -51,8 +63,9 @@ public struct SceneTexturePayload: @unchecked Sendable {
   public var wrapS: SceneTextureWrap
   public var wrapT: SceneTextureWrap
   public var channel: SceneTextureChannel
-  public init(image: CGImage, revision: String, uvIndex: Int = 0, wrapS: SceneTextureWrap = .repeatMode, wrapT: SceneTextureWrap = .repeatMode, channel: SceneTextureChannel = .rgba) {
-    self.image=image; self.revision=revision; self.uvIndex=uvIndex; self.wrapS=wrapS; self.wrapT=wrapT; self.channel=channel
+  public var sampling:SceneTextureSampling
+  public init(image: CGImage, revision: String, uvIndex: Int = 0, wrapS: SceneTextureWrap = .repeatMode, wrapT: SceneTextureWrap = .repeatMode, channel: SceneTextureChannel = .rgba,sampling:SceneTextureSampling = .init()) {
+    self.image=image; self.revision=revision; self.uvIndex=uvIndex; self.wrapS=wrapS; self.wrapT=wrapT; self.channel=channel;self.sampling=sampling
   }
 }
 public enum SceneColorEncoding: String, Sendable { case srgb, linearSRGB }

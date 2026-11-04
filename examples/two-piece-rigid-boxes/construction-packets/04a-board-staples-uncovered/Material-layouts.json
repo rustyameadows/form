@@ -1,0 +1,297 @@
+{
+  "batches" : [
+    {
+      "candidateChecks" : 110,
+      "cutAreaMM2" : 101525.55999999998,
+      "format" : {
+        "allowRotation" : true,
+        "componentIDs" : [
+          "b-floor",
+          "b-n",
+          "b-e",
+          "b-s",
+          "b-w",
+          "l-floor",
+          "l-n",
+          "l-e",
+          "l-s",
+          "l-w"
+        ],
+        "grain" : "bidirectional",
+        "id" : "board",
+        "lengthMM" : 1000,
+        "marginMM" : 10,
+        "name" : "Board stock",
+        "spacingMM" : 3,
+        "surface" : "sheet",
+        "wasteAllowanceFraction" : 0.08,
+        "widthMM" : 700
+      },
+      "id" : "board-83b9e6c11a03",
+      "placements" : [
+        {
+          "bounds" : {
+            "height" : 189.2,
+            "width" : 139.2,
+            "x" : 10,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 10,
+            "y" : 10
+          },
+          "pieceID" : "l-floor",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 10,
+            "ty" : 199.2
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 184,
+            "width" : 134,
+            "x" : 152.2,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 152.2,
+            "y" : 10
+          },
+          "pieceID" : "b-floor",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 152.2,
+            "ty" : 194
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 184,
+            "width" : 55,
+            "x" : 289.2,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 289.2,
+            "y" : 10
+          },
+          "pieceID" : "b-n",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 289.2,
+            "ty" : 194
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 184,
+            "width" : 55,
+            "x" : 347.2,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 347.2,
+            "y" : 10
+          },
+          "pieceID" : "b-s",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 347.2,
+            "ty" : 194
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 130,
+            "width" : 55,
+            "x" : 405.2,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 405.2,
+            "y" : 10
+          },
+          "pieceID" : "b-e",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 405.2,
+            "ty" : 140
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 130,
+            "width" : 55.00000000000006,
+            "x" : 463.2,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 463.2,
+            "y" : 10
+          },
+          "pieceID" : "b-w",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 463.2,
+            "ty" : 140
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 189.2,
+            "width" : 24.649999999999977,
+            "x" : 521.2,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 521.2,
+            "y" : 10
+          },
+          "pieceID" : "l-n",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 521.2,
+            "ty" : 199.2
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 189.2,
+            "width" : 24.649999999999977,
+            "x" : 548.85,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 548.85,
+            "y" : 10
+          },
+          "pieceID" : "l-s",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 548.85,
+            "ty" : 199.2
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 135.2,
+            "width" : 24.649999999999977,
+            "x" : 576.5,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 576.5,
+            "y" : 10
+          },
+          "pieceID" : "l-e",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 576.5,
+            "ty" : 145.2
+          }
+        },
+        {
+          "bounds" : {
+            "height" : 135.2,
+            "width" : 24.649999999999977,
+            "x" : 604.15,
+            "y" : 10
+          },
+          "copy" : 1,
+          "origin" : {
+            "x" : 604.15,
+            "y" : 10
+          },
+          "pieceID" : "l-w",
+          "rotationDegrees" : -90,
+          "sheetIndex" : 0,
+          "transform" : {
+            "a" : 6.123233995736766e-17,
+            "b" : -1,
+            "c" : 1,
+            "d" : 6.123233995736766e-17,
+            "tx" : 604.15,
+            "ty" : 145.2
+          }
+        }
+      ],
+      "sheetCount" : 1,
+      "stock" : {
+        "grain" : "parallelWidth",
+        "name" : "Recycled greyboard",
+        "notes" : "Declared prototype caliper and appearance. Verify actual stock, adhesive, fold allowance and tool settings on physical samples.",
+        "profile" : {
+          "color" : "#AEA58F",
+          "opacity" : 1,
+          "roughness" : 0.9,
+          "texture" : "recycled",
+          "textureDepthMM" : 0.012,
+          "textureScaleMM" : 0.8
+        },
+        "thicknessMM" : 2,
+        "verified" : false
+      },
+      "stockAreaMM2" : 700000,
+      "stockDigest" : "83b9e6c11a0356185db9e295b7ae093515f8f2aa03432f233374cd05b81a9346",
+      "usedLengthMM" : 209.2
+    }
+  ],
+  "issues" : [
+
+  ]
+}

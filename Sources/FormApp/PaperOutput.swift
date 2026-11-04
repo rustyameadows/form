@@ -119,12 +119,20 @@ extension StudioStore {
     }
   }
   private func paperExportArguments(object:ProductObject,format:String,path:String)->[String:Any] {
-    ["command":"export","object_id":object.id.uuidString,"format":format,"path":path,"inside":paperInside,"sheet_width":paperSheetWidth,"sheet_height":paperSheetHeight,"margin":paperSheetMargin,"gap":paperSheetGap,"count":paperQuantity,"bleed_mm":paperBleedMM]
+    if object.paperConstruction?.authored?.version ?? 0 >= 4,object.paperConstruction?.authored?.production != nil {
+      return ["command":"export","object_id":object.id.uuidString,"format":format,"path":path]
+    }
+    return ["command":"export","object_id":object.id.uuidString,"format":format,"path":path,"inside":paperInside,"sheet_width":paperSheetWidth,"sheet_height":paperSheetHeight,"margin":paperSheetMargin,"gap":paperSheetGap,"count":paperQuantity,"bleed_mm":paperBleedMM]
   }
   func paperOutputCall(_ args:[String:Any])throws->Any {
     if args["command"] as? String == "view" { return try paperViewCall(args) }
     if ["template_attach","template_inspect"].contains(args["command"] as? String ?? "") { return try paperTemplateCall(args) }
     if args["command"] as? String == "preflight",args["contents_object_id"] != nil { return try PaperNativeFit.preflight(store:self,args:args) }
+    if let project,let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),
+      let object=project.objects.first(where:{$0.id==id}),object.paperConstruction?.authored?.version ?? 0 >= 4,
+      ["export","packet_status","preflight"].contains(args["command"] as? String ?? "") {
+      return try ConstructionPacketOutput.export(store:self,objectID:id,arguments:args)
+    }
     guard args["command"] as? String == "export",let project,let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),let object=project.objects.first(where:{$0.id==id}) else{throw FormError.invalid("Select a paper construction to export.")}
     guard let format=args["format"] as? String,["svg","pdf","packet"].contains(format),let path=args["path"] as? String,path.hasPrefix("/") else{throw FormError.invalid("Paper output requires svg, pdf or packet and a new absolute path.")}
     let destination=URL(fileURLWithPath:path).standardizedFileURL.resolvingSymlinksInPath()

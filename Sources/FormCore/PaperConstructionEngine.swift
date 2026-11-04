@@ -25,7 +25,11 @@ public enum PaperConstructionEngine {
     recipeID=="tuckCarton" ? .init(kind:.straightTuckCarton,dimensions:.init(width:64,height:138,depth:38),stock:.init(thicknessMM:0.45),clearanceMM:1,glueTabMM:14,topFlapMM:23,bottomFlapMM:23,cornerRadiusMM:3):.init(kind:.envelope,dimensions:.init(width:216,height:275,depth:12))
   }
   public static func parameters(_ s:PaperConstruction)->[String:Double]{
-    if let authored=s.authored {return authored.values.merging(["fold":s.foldPercent,"opening":s.openingPercent]){_,new in new}}
+    if let authored=s.authored {
+      var pose=["fold":s.foldPercent,"opening":s.openingPercent]
+      if authored.version>=4 {pose["explosion"]=s.explosionPercent ?? 0}
+      return authored.values.merging(pose){_,new in new}
+    }
     return ["width":s.dimensions.width,"height":s.dimensions.height,"depth":s.dimensions.depth,"stock":s.stock.thicknessMM,"clearance":s.clearanceMM,"glueTab":s.glueTabMM,"topFlap":s.topFlapMM,"bottomFlap":s.bottomFlapMM,"cornerRadius":s.cornerRadiusMM,"fold":s.foldPercent,"opening":s.openingPercent]
   }
   public static func applying(_ values:[String:Double],to original:PaperConstruction)->PaperConstruction {
@@ -34,7 +38,9 @@ public enum PaperConstructionEngine {
       for i in authored.parameters.indices {if let v=values[authored.parameters[i].name]{authored.parameters[i].value=v}}
       s.authored=authored
     }
-    if let v=values["width"]{s.dimensions.width=v};if let v=values["height"]{s.dimensions.height=v};if let v=values["depth"]{s.dimensions.depth=v};if let v=values["stock"]{s.stock.thicknessMM=v};if let v=values["clearance"]{s.clearanceMM=v};if let v=values["glueTab"]{s.glueTabMM=v};if let v=values["topFlap"]{s.topFlapMM=v};if let v=values["bottomFlap"]{s.bottomFlapMM=v};if let v=values["cornerRadius"]{s.cornerRadiusMM=v};if let v=values["fold"]{s.foldPercent=v};if let v=values["opening"]{s.openingPercent=v};return s
+    if let v=values["width"]{s.dimensions.width=v};if let v=values["height"]{s.dimensions.height=v};if let v=values["depth"]{s.dimensions.depth=v};if let v=values["stock"]{s.stock.thicknessMM=v};if let v=values["clearance"]{s.clearanceMM=v};if let v=values["glueTab"]{s.glueTabMM=v};if let v=values["topFlap"]{s.topFlapMM=v};if let v=values["bottomFlap"]{s.bottomFlapMM=v};if let v=values["cornerRadius"]{s.cornerRadiusMM=v};if let v=values["fold"]{s.foldPercent=v};if let v=values["opening"]{s.openingPercent=v}
+    if (s.authored?.version ?? 0)>=4,let v=values["explosion"]{s.explosionPercent=v}
+    return s
   }
   public static func validate(_ s:PaperConstruction)throws {
     try s.stock.validate()
@@ -49,13 +55,19 @@ public enum PaperConstructionEngine {
         s.stock.name.utf8.count<=256,s.stock.notes.utf8.count<=2048,
         s.insideArtwork==nil || s.insideArtworkSourceID==nil else {throw FormError.invalid("Invalid authored construction state.")}
       _ = try authored.net()
+      if let explosion=s.explosionPercent {
+        guard authored.version>=4,explosion.isFinite,(0...100).contains(explosion) else{throw FormError.invalid("Exploded presentation needs a version-four assembly and a 0–100% pose.")}
+      }
       guard abs(try authored.number(authored.stockThickness)-s.stock.resolvedThicknessMM)<=1e-9 else {
         throw FormError.invalid("Authored stockThickness must equal the declared stock's resolved total caliper.")
       }
       if let art=s.insideArtwork{try validateArtwork(art)}
+      if authored.jointAttachments?.isEmpty == false {
+        _ = try authored.resolveJointAttachments(stock:s.stock,foldPercent:100,openingPercent:0,explosionPercent:0,validateEngagement:true)
+      }
       return
     }
-    guard s.authored==nil else{throw FormError.invalid("Authored geometry requires the authored construction kind.")}
+    guard s.authored==nil,s.explosionPercent==nil else{throw FormError.invalid("Authored geometry and exploded presentation require the authored construction kind.")}
     let d=s.dimensions,values=[d.width,d.height,d.depth,s.stock.thicknessMM,s.clearanceMM,s.glueTabMM,s.topFlapMM,s.bottomFlapMM,s.cornerRadiusMM,s.foldPercent,s.openingPercent]
     guard s.version==1,values.allSatisfy(\.isFinite),(30...1200).contains(d.width),(40...1600).contains(d.height),(1...600).contains(d.depth),(0.08...2).contains(s.stock.thicknessMM),(0...20).contains(s.clearanceMM),(6...60).contains(s.glueTabMM),(8...150).contains(s.topFlapMM),(8...150).contains(s.bottomFlapMM),(0...20).contains(s.cornerRadiusMM),(0...100).contains(s.foldPercent),(0...100).contains(s.openingPercent),d.depth<=d.width,d.depth<=d.height*0.8,s.glueTabMM<d.width/2,s.topFlapMM<d.height/2,s.bottomFlapMM<d.height/2 else{throw FormError.invalid("Paper dimensions, stock and flap sizes must be finite and form a physically bounded net. Depth cannot exceed width or 80% of height; glue/tuck flaps must be smaller than half their body dimension.")}
     if let art=s.insideArtwork{try validateArtwork(art)}
@@ -143,10 +155,17 @@ public enum PaperConstructionEngine {
   private static func rotate(axis:Vector3,radians:Double)->[Double]{let n=sqrt(axis.x*axis.x+axis.y*axis.y+axis.z*axis.z),x=axis.x/n,y=axis.y/n,z=axis.z/n,c=cos(radians),s=sin(radians),t=1-c;return [t*x*x+c,t*x*y-s*z,t*x*z+s*y,0,t*x*y+s*z,t*y*y+c,t*y*z-s*x,0,t*x*z-s*y,t*y*z+s*x,t*z*z+c,0,0,0,0,1]}
   private static func point(_ m:[Double],_ p:Point2,z:Double)->Vector3{.init(m[0]*p.x-m[1]*p.y+m[2]*z+m[3],m[4]*p.x-m[5]*p.y+m[6]*z+m[7],m[8]*p.x-m[9]*p.y+m[10]*z+m[11])}
   public static func resolvedPanels(_ source:PaperConstruction,foldPercent:Double?=nil)throws->[PaperResolvedPanel] {
-    let net=try net(source),amount=(foldPercent ?? source.foldPercent)/100
+    try resolvedPanels(source,validatedNet:net(source),foldPercent:foldPercent)
+  }
+  /// Pose a previously accepted physical source without re-running its joint
+  /// installation validation. Callers must retain the exact matching source,
+  /// net and optional context together; a new source takes the validating API.
+  public static func resolvedPanels(_ source:PaperConstruction,validatedNet net:PaperNet,foldPercent:Double?=nil,
+    sourceContext:PlanarAssemblySourceContext?=nil)throws->[PaperResolvedPanel] {
+    let amount=(foldPercent ?? source.foldPercent)/100
     guard amount.isFinite,(0...1).contains(amount) else{throw FormError.invalid("Paper folding is a preview percentage from 0 to 100.")}
     if source.authored?.components?.isEmpty == false {
-      return try PlanarComponentPoseResolver.resolve(source,net:net,amount:amount).panels
+      return try PlanarComponentPoseResolver.resolve(source,net:net,amount:amount,context:sourceContext).panels
     }
     let base:[Double]=[1,0,0,-net.size.x/2,0,0,1,source.stock.thicknessMM/2,0,-1,0,-net.size.y/2,0,0,0,1]
     let global=multiply(rotate(axis:.init(1,0,0),radians:amount * .pi/2),base)
@@ -181,9 +200,14 @@ public enum PaperConstructionEngine {
       if let panel=annotation.panelID,!panelIDs.contains(panel){issues.append(.init(id:annotation.id.uuidString+".panel",severity:.warning,code:"orphan-panel-annotation",message:"A saved note references missing panel \(panel). Its source anchor is preserved; review it instead of silently retargeting."))}
       if let edge=annotation.edgeID,!edgeIDs.contains(edge){issues.append(.init(id:annotation.id.uuidString+".edge",severity:.warning,code:"orphan-edge-annotation",message:"A saved note references an edge that changed (\(edge)). Its source anchor is preserved and needs review."))}
     }
-    if !s.stock.verified{issues.append(.init(severity:.warning,code:"unverified-stock",message:"Stock caliper, grain, scoring and adhesive remain prototype assumptions; prove the construction on actual material."))}
-    if s.stock.grain == .unknown{issues.append(.init(severity:.warning,code:"unknown-grain",message:"Declare grain direction before final scoring; grain and fold tooling affect cracking and springback."))}
-    if s.artworkReviewRequired{issues.append(.init(severity:.warning,code:"artwork-review",message:"The net dimensions changed. Artwork retains its original physical coordinates and needs a panel/bleed placement review."))}
+    let partAssembly=s.authored.flatMap{$0.version>=4 ? $0:nil}
+    if let definition=partAssembly {
+      issues += try partAssemblyPreflightIssues(s,definition:definition,net:net)
+    }else{
+      if !s.stock.verified{issues.append(.init(severity:.warning,code:"unverified-stock",message:"Stock caliper, grain, scoring and adhesive remain prototype assumptions; prove the construction on actual material."))}
+      if s.stock.grain == .unknown{issues.append(.init(severity:.warning,code:"unknown-grain",message:"Declare grain direction before final scoring; grain and fold tooling affect cracking and springback."))}
+    }
+    if s.artworkReviewRequired{issues.append(.init(severity:.warning,code:"artwork-review",message:partAssembly == nil ? "The net dimensions changed. Artwork retains its original physical coordinates and needs a panel/bleed placement review.":"Construction dimensions changed. Canonical artwork keeps its physical size and source anchors; review affected piece crops, seams, edge allowances and finish masks."))}
     if s.authored==nil,s.stock.thicknessMM>s.dimensions.depth/5{issues.append(.init(severity:.warning,code:"thick-stock",message:"Stock is thick relative to package depth. Neutral-axis allowances are a starting estimate, not a tested crease specification."))}
     if let contents{
       guard s.authored==nil else {throw FormError.invalid("Authored construction fit requires a named declared interior and actual contents_object_id; flat-net dimensions are not a usable cavity.")}
@@ -191,10 +215,52 @@ public enum PaperConstructionEngine {
     }
     let interiors=try resolvedInteriors(s)
     if s.authored != nil,interiors.isEmpty {issues.append(.init(severity:.warning,code:"interior-not-declared",message:"This authored construction has no declared usable interior. Net extents do not establish contents fit."))}
-    issues.append(.init(severity:.info,code:"duplex-proof",message:"Inside artwork uses the same registered flat-net coordinates. Verify actual feed/turn orientation with a duplex proof; no machine setup is inferred."))
+    if partAssembly==nil {issues.append(.init(severity:.info,code:"duplex-proof",message:"Inside artwork uses the same registered flat-net coordinates. Verify actual feed/turn orientation with a duplex proof; no machine setup is inferred."))}
     return .init(issues:issues,netSize:net.size,usableInternalDimensions:s.authored==nil ? s.dimensions:nil,
       requiresArtworkReview:s.artworkReviewRequired,declaredInteriors:interiors.isEmpty ? nil:interiors)
   }
+  /// Independently stocked pieces have their own material and registered face
+  /// authority. A single-net carton warning does not describe that source.
+  private static func partAssemblyPreflightIssues(_ source:PaperConstruction,
+    definition:PlanarConstructionDefinition,net:PaperNet)throws->[PaperPreflightIssue] {
+    let context=try PlanarAssemblySourceContext(definition,fallbackStock:source.stock)
+    let pieces=(definition.components ?? []).filter{context.enabledIDs.contains($0.id)}
+    var issues=[PaperPreflightIssue]()
+    func targets(_ pieces:[PlanarComponentDefinition])->[String] {
+      let ids=Set(pieces.map(\.id));return net.panels.filter{$0.componentID.map(ids.contains) ?? false}.map(\.id)
+    }
+    let unverified=pieces.filter{context.stocks[$0.id]?.verified == false}
+    if !unverified.isEmpty {
+      issues.append(.init(severity:.warning,code:"unverified-stock",
+        message:"Stock caliper and material behavior remain unverified for \(unverified.count) active cut pieces. Confirm each stock and its declared attachment/process assumptions on physical samples.",panelIDs:targets(unverified)))
+    }
+    let unknownGrain=pieces.filter{context.stocks[$0.id]?.grain == .unknown}
+    if !unknownGrain.isEmpty {
+      issues.append(.init(severity:.warning,code:"unknown-grain",
+        message:"Declare grain or pattern direction for \(unknownGrain.count) active cut pieces before preparing material layouts. Rotation follows the selected sheet or roll constraints.",panelIDs:targets(unknownGrain)))
+    }
+    issues.append(.init(severity:.info,code:"independent-cut-pieces",
+      message:"Active cut pieces retain independent stock, cut geometry and source identities. Group poses change presentation; declared fit and joint checks use the closed construction."))
+    let mapped=pieces.filter{$0.front != nil || $0.back != nil}
+    if !mapped.isEmpty {
+      issues.append(.init(severity:.info,code:"canonical-piece-faces",
+        message:"Canonical artwork is assigned to \(mapped.count) active cut pieces. Front and back assignments retain their own sources and physical crop coordinates; review those sources and finish masks together.",panelIDs:targets(mapped)))
+    }
+    let attachments=try (definition.jointAttachments ?? []).filter{try definition.attachmentEnabled($0.enabled,values:context.values)}
+    if !attachments.isEmpty {
+      issues.append(.init(severity:.info,code:"declared-attachment-coverage",
+        message:"Attachment validation covers the saved contact regions, receiving paths and tool-access criteria. Bond strength, material compression and fastener performance require physical evaluation."))
+    }
+    for (index,assumption) in (definition.production?.assumptions ?? []).enumerated() {
+      let id="source-assumption-"+String(index+1)
+      issues.append(.init(id:id,severity:.info,code:id,message:assumption))
+    }
+    if let notes=definition.production?.processNotes,!notes.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty {
+      issues.append(.init(severity:.info,code:"source-production-notes",message:notes))
+    }
+    return issues
+  }
+
 }
 extension PaperNet {
   public func layout(sheetSize:Point2,marginMM:Double=10,gapMM:Double=6,count:Int=1,allowRotation:Bool=true)throws->PaperLayout {

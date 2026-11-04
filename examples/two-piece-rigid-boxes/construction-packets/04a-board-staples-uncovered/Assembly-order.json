@@ -1,0 +1,55 @@
+[
+  {
+    "after" : [
+
+    ],
+    "componentIDs" : [
+      "b-floor",
+      "b-n",
+      "b-e",
+      "b-s",
+      "b-w",
+      "l-floor",
+      "l-n",
+      "l-e",
+      "l-s",
+      "l-w"
+    ],
+    "id" : "cut",
+    "instructions" : "Cut separate boards, selected backing and physical seating parts at their nominal contours. Grain and all quantities come from each piece. No score or groove is implied on independent boards. Retain printed source registration.",
+    "jointIDs" : [
+
+    ],
+    "title" : "Cut independent stock"
+  },
+  {
+    "after" : [
+      "cut"
+    ],
+    "componentIDs" : [
+      "b-floor",
+      "b-n",
+      "b-e",
+      "b-s",
+      "b-w",
+      "l-floor",
+      "l-n",
+      "l-e",
+      "l-s",
+      "l-w"
+    ],
+    "id" : "boards",
+    "instructions" : "Dry assemble the selected floor and spanning-wall arrangement. Apply only the declared board glue regions. Where selected, drive the configured staples from the bare floor underside into the actual wall bottom edges. Inspect receiving depth and both leg paths. Do not substitute a carton or publication stapler. Tool settings require a physical sample.",
+    "jointIDs" : [
+      "b-floor-n",
+      "b-floor-e",
+      "b-floor-s",
+      "b-floor-w",
+      "l-floor-n",
+      "l-floor-e",
+      "l-floor-s",
+      "l-floor-w"
+    ],
+    "title" : "Assemble supported board joints"
+  }
+]

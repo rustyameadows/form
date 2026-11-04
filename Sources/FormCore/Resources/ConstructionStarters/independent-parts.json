@@ -1,0 +1,233 @@
+{
+  "kind": "constructionStarter",
+  "version": 1,
+  "id": "independent-cut-parts",
+  "name": "Independent parts",
+  "summary": "Start with one separate cut piece, then add parts, parent groups, materials, joined faces and canonical artwork.",
+  "symbol": "square.3.layers.3d",
+  "definition": {
+    "version": 4,
+    "name": "Independent parts",
+    "parameters": [
+      {
+        "name": "width",
+        "value": 100,
+        "minimum": 10,
+        "maximum": 1000,
+        "unit": "mm"
+      },
+      {
+        "name": "height",
+        "value": 80,
+        "minimum": 10,
+        "maximum": 1000,
+        "unit": "mm"
+      },
+      {
+        "name": "caliper",
+        "value": 1.5,
+        "minimum": 0.01,
+        "maximum": 20,
+        "unit": "mm"
+      }
+    ],
+    "derived": {
+      "cutArea": "width*height"
+    },
+    "size": {
+      "x": "width",
+      "y": "height"
+    },
+    "stockThickness": "caliper",
+    "panels": [
+      {
+        "id": "first-piece",
+        "name": "First cut piece",
+        "role": "body",
+        "polygon": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": "width",
+            "y": 0
+          },
+          {
+            "x": "width",
+            "y": "height"
+          },
+          {
+            "x": 0,
+            "y": "height"
+          }
+        ]
+      }
+    ],
+    "hinges": [],
+    "joins": [],
+    "rootPanelID": "first-piece",
+    "components": [
+      {
+        "id": "first-piece",
+        "name": "First cut piece",
+        "rootPanelID": "first-piece",
+        "anchor": {
+          "x": 0,
+          "y": "height"
+        },
+        "position": {
+          "x": "-width/2",
+          "y": "caliper/2",
+          "z": "-height/2"
+        },
+        "rotationDegrees": {
+          "x": -90,
+          "y": 0,
+          "z": 0
+        },
+        "groupID": "assembly-frame",
+        "stock": {
+          "name": "Uncoated board",
+          "thicknessMM": 1.5,
+          "grain": "parallelHeight",
+          "verified": false,
+          "notes": "Editable visual stock; nominal caliper is a declared design input.",
+          "profile": {
+            "texture": "recycled",
+            "color": "#D4C8B3",
+            "roughness": 0.92,
+            "textureScaleMM": 0.8,
+            "textureDepthMM": 0.02,
+            "opacity": 1
+          }
+        },
+        "stockThickness": "caliper",
+        "quantity": 1
+      }
+    ],
+    "groups": [
+      {
+        "id": "assembly-frame",
+        "name": "Assembly frame",
+        "position": {
+          "x": 0,
+          "y": "explosion/100*25",
+          "z": 0
+        },
+        "rotationDegrees": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    ],
+    "controls": {
+      "groups": [
+        {
+          "id": "size",
+          "title": "Part dimensions"
+        }
+      ],
+      "parameters": [
+        {
+          "parameter": "width",
+          "label": "Width",
+          "group": "size"
+        },
+        {
+          "parameter": "height",
+          "label": "Height",
+          "group": "size"
+        },
+        {
+          "parameter": "caliper",
+          "label": "Material caliper",
+          "group": "size"
+        }
+      ],
+      "measurements": [
+        {
+          "id": "area",
+          "label": "Cut area",
+          "expression": "cutArea",
+          "unit": "mm\u00b2",
+          "group": "size"
+        }
+      ],
+      "poses": [
+        {
+          "id": "assembled",
+          "name": "Assembled",
+          "openingPercent": 0,
+          "explosionPercent": 0
+        },
+        {
+          "id": "lifted",
+          "name": "Lifted for inspection",
+          "openingPercent": 0,
+          "explosionPercent": 100
+        }
+      ]
+    },
+    "production": {
+      "version": 1,
+      "materials": [
+        {
+          "id": "sheet-stock",
+          "name": "Board sheets",
+          "componentIDs": [
+            "first-piece"
+          ],
+          "surface": "sheet",
+          "widthMM": 700,
+          "lengthMM": 1000,
+          "marginMM": 10,
+          "spacingMM": 4,
+          "grain": "bidirectional",
+          "allowRotation": true,
+          "wasteAllowanceFraction": 0
+        }
+      ],
+      "steps": [
+        {
+          "id": "inspect-piece",
+          "title": "Inspect the cut piece",
+          "componentIDs": [
+            "first-piece"
+          ],
+          "jointIDs": [],
+          "after": [],
+          "instructions": "Check the nominal contour, material face and grain against the design. Add the declared assembly and attachment steps when adding more parts."
+        }
+      ],
+      "assumptions": [
+        "Material caliper and cutter allowances are declared design inputs; physical verification is separate."
+      ],
+      "guides": [],
+      "foldRoles": {},
+      "quantity": 1,
+      "labels": true,
+      "registrationMarks": false,
+      "bleedMM": 0,
+      "processNotes": "Nominal independent cut pieces; no cutter compensation or machine command is implied."
+    }
+  },
+  "stock": {
+    "name": "Uncoated board",
+    "thicknessMM": 1.5,
+    "grain": "parallelHeight",
+    "verified": false,
+    "notes": "Editable visual stock; nominal caliper is a declared design input.",
+    "profile": {
+      "texture": "recycled",
+      "color": "#D4C8B3",
+      "roughness": 0.92,
+      "textureScaleMM": 0.8,
+      "textureDepthMM": 0.02,
+      "opacity": 1
+    }
+  },
+  "materialID": "natural-kraft",
+  "artworkSources": []
+}

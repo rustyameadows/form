@@ -1,0 +1,280 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "elements" : [
+      {
+        "color" : "#243F39",
+        "fontSize" : 7,
+        "height" : 5,
+        "id" : "9E0C188C-4F59-4B6F-98C1-87B17F20FCC8",
+        "kind" : "text",
+        "name" : "edition",
+        "text" : "CASK / COLLECT     01",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 8.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 78,
+        "x" : 93.26999999999998,
+        "y" : 85.69
+      },
+      {
+        "color" : "#243F39",
+        "fontSize" : 32,
+        "height" : 17,
+        "id" : "A75DAF2F-E00E-49A3-B8F0-27213845D738",
+        "kind" : "text",
+        "name" : "title",
+        "text" : "CASK",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 38.4,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 112,
+        "x" : 118.78999999999999,
+        "y" : 133.51
+      },
+      {
+        "color" : "#243F39",
+        "fontSize" : 10,
+        "height" : 0.25,
+        "id" : "3AEBB222-DC4E-40CA-9996-BE449E99C53C",
+        "kind" : "rectangle",
+        "name" : "rule",
+        "text" : "",
+        "width" : 46,
+        "x" : 151.79,
+        "y" : 158.51
+      },
+      {
+        "color" : "#243F39",
+        "fontSize" : 8,
+        "height" : 8,
+        "id" : "B8297481-3C7B-47F1-9D66-5E9AE7EF739B",
+        "kind" : "text",
+        "name" : "detail",
+        "text" : "A place for small collections.",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 9.6,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 105,
+        "x" : 122.28999999999999,
+        "y" : 163.50999999999996
+      },
+      {
+        "color" : "#A98D56",
+        "fontSize" : 10,
+        "height" : 11,
+        "id" : "1EA20CCE-0612-47CE-8444-D003CC4C9BF3",
+        "kind" : "ellipse",
+        "name" : "seal",
+        "text" : "",
+        "width" : 11,
+        "x" : 242.30999999999997,
+        "y" : 184.32999999999996
+      }
+    ],
+    "unit" : "mm"
+  },
+  "artworkRegions" : [
+    {
+      "anchors" : [
+        {
+          "elementIDs" : [
+            "9E0C188C-4F59-4B6F-98C1-87B17F20FCC8",
+            "A75DAF2F-E00E-49A3-B8F0-27213845D738",
+            "3AEBB222-DC4E-40CA-9996-BE449E99C53C",
+            "B8297481-3C7B-47F1-9D66-5E9AE7EF739B",
+            "1EA20CCE-0612-47CE-8444-D003CC4C9BF3"
+          ],
+          "horizontal" : 0.5,
+          "vertical" : 0.5
+        }
+      ],
+      "id" : "l-cap",
+      "name" : "Lid exterior face",
+      "origin" : {
+        "x" : "lcapX",
+        "y" : "lcapY"
+      },
+      "size" : {
+        "x" : "laW",
+        "y" : "laD"
+      }
+    }
+  ],
+  "canvasSourceOnly" : true,
+  "designID" : "AB2C6BAC-F339-4F3A-8AEE-89B346B3A6D8",
+  "dimensionBindings" : [
+    {
+      "expression" : "sourceValue0",
+      "inputs" : {
+        "sourceValue0" : {
+          "measurement" : "parameter",
+          "parameter" : "lartW",
+          "sourceObjectID" : "7D36AECB-DC3B-4E44-AB4B-A7B1D520243C"
+        }
+      },
+      "parameter" : "width"
+    },
+    {
+      "expression" : "sourceValue0",
+      "inputs" : {
+        "sourceValue0" : {
+          "measurement" : "parameter",
+          "parameter" : "lartH",
+          "sourceObjectID" : "7D36AECB-DC3B-4E44-AB4B-A7B1D520243C"
+        }
+      },
+      "parameter" : "depth"
+    },
+    {
+      "expression" : "sourceValue0",
+      "inputs" : {
+        "sourceValue0" : {
+          "measurement" : "parameter",
+          "parameter" : "laD",
+          "sourceObjectID" : "7D36AECB-DC3B-4E44-AB4B-A7B1D520243C"
+        }
+      },
+      "parameter" : "laD"
+    },
+    {
+      "expression" : "sourceValue0",
+      "inputs" : {
+        "sourceValue0" : {
+          "measurement" : "parameter",
+          "parameter" : "laW",
+          "sourceObjectID" : "7D36AECB-DC3B-4E44-AB4B-A7B1D520243C"
+        }
+      },
+      "parameter" : "laW"
+    },
+    {
+      "expression" : "sourceValue0",
+      "inputs" : {
+        "sourceValue0" : {
+          "measurement" : "parameter",
+          "parameter" : "lcapX",
+          "sourceObjectID" : "7D36AECB-DC3B-4E44-AB4B-A7B1D520243C"
+        }
+      },
+      "parameter" : "lcapX"
+    },
+    {
+      "expression" : "sourceValue0",
+      "inputs" : {
+        "sourceValue0" : {
+          "measurement" : "parameter",
+          "parameter" : "lcapY",
+          "sourceObjectID" : "7D36AECB-DC3B-4E44-AB4B-A7B1D520243C"
+        }
+      },
+      "parameter" : "lcapY"
+    }
+  ],
+  "id" : "EA57CDD3-CCB5-4151-BEE3-303784171383",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "Lid covering · canonical artwork",
+  "parameters" : {
+    "depth" : 284.0199999999999,
+    "laD" : 165.26,
+    "laW" : 230.82,
+    "lcapX" : 59.37999999999999,
+    "lcapY" : 59.37999999999999,
+    "width" : 349.58
+  },
+  "position" : {
+    "x" : 0,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "construction-source-EA57CDD3-CCB5-4151-BEE3-303784171383",
+  "relationship" : "original",
+  "rotation" : 0
+}

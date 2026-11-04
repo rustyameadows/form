@@ -24,7 +24,7 @@ public enum PaperCommands {
     for (index,definition) in definitions {project.objects[index].paperConstruction=definition}
     return art.id
   }
-  public static func isReadOnly(_ args:[String:Any])->Bool{["inspect","preflight","layout","view","export","template_inspect"].contains(args["command"] as? String ?? "inspect") || PaperAppearanceCommands.readOnlyNames.contains(args["command"] as? String ?? "")}
+  public static func isReadOnly(_ args:[String:Any])->Bool{["inspect","preflight","layout","view","export","packet_status","template_inspect"].contains(args["command"] as? String ?? "inspect") || PaperAppearanceCommands.readOnlyNames.contains(args["command"] as? String ?? "")}
   public static func preservesDocumentDrafts(_ args:[String:Any])->Bool{isReadOnly(args) || args["command"] as? String == "save_stock"}
   public static func call(engine:OperationEngine,arguments args:[String:Any],source:String)throws->Any {
     if let raw=args["command"],!(raw is String){throw FormError.invalid("Paper command must be a string.")}
@@ -43,7 +43,7 @@ public enum PaperCommands {
       guard let graphics=engine.onGraphics else{throw FormError.invalid("Template attachment/inspection requires the native graphics host.")}
       return try graphics("form_paper",args)
     }
-    let common:Set<String>=["command","object_id"],fields:[String:Set<String>]=["inspect":[],"preflight":["contents","contents_object_id","interior_id","clearance_mm"],"layout":["sheet_width","sheet_height","margin","gap","count","allow_rotation"],"configure":["definition","parameters","stock","annotations","annotation","annotation_id","acknowledge_artwork"],"annotations":["annotations","annotation","annotation_id"],"ensure_inside":[],"convert":[],"view":["representation","inside","panel_id","split"],"export":["path","format","inside","sheet_width","sheet_height","margin","gap","count","bleed_mm","handoff"]]
+    let common:Set<String>=["command","object_id"],fields:[String:Set<String>]=["inspect":[],"preflight":["contents","contents_object_id","interior_id","clearance_mm"],"packet_status":["path"],"layout":["sheet_width","sheet_height","margin","gap","count","allow_rotation"],"configure":["definition","parameters","stock","annotations","annotation","annotation_id","acknowledge_artwork"],"annotations":["annotations","annotation","annotation_id"],"ensure_inside":[],"convert":[],"view":["representation","inside","panel_id","split"],"export":["path","format","inside","sheet_width","sheet_height","margin","gap","count","bleed_mm","handoff"]]
     guard let allowed=fields[command],Set(args.keys).isSubset(of:common.union(allowed)) else{throw FormError.invalid("Unknown paper command or argument fields.")}
     if command=="preflight" {
       if let raw=args["contents_object_id"] {
@@ -62,7 +62,7 @@ public enum PaperCommands {
       if let raw=args["bleed_mm"] {guard let n=raw as? NSNumber,CFGetTypeID(n) != CFBooleanGetTypeID(),n.doubleValue.isFinite,(0...25).contains(n.doubleValue) else{throw FormError.invalid("bleed_mm must be0–25 physical millimeters.")}}
       if let raw=args["handoff"] {guard let handoff=raw as? String,["artwork_only","separate","registered_original"].contains(handoff) else{throw FormError.invalid("Choose artwork_only, separate or registered_original handoff.")}}
     }
-    if command=="view" || command=="export"{guard let graphics=engine.onGraphics else{throw FormError.invalid("Paper view/export requires the native graphics host.")};return try graphics("form_paper",args)}
+    if ["view","export","packet_status"].contains(command){guard let graphics=engine.onGraphics else{throw FormError.invalid("Paper view/export/status requires the native graphics host.")};return try graphics("form_paper",args)}
     guard let project=engine.project,let raw=args["object_id"] as? String,let id=UUID(uuidString:raw),let object=project.objects.first(where:{$0.id==id}) else{throw FormError.missing("Choose a paper object in the current project.")}
     func number(_ key:String,_ fallback:Double)throws->Double{guard let raw=args[key] else{return fallback};guard let n=raw as? NSNumber,CFGetTypeID(n) != CFBooleanGetTypeID(),n.doubleValue.isFinite else{throw FormError.invalid("\(key) must be a finite number.")};return n.doubleValue}
     func boolean(_ key:String,_ fallback:Bool=false)throws->Bool{guard let raw=args[key] else{return fallback};guard let n=raw as? NSNumber,CFGetTypeID(n)==CFBooleanGetTypeID() else{throw FormError.invalid("\(key) must be boolean.")};return n.boolValue}
@@ -85,6 +85,11 @@ public enum PaperCommands {
       return try jsonObject(engine.project!.objects.first{$0.id==id}!)
     }
     let current=try PaperConstruction.definition(for:object)
+    if current.authored?.version ?? 0 >= 4,current.authored?.production != nil,["preflight","layout"].contains(command),args["contents"]==nil {
+      guard Set(args.keys).isSubset(of:common) else{throw FormError.invalid("Independent-piece production uses its saved stock formats and quantities. Edit the production source before checking its layouts.")}
+      let packet=try ConstructionPacketModel(project:project,object:object)
+      return command == "layout" ? try jsonObject(packet.layouts):try packet.metadata()
+    }
     switch command {
     case "inspect":return ["object_id":id.uuidString,"definition":try jsonObject(current),"net":try jsonObject(current.net()),"preflight":try jsonObject(current.preflight()),"appearance":try jsonObject(PaperAppearance.inspect(project:project,object:object)),"inside_source_id":current.insideArtworkSourceID?.uuidString as Any? ?? NSNull(),"artwork_coordinates":"Registered full-net millimeters; both sides share physical coordinates. No automatic fitting or duplex feed is inferred."]
     case "preflight":let contents=try args["contents"].map{try decode($0,PaperDimensions.self)};return try jsonObject(current.preflight(contents:contents))

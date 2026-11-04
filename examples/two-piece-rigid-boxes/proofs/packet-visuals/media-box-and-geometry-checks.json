@@ -1,0 +1,65 @@
+[
+  {
+    "packet": "round08-01-paper-tape-unlined-packet",
+    "classified_pages": 3,
+    "physical_stock_pages": 3,
+    "annotation_pages": 0,
+    "maximum_media_box_roundoff_pt": 0.004330708661200333,
+    "unchanged_nominal_layouts_from_round06": 3,
+    "accepted_source_digest_unchanged": true
+  },
+  {
+    "packet": "round08-02-paper-independent-lining-packet",
+    "classified_pages": 4,
+    "physical_stock_pages": 4,
+    "annotation_pages": 0,
+    "maximum_media_box_roundoff_pt": 0.004330708661200333,
+    "unchanged_nominal_layouts_from_round06": 4,
+    "accepted_source_digest_unchanged": true
+  },
+  {
+    "packet": "round08-03-fabric-contrasting-lining-packet",
+    "classified_pages": 4,
+    "physical_stock_pages": 4,
+    "annotation_pages": 0,
+    "maximum_media_box_roundoff_pt": 0.004566929133943631,
+    "unchanged_nominal_layouts_from_round06": 4,
+    "accepted_source_digest_unchanged": true
+  },
+  {
+    "packet": "round08-04a-board-staples-uncovered-packet",
+    "classified_pages": 1,
+    "physical_stock_pages": 1,
+    "annotation_pages": 0,
+    "maximum_media_box_roundoff_pt": 0.004330708661200333,
+    "unchanged_nominal_layouts_from_round06": 1,
+    "accepted_source_digest_unchanged": true
+  },
+  {
+    "packet": "round08-04b-board-staples-covered-packet",
+    "classified_pages": 5,
+    "physical_stock_pages": 5,
+    "annotation_pages": 0,
+    "maximum_media_box_roundoff_pt": 0.00488188976373749,
+    "unchanged_nominal_layouts_from_round06": 5,
+    "accepted_source_digest_unchanged": true
+  },
+  {
+    "packet": "round08-05-mixed-partial-overlap-packet",
+    "classified_pages": 7,
+    "physical_stock_pages": 6,
+    "annotation_pages": 1,
+    "maximum_media_box_roundoff_pt": 0.004409448818819328,
+    "unchanged_nominal_layouts_from_round06": 6,
+    "accepted_source_digest_unchanged": true
+  },
+  {
+    "packet": "round08-06-independent-deep-lid-packet",
+    "classified_pages": 8,
+    "physical_stock_pages": 7,
+    "annotation_pages": 1,
+    "maximum_media_box_roundoff_pt": 0.004409448818819328,
+    "unchanged_nominal_layouts_from_round06": 7,
+    "accepted_source_digest_unchanged": true
+  }
+]

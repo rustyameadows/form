@@ -17,16 +17,20 @@ public enum CADDerivedExpressions {
       guard unknown.isEmpty else{throw CADModelError("Derived expression '\(name)' references unknown values: \(unknown.sorted().joined(separator:", ")).")}
       dependencies[name]=names
     }
-    var resolved=variables,pending=Set(expressions.keys)
-    while !pending.isEmpty {
-      var advanced=false
-      for name in pending.sorted() where dependencies[name]!.isSubset(of:Set(resolved.keys)) {
-        do{resolved[name]=try CADExpression.evaluate(expressions[name]!.expression,variables:resolved)}
-        catch{throw CADModelError("Derived expression '\(name)' failed: \(error.localizedDescription)")}
-        pending.remove(name);advanced=true
+    // Visit each dependency once. Rebuilding the complete resolved-key Set for
+    // every pending expression made a large valid graph quadratic per pass.
+    var resolved=variables,visiting=Set<String>()
+    func resolve(_ name:String)throws {
+      if resolved[name] != nil{return}
+      guard visiting.insert(name).inserted else {
+        throw CADModelError("Derived expressions contain a cycle: \(visiting.sorted().joined(separator:", ")).")
       }
-      guard advanced else{throw CADModelError("Derived expressions contain a cycle: \(pending.sorted().joined(separator:", ")).")}
+      for dependency in dependencies[name]!.sorted() where expressions[dependency] != nil {try resolve(dependency)}
+      do{resolved[name]=try CADExpression.evaluate(expressions[name]!.expression,variables:resolved)}
+      catch{throw CADModelError("Derived expression '\(name)' failed: \(error.localizedDescription)")}
+      visiting.remove(name)
     }
+    for name in expressions.keys.sorted(){try resolve(name)}
     return resolved
   }
 }

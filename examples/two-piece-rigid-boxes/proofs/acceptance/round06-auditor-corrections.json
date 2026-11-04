@@ -1,0 +1,24 @@
+{
+  "initial_report": "round06-initial-report.json",
+  "corrected_prelabel_report": "round06-prelabel-report.json",
+  "initial_false_failures": [
+    {
+      "issue": "Layout dictionary selected rotated label group in place of cut group because both share physical piece/copy identifiers.",
+      "correction": "Select groups containing actual nominal path geometry; separately validate placement-label identities/completeness."
+    },
+    {
+      "issue": "Raw CAD seam-fraction coordinates were compared directly with the integer union output.",
+      "evidence": "Sources/CFormClipper/form_clipper.cpp:15 uses std::llround(mm*1000) for input vertices; pack converts integer coordinates back by /1000.0.",
+      "correction": "Independently quantize piece-local source vertices onto that exact0.001mm lattice before polygon union equivalence; global audit tolerance remains unchanged.",
+      "specific_components": [
+        "02/b-band-p",
+        "05/b-band-p",
+        "05/l-band-c"
+      ]
+    }
+  ],
+  "artifacts_modified": false,
+  "corrected_result": "All7 round06 packets pass8283 source/hash/material/physical-path checks; real tiny-label truncation found by separate visual review remains for fresh round08 outputs.",
+  "label_aware_followup": "round06-label-aware-report.json",
+  "label_aware_result": "Six packets pass;05 correctly fails its four16\u00d74mm overlap-stop labels until fresh numbered-key output is exported. Original source/hash/physical checks remain passing."
+}

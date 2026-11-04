@@ -61,7 +61,7 @@ import simd
     return name
   }
   private static func uvRevision(_ material:MeshMaterial)->String {
-    [material.diffuse,material.normal,material.roughness,material.metalness,material.emission].map{"\($0.resourceID):\($0.resourceRevision):\($0.intensity):\($0.wrapS):\($0.wrapT)"}.joined(separator:",")
+    [material.diffuse,material.normal,material.roughness,material.metalness,material.emission].map{"\($0.resourceID):\($0.resourceRevision):\($0.intensity):\($0.wrapS):\($0.wrapT):\($0.minificationFilter):\($0.magnificationFilter):\($0.mipFilter):\($0.maxAnisotropy)"}.joined(separator:",")
   }
   private static func meshUVRevision(_ material:MeshMaterial)->String {
     let primary=[material.diffuse,material.normal,material.roughness,material.metalness,material.emission].first{hasImage($0.contents)}
@@ -132,7 +132,8 @@ import simd
     guard let image=cached ?? image(p.contents) else{return nil}
     if cached == nil {imageCache.totalCostLimit=128*1024*1024;imageCache.setObject(ImageBox(image),forKey:key,cost:image.bytesPerRow*image.height)}
     func wrap(_ value:MeshWrapMode)->SceneTextureWrap{switch value{case .clamp:return .clamp;case .repeat:return .repeatMode;case .mirror:return .mirror}}
-    return .init(image:image,revision:"\(p.resourceID):\(p.resourceRevision)",wrapS:wrap(p.wrapS),wrapT:wrap(p.wrapT))
+    func filter(_ value:MeshTextureFilter)->SceneTextureFilter{switch value{case .none:return .none;case .nearest:return .nearest;case .linear:return .linear}}
+    return .init(image:image,revision:"\(p.resourceID):\(p.resourceRevision)",wrapS:wrap(p.wrapS),wrapT:wrap(p.wrapT),sampling:.init(minification:filter(p.minificationFilter),magnification:filter(p.magnificationFilter),mip:filter(p.mipFilter),maximumAnisotropy:p.maxAnisotropy))
   }
   private static func material(_ m:MeshMaterial,opacity:Double)->SceneMaterialPayload {
     let id="recipe-material:\(ObjectIdentifier(m))"

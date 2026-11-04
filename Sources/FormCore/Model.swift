@@ -423,7 +423,7 @@ public struct Equipment: Codable, Equatable, Identifiable, Sendable {
 }
 
 public struct Project: Codable, Equatable, Identifiable, Sendable {
-  public static let maximumSchemaVersion=65
+  public static let maximumSchemaVersion=66
   public var schemaVersion = 1
   public var id: UUID = UUID()
   public var name: String
@@ -463,6 +463,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
     return required
   }
   private var requiredResourceSchemaVersion:Int {
+    if studioPresentation?.scenes?.contains(where:{$0.instances.contains(where:{$0.paperPose != nil})}) == true {return 66}
     if studioPresentation?.scenes?.contains(where:{$0.instances.contains(where:{$0.sheetPose?.bindingStyle == .adhesive || $0.sheetPose?.bindingStyle == .sewn})}) == true {return 65}
     if textStories?.contains(where:{$0.annotations?.isEmpty==false})==true {return 64}
     if publications?.contains(where:{$0.requiresExtendedPublicationSchema}) == true {return 63}
@@ -528,6 +529,7 @@ public struct Project: Codable, Equatable, Identifiable, Sendable {
 extension ProductObject {
   fileprivate var requiredObjectSchemaVersion:Int {
     let paper=paperConstruction
+    if (paper?.authored?.version ?? 0)>=4 || paper?.explosionPercent != nil {return 66}
     if dimensionBindings != nil || artworkRegions != nil || sheetAssembly?.requiresAdvancedStructureSchema == true || paper?.authored?.panels.contains(where:{$0.features != nil}) == true {return 65}
     if sheetAssembly != nil {return 63}
     // Only these high-version predicates historically include inside artwork,

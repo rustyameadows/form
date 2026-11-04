@@ -31,6 +31,7 @@ extension Project {
       }
       _ = try source.net()
       try validatePaperPanelFeatures(object,source:source)
+      try validateConstructionPieceSources(object,source:source)
       if object.artworkSourceID != nil,object.artworkFit != "actual"{throw FormError.invalid("Paper construction artwork must remain registered at actual size.")}
       if let id=source.insideArtworkSourceID{guard id != object.id,let inside=objects.first(where:{$0.id==id}),isIndependentFlatArtworkSource(inside),!inside.isCanvasWorkspace,inside.artworkSourceID==nil,inside.artwork != nil else{throw FormError.invalid("Paper inside artwork must reference an independent artwork sheet. Detach it before removing its source.")}}
     }

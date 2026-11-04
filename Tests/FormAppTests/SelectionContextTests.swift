@@ -50,6 +50,35 @@ import XCTest
     let status = try XCTUnwrap(store.engine.call("form_status") as? [String: Any])
     XCTAssertEqual(NSDictionary(dictionary: try XCTUnwrap(status["context"] as? [String: Any])), NSDictionary(dictionary: value))
   }
+  func testConstructionTargetAndPieceProofQueriesRetainPhysicalIdentityWithoutEditing()throws {
+    let(store,_,_)=try fixture()
+    var definition=PlanarConstructionDefinition(name:"Two independent source pieces",size:.init(120,50),stockThickness:0.5,panels:[
+      .init(id:"first",name:"First physical piece",polygon:[.init(0,0),.init(40,0),.init(40,40),.init(0,40)]),
+      .init(id:"second",name:"Second physical piece",polygon:[.init(60,0),.init(100,0),.init(100,40),.init(60,40)])],
+      joins:[.init(id:"piece-joint",name:"Declared connection",firstPanelID:"first",secondPanelID:"second",overlapMM:0)],rootPanelID:"first",components:[
+        .init(id:"first-piece",name:"First piece",rootPanelID:"first",anchor:.init(0,40),position:.init(),rotationDegrees:.init(-90,0,0)),
+        .init(id:"second-piece",name:"Second piece",rootPanelID:"second",anchor:.init(60,40),position:.init(60,0,0),rotationDegrees:.init(-90,0,0))])
+    definition.version=4
+    var project=Project(name:"Physical context identity")
+    let imported=try project.importConstructionStarter(.init(id:"independent-context",name:"Independent source",definition:definition,stock:.init(thicknessMM:0.5)))
+    store.engine.project=project;store.showingHome=false;store.engine.selection=[imported.objectID];store.mode = .table
+    let before=store.project!,history=store.engine.undoStack.count,camera=store.project!.camera
+    XCTAssertTrue(store.selectConstructionTarget(objectID:imported.objectID,jointID:"piece-joint"))
+    let selected=try context(store),table=try XCTUnwrap(selected["table"] as? [String:Any]),joint=try XCTUnwrap(table["construction_target"] as? [String:Any])
+    XCTAssertEqual(joint["object_id"] as? String,imported.objectID.uuidString);XCTAssertEqual(joint["joint_id"] as? String,"piece-joint")
+    XCTAssertEqual(joint["kind"] as? String,"joint");XCTAssertEqual(joint["panel_ids"] as? [String],["first","second"])
+    store.artworkSession.paperFocusPanelID="second"
+    XCTAssertEqual(store.constructionTableTarget?.jointID,"piece-joint");XCTAssertEqual(store.engine.selection,[imported.objectID])
+    store.mode = .artwork;store.activateDesignSurface(.artwork)
+    let proof=try XCTUnwrap(store.artworkSession.frames.first{$0.projection?.constructionID==imported.objectID && $0.projection?.componentID=="first-piece" && $0.projection?.panelID==nil && $0.projection?.inside==false})
+    store.artworkSession.activate(proof.id)
+    let canvas=try XCTUnwrap(context(store)["canvas"] as? [String:Any]),query=try XCTUnwrap(canvas["view_artwork_query"] as? [String:Any]),frame=try XCTUnwrap(query["physical_frame"] as? [String:Any])
+    XCTAssertEqual(frame["component_id"] as? String,"first-piece");XCTAssertNil(frame["surface_id"])
+    _=try store.engine.call("form_get_artwork",arguments:query)
+    XCTAssertEqual(store.project,before);XCTAssertEqual(store.project!.camera,camera);XCTAssertEqual(store.engine.undoStack.count,history)
+    store.engine.selection=[]
+    let unselected=try XCTUnwrap(context(store)["table"] as? [String:Any]);XCTAssertTrue(unselected["construction_target"] is NSNull)
+  }
 
   func testSplitSurfaceUsesLastFocusedPaneAndDoesNotSelectHiddenCanvasInstead() throws {
     let (store, frame, object) = try fixture()

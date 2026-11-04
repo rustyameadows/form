@@ -189,17 +189,38 @@ struct IconButton: View {
 struct AddObjectMenu: View {
   @EnvironmentObject var store: StudioStore
   var compact = false
+  private var starters:[ConstructionStarter] {(try? ConstructionStarterCatalog.bundled().starters) ?? []}
+  private var projectFactories:[Recipe] {
+    guard let project=store.project else{return []}
+    return project.recipes.filter {recipe in
+      // A recipe with executable parts/solid is independently addable. A recipe
+      // serving only instance-authored source objects has no factory payload.
+      if !recipe.parts.isEmpty || recipe.solid != nil{return true}
+      let owners=project.objects.filter{$0.recipeID==recipe.id}
+      return owners.isEmpty || owners.contains{$0.canvasSourceOnly != true && $0.paperConstruction?.authored == nil && $0.sheetAssembly == nil}
+    }
+  }
   var body: some View {
     Menu {
       Button {
         store.libraryReplacementID = nil
         store.showingObjectLibrary = true
       } label: { Label("Object library…", systemImage: "square.grid.2x2") }
+      if !starters.isEmpty {
+        Menu("Constructions") {
+          ForEach(starters){starter in
+            Button {
+              guard let projectID=store.project?.id else{return}
+              _=PartAssemblyNativeEditing.importStarter(store:store,projectID:projectID,starter:starter)
+            } label:{Label(starter.name,systemImage:starter.symbol)}
+          }
+        }
+      }
       Button {store.cad.openEditor()} label:{Label("Exact CAD model…",systemImage:"cube.transparent")}
       Button {store.modelAssets.openImport()} label:{Label("Import 3D model…",systemImage:"square.and.arrow.down")}
       Button {store.cad.openImport()} label:{Label("Import exact STEP / BRep…",systemImage:"cube.box")}
       Divider()
-      ForEach(Recipe.builtins.filter { $0.id != "reference" && $0.id != "patternAssembly" && !["importedMesh", "cadModel"].contains($0.id) } + (store.project?.recipes ?? [])) {
+      ForEach(Recipe.builtins.filter { $0.id != "reference" && $0.id != "patternAssembly" && !["importedMesh", "cadModel"].contains($0.id) } + projectFactories) {
         recipe in
         Button {
           store.add(recipe)

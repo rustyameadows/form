@@ -23,6 +23,7 @@ import simd
   private let frameEvent: any MTLSharedEvent
   private var frameNumber:UInt64=0
   private var lighting=SceneLightingPayload()
+  private var shadowsDirty=true
   private struct MeshEntry {var resource:MeshResource;var originMM:SIMD3<Double>;var low:SIMD3<Double>;var high:SIMD3<Double>;var cost:Int}
   private struct Record {var payload:SceneRenderablePayload;var entity:ModelEntity;var mesh:MeshEntry;var materialKey:String;var selection:Entity?}
   private var records:[String:Record]=[:]
@@ -44,7 +45,7 @@ import simd
     viewport.autoResizeDrawable=true;viewport.setAccessibilityLabel("RealityKit design viewport")
     sceneRoot.name="LAB scene";objectRoot.name="LAB objects";cameraEntity.name="LAB camera"
     sceneRoot.addChild(objectRoot);sceneRoot.addChild(cameraEntity);sceneRoot.addChild(key);sceneRoot.addChild(fill);sceneRoot.addChild(environment)
-    environment.name="LAB environment"
+    environment.name="LAB environment";key.name="LAB key light"
     if Self.studioEnvironment==nil {Self.studioEnvironment=try EnvironmentResource(equirectangular:Self.softboxImage(),withName:"LAB neutral studio")}
     if let resource=Self.studioEnvironment {environment.components.set(ImageBasedLightComponent(source:.single(resource),intensityExponent:0))}
     rendered.entities.append(sceneRoot);rendered.activeCamera=cameraEntity
@@ -56,6 +57,7 @@ import simd
     guard view.bounds.width>0,view.bounds.height>0,let drawable=view.currentDrawable else{return}
     let started=CFAbsoluteTimeGetCurrent()
     do {
+      refreshShadows()
       let output=try RealityRenderer.CameraOutput(.singleProjection(colorTexture:drawable.texture))
       frameNumber &+= 1
       try rendered.updateAndRender(deltaTime:1/60,cameraOutput:output,actionsAfterRender:[.signal(frameEvent,value:frameNumber)])
@@ -64,7 +66,7 @@ import simd
       diagnostics.frames+=1;diagnostics.lastFrameMilliseconds=(CFAbsoluteTimeGetCurrent()-started)*1000
     }catch{warn("Viewport render: \(error.localizedDescription)")}
   }
-  public func mtkView(_ view:MTKView,drawableSizeWillChange size:CGSize){requestDraw()}
+  public func mtkView(_ view:MTKView,drawableSizeWillChange size:CGSize){shadowsDirty=true;requestDraw()}
   public func upsert(_ payload:SceneRenderablePayload)throws {
     try payload.transform.validate()
     pendingRequests.removeValue(forKey:payload.componentID)
@@ -92,7 +94,7 @@ import simd
       let record=Record(payload:payload,entity:entity,mesh:entry,materialKey:materialKey,selection:nil)
       records[payload.componentID]=record;applyTransform(record);applyVisibility(record);refreshSelection(payload.componentID)
     }
-    diagnostics.componentCount=records.count
+    diagnostics.componentCount=records.count;shadowsDirty=true
     if !payload.mesh.uvs1.isEmpty{warn("\(payload.componentID): secondary UVs retained, but procedural UV1 upload needs a newer RealityKit API or explicit UV baking.")}
     if !payload.mesh.colors.isEmpty{warn("\(payload.componentID): vertex colors retained; the standard PBR backend currently needs an explicit color-texture bake.")}
     requestDraw()
@@ -129,11 +131,11 @@ import simd
     guard token==epoch,pendingRequests[payload.componentID]==request else{throw SceneRendererError.cancelled}
     try upsert(payload);trimMeshes()
   }
-  public func remove(componentID:String){pendingRequests.removeValue(forKey:componentID);records.removeValue(forKey:componentID)?.entity.removeFromParent();diagnostics.componentCount=records.count;requestDraw()}
-  public func reset(){epoch=UUID();pendingRequests=[:];objectRoot.children.removeAll();records=[:];meshCache=[:];meshOrder=[];materialCache=[:];materialOrder=[];textureCache=[:];textureCosts=[:];textureOrder=[];selection=[];visibleObjects=nil;diagnostics.componentCount=0;diagnostics.meshCacheBytes=0;diagnostics.textureCacheBytes=0;diagnostics.warnings=[];requestDraw()}
+  public func remove(componentID:String){pendingRequests.removeValue(forKey:componentID);records.removeValue(forKey:componentID)?.entity.removeFromParent();diagnostics.componentCount=records.count;shadowsDirty=true;requestDraw()}
+  public func reset(){epoch=UUID();pendingRequests=[:];objectRoot.children.removeAll();records=[:];meshCache=[:];meshOrder=[];materialCache=[:];materialOrder=[];textureCache=[:];textureCosts=[:];textureOrder=[];selection=[];visibleObjects=nil;diagnostics.componentCount=0;diagnostics.meshCacheBytes=0;diagnostics.textureCacheBytes=0;diagnostics.warnings=[];shadowsDirty=true;requestDraw()}
   public func setTransform(_ transform:SceneTransformPayload,componentID:String)throws {
     try transform.validate();guard var record=records[componentID] else{return}
-    guard record.payload.transform != transform else{return};record.payload.transform=transform;records[componentID]=record;applyTransform(record);diagnostics.transformUpdates+=1;requestDraw()
+    guard record.payload.transform != transform else{return};record.payload.transform=transform;records[componentID]=record;applyTransform(record);diagnostics.transformUpdates+=1;shadowsDirty=true;requestDraw()
   }
   public func setMaterials(_ materials:[SceneMaterialPayload],componentID:String)throws {
     guard let record=records[componentID] else{return};var payload=record.payload;payload.materials=materials;try payload.mesh.validate(materialCount:materials.count);try upsert(payload)
@@ -142,20 +144,34 @@ import simd
     try camera.validate();self.camera=camera
     let p=camera.worldFromCameraMM.columns.3,eye=SIMD3(p.x,p.y,p.z)
     if simd_distance(eye,floatingOriginMM)>50_000 {floatingOriginMM=SIMD3((eye.x/10_000).rounded(),(eye.y/10_000).rounded(),(eye.z/10_000).rounded())*10_000;for record in records.values{applyTransform(record)}}
-    applyCamera(camera,to:cameraEntity);requestDraw()
+    applyCamera(camera,to:cameraEntity);shadowsDirty=true;requestDraw()
   }
   public func setLighting(_ lighting:SceneLightingPayload)throws {
     guard lighting.keyIntensity.isFinite,lighting.fillIntensity.isFinite,lighting.keyIntensity>=0,lighting.fillIntensity>=0,simd_length_squared(lighting.keyDirection)>1e-10 else{throw SceneRendererError.invalidCamera}
     self.lighting=lighting;rendered.cameraSettings.isToneMappingEnabled=lighting.toneMappingEnabled;rendered.cameraSettings.colorBackground = .color(color(lighting.background).cgColor)
     key.light.intensity=lighting.keyIntensity;key.light.color=NSColor(srgbRed:CGFloat(lighting.keyColor.x),green:CGFloat(lighting.keyColor.y),blue:CGFloat(lighting.keyColor.z),alpha:1)
     key.look(at:lighting.keyDirection,from:.zero,relativeTo:nil)
-    key.shadow=lighting.shadows ? .init(shadowProjection:.automatic(maximumDistance:1000),depthBias:1):nil
+    shadowsDirty=true
     fill.light.intensity=lighting.fillIntensity;fill.light.color = .white;fill.look(at:SIMD3<Float>(0.6,-0.3,0.8),from:.zero,relativeTo:nil);fill.shadow=nil
     if var ibl=environment.components[ImageBasedLightComponent.self] {ibl.intensityExponent=log2(max(0.01,lighting.fillIntensity/600));environment.components.set(ibl)}
     requestDraw()
   }
+  private func shadow(camera:SceneCameraPayload,viewport:CGSize)->DirectionalLightComponent.Shadow? {
+    guard lighting.shadows else{return nil}
+    let subjects=records.values.filter {record in
+      record.payload.visible && record.payload.pickable && (visibleObjects?.contains(record.payload.objectID) ?? true)
+    }.map {record in
+      SceneShadowSubject(minimumMM:record.mesh.low,maximumMM:record.mesh.high,worldFromLocalMM:record.payload.transform.matrixMM)
+    }
+    let distance=SceneShadowFitting.maximumDistanceMetres(camera:camera,viewport:viewport,subjects:subjects)
+    return .init(shadowProjection:.automatic(maximumDistance:distance),depthBias:1)
+  }
+  private func refreshShadows() {
+    guard shadowsDirty else{return};shadowsDirty=false
+    key.shadow=shadow(camera:camera,viewport:viewport.drawableSize)
+  }
   public func setSelection(_ ids:Set<UUID>){guard ids != selection else{return};selection=ids;for id in records.keys{refreshSelection(id)};requestDraw()}
-  public func setVisibleObjects(_ ids:Set<UUID>?){visibleObjects=ids;for record in records.values{applyVisibility(record)};requestDraw()}
+  public func setVisibleObjects(_ ids:Set<UUID>?){visibleObjects=ids;for record in records.values{applyVisibility(record)};shadowsDirty=true;requestDraw()}
   public func ray(atTopLeft point:CGPoint,viewport:CGSize)->SceneRay? {SceneProjection.ray(camera:camera,atTopLeft:point,viewport:viewport)}
   public func pick(atTopLeft point:CGPoint,viewport:CGSize)->ScenePick? {picks(atTopLeft:point,viewport:viewport).first}
   public func picks(atTopLeft point:CGPoint,viewport:CGSize)->[ScenePick] {
@@ -183,6 +199,10 @@ import simd
     renderer.entities.append(root)
     guard let lens=root.findEntity(named:"LAB camera") else{throw SceneRendererError.invalidCamera}
     if let override{applyCamera(override,to:lens)}
+    if let light=root.findEntity(named:"LAB key light") {
+      if let fitted=shadow(camera:captureCamera,viewport:.init(width:width,height:height)){light.components.set(fitted)}
+      else{light.components.remove(DirectionalLightComponent.Shadow.self)}
+    }
     renderer.activeCamera=lens;renderer.cameraSettings.isToneMappingEnabled=captureLighting.toneMappingEnabled;renderer.cameraSettings.antialiasing = .multisample4X
     renderer.cameraSettings.colorBackground = .color(color(transparent ? SIMD4(0,0,0,0):captureLighting.background).cgColor)
     let descriptor=MTLTextureDescriptor.texture2DDescriptor(pixelFormat:.bgra8Unorm_srgb,width:width,height:height,mipmapped:false)
@@ -313,14 +333,26 @@ import simd
     cacheMaterial(m,key:cacheKey);return m
   }
   private func cacheMaterial(_ material:any RealityKit.Material,key:String){materialCache[key]=material;touch(key,in:&materialOrder);while materialOrder.count>512{materialCache.removeValue(forKey:materialOrder.removeFirst())}}
-  private func texture(_ value:SceneTexturePayload,semantic:TextureResource.Semantic)throws->MaterialParameters.Texture {
+  func texture(_ value:SceneTexturePayload,semantic:TextureResource.Semantic)throws->MaterialParameters.Texture {
     guard value.image.width<=8192,value.image.height<=8192,value.image.width*value.image.height<=16_000_000,!value.revision.isEmpty else{throw SceneRendererError.invalidTexture("Textures need an immutable revision and at most 16 MP / 8192 pixels per edge.")}
     guard value.uvIndex==0 else{throw SceneRendererError.invalidTexture("The current procedural renderer supports UV0. Bake the requested UV set explicitly; its source remains retained.")}
-    let key=value.revision+"|"+String(describing:semantic)
+    try value.sampling.validate()
+    let useMipmaps=value.sampling.mip != .none
+    let key=value.revision+"|"+String(describing:semantic)+"|mipmaps:\(useMipmaps)"
     let resource:TextureResource
-    if let cached=textureCache[key]{resource=cached;touch(key,in:&textureOrder)}else{resource=try TextureResource(image:try orientedTextureImage(value.image,semantic:semantic),withName:nil,options:.init(semantic:semantic));textureCache[key]=resource;textureOrder.append(key);let cost=value.image.width*value.image.height*4;textureCosts[key]=cost;diagnostics.textureCacheBytes+=cost;diagnostics.textureUploads+=1;trimTextures()}
-    var output=MaterialParameters.Texture(resource);output.uvIndex=value.uvIndex
-    output.sampler.modify {d in d.sAddressMode=address(value.wrapS);d.tAddressMode=address(value.wrapT);d.minFilter = .linear;d.magFilter = .linear;d.mipFilter = .linear}
+    if let cached=textureCache[key]{resource=cached;touch(key,in:&textureOrder)}else {
+      resource=try TextureResource(image:try orientedTextureImage(value.image,semantic:semantic),withName:nil,options:.init(semantic:semantic,mipmapsMode:useMipmaps ? .allocateAndGenerateAll:.none))
+      textureCache[key]=resource;textureOrder.append(key)
+      let cost=(0..<resource.mipmapLevelCount).reduce(0){$0+max(1,value.image.width>>$1)*max(1,value.image.height>>$1)*4}
+      textureCosts[key]=cost;diagnostics.textureCacheBytes+=cost;diagnostics.textureUploads+=1;trimTextures()
+    }
+    let descriptor=MTLSamplerDescriptor()
+    descriptor.sAddressMode=address(value.wrapS);descriptor.tAddressMode=address(value.wrapT)
+    descriptor.minFilter=value.sampling.minification == .linear ? .linear:.nearest
+    descriptor.magFilter=value.sampling.magnification == .linear ? .linear:.nearest
+    switch value.sampling.mip {case .none:descriptor.mipFilter = .notMipmapped;case .nearest:descriptor.mipFilter = .nearest;case .linear:descriptor.mipFilter = .linear}
+    descriptor.maxAnisotropy=Int(value.sampling.maximumAnisotropy.rounded())
+    var output=MaterialParameters.Texture(resource,sampler:.init(descriptor));output.uvIndex=value.uvIndex
     switch value.channel {
     case .rgba:break
     case .red:output.swizzle = .init(red:.red,green:.red,blue:.red,alpha:.one)

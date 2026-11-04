@@ -66,23 +66,26 @@ enum PlanarSolidValidation {
         try await checkpoint?();try checkBudget()
         let checks=source.solidChecks ?? [],values=try source.resolvedValues()
         let needed=Set(checks.flatMap{[$0.firstPanelID,$0.secondPanelID]})
-        var posed:[String:CADShape]=[:],measurements:[Pair:CADClearance]=[:]
+        var posed:[String:CADShape]=[:],measurements:[Pair:CADClearance]=[:],calipers:[String:Double]=[:]
         let matrices=Dictionary(uniqueKeysWithValues:prepared.poses.map{($0.panelID,$0.flatToWorld)})
         for panel in net.panels where needed.contains(panel.id) {
           try checkBudget()
+          var material=try panel.resolvedStock(fallback:.init(thicknessMM:stock))
+          if let thickness=panel.features?.stockThickness {material=try PlanarConstructionDefinition.resizedStock(material,thickness:source.number(thickness))}
+          let effective=material.resolvedThicknessMM;calipers[panel.id]=effective
           let base:CADShape
-          if let cached=flat[panel.id],cached.polygon==panel.polygon,cached.cutouts==panel.cutouts,cached.stock==stock {
+          if let cached=flat[panel.id],cached.polygon==panel.polygon,cached.cutouts==panel.cutouts,cached.stock==effective {
             base=cached.shape
           } else {
             let profile=try await kernel.profile(outer:panel.polygon.map{.init($0.x,-$0.y)},
               holes:(panel.cutouts ?? []).map{$0.polygon.map{.init($0.x,-$0.y)}},
-              plane:.init(origin:.init(0,0,-stock/2),u:.init(1,0,0),v:.init(0,1,0)))
+              plane:.init(origin:.init(0,0,-effective/2),u:.init(1,0,0),v:.init(0,1,0)))
             try checkBudget()
-            base=try await kernel.extrude(profile,vector:.init(0,0,stock))
+            base=try await kernel.extrude(profile,vector:.init(0,0,effective))
             guard base.info.valid,base.info.closed,base.info.solids==1,base.info.volumeMM3>0 else {
               throw FormError.invalid("Panel '\(panel.id)' did not produce a valid positive-volume nominal-stock slab.")
             }
-            flat[panel.id] = .init(polygon:panel.polygon,cutouts:panel.cutouts,stock:stock,shape:base)
+            flat[panel.id] = .init(polygon:panel.polygon,cutouts:panel.cutouts,stock:effective,shape:base)
           }
           try checkBudget()
           guard let matrix=matrices[panel.id],matrix.count==16,matrix.allSatisfy(\.isFinite) else {
@@ -104,7 +107,9 @@ enum PlanarSolidValidation {
             try checkBudget();measurements[pair]=measurement
           }
           reports.append(try check.measurement(check.metric == .clearance ? measurement.distanceMM:measurement.interferenceVolumeMM3,
-            values:values,stockThicknessMM:stock))
+            values:values,stockThicknessMM:stock,
+            firstStockThicknessMM:source.version>=4 ? calipers[check.firstPanelID]:nil,
+            secondStockThicknessMM:source.version>=4 ? calipers[check.secondPanelID]:nil))
           prepared.result.solidChecks=reports;active=prepared.result
         }
         prepared.result.solidChecks=reports

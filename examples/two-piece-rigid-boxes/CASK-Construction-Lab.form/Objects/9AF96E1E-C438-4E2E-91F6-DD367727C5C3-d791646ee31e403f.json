@@ -1,0 +1,1381 @@
+{
+  "artwork" : {
+    "background" : "#FFFFFF",
+    "backgroundOpacity" : 0,
+    "bleed" : 0,
+    "elements" : [
+      {
+        "color" : "#213D44",
+        "fontSize" : 13.5,
+        "height" : 11,
+        "id" : "5647DEBA-8AC6-5F55-B43C-1D33DD6E49B0",
+        "kind" : "text",
+        "name" : "Retained legacy inscription",
+        "text" : "LEGACY04 / RETAIN THIS ARTWORK",
+        "typography" : {
+          "alignment" : "left",
+          "baseline" : 0,
+          "caseTreatment" : "original",
+          "direction" : "natural",
+          "features" : {
+
+          },
+          "firstLineIndent" : 0,
+          "fontName" : "HelveticaNeue",
+          "frameMode" : "area",
+          "horizontalScale" : 100,
+          "hyphenation" : 0,
+          "leading" : 16.2,
+          "leftIndent" : 0,
+          "ligatures" : 1,
+          "pairKerning" : {
+
+          },
+          "paragraphAfter" : 0,
+          "paragraphBefore" : 0,
+          "rightIndent" : 0,
+          "strikethrough" : false,
+          "tracking" : 0,
+          "underline" : false,
+          "variations" : {
+
+          },
+          "verticalAlignment" : "top",
+          "wordSpacing" : 0
+        },
+        "width" : 105,
+        "x" : 14,
+        "y" : 15
+      },
+      {
+        "color" : "#8B583D",
+        "fontSize" : 10,
+        "height" : 7,
+        "id" : "D8D49810-5649-5ED5-B733-C77587D32FCF",
+        "kind" : "ellipse",
+        "name" : "Retained legacy mark",
+        "text" : "",
+        "width" : 7,
+        "x" : 14,
+        "y" : 30
+      }
+    ],
+    "unit" : "mm"
+  },
+  "designID" : "23ED4226-92D3-461E-AFDF-238FEF5BA31A",
+  "id" : "9AF96E1E-C438-4E2E-91F6-DD367727C5C3",
+  "locked" : false,
+  "materialID" : "paper-superfine",
+  "name" : "Legacy04 / adoption preservation",
+  "paperConstruction" : {
+    "annotations" : [
+      {
+        "id" : "EFF2470F-8C03-5C3B-B24C-927B0EB63115",
+        "kind" : "note",
+        "panelID" : "base-front",
+        "text" : "Retain this saved board note.",
+        "view" : "assembled"
+      },
+      {
+        "id" : "AD831B7B-E6F6-4DD5-9442-3A766DF752FE",
+        "kind" : "assembly",
+        "text" : "Adopted the saved independent pieces into editable assembly groups. Existing dimension and clearance meanings are retained; new material, fastening and finished-fit assumptions require explicit review.",
+        "view" : "assembled"
+      }
+    ],
+    "artworkReferenceSize" : {
+      "x" : 535.2,
+      "y" : 713.6
+    },
+    "artworkReviewRequired" : true,
+    "authored" : {
+      "components" : [
+        {
+          "anchor" : {
+            "x" : "5+0*cell",
+            "y" : "5+0*cell"
+          },
+          "groupID" : "989F9CCA-76A3-438F-A956-0B510466B4A2",
+          "id" : "base-floor",
+          "name" : "Base Floor",
+          "position" : {
+            "x" : "-(width)/2-stock",
+            "y" : "(stock/2)+(0)",
+            "z" : "-(depth)/2-stock"
+          },
+          "quantity" : 1,
+          "rootPanelID" : "base-floor",
+          "rotationDegrees" : {
+            "x" : "-90.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "stock" : {
+            "grain" : "parallelWidth",
+            "gsm" : 300,
+            "name" : "Legacy saved two-ply board",
+            "notes" : "Retained source-specific stock choice; bonded facing is not a generated wrap pattern.",
+            "plies" : [
+              {
+                "color" : "#918A78",
+                "id" : "F3B81C95-8B80-53F7-880E-CD11CB25E7A6",
+                "name" : "Saved grey backing",
+                "thicknessMM" : 0.6000000000000001
+              },
+              {
+                "color" : "#E7DCC4",
+                "id" : "53C78F1B-7829-5CFF-A91B-4B17016696F0",
+                "name" : "Saved oat facing",
+                "profile" : {
+                  "color" : "#E7DCC4",
+                  "opacity" : 1,
+                  "roughness" : 0.91,
+                  "texture" : "cotton",
+                  "textureDepthMM" : 0.012,
+                  "textureScaleMM" : 0.7
+                },
+                "thicknessMM" : 1.2000000000000002
+              }
+            ],
+            "profile" : {
+              "color" : "#DBD0B9",
+              "opacity" : 1,
+              "roughness" : 0.88,
+              "texture" : "laid",
+              "textureDepthMM" : 0.018,
+              "textureScaleMM" : 0.8
+            },
+            "thicknessMM" : 1.8,
+            "verified" : false
+          },
+          "stockThickness" : "stock"
+        },
+        {
+          "anchor" : {
+            "x" : "5+1*cell",
+            "y" : "(5+0*cell)+(height)"
+          },
+          "groupID" : "989F9CCA-76A3-438F-A956-0B510466B4A2",
+          "id" : "base-front",
+          "name" : "Base Front",
+          "position" : {
+            "x" : "-(width)/2-stock",
+            "y" : "(stock)+(0)",
+            "z" : "(depth)/2+stock/2"
+          },
+          "quantity" : 1,
+          "rootPanelID" : "base-front",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "stock" : {
+            "grain" : "parallelWidth",
+            "gsm" : 300,
+            "name" : "Legacy saved two-ply board",
+            "notes" : "Retained source-specific stock choice; bonded facing is not a generated wrap pattern.",
+            "plies" : [
+              {
+                "color" : "#918A78",
+                "id" : "F3B81C95-8B80-53F7-880E-CD11CB25E7A6",
+                "name" : "Saved grey backing",
+                "thicknessMM" : 0.6000000000000001
+              },
+              {
+                "color" : "#E7DCC4",
+                "id" : "53C78F1B-7829-5CFF-A91B-4B17016696F0",
+                "name" : "Saved oat facing",
+                "profile" : {
+                  "color" : "#E7DCC4",
+                  "opacity" : 1,
+                  "roughness" : 0.91,
+                  "texture" : "cotton",
+                  "textureDepthMM" : 0.012,
+                  "textureScaleMM" : 0.7
+                },
+                "thicknessMM" : 1.2000000000000002
+              }
+            ],
+            "profile" : {
+              "color" : "#DBD0B9",
+              "opacity" : 1,
+              "roughness" : 0.88,
+              "texture" : "laid",
+              "textureDepthMM" : 0.018,
+              "textureScaleMM" : 0.8
+            },
+            "thicknessMM" : 1.8,
+            "verified" : false
+          },
+          "stockThickness" : "stock"
+        },
+        {
+          "anchor" : {
+            "x" : "5+2*cell",
+            "y" : "(5+0*cell)+(height)"
+          },
+          "groupID" : "989F9CCA-76A3-438F-A956-0B510466B4A2",
+          "id" : "base-back",
+          "name" : "Base Back",
+          "position" : {
+            "x" : "(width)/2+stock",
+            "y" : "(stock)+(0)",
+            "z" : "-(depth)/2-stock/2"
+          },
+          "quantity" : 1,
+          "rootPanelID" : "base-back",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "180.0",
+            "z" : "0.0"
+          },
+          "stock" : {
+            "grain" : "parallelWidth",
+            "gsm" : 300,
+            "name" : "Legacy saved two-ply board",
+            "notes" : "Retained source-specific stock choice; bonded facing is not a generated wrap pattern.",
+            "plies" : [
+              {
+                "color" : "#918A78",
+                "id" : "F3B81C95-8B80-53F7-880E-CD11CB25E7A6",
+                "name" : "Saved grey backing",
+                "thicknessMM" : 0.6000000000000001
+              },
+              {
+                "color" : "#E7DCC4",
+                "id" : "53C78F1B-7829-5CFF-A91B-4B17016696F0",
+                "name" : "Saved oat facing",
+                "profile" : {
+                  "color" : "#E7DCC4",
+                  "opacity" : 1,
+                  "roughness" : 0.91,
+                  "texture" : "cotton",
+                  "textureDepthMM" : 0.012,
+                  "textureScaleMM" : 0.7
+                },
+                "thicknessMM" : 1.2000000000000002
+              }
+            ],
+            "profile" : {
+              "color" : "#DBD0B9",
+              "opacity" : 1,
+              "roughness" : 0.88,
+              "texture" : "laid",
+              "textureDepthMM" : 0.018,
+              "textureScaleMM" : 0.8
+            },
+            "thicknessMM" : 1.8,
+            "verified" : false
+          },
+          "stockThickness" : "stock"
+        },
+        {
+          "anchor" : {
+            "x" : "5+0*cell",
+            "y" : "(5+1*cell)+(height)"
+          },
+          "groupID" : "989F9CCA-76A3-438F-A956-0B510466B4A2",
+          "id" : "base-left",
+          "name" : "Base Left",
+          "position" : {
+            "x" : "-(width)/2-stock/2",
+            "y" : "(stock)+(0)",
+            "z" : "-(depth)/2"
+          },
+          "quantity" : 1,
+          "rootPanelID" : "base-left",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "-90.0",
+            "z" : "0.0"
+          },
+          "stock" : {
+            "grain" : "parallelWidth",
+            "gsm" : 300,
+            "name" : "Legacy saved two-ply board",
+            "notes" : "Retained source-specific stock choice; bonded facing is not a generated wrap pattern.",
+            "plies" : [
+              {
+                "color" : "#918A78",
+                "id" : "F3B81C95-8B80-53F7-880E-CD11CB25E7A6",
+                "name" : "Saved grey backing",
+                "thicknessMM" : 0.6000000000000001
+              },
+              {
+                "color" : "#E7DCC4",
+                "id" : "53C78F1B-7829-5CFF-A91B-4B17016696F0",
+                "name" : "Saved oat facing",
+                "profile" : {
+                  "color" : "#E7DCC4",
+                  "opacity" : 1,
+                  "roughness" : 0.91,
+                  "texture" : "cotton",
+                  "textureDepthMM" : 0.012,
+                  "textureScaleMM" : 0.7
+                },
+                "thicknessMM" : 1.2000000000000002
+              }
+            ],
+            "profile" : {
+              "color" : "#DBD0B9",
+              "opacity" : 1,
+              "roughness" : 0.88,
+              "texture" : "laid",
+              "textureDepthMM" : 0.018,
+              "textureScaleMM" : 0.8
+            },
+            "thicknessMM" : 1.8,
+            "verified" : false
+          },
+          "stockThickness" : "stock"
+        },
+        {
+          "anchor" : {
+            "x" : "5+1*cell",
+            "y" : "(5+1*cell)+(height)"
+          },
+          "groupID" : "989F9CCA-76A3-438F-A956-0B510466B4A2",
+          "id" : "base-right",
+          "name" : "Base Right",
+          "position" : {
+            "x" : "(width)/2+stock/2",
+            "y" : "(stock)+(0)",
+            "z" : "(depth)/2"
+          },
+          "quantity" : 1,
+          "rootPanelID" : "base-right",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "90.0",
+            "z" : "0.0"
+          },
+          "stock" : {
+            "grain" : "parallelWidth",
+            "gsm" : 300,
+            "name" : "Legacy saved two-ply board",
+            "notes" : "Retained source-specific stock choice; bonded facing is not a generated wrap pattern.",
+            "plies" : [
+              {
+                "color" : "#918A78",
+                "id" : "F3B81C95-8B80-53F7-880E-CD11CB25E7A6",
+                "name" : "Saved grey backing",
+                "thicknessMM" : 0.6000000000000001
+              },
+              {
+                "color" : "#E7DCC4",
+                "id" : "53C78F1B-7829-5CFF-A91B-4B17016696F0",
+                "name" : "Saved oat facing",
+                "profile" : {
+                  "color" : "#E7DCC4",
+                  "opacity" : 1,
+                  "roughness" : 0.91,
+                  "texture" : "cotton",
+                  "textureDepthMM" : 0.012,
+                  "textureScaleMM" : 0.7
+                },
+                "thicknessMM" : 1.2000000000000002
+              }
+            ],
+            "profile" : {
+              "color" : "#DBD0B9",
+              "opacity" : 1,
+              "roughness" : 0.88,
+              "texture" : "laid",
+              "textureDepthMM" : 0.018,
+              "textureScaleMM" : 0.8
+            },
+            "thicknessMM" : 1.8,
+            "verified" : false
+          },
+          "stockThickness" : "stock"
+        },
+        {
+          "anchor" : {
+            "x" : "5+2*cell",
+            "y" : "5+1*cell"
+          },
+          "groupID" : "989F9CCA-76A3-438F-A956-0B510466B4A2",
+          "id" : "lid-floor",
+          "name" : "Lid Floor",
+          "position" : {
+            "x" : "(-(lidWidth)/2-stock)+opening/100*(width+40)",
+            "y" : "(stock+height+clearance+stock/2)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+            "z" : "-(lidDepth)/2-stock"
+          },
+          "quantity" : 1,
+          "rootPanelID" : "lid-floor",
+          "rotationDegrees" : {
+            "x" : "-90.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "stock" : {
+            "grain" : "parallelWidth",
+            "gsm" : 300,
+            "name" : "Legacy saved two-ply board",
+            "notes" : "Retained source-specific stock choice; bonded facing is not a generated wrap pattern.",
+            "plies" : [
+              {
+                "color" : "#918A78",
+                "id" : "F3B81C95-8B80-53F7-880E-CD11CB25E7A6",
+                "name" : "Saved grey backing",
+                "thicknessMM" : 0.6000000000000001
+              },
+              {
+                "color" : "#E7DCC4",
+                "id" : "53C78F1B-7829-5CFF-A91B-4B17016696F0",
+                "name" : "Saved oat facing",
+                "profile" : {
+                  "color" : "#E7DCC4",
+                  "opacity" : 1,
+                  "roughness" : 0.91,
+                  "texture" : "cotton",
+                  "textureDepthMM" : 0.012,
+                  "textureScaleMM" : 0.7
+                },
+                "thicknessMM" : 1.2000000000000002
+              }
+            ],
+            "profile" : {
+              "color" : "#DBD0B9",
+              "opacity" : 1,
+              "roughness" : 0.88,
+              "texture" : "laid",
+              "textureDepthMM" : 0.018,
+              "textureScaleMM" : 0.8
+            },
+            "thicknessMM" : 1.8,
+            "verified" : false
+          },
+          "stockThickness" : "stock"
+        },
+        {
+          "anchor" : {
+            "x" : "5+0*cell",
+            "y" : "(5+2*cell)+(lidHeight)"
+          },
+          "groupID" : "989F9CCA-76A3-438F-A956-0B510466B4A2",
+          "id" : "lid-front",
+          "name" : "Lid Front",
+          "position" : {
+            "x" : "(-(lidWidth)/2-stock)+opening/100*(width+40)",
+            "y" : "(stock+height+clearance-lidHeight)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+            "z" : "(lidDepth)/2+stock/2"
+          },
+          "quantity" : 1,
+          "rootPanelID" : "lid-front",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "stock" : {
+            "grain" : "parallelWidth",
+            "gsm" : 300,
+            "name" : "Legacy saved two-ply board",
+            "notes" : "Retained source-specific stock choice; bonded facing is not a generated wrap pattern.",
+            "plies" : [
+              {
+                "color" : "#918A78",
+                "id" : "F3B81C95-8B80-53F7-880E-CD11CB25E7A6",
+                "name" : "Saved grey backing",
+                "thicknessMM" : 0.6000000000000001
+              },
+              {
+                "color" : "#E7DCC4",
+                "id" : "53C78F1B-7829-5CFF-A91B-4B17016696F0",
+                "name" : "Saved oat facing",
+                "profile" : {
+                  "color" : "#E7DCC4",
+                  "opacity" : 1,
+                  "roughness" : 0.91,
+                  "texture" : "cotton",
+                  "textureDepthMM" : 0.012,
+                  "textureScaleMM" : 0.7
+                },
+                "thicknessMM" : 1.2000000000000002
+              }
+            ],
+            "profile" : {
+              "color" : "#DBD0B9",
+              "opacity" : 1,
+              "roughness" : 0.88,
+              "texture" : "laid",
+              "textureDepthMM" : 0.018,
+              "textureScaleMM" : 0.8
+            },
+            "thicknessMM" : 1.8,
+            "verified" : false
+          },
+          "stockThickness" : "stock"
+        },
+        {
+          "anchor" : {
+            "x" : "5+1*cell",
+            "y" : "(5+2*cell)+(lidHeight)"
+          },
+          "groupID" : "989F9CCA-76A3-438F-A956-0B510466B4A2",
+          "id" : "lid-back",
+          "name" : "Lid Back",
+          "position" : {
+            "x" : "((lidWidth)/2+stock)+opening/100*(width+40)",
+            "y" : "(stock+height+clearance-lidHeight)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+            "z" : "-(lidDepth)/2-stock/2"
+          },
+          "quantity" : 1,
+          "rootPanelID" : "lid-back",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "180.0",
+            "z" : "0.0"
+          },
+          "stock" : {
+            "grain" : "parallelWidth",
+            "gsm" : 300,
+            "name" : "Legacy saved two-ply board",
+            "notes" : "Retained source-specific stock choice; bonded facing is not a generated wrap pattern.",
+            "plies" : [
+              {
+                "color" : "#918A78",
+                "id" : "F3B81C95-8B80-53F7-880E-CD11CB25E7A6",
+                "name" : "Saved grey backing",
+                "thicknessMM" : 0.6000000000000001
+              },
+              {
+                "color" : "#E7DCC4",
+                "id" : "53C78F1B-7829-5CFF-A91B-4B17016696F0",
+                "name" : "Saved oat facing",
+                "profile" : {
+                  "color" : "#E7DCC4",
+                  "opacity" : 1,
+                  "roughness" : 0.91,
+                  "texture" : "cotton",
+                  "textureDepthMM" : 0.012,
+                  "textureScaleMM" : 0.7
+                },
+                "thicknessMM" : 1.2000000000000002
+              }
+            ],
+            "profile" : {
+              "color" : "#DBD0B9",
+              "opacity" : 1,
+              "roughness" : 0.88,
+              "texture" : "laid",
+              "textureDepthMM" : 0.018,
+              "textureScaleMM" : 0.8
+            },
+            "thicknessMM" : 1.8,
+            "verified" : false
+          },
+          "stockThickness" : "stock"
+        },
+        {
+          "anchor" : {
+            "x" : "5+2*cell",
+            "y" : "(5+2*cell)+(lidHeight)"
+          },
+          "groupID" : "989F9CCA-76A3-438F-A956-0B510466B4A2",
+          "id" : "lid-left",
+          "name" : "Lid Left",
+          "position" : {
+            "x" : "(-(lidWidth)/2-stock/2)+opening/100*(width+40)",
+            "y" : "(stock+height+clearance-lidHeight)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+            "z" : "-(lidDepth)/2"
+          },
+          "quantity" : 1,
+          "rootPanelID" : "lid-left",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "-90.0",
+            "z" : "0.0"
+          },
+          "stock" : {
+            "grain" : "parallelWidth",
+            "gsm" : 300,
+            "name" : "Legacy saved two-ply board",
+            "notes" : "Retained source-specific stock choice; bonded facing is not a generated wrap pattern.",
+            "plies" : [
+              {
+                "color" : "#918A78",
+                "id" : "F3B81C95-8B80-53F7-880E-CD11CB25E7A6",
+                "name" : "Saved grey backing",
+                "thicknessMM" : 0.6000000000000001
+              },
+              {
+                "color" : "#E7DCC4",
+                "id" : "53C78F1B-7829-5CFF-A91B-4B17016696F0",
+                "name" : "Saved oat facing",
+                "profile" : {
+                  "color" : "#E7DCC4",
+                  "opacity" : 1,
+                  "roughness" : 0.91,
+                  "texture" : "cotton",
+                  "textureDepthMM" : 0.012,
+                  "textureScaleMM" : 0.7
+                },
+                "thicknessMM" : 1.2000000000000002
+              }
+            ],
+            "profile" : {
+              "color" : "#DBD0B9",
+              "opacity" : 1,
+              "roughness" : 0.88,
+              "texture" : "laid",
+              "textureDepthMM" : 0.018,
+              "textureScaleMM" : 0.8
+            },
+            "thicknessMM" : 1.8,
+            "verified" : false
+          },
+          "stockThickness" : "stock"
+        },
+        {
+          "anchor" : {
+            "x" : "5+0*cell",
+            "y" : "(5+3*cell)+(lidHeight)"
+          },
+          "groupID" : "989F9CCA-76A3-438F-A956-0B510466B4A2",
+          "id" : "lid-right",
+          "name" : "Lid Right",
+          "position" : {
+            "x" : "((lidWidth)/2+stock/2)+opening/100*(width+40)",
+            "y" : "(stock+height+clearance-lidHeight)+sin(radians(opening*1.8))*(height+20)-opening/100*(stock+height+clearance-lidHeight)",
+            "z" : "(lidDepth)/2"
+          },
+          "quantity" : 1,
+          "rootPanelID" : "lid-right",
+          "rotationDegrees" : {
+            "x" : "0.0",
+            "y" : "90.0",
+            "z" : "0.0"
+          },
+          "stock" : {
+            "grain" : "parallelWidth",
+            "gsm" : 300,
+            "name" : "Legacy saved two-ply board",
+            "notes" : "Retained source-specific stock choice; bonded facing is not a generated wrap pattern.",
+            "plies" : [
+              {
+                "color" : "#918A78",
+                "id" : "F3B81C95-8B80-53F7-880E-CD11CB25E7A6",
+                "name" : "Saved grey backing",
+                "thicknessMM" : 0.6000000000000001
+              },
+              {
+                "color" : "#E7DCC4",
+                "id" : "53C78F1B-7829-5CFF-A91B-4B17016696F0",
+                "name" : "Saved oat facing",
+                "profile" : {
+                  "color" : "#E7DCC4",
+                  "opacity" : 1,
+                  "roughness" : 0.91,
+                  "texture" : "cotton",
+                  "textureDepthMM" : 0.012,
+                  "textureScaleMM" : 0.7
+                },
+                "thicknessMM" : 1.2000000000000002
+              }
+            ],
+            "profile" : {
+              "color" : "#DBD0B9",
+              "opacity" : 1,
+              "roughness" : 0.88,
+              "texture" : "laid",
+              "textureDepthMM" : 0.018,
+              "textureScaleMM" : 0.8
+            },
+            "thicknessMM" : 1.8,
+            "verified" : false
+          },
+          "stockThickness" : "stock"
+        },
+        {
+          "anchor" : {
+            "x" : "5+1*cell",
+            "y" : "5+3*cell"
+          },
+          "groupID" : "989F9CCA-76A3-438F-A956-0B510466B4A2",
+          "id" : "insert",
+          "name" : "Insert",
+          "position" : {
+            "x" : "-(width-2*clearance)/2",
+            "y" : "stock+insertHeight",
+            "z" : "-(depth-2*clearance)/2"
+          },
+          "quantity" : 1,
+          "rootPanelID" : "insert",
+          "rotationDegrees" : {
+            "x" : "-90.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "stock" : {
+            "grain" : "parallelWidth",
+            "gsm" : 300,
+            "name" : "Legacy saved two-ply board",
+            "notes" : "Retained source-specific stock choice; bonded facing is not a generated wrap pattern.",
+            "plies" : [
+              {
+                "color" : "#918A78",
+                "id" : "F3B81C95-8B80-53F7-880E-CD11CB25E7A6",
+                "name" : "Saved grey backing",
+                "thicknessMM" : 0.6000000000000001
+              },
+              {
+                "color" : "#E7DCC4",
+                "id" : "53C78F1B-7829-5CFF-A91B-4B17016696F0",
+                "name" : "Saved oat facing",
+                "profile" : {
+                  "color" : "#E7DCC4",
+                  "opacity" : 1,
+                  "roughness" : 0.91,
+                  "texture" : "cotton",
+                  "textureDepthMM" : 0.012,
+                  "textureScaleMM" : 0.7
+                },
+                "thicknessMM" : 1.2000000000000002
+              }
+            ],
+            "profile" : {
+              "color" : "#DBD0B9",
+              "opacity" : 1,
+              "roughness" : 0.88,
+              "texture" : "laid",
+              "textureDepthMM" : 0.018,
+              "textureScaleMM" : 0.8
+            },
+            "thicknessMM" : 1.8,
+            "verified" : false
+          },
+          "stockThickness" : "stock"
+        }
+      ],
+      "controls" : {
+        "groups" : [
+          {
+            "id" : "dimensions",
+            "title" : "Construction dimensions"
+          }
+        ],
+        "measurements" : [
+
+        ],
+        "parameters" : [
+          {
+            "group" : "dimensions",
+            "label" : "width",
+            "parameter" : "width"
+          },
+          {
+            "group" : "dimensions",
+            "label" : "height",
+            "parameter" : "height"
+          },
+          {
+            "group" : "dimensions",
+            "label" : "depth",
+            "parameter" : "depth"
+          },
+          {
+            "group" : "dimensions",
+            "label" : "stock",
+            "parameter" : "stock"
+          },
+          {
+            "group" : "dimensions",
+            "label" : "clearance",
+            "parameter" : "clearance"
+          },
+          {
+            "group" : "dimensions",
+            "label" : "lidHeight",
+            "parameter" : "lidHeight"
+          },
+          {
+            "group" : "dimensions",
+            "label" : "insertHeight",
+            "parameter" : "insertHeight"
+          }
+        ],
+        "poses" : [
+
+        ]
+      },
+      "derived" : {
+        "cell" : "max(width,max(depth,height))+8*stock+4*clearance+20",
+        "lidDepth" : "depth+2*stock+2*clearance",
+        "lidWidth" : "width+2*stock+2*clearance"
+      },
+      "groups" : [
+        {
+          "id" : "989F9CCA-76A3-438F-A956-0B510466B4A2",
+          "name" : "Two piece board box and insert",
+          "position" : {
+            "x" : "0",
+            "y" : "0",
+            "z" : "0"
+          },
+          "rotationDegrees" : {
+            "x" : "0",
+            "y" : "0",
+            "z" : "0"
+          }
+        }
+      ],
+      "hinges" : [
+
+      ],
+      "interiors" : [
+        {
+          "componentID" : "base-floor",
+          "id" : "base-interior",
+          "name" : "Base Interior",
+          "opening" : {
+            "axis" : "y",
+            "height" : "depth",
+            "width" : "width"
+          },
+          "origin" : {
+            "x" : "stock",
+            "y" : "-stock",
+            "z" : "stock/2"
+          },
+          "rotationDegrees" : {
+            "x" : "90.0",
+            "y" : "0.0",
+            "z" : "0.0"
+          },
+          "size" : {
+            "x" : "width",
+            "y" : "height",
+            "z" : "depth"
+          }
+        }
+      ],
+      "joins" : [
+        {
+          "firstPanelID" : "base-floor",
+          "id" : "base-front-bond",
+          "kind" : "glue",
+          "name" : "Base Front Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "base-front"
+        },
+        {
+          "firstPanelID" : "base-floor",
+          "id" : "base-back-bond",
+          "kind" : "glue",
+          "name" : "Base Back Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "base-back"
+        },
+        {
+          "firstPanelID" : "base-floor",
+          "id" : "base-left-bond",
+          "kind" : "glue",
+          "name" : "Base Left Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "base-left"
+        },
+        {
+          "firstPanelID" : "base-floor",
+          "id" : "base-right-bond",
+          "kind" : "glue",
+          "name" : "Base Right Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "base-right"
+        },
+        {
+          "firstPanelID" : "lid-floor",
+          "id" : "lid-front-bond",
+          "kind" : "glue",
+          "name" : "Lid Front Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "lid-front"
+        },
+        {
+          "firstPanelID" : "lid-floor",
+          "id" : "lid-back-bond",
+          "kind" : "glue",
+          "name" : "Lid Back Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "lid-back"
+        },
+        {
+          "firstPanelID" : "lid-floor",
+          "id" : "lid-left-bond",
+          "kind" : "glue",
+          "name" : "Lid Left Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "lid-left"
+        },
+        {
+          "firstPanelID" : "lid-floor",
+          "id" : "lid-right-bond",
+          "kind" : "glue",
+          "name" : "Lid Right Bond",
+          "notes" : "Prototype joint on the actual stock; adhesive strength is not simulated.",
+          "overlapMM" : "stock",
+          "secondPanelID" : "lid-right"
+        }
+      ],
+      "name" : "Two piece board box and insert",
+      "panels" : [
+        {
+          "id" : "base-floor",
+          "name" : "Base Floor",
+          "polygon" : [
+            {
+              "x" : "5+0*cell",
+              "y" : "5+0*cell"
+            },
+            {
+              "x" : "(5+0*cell)+((width)+2*stock)",
+              "y" : "5+0*cell"
+            },
+            {
+              "x" : "(5+0*cell)+((width)+2*stock)",
+              "y" : "(5+0*cell)+((depth)+2*stock)"
+            },
+            {
+              "x" : "5+0*cell",
+              "y" : "(5+0*cell)+((depth)+2*stock)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "base-front",
+          "name" : "Base Front",
+          "polygon" : [
+            {
+              "x" : "5+1*cell",
+              "y" : "5+0*cell"
+            },
+            {
+              "x" : "(5+1*cell)+((width)+2*stock)",
+              "y" : "5+0*cell"
+            },
+            {
+              "x" : "(5+1*cell)+((width)+2*stock)",
+              "y" : "(5+0*cell)+(height)"
+            },
+            {
+              "x" : "5+1*cell",
+              "y" : "(5+0*cell)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "base-back",
+          "name" : "Base Back",
+          "polygon" : [
+            {
+              "x" : "5+2*cell",
+              "y" : "5+0*cell"
+            },
+            {
+              "x" : "(5+2*cell)+((width)+2*stock)",
+              "y" : "5+0*cell"
+            },
+            {
+              "x" : "(5+2*cell)+((width)+2*stock)",
+              "y" : "(5+0*cell)+(height)"
+            },
+            {
+              "x" : "5+2*cell",
+              "y" : "(5+0*cell)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "base-left",
+          "name" : "Base Left",
+          "polygon" : [
+            {
+              "x" : "5+0*cell",
+              "y" : "5+1*cell"
+            },
+            {
+              "x" : "(5+0*cell)+(depth)",
+              "y" : "5+1*cell"
+            },
+            {
+              "x" : "(5+0*cell)+(depth)",
+              "y" : "(5+1*cell)+(height)"
+            },
+            {
+              "x" : "5+0*cell",
+              "y" : "(5+1*cell)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "base-right",
+          "name" : "Base Right",
+          "polygon" : [
+            {
+              "x" : "5+1*cell",
+              "y" : "5+1*cell"
+            },
+            {
+              "x" : "(5+1*cell)+(depth)",
+              "y" : "5+1*cell"
+            },
+            {
+              "x" : "(5+1*cell)+(depth)",
+              "y" : "(5+1*cell)+(height)"
+            },
+            {
+              "x" : "5+1*cell",
+              "y" : "(5+1*cell)+(height)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "lid-floor",
+          "name" : "Lid Floor",
+          "polygon" : [
+            {
+              "x" : "5+2*cell",
+              "y" : "5+1*cell"
+            },
+            {
+              "x" : "(5+2*cell)+((lidWidth)+2*stock)",
+              "y" : "5+1*cell"
+            },
+            {
+              "x" : "(5+2*cell)+((lidWidth)+2*stock)",
+              "y" : "(5+1*cell)+((lidDepth)+2*stock)"
+            },
+            {
+              "x" : "5+2*cell",
+              "y" : "(5+1*cell)+((lidDepth)+2*stock)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "lid-front",
+          "name" : "Lid Front",
+          "polygon" : [
+            {
+              "x" : "5+0*cell",
+              "y" : "5+2*cell"
+            },
+            {
+              "x" : "(5+0*cell)+((lidWidth)+2*stock)",
+              "y" : "5+2*cell"
+            },
+            {
+              "x" : "(5+0*cell)+((lidWidth)+2*stock)",
+              "y" : "(5+2*cell)+(lidHeight)"
+            },
+            {
+              "x" : "5+0*cell",
+              "y" : "(5+2*cell)+(lidHeight)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "lid-back",
+          "name" : "Lid Back",
+          "polygon" : [
+            {
+              "x" : "5+1*cell",
+              "y" : "5+2*cell"
+            },
+            {
+              "x" : "(5+1*cell)+((lidWidth)+2*stock)",
+              "y" : "5+2*cell"
+            },
+            {
+              "x" : "(5+1*cell)+((lidWidth)+2*stock)",
+              "y" : "(5+2*cell)+(lidHeight)"
+            },
+            {
+              "x" : "5+1*cell",
+              "y" : "(5+2*cell)+(lidHeight)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "lid-left",
+          "name" : "Lid Left",
+          "polygon" : [
+            {
+              "x" : "5+2*cell",
+              "y" : "5+2*cell"
+            },
+            {
+              "x" : "(5+2*cell)+(lidDepth)",
+              "y" : "5+2*cell"
+            },
+            {
+              "x" : "(5+2*cell)+(lidDepth)",
+              "y" : "(5+2*cell)+(lidHeight)"
+            },
+            {
+              "x" : "5+2*cell",
+              "y" : "(5+2*cell)+(lidHeight)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "id" : "lid-right",
+          "name" : "Lid Right",
+          "polygon" : [
+            {
+              "x" : "5+0*cell",
+              "y" : "5+3*cell"
+            },
+            {
+              "x" : "(5+0*cell)+(lidDepth)",
+              "y" : "5+3*cell"
+            },
+            {
+              "x" : "(5+0*cell)+(lidDepth)",
+              "y" : "(5+3*cell)+(lidHeight)"
+            },
+            {
+              "x" : "5+0*cell",
+              "y" : "(5+3*cell)+(lidHeight)"
+            }
+          ],
+          "role" : "body"
+        },
+        {
+          "cutouts" : [
+            {
+              "id" : "product-aperture",
+              "kind" : "window",
+              "polygon" : [
+                {
+                  "x" : "(5+1*cell)+((width-2*clearance)*.25)",
+                  "y" : "(5+3*cell)+((depth-2*clearance)*.2)"
+                },
+                {
+                  "x" : "((5+1*cell)+((width-2*clearance)*.25))+((width-2*clearance)*.5)",
+                  "y" : "(5+3*cell)+((depth-2*clearance)*.2)"
+                },
+                {
+                  "x" : "((5+1*cell)+((width-2*clearance)*.25))+((width-2*clearance)*.5)",
+                  "y" : "((5+3*cell)+((depth-2*clearance)*.2))+((depth-2*clearance)*.6)"
+                },
+                {
+                  "x" : "(5+1*cell)+((width-2*clearance)*.25)",
+                  "y" : "((5+3*cell)+((depth-2*clearance)*.2))+((depth-2*clearance)*.6)"
+                }
+              ]
+            }
+          ],
+          "id" : "insert",
+          "name" : "Insert",
+          "polygon" : [
+            {
+              "x" : "5+1*cell",
+              "y" : "5+3*cell"
+            },
+            {
+              "x" : "(5+1*cell)+(width-2*clearance)",
+              "y" : "5+3*cell"
+            },
+            {
+              "x" : "(5+1*cell)+(width-2*clearance)",
+              "y" : "(5+3*cell)+(depth-2*clearance)"
+            },
+            {
+              "x" : "5+1*cell",
+              "y" : "(5+3*cell)+(depth-2*clearance)"
+            }
+          ],
+          "role" : "body"
+        }
+      ],
+      "parameters" : [
+        {
+          "maximum" : 224,
+          "minimum" : 84,
+          "name" : "width",
+          "unit" : "mm",
+          "value" : 140
+        },
+        {
+          "maximum" : 72,
+          "minimum" : 27,
+          "name" : "height",
+          "unit" : "mm",
+          "value" : 45
+        },
+        {
+          "maximum" : 160,
+          "minimum" : 60,
+          "name" : "depth",
+          "unit" : "mm",
+          "value" : 100
+        },
+        {
+          "maximum" : 3.24,
+          "minimum" : 0.9,
+          "name" : "stock",
+          "unit" : "mm",
+          "value" : 1.8
+        },
+        {
+          "maximum" : 5,
+          "minimum" : 0,
+          "name" : "clearance",
+          "unit" : "mm",
+          "value" : 1
+        },
+        {
+          "maximum" : 38,
+          "minimum" : 15,
+          "name" : "lidHeight",
+          "unit" : "mm",
+          "value" : 25
+        },
+        {
+          "maximum" : 20,
+          "minimum" : 5,
+          "name" : "insertHeight",
+          "unit" : "mm",
+          "value" : 12
+        }
+      ],
+      "rootPanelID" : "base-floor",
+      "size" : {
+        "x" : "3*cell",
+        "y" : "4*cell"
+      },
+      "solidChecks" : [
+        {
+          "firstPanelID" : "base-front",
+          "id" : "lid-clears-base",
+          "message" : "Nested front boards must not occupy the same solid volume.",
+          "metric" : "interference",
+          "relation" : "<=",
+          "secondPanelID" : "lid-front",
+          "value" : "0"
+        },
+        {
+          "firstPanelID" : "base-front",
+          "id" : "lid-front-clearance",
+          "message" : "The nested lid retains the declared physical board-to-board clearance.",
+          "metric" : "clearance",
+          "relation" : ">=",
+          "secondPanelID" : "lid-front",
+          "value" : "clearance"
+        }
+      ],
+      "stockThickness" : "stock",
+      "version" : 4
+    },
+    "bottomFlapMM" : 30,
+    "clearanceMM" : 1,
+    "cornerRadiusMM" : 4,
+    "dimensions" : {
+      "depth" : 100,
+      "height" : 45,
+      "width" : 140
+    },
+    "explosionPercent" : 0,
+    "finishes" : [
+      {
+        "color" : "#213D44",
+        "depthMM" : 0.04,
+        "elementIDs" : [
+          "5647DEBA-8AC6-5F55-B43C-1D33DD6E49B0"
+        ],
+        "enabled" : true,
+        "heightMM" : 0,
+        "id" : "58D0E608-8B9B-5998-82D2-4B0AC7EC5243",
+        "kind" : "letterpress",
+        "name" : "Retained legacy letterpress",
+        "opacity" : 1,
+        "roughness" : 0.85,
+        "side" : "outside"
+      }
+    ],
+    "foldPercent" : 100,
+    "glueTabMM" : 16,
+    "insideArtworkSourceID" : "F9B9494C-7734-4EF3-889D-170677EE28FF",
+    "kind" : "authored",
+    "openingPercent" : 37,
+    "stock" : {
+      "grain" : "parallelWidth",
+      "gsm" : 300,
+      "name" : "Legacy saved two-ply board",
+      "notes" : "Retained source-specific stock choice; bonded facing is not a generated wrap pattern.",
+      "plies" : [
+        {
+          "color" : "#918A78",
+          "id" : "F3B81C95-8B80-53F7-880E-CD11CB25E7A6",
+          "name" : "Saved grey backing",
+          "thicknessMM" : 0.6
+        },
+        {
+          "color" : "#E7DCC4",
+          "id" : "53C78F1B-7829-5CFF-A91B-4B17016696F0",
+          "name" : "Saved oat facing",
+          "profile" : {
+            "color" : "#E7DCC4",
+            "opacity" : 1,
+            "roughness" : 0.91,
+            "texture" : "cotton",
+            "textureDepthMM" : 0.012,
+            "textureScaleMM" : 0.7
+          },
+          "thicknessMM" : 1.2
+        }
+      ],
+      "profile" : {
+        "color" : "#DBD0B9",
+        "opacity" : 1,
+        "roughness" : 0.88,
+        "texture" : "laid",
+        "textureDepthMM" : 0.018,
+        "textureScaleMM" : 0.8
+      },
+      "thicknessMM" : 1.8,
+      "verified" : false
+    },
+    "topFlapMM" : 38,
+    "version" : 1
+  },
+  "parameters" : {
+    "clearance" : 1,
+    "depth" : 100,
+    "explosion" : 0,
+    "fold" : 100,
+    "height" : 45,
+    "insertHeight" : 12,
+    "lidHeight" : 25,
+    "opening" : 37,
+    "stock" : 1.8,
+    "width" : 140
+  },
+  "position" : {
+    "x" : -560,
+    "y" : 0,
+    "z" : 0
+  },
+  "recipeID" : "construction-9AF96E1E-C438-4E2E-91F6-DD367727C5C3",
+  "relationship" : "original",
+  "rotation" : 17
+}

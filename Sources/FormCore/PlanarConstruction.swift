@@ -47,10 +47,11 @@ public struct PlanarJoinDefinition: Codable, Equatable, Identifiable, Sendable {
   public var kind: String
   public var overlapMM: CADScalar
   public var notes: String
+  public var enabled:CADScalar?
   public init(id: String, name: String, firstPanelID: String, secondPanelID: String,
-    kind: String = "glue", overlapMM: CADScalar, notes: String = "") {
+    kind: String = "glue", overlapMM: CADScalar, notes: String = "",enabled:CADScalar?=nil) {
     self.id=id; self.name=name; self.firstPanelID=firstPanelID; self.secondPanelID=secondPanelID
-    self.kind=kind; self.overlapMM=overlapMM; self.notes=notes
+    self.kind=kind; self.overlapMM=overlapMM; self.notes=notes;self.enabled=enabled
   }
   public init(_ resolved: PaperJoin) {
     self.init(id:resolved.id,name:resolved.name,firstPanelID:resolved.firstPanelID,
@@ -75,28 +76,38 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
   public var solidChecks: [PlanarSolidRequirement]?
   public var components:[PlanarComponentDefinition]?
   public var interiors:[PlanarInteriorDefinition]?
+  public var groups:[PlanarComponentGroupDefinition]?
+  public var jointAttachments:[PlanarJointAttachmentDefinition]?
+  public var controls:ConstructionControlSurface?
+  public var production:ConstructionProductionDefinition?
   public init(name: String, parameters: [CADModelParameter] = [], size: CADExpressionPoint2,
     stockThickness: CADScalar = 0.35, panels: [PlanarPanelDefinition],
     hinges: [PlanarHingeDefinition] = [], joins: [PlanarJoinDefinition] = [], rootPanelID: String,
     requirements: [CADModelRequirement]? = nil,derived:[String:CADScalar]? = nil,
     connections:[PlanarConnectionRequirement]? = nil, solidChecks:[PlanarSolidRequirement]? = nil,
-    components:[PlanarComponentDefinition]?=nil,interiors:[PlanarInteriorDefinition]?=nil) {
+    components:[PlanarComponentDefinition]?=nil,interiors:[PlanarInteriorDefinition]?=nil,
+    groups:[PlanarComponentGroupDefinition]?=nil,jointAttachments:[PlanarJointAttachmentDefinition]?=nil,
+    controls:ConstructionControlSurface?=nil,production:ConstructionProductionDefinition?=nil) {
     self.name=name; self.parameters=parameters; self.size=size; self.stockThickness=stockThickness
     self.panels=panels; self.hinges=hinges; self.joins=joins; self.rootPanelID=rootPanelID
     self.requirements=requirements;self.derived=derived;self.connections=connections
     self.solidChecks=solidChecks;self.version=solidChecks?.isEmpty == false ? 2:1
-    self.components=components;self.interiors=interiors
+    self.components=components;self.interiors=interiors;self.groups=groups;self.jointAttachments=jointAttachments;self.controls=controls;self.production=production
     if components?.isEmpty == false || interiors?.isEmpty == false || panels.contains(where:{$0.cutouts?.isEmpty == false}) {version=3}
+    if usesPartAssemblyFields {version=4}
   }
   public var values: [String: Double] { Dictionary(parameters.map { ($0.name,$0.value) }, uniquingKeysWith: { a,_ in a }) }
   public func number(_ scalar: CADScalar) throws -> Double {
     try CADExpression.evaluate(scalar.expression,variables:resolvedValues())
   }
-  public func resolvedValues()throws->[String:Double] {try CADDerivedExpressions.resolve(derived ?? [:],variables:values)}
+  public func resolvedValues()throws->[String:Double] {
+    let source=version>=4 ? values.merging(["fold":100,"opening":0,"explosion":0]){_,new in new}:values
+    return try CADDerivedExpressions.resolve(derived ?? [:],variables:source)
+  }
   public mutating func setParameters(_ values: [String: Double]) throws {
     var next=parameters
     for (name,value) in values {
-      if name=="fold" || name=="opening" {
+      if name=="fold" || name=="opening" || (version>=4 && name=="explosion") {
         guard value.isFinite,(0...100).contains(value) else{throw FormError.invalid("Construction pose controls must be 0–100%.")}
         continue
       }
@@ -113,20 +124,24 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
     }
   }
   public func net() throws -> PaperNet {
+    try PlanarConstructionNetCache.shared.resolve(self){try uncachedNet()}
+  }
+  /// The complete validator remains the miss/failure authority.
+  func uncachedNet() throws -> PaperNet {
     let hasV3=components?.isEmpty == false || interiors?.isEmpty == false || panels.contains(where:{$0.cutouts?.isEmpty == false})
     let roots=components?.map(\.rootPanelID) ?? [rootPanelID]
-    guard (1...3).contains(version),(version>=2 || solidChecks?.isEmpty != false),(version>=3 || !hasV3),!name.isEmpty,name.utf8.count<=160,parameters.count<=64,
+    guard (1...4).contains(version),(version>=2 || solidChecks?.isEmpty != false),(version>=3 || !hasV3),!name.isEmpty,name.utf8.count<=160,parameters.count<=(version>=4 ? 128:64),
       Set(parameters.map(\.name)).count==parameters.count,
-      parameters.allSatisfy({CADExpression.validName($0.name) && !["fold","opening"].contains($0.name)
+      parameters.allSatisfy({CADExpression.validName($0.name) && !(version>=4 ? ["fold","opening","explosion"]:["fold","opening"]).contains($0.name)
         && [$0.minimum,$0.maximum].allSatisfy(\.isFinite)
         && $0.minimum <= $0.maximum && abs($0.minimum)<=100000 && abs($0.maximum)<=100000}),
-      (1...64).contains(panels.count),!roots.isEmpty,roots.count<=32,Set(roots).count==roots.count,
+      (1...(version>=4 ? 256:64)).contains(panels.count),!roots.isEmpty,roots.count<=(version>=4 ? 128:32),Set(roots).count==roots.count,
       hinges.count==panels.count-roots.count,joins.count<=128 else {
       throw FormError.invalid("Construction requires a named bounded definition, up to 64 parameters/panels, and one hinge per non-root panel.")
     }
     for parameter in parameters {try validateValue(parameter.value,for:parameter)}
     guard (requirements?.count ?? 0)<=128,Set((requirements ?? []).map(\.id)).count==(requirements?.count ?? 0),
-      panels.reduce(0,{$0+$1.polygon.count+($1.cutouts ?? []).reduce(0){$0+$1.polygon.count}+($1.features?.outline?.count ?? 0)+($1.features?.cutouts ?? []).reduce(0){$0+$1.polygon.count}})<=2048 else {throw FormError.invalid("Keep construction requirements and polygon complexity bounded.")}
+      panels.reduce(0,{$0+$1.polygon.count+($1.cutouts ?? []).reduce(0){$0+$1.polygon.count}+($1.features?.outline?.count ?? 0)+($1.features?.cutouts ?? []).reduce(0){$0+$1.polygon.count}})<=(version>=4 ? 8192:2048) else {throw FormError.invalid("Keep construction requirements and polygon complexity bounded.")}
     let variables=try resolvedValues()
     func number(_ scalar:CADScalar)throws->Double {try CADExpression.evaluate(scalar.expression,variables:variables)}
     for requirement in requirements ?? [] {try requirement.validate(using:variables)}
@@ -140,12 +155,14 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
       Set(hinges.map(\.id)).count==hinges.count,Set(hinges.map(\.childPanelID)).count==hinges.count else {
       throw FormError.invalid("Construction panel/hinge identities must be unique and include an existing root panel.")
     }
+    let context=try PlanarAssemblySourceContext(self,values:variables,includePoseEndpoints:true)
+    let ownership=context.ownership,pieceByPanel=context.pieceByPanel
     var resolved: [PaperPanel] = try panels.map { panel in
       guard (3...128).contains(panel.polygon.count) else {throw FormError.invalid("Panel '\(panel.id)' requires 3–128 polygon vertices.")}
       // Collapsed sampled corners (for example radius=0) retain their source
       // declarations while resolving to the ordinary nondegenerate polygon.
       var polygon:[Point2]=[]
-      for vertex in try panel.polygon.map(point) {
+      for vertex in context.rawPolygons[panel.id] ?? [] {
         if let previous=polygon.last,hypot(vertex.x-previous.x,vertex.y-previous.y)<=1e-7{continue}
         polygon.append(vertex)
       }
@@ -184,20 +201,30 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
         guard !Self.boundariesTouch(cutouts[i].polygon,cutouts[j].polygon),
           !(try Self.overlaps(cutouts[i].polygon,cutouts[j].polygon)) else {throw FormError.invalid("Cutouts '\(cutouts[i].id)' and '\(cutouts[j].id)' touch or overlap.")}
       }}
+      let piece=pieceByPanel[panel.id]
+      let pieceStock=piece.flatMap{context.stocks[$0.id]} ?? .init(thicknessMM:thickness)
       if var features=panel.features {
         // Validate feature geometry at rest using the same physical profile.
         // Source faces are validated when the owning project is available.
         features.outline=polygon.map{.init(CADScalar($0.x-origin.x),CADScalar($0.y-origin.y))}
         features.cutouts=cutouts.map{.init(id:$0.id,polygon:$0.polygon.map{.init(CADScalar($0.x-origin.x),CADScalar($0.y-origin.y))},kind:$0.kind)}
         let restValues=variables.merging(["fold":100,"opening":0]){_,new in new}
-        _ = try features.resolved(size:panelSize,stock:.init(thicknessMM:thickness),variables:restValues) {declaration,_ in
+        _ = try features.resolved(size:panelSize,stock:pieceStock,variables:restValues) {declaration,_ in
           guard let declaration else{return nil}
           let origin=try declaration.sourceOriginMM.map{Point2(
             try CADExpression.evaluate($0.x.expression,variables:restValues),try CADExpression.evaluate($0.y.expression,variables:restValues))} ?? .init()
           return .init(sourceObjectID:declaration.sourceObjectID,sourceSide:declaration.sourceSide,originMM:origin)
         }
       }
-      return .init(id:panel.id,name:panel.name,role:panel.role,polygon:polygon,artworkRotationDegrees:rotation,cutouts:cutouts.isEmpty ? nil:cutouts,features:panel.features)
+      var result=PaperPanel(id:panel.id,name:panel.name,role:panel.role,polygon:polygon,artworkRotationDegrees:rotation,cutouts:cutouts.isEmpty ? nil:cutouts,features:panel.features)
+      if let piece,version>=4 {
+        result.componentID=piece.id;result.stock=piece.stock
+        result.stockThicknessMM=piece.stockThickness == nil ? nil:pieceStock.resolvedThicknessMM
+        result.front=try context.face(piece.front,panel:result,piece:piece)
+        result.back=try context.face(piece.back,panel:result,piece:piece)
+        result.finishes=piece.finishes
+      }
+      return result
     }
     var folds: [PaperFold] = []
     for hinge in hinges {
@@ -221,7 +248,8 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
     var connected=Set(roots)
     for _ in panels.indices { for fold in folds where connected.contains(fold.parentPanelID) {connected.insert(fold.childPanelID)} }
     guard connected==ids else {throw FormError.invalid("Construction hinge graph is disconnected or cyclic.")}
-    try validateComponentsAndInteriors(resolvedPanels:resolved)
+    try validateComponentsAndInteriors(resolvedPanels:resolved,context:context)
+    try validatePartAssemblyMetadata(resolvedPanels:resolved,context:context)
     for i in resolved.indices {for j in resolved.indices where j>i {
       if try Self.overlaps(resolved[i].polygon,resolved[j].polygon) {throw FormError.invalid("Flat construction panels '\(resolved[i].id)' and '\(resolved[j].id)' overlap.")}
     }}
@@ -255,9 +283,26 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
       throw FormError.invalid("Use up to 128 uniquely identified explicit panel-pair solid checks.")
     }
     for check in solidChecks ?? [] {try check.validateDefinition(panelIDs:ids,values:variables)}
+    if version>=4 {
+      let active=(components ?? []).filter{context.enabledIDs.contains($0.id)},activeIDs=Set(active.flatMap{ownership[$0.id] ?? []})
+      guard !active.isEmpty else{throw FormError.invalid("Keep at least one active cut piece in the construction.")}
+      var activeJoins=[PaperJoin]()
+      for (declaration,join) in zip(joins,resolvedJoins) {
+        if let enabled=declaration.enabled {
+          let value=try number(enabled)
+          guard abs(value)<1e-9 || abs(value-1)<1e-9 else{throw FormError.invalid("Joint '\(declaration.id)' enabled must resolve to zero or one.")}
+          if value<0.5 {continue}
+        }
+        guard activeIDs.contains(join.firstPanelID),activeIDs.contains(join.secondPanelID) else{throw FormError.invalid("Active joint '\(join.id)' targets a disabled cut piece. Disable or repair that joint explicitly.")}
+        activeJoins.append(join)
+      }
+      let visible=resolved.filter{activeIDs.contains($0.id)},activeFolds=folds.filter{activeIDs.contains($0.parentPanelID) && activeIDs.contains($0.childPanelID)}
+      return PaperNet(size:extent,panels:visible,folds:activeFolds,joins:activeJoins,cutEdges:Self.cutEdges(panels:visible,folds:activeFolds),rootPanelID:activeIDs.contains(rootPanelID) ? rootPanelID:active[0].rootPanelID)
+    }
     return PaperNet(size:extent,panels:resolved,folds:folds,joins:resolvedJoins,
       cutEdges:Self.cutEdges(panels:resolved,folds:folds),rootPanelID:rootPanelID)
   }
+  static func validJointRegion(_ points:[Point2])->Bool {points.count>=3 && abs(signedArea(points))>0.001 && !selfIntersects(points)}
   private static func signedArea(_ p:[Point2])->Double {p.indices.reduce(0){s,i in let q=p[(i+1)%p.count];return s+p[i].x*q.y-q.x*p[i].y}/2}
   private static func side(_ p:Point2,_ a:Point2,_ b:Point2)->Double {(b.x-a.x)*(p.y-a.y)-(b.y-a.y)*(p.x-a.x)}
   private static func onSegment(_ p:Point2,_ a:Point2,_ b:Point2)->Bool {

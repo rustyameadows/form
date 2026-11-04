@@ -13,8 +13,7 @@ import simd
     sampling:SourceTextureSamplingPlan)throws->MeshNode {
     guard let features=panel.features else{throw FormError.invalid("Layered panel rendering needs physical panel features.")}
     let rect=panel.bounds,size=Point2(rect.width,rect.height)
-    var values=try definition.authored?.resolvedValues() ?? [:]
-    values["fold"]=definition.foldPercent;values["opening"]=definition.openingPercent
+    let values=try definition.authored?.poseValues(fold:definition.foldPercent,opening:definition.openingPercent,explosion:definition.explosionPercent ?? 0) ?? [:]
     func face(_ source:SheetAssemblyFace?,_ extent:Point2)throws->ResolvedSheetAssemblyFace? {
       guard let source else{return nil}
       let origin=try source.sourceOriginMM.map{Point2(try CADExpression.evaluate($0.x.expression,variables:values),try CADExpression.evaluate($0.y.expression,variables:values))} ?? .init()
@@ -24,16 +23,17 @@ import simd
       guard origin.x >= -bleed,origin.y >= -bleed,origin.x+extent.x<=owner.artworkSize.x+bleed,origin.y+extent.y<=owner.artworkSize.y+bleed else{throw FormError.invalid("An inset crop must fit its actual source without scaling.")}
       return .init(sourceObjectID:source.sourceObjectID,sourceSide:source.sourceSide,originMM:origin)
     }
-    let resolved=try features.resolved(size:size,stock:definition.stock,variables:values,face:face)
+    let resolved=try features.resolved(size:size,stock:panel.resolvedStock(fallback:definition.stock),variables:values,face:face)
+    let source=try PaperGeometry.panelArtwork(panel,definition:definition,project:project,outside:outside,inside:inside)
     var physical=resolved.1
     // Net topology remains the canonical authority, including authored windows.
     physical.outline=panel.polygon.map{.init($0.x-rect.x,$0.y-rect.y)}
     physical.cutouts=(panel.cutouts ?? []).map{.init(id:$0.id,polygon:$0.polygon.map{.init($0.x-rect.x,$0.y-rect.y)},kind:$0.kind)}
     let ownerFace=ResolvedSheetAssemblyFace(sourceObjectID:object.id)
     let plane=ResolvedSheetAssemblyPlane(id:panel.id,name:panel.name,size:size,positionMM:.init(),rotationDegrees:.init(),stock:resolved.0,
-      front:outside==nil ? nil:ownerFace,back:inside==nil ? nil:ownerFace,finishes:definition.finishes ?? [],features:physical)
+      front:source.outside==nil ? nil:ownerFace,back:source.inside==nil ? nil:ownerFace,finishes:source.outsideFinishes+source.insideFinishes,features:physical)
     let layers=try SheetPanelLayerGeometry.layers(plane),cap=Affine2.translation(-rect.x,-rect.y)
-    let capOutside=outside.map{SheetAssemblyGeometry.transformed($0,by:cap)},capInside=inside.map{SheetAssemblyGeometry.transformed($0,by:cap)}
+    let capOutside=source.outside.map{SheetAssemblyGeometry.transformed($0,by:cap)},capInside=source.inside.map{SheetAssemblyGeometry.transformed($0,by:cap)}
     let budget=sampling.raster.maximumPixels,minimum=layers.count*2*64
     let maximum=budget<minimum ? 1:sampling.raster.maximumEdge
     let targets=layers.flatMap{layer in [false,true].map {inside in

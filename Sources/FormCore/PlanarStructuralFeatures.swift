@@ -27,10 +27,22 @@ public struct PlanarComponentDefinition:Codable,Equatable,Identifiable,Sendable 
   public var anchor:CADExpressionPoint2
   public var position:CADExpressionPoint
   public var rotationDegrees:CADExpressionPoint
+  public var groupID:String?
+  public var stock:PaperStock?
+  public var stockThickness:CADScalar?
+  public var quantity:Int?
+  public var purpose:String?
+  public var front:SheetAssemblyFace?,back:SheetAssemblyFace?
+  public var enabled:CADScalar?
+  public var finishes:[PaperFinishAssignment]?
   public init(id:String,name:String,rootPanelID:String,anchor:CADExpressionPoint2,
-    position:CADExpressionPoint = .init(),rotationDegrees:CADExpressionPoint = .init()) {
+    position:CADExpressionPoint = .init(),rotationDegrees:CADExpressionPoint = .init(),groupID:String?=nil,
+    stock:PaperStock?=nil,stockThickness:CADScalar?=nil,quantity:Int?=nil,purpose:String?=nil,
+    front:SheetAssemblyFace?=nil,back:SheetAssemblyFace?=nil,enabled:CADScalar?=nil,finishes:[PaperFinishAssignment]?=nil) {
     self.id=id;self.name=name;self.rootPanelID=rootPanelID;self.anchor=anchor
     self.position=position;self.rotationDegrees=rotationDegrees
+    self.groupID=groupID;self.stock=stock;self.stockThickness=stockThickness;self.quantity=quantity;self.purpose=purpose
+    self.front=front;self.back=back;self.enabled=enabled;self.finishes=finishes
   }
 }
 public struct PaperResolvedComponent:Codable,Equatable,Identifiable,Sendable {
@@ -71,24 +83,30 @@ enum PaperRigidMatrix {
 
 enum PlanarComponentPoseResolver {
   struct Resolution {var panels:[PaperResolvedPanel];var components:[PaperResolvedComponent]}
-  static func resolve(_ source:PaperConstruction,net:PaperNet,amount:Double)throws->Resolution {
-    guard let definition=source.authored,let components=definition.components,!components.isEmpty else {
+  static func resolve(_ source:PaperConstruction,net:PaperNet,amount:Double,context:PlanarAssemblySourceContext?=nil)throws->Resolution {
+    guard let definition=source.authored,definition.components?.isEmpty == false else {
       throw FormError.invalid("Multi-component construction roots are missing.")
     }
-    let variables=try definition.resolvedValues(),t=source.stock.resolvedThicknessMM
+    let sourceValues=try context?.values ?? definition.resolvedValues()
+    let actualValues=try definition.poseValues(fold:amount*100,opening:source.openingPercent,explosion:source.explosionPercent ?? 0)
+    let closedValues=(definition.version>=4 && amount==1) ? sourceValues:try definition.poseValues(fold:amount*100,opening:0,explosion:0)
+    let components=try context.map {prepared in (definition.components ?? []).filter{prepared.enabledIDs.contains($0.id)}} ?? definition.activeComponents(values:sourceValues)
+    let actualGroups=try definition.resolvedGroupMatrices(fold:amount*100,opening:source.openingPercent,explosion:source.explosionPercent ?? 0,values:actualValues)
+    let closedGroups=try definition.resolvedGroupMatrices(fold:amount*100,opening:0,explosion:0,values:closedValues)
     typealias M=PaperRigidMatrix
-    func root(_ component:PlanarComponentDefinition,opening:Double)throws->(matrix:[Double],anchor:Point2) {
-      let anchor=Point2(try definition.number(component.anchor.x),try definition.number(component.anchor.y))
-      let poseValues=variables.merging(["fold":amount*100,"opening":opening]){_,new in new}
+    func root(_ component:PlanarComponentDefinition,poseValues:[String:Double],groups:[String:[Double]])throws->(matrix:[Double],anchor:Point2) {
+      let anchor=try Point2(CADExpression.evaluate(component.anchor.x.expression,variables:sourceValues),CADExpression.evaluate(component.anchor.y.expression,variables:sourceValues))
+      let t=try (context?.stocks[component.id] ?? definition.componentStock(component,fallback:source.stock,values:sourceValues)).resolvedThicknessMM
       let position=try M.vector(component.position,values:poseValues),rotation=try M.vector(component.rotationDegrees,values:poseValues)
       let flat=Vector3(anchor.x-net.size.x/2,t/2,anchor.y-net.size.y/2)
       let blended=Vector3(flat.x+(position.x-flat.x)*amount,flat.y+(position.y-flat.y)*amount,flat.z+(position.z-flat.z)*amount)
       let r=M.rotation(-90+(rotation.x+90)*amount,rotation.y*amount,rotation.z*amount)
-      return (M.multiply(M.translation(blended.x,blended.y,blended.z),M.multiply(r,M.translation(-anchor.x,anchor.y,0))),anchor)
+      let local=M.multiply(M.translation(blended.x,blended.y,blended.z),M.multiply(r,M.translation(-anchor.x,anchor.y,0)))
+      return (M.multiply(component.groupID.flatMap{groups[$0]} ?? M.identity,local),anchor)
     }
     var actual:[String:[Double]]=[:],closed:[String:[Double]]=[:],anchors:[String:Point2]=[:]
     for component in components {
-      let a=try root(component,opening:source.openingPercent),c=try root(component,opening:0)
+      let a=try root(component,poseValues:actualValues,groups:actualGroups),c=try root(component,poseValues:closedValues,groups:closedGroups)
       actual[component.rootPanelID]=a.matrix;closed[component.rootPanelID]=c.matrix;anchors[component.id]=a.anchor
     }
     var remaining=net.panels.filter{actual[$0.id]==nil}
@@ -107,10 +125,10 @@ enum PlanarComponentPoseResolver {
     }
     guard actual.count==net.panels.count else {throw FormError.invalid("Component hinge trees are disconnected or cyclic.")}
     var low=Vector3(.infinity,.infinity,.infinity),high=Vector3(-.infinity,-.infinity,-.infinity)
-    let closedFeatureValues=variables.merging(["fold":amount*100,"opening":0]){_,new in new}
+    let closedFeatureValues=closedValues
     for panel in net.panels {
       let matrix=closed[panel.id]!
-      for point in try panel.physicalBoundarySamples(stock:source.stock,variables:closedFeatureValues,worldMatrix:matrix) {
+      for point in try panel.physicalBoundarySamples(stock:try panel.resolvedStock(fallback:source.stock),variables:closedFeatureValues,worldMatrix:matrix) {
         let v=M.point(matrix,point)
         low = .init(min(low.x,v.x),min(low.y,v.y),min(low.z,v.z));high = .init(max(high.x,v.x),max(high.y,v.y),max(high.z,v.z))
       }

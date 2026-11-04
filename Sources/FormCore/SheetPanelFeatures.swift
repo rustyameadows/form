@@ -156,6 +156,7 @@ extension PlanarConstructionDefinition {
   public var requiresAdvancedPanelFeaturesSchema:Bool {panels.contains{$0.features != nil}}
   public var featureArtworkSourceObjectIDs:Set<UUID> {
     Set(panels.flatMap{($0.features?.recesses ?? []).compactMap{$0.insert?.face?.sourceObjectID}})
+      .union((components ?? []).flatMap{[$0.front?.sourceObjectID,$0.back?.sourceObjectID].compactMap{$0}})
   }
 }
 
@@ -163,13 +164,13 @@ extension PlanarConstructionDefinition {
 extension Project {
   func validatePaperPanelFeatures(_ object:ProductObject,source:PaperConstruction)throws {
     guard let authored=source.authored,authored.panels.contains(where:{$0.features != nil}) else{return}
-    let net=try source.net(),values=try authored.resolvedValues().merging(["fold":source.foldPercent,"opening":source.openingPercent]){_,new in new}
+    let net=try source.net(),values=try authored.poseValues(fold:source.foldPercent,opening:source.openingPercent,explosion:source.explosionPercent ?? 0)
     for panel in net.panels {
       guard var feature=panel.features else{continue}
       let bounds=panel.bounds,size=Point2(bounds.width,bounds.height)
       feature.outline=panel.polygon.map{.init(CADScalar($0.x-bounds.x),CADScalar($0.y-bounds.y))}
       feature.cutouts=(panel.cutouts ?? []).map{.init(id:$0.id,polygon:$0.polygon.map{.init(CADScalar($0.x-bounds.x),CADScalar($0.y-bounds.y))},kind:$0.kind)}
-      let physical=try feature.resolved(size:size,stock:source.stock,variables:values) {declaration,extent in
+      let physical=try feature.resolved(size:size,stock:panel.resolvedStock(fallback:source.stock),variables:values) {declaration,extent in
         try resolvedSheetFace(declaration,size:extent,variables:values,assemblyID:object.id,validateSourceCrops:true)
       }
       if let wrap=physical.1.wrap,let art=paperArtwork(for:object) {

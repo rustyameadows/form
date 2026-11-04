@@ -15,13 +15,15 @@ struct CanvasSourceProjection: Equatable {
   var cutouts:[[Point2]]?=nil
   var surfaceKind:PhysicalArtworkSurfaceIdentity.Kind = .panel
   var requiresInsideSource=false
+  var componentID:String?=nil
 
   var physicalIdentity:PhysicalArtworkSurfaceIdentity {
     .init(kind:isProof ? .net:surfaceKind,surfaceID:panelID,side:inside ? .inside:.outside)
   }
 
   var key: String {
-    "\(constructionID.uuidString):\(physicalIdentity.key)"
+    let part=isProof ? componentID.map{":piece:\($0.utf8.count):\($0)"} ?? "":""
+    return "\(constructionID.uuidString):\(physicalIdentity.key)"+part
   }
   var legacyKey:String {"\(constructionID.uuidString):\(inside ? "inside" : "outside"):\(panelID ?? "net")"}
   var id: UUID {
