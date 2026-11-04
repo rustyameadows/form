@@ -26,7 +26,7 @@ public enum PublicationPhysicalToolSchema {
   private static func number(_ minimum: Double, _ maximum: Double) -> [String: Any] {
     ["type": "number", "minimum": minimum, "maximum": maximum]
   }
-  private static var expression: [String: Any] { ["type": ["number", "string"], "maxLength": 4096,
+  private static var expression: [String: Any] { ["type": ["number", "string"], "maxLength": 256,
     "description": "Existing CAD scalar: finite number or bounded expression in source parameters and assembly dimensions; physical lengths are millimeters."] }
   private static var point: [String: Any] { object(["x": expression, "y": expression], required: ["x", "y"]) }
   private static var vector: [String: Any] { object(["x": expression, "y": expression, "z": expression], required: ["x", "y", "z"]) }
@@ -57,7 +57,8 @@ public enum PublicationPhysicalToolSchema {
       "positionsMM": optional(array(number(0, 10000), maximum: 8)),
       "endMarginMM": number(0, 5000), "edgeInsetMM": number(0.5, 40),
       "crownLengthMM": number(1, 40), "wireDiameterMM": number(0.1, 2),
-      "clinchLengthMM": number(0.5, 10), "flexWidthMM": number(1, 50)])
+      "clinchLengthMM": number(0.5, 10), "flexWidthMM": number(1, 50),
+      "adhesiveMM":optional(number(0,20)),"sewingSwellMM":optional(number(0,20))])
     let defaults = SheetBindingDefinition()
     let fields: [String: Any] = ["style": defaults.style.rawValue, "count": defaults.count,
       "endMarginMM": defaults.endMarginMM, "edgeInsetMM": defaults.edgeInsetMM,
@@ -66,7 +67,7 @@ public enum PublicationPhysicalToolSchema {
     var properties = value["properties"] as! [String: [String: Any]]
     for (key, fallback) in fields { properties[key]?["default"] = fallback }
     value["properties"] = properties
-    value["description"] = "Explicit physical binding. style:none declares unbound; omitted/null binding is unspecified. Positions are crown centers from the head edge. Other dimensions default to the native SheetBindingDefinition values."
+    value["description"] = "Explicit physical binding. style:none declares unbound; omitted/null binding is unspecified. Adhesive and sewing swell are editable construction allowances separate from stock caliper. Positions are fastener/stitch centers from the head edge; omitted dimensions use native defaults."
     return value
   }
   private static var finishes: [String: Any] {
@@ -78,6 +79,20 @@ public enum PublicationPhysicalToolSchema {
     object(["sourceObjectID": uuid, "sourceSide": ["type": "string", "enum": ["outside", "inside"]],
       "sourceOriginMM": optional(point)], required: ["sourceObjectID", "sourceSide"])
   }
+  public static var panelFeatures:[String:Any] {
+    var polygon=array(point,maximum:128);polygon["minItems"]=3
+    let cutout=object(["id":["type":"string","maxLength":128],"polygon":polygon,
+      "kind":["type":"string","enum":["cutout","window","slot","perforation"]]],required:["id","polygon","kind"])
+    let wrap=object(["stock":stock,"turnInMM":expression,"cornerRadiusMM":expression,"stockThickness":optional(expression)],required:["stock","turnInMM","cornerRadiusMM"])
+    var curvePoints=array(point,maximum:4);curvePoints["minItems"]=4
+    let curve=object(["points":curvePoints,"fitLength":["type":"boolean","default":false]],required:["points"])
+    let flex=object(["edge":["type":"string","enum":SheetPanelEdge.allCases.map(\.rawValue)],"widthMM":expression,"angleDegrees":expression,"curve":optional(curve)],required:["edge","widthMM","angleDegrees"])
+    let insert=object(["stock":stock,"face":optional(face)],required:["stock"])
+    let recess=object(["id":["type":"string","maxLength":128],"origin":point,"size":point,
+      "depthMM":expression,"cornerRadiusMM":expression,"insert":optional(insert)],required:["id","origin","size","depthMM","cornerRadiusMM"])
+    return object(["outline":optional(polygon),"cutouts":array(cutout,maximum:32,nullable:true),
+      "stockThickness":optional(expression),"wrap":optional(wrap),"flex":optional(flex),"recesses":array(recess,maximum:16,nullable:true)])
+  }
   public static var assembly: [String: Any] {
     let leaf = object(["id": uuid, "frontPageID": optional(uuid), "backPageID": optional(uuid),
       "stock": optional(stock), "finishes": finishes], required: ["id"])
@@ -88,15 +103,25 @@ public enum PublicationPhysicalToolSchema {
       required: ["frontPageIDs", "backPageIDs", "stock", "sizeMM"])
     let plane = object(["id": ["type": "string", "maxLength": 128], "name": ["type": "string", "maxLength": 256],
       "size": point, "positionMM": vector, "rotationDegrees": vector, "stock": stock,
-      "front": optional(face), "back": optional(face), "finishes": finishes],
+      "front": optional(face), "back": optional(face), "finishes": finishes,"features":optional(panelFeatures)],
       required: ["id", "name", "size", "positionMM", "rotationDegrees", "stock"])
+    let attachment=object(["planeID":optional(["type":"string","maxLength":128]),
+      "edge":["type":"string","enum":SheetPanelEdge.allCases.map(\.rawValue)],"widthMM":number(0,10000)],required:["edge","widthMM"])
+    let auxiliary=object(["id":uuid,"name":["type":"string","maxLength":256],
+      "placement":["type":"string","enum":["front","back"]],"size":optional(point),"stock":stock,
+      "front":optional(face),"back":optional(face),"attachment":optional(attachment)],required:["id","name","placement","stock"])
+    let signature=object(["id":uuid,"parentSheetIDs":array(uuid,maximum:51)],required:["id","parentSheetIDs"])
+    let edges=object(["head":optional(face),"tail":optional(face),"foreEdge":optional(face)])
     var value = object(["version": ["type": "integer", "enum": [1]], "publicationID": uuid, "stock": stock,
       "openingDegrees": number(0, 180), "activeSpread": ["type": "integer", "minimum": 0, "maximum": 200],
       "bendMM": number(0, 20), "leaves": array(leaf, maximum: 200, nullable: true),
-      "enclosure": array(plane, maximum: 32, nullable: true), "binding": optional(binding),
-      "parentSheets": array(parent, maximum: 51, nullable: true)],
+      "enclosure": array(plane, maximum: 128, nullable: true), "binding": optional(binding),
+      "parentSheets": array(parent, maximum: 51, nullable: true),
+      "signatures":array(signature,maximum:51,nullable:true),"auxiliaryLeaves":array(auxiliary,maximum:16,nullable:true),"edgeArtwork":optional(edges),
+      "derived":["type":["object","null"],"maxProperties":256,"additionalProperties":["type":"string","maxLength":256],
+        "description":"Optional acyclic named CAD expressions, distinct from authored parameters and standard assembly variables. Each value is a string of at most256 UTF-8 bytes. Shared arithmetic is resolved for the current pose and independently for closed measurements; no source artwork is copied or scaled."]],
       required: ["version", "publicationID", "stock", "openingDegrees", "activeSpread", "bendMM"])
-    value["description"] = "Complete SheetAssemblyDefinition. Leaf and parent face UUIDs are PublicationPage.id (logical IDs), not artwork object IDs. activeSpread counts turned physical leaves. Parent stock and nested front/back ordering are authoritative. Enclosure crops never scale artwork."
+    value["description"] = "Complete SheetAssemblyDefinition. Leaf and parent face UUIDs are PublicationPage.id (logical IDs), not artwork object IDs. Signatures partition the authoritative parent IDs once; auxiliary leaves are unnumbered physical material. activeSpread counts turned physical leaves. Edge artwork registers across the closed stack before opening. Enclosure features are generic physical outline/cutout/wrap/flex/recess operations. Artwork sources and crop scales remain canonical."
     return value
   }
   public static var pose: [String: Any] {
@@ -120,14 +145,20 @@ public enum PublicationPhysicalToolSchema {
       guard types.contains("null") else { throw FormError.invalid("\(path) cannot be null.") }; return
     }
     if types.contains("object") {
-      guard let object = raw as? [String: Any], let properties = schema["properties"] as? [String: Any],
-        Set(object.keys).isSubset(of: Set(properties.keys)) else { throw FormError.invalid("Unknown or malformed \(path) field.") }
+      guard let object = raw as? [String: Any], object.count <= (schema["maxProperties"] as? Int ?? 5000) else {
+        throw FormError.invalid("Malformed or excessive \(path) fields.")
+      }
+      let properties = schema["properties"] as? [String: Any] ?? [:]
+      let additional = schema["additionalProperties"] as? [String: Any]
+      guard additional != nil || Set(object.keys).isSubset(of: Set(properties.keys)) else {
+        throw FormError.invalid("Unknown or malformed \(path) field.")
+      }
       let required = schema["required"] as? [String] ?? []
       guard Set(required).isSubset(of: Set(object.keys)) else {
         throw FormError.invalid("\(path) is missing required fields: \(Set(required).subtracting(object.keys).sorted().joined(separator: ", ")).")
       }
       for (key, value) in object {
-        if let child = properties[key] as? [String: Any] { try validateFields(value, schema: child, path: path + "." + key) }
+        if let child = properties[key] as? [String: Any] ?? additional { try validateFields(value, schema: child, path: path + "." + key) }
       }
     } else if types.contains("array") {
       guard let values = raw as? [Any], values.count <= (schema["maxItems"] as? Int ?? 5000) else { throw FormError.invalid("Invalid or excessive \(path) entries.") }

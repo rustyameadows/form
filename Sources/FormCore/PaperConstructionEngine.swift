@@ -163,7 +163,14 @@ public enum PaperConstructionEngine {
     };remaining=next}
     guard matrices.count==net.panels.count else{throw FormError.invalid("Paper fold hierarchy is disconnected or cyclic.")}
     var low=Vector3(.infinity,.infinity,.infinity),high=Vector3(-.infinity,-.infinity,-.infinity)
-    for panel in net.panels{let m=closedMatrices[panel.id]!;for p in panel.polygon{for z in [-source.stock.thicknessMM/2,source.stock.thicknessMM/2]{let v=point(m,p,z:z);low = .init(min(low.x,v.x),min(low.y,v.y),min(low.z,v.z));high = .init(max(high.x,v.x),max(high.y,v.y),max(high.z,v.z))}}}
+    let featureValues=try (source.authored?.resolvedValues() ?? [:]).merging(["fold":amount*100,"opening":0]){_,new in new}
+    for panel in net.panels {
+      let matrix=closedMatrices[panel.id]!
+      for point in try panel.physicalBoundarySamples(stock:source.stock,variables:featureValues,worldMatrix:matrix) {
+        let v=PaperRigidMatrix.point(matrix,point)
+        low = .init(min(low.x,v.x),min(low.y,v.y),min(low.z,v.z));high = .init(max(high.x,v.x),max(high.y,v.y),max(high.z,v.z))
+      }
+    }
     let ground=translation(-(low.x+high.x)/2,-low.y,-(low.z+high.z)/2)
     return net.panels.map{.init(panelID:$0.id,flatToWorld:multiply(ground,matrices[$0.id]!))}
   }

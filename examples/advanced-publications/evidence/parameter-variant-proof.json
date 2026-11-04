@@ -1,0 +1,154 @@
+[
+  {
+    "variant": "calipers",
+    "undo_exact": true,
+    "cover_artwork": {
+      "before_artwork_sha256": "4ac78ac2aa2050833f03d552d9b2678f60c2ce7bebf52fa0548378c218c91d8d",
+      "after_artwork_sha256": "3b4eb8511d67e32b878bcc7a07b73a407612274e9bb5fe71a4a04f54962131a4",
+      "content_style_topology_sha256": "92f0ecd4d3ade50336ee79c4ba42fea351345fe7ea5765cc85a652cf26594951",
+      "translated_elements": [
+        {
+          "id": "53A4ED9E-CA97-5088-B448-A20FB643534B",
+          "dx": 0.7000000000000028,
+          "dy": 0.7000000000000028
+        },
+        {
+          "id": "E3937041-8606-52EC-8904-53519EF81596",
+          "dx": 0.7000000000000028,
+          "dy": 0.7000000000000028
+        },
+        {
+          "id": "35CDE0BB-CB6C-5792-A396-ECE45528C2ED",
+          "dx": 0.7000000000000028,
+          "dy": 0.700000000000017
+        },
+        {
+          "id": "8634DC29-5C42-5ED1-BA4F-953C29D25B20",
+          "dx": 2.299999999999983,
+          "dy": 0.7000000000000028
+        },
+        {
+          "id": "2A272B01-453E-5304-A209-06C5768BC6A7",
+          "dx": 2.299999999999983,
+          "dy": 0.7000000000000028
+        },
+        {
+          "id": "5034C9DC-10C7-5649-A276-163230A9E993",
+          "dx": 2.299999999999983,
+          "dy": 0.700000000000017
+        },
+        {
+          "id": "0226A9D8-537E-527B-B3D4-970FEEDE5BFD",
+          "dx": 2.2999999999999545,
+          "dy": 0.700000000000017
+        },
+        {
+          "id": "3B6899DE-BCBE-5883-A905-A6C1490ED54E",
+          "dx": 1.5,
+          "dy": 0.7000000000000028
+        }
+      ]
+    },
+    "case_width_before": 43.57001200106684,
+    "case_width_after": 45.23001200106684
+  },
+  {
+    "variant": "page-count",
+    "undo_exact": true,
+    "before_pages": 128,
+    "after_pages": 132,
+    "before_parent_sheets": 32,
+    "after_parent_sheets": 33,
+    "case_width_before": 43.57001200106684,
+    "case_width_after": 43.770012001066846
+  },
+  {
+    "variant": "largest-trim",
+    "undo_exact": true,
+    "trim_before": [
+      155,
+      215
+    ],
+    "trim_after": [
+      165,
+      225
+    ],
+    "cover_artwork": {
+      "before_artwork_sha256": "d729f5fbdfbe7cf60febf5ce89a036555867011593d495655bde10c972d3b6bb",
+      "after_artwork_sha256": "5b40cc19e1d2787d9d057ec578a50a2a599a3b5a07b9762069a734785ee0abbb",
+      "content_style_topology_sha256": "b4d26d2c469a43bda28c4ec2b426cf61e73e6f55e7069feeba71ce99a8a2b1f9",
+      "translated_elements": [
+        {
+          "id": "0F9287B1-A7C2-51B2-836C-BB14EEC3F21E",
+          "dx": 0.0,
+          "dy": 10.0
+        },
+        {
+          "id": "D05C3141-A85D-5CF4-B731-8AC1451E75EB",
+          "dx": 10.0,
+          "dy": 0.0
+        },
+        {
+          "id": "D5E223C3-1AEB-549C-9953-9FBA317A224A",
+          "dx": 10.0,
+          "dy": 0.0
+        },
+        {
+          "id": "3EF856CB-1A17-5D52-B98C-667687958631",
+          "dx": 10.0,
+          "dy": 10.0
+        },
+        {
+          "id": "520DF76B-1454-5CE6-A16B-3CB2E755879E",
+          "dx": 15.0,
+          "dy": 10.0
+        },
+        {
+          "id": "3D12729C-A7B0-5774-B525-6D503E657E81",
+          "dx": 10.0,
+          "dy": 5.0
+        }
+      ]
+    },
+    "case_height_before": 224.84,
+    "case_height_after": 234.84
+  },
+  {
+    "variant": "volume-order-fit",
+    "undo_exact": true,
+    "ordered_source_ids": [
+      "084F8882-4747-4F41-8E6D-7BE49906D40F",
+      "C83A464C-4986-478A-9AB0-2D51CA02C702",
+      "714E30E8-AD11-48DB-8CDB-62DC072095C2"
+    ],
+    "clearance_mm": 2.8,
+    "volume_gap_mm": 1.4,
+    "case_artwork": {
+      "before_artwork_sha256": "55ef4ce5826dd50a5892c9517193fc962858c9f1394bcf89f89aab1370632b97",
+      "after_artwork_sha256": "6d248cae67d65f42f52fe6e3368e9f4fa4cdb8fe89d2500f480693f5311a0aa0",
+      "content_style_topology_sha256": "2566824ca74c3a499183c7ceb014c4c66dc1f824b535bf0624b619deeae506c0",
+      "translated_elements": [
+        {
+          "id": "54E16ED2-D080-57B5-876E-579267CA8075",
+          "dx": 0.0,
+          "dy": 2.0
+        },
+        {
+          "id": "81B17BDB-5D75-5EAC-A064-903D1B95E586",
+          "dx": 0.0,
+          "dy": 4.0
+        },
+        {
+          "id": "5C41F054-EA78-5221-B197-8EA4A3FE218C",
+          "dx": 0.0,
+          "dy": 6.0
+        },
+        {
+          "id": "4BA70590-F96C-5888-8639-7DC61EA82FBE",
+          "dx": 0.0,
+          "dy": 8.0
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,80 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+    {
+      "bounds_extend_outside_frame_or_clip_range" : true,
+      "object_id" : "22FC8FF3-4D90-470B-8729-91B37B560BD2"
+    }
+  ],
+  "height" : 1000,
+  "png_sha256" : "2e186697b19bf83f45e5b7954eec23e3252f7d9369cc62649123e67fdc2066db",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:07D7FFAD-5A22-45F9-846B-BA526F25DA9F.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "font:HelveticaNeue",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    },
+    {
+      "id" : "font:HelveticaNeue-Medium",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 0.40000000000000002,
+      "distance" : 1.8500000000000001,
+      "elevation" : 0.47999999999999998,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 0.71999999999999997,
+        "y" : 0.11,
+        "z" : 0.23000000000000001
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "149148D9-2685-481E-85D1-2E056D67326D",
+    "instances" : [
+      {
+        "id" : "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name" : "Sewn hardcover",
+        "positionMM" : {
+          "x" : 0,
+          "y" : 0,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sheetPose" : {
+          "activeSpread" : 0,
+          "bendMM" : 0,
+          "openingDegrees" : 0
+        },
+        "sourceObjectID" : "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "Proof \/ inset-close",
+    "pixels" : {
+      "height" : 1000,
+      "width" : 1500
+    },
+    "revision" : 2,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "cde8196992e904fe46cec154828572fdb345334ed917cc8829f2561b9ef19e50",
+  "source_project_id" : "DCF5F48D-BCBA-460B-B015-2D1A1D4E8BF2",
+  "width" : 1500
+}

@@ -1,0 +1,205 @@
+Test Suite 'All tests' started at 2026-11-03 17:37:14.366
+Test Suite 'testing.xctest' started at 2026-11-03 17:37:14.367
+Test Suite 'AdvancedSheetControlsTests' started at 2026-11-03 17:37:14.367
+Test Case 'AdvancedSheetControlsTests.testCreatingLinkedPhysicalFaceCreatesOneTransparentCanonicalSourceWithOneUndoAndReopen' started at 2026-11-03 17:37:14.367
+Test Case 'AdvancedSheetControlsTests.testCreatingLinkedPhysicalFaceCreatesOneTransparentCanonicalSourceWithOneUndoAndReopen' passed (0.031 seconds)
+Test Case 'AdvancedSheetControlsTests.testDimensionRelationshipReplacementIsSourcePreservingAtomicAndUndoable' started at 2026-11-03 17:37:14.398
+Test Case 'AdvancedSheetControlsTests.testDimensionRelationshipReplacementIsSourcePreservingAtomicAndUndoable' passed (0.005 seconds)
+Test Case 'AdvancedSheetControlsTests.testMountedExpressionInputRetainsAuthoredParameterInsteadOfSamplingNumber' started at 2026-11-03 17:37:14.403
+Test Case 'AdvancedSheetControlsTests.testMountedExpressionInputRetainsAuthoredParameterInsteadOfSamplingNumber' passed (0.576 seconds)
+Test Case 'AdvancedSheetControlsTests.testMountedProjectAuthoredAssemblyParameterUsesNativeControlAndSingleUndo' started at 2026-11-03 17:37:14.979
+Test Case 'AdvancedSheetControlsTests.testMountedProjectAuthoredAssemblyParameterUsesNativeControlAndSingleUndo' passed (0.175 seconds)
+Test Case 'AdvancedSheetControlsTests.testPaleYellowStockAndDuplexCaliperPreservePrintedInkAndPlyProportions' started at 2026-11-03 17:37:15.154
+Test Case 'AdvancedSheetControlsTests.testPaleYellowStockAndDuplexCaliperPreservePrintedInkAndPlyProportions' passed (0.003 seconds)
+Test Case 'AdvancedSheetControlsTests.testRemovedSurfaceAndImportedProjectRejectSourceCreationWithoutOrphanOrHistory' started at 2026-11-03 17:37:15.157
+Test Case 'AdvancedSheetControlsTests.testRemovedSurfaceAndImportedProjectRejectSourceCreationWithoutOrphanOrHistory' passed (0.002 seconds)
+Test Case 'AdvancedSheetControlsTests.testSharedSurfaceDetailChangesEffectiveExplicitAndInheritedProfilesOneChannelAtATime' started at 2026-11-03 17:37:15.159
+Test Case 'AdvancedSheetControlsTests.testSharedSurfaceDetailChangesEffectiveExplicitAndInheritedProfilesOneChannelAtATime' passed (0.0 seconds)
+Test Suite 'AdvancedSheetControlsTests' passed at 2026-11-03 17:37:15.160
+	 Executed 7 tests, with 0 failures (0 unexpected) in 0.792 (0.792) seconds
+Test Suite 'PaperWrappingControlsTests' started at 2026-11-03 17:37:15.160
+Test Case 'PaperWrappingControlsTests.testOrdinaryWrappedPanelsShareMaterialEditingPreserveSourceAndRejectStaleTargetsAtomically' started at 2026-11-03 17:37:15.160
+Test Case 'PaperWrappingControlsTests.testOrdinaryWrappedPanelsShareMaterialEditingPreserveSourceAndRejectStaleTargetsAtomically' passed (0.059 seconds)
+Test Suite 'PaperWrappingControlsTests' passed at 2026-11-03 17:37:15.219
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.059 (0.059) seconds
+Test Suite 'PrintMeshBuilderTests' started at 2026-11-03 17:37:15.219
+Test Case 'PrintMeshBuilderTests.testUnseenPrimitivesHavePhysicalDimensionsAndRealChamferGeometry' started at 2026-11-03 17:37:15.219
+Test Case 'PrintMeshBuilderTests.testUnseenPrimitivesHavePhysicalDimensionsAndRealChamferGeometry' passed (0.068 seconds)
+Test Suite 'PrintMeshBuilderTests' passed at 2026-11-03 17:37:15.286
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.068 (0.068) seconds
+Test Suite 'SewingLayoutEditingTests' started at 2026-11-03 17:37:15.286
+Test Case 'SewingLayoutEditingTests.testRealLayoutSVGAndPDFKeepStockOriginPhysicalDimensionsAndPreflightDoesNotWrite' started at 2026-11-03 17:37:15.286
+Test Case 'SewingLayoutEditingTests.testRealLayoutSVGAndPDFKeepStockOriginPhysicalDimensionsAndPreflightDoesNotWrite' passed (0.2 seconds)
+Test Suite 'SewingLayoutEditingTests' passed at 2026-11-03 17:37:15.486
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.2 (0.2) seconds
+Test Suite 'SheetPanelNeutralCurveGeometryTests' started at 2026-11-03 17:37:15.486
+Test Case 'SheetPanelNeutralCurveGeometryTests.testCurvedSignMeshRetainsPhysicalUVsCaliperNormalsAndSharedCoreBoundsOnAllEdges' started at 2026-11-03 17:37:15.486
+Test Case 'SheetPanelNeutralCurveGeometryTests.testCurvedSignMeshRetainsPhysicalUVsCaliperNormalsAndSharedCoreBoundsOnAllEdges' passed (1.034 seconds)
+Test Case 'SheetPanelNeutralCurveGeometryTests.testFullWidthCircularFlexHasNoZeroTailDegeneracyAndOrdinaryPaperUsesSharedCurve' started at 2026-11-03 17:37:16.520
+Test Case 'SheetPanelNeutralCurveGeometryTests.testFullWidthCircularFlexHasNoZeroTailDegeneracyAndOrdinaryPaperUsesSharedCurve' passed (0.242 seconds)
+Test Case 'SheetPanelNeutralCurveGeometryTests.testNarrowLeafBindingUsesTheSameEffectiveHingeAsItsMeasuredDependency' started at 2026-11-03 17:37:16.761
+Test Case 'SheetPanelNeutralCurveGeometryTests.testNarrowLeafBindingUsesTheSameEffectiveHingeAsItsMeasuredDependency' passed (0.304 seconds)
+Test Case 'SheetPanelNeutralCurveGeometryTests.testRigidAttachedLiningIsCenteredOnItsParentWithRealWrapClearance' started at 2026-11-03 17:37:17.065
+Test Case 'SheetPanelNeutralCurveGeometryTests.testRigidAttachedLiningIsCenteredOnItsParentWithRealWrapClearance' passed (0.193 seconds)
+Test Suite 'SheetPanelNeutralCurveGeometryTests' passed at 2026-11-03 17:37:17.258
+	 Executed 4 tests, with 0 failures (0 unexpected) in 1.771 (1.771) seconds
+Test Suite 'LayeredPanelAuthoringTests' started at 2026-11-03 17:37:17.258
+Test Case 'LayeredPanelAuthoringTests.testExternalInsetSourceCropOwnershipAndLiveViewCyclesValidateBeforePublishing' started at 2026-11-03 17:37:17.258
+Test Case 'LayeredPanelAuthoringTests.testExternalInsetSourceCropOwnershipAndLiveViewCyclesValidateBeforePublishing' passed (0.027 seconds)
+Test Case 'LayeredPanelAuthoringTests.testOriginalPlyInterfacesAndRecessDepthsShareBoundedPhysicalLayers' started at 2026-11-03 17:37:17.285
+Test Case 'LayeredPanelAuthoringTests.testOriginalPlyInterfacesAndRecessDepthsShareBoundedPhysicalLayers' passed (0.002 seconds)
+Test Case 'LayeredPanelAuthoringTests.testPublicAuthoringAcceptsGenericFeatureDataAndRejectsMisspelledNestedFieldsAtomically' started at 2026-11-03 17:37:17.287
+Test Case 'LayeredPanelAuthoringTests.testPublicAuthoringAcceptsGenericFeatureDataAndRejectsMisspelledNestedFieldsAtomically' passed (0.064 seconds)
+Test Suite 'LayeredPanelAuthoringTests' passed at 2026-11-03 17:37:17.351
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.093 (0.093) seconds
+Test Suite 'PaperConstructionTests' started at 2026-11-03 17:37:17.351
+Test Case 'PaperConstructionTests.testAnnotationsAndInvalidInputsAreAtomicAndReadOnlyCommandsDoNotAddHistory' started at 2026-11-03 17:37:17.351
+Test Case 'PaperConstructionTests.testAnnotationsAndInvalidInputsAreAtomicAndReadOnlyCommandsDoNotAddHistory' passed (0.014 seconds)
+Test Case 'PaperConstructionTests.testDeterministicNetsHaveStableSemanticIDsAndNoCutThroughAnyCreaseInterior' started at 2026-11-03 17:37:17.365
+Test Case 'PaperConstructionTests.testDeterministicNetsHaveStableSemanticIDsAndNoCutThroughAnyCreaseInterior' passed (0.039 seconds)
+Test Case 'PaperConstructionTests.testExistingStudioLibraryGainsPaperPresetWithoutOverwritingCustomMaterials' started at 2026-11-03 17:37:17.403
+Test Case 'PaperConstructionTests.testExistingStudioLibraryGainsPaperPresetWithoutOverwritingCustomMaterials' passed (0.002 seconds)
+Test Case 'PaperConstructionTests.testExplicitLegacyConversionTranslatesFrontArtWithoutTouchingLinkedSourceAndUndoRestores' started at 2026-11-03 17:37:17.405
+Test Case 'PaperConstructionTests.testExplicitLegacyConversionTranslatesFrontArtWithoutTouchingLinkedSourceAndUndoRestores' passed (0.006 seconds)
+Test Case 'PaperConstructionTests.testFoldTransformsAreRigidGroundedUprightAndOutsideOrientationIsConsistent' started at 2026-11-03 17:37:17.411
+Test Case 'PaperConstructionTests.testFoldTransformsAreRigidGroundedUprightAndOutsideOrientationIsConsistent' passed (0.04 seconds)
+Test Case 'PaperConstructionTests.testInsideArtworkCreationIsOneUndoIdempotentLinkedAndResolvesSharedSwatches' started at 2026-11-03 17:37:17.451
+Test Case 'PaperConstructionTests.testInsideArtworkCreationIsOneUndoIdempotentLinkedAndResolvesSharedSwatches' passed (0.004 seconds)
+Test Case 'PaperConstructionTests.testLayoutNeverScalesBlanksAndReportsStockFitContentsAndPrototypeAssumptions' started at 2026-11-03 17:37:17.455
+Test Case 'PaperConstructionTests.testLayoutNeverScalesBlanksAndReportsStockFitContentsAndPrototypeAssumptions' passed (0.005 seconds)
+Test Case 'PaperConstructionTests.testLoadedPaperSourceRejectsMixedRepresentationsAndMismatchedRecipeOrKind' started at 2026-11-03 17:37:17.460
+Test Case 'PaperConstructionTests.testLoadedPaperSourceRejectsMixedRepresentationsAndMismatchedRecipeOrKind' passed (0.031 seconds)
+Test Case 'PaperConstructionTests.testParameterChangesPreserveArtworkCoordinatesAndInsideSourceWhileFlaggingReviewAndUndo' started at 2026-11-03 17:37:17.490
+Test Case 'PaperConstructionTests.testParameterChangesPreserveArtworkCoordinatesAndInsideSourceWhileFlaggingReviewAndUndo' passed (0.012 seconds)
+Test Case 'PaperConstructionTests.testSourcePersistenceSchema53AndHistoricalSleeveRemainIndependent' started at 2026-11-03 17:37:17.502
+Test Case 'PaperConstructionTests.testSourcePersistenceSchema53AndHistoricalSleeveRemainIndependent' passed (0.02 seconds)
+Test Case 'PaperConstructionTests.testTopOpeningKeepsBodyAndBottomFixedAndUsesDistinctClosureLayers' started at 2026-11-03 17:37:17.522
+Test Case 'PaperConstructionTests.testTopOpeningKeepsBodyAndBottomFixedAndUsesDistinctClosureLayers' passed (0.028 seconds)
+Test Suite 'PaperConstructionTests' passed at 2026-11-03 17:37:17.549
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.198 (0.198) seconds
+Test Suite 'PaperRegistrationReviewTests' started at 2026-11-03 17:37:17.550
+Test Case 'PaperRegistrationReviewTests.testEffectiveCoreWrapCaliperAndTurnInChangesStillFlagReviewWithoutChangingArtwork' started at 2026-11-03 17:37:17.550
+Test Case 'PaperRegistrationReviewTests.testEffectiveCoreWrapCaliperAndTurnInChangesStillFlagReviewWithoutChangingArtwork' passed (0.072 seconds)
+Test Case 'PaperRegistrationReviewTests.testMaterialAndMetadataChangesDoNotDemandArtworkReviewAndRemainUndoableAndPersistent' started at 2026-11-03 17:37:17.622
+Test Case 'PaperRegistrationReviewTests.testMaterialAndMetadataChangesDoNotDemandArtworkReviewAndRemainUndoableAndPersistent' passed (0.021 seconds)
+Test Suite 'PaperRegistrationReviewTests' passed at 2026-11-03 17:37:17.643
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.094 (0.094) seconds
+Test Suite 'PhysicalDimensionBindingTests' started at 2026-11-03 17:37:17.643
+Test Case 'PhysicalDimensionBindingTests.testBindingsAreExplicitAndSourceObjectsRemainVisible' started at 2026-11-03 17:37:17.643
+Test Case 'PhysicalDimensionBindingTests.testBindingsAreExplicitAndSourceObjectsRemainVisible' passed (0.002 seconds)
+Test Case 'PhysicalDimensionBindingTests.testCropIndependentBookMeasurementsCanDriveTheirOwnCoverArtwork' started at 2026-11-03 17:37:17.646
+Test Case 'PhysicalDimensionBindingTests.testCropIndependentBookMeasurementsCanDriveTheirOwnCoverArtwork' passed (0.005 seconds)
+Test Case 'PhysicalDimensionBindingTests.testCycleMissingSourceUnknownInputAndBoundsRejectWithoutPartialEdits' started at 2026-11-03 17:37:17.650
+Test Case 'PhysicalDimensionBindingTests.testCycleMissingSourceUnknownInputAndBoundsRejectWithoutPartialEdits' passed (0.002 seconds)
+Test Case 'PhysicalDimensionBindingTests.testRegionsRejectConflictingAuthoritiesAndNeverEnterArtwork' started at 2026-11-03 17:37:17.653
+Test Case 'PhysicalDimensionBindingTests.testRegionsRejectConflictingAuthoritiesAndNeverEnterArtwork' passed (0.003 seconds)
+Test Case 'PhysicalDimensionBindingTests.testTransitiveDimensionsUndoAndReopenKeepAuthorityAndExactArtworkScale' started at 2026-11-03 17:37:17.655
+Test Case 'PhysicalDimensionBindingTests.testTransitiveDimensionsUndoAndReopenKeepAuthorityAndExactArtworkScale' passed (0.008 seconds)
+Test Suite 'PhysicalDimensionBindingTests' passed at 2026-11-03 17:37:17.663
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.02 (0.02) seconds
+Test Suite 'PhysicalDimensionDependencyRegressionTests' started at 2026-11-03 17:37:17.663
+Test Case 'PhysicalDimensionDependencyRegressionTests.testConflictingIntentionalPositionAndDimensionEditsRejectAtomicallyAndPreserveUndo' started at 2026-11-03 17:37:17.663
+Test Case 'PhysicalDimensionDependencyRegressionTests.testConflictingIntentionalPositionAndDimensionEditsRejectAtomicallyAndPreserveUndo' passed (0.002 seconds)
+Test Case 'PhysicalDimensionDependencyRegressionTests.testDerivedTargetCannotSilentlyDivergeAnExistingLinkedParameterFamily' started at 2026-11-03 17:37:17.665
+Test Case 'PhysicalDimensionDependencyRegressionTests.testDerivedTargetCannotSilentlyDivergeAnExistingLinkedParameterFamily' passed (0.001 seconds)
+Test Case 'PhysicalDimensionDependencyRegressionTests.testInputDictionarySchemaAcceptsTypedReferencesAndRejectsUnknownNestedFields' started at 2026-11-03 17:37:17.666
+Test Case 'PhysicalDimensionDependencyRegressionTests.testInputDictionarySchemaAcceptsTypedReferencesAndRejectsUnknownNestedFields' passed (0.0 seconds)
+Test Case 'PhysicalDimensionDependencyRegressionTests.testLockedDependentRejectsSourceRebuildAndRelationshipRemovalWithoutPartialEdits' started at 2026-11-03 17:37:17.666
+Test Case 'PhysicalDimensionDependencyRegressionTests.testLockedDependentRejectsSourceRebuildAndRelationshipRemovalWithoutPartialEdits' passed (0.0 seconds)
+Test Case 'PhysicalDimensionDependencyRegressionTests.testNestedAnchorsAndAncestorDescendantPairsRejectInsteadOfDoubleMovingArtwork' started at 2026-11-03 17:37:17.667
+Test Case 'PhysicalDimensionDependencyRegressionTests.testNestedAnchorsAndAncestorDescendantPairsRejectInsteadOfDoubleMovingArtwork' passed (0.0 seconds)
+Test Case 'PhysicalDimensionDependencyRegressionTests.testTopLevelAffineAnchorMovesInPhysicalWorldMillimetersAndRepeatedReconciliationIsExact' started at 2026-11-03 17:37:17.667
+Test Case 'PhysicalDimensionDependencyRegressionTests.testTopLevelAffineAnchorMovesInPhysicalWorldMillimetersAndRepeatedReconciliationIsExact' passed (0.0 seconds)
+Test Suite 'PhysicalDimensionDependencyRegressionTests' passed at 2026-11-03 17:37:17.667
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.004 (0.004) seconds
+Test Suite 'PlanarConstructionTests' started at 2026-11-03 17:37:17.668
+Test Case 'PlanarConstructionTests.testAuthoredSourceAndCanvasPositionsPersistAndStaleEditsReject' started at 2026-11-03 17:37:17.668
+Test Case 'PlanarConstructionTests.testAuthoredSourceAndCanvasPositionsPersistAndStaleEditsReject' passed (0.021 seconds)
+Test Case 'PlanarConstructionTests.testCaseValidationUsesRequestedPoseAndRejectsInvalidOrUnknownValues' started at 2026-11-03 17:37:17.688
+Test Case 'PlanarConstructionTests.testCaseValidationUsesRequestedPoseAndRejectsInvalidOrUnknownValues' passed (0.023 seconds)
+Test Case 'PlanarConstructionTests.testExplicitConversionPreservesSourceIDsArtworkAnnotationsAndUndo' started at 2026-11-03 17:37:17.711
+Test Case 'PlanarConstructionTests.testExplicitConversionPreservesSourceIDsArtworkAnnotationsAndUndo' passed (2.981 seconds)
+Test Case 'PlanarConstructionTests.testFabricRecipesShareTheSameParameterRequirementValidation' started at 2026-11-03 17:37:20.693
+Test Case 'PlanarConstructionTests.testFabricRecipesShareTheSameParameterRequirementValidation' passed (0.0 seconds)
+Test Case 'PlanarConstructionTests.testFullHingeBoundaryCoverageRejectsGapsThatEndpointsAndMidpointMiss' started at 2026-11-03 17:37:20.693
+Test Case 'PlanarConstructionTests.testFullHingeBoundaryCoverageRejectsGapsThatEndpointsAndMidpointMiss' passed (0.0 seconds)
+Test Case 'PlanarConstructionTests.testHingeAcrossSubdividedCollinearEdgesDoesNotCreateCuts' started at 2026-11-03 17:37:20.693
+Test Case 'PlanarConstructionTests.testHingeAcrossSubdividedCollinearEdgesDoesNotCreateCuts' passed (0.0 seconds)
+Test Case 'PlanarConstructionTests.testHingesNeverBecomeCutsAndFoldChangesPreserveArtwork' started at 2026-11-03 17:37:20.694
+Test Case 'PlanarConstructionTests.testHingesNeverBecomeCutsAndFoldChangesPreserveArtwork' passed (0.029 seconds)
+Test Case 'PlanarConstructionTests.testInvalidHingesAndCrossingPanelsRejectBeforePublication' started at 2026-11-03 17:37:20.723
+Test Case 'PlanarConstructionTests.testInvalidHingesAndCrossingPanelsRejectBeforePublication' passed (0.002 seconds)
+Test Case 'PlanarConstructionTests.testJoinOverlapExpressionsResolveParametersAndRejectInvalidValues' started at 2026-11-03 17:37:20.725
+Test Case 'PlanarConstructionTests.testJoinOverlapExpressionsResolveParametersAndRejectInvalidValues' passed (0.004 seconds)
+Test Case 'PlanarConstructionTests.testLiteralJoinSourceJSONRemainsReadableAndPersistsWithoutInferringExpressions' started at 2026-11-03 17:37:20.730
+Test Case 'PlanarConstructionTests.testLiteralJoinSourceJSONRemainsReadableAndPersistsWithoutInferringExpressions' passed (0.028 seconds)
+Test Case 'PlanarConstructionTests.testMeasuredFoldAndGlueContactUsesRequestedPoseAndRepairsWithoutEditingAcceptedSource' started at 2026-11-03 17:37:20.758
+Test Case 'PlanarConstructionTests.testMeasuredFoldAndGlueContactUsesRequestedPoseAndRepairsWithoutEditingAcceptedSource' passed (0.043 seconds)
+Test Case 'PlanarConstructionTests.testOrdinaryLegacyExamplesRemainParametricAtChangedDimensionsAndZeroRadius' started at 2026-11-03 17:37:20.801
+Test Case 'PlanarConstructionTests.testOrdinaryLegacyExamplesRemainParametricAtChangedDimensionsAndZeroRadius' passed (5.917 seconds)
+Test Case 'PlanarConstructionTests.testParameterCasesAndRequirementsLeaveAcceptedSourceUntouched' started at 2026-11-03 17:37:26.718
+Test Case 'PlanarConstructionTests.testParameterCasesAndRequirementsLeaveAcceptedSourceUntouched' passed (0.018 seconds)
+Test Case 'PlanarConstructionTests.testPositiveAreaOverlapRejectsContainedStripAndCoincidentSubdividedPolygons' started at 2026-11-03 17:37:26.736
+Test Case 'PlanarConstructionTests.testPositiveAreaOverlapRejectsContainedStripAndCoincidentSubdividedPolygons' passed (0.001 seconds)
+Test Case 'PlanarConstructionTests.testUnknownDefinitionFieldsRejectRecursivelyBeforePublication' started at 2026-11-03 17:37:26.736
+Test Case 'PlanarConstructionTests.testUnknownDefinitionFieldsRejectRecursivelyBeforePublication' passed (0.002 seconds)
+Test Case 'PlanarConstructionTests.testUnregisteredConstructionCreatesStableGeometryAndEditableControls' started at 2026-11-03 17:37:26.738
+Test Case 'PlanarConstructionTests.testUnregisteredConstructionCreatesStableGeometryAndEditableControls' passed (0.039 seconds)
+Test Suite 'PlanarConstructionTests' passed at 2026-11-03 17:37:26.777
+	 Executed 16 tests, with 0 failures (0 unexpected) in 9.109 (9.109) seconds
+Test Suite 'PlanarPackagingTests' started at 2026-11-03 17:37:26.777
+Test Case 'PlanarPackagingTests.testAuthoredStockMetadataAndSourceCaliperCannotBeSilentlyRepaired' started at 2026-11-03 17:37:26.777
+Test Case 'PlanarPackagingTests.testAuthoredStockMetadataAndSourceCaliperCannotBeSilentlyRepaired' passed (0.001 seconds)
+Test Case 'PlanarPackagingTests.testFitUsesActualOrientedCornersAndSeparatelyReportsOpening' started at 2026-11-03 17:37:26.778
+Test Case 'PlanarPackagingTests.testFitUsesActualOrientedCornersAndSeparatelyReportsOpening' passed (0.014 seconds)
+Test Case 'PlanarPackagingTests.testFourteenPackagingSourcesAndSeparateLinerCreateEditUndoAndReopen' started at 2026-11-03 17:37:26.791
+Test Case 'PlanarPackagingTests.testFourteenPackagingSourcesAndSeparateLinerCreateEditUndoAndReopen' passed (8.623 seconds)
+Test Case 'PlanarPackagingTests.testIndependentRootsRetainFlatCoordinatesAndOnlyOpeningComponentMoves' started at 2026-11-03 17:37:35.414
+Test Case 'PlanarPackagingTests.testIndependentRootsRetainFlatCoordinatesAndOnlyOpeningComponentMoves' passed (0.007 seconds)
+Test Case 'PlanarPackagingTests.testMalformedRootsHolesAndOldSourceVersionReject' started at 2026-11-03 17:37:35.421
+Test Case 'PlanarPackagingTests.testMalformedRootsHolesAndOldSourceVersionReject' passed (0.001 seconds)
+Test Case 'PlanarPackagingTests.testPhysicalCutoutsHaveStableTechnicalEdgesAndInsideFrameMapping' started at 2026-11-03 17:37:35.422
+Test Case 'PlanarPackagingTests.testPhysicalCutoutsHaveStableTechnicalEdgesAndInsideFrameMapping' passed (0.001 seconds)
+Test Suite 'PlanarPackagingTests' passed at 2026-11-03 17:37:35.423
+	 Executed 6 tests, with 0 failures (0 unexpected) in 8.646 (8.646) seconds
+Test Suite 'PlanarPhysicalFlexBoundsTests' started at 2026-11-03 17:37:35.423
+Test Case 'PlanarPhysicalFlexBoundsTests.testFiniteHalfTurnWrappedFlapUsesActualSkinAndClosedRestBoundsAtEveryViewingOpening' started at 2026-11-03 17:37:35.423
+Test Case 'PlanarPhysicalFlexBoundsTests.testFiniteHalfTurnWrappedFlapUsesActualSkinAndClosedRestBoundsAtEveryViewingOpening' passed (0.047 seconds)
+Test Case 'PlanarPhysicalFlexBoundsTests.testOffOriginCurvedSignIsGroundedAndBoundDimensionsMatchItsActualDeformedSurface' started at 2026-11-03 17:37:35.470
+Test Case 'PlanarPhysicalFlexBoundsTests.testOffOriginCurvedSignIsGroundedAndBoundDimensionsMatchItsActualDeformedSurface' passed (0.06 seconds)
+Test Case 'PlanarPhysicalFlexBoundsTests.testSingleRootFeatureNeedsNoComponentToGroundItsBentStock' started at 2026-11-03 17:37:35.531
+Test Case 'PlanarPhysicalFlexBoundsTests.testSingleRootFeatureNeedsNoComponentToGroundItsBentStock' passed (0.015 seconds)
+Test Suite 'PlanarPhysicalFlexBoundsTests' passed at 2026-11-03 17:37:35.546
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.123 (0.123) seconds
+Test Suite 'SheetBindingTests' started at 2026-11-03 17:37:35.546
+Test Case 'SheetBindingTests.testConflictingLeafStockParentOrderAndPhysicalDimensionsRejectAtomically' started at 2026-11-03 17:37:35.546
+Test Case 'SheetBindingTests.testConflictingLeafStockParentOrderAndPhysicalDimensionsRejectAtomically' passed (0.002 seconds)
+Test Suite 'SheetBindingTests' passed at 2026-11-03 17:37:35.548
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'SheetPanelNeutralCurveCacheTests' started at 2026-11-03 17:37:35.548
+Test Case 'SheetPanelNeutralCurveCacheTests.testCacheEvictsNumericalShapesWithoutRetainingAnUnboundedKeyHistory' started at 2026-11-03 17:37:35.548
+Test Case 'SheetPanelNeutralCurveCacheTests.testCacheEvictsNumericalShapesWithoutRetainingAnUnboundedKeyHistory' passed (0.05 seconds)
+Test Case 'SheetPanelNeutralCurveCacheTests.testConcurrentReadersRetainIdenticalImmutableProfilesAndBoundedCache' started at 2026-11-03 17:37:35.598
+Test Case 'SheetPanelNeutralCurveCacheTests.testConcurrentReadersRetainIdenticalImmutableProfilesAndBoundedCache' passed (0.024 seconds)
+Test Case 'SheetPanelNeutralCurveCacheTests.testExactNumericWidthEveryControlCoordinateAndFitFlagParticipateInTheKey' started at 2026-11-03 17:37:35.622
+Test Case 'SheetPanelNeutralCurveCacheTests.testExactNumericWidthEveryControlCoordinateAndFitFlagParticipateInTheKey' passed (0.021 seconds)
+Test Case 'SheetPanelNeutralCurveCacheTests.testIdenticalNumericalProfilesAvoidRepeatedSolvesAndStillCheckEveryCaliper' started at 2026-11-03 17:37:35.644
+NEUTRAL_CURVE_CACHE cold_solves=1 cold_solve_ms=4.018068313598633 warm_resolutions=35 warm_ms=0.12695789337158203
+Test Case 'SheetPanelNeutralCurveCacheTests.testIdenticalNumericalProfilesAvoidRepeatedSolvesAndStillCheckEveryCaliper' passed (0.004 seconds)
+Test Suite 'SheetPanelNeutralCurveCacheTests' passed at 2026-11-03 17:37:35.648
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.1 (0.1) seconds
+Test Suite 'SheetPanelNeutralCurveTests' started at 2026-11-03 17:37:35.648
+Test Case 'SheetPanelNeutralCurveTests.testCurveFitsOnePhysicalLengthByCommonInteriorXFactorAndKeepsEndpointsAndHeight' started at 2026-11-03 17:37:35.649
+Test Case 'SheetPanelNeutralCurveTests.testCurveFitsOnePhysicalLengthByCommonInteriorXFactorAndKeepsEndpointsAndHeight' passed (0.016 seconds)
+Test Case 'SheetPanelNeutralCurveTests.testCurveRejectsStretchFallbackCuspsBadOriginsAndInsufficientCaliperRadius' started at 2026-11-03 17:37:35.665
+Test Case 'SheetPanelNeutralCurveTests.testCurveRejectsStretchFallbackCuspsBadOriginsAndInsufficientCaliperRadius' passed (0.009 seconds)
+Test Case 'SheetPanelNeutralCurveTests.testParametricWrapCaliperPreservesBondedPlyProportionsAndChangesPhysicalEnvelope' started at 2026-11-03 17:37:35.674
+Test Case 'SheetPanelNeutralCurveTests.testParametricWrapCaliperPreservesBondedPlyProportionsAndChangesPhysicalEnvelope' passed (0.002 seconds)
+Test Case 'SheetPanelNeutralCurveTests.testWholePanelFlexAndClosedEnvelopeUseSameCurvedCaliperSamplesAtEveryViewingPose' started at 2026-11-03 17:37:35.676
+Test Case 'SheetPanelNeutralCurveTests.testWholePanelFlexAndClosedEnvelopeUseSameCurvedCaliperSamplesAtEveryViewingPose' passed (0.035 seconds)
+Test Suite 'SheetPanelNeutralCurveTests' passed at 2026-11-03 17:37:35.711
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.062 (0.062) seconds
+Test Suite 'testing.xctest' passed at 2026-11-03 17:37:35.711
+	 Executed 75 tests, with 0 failures (0 unexpected) in 21.34 (21.34) seconds
+Test Suite 'All tests' passed at 2026-11-03 17:37:35.711
+	 Executed 75 tests, with 0 failures (0 unexpected) in 21.34 (21.34) seconds

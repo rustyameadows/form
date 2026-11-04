@@ -1,0 +1,1261 @@
+{
+  "patch": {
+    "project_id": "DCF5F48D-BCBA-460B-B015-2D1A1D4E8BF2",
+    "object_id": "D08116E7-D7EA-4552-8D12-9954A32A3461",
+    "book_id": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+    "source_object_id": "0EFCBEBE-2F5E-438B-AEEB-F819CEECB345",
+    "operations": [
+      {
+        "name": "form_construction",
+        "arguments": {
+          "command": "configure",
+          "object_id": "D08116E7-D7EA-4552-8D12-9954A32A3461",
+          "definition": {
+            "hinges": [
+              {
+                "angleDegrees": "90.0",
+                "childPanelID": "back",
+                "end": {
+                  "x": "flapWidth+panelWidth",
+                  "y": "panelHeight"
+                },
+                "id": "back-joint",
+                "layerOffsetMM": "paperMM",
+                "parentPanelID": "spine",
+                "start": {
+                  "x": "flapWidth+panelWidth",
+                  "y": "0.0"
+                }
+              },
+              {
+                "angleDegrees": "-90.0",
+                "childPanelID": "front",
+                "end": {
+                  "x": "flapWidth+panelWidth+spineWidth",
+                  "y": "panelHeight"
+                },
+                "id": "front-joint",
+                "layerOffsetMM": "paperMM",
+                "parentPanelID": "spine",
+                "start": {
+                  "x": "flapWidth+panelWidth+spineWidth",
+                  "y": "0.0"
+                }
+              },
+              {
+                "angleDegrees": 0,
+                "childPanelID": "back-flap",
+                "end": {
+                  "x": "flapWidth",
+                  "y": "panelHeight"
+                },
+                "id": "back-turn",
+                "layerOffsetMM": 0,
+                "parentPanelID": "back",
+                "start": {
+                  "x": "flapWidth",
+                  "y": "0.0"
+                }
+              },
+              {
+                "angleDegrees": 0,
+                "childPanelID": "front-flap",
+                "end": {
+                  "x": "flapWidth+2*panelWidth+spineWidth",
+                  "y": "panelHeight"
+                },
+                "id": "front-turn",
+                "layerOffsetMM": 0,
+                "parentPanelID": "front",
+                "start": {
+                  "x": "flapWidth+2*panelWidth+spineWidth",
+                  "y": "0.0"
+                }
+              }
+            ],
+            "joins": [],
+            "name": "The useful interval / removable jacket",
+            "panels": [
+              {
+                "id": "back-flap",
+                "name": "Back Flap",
+                "polygon": [
+                  {
+                    "x": "0.0",
+                    "y": "0.0"
+                  },
+                  {
+                    "x": "(0)+(flapWidth)",
+                    "y": "0.0"
+                  },
+                  {
+                    "x": "(0)+(flapWidth)",
+                    "y": "panelHeight"
+                  },
+                  {
+                    "x": "0.0",
+                    "y": "panelHeight"
+                  }
+                ],
+                "role": "body",
+                "features": {
+                  "flex": {
+                    "edge": "right",
+                    "widthMM": "pi*(boardCore+2*coverSkin+paperMM+0.5)/2",
+                    "angleDegrees": -180
+                  }
+                }
+              },
+              {
+                "id": "back",
+                "name": "Back",
+                "polygon": [
+                  {
+                    "x": "flapWidth",
+                    "y": "0.0"
+                  },
+                  {
+                    "x": "(flapWidth)+(panelWidth)",
+                    "y": "0.0"
+                  },
+                  {
+                    "x": "(flapWidth)+(panelWidth)",
+                    "y": "panelHeight"
+                  },
+                  {
+                    "x": "flapWidth",
+                    "y": "panelHeight"
+                  }
+                ],
+                "role": "body"
+              },
+              {
+                "id": "spine",
+                "name": "Spine",
+                "polygon": [
+                  {
+                    "x": "flapWidth+panelWidth",
+                    "y": "0.0"
+                  },
+                  {
+                    "x": "(flapWidth+panelWidth)+(spineWidth)",
+                    "y": "0.0"
+                  },
+                  {
+                    "x": "(flapWidth+panelWidth)+(spineWidth)",
+                    "y": "panelHeight"
+                  },
+                  {
+                    "x": "flapWidth+panelWidth",
+                    "y": "panelHeight"
+                  }
+                ],
+                "role": "body"
+              },
+              {
+                "id": "front",
+                "name": "Front",
+                "polygon": [
+                  {
+                    "x": "flapWidth+panelWidth+spineWidth",
+                    "y": "0.0"
+                  },
+                  {
+                    "x": "(flapWidth+panelWidth+spineWidth)+(panelWidth)",
+                    "y": "0.0"
+                  },
+                  {
+                    "x": "(flapWidth+panelWidth+spineWidth)+(panelWidth)",
+                    "y": "panelHeight"
+                  },
+                  {
+                    "x": "flapWidth+panelWidth+spineWidth",
+                    "y": "panelHeight"
+                  }
+                ],
+                "role": "body"
+              },
+              {
+                "id": "front-flap",
+                "name": "Front Flap",
+                "polygon": [
+                  {
+                    "x": "flapWidth+2*panelWidth+spineWidth",
+                    "y": "0.0"
+                  },
+                  {
+                    "x": "(flapWidth+2*panelWidth+spineWidth)+(flapWidth)",
+                    "y": "0.0"
+                  },
+                  {
+                    "x": "(flapWidth+2*panelWidth+spineWidth)+(flapWidth)",
+                    "y": "panelHeight"
+                  },
+                  {
+                    "x": "flapWidth+2*panelWidth+spineWidth",
+                    "y": "panelHeight"
+                  }
+                ],
+                "role": "body",
+                "features": {
+                  "flex": {
+                    "edge": "left",
+                    "widthMM": "pi*(boardCore+2*coverSkin+paperMM+0.5)/2",
+                    "angleDegrees": -180
+                  }
+                }
+              }
+            ],
+            "parameters": [
+              {
+                "maximum": 1000,
+                "minimum": 0.01,
+                "name": "panelWidth",
+                "unit": "mm",
+                "value": 147
+              },
+              {
+                "maximum": 1000,
+                "minimum": 0.01,
+                "name": "panelHeight",
+                "unit": "mm",
+                "value": 217
+              },
+              {
+                "maximum": 1000,
+                "minimum": 0.01,
+                "name": "spineWidth",
+                "unit": "mm",
+                "value": 13.939999999999996
+              },
+              {
+                "maximum": 1000,
+                "minimum": 0.01,
+                "name": "flapWidth",
+                "unit": "mm",
+                "value": 55
+              },
+              {
+                "maximum": 1000,
+                "minimum": 0.01,
+                "name": "paperMM",
+                "unit": "mm",
+                "value": 0.18
+              },
+              {
+                "name": "bookFore",
+                "value": 143.12,
+                "minimum": 0.01,
+                "maximum": 1000,
+                "unit": "mm"
+              },
+              {
+                "name": "bookFloor",
+                "value": -2.695,
+                "minimum": -1000,
+                "maximum": 1000,
+                "unit": "mm"
+              },
+              {
+                "name": "boardCore",
+                "value": 2.4,
+                "minimum": 0.01,
+                "maximum": 1000,
+                "unit": "mm"
+              },
+              {
+                "name": "coverSkin",
+                "value": 0.12,
+                "minimum": 0,
+                "maximum": 1000,
+                "unit": "mm"
+              }
+            ],
+            "rootPanelID": "spine",
+            "size": {
+              "x": "2*flapWidth+2*panelWidth+spineWidth",
+              "y": "panelHeight"
+            },
+            "stockThickness": "paperMM",
+            "version": 3,
+            "components": [
+              {
+                "id": "jacket-fit",
+                "name": "Removable jacket registration",
+                "rootPanelID": "spine",
+                "anchor": {
+                  "x": "flapWidth+panelWidth",
+                  "y": "panelHeight"
+                },
+                "rotationDegrees": {
+                  "x": -90,
+                  "y": 0,
+                  "z": 90
+                },
+                "position": {
+                  "x": "bookFore-panelWidth",
+                  "y": "bookFloor-0.3",
+                  "z": "panelHeight/2"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "form_update_object",
+        "arguments": {
+          "object_id": "D08116E7-D7EA-4552-8D12-9954A32A3461",
+          "dimension_bindings": [
+            {
+              "parameter": "panelWidth",
+              "expression": "book+1",
+              "inputs": {
+                "book": {
+                  "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+                  "measurement": "closedWidth"
+                }
+              }
+            },
+            {
+              "parameter": "panelHeight",
+              "expression": "book+1",
+              "inputs": {
+                "book": {
+                  "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+                  "measurement": "closedHeight"
+                }
+              }
+            },
+            {
+              "parameter": "spineWidth",
+              "expression": "book+0.6",
+              "inputs": {
+                "book": {
+                  "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+                  "measurement": "closedThickness"
+                }
+              }
+            },
+            {
+              "parameter": "bookFore",
+              "expression": "width+overhang+wrap",
+              "inputs": {
+                "width": {
+                  "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+                  "measurement": "trimWidth"
+                },
+                "overhang": {
+                  "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+                  "measurement": "parameter",
+                  "parameter": "overhangMM"
+                },
+                "wrap": {
+                  "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+                  "measurement": "parameter",
+                  "parameter": "wrapMM"
+                }
+              }
+            },
+            {
+              "parameter": "bookFloor",
+              "expression": "-board-wrap-reinforced/2",
+              "inputs": {
+                "board": {
+                  "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+                  "measurement": "parameter",
+                  "parameter": "boardMM"
+                },
+                "wrap": {
+                  "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+                  "measurement": "parameter",
+                  "parameter": "wrapMM"
+                },
+                "reinforced": {
+                  "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+                  "measurement": "parameter",
+                  "parameter": "spineBoardMM"
+                }
+              }
+            },
+            {
+              "parameter": "boardCore",
+              "expression": "board",
+              "inputs": {
+                "board": {
+                  "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+                  "measurement": "parameter",
+                  "parameter": "boardMM"
+                }
+              }
+            },
+            {
+              "parameter": "coverSkin",
+              "expression": "skin",
+              "inputs": {
+                "skin": {
+                  "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+                  "measurement": "parameter",
+                  "parameter": "wrapMM"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "reviewed_project_sha256": "4b00b642fdf142923d4b1b14bdb590328d9423f658cb004a929c0ca080620eb6",
+    "jacket_before_sha256": "63cb4404bdd03a81678eeed20723db5e15baaeadd5e70ddc608a36116711fcc7",
+    "source_artwork_sha256": "b6d0c19f516efd43376799f4f902105a75da412e044d876e12f3f0d97861ec5b",
+    "source_content_style_topology_sha256": "314ae6645288c7529617e7572f57d400331d5e5adb804f73be44fcef8a1b6fe2",
+    "source_regions_sha256": "1a968df7ec91de334657a6e73d0070d7307183a0848ed1300514a38b6c910ffc",
+    "jacket_finishes_sha256": "319a6b4618b8c584ff9ba6dc3c2bf46b0504253542c09e1c85c097c1a2a32f95",
+    "registration_parameters": {
+      "bookFore": 143.12,
+      "bookFloor": -2.695,
+      "boardCore": 2.4,
+      "coverSkin": 0.12
+    },
+    "note": "One public batch preserves canonical source/layers, material/finish assignments and object IDs. Closed component normalization centers X/Z and grounds Y: use actual inspected pose registration in the scene, then prove native fit, trim/caliper changes and exact Undo/Redo."
+  },
+  "source_translation": {
+    "before_artwork_sha256": "b6d0c19f516efd43376799f4f902105a75da412e044d876e12f3f0d97861ec5b",
+    "after_artwork_sha256": "a145b19cd7f083b08fcee7164688c4650441a98f7a434075b3bbe64fefcef80e",
+    "content_style_topology_sha256": "314ae6645288c7529617e7572f57d400331d5e5adb804f73be44fcef8a1b6fe2",
+    "translated_elements": [
+      {
+        "id": "72208522-2ADC-5864-8D51-EC03365CF650",
+        "dx": 0.6957008798755311,
+        "dy": 0
+      },
+      {
+        "id": "F9BE3F8B-3019-552D-A272-7A8E6FB06260",
+        "dx": 1.5371066399821984,
+        "dy": 0
+      }
+    ]
+  },
+  "registration": {
+    "object_id": "D08116E7-D7EA-4552-8D12-9954A32A3461",
+    "position_mm": [
+      96.37929912012446,
+      -2.9949999999999997,
+      0.0
+    ],
+    "normalization_compensation_mm": [
+      96.37929912012446,
+      -2.9949999999999997,
+      0.0
+    ],
+    "desired_component_anchor_mm": [
+      -5.271401759751058,
+      -2.9949999999999997,
+      108.62
+    ],
+    "inspected_component_anchor_mm": [
+      -101.65070087987552,
+      0,
+      108.62
+    ],
+    "inspection_revision": "05141e59119d88ce7286018bac6645648b73f8e02e5c28079c2861fb7c24babc",
+    "note": "Exact compensation of the native generic closed-bounds normalization; refresh from inspection after changing bound trim/calipers. No canonical artwork or physical dimensions change."
+  },
+  "inspection": {
+    "components": [
+      {
+        "id": "jacket-fit",
+        "localToWorld": [
+          6.123233995736766e-17,
+          -6.123233995736766e-17,
+          -1,
+          -101.65070087987552,
+          1,
+          3.749399456654644e-33,
+          6.123233995736766e-17,
+          0,
+          0,
+          -1,
+          6.123233995736766e-17,
+          108.62,
+          0,
+          0,
+          0,
+          1
+        ],
+        "name": "Removable jacket registration",
+        "rootPanelID": "spine"
+      }
+    ],
+    "connection_checks": [],
+    "connections_passed": true,
+    "definition": {
+      "components": [
+        {
+          "anchor": {
+            "x": "flapWidth+panelWidth",
+            "y": "panelHeight"
+          },
+          "id": "jacket-fit",
+          "name": "Removable jacket registration",
+          "position": {
+            "x": "bookFore-panelWidth",
+            "y": "bookFloor-0.3",
+            "z": "panelHeight/2"
+          },
+          "rootPanelID": "spine",
+          "rotationDegrees": {
+            "x": "-90.0",
+            "y": "0.0",
+            "z": "90.0"
+          }
+        }
+      ],
+      "hinges": [
+        {
+          "angleDegrees": "90.0",
+          "childPanelID": "back",
+          "end": {
+            "x": "flapWidth+panelWidth",
+            "y": "panelHeight"
+          },
+          "id": "back-joint",
+          "layerOffsetMM": "paperMM",
+          "parentPanelID": "spine",
+          "start": {
+            "x": "flapWidth+panelWidth",
+            "y": "0.0"
+          }
+        },
+        {
+          "angleDegrees": "-90.0",
+          "childPanelID": "front",
+          "end": {
+            "x": "flapWidth+panelWidth+spineWidth",
+            "y": "panelHeight"
+          },
+          "id": "front-joint",
+          "layerOffsetMM": "paperMM",
+          "parentPanelID": "spine",
+          "start": {
+            "x": "flapWidth+panelWidth+spineWidth",
+            "y": "0.0"
+          }
+        },
+        {
+          "angleDegrees": "0.0",
+          "childPanelID": "back-flap",
+          "end": {
+            "x": "flapWidth",
+            "y": "panelHeight"
+          },
+          "id": "back-turn",
+          "layerOffsetMM": "0.0",
+          "parentPanelID": "back",
+          "start": {
+            "x": "flapWidth",
+            "y": "0.0"
+          }
+        },
+        {
+          "angleDegrees": "0.0",
+          "childPanelID": "front-flap",
+          "end": {
+            "x": "flapWidth+2*panelWidth+spineWidth",
+            "y": "panelHeight"
+          },
+          "id": "front-turn",
+          "layerOffsetMM": "0.0",
+          "parentPanelID": "front",
+          "start": {
+            "x": "flapWidth+2*panelWidth+spineWidth",
+            "y": "0.0"
+          }
+        }
+      ],
+      "joins": [],
+      "name": "The useful interval / removable jacket",
+      "panels": [
+        {
+          "features": {
+            "flex": {
+              "angleDegrees": "-180.0",
+              "edge": "right",
+              "widthMM": "pi*(boardCore+2*coverSkin+paperMM+0.5)/2"
+            }
+          },
+          "id": "back-flap",
+          "name": "Back Flap",
+          "polygon": [
+            {
+              "x": "0.0",
+              "y": "0.0"
+            },
+            {
+              "x": "(0)+(flapWidth)",
+              "y": "0.0"
+            },
+            {
+              "x": "(0)+(flapWidth)",
+              "y": "panelHeight"
+            },
+            {
+              "x": "0.0",
+              "y": "panelHeight"
+            }
+          ],
+          "role": "body"
+        },
+        {
+          "id": "back",
+          "name": "Back",
+          "polygon": [
+            {
+              "x": "flapWidth",
+              "y": "0.0"
+            },
+            {
+              "x": "(flapWidth)+(panelWidth)",
+              "y": "0.0"
+            },
+            {
+              "x": "(flapWidth)+(panelWidth)",
+              "y": "panelHeight"
+            },
+            {
+              "x": "flapWidth",
+              "y": "panelHeight"
+            }
+          ],
+          "role": "body"
+        },
+        {
+          "id": "spine",
+          "name": "Spine",
+          "polygon": [
+            {
+              "x": "flapWidth+panelWidth",
+              "y": "0.0"
+            },
+            {
+              "x": "(flapWidth+panelWidth)+(spineWidth)",
+              "y": "0.0"
+            },
+            {
+              "x": "(flapWidth+panelWidth)+(spineWidth)",
+              "y": "panelHeight"
+            },
+            {
+              "x": "flapWidth+panelWidth",
+              "y": "panelHeight"
+            }
+          ],
+          "role": "body"
+        },
+        {
+          "id": "front",
+          "name": "Front",
+          "polygon": [
+            {
+              "x": "flapWidth+panelWidth+spineWidth",
+              "y": "0.0"
+            },
+            {
+              "x": "(flapWidth+panelWidth+spineWidth)+(panelWidth)",
+              "y": "0.0"
+            },
+            {
+              "x": "(flapWidth+panelWidth+spineWidth)+(panelWidth)",
+              "y": "panelHeight"
+            },
+            {
+              "x": "flapWidth+panelWidth+spineWidth",
+              "y": "panelHeight"
+            }
+          ],
+          "role": "body"
+        },
+        {
+          "features": {
+            "flex": {
+              "angleDegrees": "-180.0",
+              "edge": "left",
+              "widthMM": "pi*(boardCore+2*coverSkin+paperMM+0.5)/2"
+            }
+          },
+          "id": "front-flap",
+          "name": "Front Flap",
+          "polygon": [
+            {
+              "x": "flapWidth+2*panelWidth+spineWidth",
+              "y": "0.0"
+            },
+            {
+              "x": "(flapWidth+2*panelWidth+spineWidth)+(flapWidth)",
+              "y": "0.0"
+            },
+            {
+              "x": "(flapWidth+2*panelWidth+spineWidth)+(flapWidth)",
+              "y": "panelHeight"
+            },
+            {
+              "x": "flapWidth+2*panelWidth+spineWidth",
+              "y": "panelHeight"
+            }
+          ],
+          "role": "body"
+        }
+      ],
+      "parameters": [
+        {
+          "maximum": 1000,
+          "minimum": 0.01,
+          "name": "panelWidth",
+          "unit": "mm",
+          "value": 148.39140175975106
+        },
+        {
+          "maximum": 1000,
+          "minimum": 0.01,
+          "name": "panelHeight",
+          "unit": "mm",
+          "value": 217.24
+        },
+        {
+          "maximum": 1000,
+          "minimum": 0.01,
+          "name": "spineWidth",
+          "unit": "mm",
+          "value": 13.390004000355612
+        },
+        {
+          "maximum": 1000,
+          "minimum": 0.01,
+          "name": "flapWidth",
+          "unit": "mm",
+          "value": 55
+        },
+        {
+          "maximum": 1000,
+          "minimum": 0.01,
+          "name": "paperMM",
+          "unit": "mm",
+          "value": 0.18
+        },
+        {
+          "maximum": 1000,
+          "minimum": 0.01,
+          "name": "bookFore",
+          "unit": "mm",
+          "value": 143.12
+        },
+        {
+          "maximum": 1000,
+          "minimum": -1000,
+          "name": "bookFloor",
+          "unit": "mm",
+          "value": -2.695
+        },
+        {
+          "maximum": 1000,
+          "minimum": 0.01,
+          "name": "boardCore",
+          "unit": "mm",
+          "value": 2.4
+        },
+        {
+          "maximum": 1000,
+          "minimum": 0,
+          "name": "coverSkin",
+          "unit": "mm",
+          "value": 0.12
+        }
+      ],
+      "rootPanelID": "spine",
+      "size": {
+        "x": "2*flapWidth+2*panelWidth+spineWidth",
+        "y": "panelHeight"
+      },
+      "stockThickness": "paperMM",
+      "version": 3
+    },
+    "interiors": [],
+    "net": {
+      "cutEdges": [
+        {
+          "end": {
+            "x": 55,
+            "y": 0
+          },
+          "id": "back-flap.cut.0.0",
+          "panelID": "back-flap",
+          "start": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "end": {
+            "x": 0,
+            "y": 217.24
+          },
+          "id": "back-flap.cut.2.0",
+          "panelID": "back-flap",
+          "start": {
+            "x": 55,
+            "y": 217.24
+          }
+        },
+        {
+          "end": {
+            "x": 0,
+            "y": 0
+          },
+          "id": "back-flap.cut.3.0",
+          "panelID": "back-flap",
+          "start": {
+            "x": 0,
+            "y": 217.24
+          }
+        },
+        {
+          "end": {
+            "x": 203.39140175975106,
+            "y": 0
+          },
+          "id": "back.cut.0.0",
+          "panelID": "back",
+          "start": {
+            "x": 55,
+            "y": 0
+          }
+        },
+        {
+          "end": {
+            "x": 55,
+            "y": 217.24
+          },
+          "id": "back.cut.2.0",
+          "panelID": "back",
+          "start": {
+            "x": 203.39140175975106,
+            "y": 217.24
+          }
+        },
+        {
+          "end": {
+            "x": 216.78140576010668,
+            "y": 0
+          },
+          "id": "spine.cut.0.0",
+          "panelID": "spine",
+          "start": {
+            "x": 203.39140175975106,
+            "y": 0
+          }
+        },
+        {
+          "end": {
+            "x": 203.39140175975106,
+            "y": 217.24
+          },
+          "id": "spine.cut.2.0",
+          "panelID": "spine",
+          "start": {
+            "x": 216.78140576010668,
+            "y": 217.24
+          }
+        },
+        {
+          "end": {
+            "x": 365.17280751985777,
+            "y": 0
+          },
+          "id": "front.cut.0.0",
+          "panelID": "front",
+          "start": {
+            "x": 216.78140576010668,
+            "y": 0
+          }
+        },
+        {
+          "end": {
+            "x": 216.78140576010668,
+            "y": 217.24
+          },
+          "id": "front.cut.2.0",
+          "panelID": "front",
+          "start": {
+            "x": 365.17280751985777,
+            "y": 217.24
+          }
+        },
+        {
+          "end": {
+            "x": 420.1728075198577,
+            "y": 0
+          },
+          "id": "front-flap.cut.0.0",
+          "panelID": "front-flap",
+          "start": {
+            "x": 365.1728075198577,
+            "y": 0
+          }
+        },
+        {
+          "end": {
+            "x": 420.1728075198577,
+            "y": 217.24
+          },
+          "id": "front-flap.cut.1.0",
+          "panelID": "front-flap",
+          "start": {
+            "x": 420.1728075198577,
+            "y": 0
+          }
+        },
+        {
+          "end": {
+            "x": 365.1728075198577,
+            "y": 217.24
+          },
+          "id": "front-flap.cut.2.0",
+          "panelID": "front-flap",
+          "start": {
+            "x": 420.1728075198577,
+            "y": 217.24
+          }
+        }
+      ],
+      "folds": [
+        {
+          "angleDegrees": 90,
+          "childPanelID": "back",
+          "end": {
+            "x": 203.39140175975106,
+            "y": 217.24
+          },
+          "id": "back-joint",
+          "layerOffsetMM": 0.18,
+          "parentPanelID": "spine",
+          "start": {
+            "x": 203.39140175975106,
+            "y": 0
+          }
+        },
+        {
+          "angleDegrees": -90,
+          "childPanelID": "front",
+          "end": {
+            "x": 216.78140576010668,
+            "y": 217.24
+          },
+          "id": "front-joint",
+          "layerOffsetMM": 0.18,
+          "parentPanelID": "spine",
+          "start": {
+            "x": 216.78140576010668,
+            "y": 0
+          }
+        },
+        {
+          "angleDegrees": 0,
+          "childPanelID": "back-flap",
+          "end": {
+            "x": 55,
+            "y": 217.24
+          },
+          "id": "back-turn",
+          "layerOffsetMM": 0,
+          "parentPanelID": "back",
+          "start": {
+            "x": 55,
+            "y": 0
+          }
+        },
+        {
+          "angleDegrees": 0,
+          "childPanelID": "front-flap",
+          "end": {
+            "x": 365.1728075198577,
+            "y": 217.24
+          },
+          "id": "front-turn",
+          "layerOffsetMM": 0,
+          "parentPanelID": "front",
+          "start": {
+            "x": 365.1728075198577,
+            "y": 0
+          }
+        }
+      ],
+      "joins": [],
+      "panels": [
+        {
+          "features": {
+            "flex": {
+              "angleDegrees": "-180.0",
+              "edge": "right",
+              "widthMM": "pi*(boardCore+2*coverSkin+paperMM+0.5)/2"
+            }
+          },
+          "foldID": "back-turn",
+          "id": "back-flap",
+          "name": "Back Flap",
+          "parentID": "back",
+          "polygon": [
+            {
+              "x": 0,
+              "y": 0
+            },
+            {
+              "x": 55,
+              "y": 0
+            },
+            {
+              "x": 55,
+              "y": 217.24
+            },
+            {
+              "x": 0,
+              "y": 217.24
+            }
+          ],
+          "role": "body"
+        },
+        {
+          "foldID": "back-joint",
+          "id": "back",
+          "name": "Back",
+          "parentID": "spine",
+          "polygon": [
+            {
+              "x": 55,
+              "y": 0
+            },
+            {
+              "x": 203.39140175975106,
+              "y": 0
+            },
+            {
+              "x": 203.39140175975106,
+              "y": 217.24
+            },
+            {
+              "x": 55,
+              "y": 217.24
+            }
+          ],
+          "role": "body"
+        },
+        {
+          "id": "spine",
+          "name": "Spine",
+          "polygon": [
+            {
+              "x": 203.39140175975106,
+              "y": 0
+            },
+            {
+              "x": 216.78140576010668,
+              "y": 0
+            },
+            {
+              "x": 216.78140576010668,
+              "y": 217.24
+            },
+            {
+              "x": 203.39140175975106,
+              "y": 217.24
+            }
+          ],
+          "role": "body"
+        },
+        {
+          "foldID": "front-joint",
+          "id": "front",
+          "name": "Front",
+          "parentID": "spine",
+          "polygon": [
+            {
+              "x": 216.78140576010668,
+              "y": 0
+            },
+            {
+              "x": 365.17280751985777,
+              "y": 0
+            },
+            {
+              "x": 365.17280751985777,
+              "y": 217.24
+            },
+            {
+              "x": 216.78140576010668,
+              "y": 217.24
+            }
+          ],
+          "role": "body"
+        },
+        {
+          "features": {
+            "flex": {
+              "angleDegrees": "-180.0",
+              "edge": "left",
+              "widthMM": "pi*(boardCore+2*coverSkin+paperMM+0.5)/2"
+            }
+          },
+          "foldID": "front-turn",
+          "id": "front-flap",
+          "name": "Front Flap",
+          "parentID": "front",
+          "polygon": [
+            {
+              "x": 365.1728075198577,
+              "y": 0
+            },
+            {
+              "x": 420.1728075198577,
+              "y": 0
+            },
+            {
+              "x": 420.1728075198577,
+              "y": 217.24
+            },
+            {
+              "x": 365.1728075198577,
+              "y": 217.24
+            }
+          ],
+          "role": "body"
+        }
+      ],
+      "rootPanelID": "spine",
+      "size": {
+        "x": 420.1728075198577,
+        "y": 217.24
+      }
+    },
+    "object_id": "D08116E7-D7EA-4552-8D12-9954A32A3461",
+    "parameters": {
+      "boardCore": 2.4,
+      "bookFloor": -2.695,
+      "bookFore": 143.12,
+      "coverSkin": 0.12,
+      "flapWidth": 55,
+      "fold": 100,
+      "opening": 0,
+      "panelHeight": 217.24,
+      "panelWidth": 148.39140175975106,
+      "paperMM": 0.18,
+      "spineWidth": 13.390004000355612
+    },
+    "poses": [
+      {
+        "flatToWorld": [
+          -1,
+          -6.123233995736766e-17,
+          -1.2246467991473532e-16,
+          101.74070087987552,
+          1.2246467991473532e-16,
+          3.749399456654644e-33,
+          -1,
+          0.1799999999999784,
+          6.123233995736766e-17,
+          -1,
+          3.749399456654644e-33,
+          -108.62000000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID": "back-flap"
+      },
+      {
+        "flatToWorld": [
+          -1,
+          -6.123233995736766e-17,
+          -1.2246467991473532e-16,
+          101.74070087987552,
+          1.2246467991473532e-16,
+          3.749399456654644e-33,
+          -1,
+          0.1799999999999784,
+          6.123233995736766e-17,
+          -1,
+          3.749399456654644e-33,
+          -108.62000000000002,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID": "back"
+      },
+      {
+        "flatToWorld": [
+          6.123233995736766e-17,
+          -6.123233995736766e-17,
+          -1,
+          -101.65070087987554,
+          1,
+          3.749399456654644e-33,
+          6.123233995736766e-17,
+          -203.39140175975106,
+          0,
+          -1,
+          6.123233995736766e-17,
+          -108.62,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID": "spine"
+      },
+      {
+        "flatToWorld": [
+          1,
+          -6.123233995736766e-17,
+          0,
+          -318.43210663998224,
+          0,
+          3.749399456654644e-33,
+          1,
+          13.21000400035561,
+          -6.123233995736766e-17,
+          -1,
+          3.749399456654644e-33,
+          -108.61999999999999,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID": "front"
+      },
+      {
+        "flatToWorld": [
+          1,
+          -6.123233995736766e-17,
+          0,
+          -318.43210663998224,
+          0,
+          3.749399456654644e-33,
+          1,
+          13.21000400035561,
+          -6.123233995736766e-17,
+          -1,
+          3.749399456654644e-33,
+          -108.61999999999999,
+          0,
+          0,
+          0,
+          1
+        ],
+        "panelID": "front-flap"
+      }
+    ],
+    "revision": "05141e59119d88ce7286018bac6645648b73f8e02e5c28079c2861fb7c24babc",
+    "solid_checks_status": "not_declared"
+  }
+}

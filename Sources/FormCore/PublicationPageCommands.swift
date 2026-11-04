@@ -10,7 +10,7 @@ extension PublicationCommands {
         definition.parentSheets?.isEmpty != false,
         publicationID==nil || definition.publicationID==publicationID,
         let document=project.publications?.first(where:{$0.id==definition.publicationID}) else{continue}
-      let count=document.leafPairs().count
+      let count=document.leafPairs().count+(definition.auxiliaryLeaves?.count ?? 0)
       if definition.activeSpread>count {project.objects[index].sheetAssembly!.activeSpread=count}
     }
   }
@@ -54,15 +54,23 @@ extension PublicationCommands {
     if let artwork=copy.artwork {try reconcileFrames(in:&candidate,objectID:copy.id,artwork:artwork)}
     try setPublication(in:&candidate,document:changed);try candidate.validateArtworkLinks();project=candidate;return copy.id
   }
-  @discardableResult public static func addPages(in project:inout Project,publicationID:UUID,count:Int,width:Double=160,height:Double=210,storyID:UUID?=nil,columns:Int=1,gutter:Double=8,at:Int?=nil)throws->[UUID] {
+  @discardableResult public static func addPages(in project:inout Project,publicationID:UUID,count:Int,width:Double=160,height:Double=210,storyID:UUID?=nil,columns:Int=1,gutter:Double=8,at:Int?=nil,canvasSourceOnly:Bool=false)throws->[UUID] {
     guard (1...200).contains(count) else{throw FormError.invalid("Create one to 200 physical pages in a single operation.")}
-    var candidate=project;var ids:[UUID]=[]
-    for offset in 0..<count {
-      let inserted=try addPage(in:&candidate,publicationID:publicationID,width:width,height:height,storyID:storyID,columns:columns,gutter:gutter,at:at.map{$0+offset})
-      ids.append(inserted.0)
+    var candidate=project;var ids=[UUID](),frames=[StoryFrameID]()
+    guard let document=candidate.publications?.first(where:{$0.id==publicationID}),document.pages.count+count<=200 else {
+      throw FormError.invalid("A publication supports at most 200 physical source pages.")
     }
+    for offset in 0..<count {
+      let inserted=try appendBlankPublicationPage(in:&candidate,publicationID:publicationID,width:width,height:height,columns:columns,gutter:gutter,at:at.map{$0+offset})
+      if canvasSourceOnly,let index=candidate.objects.firstIndex(where:{$0.id==inserted.0}) {candidate.objects[index].canvasSourceOnly=true}
+      ids.append(inserted.0);frames+=inserted.1
+    }
+    if let storyID {try appendPublicationPageFrames(in:&candidate,publicationID:publicationID,storyID:storyID,frames:frames)}
+    try SheetAssemblyCommands.reconcileParentSheets(in:&candidate,publicationID:publicationID,validateSourceCrops:false)
+    try candidate.reconcilePhysicalDimensions(previous:project)
     try candidate.validateArtworkLinks();project=candidate;return ids
   }
+
   public static func replaceStoryText(in project:inout Project,storyID:UUID,range:NSRange,text:String)throws {
     guard let story=project.textStories?.first(where:{$0.id==storyID}) else{throw FormError.missing("Text story not found.")}
     let replacement=try PublicationTextEdits.replacing(story.sourceElement,range:range,with:text)

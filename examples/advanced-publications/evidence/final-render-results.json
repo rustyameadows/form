@@ -1,0 +1,58 @@
+{
+  "hardcover-partial": {
+    "folder": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-hardcover-partial.render",
+    "format": "png",
+    "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-hardcover-partial.render/round-09-hardcover-partial.png",
+    "record": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-hardcover-partial.render/render.json",
+    "scene_id": "6A78E04D-4B54-40F8-B864-9483B906B0F6"
+  },
+  "hardcover-spread": {
+    "folder": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-hardcover-spread.render",
+    "format": "png",
+    "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-hardcover-spread.render/round-09-hardcover-spread.png",
+    "record": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-hardcover-spread.render/render.json",
+    "scene_id": "709DD283-85A5-4159-B86E-448CBCD31EEF"
+  },
+  "hardcover-hinge": {
+    "folder": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-hardcover-hinge.render",
+    "format": "png",
+    "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-hardcover-hinge.render/round-09-hardcover-hinge.png",
+    "record": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-hardcover-hinge.render/render.json",
+    "scene_id": "364A02F6-6BF0-4EB9-805B-F097B91E6FB2"
+  },
+  "softcover-partial": {
+    "folder": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-softcover-partial.render",
+    "format": "png",
+    "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-softcover-partial.render/round-09-softcover-partial.png",
+    "record": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-softcover-partial.render/render.json",
+    "scene_id": "A9B5F1D4-85C1-44AD-9C2C-5BDBF71C214E"
+  },
+  "softcover-spread": {
+    "folder": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-softcover-spread.render",
+    "format": "png",
+    "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-softcover-spread.render/round-09-softcover-spread.png",
+    "record": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-softcover-spread.render/render.json",
+    "scene_id": "58DC4939-C9DC-4E92-A279-33A77AC7D10C"
+  },
+  "one-volume-case": {
+    "folder": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-one-volume-case.render",
+    "format": "png",
+    "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-one-volume-case.render/round-09-one-volume-case.png",
+    "record": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-one-volume-case.render/render.json",
+    "scene_id": "9E2F8DAA-5594-485B-BABB-F46786904DAB"
+  },
+  "ordered-three-volume-case": {
+    "folder": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-ordered-three-volume-case.render",
+    "format": "png",
+    "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-ordered-three-volume-case.render/round-09-ordered-three-volume-case.png",
+    "record": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-ordered-three-volume-case.render/render.json",
+    "scene_id": "6B36D619-918D-42A2-80A9-1EDF489123AE"
+  },
+  "fitted-jacket": {
+    "folder": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-fitted-jacket.render",
+    "format": "png",
+    "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-fitted-jacket.render/round-09-fitted-jacket.png",
+    "record": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-09-fitted-jacket.render/render.json",
+    "scene_id": "DDFD67DA-83D8-40DA-9CD7-F1F4A01863B8"
+  }
+}

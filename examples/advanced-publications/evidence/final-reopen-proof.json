@@ -1,0 +1,15 @@
+{
+  "objects": true,
+  "publications": true,
+  "recipes": true,
+  "materials": true,
+  "camera": true,
+  "studioPresentation": true,
+  "project_id": "DCF5F48D-BCBA-460B-B015-2D1A1D4E8BF2",
+  "object_count": 505,
+  "publication_count": 4,
+  "scene_count": 23,
+  "canonical_sources_and_scenes_exact": true,
+  "open_response_interrupted": true,
+  "subsequent_public_read_verified": true
+}

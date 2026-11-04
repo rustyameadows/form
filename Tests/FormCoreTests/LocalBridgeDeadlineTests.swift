@@ -3,6 +3,17 @@ import XCTest
 @testable import FormCore
 
 final class LocalBridgeDeadlineTests:XCTestCase {
+  func testSavedProjectOpeningHasABoundedPreparationWindowWithoutChangingEdits() {
+    let id=UUID().uuidString
+    XCTAssertEqual(LocalBridgeClient.responseTimeoutSeconds(for:"form_open_project",arguments:["project_id":id]),180)
+    let invalid:[[String:Any]]=[[:],["project_id":true],["project_id":"invalid"]]
+    for arguments in invalid {
+      XCTAssertEqual(LocalBridgeClient.responseTimeoutSeconds(for:"form_open_project",arguments:arguments),30)
+    }
+    for name in ["form_update_object","form_batch","form_set_artwork","form_set_view","form_get_project"] {
+      XCTAssertEqual(LocalBridgeClient.responseTimeoutSeconds(for:name,arguments:["project_id":id]),30)
+    }
+  }
   func testOnlyNativePNGExportsReceiveTheCaptureResponseWindow() {
     let id=UUID().uuidString
     let captures:[[String:Any]]=[

@@ -666,15 +666,21 @@ struct ArtworkInspector: View {
           .font(.system(size:11)).foregroundStyle(Palette.secondary).fixedSize(horizontal:false,vertical:true)
       } else {
       ArtworkFrameName(value: object.name) { name in store.update(object, ["name": name]) }
+      if let project=store.project {
+        SheetDimensionRelationships(session:session,objectID:object.id,projectID:project.id)
+        if object.recipeID != "artboard",project.isIndependentFlatArtworkSource(object),let recipe=project.recipe(object.recipeID) {
+          ForEach(recipe.parameters){parameter in ParameterControl(parameter:parameter,object:object).environmentObject(store)}
+        }
+      }
       let dimensions = ArtworkDrawing.dimensions(object)
       if object.recipeID == "artboard" {
         HStack(spacing: 12) {
           ArtworkUnitField("Width", value: dimensions.width, unit: session.unit) { width in
             store.update(object, ["parameters": ["width": width]])
-          }
+          }.disabled(object.dimensionBindings?.contains(where:{$0.parameter=="width"}) == true)
           ArtworkUnitField("Height", value: dimensions.height, unit: session.unit) { height in
             store.update(object, ["parameters": ["depth": height]])
-          }
+          }.disabled(object.dimensionBindings?.contains(where:{$0.parameter=="depth"}) == true)
         }
       } else {
         Text("\(dimensions.width.formatted()) × \(dimensions.height.formatted()) mm").font(

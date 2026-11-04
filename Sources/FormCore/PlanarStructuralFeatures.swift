@@ -107,10 +107,14 @@ enum PlanarComponentPoseResolver {
     }
     guard actual.count==net.panels.count else {throw FormError.invalid("Component hinge trees are disconnected or cyclic.")}
     var low=Vector3(.infinity,.infinity,.infinity),high=Vector3(-.infinity,-.infinity,-.infinity)
-    for panel in net.panels {for p in panel.polygon {for z in [-t/2,t/2] {
-      let v=M.point(closed[panel.id]!, .init(p.x,-p.y,z))
-      low = .init(min(low.x,v.x),min(low.y,v.y),min(low.z,v.z));high = .init(max(high.x,v.x),max(high.y,v.y),max(high.z,v.z))
-    }}}
+    let closedFeatureValues=variables.merging(["fold":amount*100,"opening":0]){_,new in new}
+    for panel in net.panels {
+      let matrix=closed[panel.id]!
+      for point in try panel.physicalBoundarySamples(stock:source.stock,variables:closedFeatureValues,worldMatrix:matrix) {
+        let v=M.point(matrix,point)
+        low = .init(min(low.x,v.x),min(low.y,v.y),min(low.z,v.z));high = .init(max(high.x,v.x),max(high.y,v.y),max(high.z,v.z))
+      }
+    }
     let ground=M.translation(-(low.x+high.x)/2,-low.y,-(low.z+high.z)/2)
     let resolved=net.panels.map{PaperResolvedPanel(panelID:$0.id,flatToWorld:M.multiply(ground,actual[$0.id]!))}
     let roots=components.map {component->PaperResolvedComponent in

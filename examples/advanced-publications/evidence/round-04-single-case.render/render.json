@@ -1,0 +1,113 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1000,
+  "png_sha256" : "5fc04e834918ce3c4067f3ea488d2bb7e69d77aa71c486cd11103607118f2f25",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:07D7FFAD-5A22-45F9-846B-BA526F25DA9F.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "asset:0D99662C-6980-4DE8-B9B7-C0525ECB81D2.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "asset:2CC9524A-9464-4198-85FB-D1DEBAA17F85.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "asset:8C1A9092-4412-4F97-88BD-69063A0E371B.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "font:Georgia",
+      "sha256" : "4f54eb299fccea7f103edeb0d92437359bfd4441811d53222b82b335369f6218"
+    },
+    {
+      "id" : "font:HelveticaNeue",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 1.1000000000000001,
+      "distance" : 4.7999999999999998,
+      "elevation" : 0.45000000000000001,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 0.050000000000000003,
+        "y" : 0.12,
+        "z" : 0
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "9E2F8DAA-5594-485B-BABB-F46786904DAB",
+    "instances" : [
+      {
+        "id" : "20EE4A01-47B0-4A6E-90A3-24DFFD544A79",
+        "name" : "INTERVAL \/ Single volume case",
+        "positionMM" : {
+          "x" : 0,
+          "y" : 0.14000000000000001,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "BC21F464-4051-481F-A31C-86C0212E43E3",
+        "visible" : true
+      },
+      {
+        "id" : "4EA49258-1597-4265-B81A-371968EAF865",
+        "name" : "INTERVAL \/ Single volume case \/ actual paper lining",
+        "positionMM" : {
+          "x" : 0.87000000000000011,
+          "y" : 1.8800000000000001,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "693E86C3-67DE-4D46-A3E0-1A2A97703542",
+        "visible" : true
+      },
+      {
+        "id" : "B12252FC-4ECB-43BF-A31C-5E4711765B18",
+        "name" : "The useful interval \/ bound physical source",
+        "positionMM" : {
+          "x" : 70.354299120124466,
+          "y" : 6.4950000000000134,
+          "z" : 0
+        },
+        "rotationDegrees" : 180,
+        "sheetPose" : {
+          "activeSpread" : 0,
+          "bendMM" : 0,
+          "openingDegrees" : 0
+        },
+        "sourceObjectID" : "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "Collected volumes \/ single \/ fitted case",
+    "pixels" : {
+      "height" : 1000,
+      "width" : 1500
+    },
+    "revision" : 1,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "357f7856ce75af0fe1e37146d881667f9af0d703d975e1e55c8d3a18fa668a84",
+  "source_project_id" : "DCF5F48D-BCBA-460B-B015-2D1A1D4E8BF2",
+  "width" : 1500
+}

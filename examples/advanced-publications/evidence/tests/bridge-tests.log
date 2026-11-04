@@ -1,0 +1,34 @@
+Test Suite 'All tests' started at 2026-11-03 16:51:58.733
+Test Suite 'testing.xctest' started at 2026-11-03 16:51:58.734
+Test Suite 'FormCoreTests' started at 2026-11-03 16:51:58.734
+Test Case 'FormCoreTests.testManyObjectEditsStayLocal' started at 2026-11-03 16:51:58.734
+Test Case 'FormCoreTests.testManyObjectEditsStayLocal' passed (2.96 seconds)
+Test Suite 'FormCoreTests' passed at 2026-11-03 16:52:01.695
+	 Executed 1 test, with 0 failures (0 unexpected) in 2.96 (2.96) seconds
+Test Suite 'LocalBridgeDeadlineTests' started at 2026-11-03 16:52:01.695
+Test Case 'LocalBridgeDeadlineTests.testMultipagePublicationExportAndOnlyItsPreflightReceiveBoundedCompositionWindows' started at 2026-11-03 16:52:01.695
+Test Case 'LocalBridgeDeadlineTests.testMultipagePublicationExportAndOnlyItsPreflightReceiveBoundedCompositionWindows' passed (0.0 seconds)
+Test Case 'LocalBridgeDeadlineTests.testOnlyNativePNGExportsReceiveTheCaptureResponseWindow' started at 2026-11-03 16:52:01.695
+Test Case 'LocalBridgeDeadlineTests.testOnlyNativePNGExportsReceiveTheCaptureResponseWindow' passed (0.0 seconds)
+Test Case 'LocalBridgeDeadlineTests.testSavedSceneVideoRetainsItsExistingBoundedWindow' started at 2026-11-03 16:52:01.695
+Test Case 'LocalBridgeDeadlineTests.testSavedSceneVideoRetainsItsExistingBoundedWindow' passed (0.0 seconds)
+Test Suite 'LocalBridgeDeadlineTests' passed at 2026-11-03 16:52:01.696
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'LocalBridgeReadingTests' started at 2026-11-03 16:52:01.696
+Test Case 'LocalBridgeReadingTests.testActualUnixServerAndClientRoundTripPreservesMultiMegabyteProjectResponse' started at 2026-11-03 16:52:01.696
+LocalBridgeReadingTests actual AF_UNIX multi-megabyte JSON response: payloadUTF8=4433293, elapsed=0.4851529598236084s; no timing threshold
+Test Case 'LocalBridgeReadingTests.testActualUnixServerAndClientRoundTripPreservesMultiMegabyteProjectResponse' passed (0.536 seconds)
+Test Case 'LocalBridgeReadingTests.testExactEightMiBPayloadAcceptedAndOneExtraByteRejectedWithEitherEOFOrNewline' started at 2026-11-03 16:52:02.231
+Test Case 'LocalBridgeReadingTests.testExactEightMiBPayloadAcceptedAndOneExtraByteRejectedWithEitherEOFOrNewline' passed (1.88 seconds)
+Test Case 'LocalBridgeReadingTests.testFragmentedUnicodeAndFirstLineFramingRetainExactBytesAndIgnoreTrailingLines' started at 2026-11-03 16:52:04.111
+Test Case 'LocalBridgeReadingTests.testFragmentedUnicodeAndFirstLineFramingRetainExactBytesAndIgnoreTrailingLines' passed (0.003 seconds)
+Test Case 'LocalBridgeReadingTests.testNonemptyEOFIsAcceptedEmptyEOFAndReadFailuresRemainErrors' started at 2026-11-03 16:52:04.114
+Test Case 'LocalBridgeReadingTests.testNonemptyEOFIsAcceptedEmptyEOFAndReadFailuresRemainErrors' passed (0.0 seconds)
+Test Case 'LocalBridgeReadingTests.testOversizedTerminatorInSameReadCannotBypassLimitAndSmallFirstLineIgnoresLargeTail' started at 2026-11-03 16:52:04.114
+Test Case 'LocalBridgeReadingTests.testOversizedTerminatorInSameReadCannotBypassLimitAndSmallFirstLineIgnoresLargeTail' passed (5.478 seconds)
+Test Suite 'LocalBridgeReadingTests' passed at 2026-11-03 16:52:09.592
+	 Executed 5 tests, with 0 failures (0 unexpected) in 7.896 (7.896) seconds
+Test Suite 'testing.xctest' passed at 2026-11-03 16:52:09.592
+	 Executed 9 tests, with 0 failures (0 unexpected) in 10.858 (10.858) seconds
+Test Suite 'All tests' passed at 2026-11-03 16:52:09.592
+	 Executed 9 tests, with 0 failures (0 unexpected) in 10.858 (10.858) seconds

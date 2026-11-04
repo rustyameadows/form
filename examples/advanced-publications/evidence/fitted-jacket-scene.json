@@ -1,0 +1,60 @@
+{
+  "camera": {
+    "azimuth": 0.55,
+    "distance": 4.8,
+    "elevation": 0.65,
+    "projection": "perspective",
+    "target": {
+      "x": 0.7,
+      "y": 0.07,
+      "z": 0
+    },
+    "viewportAspect": 1.5
+  },
+  "id": "DDFD67DA-83D8-40DA-9CD7-F1F4A01863B8",
+  "instances": [
+    {
+      "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+      "name": "Sewn hardcover",
+      "positionMM": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationDegrees": 0,
+      "sheetPose": {
+        "activeSpread": 0,
+        "bendMM": 0,
+        "openingDegrees": 0
+      },
+      "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+      "visible": true
+    },
+    {
+      "id": "D971A54C-6496-4B8A-92B1-34D8DFBF84E9",
+      "name": "Fitted continuous jacket",
+      "positionMM": {
+        "x": 96.37929912012446,
+        "y": -2.9949999999999997,
+        "z": 0
+      },
+      "rotationDegrees": 0,
+      "sourceObjectID": "D08116E7-D7EA-4552-8D12-9954A32A3461",
+      "visible": true
+    }
+  ],
+  "lighting": "soft-side-v1",
+  "motion": {
+    "fps": 24,
+    "mode": "orbit",
+    "orbitDegrees": 45,
+    "seconds": 6
+  },
+  "name": "Fitted removable jacket / closed book",
+  "pixels": {
+    "height": 1000,
+    "width": 1500
+  },
+  "revision": 1,
+  "surface": "Daylight"
+}
