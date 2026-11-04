@@ -73,6 +73,24 @@ Target one low-resolution review view, preserving the other saved views:
 Final captures for visual acceptance, all eight cases and all three views:
   python3 scripts/author_cycles_materials.py --apply --render --samples 512 --width 3000 --height 2000
 
+For a fresh checkout/checkpoint, author the current definitions and install the
+reverse-side vellum artwork before capturing the final main views. Use the same
+new checkpoint path for every step, with the verified ordinary app running:
+  python3 scripts/author_cycles_materials.py --apply --output .local/cycles-materials-fresh
+  python3 scripts/author_cycles_optics.py --output .local/cycles-materials-fresh --samples 64 --width 1200 --height 900
+  python3 scripts/run_cycles_material_review.py --stage final --apply --output .local/cycles-materials-fresh
+  python3 scripts/run_cycles_material_review.py --stage final-controls --apply --output .local/cycles-materials-fresh
+
+The optics author is an active authoring/render command: it creates the registered
+reverse artwork and extra optical-control scenes through MCP. Running final main
+captures first on a fresh project would omit that reverse artwork from those
+images. The optional curved attachment control can then be authored with
+author_cycles_curved_attachment.py --apply using the same --output path. These
+steps reproduce the current editable cases and controls, not the prior project's
+failed iterations or its visual-acceptance decisions. Review the new actual
+renders independently. The density/tie scripts below replay historical changes
+and intentionally require their earlier state; they are not fresh-setup steps.
+
 --case and --view can be repeated. A view filter limits saved-view updates and
 rendering; selected case material/geometry definitions are still authored from
 the current corpus. Omitted view defaults to all three. Output dimensions use

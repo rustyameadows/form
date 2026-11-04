@@ -21,6 +21,12 @@ struct PaperAppearanceControls: View {
     VStack(alignment: .leading, spacing: InspectorStyle.sectionSpacing) {
       if let paper, let current {
         stockControls(paper.stock)
+        if let projectID=store.project?.id,let authored=paper.authored {
+          ForEach(authored.panels.filter{$0.features?.wrap != nil},id:\.id){panel in
+            InspectorDivider()
+            PaperPanelWrappingControls(projectID:projectID,objectID:current.id,panel:panel,parameters:authored.parameters.map(\.name)+Array((authored.derived ?? [:]).keys).sorted())
+          }
+        }
         InspectorDivider()
         finishControls(paper, current: current)
         Text("Visual profiles and finish intent. Relief uses surface shading; press tooling, registration, bonding and physical prototypes remain unverified.")

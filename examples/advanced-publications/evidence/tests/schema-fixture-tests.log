@@ -1,0 +1,21 @@
+Test Suite 'All tests' started at 2026-11-03 16:14:51.186
+Test Suite 'testing.xctest' started at 2026-11-03 16:14:51.187
+Test Suite 'OnePassSchemaClassificationTests' started at 2026-11-03 16:14:51.187
+Test Case 'OnePassSchemaClassificationTests.testDetachedStorySnapshotAndInsideArtworkParticipateInHigherStoredDocumentRequirements' started at 2026-11-03 16:14:51.187
+Test Case 'OnePassSchemaClassificationTests.testDetachedStorySnapshotAndInsideArtworkParticipateInHigherStoredDocumentRequirements' passed (0.007 seconds)
+Test Case 'OnePassSchemaClassificationTests.testExistingAndFutureSchemaFloorsRemainMonotonicWithoutMutatingSources' started at 2026-11-03 16:14:51.193
+Test Case 'OnePassSchemaClassificationTests.testExistingAndFutureSchemaFloorsRemainMonotonicWithoutMutatingSources' passed (0.0 seconds)
+Test Case 'OnePassSchemaClassificationTests.testLegacyRecipeOnlyAndEmptyProjectResourceSemanticsAreUnchanged' started at 2026-11-03 16:14:51.194
+Test Case 'OnePassSchemaClassificationTests.testLegacyRecipeOnlyAndEmptyProjectResourceSemanticsAreUnchanged' passed (0.001 seconds)
+Test Case 'OnePassSchemaClassificationTests.testMixedProjectAndLaterObjectFeaturesSelectHighestRequirementIndependentlyOfOrder' started at 2026-11-03 16:14:51.195
+Test Case 'OnePassSchemaClassificationTests.testMixedProjectAndLaterObjectFeaturesSelectHighestRequirementIndependentlyOfOrder' passed (0.002 seconds)
+Test Case 'OnePassSchemaClassificationTests.testNilAndPresentEmptyOptionalObjectFieldsKeepTheirExactHistoricalLevels' started at 2026-11-03 16:14:51.196
+Test Case 'OnePassSchemaClassificationTests.testNilAndPresentEmptyOptionalObjectFieldsKeepTheirExactHistoricalLevels' passed (0.001 seconds)
+Test Case 'OnePassSchemaClassificationTests.testStoryAndStyleCharacterOpticalAndPaintRequirementsRemainProjectContributions' started at 2026-11-03 16:14:51.197
+Test Case 'OnePassSchemaClassificationTests.testStoryAndStyleCharacterOpticalAndPaintRequirementsRemainProjectContributions' passed (0.0 seconds)
+Test Suite 'OnePassSchemaClassificationTests' passed at 2026-11-03 16:14:51.197
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.011 (0.011) seconds
+Test Suite 'testing.xctest' passed at 2026-11-03 16:14:51.198
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.011 (0.011) seconds
+Test Suite 'All tests' passed at 2026-11-03 16:14:51.198
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.011 (0.011) seconds

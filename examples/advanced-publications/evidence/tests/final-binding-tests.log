@@ -1,0 +1,54 @@
+Test Suite 'All tests' started at 2026-11-03 17:50:44.406
+Test Suite 'testing.xctest' started at 2026-11-03 17:50:44.407
+Test Suite 'SheetAssemblyGeometryTests' started at 2026-11-03 17:50:44.407
+Test Case 'SheetAssemblyGeometryTests.testActualGPUActiveSpreadShowsCanonicalBackGlyphUprightAndPreservesWindingAndColors' started at 2026-11-03 17:50:44.407
+SHEET_GLYPH_EVIDENCE=/var/folders/2r/52cdxw856y94dcnx7p4b5s_00000gn/T/form-sheet-glyph-3868C27A-954D-405E-8F73-E8CF20C3AB73
+Test Case 'SheetAssemblyGeometryTests.testActualGPUActiveSpreadShowsCanonicalBackGlyphUprightAndPreservesWindingAndColors' passed (1.98 seconds)
+Test Case 'SheetAssemblyGeometryTests.testActualGPUBentLowerPrintedCapRemainsVisibleBeyondItsOpaqueNeighbor' started at 2026-11-03 17:50:46.386
+BENT_CAP_EVIDENCE=/var/folders/2r/52cdxw856y94dcnx7p4b5s_00000gn/T/form-bent-cap-B4C76A5D-FD52-4B2C-94BF-CC00DA32835C
+Test Case 'SheetAssemblyGeometryTests.testActualGPUBentLowerPrintedCapRemainsVisibleBeyondItsOpaqueNeighbor' passed (1.76 seconds)
+Test Case 'SheetAssemblyGeometryTests.testBendPreservesMaterialArcCoordinatesRealPlySlotsAndNonzeroCaliper' started at 2026-11-03 17:50:48.146
+Test Case 'SheetAssemblyGeometryTests.testBendPreservesMaterialArcCoordinatesRealPlySlotsAndNonzeroCaliper' passed (0.048 seconds)
+Test Case 'SheetAssemblyGeometryTests.testCanonicalStoryEditChangesActualPaperMaterialPixelsWhilePageFramesStayExact' started at 2026-11-03 17:50:48.194
+Test Case 'SheetAssemblyGeometryTests.testCanonicalStoryEditChangesActualPaperMaterialPixelsWhilePageFramesStayExact' passed (2.753 seconds)
+Test Case 'SheetAssemblyGeometryTests.testCoverCropsTranslateWithoutScalingAndFinalSamplingSpendsOnExposedFaces' started at 2026-11-03 17:50:50.947
+Test Case 'SheetAssemblyGeometryTests.testCoverCropsTranslateWithoutScalingAndFinalSamplingSpendsOnExposedFaces' passed (0.189 seconds)
+Test Case 'SheetAssemblyGeometryTests.testOpeningUpdatesPoseWithoutNewPhysicalMeshesTexturesOrCanonicalWrites' started at 2026-11-03 17:50:51.136
+Test Case 'SheetAssemblyGeometryTests.testOpeningUpdatesPoseWithoutNewPhysicalMeshesTexturesOrCanonicalWrites' passed (0.107 seconds)
+Test Case 'SheetAssemblyGeometryTests.testSixtyFourPageCurvedSourcePlansPrioritizeExteriorFacesAndKeepEditingAndFinalBudgetsBounded' started at 2026-11-03 17:50:51.243
+BENT_SOURCE_BUDGET=faces:64,editingPixels:260304,finalPixels:7181430,chargedPixels:7190235,primaryPixels:2057994,tailPixels:102424,sourceBytes:402653160
+Test Case 'SheetAssemblyGeometryTests.testSixtyFourPageCurvedSourcePlansPrioritizeExteriorFacesAndKeepEditingAndFinalBudgetsBounded' passed (2.938 seconds)
+Test Suite 'SheetAssemblyGeometryTests' passed at 2026-11-03 17:50:54.181
+	 Executed 7 tests, with 0 failures (0 unexpected) in 9.774 (9.774) seconds
+Test Suite 'SheetBindingGeometryTests' started at 2026-11-03 17:50:54.181
+Test Case 'SheetBindingGeometryTests.testSideFlexUsesPinnedMarginUnitNormalsAndDistinctGeometryPoseIdentity' started at 2026-11-03 17:50:54.181
+Test Case 'SheetBindingGeometryTests.testSideFlexUsesPinnedMarginUnitNormalsAndDistinctGeometryPoseIdentity' passed (0.105 seconds)
+Test Case 'SheetBindingGeometryTests.testWireCrownLegsAndClinchesHaveActualBoundedCaliperAndHeadRegistration' started at 2026-11-03 17:50:54.287
+Test Case 'SheetBindingGeometryTests.testWireCrownLegsAndClinchesHaveActualBoundedCaliperAndHeadRegistration' passed (0.003 seconds)
+Test Suite 'SheetBindingGeometryTests' passed at 2026-11-03 17:50:54.290
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.109 (0.109) seconds
+Test Suite 'SheetPanelAdvancedGeometryTests' started at 2026-11-03 17:50:54.290
+Test Case 'SheetPanelAdvancedGeometryTests.testActualParentFoldHeightAndRigidTurnFollowResolvedLeavesWithoutChangingCaliper' started at 2026-11-03 17:50:54.290
+Test Case 'SheetPanelAdvancedGeometryTests.testActualParentFoldHeightAndRigidTurnFollowResolvedLeavesWithoutChangingCaliper' passed (0.504 seconds)
+Test Case 'SheetPanelAdvancedGeometryTests.testCanonicalEdgeAndInsetMissingAssetsRejectAndExternalInsetEditsInvalidateGeometry' started at 2026-11-03 17:50:54.794
+Test Case 'SheetPanelAdvancedGeometryTests.testCanonicalEdgeAndInsetMissingAssetsRejectAndExternalInsetEditsInvalidateGeometry' passed (0.014 seconds)
+Test Case 'SheetPanelAdvancedGeometryTests.testClosedEdgeRegistrationSurvivesPageBendAndSharesOnlyThreeSourceSurfaces' started at 2026-11-03 17:50:54.808
+Test Case 'SheetPanelAdvancedGeometryTests.testClosedEdgeRegistrationSurvivesPageBendAndSharesOnlyThreeSourceSurfaces' passed (0.042 seconds)
+Test Case 'SheetPanelAdvancedGeometryTests.testFullyOpenBondedAndSewnSpreadsRemainAboveNeighboringBlankLeafFaces' started at 2026-11-03 17:50:54.850
+Test Case 'SheetPanelAdvancedGeometryTests.testFullyOpenBondedAndSewnSpreadsRemainAboveNeighboringBlankLeafFaces' passed (0.499 seconds)
+Test Case 'SheetPanelAdvancedGeometryTests.testGatheredSewnConstructionUsesPaperFoldsAndNonmetallicFiber' started at 2026-11-03 17:50:55.349
+Test Case 'SheetPanelAdvancedGeometryTests.testGatheredSewnConstructionUsesPaperFoldsAndNonmetallicFiber' passed (0.236 seconds)
+Test Case 'SheetPanelAdvancedGeometryTests.testOrdinaryPlanarPanelAndSheetEnclosureUseSameLayerRenderingPrimitive' started at 2026-11-03 17:50:55.585
+Test Case 'SheetPanelAdvancedGeometryTests.testOrdinaryPlanarPanelAndSheetEnclosureUseSameLayerRenderingPrimitive' passed (0.109 seconds)
+Test Case 'SheetPanelAdvancedGeometryTests.testPhysicalHingeAllEdgesConservesNeutralArcCaliperAndUnitNormals' started at 2026-11-03 17:50:55.694
+Test Case 'SheetPanelAdvancedGeometryTests.testPhysicalHingeAllEdgesConservesNeutralArcCaliperAndUnitNormals' passed (0.187 seconds)
+Test Case 'SheetPanelAdvancedGeometryTests.testRecessSlicesActualBondedStrataWithoutDuplicatingOrRecoloringPlies' started at 2026-11-03 17:50:55.881
+Test Case 'SheetPanelAdvancedGeometryTests.testRecessSlicesActualBondedStrataWithoutDuplicatingOrRecoloringPlies' passed (0.001 seconds)
+Test Case 'SheetPanelAdvancedGeometryTests.testWrappedPanelHasRealCorePocketFloorInsertAndMiteredPrintedTurnIns' started at 2026-11-03 17:50:55.882
+Test Case 'SheetPanelAdvancedGeometryTests.testWrappedPanelHasRealCorePocketFloorInsertAndMiteredPrintedTurnIns' passed (0.073 seconds)
+Test Suite 'SheetPanelAdvancedGeometryTests' passed at 2026-11-03 17:50:55.956
+	 Executed 9 tests, with 0 failures (0 unexpected) in 1.665 (1.665) seconds
+Test Suite 'testing.xctest' passed at 2026-11-03 17:50:55.956
+	 Executed 18 tests, with 0 failures (0 unexpected) in 11.547 (11.547) seconds
+Test Suite 'All tests' passed at 2026-11-03 17:50:55.956
+	 Executed 18 tests, with 0 failures (0 unexpected) in 11.547 (11.547) seconds

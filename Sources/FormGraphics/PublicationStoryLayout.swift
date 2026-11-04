@@ -44,6 +44,7 @@ public final class StoryTextContainer:NSTextContainer {
   private var usesGrid:Bool
   private var flowNeedsLayout=true
   private var stabilizing=false
+  private var deferredLayoutScheduled=false
   private var flowSizes:[CGSize]=[]
   public private(set) var layoutAvailable=true
   public init(_ context:ResolvedTextStory) {
@@ -67,14 +68,30 @@ public final class StoryTextContainer:NSTextContainer {
     origins[ObjectIdentifier(overflow)]=(context.baselineGrid?.origin ?? 0)-baseAscent
     NotificationCenter.default.addObserver(self,selector:#selector(sourceWillChange(_:)),
       name:NSTextStorage.willProcessEditingNotification,object:storage)
+    NotificationCenter.default.addObserver(self,selector:#selector(sourceDidFinishEditing(_:)),
+      name:PublicationTextStorage.didFinishEditingNotification,object:storage)
     storage.setAttributedString(preparing(attributed))
     ensureLayout()
   }
   @objc private func sourceWillChange(_ notification:Notification) {
     // Native character edits, formatting and IME drafts all invalidate measured
     // line boundaries. Do not re-enter TextKit while storage processes edits.
-    flowNeedsLayout=true
+    flowNeedsLayout=true;layoutAvailable=false
     for box in containers {box.acceptedEnd=nil}
+  }
+  @objc private func sourceDidFinishEditing(_ notification:Notification) {
+    guard flowNeedsLayout,!deferredLayoutScheduled else{return}
+    deferredLayoutScheduled=true
+    // Coalesce native insertion, attribute repair and selection notifications.
+    // A synchronous caller after endEditing may still request stable layout now.
+    DispatchQueue.main.async { [weak self] in
+      guard let self else{return}
+      self.deferredLayoutScheduled=false;self.ensureLayout()
+    }
+  }
+  private var canQueryLayout:Bool {
+    if storage.isProcessingEditing {flowNeedsLayout=true;layoutAvailable=false;return false}
+    return !stabilizing
   }
   private func reservedLineHeight(_ range:NSRange)->CGFloat {
     guard range.length>0 else{return 0}
@@ -103,7 +120,7 @@ public final class StoryTextContainer:NSTextContainer {
   /// prefix and moves its first invalid line (and remainder) to the next frame.
   /// Thus a fixed source needs at most one correction per physical container.
   public func ensureLayout() {
-    guard !stabilizing else{return}
+    guard canQueryLayout else{return}
     let sizes=containers.map(\.size)
     guard flowNeedsLayout || sizes != flowSizes else{return}
     stabilizing=true;defer{stabilizing=false}
@@ -215,15 +232,26 @@ public final class StoryTextContainer:NSTextContainer {
     return true
   }
   public func index(_ frame:StoryFrameID)->Int? {context.frames.firstIndex{$0.frame==frame}}
-  public func glyphRange(_ index:Int)->NSRange {ensureLayout();return layout.glyphRange(for:containers[index])}
-  public func displayRange(_ index:Int)->NSRange {layout.characterRange(forGlyphRange:glyphRange(index),actualGlyphRange:nil)}
-  public func sourceRange(_ index:Int)->NSRange {TextCase.source(storage).sourceRange(displayRange(index))}
+  public func glyphRange(_ index:Int)->NSRange {
+    guard canQueryLayout else{return .init(location:0,length:0)}
+    ensureLayout();return layout.glyphRange(for:containers[index])
+  }
+  public func displayRange(_ index:Int)->NSRange {
+    guard canQueryLayout else{return .init(location:0,length:0)}
+    return layout.characterRange(forGlyphRange:glyphRange(index),actualGlyphRange:nil)
+  }
+  public func sourceRange(_ index:Int)->NSRange {
+    guard canQueryLayout else{return .init(location:0,length:0)}
+    return TextCase.source(storage).sourceRange(displayRange(index))
+  }
   public var oversetRange:NSRange {
+    guard canQueryLayout else{return .init(location:0,length:TextCase.source(storage).text.length)}
     ensureLayout()
     let first=containers.last.map{NSMaxRange(layout.characterRange(forGlyphRange:layout.glyphRange(for:$0),actualGlyphRange:nil))} ?? 0
     return TextCase.source(storage).sourceRange(NSRange(location:first,length:max(0,storage.length-first)))
   }
   public func offset(_ index:Int,verticalAlignment:String="top")->Double {
+    guard canQueryLayout else{return topOffsets[index]}
     ensureLayout()
     let padding=topOffsets[index]
     guard !usesGrid else{return padding}

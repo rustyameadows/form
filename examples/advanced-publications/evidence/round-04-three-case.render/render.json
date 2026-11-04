@@ -1,0 +1,147 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1000,
+  "png_sha256" : "9a0b0ef601d7d1c6a62efd1c86bfe407058b6168b66d19c9f19b271ff3a548d1",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:07D7FFAD-5A22-45F9-846B-BA526F25DA9F.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "asset:0D99662C-6980-4DE8-B9B7-C0525ECB81D2.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "asset:2CC9524A-9464-4198-85FB-D1DEBAA17F85.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "asset:8C1A9092-4412-4F97-88BD-69063A0E371B.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "font:Georgia",
+      "sha256" : "4f54eb299fccea7f103edeb0d92437359bfd4441811d53222b82b335369f6218"
+    },
+    {
+      "id" : "font:HelveticaNeue",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 1.1000000000000001,
+      "distance" : 4.7999999999999998,
+      "elevation" : 0.45000000000000001,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 0.050000000000000003,
+        "y" : 0.29999999999999999,
+        "z" : 0
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "6B36D619-918D-42A2-80A9-1EDF489123AE",
+    "instances" : [
+      {
+        "id" : "8AA005A5-B176-4A59-BCB0-C511136EFC79",
+        "name" : "INTERVAL \/ Three collected volumes",
+        "positionMM" : {
+          "x" : 0,
+          "y" : 0.14000000000000001,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "581FF12E-EB5C-48B8-8FF2-6BED575AEDB7",
+        "visible" : true
+      },
+      {
+        "id" : "4D98B289-66A9-4730-8BE8-F8B08D4A1DE9",
+        "name" : "INTERVAL \/ Three collected volumes \/ actual paper lining",
+        "positionMM" : {
+          "x" : 0.87000000000000011,
+          "y" : 1.8800000000000001,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "C20D23E9-0739-426C-ACBD-EA89658B21DA",
+        "visible" : true
+      },
+      {
+        "id" : "C408FE60-60B7-4E5B-8F80-6658008FC0DB",
+        "name" : "Gathered observations \/ 64 \/ bound physical source",
+        "positionMM" : {
+          "x" : 78.176823126171044,
+          "y" : 6.4950000000000134,
+          "z" : 0
+        },
+        "rotationDegrees" : 180,
+        "sheetPose" : {
+          "activeSpread" : 0,
+          "bendMM" : 0,
+          "openingDegrees" : 0
+        },
+        "sourceObjectID" : "714E30E8-AD11-48DB-8CDB-62DC072095C2",
+        "visible" : true
+      },
+      {
+        "id" : "DAC8F87D-D93A-4A67-A500-E16AA75616DD",
+        "name" : "The useful interval \/ bound physical source",
+        "positionMM" : {
+          "x" : 77.435765109133811,
+          "y" : 16.765004000355635,
+          "z" : 0
+        },
+        "rotationDegrees" : 180,
+        "sheetPose" : {
+          "activeSpread" : 0,
+          "bendMM" : 0,
+          "openingDegrees" : 0
+        },
+        "sourceObjectID" : "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible" : true
+      },
+      {
+        "id" : "BE5163EA-894E-44A4-B965-DAB6BCE94310",
+        "name" : "Gathered observations \/ 192 \/ bound physical source",
+        "positionMM" : {
+          "x" : 78.272833131115121,
+          "y" : 30.355008000711248,
+          "z" : 0
+        },
+        "rotationDegrees" : 180,
+        "sheetPose" : {
+          "activeSpread" : 0,
+          "bendMM" : 0,
+          "openingDegrees" : 0
+        },
+        "sourceObjectID" : "084F8882-4747-4F41-8E6D-7BE49906D40F",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "Collected volumes \/ three \/ fitted case",
+    "pixels" : {
+      "height" : 1000,
+      "width" : 1500
+    },
+    "revision" : 1,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "357f7856ce75af0fe1e37146d881667f9af0d703d975e1e55c8d3a18fa668a84",
+  "source_project_id" : "DCF5F48D-BCBA-460B-B015-2D1A1D4E8BF2",
+  "width" : 1500
+}

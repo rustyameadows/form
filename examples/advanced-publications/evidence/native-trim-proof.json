@@ -1,0 +1,130 @@
+{
+  "input": "Native Publication trim width 140\u2192150 mm",
+  "pages": 128,
+  "artwork": {
+    "before_artwork_sha256": "4ac78ac2aa2050833f03d552d9b2678f60c2ce7bebf52fa0548378c218c91d8d",
+    "after_artwork_sha256": "24f188ce2708fb5bb372df7284fed2f3181022c256ec28b0d8f8f27e3a316327",
+    "content_style_topology_sha256": "92f0ecd4d3ade50336ee79c4ba42fea351345fe7ea5765cc85a652cf26594951",
+    "translated_elements": [
+      {
+        "id": "53A4ED9E-CA97-5088-B448-A20FB643534B",
+        "dx": 5.0,
+        "dy": 0.0
+      },
+      {
+        "id": "E3937041-8606-52EC-8904-53519EF81596",
+        "dx": 5.0,
+        "dy": 0.0
+      },
+      {
+        "id": "35CDE0BB-CB6C-5792-A396-ECE45528C2ED",
+        "dx": 5.0,
+        "dy": 0.0
+      },
+      {
+        "id": "8634DC29-5C42-5ED1-BA4F-953C29D25B20",
+        "dx": 15.0,
+        "dy": 0.0
+      },
+      {
+        "id": "2A272B01-453E-5304-A209-06C5768BC6A7",
+        "dx": 15.0,
+        "dy": 0.0
+      },
+      {
+        "id": "5034C9DC-10C7-5649-A276-163230A9E993",
+        "dx": 15.0,
+        "dy": 0.0
+      },
+      {
+        "id": "0226A9D8-537E-527B-B3D4-970FEEDE5BFD",
+        "dx": 15.0,
+        "dy": 0.0
+      },
+      {
+        "id": "3B6899DE-BCBE-5883-A905-A6C1490ED54E",
+        "dx": 10.0,
+        "dy": 0.0
+      }
+    ]
+  },
+  "parameters": {
+    "244408D5-7EFB-4D9B-B01B-3D131D220C62": {
+      "before": {
+        "depth": 248.8,
+        "flapWidth": 0,
+        "jointWidth": 10,
+        "margin": 16.4,
+        "panelHeight": 216,
+        "panelWidth": 133,
+        "spineWidth": 13.339999999999996,
+        "width": 332.14000000000004
+      },
+      "after": {
+        "depth": 248.8,
+        "flapWidth": 0,
+        "jointWidth": 10,
+        "margin": 16.4,
+        "panelHeight": 216,
+        "panelWidth": 143,
+        "spineWidth": 13.339999999999996,
+        "width": 352.14000000000004
+      }
+    },
+    "D08116E7-D7EA-4552-8D12-9954A32A3461": {
+      "before": {
+        "flapWidth": 55,
+        "fold": 100,
+        "opening": 0,
+        "panelHeight": 217,
+        "panelWidth": 147,
+        "paperMM": 0.18,
+        "spineWidth": 13.939999999999996
+      },
+      "after": {
+        "flapWidth": 55,
+        "fold": 100,
+        "opening": 0,
+        "panelHeight": 217,
+        "panelWidth": 157,
+        "paperMM": 0.18,
+        "spineWidth": 13.939999999999996
+      }
+    },
+    "BC21F464-4051-481F-A31C-86C0212E43E3": {
+      "before": {
+        "board": 1.6,
+        "clearance": 1.8,
+        "fold": 100,
+        "innerDepth": 150.99140175975106,
+        "innerHeight": 219.84,
+        "innerWidth": 16.390004000355614,
+        "layoutGap": 10,
+        "lining": 0.12,
+        "opening": 0,
+        "skin": 0.14,
+        "turnIn": 12,
+        "volumeGap": 0.8,
+        "volumeOffset0": 1.8
+      },
+      "after": {
+        "board": 1.6,
+        "clearance": 1.8,
+        "fold": 100,
+        "innerDepth": 160.99140175975106,
+        "innerHeight": 219.84,
+        "innerWidth": 16.390004000355614,
+        "layoutGap": 10,
+        "lining": 0.12,
+        "opening": 0,
+        "skin": 0.14,
+        "turnIn": 12,
+        "volumeGap": 0.8,
+        "volumeOffset0": 1.8
+      }
+    }
+  },
+  "undo_exact": true,
+  "redo_exact": true,
+  "reviewed_dimensions_restored": true
+}

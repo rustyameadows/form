@@ -39,12 +39,10 @@ struct SheetFastenerControls:View {
   var body:some View {
     VStack(alignment:.leading,spacing:8) {
       Picker("Binding",selection:$binding.style) {
-        Text("None").tag(SheetBindingStyle.none)
-        Text("Saddle stitch").tag(SheetBindingStyle.saddleStitch)
-        Text("Side staple").tag(SheetBindingStyle.sideStaple)
+        ForEach(SheetBindingStyle.allCases,id:\.self){style in Text(SheetBindingLabels.title(style)).tag(style)}
       }.inspectorPicker().accessibilityIdentifier("sheet-binding-style")
-      if binding.style != .none {
-        Picker("Fasteners",selection:Binding(get:{binding.count},set:{count in var value=binding;value.count=count;value.positionsMM=nil;binding=value})) {
+      if binding.style != .none && binding.style != .adhesive {
+        Picker(binding.style == .sewn ? "Stitch stations":"Fasteners",selection:Binding(get:{binding.count},set:{count in var value=binding;value.count=count;value.positionsMM=nil;binding=value})) {
           ForEach(1...8,id:\.self){Text(String($0)).tag($0)}
         }.inspectorPicker()
         DisclosureGroup("Fastener dimensions") {
@@ -65,7 +63,18 @@ struct SheetFastenerControls:View {
           }.padding(.top,8)
         }.font(InspectorStyle.labelFont)
       }
+      if binding.style == .adhesive || binding.style == .sewn {
+        ArtworkUnitField("Adhesive allowance",value:binding.adhesiveMM ?? 0,unit:.mm){binding.adhesiveMM=$0}
+        if binding.style == .sewn {ArtworkUnitField("Sewing swell",value:binding.sewingSwellMM ?? 0,unit:.mm){binding.sewingSwellMM=$0}}
+        Text("Editable construction allowances; sheet calipers stay separate.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
+      }
     }
+  }
+}
+
+enum SheetBindingLabels {
+  static func title(_ style:SheetBindingStyle)->String {
+    switch style {case .none:return "None";case .saddleStitch:return "Saddle stitch";case .sideStaple:return "Side staple";case .adhesive:return "Adhesive";case .sewn:return "Sewn signatures"}
   }
 }
 

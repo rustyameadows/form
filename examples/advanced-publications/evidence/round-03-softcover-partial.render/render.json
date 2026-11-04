@@ -1,0 +1,73 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1000,
+  "png_sha256" : "e485e23466b8eb4070ea19f6eef665afa5670350b3c08fbcf38351e1bc50a0fc",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:07D7FFAD-5A22-45F9-846B-BA526F25DA9F.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "font:HelveticaNeue",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 0.55000000000000004,
+      "distance" : 6.2000000000000002,
+      "elevation" : 0.80000000000000004,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 0.25,
+        "y" : 0.25,
+        "z" : 0
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "A9B5F1D4-85C1-44AD-9C2C-5BDBF71C214E",
+    "instances" : [
+      {
+        "id" : "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name" : "Sewn hardcover",
+        "positionMM" : {
+          "x" : 0,
+          "y" : 0,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sheetPose" : {
+          "activeSpread" : 26,
+          "bendMM" : 4,
+          "openingDegrees" : 95
+        },
+        "sourceObjectID" : "78C4C742-3D71-48EB-8A22-75B60E00AB52",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "Review03 \/ softcover-partial",
+    "pixels" : {
+      "height" : 1000,
+      "width" : 1500
+    },
+    "revision" : 1,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "7b3e267e64914cb7c01492fb7e6af8479814cc063093c962014ca7f9074c8f02",
+  "source_project_id" : "DCF5F48D-BCBA-460B-B015-2D1A1D4E8BF2",
+  "width" : 1500
+}

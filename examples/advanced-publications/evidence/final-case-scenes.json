@@ -1,0 +1,180 @@
+{
+  "three": {
+    "camera": {
+      "azimuth": 1.1,
+      "distance": 4.8,
+      "elevation": 0.45,
+      "projection": "perspective",
+      "target": {
+        "x": 0.05,
+        "y": 0.3,
+        "z": 0
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "6B36D619-918D-42A2-80A9-1EDF489123AE",
+    "instances": [
+      {
+        "id": "8AA005A5-B176-4A59-BCB0-C511136EFC79",
+        "name": "INTERVAL / Three collected volumes",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sourceObjectID": "581FF12E-EB5C-48B8-8FF2-6BED575AEDB7",
+        "visible": true
+      },
+      {
+        "id": "4D98B289-66A9-4730-8BE8-F8B08D4A1DE9",
+        "name": "INTERVAL / Three collected volumes / actual paper lining",
+        "positionMM": {
+          "x": 0.8700000000000001,
+          "y": 1.8800000000000001,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sourceObjectID": "C20D23E9-0739-426C-ACBD-EA89658B21DA",
+        "visible": true
+      },
+      {
+        "id": "C408FE60-60B7-4E5B-8F80-6658008FC0DB",
+        "name": "Gathered observations / 64 / bound physical source",
+        "positionMM": {
+          "x": 78.17682312617104,
+          "y": 6.495000000000013,
+          "z": 0
+        },
+        "rotationDegrees": 180,
+        "sheetPose": {
+          "activeSpread": 0,
+          "bendMM": 0,
+          "openingDegrees": 0
+        },
+        "sourceObjectID": "714E30E8-AD11-48DB-8CDB-62DC072095C2",
+        "visible": true
+      },
+      {
+        "id": "DAC8F87D-D93A-4A67-A500-E16AA75616DD",
+        "name": "The useful interval / bound physical source",
+        "positionMM": {
+          "x": 77.43576510913381,
+          "y": 16.765004000355635,
+          "z": 0
+        },
+        "rotationDegrees": 180,
+        "sheetPose": {
+          "activeSpread": 0,
+          "bendMM": 0,
+          "openingDegrees": 0
+        },
+        "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible": true
+      },
+      {
+        "id": "BE5163EA-894E-44A4-B965-DAB6BCE94310",
+        "name": "Gathered observations / 192 / bound physical source",
+        "positionMM": {
+          "x": 78.27283313111512,
+          "y": 30.355008000711248,
+          "z": 0
+        },
+        "rotationDegrees": 180,
+        "sheetPose": {
+          "activeSpread": 0,
+          "bendMM": 0,
+          "openingDegrees": 0
+        },
+        "sourceObjectID": "084F8882-4747-4F41-8E6D-7BE49906D40F",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Collected volumes / three / fitted case",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 2,
+    "surface": "Daylight"
+  },
+  "single": {
+    "camera": {
+      "azimuth": 1.1,
+      "distance": 4.8,
+      "elevation": 0.45,
+      "projection": "perspective",
+      "target": {
+        "x": 0.05,
+        "y": 0.12,
+        "z": 0
+      },
+      "viewportAspect": 1.5
+    },
+    "id": "9E2F8DAA-5594-485B-BABB-F46786904DAB",
+    "instances": [
+      {
+        "id": "20EE4A01-47B0-4A6E-90A3-24DFFD544A79",
+        "name": "INTERVAL / Single volume case",
+        "positionMM": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sourceObjectID": "BC21F464-4051-481F-A31C-86C0212E43E3",
+        "visible": true
+      },
+      {
+        "id": "4EA49258-1597-4265-B81A-371968EAF865",
+        "name": "INTERVAL / Single volume case / actual paper lining",
+        "positionMM": {
+          "x": 0.8700000000000001,
+          "y": 1.8800000000000001,
+          "z": 0
+        },
+        "rotationDegrees": 0,
+        "sourceObjectID": "693E86C3-67DE-4D46-A3E0-1A2A97703542",
+        "visible": true
+      },
+      {
+        "id": "B12252FC-4ECB-43BF-A31C-5E4711765B18",
+        "name": "The useful interval / bound physical source",
+        "positionMM": {
+          "x": 70.35429912012447,
+          "y": 6.495000000000013,
+          "z": 0
+        },
+        "rotationDegrees": 180,
+        "sheetPose": {
+          "activeSpread": 0,
+          "bendMM": 0,
+          "openingDegrees": 0
+        },
+        "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible": true
+      }
+    ],
+    "lighting": "soft-side-v1",
+    "motion": {
+      "fps": 24,
+      "mode": "orbit",
+      "orbitDegrees": 45,
+      "seconds": 6
+    },
+    "name": "Collected volumes / single / fitted case",
+    "pixels": {
+      "height": 1000,
+      "width": 1500
+    },
+    "revision": 2,
+    "surface": "Daylight"
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "book_id": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+  "sources": {
+    "head": {
+      "object_id": "1F804AEC-8386-4250-BDBB-84B617B88BE2",
+      "width_mm": 140,
+      "depth_mm": 6.639999999999997,
+      "bindings": [
+        {
+          "parameter": "width",
+          "expression": "long",
+          "inputs": {
+            "long": {
+              "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+              "measurement": "trimWidth"
+            },
+            "block": {
+              "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+              "measurement": "textBlockThickness"
+            }
+          }
+        },
+        {
+          "parameter": "depth",
+          "expression": "block",
+          "inputs": {
+            "long": {
+              "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+              "measurement": "trimWidth"
+            },
+            "block": {
+              "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+              "measurement": "textBlockThickness"
+            }
+          }
+        }
+      ]
+    },
+    "tail": {
+      "object_id": "650FDB52-A769-4559-B904-CF0FB027E107",
+      "width_mm": 140,
+      "depth_mm": 6.639999999999997,
+      "bindings": [
+        {
+          "parameter": "width",
+          "expression": "long",
+          "inputs": {
+            "long": {
+              "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+              "measurement": "trimWidth"
+            },
+            "block": {
+              "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+              "measurement": "textBlockThickness"
+            }
+          }
+        },
+        {
+          "parameter": "depth",
+          "expression": "block",
+          "inputs": {
+            "long": {
+              "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+              "measurement": "trimWidth"
+            },
+            "block": {
+              "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+              "measurement": "textBlockThickness"
+            }
+          }
+        }
+      ]
+    },
+    "foreEdge": {
+      "object_id": "FDF3C774-2A00-4696-AF4C-4809D5DB4CE4",
+      "width_mm": 210,
+      "depth_mm": 6.639999999999997,
+      "bindings": [
+        {
+          "parameter": "width",
+          "expression": "long",
+          "inputs": {
+            "long": {
+              "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+              "measurement": "trimHeight"
+            },
+            "block": {
+              "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+              "measurement": "textBlockThickness"
+            }
+          }
+        },
+        {
+          "parameter": "depth",
+          "expression": "block",
+          "inputs": {
+            "long": {
+              "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+              "measurement": "trimHeight"
+            },
+            "block": {
+              "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+              "measurement": "textBlockThickness"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "edge_artwork": {
+    "head": {
+      "sourceObjectID": "1F804AEC-8386-4250-BDBB-84B617B88BE2",
+      "sourceSide": "outside"
+    },
+    "tail": {
+      "sourceObjectID": "650FDB52-A769-4559-B904-CF0FB027E107",
+      "sourceSide": "outside"
+    },
+    "foreEdge": {
+      "sourceObjectID": "FDF3C774-2A00-4696-AF4C-4809D5DB4CE4",
+      "sourceSide": "outside"
+    }
+  },
+  "registration": "Closed interior block; canonical ink is sampled onto the corresponding leaf edges before opening/fanning. Endpaper stocks remain unprinted."
+}

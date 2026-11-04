@@ -43,3 +43,22 @@ are build artifacts, not committed source.
 
 This summary records executed checks; it does not claim Developer ID notarization,
 Intel distribution, or that the full private local evidence is included in the PR.
+
+## PR integration with current main
+
+The initial implementation commit `ddaf689` preserves the source used for the
+installed candidate 6 evidence above. The PR subsequently integrates publication
+changes from `25369d5`. Cycles persistence moves to schema 66 so upstream schema
+64 story annotations and schema 65 physical publications keep their meanings.
+The earlier installed-binary hashes and visual acceptance remain historical
+records for that build; integration test results are recorded separately.
+
+The merged release regression passed **2,594 tests, zero failures**, with
+4 skips in that run. The saved-needle diagnostic then passed a focused run with
+its existing fixture, leaving only 3 optional performance fixtures unrun.
+All 28 Python checks also passed.
+The run enabled the real CPU/Metal helpers, intentional Metal-failure fixture,
+full saved stitch program and whole-study preparation checks. See
+[PR integration results](pr-integration.json) for suite counts, source/log hashes
+and the schema-compatibility coverage. No ordinary app was replaced during this
+PR integration run.

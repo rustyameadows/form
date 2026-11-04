@@ -7,11 +7,22 @@ import FormGeometry
   /// Source owners are canonical pages/covers. A physical book itself owns no
   /// artwork, so validating only surfaceArtwork(book) misses all these inputs.
   static func sources(_ object:ProductObject,project:Project,assets:URL)throws {
+    guard object.sheetAssembly != nil else{try panelSources(object,project:project,assets:assets);return}
     let resolved:ResolvedSheetAssembly
     do{resolved=try project.resolvedSheetAssembly(object)}
     catch{throw FormError.invalid("Cannot render \(object.name): \(error.localizedDescription)")}
     let faces=resolved.leaves.flatMap{[$0.front,$0.back].compactMap{$0}}
       + resolved.enclosure.flatMap{[$0.front,$0.back].compactMap{$0}}
+      + resolved.enclosure.flatMap{$0.features?.recesses.compactMap{$0.insert?.face} ?? []}
+      + [resolved.edgeArtwork?.head,resolved.edgeArtwork?.tail,resolved.edgeArtwork?.foreEdge].compactMap{$0}
+    try validate(faces,object:object,project:project,assets:assets)
+  }
+  static func panelSources(_ object:ProductObject,project:Project,assets:URL)throws {
+    guard PaperConstruction.isPaper(object),let definition=try? PaperConstruction.definition(for:object) else{return}
+    let faces=definition.authored?.panels.flatMap{$0.features?.recesses?.compactMap{$0.insert?.face} ?? []} ?? []
+    try validate(faces.map{.init(sourceObjectID:$0.sourceObjectID,sourceSide:$0.sourceSide)},object:object,project:project,assets:assets)
+  }
+  private static func validate(_ faces:[ResolvedSheetAssemblyFace],object:ProductObject,project:Project,assets:URL)throws {
     var checked=Set<String>(),images=Set<String>(),stories=Set<UUID>()
     for face in faces {
       let key=face.sourceObjectID.uuidString+":"+face.sourceSide.rawValue

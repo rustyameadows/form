@@ -37,9 +37,9 @@ public enum ConstructionCommands {
         "solid_check_fields":["id","firstPanelID","secondPanelID","metric","relation","value","message","tolerance"],
         "solid_checks":"Version 2 or 3 explicit panel-pair clearance (mm) or interference (mm3) comparisons. Exact sharp centered stock slabs derive from existing outer/inner polygons and resolved poses. Only declared pairs/conditions are covered; declare hinge/glue allowances explicitly. Run through the installed app; no source, artwork or Undo mutation.",
         "parameter_fields":["name","value","minimum","maximum","unit"],
-        "panel_fields":["id","name","role","polygon","artworkRotationDegrees","cutouts"],
+        "panel_fields":["id","name","role","polygon","artworkRotationDegrees","cutouts","features"],
         "panel_required_fields":["id","name","role","polygon"],
-        "panel_optional_fields":["artworkRotationDegrees","cutouts"],
+        "panel_optional_fields":["artworkRotationDegrees","cutouts","features"],
         "panel_roles":["body","side","glue","tuck","dust","bottomClosure"],
         "component_fields":["id","name","rootPanelID","anchor","position","rotationDegrees"],
         "component_required_fields":["id","name","rootPanelID","anchor","position","rotationDegrees"],
@@ -226,8 +226,9 @@ public enum ConstructionCommands {
       _ = try object(value,allowed:["name","value","minimum","maximum","unit"],label:"construction parameter")
     }}
     if let raw=definition["panels"] {for value in try objects(raw,label:"construction panels") {
-      let panel=try object(value,allowed:["id","name","role","polygon","artworkRotationDegrees","cutouts"],label:"construction panel")
+      let panel=try object(value,allowed:["id","name","role","polygon","artworkRotationDegrees","cutouts","features"],label:"construction panel")
       if let raw=panel["polygon"] {for value in try objects(raw,label:"panel polygon") {try point(value,label:"panel polygon point")}}
+      if let raw=panel["features"],!(raw is NSNull) {try PublicationPhysicalToolSchema.validateFields(raw,schema:PublicationPhysicalToolSchema.panelFeatures,path:"construction panel.features")}
       if let raw=panel["cutouts"],!(raw is NSNull) {for value in try objects(raw,label:"panel cutouts") {
         let cutout=try object(value,allowed:["id","polygon","kind"],label:"panel cutout")
         if let raw=cutout["polygon"] {for p in try objects(raw,label:"cutout polygon") {try point(p,label:"cutout point")}}

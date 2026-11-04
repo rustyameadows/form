@@ -1,0 +1,48 @@
+{
+  "camera": {
+    "azimuth": 3.141592653589793,
+    "distance": 2.6,
+    "elevation": 0.045,
+    "projection": "perspective",
+    "target": {
+      "x": 0.7,
+      "y": 0.034,
+      "z": -1.05
+    },
+    "viewportAspect": 1.5
+  },
+  "id": "AF841CC4-52C8-4314-AA86-75F18D42A48B",
+  "instances": [
+    {
+      "id": "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+      "name": "Sewn hardcover",
+      "positionMM": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationDegrees": 0,
+      "sheetPose": {
+        "activeSpread": 0,
+        "bendMM": 0,
+        "openingDegrees": 0
+      },
+      "sourceObjectID": "C83A464C-4986-478A-9AB0-2D51CA02C702",
+      "visible": true
+    }
+  ],
+  "lighting": "soft-side-v1",
+  "motion": {
+    "fps": 24,
+    "mode": "orbit",
+    "orbitDegrees": 45,
+    "seconds": 6
+  },
+  "name": "Construction review / head-image-registration",
+  "pixels": {
+    "height": 1000,
+    "width": 1500
+  },
+  "revision": 3,
+  "surface": "Daylight"
+}

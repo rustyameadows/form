@@ -15,12 +15,17 @@ extension Material {
 extension PaperStock {
   var usesPhysicalAppearance:Bool {profile?.appearance != nil || plies?.contains(where:{$0.profile?.appearance != nil}) == true}
 }
+extension SheetPanelFeatures {
+  var usesPhysicalAppearance:Bool {
+    wrap?.stock.usesPhysicalAppearance == true || recesses?.contains(where:{$0.insert?.stock.usesPhysicalAppearance == true}) == true
+  }
+}
 extension ProductObject {
   var usesPhysicalAppearance:Bool {
     if textile?.embroidery?.threads.contains(where:{$0.appearance != nil || $0.roughness != nil}) == true || patternAssembly?.panels.contains(where:{$0.material.usesPhysicalAppearance}) == true {return true}
-    if paperConstruction?.stock.usesPhysicalAppearance == true || paperConstruction?.finishes?.contains(where:{$0.appearance != nil}) == true {return true}
+    if paperConstruction?.stock.usesPhysicalAppearance == true || paperConstruction?.finishes?.contains(where:{$0.appearance != nil}) == true || paperConstruction?.authored?.panels.contains(where:{$0.features?.usesPhysicalAppearance == true}) == true {return true}
     guard let sheet=sheetAssembly else {return false}
-    return sheet.stock.usesPhysicalAppearance || sheet.leaves?.contains(where:{$0.stock?.usesPhysicalAppearance == true || $0.finishes?.contains(where:{$0.appearance != nil}) == true}) == true || sheet.enclosure?.contains(where:{$0.stock.usesPhysicalAppearance || $0.finishes?.contains(where:{$0.appearance != nil}) == true}) == true || sheet.parentSheets?.contains(where:{$0.stock.usesPhysicalAppearance}) == true
+    return sheet.stock.usesPhysicalAppearance || sheet.leaves?.contains(where:{$0.stock?.usesPhysicalAppearance == true || $0.finishes?.contains(where:{$0.appearance != nil}) == true}) == true || sheet.enclosure?.contains(where:{$0.stock.usesPhysicalAppearance || $0.finishes?.contains(where:{$0.appearance != nil}) == true || $0.features?.usesPhysicalAppearance == true}) == true || sheet.parentSheets?.contains(where:{$0.stock.usesPhysicalAppearance}) == true || sheet.auxiliaryLeaves?.contains(where:{$0.stock.usesPhysicalAppearance}) == true
   }
 }
 extension Project {

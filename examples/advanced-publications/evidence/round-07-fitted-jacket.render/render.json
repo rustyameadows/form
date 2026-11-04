@@ -1,0 +1,101 @@
+{
+  "animation" : "camera only; committed source objects",
+  "application" : "LAB",
+  "framing_warnings" : [
+
+  ],
+  "height" : 1000,
+  "png_sha256" : "449378d595a8886a678e843ea610b1fa7a12ff39b80769e765bbb684f8ffd3de",
+  "record_version" : 1,
+  "renderer" : "RealityKit",
+  "resources" : [
+    {
+      "id" : "asset:07D7FFAD-5A22-45F9-846B-BA526F25DA9F.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "asset:0D99662C-6980-4DE8-B9B7-C0525ECB81D2.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "asset:2CC9524A-9464-4198-85FB-D1DEBAA17F85.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "asset:8C1A9092-4412-4F97-88BD-69063A0E371B.png",
+      "sha256" : "367cd7d8f020b742a373abf3d382e77a29146b681487a17d43446a1a934cea91"
+    },
+    {
+      "id" : "font:Georgia",
+      "sha256" : "4f54eb299fccea7f103edeb0d92437359bfd4441811d53222b82b335369f6218"
+    },
+    {
+      "id" : "font:HelveticaNeue",
+      "sha256" : "a43317500f5c8086ebbe479b32e86f53ce7c075c14283aa9894cc23be5bfd8e2"
+    }
+  ],
+  "scene" : {
+    "camera" : {
+      "azimuth" : 0.55000000000000004,
+      "distance" : 4.7999999999999998,
+      "elevation" : 0.65000000000000002,
+      "projection" : "perspective",
+      "target" : {
+        "x" : 0.69999999999999996,
+        "y" : 0.070000000000000007,
+        "z" : 0
+      },
+      "viewportAspect" : 1.5
+    },
+    "id" : "DDFD67DA-83D8-40DA-9CD7-F1F4A01863B8",
+    "instances" : [
+      {
+        "id" : "22FC8FF3-4D90-470B-8729-91B37B560BD2",
+        "name" : "Sewn hardcover",
+        "positionMM" : {
+          "x" : 0,
+          "y" : 0,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sheetPose" : {
+          "activeSpread" : 0,
+          "bendMM" : 0,
+          "openingDegrees" : 0
+        },
+        "sourceObjectID" : "C83A464C-4986-478A-9AB0-2D51CA02C702",
+        "visible" : true
+      },
+      {
+        "id" : "D971A54C-6496-4B8A-92B1-34D8DFBF84E9",
+        "name" : "Fitted continuous jacket",
+        "positionMM" : {
+          "x" : 96.379299120124458,
+          "y" : -2.9949999999999997,
+          "z" : 0
+        },
+        "rotationDegrees" : 0,
+        "sourceObjectID" : "D08116E7-D7EA-4552-8D12-9954A32A3461",
+        "visible" : true
+      }
+    ],
+    "lighting" : "soft-side-v1",
+    "motion" : {
+      "fps" : 24,
+      "mode" : "orbit",
+      "orbitDegrees" : 45,
+      "seconds" : 6
+    },
+    "name" : "Fitted removable jacket \/ closed book",
+    "pixels" : {
+      "height" : 1000,
+      "width" : 1500
+    },
+    "revision" : 1,
+    "surface" : "Daylight"
+  },
+  "source_archived" : false,
+  "source_design_sha256" : "981da9f4f38dce2e159aafe7c4879e66157e9ad23febe6c93808b7e1da1a17bb",
+  "source_project_id" : "DCF5F48D-BCBA-460B-B015-2D1A1D4E8BF2",
+  "width" : 1500
+}

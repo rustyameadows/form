@@ -32,13 +32,23 @@ import simd
   }
 
   static func geometryDefinition(_ value:PaperConstruction)->PaperConstruction {
-    var copy=value;copy.foldPercent=0;copy.openingPercent=0;copy.annotations=[];copy.artworkReviewRequired=false
+    var copy=value
+    if value.authored?.panels.contains(where:{$0.features != nil}) != true {copy.foldPercent=0;copy.openingPercent=0}
+    copy.annotations=[];copy.artworkReviewRequired=false
     return copy
   }
   static func sourceRevision(_ object:ProductObject,project:Project)->String? {
     guard PaperConstruction.isPaper(object),let definition=try? PaperConstruction.definition(for:object),let data=try? JSONEncoder.form.encode(geometryDefinition(definition)) else{return nil}
     var source=data
     if let inside=resolvedArtwork(object,project:project,inside:true),let bytes=try? inside.renderCacheData(){source.append(bytes)}
+    let inserted=definition.authored?.panels.flatMap{$0.features?.recesses?.compactMap{$0.insert?.face} ?? []} ?? []
+    for face in inserted.sorted(by:{$0.sourceObjectID.uuidString<$1.sourceObjectID.uuidString}) {
+      source.append((try? JSONEncoder.form.encode(face)) ?? Data())
+      guard let owner=project.objects.first(where:{$0.id==face.sourceObjectID}) else{continue}
+      source.append((try? JSONEncoder.form.encode(owner.paperConstruction)) ?? Data())
+      let art=PaperConstruction.isPaper(owner) ? project.paperArtwork(for:owner,inside:face.sourceSide == .inside):project.surfaceArtwork(owner)
+      if let bytes=try? art?.renderCacheData(){source.append(bytes)}
+    }
     source.append(Data("font:\(GeometryFactory.fontRevision)".utf8))
     return SHA256.hash(data:source).map{String(format:"%02x",$0)}.joined()
   }
@@ -67,6 +77,7 @@ import simd
   struct FaceArtworkSources {var outside:Artwork?,inside:Artwork?}
   static func make(_ object:ProductObject,project:Project,assets:URL,limit:Int,foldPercent:Double?=nil,selectedPanelID:String?=nil,sampling:SourceTextureSamplingPlan?=nil,artworkSources:FaceArtworkSources?=nil)throws->MeshNode {
     let definition=try PaperConstruction.definition(for:object),net=try definition.net()
+    if sampling?.isFinalCapture == true {try SheetAssemblyRenderValidation.panelSources(object,project:project,assets:assets)}
     let outside=artworkSources == nil ? resolvedArtwork(object,project:project,inside:false):artworkSources!.outside
     let inside=artworkSources == nil ? resolvedArtwork(object,project:project,inside:true):artworkSources!.inside
     let outsideFinishes=(definition.finishes ?? []).filter{$0.side == .outside}
@@ -93,6 +104,13 @@ import simd
             maximumPixels:max(1,sampling.raster.maximumPixels/max(1,net.panels.count*2)))
       }
       let outsideSampling=allocation(inside:false),insideSampling=allocation(inside:true)
+      if panel.features != nil {
+        let front=outsideSampling ?? .init(maximumEdge:edge,maximumPixels:share),back=insideSampling ?? .init(maximumEdge:edge,maximumPixels:share)
+        let plan=SourceTextureSamplingPlan(raster:.init(maximumEdge:max(front.maximumEdge,back.maximumEdge),maximumPixels:front.maximumPixels+back.maximumPixels),isFinalCapture:sampling?.isFinalCapture ?? false)
+        root.addChildNode(try SheetPanelMaterialGeometry.make(object:object,panel:panel,definition:definition,project:project,assets:assets,
+          outside:outside,inside:inside,limit:limit,sampling:plan))
+        continue
+      }
       let before=PaperSurfaceRasterizer.builds
       let front=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:frontProfile,color:frontColor,grain:stock.grain,artwork:outside,finishes:outsideFinishes,assets:assets,maximumEdge:outsideSampling?.maximumEdge ?? edge,pixelBudget:outsideSampling?.maximumPixels ?? share,preparedArtwork:preparedOutside)
       let back=try PaperSurfaceRasterizer.make(rect:rect,netSize:net.size,profile:backProfile,color:backColor,grain:stock.grain,artwork:inside,finishes:insideFinishes,assets:assets,maximumEdge:insideSampling?.maximumEdge ?? edge,pixelBudget:insideSampling?.maximumPixels ?? share,preparedArtwork:preparedInside)

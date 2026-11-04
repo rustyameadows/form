@@ -60,11 +60,18 @@ public enum PublicationPhysicalInspection {
       throw FormError.missing("Choose a physical sheet assembly with an existing publication.")
     }
     let resolved = try project.resolvedSheetAssembly(object)
+    let closedBounds:Any
+    if let bounds=resolved.closedBoundsMM {
+      closedBounds=["minimum_mm":[bounds.minimum.x,bounds.minimum.y,bounds.minimum.z],
+        "maximum_mm":[bounds.maximum.x,bounds.maximum.y,bounds.maximum.z]]
+    }else{closedBounds=NSNull()}
     var authored = try pose(definition)
     authored["version"] = definition.version; authored["stock"] = try jsonObject(definition.stock)
     authored["binding"] = try definition.binding.map(jsonObject) ?? NSNull()
     authored["leaf_pairing"] = definition.leaves == nil ? "derived" : "explicit"
     authored["parent_sheet_mapping"] = definition.parentSheets?.isEmpty == false ? "declared" : "unspecified"
+    authored["edge_artwork"] = try definition.edgeArtwork.map(jsonObject) ?? NSNull()
+    authored["derived"] = definition.derived as Any? ?? NSNull()
     let leaves = try pagination.section(Array(resolved.leaves.enumerated())) { index, leaf in
       let original = definition.leaves?.first(where: { $0.id == leaf.id })
       return ["index": index, "leaf_id": leaf.id.uuidString,
@@ -72,6 +79,10 @@ public enum PublicationPhysicalInspection {
         "size_mm": try jsonObject(leaf.size), "stock": try jsonObject(leaf.stock),
         "authored_stock": try original?.stock.map(jsonObject) ?? NSNull(),
         "parent_sheet_id": leaf.parentSheetID?.uuidString as Any? ?? NSNull(),
+        "signature_id":leaf.signatureID?.uuidString as Any? ?? NSNull(),
+        "auxiliary_id":leaf.auxiliaryID?.uuidString as Any? ?? NSNull(),
+        "name":leaf.name as Any? ?? NSNull(),
+        "attachment":try leaf.attachment.map(jsonObject) ?? NSNull(),
         "stack_offset_mm": leaf.stackOffsetMM, "turned": leaf.turned,
         "front_render_candidate": leaf.frontVisible, "back_render_candidate": leaf.backVisible,
         "finish_count": leaf.finishes.count]
@@ -86,10 +97,12 @@ public enum PublicationPhysicalInspection {
       return ["id": plane.id, "name": plane.name, "stock": try jsonObject(plane.stock),
         "authored": ["size": try jsonObject(source.size), "positionMM": try jsonObject(source.positionMM),
           "rotationDegrees": try jsonObject(source.rotationDegrees),
-          "front": try source.front.map(jsonObject) ?? NSNull(), "back": try source.back.map(jsonObject) ?? NSNull()],
+          "front": try source.front.map(jsonObject) ?? NSNull(), "back": try source.back.map(jsonObject) ?? NSNull(),
+          "features":try source.features.map(jsonObject) ?? NSNull()],
         "resolved": ["size_mm": try jsonObject(plane.size), "position_mm": try jsonObject(plane.positionMM),
           "rotation_degrees": try jsonObject(plane.rotationDegrees),
-          "front": try plane.front.map(jsonObject) ?? NSNull(), "back": try plane.back.map(jsonObject) ?? NSNull()],
+          "front": try plane.front.map(jsonObject) ?? NSNull(), "back": try plane.back.map(jsonObject) ?? NSNull(),
+          "features":try plane.features.map(jsonObject) ?? NSNull()],
         "finish_count": plane.finishes.count]
     }
     return try bounded([
@@ -98,11 +111,21 @@ public enum PublicationPhysicalInspection {
       "units": ["length": "millimeters", "angle": "degrees", "active_spread": "turned physical leaves"],
       "authored": authored,
       "resolved": ["size_mm": try jsonObject(resolved.size), "stack_thickness_mm": resolved.stackThicknessMM,
+        "trim_width_mm":resolved.trimWidth,"trim_height_mm":resolved.trimHeight,
+        "text_block_thickness_mm":resolved.textBlockThickness,"binding_allowance_mm":resolved.bindingAllowance,
+        "spine_thickness_mm":resolved.spineThickness,"closed_width_mm":resolved.closedWidth,
+        "closed_height_mm":resolved.closedHeight,"closed_thickness_mm":resolved.closedThickness,
+        "closed_bounds_mm":closedBounds,
+        "edge_artwork":try resolved.edgeArtwork.map(jsonObject) ?? NSNull(),
         "binding": try resolved.binding.map(jsonObject) ?? NSNull(), "binding_state": bindingState(definition.binding),
         "logical_page_count": document.pages.count, "leaf_count": resolved.leaves.count,
-        "parent_sheet_count": resolved.parentSheets.count, "enclosure_count": resolved.enclosure.count],
+        "parent_sheet_count": resolved.parentSheets.count, "enclosure_count": resolved.enclosure.count,
+        "signature_count":resolved.signatures.count,"auxiliary_leaf_count":definition.auxiliaryLeaves?.count ?? 0],
       "pages": pagination.section(document.pages) { entry in page(entry.id, document: document) as! [String: Any] },
       "leaves": leaves, "parent_sheets": parents, "enclosure": enclosure,
+      "signatures":try pagination.section(resolved.signatures){try jsonObject($0) as! [String:Any]},
+      "auxiliary_leaves":try pagination.section(definition.auxiliaryLeaves ?? []){try jsonObject($0) as! [String:Any]},
+      "source_object_ids":resolved.sourceObjectIDs.map(\.uuidString).sorted(),
       "reader_spreads": pagination.section(Array(0...resolved.leaves.count)) { spread($0, document: document, leaves: resolved.leaves) },
       "selected_reader_spread": spread(resolved.activeSpread, document: document, leaves: resolved.leaves),
       "finish_details": "Canonical source definitions retain finish assignments; inspection reports counts without copying mask artwork.",

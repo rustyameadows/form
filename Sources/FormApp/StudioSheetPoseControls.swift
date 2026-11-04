@@ -29,9 +29,7 @@ struct StudioSheetPoseControls:View {
       InspectorRow("Binding") {
         Picker("Instance binding",selection:Binding<SheetBindingStyle?>(get:{instance.sheetPose?.bindingStyle},set:{value in update{$0.bindingStyle=value}})) {
           Text("From source").tag(SheetBindingStyle?.none)
-          Text("Unbound").tag(Optional(SheetBindingStyle.none))
-          Text("Saddle stitch").tag(Optional(SheetBindingStyle.saddleStitch))
-          Text("Side staples").tag(Optional(SheetBindingStyle.sideStaple))
+          ForEach(SheetBindingStyle.allCases,id:\.self) {style in Text(SheetBindingLabels.title(style)).tag(Optional(style))}
         }.labelsHidden().inspectorPicker()
       }
       if instance.sheetPose != nil {

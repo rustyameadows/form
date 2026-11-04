@@ -176,6 +176,15 @@ final class CanvasTextView: NSTextView, NSTextStorageDelegate {
   var prepareSource:((NSAttributedString)->NSAttributedString)?
   var onBecomeActive:(()->Void)?
   var onCharacterPosition:((CharacterPosition)->Void)?
+  var sourceFormattingAction:((StorySourceFormat)->Void)?
+  var sourceFindAction:(()->Void)?
+  override func performKeyEquivalent(with event:NSEvent)->Bool {
+    let modifiers=event.modifierFlags.intersection([.command,.option,.control,.shift])
+    if modifiers == .command,event.charactersIgnoringModifiers?.lowercased()=="f",let find=sourceFindAction {find();return true}
+    if let action=sourceFormattingAction,modifiers == .command,
+      let format=["b":StorySourceFormat.bold,"i":.italic,"u":.underline][event.charactersIgnoringModifiers?.lowercased() ?? ""] {action(format);return true}
+    return super.performKeyEquivalent(with:event)
+  }
   override var undoManager:UndoManager? {sharedUndoManager ?? super.undoManager}
   var verticalOffset = 0.0
   var horizontalOffset = 0.0
@@ -423,6 +432,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
   private var lastFitDiagnostics: [String: Any]?
   private let sewingGuides = CanvasSewingGuideCache()
   private let physicalArtworkGuides = CanvasPhysicalArtworkGuideCache()
+  private let physicalSourceStocks = CanvasPhysicalSourceStockCache()
   private let preparedArtwork = CanvasPreparedArtworkCache()
   private let overviewArtwork = CanvasOverviewRasterCache()
   private var lastDrawnFrames = 0, lastDrawnElements = 0, lastCulledElements = 0
@@ -1033,6 +1043,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
         let paperNet = f.projection?.panelID == nil
           ? f.paperNet ?? paper.flatMap { try? $0.net() } : nil
         let sewing = sewingGuides.overlay(frameID: f.id, source: f.artwork)
+        let stockRegions=physicalSourceStocks.regions(for:f,store:session.store)
         let face = paper.flatMap { paper in session.store?.project.map {
           PaperGeometry.faceAppearance(for:f.surfaceObject,stock:paper.stock,project:$0,inside:f.projection?.inside == true)
         } }
@@ -1062,6 +1073,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
             target.setFillColor(FormColor.color(face.resolvedColor).withAlphaComponent(face.profile.opacity).cgColor)
             target.fill(CGRect(origin:.zero,size:f.rect.size))
           }
+          CanvasPhysicalSourceStockCache.draw(stockRegions,in:target)
           // Overview pixels retain their own compact backing; do not evict
           // close-up prepared vector trees while visiting hundreds of frames.
           let renderer = preparingOverview
@@ -1077,7 +1089,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           }
         }
         let presentation = CanvasOverviewRasterCache.Presentation(size: f.rect.size, projection: f.projection,
-          paperNet: paperNet, paperColor: face?.resolvedColor, paperOpacity: face?.profile.opacity)
+          paperNet: paperNet, paperColor: face?.resolvedColor, paperOpacity: face?.profile.opacity,sourceStockRegions:stockRegions)
         let lookupStart = CFAbsoluteTimeGetCurrent()
         let image = unbounded ? nil : overviewArtwork.image(frameID: f.id, source: f.artwork,
           assets: assets, excluding: excluded, presentation: presentation, zoom: drawingZoom,
@@ -1091,6 +1103,7 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
           drawArtwork(in: context, preparingOverview: false)
         }
         lastFrameContentMS += (CFAbsoluteTimeGetCurrent()-contentStart)*1000
+        drawConstructionRegions(f,context:context,scale:scale)
         if let guideReport {
           drawPhysicalArtworkGuides(f,report:guideReport,context:context,scale:scale,active:f.id==activeID)
         }
@@ -2617,11 +2630,11 @@ final class VectorCanvasView: NSView, NSTextViewDelegate {
     publicationEditor=editor;session.editingText=true;editor.focus(frame);needsDisplay=true
   }
   func showStorySource() {publicationEditor?.showOverflow()}
-  func openStorySource(_ id:UUID) {
-    if let publicationEditor,publicationEditor.storyID==id {publicationEditor.showOverflow();return}
+  func openStorySource(_ id:UUID,revealOverflow:Bool=false) {
+    if let publicationEditor,publicationEditor.storyID==id {publicationEditor.showSource(revealOverflow:revealOverflow);return}
     guard let session,let context=session.store?.project?.resolvedTextStory(id) else{return}
     finishText();let editor=PublicationEditingController(canvas:self,session:session,context:context)
-    publicationEditor=editor;session.editingText=true;editor.showOverflow()
+    publicationEditor=editor;session.editingText=true;editor.showSource(revealOverflow:revealOverflow)
   }
   func revealStoryPage(_ id:UUID) {
     synchronize()

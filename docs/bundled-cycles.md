@@ -9,6 +9,16 @@ acceptance depends on the separate visible reference reviews, not those gates.
 
 ## Current installation and reproduction
 
+The PR integrates the newer publication work on `main`. Persisted Cycles and
+physical-appearance fields now require schema 66; schemas 64 and 65 retain their
+upstream story/publication meanings. Earlier local Cycles schema-64 projects still
+decode and acquire the newer minimum version when saved by this branch.
+The installed candidate 6 and its visual/native evidence below identify the
+validated implementation before that integration. Their source hashes are
+historical evidence for that installed binary, not a claim that newer PR sources
+are identical. PR integration checks are recorded in
+[the reviewer validation snapshot](validation/cycles/README.md).
+
 The [committed validation snapshot](validation/cycles/README.md) provides portable
 test counts, executable identities and evidence hashes for code review, without
 user-project contents or workstation-specific paths.

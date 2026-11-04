@@ -98,6 +98,7 @@ struct PublicationWorkspaceInspector:View {
               Text("Margins define new body frames. Existing artwork keeps its physical coordinates.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
             }.padding(.top,8)
           }.font(InspectorStyle.labelFont)
+          PublicationTrimControls(session:session,project:project,document:document)
           numbering(document,projectID:project.id)
         }
         if let page=document.pages.first(where:{$0.objectID==session.objectID}) {
@@ -186,7 +187,7 @@ struct PublicationWorkspaceInspector:View {
         if stories.isEmpty {Text("Select a text frame to start a linked story, or add a chapter from the page rail.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)}
         ForEach(stories){story in
           let overset=project.resolvedTextStory(story.id).map{PublicationStoryLayout.composition($0).oversetRange.length} ?? 0
-          WorkspaceNavigationRow(title:story.name,subtitle:overset>0 ? "\(overset) overset source units":"\(story.frames.count) frames · \(story.text.count) characters",symbol:"text.alignleft",statusSymbols:overset>0 ? ["exclamationmark.triangle"]:[],accessibilityLabel:"Edit story "+story.name,identifier:"publication-story-"+story.id.uuidString){
+          WorkspaceNavigationRow(title:story.name,subtitle:overset>0 ? "Text extends beyond its frames":"\(story.frames.count) frames · \(StorySourceStatistics.words(story.text)) words",symbol:"text.alignleft",statusSymbols:overset>0 ? ["exclamationmark.triangle"]:[],accessibilityLabel:"Edit story "+story.name,identifier:"publication-story-"+story.id.uuidString){
             session.store?.showSurface(.artwork);controller.open(document.id);controller.openStory(story.id)
           }
         }
@@ -225,15 +226,22 @@ struct PublicationBindingControls:View {
   private var store:StudioStore?{observedStore}
   private var assemblies:[ProductObject]{store?.project?.tablePresentationObjects.filter{$0.sheetAssembly?.publicationID==publicationID} ?? []}
   private func configure(_ object:ProductObject,expectedProject:UUID,_ body:(inout SheetAssemblyDefinition)->Void){
-    guard let store,var definition=store.project?.objects.first(where:{$0.id==object.id})?.sheetAssembly,store.project?.id==expectedProject else{return}
+    guard let store,let current=store.project,current.id==expectedProject,
+      let owner=current.objects.first(where:{$0.id==object.id}),!owner.locked,var definition=owner.sheetAssembly else{return}
     body(&definition)
     let key="sheet-assembly-\(object.id)"
-    do {try store.engine.edit("Updated sheet assembly",source:"Studio",coalescing:store.engine.isInteracting(with:key) ? key:nil){project in try SheetAssemblyCommands.configure(in:&project,objectID:object.id,definition:definition)};store.changed()}
+    do {
+      guard session.canvas?.activeTextView?.hasMarkedText() != true,
+        session.canvas?.storyEditor?.views.contains(where:{$0.hasMarkedText()}) != true else{throw FormError.invalid("Finish the current text input before changing physical construction.")}
+      var proposal=current;try SheetAssemblyCommands.configure(in:&proposal,objectID:object.id,definition:definition)
+      session.canvas?.finishText()
+      try store.engine.edit("Updated sheet assembly",source:"Studio",coalescing:store.engine.isInteracting(with:key) ? key:nil){project in try SheetAssemblyCommands.configure(in:&project,objectID:object.id,definition:definition)};store.changed()
+    }
     catch{store.error=error.localizedDescription}
   }
   var body:some View {
     VStack(alignment:.leading,spacing:10) {
-      InspectorSectionHeader("PHYSICAL SHEETS")
+      InspectorSectionHeader("PHYSICAL CONSTRUCTION")
       if let store,let project=store.project {
         if assemblies.isEmpty {
           WorkspaceToolbarButton("Create linked physical sheets",symbol:"book.closed",showsTitle:true,identifier:"publication-create-binding"){
@@ -250,6 +258,11 @@ struct PublicationBindingControls:View {
                 Spacer()
                 WorkspaceToolbarButton("Find physical sheets on Table",symbol:"cube.transparent",identifier:"publication-find-binding-"+object.id.uuidString){_=store.findOnTable(object.id)}
               }
+              if let controls=project.recipe(object.recipeID),!controls.parameters.isEmpty {
+                DisclosureGroup("Authored construction parameters") {
+                  VStack(spacing:8){ForEach(controls.parameters){parameter in ParameterControl(parameter:parameter,object:object)}}.padding(.top,8)
+                }.font(InspectorStyle.labelFont)
+              }
               if let resolved {
                 SheetPoseControls(openingDegrees:Binding(get:{definition.openingDegrees},set:{value in configure(object,expectedProject:project.id){$0.openingDegrees=value}}),
                   activeSpread:Binding(get:{definition.activeSpread},set:{value in configure(object,expectedProject:project.id){$0.activeSpread=value}}),
@@ -258,6 +271,9 @@ struct PublicationBindingControls:View {
                   onEditingChanged:store.inspectorInteraction("sheet-assembly-\(object.id)"))
               }
               SheetFastenerControls(binding:Binding(get:{definition.binding ?? .init()},set:{value in configure(object,expectedProject:project.id){$0.binding=value}}))
+              let parameters=Array(Set(object.parameters.keys).union(definition.derived?.keys.map{$0} ?? []).union(["width","height","pageCount","leafCount","stackThickness","openingDegrees","activeSpread","bendMM","trimWidth","trimHeight","textBlockThickness","bindingAllowance","spineThickness","bindingFlexWidth","bindingFlexWidthMM"])).sorted()
+              SheetDimensionRelationships(session:session,objectID:object.id,projectID:project.id)
+              SheetStructureControls(session:session,definition:Binding(get:{store.project?.objects.first{$0.id==object.id}?.sheetAssembly ?? definition},set:{value in configure(object,expectedProject:project.id){$0=value}}),objectID:object.id,parameters:parameters,onEditingChanged:store.inspectorInteraction("sheet-assembly-\(object.id)"))
               if let parents=definition.parentSheets,!parents.isEmpty {
                 DisclosureGroup("Parent sheets (\(parents.count))") {
                   VStack(alignment:.leading,spacing:10) {
@@ -269,28 +285,27 @@ struct PublicationBindingControls:View {
                     }
                   }.padding(.top,8)
                 }.font(InspectorStyle.labelFont)
-              }else{
-                ArtworkUnitField("Leaf caliper",value:definition.stock.resolvedThicknessMM,unit:.mm){value in configure(object,expectedProject:project.id){model in
-                  let old=model.stock.resolvedThicknessMM;model.stock.thicknessMM=value
-                  if model.stock.plies != nil,old>0 {for index in model.stock.plies!.indices {model.stock.plies![index].thicknessMM *= value/old}}
-                }}
               }
               if let resolved {Text("\(resolved.leaves.count) leaves · \(String(format:"%.2f",resolved.stackThicknessMM)) mm stack").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)}
-              if !(definition.enclosure ?? []).isEmpty {
-                DisclosureGroup("Enclosure panels (\(definition.enclosure!.count))") {
+              DisclosureGroup("Cover & enclosure panels (\(definition.enclosure?.count ?? 0))") {
+                VStack(alignment:.leading,spacing:10) {
+                  Text("Wrapped boards and flexible stocks share editable, physical-size artwork.").font(InspectorStyle.captionFont).foregroundStyle(Palette.secondary)
                   ForEach(definition.enclosure ?? []) {plane in
                     VStack(alignment:.leading,spacing:5) {
-                      Text(plane.name).font(.system(size:11,weight:.medium))
-                      ForEach(Array([plane.front,plane.back].compactMap{$0}.enumerated()),id:\.offset){_,face in
-                        if let source=project.objects.first(where:{$0.id==face.sourceObjectID}) {
-                          Button("Edit \(source.name)"){store.showSurface(.artwork);session.activate(source.id);session.canvas?.synchronize();_=session.canvas?.fit(frameIDs:[source.id])}.buttonStyle(InspectorActionStyle())
-                        }
-                      }
-                      ArtworkUnitField("Panel caliper",value:plane.stock.resolvedThicknessMM,unit:.mm){value in configure(object,expectedProject:project.id){model in if let index=model.enclosure?.firstIndex(where:{$0.id==plane.id}) {model.enclosure![index].stock.thicknessMM=value}}}
-                    }.padding(.top,8)
+                      HStack {Text(plane.name).font(.system(size:11,weight:.medium));Spacer();AppCloseButton("Remove physical panel"){configure(object,expectedProject:project.id){$0.enclosure?.removeAll{$0.id==plane.id}}}}
+                      SheetPanelControls(session:session,panel:Binding(get:{store.project?.objects.first{$0.id==object.id}?.sheetAssembly?.enclosure?.first{$0.id==plane.id} ?? plane},set:{value in configure(object,expectedProject:project.id){model in
+                        if let index=model.enclosure?.firstIndex(where:{$0.id==plane.id}) {model.enclosure![index]=value}
+                      }}),objectID:object.id,parameters:parameters,onEditingChanged:store.inspectorInteraction("sheet-assembly-\(object.id)"))
+                    }.padding(10).background(Palette.surface,in:RoundedRectangle(cornerRadius:InspectorStyle.moduleRadius))
                   }
-                }.font(InspectorStyle.labelFont)
-              }
+                  Button("Add physical panel") {
+                    configure(object,expectedProject:project.id){model in
+                      if model.enclosure==nil {model.enclosure=[]}
+                      model.enclosure!.append(.init(id:UUID().uuidString,name:"Physical panel",size:.init("width","height")))
+                    }
+                  }.buttonStyle(InspectorActionStyle()).accessibilityIdentifier("sheet-add-physical-panel")
+                }.padding(.top,8)
+              }.font(InspectorStyle.labelFont)
             }.disabled(object.locked)
           }
         }

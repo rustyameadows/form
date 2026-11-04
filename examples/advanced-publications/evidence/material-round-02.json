@@ -1,0 +1,3300 @@
+{
+  "before": {
+    "activeSpread": 0,
+    "auxiliaryLeaves": [
+      {
+        "attachment": {
+          "edge": "left",
+          "planeID": "front-board",
+          "widthMM": 0
+        },
+        "id": "BFD9DE17-477B-59D3-BDE8-11B5F5F76F30",
+        "name": "Front pastedown",
+        "placement": "front",
+        "size": {
+          "x": "width+2*overhangMM",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 180,
+          "name": "Pale-yellow pastedown / 180 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F3E6A4",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.18,
+          "verified": false
+        }
+      },
+      {
+        "attachment": {
+          "edge": "left",
+          "widthMM": 8
+        },
+        "id": "E3D9D77E-EDA2-5F83-8ACD-2E6A09770238",
+        "name": "Front yellow flyleaf",
+        "placement": "front",
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 140,
+          "name": "Pale-yellow endpaper / 140 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F3E6A4",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.14,
+          "verified": false
+        }
+      },
+      {
+        "attachment": {
+          "edge": "left",
+          "widthMM": 8
+        },
+        "id": "21E2DB45-FCB0-54CB-AAF3-4AD602EB81B6",
+        "name": "Back yellow flyleaf",
+        "placement": "back",
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 140,
+          "name": "Pale-yellow endpaper / 140 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F3E6A4",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.14,
+          "verified": false
+        }
+      },
+      {
+        "attachment": {
+          "edge": "left",
+          "planeID": "back-board",
+          "widthMM": 0
+        },
+        "id": "46A81E57-BCB6-583F-8FF7-955F8B85AD2F",
+        "name": "Back pastedown",
+        "placement": "back",
+        "size": {
+          "x": "width+2*overhangMM",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 180,
+          "name": "Pale-yellow pastedown / 180 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F3E6A4",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.18,
+          "verified": false
+        }
+      }
+    ],
+    "bendMM": 0,
+    "binding": {
+      "adhesiveMM": 0.22,
+      "clinchLengthMM": 2,
+      "count": 3,
+      "crownLengthMM": 10,
+      "edgeInsetMM": 7,
+      "endMarginMM": 35,
+      "flexWidthMM": 8,
+      "sewingSwellMM": 0.8,
+      "style": "sewn",
+      "wireDiameterMM": 0.35
+    },
+    "enclosure": [
+      {
+        "features": {
+          "stockThickness": "boardMM",
+          "wrap": {
+            "cornerRadiusMM": "1.2",
+            "stock": {
+              "grain": "parallelHeight",
+              "gsm": 150,
+              "name": "Dyed linen wrapping / 0.12 mm",
+              "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+              "profile": {
+                "color": "#385949",
+                "opacity": 1,
+                "roughness": 0.92,
+                "texture": "linen",
+                "textureDepthMM": 0.009,
+                "textureScaleMM": 0.65
+              },
+              "thicknessMM": 0.12,
+              "verified": false
+            },
+            "turnInMM": "turnInMM"
+          }
+        },
+        "finishes": [
+          {
+            "depthMM": 0.06,
+            "elementIDs": [
+              "53A4ED9E-CA97-5088-B448-A20FB643534B"
+            ],
+            "enabled": true,
+            "heightMM": 0,
+            "id": "56C36D48-51BD-5D81-B39E-5F72E6EA79EB",
+            "kind": "letterpress",
+            "name": "back-letterpress",
+            "opacity": 1,
+            "side": "outside"
+          }
+        ],
+        "front": {
+          "sourceObjectID": "244408D5-7EFB-4D9B-B01B-3D131D220C62",
+          "sourceOriginMM": {
+            "x": "max(boardMM,spineBoardMM)+turnInMM",
+            "y": "max(boardMM,spineBoardMM)+turnInMM"
+          },
+          "sourceSide": "outside"
+        },
+        "id": "back-board",
+        "name": "Wrapped back board",
+        "positionMM": {
+          "x": "width+overhangMM",
+          "y": "-boardMM/2",
+          "z": "-(height+2*overhangMM)/2"
+        },
+        "rotationDegrees": {
+          "x": "-90.0",
+          "y": "0.0",
+          "z": "180.0"
+        },
+        "size": {
+          "x": "width+2*overhangMM",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 1400,
+          "name": "Conservation board / 2.4 mm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#ADA68D",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "recycled",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 2.4,
+          "verified": false
+        }
+      },
+      {
+        "features": {
+          "stockThickness": "0.12"
+        },
+        "front": {
+          "sourceObjectID": "244408D5-7EFB-4D9B-B01B-3D131D220C62",
+          "sourceOriginMM": {
+            "x": "(max(boardMM,spineBoardMM)+turnInMM)+(width+2*overhangMM)",
+            "y": "max(boardMM,spineBoardMM)+turnInMM"
+          },
+          "sourceSide": "outside"
+        },
+        "id": "back-joint",
+        "name": "Continuous back joint",
+        "positionMM": {
+          "x": "-overhangMM",
+          "y": "-boardMM-0.06",
+          "z": "-(height+2*overhangMM)/2"
+        },
+        "rotationDegrees": {
+          "x": "-90.0",
+          "y": "0.0",
+          "z": "180.0"
+        },
+        "size": {
+          "x": "jointMM+0.01",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 150,
+          "name": "Continuous linen joint",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#385949",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "linen",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.12,
+          "verified": false
+        }
+      },
+      {
+        "features": {
+          "stockThickness": "spineBoardMM",
+          "wrap": {
+            "cornerRadiusMM": "0.8",
+            "stock": {
+              "grain": "parallelHeight",
+              "gsm": 150,
+              "name": "Dyed linen wrapping / 0.12 mm",
+              "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+              "profile": {
+                "color": "#385949",
+                "opacity": 1,
+                "roughness": 0.92,
+                "texture": "linen",
+                "textureDepthMM": 0.009,
+                "textureScaleMM": 0.65
+              },
+              "thicknessMM": 0.12,
+              "verified": false
+            },
+            "turnInMM": "min(turnInMM,(spineThickness+2*(boardMM+0.12))/2)"
+          }
+        },
+        "finishes": [
+          {
+            "color": "#C4A66B",
+            "depthMM": 0,
+            "elementIDs": [
+              "3B6899DE-BCBE-5883-A905-A6C1490ED54E"
+            ],
+            "enabled": true,
+            "heightMM": 0.01,
+            "id": "97F28340-E531-567F-809B-035E44569296",
+            "kind": "foil",
+            "metallic": 1,
+            "name": "spine-foil",
+            "opacity": 1,
+            "roughness": 0.23,
+            "side": "outside"
+          }
+        ],
+        "front": {
+          "sourceObjectID": "244408D5-7EFB-4D9B-B01B-3D131D220C62",
+          "sourceOriginMM": {
+            "x": "(max(boardMM,spineBoardMM)+turnInMM)+(width+2*overhangMM)+jointMM",
+            "y": "max(boardMM,spineBoardMM)+turnInMM"
+          },
+          "sourceSide": "outside"
+        },
+        "id": "spine-board",
+        "name": "Wrapped spine board",
+        "positionMM": {
+          "x": "-overhangMM-jointMM",
+          "y": "-boardMM-0.12",
+          "z": "-(height+2*overhangMM)/2"
+        },
+        "rotationDegrees": {
+          "x": "-90.0",
+          "y": "0.0",
+          "z": "90+openingDegrees/2"
+        },
+        "size": {
+          "x": "spineThickness+2*(boardMM+0.12)",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 1000,
+          "name": "Spine board",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#ADA68D",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "recycled",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 1.6,
+          "verified": false
+        }
+      },
+      {
+        "features": {
+          "flex": {
+            "angleDegrees": "openingDegrees",
+            "edge": "left",
+            "widthMM": "jointMM"
+          },
+          "stockThickness": "0.12"
+        },
+        "front": {
+          "sourceObjectID": "244408D5-7EFB-4D9B-B01B-3D131D220C62",
+          "sourceOriginMM": {
+            "x": "(((max(boardMM,spineBoardMM)+turnInMM)+(width+2*overhangMM)+jointMM)+(spineThickness+2*(boardMM+0.12))+jointMM)-jointMM",
+            "y": "max(boardMM,spineBoardMM)+turnInMM"
+          },
+          "sourceSide": "outside"
+        },
+        "id": "front-joint",
+        "name": "Flexible front joint",
+        "positionMM": {
+          "x": "(-overhangMM-jointMM+(spineThickness+2*(boardMM+0.12))*cos(pi/2+(openingDegrees*pi/180)/2))+0.06*sin(openingDegrees*pi/180)",
+          "y": "(-boardMM-0.12+(spineThickness+2*(boardMM+0.12))*sin(pi/2+(openingDegrees*pi/180)/2))-0.06*cos(openingDegrees*pi/180)",
+          "z": "-(height+2*overhangMM)/2"
+        },
+        "rotationDegrees": {
+          "x": "-90.0",
+          "y": "0.0",
+          "z": "0.0"
+        },
+        "size": {
+          "x": "jointMM+0.01",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 150,
+          "name": "Continuous linen joint",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#385949",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "linen",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.12,
+          "verified": false
+        }
+      },
+      {
+        "features": {
+          "recesses": [
+            {
+              "cornerRadiusMM": "1.5",
+              "depthMM": "insetDepthMM",
+              "id": "inset-seat",
+              "insert": {
+                "face": {
+                  "sourceObjectID": "768814F4-ABD3-4B88-B846-2CB29D44E543",
+                  "sourceOriginMM": {
+                    "x": "0.0",
+                    "y": "0.0"
+                  },
+                  "sourceSide": "outside"
+                },
+                "stock": {
+                  "grain": "parallelHeight",
+                  "gsm": 240,
+                  "name": "Inserted photographic paper / 0.24 mm",
+                  "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+                  "profile": {
+                    "color": "#F7F5EF",
+                    "opacity": 1,
+                    "roughness": 0.92,
+                    "texture": "coated",
+                    "textureDepthMM": 0.009,
+                    "textureScaleMM": 0.65
+                  },
+                  "thicknessMM": 0.24,
+                  "verified": false
+                }
+              },
+              "origin": {
+                "x": "((width+2*overhangMM)-insetWidthMM)/2",
+                "y": "height*0.34"
+              },
+              "size": {
+                "x": "insetWidthMM",
+                "y": "insetHeightMM"
+              }
+            }
+          ],
+          "stockThickness": "boardMM",
+          "wrap": {
+            "cornerRadiusMM": "1.2",
+            "stock": {
+              "grain": "parallelHeight",
+              "gsm": 150,
+              "name": "Dyed linen wrapping / 0.12 mm",
+              "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+              "profile": {
+                "color": "#385949",
+                "opacity": 1,
+                "roughness": 0.92,
+                "texture": "linen",
+                "textureDepthMM": 0.009,
+                "textureScaleMM": 0.65
+              },
+              "thicknessMM": 0.12,
+              "verified": false
+            },
+            "turnInMM": "turnInMM"
+          }
+        },
+        "finishes": [
+          {
+            "color": "#C4A66B",
+            "depthMM": 0.025,
+            "elementIDs": [
+              "8634DC29-5C42-5ED1-BA4F-953C29D25B20",
+              "2A272B01-453E-5304-A209-06C5768BC6A7"
+            ],
+            "enabled": true,
+            "heightMM": 0.01,
+            "id": "3E129D3F-5BB4-531E-9FB1-FCE5C7FFEC1D",
+            "kind": "foil",
+            "metallic": 1,
+            "name": "front-foil",
+            "opacity": 1,
+            "roughness": 0.23,
+            "side": "outside"
+          },
+          {
+            "depthMM": 0,
+            "elementIDs": [
+              "0226A9D8-537E-527B-B3D4-970FEEDE5BFD"
+            ],
+            "enabled": true,
+            "heightMM": 0.12,
+            "id": "E4F0C1A4-306F-5108-9111-D9AE4C47B86A",
+            "kind": "emboss",
+            "name": "front-blind",
+            "opacity": 1,
+            "side": "outside"
+          }
+        ],
+        "front": {
+          "sourceObjectID": "244408D5-7EFB-4D9B-B01B-3D131D220C62",
+          "sourceOriginMM": {
+            "x": "((max(boardMM,spineBoardMM)+turnInMM)+(width+2*overhangMM)+jointMM)+(spineThickness+2*(boardMM+0.12))+jointMM",
+            "y": "max(boardMM,spineBoardMM)+turnInMM"
+          },
+          "sourceSide": "outside"
+        },
+        "id": "front-board",
+        "name": "Wrapped front board",
+        "positionMM": {
+          "x": "-overhangMM-jointMM-(spineThickness+2*(boardMM+.12))*sin(openingDegrees*pi/360)+jointMM*sin(max(openingDegrees*pi/180,.000001))/max(openingDegrees*pi/180,.000001)+.01*cos(openingDegrees*pi/180)+(boardMM/2+.12)*sin(openingDegrees*pi/180)",
+          "y": "-boardMM-.12+(spineThickness+2*(boardMM+.12))*cos(openingDegrees*pi/360)+jointMM*(1-cos(max(openingDegrees*pi/180,.000001)))/max(openingDegrees*pi/180,.000001)+.01*sin(openingDegrees*pi/180)-(boardMM/2+.12)*cos(openingDegrees*pi/180)",
+          "z": "-(height+2*overhangMM)/2"
+        },
+        "rotationDegrees": {
+          "x": "-90.0",
+          "y": "0.0",
+          "z": "openingDegrees"
+        },
+        "size": {
+          "x": "width+2*overhangMM",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 1400,
+          "name": "Conservation board / 2.4 mm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#ADA68D",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "recycled",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 2.4,
+          "verified": false
+        }
+      }
+    ],
+    "openingDegrees": 0,
+    "parentSheets": [
+      {
+        "backPageIDs": [
+          "881AE312-7236-4A4A-BDF4-67DC9E0F844E",
+          "A8EE3476-F6A3-42BA-A2D6-4A6E99FE011E"
+        ],
+        "frontPageIDs": [
+          "CD0D967D-64BC-4A93-A5C2-633E6B85D8F5",
+          "FD4D08A2-96A5-49B6-9C06-ACB44C3D8D1D"
+        ],
+        "id": "6D5B01CD-EC75-59B4-97FE-5E1395067527",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "48E199C1-43D4-427E-BFF9-8E0101BA1BDD",
+          "D8B1B52B-2289-4833-AA1E-AF8BB909D19A"
+        ],
+        "frontPageIDs": [
+          "48958BCF-95A9-41AF-B2A8-AE8CA40EF03F",
+          "119602AD-05BA-4C5E-A90E-EAFBAE1C348E"
+        ],
+        "id": "4CCE64E1-B4AE-58D3-B3D6-FBED6C03C36E",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "455EB991-A528-487B-B208-AAA5FECBD997",
+          "3C691EA9-5B2A-4AE5-B192-BEA24AABF3BA"
+        ],
+        "frontPageIDs": [
+          "AFE401C0-60B5-4155-BF69-13008B1C0208",
+          "FAFE5E42-B439-4D7A-93E4-DBB3A57AD568"
+        ],
+        "id": "FE8904E5-A64A-5525-B5FE-95674D652261",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "0AC8B5AD-D76B-4EA5-8D6B-D0149279B84B",
+          "1992F9A7-1911-4BC8-BCB9-7AA3BF7B08CA"
+        ],
+        "frontPageIDs": [
+          "AD850A5D-CF6F-404F-99D6-C304F7A4C7FC",
+          "8A07FB2C-CD21-43B1-A16A-E478FA90D97F"
+        ],
+        "id": "14AD8E8B-41F0-504B-B9A8-F365FF141AF3",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "FD2552D4-9956-4F9F-A7E5-B19C1EA38792",
+          "911B3458-F80C-4992-A46C-DCEFA5D14BDD"
+        ],
+        "frontPageIDs": [
+          "2E82324F-7AB0-424C-8D92-8D1E64F0A76A",
+          "79A8E994-3D19-4F38-AA44-B52CBAF53B4C"
+        ],
+        "id": "E8C9C914-4305-5111-B1B0-BF8C5D2D560D",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "F330CF67-A6FE-4468-97DF-38DF0E1E99B1",
+          "CB153795-30D0-4667-9BDD-67F13DFDBFB4"
+        ],
+        "frontPageIDs": [
+          "1B898A77-3DE0-4AAC-8506-8016629528F7",
+          "D2CB1A9E-C825-456B-81B8-6F849AAF691D"
+        ],
+        "id": "361F9BC7-3AD0-55DF-AE7B-03A6F2F6F848",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "FA786D99-CF12-460D-BF80-7807857681C4",
+          "8204B34B-A90E-4FB4-8BFE-5F45777D5976"
+        ],
+        "frontPageIDs": [
+          "2CAED5C8-C18B-4419-A6D9-7941CFC39630",
+          "6BE23216-137A-494F-827E-F6A8CB0B481F"
+        ],
+        "id": "4A7CEB74-4EF0-501C-9BD8-4D83C7E0FC1E",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "9840A4E8-40FF-4745-8B37-9A32640A801E",
+          "C42BE668-586D-43B3-8B07-5ED57035BBAC"
+        ],
+        "frontPageIDs": [
+          "2B79DACA-61FF-4579-A13E-5FE8A72EFB62",
+          "4EE1D6EB-20D1-49F4-9111-94ECE805AC49"
+        ],
+        "id": "17B828B1-366F-5648-A5E1-15A7231C22C1",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "70EE2FC2-0C2E-43F8-AC50-C96EBDCB6E22",
+          "3ED5371D-1BCE-4912-8B8F-C10130E4025B"
+        ],
+        "frontPageIDs": [
+          "C001F471-CBD0-4122-B92F-5966A8C8CA8B",
+          "398DE9A5-F8F9-41E2-B795-AE2DB810E1C3"
+        ],
+        "id": "7BA81FD8-D31C-56B6-9DE5-4D6784162578",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "22D06CB1-D197-4436-906C-A3D78A8AF946",
+          "043A89AD-165A-4335-8B5B-228FA81F1F31"
+        ],
+        "frontPageIDs": [
+          "4E459403-D375-4D57-8050-ED0EAAE1D1DD",
+          "788D3D53-C1A0-42EA-83DD-79F7D58C9C1E"
+        ],
+        "id": "0513D2DF-41A2-5CAB-AED8-88E841C5D058",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "DA784EEB-1DD3-42D2-8C66-F8BCC537CAC9",
+          "C256463F-A9FA-444E-AEAA-9E5F076B2C91"
+        ],
+        "frontPageIDs": [
+          "9F7BD9FF-7775-4CE9-9C31-66CF5F810ACB",
+          "B26542C7-66C0-4630-AC6E-B672621927AF"
+        ],
+        "id": "BC78010A-17C0-5860-9FCF-A03C856AD40D",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "AD59177E-2B41-43FF-AA18-C35507AA2843",
+          "2415E55F-8AFA-4572-BBEC-6AA3D62DD0F8"
+        ],
+        "frontPageIDs": [
+          "B1D9884F-E0B9-488B-A5CD-BA467D773191",
+          "607AC66D-6D0E-4032-95F2-6441706FEBCA"
+        ],
+        "id": "9768C469-CD78-5FDE-9298-76CB0D0EBF7B",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "5EBB6183-94F6-4016-BFE6-55733C6FAD86",
+          "888072F4-C108-465F-B98C-CDD49F6C6E72"
+        ],
+        "frontPageIDs": [
+          "FA211E96-0CF3-4646-B5D4-1A0EE0AE80D8",
+          "2F32E79C-4E07-4A64-9725-79B79ED36236"
+        ],
+        "id": "08969412-5C54-50E6-8443-9FC0E78661D3",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "E84176B1-C970-45A7-A938-7FAD97C26B3E",
+          "D8157BAB-3676-417B-9056-015175A47A94"
+        ],
+        "frontPageIDs": [
+          "DE422C3A-498F-4BCF-89F4-7B132FAE5127",
+          "137CC683-7D46-440C-B5DE-065A7F02861C"
+        ],
+        "id": "A3E09CDC-E7FD-5772-AF18-908484BE5E71",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "5E0937E3-28A2-4C3C-A6CF-A1156DBEA943",
+          "03458CF1-5AF2-4A35-AC08-652F839143FC"
+        ],
+        "frontPageIDs": [
+          "75944A36-5AB2-4771-BF43-114D560CEFF4",
+          "0594A665-C4CE-43C5-B270-52569B84E371"
+        ],
+        "id": "292B818C-0491-5F98-9C83-993B624A69BC",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "3EE3F607-CE73-4085-AF16-5D443F815982",
+          "6D597990-99E8-4093-B2B0-1759EAEB2DC4"
+        ],
+        "frontPageIDs": [
+          "6BFF4F3A-0FE0-4980-9FF6-69D34B680421",
+          "6EC1348B-CF3B-4027-B1BF-31BEF7B51556"
+        ],
+        "id": "36B2831B-7F71-55BE-AFBB-CE5EF7300CB4",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "9D712867-B7AF-497C-AC66-F97389D1AA39",
+          "976691C0-1D97-4A98-A86F-C5E0BF20D1D4"
+        ],
+        "frontPageIDs": [
+          "77179DCF-2992-48DB-B2FC-44DBDA2CBCF0",
+          "52702E62-F5AE-40F3-852B-E3C51D6CFFE5"
+        ],
+        "id": "C77BFFA0-7CC2-5DB4-AFA7-2EC5576854B7",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "F25A4647-1976-496E-9608-69C33D05E900",
+          "B3AFCE78-1300-4502-B488-AA53B9746E05"
+        ],
+        "frontPageIDs": [
+          "3E84F181-A2F0-49C5-AC2A-FF6B54D4D6FE",
+          "687F2E65-2E0A-4BD6-96F7-1BEB8336DC9A"
+        ],
+        "id": "29809246-1654-52F1-B7D7-2CDCC1514711",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "2D75BE00-DAC3-4F4F-AC44-37BF7791F30F",
+          "D1A8A655-7396-447E-BEBF-126E1675357E"
+        ],
+        "frontPageIDs": [
+          "63D7A157-8688-4FCF-872B-18F11D28713C",
+          "7653FCA7-905D-4F35-B727-277BCA7D2E7A"
+        ],
+        "id": "53160D98-9539-5687-8FAA-6ED23F84CA06",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "B44FABA1-780B-4DC7-9B5C-7D53B22A060B",
+          "F5439C33-5C6E-4FB3-87B6-9E72B3889C7F"
+        ],
+        "frontPageIDs": [
+          "79B292B4-6577-4B59-AECE-3E05115A5DD6",
+          "07AFAAAD-3D35-468F-83C2-6752BD403D3B"
+        ],
+        "id": "FE477ED8-EB62-5E39-ADF1-AE05E76E3546",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "C8BC4A08-F972-425C-A814-D503FAC810C4",
+          "06BE3FE8-0335-4E2F-931E-932B5977419F"
+        ],
+        "frontPageIDs": [
+          "1C467E32-1A43-4E06-A992-5B06C0FFDFD4",
+          "AAD02C32-1006-441D-BF37-721D6D317294"
+        ],
+        "id": "B026708A-30F7-56F4-A94F-DFD6DF47E0C3",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "5CA11AF7-47DA-4BBF-A576-AC649C94D583",
+          "6CEF150F-9F02-4EBF-9193-894704865B36"
+        ],
+        "frontPageIDs": [
+          "BCB503D6-D26F-4566-BE13-CAF168600820",
+          "3ECFCEC4-5019-4908-AE7B-079E836D9409"
+        ],
+        "id": "03D8AB2B-2FCC-550C-B68A-00B16B89BA8D",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "F6A5320A-88A7-4171-B53E-31D7A4CA04CE",
+          "39B885A7-765D-47D4-B193-42D1AE154FBE"
+        ],
+        "frontPageIDs": [
+          "35E29F2F-993B-48D0-84C6-9E7E198BE4FA",
+          "7A39B3FD-93D5-4723-8CDA-44624FF1FE1E"
+        ],
+        "id": "D1E68CB0-C1DA-50F0-BBE7-C5A7B0E4DE10",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "3825FF0A-C76E-411D-A871-DA92D408EEB7",
+          "92C8E3C7-0ABC-455C-BE93-7DA38C930ED5"
+        ],
+        "frontPageIDs": [
+          "8815C7A0-2C9A-46D0-96DC-F6B149F742CF",
+          "EC500754-77E1-4DE1-AEC3-B6D50B48BD12"
+        ],
+        "id": "59FBF40D-6737-50A4-82BD-15F3DD7EE574",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "87A3D117-944B-40A3-A7EA-5D182571E3AA",
+          "972223D4-9566-48E6-BEB6-923747098202"
+        ],
+        "frontPageIDs": [
+          "B6797A83-0108-4033-B0EB-E9C1F3FBF393",
+          "08FE3DA5-54B9-41D1-9CA1-E5269081AB73"
+        ],
+        "id": "D4C0A1BB-0EE0-5C99-BB9B-56B6757DBAC7",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "5B6C7BC4-4981-4F80-B978-4CAABB5A3B22",
+          "0F19080C-6793-42EE-971E-6921EDDBB5C2"
+        ],
+        "frontPageIDs": [
+          "6AC8AE4F-A3DB-4113-8E55-11FECD6E7672",
+          "87D84853-DB0C-4569-A797-C6739B73D530"
+        ],
+        "id": "B391D5CB-2C39-5404-AA2F-3DB5513EA344",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "8F58A5D9-221F-40A2-9584-3C81DE30987C",
+          "9BA61B66-1FB4-414E-8E27-1CFB3FFAE892"
+        ],
+        "frontPageIDs": [
+          "3B2B7B38-A407-4902-937C-0E9B6F366580",
+          "CEDE8A24-86E3-49E4-84BC-39848BF30488"
+        ],
+        "id": "9789E0F6-D3EA-5D05-B593-2694E282ECE4",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "7256B28E-0536-423E-9D1A-443F6B0C247A",
+          "BC35830C-1C7E-45A6-9D51-A3694099A731"
+        ],
+        "frontPageIDs": [
+          "F8B6CEB5-1A3C-416E-A423-E52D5C694A79",
+          "8E037F44-4A74-48C4-B103-9F86807AE315"
+        ],
+        "id": "3F6B7FFD-ACB8-59F5-A688-39DE69ABD04A",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "57830EEB-23A1-4979-BD66-93E01BA875A8",
+          "DA944FA7-591B-4490-AB2C-3B68E6224A2A"
+        ],
+        "frontPageIDs": [
+          "F86D3B1D-855A-41E0-852A-4AD4063BC8EC",
+          "6D336A02-B394-4CF3-9729-C4FE0C5AEC3A"
+        ],
+        "id": "23E7685F-0B96-5E14-929A-2A3DE6DBA544",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "88B40B65-2C0D-485A-9B57-D306B6204B08",
+          "5A57B828-E5ED-4A35-AAAD-D1FE5AD6B3F1"
+        ],
+        "frontPageIDs": [
+          "F6C3F1AF-AEEA-4739-81E5-F060F38218CD",
+          "A5544BC9-4C95-4546-A697-31DDA289D508"
+        ],
+        "id": "00D03BC8-33EF-56FA-A15A-DD4C94F2F6C5",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "4AB88790-98B9-40EB-AFA8-6DC3BD3D6C53",
+          "3FF3B434-A472-45C5-BD2C-86D9E55C746D"
+        ],
+        "frontPageIDs": [
+          "FA7A7B03-5FE1-4A12-A7C8-70D6F814ADD7",
+          "8659E6E4-5EE2-474D-8006-30F7B219DC50"
+        ],
+        "id": "A53FF214-92E0-5866-BB34-1D59A71FB9F9",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "6E8D3519-BF8D-43D8-99D8-5E8348BDF44A",
+          "C3A54F03-BD8F-4748-B442-55FAD9838605"
+        ],
+        "frontPageIDs": [
+          "2DD73016-6F23-491E-944D-91A495B21AAD",
+          "33D94AE6-6D9B-4BF2-A172-EA91F14FC4A8"
+        ],
+        "id": "FEEA68C7-CFE2-53A0-BE0E-1FA8B16567F1",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      }
+    ],
+    "publicationID": "95D43B98-5DA8-41F6-AA59-E2C05304A4AE",
+    "signatures": [
+      {
+        "id": "03E14A77-FDE9-5C07-8F61-1B0691487A22",
+        "parentSheetIDs": [
+          "6D5B01CD-EC75-59B4-97FE-5E1395067527",
+          "4CCE64E1-B4AE-58D3-B3D6-FBED6C03C36E",
+          "FE8904E5-A64A-5525-B5FE-95674D652261",
+          "14AD8E8B-41F0-504B-B9A8-F365FF141AF3"
+        ]
+      },
+      {
+        "id": "36763949-E26C-54E2-8E01-15819631D7B7",
+        "parentSheetIDs": [
+          "E8C9C914-4305-5111-B1B0-BF8C5D2D560D",
+          "361F9BC7-3AD0-55DF-AE7B-03A6F2F6F848",
+          "4A7CEB74-4EF0-501C-9BD8-4D83C7E0FC1E",
+          "17B828B1-366F-5648-A5E1-15A7231C22C1"
+        ]
+      },
+      {
+        "id": "D60835DF-710D-530D-B1F5-41F39572C302",
+        "parentSheetIDs": [
+          "7BA81FD8-D31C-56B6-9DE5-4D6784162578",
+          "0513D2DF-41A2-5CAB-AED8-88E841C5D058",
+          "BC78010A-17C0-5860-9FCF-A03C856AD40D",
+          "9768C469-CD78-5FDE-9298-76CB0D0EBF7B"
+        ]
+      },
+      {
+        "id": "A2B9325E-0425-5E40-BCF2-8FA62A066985",
+        "parentSheetIDs": [
+          "08969412-5C54-50E6-8443-9FC0E78661D3",
+          "A3E09CDC-E7FD-5772-AF18-908484BE5E71",
+          "292B818C-0491-5F98-9C83-993B624A69BC",
+          "36B2831B-7F71-55BE-AFBB-CE5EF7300CB4"
+        ]
+      },
+      {
+        "id": "93C2B61B-38FD-578A-8A51-F88EF7126FD7",
+        "parentSheetIDs": [
+          "C77BFFA0-7CC2-5DB4-AFA7-2EC5576854B7",
+          "29809246-1654-52F1-B7D7-2CDCC1514711",
+          "53160D98-9539-5687-8FAA-6ED23F84CA06",
+          "FE477ED8-EB62-5E39-ADF1-AE05E76E3546"
+        ]
+      },
+      {
+        "id": "11E7811A-593A-5AF9-8C56-1B8CFAECD35A",
+        "parentSheetIDs": [
+          "B026708A-30F7-56F4-A94F-DFD6DF47E0C3",
+          "03D8AB2B-2FCC-550C-B68A-00B16B89BA8D",
+          "D1E68CB0-C1DA-50F0-BBE7-C5A7B0E4DE10",
+          "59FBF40D-6737-50A4-82BD-15F3DD7EE574"
+        ]
+      },
+      {
+        "id": "2E96A487-3439-5E12-8148-F17720CCBE79",
+        "parentSheetIDs": [
+          "D4C0A1BB-0EE0-5C99-BB9B-56B6757DBAC7",
+          "B391D5CB-2C39-5404-AA2F-3DB5513EA344",
+          "9789E0F6-D3EA-5D05-B593-2694E282ECE4",
+          "3F6B7FFD-ACB8-59F5-A688-39DE69ABD04A"
+        ]
+      },
+      {
+        "id": "177D24A1-CBA8-51B4-AE92-0CF02203B81D",
+        "parentSheetIDs": [
+          "23E7685F-0B96-5E14-929A-2A3DE6DBA544",
+          "00D03BC8-33EF-56FA-A15A-DD4C94F2F6C5",
+          "A53FF214-92E0-5866-BB34-1D59A71FB9F9",
+          "FEEA68C7-CFE2-53A0-BE0E-1FA8B16567F1"
+        ]
+      }
+    ],
+    "stock": {
+      "grain": "parallelHeight",
+      "gsm": 100,
+      "name": "White uncoated body / 100 gsm",
+      "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+      "profile": {
+        "color": "#F7F5EF",
+        "opacity": 1,
+        "roughness": 0.92,
+        "texture": "cotton",
+        "textureDepthMM": 0.009,
+        "textureScaleMM": 0.65
+      },
+      "thicknessMM": 0.1,
+      "verified": false
+    },
+    "version": 1
+  },
+  "after": {
+    "activeSpread": 0,
+    "auxiliaryLeaves": [
+      {
+        "attachment": {
+          "edge": "left",
+          "planeID": "front-board",
+          "widthMM": 0
+        },
+        "id": "BFD9DE17-477B-59D3-BDE8-11B5F5F76F30",
+        "name": "Front pastedown",
+        "placement": "front",
+        "size": {
+          "x": "width+2*overhangMM",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 180,
+          "name": "Pale-yellow pastedown / 180 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F3E6A4",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.18,
+          "verified": false
+        }
+      },
+      {
+        "attachment": {
+          "edge": "left",
+          "widthMM": 8
+        },
+        "id": "E3D9D77E-EDA2-5F83-8ACD-2E6A09770238",
+        "name": "Front yellow flyleaf",
+        "placement": "front",
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 140,
+          "name": "Pale-yellow endpaper / 140 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F3E6A4",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.14,
+          "verified": false
+        }
+      },
+      {
+        "attachment": {
+          "edge": "left",
+          "widthMM": 8
+        },
+        "id": "21E2DB45-FCB0-54CB-AAF3-4AD602EB81B6",
+        "name": "Back yellow flyleaf",
+        "placement": "back",
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 140,
+          "name": "Pale-yellow endpaper / 140 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F3E6A4",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.14,
+          "verified": false
+        }
+      },
+      {
+        "attachment": {
+          "edge": "left",
+          "planeID": "back-board",
+          "widthMM": 0
+        },
+        "id": "46A81E57-BCB6-583F-8FF7-955F8B85AD2F",
+        "name": "Back pastedown",
+        "placement": "back",
+        "size": {
+          "x": "width+2*overhangMM",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 180,
+          "name": "Pale-yellow pastedown / 180 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F3E6A4",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.18,
+          "verified": false
+        }
+      }
+    ],
+    "bendMM": 0,
+    "binding": {
+      "adhesiveMM": 0.22,
+      "clinchLengthMM": 2,
+      "count": 3,
+      "crownLengthMM": 10,
+      "edgeInsetMM": 7,
+      "endMarginMM": 35,
+      "flexWidthMM": 8,
+      "sewingSwellMM": 0.8,
+      "style": "sewn",
+      "wireDiameterMM": 0.35
+    },
+    "enclosure": [
+      {
+        "features": {
+          "stockThickness": "boardMM",
+          "wrap": {
+            "cornerRadiusMM": "1.2",
+            "stock": {
+              "grain": "parallelHeight",
+              "gsm": 150,
+              "name": "Dyed linen wrapping / 0.12 mm",
+              "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+              "profile": {
+                "color": "#385949",
+                "opacity": 1,
+                "roughness": 0.82,
+                "texture": "linen",
+                "textureDepthMM": 0.04,
+                "textureScaleMM": 0.75
+              },
+              "thicknessMM": 0.12,
+              "verified": false
+            },
+            "turnInMM": "turnInMM"
+          }
+        },
+        "finishes": [
+          {
+            "depthMM": 0.06,
+            "elementIDs": [
+              "53A4ED9E-CA97-5088-B448-A20FB643534B"
+            ],
+            "enabled": true,
+            "heightMM": 0,
+            "id": "56C36D48-51BD-5D81-B39E-5F72E6EA79EB",
+            "kind": "letterpress",
+            "name": "back-letterpress",
+            "opacity": 1,
+            "side": "outside"
+          }
+        ],
+        "front": {
+          "sourceObjectID": "244408D5-7EFB-4D9B-B01B-3D131D220C62",
+          "sourceOriginMM": {
+            "x": "max(boardMM,spineBoardMM)+turnInMM",
+            "y": "max(boardMM,spineBoardMM)+turnInMM"
+          },
+          "sourceSide": "outside"
+        },
+        "id": "back-board",
+        "name": "Wrapped back board",
+        "positionMM": {
+          "x": "width+overhangMM",
+          "y": "-boardMM/2",
+          "z": "-(height+2*overhangMM)/2"
+        },
+        "rotationDegrees": {
+          "x": "-90.0",
+          "y": "0.0",
+          "z": "180.0"
+        },
+        "size": {
+          "x": "width+2*overhangMM",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 1400,
+          "name": "Conservation board / 2.4 mm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#ADA68D",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "recycled",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 2.4,
+          "verified": false
+        }
+      },
+      {
+        "features": {
+          "stockThickness": "0.12"
+        },
+        "front": {
+          "sourceObjectID": "244408D5-7EFB-4D9B-B01B-3D131D220C62",
+          "sourceOriginMM": {
+            "x": "(max(boardMM,spineBoardMM)+turnInMM)+(width+2*overhangMM)",
+            "y": "max(boardMM,spineBoardMM)+turnInMM"
+          },
+          "sourceSide": "outside"
+        },
+        "id": "back-joint",
+        "name": "Continuous back joint",
+        "positionMM": {
+          "x": "-overhangMM",
+          "y": "-boardMM-0.06",
+          "z": "-(height+2*overhangMM)/2"
+        },
+        "rotationDegrees": {
+          "x": "-90.0",
+          "y": "0.0",
+          "z": "180.0"
+        },
+        "size": {
+          "x": "jointMM+0.01",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 150,
+          "name": "Continuous linen joint",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#385949",
+            "opacity": 1,
+            "roughness": 0.82,
+            "texture": "linen",
+            "textureDepthMM": 0.04,
+            "textureScaleMM": 0.75
+          },
+          "thicknessMM": 0.12,
+          "verified": false
+        }
+      },
+      {
+        "features": {
+          "stockThickness": "spineBoardMM",
+          "wrap": {
+            "cornerRadiusMM": "0.8",
+            "stock": {
+              "grain": "parallelHeight",
+              "gsm": 150,
+              "name": "Dyed linen wrapping / 0.12 mm",
+              "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+              "profile": {
+                "color": "#385949",
+                "opacity": 1,
+                "roughness": 0.82,
+                "texture": "linen",
+                "textureDepthMM": 0.04,
+                "textureScaleMM": 0.75
+              },
+              "thicknessMM": 0.12,
+              "verified": false
+            },
+            "turnInMM": "min(turnInMM,(spineThickness+2*(boardMM+0.12))/2)"
+          }
+        },
+        "finishes": [
+          {
+            "color": "#C4A66B",
+            "depthMM": 0,
+            "elementIDs": [
+              "3B6899DE-BCBE-5883-A905-A6C1490ED54E"
+            ],
+            "enabled": true,
+            "heightMM": 0.01,
+            "id": "97F28340-E531-567F-809B-035E44569296",
+            "kind": "foil",
+            "metallic": 1,
+            "name": "spine-foil",
+            "opacity": 1,
+            "roughness": 0.12,
+            "side": "outside"
+          }
+        ],
+        "front": {
+          "sourceObjectID": "244408D5-7EFB-4D9B-B01B-3D131D220C62",
+          "sourceOriginMM": {
+            "x": "(max(boardMM,spineBoardMM)+turnInMM)+(width+2*overhangMM)+jointMM",
+            "y": "max(boardMM,spineBoardMM)+turnInMM"
+          },
+          "sourceSide": "outside"
+        },
+        "id": "spine-board",
+        "name": "Wrapped spine board",
+        "positionMM": {
+          "x": "-overhangMM-jointMM",
+          "y": "-boardMM-0.12",
+          "z": "-(height+2*overhangMM)/2"
+        },
+        "rotationDegrees": {
+          "x": "-90.0",
+          "y": "0.0",
+          "z": "90+openingDegrees/2"
+        },
+        "size": {
+          "x": "spineThickness+2*(boardMM+0.12)",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 1000,
+          "name": "Spine board",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#ADA68D",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "recycled",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 1.6,
+          "verified": false
+        }
+      },
+      {
+        "features": {
+          "flex": {
+            "angleDegrees": "openingDegrees",
+            "edge": "left",
+            "widthMM": "jointMM"
+          },
+          "stockThickness": "0.12"
+        },
+        "front": {
+          "sourceObjectID": "244408D5-7EFB-4D9B-B01B-3D131D220C62",
+          "sourceOriginMM": {
+            "x": "(((max(boardMM,spineBoardMM)+turnInMM)+(width+2*overhangMM)+jointMM)+(spineThickness+2*(boardMM+0.12))+jointMM)-jointMM",
+            "y": "max(boardMM,spineBoardMM)+turnInMM"
+          },
+          "sourceSide": "outside"
+        },
+        "id": "front-joint",
+        "name": "Flexible front joint",
+        "positionMM": {
+          "x": "(-overhangMM-jointMM+(spineThickness+2*(boardMM+0.12))*cos(pi/2+(openingDegrees*pi/180)/2))+0.06*sin(openingDegrees*pi/180)",
+          "y": "(-boardMM-0.12+(spineThickness+2*(boardMM+0.12))*sin(pi/2+(openingDegrees*pi/180)/2))-0.06*cos(openingDegrees*pi/180)",
+          "z": "-(height+2*overhangMM)/2"
+        },
+        "rotationDegrees": {
+          "x": "-90.0",
+          "y": "0.0",
+          "z": "0.0"
+        },
+        "size": {
+          "x": "jointMM+0.01",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 150,
+          "name": "Continuous linen joint",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#385949",
+            "opacity": 1,
+            "roughness": 0.82,
+            "texture": "linen",
+            "textureDepthMM": 0.04,
+            "textureScaleMM": 0.75
+          },
+          "thicknessMM": 0.12,
+          "verified": false
+        }
+      },
+      {
+        "features": {
+          "recesses": [
+            {
+              "cornerRadiusMM": "1.5",
+              "depthMM": "insetDepthMM",
+              "id": "inset-seat",
+              "insert": {
+                "face": {
+                  "sourceObjectID": "768814F4-ABD3-4B88-B846-2CB29D44E543",
+                  "sourceOriginMM": {
+                    "x": "0.0",
+                    "y": "0.0"
+                  },
+                  "sourceSide": "outside"
+                },
+                "stock": {
+                  "grain": "parallelHeight",
+                  "gsm": 240,
+                  "name": "Inserted photographic paper / 0.24 mm",
+                  "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+                  "profile": {
+                    "color": "#F7F5EF",
+                    "opacity": 1,
+                    "roughness": 0.92,
+                    "texture": "coated",
+                    "textureDepthMM": 0.009,
+                    "textureScaleMM": 0.65
+                  },
+                  "thicknessMM": 0.24,
+                  "verified": false
+                }
+              },
+              "origin": {
+                "x": "((width+2*overhangMM)-insetWidthMM)/2",
+                "y": "height*0.34"
+              },
+              "size": {
+                "x": "insetWidthMM",
+                "y": "insetHeightMM"
+              }
+            }
+          ],
+          "stockThickness": "boardMM",
+          "wrap": {
+            "cornerRadiusMM": "1.2",
+            "stock": {
+              "grain": "parallelHeight",
+              "gsm": 150,
+              "name": "Dyed linen wrapping / 0.12 mm",
+              "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+              "profile": {
+                "color": "#385949",
+                "opacity": 1,
+                "roughness": 0.82,
+                "texture": "linen",
+                "textureDepthMM": 0.04,
+                "textureScaleMM": 0.75
+              },
+              "thicknessMM": 0.12,
+              "verified": false
+            },
+            "turnInMM": "turnInMM"
+          }
+        },
+        "finishes": [
+          {
+            "color": "#C4A66B",
+            "depthMM": 0.025,
+            "elementIDs": [
+              "8634DC29-5C42-5ED1-BA4F-953C29D25B20",
+              "2A272B01-453E-5304-A209-06C5768BC6A7"
+            ],
+            "enabled": true,
+            "heightMM": 0.01,
+            "id": "3E129D3F-5BB4-531E-9FB1-FCE5C7FFEC1D",
+            "kind": "foil",
+            "metallic": 1,
+            "name": "front-foil",
+            "opacity": 1,
+            "roughness": 0.12,
+            "side": "outside"
+          },
+          {
+            "depthMM": 0,
+            "elementIDs": [
+              "0226A9D8-537E-527B-B3D4-970FEEDE5BFD"
+            ],
+            "enabled": true,
+            "heightMM": 0.12,
+            "id": "E4F0C1A4-306F-5108-9111-D9AE4C47B86A",
+            "kind": "emboss",
+            "name": "front-blind",
+            "opacity": 1,
+            "side": "outside"
+          }
+        ],
+        "front": {
+          "sourceObjectID": "244408D5-7EFB-4D9B-B01B-3D131D220C62",
+          "sourceOriginMM": {
+            "x": "((max(boardMM,spineBoardMM)+turnInMM)+(width+2*overhangMM)+jointMM)+(spineThickness+2*(boardMM+0.12))+jointMM",
+            "y": "max(boardMM,spineBoardMM)+turnInMM"
+          },
+          "sourceSide": "outside"
+        },
+        "id": "front-board",
+        "name": "Wrapped front board",
+        "positionMM": {
+          "x": "-overhangMM-jointMM-(spineThickness+2*(boardMM+.12))*sin(openingDegrees*pi/360)+jointMM*sin(max(openingDegrees*pi/180,.000001))/max(openingDegrees*pi/180,.000001)+.01*cos(openingDegrees*pi/180)+(boardMM/2+.12)*sin(openingDegrees*pi/180)",
+          "y": "-boardMM-.12+(spineThickness+2*(boardMM+.12))*cos(openingDegrees*pi/360)+jointMM*(1-cos(max(openingDegrees*pi/180,.000001)))/max(openingDegrees*pi/180,.000001)+.01*sin(openingDegrees*pi/180)-(boardMM/2+.12)*cos(openingDegrees*pi/180)",
+          "z": "-(height+2*overhangMM)/2"
+        },
+        "rotationDegrees": {
+          "x": "-90.0",
+          "y": "0.0",
+          "z": "openingDegrees"
+        },
+        "size": {
+          "x": "width+2*overhangMM",
+          "y": "height+2*overhangMM"
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 1400,
+          "name": "Conservation board / 2.4 mm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#ADA68D",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "recycled",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 2.4,
+          "verified": false
+        }
+      }
+    ],
+    "openingDegrees": 0,
+    "parentSheets": [
+      {
+        "backPageIDs": [
+          "881AE312-7236-4A4A-BDF4-67DC9E0F844E",
+          "A8EE3476-F6A3-42BA-A2D6-4A6E99FE011E"
+        ],
+        "frontPageIDs": [
+          "CD0D967D-64BC-4A93-A5C2-633E6B85D8F5",
+          "FD4D08A2-96A5-49B6-9C06-ACB44C3D8D1D"
+        ],
+        "id": "6D5B01CD-EC75-59B4-97FE-5E1395067527",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "48E199C1-43D4-427E-BFF9-8E0101BA1BDD",
+          "D8B1B52B-2289-4833-AA1E-AF8BB909D19A"
+        ],
+        "frontPageIDs": [
+          "48958BCF-95A9-41AF-B2A8-AE8CA40EF03F",
+          "119602AD-05BA-4C5E-A90E-EAFBAE1C348E"
+        ],
+        "id": "4CCE64E1-B4AE-58D3-B3D6-FBED6C03C36E",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "455EB991-A528-487B-B208-AAA5FECBD997",
+          "3C691EA9-5B2A-4AE5-B192-BEA24AABF3BA"
+        ],
+        "frontPageIDs": [
+          "AFE401C0-60B5-4155-BF69-13008B1C0208",
+          "FAFE5E42-B439-4D7A-93E4-DBB3A57AD568"
+        ],
+        "id": "FE8904E5-A64A-5525-B5FE-95674D652261",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "0AC8B5AD-D76B-4EA5-8D6B-D0149279B84B",
+          "1992F9A7-1911-4BC8-BCB9-7AA3BF7B08CA"
+        ],
+        "frontPageIDs": [
+          "AD850A5D-CF6F-404F-99D6-C304F7A4C7FC",
+          "8A07FB2C-CD21-43B1-A16A-E478FA90D97F"
+        ],
+        "id": "14AD8E8B-41F0-504B-B9A8-F365FF141AF3",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "FD2552D4-9956-4F9F-A7E5-B19C1EA38792",
+          "911B3458-F80C-4992-A46C-DCEFA5D14BDD"
+        ],
+        "frontPageIDs": [
+          "2E82324F-7AB0-424C-8D92-8D1E64F0A76A",
+          "79A8E994-3D19-4F38-AA44-B52CBAF53B4C"
+        ],
+        "id": "E8C9C914-4305-5111-B1B0-BF8C5D2D560D",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "F330CF67-A6FE-4468-97DF-38DF0E1E99B1",
+          "CB153795-30D0-4667-9BDD-67F13DFDBFB4"
+        ],
+        "frontPageIDs": [
+          "1B898A77-3DE0-4AAC-8506-8016629528F7",
+          "D2CB1A9E-C825-456B-81B8-6F849AAF691D"
+        ],
+        "id": "361F9BC7-3AD0-55DF-AE7B-03A6F2F6F848",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "FA786D99-CF12-460D-BF80-7807857681C4",
+          "8204B34B-A90E-4FB4-8BFE-5F45777D5976"
+        ],
+        "frontPageIDs": [
+          "2CAED5C8-C18B-4419-A6D9-7941CFC39630",
+          "6BE23216-137A-494F-827E-F6A8CB0B481F"
+        ],
+        "id": "4A7CEB74-4EF0-501C-9BD8-4D83C7E0FC1E",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "9840A4E8-40FF-4745-8B37-9A32640A801E",
+          "C42BE668-586D-43B3-8B07-5ED57035BBAC"
+        ],
+        "frontPageIDs": [
+          "2B79DACA-61FF-4579-A13E-5FE8A72EFB62",
+          "4EE1D6EB-20D1-49F4-9111-94ECE805AC49"
+        ],
+        "id": "17B828B1-366F-5648-A5E1-15A7231C22C1",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "70EE2FC2-0C2E-43F8-AC50-C96EBDCB6E22",
+          "3ED5371D-1BCE-4912-8B8F-C10130E4025B"
+        ],
+        "frontPageIDs": [
+          "C001F471-CBD0-4122-B92F-5966A8C8CA8B",
+          "398DE9A5-F8F9-41E2-B795-AE2DB810E1C3"
+        ],
+        "id": "7BA81FD8-D31C-56B6-9DE5-4D6784162578",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "22D06CB1-D197-4436-906C-A3D78A8AF946",
+          "043A89AD-165A-4335-8B5B-228FA81F1F31"
+        ],
+        "frontPageIDs": [
+          "4E459403-D375-4D57-8050-ED0EAAE1D1DD",
+          "788D3D53-C1A0-42EA-83DD-79F7D58C9C1E"
+        ],
+        "id": "0513D2DF-41A2-5CAB-AED8-88E841C5D058",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "DA784EEB-1DD3-42D2-8C66-F8BCC537CAC9",
+          "C256463F-A9FA-444E-AEAA-9E5F076B2C91"
+        ],
+        "frontPageIDs": [
+          "9F7BD9FF-7775-4CE9-9C31-66CF5F810ACB",
+          "B26542C7-66C0-4630-AC6E-B672621927AF"
+        ],
+        "id": "BC78010A-17C0-5860-9FCF-A03C856AD40D",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "AD59177E-2B41-43FF-AA18-C35507AA2843",
+          "2415E55F-8AFA-4572-BBEC-6AA3D62DD0F8"
+        ],
+        "frontPageIDs": [
+          "B1D9884F-E0B9-488B-A5CD-BA467D773191",
+          "607AC66D-6D0E-4032-95F2-6441706FEBCA"
+        ],
+        "id": "9768C469-CD78-5FDE-9298-76CB0D0EBF7B",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "5EBB6183-94F6-4016-BFE6-55733C6FAD86",
+          "888072F4-C108-465F-B98C-CDD49F6C6E72"
+        ],
+        "frontPageIDs": [
+          "FA211E96-0CF3-4646-B5D4-1A0EE0AE80D8",
+          "2F32E79C-4E07-4A64-9725-79B79ED36236"
+        ],
+        "id": "08969412-5C54-50E6-8443-9FC0E78661D3",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "E84176B1-C970-45A7-A938-7FAD97C26B3E",
+          "D8157BAB-3676-417B-9056-015175A47A94"
+        ],
+        "frontPageIDs": [
+          "DE422C3A-498F-4BCF-89F4-7B132FAE5127",
+          "137CC683-7D46-440C-B5DE-065A7F02861C"
+        ],
+        "id": "A3E09CDC-E7FD-5772-AF18-908484BE5E71",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "5E0937E3-28A2-4C3C-A6CF-A1156DBEA943",
+          "03458CF1-5AF2-4A35-AC08-652F839143FC"
+        ],
+        "frontPageIDs": [
+          "75944A36-5AB2-4771-BF43-114D560CEFF4",
+          "0594A665-C4CE-43C5-B270-52569B84E371"
+        ],
+        "id": "292B818C-0491-5F98-9C83-993B624A69BC",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "3EE3F607-CE73-4085-AF16-5D443F815982",
+          "6D597990-99E8-4093-B2B0-1759EAEB2DC4"
+        ],
+        "frontPageIDs": [
+          "6BFF4F3A-0FE0-4980-9FF6-69D34B680421",
+          "6EC1348B-CF3B-4027-B1BF-31BEF7B51556"
+        ],
+        "id": "36B2831B-7F71-55BE-AFBB-CE5EF7300CB4",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "9D712867-B7AF-497C-AC66-F97389D1AA39",
+          "976691C0-1D97-4A98-A86F-C5E0BF20D1D4"
+        ],
+        "frontPageIDs": [
+          "77179DCF-2992-48DB-B2FC-44DBDA2CBCF0",
+          "52702E62-F5AE-40F3-852B-E3C51D6CFFE5"
+        ],
+        "id": "C77BFFA0-7CC2-5DB4-AFA7-2EC5576854B7",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "F25A4647-1976-496E-9608-69C33D05E900",
+          "B3AFCE78-1300-4502-B488-AA53B9746E05"
+        ],
+        "frontPageIDs": [
+          "3E84F181-A2F0-49C5-AC2A-FF6B54D4D6FE",
+          "687F2E65-2E0A-4BD6-96F7-1BEB8336DC9A"
+        ],
+        "id": "29809246-1654-52F1-B7D7-2CDCC1514711",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "2D75BE00-DAC3-4F4F-AC44-37BF7791F30F",
+          "D1A8A655-7396-447E-BEBF-126E1675357E"
+        ],
+        "frontPageIDs": [
+          "63D7A157-8688-4FCF-872B-18F11D28713C",
+          "7653FCA7-905D-4F35-B727-277BCA7D2E7A"
+        ],
+        "id": "53160D98-9539-5687-8FAA-6ED23F84CA06",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "B44FABA1-780B-4DC7-9B5C-7D53B22A060B",
+          "F5439C33-5C6E-4FB3-87B6-9E72B3889C7F"
+        ],
+        "frontPageIDs": [
+          "79B292B4-6577-4B59-AECE-3E05115A5DD6",
+          "07AFAAAD-3D35-468F-83C2-6752BD403D3B"
+        ],
+        "id": "FE477ED8-EB62-5E39-ADF1-AE05E76E3546",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "C8BC4A08-F972-425C-A814-D503FAC810C4",
+          "06BE3FE8-0335-4E2F-931E-932B5977419F"
+        ],
+        "frontPageIDs": [
+          "1C467E32-1A43-4E06-A992-5B06C0FFDFD4",
+          "AAD02C32-1006-441D-BF37-721D6D317294"
+        ],
+        "id": "B026708A-30F7-56F4-A94F-DFD6DF47E0C3",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "5CA11AF7-47DA-4BBF-A576-AC649C94D583",
+          "6CEF150F-9F02-4EBF-9193-894704865B36"
+        ],
+        "frontPageIDs": [
+          "BCB503D6-D26F-4566-BE13-CAF168600820",
+          "3ECFCEC4-5019-4908-AE7B-079E836D9409"
+        ],
+        "id": "03D8AB2B-2FCC-550C-B68A-00B16B89BA8D",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "F6A5320A-88A7-4171-B53E-31D7A4CA04CE",
+          "39B885A7-765D-47D4-B193-42D1AE154FBE"
+        ],
+        "frontPageIDs": [
+          "35E29F2F-993B-48D0-84C6-9E7E198BE4FA",
+          "7A39B3FD-93D5-4723-8CDA-44624FF1FE1E"
+        ],
+        "id": "D1E68CB0-C1DA-50F0-BBE7-C5A7B0E4DE10",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "3825FF0A-C76E-411D-A871-DA92D408EEB7",
+          "92C8E3C7-0ABC-455C-BE93-7DA38C930ED5"
+        ],
+        "frontPageIDs": [
+          "8815C7A0-2C9A-46D0-96DC-F6B149F742CF",
+          "EC500754-77E1-4DE1-AEC3-B6D50B48BD12"
+        ],
+        "id": "59FBF40D-6737-50A4-82BD-15F3DD7EE574",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "87A3D117-944B-40A3-A7EA-5D182571E3AA",
+          "972223D4-9566-48E6-BEB6-923747098202"
+        ],
+        "frontPageIDs": [
+          "B6797A83-0108-4033-B0EB-E9C1F3FBF393",
+          "08FE3DA5-54B9-41D1-9CA1-E5269081AB73"
+        ],
+        "id": "D4C0A1BB-0EE0-5C99-BB9B-56B6757DBAC7",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "5B6C7BC4-4981-4F80-B978-4CAABB5A3B22",
+          "0F19080C-6793-42EE-971E-6921EDDBB5C2"
+        ],
+        "frontPageIDs": [
+          "6AC8AE4F-A3DB-4113-8E55-11FECD6E7672",
+          "87D84853-DB0C-4569-A797-C6739B73D530"
+        ],
+        "id": "B391D5CB-2C39-5404-AA2F-3DB5513EA344",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "8F58A5D9-221F-40A2-9584-3C81DE30987C",
+          "9BA61B66-1FB4-414E-8E27-1CFB3FFAE892"
+        ],
+        "frontPageIDs": [
+          "3B2B7B38-A407-4902-937C-0E9B6F366580",
+          "CEDE8A24-86E3-49E4-84BC-39848BF30488"
+        ],
+        "id": "9789E0F6-D3EA-5D05-B593-2694E282ECE4",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "7256B28E-0536-423E-9D1A-443F6B0C247A",
+          "BC35830C-1C7E-45A6-9D51-A3694099A731"
+        ],
+        "frontPageIDs": [
+          "F8B6CEB5-1A3C-416E-A423-E52D5C694A79",
+          "8E037F44-4A74-48C4-B103-9F86807AE315"
+        ],
+        "id": "3F6B7FFD-ACB8-59F5-A688-39DE69ABD04A",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "57830EEB-23A1-4979-BD66-93E01BA875A8",
+          "DA944FA7-591B-4490-AB2C-3B68E6224A2A"
+        ],
+        "frontPageIDs": [
+          "F86D3B1D-855A-41E0-852A-4AD4063BC8EC",
+          "6D336A02-B394-4CF3-9729-C4FE0C5AEC3A"
+        ],
+        "id": "23E7685F-0B96-5E14-929A-2A3DE6DBA544",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "88B40B65-2C0D-485A-9B57-D306B6204B08",
+          "5A57B828-E5ED-4A35-AAAD-D1FE5AD6B3F1"
+        ],
+        "frontPageIDs": [
+          "F6C3F1AF-AEEA-4739-81E5-F060F38218CD",
+          "A5544BC9-4C95-4546-A697-31DDA289D508"
+        ],
+        "id": "00D03BC8-33EF-56FA-A15A-DD4C94F2F6C5",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 110,
+          "name": "Pale mineral body / 110 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#D9E0C8",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.115,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "4AB88790-98B9-40EB-AFA8-6DC3BD3D6C53",
+          "3FF3B434-A472-45C5-BD2C-86D9E55C746D"
+        ],
+        "frontPageIDs": [
+          "FA7A7B03-5FE1-4A12-A7C8-70D6F814ADD7",
+          "8659E6E4-5EE2-474D-8006-30F7B219DC50"
+        ],
+        "id": "A53FF214-92E0-5866-BB34-1D59A71FB9F9",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      },
+      {
+        "backPageIDs": [
+          "6E8D3519-BF8D-43D8-99D8-5E8348BDF44A",
+          "C3A54F03-BD8F-4748-B442-55FAD9838605"
+        ],
+        "frontPageIDs": [
+          "2DD73016-6F23-491E-944D-91A495B21AAD",
+          "33D94AE6-6D9B-4BF2-A172-EA91F14FC4A8"
+        ],
+        "id": "FEEA68C7-CFE2-53A0-BE0E-1FA8B16567F1",
+        "printIntent": "color",
+        "sizeMM": {
+          "x": 280,
+          "y": 210
+        },
+        "stock": {
+          "grain": "parallelHeight",
+          "gsm": 100,
+          "name": "White uncoated body / 100 gsm",
+          "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+          "profile": {
+            "color": "#F7F5EF",
+            "opacity": 1,
+            "roughness": 0.92,
+            "texture": "cotton",
+            "textureDepthMM": 0.009,
+            "textureScaleMM": 0.65
+          },
+          "thicknessMM": 0.1,
+          "verified": false
+        }
+      }
+    ],
+    "publicationID": "95D43B98-5DA8-41F6-AA59-E2C05304A4AE",
+    "signatures": [
+      {
+        "id": "03E14A77-FDE9-5C07-8F61-1B0691487A22",
+        "parentSheetIDs": [
+          "6D5B01CD-EC75-59B4-97FE-5E1395067527",
+          "4CCE64E1-B4AE-58D3-B3D6-FBED6C03C36E",
+          "FE8904E5-A64A-5525-B5FE-95674D652261",
+          "14AD8E8B-41F0-504B-B9A8-F365FF141AF3"
+        ]
+      },
+      {
+        "id": "36763949-E26C-54E2-8E01-15819631D7B7",
+        "parentSheetIDs": [
+          "E8C9C914-4305-5111-B1B0-BF8C5D2D560D",
+          "361F9BC7-3AD0-55DF-AE7B-03A6F2F6F848",
+          "4A7CEB74-4EF0-501C-9BD8-4D83C7E0FC1E",
+          "17B828B1-366F-5648-A5E1-15A7231C22C1"
+        ]
+      },
+      {
+        "id": "D60835DF-710D-530D-B1F5-41F39572C302",
+        "parentSheetIDs": [
+          "7BA81FD8-D31C-56B6-9DE5-4D6784162578",
+          "0513D2DF-41A2-5CAB-AED8-88E841C5D058",
+          "BC78010A-17C0-5860-9FCF-A03C856AD40D",
+          "9768C469-CD78-5FDE-9298-76CB0D0EBF7B"
+        ]
+      },
+      {
+        "id": "A2B9325E-0425-5E40-BCF2-8FA62A066985",
+        "parentSheetIDs": [
+          "08969412-5C54-50E6-8443-9FC0E78661D3",
+          "A3E09CDC-E7FD-5772-AF18-908484BE5E71",
+          "292B818C-0491-5F98-9C83-993B624A69BC",
+          "36B2831B-7F71-55BE-AFBB-CE5EF7300CB4"
+        ]
+      },
+      {
+        "id": "93C2B61B-38FD-578A-8A51-F88EF7126FD7",
+        "parentSheetIDs": [
+          "C77BFFA0-7CC2-5DB4-AFA7-2EC5576854B7",
+          "29809246-1654-52F1-B7D7-2CDCC1514711",
+          "53160D98-9539-5687-8FAA-6ED23F84CA06",
+          "FE477ED8-EB62-5E39-ADF1-AE05E76E3546"
+        ]
+      },
+      {
+        "id": "11E7811A-593A-5AF9-8C56-1B8CFAECD35A",
+        "parentSheetIDs": [
+          "B026708A-30F7-56F4-A94F-DFD6DF47E0C3",
+          "03D8AB2B-2FCC-550C-B68A-00B16B89BA8D",
+          "D1E68CB0-C1DA-50F0-BBE7-C5A7B0E4DE10",
+          "59FBF40D-6737-50A4-82BD-15F3DD7EE574"
+        ]
+      },
+      {
+        "id": "2E96A487-3439-5E12-8148-F17720CCBE79",
+        "parentSheetIDs": [
+          "D4C0A1BB-0EE0-5C99-BB9B-56B6757DBAC7",
+          "B391D5CB-2C39-5404-AA2F-3DB5513EA344",
+          "9789E0F6-D3EA-5D05-B593-2694E282ECE4",
+          "3F6B7FFD-ACB8-59F5-A688-39DE69ABD04A"
+        ]
+      },
+      {
+        "id": "177D24A1-CBA8-51B4-AE92-0CF02203B81D",
+        "parentSheetIDs": [
+          "23E7685F-0B96-5E14-929A-2A3DE6DBA544",
+          "00D03BC8-33EF-56FA-A15A-DD4C94F2F6C5",
+          "A53FF214-92E0-5866-BB34-1D59A71FB9F9",
+          "FEEA68C7-CFE2-53A0-BE0E-1FA8B16567F1"
+        ]
+      }
+    ],
+    "stock": {
+      "grain": "parallelHeight",
+      "gsm": 100,
+      "name": "White uncoated body / 100 gsm",
+      "notes": "Project-authored visual specification; physical stock/bindery proof remains unverified.",
+      "profile": {
+        "color": "#F7F5EF",
+        "opacity": 1,
+        "roughness": 0.92,
+        "texture": "cotton",
+        "textureDepthMM": 0.009,
+        "textureScaleMM": 0.65
+      },
+      "thicknessMM": 0.1,
+      "verified": false
+    },
+    "version": 1
+  },
+  "export": {
+    "folder": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-02-corner-texture.render",
+    "format": "png",
+    "path": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-02-corner-texture.render/round-02-corner-texture.png",
+    "record": "/Users/rustymeadows/.codex/worktrees/solid-render-quality/form/.local/validation/advanced-publication/round-02-corner-texture.render/render.json",
+    "scene_id": "149148D9-2685-481E-85D1-2E056D67326D"
+  },
+  "purpose": "Same native camera; original artwork/stock caliper preserved, stronger authored linen microstructure and lower foil roughness."
+}

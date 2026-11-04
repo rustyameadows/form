@@ -144,6 +144,7 @@ extension Project {
     try fontLibrary?.validate()
     try validatePaperMaterialSnapshots()
     try validatePhysicalMaterials()
+    try validatePhysicalDimensions()
     try validateArtworkParameterBindings()
     try validatePhysicalSurfaceBindings()
     try validatePhysicalArtworkIntents()

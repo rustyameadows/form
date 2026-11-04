@@ -10,11 +10,12 @@ public struct PlanarPanelDefinition: Codable, Equatable, Sendable {
   public var polygon: [CADExpressionPoint2]
   public var artworkRotationDegrees: CADScalar?
   public var cutouts:[PlanarCutoutDefinition]?
+  public var features:SheetPanelFeatures?
   public init(id: String, name: String, role: PaperPanel.Role = .body,
-    polygon: [CADExpressionPoint2], artworkRotationDegrees: CADScalar? = nil,cutouts:[PlanarCutoutDefinition]?=nil) {
+    polygon: [CADExpressionPoint2], artworkRotationDegrees: CADScalar? = nil,cutouts:[PlanarCutoutDefinition]?=nil,features:SheetPanelFeatures?=nil) {
     self.id=id; self.name=name; self.role=role; self.polygon=polygon
     self.artworkRotationDegrees=artworkRotationDegrees
-    self.cutouts=cutouts
+    self.cutouts=cutouts;self.features=features
   }
 }
 
@@ -125,7 +126,7 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
     }
     for parameter in parameters {try validateValue(parameter.value,for:parameter)}
     guard (requirements?.count ?? 0)<=128,Set((requirements ?? []).map(\.id)).count==(requirements?.count ?? 0),
-      panels.reduce(0,{$0+$1.polygon.count+($1.cutouts ?? []).reduce(0){$0+$1.polygon.count}})<=2048 else {throw FormError.invalid("Keep construction requirements and polygon complexity bounded.")}
+      panels.reduce(0,{$0+$1.polygon.count+($1.cutouts ?? []).reduce(0){$0+$1.polygon.count}+($1.features?.outline?.count ?? 0)+($1.features?.cutouts ?? []).reduce(0){$0+$1.polygon.count}})<=2048 else {throw FormError.invalid("Keep construction requirements and polygon complexity bounded.")}
     let variables=try resolvedValues()
     func number(_ scalar:CADScalar)throws->Double {try CADExpression.evaluate(scalar.expression,variables:variables)}
     for requirement in requirements ?? [] {try requirement.validate(using:variables)}
@@ -153,8 +154,25 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
         abs(Self.signedArea(polygon))>0.001,!Self.selfIntersects(polygon) else {
         throw FormError.invalid("Panel '\(panel.id)' has an invalid, self-crossing, or out-of-bounds polygon.")
       }
+      let xs=polygon.map(\.x),ys=polygon.map(\.y)
+      let origin=Point2(xs.min()!,ys.min()!),panelSize=Point2(xs.max()!-origin.x,ys.max()!-origin.y)
+      if let outline=panel.features?.outline {
+        let local=try outline.map(point)
+        guard (3...128).contains(local.count),local.allSatisfy({$0.x>=0 && $0.y>=0 && $0.x<=panelSize.x && $0.y<=panelSize.y}),
+          abs((local.map(\.x).min() ?? 0))<1e-7,abs((local.map(\.y).min() ?? 0))<1e-7,
+          abs((local.map(\.x).max() ?? 0)-panelSize.x)<1e-7,abs((local.map(\.y).max() ?? 0)-panelSize.y)<1e-7 else {
+          throw FormError.invalid("A panel-local feature outline must preserve its declared physical frame extents.")
+        }
+        polygon=local.map{.init($0.x+origin.x,$0.y+origin.y)}
+        guard abs(Self.signedArea(polygon))>0.001,!Self.selfIntersects(polygon) else{throw FormError.invalid("A panel feature outline must be simple and nondegenerate.")}
+      }
+      let localHoles=try (panel.features?.cutouts ?? []).map{cutout in
+        PlanarCutoutDefinition(id:cutout.id,polygon:try cutout.polygon.map{value in
+          let p=try point(value);return .init(CADScalar(p.x+origin.x),CADScalar(p.y+origin.y))
+        },kind:cutout.kind)
+      }
       let rotation=try panel.artworkRotationDegrees.map(number)
-      let cutouts=try (panel.cutouts ?? []).map {cutout->PaperPanelCutout in
+      let cutouts=try ((panel.cutouts ?? [])+localHoles).map {cutout->PaperPanelCutout in
         let points=try cutout.polygon.map(point)
         guard validID(cutout.id),(3...128).contains(points.count),abs(Self.signedArea(points))>0.001,
           !Self.selfIntersects(points),points.allSatisfy({Self.strictlyInside($0,polygon)}),
@@ -166,7 +184,20 @@ public struct PlanarConstructionDefinition: Codable, Equatable, Sendable {
         guard !Self.boundariesTouch(cutouts[i].polygon,cutouts[j].polygon),
           !(try Self.overlaps(cutouts[i].polygon,cutouts[j].polygon)) else {throw FormError.invalid("Cutouts '\(cutouts[i].id)' and '\(cutouts[j].id)' touch or overlap.")}
       }}
-      return .init(id:panel.id,name:panel.name,role:panel.role,polygon:polygon,artworkRotationDegrees:rotation,cutouts:cutouts.isEmpty ? nil:cutouts)
+      if var features=panel.features {
+        // Validate feature geometry at rest using the same physical profile.
+        // Source faces are validated when the owning project is available.
+        features.outline=polygon.map{.init(CADScalar($0.x-origin.x),CADScalar($0.y-origin.y))}
+        features.cutouts=cutouts.map{.init(id:$0.id,polygon:$0.polygon.map{.init(CADScalar($0.x-origin.x),CADScalar($0.y-origin.y))},kind:$0.kind)}
+        let restValues=variables.merging(["fold":100,"opening":0]){_,new in new}
+        _ = try features.resolved(size:panelSize,stock:.init(thicknessMM:thickness),variables:restValues) {declaration,_ in
+          guard let declaration else{return nil}
+          let origin=try declaration.sourceOriginMM.map{Point2(
+            try CADExpression.evaluate($0.x.expression,variables:restValues),try CADExpression.evaluate($0.y.expression,variables:restValues))} ?? .init()
+          return .init(sourceObjectID:declaration.sourceObjectID,sourceSide:declaration.sourceSide,originMM:origin)
+        }
+      }
+      return .init(id:panel.id,name:panel.name,role:panel.role,polygon:polygon,artworkRotationDegrees:rotation,cutouts:cutouts.isEmpty ? nil:cutouts,features:panel.features)
     }
     var folds: [PaperFold] = []
     for hinge in hinges {

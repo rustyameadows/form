@@ -16,7 +16,7 @@ extension Project {
   /// Frozen object views are deliberate pixels and add no live dependency.
   public func artworkDependencyObjectIDs(for objectID:UUID)->Set<UUID> {
     guard let object=objects.first(where:{$0.id==objectID}) else{return []}
-    var result=Set<UUID>()
+    var result=object.paperConstruction?.authored?.featureArtworkSourceObjectIDs ?? Set<UUID>()
     if let source=object.artworkSourceID {result.insert(source)}
     if let source=object.paperConstruction?.insideArtworkSourceID {result.insert(source)}
     result.formUnion((object.surfaceArtworkBindings ?? []).compactMap(\.sourceObjectID))
@@ -26,7 +26,7 @@ extension Project {
         let entries=Dictionary(uniqueKeysWithValues:document.pages.map{($0.id,$0.objectID)})
         result.formUnion(leaves.flatMap{[$0.frontPageID,$0.backPageID].compactMap{$0}.compactMap{entries[$0]}})
       }else{result.formUnion(document.pages.map(\.objectID))}
-      result.formUnion((definition.enclosure ?? []).flatMap{[$0.front?.sourceObjectID,$0.back?.sourceObjectID].compactMap{$0}})
+      result.formUnion(definition.artworkSourceObjectIDs)
     }
     for artwork in object.storedArtworks {
       for element in artwork.elements {
@@ -52,6 +52,7 @@ extension Project {
     case .rendered(let id):
       guard let object=objects.first(where:{$0.id==id}) else{return []}
       var result:Set<PublicationArtworkDependency>=[.canonical(id)]
+      for source in object.paperConstruction?.authored?.featureArtworkSourceObjectIDs ?? [] {result.insert(.rendered(source))}
       if let source=object.artworkSourceID {result.insert(.rendered(source))}
       if let source=object.paperConstruction?.insideArtworkSourceID {result.insert(.rendered(source))}
       for source in (object.surfaceArtworkBindings ?? []).compactMap(\.sourceObjectID) {result.insert(.rendered(source))}
@@ -66,7 +67,7 @@ extension Project {
           let entries=Dictionary(uniqueKeysWithValues:document.pages.map{($0.id,$0.objectID)})
           for source in leaves.flatMap({[$0.frontPageID,$0.backPageID].compactMap{$0}.compactMap{entries[$0]}}) {result.insert(.rendered(source))}
         }else{for page in document.pages {result.insert(.rendered(page.objectID))}}
-        for source in (definition.enclosure ?? []).flatMap({[$0.front?.sourceObjectID,$0.back?.sourceObjectID].compactMap{$0}}) {result.insert(.rendered(source))}
+        for source in definition.artworkSourceObjectIDs {result.insert(.rendered(source))}
       }
       return result
     }
