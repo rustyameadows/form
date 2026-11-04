@@ -1,8 +1,10 @@
 # Accepted separate-board workflow
 
-November 4, 2026 · Technical acceptance complete · Final commit/PR record pending
+November 4, 2026 · Acceptance and handoff complete
 
-The specified separate-board workflow has passed source/geometry, ordinary-app native, actual render, construction-file and portable-package acceptance against the [specification](two-piece-rigid-box-spec.md) and [implementation plan](two-piece-rigid-box-implementation-plan.md). Only the final commit/PR record remains open below. This acceptance does not claim physical manufacturing verification.
+The specified separate-board workflow has passed source/geometry, ordinary-app native, actual render, construction-file and portable-package acceptance against the [specification](two-piece-rigid-box-spec.md) and [implementation plan](two-piece-rigid-box-implementation-plan.md). The implementation and accepted handoff are pushed in [PR #37](https://github.com/rustyameadows/form/pull/37), ready for review. Main is unchanged. This acceptance does not claim physical manufacturing verification.
+
+The code checkpoint is `04da88a`; the accepted project, packets and evidence checkpoint is `672cca0`. Start with the [editable study](../examples/two-piece-rigid-boxes/README.md), [portable audit report](../examples/two-piece-rigid-boxes/proofs/packet-audit.json), [actual final views](../examples/two-piece-rigid-boxes/proofs/final/) and [PDF/SVG visual review](../examples/two-piece-rigid-boxes/proofs/packet-visuals/visual-review.md).
 
 ## Implementation and regression checks
 
@@ -122,7 +124,7 @@ The refreshed [portable project](../examples/two-piece-rigid-boxes/CASK-Construc
 - [x] **Final round-nine visible review:** all 21 fresh whole/detail/overview images accepted at retained cameras with no new blocker.
 - [x] **Fresh round-eight packets:** seven exports passed 8,875 independent checks and final actual PDF/SVG visual review; exact stock MediaBoxes/cuts, full-ID keyed legends, classified annotation pages and hashed companions verified.
 - [x] **Portable project and evidence:** refreshed editable 45-object/26-scene package verified; seven packet copies byte-identical and independently verified again; final proof images/PDF review retained; exact save/reopen and prior-project preservation repeated.
-- [ ] **Final commit/PR record:** record the final committed/pushed handoff and PR state after packaging metadata is finalized.
+- [x] **Final commit/PR record:** code `04da88a` and accepted handoff `672cca0` committed/pushed on `codex/two-piece-rigid-boxes`; PR #37 marked ready for review. Main remains unchanged.
 
 ## Physical and representation limits
 

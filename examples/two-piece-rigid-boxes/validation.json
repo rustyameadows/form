@@ -1645,5 +1645,14 @@
       "manifestSHA256": "c8c0ed4de3c7106d25b39fc8219cac37e9105045c40d75541c6df17fff1d8aae",
       "checks": 966
     }
-  ]
+  ],
+  "delivery": {
+    "branch": "codex/two-piece-rigid-boxes",
+    "codeCommit": "04da88a656ca3967fc88cd1366a46a941b4e92be",
+    "artifactCommit": "672cca099976ed28aa7e61603f891a112ca5778c",
+    "pullRequest": "https://github.com/rustyameadows/form/pull/37",
+    "readyForReview": true,
+    "merged": false,
+    "mainUnchanged": true
+  }
 }
